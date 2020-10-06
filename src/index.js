@@ -30,10 +30,10 @@ const createWindow = () => {
     //simpleFullscreen: true,
     //fullscreenWindowTitle: true,
     webPreferences: {
-      worldSafeExecuteJavaScript: true,
-      nodeIntegration: true,
-      enableRemoteModule: true,
       //contextIsolation: true,
+      //worldSafeExecuteJavaScript:true,
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
 

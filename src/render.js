@@ -27,6 +27,7 @@ const store = new Store({
 });
 const btnLoadTodoFile = document.getElementById('btnLoadTodoFile');
 const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
+const filterCategories = ["contexts", "projects"];
 
 // defining a Global file path Variable to store user-selected file
 global.filepath = undefined;
@@ -49,9 +50,13 @@ function readTodoFile(pathToFile) {
       // TODO: call only when function was a success
       console.log('Received data successfully');
       // call function to generate the context filters
-      generateTodoFilters(data, 'contexts');
+      //generateTodoFilters(data, 'contexts');
       // call function to generate the project filters
-      generateTodoFilters(data, 'projects');
+      //generateTodoFilters(data, 'projects');
+
+      // call function to generate the project filters and supply the categories as an array
+      generateTodoFilters(data, filterCategories);
+
       // TODO: call only when function was a success
       console.log('Filters successfully loaded');
     } else {
@@ -67,86 +72,233 @@ function readTodoFile(pathToFile) {
 // ###############
 
 // read passed filters, count them and build selection buttons
-function generateTodoFilters(data, filterCategory) {
+function generateTodoFilters(data, filterCategories) {
+
+
+  let superArray = new Array();
+
 
   // parse the data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
-  let allFilters = [];
 
-  for (var i = 0; i < items.length; i++) {
-    item = items[i];
+  for (var i = 0; i < filterCategories.length; i++) {
+    category = filterCategories[i];
 
-    if(item[filterCategory]!=null) {
-      // concate all arrays into one
-      allFilters.push(item[filterCategory][0]);
+    let allFilters = [];
+
+    for (var j = 0; j < items.length; j++) {
+      item = items[j];
+      if(item[category]) {
+        allFilters = allFilters.concat(item[category]);
+      }
     }
-  }
-  // split arrays with several values into single entries and then join all of them into one string
-  allFilters = allFilters.flat().join(",");
 
-  // use the string to count how often contexts occur and generate an object to work with
-  let allFiltersCounted = allFilters.split(",").reduce(function (allFilters, filter) {
-    if (filter in allFilters) {
-      allFilters[filter]++;
+    // use the string to count how often contexts occur and generate an object to work with
+    let allFiltersCounted = [];
+    allFiltersCounted = allFilters.join(',').split(',').reduce(function (allFilters, filter) {
+      if (filter in allFilters) {
+        allFilters[filter]++;
+      } else {
+        allFilters[filter] = 1;
+      }
+      if(allFilters!=null) {
+        return allFilters;
+      }
+    }, {});
+
+    // get the reference for the filter container
+    var todoFilterContainer = document.getElementById("todoFilters");
+
+    // only generate contexts filters if there are any
+    if(allFilters.length > 0) {
+      // creates a div for the specific filter section
+      var todoFilterContainerSub = document.createElement("div");
+      todoFilterContainerSub.setAttribute("class", category);
+
+      // empty the container before reading fresh data
+      todoFilterContainerSub.innerHTML = "";
+
+      // build one button each
+      for (let filter in allFiltersCounted) {
+        var todoFiltersItem = document.createElement("button");
+        todoFiltersItem.setAttribute("class", "btnApplyFilter button is-success is-light");
+        todoFiltersItem.setAttribute("name", filter);
+        todoFiltersItem.setAttribute("title", category);
+        todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ") (" + category + ")";
+        todoFilterContainerSub.appendChild(todoFiltersItem);
+      }
+      // add contexts to the specific filter container
+      todoFilterContainer.appendChild(todoFilterContainerSub);
     }
-    else {
-      allFilters[filter] = 1;
-    }
-    return allFilters;
-  }, {});
-
-  // build the context filters
-  // get the reference for the filter container
-  var todoFilterContainer = document.getElementById("todoFilters");
-
-  // only generate contexts filters if there are any
-  if(allFilters.length > 0) {
-    // creates a div for the specific filter section
-    var todoFilterContainerSub = document.createElement("div");
-    todoFilterContainerSub.setAttribute("class", filterCategory);
-
-    // empty the container before reading fresh data
-    todoFilterContainerSub.innerHTML = "";
-
-    // build one button each
-    for (let filter in allFiltersCounted) {
-      var todoFiltersItem = document.createElement("button");
-      todoFiltersItem.setAttribute("class", "btnApplyFilter button is-success is-light");
-      todoFiltersItem.setAttribute("name", filter);
-      todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ")";
-      todoFilterContainerSub.appendChild(todoFiltersItem);
-    }
-    // add contexts to the specific filter container
-    todoFilterContainer.appendChild(todoFilterContainerSub);
-
     // generate filter array
-    let setFilterArray = new Array;
+    let setFilterArray = new Array();
+    let setCategoryArray = new Array();
 
     // configure filter buttons
-    let listOfFilterButtons = document.querySelectorAll("div." + filterCategory + " button.btnApplyFilter");
-    for(var i = 0; i < listOfFilterButtons.length; i++) {
-      let btnApplyFilter = listOfFilterButtons[i];
+    let listOfFilterButtons = document.querySelectorAll("div." + category + " button.btnApplyFilter");
+
+    for(var l = 0; l < listOfFilterButtons.length; l++) {
+
+      let btnApplyFilter = listOfFilterButtons[l];
       btnApplyFilter.addEventListener('click', () => {
+
         // add or remove css class for highlighting
         btnApplyFilter.classList.toggle("is-light");
+
+        if(superArray.length > 0) {
+          for(var z = 0; z < superArray.length; z++) {
+            // check if comination is already part of the array
+            //console.log(superArray[z].includes(btnApplyFilter.name));
+            if(superArray[z].includes(btnApplyFilter.name, btnApplyFilter.title)) {
+              superArray.splice(z,1);
+              console.log("DELETE: " + btnApplyFilter.name + ' & ' + btnApplyFilter.title);
+            } else {
+              superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
+              console.log("REGULAR PUSH: " + btnApplyFilter.name + ' & ' + btnApplyFilter.title);
+            }
+          }
+        } else {
+          // push for the first time
+          superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
+          console.log("PUSH FIRST TIME: " + btnApplyFilter.name + ' & ' + btnApplyFilter.title);
+        }
+
+        console.log(superArray);
+        //console.log(superArray1);
+
         // add this filter to the filter array
         if(setFilterArray.includes(btnApplyFilter.name)==false) {
           // add this filter to filter array
           setFilterArray.push(btnApplyFilter.name);
-          console.log('Filter added: ' + btnApplyFilter.name);
+          setCategoryArray.push(btnApplyFilter.title);
+          //console.log('Filter added: ' + btnApplyFilter.name);
+          //console.log('Category added: ' + btnApplyFilter.title);
         } else {
           // remove value from array
           setFilterArray = setFilterArray.filter(e => e !== btnApplyFilter.name);
-          console.log('Filter removed: ' + btnApplyFilter.name);
+          //console.log('Filter removed: ' + btnApplyFilter.name);
+          //console.log('Category removed: ' + btnApplyFilter.title);
         }
-        //console.log(setFilterArray);
-        generateTodoData(data, setFilterArray, filterCategory);
+        generateTodoData(data, setFilterArray, btnApplyFilter.title);
       });
     }
-    //console.log("filterCategory: " + filterCategory);
-    //generateTodoData(data, setFilterArray, filterCategory);
   }
+  //filterCategories = filterCategories.push('test');
 }
+
+      //console.log(allFilters);
+    //}
+    //console.log(allFiltersCounted);
+    //console.log(allFilters);
+
+
+  //let allFilters = [];
+
+  //console.log(allFilters);
+
+  /*for (var i = 0; i < filterCategories.length; i++) {
+    category = filterCategories[i];
+
+    console.log(i);
+
+    for (vcategoryar i = 0; i < items.length; i++) {
+      item = items[i];
+
+      if(item[category]) {
+        console.log(item[category]);
+      }
+    }
+  }*/
+
+    /*for (var i = 0; i < items.length; i++) {
+      console.log(category);
+      item = items[i];
+      if(item[category]) {
+        console.log(item.text);
+      }
+
+      if (item[category]) {
+        console.log(item[category]);
+      }
+
+      for(var i = 0; i < filterCategories.length; i++) {
+        let category = filterCategories[i];
+        console.log(category);
+        if(item[category]!=null) {
+          // concate all arrays into one
+          allFilters.push(item[category]);
+        }
+      }
+    }*/
+
+    /*
+    // split arrays with several values into single entries and then join all of them into one string
+    allFilters = allFilters.flat().join(",");
+
+    // use the string to count how often contexts occur and generate an object to work with
+    let allFiltersCounted = allFilters.split(",").reduce(function (allFilters, filter) {
+      if (filter in allFilters) {
+        allFilters[filter]++;
+      }
+      else {
+        allFilters[filter] = 1;
+      }
+      return allFilters;
+    }, {});
+
+    // build the context filters
+    // get the reference for the filter container
+    var todoFilterContainer = document.getElementById("todoFilters");
+
+    // only generate contexts filters if there are any
+    if(allFilters.length > 0) {
+      // creates a div for the specific filter section
+      var todoFilterContainerSub = document.createElement("div");
+      todoFilterContainerSub.setAttribute("class", category);
+
+      // empty the container before reading fresh data
+      todoFilterContainerSub.innerHTML = "";
+
+      // build one button each
+      for (let filter in allFiltersCounted) {
+        var todoFiltersItem = document.createElement("button");
+        todoFiltersItem.setAttribute("class", "btnApplyFilter button is-success is-light");
+        todoFiltersItem.setAttribute("name", filter);
+        todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ")";
+        todoFilterContainerSub.appendChild(todoFiltersItem);
+      }
+      // add contexts to the specific filter container
+      todoFilterContainer.appendChild(todoFilterContainerSub);
+
+      // generate filter array
+      let setFilterArray = new Array;
+
+      // configure filter buttons
+      let listOfFilterButtons = document.querySelectorAll("div." + category + " button.btnApplyFilter");
+      for(var i = 0; i < listOfFilterButtons.length; i++) {
+        let btnApplyFilter = listOfFilterButtons[i];
+        btnApplyFilter.addEventListener('click', () => {
+          // add or remove css class for highlighting
+          btnApplyFilter.classList.toggle("is-light");
+          // add this filter to the filter array
+          if(setFilterArray.includes(btnApplyFilter.name)==false) {
+            // add this filter to filter array
+            setFilterArray.push(btnApplyFilter.name);
+            console.log('Filter added: ' + btnApplyFilter.name);
+          } else {
+            // remove value from array
+            setFilterArray = setFilterArray.filter(e => e !== btnApplyFilter.name);
+            console.log('Filter removed: ' + btnApplyFilter.name);
+          }
+          //console.log(setFilterArray);
+          generateTodoData(data, setFilterArray, category);
+        });
+      }
+      //console.log("filterCategory: " + filterCategory);
+      //generateTodoData(data, setFilterArray, filterCategory);
+    }*/
+  //}
+//}
 
 // ###############
 
@@ -249,7 +401,6 @@ function generateTodoTable(itemsFiltered) {
 // ###############
 
 function generateTodoData(data, filterArray, filterCategory) {
-
   // https://github.com/jmhobbs/jsTodoTxt
   // parse raw data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
@@ -325,7 +476,8 @@ btnLoadTodoFile.addEventListener('click', () => {
                   // Call function to generate or regenerate the table
                   generateTodoData(data);
                   // Call function to generate or regenerate the filter list
-                  generateTodoFilters(data);
+                  //let filterCategories = ["contexts", "projects", "test"];
+                  generateTodoFilters(data, filterCategories);
                   store.set('pathToFile', global.filepath);
                   console.log('Saved path in user preferences: ' + global.filepath);
              } else {
