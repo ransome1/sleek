@@ -46,19 +46,16 @@ function readTodoFile(pathToFile) {
   fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
     if (!err) {
       //var dataArray = data.split("\n");
-      generateTodoData(data);
-      // TODO: call only when function was a success
-      console.log('Received data successfully');
-      // call function to generate the context filters
-      //generateTodoFilters(data, 'contexts');
-      // call function to generate the project filters
-      //generateTodoFilters(data, 'projects');
+
+      if(generateTodoData(data) == true) {
+        console.log('Received data successfully');
+      }
 
       // call function to generate the project filters and supply the categories as an array
-      generateTodoFilters(data, filterCategories);
+      if(generateTodoFilters(data, filterCategories) == true) {
+        console.log('Filters successfully loaded');
+      };
 
-      // TODO: call only when function was a success
-      console.log('Filters successfully loaded');
     } else {
       console.log(err);
     }
@@ -74,9 +71,7 @@ function readTodoFile(pathToFile) {
 // read passed filters, count them and build selection buttons
 function generateTodoFilters(data, filterCategories) {
 
-
   let superArray = new Array();
-
 
   // parse the data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
@@ -145,27 +140,29 @@ function generateTodoFilters(data, filterCategories) {
         // add or remove css class for highlighting
         btnApplyFilter.classList.toggle("is-light");
 
+        // check if there is already one filter, otherwise initialize first push
         if(superArray.length > 0) {
+
+          let filterFound;
           for(var z = 0; z < superArray.length; z++) {
-            // check if comination is already part of the array
-            //console.log(superArray[z].includes(btnApplyFilter.name));
-            if(superArray[z].includes(btnApplyFilter.name, btnApplyFilter.title)) {
-              superArray.splice(z,1);
-              console.log("DELETE: " + btnApplyFilter.name + ' & ' + btnApplyFilter.title);
-            } else {
-              superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
-              console.log("REGULAR PUSH: " + btnApplyFilter.name + ' & ' + btnApplyFilter.title);
-            }
+             if(superArray[z][0] == btnApplyFilter.name) {
+               // if filter is already present in 1 dimension of array, then delete array entry
+               superArray.splice(z,1);
+               filterFound = true;
+             }
           }
+
+          // if filter is not already present in first dimension of the array, then push the value
+          if(filterFound!=true) {
+            superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
+          }
+
         } else {
           // push for the first time
           superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
-          console.log("PUSH FIRST TIME: " + btnApplyFilter.name + ' & ' + btnApplyFilter.title);
         }
 
-        console.log(superArray);
-        //console.log(superArray1);
-
+        /*
         // add this filter to the filter array
         if(setFilterArray.includes(btnApplyFilter.name)==false) {
           // add this filter to filter array
@@ -178,12 +175,15 @@ function generateTodoFilters(data, filterCategories) {
           setFilterArray = setFilterArray.filter(e => e !== btnApplyFilter.name);
           //console.log('Filter removed: ' + btnApplyFilter.name);
           //console.log('Category removed: ' + btnApplyFilter.title);
-        }
-        generateTodoData(data, setFilterArray, btnApplyFilter.title);
+        }*/
+        //console.log(superArray);
+
+        generateTodoData(data, setFilterArray, superArray);
       });
     }
   }
   //filterCategories = filterCategories.push('test');
+  return true;
 }
 
       //console.log(allFilters);
@@ -400,7 +400,8 @@ function generateTodoTable(itemsFiltered) {
 
 // ###############
 
-function generateTodoData(data, filterArray, filterCategory) {
+function generateTodoData(data, filterArray, superArray) {
+
   // https://github.com/jmhobbs/jsTodoTxt
   // parse raw data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
@@ -427,6 +428,9 @@ function generateTodoData(data, filterArray, filterCategory) {
   }
   // pass filtered data to functio to build the table
   generateTodoTable(itemsFiltered);
+
+  return true;
+
 }
 
 // ###############
