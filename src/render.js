@@ -73,6 +73,10 @@ function generateTodoFilters(data, filterCategories) {
 
   let superArray = new Array();
 
+  // get the reference for the filter container
+  var todoFilterContainer = document.getElementById("todoFilters");
+  todoFilterContainer.innerHTML = "";
+
   // parse the data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
 
@@ -101,9 +105,6 @@ function generateTodoFilters(data, filterCategories) {
       }
     }, {});
 
-    // get the reference for the filter container
-    var todoFilterContainer = document.getElementById("todoFilters");
-
     // only generate contexts filters if there are any
     if(allFilters.length > 0) {
       // creates a div for the specific filter section
@@ -119,7 +120,7 @@ function generateTodoFilters(data, filterCategories) {
         todoFiltersItem.setAttribute("class", "btnApplyFilter button is-success is-light");
         todoFiltersItem.setAttribute("name", filter);
         todoFiltersItem.setAttribute("title", category);
-        todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ") (" + category + ")";
+        todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ")";
         todoFilterContainerSub.appendChild(todoFiltersItem);
       }
       // add contexts to the specific filter container
@@ -162,143 +163,12 @@ function generateTodoFilters(data, filterCategories) {
           superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
         }
 
-        /*
-        // add this filter to the filter array
-        if(setFilterArray.includes(btnApplyFilter.name)==false) {
-          // add this filter to filter array
-          setFilterArray.push(btnApplyFilter.name);
-          setCategoryArray.push(btnApplyFilter.title);
-          //console.log('Filter added: ' + btnApplyFilter.name);
-          //console.log('Category added: ' + btnApplyFilter.title);
-        } else {
-          // remove value from array
-          setFilterArray = setFilterArray.filter(e => e !== btnApplyFilter.name);
-          //console.log('Filter removed: ' + btnApplyFilter.name);
-          //console.log('Category removed: ' + btnApplyFilter.title);
-        }*/
-        //console.log(superArray);
-
         generateTodoData(data, setFilterArray, superArray);
       });
     }
   }
-  //filterCategories = filterCategories.push('test');
   return true;
 }
-
-      //console.log(allFilters);
-    //}
-    //console.log(allFiltersCounted);
-    //console.log(allFilters);
-
-
-  //let allFilters = [];
-
-  //console.log(allFilters);
-
-  /*for (var i = 0; i < filterCategories.length; i++) {
-    category = filterCategories[i];
-
-    console.log(i);
-
-    for (vcategoryar i = 0; i < items.length; i++) {
-      item = items[i];
-
-      if(item[category]) {
-        console.log(item[category]);
-      }
-    }
-  }*/
-
-    /*for (var i = 0; i < items.length; i++) {
-      console.log(category);
-      item = items[i];
-      if(item[category]) {
-        console.log(item.text);
-      }
-
-      if (item[category]) {
-        console.log(item[category]);
-      }
-
-      for(var i = 0; i < filterCategories.length; i++) {
-        let category = filterCategories[i];
-        console.log(category);
-        if(item[category]!=null) {
-          // concate all arrays into one
-          allFilters.push(item[category]);
-        }
-      }
-    }*/
-
-    /*
-    // split arrays with several values into single entries and then join all of them into one string
-    allFilters = allFilters.flat().join(",");
-
-    // use the string to count how often contexts occur and generate an object to work with
-    let allFiltersCounted = allFilters.split(",").reduce(function (allFilters, filter) {
-      if (filter in allFilters) {
-        allFilters[filter]++;
-      }
-      else {
-        allFilters[filter] = 1;
-      }
-      return allFilters;
-    }, {});
-
-    // build the context filters
-    // get the reference for the filter container
-    var todoFilterContainer = document.getElementById("todoFilters");
-
-    // only generate contexts filters if there are any
-    if(allFilters.length > 0) {
-      // creates a div for the specific filter section
-      var todoFilterContainerSub = document.createElement("div");
-      todoFilterContainerSub.setAttribute("class", category);
-
-      // empty the container before reading fresh data
-      todoFilterContainerSub.innerHTML = "";
-
-      // build one button each
-      for (let filter in allFiltersCounted) {
-        var todoFiltersItem = document.createElement("button");
-        todoFiltersItem.setAttribute("class", "btnApplyFilter button is-success is-light");
-        todoFiltersItem.setAttribute("name", filter);
-        todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ")";
-        todoFilterContainerSub.appendChild(todoFiltersItem);
-      }
-      // add contexts to the specific filter container
-      todoFilterContainer.appendChild(todoFilterContainerSub);
-
-      // generate filter array
-      let setFilterArray = new Array;
-
-      // configure filter buttons
-      let listOfFilterButtons = document.querySelectorAll("div." + category + " button.btnApplyFilter");
-      for(var i = 0; i < listOfFilterButtons.length; i++) {
-        let btnApplyFilter = listOfFilterButtons[i];
-        btnApplyFilter.addEventListener('click', () => {
-          // add or remove css class for highlighting
-          btnApplyFilter.classList.toggle("is-light");
-          // add this filter to the filter array
-          if(setFilterArray.includes(btnApplyFilter.name)==false) {
-            // add this filter to filter array
-            setFilterArray.push(btnApplyFilter.name);
-            console.log('Filter added: ' + btnApplyFilter.name);
-          } else {
-            // remove value from array
-            setFilterArray = setFilterArray.filter(e => e !== btnApplyFilter.name);
-            console.log('Filter removed: ' + btnApplyFilter.name);
-          }
-          //console.log(setFilterArray);
-          generateTodoData(data, setFilterArray, category);
-        });
-      }
-      //console.log("filterCategory: " + filterCategory);
-      //generateTodoData(data, setFilterArray, filterCategory);
-    }*/
-  //}
-//}
 
 // ###############
 
@@ -399,9 +269,9 @@ function generateTodoTable(itemsFiltered) {
 // GENERATE THE DATA BEFORE TABLE IS BUILT
 
 // ###############
-
+// TODO: Remove filterArray if not needed anymore
 function generateTodoData(data, filterArray, superArray) {
-
+console.log(superArray);
   // https://github.com/jmhobbs/jsTodoTxt
   // parse raw data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
@@ -410,14 +280,68 @@ function generateTodoData(data, filterArray, superArray) {
   let itemsFiltered = [];
 
   // check if a filter has been passed
-  if(filterArray!=undefined && filterArray!='') {
-    // use filter to build new items
-    for (var i = 0; i < items.length; i++) {
-      item = items[i];
-      if(checkAvailability(item[filterCategory], filterArray)==true) {
-        itemsFiltered.push(item);
+  if(superArray!=undefined && superArray!='') {
+
+
+    // erst die kategorien, dann jeweils de item und gucken ob kategorie werte hat
+    for (var i = 0; i < filterCategories.length; i++) {
+
+      var category = filterCategories[i];
+
+      console.log("KATEGORIE: " + category);
+
+      for (var j = 0; j < superArray.length; j++) {
+        if(category == superArray[j][1]) {
+          //console.log("TREFFER");
+          //console.log(items[j]['text']);
+          for (var l = 0; l < items.length; l++) {
+            if(items[l][category]!=null) {
+              if(superArray[j][0]==items[l][category][0]) {
+                console.log(items[l].text);
+              }
+            }
+
+          }
+
+        }
       }
+
+
+
+
+
+
+      /*for (var j = 0; j < items.length; j++) {
+
+        var item = items[j];
+
+        if(item[category]!=null) {
+
+
+          //console.log(item[category]);
+          //console.log(item.text);
+          //console.log(superArray);
+
+          if(category == superArray[j][1]) {
+            console.log(item.text);
+          }
+        }
+      }*/
+
     }
+
+    // use filter to build new items
+    /*for (var i = 0; i < items.length; i++) {
+      item = items[i];
+
+
+
+      if(checkAvailability(item[filterCategories[0]], superArray)==true) {
+        //itemsFiltered.push(item);
+        console.log("test");
+      }
+    }*/
+
   // if no filter has been passed
   } else {
     for (var i = 0; i < items.length; i++) {
@@ -426,11 +350,10 @@ function generateTodoData(data, filterArray, superArray) {
       itemsFiltered.push(item);
     }
   }
+
   // pass filtered data to functio to build the table
   generateTodoTable(itemsFiltered);
-
   return true;
-
 }
 
 // ###############
