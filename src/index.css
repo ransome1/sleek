@@ -17,11 +17,15 @@ body {
 }
 
 #todoFilters div.contexts {
-  background: red;
+  /*background: red;*/
 }
 
 #todoFilters div.projects {
-  background: green;
+  /*background: green;*/
+}
+
+#todoFilters div.column {
+    padding-left: 0;
 }
 
 /* TABLE */

@@ -45,7 +45,7 @@ let pathToFile = store.get('pathToFile');
 function readTodoFile(pathToFile) {
   fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
     if (!err) {
-      //var dataArray = data.split("\n");
+      //let dataArray = data.split("\n");
 
       if(generateTodoData(data) == true) {
         console.log('Received data successfully');
@@ -74,18 +74,18 @@ function generateTodoFilters(data, filterCategories) {
   let superArray = new Array();
 
   // get the reference for the filter container
-  var todoFilterContainer = document.getElementById("todoFilters");
+  let todoFilterContainer = document.getElementById("todoFilters");
   todoFilterContainer.innerHTML = "";
 
   // parse the data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
 
-  for (var i = 0; i < filterCategories.length; i++) {
+  for (let i = 0; i < filterCategories.length; i++) {
     category = filterCategories[i];
 
     let allFilters = [];
 
-    for (var j = 0; j < items.length; j++) {
+    for (let j = 0; j < items.length; j++) {
       item = items[j];
       if(item[category]) {
         allFilters = allFilters.concat(item[category]);
@@ -108,7 +108,7 @@ function generateTodoFilters(data, filterCategories) {
     // only generate contexts filters if there are any
     if(allFilters.length > 0) {
       // creates a div for the specific filter section
-      var todoFilterContainerSub = document.createElement("div");
+      let todoFilterContainerSub = document.createElement("div");
       todoFilterContainerSub.setAttribute("class", category);
 
       // empty the container before reading fresh data
@@ -116,8 +116,8 @@ function generateTodoFilters(data, filterCategories) {
 
       // build one button each
       for (let filter in allFiltersCounted) {
-        var todoFiltersItem = document.createElement("button");
-        todoFiltersItem.setAttribute("class", "btnApplyFilter button is-success is-light");
+        let todoFiltersItem = document.createElement("button");
+        todoFiltersItem.setAttribute("class", "btnApplyFilter button");
         todoFiltersItem.setAttribute("name", filter);
         todoFiltersItem.setAttribute("title", category);
         todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ")";
@@ -126,26 +126,23 @@ function generateTodoFilters(data, filterCategories) {
       // add contexts to the specific filter container
       todoFilterContainer.appendChild(todoFilterContainerSub);
     }
-    // generate filter array
-    let setFilterArray = new Array();
-    let setCategoryArray = new Array();
 
     // configure filter buttons
     let listOfFilterButtons = document.querySelectorAll("div." + category + " button.btnApplyFilter");
 
-    for(var l = 0; l < listOfFilterButtons.length; l++) {
+    for(let l = 0; l < listOfFilterButtons.length; l++) {
 
       let btnApplyFilter = listOfFilterButtons[l];
       btnApplyFilter.addEventListener('click', () => {
 
         // add or remove css class for highlighting
-        btnApplyFilter.classList.toggle("is-light");
+        btnApplyFilter.classList.toggle("is-dark");
 
         // check if there is already one filter, otherwise initialize first push
         if(superArray.length > 0) {
 
           let filterFound;
-          for(var z = 0; z < superArray.length; z++) {
+          for(let z = 0; z < superArray.length; z++) {
              if(superArray[z][0] == btnApplyFilter.name) {
                // if filter is already present in 1 dimension of array, then delete array entry
                superArray.splice(z,1);
@@ -163,7 +160,7 @@ function generateTodoFilters(data, filterCategories) {
           superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
         }
 
-        generateTodoData(data, setFilterArray, superArray);
+        generateTodoData(data, superArray);
       });
     }
   }
@@ -194,16 +191,16 @@ function checkAvailability(items, filter) {
 
 function generateTodoTable(itemsFiltered) {
   // get the reference for the table container
-  var todoTableContainer = document.getElementById("todoTableContainer");
+  let todoTableContainer = document.getElementById("todoTableContainer");
 
   // empty the table before reading fresh data
   todoTableContainer.innerHTML = "";
 
   // creates a div for the table itself
-  var todoTable = document.createElement("div");
+  let todoTable = document.createElement("div");
 
   // create all rows
-  for (var i = 0; i < itemsFiltered.length; i++) {
+  for (let i = 0; i < itemsFiltered.length; i++) {
     item = itemsFiltered[i];
 
     //format items
@@ -224,16 +221,16 @@ function generateTodoTable(itemsFiltered) {
         itemPriority = '<span class="tag is-info is-medium">'+item.priority+'</span>';
         break;
       default:
-        itemPriority = '<span class="tag is-light is-medium">'+item.priority+'</span>';
+        itemPriority = '<span class="tag is-dark is-medium">'+item.priority+'</span>';
     }
 
     // creates a table row
-    var todoTableBodyRow = document.createElement("div");
+    let todoTableBodyRow = document.createElement("div");
     todoTableBodyRow.setAttribute("class", "flex-table");
     todoTableBodyRow.setAttribute("role", "rowgroup");
 
     // creates cell for priority tag
-    var todoTableBodyCell_priority = document.createElement("div");
+    let todoTableBodyCell_priority = document.createElement("div");
     todoTableBodyCell_priority.setAttribute("class", "flex-row");
     todoTableBodyCell_priority.setAttribute("role", "cell");
     if(item.priority!=null) {
@@ -242,7 +239,7 @@ function generateTodoTable(itemsFiltered) {
     todoTableBodyRow.appendChild(todoTableBodyCell_priority);
 
     // creates cell for the text
-    var todoTableBodyCell_text = document.createElement("div");
+    let todoTableBodyCell_text = document.createElement("div");
     todoTableBodyCell_text.setAttribute("class", "flex-row");
     todoTableBodyCell_text.setAttribute("role", "cell");
     if(item.text) {
@@ -266,12 +263,26 @@ function generateTodoTable(itemsFiltered) {
 
 // ###############
 
+// SORT ARRAY THEN DELETE DUPLICATES
+// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+
+// ###############
+function uniq(a) {
+  return a.sort().filter(function(item, pos, ary) {
+      return !pos || item != ary[pos - 1];
+  });
+}
+
+// ###############
+
 // GENERATE THE DATA BEFORE TABLE IS BUILT
 
 // ###############
 // TODO: Remove filterArray if not needed anymore
-function generateTodoData(data, filterArray, superArray) {
-console.log(superArray);
+function generateTodoData(data, superArray) {
+
+  //console.log(superArray);
+
   // https://github.com/jmhobbs/jsTodoTxt
   // parse raw data
   items = TodoTxt.parse( data, [ new DueExtension() ] );
@@ -284,67 +295,22 @@ console.log(superArray);
 
 
     // erst die kategorien, dann jeweils de item und gucken ob kategorie werte hat
-    for (var i = 0; i < filterCategories.length; i++) {
+    for (let i = 0; i < superArray.length; i++) {
 
-      var category = filterCategories[i];
+      let category = superArray[i][1];
+      let filter = superArray[i][0];
 
-      console.log("KATEGORIE: " + category);
-
-      for (var j = 0; j < superArray.length; j++) {
-        if(category == superArray[j][1]) {
-          //console.log("TREFFER");
-          //console.log(items[j]['text']);
-          for (var l = 0; l < items.length; l++) {
-            if(items[l][category]!=null) {
-              if(superArray[j][0]==items[l][category][0]) {
-                console.log(items[l].text);
-              }
-            }
-
-          }
-
+      // TODO: Not sure if this works well
+      for (let l = 0; l < items.length; l++) {
+        if(items[l][category] != null && items[l][category].includes(filter)==true) {
+          itemsFiltered.push(items[l]);
         }
       }
-
-
-
-
-
-
-      /*for (var j = 0; j < items.length; j++) {
-
-        var item = items[j];
-
-        if(item[category]!=null) {
-
-
-          //console.log(item[category]);
-          //console.log(item.text);
-          //console.log(superArray);
-
-          if(category == superArray[j][1]) {
-            console.log(item.text);
-          }
-        }
-      }*/
-
     }
-
-    // use filter to build new items
-    /*for (var i = 0; i < items.length; i++) {
-      item = items[i];
-
-
-
-      if(checkAvailability(item[filterCategories[0]], superArray)==true) {
-        //itemsFiltered.push(item);
-        console.log("test");
-      }
-    }*/
 
   // if no filter has been passed
   } else {
-    for (var i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
       // no filters so every item is passed to new "filtered" array
       item = items[i];
       itemsFiltered.push(item);
@@ -352,7 +318,7 @@ console.log(superArray);
   }
 
   // pass filtered data to functio to build the table
-  generateTodoTable(itemsFiltered);
+  generateTodoTable(uniq(itemsFiltered));
   return true;
 }
 
@@ -398,7 +364,7 @@ btnLoadTodoFile.addEventListener('click', () => {
         if (global.filepath && !file.canceled) {
           fs.readFile(global.filepath, {encoding: 'utf-8'}, function(err,data) {
              if (!err) {
-                  var dataArray = data.split("\n");
+                  let dataArray = data.split("\n");
                   console.log('Received data successfully');
                   // Call function to generate or regenerate the table
                   generateTodoData(data);
