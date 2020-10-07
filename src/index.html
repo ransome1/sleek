@@ -4,25 +4,102 @@
 
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>todo.txt</title>
 
     <link rel="stylesheet" href="bulma.min.css">
     <link rel="stylesheet" href="index.css">
 
+    <script defer src="fontawesome.js"></script>
     <script defer src="render.js"></script>
     <script defer src="jsTodoTxt.min.js"></script>
 
   </head>
   <body>
 
-    <h1 class="title is-1">todo.txt</h1>
+    <section class="hero is-light">
+      <div class="hero-body">
+        <div class="container">
+          <div class="columns is-variable">
 
-    <button id="btnLoadTodoFile" class="button is-primary">Open todo.txt file</button>
+            <div class="column is-9">
+              <h2 class="title is-2">todo.txt</h2>
+            </div>
 
-    <div id="todoFilters" class="columns"></div>
+            <div class="column is-3">
 
-    <div id="todoTableContainer"></div>
+              <div class="field">
+                <div class="file has-name">
+                  <label class="file-label">
+                    <button id="btnLoadTodoFile" class="file-input" type="file" name="resume"></button>
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                      </span>
+                      <span class="file-label">
+                        open file
+                      </span>
+                    </span>
+                    <span id="fileName" class="file-name"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!--<div class="column is-1">
+              <i class="fas fa-cog"></i>
+            </div>-->
+
+          </div>
+
+          <div id="todoFilters" class="columns"></div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="hero">
+      <div class="hero-body">
+
+        <div class="container">
+
+          <div id="btnSorting" class="dropdown is-right">
+            <div class="dropdown-trigger">
+              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>Dropdown button</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <a href="#" class="dropdown-item">
+                  Dropdown item
+                </a>
+                <a class="dropdown-item">
+                  Other dropdown item
+                </a>
+                <a href="#" class="dropdown-item is-active">
+                  Active dropdown item
+                </a>
+                <a href="#" class="dropdown-item">
+                  Other dropdown item
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item">
+                  With a divider
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div id="todoTableContainer"></div>
+
+        </div>
+      </div>
+    </section>
 
   </body>
 </html>

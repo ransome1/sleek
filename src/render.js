@@ -5,7 +5,7 @@
 
 // ###############
 
-// DEFINITIONS
+// BASIC DEFINITIONS
 
 // ###############
 
@@ -25,15 +25,18 @@ const store = new Store({
     pathToFile: app.getPath('home')
   }
 });
+// id the sort button and put the toggle action on it
+const btnSorting = document.getElementById('btnSorting');
+btnSorting.addEventListener('click', () => {
+  btnSorting.classList.toggle("is-active");
+});
+
+const pathToFile = store.get('pathToFile');
 const btnLoadTodoFile = document.getElementById('btnLoadTodoFile');
 const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
 const filterCategories = ["contexts", "projects"];
-
 // defining a Global file path Variable to store user-selected file
 global.filepath = undefined;
-
-// set variables
-let pathToFile = store.get('pathToFile');
 
 // ###############
 
@@ -45,17 +48,15 @@ let pathToFile = store.get('pathToFile');
 function readTodoFile(pathToFile) {
   fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
     if (!err) {
-      //let dataArray = data.split("\n");
-
       if(generateTodoData(data) == true) {
+        // write shortened path and file name to empty field
+        fileName.innerHTML = pathToFile;
+
         console.log('Received data successfully');
       }
-
-      // call function to generate the project filters and supply the categories as an array
       if(generateTodoFilters(data, filterCategories) == true) {
         console.log('Filters successfully loaded');
       };
-
     } else {
       console.log(err);
     }
@@ -71,7 +72,7 @@ function readTodoFile(pathToFile) {
 // read passed filters, count them and build selection buttons
 function generateTodoFilters(data, filterCategories) {
 
-  let superArray = new Array();
+  let selectedFilters = new Array();
 
   // get the reference for the filter container
   let todoFilterContainer = document.getElementById("todoFilters");
@@ -120,7 +121,7 @@ function generateTodoFilters(data, filterCategories) {
         todoFiltersItem.setAttribute("class", "btnApplyFilter button");
         todoFiltersItem.setAttribute("name", filter);
         todoFiltersItem.setAttribute("title", category);
-        todoFiltersItem.innerHTML = filter + " (" + allFiltersCounted[filter] + ")";
+        todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + allFiltersCounted[filter] + "</span>";
         todoFilterContainerSub.appendChild(todoFiltersItem);
       }
       // add contexts to the specific filter container
@@ -139,49 +140,32 @@ function generateTodoFilters(data, filterCategories) {
         btnApplyFilter.classList.toggle("is-dark");
 
         // check if there is already one filter, otherwise initialize first push
-        if(superArray.length > 0) {
+        if(selectedFilters.length > 0) {
 
           let filterFound;
-          for(let z = 0; z < superArray.length; z++) {
-             if(superArray[z][0] == btnApplyFilter.name) {
+          for(let z = 0; z < selectedFilters.length; z++) {
+             if(selectedFilters[z][0] == btnApplyFilter.name) {
                // if filter is already present in 1 dimension of array, then delete array entry
-               superArray.splice(z,1);
+               selectedFilters.splice(z,1);
                filterFound = true;
              }
           }
 
           // if filter is not already present in first dimension of the array, then push the value
           if(filterFound!=true) {
-            superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
+            selectedFilters.push([btnApplyFilter.name, btnApplyFilter.title]);
           }
 
         } else {
           // push for the first time
-          superArray.push([btnApplyFilter.name, btnApplyFilter.title]);
+          selectedFilters.push([btnApplyFilter.name, btnApplyFilter.title]);
         }
-
-        generateTodoData(data, superArray);
+        generateTodoData(data, selectedFilters);
       });
     }
   }
   return true;
 }
-
-// ###############
-
-// COMPARE ARRAYS
-
-// ###############
-
-// https://stackoverflow.com/a/25926600
-// TODO: how does it work?
-function checkAvailability(items, filter) {
-  if(filter && items) {
-    return filter.some(function (v) {
-        return items.indexOf(v) >= 0;
-    });
-  }
-};
 
 // ###############
 
@@ -196,69 +180,70 @@ function generateTodoTable(itemsFiltered) {
   // empty the table before reading fresh data
   todoTableContainer.innerHTML = "";
 
-  // creates a div for the table itself
-  let todoTable = document.createElement("div");
-
   // create all rows
   for (let i = 0; i < itemsFiltered.length; i++) {
     item = itemsFiltered[i];
-
-    //format items
-    switch (item.priority) {
-      case "NULL":
-        itemPriority = '';
-        break;
-      case "A":
-        itemPriority = '<span class="tag is-danger is-medium">'+item.priority+'</span>';
-        break;
-      case "B":
-        itemPriority = '<span class="tag is-warning is-medium">'+item.priority+'</span>';
-        break;
-      case "C":
-        itemPriority = '<span class="tag is-success is-medium">'+item.priority+'</span>';
-        break;
-      case "D":
-        itemPriority = '<span class="tag is-info is-medium">'+item.priority+'</span>';
-        break;
-      default:
-        itemPriority = '<span class="tag is-dark is-medium">'+item.priority+'</span>';
-    }
 
     // creates a table row
     let todoTableBodyRow = document.createElement("div");
     todoTableBodyRow.setAttribute("class", "flex-table");
     todoTableBodyRow.setAttribute("role", "rowgroup");
 
+    // add the checkbox
+    let todoTableBodyCellCheckbox = document.createElement("div");
+    todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
+    todoTableBodyCellCheckbox.setAttribute("role", "cell");
+    todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>"
+    todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
+
     // creates cell for priority tag
     let todoTableBodyCell_priority = document.createElement("div");
-    todoTableBodyCell_priority.setAttribute("class", "flex-row");
+    todoTableBodyCell_priority.setAttribute("class", "flex-row priority");
     todoTableBodyCell_priority.setAttribute("role", "cell");
     if(item.priority!=null) {
-      todoTableBodyCell_priority.innerHTML = itemPriority;
+      todoTableBodyCell_priority.innerHTML = item.priority;
     }
     todoTableBodyRow.appendChild(todoTableBodyCell_priority);
 
     // creates cell for the text
     let todoTableBodyCell_text = document.createElement("div");
-    todoTableBodyCell_text.setAttribute("class", "flex-row");
+    todoTableBodyCell_text.setAttribute("class", "flex-row text");
     todoTableBodyCell_text.setAttribute("role", "cell");
     if(item.text) {
         todoTableBodyCell_text.innerHTML = item.text;
     }
     todoTableBodyRow.appendChild(todoTableBodyCell_text);
 
+    for (let k = 0; k < filterCategories.length; k++) {
+      // creates cell for the projects
+      if(item[filterCategories[k]]!=null) {
+        let todoTableBodyCellCategory = document.createElement("div");
+        todoTableBodyCellCategory.setAttribute("class", "flex-row " + filterCategories[k]);
+        todoTableBodyCellCategory.setAttribute("role", "cell");
+        //console.log(item.projects);
+        for(let j = 0; j < item[filterCategories[k]].length; j++) {
+            //console.log(item.projects[j]);
+            let todoTableBodyCellCategoryItem = document.createElement("span");
+            todoTableBodyCellCategoryItem.setAttribute("class", "tag");
+            todoTableBodyCellCategoryItem.innerHTML = item[filterCategories[k]][j];
+            todoTableBodyCellCategory.appendChild(todoTableBodyCellCategoryItem);
+        }
+        todoTableBodyRow.appendChild(todoTableBodyCellCategory);
+      }
+    }
+
+    /*
+    // add the interactions elements to the row
+    let todoTableBodyCellButtons = document.createElement("div");
+    todoTableBodyCellButtons.setAttribute("class", "flex-row is-right");
+    todoTableBodyCellButtons.setAttribute("role", "cell");
+    todoTableBodyCellButtons.innerHTML = '<i class="fas fa-edit"></i> <i class="fas fa-trash-alt"></i>'
+    todoTableBodyRow.appendChild(todoTableBodyCellButtons);
+    */
+
     // add the row to the end of the table body
-    todoTable.appendChild(todoTableBodyRow);
-
+    todoTableContainer.appendChild(todoTableBodyRow);
   }
-
-  // add the actual table with data to the placeholder
-  todoTableContainer.appendChild(todoTable);
-
-  // add attributes
-  todoTable.setAttribute("class", "table-container");
-  todoTable.setAttribute("role", "table");
-  todoTable.setAttribute("aria-label", "Todos");
 }
 
 // ###############
@@ -279,9 +264,9 @@ function uniq(a) {
 
 // ###############
 // TODO: Remove filterArray if not needed anymore
-function generateTodoData(data, superArray) {
+function generateTodoData(data, selectedFilters) {
 
-  //console.log(superArray);
+  //console.log(selectedFilters);
 
   // https://github.com/jmhobbs/jsTodoTxt
   // parse raw data
@@ -291,14 +276,14 @@ function generateTodoData(data, superArray) {
   let itemsFiltered = [];
 
   // check if a filter has been passed
-  if(superArray!=undefined && superArray!='') {
+  if(selectedFilters!=undefined && selectedFilters!='') {
 
 
     // erst die kategorien, dann jeweils de item und gucken ob kategorie werte hat
-    for (let i = 0; i < superArray.length; i++) {
+    for (let i = 0; i < selectedFilters.length; i++) {
 
-      let category = superArray[i][1];
-      let filter = superArray[i][0];
+      let category = selectedFilters[i][1];
+      let filter = selectedFilters[i][0];
 
       // TODO: Not sure if this works well
       for (let l = 0; l < items.length; l++) {
@@ -365,11 +350,11 @@ btnLoadTodoFile.addEventListener('click', () => {
           fs.readFile(global.filepath, {encoding: 'utf-8'}, function(err,data) {
              if (!err) {
                   let dataArray = data.split("\n");
+
                   console.log('Received data successfully');
                   // Call function to generate or regenerate the table
                   generateTodoData(data);
                   // Call function to generate or regenerate the filter list
-                  //let filterCategories = ["contexts", "projects", "test"];
                   generateTodoFilters(data, filterCategories);
                   store.set('pathToFile', global.filepath);
                   console.log('Saved path in user preferences: ' + global.filepath);

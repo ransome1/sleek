@@ -25,10 +25,12 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: width,
     height: height,
+    icon: __dirname + '/icon.png',
     //frame: false,
     //fullscreen: true,
     //simpleFullscreen: true,
     //fullscreenWindowTitle: true,
+    autoHideMenuBar: true,
     webPreferences: {
       //contextIsolation: true,
       //worldSafeExecuteJavaScript:true,

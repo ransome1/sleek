@@ -1,10 +1,33 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   margin: auto;
-  max-width: 75%;
-  padding: 2rem;
+  /*max-width: 75%;
+  padding: 2rem;*/
   background: #fff;
+
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
 }
+
+/* FILE UPLOAD */
+
+.file.has-name .file-name {
+  width: 10em;
+  float: right;
+
+  background: #fff;
+
+  direction: rtl;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*.fa-cog {
+  font-size: 1.75em;
+  text-align: right;
+}*/
 
 /* FILTERS */
 #todoFilters {
@@ -13,19 +36,66 @@ body {
 
 #todoFilters button {
   text-transform: uppercase;
-  margin: 0 .25rem .25rem 0;
+  margin: 0 .5rem .5rem 0;
 }
 
-#todoFilters div.contexts {
-  /*background: red;*/
+#todoFilters div.contexts button  {
+  background: #c5ede3;
+  color: #075943;
 }
 
-#todoFilters div.projects {
-  /*background: green;*/
+#todoFilters div.contexts button span.tag {
+  background: #1aa37e;
+  color: #fff;
+
+  font-weight: bold;
+
+  position: absolute;
+  right: -.75em;
+  top: -.75em;
+  z-index: 100;
+}
+
+#todoFilters div.contexts button.is-dark  {
+  background: #075943;
+  color: #fff;
+}
+
+#todoFilters div.projects button {
+  background: #f1d6f1;
+  color: #5f1a5e;
+
+  position: relative;
+}
+
+#todoFilters div.projects button span.tag {
+  background: #bc30ba;
+  color: #fff;
+
+  font-weight: bold;
+
+  position: absolute;
+  right: -.75em;
+  top: -.75em;
+  z-index: 100;
+}
+
+#todoFilters div.projects button.is-dark {
+  background: #5f1a5e;
+  color: #fff;
 }
 
 #todoFilters div.column {
     padding-left: 0;
+}
+
+/* SORTING */
+
+#btnSorting {
+  float: right;
+  clear: both;
+
+  padding: 0 0 0.5em 3em;
 }
 
 /* TABLE */
@@ -39,8 +109,38 @@ body {
 }
 
 .flex-table .flex-row[role="cell"] {
-  padding: .25rem .75rem .25rem 0;
+  margin: .25rem .5em .25em 0;
   height: auto;
+
+  line-height: 1.5em;
+}
+
+.flex-table .flex-row.checkbox[role="cell"] .fa-square {
+  font-size: 1.5em;
+  color: #666666;
+}
+
+.flex-table .flex-row.text[role="cell"] {
+  max-width: 55%;
+}
+
+.flex-table .flex-row[role="cell"] span.tag {
+  margin: 0 .5em .5em 0;
+}
+
+.flex-table .flex-row.projects[role="cell"],
+.flex-table .flex-row.contexts[role="cell"] {
+  margin-right: 0;
+}
+
+.flex-table .flex-row.projects[role="cell"] span.tag {
+  background: #f1d6f1;
+  color: #5f1a5e;
+}
+
+.flex-table .flex-row.contexts[role="cell"] span.tag {
+  background: #c5ede3;
+  color: #075943;
 }
 
  /*.flex-table:first-of-type {
