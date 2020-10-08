@@ -25,6 +25,12 @@ const store = new Store({
     pathToFile: app.getPath('home')
   }
 });
+
+// id the filter button and put the toggle action on it
+const btnFilter = document.getElementById('btnFilter');
+document.getElementById('btnFilterClick').addEventListener('click', () => {
+  btnFilter.classList.toggle("is-active");
+});
 // id the sort button and put the toggle action on it
 const btnSorting = document.getElementById('btnSorting');
 btnSorting.addEventListener('click', () => {
@@ -46,21 +52,31 @@ global.filepath = undefined;
 
 // read contents of todo.txt file and trigger further action
 function readTodoFile(pathToFile) {
-  fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
-    if (!err) {
-      if(generateTodoData(data) == true) {
-        // write shortened path and file name to empty field
-        fileName.innerHTML = pathToFile;
 
-        console.log('Received data successfully');
+  if(pathToFile) {
+    fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
+
+      if (!err) {
+        // parse the raw data into usefull objects
+        parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
+
+        // pass data on and generate the items for the table
+        if(generateTodoData(parsedData) == true) {
+          // write shortened path and file name to empty field
+          fileName.innerHTML = pathToFile;
+          console.log('Received data successfully');
+        }
+
+        // pass data on and generate the filters
+        if(generateTodoFilters(parsedData, filterCategories) == true) {
+          console.log('Filters successfully loaded');
+        };
+
+      } else {
+        console.log(err);
       }
-      if(generateTodoFilters(data, filterCategories) == true) {
-        console.log('Filters successfully loaded');
-      };
-    } else {
-      console.log(err);
-    }
-  });
+    });
+  }
 }
 
 // ###############
@@ -70,7 +86,7 @@ function readTodoFile(pathToFile) {
 // ###############
 
 // read passed filters, count them and build selection buttons
-function generateTodoFilters(data, filterCategories) {
+function generateTodoFilters(parsedData, filterCategories) {
 
   let selectedFilters = new Array();
 
@@ -79,23 +95,40 @@ function generateTodoFilters(data, filterCategories) {
   todoFilterContainer.innerHTML = "";
 
   // parse the data
-  items = TodoTxt.parse( data, [ new DueExtension() ] );
+  //items = TodoTxt.parse( data, [ new DueExtension() ] );
 
+  // parse through above defined categories, most likely contexts and projects
   for (let i = 0; i < filterCategories.length; i++) {
+
     category = filterCategories[i];
+
+    // configure the headline by adding icon
+    let categoryHeadline;
+    switch(category) {
+      case "contexts":
+        categoryHeadline = "<i class=\"fas fa-plus\"></i> " + category;
+        break;
+      case "projects":
+        categoryHeadline = "<i class=\"fas fa-at\"></i> " + category;
+        break;
+      default:
+        categoryHeadline = category;
+    }
 
     let allFilters = [];
 
-    for (let j = 0; j < items.length; j++) {
-      item = items[j];
+    // run the array and collect all possible filter, duplicates included
+    for (let j = 0; j < parsedData.length; j++) {
+      item = parsedData[j];
       if(item[category]) {
+        // convert the array to a comma separated string for further comparison
         allFilters = allFilters.concat(item[category]);
       }
     }
 
-    // use the string to count how often contexts occur and generate an object to work with
-    let allFiltersCounted = [];
-    allFiltersCounted = allFilters.join(',').split(',').reduce(function (allFilters, filter) {
+    // use the string to count how often filter occur and generate an object to work with
+    //let allFilters = [];
+    allFilters = allFilters.join(',').split(',').reduce(function (allFilters, filter) {
       if (filter in allFilters) {
         allFilters[filter]++;
       } else {
@@ -106,26 +139,36 @@ function generateTodoFilters(data, filterCategories) {
       }
     }, {});
 
-    // only generate contexts filters if there are any
-    if(allFilters.length > 0) {
+
+    // only generate filters if there are any
+    if(allFilters) {
+
       // creates a div for the specific filter section
       let todoFilterContainerSub = document.createElement("div");
-      todoFilterContainerSub.setAttribute("class", category);
+      todoFilterContainerSub.setAttribute("class", "dropdown-item " + category);
 
-      // empty the container before reading fresh data
-      todoFilterContainerSub.innerHTML = "";
+      // create a sub headline element
+      let todoFilterHeadline = document.createElement("h5");
+      todoFilterHeadline.setAttribute("class", "title is-5 " + category);
+      todoFilterHeadline.innerHTML = categoryHeadline;
+
+      // add the headline before category container
+      todoFilterContainerSub.appendChild(todoFilterHeadline);
 
       // build one button each
-      for (let filter in allFiltersCounted) {
+      for (let filter in allFilters) {
         let todoFiltersItem = document.createElement("button");
         todoFiltersItem.setAttribute("class", "btnApplyFilter button");
         todoFiltersItem.setAttribute("name", filter);
         todoFiltersItem.setAttribute("title", category);
-        todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + allFiltersCounted[filter] + "</span>";
+        todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + allFilters[filter] + "</span>";
         todoFilterContainerSub.appendChild(todoFiltersItem);
+
       }
-      // add contexts to the specific filter container
+
+      // add filters to the specific filter container
       todoFilterContainer.appendChild(todoFilterContainerSub);
+
     }
 
     // configure filter buttons
@@ -160,7 +203,7 @@ function generateTodoFilters(data, filterCategories) {
           // push for the first time
           selectedFilters.push([btnApplyFilter.name, btnApplyFilter.title]);
         }
-        generateTodoData(data, selectedFilters);
+        generateTodoData(parsedData, selectedFilters);
       });
     }
   }
@@ -220,9 +263,7 @@ function generateTodoTable(itemsFiltered) {
         let todoTableBodyCellCategory = document.createElement("div");
         todoTableBodyCellCategory.setAttribute("class", "flex-row " + filterCategories[k]);
         todoTableBodyCellCategory.setAttribute("role", "cell");
-        //console.log(item.projects);
         for(let j = 0; j < item[filterCategories[k]].length; j++) {
-            //console.log(item.projects[j]);
             let todoTableBodyCellCategoryItem = document.createElement("span");
             todoTableBodyCellCategoryItem.setAttribute("class", "tag");
             todoTableBodyCellCategoryItem.innerHTML = item[filterCategories[k]][j];
@@ -231,15 +272,6 @@ function generateTodoTable(itemsFiltered) {
         todoTableBodyRow.appendChild(todoTableBodyCellCategory);
       }
     }
-
-    /*
-    // add the interactions elements to the row
-    let todoTableBodyCellButtons = document.createElement("div");
-    todoTableBodyCellButtons.setAttribute("class", "flex-row is-right");
-    todoTableBodyCellButtons.setAttribute("role", "cell");
-    todoTableBodyCellButtons.innerHTML = '<i class="fas fa-edit"></i> <i class="fas fa-trash-alt"></i>'
-    todoTableBodyRow.appendChild(todoTableBodyCellButtons);
-    */
 
     // add the row to the end of the table body
     todoTableContainer.appendChild(todoTableBodyRow);
@@ -264,13 +296,13 @@ function uniq(a) {
 
 // ###############
 // TODO: Remove filterArray if not needed anymore
-function generateTodoData(data, selectedFilters) {
+function generateTodoData(parsedData, selectedFilters) {
 
   //console.log(selectedFilters);
 
   // https://github.com/jmhobbs/jsTodoTxt
   // parse raw data
-  items = TodoTxt.parse( data, [ new DueExtension() ] );
+  //items = TodoTxt.parse( data, [ new DueExtension() ] );
 
   // new variable for items, filtered or not filtered
   let itemsFiltered = [];
@@ -286,18 +318,18 @@ function generateTodoData(data, selectedFilters) {
       let filter = selectedFilters[i][0];
 
       // TODO: Not sure if this works well
-      for (let l = 0; l < items.length; l++) {
-        if(items[l][category] != null && items[l][category].includes(filter)==true) {
-          itemsFiltered.push(items[l]);
+      for (let l = 0; l < parsedData.length; l++) {
+        if(parsedData[l][category] != null && parsedData[l][category].includes(filter)==true) {
+          itemsFiltered.push(parsedData[l]);
         }
       }
     }
 
   // if no filter has been passed
   } else {
-    for (let i = 0; i < items.length; i++) {
+    for (let i = 0; i < parsedData.length; i++) {
       // no filters so every item is passed to new "filtered" array
-      item = items[i];
+      item = parsedData[i];
       itemsFiltered.push(item);
     }
   }
@@ -337,31 +369,22 @@ btnLoadTodoFile.addEventListener('click', () => {
         //properties: ['openFile', 'openDirectory']
       //}
   }).then(file => {
-      // Stating whether dialog operation was
-      // cancelled or not.
-      //console.log(file.canceled);
+      // Stating whether dialog operation was cancelled or not.
+
       if (!file.canceled) {
-        // Updating the GLOBAL filepath variable
-        // to user-selected file.
+        // Updating the GLOBAL filepath variable to user-selected file.
         global.filepath = file.filePaths[0].toString();
 
         // read contents of todo.txt file
         if (global.filepath && !file.canceled) {
-          fs.readFile(global.filepath, {encoding: 'utf-8'}, function(err,data) {
-             if (!err) {
-                  let dataArray = data.split("\n");
 
-                  console.log('Received data successfully');
-                  // Call function to generate or regenerate the table
-                  generateTodoData(data);
-                  // Call function to generate or regenerate the filter list
-                  generateTodoFilters(data, filterCategories);
-                  store.set('pathToFile', global.filepath);
-                  console.log('Saved path in user preferences: ' + global.filepath);
-             } else {
-                  console.log(err);
-              }
-           });
+          // pass path and filename on, to extract and parse the raw data
+          readTodoFile(global.filepath);
+
+          // write new path and file name into storage file
+          store.set('pathToFile', global.filepath);
+          console.log('Storage file updated by new path and filename: ' + global.filepath);
+
          }
       }
   }).catch(err => {

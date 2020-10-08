@@ -1,5 +1,5 @@
 # todo.txt
-## a simple Electron application to manage todo.txt Files
+## A simple Electron application to manage todo.txt files
 ### Used libraries
 - Electron: https://github.com/electron/electron
 - Bulma CSS: https://bulma.io/

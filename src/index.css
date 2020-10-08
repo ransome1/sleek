@@ -13,7 +13,7 @@ body {
 /* FILE UPLOAD */
 
 .file.has-name .file-name {
-  width: 10em;
+  width: auto;
   float: right;
 
   background: #fff;
@@ -37,6 +37,10 @@ body {
 #todoFilters button {
   text-transform: uppercase;
   margin: 0 .5rem .5rem 0;
+}
+
+#todoFilters div.contexts h5 {
+  color: #1aa37e;
 }
 
 #todoFilters div.contexts button  {
@@ -68,6 +72,10 @@ body {
   position: relative;
 }
 
+#todoFilters div.projects h5 {
+  color: #bc30ba;
+}
+
 #todoFilters div.projects button span.tag {
   background: #bc30ba;
   color: #fff;
@@ -89,13 +97,23 @@ body {
     padding-left: 0;
 }
 
-/* SORTING */
+.dropdown-menu {
+  width: 50em;
+}
+
+/* FILTER */
+
+#btnFilter #dropdown-menu2 {
+  /*width: 100%;*/
+}
+
+/* SORT */
 
 #btnSorting {
-  float: right;
+  /*float: right;
   clear: both;
 
-  padding: 0 0 0.5em 3em;
+  padding: 0 0 0.5em 3em;*/
 }
 
 /* TABLE */
