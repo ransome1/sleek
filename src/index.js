@@ -1,15 +1,16 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 // Store user data: read store.js
-const Store = require('./store.js');
-let mainWindow; //do this so that the window object doesn't get GC'd
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
 
-// Store user data: First instantiate the class
+const Store = require('./store.js');
+let mainWindow; //do this so that the window object doesn't get GC'd
+
+// First instantiate the class
 const store = new Store({
   // We'll call our data file 'user-preferences'
   configName: 'user-preferences',
@@ -20,7 +21,9 @@ const store = new Store({
 });
 
 const createWindow = () => {
+  // First we'll get our height and width. This will be the defaults if there wasn't anything saved
   let { width, height } = store.get('windowBounds');
+  
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: width,

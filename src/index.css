@@ -1,5 +1,5 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, FreeSans, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   margin: auto;
   /*max-width: 75%;
   padding: 2rem;*/
@@ -29,9 +29,73 @@ body {
   text-align: right;
 }*/
 
+/* INTERACTION BAR */
+#interactionBar {
+  background: #f5f5f5;
+}
+
+#interactionBar .hero-body {
+  padding: 0;
+}
+
+#interactionBar .hero-body .item {
+  height: 5em;
+  float: left;
+
+  padding: 0 1.5em;
+  /*border-left: 1px solid #fff;
+  border-right: 1px solid #fff;*/
+
+  text-align: center;
+  line-height: 5em;
+
+  cursor: pointer;
+}
+
+#interactionBar .hero-body .item:hover,
+#interactionBar .hero-body .item.is-active {
+  background: #4d4d4d;
+  color: #fff;
+}
+
+#interactionBar .hero-body .item svg {
+  font-size: 1.5em;
+  color: #4d4d4d;
+}
+
+#interactionBar .hero-body .item:hover svg,
+#interactionBar .hero-body .item.is-active svg {
+  font-size: 1.5em;
+  color: inherit;
+}
+
+#interactionBar .hero-body .dropdown {
+  width: 100%;
+  float: left;
+  position: static;
+  display: none;
+
+  background: #4d4d4d;
+}
+
+#interactionBar .hero-body .dropdown.is-active {
+  display: block;
+}
+
+#interactionBar .hero-body .dropdown .dropdown-item {
+  width: 50%;
+  float: left;
+}
+
+#interactionBar .field {
+  float: right;
+  padding-top: 1.25em;
+}
+
 /* FILTERS */
 #todoFilters {
-  margin: 1rem 0;
+  float: left;
+  margin: 2.5em 0;
 }
 
 #todoFilters button {
@@ -39,8 +103,8 @@ body {
   margin: 0 .5rem .5rem 0;
 }
 
-#todoFilters div.contexts h5 {
-  color: #1aa37e;
+#todoFilters div h4 {
+  color: #fff;
 }
 
 #todoFilters div.contexts button  {
@@ -70,10 +134,6 @@ body {
   color: #5f1a5e;
 
   position: relative;
-}
-
-#todoFilters div.projects h5 {
-  color: #bc30ba;
 }
 
 #todoFilters div.projects button span.tag {

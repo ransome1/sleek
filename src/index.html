@@ -18,7 +18,7 @@
   </head>
   <body>
 
-    <section class="hero is-light">
+    <!--<section class="hero is-light">
       <div class="hero-body">
         <div class="container">
           <div class="columns is-variable">
@@ -103,9 +103,9 @@
               </div>
             </div>
 
-            <!--<div class="column is-1">
+            <div class="column is-1">
               <i class="fas fa-cog"></i>
-            </div>-->
+            </div>
 
           </div>
 
@@ -113,9 +113,67 @@
       </div>
     </div>
 
+  </section>-->
+
+    <section id="interactionBar" class="hero">
+
+      <div class="hero-body">
+
+        <div class="container">
+
+          <div id="btnFilter" class="item">
+            <i class="fas fa-filter"></i>&nbsp;&nbsp;Filter the todos
+          </div>
+
+          <div id="btnSorting" class="item">
+            <i class="fas fa-angle-down"></i>&nbsp;&nbsp;Sort the todos
+          </div>
+
+          <div class="field">
+            <div class="file has-name">
+              <label class="file-label">
+                <button id="btnLoadTodoFile" class="file-input" type="file" name="resume"></button>
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    open file
+                  </span>
+                </span>
+                <span id="fileName" class="file-name"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div id="filterDropdown" class="dropdown">
+          <div class="container">
+            <div id="todoFilters"></div>
+            <hr class="dropdown-divider">
+            <div class="dropdown-item">
+              <button class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sortingDropdown" class="dropdown">
+          <div class="container">
+            <!--<div id="todoSorting"></div>-->
+            111
+            <!--<hr class="dropdown-divider">
+            <div class="dropdown-item">
+              <button class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+            </div>-->
+          </div>
+        </div>
+
+      </div>
+
     </section>
 
     <section class="hero">
+
       <div class="hero-body">
 
         <div class="container">
@@ -123,7 +181,9 @@
           <div id="todoTableContainer"></div>
 
         </div>
+
       </div>
+
     </section>
 
   </body>
