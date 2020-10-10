@@ -29,6 +29,9 @@ const store = new Store({
 // TODO: clean up the mess
 let selectedFiltersCollected = new Array;
 
+// get the reference for the table container
+let todoTableContainer = document.getElementById("todoTableContainer");
+
 // id the filter button and put the toggle action on it
 const btnFilter = document.getElementById('btnFilter');
 const filterDropdown = document.getElementById('filterDropdown');
@@ -36,7 +39,7 @@ document.getElementById('btnFilter').addEventListener('click', () => {
   btnFilter.classList.toggle("is-active");
   filterDropdown.classList.toggle("is-active");
 });
-
+/*
 // id the sort button and put the toggle action on it
 const btnSorting = document.getElementById('btnSorting');
 const sortingDropdown = document.getElementById('sortingDropdown');
@@ -44,7 +47,7 @@ document.getElementById('btnSorting').addEventListener('click', () => {
   btnSorting.classList.toggle("is-active");
   sortingDropdown.classList.toggle("is-active");
 });
-
+*/
 const pathToFile = store.get('pathToFile');
 const btnLoadTodoFile = document.getElementById('btnLoadTodoFile');
 const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
@@ -58,7 +61,6 @@ global.parsedData = undefined;
 
 // ###############
 
-// SORT AN 2 DIMENSIONAL ARRAY BY ITS FIRST DIMENSION AND THEN DELETE DUPLICATES
 // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
 
 // ###############
@@ -115,41 +117,69 @@ function readTodoFile(pathToFile) {
 
 // ###############
 
-function buildFilterButtons(selectedFilters) {
+// read passed filters, count them and pass on
+function generateFilterData() {
 
-  let selectedFiltersNoCategory = new Array;
+  // get the reference for the filter container
+  let todoFilterContainer = document.getElementById("todoFilters");
+  // empty the container to prevent duplicates
+  todoFilterContainer.innerHTML = "";
 
-  for(i = 0; i < selectedFilters.length; i++) {
-    selectedFiltersNoCategory.push(selectedFilters[i].slice(0,1));
+  // parse through above defined categories, most likely contexts and projects
+  for (let i = 0; i < filterCategories.length; i++) {
+
+    category = filterCategories[i];
+
+    // TODO: Clean up the mess
+    let selectedFilters = new Array();
+
+    // TODO: clean up the mess
+    let selectedFiltersNoCategory = new Array;
+
+    // run the array and collect all possible filter, duplicates included
+    for (let j = 0; j < parsedData.length; j++) {
+
+      item = parsedData[j];
+
+      if(item[category]) {
+        for(let k = 0; k < item[category].length; k++) {
+          filter = item[category][k];
+
+          // convert the array to a comma separated string for further comparison
+          selectedFilters.push([filter, category]);
+        }
+      }
+    }
+
+    // reduce to 1st dimension so we can count with reduce function
+    for(k = 0; k < selectedFilters.length; k++) {
+      selectedFiltersNoCategory.push(selectedFilters[k].slice(0,1));
+    }
+
+    // delete duplicates and count filters
+    selectedFiltersCounted = selectedFiltersNoCategory.join(',').split(',').reduce(function (selectedFiltersNoCategory, filter) {
+      if (filter in selectedFiltersNoCategory) {
+        selectedFiltersNoCategory[filter]++;
+      } else {
+        selectedFiltersNoCategory[filter] = 1;
+      }
+      if(selectedFiltersNoCategory!=null) {
+        return selectedFiltersNoCategory;
+      }
+    }, {});
+
+    // remove the duplicates
+    selectedFilters = uniqBy(selectedFilters, JSON.stringify);
+
+    buildFilterButtons(selectedFilters, selectedFiltersCounted);
   }
 
-  // delete duplicates and count filters
-  let selectedFiltersCounted = selectedFiltersNoCategory.join(',').split(',').reduce(function (selectedFiltersNoCategory, filter) {
-    if (filter in selectedFiltersNoCategory) {
-      selectedFiltersNoCategory[filter]++;
-    } else {
-      selectedFiltersNoCategory[filter] = 1;
-    }
-    if(selectedFiltersNoCategory!=null) {
-      return selectedFiltersNoCategory;
-    }
-  }, {});
+  // TODO: add a false on err
+  return true;
+}
 
-  // remove the duplicates
-  selectedFilters = uniqBy(selectedFilters, JSON.stringify);
-
-  // configure the headline by adding icon
-  let categoryHeadline;
-  switch(category) {
-    case "contexts":
-      categoryHeadline = "<i class=\"fas fa-plus\"></i> " + category;
-      break;
-    case "projects":
-      categoryHeadline = "<i class=\"fas fa-at\"></i> " + category;
-      break;
-    default:
-      categoryHeadline = category;
-  }
+// build a section for each category and add the buttons to each
+function buildFilterButtons(selectedFilters, selectedFiltersCounted) {
 
   // build the buttons
   // only generate filters if there are any
@@ -164,7 +194,7 @@ function buildFilterButtons(selectedFilters) {
     // create a sub headline element
     let todoFilterHeadline = document.createElement("h4");
     todoFilterHeadline.setAttribute("class", "title is-4 " + category);
-    todoFilterHeadline.innerHTML = categoryHeadline;
+    todoFilterHeadline.innerHTML = category;
 
     // add the headline before category container
     todoFilterContainerSub.appendChild(todoFilterHeadline);
@@ -220,38 +250,40 @@ function buildFilterButtons(selectedFilters) {
   }
 }
 
-// read passed filters, count them and build selection buttons
-function generateFilterData(selectedFiltersCollected) {
+// ###############
 
-  // get the reference for the filter container
-  let todoFilterContainer = document.getElementById("todoFilters");
-  // empty the container to prevent duplicates
-  todoFilterContainer.innerHTML = "";
+// GENERATE THE DATA BEFORE TABLE IS BEING BUILT
 
-  // parse through above defined categories, most likely contexts and projects
-  for (let i = 0; i < filterCategories.length; i++) {
+// ###############
 
-    category = filterCategories[i];
+// TODO: Remove filterArray if not needed anymore
+function generateTodoData(selectedFiltersCollected) {
 
-    // TODO: Clean up the mess
-    let selectedFilters = new Array();
+  //console.log(selectedFiltersCollected);
+  // new variable for items, filtered or not filtered
+  let itemsFiltered = [];
 
-    // run the array and collect all possible filter, duplicates included
-    for (let j = 0; j < parsedData.length; j++) {
+  // check if a filter has been passed
+  if(selectedFiltersCollected!=undefined && selectedFiltersCollected!='') {
 
-      item = parsedData[j];
+    // erst die kategorien, dann jeweils de item und gucken ob kategorie werte hat
+    for (let i = 0; i < selectedFiltersCollected.length; i++) {
 
-      if(item[category]) {
-        for(let k = 0; k < item[category].length; k++) {
-          filter = item[category][k];
+      let category = selectedFiltersCollected[i][1];
+      let filter = selectedFiltersCollected[i][0];
 
-          // convert the array to a comma separated string for further comparison
-          selectedFilters.push([filter, category]);
-        }
-      }
+      itemsFiltered.push(parsedData.filter(item => item[category] == filter));
     }
-    buildFilterButtons(selectedFilters);
+
+  // if no filter has been passed, select all items
+  } else {
+    itemsFiltered = parsedData;
   }
+
+  // pass filtered data to function to build the table
+  generateTodoTable(itemsFiltered.flat(1));
+
+  // TODO: neccessary?
   return true;
 }
 
@@ -263,43 +295,89 @@ function generateFilterData(selectedFiltersCollected) {
 
 function generateTodoTable(itemsFiltered) {
 
-  // get the reference for the table container
-  let todoTableContainer = document.getElementById("todoTableContainer");
-
   // empty the table before reading fresh data
   todoTableContainer.innerHTML = "";
 
+  //itemsFiltered.sort();
+  let itemsWithPriority = new Array();
+  let itemsWithNoPriority = new Array();
+
   // create all rows
   for (let i = 0; i < itemsFiltered.length; i++) {
-    item = itemsFiltered[i];
+
+    // TODO: Maybe meaningless
+    if(itemsFiltered[i].priority!=null) {
+      itemsWithPriority.push(itemsFiltered[i]);
+      delete itemsFiltered[i];
+    } else {
+      itemsWithNoPriority.push(itemsFiltered[i]);
+    }
+  }
+
+  addTableRows(itemsWithPriority, true);
+
+  addTableRows(itemsWithNoPriority, false);
+
+}
+
+function addTableRows(items, priority) {
+
+  if(priority == true) {
+    items.sort();
+  }
+
+  let previousItem;
+
+  for (let i = 0; i < items.length; i++) {
+
+    item = items[i];
+
+    if(item.priority && item.priority!=previousItem) {
+      previousItem = items[i].priority;
+      priority = items[i].priority;
+      //console.log("WECHSEL: " + item.priority);
+      // creates a divider row for priority group
+      let todoTableBodyRowDivider = document.createElement("div");
+      todoTableBodyRowDivider.setAttribute("class", "flex-table priority");
+      todoTableBodyRowDivider.setAttribute("role", "rowgroup");
+
+      let todoTableBodyCellPriority = document.createElement("div");
+      todoTableBodyCellPriority.setAttribute("class", "flex-row checkbox");
+      todoTableBodyCellPriority.setAttribute("role", "cell");
+      todoTableBodyCellPriority.innerHTML = priority;
+      todoTableBodyRowDivider.appendChild(todoTableBodyCellPriority);
+
+      // add the row to the end of the table body
+      todoTableContainer.appendChild(todoTableBodyRowDivider);
+
+    }
 
     // creates a table row
     let todoTableBodyRow = document.createElement("div");
-    todoTableBodyRow.setAttribute("class", "flex-table");
+    if(item.complete==true) {
+      todoTableBodyRow.setAttribute("class", "flex-table completed");
+    } else {
+      todoTableBodyRow.setAttribute("class", "flex-table");
+    }
     todoTableBodyRow.setAttribute("role", "rowgroup");
 
     // add the checkbox
     let todoTableBodyCellCheckbox = document.createElement("div");
     todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
     todoTableBodyCellCheckbox.setAttribute("role", "cell");
-    todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>"
-    todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
-
-    // creates cell for priority tag
-    let todoTableBodyCell_priority = document.createElement("div");
-    todoTableBodyCell_priority.setAttribute("class", "flex-row priority");
-    todoTableBodyCell_priority.setAttribute("role", "cell");
-    if(item.priority!=null) {
-      todoTableBodyCell_priority.innerHTML = item.priority;
+    if(item.complete==true) {
+      todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-check-square\"></i>";
+    } else {
+      todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
     }
-    todoTableBodyRow.appendChild(todoTableBodyCell_priority);
+    todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
 
     // creates cell for the text
     let todoTableBodyCell_text = document.createElement("div");
     todoTableBodyCell_text.setAttribute("class", "flex-row text");
     todoTableBodyCell_text.setAttribute("role", "cell");
     if(item.text) {
-        todoTableBodyCell_text.innerHTML = item.text;
+        todoTableBodyCell_text.innerHTML =  item.text;
     }
     todoTableBodyRow.appendChild(todoTableBodyCell_text);
 
@@ -322,51 +400,6 @@ function generateTodoTable(itemsFiltered) {
     // add the row to the end of the table body
     todoTableContainer.appendChild(todoTableBodyRow);
   }
-}
-
-// ###############
-
-// GENERATE THE DATA BEFORE TABLE IS BUILT
-
-// ###############
-// TODO: Remove filterArray if not needed anymore
-function generateTodoData(selectedFilters) {
-
-  // new variable for items, filtered or not filtered
-  let itemsFiltered = [];
-
-  // check if a filter has been passed
-  if(selectedFilters!=undefined && selectedFilters!='') {
-
-    // erst die kategorien, dann jeweils de item und gucken ob kategorie werte hat
-    for (let i = 0; i < selectedFilters.length; i++) {
-
-      let category = selectedFilters[i][1];
-      let filter = selectedFilters[i][0];
-
-      // TODO: Not sure if this works well
-      for (let l = 0; l < parsedData.length; l++) {
-        if(parsedData[l][category] != null && parsedData[l][category].includes(filter)==true) {
-          itemsFiltered.push(parsedData[l]);
-        }
-      }
-    }
-
-  // if no filter has been passed
-  } else {
-
-    for (let i = 0; i < parsedData.length; i++) {
-      // no filters so every item is passed to new "filtered" array
-      item = parsedData[i];
-      itemsFiltered.push(item);
-    }
-  }
-
-  console.log(itemsFiltered);
-
-  // pass filtered data to function to build the table
-  generateTodoTable(itemsFiltered);
-  return true;
 }
 
 // ###############

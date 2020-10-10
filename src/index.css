@@ -186,6 +186,16 @@ body {
   padding: .25rem;
 }
 
+.flex-table.priority {
+  border: none;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.flex-table.completed {
+  color: grey;
+}
+
 .flex-table .flex-row[role="cell"] {
   margin: .25rem .5em .25em 0;
   height: auto;
@@ -193,10 +203,10 @@ body {
   line-height: 1.5em;
 }
 
-.flex-table .flex-row.checkbox[role="cell"] .fa-square {
+/*.flex-table .flex-row.checkbox[role="cell"] .fa-square {
   font-size: 1.5em;
   color: #666666;
-}
+}*/
 
 .flex-table .flex-row.text[role="cell"] {
   max-width: 55%;
