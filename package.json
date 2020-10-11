@@ -1,8 +1,8 @@
 {
-  "name": "todo-txt",
-  "productName": "todo.txt",
-  "version": "1.0.0",
-  "description": "Simple app to manage todo.txt files",
+  "name": "tidy.txt",
+  "productName": "tidy.txt",
+  "version": "0.0.1",
+  "description": "A simple and tidy app to manage a todo.txt file.",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -21,7 +21,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "todo.txt"
+            "name": "tidy.txt"
           }
         },
         {

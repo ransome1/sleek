@@ -29,6 +29,9 @@ const store = new Store({
 // TODO: clean up the mess
 let selectedFiltersCollected = new Array;
 
+// TODO: clean up the mess
+let previousItem;
+
 // get the reference for the table container
 let todoTableContainer = document.getElementById("todoTableContainer");
 
@@ -48,8 +51,26 @@ document.getElementById('btnSorting').addEventListener('click', () => {
   sortingDropdown.classList.toggle("is-active");
 });
 */
+
+// just reread the file and flush all filters and items
+document.getElementById('btnResetAllFilters').addEventListener('click', () => {
+  selectedFiltersCollected = [];
+  readTodoFile(pathToFile);
+});
+
+// reread the data but sort it asc
+document.getElementById('toggleSort').addEventListener('click', () => {
+  if(sort==false) {
+    sort = true;
+  } else {
+    sort = false;
+  }
+  generateTodoData(selectedFiltersCollected);
+});
+
 const pathToFile = store.get('pathToFile');
-const btnLoadTodoFile = document.getElementById('btnLoadTodoFile');
+const btnLoadTodoFile = document.getElementsByClassName('btnLoadTodoFile');
+
 const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
 const filterCategories = ["contexts", "projects"];
 
@@ -58,6 +79,11 @@ global.filepath = undefined;
 
 // make the parsed data available
 global.parsedData = undefined;
+
+global.selectedFiltersCollected = undefined;
+
+// sort
+let sort = false;
 
 // ###############
 
@@ -80,7 +106,7 @@ function uniqBy(a, key) {
 // ###############
 
 // read contents of todo.txt file and trigger further action
-function readTodoFile(pathToFile) {
+function readTodoFile(pathToFile, sort) {
 
   if(pathToFile) {
 
@@ -89,24 +115,26 @@ function readTodoFile(pathToFile) {
       fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
 
         if (!err) {
-        // parse the raw data into usefull objects
-        parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
 
-        // pass data on and generate the items for the table
-        if(generateTodoData() == true) {
-          // write shortened path and file name to empty field
-          fileName.innerHTML = pathToFile;
-          console.log('Received data successfully');
+          // parse the raw data into usefull objects
+          parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
+
+          // pass data on and generate the items for the table
+          if(generateTodoData() == true) {
+            // write shortened path and file name to empty field
+            //fileName.innerHTML = pathToFile;
+            console.log('Received data successfully');
+          }
+
+          // pass data on and generate the filters
+          if(generateFilterData() == true) {
+            console.log('Filters successfully loaded');
+          };
+
+        } else {
+          document.getElementById('onboarding').setAttribute('class','modal is-active');
+          console.log(err);
         }
-
-        // pass data on and generate the filters
-        if(generateFilterData() == true) {
-          console.log('Filters successfully loaded');
-        };
-
-      } else {
-        console.log(err);
-      }
     });
   }
 }
@@ -242,7 +270,6 @@ function buildFilterButtons(selectedFilters, selectedFiltersCounted) {
         if(filterFound!=true) {
           selectedFiltersCollected.push([btnApplyFilter.name, btnApplyFilter.title]);
         }
-
         generateTodoData(selectedFiltersCollected);
 
       });
@@ -259,20 +286,28 @@ function buildFilterButtons(selectedFilters, selectedFiltersCounted) {
 // TODO: Remove filterArray if not needed anymore
 function generateTodoData(selectedFiltersCollected) {
 
-  //console.log(selectedFiltersCollected);
   // new variable for items, filtered or not filtered
   let itemsFiltered = [];
 
   // check if a filter has been passed
   if(selectedFiltersCollected!=undefined && selectedFiltersCollected!='') {
 
-    // erst die kategorien, dann jeweils de item und gucken ob kategorie werte hat
+    // TODO: why?
     for (let i = 0; i < selectedFiltersCollected.length; i++) {
 
-      let category = selectedFiltersCollected[i][1];
-      let filter = selectedFiltersCollected[i][0];
+      for(var j = 0; j < parsedData.length; j++) {
+        if(parsedData[j][selectedFiltersCollected[i][1]]) {
 
-      itemsFiltered.push(parsedData.filter(item => item[category] == filter));
+          // check if the selected filter is one of the array values of the category
+          if(parsedData[j][selectedFiltersCollected[i][1]].includes(selectedFiltersCollected[i][0])) {
+            itemsFiltered.push(parsedData[j]);
+          }
+        }
+      }
+
+      // remove duplicate items using magic function I do not even understand
+      itemsFiltered = uniqBy(itemsFiltered, JSON.stringify);
+
     }
 
   // if no filter has been passed, select all items
@@ -280,8 +315,19 @@ function generateTodoData(selectedFiltersCollected) {
     itemsFiltered = parsedData;
   }
 
-  // pass filtered data to function to build the table
-  generateTodoTable(itemsFiltered.flat(1));
+  // sort asc if requested
+  // https://stackoverflow.com/a/45544166
+  let itemsFilteredSorted = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text))
+
+  if(sort==true) {
+    console.log("sortiert");
+    // pass filtered data to function to build the table
+    generateTodoTable(itemsFilteredSorted);
+  } else {
+    console.log("unsortiert");
+    // pass filtered data to function to build the table
+    generateTodoTable(itemsFiltered);
+  }
 
   // TODO: neccessary?
   return true;
@@ -298,108 +344,119 @@ function generateTodoTable(itemsFiltered) {
   // empty the table before reading fresh data
   todoTableContainer.innerHTML = "";
 
-  //itemsFiltered.sort();
-  let itemsWithPriority = new Array();
-  let itemsWithNoPriority = new Array();
-
-  // create all rows
-  for (let i = 0; i < itemsFiltered.length; i++) {
-
-    // TODO: Maybe meaningless
-    if(itemsFiltered[i].priority!=null) {
-      itemsWithPriority.push(itemsFiltered[i]);
-      delete itemsFiltered[i];
-    } else {
-      itemsWithNoPriority.push(itemsFiltered[i]);
-    }
-  }
+  let itemsWithPriority = itemsFiltered.filter(item => item.priority!=null);
+  let itemsWithNoPriority = itemsFiltered.filter(item => item.priority==null);
+  //let itemsComplete = itemsFilteredSorted.filter(item => item.complete==true);
 
   addTableRows(itemsWithPriority, true);
 
   addTableRows(itemsWithNoPriority, false);
 
+  previousItem = undefined;
+
 }
 
 function addTableRows(items, priority) {
 
-  if(priority == true) {
-    items.sort();
-  }
+  if(priority==true) {
 
-  let previousItem;
+    // TODO: whats happening here?
+    let itemsByPriority = items.reduce((r, a) => {
+     r[a.priority] = [...r[a.priority] || [], a];
+     return r;
+    }, {});
 
-  for (let i = 0; i < items.length; i++) {
+    // convert the not sortable object into an array and sort it a to z
+    itemsByPriority = Object.entries(itemsByPriority).sort();
 
-    item = items[i];
+    for (let j = 0; j < itemsByPriority.length; j++) {
 
-    if(item.priority && item.priority!=previousItem) {
-      previousItem = items[i].priority;
-      priority = items[i].priority;
-      //console.log("WECHSEL: " + item.priority);
-      // creates a divider row for priority group
-      let todoTableBodyRowDivider = document.createElement("div");
-      todoTableBodyRowDivider.setAttribute("class", "flex-table priority");
-      todoTableBodyRowDivider.setAttribute("role", "rowgroup");
+      for (let i = 0; i < itemsByPriority[j][1].length; i++) {
+        item = itemsByPriority[j][1][i];
 
-      let todoTableBodyCellPriority = document.createElement("div");
-      todoTableBodyCellPriority.setAttribute("class", "flex-row checkbox");
-      todoTableBodyCellPriority.setAttribute("role", "cell");
-      todoTableBodyCellPriority.innerHTML = priority;
-      todoTableBodyRowDivider.appendChild(todoTableBodyCellPriority);
-
-      // add the row to the end of the table body
-      todoTableContainer.appendChild(todoTableBodyRowDivider);
-
-    }
-
-    // creates a table row
-    let todoTableBodyRow = document.createElement("div");
-    if(item.complete==true) {
-      todoTableBodyRow.setAttribute("class", "flex-table completed");
-    } else {
-      todoTableBodyRow.setAttribute("class", "flex-table");
-    }
-    todoTableBodyRow.setAttribute("role", "rowgroup");
-
-    // add the checkbox
-    let todoTableBodyCellCheckbox = document.createElement("div");
-    todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
-    todoTableBodyCellCheckbox.setAttribute("role", "cell");
-    if(item.complete==true) {
-      todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-check-square\"></i>";
-    } else {
-      todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
-    }
-    todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
-
-    // creates cell for the text
-    let todoTableBodyCell_text = document.createElement("div");
-    todoTableBodyCell_text.setAttribute("class", "flex-row text");
-    todoTableBodyCell_text.setAttribute("role", "cell");
-    if(item.text) {
-        todoTableBodyCell_text.innerHTML =  item.text;
-    }
-    todoTableBodyRow.appendChild(todoTableBodyCell_text);
-
-    for (let k = 0; k < filterCategories.length; k++) {
-      // creates cell for the projects
-      if(item[filterCategories[k]]!=null) {
-        let todoTableBodyCellCategory = document.createElement("div");
-        todoTableBodyCellCategory.setAttribute("class", "flex-row " + filterCategories[k]);
-        todoTableBodyCellCategory.setAttribute("role", "cell");
-        for(let j = 0; j < item[filterCategories[k]].length; j++) {
-            let todoTableBodyCellCategoryItem = document.createElement("span");
-            todoTableBodyCellCategoryItem.setAttribute("class", "tag");
-            todoTableBodyCellCategoryItem.innerHTML = item[filterCategories[k]][j];
-            todoTableBodyCellCategory.appendChild(todoTableBodyCellCategoryItem);
-        }
-        todoTableBodyRow.appendChild(todoTableBodyCellCategory);
+        // divider row for new priority
+        createTableDividerRow(item, previousItem, itemsByPriority[j][0]);
+        // table row with item data
+        createTableRow(item);
       }
     }
+  } else {
+    for (let i = 0; i < items.length; i++) {
+      item = items[i];
+      // table row with item data
+      createTableRow(item);
+    }
+  }
+}
+
+function createTableDividerRow() {
+
+  if(item.priority && item.priority!=previousItem) {
+    previousItem = item.priority;
+    priority = item.priority;
+    let todoTableBodyRowDivider = document.createElement("div");
+    todoTableBodyRowDivider.setAttribute("class", "flex-table priority");
+    todoTableBodyRowDivider.setAttribute("role", "rowgroup");
+
+    let todoTableBodyCellPriority = document.createElement("div");
+    todoTableBodyCellPriority.setAttribute("class", "flex-row checkbox");
+    todoTableBodyCellPriority.setAttribute("role", "cell");
+    todoTableBodyCellPriority.innerHTML = priority;
+    todoTableBodyRowDivider.appendChild(todoTableBodyCellPriority);
 
     // add the row to the end of the table body
-    todoTableContainer.appendChild(todoTableBodyRow);
+    todoTableContainer.appendChild(todoTableBodyRowDivider);
   }
+}
+
+function createTableRow() {
+  // creates a table row for one item
+  let todoTableBodyRow = document.createElement("div");
+  if(item.complete==true) {
+    todoTableBodyRow.setAttribute("class", "flex-table completed");
+  } else {
+    todoTableBodyRow.setAttribute("class", "flex-table");
+  }
+  todoTableBodyRow.setAttribute("role", "rowgroup");
+
+  // add the checkbox
+  let todoTableBodyCellCheckbox = document.createElement("div");
+  todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
+  todoTableBodyCellCheckbox.setAttribute("role", "cell");
+  if(item.complete==true) {
+    todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-check-square\"></i>";
+  } else {
+    todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
+  }
+  todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
+
+  // creates cell for the text
+  let todoTableBodyCell_text = document.createElement("div");
+  todoTableBodyCell_text.setAttribute("class", "flex-row text");
+  todoTableBodyCell_text.setAttribute("role", "cell");
+  if(item.text) {
+      todoTableBodyCell_text.innerHTML =  item.text;
+  }
+  todoTableBodyRow.appendChild(todoTableBodyCell_text);
+
+  for (let k = 0; k < filterCategories.length; k++) {
+    // creates cell for the projects
+    if(item[filterCategories[k]]!=null) {
+      let todoTableBodyCellCategory = document.createElement("div");
+      todoTableBodyCellCategory.setAttribute("class", "flex-row " + filterCategories[k]);
+      todoTableBodyCellCategory.setAttribute("role", "cell");
+      for(let j = 0; j < item[filterCategories[k]].length; j++) {
+          let todoTableBodyCellCategoryItem = document.createElement("span");
+          todoTableBodyCellCategoryItem.setAttribute("class", "tag");
+          todoTableBodyCellCategoryItem.innerHTML = item[filterCategories[k]][j];
+          todoTableBodyCellCategory.appendChild(todoTableBodyCellCategoryItem);
+      }
+      todoTableBodyRow.appendChild(todoTableBodyCellCategory);
+    }
+  }
+
+  // add the row to the end of the table body
+  todoTableContainer.appendChild(todoTableBodyRow);
 }
 
 // ###############
@@ -409,52 +466,59 @@ function addTableRows(items, priority) {
 // ###############
 
 if(btnLoadTodoFile) {
-  btnLoadTodoFile.addEventListener('click', () => {
 
-    // Resolves to a Promise<Object>
-    dialog.showOpenDialog({
-        title: 'Select yout todo.txt file',
-        defaultPath: path.join(app.getPath('home')),
-        buttonLabel: 'Open',
+  for (var i = 0; i < btnLoadTodoFile.length; i++) {
 
-        // Restricting the user to only Text Files.
-        filters: [
-            {
-                name: 'Text Files',
-                extensions: ['txt']
-            }, ],
+    btnLoadTodoFile[i].addEventListener('click', () => {
 
-        // Specifying the File Selector Property
-        //if (process.platform !== 'darwin') {
-          // If the platform is 'win32' or 'Linux'
-          properties: ['openFile']
-        //} else {
-          // If the platform is 'darwin' (macOS)
-          //properties: ['openFile', 'openDirectory']
-        //}
-    }).then(file => {
-        // Stating whether dialog operation was cancelled or not.
+      // Resolves to a Promise<Object>
+      dialog.showOpenDialog({
+          title: 'Select yout todo.txt file',
+          defaultPath: path.join(app.getPath('home')),
+          buttonLabel: 'Open',
 
-        if (!file.canceled) {
-          // Updating the GLOBAL filepath variable to user-selected file.
-          global.filepath = file.filePaths[0].toString();
+          // Restricting the user to only Text Files.
+          filters: [
+              {
+                  name: 'Text Files',
+                  extensions: ['txt']
+              }, ],
 
-          // read contents of todo.txt file
-          if (global.filepath && !file.canceled) {
+          // Specifying the File Selector Property
+          //if (process.platform !== 'darwin') {
+            // If the platform is 'win32' or 'Linux'
+            properties: ['openFile']
+          //} else {
+            // If the platform is 'darwin' (macOS)
+            //properties: ['openFile', 'openDirectory']
+          //}
+      }).then(file => {
+          // Stating whether dialog operation was cancelled or not.
 
-            // pass path and filename on, to extract and parse the raw data
-            readTodoFile(global.filepath);
+          if (!file.canceled) {
+            // Updating the GLOBAL filepath variable to user-selected file.
+            global.filepath = file.filePaths[0].toString();
 
-            // write new path and file name into storage file
-            store.set('pathToFile', global.filepath);
-            console.log('Storage file updated by new path and filename: ' + global.filepath);
+            // read contents of todo.txt file
+            if (global.filepath && !file.canceled) {
 
-           }
-        }
-    }).catch(err => {
-        console.log(err)
+              // pass path and filename on, to extract and parse the raw data
+              readTodoFile(global.filepath);
+
+              // close the modal layer if open
+              document.getElementById('onboarding').setAttribute('class','modal');
+
+              // write new path and file name into storage file
+              store.set('pathToFile', global.filepath);
+              console.log('Storage file updated by new path and filename: ' + global.filepath);
+
+             }
+          }
+      }).catch(err => {
+          console.log(err)
+      });
     });
-  });
+  }
 }
 
 // ###############
@@ -465,5 +529,8 @@ if(btnLoadTodoFile) {
 
 if(pathToFile) {
   readTodoFile(pathToFile);
-  console.log('Previous file loaded: ' + pathToFile);
+  console.log('todo.txt file loaded: ' + pathToFile);
+  document.getElementById('onboarding').setAttribute('class','modal');
+} else {
+  document.getElementById('onboarding').setAttribute('class','modal is-active');
 }

@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>todo.txt</title>
+    <title>tidy.txt</title>
 
     <link rel="stylesheet" href="bulma.min.css">
     <link rel="stylesheet" href="index.css">
@@ -31,11 +31,26 @@
           <!--<div id="btnSorting" class="item">
             <i class="fas fa-angle-down"></i>&nbsp;&nbsp;Sort the todos
           </div>-->
+          <div class="sort">
+            <label class="switch">
+              <input type="checkbox" id="toggleSort">
+              <span class="slider round"></span>
+            </label>
+            <label for="sort" class="text">Sort alphabetically</label>
+          </div>
+
+          <div class="sort">
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <span class="text">Show completed</span>
+          </div>
 
           <div class="field">
-            <div class="file has-name">
+            <div class="file">
               <label class="file-label">
-                <button id="btnLoadTodoFile" class="file-input" type="file" name="resume"></button>
+                <button class="btnLoadTodoFile file-input" type="file" name="resume"></button>
                 <span class="file-cta">
                   <span class="file-icon">
                     <i class="fas fa-upload"></i>
@@ -44,7 +59,7 @@
                     open file
                   </span>
                 </span>
-                <span id="fileName" class="file-name"></span>
+                <!--<span id="fileName" class="file-name"></span>-->
               </label>
             </div>
           </div>
@@ -53,27 +68,50 @@
         <div id="filterDropdown" class="dropdown">
           <div class="container">
             <div id="todoFilters"></div>
-            <!--<hr class="dropdown-divider">
+
             <div class="dropdown-item">
-              <button class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
-            </div>-->
+              <hr class="dropdown-divider">
+              <div class="dropdown-item">
+                <button id="btnResetAllFilters" class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div id="sortingDropdown" class="dropdown">
+        <!--<div id="sortingDropdown" class="dropdown">
           <div class="container">
-            <!--<div id="todoSorting"></div>-->
+            <div id="todoSorting"></div>
             111
-            <!--<hr class="dropdown-divider">
+            <hr class="dropdown-divider">
             <div class="dropdown-item">
               <button class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
-            </div>-->
+            </div>
           </div>
-        </div>
+        </div>-->
 
       </div>
 
     </section>
+
+    <!--<section class="hero">
+
+      <div class="hero-body">
+
+        <div class="container">
+
+          <div class="control has-icons-left has-icons-right is-loading">
+            <input class="input" type="search" placeholder="Search the todos">
+            <span class="icon is-medium is-left">
+              <i class="fas fa-search"></i>
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>-->
 
     <section class="hero">
 
@@ -88,6 +126,42 @@
       </div>
 
     </section>
+
+    <div id="onboarding" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <h1 class="title is-1">tidy.txt</h1>
+        <p class="subtitle">A simple and tidy app to manage a todo.txt file.</p>
+
+        <div class="columns">
+          <div class="column">
+
+            <p>Choose an <strong>existing</strong> todo.txt from your file system.</p>
+
+            <p>
+              <div class="btnLoadTodoFile">
+                <p><i class="fas fa-upload"></i></p>
+                <p>open todo.txt file</p>
+              </div>
+            </p>
+
+          </div>
+
+          <div class="column">
+
+            <p>Create a <strong>new</strong> todo.txt file, if you don't already have one.</p>
+            <p>
+              <div id="btnCreatTodoFileOnboarding">
+                <p><i class="fas fa-plus-square"></i></p>
+                <p>create todo.txt file</p>
+              </div>
+            </p>
+          </div>
+        </div>
+
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
 
   </body>
 </html>

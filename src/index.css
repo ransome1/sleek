@@ -10,6 +10,10 @@ body {
   -ms-user-select: none;      /* IE 10+ */
 }
 
+body, button, input, optgroup, select, textarea {
+  font-family: -apple-system, BlinkMacSystemFont, FreeSans, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
 /* FILE UPLOAD */
 
 .file.has-name .file-name {
@@ -28,6 +32,56 @@ body {
   font-size: 1.75em;
   text-align: right;
 }*/
+
+/* MODAL */
+
+.modal .modal-background {
+  background: #fff;
+}
+
+.modal .modal-content {
+  /*width: 50em;*/
+  /*max-width: 60%;*/
+  padding: 2em;
+  text-align: center;
+}
+
+.modal .modal-content h1 {
+  margin: 0;
+}
+
+.modal .modal-content .subtitle {
+  margin: .25em 0 3em 0;
+}
+
+.modal .modal-content .column {
+  padding: 0 3em;
+}
+
+.modal .modal-content .column div {
+  background: #363636;
+  color: #fff;
+
+  border-radius: 4px;
+
+  padding: 1em 1em .5em 1em;
+
+  font-size: 1.15em;
+
+  cursor: pointer;
+}
+
+.modal .modal-content .column div svg {
+  font-size: 1.15em;
+}
+
+.modal .modal-content .column p {
+  margin-bottom: 0.5em;
+}
+
+.column:first-child {
+  border-right: .25em solid #f5f5f5;
+}
 
 /* INTERACTION BAR */
 #interactionBar {
@@ -54,20 +108,15 @@ body {
 
 #interactionBar .hero-body .item:hover,
 #interactionBar .hero-body .item.is-active {
-  background: #4d4d4d;
-  color: #fff;
+  background: #ebebeb;
+  /*color: #fff;*/
 }
 
 #interactionBar .hero-body .item svg {
-  font-size: 1.5em;
+  font-size: 1.25em;
   color: #4d4d4d;
 }
 
-#interactionBar .hero-body .item:hover svg,
-#interactionBar .hero-body .item.is-active svg {
-  font-size: 1.5em;
-  color: inherit;
-}
 
 #interactionBar .hero-body .dropdown {
   width: 100%;
@@ -75,7 +124,9 @@ body {
   position: static;
   display: none;
 
-  background: #4d4d4d;
+  background: #ebebeb;
+
+  /*box-shadow: 0 -1em 2em inset rgba(0, 0, 0, 0.05);*/
 }
 
 #interactionBar .hero-body .dropdown.is-active {
@@ -85,6 +136,7 @@ body {
 #interactionBar .hero-body .dropdown .dropdown-item {
   width: 50%;
   float: left;
+  padding: 1em 2em 1em 0;
 }
 
 #interactionBar .field {
@@ -99,17 +151,22 @@ body {
 }
 
 #todoFilters button {
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   margin: 0 .5rem .5rem 0;
 }
 
-#todoFilters div h4 {
+/*#todoFilters div h4 {
   color: #fff;
-}
+}*/
 
 #todoFilters div.contexts button  {
   background: #c5ede3;
   color: #075943;
+  border: none;
+}
+
+#todoFilters div.contexts button:hover {
+  background: #c9f2e8;
 }
 
 #todoFilters div.contexts button span.tag {
@@ -132,8 +189,11 @@ body {
 #todoFilters div.projects button {
   background: #f1d6f1;
   color: #5f1a5e;
+  border: none;
+}
 
-  position: relative;
+#todoFilters div.projects button:hover {
+  background: #f7dcf7;
 }
 
 #todoFilters div.projects button span.tag {
@@ -240,3 +300,81 @@ body {
 	 color: white;
 	 border-color: #1565c0;
 }*/
+
+/* https://www.w3schools.com/howto/howto_css_switch.asp */
+
+/* The switch - the box around the slider */
+.sort {
+  float: left;
+  padding-top: 1.5em;
+  margin: 0 1.5em;
+  line-height: 2em;
+}
+
+.switch {
+ position: relative;
+ display: inline-block;
+ width: 56px;
+ height: 31px;
+ float: left;
+ margin-right: .7em;
+}
+
+.switch .text {
+  float: left;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+ opacity: 0;
+ width: 0;
+ height: 0;
+}
+
+/* The slider */
+.slider {
+ position: absolute;
+ cursor: pointer;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-color: #ccc;
+ -webkit-transition: .4s;
+ transition: .4s;
+}
+
+.slider:before {
+ position: absolute;
+ content: "";
+ height: 25px;
+ width: 25px;
+ left: 4px;
+ bottom: 3px;
+ background-color: white;
+ -webkit-transition: .4s;
+ transition: .4s;
+}
+
+input:checked + .slider {
+ background-color: #4a4a4a;
+}
+
+input:focus + .slider {
+ box-shadow: 0 0 1px #4a4a4a;
+}
+
+input:checked + .slider:before {
+ -webkit-transform: translateX(25px);
+ -ms-transform: translateX(25px);
+ transform: translateX(25px);
+}
+
+/* Rounded sliders */
+.slider.round {
+ border-radius: 30px;
+}
+
+.slider.round:before {
+ border-radius: 50%;
+}

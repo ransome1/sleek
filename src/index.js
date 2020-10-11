@@ -16,14 +16,14 @@ const store = new Store({
   configName: 'user-preferences',
   defaults: {
     // 800x600 is the default size of our window
-    windowBounds: { width: 800, height: 600 }
+    windowBounds: { width: 1000, height: 800 }
   }
 });
 
 const createWindow = () => {
   // First we'll get our height and width. This will be the defaults if there wasn't anything saved
   let { width, height } = store.get('windowBounds');
-  
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: width,
