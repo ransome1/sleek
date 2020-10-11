@@ -1,5 +1,5 @@
-# todo.txt
-## A simple Electron application to manage todo.txt files
+# tidy.txt
+## A simple and tidy app to manage a todo.txt file.
 ### Used libraries
 - Electron: https://github.com/electron/electron
 - Bulma CSS: https://bulma.io/
