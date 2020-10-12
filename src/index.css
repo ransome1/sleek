@@ -1,8 +1,5 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, FreeSans, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   margin: auto;
-  /*max-width: 75%;
-  padding: 2rem;*/
   background: #fff;
 
   -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -11,7 +8,7 @@ body {
 }
 
 body, button, input, optgroup, select, textarea {
-  font-family: -apple-system, BlinkMacSystemFont, FreeSans, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans",  sans-serif;
 }
 
 /* FILE UPLOAD */

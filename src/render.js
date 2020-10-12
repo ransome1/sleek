@@ -21,7 +21,6 @@ const store = new Store({
   // we'll call our data file 'user-preferences'
   configName: 'user-preferences',
   defaults: {
-    // users home directory as default
     pathToFile: app.getPath('home')
   }
 });
@@ -42,30 +41,11 @@ document.getElementById('btnFilter').addEventListener('click', () => {
   btnFilter.classList.toggle("is-active");
   filterDropdown.classList.toggle("is-active");
 });
-/*
-// id the sort button and put the toggle action on it
-const btnSorting = document.getElementById('btnSorting');
-const sortingDropdown = document.getElementById('sortingDropdown');
-document.getElementById('btnSorting').addEventListener('click', () => {
-  btnSorting.classList.toggle("is-active");
-  sortingDropdown.classList.toggle("is-active");
-});
-*/
 
 // just reread the file and flush all filters and items
 document.getElementById('btnResetAllFilters').addEventListener('click', () => {
   selectedFiltersCollected = [];
   readTodoFile(pathToFile);
-});
-
-// reread the data but sort it asc
-document.getElementById('toggleSort').addEventListener('click', () => {
-  if(sort==false) {
-    sort = true;
-  } else {
-    sort = false;
-  }
-  generateTodoData(selectedFiltersCollected);
 });
 
 const pathToFile = store.get('pathToFile');
@@ -80,10 +60,46 @@ global.filepath = undefined;
 // make the parsed data available
 global.parsedData = undefined;
 
+// TODO: clean up the mess
 global.selectedFiltersCollected = undefined;
 
-// sort
-let sort = false;
+// sort alphabetically
+let sortAlphabetically = store.get('sortAlphabetically');
+
+// set the checked attribute according to the persisted value
+document.getElementById('toggleSort').checked = sortAlphabetically;
+
+// reread the data but sort it asc
+document.getElementById('toggleSort').addEventListener('click', () => {
+  if(sortAlphabetically==false) {
+    sortAlphabetically = true;
+  } else {
+    sortAlphabetically = false;
+  }
+  // persist the sorting
+  store.set('sortAlphabetically', sortAlphabetically);
+  // regenerate the table considering the sort value
+  generateTodoData(selectedFiltersCollected);
+});
+
+// show completed
+let showCompleted = store.get('showCompleted');
+
+// set the checked attribute according to the persisted value
+document.getElementById('showCompleted').checked = showCompleted;
+
+// reread the data but sort it asc
+document.getElementById('showCompleted').addEventListener('click', () => {
+  if(showCompleted==false) {
+    showCompleted = true;
+  } else {
+    showCompleted = false;
+  }
+  // persist the sorting
+  store.set('showCompleted', showCompleted);
+  // regenerate the table considering the sort value
+  generateTodoData(selectedFiltersCollected);
+});
 
 // ###############
 
@@ -106,7 +122,9 @@ function uniqBy(a, key) {
 // ###############
 
 // read contents of todo.txt file and trigger further action
-function readTodoFile(pathToFile, sort) {
+function readTodoFile(pathToFile) {
+
+  console.log(pathToFile);
 
   if(pathToFile) {
 
@@ -265,13 +283,11 @@ function buildFilterButtons(selectedFilters, selectedFiltersCounted) {
              filterFound = true;
            }
         }
-
         // if filter is not already present in first dimension of the array, then push the value
         if(filterFound!=true) {
           selectedFiltersCollected.push([btnApplyFilter.name, btnApplyFilter.title]);
         }
         generateTodoData(selectedFiltersCollected);
-
       });
     }
   }
@@ -297,7 +313,6 @@ function generateTodoData(selectedFiltersCollected) {
 
       for(var j = 0; j < parsedData.length; j++) {
         if(parsedData[j][selectedFiltersCollected[i][1]]) {
-
           // check if the selected filter is one of the array values of the category
           if(parsedData[j][selectedFiltersCollected[i][1]].includes(selectedFiltersCollected[i][0])) {
             itemsFiltered.push(parsedData[j]);
@@ -315,16 +330,21 @@ function generateTodoData(selectedFiltersCollected) {
     itemsFiltered = parsedData;
   }
 
+  // https://stackoverflow.com/a/10024929
+  // check the showCompleted value and filter completed items if selected by user
+  if(showCompleted == false) {
+    itemsFiltered = itemsFiltered.filter(function(el) { return el.complete == false; });
+  } else {
+    itemsFiltered = itemsFiltered;
+  }
+
   // sort asc if requested
   // https://stackoverflow.com/a/45544166
-  let itemsFilteredSorted = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text))
-
-  if(sort==true) {
-    console.log("sortiert");
+  let itemsFilteredSorted = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
+  if(sortAlphabetically==true) {
     // pass filtered data to function to build the table
     generateTodoTable(itemsFilteredSorted);
   } else {
-    console.log("unsortiert");
     // pass filtered data to function to build the table
     generateTodoTable(itemsFiltered);
   }
@@ -358,6 +378,15 @@ function generateTodoTable(itemsFiltered) {
 
 function addTableRows(items, priority) {
 
+  /*let temp = items.reduce((r, a) => {
+   r[a.complete] = [...r[a.complete] || [], a];
+   return r;
+  }, {});
+  temp = items.complete.splice(this == false);*/
+  /*console.log(items);
+  var temp = items.filter(function(el) { return el.complete == true; });
+  console.log(temp);*/
+
   if(priority==true) {
 
     // TODO: whats happening here?
@@ -376,6 +405,7 @@ function addTableRows(items, priority) {
 
         // divider row for new priority
         createTableDividerRow(item, previousItem, itemsByPriority[j][0]);
+
         // table row with item data
         createTableRow(item);
       }
@@ -511,7 +541,6 @@ if(btnLoadTodoFile) {
               // write new path and file name into storage file
               store.set('pathToFile', global.filepath);
               console.log('Storage file updated by new path and filename: ' + global.filepath);
-
              }
           }
       }).catch(err => {
