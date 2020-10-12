@@ -5,7 +5,7 @@
 
 // ###############
 
-// BASIC DEFINITIONS
+// CONSTANTS
 
 // ###############
 
@@ -14,6 +14,12 @@ const path = require('path');
 const dialog = electron.remote.dialog;
 const app = electron.remote.app;
 const fs = require('fs');
+// id the filter button and put the toggle action on it
+const btnFilter = document.getElementById('btnFilter');
+const filterDropdown = document.getElementById('filterDropdown');
+const btnLoadTodoFile = document.getElementsByClassName('btnLoadTodoFile');
+const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
+const filterCategories = ["contexts", "projects"];
 // store user data: read store.js
 const Store = require('./store.js');
 // store user data: First instantiate the class
@@ -24,50 +30,53 @@ const store = new Store({
     pathToFile: app.getPath('home')
   }
 });
+const pathToFile = store.get('pathToFile');
 
+// ###############
+
+// VARIABLES
+
+// ###############
+
+// Needed for comparison between priority items to build the divider rows
+let previousItem;
+// defining a Global file path Variable to store user-selected file
+let filepath = undefined;
+// make the parsed data available
+let parsedData = undefined;
 // TODO: clean up the mess
 let selectedFiltersCollected = new Array;
+// sort alphabetically
+let sortAlphabetically = store.get('sortAlphabetically');
+// show completed: get the stored value
+let showCompleted = store.get('showCompleted');
 
-// TODO: clean up the mess
-let previousItem;
+// ###############
 
-// get the reference for the table container
-let todoTableContainer = document.getElementById("todoTableContainer");
+// INITIAL DOM CONFIG
 
-// id the filter button and put the toggle action on it
-const btnFilter = document.getElementById('btnFilter');
-const filterDropdown = document.getElementById('filterDropdown');
+// ###############
+
+// set the checked attribute according to the persisted value
+document.getElementById('toggleSort').checked = sortAlphabetically;
+// set the checked attribute according to the persisted value
+document.getElementById('showCompleted').checked = showCompleted;
+// persist the highlighting of the button and the dropdown menu
 document.getElementById('btnFilter').addEventListener('click', () => {
   btnFilter.classList.toggle("is-active");
   filterDropdown.classList.toggle("is-active");
 });
-
 // just reread the file and flush all filters and items
 document.getElementById('btnResetAllFilters').addEventListener('click', () => {
   selectedFiltersCollected = [];
   readTodoFile(pathToFile);
 });
 
-const pathToFile = store.get('pathToFile');
-const btnLoadTodoFile = document.getElementsByClassName('btnLoadTodoFile');
+// ###############
 
-const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
-const filterCategories = ["contexts", "projects"];
+// EVENT LISTENERS
 
-// defining a Global file path Variable to store user-selected file
-global.filepath = undefined;
-
-// make the parsed data available
-global.parsedData = undefined;
-
-// TODO: clean up the mess
-global.selectedFiltersCollected = undefined;
-
-// sort alphabetically
-let sortAlphabetically = store.get('sortAlphabetically');
-
-// set the checked attribute according to the persisted value
-document.getElementById('toggleSort').checked = sortAlphabetically;
+// ###############
 
 // reread the data but sort it asc
 document.getElementById('toggleSort').addEventListener('click', () => {
@@ -81,13 +90,6 @@ document.getElementById('toggleSort').addEventListener('click', () => {
   // regenerate the table considering the sort value
   generateTodoData(selectedFiltersCollected);
 });
-
-// show completed
-let showCompleted = store.get('showCompleted');
-
-// set the checked attribute according to the persisted value
-document.getElementById('showCompleted').checked = showCompleted;
-
 // reread the data but sort it asc
 document.getElementById('showCompleted').addEventListener('click', () => {
   if(showCompleted==false) {
@@ -103,16 +105,95 @@ document.getElementById('showCompleted').addEventListener('click', () => {
 
 // ###############
 
-// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+// READ PREVIOUSLY SELECTED todo.txt FILE, STORED IN store.js
 
 // ###############
 
-function uniqBy(a, key) {
+if(pathToFile) {
+  readTodoFile(pathToFile);
+  console.log('todo.txt file loaded: ' + pathToFile);
+  document.getElementById('onboarding').setAttribute('class','modal');
+} else {
+  document.getElementById('onboarding').setAttribute('class','modal is-active');
+}
+
+// ###############
+
+// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+// TODO: understand the function
+
+// ###############
+
+function uniqBy(a) {
     var seen = {};
     return a.filter(function(item) {
-        var k = key(item);
+        var k = JSON.stringify(item);
         return seen.hasOwnProperty(k) ? false : (seen[k] = true);
     })
+}
+
+// ###############
+
+// OPEN FILE AND PASS DATA TO FUNCTIONS
+
+// ###############
+
+if(btnLoadTodoFile) {
+
+  for (var i = 0; i < btnLoadTodoFile.length; i++) {
+
+    btnLoadTodoFile[i].addEventListener('click', () => {
+
+      // Resolves to a Promise<Object>
+      dialog.showOpenDialog({
+          title: 'Select yout todo.txt file',
+          defaultPath: path.join(app.getPath('home')),
+          buttonLabel: 'Open',
+
+          // Restricting the user to only Text Files.
+          filters: [
+              {
+                  name: 'Text Files',
+                  extensions: ['txt']
+              }, ],
+          properties: ['openFile']
+
+          /*
+          // Specifying the File Selector Property
+          if (process.platform !== 'darwin') {
+            // If the platform is 'win32' or 'Linux'
+            properties: ['openFile']
+          } else {
+            // If the platform is 'darwin' (macOS)
+            properties: ['openFile', 'openDirectory']
+          }
+          */
+      }).then(file => {
+          // Stating whether dialog operation was cancelled or not.
+
+          if (!file.canceled) {
+            // Updating the GLOBAL filepath variable to user-selected file.
+            global.filepath = file.filePaths[0].toString();
+
+            // read contents of todo.txt file
+            if (global.filepath && !file.canceled) {
+
+              // pass path and filename on, to extract and parse the raw data
+              readTodoFile(global.filepath);
+
+              // close the modal layer if open
+              document.getElementById('onboarding').setAttribute('class','modal');
+
+              // write new path and file name into storage file
+              store.set('pathToFile', global.filepath);
+              console.log('Storage file updated by new path and filename: ' + global.filepath);
+             }
+          }
+      }).catch(err => {
+          console.log(err)
+      });
+    });
+  }
 }
 
 // ###############
@@ -123,8 +204,6 @@ function uniqBy(a, key) {
 
 // read contents of todo.txt file and trigger further action
 function readTodoFile(pathToFile) {
-
-  console.log(pathToFile);
 
   if(pathToFile) {
 
@@ -215,9 +294,10 @@ function generateFilterData() {
     }, {});
 
     // remove the duplicates
-    selectedFilters = uniqBy(selectedFilters, JSON.stringify);
+    selectedFilters = uniqBy(selectedFilters);
 
-    buildFilterButtons(selectedFilters, selectedFiltersCounted);
+    // build the filter buttons
+    buildFilterButtons();
   }
 
   // TODO: add a false on err
@@ -225,7 +305,7 @@ function generateFilterData() {
 }
 
 // build a section for each category and add the buttons to each
-function buildFilterButtons(selectedFilters, selectedFiltersCounted) {
+function buildFilterButtons() {
 
   // build the buttons
   // only generate filters if there are any
@@ -321,7 +401,7 @@ function generateTodoData(selectedFiltersCollected) {
       }
 
       // remove duplicate items using magic function I do not even understand
-      itemsFiltered = uniqBy(itemsFiltered, JSON.stringify);
+      //itemsFiltered = uniqBy(itemsFiltered, JSON.stringify);
 
     }
 
@@ -360,6 +440,9 @@ function generateTodoData(selectedFiltersCollected) {
 // ###############
 
 function generateTodoTable(itemsFiltered) {
+
+  // get the reference for the table container
+  let todoTableContainer = document.getElementById("todoTableContainer");
 
   // empty the table before reading fresh data
   todoTableContainer.innerHTML = "";
@@ -487,79 +570,4 @@ function createTableRow() {
 
   // add the row to the end of the table body
   todoTableContainer.appendChild(todoTableBodyRow);
-}
-
-// ###############
-
-// OPEN FILE AND PASS DATA TO FUNCTIONS
-
-// ###############
-
-if(btnLoadTodoFile) {
-
-  for (var i = 0; i < btnLoadTodoFile.length; i++) {
-
-    btnLoadTodoFile[i].addEventListener('click', () => {
-
-      // Resolves to a Promise<Object>
-      dialog.showOpenDialog({
-          title: 'Select yout todo.txt file',
-          defaultPath: path.join(app.getPath('home')),
-          buttonLabel: 'Open',
-
-          // Restricting the user to only Text Files.
-          filters: [
-              {
-                  name: 'Text Files',
-                  extensions: ['txt']
-              }, ],
-
-          // Specifying the File Selector Property
-          //if (process.platform !== 'darwin') {
-            // If the platform is 'win32' or 'Linux'
-            properties: ['openFile']
-          //} else {
-            // If the platform is 'darwin' (macOS)
-            //properties: ['openFile', 'openDirectory']
-          //}
-      }).then(file => {
-          // Stating whether dialog operation was cancelled or not.
-
-          if (!file.canceled) {
-            // Updating the GLOBAL filepath variable to user-selected file.
-            global.filepath = file.filePaths[0].toString();
-
-            // read contents of todo.txt file
-            if (global.filepath && !file.canceled) {
-
-              // pass path and filename on, to extract and parse the raw data
-              readTodoFile(global.filepath);
-
-              // close the modal layer if open
-              document.getElementById('onboarding').setAttribute('class','modal');
-
-              // write new path and file name into storage file
-              store.set('pathToFile', global.filepath);
-              console.log('Storage file updated by new path and filename: ' + global.filepath);
-             }
-          }
-      }).catch(err => {
-          console.log(err)
-      });
-    });
-  }
-}
-
-// ###############
-
-// read previously stored todo.txt file
-
-// ###############
-
-if(pathToFile) {
-  readTodoFile(pathToFile);
-  console.log('todo.txt file loaded: ' + pathToFile);
-  document.getElementById('onboarding').setAttribute('class','modal');
-} else {
-  document.getElementById('onboarding').setAttribute('class','modal is-active');
 }
