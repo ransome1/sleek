@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>tidy.txt</title>
+    <title>TIDY.TXT</title>
 
     <link rel="stylesheet" href="bulma.min.css">
     <link rel="stylesheet" href="index.css">
@@ -28,24 +28,10 @@
             <i class="fas fa-filter"></i>&nbsp;&nbsp;Filter the todos
           </div>
 
-          <!--<div id="btnSorting" class="item">
-            <i class="fas fa-angle-down"></i>&nbsp;&nbsp;Sort the todos
+          <!--<div class="logo">
+            <img src="logo.png" style="width: 5em; height: 5em; float: left;">
+            <span>TIDY.TXT</span>
           </div>-->
-          <div class="sort">
-            <label class="switch">
-              <input type="checkbox" id="toggleSort">
-              <span class="slider round"></span>
-            </label>
-            <label for="sort" class="text">Sort alphabetically</label>
-          </div>
-
-          <div class="sort">
-            <label class="switch">
-              <input type="checkbox" id="showCompleted">
-              <span class="slider round"></span>
-            </label>
-            <span class="text">Show completed</span>
-          </div>
 
           <div class="field">
             <div class="file">
@@ -63,20 +49,10 @@
               </label>
             </div>
           </div>
+
         </div>
 
-        <div id="filterDropdown" class="dropdown">
-          <div class="container">
-            <div id="todoFilters"></div>
 
-            <div class="dropdown-item">
-              <hr class="dropdown-divider">
-              <div class="dropdown-item">
-                <button id="btnResetAllFilters" class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!--<div id="sortingDropdown" class="dropdown">
           <div class="container">
@@ -113,18 +89,40 @@
 
     </section>-->
 
-    <section class="hero">
+    <section id="filterDropdown" class="dropdown">
+      <div class="container">
 
-      <div class="hero-body">
+        <div id="todoFilters"></div>
 
-        <div class="container">
+        <div class="toggle">
+          <label class="switch">
+            <input type="checkbox" id="toggleSort">
+            <span class="slider round"></span>
+          </label>
+          <label for="sort" class="text">Sort alphabetically</label>
+        </div>
 
-          <div id="todoTableContainer"></div>
+        <div class="toggle">
+          <label class="switch">
+            <input type="checkbox" id="toggleShowCompleted">
+            <span class="slider round"></span>
+          </label>
+          <span class="text">Show completed</span>
+        </div>
 
+        <div class="toggle" style="float: right;">
+          <button id="btnResetAllFilters" class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
         </div>
 
       </div>
+    </section>
 
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container">
+          <div id="todoTableContainer"></div>
+        </div>
+      </div>
     </section>
 
     <div id="onboarding" class="modal">

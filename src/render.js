@@ -14,17 +14,13 @@ const path = require('path');
 const dialog = electron.remote.dialog;
 const app = electron.remote.app;
 const fs = require('fs');
-// id the filter button and put the toggle action on it
 const btnFilter = document.getElementById('btnFilter');
 const filterDropdown = document.getElementById('filterDropdown');
 const btnLoadTodoFile = document.getElementsByClassName('btnLoadTodoFile');
 const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
 const filterCategories = ["contexts", "projects"];
-// store user data: read store.js
 const Store = require('./store.js');
-// store user data: First instantiate the class
 const store = new Store({
-  // we'll call our data file 'user-preferences'
   configName: 'user-preferences',
   defaults: {
     pathToFile: app.getPath('home')
@@ -60,11 +56,27 @@ let showCompleted = store.get('showCompleted');
 // set the checked attribute according to the persisted value
 document.getElementById('toggleSort').checked = sortAlphabetically;
 // set the checked attribute according to the persisted value
-document.getElementById('showCompleted').checked = showCompleted;
+document.getElementById('toggleShowCompleted').checked = showCompleted;
 // persist the highlighting of the button and the dropdown menu
 document.getElementById('btnFilter').addEventListener('click', () => {
   btnFilter.classList.toggle("is-active");
-  filterDropdown.classList.toggle("is-active");
+  filterDropdown.classList.toggle('is-active');
+});
+
+// https://stackoverflow.com/questions/14188654/detect-click-outside-element-vanilla-javascript
+document.addEventListener('click', function(event) {
+  var isClickInside = filterDropdown.contains(event.target);
+  if (!isClickInside) {
+    console.log("outside");
+    if(filterDropdown.classList.contains('is-active')) {
+      console.log("close");
+      //filterDropdown.classList.toggle('is-active');
+    }
+    //filterDropdown.classList.toggle('is-active');
+    //the click was outside the specifiedElement, do something
+    //btnFilter.classList.toggle("is-active");
+    //filterDropdown.classList.toggle('is-active');
+  }
 });
 // just reread the file and flush all filters and items
 document.getElementById('btnResetAllFilters').addEventListener('click', () => {
@@ -88,10 +100,10 @@ document.getElementById('toggleSort').addEventListener('click', () => {
   // persist the sorting
   store.set('sortAlphabetically', sortAlphabetically);
   // regenerate the table considering the sort value
-  generateTodoData(selectedFiltersCollected);
+  readTodoFile(pathToFile);
 });
 // reread the data but sort it asc
-document.getElementById('showCompleted').addEventListener('click', () => {
+document.getElementById('toggleShowCompleted').addEventListener('click', () => {
   if(showCompleted==false) {
     showCompleted = true;
   } else {
@@ -100,7 +112,9 @@ document.getElementById('showCompleted').addEventListener('click', () => {
   // persist the sorting
   store.set('showCompleted', showCompleted);
   // regenerate the table considering the sort value
-  generateTodoData(selectedFiltersCollected);
+  //generateTodoData(selectedFiltersCollected);
+
+  readTodoFile(pathToFile);
 });
 
 // ###############
@@ -212,25 +226,41 @@ function readTodoFile(pathToFile) {
       fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
 
         if (!err) {
-
-          // parse the raw data into usefull objects
-          parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
-
-          // pass data on and generate the items for the table
-          if(generateTodoData() == true) {
-            // write shortened path and file name to empty field
-            //fileName.innerHTML = pathToFile;
-            console.log('Received data successfully');
+          // https://stackoverflow.com/a/10024929
+          // check the toggleShowCompleted value and filter completed items if selected by user
+          if(showCompleted == false) {
+            // only select the items where "complete" is equal "false"
+            parsedData = TodoTxt.parse( data, [ new DueExtension() ] ).filter(function(el) { return el.complete == false; });
+          } else {
+            // process all items
+            parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
           }
 
-          // pass data on and generate the filters
+          // sort the items if toggle is set to true
+          if(sortAlphabetically==true) {
+            // pass filtered data to function to build the table
+            parsedData = parsedData.slice().sort((a, b) => a.text.localeCompare(b.text));
+          }
+
+          // load data
+          if(generateTodoData() == true) {
+            console.log('Todos successfully loaded');
+          } else {
+            console.log('Could not load data');
+          }
+
+          // load filters
           if(generateFilterData() == true) {
             console.log('Filters successfully loaded');
-          };
+          } else {
+            console.log('Could not load filters');
+          }
 
         } else {
+          // if data couldn't be extracted from file
+          console.log("Data could not be extracted from file");
           document.getElementById('onboarding').setAttribute('class','modal is-active');
-          console.log(err);
+          //console.log(err);
         }
     });
   }
@@ -410,14 +440,17 @@ function generateTodoData(selectedFiltersCollected) {
     itemsFiltered = parsedData;
   }
 
+  /*
   // https://stackoverflow.com/a/10024929
-  // check the showCompleted value and filter completed items if selected by user
+  // check the toggleShowCompleted value and filter completed items if selected by user
   if(showCompleted == false) {
     itemsFiltered = itemsFiltered.filter(function(el) { return el.complete == false; });
   } else {
     itemsFiltered = itemsFiltered;
   }
+  */
 
+  /*
   // sort asc if requested
   // https://stackoverflow.com/a/45544166
   let itemsFilteredSorted = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
@@ -427,7 +460,9 @@ function generateTodoData(selectedFiltersCollected) {
   } else {
     // pass filtered data to function to build the table
     generateTodoTable(itemsFiltered);
-  }
+  }*/
+
+  generateTodoTable(itemsFiltered);
 
   // TODO: neccessary?
   return true;

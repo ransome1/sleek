@@ -1,6 +1,6 @@
 {
-  "name": "tidy.txt",
-  "productName": "tidy.txt",
+  "name": "TIDY.TXT",
+  "productName": "TIDY.TXT",
   "version": "0.0.1",
   "description": "A simple and tidy app to manage a todo.txt file.",
   "main": "src/index.js",
