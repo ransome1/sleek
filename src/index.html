@@ -16,106 +16,44 @@
     <script defer src="jsTodoTxt.min.js"></script>
 
   </head>
-  <body>
+  <body id="body">
 
-    <section id="interactionBar" class="hero">
+    <nav>
+      <ul>
+      	<li class="logo"><span>TDY<br>TXT</span></li>
+      	<li><a href="#" id="btnFilter"><i class="fas fa-filter"></i></a></li>
+      	<li><a href="#" class="btnLoadTodoFile"><i class="fas fa-upload"></i></a></li>
+      </ul>
 
-      <div class="hero-body">
-
+      <section id="filterDropdown" class="dropdown">
         <div class="container">
 
-          <div id="btnFilter" class="item">
-            <i class="fas fa-filter"></i>&nbsp;&nbsp;Filter the todos
+          <div class="toggle">
+            <label class="switch">
+              <input type="checkbox" id="toggleSort">
+              <span class="slider round"></span>
+            </label>
+            <label for="sort" class="text">Sort alphabetically</label>
           </div>
 
-          <!--<div class="logo">
-            <img src="logo.png" style="width: 5em; height: 5em; float: left;">
-            <span>TIDY.TXT</span>
-          </div>-->
+          <div class="toggle">
+            <label class="switch">
+              <input type="checkbox" id="toggleShowCompleted">
+              <span class="slider round"></span>
+            </label>
+            <span class="text">Show completed</span>
+          </div>
 
-          <div class="field">
-            <div class="file">
-              <label class="file-label">
-                <button class="btnLoadTodoFile file-input" type="file" name="resume"></button>
-                <span class="file-cta">
-                  <span class="file-icon">
-                    <i class="fas fa-upload"></i>
-                  </span>
-                  <span class="file-label">
-                    open file
-                  </span>
-                </span>
-                <!--<span id="fileName" class="file-name"></span>-->
-              </label>
-            </div>
+          <div id="todoFilters"></div>
+
+          <div class="toggle">
+            <button id="btnResetAllFilters" class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
           </div>
 
         </div>
+      </section>
 
-
-
-        <!--<div id="sortingDropdown" class="dropdown">
-          <div class="container">
-            <div id="todoSorting"></div>
-            111
-            <hr class="dropdown-divider">
-            <div class="dropdown-item">
-              <button class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
-            </div>
-          </div>
-        </div>-->
-
-      </div>
-
-    </section>
-
-    <!--<section class="hero">
-
-      <div class="hero-body">
-
-        <div class="container">
-
-          <div class="control has-icons-left has-icons-right is-loading">
-            <input class="input" type="search" placeholder="Search the todos">
-            <span class="icon is-medium is-left">
-              <i class="fas fa-search"></i>
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>-->
-
-    <section id="filterDropdown" class="dropdown">
-      <div class="container">
-
-        <div id="todoFilters"></div>
-
-        <div class="toggle">
-          <label class="switch">
-            <input type="checkbox" id="toggleSort">
-            <span class="slider round"></span>
-          </label>
-          <label for="sort" class="text">Sort alphabetically</label>
-        </div>
-
-        <div class="toggle">
-          <label class="switch">
-            <input type="checkbox" id="toggleShowCompleted">
-            <span class="slider round"></span>
-          </label>
-          <span class="text">Show completed</span>
-        </div>
-
-        <div class="toggle" style="float: right;">
-          <button id="btnResetAllFilters" class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
-        </div>
-
-      </div>
-    </section>
+    </nav>
 
     <section class="hero">
       <div class="hero-body">
@@ -125,11 +63,34 @@
       </div>
     </section>
 
+    <form id="modalEditItem" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+
+        <div class="box">
+
+          <div class="field">
+            <div class="control">
+              <input id="modalEditItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project">
+              <button type="submit" class="button is-dark">Save</button>
+            </div>
+          </div>
+
+          <!--<i class="far fa-calendar-alt"></i> Add due date
+          <i class="fas fa-plus"></i> Add a project
+          <i class="fas fa-at"></i> Add a context-->
+
+        </div>
+
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </form>
+
     <div id="onboarding" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
-        <h1 class="title is-1">tidy.txt</h1>
-        <p class="subtitle">A simple and tidy app to manage a todo.txt file.</p>
+        <h1 class="title is-1">TDY<br>TXT</h1>
+        <p class="subtitle">A tidy app to manage a todo.txt file.</p>
 
         <div class="columns">
           <div class="column">
@@ -158,7 +119,7 @@
         </div>
 
       </div>
-      <button class="modal-close is-large" aria-label="close"></button>
+      <!--<button class="modal-close is-large" aria-label="close"></button>-->
     </div>
 
   </body>

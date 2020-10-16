@@ -1,5 +1,5 @@
 body {
-  padding-top: 5em;
+  padding-left: 5em;
   margin: auto;
   background: #fff;
 
@@ -8,13 +8,18 @@ body {
   -ms-user-select: none;      /* IE 10+ */
 }
 
+body.is-active {
+  padding-left: 40em;
+  transition: padding-left .5s;
+}
+
 body, button, input, optgroup, select, textarea {
   font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans",  sans-serif;
 }
 
 /* FILE UPLOAD */
 
-.file.has-name .file-name {
+/*.file.has-name .file-name {
   width: auto;
   float: right;
 
@@ -24,39 +29,45 @@ body, button, input, optgroup, select, textarea {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/*.fa-cog {
-  font-size: 1.75em;
-  text-align: right;
 }*/
 
 /* MODAL */
 
-.modal .modal-background {
+.modal {
+  z-index: 110;
+}
+
+#onboarding {
+  z-index: 110;
+}
+
+#onboarding .modal-background {
   background: #fff;
 }
 
-.modal .modal-content {
+#onboarding .modal-content {
   /*width: 50em;*/
   /*max-width: 60%;*/
   padding: 2em;
   text-align: center;
 }
 
-.modal .modal-content h1 {
-  margin: 0;
+#onboarding .modal-content h1 {
+  margin: .5em 0;
+
+  font-weight: 1000;
+  line-height: .85em;
 }
 
-.modal .modal-content .subtitle {
+#onboarding .modal-content .subtitle {
   margin: .25em 0 3em 0;
 }
 
-.modal .modal-content .column {
+#onboarding .modal-content .column {
   padding: 0 3em;
 }
 
-.modal .modal-content .column div {
+#onboarding .modal-content .column div {
   background: #363636;
   color: #fff;
 
@@ -69,16 +80,16 @@ body, button, input, optgroup, select, textarea {
   cursor: pointer;
 }
 
-.modal .modal-content .column div svg {
+#onboarding .modal-content .column div svg {
   font-size: 1.15em;
 }
 
-.modal .modal-content .column p {
+#onboarding .modal-content .column p {
   margin-bottom: 0.5em;
 }
 
 .column:first-child {
-  border-right: .25em solid #f5f5f5;
+  border-right: 1px solid #363636;
 }
 
 .hero {
@@ -86,7 +97,75 @@ body, button, input, optgroup, select, textarea {
   float: left;
 }
 
-/* MENU BAR */
+.hero .hero-body {
+  padding: 1.5em;
+}
+
+/* Vertical menu */
+nav ul {
+  height: 100%;
+
+	position: fixed;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+  z-index: 110;
+
+	list-style-type: none;
+
+	margin: 0;
+	padding: 0;
+
+  background: #f5f5f5;
+}
+
+nav ul li {
+  width: 5em;
+  height: 5em;
+  position: relative;
+  display: block;
+	/*text-indent: -500em;*/
+
+	line-height: 5em;
+	text-align: center;
+	color: #404040;
+
+	border-bottom: 1px solid rgba(0,0,0,0.05);
+
+	/*-webkit-transition: background 0.1s ease-in-out;
+	-moz-transition: background 0.1s ease-in-out;
+	transition: background 0.1s ease-in-out;*/
+}
+
+nav ul li:hover,
+nav ul li a.is-active {
+  background: #ebebeb
+}
+
+nav ul li a {
+  width: 5em;
+  height: 5em;
+
+  display: block;
+
+  cursor: pointer;
+  color: #404040;
+}
+
+nav ul li.logo {
+  background: #404040;
+  color: #fff;
+
+  font-weight: 1000;
+  line-height: 1em;
+}
+
+nav ul li.logo span {
+  display: block;
+  padding-top: 1.5em;
+}
+
+/*
 #interactionBar {
   width: 100%;
   height: 5em;
@@ -109,6 +188,7 @@ body, button, input, optgroup, select, textarea {
   float: left;
 
   padding: 0 1.5em;
+  margin-left: -1.25em;
 
   text-align: center;
   line-height: 5em;
@@ -119,7 +199,6 @@ body, button, input, optgroup, select, textarea {
 #interactionBar .hero-body .item:hover,
 #interactionBar .hero-body .item.is-active {
   background: #ebebeb;
-  /*color: #fff;*/
 }
 
 #interactionBar .hero-body .item svg {
@@ -127,51 +206,37 @@ body, button, input, optgroup, select, textarea {
   color: #4d4d4d;
 }
 
-/*#interactionBar .logo {
-  width: 12em;
-  height: 5em;
-
-  margin:0 auto;
-  padding: 0 1.5em 0 0;
-
-  color: #fff;
-  line-height: 5em;
-
-  background: #4a4a4a;
-
-  -webkit-box-shadow: 0px 0px 40px 1px rgba(0,0,0,0.25);
-  -moz-box-shadow: 0px 0px 40px 1px rgba(0,0,0,0.25);
-  box-shadow: 0px 0px 40px 1px rgba(0,0,0,0.25);
-}*/
-
 #interactionBar .field {
   position: absolute;
   top: 0;
   right: 0;
   padding-top: 1.25em;
-}
+}*/
 
 /* FILTER DROPDOWN */
 
 #filterDropdown {
-  width: 100%;
-  position: absolute;
-  top: -20em;
+  width: 35em;
+  height: 100%;
+
+  position: fixed;
+  top: 0;
+  left: -50em;
   z-index: 90;
+  transition: left .5s;
 
-  display: block;
-
-  transition: top .5s;
+  padding: 0 3em;
 
   background: #ebebeb;
+
+  -webkit-box-shadow: inset -10px 0px 55px -60px rgba(0,0,0,0.65);
+  -moz-box-shadow: inset -10px 0px 55px -60px rgba(0,0,0,0.65);
+  box-shadow: inset -10px 0px 55px -60px rgba(0,0,0,0.65);
 }
 
 #filterDropdown.is-active {
-  float: left;
-  position: relative;
-  top: 0;
-
-  display: block;
+  position: fixed;
+  left: 5em;
 }
 
 #filterDropdown .container {
@@ -181,16 +246,25 @@ body, button, input, optgroup, select, textarea {
 }
 
 #filterDropdown .dropdown-item {
-  width: 50%;
   float: left;
-  padding: 0 2em 0 0;
+  padding: 0;
+  margin: 1.5em 0;
+}
+
+#filterDropdown .dropdown-item h4 {
+  font-size: 1.15em;
+  font-weight: 1000;
+  color: #4d4d4d;
+  text-transform: uppercase;
+
+  margin-bottom: 1.5em;
 }
 
 /* FILTERS */
 #todoFilters {
   width: 100%;
   float: left;
-  margin: 2.5em 0;
+  margin: 0;
 }
 
 #todoFilters button {
@@ -260,24 +334,9 @@ body, button, input, optgroup, select, textarea {
     padding-left: 0;
 }
 
-.dropdown-menu {
+/*.dropdown-menu {
   width: 50em;
-}
-
-/* FILTER */
-
-#btnFilter #dropdown-menu2 {
-  /*width: 100%;*/
-}
-
-/* SORT */
-
-#btnSorting {
-  /*float: right;
-  clear: both;
-
-  padding: 0 0 0.5em 3em;*/
-}
+}*/
 
 /* TABLE */
 
@@ -286,7 +345,7 @@ body, button, input, optgroup, select, textarea {
   flex-flow: row wrap;
   border-bottom: solid 1px #d9d9d9;
   transition: 0.5s;
-  padding: .25rem;
+
 }
 
 .flex-table.priority {
@@ -300,10 +359,29 @@ body, button, input, optgroup, select, textarea {
 }
 
 .flex-table .flex-row[role="cell"] {
-  margin: .25rem .5em .25em 0;
+  padding: .5rem 0;
+  margin-right: 1em;
   height: auto;
 
   line-height: 1.5em;
+}
+
+.flex-table .flex-row[role="cell"].priority {
+  width: .5em;
+  background: #404040;
+  opacity: .5;
+}
+
+.flex-table .flex-row[role="cell"].priority.A {
+  background: #e67373;
+}
+
+.flex-table .flex-row[role="cell"].priority.B {
+  background: #e6dc73;
+}
+
+.flex-table .flex-row[role="cell"].priority.C {
+  background: #73e673;
 }
 
 /*.flex-table .flex-row.checkbox[role="cell"] .fa-square {
@@ -312,11 +390,11 @@ body, button, input, optgroup, select, textarea {
 }*/
 
 .flex-table .flex-row.text[role="cell"] {
-  max-width: 55%;
+  max-width: 80%;
 }
 
 .flex-table .flex-row[role="cell"] span.tag {
-  margin: 0 .5em .5em 0;
+  margin-left: .5em;
 }
 
 .flex-table .flex-row.projects[role="cell"],
@@ -324,12 +402,12 @@ body, button, input, optgroup, select, textarea {
   margin-right: 0;
 }
 
-.flex-table .flex-row.projects[role="cell"] span.tag {
+.flex-table .flex-row[role="cell"] span.tag.projects {
   background: #f1d6f1;
   color: #5f1a5e;
 }
 
-.flex-table .flex-row.contexts[role="cell"] span.tag {
+.flex-table .flex-row[role="cell"] span.tag.contexts {
   background: #c5ede3;
   color: #075943;
 }
@@ -350,7 +428,7 @@ body, button, input, optgroup, select, textarea {
 .toggle {
   float: left;
   padding: 1.5em 1.5em 1.5em 0;
-  margin: 0 1.5em 0 0;
+  margin: 0;
   line-height: 2em;
 }
 
@@ -363,7 +441,7 @@ body, button, input, optgroup, select, textarea {
  margin-right: .7em;
 }
 
-.switch .text {
+.switch .itemText {
   float: left;
 }
 
@@ -400,11 +478,11 @@ body, button, input, optgroup, select, textarea {
 }
 
 input:checked + .slider {
- background-color: #4a4a4a;
+ background-color: #404040;
 }
 
 input:focus + .slider {
- box-shadow: 0 0 1px #4a4a4a;
+ box-shadow: 0 0 1px #404040;
 }
 
 input:checked + .slider:before {
@@ -420,4 +498,50 @@ input:checked + .slider:before {
 
 .slider.round:before {
  border-radius: 50%;
+}
+
+/* MEDIA QUERIES */
+
+@media (max-width: 1023px) {
+
+  #filterDropdown {
+    width: 90%!important;
+    padding: 0 2%!important;
+  }
+
+  #filterDropdown .dropdown-item {
+      width: 100%!important;
+      padding: 0 1.5em!important;
+  }
+
+  #filterDropdown.is-active {
+    left: 3.5em;
+  }
+
+  .toggle {
+    margin: 0!important;
+    padding: 1em!important;
+  }
+
+  nav ul li {
+    width: 3.5em;
+    height: 3.5em;
+  	line-height: 3.5em;
+  }
+
+  nav ul li a {
+    width: 3.5em;
+    height: 3.5em;
+  }
+
+  nav ul li.logo {
+    width: 100%;
+    height: 4.25em;
+    font-size: .8em;
+    line-height: 1em;
+  }
+
+  nav ul li.logo span {
+    padding-top: 1.2em;
+  }
 }
