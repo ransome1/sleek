@@ -570,7 +570,8 @@ function createTableRow() {
   }
 
   todoTableBodyCell_text.addEventListener('click', function() {
-    let dataItem = this.getAttribute('data-item');
+    // declaring the item-data value global so other functions can access it
+    window.dataItem = this.getAttribute('data-item');
     editItem(dataItem);
   });
 
@@ -594,34 +595,41 @@ function createTableRow() {
 // TODO: clean up
 
 function editItem(dataItem) {
-
   parsedDataToString = parsedData.map(item => item.toString());
-
   modalEditItem.classList.toggle('is-active');
   modalEditItemInput.value = dataItem;
-
-  modalEditForm.addEventListener("submit", function(e) {
-    if (e.preventDefault) e.preventDefault();
-
-    console.log(parsedDataToString);
-    console.log(dataItem);
-
-    let itemId = parsedDataToString.indexOf(dataItem);
-    console.log(itemId);
-
-    console.log(this.elements)
-    parsedDataToString.splice(itemId, 1, this.elements[0].value);
-
-    //console.log(parsedDataToString);
-
-    modalEditItem.classList.toggle('is-active');
-
-    parsedData = parsedDataToString.map(item => new TodoTxtItem(item));
-
-    //console.log(parsedData);
-
-    generateTodoData();
-
-    //return false;
-  });
 }
+
+modalEditForm.addEventListener("submit", function(e) {
+  // intercept submit
+  if (e.preventDefault) e.preventDefault();
+
+  // get the position of that item in the array
+  let itemId = parsedDataToString.indexOf(window.dataItem);
+
+  // get the index using the itemId, remove 1 item there and add the value from the input at that position
+  parsedDataToString.splice(itemId, 1, modalEditForm.elements[0].value);
+
+  // convert all the strings to proper todotxt items again
+  parsedData = parsedDataToString.map(item => new TodoTxtItem(item));
+
+  // load the data again using the new parsedData
+  // load data
+  if(generateTodoData() == true) {
+    console.log('Todos successfully loaded');
+  } else {
+    console.log('Could not load data');
+  }
+
+  // load filters
+  if(generateFilterData() == true) {
+    console.log('Filters successfully loaded');
+  } else {
+    console.log('Could not load filters');
+  }
+
+  modalEditItem.classList.toggle('is-active');
+
+  // don't know if I need that
+  return false;
+});
