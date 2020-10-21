@@ -21,6 +21,7 @@
     <nav>
       <ul>
       	<li class="logo"><span>TDY<br>TXT</span></li>
+        <li><a href="#" id="btnAddItem"><i class="fas fa-plus"></i></a></li>
       	<li><a href="#" id="btnFilter"><i class="fas fa-filter"></i></a></li>
       	<li><a href="#" class="btnLoadTodoFile"><i class="fas fa-upload"></i></a></li>
       </ul>
@@ -55,7 +56,7 @@
 
     </nav>
 
-    <section class="hero">
+    <section id="todoTable" class="hero">
       <div class="hero-body">
         <div class="container">
           <div id="todoTableContainer"></div>
@@ -69,9 +70,7 @@
 
         <div class="card">
           <header class="card-header">
-            <p id="modalTitle" class="card-header-title">
-              Add a new todo
-            </p>
+            <p id="modalTitle" class="card-header-title"></p>
           </header>
           <div class="card-content">
             <div class="content">
@@ -79,64 +78,19 @@
               <article id="modalEditItemAlert" class="message is-danger">
                 <div class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>
               </article>
+              <div class="field">
+                Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank">todo.txt syntax</a>.
+              </div>
             </div>
           </div>
           <footer class="card-footer">
             <a href="#" id="btnFormSubmit" class="card-footer-item">Save</a>
-            <!--<a href="#" class="card-footer-item">Edit</a>
-            <a href="#" class="card-footer-item">Delete</a>-->
+            <a href="#" id="btnItemComplete" class="card-footer-item">Complete</a>
+            <a href="#" id="btnFormCancel" class="card-footer-item">Cancel</a>
           </footer>
         </div>
 
-        <!--<div class="box">
-
-          <div class="field">
-            <div class="control">
-              <input id="modalEditItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project">
-              <article id="modalEditItemAlert" class="message is-danger">
-                <div class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>
-              </article>
-
-              <nav class="navbar" role="navigation" aria-label="dropdown navigation">
-                <div class="navbar-menu">
-                  <div class="navbar-start">
-                    <div class="navbar-item has-dropdown has-dropdown-up is-active">
-                      <a class="navbar-link">
-                        Dropup
-                      </a>
-
-                      <div class="navbar-dropdown">
-                        <a class="navbar-item">
-                          Overview
-                        </a>
-                        <a class="navbar-item">
-                          Elements
-                        </a>
-                        <a class="navbar-item">
-                          Components
-                        </a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item">
-                          Version 0.9.1
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </nav>
-
-              <button type="submit" class="button is-dark">Save</button>
-            </div>
-          </div>-->
-
-          <!--<i class="far fa-calendar-alt"></i> Add due date
-          <i class="fas fa-plus"></i> Add a project
-          <i class="fas fa-at"></i> Add a context
-
-        </div>-->
-
       </div>
-      <div class="modal-close is-large" aria-label="close"></div>
     </form>
 
     <div id="onboarding" class="modal">
@@ -172,7 +126,6 @@
         </div>
 
       </div>
-      <!--<button class="modal-close is-large" aria-label="close"></button>-->
     </div>
 
   </body>

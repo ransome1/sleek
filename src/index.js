@@ -14,8 +14,9 @@ const store = new Store({
   // We'll call our data file 'user-preferences'
   configName: 'user-preferences',
   defaults: {
-    // 800x600 is the default size of our window
-    windowBounds: { width: 800, height: 600 }
+    windowBounds: { width: 800, height: 600 },
+    sortAlphabetically: false,
+    showCompleted: false
   }
 });
 
@@ -43,6 +44,12 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+  // open links in external browser
+  mainWindow.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    require('electron').shell.openExternal(url);
+  });
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();

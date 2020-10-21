@@ -372,7 +372,7 @@ nav ul li.logo span {
 
 .flex-table .flex-row[role="cell"].priority {
   width: .5em;
-  background: #404040;
+  background: #ebebeb;
   opacity: .5;
 }
 
@@ -513,6 +513,20 @@ input:checked + .slider:before {
 
 #modalEditForm #modalEditItemAlert.is-active {
   display: block;
+}
+
+#modalEditForm #btnItemComplete {
+  display: none;
+
+  text-align: center;
+}
+
+#modalEditForm #btnItemComplete.is-active {
+  display: block;
+}
+
+#modalEditForm .field {
+  margin: .75em 0;
 }
 
 /* MEDIA QUERIES */

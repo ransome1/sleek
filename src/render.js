@@ -14,25 +14,35 @@ const path = require('path');
 const dialog = electron.remote.dialog;
 const app = electron.remote.app;
 const fs = require('fs');
+
+const body = document.getElementById('body');
+
 const btnFilter = document.getElementById('btnFilter');
+const btnAddItem = document.getElementById('btnAddItem');
 const btnFormSubmit = document.getElementById('btnFormSubmit');
+const btnItemComplete = document.getElementById('btnItemComplete');
+const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
+const btnLoadTodoFile = document.querySelectorAll('.btnLoadTodoFile');
+const btnFormCancel = document.getElementById("btnFormCancel");
+
+const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById('filterDropdown');
+
 const modalEditForm = document.getElementById('modalEditForm');
-//const modalEditItem = document.getElementById("modalEditItem");
 const modalEditItemInput = document.getElementById("modalEditItemInput");
 const modalEditItemAlert = document.getElementById("modalEditItemAlert");
 const modalTitle = document.getElementById("modalTitle");
-const body = document.getElementById('body');
-const btnLoadTodoFile = document.querySelectorAll('.btnLoadTodoFile');
 const modalClose = document.querySelectorAll('.modal-close');
 const modalBackground = document.querySelectorAll('.modal-background');
-const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
-const filterCategories = ["contexts", "projects"];
+
 const Store = require('./store.js');
 const store = new Store({
   configName: 'user-preferences',
   defaults: {
-    pathToFile: app.getPath('home')
+    pathToFile: app.getPath('home'),
+    windowBounds: { width: 800, height: 600 },
+    sortAlphabetically: false,
+    showCompleted: false
   }
 });
 
@@ -46,44 +56,63 @@ const store = new Store({
 let previousItem;
 // defining a file path Variable to store user-selected file
 let pathToFile = store.get('pathToFile');
-// make the parsed data available
-// let parsedData = undefined;
-// TODO: clean up the mess
-//let selectedFiltersCollected = new Array;
-let selectedFiltersCollected = new Array || store.get('selectedFiltersCollected');
+// create an empty array for pre selected filters
+let selectedFiltersCollected = new Array;
+// check store file if filters (come as JSON) have been saved. If so convert the JSON to arrays and them to the main array. If not the array stays empty
+// TODO: is there a more sophisticated way to do this?
+if(store.get('selectedFiltersCollected')!= undefined) {
+  selectedFiltersCollected = JSON.parse(store.get('selectedFiltersCollected'));
+}
 // sort alphabetically
 let sortAlphabetically = store.get('sortAlphabetically');
 // show completed: get the stored value
 let showCompleted = store.get('showCompleted');
+// we need the parsed data as strings instead of todotxt objects to save them into the text file
+let parsedDataString = new Array;
 
 // ###############
 
 // INITIAL DOM CONFIG
 
 // ###############
-
 // set the checked attribute according to the persisted value
 document.getElementById('toggleSort').checked = sortAlphabetically;
 // set the checked attribute according to the persisted value
 document.getElementById('toggleShowCompleted').checked = showCompleted;
-// persist the highlighting of the button and the dropdown menu
-document.getElementById('btnFilter').addEventListener('click', () => {
-  btnFilter.classList.toggle("is-active");
-  filterDropdown.classList.toggle('is-active');
-  body.classList.toggle('is-active');
-});
-
-// just reread the file and flush all filters and items
-document.getElementById('btnResetAllFilters').addEventListener('click', () => {
-  selectedFiltersCollected = [];
-  parseData(pathToFile);
-});
 
 // ###############
 
 // EVENT LISTENERS
 
 // ###############
+
+// persist the highlighting of the button and the dropdown menu
+btnFilter.addEventListener('click', () => {
+  btnFilter.classList.toggle("is-active");
+  filterDropdown.classList.toggle('is-active');
+  body.classList.toggle('is-active');
+});
+
+// put a listeners on the table for closing the active menu
+document.getElementById('todoTable').addEventListener('click', () => {
+  if(filterDropdown.classList.contains('is-active')) {
+    btnFilter.classList.toggle("is-active");
+    filterDropdown.classList.toggle('is-active');
+    body.classList.toggle('is-active');
+  }
+});
+
+btnAddItem.addEventListener('click', () => {
+  showForm();
+});
+
+// just reread the file and flush all filters and items
+document.getElementById('btnResetAllFilters').addEventListener('click', () => {
+  selectedFiltersCollected = [];
+  // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
+  store.set('selectedFiltersCollected', undefined);
+  parseData(pathToFile);
+});
 
 // reread the data but sort it asc
 document.getElementById('toggleSort').addEventListener('click', () => {
@@ -96,8 +125,9 @@ document.getElementById('toggleSort').addEventListener('click', () => {
   store.set('sortAlphabetically', sortAlphabetically);
 
   // TODO: error handling
-  // regenerate the table considering the sort value
-  generateTodoData();
+  // regenerate the table considering the sort value and make sure saved filters are going to be passed
+  // TODO: does it crash if no filters have been selected?
+  generateTodoData(selectedFiltersCollected);
 });
 
 // reread the data but sort it asc
@@ -110,11 +140,41 @@ document.getElementById('toggleShowCompleted').addEventListener('click', () => {
   // persist the sorting
   store.set('showCompleted', showCompleted);
 
-  // empty any pre selcted filters to avoid problems
-  selectedFiltersCollected = [];
   // TODO: error handling
   // regenerate the table considering the sort value
   parseData(pathToFile);
+
+});
+
+// submit in the form
+modalEditForm.addEventListener("submit", function(e) {
+  // intercept submit
+  if (e.preventDefault) e.preventDefault();
+
+  if(submitForm()) {
+      modalEditForm.classList.toggle('is-active');
+  }
+
+  return false;
+
+});
+
+// click on submit button
+btnFormSubmit.addEventListener("click", function(e) {
+  if(submitForm()) {
+      modalEditForm.classList.toggle('is-active');
+  }
+});
+
+btnItemComplete.addEventListener('click', () => {
+  if(completeItem(dataItem)) {
+    modalEditForm.classList.toggle('is-active');
+  }
+});
+
+// click on the close button in the footer of the edit modal
+btnFormCancel.addEventListener("click", function(e) {
+  modalEditForm.classList.toggle('is-active');
 });
 
 // put a click event on all "open file" buttons
@@ -140,8 +200,6 @@ modalBackground.forEach(el => el.addEventListener('click', event => {
 
 // TODO: Maybe wait for something before we start the iterations?
 if(pathToFile) {
-
-  console.log(selectedFiltersCollected);
 
   parseData(pathToFile);
   console.log('todo.txt file loaded: ' + pathToFile);
@@ -236,8 +294,6 @@ function parseData(pathToFile) {
 
   if(pathToFile) {
 
-      let allFilters = [];
-
       fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
 
         if (!err) {
@@ -252,14 +308,14 @@ function parseData(pathToFile) {
           }
 
           // load data
-          if(generateTodoData() == true) {
+          if(generateTodoData(selectedFiltersCollected) == true) {
             console.log('Todos successfully loaded');
           } else {
             console.log('Could not load data');
           }
 
           // load filters
-          if(generateFilterData() == true) {
+          if(generateFilterData(selectedFiltersCollected) == true) {
             console.log('Filters successfully loaded');
           } else {
             console.log('Could not load filters');
@@ -295,50 +351,39 @@ function generateFilterData() {
     category = filterCategories[i];
 
     // TODO: Clean up the mess
-    let selectedFilters = new Array();
-
-    // TODO: clean up the mess
-    let selectedFiltersNoCategory = new Array;
+    let filters = new Array();
 
     // run the array and collect all possible filter, duplicates included
     for (let j = 0; j < parsedData.length; j++) {
 
       item = parsedData[j];
-
       if(item[category]) {
         for(let k = 0; k < item[category].length; k++) {
-          filter = item[category][k];
-
-          // convert the array to a comma separated string for further comparison
-          selectedFilters.push([filter, category]);
+          filters.push([item[category][k]]);
         }
       }
     }
 
-    // reduce to 1st dimension so we can count with reduce function
-    for(k = 0; k < selectedFilters.length; k++) {
-      selectedFiltersNoCategory.push(selectedFilters[k].slice(0,1));
-    }
-
     // delete duplicates and count filters
-    selectedFiltersCounted = selectedFiltersNoCategory.join(',').split(',').reduce(function (selectedFiltersNoCategory, filter) {
-      if (filter in selectedFiltersNoCategory) {
-        selectedFiltersNoCategory[filter]++;
+    selectedFiltersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
+      if (filter in filters) {
+        filters[filter]++;
       } else {
-        selectedFiltersNoCategory[filter] = 1;
+        filters[filter] = 1;
       }
-      if(selectedFiltersNoCategory!=null) {
-        return selectedFiltersNoCategory;
+      if(filters!=null) {
+        return filters;
       }
     }, {});
 
     // remove the duplicates
-    selectedFilters = uniqBy(selectedFilters);
+    //selectedFilters = uniqBy(selectedFilters);
 
     // TODO: error handling
     // build the filter buttons
     buildFilterButtons();
   }
+
   // TODO: add a false on err
   return true;
 }
@@ -369,6 +414,11 @@ function buildFilterButtons() {
       // build one button each
       // TODO: why dont put the adventListener on the buttons here?!
       for (let filter in selectedFiltersCounted) {
+
+
+        //console.log(JSON.stringify(selectedFiltersCollected));
+        //console.log(new Array([filter, category]));
+
         let todoFiltersItem = document.createElement("button");
         todoFiltersItem.setAttribute("class", "btnApplyFilter button");
         todoFiltersItem.setAttribute("data-filter", filter);
@@ -402,6 +452,13 @@ function buildFilterButtons() {
 
         });
 
+        // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
+        selectedFiltersCollected.forEach(function(item) {
+          if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') {
+            todoFiltersItem.classList.toggle("is-dark");
+          }
+        });
+
         todoFilterContainerSub.appendChild(todoFiltersItem);
       }
 
@@ -409,47 +466,6 @@ function buildFilterButtons() {
       todoFilterContainer.appendChild(todoFilterContainerSub);
     }
   }
-
-
-
-  /*
-  // configure filter buttons
-  let listOfFilterButtons = document.querySelectorAll("div." + category + " button.btnApplyFilter");
-
-  if(listOfFilterButtons.length > 0) {
-
-    // TODO: Why again?
-    selectedFilters = [];
-
-    for(let l = 0; l < listOfFilterButtons.length; l++) {
-
-      let btnApplyFilter = listOfFilterButtons[l];
-      btnApplyFilter.addEventListener('click', () => {
-
-
-        btnApplyFilter.classList.toggle("is-dark");
-
-        let filterFound;
-        for(let z = 0; z < selectedFiltersCollected.length; z++) {
-           if(selectedFiltersCollected[z][0] == btnApplyFilter.name) {
-             // if filter is already present in 1 dimension of array, then delete array entry
-             selectedFiltersCollected.splice(z,1);
-             filterFound = true;
-           }
-        }
-        // if filter is not already present in first dimension of the array, then push the value
-        if(filterFound!=true) {
-          selectedFiltersCollected.push([btnApplyFilter.name, btnApplyFilter.title]);
-        }
-
-        //convert the collected filters to JSON and save it to store.js
-        store.set('selectedFiltersCollected', JSON.stringify(selectedFiltersCollected));
-
-        // TODO: error handling
-        generateTodoData(selectedFiltersCollected);
-      });
-    }
-  }*/
 }
 
 // ###############
@@ -461,11 +477,6 @@ function buildFilterButtons() {
 // TODO: Remove filterArray if not needed anymore
 function generateTodoData(selectedFiltersCollected) {
 
-  /*let selectedFiltersCollectedTemp = store.get('selectedFiltersCollected');
-  console.log(JSON.parse(selectedFiltersCollectedTemp));
-
-  console.log(selectedFiltersCollected);*/
-
   // new variable for items, filtered or not filtered
   let itemsFiltered = [];
 
@@ -474,7 +485,6 @@ function generateTodoData(selectedFiltersCollected) {
 
     // TODO: why?
     for (let i = 0; i < selectedFiltersCollected.length; i++) {
-
       for(var j = 0; j < parsedData.length; j++) {
         if(parsedData[j][selectedFiltersCollected[i][1]]) {
           // check if the selected filter is in one of the array values of the category field
@@ -496,8 +506,6 @@ function generateTodoData(selectedFiltersCollected) {
     // pass filtered data to function to build the table
     itemsFiltered = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
   }
-
-  //console.log(itemsFiltered.uniqBy(itemsFiltered));
 
   // TODO: error handling
   generateTodoTable(itemsFiltered);
@@ -634,7 +642,7 @@ function createTableRow() {
   todoTableBodyCell_text.addEventListener('click', function() {
     // declaring the item-data value global so other functions can access it
     window.dataItem = this.parentElement.getAttribute('data-item');
-    showEditForm(dataItem);
+    showForm(dataItem);
   });
 
   for (let k = 0; k < filterCategories.length; k++) {
@@ -660,47 +668,42 @@ function createTableRow() {
 
 // ###############
 
-// form in modal layer
-modalEditForm.addEventListener("submit", function(e) {
-  // intercept submit
-  if (e.preventDefault) e.preventDefault();
+// function to open modal layer and pass a string version of the todo into input field
+function showForm(dataItem) {
+  // clear the input value in case there was an old one
+  modalEditItemInput.value = null;
+  // convert array of objects to array of strings
+  parsedDataString = parsedData.map(item => item.toString());
+  modalEditForm.classList.toggle('is-active');
 
-  if(submitForm()) {
-      modalEditForm.classList.toggle('is-active');
+  if(dataItem) {
+    modalEditItemInput.value = dataItem;
+    modalTitle.innerHTML = 'Edit item';
+    // only show the complete button on open items
+    if(new TodoTxtItem(dataItem).complete == false) {
+      btnItemComplete.classList.add('is-active');
+    } else {
+      btnItemComplete.classList.remove('is-active');
+    }
+  } else {
+    modalTitle.innerHTML = 'Add item';
+    btnItemComplete.classList.remove('is-active');
   }
-
-  return false;
-
-});
-
-btnFormSubmit.addEventListener("click", function(e) {
-  if(submitForm()) {
-      modalEditForm.classList.toggle('is-active');
-  }
-});
+}
 
 function submitForm() {
   // get the position of that item in the array
-  let itemId = parsedData.indexOf(window.dataItem);
+  let itemId = parsedDataString.indexOf(window.dataItem);
 
   // get the index using the itemId, remove 1 item there and add the value from the input at that position
-  parsedData.splice(itemId, 1, modalEditForm.elements[0].value);
+  parsedDataString.splice(itemId, 1, modalEditForm.elements[0].value);
 
   // convert all the strings to proper todotxt items again
-  parsedData = parsedData.map(item => new TodoTxtItem(item));
+  parsedDataString = parsedDataString.map(item => new TodoTxtItem(item));
 
-  writeDataIntoFile(parsedData);
+  writeDataIntoFile(parsedDataString);
 
   return true;
-}
-
-// function to open modal layer and pass a string version of the todo into input field
-function showEditForm(dataItem) {
-  // convert array of objects to array of strings
-  parsedData = parsedData.map(item => item.toString());
-  modalEditForm.classList.toggle('is-active');
-  modalEditItemInput.value = dataItem;
-  modalTitle.innerHTML = 'Edit item'
 }
 
 function completeItem(dataItem) {
@@ -722,6 +725,8 @@ function completeItem(dataItem) {
   parsedData = parsedData.map(item => new TodoTxtItem(item));
 
   writeDataIntoFile(parsedData);
+
+  return true;
 }
 
 function writeDataIntoFile(parsedData) {
@@ -739,7 +744,6 @@ function writeDataIntoFile(parsedData) {
       console.log("The written has the following contents:");
       console.log(fs.readFileSync(pathToFile, "utf8"));
       parseData(pathToFile);
-      //modalEditItem.classList.toggle('is-active');
     }
-});
+  });
 }
