@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>TIDY.TXT</title>
+    <title>TDY.TXT</title>
 
     <link rel="stylesheet" href="bulma.min.css">
     <link rel="stylesheet" href="index.css">
@@ -63,27 +63,80 @@
       </div>
     </section>
 
-    <form id="modalEditItem" class="modal">
+    <form id="modalEditForm" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
 
-        <div class="box">
+        <div class="card">
+          <header class="card-header">
+            <p id="modalTitle" class="card-header-title">
+              Add a new todo
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <input id="modalEditItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project">
+              <article id="modalEditItemAlert" class="message is-danger">
+                <div class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>
+              </article>
+            </div>
+          </div>
+          <footer class="card-footer">
+            <a href="#" id="btnFormSubmit" class="card-footer-item">Save</a>
+            <!--<a href="#" class="card-footer-item">Edit</a>
+            <a href="#" class="card-footer-item">Delete</a>-->
+          </footer>
+        </div>
+
+        <!--<div class="box">
 
           <div class="field">
             <div class="control">
               <input id="modalEditItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project">
+              <article id="modalEditItemAlert" class="message is-danger">
+                <div class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>
+              </article>
+
+              <nav class="navbar" role="navigation" aria-label="dropdown navigation">
+                <div class="navbar-menu">
+                  <div class="navbar-start">
+                    <div class="navbar-item has-dropdown has-dropdown-up is-active">
+                      <a class="navbar-link">
+                        Dropup
+                      </a>
+
+                      <div class="navbar-dropdown">
+                        <a class="navbar-item">
+                          Overview
+                        </a>
+                        <a class="navbar-item">
+                          Elements
+                        </a>
+                        <a class="navbar-item">
+                          Components
+                        </a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item">
+                          Version 0.9.1
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+
               <button type="submit" class="button is-dark">Save</button>
             </div>
-          </div>
+          </div>-->
 
           <!--<i class="far fa-calendar-alt"></i> Add due date
           <i class="fas fa-plus"></i> Add a project
-          <i class="fas fa-at"></i> Add a context-->
+          <i class="fas fa-at"></i> Add a context
 
-        </div>
+        </div>-->
 
       </div>
-      <button class="modal-close is-large" aria-label="close"></button>
+      <div class="modal-close is-large" aria-label="close"></div>
     </form>
 
     <div id="onboarding" class="modal">

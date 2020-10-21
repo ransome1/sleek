@@ -15,13 +15,17 @@ const dialog = electron.remote.dialog;
 const app = electron.remote.app;
 const fs = require('fs');
 const btnFilter = document.getElementById('btnFilter');
+const btnFormSubmit = document.getElementById('btnFormSubmit');
 const filterDropdown = document.getElementById('filterDropdown');
-const modalEditForm = document.getElementById('modalEditItem');
-const modalEditItem = document.getElementById("modalEditItem");
+const modalEditForm = document.getElementById('modalEditForm');
+//const modalEditItem = document.getElementById("modalEditItem");
 const modalEditItemInput = document.getElementById("modalEditItemInput");
+const modalEditItemAlert = document.getElementById("modalEditItemAlert");
+const modalTitle = document.getElementById("modalTitle");
 const body = document.getElementById('body');
 const btnLoadTodoFile = document.querySelectorAll('.btnLoadTodoFile');
 const modalClose = document.querySelectorAll('.modal-close');
+const modalBackground = document.querySelectorAll('.modal-background');
 const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
 const filterCategories = ["contexts", "projects"];
 const Store = require('./store.js');
@@ -31,7 +35,6 @@ const store = new Store({
     pathToFile: app.getPath('home')
   }
 });
-const pathToFile = store.get('pathToFile');
 
 // ###############
 
@@ -41,12 +44,13 @@ const pathToFile = store.get('pathToFile');
 
 // Needed for comparison between priority items to build the divider rows
 let previousItem;
-// defining a Global file path Variable to store user-selected file
-let filepath = undefined;
+// defining a file path Variable to store user-selected file
+let pathToFile = store.get('pathToFile');
 // make the parsed data available
-let parsedData = undefined;
+// let parsedData = undefined;
 // TODO: clean up the mess
-let selectedFiltersCollected = new Array;
+//let selectedFiltersCollected = new Array;
+let selectedFiltersCollected = new Array || store.get('selectedFiltersCollected');
 // sort alphabetically
 let sortAlphabetically = store.get('sortAlphabetically');
 // show completed: get the stored value
@@ -106,18 +110,25 @@ document.getElementById('toggleShowCompleted').addEventListener('click', () => {
   // persist the sorting
   store.set('showCompleted', showCompleted);
 
+  // empty any pre selcted filters to avoid problems
+  selectedFiltersCollected = [];
   // TODO: error handling
   // regenerate the table considering the sort value
-  //console.log(pathToFile);
   parseData(pathToFile);
 });
 
 // put a click event on all "open file" buttons
 btnLoadTodoFile.forEach(el => el.addEventListener('click', event => {
-  extractDataFromFile();
+  openFile();
 }));
 
+// put a listeners on all close buttons
 modalClose.forEach(el => el.addEventListener('click', event => {
+  el.parentElement.classList.toggle('is-active');
+}));
+
+// put a listeners on all modal backgrounds
+modalBackground.forEach(el => el.addEventListener('click', event => {
   el.parentElement.classList.toggle('is-active');
 }));
 
@@ -127,7 +138,11 @@ modalClose.forEach(el => el.addEventListener('click', event => {
 
 // ###############
 
+// TODO: Maybe wait for something before we start the iterations?
 if(pathToFile) {
+
+  console.log(selectedFiltersCollected);
+
   parseData(pathToFile);
   console.log('todo.txt file loaded: ' + pathToFile);
   document.getElementById('onboarding').setAttribute('class','modal');
@@ -156,7 +171,7 @@ function uniqBy(a) {
 
 // ###############
 
-function extractDataFromFile() {
+function openFile() {
   // Resolves to a Promise<Object>
   dialog.showOpenDialog({
       title: 'Select yout todo.txt file',
@@ -186,22 +201,23 @@ function extractDataFromFile() {
 
       if (!file.canceled) {
         // Updating the GLOBAL filepath variable to user-selected file.
-        global.filepath = file.filePaths[0].toString();
+        pathToFile = file.filePaths[0].toString();
 
         //console.log(global.filepath);
 
         // read contents of todo.txt file
-        if (global.filepath && !file.canceled) {
+        if (pathToFile && !file.canceled) {
 
           // pass path and filename on, to extract and parse the raw data
-          parseData(global.filepath);
+          parseData(pathToFile);
 
           // close the modal layer if open
           document.getElementById('onboarding').setAttribute('class','modal');
 
           // write new path and file name into storage file
-          store.set('pathToFile', global.filepath);
-          console.log('Storage file updated by new path and filename: ' + global.filepath);
+          store.set('pathToFile', pathToFile);
+
+          console.log('Storage file updated by new path and filename: ' + pathToFile);
          }
       }
   }).catch(err => {
@@ -323,7 +339,6 @@ function generateFilterData() {
     // build the filter buttons
     buildFilterButtons();
   }
-
   // TODO: add a false on err
   return true;
 }
@@ -356,9 +371,37 @@ function buildFilterButtons() {
       for (let filter in selectedFiltersCounted) {
         let todoFiltersItem = document.createElement("button");
         todoFiltersItem.setAttribute("class", "btnApplyFilter button");
-        todoFiltersItem.setAttribute("name", filter);
-        todoFiltersItem.setAttribute("title", category);
+        todoFiltersItem.setAttribute("data-filter", filter);
+        todoFiltersItem.setAttribute("data-category", category);
         todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + selectedFiltersCounted[filter] + "</span>";
+        todoFiltersItem.addEventListener('click', () => {
+
+          todoFiltersItem.classList.toggle("is-dark");
+
+          // if no filters are selected, add a first one
+          if (selectedFiltersCollected.length > 0) {
+            // get the index of the item that matches the data values the button clic provided
+            let index = selectedFiltersCollected.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+            if(index != -1) {
+              // remove the item at the index where it matched
+              selectedFiltersCollected.splice(index, 1);
+            } else {
+              // if the item is not already in the array, push it into
+              selectedFiltersCollected.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+            }
+          } else {
+            // this is the first push
+            selectedFiltersCollected.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+          }
+
+          //convert the collected filters to JSON and save it to store.js
+          store.set('selectedFiltersCollected', JSON.stringify(selectedFiltersCollected));
+
+          // TODO: error handling
+          generateTodoData(selectedFiltersCollected);
+
+        });
+
         todoFilterContainerSub.appendChild(todoFiltersItem);
       }
 
@@ -367,6 +410,9 @@ function buildFilterButtons() {
     }
   }
 
+
+
+  /*
   // configure filter buttons
   let listOfFilterButtons = document.querySelectorAll("div." + category + " button.btnApplyFilter");
 
@@ -380,7 +426,7 @@ function buildFilterButtons() {
       let btnApplyFilter = listOfFilterButtons[l];
       btnApplyFilter.addEventListener('click', () => {
 
-        // add or remove css class for highlighting
+
         btnApplyFilter.classList.toggle("is-dark");
 
         let filterFound;
@@ -396,11 +442,14 @@ function buildFilterButtons() {
           selectedFiltersCollected.push([btnApplyFilter.name, btnApplyFilter.title]);
         }
 
+        //convert the collected filters to JSON and save it to store.js
+        store.set('selectedFiltersCollected', JSON.stringify(selectedFiltersCollected));
+
         // TODO: error handling
         generateTodoData(selectedFiltersCollected);
       });
     }
-  }
+  }*/
 }
 
 // ###############
@@ -411,6 +460,11 @@ function buildFilterButtons() {
 
 // TODO: Remove filterArray if not needed anymore
 function generateTodoData(selectedFiltersCollected) {
+
+  /*let selectedFiltersCollectedTemp = store.get('selectedFiltersCollected');
+  console.log(JSON.parse(selectedFiltersCollectedTemp));
+
+  console.log(selectedFiltersCollected);*/
 
   // new variable for items, filtered or not filtered
   let itemsFiltered = [];
@@ -423,8 +477,9 @@ function generateTodoData(selectedFiltersCollected) {
 
       for(var j = 0; j < parsedData.length; j++) {
         if(parsedData[j][selectedFiltersCollected[i][1]]) {
-          // check if the selected filter is one of the array values of the category
-          if(parsedData[j][selectedFiltersCollected[i][1]].includes(selectedFiltersCollected[i][0])) {
+          // check if the selected filter is in one of the array values of the category field
+          // only push into array if it hasn't already been part of the array
+          if(parsedData[j][selectedFiltersCollected[i][1]].includes(selectedFiltersCollected[i][0]) && !itemsFiltered.includes(parsedData[j])) {
             itemsFiltered.push(parsedData[j]);
           }
         }
@@ -441,6 +496,8 @@ function generateTodoData(selectedFiltersCollected) {
     // pass filtered data to function to build the table
     itemsFiltered = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
   }
+
+  //console.log(itemsFiltered.uniqBy(itemsFiltered));
 
   // TODO: error handling
   generateTodoTable(itemsFiltered);
@@ -479,7 +536,6 @@ function generateTodoTable(itemsFiltered) {
 function addTableRows(items, priority) {
 
   if(priority==true) {
-
     // TODO: whats happening here?
     let itemsByPriority = items.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
@@ -532,6 +588,7 @@ function createTableDividerRow() {
 }
 
 function createTableRow() {
+
   // creates a table row for one item
   let todoTableBodyRow = document.createElement("div");
   if(item.complete==true) {
@@ -540,6 +597,7 @@ function createTableRow() {
     todoTableBodyRow.setAttribute("class", "flex-table");
   }
   todoTableBodyRow.setAttribute("role", "rowgroup");
+  todoTableBodyRow.setAttribute("data-item", item.toString());
 
   // add the priority marker
   if(item.priority) {
@@ -557,6 +615,11 @@ function createTableRow() {
     todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-check-square\"></i>";
   } else {
     todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
+    todoTableBodyCellCheckbox.addEventListener('click', function() {
+      // passing the data-item attribute of the parent tag to complete function
+      completeItem(this.parentElement.getAttribute('data-item'));
+    });
+
   }
   todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
 
@@ -564,19 +627,18 @@ function createTableRow() {
   let todoTableBodyCell_text = document.createElement("div");
   todoTableBodyCell_text.setAttribute("class", "flex-row itemText");
   todoTableBodyCell_text.setAttribute("role", "cell");
-  todoTableBodyCell_text.setAttribute("data-item", item.toString());
+  //  todoTableBodyCell_text.setAttribute("data-item", item.toString());
   if(item.text) {
       todoTableBodyCell_text.innerHTML =  item.text;
   }
-
   todoTableBodyCell_text.addEventListener('click', function() {
     // declaring the item-data value global so other functions can access it
-    window.dataItem = this.getAttribute('data-item');
-    editItem(dataItem);
+    window.dataItem = this.parentElement.getAttribute('data-item');
+    showEditForm(dataItem);
   });
 
   for (let k = 0; k < filterCategories.length; k++) {
-    // creates cell for the projects
+    // creates bubbles for the categories
     if(item[filterCategories[k]]!=null) {
       for(let j = 0; j < item[filterCategories[k]].length; j++) {
           let todoTableBodyCellCategoryItem = document.createElement("span");
@@ -592,44 +654,92 @@ function createTableRow() {
   todoTableContainer.appendChild(todoTableBodyRow);
 }
 
-// TODO: clean up
+// ###############
 
-function editItem(dataItem) {
-  parsedDataToString = parsedData.map(item => item.toString());
-  modalEditItem.classList.toggle('is-active');
-  modalEditItemInput.value = dataItem;
-}
+// SAVE DATA
 
+// ###############
+
+// form in modal layer
 modalEditForm.addEventListener("submit", function(e) {
   // intercept submit
   if (e.preventDefault) e.preventDefault();
 
+  if(submitForm()) {
+      modalEditForm.classList.toggle('is-active');
+  }
+
+  return false;
+
+});
+
+btnFormSubmit.addEventListener("click", function(e) {
+  if(submitForm()) {
+      modalEditForm.classList.toggle('is-active');
+  }
+});
+
+function submitForm() {
   // get the position of that item in the array
-  let itemId = parsedDataToString.indexOf(window.dataItem);
+  let itemId = parsedData.indexOf(window.dataItem);
 
   // get the index using the itemId, remove 1 item there and add the value from the input at that position
-  parsedDataToString.splice(itemId, 1, modalEditForm.elements[0].value);
+  parsedData.splice(itemId, 1, modalEditForm.elements[0].value);
 
   // convert all the strings to proper todotxt items again
-  parsedData = parsedDataToString.map(item => new TodoTxtItem(item));
+  parsedData = parsedData.map(item => new TodoTxtItem(item));
 
-  // load the data again using the new parsedData
-  // load data
-  if(generateTodoData() == true) {
-    console.log('Todos successfully loaded');
-  } else {
-    console.log('Could not load data');
-  }
+  writeDataIntoFile(parsedData);
 
-  // load filters
-  if(generateFilterData() == true) {
-    console.log('Filters successfully loaded');
-  } else {
-    console.log('Could not load filters');
-  }
+  return true;
+}
 
-  modalEditItem.classList.toggle('is-active');
+// function to open modal layer and pass a string version of the todo into input field
+function showEditForm(dataItem) {
+  // convert array of objects to array of strings
+  parsedData = parsedData.map(item => item.toString());
+  modalEditForm.classList.toggle('is-active');
+  modalEditItemInput.value = dataItem;
+  modalTitle.innerHTML = 'Edit item'
+}
 
-  // don't know if I need that
-  return false;
+function completeItem(dataItem) {
+
+  // convert array of objects to array of strings
+  parsedData = parsedData.map(item => item.toString());
+
+  // get the position of that item in the array
+  let itemId = parsedData.indexOf(dataItem);
+
+  // build the prefix "x " and add today's date
+  // https://stackoverflow.com/a/35922073
+  let prefix = "x " + new Date().toISOString().slice(0, 10) + " ";
+
+  // get the index using the itemId, remove 1 item there and add the value from the input at that position
+  parsedData.splice(itemId, 1, prefix.concat(dataItem));
+
+  // convert all the strings to proper todotxt items again
+  parsedData = parsedData.map(item => new TodoTxtItem(item));
+
+  writeDataIntoFile(parsedData);
+}
+
+function writeDataIntoFile(parsedData) {
+
+  // render the objects into a string with line breaks
+  parsedData = TodoTxt.render(parsedData);
+
+  // Write data to 'todo.txt'
+  fs.writeFile(pathToFile, parsedData, {encoding: 'utf-8'}, (err) => {
+    if (err) {
+      //modalEditItemAlert.classList.toggle('is-active');
+      console.log(err);
+    } else {
+      console.log("File written successfully\n");
+      console.log("The written has the following contents:");
+      console.log(fs.readFileSync(pathToFile, "utf8"));
+      parseData(pathToFile);
+      //modalEditItem.classList.toggle('is-active');
+    }
 });
+}

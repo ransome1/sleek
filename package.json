@@ -1,6 +1,6 @@
 {
-  "name": "TIDY.TXT",
-  "productName": "TIDY.TXT",
+  "name": "TDY.TXT",
+  "productName": "TDY.TXT",
   "version": "0.0.1",
   "description": "A tidy app to manage a todo.txt file.",
   "main": "src/index.js",
@@ -21,7 +21,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "tidy.txt"
+            "name": "tdy.txt"
           }
         },
         {

@@ -37,12 +37,16 @@ body, button, input, optgroup, select, textarea {
   z-index: 110;
 }
 
+.modal .modal-background {
+  background: rgba(0,0,0,.25);
+}
+
 #onboarding {
   z-index: 110;
 }
 
 #onboarding .modal-background {
-  background: #fff;
+  background: rgba(255,255,255,1);
 }
 
 #onboarding .modal-content {
@@ -373,15 +377,15 @@ nav ul li.logo span {
 }
 
 .flex-table .flex-row[role="cell"].priority.A {
-  background: #e67373;
+  background: #e15f91;
 }
 
 .flex-table .flex-row[role="cell"].priority.B {
-  background: #e6dc73;
+  background: #db808f;
 }
 
 .flex-table .flex-row[role="cell"].priority.C {
-  background: #73e673;
+  background: #d5a28c;
 }
 
 /*.flex-table .flex-row.checkbox[role="cell"] .fa-square {
@@ -498,6 +502,17 @@ input:checked + .slider:before {
 
 .slider.round:before {
  border-radius: 50%;
+}
+
+/* MODAL EDIT ITEM */
+
+#modalEditForm #modalEditItemAlert {
+  display: none;
+  margin: 1em 0;
+}
+
+#modalEditForm #modalEditItemAlert.is-active {
+  display: block;
 }
 
 /* MEDIA QUERIES */

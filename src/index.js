@@ -1,6 +1,5 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-// Store user data: read store.js
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -16,9 +15,7 @@ const store = new Store({
   configName: 'user-preferences',
   defaults: {
     // 800x600 is the default size of our window
-    windowBounds: { width: 1000, height: 800 },
-    sortAlphabetically: false,
-    showCompleted: false
+    windowBounds: { width: 800, height: 600 }
   }
 });
 
