@@ -504,28 +504,28 @@ input:checked + .slider:before {
  border-radius: 50%;
 }
 
-/* MODAL EDIT ITEM */
+/* MODAL FORM */
 
-#modalEditForm #modalEditItemAlert {
+#modalForm .message {
   display: none;
   margin: 1em 0;
 }
 
-#modalEditForm #modalEditItemAlert.is-active {
+#modalForm .is-active {
   display: block;
 }
 
-#modalEditForm #btnItemComplete {
+#modalForm #btnItemComplete {
   display: none;
 
   text-align: center;
 }
 
-#modalEditForm #btnItemComplete.is-active {
+#modalForm #btnItemComplete.is-active {
   display: block;
 }
 
-#modalEditForm .field {
+#modalForm .field {
   margin: .75em 0;
 }
 

@@ -23,6 +23,7 @@
 - [ ] Extensive testing
 - [ ] Code refinement and better error handling
 - [ ] Keyboard shortcuts
+- [ ] Multi language support
 - [ ] Show due date and implement a notification function
 - [ ] Build a working binary
 - [ ] UI: Dark theme

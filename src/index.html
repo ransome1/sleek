@@ -64,7 +64,7 @@
       </div>
     </section>
 
-    <form id="modalEditForm" class="modal">
+    <form id="modalForm" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
 
@@ -74,9 +74,10 @@
           </header>
           <div class="card-content">
             <div class="content">
-              <input id="modalEditItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project">
-              <article id="modalEditItemAlert" class="message is-danger">
-                <div class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>
+              <input id="modalFormItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project">
+              <article class="message">
+                <!--<div id="modalFormAlert" class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>-->
+                <div id="modalFormAlert" class="message-body"></div>
               </article>
               <div class="field">
                 Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank">todo.txt syntax</a>.

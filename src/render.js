@@ -28,9 +28,9 @@ const btnFormCancel = document.getElementById("btnFormCancel");
 const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById('filterDropdown');
 
-const modalEditForm = document.getElementById('modalEditForm');
-const modalEditItemInput = document.getElementById("modalEditItemInput");
-const modalEditItemAlert = document.getElementById("modalEditItemAlert");
+const modalForm = document.getElementById('modalForm');
+const modalFormItemInput = document.getElementById("modalFormItemInput");
+const modalFormAlert = document.getElementById("modalFormAlert");
 const modalTitle = document.getElementById("modalTitle");
 const modalClose = document.querySelectorAll('.modal-close');
 const modalBackground = document.querySelectorAll('.modal-background');
@@ -93,6 +93,7 @@ btnFilter.addEventListener('click', () => {
   body.classList.toggle('is-active');
 });
 
+/*
 // put a listeners on the table for closing the active menu
 document.getElementById('todoTable').addEventListener('click', () => {
   if(filterDropdown.classList.contains('is-active')) {
@@ -101,6 +102,7 @@ document.getElementById('todoTable').addEventListener('click', () => {
     body.classList.toggle('is-active');
   }
 });
+*/
 
 btnAddItem.addEventListener('click', () => {
   showForm();
@@ -147,12 +149,12 @@ document.getElementById('toggleShowCompleted').addEventListener('click', () => {
 });
 
 // submit in the form
-modalEditForm.addEventListener("submit", function(e) {
+modalForm.addEventListener("submit", function(e) {
   // intercept submit
   if (e.preventDefault) e.preventDefault();
 
   if(submitForm()) {
-      modalEditForm.classList.toggle('is-active');
+      modalForm.classList.toggle('is-active');
   }
 
   return false;
@@ -162,19 +164,19 @@ modalEditForm.addEventListener("submit", function(e) {
 // click on submit button
 btnFormSubmit.addEventListener("click", function(e) {
   if(submitForm()) {
-      modalEditForm.classList.toggle('is-active');
+      modalForm.classList.toggle('is-active');
   }
 });
 
 btnItemComplete.addEventListener('click', () => {
   if(completeItem(dataItem)) {
-    modalEditForm.classList.toggle('is-active');
+    modalForm.classList.toggle('is-active');
   }
 });
 
 // click on the close button in the footer of the edit modal
 btnFormCancel.addEventListener("click", function(e) {
-  modalEditForm.classList.toggle('is-active');
+  modalForm.classList.toggle('is-active');
 });
 
 // put a click event on all "open file" buttons
@@ -623,12 +625,12 @@ function createTableRow() {
     todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-check-square\"></i>";
   } else {
     todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
-    todoTableBodyCellCheckbox.addEventListener('click', function() {
-      // passing the data-item attribute of the parent tag to complete function
-      completeItem(this.parentElement.getAttribute('data-item'));
-    });
-
   }
+  // add a listener on the checkbox to call the completeItem function
+  todoTableBodyCellCheckbox.addEventListener('click', function() {
+    // passing the data-item attribute of the parent tag to complete function
+    completeItem(this.parentElement.getAttribute('data-item'));
+  });
   todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
 
   // creates cell for the text
@@ -671,13 +673,13 @@ function createTableRow() {
 // function to open modal layer and pass a string version of the todo into input field
 function showForm(dataItem) {
   // clear the input value in case there was an old one
-  modalEditItemInput.value = null;
+  modalFormItemInput.value = null;
   // convert array of objects to array of strings
   parsedDataString = parsedData.map(item => item.toString());
-  modalEditForm.classList.toggle('is-active');
+  modalForm.classList.toggle('is-active');
 
   if(dataItem) {
-    modalEditItemInput.value = dataItem;
+    modalFormItemInput.value = dataItem;
     modalTitle.innerHTML = 'Edit item';
     // only show the complete button on open items
     if(new TodoTxtItem(dataItem).complete == false) {
@@ -692,18 +694,32 @@ function showForm(dataItem) {
 }
 
 function submitForm() {
-  // get the position of that item in the array
-  let itemId = parsedDataString.indexOf(window.dataItem);
 
-  // get the index using the itemId, remove 1 item there and add the value from the input at that position
-  parsedDataString.splice(itemId, 1, modalEditForm.elements[0].value);
+  if(modalForm.elements[0].value) {
 
-  // convert all the strings to proper todotxt items again
-  parsedDataString = parsedDataString.map(item => new TodoTxtItem(item));
+    // get the position of that item in the array
+    let itemId = parsedDataString.indexOf(window.dataItem);
 
-  writeDataIntoFile(parsedDataString);
+    // get the index using the itemId, remove 1 item there and add the value from the input at that position
+    parsedDataString.splice(itemId, 1, modalForm.elements[0].value);
 
-  return true;
+    // convert all the strings to proper todotxt items again
+    parsedDataString = parsedDataString.map(item => new TodoTxtItem(item));
+
+    writeDataIntoFile(parsedDataString);
+
+    // hide the alert for future modal calls, if there has been one
+    modalFormAlert.parentElement.classList.remove('is-active');
+
+    return true;
+
+  } else {
+
+    // if the input field is empty, let users know
+    modalFormAlert.innerHTML = "Please add a todo into the text field. If you are unsure on how to do this, take a quick look at the <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.";
+    modalFormAlert.parentElement.classList.add('is-active', 'is-warning');
+  }
+
 }
 
 function completeItem(dataItem) {
@@ -713,13 +729,24 @@ function completeItem(dataItem) {
 
   // get the position of that item in the array
   let itemId = parsedData.indexOf(dataItem);
+  let itemStatus = new TodoTxtItem(dataItem).complete;
 
-  // build the prefix "x " and add today's date
-  // https://stackoverflow.com/a/35922073
-  let prefix = "x " + new Date().toISOString().slice(0, 10) + " ";
+  // check if item was complete
+  if(itemStatus) {
 
-  // get the index using the itemId, remove 1 item there and add the value from the input at that position
-  parsedData.splice(itemId, 1, prefix.concat(dataItem));
+    // if item was already completed we remove the first 13 chars (eg "x 2020-01-01 ") and make the item incomplete again
+    parsedData.splice(itemId, 1, dataItem.substr(13));
+
+  } else {
+
+    // build the prefix "x " and add today's date, so it will be read as completed
+    // https://stackoverflow.com/a/35922073
+    let prefix = "x " + new Date().toISOString().slice(0, 10) + " ";
+
+    // get the index using the itemId, remove 1 item there and add the value from the input at that position
+    parsedData.splice(itemId, 1, prefix.concat(dataItem));
+
+  }
 
   // convert all the strings to proper todotxt items again
   parsedData = parsedData.map(item => new TodoTxtItem(item));
@@ -737,7 +764,6 @@ function writeDataIntoFile(parsedData) {
   // Write data to 'todo.txt'
   fs.writeFile(pathToFile, parsedData, {encoding: 'utf-8'}, (err) => {
     if (err) {
-      //modalEditItemAlert.classList.toggle('is-active');
       console.log(err);
     } else {
       console.log("File written successfully\n");
