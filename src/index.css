@@ -1,4 +1,11 @@
+html {
+  height: 100%;
+}
+
 body {
+  height: 100%;
+  display: flex;
+
   padding-left: 5em;
   margin: auto;
   background: #fff;
@@ -17,19 +24,29 @@ body, button, input, optgroup, select, textarea {
   font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans",  sans-serif;
 }
 
-/* FILE UPLOAD */
+/* ONBOARDING */
 
-/*.file.has-name .file-name {
-  width: auto;
-  float: right;
+#onboardingContainer {
+  width: 100%;
+  height: 100%;
+  text-align: center;
 
-  background: #fff;
+  display: none;
+  flex-direction: column;
+  justify-content:center;
+}
 
-  direction: rtl;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}*/
+#onboardingContainer.is-active {
+  display: flex;
+}
+
+#onboardingContainer .title.is-1 {
+  margin-bottom: .65em;
+}
+
+#onboardingContainer .btnLoadTodoFile {
+  font-size: 1em;
+}
 
 /* MODAL */
 
@@ -39,70 +56,6 @@ body, button, input, optgroup, select, textarea {
 
 .modal .modal-background {
   background: rgba(0,0,0,.25);
-}
-
-#onboarding {
-  z-index: 110;
-}
-
-#onboarding .modal-background {
-  background: rgba(255,255,255,1);
-}
-
-#onboarding .modal-content {
-  /*width: 50em;*/
-  /*max-width: 60%;*/
-  padding: 2em;
-  text-align: center;
-}
-
-#onboarding .modal-content h1 {
-  margin: .5em 0;
-
-  font-weight: 1000;
-  line-height: .85em;
-}
-
-#onboarding .modal-content .subtitle {
-  margin: .25em 0 3em 0;
-}
-
-#onboarding .modal-content .column {
-  padding: 0 3em;
-}
-
-#onboarding .modal-content .column div {
-  background: #363636;
-  color: #fff;
-
-  border-radius: 4px;
-
-  padding: 1em 1em .5em 1em;
-
-  font-size: 1.15em;
-
-  cursor: pointer;
-}
-
-#onboarding .modal-content .column div svg {
-  font-size: 1.15em;
-}
-
-#onboarding .modal-content .column p {
-  margin-bottom: 0.5em;
-}
-
-.column:first-child {
-  border-right: 1px solid #363636;
-}
-
-.hero {
-  width: 100%;
-  float: left;
-}
-
-.hero .hero-body {
-  padding: 1.5em;
 }
 
 /* Vertical menu */
@@ -142,8 +95,18 @@ nav ul li {
 }
 
 nav ul li:hover,
-nav ul li a.is-active {
-  background: #ebebeb
+nav ul li.is-highlighted {
+  background: #ebebeb;
+}
+
+nav ul li#btnAddItem,
+nav ul li#btnFilter {
+  display: none;
+}
+
+nav ul li#btnAddItem.is-active,
+nav ul li#btnFilter.is-active {
+  display: block;
 }
 
 nav ul li a {
@@ -151,6 +114,7 @@ nav ul li a {
   height: 5em;
 
   display: block;
+  overflow: hidden;
 
   cursor: pointer;
   color: #404040;
@@ -160,62 +124,10 @@ nav ul li.logo {
   background: #404040;
   color: #fff;
 
+  font-size: 1em;
   font-weight: 1000;
-  line-height: 1em;
-}
-
-nav ul li.logo span {
-  display: block;
-  padding-top: 1.5em;
-}
-
-/*
-#interactionBar {
-  width: 100%;
-  height: 5em;
-
-  position: fixed;
-  top: 0;
-  z-index: 100;
-
-  background: #f5f5f5;
-}
-
-#interactionBar .hero-body {
-  padding: 0;
-  z-index: 110;
-  background: #f5f5f5;
-}
-
-#interactionBar .hero-body .item {
-  height: 5em;
-  float: left;
-
-  padding: 0 1.5em;
-  margin-left: -1.25em;
-
-  text-align: center;
   line-height: 5em;
-
-  cursor: pointer;
 }
-
-#interactionBar .hero-body .item:hover,
-#interactionBar .hero-body .item.is-active {
-  background: #ebebeb;
-}
-
-#interactionBar .hero-body .item svg {
-  font-size: 1.25em;
-  color: #4d4d4d;
-}
-
-#interactionBar .field {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding-top: 1.25em;
-}*/
 
 /* FILTER DROPDOWN */
 
@@ -250,6 +162,7 @@ nav ul li.logo span {
 }
 
 #filterDropdown .dropdown-item {
+  width: 100%;
   float: left;
   padding: 0;
   margin: 1.5em 0;
@@ -264,6 +177,14 @@ nav ul li.logo span {
   margin-bottom: 1.5em;
 }
 
+#filterDropdown #btnResetAllFilters {
+  display: none;
+}
+
+#filterDropdown #btnResetAllFilters.is-active {
+  display: block;
+}
+
 /* FILTERS */
 #todoFilters {
   width: 100%;
@@ -275,10 +196,6 @@ nav ul li.logo span {
   /*text-transform: uppercase;*/
   margin: 0 .5rem .5rem 0;
 }
-
-/*#todoFilters div h4 {
-  color: #fff;
-}*/
 
 #todoFilters div.contexts button  {
   background: #c5ede3;
@@ -344,12 +261,20 @@ nav ul li.logo span {
 
 /* TABLE */
 
+#todoTable {
+  width: 100%;
+  display: none;
+}
+
+#todoTable.is-active {
+  display:flex;
+}
+
 .flex-table {
   display: flex;
   flex-flow: row wrap;
   border-bottom: solid 1px #d9d9d9;
   transition: 0.5s;
-
 }
 
 .flex-table.priority {
@@ -359,7 +284,7 @@ nav ul li.logo span {
 }
 
 .flex-table.completed {
-  color: grey;
+  color: hsl(0, 0%, 71%);
 }
 
 .flex-table .flex-row[role="cell"] {
@@ -372,29 +297,25 @@ nav ul li.logo span {
 
 .flex-table .flex-row[role="cell"].priority {
   width: .5em;
-  background: #ebebeb;
+  background: hsl(0, 0%, 86%);
   opacity: .5;
 }
 
 .flex-table .flex-row[role="cell"].priority.A {
-  background: #e15f91;
+  background: hsl(348, 100%, 61%);
 }
 
 .flex-table .flex-row[role="cell"].priority.B {
-  background: #db808f;
+  background: hsl(48, 100%, 67%);
 }
 
 .flex-table .flex-row[role="cell"].priority.C {
-  background: #d5a28c;
+  background: hsl(141, 53%, 53%);
 }
-
-/*.flex-table .flex-row.checkbox[role="cell"] .fa-square {
-  font-size: 1.5em;
-  color: #666666;
-}*/
 
 .flex-table .flex-row.text[role="cell"] {
   max-width: 80%;
+  cursor: pointer;
 }
 
 .flex-table .flex-row[role="cell"] span.tag {
@@ -416,15 +337,19 @@ nav ul li.logo span {
   color: #075943;
 }
 
- /*.flex-table:first-of-type {
-	 border-top: solid 1px #1565c0;
-	 border-left: solid 1px #1565c0;
-}*/
- /*.flex-table:first-of-type .flex-row {
-	 background: #1976d2;
-	 color: white;
-	 border-color: #1565c0;
-}*/
+.flex-table.completed .flex-row[role="cell"] span.tag.projects {
+  background: hsl(0, 0%, 71%);
+  color: #fff;
+}
+
+.flex-table.completed .flex-row[role="cell"] span.tag.contexts {
+  background: hsl(0, 0%, 86%);
+  color: #fff;
+}
+
+.flex-table .flex-row.text[role="cell"] span.itemDueDate {
+  color: hsl(0, 0%, 71%);
+}
 
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 
@@ -515,18 +440,17 @@ input:checked + .slider:before {
   display: block;
 }
 
-#modalForm #btnItemComplete {
-  display: none;
+#modalForm .field {
+  margin: .75em 0;
+}
 
+#modalForm #btnItemStatus {
+  display: none;
   text-align: center;
 }
 
-#modalForm #btnItemComplete.is-active {
+#modalForm #btnItemStatus.is-active {
   display: block;
-}
-
-#modalForm .field {
-  margin: .75em 0;
 }
 
 /* MEDIA QUERIES */
@@ -534,7 +458,7 @@ input:checked + .slider:before {
 @media (max-width: 1023px) {
 
   #filterDropdown {
-    width: 90%!important;
+    width: 100%!important;
     padding: 0 2%!important;
   }
 
@@ -565,9 +489,8 @@ input:checked + .slider:before {
 
   nav ul li.logo {
     width: 100%;
-    height: 4.25em;
-    font-size: .8em;
-    line-height: 1em;
+    height: 3.5em;
+    line-height: 3.5em;
   }
 
   nav ul li.logo span {

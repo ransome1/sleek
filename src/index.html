@@ -1,34 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>TDY.TXT</title>
-
+    <title>tidy.</title>
     <link rel="stylesheet" href="bulma.min.css">
     <link rel="stylesheet" href="index.css">
-
     <script defer src="fontawesome.js"></script>
+    <script defer src="jsTodoExtensions.js"></script>
+    <script defer src="jsTodoTxt.js"></script>
+    <script defer src="autolink.js"></script>
     <script defer src="render.js"></script>
-    <script defer src="jsTodoTxt.min.js"></script>
-
   </head>
   <body id="body">
-
     <nav>
       <ul>
-      	<li class="logo"><span>TDY<br>TXT</span></li>
-        <li><a href="#" id="btnAddItem"><i class="fas fa-plus"></i></a></li>
-      	<li><a href="#" id="btnFilter"><i class="fas fa-filter"></i></a></li>
+      	<li class="logo">tidy.</li>
+        <li id="btnAddItem"><a href="#"><i class="fas fa-plus"></i></a></li>
+      	<li id="btnFilter"><a href="#"><i class="fas fa-filter"></i></a></li>
       	<li><a href="#" class="btnLoadTodoFile"><i class="fas fa-upload"></i></a></li>
       </ul>
-
       <section id="filterDropdown" class="dropdown">
         <div class="container">
-
           <div class="toggle">
             <label class="switch">
               <input type="checkbox" id="toggleSort">
@@ -36,7 +30,6 @@
             </label>
             <label for="sort" class="text">Sort alphabetically</label>
           </div>
-
           <div class="toggle">
             <label class="switch">
               <input type="checkbox" id="toggleShowCompleted">
@@ -44,18 +37,13 @@
             </label>
             <span class="text">Show completed</span>
           </div>
-
           <div id="todoFilters"></div>
-
           <div class="toggle">
-            <button id="btnResetAllFilters" class="button is-light"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+            <button id="btnResetAllFilters" class="button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
           </div>
-
         </div>
       </section>
-
     </nav>
-
     <section id="todoTable" class="hero">
       <div class="hero-body">
         <div class="container">
@@ -63,18 +51,41 @@
         </div>
       </div>
     </section>
-
+    <section id="onboardingContainer">
+      <h1 class="title is-1">tidy.</h1>
+      <p class="subtitle">Start by choosing an <strong>existing</strong> todo.txt from your file system.</p>
+      <p>
+        <div class="btnLoadTodoFile">
+          <p><i class="fas fa-upload"></i></p>
+          <p>open todo.txt file</p>
+        </div>
+      </p>
+      <!--<div class="field">
+        <div class="file is-boxed is-centered btnLoadTodoFile">
+          <label class="file-label">
+            <input class="file-input" type="file" name="Choose a todo.txt from your file system">
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">
+                todo.txt file…
+              </span>
+            </span>
+          </label>
+        </div>
+      </div>-->
+    </section>
     <form id="modalForm" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
-
         <div class="card">
           <header class="card-header">
             <p id="modalTitle" class="card-header-title"></p>
           </header>
           <div class="card-content">
             <div class="content">
-              <input id="modalFormItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project">
+              <input id="modalFormItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project" tabindex="1">
               <article class="message">
                 <!--<div id="modalFormAlert" class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>-->
                 <div id="modalFormAlert" class="message-body"></div>
@@ -86,48 +97,11 @@
           </div>
           <footer class="card-footer">
             <a href="#" id="btnFormSubmit" class="card-footer-item">Save</a>
-            <a href="#" id="btnItemComplete" class="card-footer-item">Complete</a>
+            <a href="#" id="btnItemStatus" class="card-footer-item"></a>
             <a href="#" id="btnFormCancel" class="card-footer-item">Cancel</a>
           </footer>
         </div>
-
       </div>
     </form>
-
-    <div id="onboarding" class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <h1 class="title is-1">TDY<br>TXT</h1>
-        <p class="subtitle">A tidy app to manage a todo.txt file.</p>
-
-        <div class="columns">
-          <div class="column">
-
-            <p>Choose an <strong>existing</strong> todo.txt from your file system.</p>
-
-            <p>
-              <div class="btnLoadTodoFile">
-                <p><i class="fas fa-upload"></i></p>
-                <p>open todo.txt file</p>
-              </div>
-            </p>
-
-          </div>
-
-          <div class="column">
-
-            <p>Create a <strong>new</strong> todo.txt file, if you don't already have one.</p>
-            <p>
-              <div id="btnCreatTodoFileOnboarding">
-                <p><i class="fas fa-plus-square"></i></p>
-                <p>create todo.txt file</p>
-              </div>
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
   </body>
 </html>

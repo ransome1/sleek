@@ -36,3 +36,4 @@
 - Bulma CSS: https://bulma.io/
 - Font Awesome: https://fontawesome.com
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt
+- autolink-js: https://github.com/bryanwoods/autolink-js

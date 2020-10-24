@@ -20,10 +20,12 @@ const body = document.getElementById('body');
 const btnFilter = document.getElementById('btnFilter');
 const btnAddItem = document.getElementById('btnAddItem');
 const btnFormSubmit = document.getElementById('btnFormSubmit');
-const btnItemComplete = document.getElementById('btnItemComplete');
+const btnItemStatus = document.getElementById('btnItemStatus');
 const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
 const btnLoadTodoFile = document.querySelectorAll('.btnLoadTodoFile');
 const btnFormCancel = document.getElementById("btnFormCancel");
+
+const toggleShowCompleted = document.getElementById('toggleShowCompleted');
 
 const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById('filterDropdown');
@@ -39,7 +41,6 @@ const Store = require('./store.js');
 const store = new Store({
   configName: 'user-preferences',
   defaults: {
-    pathToFile: app.getPath('home'),
     windowBounds: { width: 800, height: 600 },
     sortAlphabetically: false,
     showCompleted: false
@@ -69,6 +70,8 @@ let sortAlphabetically = store.get('sortAlphabetically');
 let showCompleted = store.get('showCompleted');
 // we need the parsed data as strings instead of todotxt objects to save them into the text file
 let parsedDataString = new Array;
+// create  an empty variable for the data item
+let dataItem;
 
 // ###############
 
@@ -78,7 +81,7 @@ let parsedDataString = new Array;
 // set the checked attribute according to the persisted value
 document.getElementById('toggleSort').checked = sortAlphabetically;
 // set the checked attribute according to the persisted value
-document.getElementById('toggleShowCompleted').checked = showCompleted;
+toggleShowCompleted.checked = showCompleted;
 
 // ###############
 
@@ -88,7 +91,7 @@ document.getElementById('toggleShowCompleted').checked = showCompleted;
 
 // persist the highlighting of the button and the dropdown menu
 btnFilter.addEventListener('click', () => {
-  btnFilter.classList.toggle("is-active");
+  btnFilter.classList.toggle("is-highlighted");
   filterDropdown.classList.toggle('is-active');
   body.classList.toggle('is-active');
 });
@@ -130,10 +133,11 @@ document.getElementById('toggleSort').addEventListener('click', () => {
   // regenerate the table considering the sort value and make sure saved filters are going to be passed
   // TODO: does it crash if no filters have been selected?
   generateTodoData(selectedFiltersCollected);
+
 });
 
 // reread the data but sort it asc
-document.getElementById('toggleShowCompleted').addEventListener('click', () => {
+toggleShowCompleted.addEventListener('click', () => {
   if(showCompleted==false) {
     showCompleted = true;
   } else {
@@ -168,7 +172,7 @@ btnFormSubmit.addEventListener("click", function(e) {
   }
 });
 
-btnItemComplete.addEventListener('click', () => {
+btnItemStatus.addEventListener('click', () => {
   if(completeItem(dataItem)) {
     modalForm.classList.toggle('is-active');
   }
@@ -177,6 +181,8 @@ btnItemComplete.addEventListener('click', () => {
 // click on the close button in the footer of the edit modal
 btnFormCancel.addEventListener("click", function(e) {
   modalForm.classList.toggle('is-active');
+  // clean up the modal
+  modalFormAlert.parentElement.classList.remove('is-active', 'is-warning');
 });
 
 // put a click event on all "open file" buttons
@@ -202,12 +208,17 @@ modalBackground.forEach(el => el.addEventListener('click', event => {
 
 // TODO: Maybe wait for something before we start the iterations?
 if(pathToFile) {
-
   parseData(pathToFile);
   console.log('todo.txt file loaded: ' + pathToFile);
-  document.getElementById('onboarding').setAttribute('class','modal');
+  document.getElementById('todoTable').classList.add("is-active");
+  document.getElementById('btnAddItem').setAttribute('class','is-active');
+  document.getElementById('btnFilter').setAttribute('class','is-active');
 } else {
-  document.getElementById('onboarding').setAttribute('class','modal is-active');
+  console.log("No todo.txt file loaded, starting onboarding.");
+  document.getElementById('todoTable').classList.remove("is-active");
+  document.getElementById('btnAddItem').removeAttribute('class','is-active');
+  document.getElementById('btnFilter').removeAttribute('class','is-active');
+  document.getElementById('onboardingContainer').setAttribute('class','is-active');
 }
 
 // ###############
@@ -272,12 +283,13 @@ function openFile() {
           parseData(pathToFile);
 
           // close the modal layer if open
-          document.getElementById('onboarding').setAttribute('class','modal');
+          //document.getElementById('onboarding').setAttribute('class','modal');
 
           // write new path and file name into storage file
           store.set('pathToFile', pathToFile);
 
           console.log('Storage file updated by new path and filename: ' + pathToFile);
+
          }
       }
   }).catch(err => {
@@ -323,10 +335,18 @@ function parseData(pathToFile) {
             console.log('Could not load filters');
           }
 
+          document.getElementById('onboardingContainer').removeAttribute('class','is-active');
+          document.getElementById('todoTable').classList.add("is-active");
+          document.getElementById('btnAddItem').setAttribute('class','is-active');
+          btnFilter.classList.add('is-active');
+
         } else {
           // if data couldn't be extracted from file
           console.log("Data could not be extracted from file, starting onboarding instead");
-          document.getElementById('onboarding').setAttribute('class','modal is-active');
+          document.getElementById('onboardingContainer').addAttribute('class','is-active');
+          document.getElementById('btnAddItem').removeAttribute('class','is-active');
+          document.getElementById('btnFilter').removeAttribute('class','is-active');
+          document.getElementById('todoTable').classList.remove("is-active");
           //console.log(err);
         }
     });
@@ -378,12 +398,18 @@ function generateFilterData() {
       }
     }, {});
 
-    // remove the duplicates
-    //selectedFilters = uniqBy(selectedFilters);
+    // always hide the reset filters button first
+    btnResetAllFilters.classList.remove('is-active');
 
     // TODO: error handling
     // build the filter buttons
-    buildFilterButtons();
+    if(filters.length > 0) {
+        // only show the reset filters button if there are any filters
+        btnResetAllFilters.classList.add('is-active');
+        buildFilterButtons();
+    } else {
+      console.log("No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
+    }
   }
 
   // TODO: add a false on err
@@ -397,76 +423,69 @@ function buildFilterButtons() {
   // only generate filters if there are any
   if(selectedFiltersCounted) {
 
-    if(Object.keys(selectedFiltersCounted).length > 1) {
+    let todoFilterContainer = document.getElementById("todoFilters");
 
-      let todoFilterContainer = document.getElementById("todoFilters");
+    // creates a div for the specific filter section
+    let todoFilterContainerSub = document.createElement("div");
+    todoFilterContainerSub.setAttribute("class", "dropdown-item " + category);
 
-      // creates a div for the specific filter section
-      let todoFilterContainerSub = document.createElement("div");
-      todoFilterContainerSub.setAttribute("class", "dropdown-item " + category);
+    // create a sub headline element
+    let todoFilterHeadline = document.createElement("h4");
+    todoFilterHeadline.setAttribute("class", "title is-4 " + category);
+    todoFilterHeadline.innerHTML = category;
 
-      // create a sub headline element
-      let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "title is-4 " + category);
-      todoFilterHeadline.innerHTML = category;
+    // add the headline before category container
+    todoFilterContainerSub.appendChild(todoFilterHeadline);
 
-      // add the headline before category container
-      todoFilterContainerSub.appendChild(todoFilterHeadline);
+    // build one button each
+    // TODO: why dont put the adventListener on the buttons here?!
+    for (let filter in selectedFiltersCounted) {
 
-      // build one button each
-      // TODO: why dont put the adventListener on the buttons here?!
-      for (let filter in selectedFiltersCounted) {
+      let todoFiltersItem = document.createElement("button");
+      todoFiltersItem.setAttribute("class", "btnApplyFilter button");
+      todoFiltersItem.setAttribute("data-filter", filter);
+      todoFiltersItem.setAttribute("data-category", category);
+      todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + selectedFiltersCounted[filter] + "</span>";
+      todoFiltersItem.addEventListener('click', () => {
 
+        todoFiltersItem.classList.toggle("is-dark");
 
-        //console.log(JSON.stringify(selectedFiltersCollected));
-        //console.log(new Array([filter, category]));
-
-        let todoFiltersItem = document.createElement("button");
-        todoFiltersItem.setAttribute("class", "btnApplyFilter button");
-        todoFiltersItem.setAttribute("data-filter", filter);
-        todoFiltersItem.setAttribute("data-category", category);
-        todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + selectedFiltersCounted[filter] + "</span>";
-        todoFiltersItem.addEventListener('click', () => {
-
-          todoFiltersItem.classList.toggle("is-dark");
-
-          // if no filters are selected, add a first one
-          if (selectedFiltersCollected.length > 0) {
-            // get the index of the item that matches the data values the button clic provided
-            let index = selectedFiltersCollected.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
-            if(index != -1) {
-              // remove the item at the index where it matched
-              selectedFiltersCollected.splice(index, 1);
-            } else {
-              // if the item is not already in the array, push it into
-              selectedFiltersCollected.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-            }
+        // if no filters are selected, add a first one
+        if (selectedFiltersCollected.length > 0) {
+          // get the index of the item that matches the data values the button clic provided
+          let index = selectedFiltersCollected.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+          if(index != -1) {
+            // remove the item at the index where it matched
+            selectedFiltersCollected.splice(index, 1);
           } else {
-            // this is the first push
+            // if the item is not already in the array, push it into
             selectedFiltersCollected.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
           }
+        } else {
+          // this is the first push
+          selectedFiltersCollected.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+        }
 
-          //convert the collected filters to JSON and save it to store.js
-          store.set('selectedFiltersCollected', JSON.stringify(selectedFiltersCollected));
+        //convert the collected filters to JSON and save it to store.js
+        store.set('selectedFiltersCollected', JSON.stringify(selectedFiltersCollected));
 
-          // TODO: error handling
-          generateTodoData(selectedFiltersCollected);
+        // TODO: error handling
+        generateTodoData(selectedFiltersCollected);
 
-        });
+      });
 
-        // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
-        selectedFiltersCollected.forEach(function(item) {
-          if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') {
-            todoFiltersItem.classList.toggle("is-dark");
-          }
-        });
+      // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
+      selectedFiltersCollected.forEach(function(item) {
+        if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') {
+          todoFiltersItem.classList.toggle("is-dark");
+        }
+      });
 
-        todoFilterContainerSub.appendChild(todoFiltersItem);
-      }
-
-      // add filters to the specific filter container
-      todoFilterContainer.appendChild(todoFilterContainerSub);
+      todoFilterContainerSub.appendChild(todoFiltersItem);
     }
+
+    // add filters to the specific filter container
+    todoFilterContainer.appendChild(todoFilterContainerSub);
   }
 }
 
@@ -483,7 +502,7 @@ function generateTodoData(selectedFiltersCollected) {
   let itemsFiltered = [];
 
   // check if a filter has been passed
-  if(selectedFiltersCollected!=undefined && selectedFiltersCollected!='') {
+  if(selectedFiltersCollected.length > 0) {
 
     // TODO: why?
     for (let i = 0; i < selectedFiltersCollected.length; i++) {
@@ -634,31 +653,47 @@ function createTableRow() {
   todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
 
   // creates cell for the text
-  let todoTableBodyCell_text = document.createElement("div");
-  todoTableBodyCell_text.setAttribute("class", "flex-row itemText");
-  todoTableBodyCell_text.setAttribute("role", "cell");
-  //  todoTableBodyCell_text.setAttribute("data-item", item.toString());
+  let todoTableBodyCellText = document.createElement("div");
+  todoTableBodyCellText.setAttribute("class", "flex-row text");
+  todoTableBodyCellText.setAttribute("role", "cell");
+  //  todoTableBodyCellText.setAttribute("data-item", item.toString());
   if(item.text) {
-      todoTableBodyCell_text.innerHTML =  item.text;
+      todoTableBodyCellText.innerHTML =  item.text.autoLink({ target: "_blank" });
   }
-  todoTableBodyCell_text.addEventListener('click', function() {
+  // event listener for the click on the text
+  todoTableBodyCellText.addEventListener('click', function() {
     // declaring the item-data value global so other functions can access it
-    window.dataItem = this.parentElement.getAttribute('data-item');
+    dataItem = this.parentElement.getAttribute('data-item');
     showForm(dataItem);
   });
 
-  for (let k = 0; k < filterCategories.length; k++) {
-    // creates bubbles for the categories
-    if(item[filterCategories[k]]!=null) {
-      for(let j = 0; j < item[filterCategories[k]].length; j++) {
-          let todoTableBodyCellCategoryItem = document.createElement("span");
-          todoTableBodyCellCategoryItem.setAttribute("class", "tag " + filterCategories[k]);
-          todoTableBodyCellCategoryItem.innerHTML = item[filterCategories[k]][j];
-          todoTableBodyCell_text.appendChild(todoTableBodyCellCategoryItem);
+
+
+  // create tag for the categories
+  if (filterCategories.length > 0) {
+
+    for (let k = 0; k < filterCategories.length; k++) {
+      if(item[filterCategories[k]]!=null) {
+        for(let j = 0; j < item[filterCategories[k]].length; j++) {
+          let todoTableBodyCellCategory = document.createElement("span");
+          todoTableBodyCellCategory.setAttribute("class", "tag " + filterCategories[k]);
+          todoTableBodyCellCategory.innerHTML = item[filterCategories[k]][j];
+          todoTableBodyCellText.appendChild(todoTableBodyCellCategory);
+        }
       }
     }
-    todoTableBodyRow.appendChild(todoTableBodyCell_text);
   }
+
+  // check for and add a given due date
+  if(item.due) {
+    let todoTableBodyCellDueDate = document.createElement("span");
+    todoTableBodyCellDueDate.setAttribute("class", "itemDueDate");
+    todoTableBodyCellDueDate.innerHTML = " <i class=\"far fa-clock\"></i> " + item.due.toISOString().slice(0, 10);
+    todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
+  }
+
+  // add the text field to the row
+  todoTableBodyRow.appendChild(todoTableBodyCellText);
 
   // add the row to the end of the table body
   todoTableContainer.appendChild(todoTableBodyRow);
@@ -674,43 +709,67 @@ function createTableRow() {
 function showForm(dataItem) {
   // clear the input value in case there was an old one
   modalFormItemInput.value = null;
-  // convert array of objects to array of strings
-  parsedDataString = parsedData.map(item => item.toString());
   modalForm.classList.toggle('is-active');
 
   if(dataItem) {
     modalFormItemInput.value = dataItem;
     modalTitle.innerHTML = 'Edit item';
+    btnItemStatus.classList.add('is-active');
     // only show the complete button on open items
     if(new TodoTxtItem(dataItem).complete == false) {
-      btnItemComplete.classList.add('is-active');
+      btnItemStatus.innerHTML = "Mark as done";
     } else {
-      btnItemComplete.classList.remove('is-active');
+      btnItemStatus.innerHTML = "Mark as in progress";
     }
   } else {
     modalTitle.innerHTML = 'Add item';
-    btnItemComplete.classList.remove('is-active');
+    btnItemStatus.classList.remove('is-active');
   }
 }
 
 function submitForm() {
 
+  // check if there is an input in the text field, otherwise indicate it to the user
   if(modalForm.elements[0].value) {
 
-    // get the position of that item in the array
-    let itemId = parsedDataString.indexOf(window.dataItem);
+    // convert array of objects to array of strings to find the index
+    parsedDataString = parsedData.map(item => item.toString());
 
-    // get the index using the itemId, remove 1 item there and add the value from the input at that position
-    parsedDataString.splice(itemId, 1, modalForm.elements[0].value);
+    // input value and data item are the same, nothing has changed, nothing will be written
+    if (dataItem==modalForm.elements[0].value) {
 
-    // convert all the strings to proper todotxt items again
-    parsedDataString = parsedDataString.map(item => new TodoTxtItem(item));
+      console.log("Nothing has changed, won't write anything.");
 
-    writeDataIntoFile(parsedDataString);
+    // Input and data item differ so we write the changed todo
+    } else if(dataItem) {
+
+        // get the position of that item in the array
+        let itemId = parsedDataString.indexOf(dataItem);
+
+        // get the index using the itemId, remove 1 item there and add the value from the input at that position
+        parsedDataString.splice(itemId, 1, modalForm.elements[0].value);
+
+        // convert all the strings to proper todotxt items again
+        parsedData = parsedDataString.map(item => new TodoTxtItem(item));
+
+        // pass the new data to the write function
+        writeDataIntoFile(parsedData);
+
+    // check if a data item has been passed by an item (edit item) or if there is none (add item)
+    } else {
+
+      // in case there hasn't been a passed data item, we just push the input value as a new item into the array
+      parsedData.push(modalForm.elements[0].value);
+
+      // pass the new data to the write function
+      writeDataIntoFile(parsedData);
+
+    }
 
     // hide the alert for future modal calls, if there has been one
-    modalFormAlert.parentElement.classList.remove('is-active');
+    modalFormAlert.parentElement.classList.remove('is-active', 'is-warning');
 
+    // TODO: needed?
     return true;
 
   } else {
@@ -766,9 +825,15 @@ function writeDataIntoFile(parsedData) {
     if (err) {
       console.log(err);
     } else {
+      // reset the selected filters
+      selectedFiltersCollected = [];
+      // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
+      store.set('selectedFiltersCollected', undefined);
+      // write the new data into file
       console.log("File written successfully\n");
       console.log("The written has the following contents:");
       console.log(fs.readFileSync(pathToFile, "utf8"));
+      // read the data again
       parseData(pathToFile);
     }
   });
