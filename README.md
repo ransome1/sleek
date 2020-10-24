@@ -1,6 +1,6 @@
-# TDY.TXT
+# tidy.
 ## A simple and tidy app to manage a todo.txt file.
-![Alt text](TDY_TXT_screenshot.png?raw=true "Screenshot of TDY.TXT")
+![Alt text](tidy.screenshot.png?raw=true "Screenshot of tidy.")
 ### Already implemented
 - [x] Simple onboarding with one of two functions working; Open existing todo.txt file
 - [x] Open a todo.txt file and parse it into a table

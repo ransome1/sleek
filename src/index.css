@@ -351,6 +351,14 @@ nav ul li.logo {
   color: hsl(0, 0%, 71%);
 }
 
+.flex-table .flex-row.text[role="cell"] .itemExternalLink {
+  color: hsl(0, 0%, 71%);
+}
+
+.flex-table .flex-row.text[role="cell"] .itemExternalLink:hover {
+    color: #3273dc;
+}
+
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 
 /* The switch - the box around the slider */
@@ -457,23 +465,11 @@ input:checked + .slider:before {
 
 @media (max-width: 1023px) {
 
-  #filterDropdown {
-    width: 100%!important;
-    padding: 0 2%!important;
-  }
+  body {
+    height: 100%;
+    display: flex;
 
-  #filterDropdown .dropdown-item {
-      width: 100%!important;
-      padding: 0 1.5em!important;
-  }
-
-  #filterDropdown.is-active {
-    left: 3.5em;
-  }
-
-  .toggle {
-    margin: 0!important;
-    padding: 1em!important;
+    padding-left: 3.5em;
   }
 
   nav ul li {
@@ -496,4 +492,30 @@ input:checked + .slider:before {
   nav ul li.logo span {
     padding-top: 1.2em;
   }
+
+  #filterDropdown {
+    width: 96%!important;
+    padding: 0 2%!important;
+  }
+
+  #filterDropdown .dropdown-item {
+      width: 96%!important;
+      padding: 0 2%!important;
+  }
+
+  #filterDropdown.is-active {
+    left: 3.5em;
+  }
+
+  .toggle {
+    margin: 0!important;
+    padding: 1em!important;
+  }
+
+  /* TODO TABLE */
+
+  #todoTable .hero-body {
+    padding: 1.5em;
+  }
+
 }

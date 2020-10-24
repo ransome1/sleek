@@ -27,6 +27,8 @@ const btnFormCancel = document.getElementById("btnFormCancel");
 
 const toggleShowCompleted = document.getElementById('toggleShowCompleted');
 
+const itemExternalLink = document.querySelectorAll('.itemExternalLink');
+
 const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById('filterDropdown');
 
@@ -178,13 +180,6 @@ btnItemStatus.addEventListener('click', () => {
   }
 });
 
-// click on the close button in the footer of the edit modal
-btnFormCancel.addEventListener("click", function(e) {
-  modalForm.classList.toggle('is-active');
-  // clean up the modal
-  modalFormAlert.parentElement.classList.remove('is-active', 'is-warning');
-});
-
 // put a click event on all "open file" buttons
 btnLoadTodoFile.forEach(el => el.addEventListener('click', event => {
   openFile();
@@ -199,6 +194,13 @@ modalClose.forEach(el => el.addEventListener('click', event => {
 modalBackground.forEach(el => el.addEventListener('click', event => {
   el.parentElement.classList.toggle('is-active');
 }));
+
+// click on the cancel button in the footer of the edit modal
+btnFormCancel.addEventListener("click", function(e) {
+  modalForm.classList.toggle('is-active');
+  // clean up the modal
+  modalFormAlert.parentElement.classList.remove('is-active', 'is-warning');
+});
 
 // ###############
 
@@ -288,12 +290,12 @@ function openFile() {
           // write new path and file name into storage file
           store.set('pathToFile', pathToFile);
 
-          console.log('Storage file updated by new path and filename: ' + pathToFile);
+          console.log('Success: Storage file updated by new path and filename: ' + pathToFile);
 
          }
       }
   }).catch(err => {
-      console.log(err)
+      console.log("Error: " + err)
   });
 }
 
@@ -323,16 +325,16 @@ function parseData(pathToFile) {
 
           // load data
           if(generateTodoData(selectedFiltersCollected) == true) {
-            console.log('Todos successfully loaded');
+            console.log('Success: Todos loaded');
           } else {
-            console.log('Could not load data');
+            console.log('Error: Could not load todo data');
           }
 
           // load filters
           if(generateFilterData(selectedFiltersCollected) == true) {
-            console.log('Filters successfully loaded');
+            console.log('Success: Filters loaded');
           } else {
-            console.log('Could not load filters');
+            console.log('Error: Could not load filters');
           }
 
           document.getElementById('onboardingContainer').removeAttribute('class','is-active');
@@ -342,7 +344,7 @@ function parseData(pathToFile) {
 
         } else {
           // if data couldn't be extracted from file
-          console.log("Data could not be extracted from file, starting onboarding instead");
+          console.log("Info: Data could not be extracted from file, starting onboarding instead");
           document.getElementById('onboardingContainer').addAttribute('class','is-active');
           document.getElementById('btnAddItem').removeAttribute('class','is-active');
           document.getElementById('btnFilter').removeAttribute('class','is-active');
@@ -658,16 +660,24 @@ function createTableRow() {
   todoTableBodyCellText.setAttribute("role", "cell");
   //  todoTableBodyCellText.setAttribute("data-item", item.toString());
   if(item.text) {
-      todoTableBodyCellText.innerHTML =  item.text.autoLink({ target: "_blank" });
+
+    // use the autoLink lib to attach an icon to every link and put a link on it
+    todoTableBodyCellText.innerHTML =  item.text.autoLink({
+      callback: function(url) {
+        return url + " <a href=" + url + " class=\"itemExternalLink\" title=\"Open this link in your browser\" target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
+      }
+    });
   }
+
   // event listener for the click on the text
   todoTableBodyCellText.addEventListener('click', function() {
-    // declaring the item-data value global so other functions can access it
-    dataItem = this.parentElement.getAttribute('data-item');
-    showForm(dataItem);
+    // if the clicked item has a surrounding link attached the link will be called instead of the edit form
+    if(!event.target.parentElement.hasAttribute('href')) {
+      // declaring the item-data value global so other functions can access it
+      dataItem = this.parentElement.getAttribute('data-item');
+      showForm(dataItem);
+    }
   });
-
-
 
   // create tag for the categories
   if (filterCategories.length > 0) {
@@ -738,7 +748,7 @@ function submitForm() {
     // input value and data item are the same, nothing has changed, nothing will be written
     if (dataItem==modalForm.elements[0].value) {
 
-      console.log("Nothing has changed, won't write anything.");
+      console.log("Info: Nothing has changed, won't write anything.");
 
     // Input and data item differ so we write the changed todo
     } else if(dataItem) {
@@ -831,8 +841,8 @@ function writeDataIntoFile(parsedData) {
       store.set('selectedFiltersCollected', undefined);
       // write the new data into file
       console.log("File written successfully\n");
-      console.log("The written has the following contents:");
-      console.log(fs.readFileSync(pathToFile, "utf8"));
+      //console.log("The written has the following contents:");
+      //console.log(fs.readFileSync(pathToFile, "utf8"));
       // read the data again
       parseData(pathToFile);
     }
