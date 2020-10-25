@@ -17,22 +17,22 @@
     <nav>
       <ul>
       	<li class="logo">tidy.</li>
-        <li id="btnAddItem"><a href="#"><i class="fas fa-plus"></i></a></li>
-      	<li id="btnFilter"><a href="#"><i class="fas fa-filter"></i></a></li>
-      	<li><a href="#" class="btnLoadTodoFile"><i class="fas fa-upload"></i></a></li>
+        <li id="btnAddItem"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
+      	<li id="btnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
+      	<li class="btnLoadTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
       </ul>
-      <section id="filterDropdown" class="dropdown">
+      <section id="filterDropdown" class="dropdown" tabindex="400">
         <div class="container">
           <div class="toggle">
-            <label class="switch">
-              <input type="checkbox" id="toggleSort">
+            <label class="switch" for="toggleSortAlphabetically">
+              <input type="checkbox" id="toggleSortAlphabetically" tabindex="405">
               <span class="slider round"></span>
             </label>
-            <label for="sort" class="text">Sort alphabetically</label>
+            <span class="text">Sort alphabetically</span>
           </div>
           <div class="toggle">
-            <label class="switch">
-              <input type="checkbox" id="toggleShowCompleted">
+            <label class="switch" for="toggleShowCompleted">
+              <input type="checkbox" id="toggleShowCompleted"  tabindex="410">
               <span class="slider round"></span>
             </label>
             <span class="text">Show completed</span>
@@ -52,37 +52,19 @@
       </div>
     </section>
     <section id="onboardingContainer">
-      <h1 class="title is-1">tidy.</h1>
-      <p class="subtitle">Start by choosing a todo.txt from your file system.</p>
-      <div class="file is-boxed is-centered">
-        <label class="file-label btnLoadTodoFile">
+      <p><i class="far fa-file-alt"></i></p>
+      <h1 class="title is-1">open your todo.txt file.</h1>
+      <p class="subtitle">Start by choosing a todo.txt from your file system.<br>It doesn't matter if it is a fully worked out one or a plain .txt file.<br>Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank" tabindex="510">todo.txt syntax</a>.</p>
+      <p class="file is-boxed is-centered">
+        <a href="#" class="file-label btnLoadTodoFile" tabindex="505">
           <span class="file-cta">
-            <span class="file-icon">
-              <i class="fas fa-upload"></i>
-            </span>
-            <span class="file-label">
-              Choose a todo.txt file…
-            </span>
+            <span class="file-icon"><i class="fas fa-upload"></i></span>
+            <span class="file-label">Choose a todo.txt file…</span>
           </span>
-        </label>
-      </div>
-      <!--<div class="field">
-        <div class="file is-boxed is-centered btnLoadTodoFile">
-          <label class="file-label">
-            <input class="file-input" type="file" name="Choose a todo.txt from your file system">
-            <span class="file-cta">
-              <span class="file-icon">
-                <i class="fas fa-upload"></i>
-              </span>
-              <span class="file-label">
-                todo.txt file…
-              </span>
-            </span>
-          </label>
-        </div>
-      </div>-->
+        </a>
+      </p>
     </section>
-    <form id="modalForm" class="modal">
+    <form id="modalForm" class="modal modalFormSubmit">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
@@ -91,20 +73,19 @@
           </header>
           <div class="card-content">
             <div class="content">
-              <input id="modalFormItemInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project" tabindex="1">
+              <input id="modalFormInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project" tabindex="300">
               <article class="message">
-                <!--<div id="modalFormAlert" class="message-body"><strong>Error:</strong> Could not write the new data to the text file. Please check the file's permissions.</div>-->
                 <div id="modalFormAlert" class="message-body"></div>
               </article>
               <div class="field">
-                Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank">todo.txt syntax</a>.
+                Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank" tabindex="305">todo.txt syntax</a>.
               </div>
             </div>
           </div>
           <footer class="card-footer">
-            <a id="btnFormSubmit" class="card-footer-item">Save</a>
-            <a id="btnItemStatus" class="card-footer-item"></a>
-            <a id="btnFormCancel" class="card-footer-item">Cancel</a>
+            <button type="submit" class="card-footer-item" tabindex="310">Save</button>
+            <a href="#" id="btnItemStatus" class="card-footer-item" tabindex="315"></a>
+            <a href="#" id="btnFormCancel" class="card-footer-item" tabindex="320">Cancel</a>
           </footer>
         </div>
       </div>

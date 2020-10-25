@@ -16,12 +16,13 @@ const store = new Store({
   defaults: {
     windowBounds: { width: 800, height: 600 },
     sortAlphabetically: false,
-    showCompleted: false
+    showCompleted: false,
+    selectedFilters: new Array
   }
 });
 
 const createWindow = () => {
-  // First we'll get our height and width. This will be the defaults if there wasn't anything saved
+  // First we'll get our height and "width". This will be the defaults if there wasn't anything saved
   let { width, height } = store.get('windowBounds');
 
   // Create the browser window.

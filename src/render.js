@@ -3,150 +3,138 @@
 // generate the table: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces
 // save and load user data: https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
 
-// ###############
+// ########################################################################################################################
 
-// CONSTANTS
 
-// ###############
+// DECLARATIONS
 
-const electron = require('electron');
-const path = require('path');
+
+// ########################################################################################################################
+
+const electron = require("electron");
+const path = require("path");
 const dialog = electron.remote.dialog;
 const app = electron.remote.app;
-const fs = require('fs');
-
-const body = document.getElementById('body');
-
-const btnFilter = document.getElementById('btnFilter');
-const btnAddItem = document.getElementById('btnAddItem');
-const btnFormSubmit = document.getElementById('btnFormSubmit');
-const btnItemStatus = document.getElementById('btnItemStatus');
-const btnApplyFilter = document.getElementsByClassName('btnApplyFilter');
-const btnLoadTodoFile = document.querySelectorAll('.btnLoadTodoFile');
-const btnFormCancel = document.getElementById("btnFormCancel");
-
-const toggleShowCompleted = document.getElementById('toggleShowCompleted');
-
-const itemExternalLink = document.querySelectorAll('.itemExternalLink');
-
-const filterCategories = ["contexts", "projects"];
-const filterDropdown = document.getElementById('filterDropdown');
-
-const modalForm = document.getElementById('modalForm');
-const modalFormItemInput = document.getElementById("modalFormItemInput");
-const modalFormAlert = document.getElementById("modalFormAlert");
-const modalTitle = document.getElementById("modalTitle");
-const modalClose = document.querySelectorAll('.modal-close');
-const modalBackground = document.querySelectorAll('.modal-background');
-
-const Store = require('./store.js');
+const fs = require("fs");
+const Store = require("./store.js");
 const store = new Store({
-  configName: 'user-preferences',
+  configName: "user-preferences",
   defaults: {
-    windowBounds: { width: 800, height: 600 },
+    windowBounds: { width: 1025, height: 600 },
     sortAlphabetically: false,
-    showCompleted: false
+    showCompleted: false,
+    selectedFilters: new Array
   }
 });
 
-// ###############
+const body = document.getElementById("body");
+const a = document.querySelectorAll("a");
 
-// VARIABLES
+const btnFilter = document.getElementById("btnFilter");
+const btnAddItem = document.getElementById("btnAddItem");
+const btnFormSubmit = document.getElementById("btnFormSubmit");
+const btnItemStatus = document.getElementById("btnItemStatus");
+const btnApplyFilter = document.getElementsByClassName("btnApplyFilter");
+const btnLoadTodoFile = document.querySelectorAll(".btnLoadTodoFile");
+const btnFormCancel = document.getElementById("btnFormCancel");
+const btnResetAllFilters = document.getElementById("btnResetAllFilters");
 
-// ###############
+const toggleShowCompleted = document.getElementById("toggleShowCompleted");
+const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetically");
+
+const onboardingContainer = document.getElementById("onboardingContainer");
+
+const todoTable = document.getElementById("todoTable");
+
+const filterCategories = ["contexts", "projects"];
+const filterDropdown = document.getElementById("filterDropdown");
+
+const modalForm = document.getElementById('modalForm');
+const modalFormInput = document.getElementById("modalFormInput");
+const modalFormAlert = document.getElementById("modalFormAlert");
+const modalTitle = document.getElementById("modalTitle");
+const modalBackground = document.querySelectorAll('.modal-background');
 
 // Needed for comparison between priority items to build the divider rows
 let previousItem;
 // defining a file path Variable to store user-selected file
-let pathToFile = store.get('pathToFile');
-// create an empty array for pre selected filters
-let selectedFiltersCollected = new Array;
+let pathToFile = store.get("pathToFile");
 // check store file if filters (come as JSON) have been saved. If so convert the JSON to arrays and them to the main array. If not the array stays empty
 // TODO: is there a more sophisticated way to do this?
-if(store.get('selectedFiltersCollected')!= undefined) {
-  selectedFiltersCollected = JSON.parse(store.get('selectedFiltersCollected'));
-}
-// sort alphabetically
-let sortAlphabetically = store.get('sortAlphabetically');
-// show completed: get the stored value
-let showCompleted = store.get('showCompleted');
-// we need the parsed data as strings instead of todotxt objects to save them into the text file
-let parsedDataString = new Array;
+let selectedFilters = store.get("selectedFilters");
+if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
+// get default sorting value (false)
+let sortAlphabetically = store.get("sortAlphabetically");
+// get default "show completed? value (false)
+let showCompleted = store.get("showCompleted");
 // create  an empty variable for the data item
 let dataItem;
+// create  an empty variable for the data item
+let parsedData;
 
 // ###############
 
 // INITIAL DOM CONFIG
 
 // ###############
+
 // set the checked attribute according to the persisted value
-document.getElementById('toggleSort').checked = sortAlphabetically;
+toggleSortAlphabetically.checked = sortAlphabetically;
 // set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
 
-// ###############
+// ########################################################################################################################
+
 
 // EVENT LISTENERS
 
-// ###############
+
+// ########################################################################################################################
 
 // persist the highlighting of the button and the dropdown menu
-btnFilter.addEventListener('click', () => {
+btnFilter.addEventListener("click", () => {
   btnFilter.classList.toggle("is-highlighted");
-  filterDropdown.classList.toggle('is-active');
-  body.classList.toggle('is-active');
+  filterDropdown.classList.toggle("is-active");
+  filterDropdown.focus();
+  body.classList.toggle("is-active");
 });
 
-/*
-// put a listeners on the table for closing the active menu
-document.getElementById('todoTable').addEventListener('click', () => {
-  if(filterDropdown.classList.contains('is-active')) {
-    btnFilter.classList.toggle("is-active");
-    filterDropdown.classList.toggle('is-active');
-    body.classList.toggle('is-active');
-  }
-});
-*/
+btnAddItem.addEventListener("click", showForm, false);
 
-btnAddItem.addEventListener('click', () => {
-  showForm();
-});
-
-// just reread the file and flush all filters and items
-document.getElementById('btnResetAllFilters').addEventListener('click', () => {
-  selectedFiltersCollected = [];
+// just reread the file and flush all filters and items by emptying the array
+btnResetAllFilters.addEventListener("click", () => {
+  selectedFilters = [];
   // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
-  store.set('selectedFiltersCollected', undefined);
+  store.set("selectedFilters", new Array);
   parseData(pathToFile);
 });
 
 // reread the data but sort it asc
-document.getElementById('toggleSort').addEventListener('click', () => {
+toggleSortAlphabetically.addEventListener("click", () => {
   if(sortAlphabetically==false) {
     sortAlphabetically = true;
   } else {
     sortAlphabetically = false;
   }
-  // persist the sorting
-  store.set('sortAlphabetically', sortAlphabetically);
+  // persisting the sorting setting
+  store.set("sortAlphabetically", sortAlphabetically);
 
   // TODO: error handling
   // regenerate the table considering the sort value and make sure saved filters are going to be passed
   // TODO: does it crash if no filters have been selected?
-  generateTodoData(selectedFiltersCollected);
+  generateTodoData(selectedFilters);
 
 });
 
 // reread the data but sort it asc
-toggleShowCompleted.addEventListener('click', () => {
+toggleShowCompleted.addEventListener("click", () => {
   if(showCompleted==false) {
     showCompleted = true;
   } else {
     showCompleted = false;
   }
   // persist the sorting
-  store.set('showCompleted', showCompleted);
+  store.set("showCompleted", showCompleted);
 
   // TODO: error handling
   // regenerate the table considering the sort value
@@ -158,75 +146,73 @@ toggleShowCompleted.addEventListener('click', () => {
 modalForm.addEventListener("submit", function(e) {
   // intercept submit
   if (e.preventDefault) e.preventDefault();
-
-  if(submitForm()) {
-      modalForm.classList.toggle('is-active');
-  }
-
-  return false;
-
+  // if form returns success we clear the modal
+  if(submitForm()) clearModal();
 });
 
-// click on submit button
-btnFormSubmit.addEventListener("click", function(e) {
-  if(submitForm()) {
-      modalForm.classList.toggle('is-active');
-  }
-});
-
-btnItemStatus.addEventListener('click', () => {
+// complete the item using the footer button in modal
+btnItemStatus.addEventListener("click", () => {
+  // TODO: error handling
   if(completeItem(dataItem)) {
-    modalForm.classList.toggle('is-active');
+    modalForm.classList.toggle("is-active");
   }
 });
+
+// prevent empty hyperlinks from jumping to top after clicking
+a.forEach(el => el.addEventListener("click", function(el) {
+  // only if the href contains a hash we prevent the default action of a link
+  if(el.target.href.includes('#')) el.preventDefault();
+}));
 
 // put a click event on all "open file" buttons
-btnLoadTodoFile.forEach(el => el.addEventListener('click', event => {
-  openFile();
-}));
-
-// put a listeners on all close buttons
-modalClose.forEach(el => el.addEventListener('click', event => {
-  el.parentElement.classList.toggle('is-active');
-}));
+btnLoadTodoFile.forEach(el => el.addEventListener("click", openFile, false));
 
 // put a listeners on all modal backgrounds
-modalBackground.forEach(el => el.addEventListener('click', event => {
-  el.parentElement.classList.toggle('is-active');
-}));
+modalBackground.forEach(el => el.addEventListener("click", clearModal, false));
 
 // click on the cancel button in the footer of the edit modal
-btnFormCancel.addEventListener("click", function(e) {
-  modalForm.classList.toggle('is-active');
-  // clean up the modal
-  modalFormAlert.parentElement.classList.remove('is-active', 'is-warning');
-});
+btnFormCancel.addEventListener("click", clearModal, false);
 
-// ###############
+// ########################################################################################################################
 
-// READ PREVIOUSLY SELECTED todo.txt FILE, STORED IN store.js
 
-// ###############
+// START PARSING ONCE EVERYTHING ELSE IS READY
 
-// TODO: Maybe wait for something before we start the iterations?
-if(pathToFile) {
-  parseData(pathToFile);
-  console.log('todo.txt file loaded: ' + pathToFile);
-  document.getElementById('todoTable').classList.add("is-active");
-  document.getElementById('btnAddItem').setAttribute('class','is-active');
-  document.getElementById('btnFilter').setAttribute('class','is-active');
-} else {
-  console.log("No todo.txt file loaded, starting onboarding.");
-  document.getElementById('todoTable').classList.remove("is-active");
-  document.getElementById('btnAddItem').removeAttribute('class','is-active');
-  document.getElementById('btnFilter').removeAttribute('class','is-active');
-  document.getElementById('onboardingContainer').setAttribute('class','is-active');
+
+// ########################################################################################################################
+
+window.onload = function () {
+  // Check if file exists
+  if (fs.existsSync(pathToFile)) {
+    parseData(pathToFile);
+    console.log("Success: todo.txt file loaded: " + pathToFile);
+    // clear the onboarding, display the todo table and show the navigation buttons
+    onboardingContainer.removeAttribute("class","is-active");
+    todoTable.classList.add("is-active");
+    btnAddItem.setAttribute("class","is-active");
+    btnFilter.setAttribute("class","is-active");
+  } else {
+    // show the onboarding instead of the table and hide the nav buttons as they are not needed right now
+    console.log("Info: No todo.txt file loaded, starting onboarding.");
+    onboardingContainer.setAttribute("class","is-active");
+    onboardingContainer.focus();
+    todoTable.classList.remove("is-active");
+    btnAddItem.removeAttribute("class","is-active");
+    btnFilter.removeAttribute("class","is-active");
+  }
 }
+
+// ########################################################################################################################
+
+
+// HELPER FUNCTIONS
+
+
+// ########################################################################################################################
 
 // ###############
 
 // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-// TODO: understand the function
 
 // ###############
 
@@ -237,6 +223,28 @@ function uniqBy(a) {
       return seen.hasOwnProperty(k) ? false : (seen[k] = true);
   })
 }
+
+// ###############
+
+// function to close the modal and set it to the defaults
+
+// ###############
+
+function clearModal() {
+  modalForm.classList.remove("is-active");
+  // empty the data item as we don't need it anymore
+  dataItem = null;
+  // clean up the modal
+  modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+}
+
+// ########################################################################################################################
+
+
+// READ DATA
+
+
+// ########################################################################################################################
 
 // ###############
 
@@ -281,14 +289,15 @@ function openFile() {
         // read contents of todo.txt file
         if (pathToFile && !file.canceled) {
 
+          // write new path and file name into storage file
+          store.set("pathToFile", pathToFile);
+
+          // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
+          selectedFilters = new Array;
+          store.set("selectedFilters", new Array);
+
           // pass path and filename on, to extract and parse the raw data
           parseData(pathToFile);
-
-          // close the modal layer if open
-          //document.getElementById('onboarding').setAttribute('class','modal');
-
-          // write new path and file name into storage file
-          store.set('pathToFile', pathToFile);
 
           console.log('Success: Storage file updated by new path and filename: ' + pathToFile);
 
@@ -308,51 +317,49 @@ function openFile() {
 // read contents of todo.txt file and trigger further action
 function parseData(pathToFile) {
 
-  if(pathToFile) {
+  fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
 
-      fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
+    if (!err) {
+      // https://stackoverflow.com/a/10024929
+      // check the toggleShowCompleted value and filter completed items if selected by user
+      // only parse from file if parsedData hasn't been read before
+      if (showCompleted == false) {
+        // only select the items where "complete" is equal "false"
+        parsedData = TodoTxt.parse( data, [ new DueExtension() ] ).filter(function(el) { return el.complete == false; });
+      } else {
+        // process all items by reading the file. This is important because the parsedString could already be incomplete from previous filtering
+        parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
+      }
 
-        if (!err) {
-          // https://stackoverflow.com/a/10024929
-          // check the toggleShowCompleted value and filter completed items if selected by user
-          if(showCompleted == false) {
-            // only select the items where "complete" is equal "false"
-            parsedData = TodoTxt.parse( data, [ new DueExtension() ] ).filter(function(el) { return el.complete == false; });
-          } else {
-            // process all items
-            parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
-          }
+      if(generateTodoData(selectedFilters)) {
+        console.log('Success: Todos loaded');
+      } else {
+        console.log('Error: Could not load todo data');
+      }
 
-          // load data
-          if(generateTodoData(selectedFiltersCollected) == true) {
-            console.log('Success: Todos loaded');
-          } else {
-            console.log('Error: Could not load todo data');
-          }
+      // load filters
+      if(generateFilterData(selectedFilters)) {
+        console.log('Success: Filters loaded');
+      } else {
+        console.log('Error: Could not load filters');
+      }
 
-          // load filters
-          if(generateFilterData(selectedFiltersCollected) == true) {
-            console.log('Success: Filters loaded');
-          } else {
-            console.log('Error: Could not load filters');
-          }
+      onboardingContainer.removeAttribute('class',"is-active");
+      todoTable.classList.add("is-active");
+      btnAddItem.setAttribute('class',"is-active");
+      btnFilter.classList.add("is-active");
 
-          document.getElementById('onboardingContainer').removeAttribute('class','is-active');
-          document.getElementById('todoTable').classList.add("is-active");
-          document.getElementById('btnAddItem').setAttribute('class','is-active');
-          btnFilter.classList.add('is-active');
-
-        } else {
-          // if data couldn't be extracted from file
-          console.log("Info: Data could not be extracted from file, starting onboarding instead");
-          document.getElementById('onboardingContainer').addAttribute('class','is-active');
-          document.getElementById('btnAddItem').removeAttribute('class','is-active');
-          document.getElementById('btnFilter').removeAttribute('class','is-active');
-          document.getElementById('todoTable').classList.remove("is-active");
-          //console.log(err);
-        }
-    });
-  }
+    } else {
+      // if data couldn't be extracted from file
+      console.log(err);
+      // start the onboarding instead
+      console.log("Info: Data could not be extracted from file, starting onboarding instead");
+      onboardingContainer.addAttribute('class',"is-active");
+      btnAddItem.removeAttribute('class',"is-active");
+      btnFilter.removeAttribute('class',"is-active");
+      todoTable.classList.remove("is-active");
+    }
+  });
 }
 
 // ###############
@@ -374,22 +381,22 @@ function generateFilterData() {
 
     category = filterCategories[i];
 
-    // TODO: Clean up the mess
+    // array to collect all the available filters in the data
     let filters = new Array();
 
-    // run the array and collect all possible filter, duplicates included
+    // run the array and collect all possible filters, duplicates included
     for (let j = 0; j < parsedData.length; j++) {
-
-      item = parsedData[j];
-      if(item[category]) {
-        for(let k = 0; k < item[category].length; k++) {
-          filters.push([item[category][k]]);
+      // check if the object has values in either the project or contexts field
+      if(parsedData[j][category]) {
+        // loop through all the values it will find and push them into the filter array
+        for(let k = 0; k < parsedData[j][category].length; k++) {
+          filters.push([parsedData[j][category][k]]);
         }
       }
     }
 
     // delete duplicates and count filters
-    selectedFiltersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
+    filtersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
       if (filter in filters) {
         filters[filter]++;
       } else {
@@ -401,20 +408,18 @@ function generateFilterData() {
     }, {});
 
     // always hide the reset filters button first
-    btnResetAllFilters.classList.remove('is-active');
+    btnResetAllFilters.classList.remove("is-active");
 
     // TODO: error handling
     // build the filter buttons
     if(filters.length > 0) {
         // only show the reset filters button if there are any filters
-        btnResetAllFilters.classList.add('is-active');
+        btnResetAllFilters.classList.add("is-active");
         buildFilterButtons();
     } else {
       console.log("No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
     }
   }
-
-  // TODO: add a false on err
   return true;
 }
 
@@ -423,17 +428,19 @@ function buildFilterButtons() {
 
   // build the buttons
   // only generate filters if there are any
-  if(selectedFiltersCounted) {
+  if(filtersCounted) {
 
     let todoFilterContainer = document.getElementById("todoFilters");
 
     // creates a div for the specific filter section
     let todoFilterContainerSub = document.createElement("div");
     todoFilterContainerSub.setAttribute("class", "dropdown-item " + category);
+    todoFilterContainerSub.setAttribute("tabindex", -1);
 
     // create a sub headline element
     let todoFilterHeadline = document.createElement("h4");
     todoFilterHeadline.setAttribute("class", "title is-4 " + category);
+    todoFilterHeadline.setAttribute("tabindex", -1);
     todoFilterHeadline.innerHTML = category;
 
     // add the headline before category container
@@ -441,43 +448,45 @@ function buildFilterButtons() {
 
     // build one button each
     // TODO: why dont put the adventListener on the buttons here?!
-    for (let filter in selectedFiltersCounted) {
+    for (let filter in filtersCounted) {
 
       let todoFiltersItem = document.createElement("button");
       todoFiltersItem.setAttribute("class", "btnApplyFilter button");
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + selectedFiltersCounted[filter] + "</span>";
-      todoFiltersItem.addEventListener('click', () => {
+      todoFiltersItem.setAttribute("tabindex", 415);
+      todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
+
+      // create the event listener for filter selection by user
+      todoFiltersItem.addEventListener("click", () => {
 
         todoFiltersItem.classList.toggle("is-dark");
 
         // if no filters are selected, add a first one
-        if (selectedFiltersCollected.length > 0) {
+        if (selectedFilters.length > 0) {
           // get the index of the item that matches the data values the button clic provided
-          let index = selectedFiltersCollected.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+          let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
           if(index != -1) {
             // remove the item at the index where it matched
-            selectedFiltersCollected.splice(index, 1);
+            selectedFilters.splice(index, 1);
           } else {
             // if the item is not already in the array, push it into
-            selectedFiltersCollected.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
           }
         } else {
           // this is the first push
-          selectedFiltersCollected.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+          selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
         }
 
         //convert the collected filters to JSON and save it to store.js
-        store.set('selectedFiltersCollected', JSON.stringify(selectedFiltersCollected));
+        store.set("selectedFilters", JSON.stringify(selectedFilters));
 
         // TODO: error handling
-        generateTodoData(selectedFiltersCollected);
+        generateTodoData(selectedFilters);
 
       });
-
       // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
-      selectedFiltersCollected.forEach(function(item) {
+      selectedFilters.forEach(function(item) {
         if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') {
           todoFiltersItem.classList.toggle("is-dark");
         }
@@ -498,21 +507,21 @@ function buildFilterButtons() {
 // ###############
 
 // TODO: Remove filterArray if not needed anymore
-function generateTodoData(selectedFiltersCollected) {
+function generateTodoData(selectedFilters) {
 
   // new variable for items, filtered or not filtered
   let itemsFiltered = [];
 
   // check if a filter has been passed
-  if(selectedFiltersCollected.length > 0) {
+  if(selectedFilters.length > 0) {
 
     // TODO: why?
-    for (let i = 0; i < selectedFiltersCollected.length; i++) {
+    for (let i = 0; i < selectedFilters.length; i++) {
       for(var j = 0; j < parsedData.length; j++) {
-        if(parsedData[j][selectedFiltersCollected[i][1]]) {
+        if(parsedData[j][selectedFilters[i][1]]) {
           // check if the selected filter is in one of the array values of the category field
           // only push into array if it hasn't already been part of the array
-          if(parsedData[j][selectedFiltersCollected[i][1]].includes(selectedFiltersCollected[i][0]) && !itemsFiltered.includes(parsedData[j])) {
+          if(parsedData[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(parsedData[j])) {
             itemsFiltered.push(parsedData[j]);
           }
         }
@@ -608,7 +617,7 @@ function createTableDividerRow() {
     todoTableBodyRowDivider.setAttribute("role", "rowgroup");
 
     let todoTableBodyCellPriority = document.createElement("div");
-    todoTableBodyCellPriority.setAttribute("class", "flex-row checkbox");
+    todoTableBodyCellPriority.setAttribute("class", "flex-row");
     todoTableBodyCellPriority.setAttribute("role", "cell");
     todoTableBodyCellPriority.innerHTML = priority;
     todoTableBodyRowDivider.appendChild(todoTableBodyCellPriority);
@@ -643,12 +652,14 @@ function createTableRow() {
   todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
   todoTableBodyCellCheckbox.setAttribute("role", "cell");
   if(item.complete==true) {
-    todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-check-square\"></i>";
+    todoTableBodyCellCheckbox.setAttribute("title", "Mark as in progress");
+    todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\" tabindex=\"300\"><i class=\"far fa-check-square\"></i></a>";
   } else {
-    todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
+    todoTableBodyCellCheckbox.setAttribute("title", "Mark as done");
+    todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\" tabindex=\"300\"><i class=\"far fa-square\"></i></a>";
   }
   // add a listener on the checkbox to call the completeItem function
-  todoTableBodyCellCheckbox.addEventListener('click', function() {
+  todoTableBodyCellCheckbox.addEventListener("click", function() {
     // passing the data-item attribute of the parent tag to complete function
     completeItem(this.parentElement.getAttribute('data-item'));
   });
@@ -658,21 +669,24 @@ function createTableRow() {
   let todoTableBodyCellText = document.createElement("div");
   todoTableBodyCellText.setAttribute("class", "flex-row text");
   todoTableBodyCellText.setAttribute("role", "cell");
+  todoTableBodyCellText.setAttribute("title", "Edit this todo");
+  todoTableBodyCellText.setAttribute("tabindex", 300);
   //  todoTableBodyCellText.setAttribute("data-item", item.toString());
   if(item.text) {
 
     // use the autoLink lib to attach an icon to every link and put a link on it
     todoTableBodyCellText.innerHTML =  item.text.autoLink({
       callback: function(url) {
-        return url + " <a href=" + url + " class=\"itemExternalLink\" title=\"Open this link in your browser\" target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
+        return url + " <a href=" + url + " class=\"itemExternalLink\" title=\"Open this link in your browser\" target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
       }
     });
   }
 
   // event listener for the click on the text
-  todoTableBodyCellText.addEventListener('click', function() {
-    // if the clicked item has a surrounding link attached the link will be called instead of the edit form
-    if(!event.target.parentElement.hasAttribute('href')) {
+  todoTableBodyCellText.addEventListener("click", function() {
+    // if the clicked item is not the external link icon, showForm() will be called
+    if(!event.target.classList.contains('fa-external-link-alt')) {
+      //console.log(event.target);
       // declaring the item-data value global so other functions can access it
       dataItem = this.parentElement.getAttribute('data-item');
       showForm(dataItem);
@@ -698,6 +712,7 @@ function createTableRow() {
   if(item.due) {
     let todoTableBodyCellDueDate = document.createElement("span");
     todoTableBodyCellDueDate.setAttribute("class", "itemDueDate");
+    todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
     todoTableBodyCellDueDate.innerHTML = " <i class=\"far fa-clock\"></i> " + item.due.toISOString().slice(0, 10);
     todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
   }
@@ -709,22 +724,27 @@ function createTableRow() {
   todoTableContainer.appendChild(todoTableBodyRow);
 }
 
-// ###############
+// ########################################################################################################################
+
 
 // SAVE DATA
 
-// ###############
+
+// ########################################################################################################################
 
 // function to open modal layer and pass a string version of the todo into input field
-function showForm(dataItem) {
+function showForm() {
   // clear the input value in case there was an old one
-  modalFormItemInput.value = null;
-  modalForm.classList.toggle('is-active');
+  modalFormInput.value = null;
+  modalForm.classList.toggle("is-active");
+  // clean up the alert box first
+  modalFormAlert.innerHTML = null;
+  modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
 
   if(dataItem) {
-    modalFormItemInput.value = dataItem;
+    modalFormInput.value = dataItem;
     modalTitle.innerHTML = 'Edit item';
-    btnItemStatus.classList.add('is-active');
+    btnItemStatus.classList.add("is-active");
     // only show the complete button on open items
     if(new TodoTxtItem(dataItem).complete == false) {
       btnItemStatus.innerHTML = "Mark as done";
@@ -733,8 +753,10 @@ function showForm(dataItem) {
     }
   } else {
     modalTitle.innerHTML = 'Add item';
-    btnItemStatus.classList.remove('is-active');
+    btnItemStatus.classList.remove("is-active");
   }
+  // in any case put focus into the input field
+  modalFormInput.focus();
 }
 
 function submitForm() {
@@ -743,52 +765,63 @@ function submitForm() {
   if(modalForm.elements[0].value) {
 
     // convert array of objects to array of strings to find the index
-    parsedDataString = parsedData.map(item => item.toString());
+    parsedData = parsedData.map(item => item.toString());
 
     // input value and data item are the same, nothing has changed, nothing will be written
     if (dataItem==modalForm.elements[0].value) {
 
       console.log("Info: Nothing has changed, won't write anything.");
+      return true;
 
-    // Input and data item differ so we write the changed todo
+    // edit item
     } else if(dataItem) {
 
         // get the position of that item in the array
-        let itemId = parsedDataString.indexOf(dataItem);
+        let itemId = parsedData.indexOf(dataItem);
 
         // get the index using the itemId, remove 1 item there and add the value from the input at that position
-        parsedDataString.splice(itemId, 1, modalForm.elements[0].value);
+        parsedData.splice(itemId, 1, modalForm.elements[0].value);
 
         // convert all the strings to proper todotxt items again
-        parsedData = parsedDataString.map(item => new TodoTxtItem(item));
+        parsedData = parsedData.map(item => new TodoTxtItem(item));
 
+        // TODO: duplicate, clean up
         // pass the new data to the write function
-        writeDataIntoFile(parsedData);
+        if(writeDataIntoFile(parsedData)) {
+          // hide the alert for future modal calls, if there has been one
+          return true;
+        } else {
+          // if writing into file is denied throw alert
+          modalFormAlert.innerHTML = "<strong>Error:</strong> Could not write your changes to the file. Please check if the file exists and if you have sufficient permissions to write to it: " + pathToFile;
+          modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
+          return false;
+        }
 
-    // check if a data item has been passed by an item (edit item) or if there is none (add item)
-    } else {
+  // add item
+  } else {
 
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       parsedData.push(modalForm.elements[0].value);
 
+      // TODO: duplicate, clean up
       // pass the new data to the write function
-      writeDataIntoFile(parsedData);
-
+      if(writeDataIntoFile(parsedData)) {
+        // hide the alert for future modal calls, if there has been one
+        return true;
+      } else {
+        // if writing into file is denied throw alert
+        modalFormAlert.innerHTML = "<strong>Error:</strong> Could not write your changes to the file. Please check if the file exists and if you have sufficient permissions to write to it: " + pathToFile;
+        modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
+        return false;
+      }
     }
-
-    // hide the alert for future modal calls, if there has been one
-    modalFormAlert.parentElement.classList.remove('is-active', 'is-warning');
-
-    // TODO: needed?
-    return true;
-
+  // if the input field is empty, let users know
   } else {
-
-    // if the input field is empty, let users know
     modalFormAlert.innerHTML = "Please add a todo into the text field. If you are unsure on how to do this, take a quick look at the <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.";
-    modalFormAlert.parentElement.classList.add('is-active', 'is-warning');
+    modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
+    modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
+    return false;
   }
-
 }
 
 function completeItem(dataItem) {
@@ -827,24 +860,30 @@ function completeItem(dataItem) {
 
 function writeDataIntoFile(parsedData) {
 
+  // empty the data item as we don't need it anymore
+  dataItem = null;
+
   // render the objects into a string with line breaks
   parsedData = TodoTxt.render(parsedData);
 
   // Write data to 'todo.txt'
-  fs.writeFile(pathToFile, parsedData, {encoding: 'utf-8'}, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      // reset the selected filters
-      selectedFiltersCollected = [];
-      // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
-      store.set('selectedFiltersCollected', undefined);
-      // write the new data into file
-      console.log("File written successfully\n");
-      //console.log("The written has the following contents:");
-      //console.log(fs.readFileSync(pathToFile, "utf8"));
-      // read the data again
-      parseData(pathToFile);
-    }
-  });
+  try {
+    //write the data to the file
+    fs.writeFileSync(pathToFile, parsedData, {encoding: 'utf-8'});
+    console.log("File written successfully");
+
+    // reset the (persisted) filters
+    selectedFilters = [];
+    store.set("selectedFilters", new Array);
+
+    // reread the data
+    parseData(pathToFile);
+
+    return true;
+
+  } catch(err) {
+    console.error(err);
+    return false;
+  }
+
 }
