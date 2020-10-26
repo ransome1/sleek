@@ -20,7 +20,7 @@ const Store = require("./store.js");
 const store = new Store({
   configName: "user-preferences",
   defaults: {
-    windowBounds: { width: 1025, height: 600 },
+    windowBounds: { width: 1025, height: 600, minWidth: 800, minHeight: 600 },
     sortAlphabetically: false,
     showCompleted: false,
     selectedFilters: new Array
@@ -36,6 +36,7 @@ const btnFormSubmit = document.getElementById("btnFormSubmit");
 const btnItemStatus = document.getElementById("btnItemStatus");
 const btnApplyFilter = document.getElementsByClassName("btnApplyFilter");
 const btnLoadTodoFile = document.querySelectorAll(".btnLoadTodoFile");
+const btnCreateTodoFile = document.getElementById("btnCreateTodoFile");
 const btnFormCancel = document.getElementById("btnFormCancel");
 const btnResetAllFilters = document.getElementById("btnResetAllFilters");
 
@@ -92,12 +93,7 @@ toggleShowCompleted.checked = showCompleted;
 // ########################################################################################################################
 
 // persist the highlighting of the button and the dropdown menu
-btnFilter.addEventListener("click", () => {
-  btnFilter.classList.toggle("is-highlighted");
-  filterDropdown.classList.toggle("is-active");
-  filterDropdown.focus();
-  body.classList.toggle("is-active");
-});
+btnFilter.addEventListener("click", showFilters, false);
 
 btnAddItem.addEventListener("click", showForm, false);
 
@@ -161,17 +157,36 @@ btnItemStatus.addEventListener("click", () => {
 // prevent empty hyperlinks from jumping to top after clicking
 a.forEach(el => el.addEventListener("click", function(el) {
   // only if the href contains a hash we prevent the default action of a link
-  if(el.target.href.includes('#')) el.preventDefault();
+  if(el.target.href && el.target.href.includes('#')) el.preventDefault();
 }));
 
 // put a click event on all "open file" buttons
 btnLoadTodoFile.forEach(el => el.addEventListener("click", openFile, false));
+
+// onboarding: click will call createFile() function
+btnCreateTodoFile.addEventListener("click", createFile, false);
 
 // put a listeners on all modal backgrounds
 modalBackground.forEach(el => el.addEventListener("click", clearModal, false));
 
 // click on the cancel button in the footer of the edit modal
 btnFormCancel.addEventListener("click", clearModal, false);
+
+// ###############
+
+// CONFIGURE KEYS
+
+// ###############
+
+// toggle filter dropdown when escape key is pressed
+filterDropdown.addEventListener ("keydown", function () {
+  if(event.key == 'Escape') showFilters();
+});
+
+// put a listeners on all modal backgrounds
+modalForm.addEventListener ("keydown", function () {
+  if(event.key == 'Escape') clearModal();
+});
 
 // ########################################################################################################################
 
@@ -209,6 +224,14 @@ window.onload = function () {
 
 
 // ########################################################################################################################
+
+// show and hide the filter selection dropdown
+function showFilters() {
+  btnFilter.classList.toggle("is-highlighted");
+  filterDropdown.classList.toggle("is-active");
+  filterDropdown.focus();
+  body.classList.toggle("is-active");
+}
 
 // ###############
 
@@ -267,16 +290,6 @@ function openFile() {
           }, ],
       properties: ['openFile']
 
-      /*
-      // Specifying the File Selector Property
-      if (process.platform !== 'darwin') {
-        // If the platform is 'win32' or 'Linux'
-        properties: ['openFile']
-      } else {
-        // If the platform is 'darwin' (macOS)
-        properties: ['openFile', 'openDirectory']
-      }
-      */
   }).then(file => {
       // Stating whether dialog operation was cancelled or not.
 
@@ -299,10 +312,64 @@ function openFile() {
           // pass path and filename on, to extract and parse the raw data
           parseData(pathToFile);
 
-          console.log('Success: Storage file updated by new path and filename: ' + pathToFile);
+          console.log("Success: Storage file updated by new path and filename: " + pathToFile);
 
          }
       }
+  }).catch(err => {
+      console.log("Error: " + err)
+  });
+}
+
+// ###############
+
+// CREATE A NEW TODO.TXT FILE
+
+// ###############
+
+function showAlert(status) {
+  document.getElementById("modalFileHandling").classList.toggle("is-active");
+  document.getElementById("modalFileHandling").classList.add("is-danger");
+};
+
+function createFile() {
+  // Resolves to a Promise<Object>
+  dialog.showOpenDialog({
+    title: "Choose a folder to save your todo.txt file",
+    defaultPath: path.join(app.getPath('home')),
+    buttonLabel: "Create todo.txt file here",
+    properties: ["openDirectory", "createDirectory"]
+  }).then(file => {
+    // Stating whether dialog operation was cancelled or not.
+    if (!file.canceled) {
+
+      pathToNewFile = file.filePaths[0].toString();
+
+      if(fs.stat(pathToNewFile + "/todo.txt", function(err, stats) {
+        if(!err) {
+          console.log("File exists here");
+          showAlert("is-danger");
+        } else {
+          console.log("File does NOT exist here");
+        }
+      }));
+
+      /*fs.writeFile(pathToNewFile + "/todo.txt", "(A) Do something good and send me your feedback at https://www.github.com/ @context +project due:2020-10-10", function (err) {
+        if (err) throw err;
+        if (!err) {
+          console.log("Success: New todo.txt file created: " + pathToNewFile + "/todo.txt");
+
+          // Updating the GLOBAL filepath variable to user-selected file.
+          pathToFile = pathToNewFile + "/todo.txt";
+
+          // write new path and file name into storage file
+          store.set("pathToFile", pathToFile);
+
+          // pass path and filename on, to extract and parse the raw data
+          parseData(pathToFile);
+        }
+      });*/
+    }
   }).catch(err => {
       console.log("Error: " + err)
   });
@@ -322,7 +389,6 @@ function parseData(pathToFile) {
     if (!err) {
       // https://stackoverflow.com/a/10024929
       // check the toggleShowCompleted value and filter completed items if selected by user
-      // only parse from file if parsedData hasn't been read before
       if (showCompleted == false) {
         // only select the items where "complete" is equal "false"
         parsedData = TodoTxt.parse( data, [ new DueExtension() ] ).filter(function(el) { return el.complete == false; });
@@ -332,16 +398,16 @@ function parseData(pathToFile) {
       }
 
       if(generateTodoData(selectedFilters)) {
-        console.log('Success: Todos loaded');
+        console.log('Success: All todos generated');
       } else {
-        console.log('Error: Could not load todo data');
+        console.log('Error: Could not generate todos');
       }
 
       // load filters
       if(generateFilterData(selectedFilters)) {
-        console.log('Success: Filters loaded');
+        console.log('Success: Filters generated');
       } else {
-        console.log('Error: Could not load filters');
+        console.log('Error: Could not generate filters');
       }
 
       onboardingContainer.removeAttribute('class',"is-active");
@@ -671,7 +737,6 @@ function createTableRow() {
   todoTableBodyCellText.setAttribute("role", "cell");
   todoTableBodyCellText.setAttribute("title", "Edit this todo");
   todoTableBodyCellText.setAttribute("tabindex", 300);
-  //  todoTableBodyCellText.setAttribute("data-item", item.toString());
   if(item.text) {
 
     // use the autoLink lib to attach an icon to every link and put a link on it
@@ -713,7 +778,7 @@ function createTableRow() {
     let todoTableBodyCellDueDate = document.createElement("span");
     todoTableBodyCellDueDate.setAttribute("class", "itemDueDate");
     todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
-    todoTableBodyCellDueDate.innerHTML = " <i class=\"far fa-clock\"></i> " + item.due.toISOString().slice(0, 10);
+    todoTableBodyCellDueDate.innerHTML = " <i class=\"far fa-clock\"></i>&nbsp;" + item.due.toISOString().slice(0, 10);
     todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
   }
 
@@ -853,7 +918,12 @@ function completeItem(dataItem) {
   // convert all the strings to proper todotxt items again
   parsedData = parsedData.map(item => new TodoTxtItem(item));
 
-  writeDataIntoFile(parsedData);
+  if(writeDataIntoFile(parsedData)) {
+      console.log("Success: Marked item as complete \"" + dataItem + "\"");
+  } else {
+    console.log("Error: Could not mark item as completed");
+  }
+
 
   return true;
 }

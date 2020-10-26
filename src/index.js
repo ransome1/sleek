@@ -14,7 +14,7 @@ const store = new Store({
   // We'll call our data file 'user-preferences'
   configName: 'user-preferences',
   defaults: {
-    windowBounds: { width: 800, height: 600 },
+    windowBounds: { width: 1025, height: 600, minWidth: 800, minHeight: 600 },
     sortAlphabetically: false,
     showCompleted: false,
     selectedFilters: new Array
@@ -23,12 +23,14 @@ const store = new Store({
 
 const createWindow = () => {
   // First we'll get our height and "width". This will be the defaults if there wasn't anything saved
-  let { width, height } = store.get('windowBounds');
+  let { width, height, minWidth, minHeight } = store.get('windowBounds');
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: width,
     height: height,
+    minWidth: minWidth,
+    minHeight: minHeight,
     icon: __dirname + '/icon.png',
     //frame: false,
     //fullscreen: true,

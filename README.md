@@ -1,5 +1,5 @@
-# tidy.
-## A simple and tidy app to manage a todo.txt file.
+# sleek.
+## A simple and sleek app to manage a todo.txt file.
 ![Alt text](tidy.screenshot.png?raw=true "Screenshot of tidy.")
 ### Already implemented
 - [x] Simple onboarding with one of two functions working; Open existing todo.txt file

@@ -29,6 +29,11 @@ button:focus, button:active, button:active, button:after, button::before, button
   border: none;
 }
 
+:focus {
+  outline: none;
+  box-shadow: 0 0 .25em rgba(0,0,0,0.25);
+}
+
 /* ONBOARDING */
 
 #onboardingContainer {
@@ -50,16 +55,27 @@ button:focus, button:active, button:active, button:after, button::before, button
 }
 
 #onboardingContainer .fa-file-alt {
-  font-size: 8em;
+  font-size: 6em;
 }
 
 #onboardingContainer .title.is-1 {
-  margin: .5em 0 .25em 0;
+  margin: .25em 0 .25em 0;
   color: #4a4a4a;
 }
 
-#onboardingContainer .btnLoadTodoFile {
+#onboardingContainer .btnOnboarding {
   font-size: 1em;
+  margin: 0 1em;
+  padding: .25em;
+}
+
+#onboardingContainer .btnOnboarding svg {
+  font-size: 5em;
+  margin: .25em 0;
+}
+
+#onboardingContainer .btnOnboarding:hover {
+  color: #4a4a4a;
 }
 
 /* Vertical menu */
@@ -116,7 +132,7 @@ nav ul li.logo {
   color: #fff;
 
   font-size: 1em;
-  font-weight: 1000;
+  font-weight: bold;
   line-height: 5em;
   text-align: center;
 
@@ -131,9 +147,9 @@ nav ul li.logo {
 
   position: fixed;
   top: 0;
-  left: -50em;
+  left: -100em;
   z-index: 90;
-  transition: left .5s;
+  transition: left .3s;
 
   padding: 0 3em;
 
@@ -251,6 +267,15 @@ nav ul li.logo {
 
 /* TABLE */
 
+#todoTable {
+  width: 100%;
+  display: none;
+}
+
+#todoTable.is-active {
+  display: flex;
+}
+
 .flex-table {
   display: flex;
   flex-flow: row wrap;
@@ -334,6 +359,7 @@ nav ul li.logo {
 
 .flex-table .flex-row.text[role="cell"] span.itemDueDate {
   color: hsl(0, 0%, 71%);
+  white-space: nowrap;
 }
 
 .flex-table .flex-row.text[role="cell"] .itemExternalLink {
@@ -425,13 +451,13 @@ input:checked + .slider:before {
  border-radius: 50%;
 }
 
-/* MODAL FORM */
+/* MODAL */
 
-#modalForm.is-active {
+.is-active {
   z-index: 110;
 }
 
-#modalForm .modal-background {
+.modal-background {
   background: rgba(0,0,0,.25);
 }
 
@@ -480,7 +506,7 @@ input:checked + .slider:before {
     padding-left: 3.5em;
   }
 
-  nav ul li {
+  nav ul li a {
     width: 3.5em;
     height: 3.5em;
   	line-height: 3.5em;
