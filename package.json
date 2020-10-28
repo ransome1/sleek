@@ -5,7 +5,12 @@
   "description": "A simple and sleek app to manage a todo.txt file.",
   "synopsis": "A simple and sleek app to manage a todo.txt file.",
   "category": "ProjectManagement",
-  "keywords": ["todo.txt", "todo", "productivity", "tasks"],
+  "keywords": [
+    "todo.txt",
+    "todo",
+    "productivity",
+    "tasks"
+  ],
   "author": "Robin Ahle <mail@robbfolio.de>",
   "copyright": "Copyright © 2020 ${author}",
   "license": "MIT",
