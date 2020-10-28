@@ -14,6 +14,7 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 parts:
   electron-app:
     plugin: nodejs
+    source: src/
     node-engine: 15.0.1
     build: npm run pack
     install: |
