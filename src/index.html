@@ -4,19 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>sleek.</title>
-    <link rel="stylesheet" href="bulma.min.css">
-    <link rel="stylesheet" href="index.css">
-    <script defer src="fontawesome.js"></script>
-    <script defer src="jsTodoExtensions.js"></script>
-    <script defer src="jsTodoTxt.js"></script>
-    <script defer src="autolink.js"></script>
-    <script defer src="render.js"></script>
+    <title>sleek</title>
+    <link rel="stylesheet" href="css/bulma.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="js/fontawesome.js"></script>
+    <script defer src="js/jsTodoExtensions.js"></script>
+    <script defer src="js/jsTodoTxt.js"></script>
+    <script defer src="js/autolink.js"></script>
+    <script defer src="js/render.js"></script>
   </head>
   <body id="body">
+    <section id="onboardingContainer">
+      <h1 class="title is-1">welcome to sleek</h1>
+      <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
+      <p class="file is-boxed is-centered">
+        <a href="#" class="btnOnboarding btnLoadTodoFile" tabindex="505">
+          <i class="fas fa-upload"></i>
+          <span class="file-label">Choose existing todo.txt</span>
+        </a>
+        <a id="btnCreateTodoFile" href="#" class="btnOnboarding" tabindex="505">
+          <i class="fas fa-plus-circle"></i>
+          <span class="file-label">Create a new todo.txt</span>
+        </a>
+      </p>
+    </section>
     <nav>
       <ul>
-      	<li class="logo">sleek.</li>
+      	<li class="logo">sleek</li>
         <li id="btnAddItem"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
       	<li id="btnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
       	<li class="btnLoadTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
@@ -51,20 +65,6 @@
         </div>
       </div>
     </section>
-    <section id="onboardingContainer">
-      <h1 class="title is-1">welcome to sleek.</h1>
-      <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
-      <p class="file is-boxed is-centered">
-        <a href="#" class="btnOnboarding btnLoadTodoFile" tabindex="505">
-          <i class="fas fa-upload"></i>
-          <span class="file-label">Choose existing todo.txt</span>
-        </a>
-        <a id="btnCreateTodoFile" href="#" class="btnOnboarding" tabindex="505">
-          <i class="fas fa-plus-circle"></i>
-          <span class="file-label">Create a new todo.txt</span>
-        </a>
-      </p>
-    </section>
     <form id="modalForm" class="modal modalFormSubmit">
       <div class="modal-background"></div>
       <div class="modal-content">
@@ -86,12 +86,12 @@
           <footer class="card-footer">
             <button type="submit" class="card-footer-item" tabindex="310">Save</button>
             <a href="#" id="btnItemStatus" class="card-footer-item" tabindex="315"></a>
-            <a href="#" id="btnFormCancel" class="card-footer-item" tabindex="320">Cancel</a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="320">Cancel</a>
           </footer>
         </div>
       </div>
     </form>
-    <div id="modalFileHandling" class="modal">
+    <div id="modalFile" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
@@ -100,15 +100,13 @@
           </header>
           <div class="card-content">
             <div class="content">
-              <article class="message is-warning">
-                <div class="message-body">There is already a todo.txt located at the chosen directory. Would you like to overwrite the existing todo.txt file (all contents will be lost) or select a different directory?</div>
-              </article>
+              There is already a todo.txt located at the chosen directory. Would you like to overwrite the existing todo.txt file (all contents will be lost) or select a different directory?
             </div>
           </div>
           <footer class="card-footer">
-            <a href="#" class="card-footer-item" tabindex="610">Overwrite existing todo.txt</a>
-            <a href="#" class="card-footer-item" tabindex="615">Choose a diffrent directory</a>
-            <a href="#" class="card-footer-item btnFormCancel" tabindex="620">Cancel</a>
+            <a href="#" id="modalFileOverwrite" class="card-footer-item" tabindex="610">Overwrite existing todo.txt</a>
+            <a href="#" id="modalFileChoose" class="card-footer-item" tabindex="615">Change directory</a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="620">Cancel</a>
           </footer>
         </div>
       </div>

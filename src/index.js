@@ -16,30 +16,28 @@ const store = new Store({
   defaults: {
     windowBounds: { width: 1025, height: 600, minWidth: 800, minHeight: 600 },
     sortAlphabetically: false,
-    showCompleted: false,
+    showCompleted: true,
     selectedFilters: new Array
   }
 });
 
 const createWindow = () => {
-  // First we'll get our height and "width". This will be the defaults if there wasn't anything saved
   let { width, height, minWidth, minHeight } = store.get('windowBounds');
-
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: width,
     height: height,
     minWidth: minWidth,
     minHeight: minHeight,
-    icon: __dirname + '/icon.png',
+    //icon: __dirname + './icon.png',
+    icon: path.join(__dirname, 'img/512x512.png'),
     //frame: false,
     //fullscreen: true,
     //simpleFullscreen: true,
     //fullscreenWindowTitle: true,
     autoHideMenuBar: true,
     webPreferences: {
-      //contextIsolation: true,
-      //worldSafeExecuteJavaScript:true,
+      contextIsolation: false,
+      worldSafeExecuteJavaScript:true,
       nodeIntegration: true,
       enableRemoteModule: true
     }
