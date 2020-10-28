@@ -20,7 +20,7 @@ const Store = require("./store.js");
 const store = new Store({
   configName: "user-preferences",
   defaults: {
-    windowBounds: { width: 1025, height: 600, minWidth: 800, minHeight: 600 },
+    windowBounds: { width: 1025, height: 768, minWidth: 800, minHeight: 600 },
     sortAlphabetically: false,
     showCompleted: true,
     selectedFilters: new Array

@@ -14,7 +14,7 @@ const store = new Store({
   // We'll call our data file 'user-preferences'
   configName: 'user-preferences',
   defaults: {
-    windowBounds: { width: 1025, height: 600, minWidth: 800, minHeight: 600 },
+    windowBounds: { width: 1025, height: 769, minWidth: 800, minHeight: 600 },
     sortAlphabetically: false,
     showCompleted: true,
     selectedFilters: new Array
@@ -52,8 +52,6 @@ const createWindow = () => {
     require('electron').shell.openExternal(url);
   });
 
-  // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
   // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
   // Modules to create application menu
   const Menu = require('electron').Menu;
@@ -61,19 +59,40 @@ const createWindow = () => {
 
   // Template for menu
   const menuTemplate = [
-    {
-      role: 'App',
+    /*{
+      label: 'File',
       submenu: [
-        {role: 'close'},
-        {role: 'Switch todo.txt file'}
+        {
+          label: 'Open todo.txt file',
+          click: () => {
+            mainWindow.webContents.toggleDevTools();
+          }
+        },
+        {
+          role: 'close',
+          label: 'Close sleek'
+        }
+
       ]
     },
     {
       label: 'View',
       submenu: [
-        {role: 'reload'}
+        {role: 'Reload'},
+        {
+          label: 'Show completed',
+          click: () => {
+            mainWindow.webContents.toggleDevTools();
+          }
+        },
+        {
+          label: 'Sort alphabetically',
+          click: () => {
+            mainWindow.webContents.toggleDevTools();
+          }
+        }
       ]
-    },
+    },*/
     {
       id: 'helpMenu',
       role: 'help',
@@ -97,6 +116,9 @@ const createWindow = () => {
 
   // Set menu to menuTemplate
   Menu.setApplicationMenu(menu)
+
+  // Open the DevTools.
+  //mainWindow.webContents.openDevTools();
 
   // Store user data: save size after resize
   mainWindow.on('resize', () => {
