@@ -766,10 +766,10 @@ function createTableRow() {
   todoTableBodyCellCheckbox.setAttribute("role", "cell");
   if(item.complete==true) {
     todoTableBodyCellCheckbox.setAttribute("title", "Mark as in progress");
-    todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\" tabindex=\"300\"><i class=\"fas fa-check-circle\"></i></a>";
+    todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"fas fa-check-circle\"></i></a>";
   } else {
     todoTableBodyCellCheckbox.setAttribute("title", "Mark as done");
-    todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\" tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
+    todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
   }
   // add a listener on the checkbox to call the completeItem function
   todoTableBodyCellCheckbox.addEventListener("click", function() {

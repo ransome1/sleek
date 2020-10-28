@@ -53,7 +53,50 @@ const createWindow = () => {
   });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
+  // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
+  // Modules to create application menu
+  const Menu = require('electron').Menu;
+  const MenuItem = require('electron').MenuItem;
+
+  // Template for menu
+  const menuTemplate = [
+    {
+      role: 'App',
+      submenu: [
+        {role: 'close'},
+        {role: 'Switch todo.txt file'}
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {role: 'reload'}
+      ]
+    },
+    {
+      id: 'helpMenu',
+      role: 'help',
+      submenu: [
+        {
+          label: 'sleek on Github',
+          click: () => {require('electron').shell.openExternal('https://github.com/ransome1/sleek')}
+        },
+        {
+          label: 'Developer Console',
+          click: () => {
+            mainWindow.webContents.toggleDevTools();
+          }
+        }
+      ]
+    }
+  ];
+
+  // Build menu from menuTemplate
+  const menu = Menu.buildFromTemplate(menuTemplate);
+
+  // Set menu to menuTemplate
+  Menu.setApplicationMenu(menu)
 
   // Store user data: save size after resize
   mainWindow.on('resize', () => {

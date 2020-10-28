@@ -1,38 +1,44 @@
 # sleek
 ## A simple and sleek app to manage a todo.txt file.
 ![Alt text](sleek.screenshot.png?raw=true "Screenshot of sleek")
-### Already implemented
-- [x] Simple onboarding with one of two functions working; Open existing todo.txt file
+### Done
+- [x] Simple onboarding with two functions: Open existing todo.txt file and create a new one
 - [x] Open a todo.txt file and parse it into a table
-- [x] Order items by priority
+- [x] Order todos by priority
 - [x] Add contexts and projects as tags to each item
-- [x] Indicate completed and not completed items
-- [x] Check items to complete them
-- [x] Add new items
-- [x] Edit existing items
-- [x] Filter items by contexts and projects
+- [x] Indicate status of completion
+- [x] Mark todos for completion
+- [x] Add new todos
+- [x] Edit existing todos
+- [x] Filter todos by contexts and projects
 - [x] Reset filter settings
 - [x] Sort items either according to position in todo.txt file (default) or alphabetically
-- [x] Show and hide completed items
+- [x] Show and hide completed todos
 - [x] Persist path to the todo.txt file
 - [x] Persist selected filters
 - [x] Persist setting for sorting
-- [x] Persist setting for shown completed
+- [x] Persist setting for "show completed"
+- [x] Uncheck completed todos
+- [x] Show due date
+- [x] Create a new todo.txt
+- [x] Push binaries to Snapcraft
 
-### Still to be done
-- [ ] Extensive testing
+### To be done
+- [ ] Extensive testing & bug fixing
 - [ ] Code refinement and better error handling
 - [ ] Keyboard shortcuts
 - [ ] Multi language support
-- [ ] Show due date and implement a notification function
-- [ ] Build a working binary
-- [ ] UI: Dark theme
-- [ ] Feature: Full text search
-- [ ] Feature: Create a new todo.txt
-- [ ] Feature: Uncheck completed items
+- [ ] Delete single todos
+- [ ] Implement a notification function for due dates
+- [ ] Dark theme
+- [ ] Full text search
+- [ ] Loading indicators
+- [ ] Add interactive user support on todo creation
+- [ ] Drag and drop todos
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
+- Electron builder: https://www.electron.build/
 - Bulma CSS: https://bulma.io/
 - Font Awesome: https://fontawesome.com
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt
