@@ -621,14 +621,13 @@ function buildFilterButtons() {
 
 // TODO: Remove filterArray if not needed anymore
 function generateTodoData(selectedFilters) {
-
   // new variable for items, filtered or not filtered
   let itemsFiltered = [];
 
   // check if a filter has been passed
   if(selectedFilters.length > 0) {
 
-    // TODO: why?
+    // if there are selected filters build the items according to those filters
     for (let i = 0; i < selectedFilters.length; i++) {
       for(var j = 0; j < parsedData.length; j++) {
         if(parsedData[j][selectedFilters[i][1]]) {
@@ -721,7 +720,9 @@ function addTableRows(items, priority) {
 }
 
 function createTableDividerRow() {
-
+  console.log(item);
+  console.log(item.priority);
+  console.log(item.text);
   if(item.priority && item.priority!=previousItem) {
     previousItem = item.priority;
     priority = item.priority;
@@ -876,9 +877,6 @@ function submitForm() {
   // check if there is an input in the text field, otherwise indicate it to the user
   if(modalForm.elements[0].value) {
 
-    // convert array of objects to array of strings to find the index
-    parsedData = parsedData.map(item => item.toString());
-
     // input value and data item are the same, nothing has changed, nothing will be written
     if (dataItem==modalForm.elements[0].value) {
 
@@ -888,29 +886,32 @@ function submitForm() {
     // edit item
     } else if(dataItem) {
 
-        // get the position of that item in the array
-        let itemId = parsedData.indexOf(dataItem);
+      // convert array of objects to array of strings to find the index
+      parsedData = parsedData.map(item => item.toString());
 
-        // get the index using the itemId, remove 1 item there and add the value from the input at that position
-        parsedData.splice(itemId, 1, modalForm.elements[0].value);
+      // get the position of that item in the array
+      let itemId = parsedData.indexOf(dataItem);
 
-        // convert all the strings to proper todotxt items again
-        parsedData = parsedData.map(item => new TodoTxtItem(item));
+      // get the index using the itemId, remove 1 item there and add the value from the input at that position
+      parsedData.splice(itemId, 1, modalForm.elements[0].value);
 
-        // TODO: duplicate, clean up
-        // pass the new data to the write function
-        if(writeDataIntoFile(parsedData)) {
-          // hide the alert for future modal calls, if there has been one
-          return true;
-        } else {
-          // if writing into file is denied throw alert
-          modalFormAlert.innerHTML = "<strong>Error:</strong> Could not write your changes to the file. Please check if the file exists and if you have sufficient permissions to write to it: " + pathToFile;
-          modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
-          return false;
-        }
+      // convert all the strings to proper todotxt items again
+      parsedData = parsedData.map(item => new TodoTxtItem(item));
 
-  // add item
-  } else {
+      // TODO: duplicate, clean up
+      // pass the new data to the write function
+      if(writeDataIntoFile(parsedData)) {
+        // hide the alert for future modal calls, if there has been one
+        return true;
+      } else {
+        // if writing into file is denied throw alert
+        modalFormAlert.innerHTML = "<strong>Error:</strong> Could not write your changes to the file. Please check if the file exists and if you have sufficient permissions to write to it: " + pathToFile;
+        modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
+        return false;
+      }
+
+    // add item
+    } else {
 
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       parsedData.push(modalForm.elements[0].value);

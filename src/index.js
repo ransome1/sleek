@@ -74,25 +74,13 @@ const createWindow = () => {
         }
 
       ]
-    },
+    },*/
     {
       label: 'View',
       submenu: [
-        {role: 'Reload'},
-        {
-          label: 'Show completed',
-          click: () => {
-            mainWindow.webContents.toggleDevTools();
-          }
-        },
-        {
-          label: 'Sort alphabetically',
-          click: () => {
-            mainWindow.webContents.toggleDevTools();
-          }
-        }
+        {role: 'Reload'}
       ]
-    },*/
+    },
     {
       id: 'helpMenu',
       role: 'help',
@@ -118,7 +106,7 @@ const createWindow = () => {
   Menu.setApplicationMenu(menu)
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Store user data: save size after resize
   mainWindow.on('resize', () => {

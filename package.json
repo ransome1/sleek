@@ -20,21 +20,31 @@
     "appId": "com.electron.sleek",
     "linux": {
       "icon": "src/img/512x512.png",
-      "category": "ProjectManagement"
-    },
-    "pacman": {},
-    "appImage": {},
-    "snap": {
-      "confinement": "strict",
-      "grade": "devel"
+      "category": "ProjectManagement",
+      "target": [
+        {
+          "target": "snap",
+          "arch": ["x64"]
+        }
+      ]
     }
+  },
+  "snap": {
+    "confinement": "strict",
+    "grade": "devel"
+  },
+  "publish": {
+    "provider": "snapStore",
+    "channels": [
+      "edge"
+    ]
   },
   "main": "src/index.js",
   "buildResources": "src",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder --publish always"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
