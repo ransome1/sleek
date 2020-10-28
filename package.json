@@ -25,11 +25,8 @@
     "pacman": {},
     "appImage": {},
     "snap": {
-      "confinement": "devmode",
+      "confinement": "strict",
       "grade": "devel"
-    },
-    "dmg": {
-      "sign": false
     }
   },
   "main": "src/index.js",

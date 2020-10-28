@@ -15,12 +15,6 @@ parts:
   electron-app:
     plugin: nodejs
     source: src/
-    node-engine: 15.0.1
-    build: npm run pack
-    install: |
-      mkdir $SNAPCRAFT_PART_INSTALL/app
-      cd release-builds/*/
-      mv * $SNAPCRAFT_PART_INSTALL/app
     stage:
       - -lib/node_modules/*
       - -usr/share/doc/*
@@ -30,8 +24,8 @@ parts:
       - -CHANGELOG.md
       - -README.md
 apps:
-  qr-code-generator-desktop:
-    command: bin/desktop-launch $SNAP/app/qr-code-generator-desktop
+  sleek:
+    command: bin/desktop-launch $SNAP/app/sleek
     plugs:
       - home
       - desktop
@@ -41,7 +35,6 @@ apps:
       - browser-support
       - network
       - gsettings
-      - pulseaudio
       - opengl
     environment:
       TMPDIR: $XDG_RUNTIME_DIR
