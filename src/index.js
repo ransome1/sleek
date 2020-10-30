@@ -32,7 +32,7 @@ const createWindow = () => {
     icon: path.join(__dirname, 'img/512x512.png'),
     //frame: false,
     //fullscreen: true,
-    //simpleFullscreen: true,
+    simpleFullscreen: true,
     //fullscreenWindowTitle: true,
     autoHideMenuBar: true,
     webPreferences: {
@@ -74,27 +74,28 @@ const createWindow = () => {
         }
 
       ]
-    },*/
+    },
     {
       label: 'View',
       submenu: [
         {role: 'Reload'}
       ]
-    },
+    },*/
     {
-      id: 'helpMenu',
-      role: 'help',
+      label: 'sleek',
       submenu: [
+        {role: 'Reload'},
         {
           label: 'sleek on Github',
           click: () => {require('electron').shell.openExternal('https://github.com/ransome1/sleek')}
         },
         {
-          label: 'Developer Console',
+          label: 'Show Developer Console',
           click: () => {
             mainWindow.webContents.toggleDevTools();
           }
-        }
+        },
+        {role: 'Close'},
       ]
     }
   ];

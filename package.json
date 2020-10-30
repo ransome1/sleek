@@ -24,9 +24,22 @@
       "target": [
         {
           "target": "snap",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "appImage"
         }
       ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable"
+        }
+      ],
+      "icon": "src/img/512x512.ico"
     }
   },
   "snap": {
@@ -44,7 +57,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --publish always"
+    "dist": "electron-builder -wl --publish never"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",

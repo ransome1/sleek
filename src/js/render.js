@@ -106,7 +106,11 @@ btnResetAllFilters.addEventListener("click", () => {
   selectedFilters = [];
   // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
   store.set("selectedFilters", new Array);
-  parseData(pathToFile);
+
+  // only generate the filters and items, we do not read the file again as it is not necessary
+  generateFilterData(selectedFilters);
+  generateTodoData(selectedFilters);
+  //parseDataFromFile(pathToFile);
 });
 
 // reread the data but sort it asc
@@ -138,11 +142,15 @@ toggleShowCompleted.addEventListener("click", () => {
 
   // clear selectedFilters to avoid problems
   // TODO: this is ugly
-  selectedFilters = [];
+  //selectedFilters = [];
 
   // TODO: error handling
-  // regenerate the table considering the sort value
-  parseData(pathToFile);
+  // only generate the filters and items, we do not read the file again as it is not necessary
+  generateFilterData(selectedFilters);
+  generateTodoData(selectedFilters);
+
+  //parseDataFromFile(pathToFile);
+
 
 });
 
@@ -217,23 +225,45 @@ modalForm.addEventListener ("keydown", function () {
 // ########################################################################################################################
 
 window.onload = function () {
+
+  // only if data is parsed from file, we
+  parseDataFromFile(pathToFile)
+  .then(res => {
+    console.log(res);
+  })
+  .catch(err => {
+    console.log(err);
+    onboarding(true);
+  });
+}
+
+async function parseDataFromFile(pathToFile) {
   // Check if file exists
   if (fs.existsSync(pathToFile)) {
-    parseData(pathToFile);
-    console.log("Success: todo.txt file loaded: " + pathToFile);
-    // clear the onboarding, display the todo table and show the navigation buttons
-    onboardingContainer.removeAttribute("class","is-active");
-    todoTable.classList.add("is-active");
-    btnAddItem.setAttribute("class","is-active");
-    btnFilter.setAttribute("class","is-active");
+    await fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
+      if (!err) {
+        parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
+        if(generateTodoData(selectedFilters)) {
+          console.log('Success: All todos generated');
+        } else {
+          console.log('Error: Could not generate todos');
+        }
+        // load filters
+        if(generateFilterData(selectedFilters)) {
+          console.log('Success: Filters generated');
+        } else {
+          console.log('Error: Could not generate filters');
+        }
+        onboarding(false);
+      } else {
+        // start the onboarding instead
+        console.log("Info: Data could not be extracted from file");
+        onboarding(true);
+      }
+    });
+    return Promise.resolve("Success: Data extracted from file, parsed and passed on to further functions");
   } else {
-    // show the onboarding instead of the table and hide the nav buttons as they are not needed right now
-    console.log("Info: No todo.txt file loaded, starting onboarding.");
-    onboardingContainer.setAttribute("class","is-active");
-    onboardingContainer.focus();
-    todoTable.classList.remove("is-active");
-    btnAddItem.removeAttribute("class","is-active");
-    btnFilter.removeAttribute("class","is-active");
+    return Promise.reject("Info: No todo.txt file found or selected yet");
   }
 }
 
@@ -244,6 +274,23 @@ window.onload = function () {
 
 
 // ########################################################################################################################
+
+//
+function onboarding(show) {
+  if(show) {
+    console.log("Info: Starting onboarding");
+    onboardingContainer.classList.add("is-active");
+    btnAddItem.classList.remove("is-active");
+    btnFilter.classList.remove("is-active");
+    todoTable.classList.remove("is-active");
+  } else {
+    console.log("Info: Hiding onboarding, loading the app");
+    onboardingContainer.classList.remove("is-active");
+    btnAddItem.classList.add("is-active");
+    btnFilter.classList.add("is-active");
+    todoTable.classList.add("is-active");
+  }
+}
 
 // show and hide the filter selection dropdown
 function showFilters() {
@@ -339,7 +386,7 @@ function openFile() {
           store.set("selectedFilters", new Array);
 
           // pass path and filename on, to extract and parse the raw data
-          parseData(pathToFile);
+          parseDataFromFile(pathToFile);
 
           console.log("Success: Storage file updated by new path and filename: " + pathToFile);
 
@@ -390,7 +437,7 @@ function createFile(showDialog, overwriteFile) {
                 store.set("pathToFile", pathToFile);
 
                 // pass path and filename on, to extract and parse the raw data
-                parseData(pathToFile);
+                parseDataFromFile(pathToFile);
               }
             });
           }
@@ -416,63 +463,10 @@ function createFile(showDialog, overwriteFile) {
         store.set("pathToFile", pathToFile);
 
         // pass path and filename on, to extract and parse the raw data
-        parseData(pathToFile);
+        parseDataFromFile(pathToFile);
       }
     });
   }
-}
-
-// ###############
-
-// READ THE FILE AND GENERATE DATA
-
-// ###############
-
-// read contents of todo.txt file and trigger further action
-function parseData(pathToFile) {
-
-  fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
-
-    if (!err) {
-      // https://stackoverflow.com/a/10024929
-      // check the toggleShowCompleted value and filter completed items if selected by user
-      if (showCompleted == false) {
-        // only select the items where "complete" is equal "false"
-        parsedData = TodoTxt.parse( data, [ new DueExtension() ] ).filter(function(el) { return el.complete == false; });
-      } else {
-        // process all items by reading the file. This is important because the parsedString could already be incomplete from previous filtering
-        parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
-      }
-
-      if(generateTodoData(selectedFilters)) {
-        console.log('Success: All todos generated');
-      } else {
-        console.log('Error: Could not generate todos');
-      }
-
-      // load filters
-      if(generateFilterData(selectedFilters)) {
-        console.log('Success: Filters generated');
-      } else {
-        console.log('Error: Could not generate filters');
-      }
-
-      onboardingContainer.removeAttribute('class',"is-active");
-      todoTable.classList.add("is-active");
-      btnAddItem.setAttribute('class',"is-active");
-      btnFilter.classList.add("is-active");
-
-    } else {
-      // if data couldn't be extracted from file
-      console.log(err);
-      // start the onboarding instead
-      console.log("Info: Data could not be extracted from file, starting onboarding instead");
-      onboardingContainer.addAttribute('class',"is-active");
-      btnAddItem.removeAttribute('class',"is-active");
-      btnFilter.removeAttribute('class',"is-active");
-      todoTable.classList.remove("is-active");
-    }
-  });
 }
 
 // ###############
@@ -503,7 +497,12 @@ function generateFilterData() {
       if(parsedData[j][category]) {
         // loop through all the values it will find and push them into the filter array
         for(let k = 0; k < parsedData[j][category].length; k++) {
-          filters.push([parsedData[j][category][k]]);
+          // consider the show complete setting, if it is set to false
+          if(showCompleted==false && parsedData[j].complete==true) {
+            continue;
+          } else {
+            filters.push([parsedData[j][category][k]]);
+          }
         }
       }
     }
@@ -706,23 +705,31 @@ function addTableRows(items, priority) {
         // divider row for new priority
         createTableDividerRow(item, previousItem, itemsByPriority[j][0]);
 
-        // table row with item data
-        createTableRow(item);
+        // consider the show complete setting, if it is set to false
+        if(showCompleted==false && item.complete==true) {
+          continue;
+        } else {
+          // table row with item data
+          createTableRow(item);
+        }
       }
     }
   } else {
     for (let i = 0; i < items.length; i++) {
       item = items[i];
       // table row with item data
-      createTableRow(item);
+      // skip this loop if showCompleted is turned off but the item has been set to complete
+      if(showCompleted==false && item.complete==true) {
+        continue;
+      } else {
+        // table row with item data
+        createTableRow(item);
+      }
     }
   }
 }
 
 function createTableDividerRow() {
-  console.log(item);
-  console.log(item.priority);
-  console.log(item.text);
   if(item.priority && item.priority!=previousItem) {
     previousItem = item.priority;
     priority = item.priority;
@@ -896,7 +903,7 @@ function submitForm() {
       parsedData.splice(itemId, 1, modalForm.elements[0].value);
 
       // convert all the strings to proper todotxt items again
-      parsedData = parsedData.map(item => new TodoTxtItem(item));
+      parsedData = parsedData.map(item => new TodoTxtItem(item, [ new DueExtension() ]));
 
       // TODO: duplicate, clean up
       // pass the new data to the write function
@@ -912,9 +919,8 @@ function submitForm() {
 
     // add item
     } else {
-
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
-      parsedData.push(modalForm.elements[0].value);
+      parsedData.push(new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension() ]));
 
       // TODO: duplicate, clean up
       // pass the new data to the write function
@@ -964,7 +970,7 @@ function completeItem(dataItem) {
   }
 
   // convert all the strings to proper todotxt items again
-  parsedData = parsedData.map(item => new TodoTxtItem(item));
+  parsedData = parsedData.map(item => new TodoTxtItem(item, [ new DueExtension() ]));
 
   if(writeDataIntoFile(parsedData)) {
       console.log("Success: Marked item as complete \"" + dataItem + "\"");
@@ -982,20 +988,22 @@ function writeDataIntoFile(parsedData) {
   dataItem = null;
 
   // render the objects into a string with line breaks
-  parsedData = TodoTxt.render(parsedData);
+  //parsedData = TodoTxt.render(parsedData);
 
   // Write data to 'todo.txt'
   try {
+
     //write the data to the file
-    fs.writeFileSync(pathToFile, parsedData, {encoding: 'utf-8'});
-    console.log("Success: File written successfully");
+    fs.writeFileSync(pathToFile, TodoTxt.render(parsedData), {encoding: 'utf-8'});
 
     // reset the (persisted) filters
-    selectedFilters = [];
-    store.set("selectedFilters", new Array);
+    //selectedFilters = [];
+    //store.set("selectedFilters", new Array);
 
     // reread the data
-    parseData(pathToFile);
+    //parseDataFromFile(pathToFile);
+    generateFilterData(selectedFilters);
+    generateTodoData(selectedFilters);
 
     return true;
 
