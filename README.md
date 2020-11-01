@@ -33,6 +33,7 @@ There is also an AppImage build for Linux distributions other than Ubuntu and an
 * [x] Push binaries to Snapcraft
 * [x] Keyboard shortcuts
 * [x] Delete single todos
+* [x] Tabindex
 
 ### To be done
 * [ ] Extensive testing & bug fixing
