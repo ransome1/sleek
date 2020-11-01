@@ -7,13 +7,14 @@
     <title>sleek</title>
     <link rel="stylesheet" href="css/bulma.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <script defer src="js/fontawesome.js"></script>
-    <script defer src="js/jsTodoExtensions.js"></script>
-    <script defer src="js/jsTodoTxt.js"></script>
-    <script defer src="js/autolink.js"></script>
-    <script defer src="js/render.js"></script>
   </head>
   <body id="body">
+    <div id="loadingIndicator" class="modal is-active">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <p><i class="fas fa-spinner fa-spin"></i></p>
+      </div>
+    </div>
     <section id="onboardingContainer">
       <h1 class="title is-1">welcome to sleek</h1>
       <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
@@ -111,5 +112,10 @@
         </div>
       </div>
     </div>
+    <script defer src="js/fontawesome.js"></script>
+    <script defer src="js/jsTodoExtensions.js"></script>
+    <script defer src="js/jsTodoTxt.js"></script>
+    <script defer src="js/autolink.js"></script>
+    <script defer src="js/render.js"></script>
   </body>
 </html>

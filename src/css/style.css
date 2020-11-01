@@ -384,24 +384,29 @@ nav ul li.logo {
     color: #3273dc;
 }
 
-.flex-table .flex-row[role="cell"] a.todoTableItemMore {
+.flex-table .flex-row.todoTableItemMore a {
   display: none;
   padding: 0 .5em;
   /*margin-right: auto;*/
 }
 
-.flex-table:hover .flex-row[role="cell"] a.todoTableItemMore,
-.flex-table .flex-row[role="cell"] .dropdown.is-active a.todoTableItemMore {
+.flex-table:hover .flex-row.todoTableItemMore a,
+.flex-table .flex-row.todoTableItemMore.is-active a,
+.flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu {
   display: block;
 }
 
-flex-row .dropdown.is-active {
+.flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
+  padding: .75em;
+}
+
+/*flex-row .dropdown.is-active {
   display: none;
 }
 
 flex-row:hover .dropdown.is-active {
   display: block;
-}
+}*/
 
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 
@@ -524,6 +529,28 @@ input:checked + .slider:before {
 
 #modalForm button:hover {
   color: #000;
+}
+
+/* LOADING INDICATOR */
+
+#loadingIndicator {
+  text-align: center;
+  z-index: 120;
+}
+
+#loadingIndicator .modal-background {
+  background: #fff;
+  opacity: .25;
+}
+
+#loadingIndicator p {
+  margin: .5em 0;
+}
+
+#loadingIndicator svg,
+#loadingIndicator .fa-spinner {
+  width: 2em;
+  height: 2em;
 }
 
 /* MEDIA QUERIES */

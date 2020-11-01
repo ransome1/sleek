@@ -47,8 +47,9 @@ const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetical
 
 const onboardingContainer = document.getElementById("onboardingContainer");
 
+const loadingIndicator = document.getElementById("loadingIndicator");
+
 const todoTable = document.getElementById("todoTable");
-const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 
 const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById("filterDropdown");
@@ -94,18 +95,17 @@ toggleShowCompleted.checked = showCompleted;
 // ########################################################################################################################
 
 
-// EVENT LISTENERS
+// ONCLICK DEFINITIONS AND EVENT LISTENERS
 
 
 // ########################################################################################################################
 
 // persist the highlighting of the button and the dropdown menu
-btnFilter.addEventListener("click", showFilters, false);
+btnFilter.onclick = showFilters;
+btnAddItem.onclick = showForm;
 
-btnAddItem.addEventListener("click", showForm, false);
-
-// just reread the file and flush all filters and items by emptying the array
-btnResetAllFilters.addEventListener("click", () => {
+// flush all filters and items by emptying the array and reloading the data
+btnResetAllFilters.onclick = function() {
   selectedFilters = [];
   // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
   store.set("selectedFilters", new Array);
@@ -113,18 +113,19 @@ btnResetAllFilters.addEventListener("click", () => {
   // only generate the filters and items, we do not read the file again as it is not necessary
   generateFilterData(selectedFilters);
   generateTodoData(selectedFilters);
-  //parseDataFromFile(pathToFile);
-});
+}
 
-// click on the todo table will close more
-todoTable.addEventListener("click", () => {
-  if(event.target.classList.contains("flex-table") || event.target.classList.contains("todoTableItemMore")) {
-    document.querySelectorAll(".todoTableItemMoreDropdown").forEach(el => el.classList.remove("is-active"), false);
+// click on the todo table will close more dropdown and remove active state for the dotted button
+todoTable.onclick = function() {
+  if(event.target.classList.contains("flex-table")) {
+    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
+      item.classList.remove("is-active")
+    });
   }
-});
+}
 
 // reread the data but sort it asc
-toggleSortAlphabetically.addEventListener("click", () => {
+toggleSortAlphabetically.onclick = function() {
   if(sortAlphabetically==false) {
     sortAlphabetically = true;
   } else {
@@ -137,11 +138,10 @@ toggleSortAlphabetically.addEventListener("click", () => {
   // regenerate the table considering the sort value and make sure saved filters are going to be passed
   // TODO: does it crash if no filters have been selected?
   generateTodoData(selectedFilters);
-
-});
+}
 
 // reread the data but sort it asc
-toggleShowCompleted.addEventListener("click", () => {
+toggleShowCompleted.onclick = function() {
   if(showCompleted==false) {
     showCompleted = true;
   } else {
@@ -158,11 +158,7 @@ toggleShowCompleted.addEventListener("click", () => {
   // only generate the filters and items, we do not read the file again as it is not necessary
   generateFilterData(selectedFilters);
   generateTodoData(selectedFilters);
-
-  //parseDataFromFile(pathToFile);
-
-
-});
+}
 
 // submit in the form
 modalForm.addEventListener("submit", function(e) {
@@ -173,46 +169,42 @@ modalForm.addEventListener("submit", function(e) {
 });
 
 // complete the item using the footer button in modal
-btnItemStatus.addEventListener("click", () => {
+btnItemStatus.onclick = function() {
   // TODO: error handling
   if(completeItem(dataItem)) {
     modalForm.classList.toggle("is-active");
   }
-});
+}
 
 // prevent empty hyperlinks from jumping to top after clicking
-a.forEach(el => el.addEventListener("click", function(el) {
+a.forEach(el => el.onclick = function(el) {
   // only if the href contains a hash we prevent the default action of a link
   if(el.target.href && el.target.href.includes('#')) el.preventDefault();
-}));
+});
 
 // put a click event on all "open file" buttons
-btnLoadTodoFile.forEach(el => el.addEventListener("click", openFile, false));
+btnLoadTodoFile.forEach(el => el.onclick = openFile);
+
+  //addEventListener("click", openFile, false));
 
 // onboarding: click will call createFile() function
-btnCreateTodoFile.addEventListener("click", function() {
-  createFile(true, false);
-});
+btnCreateTodoFile.onclick = function () { createFile(true, false) };
 
 // onboarding: click will call createFile() function
-modalFileChoose.addEventListener("click", function() {
-  createFile(true, false);
-});
+modalFileChoose.onclick = function() { createFile(true, false); }
 
 // onboarding: click will call createFile() function
-modalFileOverwrite.addEventListener("click", function() {
-  createFile(false, true);
-});
+modalFileOverwrite.onclick = function() { createFile(false, true); }
 
 // put a listeners on all modal backgrounds
-modalBackground.forEach(el => el.addEventListener("click", clearModal, false));
+modalBackground.forEach(el => el.onclick = clearModal);
 
 // click on the cancel button in the footer of the edit modal
-btnModalCancel.forEach(el => el.addEventListener("click", clearModal, false));
+btnModalCancel.forEach(el => el.onclick = clearModal);
 
 // ###############
 
-// CONFIGURE KEYS
+// CONFIGURE KEYSTROKES
 
 // ###############
 
@@ -226,6 +218,16 @@ modalForm.addEventListener ("keydown", function () {
   if(event.key == 'Escape') clearModal();
 });
 
+// shortcut for adding items
+body.addEventListener ("keydown", function () {
+  if(event.key == 'i') showForm();
+});
+
+// shortcut to show filters
+body.addEventListener ("keydown", function () {
+  if(event.key == 'f') showFilters();
+});
+
 // ########################################################################################################################
 
 
@@ -235,51 +237,59 @@ modalForm.addEventListener ("keydown", function () {
 // ########################################################################################################################
 
 window.onload = function () {
-
-// only if data is parsed from file, we
-parseDataFromFile(pathToFile)
-  .then(res => {
-    console.log(res);
-  })
-  .catch(err => {
-    console.log(err);
-    onboarding(true);
-  });
+  // only if data is parsed from file, we
+  parseDataFromFile(pathToFile)
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+      onboarding(true);
+    });
 }
 
-async function parseDataFromFile(pathToFile) {
+function parseDataFromFile(pathToFile) {
 
   // Check if file exists
   if (fs.existsSync(pathToFile)) {
 
-    let t0 = performance.now();
+    // start showing the loading indictaor
+    loadingIndicator.classList.add("is-active");
 
-    await fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
+    fs.readFile(pathToFile, {encoding: 'utf-8'}, async function(err,data) {
       if (!err) {
         parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
-        if(generateTodoData(selectedFilters)) {
+        /*if(generateTodoData(selectedFilters)) {
           console.log('Success: All todos generated');
         } else {
           console.log('Error: Could not generate todos');
-        }
+        }*/
+
+        await generateFilterData(selectedFilters).then(res => {
+          console.log(res);
+          generateTodoData(selectedFilters).then(res => {
+            console.log(res);
+            //remove loading indicator once both filters and data are loaded
+            loadingIndicator.classList.remove("is-active");
+          });
+        });
+
         // load filters
-        if(generateFilterData(selectedFilters)) {
+        /*if(generateFilterData(selectedFilters)) {
           console.log('Success: Filters generated');
         } else {
           console.log('Error: Could not generate filters');
-        }
+        }*/
+
+        // start onboarding if generation of filter or data failed
         onboarding(false);
+
       } else {
         // start the onboarding instead
         console.log("Info: Data could not be extracted from file");
         onboarding(true);
       }
     });
-
-    let t1 = performance.now();
-
-    console.log("TEST: " + (t1 - t0));
-
     return Promise.resolve("Success: Data extracted from file, parsed and passed on to further functions");
   } else {
     return Promise.reject("Info: No todo.txt file found or selected yet");
@@ -496,7 +506,7 @@ function createFile(showDialog, overwriteFile) {
 // ###############
 
 // read passed filters, count them and pass on
-function generateFilterData() {
+async function generateFilterData() {
 
   // get the reference for the filter container
   let todoFilterContainer = document.getElementById("todoFilters");
@@ -549,10 +559,12 @@ function generateFilterData() {
         btnResetAllFilters.classList.add("is-active");
         buildFilterButtons();
     } else {
-      console.log("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
+      return Promise.reject("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
+      //console.log("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
     }
   }
-  return true;
+  return Promise.resolve("Success: Filter data generated");
+  //return true;
 }
 
 // build a section for each category and add the buttons to each
@@ -639,7 +651,10 @@ function buildFilterButtons() {
 // ###############
 
 // TODO: Remove filterArray if not needed anymore
-function generateTodoData(selectedFilters) {
+async function generateTodoData(selectedFilters) {
+
+  //let t0 = performance.now();
+
   // new variable for items, filtered or not filtered
   let itemsFiltered = [];
 
@@ -672,6 +687,11 @@ function generateTodoData(selectedFilters) {
 
   // TODO: error handling
   generateTodoTable(itemsFiltered);
+
+  //let t1 = performance.now();
+  //console.log("TEST: " + (t1 - t0));
+
+  return Promise.resolve("Success: Todo data generated and passed on to build the table");
 
   // TODO: neccessary?
   return true;
@@ -730,7 +750,7 @@ function addTableRows(items, priority) {
           continue;
         } else {
           // table row with item data
-          createTableRow(item);
+          createTableItemRow(item);
         }
       }
     }
@@ -743,7 +763,7 @@ function addTableRows(items, priority) {
         continue;
       } else {
         // table row with item data
-        createTableRow(item);
+        createTableItemRow(item);
       }
     }
   }
@@ -768,7 +788,7 @@ function createTableDividerRow() {
   }
 }
 
-function createTableRow() {
+function createTableItemRow() {
 
   // creates a table row for one item
   let todoTableBodyRow = document.createElement("div");
@@ -814,10 +834,10 @@ function createTableRow() {
     todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
   }
   // add a listener on the checkbox to call the completeItem function
-  todoTableBodyCellCheckbox.addEventListener("click", function() {
+  todoTableBodyCellCheckbox.onclick = function() {
     // passing the data-item attribute of the parent tag to complete function
     completeItem(this.parentElement.getAttribute('data-item'));
-  });
+  }
   todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
 
   // creates cell for the text
@@ -837,7 +857,7 @@ function createTableRow() {
   }
 
   // event listener for the click on the text
-  todoTableBodyCellText.addEventListener("click", function() {
+  todoTableBodyCellText.onclick = function() {
     // if the clicked item is not the external link icon, showForm() will be called
     if(!event.target.classList.contains('fa-external-link-alt')) {
       //console.log(event.target);
@@ -845,7 +865,7 @@ function createTableRow() {
       dataItem = this.parentElement.getAttribute('data-item');
       showForm(dataItem);
     }
-  });
+  }
 
   // create tag for the categories
   if (filterCategories.length > 0) {
@@ -876,27 +896,35 @@ function createTableRow() {
 
   // add the more dots
   let todoTableBodyCellMore = document.createElement("div");
-  todoTableBodyCellMore.setAttribute("class", "flex-row");
+  todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
   todoTableBodyCellMore.setAttribute("role", "cell");
   todoTableBodyCellMore.setAttribute("title", "More options");
-  //todoTableBodyCellMore.innerHTML = "<a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a>";
-  todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right todoTableItemMoreDropdown\">  <div class=\"dropdown-trigger\">    <a tabindex=\"200\" class=\"todoTableItemMore\">      <i class=\"fas fa-ellipsis-v\"></i>    </a>  </div>  <div class=\"dropdown-menu\" role=\"menu\">    <div class=\"dropdown-content\">      <a class=\"dropdown-item\">Edit</a>    <a class=\"dropdown-item\">Delete</a>    </div>  </div></div>";
+  todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">Edit</a><a class=\"dropdown-item\">Delete</a></div></div></div>";
   // click on three-dots-icon to open more menu
-  todoTableBodyCellMore.addEventListener("click", function() {
-    this.classList.toggle("is-active");
-    this.firstElementChild.classList.toggle("is-active");
-    // click on edit
-    todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.addEventListener("click", function() {
-      dataItem = todoTableBodyCellText.parentElement.getAttribute('data-item');
-      showForm(dataItem);
-    });
-    // click on delete
-    todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.addEventListener("click", function() {
-      this.innerHTML = "<i class=\"fas fa-spinner fa-spin \"></i>&nbsp;Delete";
-      // passing the data-item attribute of the parent tag to complete function
-      completeItem(todoTableBodyRow.getAttribute('data-item'), true);
-    });
-  });
+  todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
+    // only if this element was highlighted before, we will hide instead of show the dropdown
+    if(this.parentElement.parentElement.classList.contains("is-active")) {
+      this.parentElement.parentElement.classList.remove("is-active");
+    } else {
+      // on click we close all other active more buttons and dropdowns
+      document.querySelectorAll(".todoTableItemMore.is-active").forEach(function(item) {
+        item.classList.remove("is-active");
+      });
+      // if this element was hidden before, we will show it now
+      this.parentElement.parentElement.classList.add("is-active");
+
+      // click on edit
+      todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.onclick = function() {
+        dataItem = todoTableBodyCellText.parentElement.getAttribute('data-item');
+        showForm(dataItem);
+      }
+      // click on delete
+      todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.onclick = function() {
+        // passing the data-item attribute of the parent tag to complete function
+        completeItem(todoTableBodyRow.getAttribute('data-item'), true);
+      }
+    }
+  }
 
   // add more container to row
   todoTableBodyRow.appendChild(todoTableBodyCellMore);
@@ -904,6 +932,7 @@ function createTableRow() {
   // add the row to the end of the table body
   todoTableContainer.appendChild(todoTableBodyRow);
 }
+
 
 // ########################################################################################################################
 
