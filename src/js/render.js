@@ -11,6 +11,8 @@
 
 // ########################################################################################################################
 
+const { performance } = require('perf_hooks');
+
 const electron = require("electron");
 const path = require("path");
 const dialog = electron.remote.dialog;
@@ -46,6 +48,7 @@ const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetical
 const onboardingContainer = document.getElementById("onboardingContainer");
 
 const todoTable = document.getElementById("todoTable");
+const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 
 const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById("filterDropdown");
@@ -111,6 +114,13 @@ btnResetAllFilters.addEventListener("click", () => {
   generateFilterData(selectedFilters);
   generateTodoData(selectedFilters);
   //parseDataFromFile(pathToFile);
+});
+
+// click on the todo table will close more
+todoTable.addEventListener("click", () => {
+  if(event.target.classList.contains("flex-table") || event.target.classList.contains("todoTableItemMore")) {
+    document.querySelectorAll(".todoTableItemMoreDropdown").forEach(el => el.classList.remove("is-active"), false);
+  }
 });
 
 // reread the data but sort it asc
@@ -226,8 +236,8 @@ modalForm.addEventListener ("keydown", function () {
 
 window.onload = function () {
 
-  // only if data is parsed from file, we
-  parseDataFromFile(pathToFile)
+// only if data is parsed from file, we
+parseDataFromFile(pathToFile)
   .then(res => {
     console.log(res);
   })
@@ -238,8 +248,12 @@ window.onload = function () {
 }
 
 async function parseDataFromFile(pathToFile) {
+
   // Check if file exists
   if (fs.existsSync(pathToFile)) {
+
+    let t0 = performance.now();
+
     await fs.readFile(pathToFile, {encoding: 'utf-8'}, function(err,data) {
       if (!err) {
         parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
@@ -261,10 +275,16 @@ async function parseDataFromFile(pathToFile) {
         onboarding(true);
       }
     });
+
+    let t1 = performance.now();
+
+    console.log("TEST: " + (t1 - t0));
+
     return Promise.resolve("Success: Data extracted from file, parsed and passed on to further functions");
   } else {
     return Promise.reject("Info: No todo.txt file found or selected yet");
   }
+
 }
 
 // ########################################################################################################################
@@ -767,6 +787,20 @@ function createTableRow() {
     todoTableBodyCellPriority.setAttribute("role", "cell");
     todoTableBodyRow.appendChild(todoTableBodyCellPriority);
   }
+  /*
+  // add the trash bin
+  let todoTableBodyCellTrash = document.createElement("div");
+  todoTableBodyCellTrash.setAttribute("class", "flex-row");
+  todoTableBodyCellTrash.setAttribute("role", "cell");
+  todoTableBodyCellTrash.setAttribute("title", "Delete todo");
+  todoTableBodyCellTrash.innerHTML = "<a tabindex=\"200\"><i class=\"far fa-trash-alt\"></i>";
+  // add a listener on the checkbox to call the completeItem function
+  todoTableBodyCellTrash.addEventListener("click", function() {
+    // passing the data-item attribute of the parent tag to complete function
+    completeItem(this.parentElement.getAttribute('data-item'), true);
+  });
+  todoTableBodyRow.appendChild(todoTableBodyCellTrash);
+  */
 
   // add the checkbox
   let todoTableBodyCellCheckbox = document.createElement("div");
@@ -797,7 +831,7 @@ function createTableRow() {
     // use the autoLink lib to attach an icon to every link and put a link on it
     todoTableBodyCellText.innerHTML =  item.text.autoLink({
       callback: function(url) {
-        return url + " <a href=" + url + " class=\"itemExternalLink\" title=\"Open this link in your browser\" target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
+        return url + " <a href=" + url + " title=\"Open this link in your browser\" target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
       }
     });
   }
@@ -839,6 +873,33 @@ function createTableRow() {
 
   // add the text field to the row
   todoTableBodyRow.appendChild(todoTableBodyCellText);
+
+  // add the more dots
+  let todoTableBodyCellMore = document.createElement("div");
+  todoTableBodyCellMore.setAttribute("class", "flex-row");
+  todoTableBodyCellMore.setAttribute("role", "cell");
+  todoTableBodyCellMore.setAttribute("title", "More options");
+  //todoTableBodyCellMore.innerHTML = "<a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a>";
+  todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right todoTableItemMoreDropdown\">  <div class=\"dropdown-trigger\">    <a tabindex=\"200\" class=\"todoTableItemMore\">      <i class=\"fas fa-ellipsis-v\"></i>    </a>  </div>  <div class=\"dropdown-menu\" role=\"menu\">    <div class=\"dropdown-content\">      <a class=\"dropdown-item\">Edit</a>    <a class=\"dropdown-item\">Delete</a>    </div>  </div></div>";
+  // click on three-dots-icon to open more menu
+  todoTableBodyCellMore.addEventListener("click", function() {
+    this.classList.toggle("is-active");
+    this.firstElementChild.classList.toggle("is-active");
+    // click on edit
+    todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.addEventListener("click", function() {
+      dataItem = todoTableBodyCellText.parentElement.getAttribute('data-item');
+      showForm(dataItem);
+    });
+    // click on delete
+    todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.addEventListener("click", function() {
+      this.innerHTML = "<i class=\"fas fa-spinner fa-spin \"></i>&nbsp;Delete";
+      // passing the data-item attribute of the parent tag to complete function
+      completeItem(todoTableBodyRow.getAttribute('data-item'), true);
+    });
+  });
+
+  // add more container to row
+  todoTableBodyRow.appendChild(todoTableBodyCellMore);
 
   // add the row to the end of the table body
   todoTableContainer.appendChild(todoTableBodyRow);
@@ -943,7 +1004,7 @@ function submitForm() {
   }
 }
 
-function completeItem(dataItem) {
+async function completeItem(dataItem, deleteItem) {
 
   // convert array of objects to array of strings
   parsedData = parsedData.map(item => item.toString());
@@ -953,33 +1014,32 @@ function completeItem(dataItem) {
   let itemStatus = new TodoTxtItem(dataItem).complete;
 
   // check if item was complete
-  if(itemStatus) {
-
+  if(itemStatus && !deleteItem) {
     // if item was already completed we remove the first 13 chars (eg "x 2020-01-01 ") and make the item incomplete again
     parsedData.splice(itemId, 1, dataItem.substr(13));
-
   } else {
-
-    // build the prefix "x " and add today's date, so it will be read as completed
-    // https://stackoverflow.com/a/35922073
-    let prefix = "x " + new Date().toISOString().slice(0, 10) + " ";
-
-    // get the index using the itemId, remove 1 item there and add the value from the input at that position
-    parsedData.splice(itemId, 1, prefix.concat(dataItem));
-
+    // if deleteItem has been sent as true, we delete the entry from the parsedData
+    if(deleteItem) {
+      parsedData.splice(itemId, 1);
+    } else {
+      // build the prefix "x " and add today's date, so it will be read as completed
+      // https://stackoverflow.com/a/35922073
+      let prefix = "x " + new Date().toISOString().slice(0, 10) + " ";
+      // get the index using the itemId, remove 1 item there and add the value from the input at that position
+      parsedData.splice(itemId, 1, prefix.concat(dataItem));
+    }
   }
 
   // convert all the strings to proper todotxt items again
   parsedData = parsedData.map(item => new TodoTxtItem(item, [ new DueExtension() ]));
 
   if(writeDataIntoFile(parsedData)) {
-      console.log("Success: Marked item as complete \"" + dataItem + "\"");
+    console.log("Success: Marked item as complete \"" + dataItem + "\"");
+    return true;
   } else {
     console.log("Error: Could not mark item as completed");
+    return false;
   }
-
-
-  return true;
 }
 
 function writeDataIntoFile(parsedData) {

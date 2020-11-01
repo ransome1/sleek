@@ -293,12 +293,16 @@ nav ul li.logo {
   color: hsl(0, 0%, 71%);
 }
 
-.flex-table .flex-row[role="cell"] {
+.flex-table .flex-row {
   padding: .75rem 0 .5em 0;
   margin-right: 1em;
   height: auto;
 
   line-height: 1.5em;
+}
+
+.flex-table .flex-row.text {
+  margin-right: auto;
 }
 
 .flex-table .flex-row[role="cell"].priority {
@@ -371,14 +375,32 @@ nav ul li.logo {
   white-space: nowrap;
 }
 
-.flex-table .flex-row.text[role="cell"] .itemExternalLink {
+.flex-table .flex-row a {
   /*color: hsl(0, 0%, 71%);*/
   color: #3273dc;
-  padding: .3em;
 }
 
-.flex-table .flex-row.text[role="cell"] .itemExternalLink:hover {
+.flex-table .flex-row a:hover {
     color: #3273dc;
+}
+
+.flex-table .flex-row[role="cell"] a.todoTableItemMore {
+  display: none;
+  padding: 0 .5em;
+  /*margin-right: auto;*/
+}
+
+.flex-table:hover .flex-row[role="cell"] a.todoTableItemMore,
+.flex-table .flex-row[role="cell"] .dropdown.is-active a.todoTableItemMore {
+  display: block;
+}
+
+flex-row .dropdown.is-active {
+  display: none;
+}
+
+flex-row:hover .dropdown.is-active {
+  display: block;
 }
 
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
