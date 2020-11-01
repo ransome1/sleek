@@ -1,5 +1,5 @@
 # sleek
-## sleek is a simple todo manager
+## A simple todo manager based on the concept of todo.txt
 Based on the concept of todo.txt. It will create a new or use an existing todo.txt file and can handle most of the todo.txt syntax.
 
 ![Alt text](sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
