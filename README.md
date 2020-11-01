@@ -3,7 +3,7 @@ Ubuntu users can download an early alpha version from Snap Store.
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
-There is also an AppImage build for Linux distrubitions other than Ubuntu based and an .exe build for Windows. You can find the binaries on the release page.
+There is also an AppImage build for Linux distributions other than Ubuntu and an .exe build for Windows. You can find the binaries on the release page.
 
 ## A simple and sleek app to manage a todo.txt file.
 ![Alt text](sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
