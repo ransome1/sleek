@@ -1,6 +1,6 @@
 # sleek
-## A simple and sleek app to manage a todo.txt file.
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
+## A simple and sleek app to manage a todo.txt file.
 ![Alt text](sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
 ### Done
 * [x] Simple onboarding with two functions: Open existing todo.txt file and create a new one
