@@ -81,6 +81,8 @@ let dataItem;
 // create  an empty variable for the data item
 let parsedData;
 
+let modalFormStatus;
+
 // ###############
 
 // INITIAL DOM CONFIG
@@ -220,18 +222,21 @@ modalForm.addEventListener ("keydown", function () {
 
 // shortcut for adding items
 body.addEventListener ("keydown", function () {
+  // shortcut will only work if the showForm modal is closed
   // we need to wait a little otherwise the form will be loaded before the key is interpreted and the i key will be filled into the input
-  if(event.key == 'a') setTimeout(showForm, 100);
+  if(!modalFormStatus && event.key == 'a') setTimeout(showForm, 100);
 });
 
 // shortcut to show filters
 body.addEventListener ("keydown", function () {
-  if(event.key == 'f') showFilters();
+  // shortcut will only work if the showForm modal is closed
+  if(!modalFormStatus && event.key == 'f') showFilters();
 });
 
 // shortcut to open file
 body.addEventListener ("keydown", function () {
-  if(event.key == 'o') openFile();
+  // shortcut will only work if the showForm modal is closed
+  if(!modalFormStatus && event.key == 'o') openFile();
 });
 
 // ########################################################################################################################
@@ -259,9 +264,6 @@ function parseDataFromFile(pathToFile) {
   // Check if file exists
   if (fs.existsSync(pathToFile)) {
 
-    // start showing the loading indictaor
-    loadingIndicator.classList.add("is-active");
-
     fs.readFile(pathToFile, {encoding: 'utf-8'}, async function(err,data) {
       if (!err) {
         parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
@@ -271,14 +273,9 @@ function parseDataFromFile(pathToFile) {
           console.log('Error: Could not generate todos');
         }*/
 
-        await generateFilterData(selectedFilters).then(res => {
-          console.log(res);
-          generateTodoData(selectedFilters).then(res => {
-            console.log(res);
-            //remove loading indicator once both filters and data are loaded
-            loadingIndicator.classList.remove("is-active");
-          });
-        });
+        generateFilterData(selectedFilters);
+
+        generateTodoData(selectedFilters);
 
         // load filters
         /*if(generateFilterData(selectedFilters)) {
@@ -291,8 +288,7 @@ function parseDataFromFile(pathToFile) {
         onboarding(false);
 
       } else {
-        // remove loading indicator if file was not found
-        loadingIndicator.classList.remove("is-active");
+
         // start the onboarding instead
         console.log("Info: Data could not be extracted from file");
         onboarding(true);
@@ -300,8 +296,7 @@ function parseDataFromFile(pathToFile) {
     });
     return Promise.resolve("Success: Data extracted from file, parsed and passed on to further functions");
   } else {
-    // remove loading indicator if file was not found
-    loadingIndicator.classList.remove("is-active");
+
     return Promise.reject("Info: No todo.txt file found or selected yet");
   }
 
@@ -367,6 +362,8 @@ function clearModal() {
   dataItem = null;
   // clean up the modal
   modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+  // set global variable if the modal is opening
+  modalFormStatus = false;
 }
 
 function showAlert(status) {
@@ -954,6 +951,8 @@ function createTableItemRow() {
 
 // function to open modal layer and pass a string version of the todo into input field
 function showForm() {
+  // set global variable if the modal is opening
+  modalFormStatus = true;
   // clear the input value in case there was an old one
   modalFormInput.value = null;
   modalForm.classList.toggle("is-active");
