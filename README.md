@@ -1,6 +1,6 @@
 # sleek
 ## A simple and sleek app to manage a todo.txt file.
-![Alt text](sleek.screenshot.png?raw=true "Screenshot of sleek")
+![Alt text](sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
 ### Done
 - [x] Simple onboarding with two functions: Open existing todo.txt file and create a new one
 - [x] Open a todo.txt file and parse it into a table
@@ -22,13 +22,13 @@
 - [x] Show due date
 - [x] Create a new todo.txt
 - [x] Push binaries to Snapcraft
+- [x] Keyboard shortcuts
+- [x] Delete single todos
 
 ### To be done
 - [ ] Extensive testing & bug fixing
 - [ ] Code refinement and better error handling
-- [ ] Keyboard shortcuts
 - [ ] Multi language support
-- [ ] Delete single todos
 - [ ] Implement a notification function for due dates
 - [ ] Dark theme
 - [ ] Full text search

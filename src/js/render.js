@@ -220,12 +220,18 @@ modalForm.addEventListener ("keydown", function () {
 
 // shortcut for adding items
 body.addEventListener ("keydown", function () {
-  if(event.key == 'i') showForm();
+  // we need to wait a little otherwise the form will be loaded before the key is interpreted and the i key will be filled into the input
+  if(event.key == 'a') setTimeout(showForm, 100);
 });
 
 // shortcut to show filters
 body.addEventListener ("keydown", function () {
   if(event.key == 'f') showFilters();
+});
+
+// shortcut to open file
+body.addEventListener ("keydown", function () {
+  if(event.key == 'o') openFile();
 });
 
 // ########################################################################################################################
@@ -285,6 +291,8 @@ function parseDataFromFile(pathToFile) {
         onboarding(false);
 
       } else {
+        // remove loading indicator if file was not found
+        loadingIndicator.classList.remove("is-active");
         // start the onboarding instead
         console.log("Info: Data could not be extracted from file");
         onboarding(true);
@@ -292,6 +300,8 @@ function parseDataFromFile(pathToFile) {
     });
     return Promise.resolve("Success: Data extracted from file, parsed and passed on to further functions");
   } else {
+    // remove loading indicator if file was not found
+    loadingIndicator.classList.remove("is-active");
     return Promise.reject("Info: No todo.txt file found or selected yet");
   }
 
