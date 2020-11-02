@@ -58,7 +58,7 @@ const pathToSampleFile = app.getAppPath() + "/src/sample.txt";
 // using pathToSampleFile to build a string that contains the sample data
 const sampleData = fs.readFileSync(pathToSampleFile).toString();
 // Needed for comparison between priority items to build the divider rows
-let previousItem;
+//let previousItem;
 // defining a file path Variable to store user-selected file
 let pathToFile = store.get("pathToFile");
 // empty variable
@@ -98,6 +98,7 @@ toggleShowCompleted.checked = showCompleted;
 
 // persist the highlighting of the button and the dropdown menu
 btnFilter.onclick = showFilters;
+
 btnAddItem.onclick = showForm;
 
 // flush all filters and items by emptying the array and reloading the data
@@ -343,7 +344,7 @@ window.onload = function () {
 // OPEN FILE AND PASS DATA TO FUNCTIONS
 
 // ###############
-
+// TODO: error handling
 function openFile() {
   // Resolves to a Promise<Object>
   dialog.showOpenDialog({
@@ -389,7 +390,7 @@ function openFile() {
 // CREATE A NEW TODO.TXT FILE
 
 // ###############
-
+// TODO: error handling
 function createFile(showDialog, overwriteFile) {
   // Resolves to a Promise<Object>
   if(showDialog && !overwriteFile) {
@@ -492,8 +493,11 @@ function parseDataFromFile(pathToFile) {
       }).catch(error => {
         console.log(error);
       });
+
       onboarding(false);
+
       return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
+
     } catch(error) {
       onboarding(true);
       return Promise.reject("Error: Data could not be extracted from file");
@@ -510,7 +514,6 @@ function parseDataFromFile(pathToFile) {
 
 // ###############
 
-// read passed filters, count them and pass on
 function generateFilterData() {
 
   try {
@@ -518,27 +521,25 @@ function generateFilterData() {
     let todoFilterContainer = document.getElementById("todoFilters");
     // empty the container to prevent duplicates
     todoFilterContainer.innerHTML = "";
-
     // parse through above defined categories, most likely contexts and projects
-    for (let i = 0; i < filterCategories.length; i++) {
-      category = filterCategories[i];
+    filterCategories.forEach((category) => {
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      for (let j = 0; j < parsedData.length; j++) {
+      parsedData.forEach((item) => {
         // check if the object has values in either the project or contexts field
-        if(parsedData[j][category]) {
-          // loop through all the values it will find and push them into the filter array
-          for(let k = 0; k < parsedData[j][category].length; k++) {
-            // consider the show complete setting, if it is set to false
-            if(showCompleted==false && parsedData[j].complete==true) {
+        if(item[category]) {
+          // push all filters found so far into an array
+          for (let filter in item[category]) {
+            // if user has not opted for showComplete we skip the filter of this particular item
+            if(showCompleted==false && item.complete==true) {
               continue;
             } else {
-              filters.push([parsedData[j][category][k]]);
+              filters.push([item[category][filter]]);
             }
           }
         }
-      }
+      });
 
       // delete duplicates and count filters
       filtersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
@@ -559,24 +560,23 @@ function generateFilterData() {
       if(filters.length > 0) {
         // only show the reset filters button if there are any filters
         btnResetAllFilters.classList.add("is-active");
-        buildFilterButtons().then(response => {
+        buildFilterButtons(category).then(response => {
           console.log(response);
         }).catch (error => {
           console.log(error);
         });
-        //return Promise.resolve("Success: Filter data generated");
+        return Promise.resolve("Success: Filter data generated");
       } else {
         console.log("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
       }
-    }
+    });
     return Promise.resolve("Success: Filter data generated");
   } catch (error) {
     return Promise.reject("Error: " + error);
   }
 }
 
-// build a section for each category and add the buttons to each
-function buildFilterButtons() {
+function buildFilterButtons(category) {
 
   try {
     // build the buttons
@@ -660,11 +660,10 @@ function buildFilterButtons() {
 
 // ###############
 
-// GENERATE THE DATA BEFORE TABLE IS BEING BUILT
+// GENERATE DATA AND BUILD THE TABLE
 
 // ###############
 
-// TODO: Remove filterArray if not needed anymore
 function generateTodoData() {
   try {
     // new variable for items, filtered or not filtered
@@ -696,6 +695,7 @@ function generateTodoData() {
       // pass filtered data to function to build the table
       itemsFiltered = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
     }
+
     generateTodoTable(itemsFiltered).then(response => {
       console.log(response);
     }).catch(error => {
@@ -705,16 +705,12 @@ function generateTodoData() {
     return Promise.resolve("Success: Todo data generated and passed on for building the table");
 
   } catch(error) {
+
     return Promise.reject(error);
+
   }
 
 }
-
-// ###############
-
-// BUILD THE TABLE
-
-// ###############
 
 function generateTodoTable(itemsFiltered) {
 
@@ -725,73 +721,48 @@ function generateTodoTable(itemsFiltered) {
     // empty the table before reading fresh data
     todoTableContainer.innerHTML = "";
 
-    let itemsWithPriority = itemsFiltered.filter(item => item.priority!=null);
-    addTableRows(itemsWithPriority, true);
-    let itemsWithNoPriority = itemsFiltered.filter(item => item.priority==null);
-    addTableRows(itemsWithNoPriority, false);
-
-    previousItem = undefined;
-
-    return Promise.resolve("Success: Todo table has been build");
-
-  } catch(error) {
-
-    return Promise.reject("Error: Could not build the todo table");
-
-  }
-
-
-}
-
-function addTableRows(items, priority) {
-
-  if(priority==true) {
-    // TODO: whats happening here?
-    let itemsByPriority = items.reduce((r, a) => {
+    // produce and object where priority a to z + null is key
+    itemsFiltered = itemsFiltered.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
      return r;
     }, {});
 
-    // convert the not sortable object into an array and sort it a to z
-    itemsByPriority = Object.entries(itemsByPriority).sort();
+    // convert the presorted object to an array
+    itemsFiltered = Object.entries(itemsFiltered).sort();
 
-    // TODO: looks to complicated
-    for (let j = 0; j < itemsByPriority.length; j++) {
-
-      for (let i = 0; i < itemsByPriority[j][1].length; i++) {
-        item = itemsByPriority[j][1][i];
-
-        // divider row for new priority
-        createTableDividerRow(item, previousItem, itemsByPriority[j][0]);
-
-        // consider the show complete setting, if it is set to false
-        if(showCompleted==false && item.complete==true) {
-          continue;
+    itemsFiltered.forEach((i) => {
+      i.forEach((j) => {
+        // reduces the entries to priorities a to z only
+        if(j.toString().length==1) {
+          createTableDividerRow(j);
+        // adds an empty row as a divider
+        } else if(j=="null") {
+          createTableDividerRow("&nbsp;");
         } else {
-          // table row with item data
-          createTableItemRow(item);
+          // can't use forEach because we need "continue" here
+          for(let k in j) {
+            // skip completed ones if user opted for it
+            if(showCompleted==false && j[k].complete==true) {
+              continue;
+            } else {
+              // table row with item data
+              createTableItemRow(j[k]);
+            }
+          }
         }
-      }
-    }
-  } else {
-    for (let i = 0; i < items.length; i++) {
-      item = items[i];
-      // table row with item data
-      // skip this loop if showCompleted is turned off but the item has been set to complete
-      if(showCompleted==false && item.complete==true) {
-        continue;
-      } else {
-        // table row with item data
-        createTableItemRow(item);
-      }
-    }
+      });
+    });
+
+    return Promise.resolve("Success: Table has been build");
+
+  } catch(error) {
+
+    return Promise.reject("Error: Could not build todo table");
+
   }
 }
 
-function createTableDividerRow() {
-  if(item.priority && item.priority!=previousItem) {
-    previousItem = item.priority;
-    priority = item.priority;
+function createTableDividerRow(rowName) {
     let todoTableBodyRowDivider = document.createElement("div");
     todoTableBodyRowDivider.setAttribute("class", "flex-table priority");
     todoTableBodyRowDivider.setAttribute("role", "rowgroup");
@@ -799,159 +770,147 @@ function createTableDividerRow() {
     let todoTableBodyCellPriority = document.createElement("div");
     todoTableBodyCellPriority.setAttribute("class", "flex-row");
     todoTableBodyCellPriority.setAttribute("role", "cell");
-    todoTableBodyCellPriority.innerHTML = priority;
+    todoTableBodyCellPriority.innerHTML = rowName;
     todoTableBodyRowDivider.appendChild(todoTableBodyCellPriority);
 
     // add the row to the end of the table body
     todoTableContainer.appendChild(todoTableBodyRowDivider);
-  }
+  //}
 }
 
-function createTableItemRow() {
+function createTableItemRow(item) {
 
-  // creates a table row for one item
-  let todoTableBodyRow = document.createElement("div");
-  if(item.complete==true) {
-    todoTableBodyRow.setAttribute("class", "flex-table completed");
-  } else {
-    todoTableBodyRow.setAttribute("class", "flex-table");
-  }
-  todoTableBodyRow.setAttribute("role", "rowgroup");
-  todoTableBodyRow.setAttribute("data-item", item.toString());
-
-  // add the priority marker
-  if(item.priority) {
-    let todoTableBodyCellPriority = document.createElement("div");
-    todoTableBodyCellPriority.setAttribute("class", "flex-row priority " + item.priority);
-    todoTableBodyCellPriority.setAttribute("role", "cell");
-    todoTableBodyRow.appendChild(todoTableBodyCellPriority);
-  }
-  /*
-  // add the trash bin
-  let todoTableBodyCellTrash = document.createElement("div");
-  todoTableBodyCellTrash.setAttribute("class", "flex-row");
-  todoTableBodyCellTrash.setAttribute("role", "cell");
-  todoTableBodyCellTrash.setAttribute("title", "Delete todo");
-  todoTableBodyCellTrash.innerHTML = "<a tabindex=\"200\"><i class=\"far fa-trash-alt\"></i>";
-  // add a listener on the checkbox to call the completeItem function
-  todoTableBodyCellTrash.addEventListener("click", function() {
-    // passing the data-item attribute of the parent tag to complete function
-    completeItem(this.parentElement.getAttribute('data-item'), true);
-  });
-  todoTableBodyRow.appendChild(todoTableBodyCellTrash);
-  */
-
-  // add the checkbox
-  let todoTableBodyCellCheckbox = document.createElement("div");
-  todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
-  todoTableBodyCellCheckbox.setAttribute("role", "cell");
-  if(item.complete==true) {
-    todoTableBodyCellCheckbox.setAttribute("title", "Mark as in progress");
-    todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"fas fa-check-circle\"></i></a>";
-  } else {
-    todoTableBodyCellCheckbox.setAttribute("title", "Mark as done");
-    todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
-  }
-  // add a listener on the checkbox to call the completeItem function
-  todoTableBodyCellCheckbox.onclick = function() {
-    // passing the data-item attribute of the parent tag to complete function
-    completeItem(this.parentElement.getAttribute('data-item'));
-  }
-  todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
-
-  // creates cell for the text
-  let todoTableBodyCellText = document.createElement("div");
-  todoTableBodyCellText.setAttribute("class", "flex-row text");
-  todoTableBodyCellText.setAttribute("role", "cell");
-  todoTableBodyCellText.setAttribute("title", "Edit this todo");
-  todoTableBodyCellText.setAttribute("tabindex", 300);
-  if(item.text) {
-
-    // use the autoLink lib to attach an icon to every link and put a link on it
-    todoTableBodyCellText.innerHTML =  item.text.autoLink({
-      callback: function(url) {
-        return url + " <a href=" + url + " title=\"Open this link in your browser\" target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
-      }
-    });
-  }
-
-  // event listener for the click on the text
-  todoTableBodyCellText.onclick = function() {
-    // if the clicked item is not the external link icon, showForm() will be called
-    if(!event.target.classList.contains('fa-external-link-alt')) {
-      //console.log(event.target);
-      // declaring the item-data value global so other functions can access it
-      dataItem = this.parentElement.getAttribute('data-item');
-      showForm(dataItem);
+  if(item) {
+    // creates a table row for one item
+    let todoTableBodyRow = document.createElement("div");
+    if(item.complete==true) {
+      todoTableBodyRow.setAttribute("class", "flex-table completed");
+    } else {
+      todoTableBodyRow.setAttribute("class", "flex-table");
     }
-  }
+    todoTableBodyRow.setAttribute("role", "rowgroup");
+    todoTableBodyRow.setAttribute("data-item", item.toString());
 
-  // create tag for the categories
-  if (filterCategories.length > 0) {
+    // add the priority marker
+    if(item.priority) {
+      let todoTableBodyCellPriority = document.createElement("div");
+      todoTableBodyCellPriority.setAttribute("class", "flex-row priority " + item.priority);
+      todoTableBodyCellPriority.setAttribute("role", "cell");
+      todoTableBodyRow.appendChild(todoTableBodyCellPriority);
+    }
 
-    for (let k = 0; k < filterCategories.length; k++) {
-      if(item[filterCategories[k]]!=null) {
-        for(let j = 0; j < item[filterCategories[k]].length; j++) {
-          let todoTableBodyCellCategory = document.createElement("span");
-          todoTableBodyCellCategory.setAttribute("class", "tag " + filterCategories[k]);
-          todoTableBodyCellCategory.innerHTML = item[filterCategories[k]][j];
-          todoTableBodyCellText.appendChild(todoTableBodyCellCategory);
+    // add the checkbox
+    let todoTableBodyCellCheckbox = document.createElement("div");
+    todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
+    todoTableBodyCellCheckbox.setAttribute("role", "cell");
+    if(item.complete==true) {
+      todoTableBodyCellCheckbox.setAttribute("title", "Mark as in progress");
+      todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"fas fa-check-circle\"></i></a>";
+    } else {
+      todoTableBodyCellCheckbox.setAttribute("title", "Mark as done");
+      todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
+    }
+    // add a listener on the checkbox to call the completeItem function
+    todoTableBodyCellCheckbox.onclick = function() {
+      // passing the data-item attribute of the parent tag to complete function
+      completeItem(this.parentElement.getAttribute('data-item'));
+    }
+    todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
+
+    // creates cell for the text
+    let todoTableBodyCellText = document.createElement("div");
+    todoTableBodyCellText.setAttribute("class", "flex-row text");
+    todoTableBodyCellText.setAttribute("role", "cell");
+    todoTableBodyCellText.setAttribute("title", "Edit this todo");
+    todoTableBodyCellText.setAttribute("tabindex", 300);
+    if(item.text) {
+
+      // use the autoLink lib to attach an icon to every link and put a link on it
+      todoTableBodyCellText.innerHTML =  item.text.autoLink({
+        callback: function(url) {
+          return url + " <a href=" + url + " title=\"Open this link in your browser\" target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
+        }
+      });
+    }
+
+    // event listener for the click on the text
+    todoTableBodyCellText.onclick = function() {
+      // if the clicked item is not the external link icon, showForm() will be called
+      if(!event.target.classList.contains('fa-external-link-alt')) {
+        // declaring the item-data value global so other functions can access it
+        dataItem = this.parentElement.getAttribute('data-item');
+        showForm(dataItem);
+      }
+    }
+
+    // create tag for the categories
+    if (filterCategories.length > 0) {
+
+      for (let k = 0; k < filterCategories.length; k++) {
+        if(item[filterCategories[k]]!=null) {
+          for(let j = 0; j < item[filterCategories[k]].length; j++) {
+            let todoTableBodyCellCategory = document.createElement("span");
+            todoTableBodyCellCategory.setAttribute("class", "tag " + filterCategories[k]);
+            todoTableBodyCellCategory.innerHTML = item[filterCategories[k]][j];
+            todoTableBodyCellText.appendChild(todoTableBodyCellCategory);
+          }
         }
       }
     }
-  }
 
-  // check for and add a given due date
-  if(item.due) {
-    let todoTableBodyCellDueDate = document.createElement("span");
-    todoTableBodyCellDueDate.setAttribute("class", "itemDueDate");
-    todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
-    todoTableBodyCellDueDate.innerHTML = " <i class=\"far fa-clock\"></i>&nbsp;" + item.due.toISOString().slice(0, 10);
-    todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
-  }
+    // check for and add a given due date
+    if(item.due) {
+      let todoTableBodyCellDueDate = document.createElement("span");
+      todoTableBodyCellDueDate.setAttribute("class", "itemDueDate");
+      todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
+      todoTableBodyCellDueDate.innerHTML = " <i class=\"far fa-clock\"></i>&nbsp;" + item.due.toISOString().slice(0, 10);
+      todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
+    }
 
-  // add the text field to the row
-  todoTableBodyRow.appendChild(todoTableBodyCellText);
+    // add the text field to the row
+    todoTableBodyRow.appendChild(todoTableBodyCellText);
 
-  // add the more dots
-  let todoTableBodyCellMore = document.createElement("div");
-  todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
-  todoTableBodyCellMore.setAttribute("role", "cell");
-  todoTableBodyCellMore.setAttribute("title", "More options");
-  todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">Edit</a><a class=\"dropdown-item\">Delete</a></div></div></div>";
-  // click on three-dots-icon to open more menu
-  todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
-    // only if this element was highlighted before, we will hide instead of show the dropdown
-    if(this.parentElement.parentElement.classList.contains("is-active")) {
-      this.parentElement.parentElement.classList.remove("is-active");
-    } else {
-      // on click we close all other active more buttons and dropdowns
-      document.querySelectorAll(".todoTableItemMore.is-active").forEach(function(item) {
-        item.classList.remove("is-active");
-      });
-      // if this element was hidden before, we will show it now
-      this.parentElement.parentElement.classList.add("is-active");
+    // add the more dots
+    let todoTableBodyCellMore = document.createElement("div");
+    todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
+    todoTableBodyCellMore.setAttribute("role", "cell");
+    todoTableBodyCellMore.setAttribute("title", "More options");
+    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">Edit</a><a class=\"dropdown-item\">Delete</a></div></div></div>";
+    // click on three-dots-icon to open more menu
+    todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
+      // only if this element was highlighted before, we will hide instead of show the dropdown
+      if(this.parentElement.parentElement.classList.contains("is-active")) {
+        this.parentElement.parentElement.classList.remove("is-active");
+      } else {
+        // on click we close all other active more buttons and dropdowns
+        document.querySelectorAll(".todoTableItemMore.is-active").forEach(function(item) {
+          item.classList.remove("is-active");
+        });
+        // if this element was hidden before, we will show it now
+        this.parentElement.parentElement.classList.add("is-active");
 
-      // click on edit
-      todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.onclick = function() {
-        dataItem = todoTableBodyCellText.parentElement.getAttribute('data-item');
-        showForm(dataItem);
-      }
-      // click on delete
-      todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.onclick = function() {
-        // passing the data-item attribute of the parent tag to complete function
-        completeItem(todoTableBodyRow.getAttribute('data-item'), true);
+        // click on edit
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.onclick = function() {
+          dataItem = todoTableBodyCellText.parentElement.getAttribute('data-item');
+          showForm(dataItem);
+        }
+        // click on delete
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.onclick = function() {
+          // passing the data-item attribute of the parent tag to complete function
+          completeItem(todoTableBodyRow.getAttribute('data-item'), true);
+        }
       }
     }
+
+    // add more container to row
+    todoTableBodyRow.appendChild(todoTableBodyCellMore);
+
+    // add the row to the end of the table body
+    todoTableContainer.appendChild(todoTableBodyRow);
+  } else {
+    console.log("Error: Could not build row for todo: " + item);
   }
-
-  // add more container to row
-  todoTableBodyRow.appendChild(todoTableBodyCellMore);
-
-  // add the row to the end of the table body
-  todoTableContainer.appendChild(todoTableBodyRow);
 }
-
 
 // ########################################################################################################################
 
@@ -962,6 +921,7 @@ function createTableItemRow() {
 // ########################################################################################################################
 
 // function to open modal layer and pass a string version of the todo into input field
+// TODO: error handling
 function showForm() {
   // set global variable if the modal is opening
   modalFormStatus = true;
@@ -990,6 +950,7 @@ function showForm() {
   modalFormInput.focus();
 }
 
+// TODO: error handling
 function submitForm() {
 
   // check if there is an input in the text field, otherwise indicate it to the user
@@ -1031,7 +992,8 @@ function submitForm() {
     // add item
     } else {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
-      parsedData.push(new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension() ]));
+      dataItem = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension() ]);
+      parsedData.push(dataItem);
 
       // TODO: duplicate, clean up
       // pass the new data to the write function
@@ -1054,51 +1016,54 @@ function submitForm() {
   }
 }
 
+// TODO: error handling
 function completeItem(dataItem, deleteItem) {
 
   // convert array of objects to array of strings
-  parsedData = parsedData.map(item => item.toString());
+  let parsedDataString = parsedData.map(item => item.toString());
+  // get the position of that item in the array using the string
+  let itemId = parsedDataString.indexOf(dataItem);
+  // first convert the string to a todo.txt object
+  dataItem = new TodoTxtItem(dataItem, [ new DueExtension() ]);
 
-  // get the position of that item in the array
-  let itemId = parsedData.indexOf(dataItem);
-  let itemStatus = new TodoTxtItem(dataItem).complete;
-
-  // check if item was complete
-  if(itemStatus && !deleteItem) {
-    // if item was already completed we remove the first 13 chars (eg "x 2020-01-01 ") and make the item incomplete again
-    parsedData.splice(itemId, 1, dataItem.substr(13));
-  } else {
-    // if deleteItem has been sent as true, we delete the entry from the parsedData
-    if(deleteItem) {
-      parsedData.splice(itemId, 1);
+  // check if item was complete but was not suppose to be deleted
+  if(dataItem.complete && !deleteItem) {
+    // if item was already completed we set complete to false and the date to null
+    dataItem.complete = false;
+    dataItem.completed = null;
+    // delete old dataItem from array and add the new one at it's position
+    parsedData.splice(itemId, 1, dataItem);
+    if(writeDataIntoFile(parsedData)) {
+      console.log("Success: Unmarked item as complete \"" + dataItem + "\"");
     } else {
-      // build the prefix "x " and add today's date, so it will be read as completed
-      // https://stackoverflow.com/a/35922073
-      let prefix = "x " + new Date().toISOString().slice(0, 10) + " ";
-      // get the index using the itemId, remove 1 item there and add the value from the input at that position
-      parsedData.splice(itemId, 1, prefix.concat(dataItem));
+      console.log("Error: Could not mark item as completed");
+    }
+  } else if(!dataItem.complete && !deleteItem) {
+    // if deleteItem has been sent as true, we delete the entry from the parsedData
+    dataItem.complete = true;
+    dataItem.completed = new Date();
+    // delete old dataItem from array and add the new one at it's position
+    parsedData.splice(itemId, 1, dataItem);
+    if(writeDataIntoFile(parsedData)) {
+      console.log("Success: Marked item as complete \"" + dataItem + "\"");
+    } else {
+      console.log("Error: Could not mark item as completed");
+    }
+  } else {
+    parsedData.splice(itemId, 1);
+    if(writeDataIntoFile(parsedData)) {
+      console.log("Success: Deleted todo \"" + dataItem + "\"");
+    } else {
+      console.log("Error: Could not delete todo");
     }
   }
-
-  // convert all the strings to proper todotxt items again
-  parsedData = parsedData.map(item => new TodoTxtItem(item, [ new DueExtension() ]));
-
-  if(writeDataIntoFile(parsedData)) {
-    console.log("Success: Marked item as complete \"" + dataItem + "\"");
-    return true;
-  } else {
-    console.log("Error: Could not mark item as completed");
-    return false;
-  }
+  clearModal();
 }
 
-function writeDataIntoFile(parsedData) {
+function writeDataIntoFile() {
 
   // empty the data item as we don't need it anymore
   dataItem = null;
-
-  // render the objects into a string with line breaks
-  //parsedData = TodoTxt.render(parsedData);
 
   // Write data to 'todo.txt'
   try {

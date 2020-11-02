@@ -108,7 +108,7 @@ const createWindow = () => {
   Menu.setApplicationMenu(menu)
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Store user data: save size after resize
   mainWindow.on('resize', () => {

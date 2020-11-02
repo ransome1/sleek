@@ -289,7 +289,8 @@ nav ul li.logo {
   font-size: 1.5em;
 }
 
-.flex-table.completed {
+.flex-table.completed,
+.flex-table.completed strong {
   color: hsl(0, 0%, 71%);
 }
 

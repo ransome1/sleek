@@ -16,17 +16,18 @@ function TodoTxtExtension( name ) {
 }
 
 function HiddenExtension() {
-	this.name = "hidden";
+	this.name = "h";
 }
 
 HiddenExtension.prototype = new TodoTxtExtension();
 HiddenExtension.prototype.parsingFunction = function(line) {
-    var hidden = false;
-    var matchHidden = /h:1/.exec( line );
+    var hidden = null;
+    var hiddenRegex = /\bh:1\b/;
+    var matchHidden = hiddenRegex.exec( line );
     if ( matchHidden !== null ) {
         hidden = true;
     }
-	return [hidden, line.replace(/h:1/, ''), null];
+	return [hidden, line.replace(hiddenRegex, ''), hidden ? '1' : null];
 };
 
 function DueExtension() {
@@ -35,12 +36,12 @@ function DueExtension() {
 DueExtension.prototype = new TodoTxtExtension();
 DueExtension.prototype.parsingFunction = function(line) {
     var dueDate = null;
-		//var dueRegex = /due:([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\s*/;
-		var dueRegex = /due:([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\s*/;
+    var dueRegex = /due:([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\s*/;
     var matchDue = dueRegex.exec(line);
     if ( matchDue !== null ) {
         datePieces = matchDue[1].split('-');
-        dueDate = new Date(datePieces[0] + "-" + datePieces[1] + "-" + datePieces[2] + " UTC");
+        //dueDate = new Date( datePieces[0], datePieces[1] - 1, datePieces[2] );
+				dueDate = new Date(datePieces[0] + "-" + datePieces[1] + "-" + datePieces[2] + " UTC");
         return [dueDate, line.replace(dueRegex, ''), matchDue[1]];
     }
     return [null, null, null];

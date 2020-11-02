@@ -149,8 +149,6 @@ function TodoTxtItem ( line, extensions ) {
 		Parse a string into this object.
 
 		\param line A string in todo.txt format to parse.
-
-		\throws Exception On an empty task.
 	*/
 	this.parse = function ( line ) {
 		var date_pieces;
@@ -168,7 +166,7 @@ function TodoTxtItem ( line, extensions ) {
 		if( null !== complete ) {
 			this.complete = true;
 			date_pieces = complete[1].split('-');
-			this.completed = new Date( date_pieces[0], date_pieces[1] - 1, date_pieces[2]);
+			this.completed = new Date( date_pieces[0], date_pieces[1] - 1, date_pieces[2] );
 			line = line.replace( TodoTxt._complete_replace_re, '' );
 		}
 
@@ -232,9 +230,6 @@ function TodoTxtItem ( line, extensions ) {
 		line = line.replace( TodoTxt._trim_re, '');
 
 		this.text = line;
-
-		// If we have an empty task, not much point in creating an object.
-		if( "" === this.text ) { throw new Exception( "Empty Task" ); }
 	};
 
 	this._getNumOfNulls = function( lhs, rhs ) {
