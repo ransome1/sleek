@@ -11,8 +11,7 @@
 
 // ########################################################################################################################
 
-const { performance } = require('perf_hooks');
-
+//const { performance } = require('perf_hooks');
 const electron = require("electron");
 const path = require("path");
 const dialog = electron.remote.dialog;
@@ -28,10 +27,8 @@ const store = new Store({
     selectedFilters: new Array
   }
 });
-
 const body = document.getElementById("body");
 const a = document.querySelectorAll("a");
-
 const btnFilter = document.getElementById("btnFilter");
 const btnAddItem = document.getElementById("btnAddItem");
 const btnFormSubmit = document.getElementById("btnFormSubmit");
@@ -41,27 +38,25 @@ const btnLoadTodoFile = document.querySelectorAll(".btnLoadTodoFile");
 const btnCreateTodoFile = document.getElementById("btnCreateTodoFile");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnResetAllFilters = document.getElementById("btnResetAllFilters");
-
 const toggleShowCompleted = document.getElementById("toggleShowCompleted");
 const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetically");
-
 const onboardingContainer = document.getElementById("onboardingContainer");
-
-const loadingIndicator = document.getElementById("loadingIndicator");
-
+//const loadingIndicator = document.getElementById("loadingIndicator");
 const todoTable = document.getElementById("todoTable");
-
 const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById("filterDropdown");
-
 const modalForm = document.getElementById('modalForm');
 const modalFormInput = document.getElementById("modalFormInput");
 const modalFormAlert = document.getElementById("modalFormAlert");
 const modalTitle = document.getElementById("modalTitle");
 const modalBackground = document.querySelectorAll('.modal-background');
+const modalFile = document.getElementById("modalFile");
 const modalFileChoose = document.getElementById("modalFileChoose");
 const modalFileOverwrite = document.getElementById("modalFileOverwrite");
-
+// path to the sample file if new todo.txt is about to be created
+const pathToSampleFile = app.getAppPath() + "/src/sample.txt";
+// using pathToSampleFile to build a string that contains the sample data
+const sampleData = fs.readFileSync(pathToSampleFile).toString();
 // Needed for comparison between priority items to build the divider rows
 let previousItem;
 // defining a file path Variable to store user-selected file
@@ -69,7 +64,6 @@ let pathToFile = store.get("pathToFile");
 // empty variable
 let pathToNewFile;
 // check store file if filters (come as JSON) have been saved. If so convert the JSON to arrays and them to the main array. If not the array stays empty
-// TODO: is there a more sophisticated way to do this?
 let selectedFilters = store.get("selectedFilters");
 if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
 // get default sorting value (false)
@@ -78,9 +72,9 @@ let sortAlphabetically = store.get("sortAlphabetically");
 let showCompleted = store.get("showCompleted");
 // create  an empty variable for the data item
 let dataItem;
-// create  an empty variable for the data item
+// create  global variable for parsedData
 let parsedData;
-
+// TODO: whats this again?
 let modalFormStatus;
 
 // ###############
@@ -114,7 +108,7 @@ btnResetAllFilters.onclick = function() {
 
   // only generate the filters and items, we do not read the file again as it is not necessary
   generateFilterData(selectedFilters);
-  generateTodoData(selectedFilters);
+  generateTodoData();
 }
 
 // click on the todo table will close more dropdown and remove active state for the dotted button
@@ -139,7 +133,7 @@ toggleSortAlphabetically.onclick = function() {
   // TODO: error handling
   // regenerate the table considering the sort value and make sure saved filters are going to be passed
   // TODO: does it crash if no filters have been selected?
-  generateTodoData(selectedFilters);
+  generateTodoData();
 }
 
 // reread the data but sort it asc
@@ -159,7 +153,7 @@ toggleShowCompleted.onclick = function() {
   // TODO: error handling
   // only generate the filters and items, we do not read the file again as it is not necessary
   generateFilterData(selectedFilters);
-  generateTodoData(selectedFilters);
+  generateTodoData();
 }
 
 // submit in the form
@@ -179,15 +173,12 @@ btnItemStatus.onclick = function() {
 }
 
 // prevent empty hyperlinks from jumping to top after clicking
-a.forEach(el => el.onclick = function(el) {
-  // only if the href contains a hash we prevent the default action of a link
-  if(el.target.href && el.target.href.includes('#')) el.preventDefault();
-});
+a.forEach(el => el.addEventListener("click", function(el) {
+  if(el.target.href && el.target.href.length==1) el.preventDefault();
+}));
 
 // put a click event on all "open file" buttons
 btnLoadTodoFile.forEach(el => el.onclick = openFile);
-
-  //addEventListener("click", openFile, false));
 
 // onboarding: click will call createFile() function
 btnCreateTodoFile.onclick = function () { createFile(true, false) };
@@ -242,69 +233,6 @@ body.addEventListener ("keydown", function () {
 // ########################################################################################################################
 
 
-// START PARSING ONCE EVERYTHING ELSE IS READY
-
-
-// ########################################################################################################################
-
-window.onload = function () {
-  // only if data is parsed from file, we
-  parseDataFromFile(pathToFile)
-    .then(res => {
-      console.log(res);
-    })
-    .catch(err => {
-      console.log(err);
-      onboarding(true);
-    });
-}
-
-function parseDataFromFile(pathToFile) {
-
-  // Check if file exists
-  if (fs.existsSync(pathToFile)) {
-
-    fs.readFile(pathToFile, {encoding: 'utf-8'}, async function(err,data) {
-      if (!err) {
-        parsedData = TodoTxt.parse( data, [ new DueExtension() ] );
-        /*if(generateTodoData(selectedFilters)) {
-          console.log('Success: All todos generated');
-        } else {
-          console.log('Error: Could not generate todos');
-        }*/
-
-        generateFilterData(selectedFilters);
-
-        generateTodoData(selectedFilters);
-
-        // load filters
-        /*if(generateFilterData(selectedFilters)) {
-          console.log('Success: Filters generated');
-        } else {
-          console.log('Error: Could not generate filters');
-        }*/
-
-        // start onboarding if generation of filter or data failed
-        onboarding(false);
-
-      } else {
-
-        // start the onboarding instead
-        console.log("Info: Data could not be extracted from file");
-        onboarding(true);
-      }
-    });
-    return Promise.resolve("Success: Data extracted from file, parsed and passed on to further functions");
-  } else {
-
-    return Promise.reject("Info: No todo.txt file found or selected yet");
-  }
-
-}
-
-// ########################################################################################################################
-
-
 // HELPER FUNCTIONS
 
 
@@ -319,7 +247,7 @@ function onboarding(show) {
     btnFilter.classList.remove("is-active");
     todoTable.classList.remove("is-active");
   } else {
-    console.log("Info: Hiding onboarding, loading the app");
+    console.log("Info: Ending onboarding");
     onboardingContainer.classList.remove("is-active");
     btnAddItem.classList.add("is-active");
     btnFilter.classList.add("is-active");
@@ -327,7 +255,12 @@ function onboarding(show) {
   }
 }
 
+// ###############
+
 // show and hide the filter selection dropdown
+
+// ###############
+
 function showFilters() {
   btnFilter.classList.toggle("is-highlighted");
   filterDropdown.classList.toggle("is-active");
@@ -341,9 +274,9 @@ function showFilters() {
 
 // ###############
 
-function uniqBy(a) {
+function uniqBy(items) {
   var seen = {};
-  return a.filter(function(item) {
+  return items.filter(function(item) {
       var k = JSON.stringify(item);
       return seen.hasOwnProperty(k) ? false : (seen[k] = true);
   })
@@ -366,13 +299,36 @@ function clearModal() {
   modalFormStatus = false;
 }
 
+// ###############
+
+// show alert modal (e.g. if file overwrite is necessary)
+
+// ###############
+
 function showAlert(status) {
   if(status) {
-    document.getElementById("modalFile").classList.add("is-active", "is-danger");
+    modalFile.classList.add("is-active", "is-danger");
   } else {
-    document.getElementById("modalFile").classList.remove("is-active", "is-danger");
+    modalFile.classList.remove("is-active", "is-danger");
   }
 };
+
+// ########################################################################################################################
+
+
+// START PARSING ONCE EVERYTHING ELSE IS READY
+
+
+// ########################################################################################################################
+
+window.onload = function () {
+  // we only start if file exists
+  parseDataFromFile(pathToFile).then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+}
 
 // ########################################################################################################################
 
@@ -394,40 +350,34 @@ function openFile() {
       title: 'Select yout todo.txt file',
       defaultPath: path.join(app.getPath('home')),
       buttonLabel: 'Open',
-
       // Restricting the user to only Text Files.
       filters: [
           {
               name: 'Text Files',
               extensions: ['txt']
-          }, ],
+          },
+      ],
       properties: ['openFile']
-
   }).then(file => {
       // Stating whether dialog operation was cancelled or not.
-
       if (!file.canceled) {
-        // Updating the GLOBAL filepath variable to user-selected file.
+        // Updating the filepath variable to user-selected file.
         pathToFile = file.filePaths[0].toString();
 
-        //console.log(global.filepath);
+        // write new path and file name into storage file
+        store.set("pathToFile", pathToFile);
+        console.log("Success: Storage file updated by new path and filename: " + pathToFile);
 
-        // read contents of todo.txt file
-        if (pathToFile && !file.canceled) {
+        // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
+        selectedFilters = new Array;
+        store.set("selectedFilters", new Array);
 
-          // write new path and file name into storage file
-          store.set("pathToFile", pathToFile);
-
-          // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
-          selectedFilters = new Array;
-          store.set("selectedFilters", new Array);
-
-          // pass path and filename on, to extract and parse the raw data
-          parseDataFromFile(pathToFile);
-
-          console.log("Success: Storage file updated by new path and filename: " + pathToFile);
-
-         }
+        // pass path and filename on, to extract and parse the raw data to objects
+        parseDataFromFile(pathToFile).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
       }
   }).catch(err => {
       console.log("Error: " + err)
@@ -455,37 +405,47 @@ function createFile(showDialog, overwriteFile) {
         pathToNewFile = file.filePaths[0].toString();
 
         if(fs.stat(pathToNewFile + "/todo.txt", function(err, stats) {
+          // file exists, so we ask user to overwrite or choose a different location
           if(!err) {
             showAlert(true);
             return false;
+          // file does not exist at given location, so we write a new file with content of sample.txt
           } else {
-            fs.writeFile(pathToNewFile + "/todo.txt", "(A) Please report bugs at https://github.com/ransome1/sleek/issues @participate +sleek due:2020-10-10", function (err) {
-              if (err) throw err;
-              if (!err) {
+            if (!err) {
+              fs.writeFile(pathToNewFile + "/todo.txt", sampleData, function (err) {
+                if (err) throw err;
+                if (!err) {
 
-                showAlert(false);
+                  showAlert(false);
+                  console.log("Success: New todo.txt file created: " + pathToNewFile + "/todo.txt");
+                  // Updating the GLOBAL filepath variable to user-selected file.
+                  pathToFile = pathToNewFile + "/todo.txt";
+                  // write new path and file name into storage file
+                  store.set("pathToFile", pathToFile);
+                }
+              });
+              // pass path and filename on, to extract and parse the raw data
+              parseDataFromFile(pathToFile);
 
-                console.log("Success: New todo.txt file created: " + pathToNewFile + "/todo.txt");
-
-                // Updating the GLOBAL filepath variable to user-selected file.
-                pathToFile = pathToNewFile + "/todo.txt";
-
-                // write new path and file name into storage file
-                store.set("pathToFile", pathToFile);
-
-                // pass path and filename on, to extract and parse the raw data
-                parseDataFromFile(pathToFile);
-              }
-            });
+              generateTodoData().then(response => {
+                console.log(response);
+              }).catch(error => {
+                console.log(error);
+              });
+              generateFilterData(selectedFilters).then(response => {
+                console.log(response);
+              }).catch(error => {
+                console.log(error);
+              });
+            }
           }
         }));
-
       }
     }).catch(err => {
         console.log("Error: " + err)
     });
-  } else if(!showDialog && overwriteFile) {
-    fs.writeFile(pathToNewFile + "/todo.txt", "(A) Please report bugs at https://github.com/ransome1/sleek/issues @participate +sleek due:2020-10-10", function (err) {
+  } else if (!showDialog && overwriteFile) {
+    fs.writeFile(pathToNewFile + "/todo.txt", sampleData, function (err) {
       if (err) throw err;
       if (!err) {
 
@@ -501,8 +461,60 @@ function createFile(showDialog, overwriteFile) {
 
         // pass path and filename on, to extract and parse the raw data
         parseDataFromFile(pathToFile);
+
+        generateTodoData().then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
+        generateFilterData(selectedFilters).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
       }
     });
+  }
+}
+
+// ###############
+
+// PARSE DATA FROM TODO.TXT FILE, CONVERT TO OBJECTS AND RETURN THOSE
+
+// ###############
+
+function parseDataFromFile(pathToFile) {
+
+  // we only start if file exists
+  if (fs.existsSync(pathToFile)) {
+    try {
+      // the actuall function to read the file
+      parsedData = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
+
+      // convert to proper todo.txt objects
+      parsedData = TodoTxt.parse( parsedData.toString(), [ new DueExtension() ] );
+
+      // parsed data will be passed to generate data and build the tables later on
+      generateTodoData().then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+      // parsed data will be passed to generate filter data and build the filter buttons
+      generateFilterData(selectedFilters).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+      onboarding(false);
+      return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
+    } catch(error) {
+      onboarding(true);
+      return Promise.reject("Error: Data could not be extracted from file");
+    }
+  } else {
+    onboarding(true);
+    return Promise.reject("Info: File does not exist or has not been defined yet");
   }
 }
 
@@ -513,141 +525,149 @@ function createFile(showDialog, overwriteFile) {
 // ###############
 
 // read passed filters, count them and pass on
-async function generateFilterData() {
+function generateFilterData() {
 
-  // get the reference for the filter container
-  let todoFilterContainer = document.getElementById("todoFilters");
-  // empty the container to prevent duplicates
-  todoFilterContainer.innerHTML = "";
+  try {
+    // get the reference for the filter container
+    let todoFilterContainer = document.getElementById("todoFilters");
+    // empty the container to prevent duplicates
+    todoFilterContainer.innerHTML = "";
 
-  // parse through above defined categories, most likely contexts and projects
-  for (let i = 0; i < filterCategories.length; i++) {
-
-    category = filterCategories[i];
-
-    // array to collect all the available filters in the data
-    let filters = new Array();
-
-    // run the array and collect all possible filters, duplicates included
-    for (let j = 0; j < parsedData.length; j++) {
-      // check if the object has values in either the project or contexts field
-      if(parsedData[j][category]) {
-        // loop through all the values it will find and push them into the filter array
-        for(let k = 0; k < parsedData[j][category].length; k++) {
-          // consider the show complete setting, if it is set to false
-          if(showCompleted==false && parsedData[j].complete==true) {
-            continue;
-          } else {
-            filters.push([parsedData[j][category][k]]);
+    // parse through above defined categories, most likely contexts and projects
+    for (let i = 0; i < filterCategories.length; i++) {
+      category = filterCategories[i];
+      // array to collect all the available filters in the data
+      let filters = new Array();
+      // run the array and collect all possible filters, duplicates included
+      for (let j = 0; j < parsedData.length; j++) {
+        // check if the object has values in either the project or contexts field
+        if(parsedData[j][category]) {
+          // loop through all the values it will find and push them into the filter array
+          for(let k = 0; k < parsedData[j][category].length; k++) {
+            // consider the show complete setting, if it is set to false
+            if(showCompleted==false && parsedData[j].complete==true) {
+              continue;
+            } else {
+              filters.push([parsedData[j][category][k]]);
+            }
           }
         }
       }
-    }
 
-    // delete duplicates and count filters
-    filtersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
-      if (filter in filters) {
-        filters[filter]++;
-      } else {
-        filters[filter] = 1;
-      }
-      if(filters!=null) {
-        return filters;
-      }
-    }, {});
+      // delete duplicates and count filters
+      filtersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
+        if (filter in filters) {
+          filters[filter]++;
+        } else {
+          filters[filter] = 1;
+        }
+        if(filters!=null) {
+          return filters;
+        }
+      }, {});
 
-    // always hide the reset filters button first
-    btnResetAllFilters.classList.remove("is-active");
+      // always hide the reset filters button first
+      btnResetAllFilters.classList.remove("is-active");
 
-    // TODO: error handling
-    // build the filter buttons
-    if(filters.length > 0) {
+      // build the filter buttons
+      if(filters.length > 0) {
         // only show the reset filters button if there are any filters
         btnResetAllFilters.classList.add("is-active");
-        buildFilterButtons();
-    } else {
-      return Promise.reject("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
-      //console.log("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
+        buildFilterButtons().then(response => {
+          console.log(response);
+        }).catch (error => {
+          console.log(error);
+        });
+        return Promise.resolve("Success: Filter data generated");
+      } else {
+        return Promise.reject("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
+      }
     }
+  } catch (error) {
+    return Promise.reject("Error: " + error);
   }
-  return Promise.resolve("Success: Filter data generated");
-  //return true;
 }
 
 // build a section for each category and add the buttons to each
 function buildFilterButtons() {
 
-  // build the buttons
-  // only generate filters if there are any
-  if(filtersCounted) {
+  try {
+    // build the buttons
+    // only generate filters if there are any
+    if(filtersCounted) {
 
-    let todoFilterContainer = document.getElementById("todoFilters");
+      let todoFilterContainer = document.getElementById("todoFilters");
 
-    // creates a div for the specific filter section
-    let todoFilterContainerSub = document.createElement("div");
-    todoFilterContainerSub.setAttribute("class", "dropdown-item " + category);
-    todoFilterContainerSub.setAttribute("tabindex", -1);
+      // creates a div for the specific filter section
+      let todoFilterContainerSub = document.createElement("div");
+      todoFilterContainerSub.setAttribute("class", "dropdown-item " + category);
+      todoFilterContainerSub.setAttribute("tabindex", -1);
 
-    // create a sub headline element
-    let todoFilterHeadline = document.createElement("h4");
-    todoFilterHeadline.setAttribute("class", "title is-4 " + category);
-    todoFilterHeadline.setAttribute("tabindex", -1);
-    todoFilterHeadline.innerHTML = category;
+      // create a sub headline element
+      let todoFilterHeadline = document.createElement("h4");
+      todoFilterHeadline.setAttribute("class", "title is-4 " + category);
+      todoFilterHeadline.setAttribute("tabindex", -1);
+      todoFilterHeadline.innerHTML = category;
 
-    // add the headline before category container
-    todoFilterContainerSub.appendChild(todoFilterHeadline);
+      // add the headline before category container
+      todoFilterContainerSub.appendChild(todoFilterHeadline);
 
-    // build one button each
-    // TODO: why dont put the adventListener on the buttons here?!
-    for (let filter in filtersCounted) {
+      // build one button each
+      // TODO: why dont put the adventListener on the buttons here?!
+      for (let filter in filtersCounted) {
 
-      let todoFiltersItem = document.createElement("button");
-      todoFiltersItem.setAttribute("class", "btnApplyFilter button");
-      todoFiltersItem.setAttribute("data-filter", filter);
-      todoFiltersItem.setAttribute("data-category", category);
-      todoFiltersItem.setAttribute("tabindex", 415);
-      todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
+        let todoFiltersItem = document.createElement("button");
+        todoFiltersItem.setAttribute("class", "btnApplyFilter button");
+        todoFiltersItem.setAttribute("data-filter", filter);
+        todoFiltersItem.setAttribute("data-category", category);
+        todoFiltersItem.setAttribute("tabindex", 415);
+        todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
 
-      // create the event listener for filter selection by user
-      todoFiltersItem.addEventListener("click", () => {
+        // create the event listener for filter selection by user
+        todoFiltersItem.addEventListener("click", () => {
 
-        todoFiltersItem.classList.toggle("is-dark");
+          todoFiltersItem.classList.toggle("is-dark");
 
-        // if no filters are selected, add a first one
-        if (selectedFilters.length > 0) {
-          // get the index of the item that matches the data values the button clic provided
-          let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
-          if(index != -1) {
-            // remove the item at the index where it matched
-            selectedFilters.splice(index, 1);
+          // if no filters are selected, add a first one
+          if (selectedFilters.length > 0) {
+            // get the index of the item that matches the data values the button clic provided
+            let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+            if(index != -1) {
+              // remove the item at the index where it matched
+              selectedFilters.splice(index, 1);
+            } else {
+              // if the item is not already in the array, push it into
+              selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+            }
           } else {
-            // if the item is not already in the array, push it into
+            // this is the first push
             selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
           }
-        } else {
-          // this is the first push
-          selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-        }
 
-        //convert the collected filters to JSON and save it to store.js
-        store.set("selectedFilters", JSON.stringify(selectedFilters));
+          //convert the collected filters to JSON and save it to store.js
+          store.set("selectedFilters", JSON.stringify(selectedFilters));
 
-        // TODO: error handling
-        generateTodoData(selectedFilters);
+          // TODO: error handling
+          generateTodoData();
 
-      });
-      // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
-      selectedFilters.forEach(function(item) {
-        if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') {
-          todoFiltersItem.classList.toggle("is-dark");
-        }
-      });
+        });
+        // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
+        selectedFilters.forEach(function(item) {
+          if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') {
+            todoFiltersItem.classList.toggle("is-dark");
+          }
+        });
 
-      todoFilterContainerSub.appendChild(todoFiltersItem);
+        todoFilterContainerSub.appendChild(todoFiltersItem);
+      }
+
+      // add filters to the specific filter container
+      todoFilterContainer.appendChild(todoFilterContainerSub);
+
+      return Promise.resolve("Success: Filter buttons have been build");
     }
-
-    // add filters to the specific filter container
-    todoFilterContainer.appendChild(todoFilterContainerSub);
+  } catch (error) {
+    return Promise.reject("Error: " + error);
   }
 }
 
@@ -658,50 +678,49 @@ function buildFilterButtons() {
 // ###############
 
 // TODO: Remove filterArray if not needed anymore
-async function generateTodoData(selectedFilters) {
+function generateTodoData() {
+  try {
+    // new variable for items, filtered or not filtered
+    let itemsFiltered = [];
 
-  //let t0 = performance.now();
+    // check if a filter has been passed
+    if(selectedFilters.length > 0) {
 
-  // new variable for items, filtered or not filtered
-  let itemsFiltered = [];
-
-  // check if a filter has been passed
-  if(selectedFilters.length > 0) {
-
-    // if there are selected filters build the items according to those filters
-    for (let i = 0; i < selectedFilters.length; i++) {
-      for(var j = 0; j < parsedData.length; j++) {
-        if(parsedData[j][selectedFilters[i][1]]) {
-          // check if the selected filter is in one of the array values of the category field
-          // only push into array if it hasn't already been part of the array
-          if(parsedData[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(parsedData[j])) {
-            itemsFiltered.push(parsedData[j]);
+      // if there are selected filters build the items according to those filters
+      for (let i = 0; i < selectedFilters.length; i++) {
+        for(var j = 0; j < parsedData.length; j++) {
+          if(parsedData[j][selectedFilters[i][1]]) {
+            // check if the selected filter is in one of the array values of the category field
+            // only push into array if it hasn't already been part of the array
+            if(parsedData[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(parsedData[j])) {
+              itemsFiltered.push(parsedData[j]);
+            }
           }
         }
       }
+
+    // if no filter has been passed, select all items
+    } else {
+      itemsFiltered = parsedData;
     }
 
-  // if no filter has been passed, select all items
-  } else {
-    itemsFiltered = parsedData;
+    // sort the items if toggle is set to true
+    if(sortAlphabetically==true) {
+      // pass filtered data to function to build the table
+      itemsFiltered = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
+    }
+    generateTodoTable(itemsFiltered).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+
+    return Promise.resolve("Success: Todo data generated and passed on for building the table");
+
+  } catch(error) {
+    return Promise.reject(error);
   }
 
-  // sort the items if toggle is set to true
-  if(sortAlphabetically==true) {
-    // pass filtered data to function to build the table
-    itemsFiltered = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
-  }
-
-  // TODO: error handling
-  generateTodoTable(itemsFiltered);
-
-  //let t1 = performance.now();
-  //console.log("TEST: " + (t1 - t0));
-
-  return Promise.resolve("Success: Todo data generated and passed on to build the table");
-
-  // TODO: neccessary?
-  return true;
 }
 
 // ###############
@@ -712,22 +731,28 @@ async function generateTodoData(selectedFilters) {
 
 function generateTodoTable(itemsFiltered) {
 
-  // get the reference for the table container
-  let todoTableContainer = document.getElementById("todoTableContainer");
+  try {
+    // get the reference for the table container
+    let todoTableContainer = document.getElementById("todoTableContainer");
 
-  // empty the table before reading fresh data
-  todoTableContainer.innerHTML = "";
+    // empty the table before reading fresh data
+    todoTableContainer.innerHTML = "";
 
-  let itemsWithPriority = itemsFiltered.filter(item => item.priority!=null);
-  let itemsWithNoPriority = itemsFiltered.filter(item => item.priority==null);
+    let itemsWithPriority = itemsFiltered.filter(item => item.priority!=null);
+    addTableRows(itemsWithPriority, true);
+    let itemsWithNoPriority = itemsFiltered.filter(item => item.priority==null);
+    addTableRows(itemsWithNoPriority, false);
 
-  // TODO: error handling
-  addTableRows(itemsWithPriority, true);
+    previousItem = undefined;
 
-  // TODO: error handling
-  addTableRows(itemsWithNoPriority, false);
+    return Promise.resolve("Success: Todo table has been build");
 
-  previousItem = undefined;
+  } catch(error) {
+
+    return Promise.reject("Error: Could not build the todo table");
+
+  }
+
 
 }
 
@@ -1042,7 +1067,7 @@ function submitForm() {
   }
 }
 
-async function completeItem(dataItem, deleteItem) {
+function completeItem(dataItem, deleteItem) {
 
   // convert array of objects to array of strings
   parsedData = parsedData.map(item => item.toString());
@@ -1100,8 +1125,18 @@ function writeDataIntoFile(parsedData) {
 
     // reread the data
     //parseDataFromFile(pathToFile);
-    generateFilterData(selectedFilters);
-    generateTodoData(selectedFilters);
+    // parsed data will be passed to generate data and build the tables later on
+    generateTodoData().then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+    // parsed data will be passed to generate filter data and build the filter buttons
+    generateFilterData(selectedFilters).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
 
     return true;
 
