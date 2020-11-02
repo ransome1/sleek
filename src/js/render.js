@@ -174,7 +174,7 @@ btnItemStatus.onclick = function() {
 
 // prevent empty hyperlinks from jumping to top after clicking
 a.forEach(el => el.addEventListener("click", function(el) {
-  if(el.target.href && el.target.href.length==1) el.preventDefault();
+  if(el.target.href && el.target.href == "#") el.preventDefault();
 }));
 
 // put a click event on all "open file" buttons
@@ -411,39 +411,32 @@ function createFile(showDialog, overwriteFile) {
             return false;
           // file does not exist at given location, so we write a new file with content of sample.txt
           } else {
-            if (!err) {
-              fs.writeFile(pathToNewFile + "/todo.txt", sampleData, function (err) {
-                if (err) throw err;
-                if (!err) {
+            fs.writeFile(pathToNewFile + "/todo.txt", sampleData, function (err) {
+              if (err) throw err;
+              if (!err) {
 
-                  showAlert(false);
-                  console.log("Success: New todo.txt file created: " + pathToNewFile + "/todo.txt");
-                  // Updating the GLOBAL filepath variable to user-selected file.
-                  pathToFile = pathToNewFile + "/todo.txt";
-                  // write new path and file name into storage file
-                  store.set("pathToFile", pathToFile);
-                }
-              });
-              // pass path and filename on, to extract and parse the raw data
-              parseDataFromFile(pathToFile);
+                showAlert(false);
+                console.log("Success: New todo.txt file created: " + pathToNewFile + "/todo.txt");
+                // Updating the GLOBAL filepath variable to user-selected file.
+                pathToFile = pathToNewFile + "/todo.txt";
+                // write new path and file name into storage file
+                store.set("pathToFile", pathToFile);
 
-              generateTodoData().then(response => {
-                console.log(response);
-              }).catch(error => {
-                console.log(error);
-              });
-              generateFilterData(selectedFilters).then(response => {
-                console.log(response);
-              }).catch(error => {
-                console.log(error);
-              });
-            }
+                // pass path and filename on, to extract and parse the raw data to objects
+                parseDataFromFile(pathToFile).then(response => {
+                  console.log(response);
+                }).catch(error => {
+                  console.log(error);
+                });
+              }
+            });
           }
         }));
       }
     }).catch(err => {
         console.log("Error: " + err)
     });
+  // existing file will be overwritten
   } else if (!showDialog && overwriteFile) {
     fs.writeFile(pathToNewFile + "/todo.txt", sampleData, function (err) {
       if (err) throw err;
@@ -459,15 +452,8 @@ function createFile(showDialog, overwriteFile) {
         // write new path and file name into storage file
         store.set("pathToFile", pathToFile);
 
-        // pass path and filename on, to extract and parse the raw data
-        parseDataFromFile(pathToFile);
-
-        generateTodoData().then(response => {
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        });
-        generateFilterData(selectedFilters).then(response => {
+        // pass path and filename on, to extract and parse the raw data to objects
+        parseDataFromFile(pathToFile).then(response => {
           console.log(response);
         }).catch(error => {
           console.log(error);
@@ -578,11 +564,12 @@ function generateFilterData() {
         }).catch (error => {
           console.log(error);
         });
-        return Promise.resolve("Success: Filter data generated");
+        //return Promise.resolve("Success: Filter data generated");
       } else {
-        return Promise.reject("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
+        console.log("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
       }
     }
+    return Promise.resolve("Success: Filter data generated");
   } catch (error) {
     return Promise.reject("Error: " + error);
   }
@@ -664,7 +651,7 @@ function buildFilterButtons() {
       // add filters to the specific filter container
       todoFilterContainer.appendChild(todoFilterContainerSub);
 
-      return Promise.resolve("Success: Filter buttons have been build");
+      return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
     }
   } catch (error) {
     return Promise.reject("Error: " + error);

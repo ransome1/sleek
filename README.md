@@ -1,6 +1,6 @@
 # sleek
 ## A simple todo manager based on the concept of todo.txt
-Based on the concept of todo.txt. It will create a new or use an existing todo.txt file and can handle most of the todo.txt syntax.
+sleek is a simple todo manager based on the concept of todo.txt. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates and according to this you will be able to filter your todos. Some keyboard shortcuts will ease adding new or filter your existing todos. There is no and there won't be any cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with any texteditor or other todo.txt app.
 
 ![Alt text](sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
 

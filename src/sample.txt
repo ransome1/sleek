@@ -1,12 +1,6 @@
-(A) The is a todo with highest priority +sleek
-x 2020-10-10 (A) A completed todo with priority A a due date and an assigned project due:2021-08-23 +linux
-(A) Another todo with priority A and also with a due date due:2021-01-01
-(B) Todo with priority B one context and two projects +project1 +project2 @context
-(B) This is an Electron app, developed mostly in Javascript with some CSS and HTML +sleek @JavaScript @HTML @CSS @Electron
-x 2020-10-10 (B) This todo has a priority B but has been marked as complete
-This todo has no priority but a couple of contexts and a assigned project +project1 @context1 @context2 @context3
-(F) A todo of priority F which has no specific color coding (only priorities A to C have color coding)
-Some keys have been assigned as shortcuts, check "a" for adding an item, "o" for opening a new todo.txt file, "f" for toggling the filters +sleek @shortcuts
-(C) This todo includes a link which can be followed by clicking the blue icon next to it: https://github.com/ransome1/sleek +sleek @features
-x 2020-10-10 (C) This is another completed one with context and project +project @context
-Some random todo with zero markup
+(A) Feel free to participate on sleek by providing bugs you find and features you would like on Github: https://github.com/ransome1/sleek/issues +sleek @development @github @feedback @bugs @features
+(B) There is a more button on the right end of this row if you hover over it. There you can delete todos instead of just completing them +sleek @features
+(C) Check out some keyboard shortcuts: <strong>"a"</strong> for adding an item, <strong>"f"</strong> for toggling the filter view and <strong>"o"</strong> to open a different todo.txt file. Also <strong>"Escape"</strong> works and you'll figure out how +sleek @features @shortcuts
+Items are sorted by their order in the todo.txt file. As an alternative you can sort them alphabetically. There is a toggle for that in the filter drawer. +sleek @features @sorting
+If you don't like to see completed todos, use the toggle to turn them off. Press "f" to find that toggle. +sleek @features @filter
+x 2020-10-10 Download sleek (thanks!) due:2021-08-23 +sleek @laptop
