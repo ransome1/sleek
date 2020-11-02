@@ -25,7 +25,10 @@
         {
           "target": "snap",
           "arch": [
-            "x64"
+            "x64",
+            "ia32",
+            "arm64",
+            "armv7l"
           ]
         },
         {
@@ -57,7 +60,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -wl --publish never"
+    "dist": "electron-builder -l --publish never"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
