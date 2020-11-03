@@ -10,7 +10,7 @@ Ubuntu users can install an early beta version from Snap Store using: `sudo inst
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
 ### or download the binary
-There is also an AppImage build compatible with most Linux distributions and builds for MacOS and Windows. You can find the binaries on the <a href="https://github.com/syncthing/syncthing-macos/releases/latest">release page</a>.
+There is also an AppImage build compatible with most Linux distributions and builds for MacOS and Windows. You can find the binaries on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
 ### Done
 * [x] Simple onboarding with two functions: Open existing todo.txt file and create a new one
