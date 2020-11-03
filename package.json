@@ -43,6 +43,10 @@
         }
       ],
       "icon": "src/img/512x512.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "src/img/512x512.icns"
     }
   },
   "snap": {
@@ -60,7 +64,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -l --publish never"
+    "dist": "electron-builder -m --publish never"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
