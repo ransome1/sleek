@@ -28,12 +28,8 @@ const createWindow = () => {
     height: height,
     minWidth: minWidth,
     minHeight: minHeight,
-    //icon: __dirname + './icon.png',
     icon: path.join(__dirname, 'img/512x512.png'),
-    //frame: false,
-    //fullscreen: true,
     simpleFullscreen: true,
-    //fullscreenWindowTitle: true,
     autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: false,
@@ -108,7 +104,7 @@ const createWindow = () => {
   Menu.setApplicationMenu(menu)
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Store user data: save size after resize
   mainWindow.on('resize', () => {

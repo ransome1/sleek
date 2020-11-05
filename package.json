@@ -1,9 +1,9 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.0.1",
-  "description": "A simple and sleek app to manage a todo.txt file.",
-  "synopsis": "A simple and sleek app to manage a todo.txt file.",
+  "version": "0.0.3",
+  "description": "sleek is a simple todo manager based on the concept of todo.txt. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates and according to this you will be able to filter your todos. There is no native cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with any text editor or other todo.txt app.",
+  "synopsis": "A simple todo manager based on the concept of todo.txt",
   "category": "ProjectManagement",
   "keywords": [
     "todo.txt",
@@ -16,55 +16,57 @@
   "license": "MIT",
   "repository": "https://github.com/ransome1/sleek/",
   "icon": "src/img/512x512.png",
+  "main": "src/index.js",
+  "buildResources": "src",
   "build": {
-    "appId": "com.electron.sleek",
+    "appId": "com.sleek.desktop",
     "linux": {
       "icon": "src/img/512x512.png",
       "category": "ProjectManagement",
       "target": [
-        {
-          "target": "snap",
-          "arch": [
-            "x64",
-            "ia32",
-            "arm64",
-            "armv7l"
-          ]
-        },
-        {
-          "target": "appImage"
-        }
+        "deb",
+        "pacman",
+        "freebsd",
+        "rpm",
+        "AppImage",
+        "snap"
       ]
     },
     "win": {
       "target": [
-        {
-          "target": "portable"
-        }
+        "portable"
       ],
       "icon": "src/img/512x512.ico"
     },
     "mac": {
       "target": "dmg",
-      "icon": "src/img/512x512.icns"
+      "icon": "src/img/512x512.icns",
+      "category": "public.app-category.productivity"
     }
+  },
+  "appImage": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "rpm": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "freebsd": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "snap": {
     "confinement": "strict",
     "grade": "devel"
   },
   "publish": {
-    "provider": "snapStore",
-    "channels": [
-      "edge"
-    ]
+    "provider": "github",
+    "owner": "ransome1",
+    "repo": "sleek",
+    "releaseType": "release"
   },
-  "main": "src/index.js",
-  "buildResources": "src",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -m --publish never"
+    "dist": "electron-builder -mwl --publish always"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",

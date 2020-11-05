@@ -1,6 +1,7 @@
+[![sleek](https://snapcraft.io/sleek/badge.svg)](https://snapcraft.io/sleek)
 # sleek
 ## A simple todo manager based on the concept of todo.txt
-sleek is a simple todo manager based on the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a>. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates and according to this you will be able to filter your todos. There is no native cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with any text editor or other todo.txt app.
+sleek is a simple todo manager based on the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a>. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates. According to this input you will be able to filter your todos using typical filter elements. There is no native cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need it to be. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with a basic text editor or any other todo.txt app.
 
 ![Alt text](assets/sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
 
@@ -10,7 +11,7 @@ Ubuntu users can install an early beta version from Snap Store using: `sudo inst
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
 ### or download the binary
-There is also an AppImage build compatible with most Linux distributions and builds for MacOS and Windows. You can find the binaries on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
+You can find binaries for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
 ### Done
 * [x] Simple onboarding with two functions: Open existing todo.txt file and create a new one

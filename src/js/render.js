@@ -11,7 +11,6 @@
 
 // ########################################################################################################################
 
-//const { performance } = require('perf_hooks');
 const electron = require("electron");
 const path = require("path");
 const dialog = electron.remote.dialog;
@@ -57,8 +56,13 @@ const modalFileOverwrite = document.getElementById("modalFileOverwrite");
 const pathToSampleFile = app.getAppPath() + "/src/sample.txt";
 // using pathToSampleFile to build a string that contains the sample data
 const sampleData = fs.readFileSync(pathToSampleFile).toString();
-// Needed for comparison between priority items to build the divider rows
-//let previousItem;
+// datepicker declaration and configuation
+const dueDatePickerInput = document.getElementById("dueDatePickerInput");
+const dueDatePicker = new Datepicker(dueDatePickerInput, {
+      autohide: true,
+      format: 'yyyy-mm-dd',
+      clearBtn: true
+});
 // defining a file path Variable to store user-selected file
 let pathToFile = store.get("pathToFile");
 // empty variable
@@ -72,6 +76,8 @@ let sortAlphabetically = store.get("sortAlphabetically");
 let showCompleted = store.get("showCompleted");
 // create  an empty variable for the data item
 let dataItem;
+// create  an empty variable for the data item if updated temporarily
+let dataItemUpdated;
 // create  global variable for parsedData
 let parsedData;
 // TODO: whats this again?
@@ -83,6 +89,8 @@ let modalFormStatus;
 
 // ###############
 
+// prevent manual input in datepicker
+dueDatePickerInput.readOnly = true;
 // set the checked attribute according to the persisted value
 toggleSortAlphabetically.checked = sortAlphabetically;
 // set the checked attribute according to the persisted value
@@ -196,6 +204,21 @@ modalBackground.forEach(el => el.onclick = clearModal);
 // click on the cancel button in the footer of the edit modal
 btnModalCancel.forEach(el => el.onclick = clearModal);
 
+// event intercepted when datepicker changes the date
+dueDatePickerInput.addEventListener('changeDate', function (e, details) {
+  // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
+  if(e.detail.date) {
+    console.log(e.detail.date);
+    // generate the object on what is written into input, so we don't overwrite previous inputs of user
+    dataItemTemp = new TodoTxtItem(modalFormInput.value, [ new DueExtension() ]);
+    dataItemTemp.due = new Date(e.detail.date);
+    dataItemTemp.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
+    modalFormInput.value = dataItemTemp.toString();
+    // clean up as we don#t need it anymore
+    dataItemTemp = null;
+  }
+});
+
 // ###############
 
 // CONFIGURE KEYSTROKES
@@ -238,6 +261,52 @@ body.addEventListener ("keydown", function () {
 
 
 // ########################################################################################################################
+
+// function to open modal layer and pass a string version of the todo into input field
+// TODO: error handling
+function showForm() {
+
+  // we need to check if there already is a due date in the object
+  dataItem = new TodoTxtItem(dataItem, [ new DueExtension() ]);
+  // if so we paste it into the input field
+  if(dataItem.dueString) {
+    dueDatePickerInput.value = dataItem.dueString;
+  } else {
+  // if not we clean it up
+    dueDatePicker.setDate({
+      clear: true
+    });
+    dueDatePickerInput.value = null;
+  }
+  // in any case the dataItem needs to be a string again to find the array position later on
+  dataItem = dataItem.toString();
+
+  // set global variable if the modal is opening
+  modalFormStatus = true;
+  // clear the input value in case there was an old one
+  modalFormInput.value = null;
+  modalForm.classList.toggle("is-active");
+  // clean up the alert box first
+  modalFormAlert.innerHTML = null;
+  modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+
+  if(dataItem) {
+    modalFormInput.value = dataItem.toString();
+    modalTitle.innerHTML = 'Edit item';
+    btnItemStatus.classList.add("is-active");
+    // only show the complete button on open items
+    if(dataItem.complete == false) {
+      btnItemStatus.innerHTML = "Mark as done";
+    } else {
+      btnItemStatus.innerHTML = "Mark as in progress";
+    }
+  } else {
+    modalTitle.innerHTML = 'Add item';
+    btnItemStatus.classList.remove("is-active");
+  }
+  // in any case put focus into the input field
+  modalFormInput.focus();
+}
 
 //
 function onboarding(show) {
@@ -919,36 +988,6 @@ function createTableItemRow(item) {
 
 
 // ########################################################################################################################
-
-// function to open modal layer and pass a string version of the todo into input field
-// TODO: error handling
-function showForm() {
-  // set global variable if the modal is opening
-  modalFormStatus = true;
-  // clear the input value in case there was an old one
-  modalFormInput.value = null;
-  modalForm.classList.toggle("is-active");
-  // clean up the alert box first
-  modalFormAlert.innerHTML = null;
-  modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
-
-  if(dataItem) {
-    modalFormInput.value = dataItem;
-    modalTitle.innerHTML = 'Edit item';
-    btnItemStatus.classList.add("is-active");
-    // only show the complete button on open items
-    if(new TodoTxtItem(dataItem).complete == false) {
-      btnItemStatus.innerHTML = "Mark as done";
-    } else {
-      btnItemStatus.innerHTML = "Mark as in progress";
-    }
-  } else {
-    modalTitle.innerHTML = 'Add item';
-    btnItemStatus.classList.remove("is-active");
-  }
-  // in any case put focus into the input field
-  modalFormInput.focus();
-}
 
 // TODO: error handling
 function submitForm() {

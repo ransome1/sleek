@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>sleek</title>
     <link rel="stylesheet" href="css/bulma.min.css">
+    <link rel="stylesheet" href="css/datepicker-bulma.min.css" />
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body id="body">
-    <div id="loadingIndicator" class="modal">
+    <!--<div id="loadingIndicator" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
         <p><i class="fas fa-spinner fa-spin"></i></p>
       </div>
-    </div>
+    </div>-->
     <section id="onboardingContainer">
       <h1 class="title is-1">welcome to sleek</h1>
       <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
@@ -75,10 +76,13 @@
           </header>
           <div class="card-content">
             <div class="content">
-              <input id="modalFormInput" class="input is-medium" type="text" placeholder="(A) 2021-01-01 Do something good @context +project" tabindex="300">
+              <input id="modalFormInput" class="input is-medium" type="text" placeholder="(A) Do something good @context +project" tabindex="300">
               <article class="message">
                 <div id="modalFormAlert" class="message-body"></div>
               </article>
+              <div class="field dueDate">
+                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" placeholder="Select a due date">
+              </div>
               <div class="field">
                 Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank" tabindex="305">todo.txt syntax</a>.
               </div>
@@ -116,6 +120,7 @@
     <script defer src="js/jsTodoExtensions.js"></script>
     <script defer src="js/jsTodoTxt.js"></script>
     <script defer src="js/autolink.js"></script>
+    <script defer src="js/datepicker.min.js"></script>
     <script defer src="js/render.js"></script>
   </body>
 </html>

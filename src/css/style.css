@@ -17,7 +17,7 @@ body {
 
 body.is-active {
   padding-left: 40em;
-  transition: padding-left .5s;
+  /*transition: padding-left .5s;*/
 }
 
 body, button, input, optgroup, select, textarea {
@@ -149,7 +149,7 @@ nav ul li.logo {
   top: 0;
   left: -100em;
   z-index: 90;
-  transition: left .3s;
+  /*transition: left .3s;*/
 
   padding: 0 3em;
 
@@ -179,10 +179,10 @@ nav ul li.logo {
 }
 
 #filterDropdown .dropdown-item h4 {
-  font-size: 1.15em;
-  font-weight: 1000;
+  font-size: 1.5em;
+  font-weight: bold;
   color: #4d4d4d;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
 
   margin-bottom: 1.5em;
 }
@@ -262,7 +262,7 @@ nav ul li.logo {
 }
 
 #todoFilters div.column {
-    padding-left: 0;
+  padding-left: 0;
 }
 
 /* TABLE */
@@ -280,7 +280,7 @@ nav ul li.logo {
   display: flex;
   flex-flow: row wrap;
   border-bottom: solid 1px #d9d9d9;
-  transition: 0.5s;
+  /*transition: 0.5s;*/
 }
 
 .flex-table.priority {
@@ -530,6 +530,35 @@ input:checked + .slider:before {
 
 #modalForm button:hover {
   color: #000;
+}
+
+/* DATEPICKER */
+
+.datepicker {
+  z-index: 120;
+}
+
+.datepicker-footer {
+  background: #fff;
+}
+
+.datepicker-footer .datepicker-controls .button  {
+  font-size: 1em;
+  background: #fff;
+  border-color: transparent;
+  color: #3273dc;
+}
+
+.dueDate svg {
+  color: #3273dc;
+}
+
+#dueDatePickerInput,
+#dueDatePickerInput::placeholder {
+  font-size: 1em;
+  color: #3273dc;
+  box-shadow: none;
+  cursor: pointer;
 }
 
 /* LOADING INDICATOR */
