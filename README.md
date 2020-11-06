@@ -6,7 +6,7 @@ sleek is a simple todo manager based on the <a href="https://github.com/todotxt/
 ![Alt text](assets/sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
 
 ### Ubuntu user get it from Snap Store
-Ubuntu users can install an early beta version from Snap Store using: `sudo install --beta sleek`
+Ubuntu users can install sleek from Canonicals Snap Store using: `sudo install --beta sleek`
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
@@ -14,29 +14,28 @@ Ubuntu users can install an early beta version from Snap Store using: `sudo inst
 You can find binaries for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
 ### Done
-* [x] Simple onboarding with two functions: Open existing todo.txt file and create a new one
+* [x] Onboarding with two functions: Open existing todo.txt file or create a new one
 * [x] Open a todo.txt file and parse it into a table
-* [x] Order todos by priority
-* [x] Add contexts and projects as tags to each item
-* [x] Indicate status of completion
-* [x] Mark todos for completion
-* [x] Unmark completed todos
-* [x] Add new todos
-* [x] Edit existing todos
-* [x] Filter todos by contexts and projects
-* [x] Reset filter settings
-* [x] Sort items either according to position in todo.txt file (default) or alphabetically
-* [x] Show and hide completed todos
+* [x] Todos grouped by priority
+* [x] Contexts and projects are added as tags to each item
+* [x] State of completion is visible
+* [x] Open todos can be checked to mark them as completed
+* [x] Completed todos can be checked to mark them as in progress
+* [x] New todos can be added
+* [x] Existing todos can be edited
+* [x] Todos can be filtered by contexts and projects
+* [x] Filters can be reset
+* [x] Todos can be sorted either according to position in todo.txt file (default) or alphabetically
+* [x] Completed todos can be hidden
 * [x] Persist path to the todo.txt file
-* [x] Persist selected filters
-* [x] Persist setting for sorting
-* [x] Persist setting for "show completed"
-* [x] Show due date
-* [x] Create a new todo.txt
-* [x] Push binaries to Snapcraft
-* [x] Keyboard shortcuts
-* [x] Delete single todos
-* [x] Tabindex
+* [x] Selected filters will be persisted
+* [x] Setting for sorting will be persisted
+* [x] Setting if completed todos shall be shown will be persisted
+* [x] If set the due date is shown on each todo
+* [x] Basic keyboard shortcuts are available (a, f, o, escape)
+* [x] Todos can be deleted
+* [x] A basic tabindex is available‚
+* [x] Due date can be set using a datepicker
 
 ### To be done
 * [ ] Extensive testing & bug fixing
@@ -47,7 +46,6 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [ ] Full text search
 * [ ] Loading indicators
 * [ ] Add interactive user support on todo creation
-* [ ] Drag and drop todos
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
@@ -56,3 +54,4 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 - Font Awesome: https://fontawesome.com
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt
 - autolink-js: https://github.com/bryanwoods/autolink-js
+- vanillajs-datepicker: https://github.com/mymth/vanillajs-datepicker
