@@ -36,12 +36,14 @@ const btnApplyFilter = document.getElementsByClassName("btnApplyFilter");
 const btnLoadTodoFile = document.querySelectorAll(".btnLoadTodoFile");
 const btnCreateTodoFile = document.getElementById("btnCreateTodoFile");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
-const btnResetAllFilters = document.getElementById("btnResetAllFilters");
+const btnResetAllFilters = document.querySelectorAll(".btnResetAllFilters");
 const toggleShowCompleted = document.getElementById("toggleShowCompleted");
 const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetically");
 const onboardingContainer = document.getElementById("onboardingContainer");
 //const loadingIndicator = document.getElementById("loadingIndicator");
 const todoTable = document.getElementById("todoTable");
+const todoTableSelectionInformation = document.getElementById("selectionInformation");
+const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 const filterCategories = ["contexts", "projects"];
 const filterDropdown = document.getElementById("filterDropdown");
 const modalForm = document.getElementById('modalForm');
@@ -105,12 +107,12 @@ toggleShowCompleted.checked = showCompleted;
 // ########################################################################################################################
 
 // persist the highlighting of the button and the dropdown menu
-btnFilter.onclick = showFilters;
+btnFilter.onclick = function() { showFilters("toggle") }
 
 btnAddItem.onclick = showForm;
 
 // flush all filters and items by emptying the array and reloading the data
-btnResetAllFilters.onclick = function() {
+btnResetAllFilters.forEach(el => el.onclick = function() {
   selectedFilters = [];
   // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
   store.set("selectedFilters", new Array);
@@ -118,15 +120,22 @@ btnResetAllFilters.onclick = function() {
   // only generate the filters and items, we do not read the file again as it is not necessary
   generateFilterData(selectedFilters);
   generateTodoData();
-}
+});
+
+/*btnResetAllFilters.onclick = function() {
+  selectedFilters = [];
+  // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
+  store.set("selectedFilters", new Array);
+
+  // only generate the filters and items, we do not read the file again as it is not necessary
+  generateFilterData(selectedFilters);
+  generateTodoData();
+}*/
 
 // click on the todo table will close more dropdown and remove active state for the dotted button
 todoTable.onclick = function() {
-  if(event.target.classList.contains("flex-table")) {
-    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
-      item.classList.remove("is-active")
-    });
-  }
+  if(event.target.classList.contains("flex-table")) hideMore();
+  showFilters(false);
 }
 
 // reread the data but sort it asc
@@ -226,7 +235,7 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
 
 // toggle filter dropdown when escape key is pressed
 filterDropdown.addEventListener ("keydown", function () {
-  if(event.key == 'Escape') showFilters();
+  if(event.key == 'Escape') showFilters(false);
 });
 
 // put a listeners on all modal backgrounds
@@ -244,7 +253,7 @@ body.addEventListener ("keydown", function () {
 // shortcut to show filters
 body.addEventListener ("keydown", function () {
   // shortcut will only work if the showForm modal is closed
-  if(!modalFormStatus && event.key == 'f') showFilters();
+  if(!modalFormStatus && event.key == 'f') showFilters("toggle");
 });
 
 // shortcut to open file
@@ -261,9 +270,17 @@ body.addEventListener ("keydown", function () {
 
 // ########################################################################################################################
 
+function hideMore() {
+  document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
+    item.classList.remove("is-active")
+  });
+};
+
 // function to open modal layer and pass a string version of the todo into input field
 // TODO: error handling
 function showForm() {
+  // in case the more toggle menu is open we close it
+  hideMore();
   // set global variable if the modal is opening
   modalFormStatus = true;
   // clear the input value in case there was an old one
@@ -337,11 +354,23 @@ function onboarding(show) {
 
 // ###############
 
-function showFilters() {
-  btnFilter.classList.toggle("is-highlighted");
-  filterDropdown.classList.toggle("is-active");
-  filterDropdown.focus();
-  body.classList.toggle("is-active");
+function showFilters(state) {
+  if(state==true) {
+    btnFilter.classList.add("is-highlighted");
+    filterDropdown.classList.add("is-active");
+    filterDropdown.focus();
+    body.classList.add("is-active");
+  } else if(state==false) {
+    btnFilter.classList.remove("is-highlighted");
+    filterDropdown.classList.remove("is-active");
+    body.classList.remove("is-active");
+  } else if(state=="toggle"){
+    console.log("drin");
+    btnFilter.classList.toggle("is-highlighted");
+    filterDropdown.classList.toggle("is-active");
+    filterDropdown.focus();
+    body.classList.toggle("is-active");
+  };
 }
 
 // ###############
@@ -607,7 +636,6 @@ function parseDataFromFile(pathToFile) {
 function generateFilterData() {
 
   try {
-
     // get the reference for the filter container
     let todoFilterContainer = document.getElementById("todoFilters");
     // empty the container to prevent duplicates
@@ -645,12 +673,12 @@ function generateFilterData() {
       }, {});
 
       // always hide the reset filters button first
-      btnResetAllFilters.classList.remove("is-active");
+      //btnResetAllFilters.classList.remove("is-active");
 
       // build the filter buttons
       if(filters.length > 0) {
         // only show the reset filters button if there are any filters
-        btnResetAllFilters.classList.add("is-active");
+        //btnResetAllFilters.classList.add("is-active");
         buildFilterButtons(category).then(response => {
           console.log(response);
         }).catch (error => {
@@ -761,6 +789,19 @@ function generateTodoData() {
 
   try {
 
+    // new variable for items with or without priority
+    let items = [];
+
+    // we build a new array according to the showComplete setting
+    if(showCompleted==false) {
+      for(let item in parsedData) {
+        if(parsedData[item].complete==true) continue;
+        items.push(parsedData[item]);
+      }
+    } else {
+      items = parsedData;
+    }
+
     // new variable for items, filtered or not filtered
     let itemsFiltered = [];
 
@@ -769,20 +810,25 @@ function generateTodoData() {
 
       // if there are selected filters build the items according to those filters
       for (let i = 0; i < selectedFilters.length; i++) {
-        for(var j = 0; j < parsedData.length; j++) {
-          if(parsedData[j][selectedFilters[i][1]]) {
+        for(var j = 0; j < items.length; j++) {
+          if(items[j][selectedFilters[i][1]]) {
             // check if the selected filter is in one of the array values of the category field
             // only push into array if it hasn't already been part of the array
-            if(parsedData[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(parsedData[j])) {
-              itemsFiltered.push(parsedData[j]);
+            if(items[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(items[j])) {
+              itemsFiltered.push(items[j]);
             }
           }
         }
       }
+      // we show some information on filters if any are set
+      todoTableSelectionInformation.classList.add("is-active");
+      todoTableSelectionInformation.firstElementChild.innerHTML = "<strong>" + itemsFiltered.length + "</strong> of <strong>" + parsedData.length + "</strong> todos are visible and <strong>" + selectedFilters.length + "</strong> filters selected";
 
     // if no filter has been passed, select all items
     } else {
-      itemsFiltered = parsedData;
+      // we remove filter info, if none have been selected
+      todoTableSelectionInformation.classList.remove("is-active");
+      itemsFiltered = items;
     }
 
     // sort the items if toggle is set to true
@@ -829,6 +875,7 @@ function generateTodoTable(itemsFiltered) {
     itemsFiltered.forEach((itemsGrouped) => {
 
       itemsGrouped.forEach((item) => {
+
         // reduces the entries to priorities a to z only
         if(item.toString().length==1) {
           createTableDividerRow(item);
@@ -840,12 +887,13 @@ function generateTodoTable(itemsFiltered) {
           let tableContainerContent = document.createDocumentFragment();
           // can't use forEach because we need "continue" here
           for(let k in item) {
-            // skip completed ones if user opted for it
+            tableContainerContent.appendChild(createTableItemRow(item[k]));
+            /*// skip completed ones if user opted for it
             if(showCompleted==false && item[k].complete==true) {
               continue;
             } else {
               tableContainerContent.appendChild(createTableItemRow(item[k]));
-            }
+            }*/
           }
           todoTableContainer.appendChild(tableContainerContent);
         }

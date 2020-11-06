@@ -16,6 +16,7 @@
         <p><i class="fas fa-spinner fa-spin"></i></p>
       </div>
     </div>-->
+
     <section id="onboardingContainer">
       <h1 class="title is-1">welcome to sleek</h1>
       <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
@@ -55,7 +56,7 @@
           </div>
           <div id="todoFilters"></div>
           <div class="toggle">
-            <button id="btnResetAllFilters" class="button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+            <button class="btnResetAllFilters button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
           </div>
         </div>
       </section>
@@ -63,6 +64,10 @@
     <section id="todoTable" class="hero">
       <div class="hero-body">
         <div class="container">
+          <header id="selectionInformation">
+            <span></span>
+            <a href="#" class="btnResetAllFilters" title="Reset all filters"><i class="fas fa-ban"></i>&nbsp;Reset all filters</a>
+          </header>
           <div id="todoTableContainer"></div>
         </div>
       </div>
@@ -81,17 +86,17 @@
                 <div id="modalFormAlert" class="message-body"></div>
               </article>
               <div class="field dueDate">
-                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" placeholder="Select a due date">
+                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" placeholder="Select a due date" tabindex="305">
               </div>
               <div class="field">
-                Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank" tabindex="305">todo.txt syntax</a>.
+                Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank" tabindex="310">todo.txt syntax</a>.
               </div>
             </div>
           </div>
           <footer class="card-footer">
-            <button type="submit" class="card-footer-item" tabindex="310">Save</button>
-            <a id="btnItemStatus" class="card-footer-item" tabindex="315"></a>
-            <a class="card-footer-item btnModalCancel" tabindex="320">Cancel</a>
+            <button type="submit" class="card-footer-item" tabindex="315">Save</button>
+            <a id="btnItemStatus" class="card-footer-item" tabindex="320"></a>
+            <a class="card-footer-item btnModalCancel" tabindex="325">Cancel</a>
           </footer>
         </div>
       </div>

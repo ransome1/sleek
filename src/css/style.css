@@ -16,8 +16,7 @@ body {
 }
 
 body.is-active {
-  padding-left: 40em;
-  /*transition: padding-left .5s;*/
+  padding-left: 35em;
 }
 
 body, button, input, optgroup, select, textarea {
@@ -142,7 +141,7 @@ nav ul li.logo {
 /* FILTER DROPDOWN */
 
 #filterDropdown {
-  width: 34em;
+  width: 30em;
   height: 100%;
 
   position: fixed;
@@ -151,7 +150,7 @@ nav ul li.logo {
   z-index: 90;
   /*transition: left .3s;*/
 
-  padding: 0 3em;
+  padding: 0 1.5em;
 
   background: #ebebeb;
 
@@ -277,7 +276,17 @@ nav ul li.logo {
 }
 
 #todoTable.is-active {
-  display: flex;
+  display: block;
+}
+
+#todoTable #selectionInformation {
+  display: none;
+  font-size: .8em;
+  text-align: center;
+}
+
+#todoTable #selectionInformation.is-active {
+  display: block;
 }
 
 .flex-table {
@@ -594,13 +603,35 @@ input:checked + .slider:before {
 
 /* MEDIA QUERIES */
 
-@media (max-width: 1023px) {
+@media (max-width: 1200px) {
+
+  body.is-active {
+    padding-left: 35em;
+  }
+
+  body.is-active #todoTable {
+    position: fixed;
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  #filterDropdown.is-active {
+    left: 5em;
+  }
+
+}
+
+@media (max-width: 992px) {
 
   body {
     height: 100%;
     display: flex;
 
     padding-left: 3.5em;
+  }
+
+  body.is-active {
+    padding-left: 34.5em;
   }
 
   nav ul li a {
@@ -620,13 +651,8 @@ input:checked + .slider:before {
   }
 
   #filterDropdown {
-    width: 96%!important;
-    padding: 0 2%!important;
-  }
-
-  #filterDropdown .dropdown-item {
-      width: 96%!important;
-      padding: 0 2%!important;
+    width: 30em!important;
+    padding: 0 1.5em!important;
   }
 
   #filterDropdown.is-active {
@@ -635,7 +661,20 @@ input:checked + .slider:before {
 
   .toggle {
     margin: 0!important;
-    padding: 1em!important;
+    padding-left: 0!important;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  body.is-active {
+    padding-left: 82.5%;
+  }
+
+  #filterDropdown {
+    width: 74%!important;
+    padding: 0 3%!important;
   }
 
 }
