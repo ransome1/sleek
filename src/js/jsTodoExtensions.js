@@ -47,11 +47,31 @@ DueExtension.prototype.parsingFunction = function(line) {
     return [null, null, null];
 };
 
+function IdExtension() {
+  // Set the name, this will be the property name on the TodoTxtItem.
+  this.name = "id";
+};
+
+IdExtension.prototype = new TodoTxtExtension();
+IdExtension.prototype.parsingFunction = function(line) {
+  // We don't have to use a regex, but it's handy for extracting the content.
+  var IdRegex = /\bid:([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/;
+  var match = IdRegex.exec(line);
+  if( match !== null ) {
+    // The return format is [ <value of property>, <line with addon removed>, <string of the value> ]
+    return [match[1], line.replace(IdRegex, ''), match[1]];
+  }
+  // Return nulls if not found.
+  return [null, null, null];
+};
+
+
 // Exported functions for node
 (function(exports){
 
   exports.TodoTxtExtension = TodoTxtExtension;
   exports.HiddenExtension = HiddenExtension;
   exports.DueExtension = DueExtension;
+	exports.IdExtension = IdExtension;
 
 })(typeof exports === 'undefined' ? window : exports);

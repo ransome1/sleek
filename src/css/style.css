@@ -267,6 +267,10 @@ nav ul li.logo {
 
 /* TABLE */
 
+#todoTable .hero-body {
+  padding: 1.5em;
+}
+
 #todoTable {
   width: 100%;
   display: none;
@@ -304,6 +308,11 @@ nav ul li.logo {
 
 .flex-table .flex-row.text {
   margin-right: auto;
+}
+
+.flex-table .flex-row[role="cell"].spacer {
+  width: .5em;
+  background: transparent;
 }
 
 .flex-table .flex-row[role="cell"].priority {
@@ -627,12 +636,6 @@ input:checked + .slider:before {
   .toggle {
     margin: 0!important;
     padding: 1em!important;
-  }
-
-  /* TODO TABLE */
-
-  #todoTable .hero-body {
-    padding: 1.5em;
   }
 
 }
