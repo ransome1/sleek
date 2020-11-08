@@ -30,7 +30,8 @@ button:focus, button:active, button:active, button:after, button::before, button
 
 :focus {
   outline: none;
-  box-shadow: 0 0 .25em rgba(0,0,0,0.25);
+  /*box-shadow: 0 0 .25em rgba(0,0,0,0.25);*/
+  box-shadow: none;
 }
 
 /* ONBOARDING */
@@ -148,7 +149,6 @@ nav ul li.logo {
   top: 0;
   left: -100em;
   z-index: 90;
-  /*transition: left .3s;*/
 
   padding: 0 1.5em;
 
@@ -181,7 +181,6 @@ nav ul li.logo {
   font-size: 1.5em;
   font-weight: bold;
   color: #4d4d4d;
-  /*text-transform: uppercase;*/
 
   margin-bottom: 1.5em;
 }
@@ -202,7 +201,6 @@ nav ul li.logo {
 }
 
 #todoFilters button {
-  /*text-transform: uppercase;*/
   margin: 0 .5rem .5rem 0;
 }
 
@@ -264,6 +262,33 @@ nav ul li.logo {
   padding-left: 0;
 }
 
+#filterDropdown .dropdown-item.is-greyed-out {
+  opacity: .5;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out a {
+  color: #4a4a4a;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out button  {
+  background: #ccc!important;
+  color: #4a4a4a;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out button.is-dark  {
+  background: #808080!important;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out span.tag  {
+  background: #4a4a4a!important;
+  color: #ccc;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out span.tag  {
+  background: #4a4a4a!important;
+  color: #ccc;
+}
+
 /* TABLE */
 
 #todoTable .hero-body {
@@ -272,6 +297,7 @@ nav ul li.logo {
 
 #todoTable {
   width: 100%;
+  height: 100%;
   display: none;
 }
 
@@ -293,7 +319,6 @@ nav ul li.logo {
   display: flex;
   flex-flow: row wrap;
   border-bottom: solid 1px #d9d9d9;
-  /*transition: 0.5s;*/
 }
 
 .flex-table.priority {
@@ -395,7 +420,6 @@ nav ul li.logo {
 }
 
 .flex-table .flex-row a {
-  /*color: hsl(0, 0%, 71%);*/
   color: #3273dc;
 }
 
@@ -406,7 +430,6 @@ nav ul li.logo {
 .flex-table .flex-row.todoTableItemMore a {
   display: none;
   padding: 0 .5em;
-  /*margin-right: auto;*/
 }
 
 .flex-table:hover .flex-row.todoTableItemMore a,
@@ -418,14 +441,6 @@ nav ul li.logo {
 .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
   padding: .75em;
 }
-
-/*flex-row .dropdown.is-active {
-  display: none;
-}
-
-flex-row:hover .dropdown.is-active {
-  display: block;
-}*/
 
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 
@@ -661,7 +676,7 @@ input:checked + .slider:before {
 
   .toggle {
     margin: 0!important;
-    padding-left: 0!important;
+    padding: 1.5em 1em 1em 0!important;
   }
 
 }
