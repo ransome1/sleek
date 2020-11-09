@@ -17,7 +17,8 @@ const store = new Store({
     windowBounds: { width: 1025, height: 769, minWidth: 800, minHeight: 600 },
     sortAlphabetically: false,
     showCompleted: true,
-    selectedFilters: new Array
+    selectedFilters: new Array,
+    categoriesFiltered: new Array
   }
 });
 
@@ -104,7 +105,7 @@ const createWindow = () => {
   Menu.setApplicationMenu(menu)
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Store user data: save size after resize
   mainWindow.on('resize', () => {

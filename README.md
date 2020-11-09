@@ -15,7 +15,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 
 ### Done
 * [x] Onboarding with two functions: Open existing todo.txt file or create a new one
-* [x] Open a todo.txt file and parse it into a table
+* [x] Open a todo.txt file and parse it into a table (path to file will be persisted)
 * [x] Todos grouped by priority
 * [x] Contexts and projects are added as tags to each item
 * [x] State of completion is visible
@@ -23,19 +23,16 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Completed todos can be checked to mark them as in progress
 * [x] New todos can be added
 * [x] Existing todos can be edited
-* [x] Todos can be filtered by contexts and projects
+* [x] Todos can be filtered by contexts and projects (setting will be persisted)
 * [x] Filters can be reset
-* [x] Todos can be sorted either according to position in todo.txt file (default) or alphabetically
-* [x] Completed todos can be hidden
-* [x] Persist path to the todo.txt file
-* [x] Selected filters will be persisted
-* [x] Setting for sorting will be persisted
-* [x] Setting if completed todos shall be shown will be persisted
+* [x] Todos can be sorted either according to position in todo.txt file or alphabetically (setting will be persisted)
+* [x] Completed todos can be hidden (setting will be persisted)
 * [x] If set the due date is shown on each todo
 * [x] Basic keyboard shortcuts are available (a, f, o, escape)
 * [x] Todos can be deleted
-* [x] A basic tabindex is available‚
+* [x] A basic tabindex is available
 * [x] Due date can be set using a datepicker
+* [x] Todos that include either contexts or projects or both can now be hidden (setting will be persisted)
 
 ### To be done
 * [ ] Extensive testing & bug fixing
@@ -44,8 +41,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [ ] Implement a notification function for due dates
 * [ ] Dark theme
 * [ ] Full text search
-* [ ] Loading indicators
-* [ ] Add interactive user support on todo creation
+* [ ] More visual guidance when adding new todos
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

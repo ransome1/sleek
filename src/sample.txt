@@ -1,6 +1,0 @@
-(A) Feel free to participate on sleek by providing bugs you find and features you would like on Github: https://github.com/ransome1/sleek/issues +sleek @development @github @feedback @bugs @features
-(B) There is a more button on the right end of this row if you hover over it. There you can delete todos instead of just completing them +sleek @features
-(C) Check out some keyboard shortcuts: <strong>"a"</strong> for adding an item, <strong>"f"</strong> for toggling the filter view and <strong>"o"</strong> to open a different todo.txt file. Also <strong>"Escape"</strong> works and you'll figure out how +sleek @features @shortcuts
-Items are sorted by their order in the todo.txt file. As an alternative you can sort them alphabetically. There is a toggle for that in the filter drawer. +sleek @features @sorting
-If you don't like to see completed todos, use the toggle to turn them off. Press "f" to find that toggle. +sleek @features @filter
-x 2020-10-10 Download sleek (thanks!) due:2021-08-23 +sleek @laptop

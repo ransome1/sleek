@@ -36,7 +36,7 @@ button:focus, button:active, button:active, button:after, button::before, button
 
 /* ONBOARDING */
 
-#onboardingContainer {
+.contentContainer {
   width: 100%;
   height: 100%;
   text-align: center;
@@ -46,35 +46,39 @@ button:focus, button:active, button:active, button:after, button::before, button
   justify-content:center;
 }
 
-#onboardingContainer.is-active {
+.contentContainer.is-active {
   display: flex;
 }
 
-#onboardingContainer p {
-    margin: .5em;
+.contentContainer p {
+  margin: .5em;
 }
 
-#onboardingContainer .fa-file-alt {
+.contentContainer .fa-file-alt {
   font-size: 6em;
 }
 
-#onboardingContainer .title.is-1 {
-  margin: .25em 0 .25em 0;
+.contentContainer .title.is-1 {
+  margin: .5em 0;
   color: #4a4a4a;
 }
 
-#onboardingContainer .btnOnboarding {
+.contentContainer .subtitle {
+  margin: .5em 0;
+}
+
+.contentContainer .btnOnboarding {
   font-size: 1em;
   margin: 0 1em;
   padding: .25em;
 }
 
-#onboardingContainer .btnOnboarding svg {
+.contentContainer .btnOnboarding svg {
   font-size: 5em;
   margin: .25em 0;
 }
 
-#onboardingContainer .btnOnboarding:hover {
+.contentContainer .btnOnboarding:hover {
   color: #4a4a4a;
 }
 

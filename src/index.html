@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>sleek</title>
-    <link rel="stylesheet" href="css/bulma.min.css">
+    <link rel="stylesheet" href="css/sass.css">
     <link rel="stylesheet" href="css/datepicker-bulma.min.css" />
     <link rel="stylesheet" href="css/style.css">
   </head>
@@ -16,7 +16,7 @@
         <p><i class="fas fa-spinner fa-spin"></i></p>
       </div>
     </div>-->
-    <section id="onboardingContainer">
+    <section id="onboardingContainer" class="contentContainer">
       <h1 class="title is-1">welcome to sleek</h1>
       <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
       <p class="file is-boxed is-centered">
@@ -30,10 +30,20 @@
         </a>
       </p>
     </section>
+    <section id="addTodoContainer" class="contentContainer">
+      <h1 class="title is-1">no todos</h1>
+      <p class="subtitle">This list is empty, let's add some todos.</p>
+      <p class="file is-boxed is-centered">
+        <a href="#" class="btnOnboarding btnAddTodo" tabindex="505">
+          <i class="fas fa-plus"></i>
+          <span class="file-label">Add a todo to your list</span>
+        </a>
+      </p>
+    </section>
     <nav>
       <ul>
       	<li class="logo">sleek</li>
-        <li id="btnAddItem"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
+        <li class="btnAddTodo"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
       	<li id="btnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
       	<li class="btnLoadTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
       </ul>
