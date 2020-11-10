@@ -14,26 +14,21 @@ const store = new Store({
   // We'll call our data file 'user-preferences'
   configName: 'user-preferences',
   defaults: {
-    windowBounds: { width: 1025, height: 769, minWidth: 800, minHeight: 600 },
-    sortAlphabetically: false,
-    showCompleted: true,
-    selectedFilters: new Array,
-    categoriesFiltered: new Array
+    windowBounds: { width: 1025, height: 768 }
   }
 });
 
 const createWindow = () => {
-  let { width, height, minWidth, minHeight } = store.get('windowBounds');
+  let { width, height } = store.get('windowBounds');
   const mainWindow = new BrowserWindow({
     width: width,
     height: height,
-    minWidth: minWidth,
-    minHeight: minHeight,
+    minWidth: 800,
+    minHeight: 600,
     icon: path.join(__dirname, 'img/512x512.png'),
     simpleFullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
-      contextIsolation: false,
       worldSafeExecuteJavaScript:true,
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -105,17 +100,12 @@ const createWindow = () => {
   Menu.setApplicationMenu(menu)
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
-  // Store user data: save size after resize
-  mainWindow.on('resize', () => {
-    // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
-    // the height, width, and x and y coordinates.
+  /*mainWindow.on('resize', () => {
     let { width, height } = mainWindow.getBounds();
-    // Now that we have them, save them using the `set` method.
     store.set('windowBounds', { width, height });
-    console.log('Saved new windows size in user preferences');
-  });
+  });*/
 };
 
 // This method will be called when Electron has finished

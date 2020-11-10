@@ -5,8 +5,8 @@ sleek is a simple todo manager based on the <a href="https://github.com/todotxt/
 
 ![Alt text](assets/sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
 
-### Ubuntu users get it from Snap Store
-Ubuntu users can install sleek from Canonicals Snap Store using: `sudo install --beta sleek`
+### Get it from Snap Store
+You can install sleek from Canonicals Snap Store using: `sudo install --beta sleek`
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 

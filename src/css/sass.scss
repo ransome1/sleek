@@ -1,0 +1,661 @@
+@charset "utf-8";
+
+$light-grey: #f5f5f5;
+$mid-grey: #ebebeb;
+$dark-grey: #ccc;
+$darker-grey: #4a4a4a;
+
+$sleek-contexts-button: #c5ede3;
+$sleek-contexts-button-font: #075943;
+$sleek-contexts-button-hover: #c9f2e8;
+$sleek-contexts-button-bubble: #1aa37e;
+$sleek-contexts-button-highlighted: #075943;
+
+$sleek-projects-button: #f1d6f1;
+$sleek-projects-button-font: #5f1a5e;
+$sleek-projects-button-hover: #f7dcf7;
+$sleek-projects-button-bubble: #bc30ba;
+$sleek-projects-button-highlighted: #5f1a5e;
+
+$family-sans-serif: "FreeSans", Helvetica, Arial, "DejaVu Sans",  sans-serif;
+$body-background-color: white;
+$modal-background-background-color: rgba(0, 0, 0, 0.15);
+$modal-z: 50;
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+body, button, input, optgroup, select, textarea, button:focus, button:active, button:active, button:after, button::before, button:active:after {
+  border: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ONBOARDING */
+
+.contentContainer {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: none;
+  flex-direction: column;
+  justify-content:center;
+}
+
+.contentContainer.is-active {
+  display: flex;
+}
+
+.contentContainer p {
+  margin: .5em;
+}
+
+.contentContainer .fa-file-alt {
+  font-size: 6em;
+}
+
+.contentContainer .title.is-1 {
+  margin: .5em 0;
+
+}
+
+.contentContainer .subtitle {
+  margin: .5em 0;
+}
+
+.contentContainer .btnOnboarding {
+  font-size: 1em;
+  margin: 0 1em;
+  padding: .25em;
+}
+
+.contentContainer .btnOnboarding svg {
+  font-size: 5em;
+  margin: .25em 0;
+}
+
+/* Columns */
+
+.columns {
+  height: 100%;
+  margin: 0!important;
+}
+
+.columns .column {
+  position: relative;
+}
+
+.columns .column.content {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.columns #filterColumnClose {
+  width: 2.5em;
+  height: 2.5em;
+  display: none;
+
+  line-height: 2.5em;
+  text-align: center;
+  font-size: 1.25em;
+
+  position: absolute;
+  right: -1.25em;
+  top: 50%;
+  z-index: 30;
+
+  background: $mid-grey;
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+.columns nav:hover #filterColumnClose.is-active {
+  display: inline-block;
+}
+
+/* Vertical menu */
+
+nav {
+  width: auto;
+  height: 100%;
+  float: left;
+  background: $light-grey;
+}
+
+nav ul {
+  width: 5em;
+  height: 100%;
+  float: left;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+nav ul li a {
+  width: 5em;
+  height: 5em;
+  display: block;
+  color: $darker-grey;
+	cursor: pointer;
+	line-height: 5em;
+	text-align: center;
+	border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+nav ul li:hover,
+nav ul li:focus,
+nav ul li.is-highlighted {
+  background: $mid-grey;
+}
+
+nav ul li.btnAddTodo,
+nav ul li#btnFilter {
+  display: none;
+}
+
+nav ul li.btnAddTodo.is-active,
+nav ul li#btnFilter.is-active {
+  display: block;
+}
+
+nav ul li.logo {
+  background: $darker-grey;
+  color: #fff;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 5em;
+  text-align: center;
+  cursor: default;
+}
+
+/* FILTER DROPDOWN */
+
+#filterDropdown {
+  width: 30em;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  float: left;
+  display: none;
+  padding: 0 1.5em;
+  background: $mid-grey;
+}
+
+#filterDropdown.is-active {
+  display: block;
+}
+
+#filterDropdown .dropdown-item {
+  width: 100%;
+  float: left;
+  padding: 0;
+  margin: 1.5em 0;
+}
+
+#filterDropdown .dropdown-item h4 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 1.5em;
+}
+
+#filterDropdown #btnResetAllFilters {
+  display: none;
+}
+
+#filterDropdown #btnResetAllFilters.is-active {
+  display: block;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out {
+  opacity: .5;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out button  {
+  background: $dark-grey!important;
+  color: $darker-grey!important;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out span.tag  {
+  background: $darker-grey!important;
+  color: #ccc;
+}
+
+/* FILTERS */
+#todoFilters {
+  width: 100%;
+  float: left;
+  margin: 0;
+}
+
+#todoFilters button {
+  margin: 0 .5rem .5rem 0;
+}
+
+#todoFilters div button span.tag {
+  z-index: 35;
+}
+
+#todoFilters div.contexts button  {
+  background: $sleek-contexts-button;
+  color: $sleek-contexts-button-font;
+  border: none;
+}
+
+#todoFilters div.contexts button:hover {
+  background: $sleek-contexts-button-hover;
+}
+
+#todoFilters div.contexts button span.tag {
+  background: $sleek-contexts-button-bubble;
+  color: #fff;
+  font-weight: bold;
+  position: absolute;
+  right: -.75em;
+  top: -.75em;
+}
+
+#todoFilters div.contexts button.is-dark  {
+  background: $sleek-contexts-button-highlighted;
+  color: #fff;
+}
+
+#todoFilters div.projects button {
+  background: $sleek-projects-button;
+  color: $sleek-projects-button-font;
+  border: none;
+}
+
+#todoFilters div.projects button:hover {
+  background: $sleek-projects-button-hover;
+}
+
+#todoFilters div.projects button span.tag {
+  background: $sleek-projects-button-bubble;
+  color: #fff;
+  font-weight: bold;
+  position: absolute;
+  right: -.75em;
+  top: -.75em;
+}
+
+#todoFilters div.projects button.is-dark {
+  background: $sleek-projects-button-highlighted;
+  color: #fff;
+}
+
+#todoFilters div.column {
+  padding-left: 0;
+}
+
+/* TABLE */
+
+#todoTable {
+  width: 100%;
+  min-width: 45em;
+  float: left;
+  display: none;
+  padding: 1.5em 3em;
+}
+
+#todoTable.is-active {
+  display: block;
+}
+
+#todoTable #selectionInformation {
+  display: none;
+  font-size: .8em;
+  text-align: center;
+}
+
+#todoTable #selectionInformation.is-active {
+  display: block;
+}
+
+.flex-table {
+  display: flex;
+  flex-flow: row wrap;
+  border-bottom: solid 1px #d9d9d9;
+}
+
+.flex-table.priority {
+  border: none;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.flex-table.completed,
+.flex-table.completed strong {
+  color: hsl(0, 0%, 71%);
+}
+
+.flex-table .flex-row {
+  padding: .75rem 0 .5em 0;
+  margin-right: 1em;
+  height: auto;
+
+  line-height: 1.5em;
+}
+
+.flex-table .flex-row.text {
+  margin-right: auto;
+}
+
+.flex-table .flex-row[role="cell"].spacer {
+  width: .5em;
+  background: transparent;
+}
+
+.flex-table .flex-row[role="cell"].priority {
+  width: .5em;
+  background: hsl(0, 0%, 86%);
+  opacity: .5;
+}
+
+.flex-table .flex-row[role="cell"].priority.A {
+  background: hsl(348, 100%, 61%);
+}
+
+.flex-table .flex-row[role="cell"].priority.B {
+  background: hsl(48, 100%, 67%);
+}
+
+.flex-table .flex-row[role="cell"].priority.C {
+  background: hsl(141, 53%, 53%);
+}
+
+.flex-table .flex-row.text[role="cell"] {
+  max-width: 80%;
+  cursor: pointer;
+}
+
+.flex-table .flex-row.checkbox a {
+  color: #3273dc;
+  font-size: 1.2em;
+}
+
+.flex-table .flex-row.checkbox a:hover {
+  color: hsl(0, 0%, 71%);
+}
+
+.flex-table.completed .flex-row.checkbox a {
+  color: hsl(0, 0%, 71%);
+}
+
+.flex-table .flex-row[role="cell"] span.tag {
+  margin-left: .5em;
+}
+
+.flex-table .flex-row.projects[role="cell"],
+.flex-table .flex-row.contexts[role="cell"] {
+  margin-right: 0;
+}
+
+.flex-table .flex-row[role="cell"] span.tag.projects {
+  background: #f1d6f1;
+  color: #5f1a5e;
+}
+
+.flex-table .flex-row[role="cell"] span.tag.contexts {
+  background: #c5ede3;
+  color: #075943;
+}
+
+.flex-table.completed .flex-row[role="cell"] span.tag.projects {
+  background: hsl(0, 0%, 71%);
+  color: #fff;
+}
+
+.flex-table.completed .flex-row[role="cell"] span.tag.contexts {
+  background: hsl(0, 0%, 86%);
+  color: #fff;
+}
+
+.flex-table .flex-row.text[role="cell"] span.itemDueDate {
+  color: hsl(0, 0%, 71%);
+  white-space: nowrap;
+}
+
+.flex-table .flex-row a {
+  color: #3273dc;
+}
+
+.flex-table .flex-row a:hover {
+    color: #3273dc;
+}
+
+.flex-table .flex-row.todoTableItemMore a {
+  display: none;
+  padding: 0 .5em;
+}
+
+.flex-table:hover .flex-row.todoTableItemMore a,
+.flex-table .flex-row.todoTableItemMore.is-active a,
+.flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu {
+  display: block;
+}
+
+.flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
+  padding: .75em;
+}
+
+/* https://www.w3schools.com/howto/howto_css_switch.asp */
+
+/* The switch - the box around the slider */
+.toggle {
+  float: left;
+  padding: 1.5em 1.5em 1.5em 0;
+  margin: 0;
+  line-height: 2em;
+}
+
+.switch {
+ position: relative;
+ display: inline-block;
+ width: 56px;
+ height: 31px;
+ float: left;
+ margin-right: .7em;
+}
+
+.switch .itemText {
+  float: left;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+ opacity: 1;
+ width: 56px;
+ height: 31px;
+ background: none;
+}
+
+/* The slider */
+.slider {
+ position: absolute;
+ cursor: pointer;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-color: $dark-grey;
+ -webkit-transition: .4s;
+ transition: .4s;
+}
+
+.slider:before {
+ position: absolute;
+ content: "";
+ height: 25px;
+ width: 25px;
+ left: 3px;
+ bottom: 3px;
+ background-color: white;
+ -webkit-transition: .4s;
+ transition: .4s;
+}
+
+input:checked + .slider {
+ background-color: $darker-grey;
+}
+
+input:focus + .slider {
+ box-shadow: 0 0 1px $darker-grey;
+}
+
+input:checked + .slider:before {
+ -webkit-transform: translateX(25px);
+ -ms-transform: translateX(25px);
+ transform: translateX(25px);
+}
+
+/* Rounded sliders */
+.slider.round {
+ border-radius: 30px;
+}
+
+.slider.round:before {
+ border-radius: 50%;
+}
+
+/* MODAL */
+
+#modalForm .message {
+  display: none;
+  margin: 1em 0;
+}
+
+#modalForm .is-active {
+  display: block;
+}
+
+#modalForm .field {
+  margin: .75em 0;
+}
+
+#modalForm #btnItemStatus {
+  display: none;
+  text-align: center;
+}
+
+#modalForm #btnItemStatus.is-active {
+  display: block;
+}
+
+#modalForm button {
+  font-size: 1em;
+  background: none;
+  color: #3273dc;
+  border: none;
+  border-right: 1px solid $mid-grey;
+}
+
+#modalForm button:hover {
+  color: #000;
+}
+
+/* DATEPICKER */
+
+.datepicker {
+  z-index: 60;
+}
+
+.datepicker-footer {
+  background: #fff;
+}
+
+.datepicker-footer .datepicker-controls .button  {
+  font-size: 1em;
+  background: #fff;
+  border-color: transparent;
+  color: $darker-grey;
+}
+
+.dueDate svg {
+  color: $darker-grey;
+}
+
+#dueDatePickerInput,
+#dueDatePickerInput::placeholder {
+  font-size: 1em;
+  color: #3273dc;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+/* LOADING INDICATOR */
+
+#loadingIndicator {
+  text-align: center;
+  z-index: 70;
+}
+
+#loadingIndicator .modal-background {
+  background: #fff;
+  opacity: .25;
+}
+
+#loadingIndicator p {
+  margin: .5em 0;
+}
+
+#loadingIndicator svg,
+#loadingIndicator .fa-spinner {
+  width: 2em;
+  height: 2em;
+}
+
+/* MEDIA QUERIES */
+
+@media (max-width: 992px) {
+
+  nav ul {
+    width: 3.5em;
+    height: 100%;
+  }
+
+  nav ul li a {
+    width: 3.5em;
+    height: 3.5em;
+  	line-height: 3.5em;
+  }
+
+  nav ul li.logo {
+    width: 100%;
+    height: 3.5em;
+    line-height: 3.5em;
+  }
+
+  #filterDropdown {
+    width: 29em!important;
+    padding: 0 1.5em!important;
+  }
+
+  #todoTable {
+    padding: 1.5em;
+  }
+
+  .toggle {
+    margin: 0!important;
+    padding: 1.5em .5em 1em 0!important;
+  }
+
+}
+
+@import "datepicker-bulma.min.css";
+@import "../../node_modules/bulma/bulma.sass";

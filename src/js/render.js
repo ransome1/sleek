@@ -16,11 +16,12 @@ const Store = require("./store.js");
 const store = new Store({
   configName: "user-preferences",
   defaults: {
-    windowBounds: { width: 1025, height: 768, minWidth: 800, minHeight: 600 },
+    windowBounds: { width: 1025, height: 768 },
     sortAlphabetically: false,
     showCompleted: true,
     selectedFilters: new Array,
-    categoriesFiltered: new Array
+    categoriesFiltered: new Array,
+    pathToFile: ""
   }
 });
 const body = document.getElementById("body");
@@ -45,6 +46,7 @@ const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 const categories = ["contexts", "projects"];
 const filterContainer = document.getElementById("todoFilters");
 const filterDropdown = document.getElementById("filterDropdown");
+const filterColumnClose = document.getElementById("filterColumnClose");
 const modalForm = document.getElementById('modalForm');
 const modalFormInput = document.getElementById("modalFormInput");
 const modalFormAlert = document.getElementById("modalFormAlert");
@@ -99,6 +101,8 @@ toggleShowCompleted.checked = showCompleted;
 
 // persist the highlighting of the button and the dropdown menu
 btnFilter.onclick = function() { showFilters("toggle") }
+
+filterColumnClose.onclick = function() { showFilters(false) }
 
 btnAddTodo.forEach(el => el.onclick = showForm);
 
@@ -181,13 +185,20 @@ toggleShowCompleted.onclick = function() {
   });
 }
 
+// persist window bound after resize
+window.addEventListener("resize", function(e) {
+  let width = this.outerWidth;
+  let height = this.outerHeight;
+  store.set('windowBounds', { width, height });
+});
+
 // submit in the form
 modalForm.addEventListener("submit", function(e) {
   // intercept submit
   if (e.preventDefault) e.preventDefault();
 
   submitForm().then(response => {
-      // if form returns success we clear the modal
+    // if form returns success we clear the modal
     clearModal();
     console.log(response);
   }).catch(error => {
@@ -366,19 +377,18 @@ function showFilters(variable) {
       btnFilter.classList.add("is-highlighted");
       filterDropdown.classList.add("is-active");
       filterDropdown.focus();
-      body.classList.add("is-active");
+      filterColumnClose.classList.add("is-active");
     break;
     case false:
       btnFilter.classList.remove("is-highlighted");
       filterDropdown.classList.remove("is-active");
-      body.classList.remove("is-active");
-      body.classList.remove("is-active");
+      filterColumnClose.classList.remove("is-active");
     break;
     case "toggle":
       btnFilter.classList.toggle("is-highlighted");
       filterDropdown.classList.toggle("is-active");
       filterDropdown.focus();
-      body.classList.toggle("is-active");
+      filterColumnClose.classList.toggle("is-active");
     break;
   }
   // if more toggle is open we close it as user doesn't need it anymore
@@ -862,6 +872,7 @@ function buildTodoTable(itemsFiltered) {
         });
       });
       todoTableContainer.appendChild(tableContainerContent);
+      //loadingIndicator.classList.remove("is-active");
       return Promise.resolve("Success: Table has been build");
     } else {
       // if there are no todos a call to action will be triggered
@@ -1014,8 +1025,9 @@ function submitForm() {
     if(modalForm.elements[0].value) {
       // input value and data item are the same, nothing has changed, nothing will be written
       if (dataItem==modalForm.elements[0].value) {
-        console.log("Info: Nothing has changed, won't write anything.");
-        return true;
+        //console.log("Info: Nothing has changed, won't write anything.");
+        return Promise.resolve("Info: Nothing has changed, won't write anything.");
+        //return true;
       // edit item
       } else if(dataItem) {
         // convert array of objects to array of strings to find the index
@@ -1056,7 +1068,6 @@ function submitForm() {
 }
 
 function completeTodo(dataItem, deleteItem) {
-  //return Promise.resolve("Completed");
   try {
     // convert array of objects to array of strings
     let parsedDataString = parsedData.map(item => item.toString());

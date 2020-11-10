@@ -5,8 +5,6 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>sleek</title>
-    <link rel="stylesheet" href="css/sass.css">
-    <link rel="stylesheet" href="css/datepicker-bulma.min.css" />
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body id="body">
@@ -16,71 +14,74 @@
         <p><i class="fas fa-spinner fa-spin"></i></p>
       </div>
     </div>-->
-    <section id="onboardingContainer" class="contentContainer">
-      <h1 class="title is-1">welcome to sleek</h1>
-      <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
-      <p class="file is-boxed is-centered">
-        <a href="#" class="btnOnboarding btnLoadTodoFile" tabindex="505">
-          <i class="fas fa-upload"></i>
-          <span class="file-label">Choose existing todo.txt</span>
-        </a>
-        <a id="btnCreateTodoFile" href="#" class="btnOnboarding" tabindex="505">
-          <i class="fas fa-plus-circle"></i>
-          <span class="file-label">Create new todo.txt</span>
-        </a>
-      </p>
-    </section>
-    <section id="addTodoContainer" class="contentContainer">
-      <h1 class="title is-1">no todos</h1>
-      <p class="subtitle">This list is empty, let's add some todos.</p>
-      <p class="file is-boxed is-centered">
-        <a href="#" class="btnOnboarding btnAddTodo" tabindex="505">
-          <i class="fas fa-plus"></i>
-          <span class="file-label">Add a todo to your list</span>
-        </a>
-      </p>
-    </section>
-    <nav>
-      <ul>
-      	<li class="logo">sleek</li>
-        <li class="btnAddTodo"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
-      	<li id="btnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
-      	<li class="btnLoadTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
-      </ul>
-      <section id="filterDropdown" class="dropdown" tabindex="400">
-        <div class="container">
-          <div class="toggle">
-            <label class="switch" for="toggleSortAlphabetically">
-              <input type="checkbox" id="toggleSortAlphabetically" tabindex="405">
-              <span class="slider round"></span>
-            </label>
-            <span class="text">Sort alphabetically</span>
-          </div>
-          <div class="toggle">
-            <label class="switch" for="toggleShowCompleted">
-              <input type="checkbox" id="toggleShowCompleted"  tabindex="410">
-              <span class="slider round"></span>
-            </label>
-            <span class="text">Show completed</span>
-          </div>
-          <div id="todoFilters"></div>
-          <div class="toggle">
-            <button class="btnResetAllFilters button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
-          </div>
-        </div>
-      </section>
-    </nav>
-    <section id="todoTable" class="hero">
-      <div class="hero-body">
-        <div class="container">
+    <div class="columns is-gapless is-mobile">
+      <div class="column is-narrow">
+        <nav>
+          <ul>
+            <li class="logo">sleek</li>
+            <li class="btnAddTodo"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
+            <li id="btnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
+            <li class="btnLoadTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
+          </ul>
+          <section id="filterDropdown" class="dropdown" tabindex="400">
+            <div class="container">
+              <div class="toggle">
+                <label class="switch" for="toggleSortAlphabetically">
+                  <input type="checkbox" id="toggleSortAlphabetically" tabindex="405">
+                  <span class="slider round"></span>
+                </label>
+                <span class="text">Sort alphabetically</span>
+              </div>
+              <div class="toggle">
+                <label class="switch" for="toggleShowCompleted">
+                  <input type="checkbox" id="toggleShowCompleted"  tabindex="410">
+                  <span class="slider round"></span>
+                </label>
+                <span class="text">Show completed</span>
+              </div>
+              <div id="todoFilters"></div>
+              <div class="toggle">
+                <button class="btnResetAllFilters button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+              </div>
+            </div>
+          </section>
+          <span href="#" id="filterColumnClose"><i class="fas fa-chevron-left"></i></span>
+        </nav>
+      </div>
+      <div class="column content">
+        <section id="todoTable">
           <header id="selectionInformation">
             <span></span>&nbsp;&nbsp;&nbsp;
             <a href="#" class="btnResetAllFilters" title="Reset all filters"><i class="fas fa-ban"></i>&nbsp;Reset all filters</a>
           </header>
           <div id="todoTableContainer"></div>
-        </div>
+        </section>
+        <section id="onboardingContainer" class="contentContainer">
+          <h1 class="title is-1">welcome to sleek</h1>
+          <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
+          <p class="file is-boxed is-centered">
+            <a href="#" class="btnOnboarding btnLoadTodoFile" tabindex="505">
+              <i class="fas fa-upload"></i>
+              <span class="file-label">Choose existing todo.txt</span>
+            </a>
+            <a id="btnCreateTodoFile" href="#" class="btnOnboarding" tabindex="505">
+              <i class="fas fa-plus-circle"></i>
+              <span class="file-label">Create new todo.txt</span>
+            </a>
+          </p>
+        </section>
+        <section id="addTodoContainer" class="contentContainer">
+          <h1 class="title is-1">no todos</h1>
+          <p class="subtitle">This list is empty, let's add some todos.</p>
+          <p class="file is-boxed is-centered">
+            <a href="#" class="btnOnboarding btnAddTodo" tabindex="505">
+              <i class="fas fa-plus"></i>
+              <span class="file-label">Add a todo to your list</span>
+            </a>
+          </p>
+        </section>
       </div>
-    </section>
+    </div>
     <form id="modalForm" class="modal modalFormSubmit">
       <div class="modal-background"></div>
       <div class="modal-content">
