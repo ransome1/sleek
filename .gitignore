@@ -3,3 +3,4 @@ dist/
 package-lock.json
 yarn.lock
 yarn-error.log
+.DS_Store
