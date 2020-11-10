@@ -3,7 +3,7 @@
 ## A simple todo manager based on the concept of todo.txt
 sleek is a simple todo manager based on the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a>. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates. According to this input you will be able to filter your todos using typical filter elements. There is no native cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need it to be. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with a basic text editor or any other todo.txt app.
 
-![Alt text](assets/sleek.screenshot_mainview.png?raw=true "Screenshot of sleek")
+![Alt text](assets/sleek.screenshot_main.png?raw=true "Screenshot of sleek")
 
 ### Get it from Snap Store
 You can install sleek from Canonicals Snap Store using: `sudo install --beta sleek`
