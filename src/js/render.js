@@ -268,23 +268,23 @@ modalForm.addEventListener ("keydown", function () {
 });
 
 // shortcut for adding items
-body.addEventListener ("keydown", function () {
+/*body.addEventListener ("keydown", function () {
   // shortcut will only work if the showForm modal is closed
   // we need to wait a little otherwise the form will be loaded before the key is interpreted and the i key will be filled into the input
   if(!modalFormStatus && event.key == 'a') setTimeout(function(){ showForm(true) }, 100);
-});
+});*/
 
 // shortcut to show filters
-body.addEventListener ("keydown", function () {
+/*body.addEventListener ("keydown", function () {
   // shortcut will only work if the showForm modal is closed
   if(!modalFormStatus && event.key == 'f') showFilters("toggle");
-});
+});*/
 
 // shortcut to open file
-body.addEventListener ("keydown", function () {
+/*body.addEventListener ("keydown", function () {
   // shortcut will only work if the showForm modal is closed
   if(!modalFormStatus && event.key == 'o') openFile();
-});
+});*/
 
 // ########################################################################################################################
 // FUNCTIONS
@@ -304,56 +304,60 @@ function showMore(variable) {
 
 // TODO: error handling
 function showForm(variable) {
-  if(variable) {
-    // in case the more toggle menu is open we close it
-    showMore(false);
-    // set global variable if the modal is opening
-    modalFormStatus = true;
-    // clear the input value in case there was an old one
-    modalFormInput.value = null;
-    modalForm.classList.toggle("is-active");
-    // clean up the alert box first
-    modalFormAlert.innerHTML = null;
-    modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
-    // here we configure the headline and the footer buttons
-    if(dataItem) {
-      // we need to check if there already is a due date in the object
-      dataItem = new TodoTxtItem(dataItem, [ new DueExtension() ]);
+  try {
+    if(variable) {
+      // in case the more toggle menu is open we close it
+      showMore(false);
+      // set global variable if the modal is opening
+      modalFormStatus = true;
+      // clear the input value in case there was an old one
+      modalFormInput.value = null;
+      modalForm.classList.toggle("is-active");
+      // clean up the alert box first
+      modalFormAlert.innerHTML = null;
+      modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+      // here we configure the headline and the footer buttons
+      if(dataItem) {
+        // we need to check if there already is a due date in the object
+        dataItem = new TodoTxtItem(dataItem, [ new DueExtension() ]);
 
-      modalFormInput.value = dataItem.toString();
-      modalTitle.innerHTML = 'Edit item';
-      btnItemStatus.classList.add("is-active");
-      // only show the complete button on open items
-      if(dataItem.complete == false) {
-        btnItemStatus.innerHTML = "Mark as done";
-      } else {
-        btnItemStatus.innerHTML = "Mark as in progress";
-      }
+        modalFormInput.value = dataItem.toString();
+        modalTitle.innerHTML = 'Edit item';
+        btnItemStatus.classList.add("is-active");
+        // only show the complete button on open items
+        if(dataItem.complete == false) {
+          btnItemStatus.innerHTML = "Mark as done";
+        } else {
+          btnItemStatus.innerHTML = "Mark as in progress";
+        }
 
-      // if so we paste it into the input field
-      if(dataItem.dueString) {
-        dueDatePickerInput.value = dataItem.dueString;
+        // if so we paste it into the input field
+        if(dataItem.dueString) {
+          dueDatePickerInput.value = dataItem.dueString;
+        } else {
+        // if not we clean it up
+          dueDatePicker.setDate({
+            clear: true
+          });
+          dueDatePickerInput.value = null;
+        }
+        // in any case the dataItem needs to be a string again to find the array position later on
+        dataItem = dataItem.toString();
+
       } else {
-      // if not we clean it up
+        // if not we clean it up
         dueDatePicker.setDate({
           clear: true
         });
         dueDatePickerInput.value = null;
+        modalTitle.innerHTML = 'Add item';
+        btnItemStatus.classList.remove("is-active");
       }
-      // in any case the dataItem needs to be a string again to find the array position later on
-      dataItem = dataItem.toString();
-
-    } else {
-      // if not we clean it up
-      dueDatePicker.setDate({
-        clear: true
-      });
-      dueDatePickerInput.value = null;
-      modalTitle.innerHTML = 'Add item';
-      btnItemStatus.classList.remove("is-active");
+      // in any case put focus into the input field
+      modalFormInput.focus();
     }
-    // in any case put focus into the input field
-    modalFormInput.focus();
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -554,7 +558,7 @@ function parseDataFromFile(pathToFile) {
       generateTodoData().then(response => {
         console.log(response);
         t1 = performance.now();
-        console.log("Table rendered in:", t1 - t0, "ms");
+        console.log("Table rendered in", t1 - t0, "ms");
       }).catch(error => {
         console.log(error);
       });
@@ -563,7 +567,7 @@ function parseDataFromFile(pathToFile) {
       generateFilterData().then(response => {
         console.log(response);
         t1 = performance.now();
-        console.log("     rendered:", t1 - t0, "ms");
+        console.log("Filters rendered in", t1 - t0, "ms");
       }).catch(error => {
         console.log(error);
       });

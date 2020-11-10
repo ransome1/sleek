@@ -1,11 +1,11 @@
 const { app, BrowserWindow } = require('electron');
+const { is } = require('electron-util');
 const path = require('path');
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
-
+const isMac = process.platform === "darwin";
 const Store = require('./store.js');
 let mainWindow; //do this so that the window object doesn't get GC'd
 
@@ -36,6 +36,10 @@ const createWindow = () => {
     }
   });
 
+  if (is.development) {
+    mainWindow.webContents.openDevTools();
+  }
+
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
@@ -52,43 +56,53 @@ const createWindow = () => {
 
   // Template for menu
   const menuTemplate = [
-    /*{
-      label: 'File',
-      submenu: [
-        {
-          label: 'Open todo.txt file',
-          click: () => {
-            mainWindow.webContents.toggleDevTools();
-          }
-        },
-        {
-          role: 'close',
-          label: 'Close sleek'
-        }
-
-      ]
-    },
-    {
-      label: 'View',
-      submenu: [
-        {role: 'Reload'}
-      ]
-    },*/
     {
       label: 'sleek',
       submenu: [
-        {role: 'Reload'},
+        {
+          label: 'Open todo.txt file',
+          accelerator: 'CmdOrCtrl+o',
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript('openFile()');
+          }
+        },
+        {
+          label: 'Create new todo.txt file',
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript('createFile(true, false)');
+          }
+        },
+        isMac ? { role: "quit" } : { role: "close" }
+      ]
+    },
+    {
+      label: 'Todos',
+      submenu: [
+        {
+          label: 'Add todo',
+          accelerator: 'CmdOrCtrl+n',
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript('showForm(true)');
+          }
+        },
+        {
+          label: 'Show filters',
+          accelerator: 'CmdOrCtrl+f',
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript('showFilters("toggle")');
+          }
+        },
+        {role: 'reload'}
+      ]
+    },
+    {
+      label: 'About',
+      submenu: [
         {
           label: 'sleek on Github',
           click: () => {require('electron').shell.openExternal('https://github.com/ransome1/sleek')}
         },
-        {
-          label: 'Show Developer Console',
-          click: () => {
-            mainWindow.webContents.toggleDevTools();
-          }
-        },
-        {role: 'Close'},
+        {role: 'toggleDevTools'}
       ]
     }
   ];

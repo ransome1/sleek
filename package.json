@@ -65,7 +65,7 @@
   },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -mwl --publish always",
+    "dist": "electron-builder -mw --publish never",
     "css-build": "node-sass --omit-source-map-url src/css/sass.scss src/css/style.css",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
@@ -73,6 +73,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-util": "^0.14.2",
     "hyperlink-parser": "0.0.1-alpha.2"
   },
   "devDependencies": {
