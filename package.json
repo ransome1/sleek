@@ -73,8 +73,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-util": "^0.14.2",
-    "hyperlink-parser": "0.0.1-alpha.2"
+    "electron-util": "^0.14.2"
   },
   "devDependencies": {
     "bulma": "^0.9.1",

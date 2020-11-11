@@ -63,8 +63,8 @@ body::-webkit-scrollbar {
     text-align: center;
     font-size: 1.25em;
     position: absolute;
-    right: -1em;
-    top: 50%;
+    right: -0.75em;
+    top: 47.5%;
     z-index: 30;
     background: #ebebeb;
     border-radius: 50%;
@@ -122,82 +122,74 @@ nav {
   float: left;
   display: none;
   padding: 0 1.5em;
-  background: #ebebeb; }
+  background: #ebebeb;
+  /* FILTERS */ }
+  #filterDropdown .dropdown-item {
+    width: 100%;
+    float: left;
+    padding: 0;
+    margin: 1.5em 0; }
+  #filterDropdown .dropdown-item h4 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1.5em; }
+  #filterDropdown #btnResetAllFilters {
+    display: none; }
+  #filterDropdown #btnResetAllFilters.is-active {
+    display: block; }
+  #filterDropdown .dropdown-item.is-greyed-out {
+    opacity: .5; }
+  #filterDropdown .dropdown-item.is-greyed-out button {
+    background: #ccc !important;
+    color: #4a4a4a !important; }
+  #filterDropdown .dropdown-item.is-greyed-out span.tag {
+    background: #4a4a4a !important;
+    color: #ccc; }
+  #filterDropdown #todoFilters {
+    width: 100%;
+    float: left;
+    margin: 0; }
+    #filterDropdown #todoFilters button {
+      margin: 0 .5rem .5rem 0; }
+    #filterDropdown #todoFilters div button span.tag {
+      z-index: 35; }
+    #filterDropdown #todoFilters div.contexts button {
+      background: #c5ede3;
+      color: #075943;
+      border: none; }
+    #filterDropdown #todoFilters div.contexts button:hover {
+      background: #c9f2e8; }
+    #filterDropdown #todoFilters div.contexts button span.tag {
+      background: #1aa37e;
+      color: #fff;
+      font-weight: bold;
+      position: absolute;
+      right: -.75em;
+      top: -.75em; }
+    #filterDropdown #todoFilters div.contexts button.is-dark {
+      background: #075943;
+      color: #fff; }
+    #filterDropdown #todoFilters div.projects button {
+      background: #f1d6f1;
+      color: #5f1a5e;
+      border: none; }
+    #filterDropdown #todoFilters div.projects button:hover {
+      background: #f7dcf7; }
+    #filterDropdown #todoFilters div.projects button span.tag {
+      background: #bc30ba;
+      color: #fff;
+      font-weight: bold;
+      position: absolute;
+      right: -.75em;
+      top: -.75em; }
+    #filterDropdown #todoFilters div.projects button.is-dark {
+      background: #5f1a5e;
+      color: #fff; }
+    #filterDropdown #todoFilters div.column {
+      padding-left: 0; }
 
 #filterDropdown.is-active {
   display: block; }
-
-#filterDropdown .dropdown-item {
-  width: 100%;
-  float: left;
-  padding: 0;
-  margin: 1.5em 0; }
-
-#filterDropdown .dropdown-item h4 {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 1.5em; }
-
-#filterDropdown #btnResetAllFilters {
-  display: none; }
-
-#filterDropdown #btnResetAllFilters.is-active {
-  display: block; }
-
-#filterDropdown .dropdown-item.is-greyed-out {
-  opacity: .5; }
-
-#filterDropdown .dropdown-item.is-greyed-out button {
-  background: #ccc !important;
-  color: #4a4a4a !important; }
-
-#filterDropdown .dropdown-item.is-greyed-out span.tag {
-  background: #4a4a4a !important;
-  color: #ccc; }
-
-/* FILTERS */
-#todoFilters {
-  width: 100%;
-  float: left;
-  margin: 0; }
-  #todoFilters button {
-    margin: 0 .5rem .5rem 0; }
-  #todoFilters div button span.tag {
-    z-index: 35; }
-  #todoFilters div.contexts button {
-    background: #c5ede3;
-    color: #075943;
-    border: none; }
-  #todoFilters div.contexts button:hover {
-    background: #c9f2e8; }
-  #todoFilters div.contexts button span.tag {
-    background: #1aa37e;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    right: -.75em;
-    top: -.75em; }
-  #todoFilters div.contexts button.is-dark {
-    background: #075943;
-    color: #fff; }
-  #todoFilters div.projects button {
-    background: #f1d6f1;
-    color: #5f1a5e;
-    border: none; }
-  #todoFilters div.projects button:hover {
-    background: #f7dcf7; }
-  #todoFilters div.projects button span.tag {
-    background: #bc30ba;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    right: -.75em;
-    top: -.75em; }
-  #todoFilters div.projects button.is-dark {
-    background: #5f1a5e;
-    color: #fff; }
-  #todoFilters div.column {
-    padding-left: 0; }
 
 /* TABLE */
 #todoTable {
@@ -221,13 +213,13 @@ nav {
     font-weight: bold;
     font-size: 1.5em; }
   #todoTable .flex-table.completed {
-    color: #ccc; }
+    color: #b5b5b5; }
     #todoTable .flex-table.completed .checkbox a {
-      color: #ccc; }
+      color: #b5b5b5; }
     #todoTable .flex-table.completed strong {
-      color: #ccc; }
+      color: #b5b5b5; }
     #todoTable .flex-table.completed .flex-row span.tag.projects {
-      background: #ebebeb;
+      background: #b5b5b5;
       color: #fff; }
     #todoTable .flex-table.completed .flex-row span.tag.contexts {
       background: #ccc;
@@ -272,12 +264,13 @@ nav {
   #todoTable .flex-table .flex-row.todoTableItemMore a {
     display: none;
     padding: 0 .5em; }
-  #todoTable .flex-table :hover .flex-row.todoTableItemMore a,
+  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
+    padding: .75em; }
   #todoTable .flex-table .flex-row.todoTableItemMore.is-active a,
   #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu {
     display: block; }
-  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
-    padding: .75em; }
+  #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
+    display: block; }
 
 #todoTable.is-active {
   display: block; }

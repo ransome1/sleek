@@ -25,13 +25,13 @@
           </ul>
           <section id="filterDropdown" class="dropdown" tabindex="400">
             <div class="container">
-              <div class="toggle">
+              <!--<div class="toggle">
                 <label class="switch" for="toggleSortAlphabetically">
                   <input type="checkbox" id="toggleSortAlphabetically" tabindex="405">
                   <span class="slider round"></span>
                 </label>
                 <span class="text">Sort alphabetically</span>
-              </div>
+              </div>-->
               <div class="toggle">
                 <label class="switch" for="toggleShowCompleted">
                   <input type="checkbox" id="toggleShowCompleted"  tabindex="410">
@@ -41,7 +41,7 @@
               </div>
               <div id="todoFilters"></div>
               <div class="toggle">
-                <button class="btnResetAllFilters button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+                <button class="btnResetFilters button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
               </div>
             </div>
           </section>
@@ -52,7 +52,7 @@
         <section id="todoTable">
           <header id="selectionInformation">
             <span></span>&nbsp;&nbsp;&nbsp;
-            <a href="#" class="btnResetAllFilters" title="Reset all filters"><i class="fas fa-ban"></i>&nbsp;Reset all filters</a>
+            <a href="#" class="btnResetFilters" title="Reset all filters"><i class="fas fa-ban"></i>&nbsp;Reset all filters</a>
           </header>
           <div id="todoTableContainer"></div>
         </section>

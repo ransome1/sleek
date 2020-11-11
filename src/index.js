@@ -92,6 +92,13 @@ const createWindow = () => {
             mainWindow.webContents.executeJavaScript('showFilters("toggle")');
           }
         },
+        {
+          label: 'Show or hide completed todos',
+          accelerator: 'CmdOrCtrl+h',
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript('showCompletedTodos()');
+          }
+        },
         {role: 'reload'}
       ]
     },

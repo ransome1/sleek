@@ -1,5 +1,6 @@
 @charset "utf-8";
 
+$has-text-grey-light: hsl(0, 0%, 71%);
 $light-grey: #f5f5f5;
 $mid-grey: #ebebeb;
 $dark-grey: #ccc;
@@ -104,8 +105,8 @@ body::-webkit-scrollbar {
     text-align: center;
     font-size: 1.25em;
     position: absolute;
-    right: -1em;
-    top: 50%;
+    right: -0.75em;
+    top: 50% - 2.5%;
     z-index: 30;
     background: $mid-grey;
     border-radius: 50%;
@@ -176,11 +177,6 @@ nav {
   display: none;
   padding: 0 1.5em;
   background: $mid-grey;
-}
-#filterDropdown.is-active {
-  display: block;
-}
-#filterDropdown {
   .dropdown-item {
     width: 100%;
     float: left;
@@ -209,63 +205,64 @@ nav {
     background: $darker-grey!important;
     color: #ccc;
   }
+  /* FILTERS */
+  #todoFilters {
+    width: 100%;
+    float: left;
+    margin: 0;
+    button {
+      margin: 0 .5rem .5rem 0;
+    }
+    div button span.tag {
+      z-index: 35;
+    }
+    div.contexts button  {
+      background: $sleek-contexts-button;
+      color: $sleek-contexts-button-font;
+      border: none;
+    }
+    div.contexts button:hover {
+      background: $sleek-contexts-button-hover;
+    }
+    div.contexts button span.tag {
+      background: $sleek-contexts-button-bubble;
+      color: #fff;
+      font-weight: bold;
+      position: absolute;
+      right: -.75em;
+      top: -.75em;
+    }
+    div.contexts button.is-dark  {
+      background: $sleek-contexts-button-highlighted;
+      color: #fff;
+    }
+    div.projects button {
+      background: $sleek-projects-button;
+      color: $sleek-projects-button-font;
+      border: none;
+    }
+    div.projects button:hover {
+      background: $sleek-projects-button-hover;
+    }
+    div.projects button span.tag {
+      background: $sleek-projects-button-bubble;
+      color: #fff;
+      font-weight: bold;
+      position: absolute;
+      right: -.75em;
+      top: -.75em;
+    }
+    div.projects button.is-dark {
+      background: $sleek-projects-button-highlighted;
+      color: #fff;
+    }
+    div.column {
+      padding-left: 0;
+    }
+  }
 }
-
-/* FILTERS */
-
-#todoFilters {
-  width: 100%;
-  float: left;
-  margin: 0;
-  button {
-    margin: 0 .5rem .5rem 0;
-  }
-  div button span.tag {
-    z-index: 35;
-  }
-  div.contexts button  {
-    background: $sleek-contexts-button;
-    color: $sleek-contexts-button-font;
-    border: none;
-  }
-  div.contexts button:hover {
-    background: $sleek-contexts-button-hover;
-  }
-  div.contexts button span.tag {
-    background: $sleek-contexts-button-bubble;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    right: -.75em;
-    top: -.75em;
-  }
-  div.contexts button.is-dark  {
-    background: $sleek-contexts-button-highlighted;
-    color: #fff;
-  }
-  div.projects button {
-    background: $sleek-projects-button;
-    color: $sleek-projects-button-font;
-    border: none;
-  }
-  div.projects button:hover {
-    background: $sleek-projects-button-hover;
-  }
-  div.projects button span.tag {
-    background: $sleek-projects-button-bubble;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    right: -.75em;
-    top: -.75em;
-  }
-  div.projects button.is-dark {
-    background: $sleek-projects-button-highlighted;
-    color: #fff;
-  }
-  div.column {
-    padding-left: 0;
-  }
+#filterDropdown.is-active {
+  display: block;
 }
 
 /* TABLE */
@@ -295,15 +292,15 @@ nav {
     font-size: 1.5em;
   }
   .flex-table.completed {
-    color: $dark-grey;
+    color: $has-text-grey-light;
     .checkbox a {
-      color: $dark-grey;
+      color: $has-text-grey-light;
     }
     strong {
-      color: $dark-grey;
+      color: $has-text-grey-light;
     }
     .flex-row span.tag.projects {
-      background: $mid-grey;
+      background: $has-text-grey-light;
       color: #fff;
     }
     .flex-row span.tag.contexts {
@@ -354,7 +351,6 @@ nav {
     .flex-row.priority.C {
       background: $has-text-success;
     }
-
     .flex-row.projects,
     .flex-row.contexts {
       margin-right: 0;
@@ -367,14 +363,16 @@ nav {
       display: none;
       padding: 0 .5em;
     }
-    :hover .flex-row.todoTableItemMore a,
+    .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
+      padding: .75em;
+    }
     .flex-row.todoTableItemMore.is-active a,
     .flex-row.todoTableItemMore.is-active .dropdown-menu {
       display: block;
     }
-    .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
-      padding: .75em;
-    }
+  }
+  .flex-table:hover .flex-row.todoTableItemMore a {
+    display: block;
   }
 }
 #todoTable.is-active {

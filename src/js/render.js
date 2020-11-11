@@ -17,7 +17,7 @@ const store = new Store({
   configName: "user-preferences",
   defaults: {
     windowBounds: { width: 1025, height: 768 },
-    sortAlphabetically: false,
+    //sortAlphabetically: false,
     showCompleted: true,
     selectedFilters: new Array,
     categoriesFiltered: new Array,
@@ -34,9 +34,9 @@ const btnApplyFilter = document.getElementsByClassName("btnApplyFilter");
 const btnLoadTodoFile = document.querySelectorAll(".btnLoadTodoFile");
 const btnCreateTodoFile = document.getElementById("btnCreateTodoFile");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
-const btnResetAllFilters = document.querySelectorAll(".btnResetAllFilters");
+const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const toggleShowCompleted = document.getElementById("toggleShowCompleted");
-const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetically");
+//const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetically");
 const onboardingContainer = document.getElementById("onboardingContainer");
 const addTodoContainer = document.getElementById("addTodoContainer");
 //const loadingIndicator = document.getElementById("loadingIndicator");
@@ -70,7 +70,7 @@ let pathToNewFile;
 let selectedFilters = store.get("selectedFilters");
 if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
 // get default sorting value (false)
-let sortAlphabetically = store.get("sortAlphabetically");
+//let sortAlphabetically = store.get("sortAlphabetically");
 // get default "show completed? value (false)
 let showCompleted = store.get("showCompleted");
 // create  an empty variable for the data item
@@ -91,7 +91,7 @@ let categoriesFiltered = store.get("categoriesFiltered");
 // prevent manual input in datepicker
 dueDatePickerInput.readOnly = true;
 // set the checked attribute according to the persisted value
-toggleSortAlphabetically.checked = sortAlphabetically;
+//toggleSortAlphabetically.checked = sortAlphabetically;
 // set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
 
@@ -107,37 +107,13 @@ filterColumnClose.onclick = function() { showFilters(false) }
 btnAddTodo.forEach(el => el.onclick = showForm);
 
 // flush all filters and items by emptying the array and reloading the data
-btnResetAllFilters.forEach(el => el.onclick = function() {
-  selectedFilters = [];
-  categoriesFiltered = new Array;
-  // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
-  store.set("selectedFilters", new Array);
-  // clear filtered categories
-  store.set("categoriesFiltered", new Array);
-  t0 = performance.now();
-  generateTodoData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Table rendered in:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });
-  // parsed data will be passed to generate filter data and build the filter buttons
-  t0 = performance.now();
-  generateFilterData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Filters rendered:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });
-});
+btnResetFilters.forEach(el => el.onclick = resetFilters);
 
 // click on the todo table will close more dropdown and remove active state for the dotted button
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 
 // reread the data but sort it asc
-toggleSortAlphabetically.onclick = function() {
+/*toggleSortAlphabetically.onclick = function() {
   if(sortAlphabetically==false) {
     sortAlphabetically = true;
   } else {
@@ -155,35 +131,10 @@ toggleSortAlphabetically.onclick = function() {
   }).catch(error => {
     console.log(error);
   });
-}
+}*/
 
 // reread the data but sort it asc
-toggleShowCompleted.onclick = function() {
-  if(showCompleted==false) {
-    showCompleted = true;
-  } else {
-    showCompleted = false;
-  }
-  // persist the sorting
-  store.set("showCompleted", showCompleted);
-  t0 = performance.now();
-  generateTodoData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Table rendered in:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });
-  // parsed data will be passed to generate filter data and build the filter buttons
-  t0 = performance.now();
-  generateFilterData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Filters rendered:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });
-}
+toggleShowCompleted.onclick = showCompletedTodos;
 
 // persist window bound after resize
 window.addEventListener("resize", function(e) {
@@ -290,6 +241,61 @@ modalForm.addEventListener ("keydown", function () {
 // FUNCTIONS
 // ########################################################################################################################
 
+function showCompletedTodos() {
+
+  if(showCompleted==false) {
+    showCompleted = true;
+  } else {
+    showCompleted = false;
+  }
+  toggleShowCompleted.checked = showCompleted;
+  // persist the sorting
+  store.set("showCompleted", showCompleted);
+  t0 = performance.now();
+  generateTodoData().then(response => {
+    console.log(response);
+    t1 = performance.now();
+    console.log("Table rendered in:", t1 - t0, "ms");
+  }).catch(error => {
+    console.log(error);
+  });
+  // parsed data will be passed to generate filter data and build the filter buttons
+  t0 = performance.now();
+  generateFilterData().then(response => {
+    console.log(response);
+    t1 = performance.now();
+    console.log("Filters rendered:", t1 - t0, "ms");
+  }).catch(error => {
+    console.log(error);
+  });
+}
+
+function resetFilters() {
+  selectedFilters = [];
+  categoriesFiltered = new Array;
+  // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
+  store.set("selectedFilters", new Array);
+  // clear filtered categories
+  store.set("categoriesFiltered", new Array);
+  t0 = performance.now();
+  generateTodoData().then(response => {
+    console.log(response);
+    t1 = performance.now();
+    console.log("Table rendered in:", t1 - t0, "ms");
+  }).catch(error => {
+    console.log(error);
+  });
+  // parsed data will be passed to generate filter data and build the filter buttons
+  t0 = performance.now();
+  generateFilterData().then(response => {
+    console.log(response);
+    t1 = performance.now();
+    console.log("Filters rendered:", t1 - t0, "ms");
+  }).catch(error => {
+    console.log(error);
+  });
+}
+
 function showMore(variable) {
   if(variable) {
     document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
@@ -302,7 +308,6 @@ function showMore(variable) {
   }
 };
 
-// TODO: error handling
 function showForm(variable) {
   try {
     if(variable) {
@@ -547,9 +552,10 @@ function parseDataFromFile(pathToFile) {
       // for each array item we generate a todotxt object and assign an id to it
       for(let i = 0; i < parsedDataTemp.length;i++) {
         if(!parsedDataTemp[i]) continue;
-        let item;
-        item = new TodoTxtItem(parsedDataTemp[i], [ new DueExtension() ]);
+        let item = new TodoTxtItem(parsedDataTemp[i], [ new DueExtension() ]);
         item.id = i;
+        // if due is missing we can't sort the array, so we set it to null if it's empty
+        if(!item.due) item.due = null;
         parsedData.push(item);
       }
       // clean it up as we don't need this anymore
@@ -804,6 +810,8 @@ function generateTodoData() {
       todoTableSelectionInformation.classList.remove("is-active");
       itemsFiltered = items;
     }
+    // todos with a due date will always be listed top
+    //itemsFiltered = itemsFiltered.slice().sort((a, b) => a.due - b.due);
     // if there is at least 1 category to hide
     if(categoriesFiltered.length > 0) {
       let temp = itemsFiltered;
@@ -816,76 +824,92 @@ function generateTodoData() {
       itemsFiltered = temp;
     }
     // sort the items if toggle is set to true
-    if(sortAlphabetically==true) {
+    /*if(sortAlphabetically==true) {
       // pass filtered data to function to build the table
       itemsFiltered = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
-    }
+    }*/
     // we show some information on filters if any are set
     if(itemsFiltered.length!=parsedData.length) {
       todoTableSelectionInformation.classList.add("is-active");
       todoTableSelectionInformation.firstElementChild.innerHTML = "visible todos: <strong>" + itemsFiltered.length + " </strong> of <strong>" + parsedData.length + "</strong>&nbsp;&nbsp;&nbsp;selected filters: <strong>" + selectedFilters.length + "</strong>";
     }
-    buildTodoTable(itemsFiltered).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
+    // produce an object where priority a to z + null is key
+    itemsFiltered = itemsFiltered.reduce((r, a) => {
+     r[a.priority] = [...r[a.priority] || [], a];
+     return r;
+    }, {});
+
+    todoTable.classList.add("is-active");
+    // hide the addTodoContainer
+    addTodoContainer.classList.remove("is-active");
+    // get the reference for the table container
+    let todoTableContainer = document.getElementById("todoTableContainer");
+    // empty the table before reading fresh data
+    todoTableContainer.innerHTML = "";
+    // fragment is created to append the nodes
+    let tableContainerContent = document.createDocumentFragment();
+
+    itemsFiltered = Object.entries(itemsFiltered).sort();
+
+    for (let priority in itemsFiltered) {
+      let itemsDue = new Array;
+      let items = new Array;
+      let itemsDueComplete = new Array;
+      let itemsComplete = new Array;
+
+      // nodes need to be created to add them to the outer fragment
+      // this creates a divider row for the priorities
+      if(itemsFiltered[priority][0]!="null") {
+        let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + itemsFiltered[priority][0] + "</div></div>");
+        tableContainerContent.appendChild(divider);
+      }
+
+      for (let item in itemsFiltered[priority][1]) {
+        let todo = itemsFiltered[priority][1][item];
+        // for each sorted group within a priority group an array is created
+        // incompleted todos with due date
+        if (todo.due && !todo.complete) {
+          itemsDue.push(todo);
+        // incompleted todos with no due date
+        } else if(!todo.due && !todo.complete) {
+          items.push(todo);
+        // completed todos with due date
+        } else if(todo.due && todo.complete) {
+          itemsDueComplete.push(todo);
+        // completed todos with no due date
+        } else if(!todo.due && todo.complete) {
+          itemsComplete.push(todo);
+        }
+      }
+      // array is sorted so the due date is desc
+      itemsDue.sort((a, b) => a.due - b.due);
+      // all rows for the items with due date within the priority group are being build
+      itemsDue.forEach(item => {
+        tableContainerContent.appendChild(createTableRow(item));
+      });
+
+      // all rows for the items with no due date within the priority group are being build
+      items.forEach(item => {
+        tableContainerContent.appendChild(createTableRow(item));
+      });
+
+      // array is sorted so the due date is desc
+      itemsDueComplete.sort((a, b) => a.due - b.due);
+      // all rows for the items with due date within the priority group are being build
+      itemsDueComplete.forEach(item => {
+        tableContainerContent.appendChild(createTableRow(item));
+      });
+
+      // all rows for the items with no due date within the priority group are being build
+      itemsComplete.forEach(item => {
+        tableContainerContent.appendChild(createTableRow(item));
+      });
+    }
+    todoTableContainer.appendChild(tableContainerContent);
+
     return Promise.resolve("Success: Todo data generated and passed on for building the table");
   } catch(error) {
     return Promise.reject("Error in generateTodoData: " + error);
-  }
-}
-
-function buildTodoTable(itemsFiltered) {
-  try {
-    if(itemsFiltered.length > 0) {
-      // only show the todo table if there is at least one todo
-      todoTable.classList.add("is-active");
-      // hide the addTodoContainer
-      addTodoContainer.classList.remove("is-active");
-      // get the reference for the table container
-      let todoTableContainer = document.getElementById("todoTableContainer");
-      // empty the table before reading fresh data
-      todoTableContainer.innerHTML = "";
-      // produce an object where priority a to z + null is key
-      itemsFiltered = itemsFiltered.reduce((r, a) => {
-       r[a.priority] = [...r[a.priority] || [], a];
-       return r;
-      }, {});
-      // convert the presorted object to an array
-      itemsFiltered = Object.entries(itemsFiltered).sort();
-      let tableContainerContent = document.createDocumentFragment();
-      itemsFiltered.forEach((itemsGrouped) => {
-        itemsGrouped.forEach((items) => {
-          // reduces the entries to priorities a to z only
-          if(items.toString().length==1) {
-            // nodes need to be created to add them to the outer fragment
-            let nodes = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items + "</div></div>");
-            tableContainerContent.appendChild(nodes);
-          // adds an empty row as a divider
-          } else if(items=="null") {
-            // nodes need to be created to add them to the outer fragment
-            let nodes = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">&nbsp;</div></div>");
-            tableContainerContent.appendChild(nodes);
-          } else {
-            // can't use forEach because we need "continue" here
-            for(let item in items) {
-              tableContainerContent.appendChild(createTableRow(items[item]));
-            }
-          }
-        });
-      });
-      todoTableContainer.appendChild(tableContainerContent);
-      //loadingIndicator.classList.remove("is-active");
-      return Promise.resolve("Success: Table has been build");
-    } else {
-      // if there are no todos a call to action will be triggered
-      addTodoContainer.classList.add("is-active");
-      todoTable.classList.remove("is-active");
-      return Promise.resolve("Info: No todos found, let's add one");
-    }
-  } catch(error) {
-    return Promise.reject("Error in buildTodoTable(): " + error);
   }
 }
 
@@ -1147,6 +1171,7 @@ function writeDataToFile() {
 // ########################################################################################################################
 
 window.onload = function () {
+  console.log("Info: Path to file: " + pathToFile);
   parseDataFromFile(pathToFile).then(response => {
     console.log(response);
   }).catch(error => {
