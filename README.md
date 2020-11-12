@@ -6,7 +6,7 @@ sleek is a simple todo manager based on the <a href="https://github.com/todotxt/
 ![Alt text](assets/sleek.screenshot_main.png?raw=true "Screenshot of sleek")
 
 ### Get it from Snap Store
-You can install sleek from Canonicals Snap Store using: `sudo install --beta sleek`
+You can install sleek from Canonicals Snap Store using: `sudo snap install --beta sleek`
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
@@ -16,7 +16,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 ### Done
 * [x] Onboarding with two functions: Open existing todo.txt file or create a new one
 * [x] Open a todo.txt file and parse it into a table (path to file will be persisted)
-* [x] Todos grouped by priority
+* [x] Todos are grouped by priority
 * [x] Contexts and projects are added as tags to each item
 * [x] State of completion is visible
 * [x] Open todos can be checked to mark them as completed
@@ -25,10 +25,9 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Existing todos can be edited
 * [x] Todos can be filtered by contexts and projects (setting will be persisted)
 * [x] Filters can be reset
-* [x] Todos can be sorted either according to position in todo.txt file or alphabetically (setting will be persisted)
 * [x] Completed todos can be hidden (setting will be persisted)
 * [x] If set the due date is shown on each todo
-* [x] Basic keyboard shortcuts are available (a, f, o, escape)
+* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (show filter drawer), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos))
 * [x] Todos can be deleted
 * [x] A basic tabindex is available
 * [x] Due date can be set using a datepicker
