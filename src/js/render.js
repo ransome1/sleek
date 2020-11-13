@@ -8,6 +8,7 @@
 // ########################################################################################################################
 
 const electron = require("electron");
+const theme = electron.remote.nativeTheme;
 const path = require("path");
 const dialog = electron.remote.dialog;
 const app = electron.remote.app;
@@ -17,11 +18,11 @@ const store = new Store({
   configName: "user-preferences",
   defaults: {
     windowBounds: { width: 1025, height: 768 },
-    //sortAlphabetically: false,
     showCompleted: true,
     selectedFilters: new Array,
     categoriesFiltered: new Array,
-    pathToFile: ""
+    pathToFile: "",
+    theme: ""
   }
 });
 const body = document.getElementById("body");
@@ -36,7 +37,6 @@ const btnCreateTodoFile = document.getElementById("btnCreateTodoFile");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const toggleShowCompleted = document.getElementById("toggleShowCompleted");
-//const toggleSortAlphabetically = document.getElementById("toggleSortAlphabetically");
 const onboardingContainer = document.getElementById("onboardingContainer");
 const addTodoContainer = document.getElementById("addTodoContainer");
 //const loadingIndicator = document.getElementById("loadingIndicator");
@@ -69,8 +69,6 @@ let pathToNewFile;
 // check store file if filters (come as JSON) have been saved. If so convert the JSON to arrays and them to the main array. If not the array stays empty
 let selectedFilters = store.get("selectedFilters");
 if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
-// get default sorting value (false)
-//let sortAlphabetically = store.get("sortAlphabetically");
 // get default "show completed? value (false)
 let showCompleted = store.get("showCompleted");
 // create  an empty variable for the data item
@@ -79,7 +77,7 @@ let dataItem;
 let itemId;
 // create  global variable for parsedData
 let parsedData = [];
-// TODO: whats this again?
+//
 let modalFormStatus;
 // variable for an array to configure if a whole category is being shown or hidden
 let categoriesFiltered = store.get("categoriesFiltered");
@@ -91,9 +89,39 @@ let categoriesFiltered = store.get("categoriesFiltered");
 // prevent manual input in datepicker
 dueDatePickerInput.readOnly = true;
 // set the checked attribute according to the persisted value
-//toggleSortAlphabetically.checked = sortAlphabetically;
-// set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
+
+// ########################################################################################################################
+// THEME
+// ########################################################################################################################
+
+// https://www.geeksforgeeks.org/managing-themes-in-electronjs/
+const head = document.getElementsByTagName("head")[0];
+const btnTheme = document.getElementById("btnTheme");
+btnTheme.addEventListener("click", () => {
+    if(selectedTheme=="dark") {
+      theme.themeSource = "light";
+    } else {
+      theme.themeSource = "dark";
+    }
+    selectedTheme=theme.themeSource;
+    switchTheme(selectedTheme);
+});
+let themeLink = null;
+let selectedTheme = store.get("theme");
+function switchTheme(selectedTheme) {
+  if(themeLink!=null) {
+    head.removeChild(document.getElementById("theme"));
+    themeLink = null;
+  }
+  themeLink = document.createElement("link");
+  themeLink.id = "theme";
+  themeLink.rel = "stylesheet";
+  themeLink.type = "text/css";
+  themeLink.href = path.join(__dirname, "css/" + selectedTheme + ".css");
+  head.appendChild(themeLink);
+  store.set("theme", selectedTheme);
+}
 
 // ########################################################################################################################
 // ONCLICK DEFINITIONS AND EVENT LISTENERS
@@ -111,27 +139,6 @@ btnResetFilters.forEach(el => el.onclick = resetFilters);
 
 // click on the todo table will close more dropdown and remove active state for the dotted button
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
-
-// reread the data but sort it asc
-/*toggleSortAlphabetically.onclick = function() {
-  if(sortAlphabetically==false) {
-    sortAlphabetically = true;
-  } else {
-    sortAlphabetically = false;
-  }
-  // persisting the sorting setting
-  store.set("sortAlphabetically", sortAlphabetically);
-  // regenerate the table considering the sort value and make sure saved filters are going to be passed
-  // TODO: does it crash if no filters have been selected?
-  t0 = performance.now();
-  generateTodoData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Table rendered in:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });
-}*/
 
 // reread the data but sort it asc
 toggleShowCompleted.onclick = showCompletedTodos;
@@ -217,25 +224,6 @@ filterDropdown.addEventListener ("keydown", function () {
 modalForm.addEventListener ("keydown", function () {
   if(event.key == 'Escape') clearModal();
 });
-
-// shortcut for adding items
-/*body.addEventListener ("keydown", function () {
-  // shortcut will only work if the showForm modal is closed
-  // we need to wait a little otherwise the form will be loaded before the key is interpreted and the i key will be filled into the input
-  if(!modalFormStatus && event.key == 'a') setTimeout(function(){ showForm(true) }, 100);
-});*/
-
-// shortcut to show filters
-/*body.addEventListener ("keydown", function () {
-  // shortcut will only work if the showForm modal is closed
-  if(!modalFormStatus && event.key == 'f') showFilters("toggle");
-});*/
-
-// shortcut to open file
-/*body.addEventListener ("keydown", function () {
-  // shortcut will only work if the showForm modal is closed
-  if(!modalFormStatus && event.key == 'o') openFile();
-});*/
 
 // ########################################################################################################################
 // FUNCTIONS
@@ -327,7 +315,7 @@ function showForm(variable) {
         dataItem = new TodoTxtItem(dataItem, [ new DueExtension() ]);
 
         modalFormInput.value = dataItem.toString();
-        modalTitle.innerHTML = 'Edit item';
+        modalTitle.innerHTML = 'Edit todo';
         btnItemStatus.classList.add("is-active");
         // only show the complete button on open items
         if(dataItem.complete == false) {
@@ -355,7 +343,7 @@ function showForm(variable) {
           clear: true
         });
         dueDatePickerInput.value = null;
-        modalTitle.innerHTML = 'Add item';
+        modalTitle.innerHTML = 'Add todo';
         btnItemStatus.classList.remove("is-active");
       }
       // in any case put focus into the input field
@@ -404,7 +392,7 @@ function showFilters(variable) {
   showMore(false);
 }
 
-function uniqBy(items) {
+function removeDuplicates(items) {
   // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
   var seen = {};
   return items.filter(function(item) {
@@ -676,7 +664,7 @@ function buildFilterButtons(category) {
           // we push the category to the filter array
           categoriesFiltered.push(category);
           // make sure there are no duplicates
-          categoriesFiltered = uniqBy(categoriesFiltered);
+          categoriesFiltered = removeDuplicates(categoriesFiltered);
           //persist the category filters
           store.set("categoriesFiltered", categoriesFiltered);
           // we add the greyed out look to the container
@@ -810,8 +798,6 @@ function generateTodoData() {
       todoTableSelectionInformation.classList.remove("is-active");
       itemsFiltered = items;
     }
-    // todos with a due date will always be listed top
-    //itemsFiltered = itemsFiltered.slice().sort((a, b) => a.due - b.due);
     // if there is at least 1 category to hide
     if(categoriesFiltered.length > 0) {
       let temp = itemsFiltered;
@@ -823,47 +809,39 @@ function generateTodoData() {
       });
       itemsFiltered = temp;
     }
-    // sort the items if toggle is set to true
-    /*if(sortAlphabetically==true) {
-      // pass filtered data to function to build the table
-      itemsFiltered = itemsFiltered.slice().sort((a, b) => a.text.localeCompare(b.text));
-    }*/
     // we show some information on filters if any are set
     if(itemsFiltered.length!=parsedData.length) {
       todoTableSelectionInformation.classList.add("is-active");
       todoTableSelectionInformation.firstElementChild.innerHTML = "visible todos: <strong>" + itemsFiltered.length + " </strong> of <strong>" + parsedData.length + "</strong>&nbsp;&nbsp;&nbsp;selected filters: <strong>" + selectedFilters.length + "</strong>";
     }
+    // hide/show the addTodoContainer
+    (itemsFiltered.length > 0) ? addTodoContainer.classList.remove("is-active") : addTodoContainer.classList.add("is-active")
     // produce an object where priority a to z + null is key
     itemsFiltered = itemsFiltered.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
      return r;
     }, {});
-
     todoTable.classList.add("is-active");
-    // hide the addTodoContainer
-    addTodoContainer.classList.remove("is-active");
     // get the reference for the table container
     let todoTableContainer = document.getElementById("todoTableContainer");
     // empty the table before reading fresh data
     todoTableContainer.innerHTML = "";
     // fragment is created to append the nodes
     let tableContainerContent = document.createDocumentFragment();
-
+    // object is converted to an array
     itemsFiltered = Object.entries(itemsFiltered).sort();
-
+    // each priority group -> A to Z plus null for all todos with no priority
     for (let priority in itemsFiltered) {
       let itemsDue = new Array;
       let items = new Array;
       let itemsDueComplete = new Array;
       let itemsComplete = new Array;
-
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
       if(itemsFiltered[priority][0]!="null") {
         let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + itemsFiltered[priority][0] + "</div></div>");
         tableContainerContent.appendChild(divider);
       }
-
       for (let item in itemsFiltered[priority][1]) {
         let todo = itemsFiltered[priority][1][item];
         // for each sorted group within a priority group an array is created
@@ -887,34 +865,29 @@ function generateTodoData() {
       itemsDue.forEach(item => {
         tableContainerContent.appendChild(createTableRow(item));
       });
-
       // all rows for the items with no due date within the priority group are being build
       items.forEach(item => {
         tableContainerContent.appendChild(createTableRow(item));
       });
-
       // array is sorted so the due date is desc
       itemsDueComplete.sort((a, b) => a.due - b.due);
       // all rows for the items with due date within the priority group are being build
       itemsDueComplete.forEach(item => {
         tableContainerContent.appendChild(createTableRow(item));
       });
-
       // all rows for the items with no due date within the priority group are being build
       itemsComplete.forEach(item => {
         tableContainerContent.appendChild(createTableRow(item));
       });
     }
     todoTableContainer.appendChild(tableContainerContent);
-
-    return Promise.resolve("Success: Todo data generated and passed on for building the table");
+    return Promise.resolve("Success: Todo data generated and table built");
   } catch(error) {
     return Promise.reject("Error in generateTodoData: " + error);
   }
 }
 
 function createTableRow(item) {
-  //console.log(item);
   try {
     // build the items for one row
     let todoTableBodyRow = document.createElement("div");
@@ -928,13 +901,17 @@ function createTableRow(item) {
     todoTableBodyCellText.setAttribute("role", "cell");
     todoTableBodyCellText.setAttribute("title", "Edit this todo");
     todoTableBodyCellText.setAttribute("tabindex", 300);
+    let tableContainerCategories = document.createElement("div");
+    tableContainerCategories.setAttribute("class", "flex-row");
+    tableContainerCategories.setAttribute("role", "cell");
     let todoTableBodyCellMore = document.createElement("div");
     let todoTableBodyCellPriority = document.createElement("div");
     todoTableBodyCellPriority.setAttribute("role", "cell");
     let todoTableBodyCellSpacer = document.createElement("div");
     todoTableBodyCellSpacer.setAttribute("role", "cell");
-    let todoTableBodyCellDueDate = document.createElement("span");
-    todoTableBodyCellDueDate.setAttribute("class", "itemDueDate");
+    let todoTableBodyCellDueDate = document.createElement("div");
+    todoTableBodyCellDueDate.setAttribute("class", "flex-row itemDueDate");
+    todoTableBodyCellDueDate.setAttribute("role", "cell");
     // start with the individual config of the items
     if(item.complete==true) {
       todoTableBodyRow.setAttribute("class", "flex-table completed");
@@ -985,7 +962,9 @@ function createTableRow(item) {
         showForm(dataItem);
       }
     }
-    let tableContainerCategories = document.createDocumentFragment();
+    // add the text cell to the row
+    todoTableBodyRow.appendChild(todoTableBodyCellText);
+    // cell for the categories
     categories.forEach(category => {
       if(item[category]) {
         item[category].forEach(el => {
@@ -996,15 +975,19 @@ function createTableRow(item) {
         });
       }
     });
-    todoTableBodyCellText.appendChild(tableContainerCategories);
+    // add the categories to the row field to the row
+    todoTableBodyRow.appendChild(tableContainerCategories);
     // check for and add a given due date
     if(item.due) {
       todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
-      todoTableBodyCellDueDate.innerHTML = " <i class=\"far fa-clock\"></i>&nbsp;" + item.due.toISOString().slice(0, 10);
-      todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
+      //todoTableBodyCellDueDate.classList.add("tag", "is-white");
+      //todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i>&nbsp;" + item.due.toISOString().slice(0, 10);
+      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">due at</span><span class=\"tag is-dark\">" + item.due.toISOString().slice(0, 10) + "</span>";
+      if(item.due < new Date()) {
+        todoTableBodyCellDueDate.classList.add("due");
+      }
+      todoTableBodyRow.appendChild(todoTableBodyCellDueDate);
     }
-    // add the text field to the row
-    todoTableBodyRow.appendChild(todoTableBodyCellText);
     // add the more dots
     todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMore.setAttribute("role", "cell");
@@ -1056,7 +1039,7 @@ function submitForm() {
         //console.log("Info: Nothing has changed, won't write anything.");
         return Promise.resolve("Info: Nothing has changed, won't write anything.");
         //return true;
-      // edit item
+      // Edit todo
       } else if(dataItem) {
         // convert array of objects to array of strings to find the index
         parsedData = parsedData.map(item => item.toString());
@@ -1066,7 +1049,7 @@ function submitForm() {
         parsedData.splice(itemId, 1, modalForm.elements[0].value);
         // convert all the strings to proper todotxt items again
         parsedData = parsedData.map(item => new TodoTxtItem(item, [ new DueExtension() ]));
-      // add item
+      // Add todo
       } else {
         // in case there hasn't been a passed data item, we just push the input value as a new item into the array
         dataItem = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension() ]);
@@ -1172,6 +1155,9 @@ function writeDataToFile() {
 
 window.onload = function () {
   console.log("Info: Path to file: " + pathToFile);
+  // set theme
+  if(selectedTheme) switchTheme(selectedTheme)
+  // start parsing data
   parseDataFromFile(pathToFile).then(response => {
     console.log(response);
   }).catch(error => {

@@ -126,7 +126,6 @@ nav {
   /* FILTERS */ }
   #filterDropdown .dropdown-item {
     width: 100%;
-    float: left;
     padding: 0;
     margin: 1.5em 0; }
   #filterDropdown .dropdown-item h4 {
@@ -147,7 +146,6 @@ nav {
     color: #ccc; }
   #filterDropdown #todoFilters {
     width: 100%;
-    float: left;
     margin: 0; }
     #filterDropdown #todoFilters button {
       margin: 0 .5rem .5rem 0; }
@@ -224,11 +222,15 @@ nav {
     #todoTable .flex-table.completed .flex-row span.tag.contexts {
       background: #ccc;
       color: #fff; }
+    #todoTable .flex-table.completed .flex-row.text span.itemDueDate.due {
+      color: #ccc; }
   #todoTable .flex-table .flex-row {
-    padding: .75rem 0 .5em 0;
+    padding: .75rem 0;
     margin-right: 1em;
     height: auto;
     line-height: 1.5em; }
+    #todoTable .flex-table .flex-row .is-white {
+      background: none; }
     #todoTable .flex-table .flex-row span.tag {
       margin-left: .5em; }
     #todoTable .flex-table .flex-row span.tag.projects {
@@ -240,8 +242,10 @@ nav {
   #todoTable .flex-table .flex-row.checkbox a {
     font-size: 1.25em; }
   #todoTable .flex-table .flex-row.text {
+    width: auto;
+    max-width: 80%;
     cursor: pointer;
-    margin-right: auto; }
+    /*margin-right: auto;*/ }
   #todoTable .flex-table .flex-row.spacer {
     width: .5em;
     background: transparent; }
@@ -258,10 +262,30 @@ nav {
   #todoTable .flex-table .flex-row.projects,
   #todoTable .flex-table .flex-row.contexts {
     margin-right: 0; }
-  #todoTable .flex-table .flex-row.text span.itemDueDate {
-    color: #ccc;
-    white-space: nowrap; }
+  #todoTable .flex-table .flex-row.itemDueDate {
+    position: relative;
+    color: #b5b5b5;
+    white-space: nowrap;
+    margin-left: .5em; }
+  #todoTable .flex-table .flex-row.itemDueDate.due {
+    color: #ff3860; }
+  #todoTable .flex-table .flex-row.itemDueDate .tags {
+    height: auto;
+    position: absolute;
+    top: -1em;
+    left: -2.7em;
+    display: none; }
+  #todoTable .flex-table .flex-row.itemDueDate .tags .tag {
+    margin: 0; }
+  #todoTable .flex-table .flex-row.itemDueDate .tags .is-dark {
+    background: #4a4a4a;
+    font-weight: bold; }
+  #todoTable .flex-table .flex-row.itemDueDate:hover .tags {
+    display: block; }
+  #todoTable .flex-table .flex-row.todoTableItemMore {
+    margin-left: auto; }
   #todoTable .flex-table .flex-row.todoTableItemMore a {
+    color: #3273dc;
     display: none;
     padding: 0 .5em; }
   #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
@@ -278,7 +302,6 @@ nav {
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .toggle {
-  float: left;
   padding: 1.5em 1.5em 1.5em 0;
   margin: 0;
   line-height: 2em; }
@@ -357,7 +380,7 @@ nav {
 
 /* DATEPICKER */
 .dueDate svg {
-  color: #4a4a4a; }
+  color: #3273dc; }
 
 .dueDate #dueDatePickerInput,
 .dueDate #dueDatePickerInput::placeholder {
@@ -369,12 +392,12 @@ nav {
 .datepicker {
   z-index: 60; }
   .datepicker .datepicker-footer {
-    background: #fff; }
+    background: none; }
     .datepicker .datepicker-footer .datepicker-controls .button {
       font-size: 1em;
-      background: #fff;
+      background: none;
       border-color: transparent;
-      color: #4a4a4a; }
+      color: #3273dc; }
 
 /* LOADING INDICATOR */
 #loadingIndicator {

@@ -86,7 +86,7 @@ const createWindow = () => {
           }
         },
         {
-          label: 'Show filters',
+          label: 'Toggle filters',
           accelerator: 'CmdOrCtrl+f',
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript('showFilters("toggle")');
@@ -100,6 +100,18 @@ const createWindow = () => {
           }
         },
         {role: 'reload'}
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Toggle dark mode',
+          accelerator: 'CmdOrCtrl+d',
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript('switchTheme("dark")');
+          }
+        }
       ]
     },
     {

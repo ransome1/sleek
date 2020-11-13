@@ -1,0 +1,134 @@
+body {
+    background-color: #1E2022;
+    color: #CCCDCF;
+}
+
+a {
+  color: white;
+}
+
+a:hover,
+strong {
+  color: #CCCDCF;
+}
+
+input {
+  background-color: none;
+  color: #CCCDCF;
+}
+
+nav {
+  background-color: #2C2D30;
+}
+
+nav ul li.logo {
+  background: none;
+}
+
+nav ul li a {
+  color: #B5B5B5;
+  border-bottom: 1px solid #3B3B3B;
+}
+
+nav ul li a:hover,
+nav ul li.is-highlighted a {
+  color: #B5B5B5;
+  border-bottom: none;
+  background-color: #3B3B3B;
+}
+
+#todoTable .flex-table {
+  border-color: #2D2E31;
+}
+
+#todoTable .flex-table.completed,
+#todoTable .flex-table.completed .checkbox a {
+  color: #4A4A4A;
+}
+
+#todoTable .flex-table .flex-row span.tag.contexts {
+  background: #075943!important;
+  color: #c5ede3!important;
+}
+
+#todoTable .flex-table .flex-row span.tag.projects {
+  background: #5f1a5e!important;
+  color: #f1d6f1!important;
+}
+
+#todoTable .flex-table .flex-row .is-white {
+  color: #CCCDCF;
+  background: none;
+}
+
+#todoTable .flex-table:hover .flex-row.todoTableItemMore a {
+  color: #CCCDCF;
+}
+
+#filterDropdown {
+  background: #3B3B3B;
+}
+
+#filterDropdown h4 {
+  color: #CCCDCF;
+}
+
+#filterDropdown #todoFilters div.contexts button  {
+  background: #075A44;
+  color: #C5EDE3;
+}
+#filterDropdown #todoFilters div.contexts button:hover,
+#filterDropdown #todoFilters div.contexts button.is-dark {
+  background: #1BA37E;
+}
+#filterDropdown #todoFilters div.contexts button span.tag {
+  background: #C5EDE3;
+  color: #075A44;
+}
+#filterDropdown #todoFilters div.projects button  {
+  background: #5F1A5E;
+  color: #F2D6F2;
+}
+#filterDropdown #todoFilters div.projects button:hover,
+#filterDropdown #todoFilters div.projects button.is-dark {
+  background: #BC30BA;
+}
+#filterDropdown #todoFilters div.projects button span.tag {
+  background: #F2D6F2;
+  color: #5F1A5E;
+}
+
+#filterDropdown .button.is-white {
+  background-color: #2C2D30!important;
+  color: #CCCDCF!important;
+}
+
+.columns #filterColumnClose {
+  background: #3B3B3B;
+  color: #CCCDCF;
+}
+
+.toggle .switch .slider {
+  background-color: #4a4a4a;
+}
+
+.toggle .switch input:checked + .slider {
+ background-color: #2C2D30;
+}
+.toggle .switch input:focus + .slider {
+ box-shadow: 0 0 1px #2C2D30;
+}
+
+#modalForm .modal-content .card {
+  background: #4A4A4A;
+  color: #CCCDCF;
+}
+
+#modalForm .modal-content .card .card-header-title {
+  color: #CCCDCF;
+}
+
+#modalForm .modal-content .card #modalFormInput {
+  background-color: #2D2E31;
+  color: #CCCDCF;
+}

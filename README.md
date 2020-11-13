@@ -3,6 +3,9 @@
 ## A simple todo manager based on the concept of todo.txt
 sleek is a simple todo manager based on the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a>. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates. According to this input you will be able to filter your todos using typical filter elements. There is no native cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need it to be. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with a basic text editor or any other todo.txt app.
 
+### Work in progress
+sleek is under active development. For detailed information on what is being currently developed, what will be and what already has been, you can take a look at this <a href="https://datenkrake.eu/kanboard/?controller=BoardViewController&action=readonly&token=7a2e9e391ee6d324070a0bebcbc7a42b6eef4b19117b4cd3d434933edad9">Kanboard</a>.
+
 ![Alt text](assets/sleek.screenshot_main.png?raw=true "Screenshot of sleek")
 
 ### Get it from Snap Store

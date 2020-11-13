@@ -179,7 +179,6 @@ nav {
   background: $mid-grey;
   .dropdown-item {
     width: 100%;
-    float: left;
     padding: 0;
     margin: 1.5em 0;
   }
@@ -208,7 +207,6 @@ nav {
   /* FILTERS */
   #todoFilters {
     width: 100%;
-    float: left;
     margin: 0;
     button {
       margin: 0 .5rem .5rem 0;
@@ -307,13 +305,19 @@ nav {
       background: $dark-grey;
       color: #fff;
     }
+    .flex-row.text span.itemDueDate.due {
+      color: $dark-grey;
+    }
   }
   .flex-table {
     .flex-row {
-      padding: .75rem 0 .5em 0;
+      padding: .75rem 0;
       margin-right: 1em;
       height: auto;
       line-height: 1.5em;
+      .is-white {
+        background: none;
+      }
       span.tag {
         margin-left: .5em;
       }
@@ -330,8 +334,10 @@ nav {
       font-size: 1.25em;
     }
     .flex-row.text {
+      width: auto;
+      max-width: 80%;
       cursor: pointer;
-      margin-right: auto;
+      /*margin-right: auto;*/
     }
     .flex-row.spacer {
       width: .5em;
@@ -355,11 +361,37 @@ nav {
     .flex-row.contexts {
       margin-right: 0;
     }
-    .flex-row.text span.itemDueDate {
-      color: $dark-grey;
+    .flex-row.itemDueDate {
+      position: relative;
+      color: $has-text-grey-light;
       white-space: nowrap;
+      margin-left: .5em;
+    }
+    .flex-row.itemDueDate.due {
+      color: $has-text-danger;
+    }
+    .flex-row.itemDueDate .tags {
+      height: auto;
+      position: absolute;
+      top: -1em;
+      left: -2.7em;
+      display: none;
+    }
+    .flex-row.itemDueDate .tags .tag {
+      margin: 0;
+    }
+    .flex-row.itemDueDate .tags .is-dark {
+      background: $darker-grey;
+      font-weight: bold;
+    }
+    .flex-row.itemDueDate:hover .tags {
+      display: block;
+    }
+    .flex-row.todoTableItemMore {
+      margin-left: auto;
     }
     .flex-row.todoTableItemMore a {
+      color: $has-text-link;
       display: none;
       padding: 0 .5em;
     }
@@ -371,8 +403,10 @@ nav {
       display: block;
     }
   }
-  .flex-table:hover .flex-row.todoTableItemMore a {
-    display: block;
+  .flex-table:hover {
+    .flex-row.todoTableItemMore a {
+      display: block;
+    }
   }
 }
 #todoTable.is-active {
@@ -383,7 +417,6 @@ nav {
 
 /* The switch - the box around the slider */
 .toggle {
-  float: left;
   padding: 1.5em 1.5em 1.5em 0;
   margin: 0;
   line-height: 2em;
@@ -479,7 +512,7 @@ nav {
 
 .dueDate {
   svg {
-    color: $darker-grey;
+    color: $has-text-link;
   }
   #dueDatePickerInput,
   #dueDatePickerInput::placeholder {
@@ -492,12 +525,12 @@ nav {
 .datepicker {
   z-index: 60;
   .datepicker-footer {
-    background: #fff;
+    background: none;
     .datepicker-controls .button  {
       font-size: 1em;
-      background: #fff;
+      background: none;
       border-color: transparent;
-      color: $darker-grey;
+      color: $has-text-link;
     }
   }
 }
