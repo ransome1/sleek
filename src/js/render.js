@@ -99,17 +99,21 @@ toggleShowCompleted.checked = showCompleted;
 const head = document.getElementsByTagName("head")[0];
 const btnTheme = document.getElementById("btnTheme");
 btnTheme.addEventListener("click", () => {
-    if(selectedTheme=="dark") {
+  switchTheme(true);
+});
+let themeLink = null;
+let selectedTheme = store.get("theme");
+function switchTheme(toggle) {
+  if(selectedTheme && !toggle) {
+    theme.themeSource = selectedTheme;
+  } else if (toggle) {
+    if(theme.themeSource=="dark") {
       theme.themeSource = "light";
     } else {
       theme.themeSource = "dark";
     }
     selectedTheme=theme.themeSource;
-    switchTheme(selectedTheme);
-});
-let themeLink = null;
-let selectedTheme = store.get("theme");
-function switchTheme(selectedTheme) {
+  }
   if(themeLink!=null) {
     head.removeChild(document.getElementById("theme"));
     themeLink = null;
@@ -167,7 +171,8 @@ modalForm.addEventListener("submit", function(e) {
 // complete the item using the footer button in modal
 btnItemStatus.onclick = function() {
   completeTodo(dataItem).then(response => {
-    modalForm.classList.toggle("is-active");
+    modalForm.classList.remove("is-active");
+    clearModal();
     console.log(response);
   }).catch(error => {
     console.log(error);
@@ -902,7 +907,7 @@ function createTableRow(item) {
     todoTableBodyCellText.setAttribute("title", "Edit this todo");
     todoTableBodyCellText.setAttribute("tabindex", 300);
     let tableContainerCategories = document.createElement("div");
-    tableContainerCategories.setAttribute("class", "flex-row");
+    tableContainerCategories.setAttribute("class", "flex-row categories");
     tableContainerCategories.setAttribute("role", "cell");
     let todoTableBodyCellMore = document.createElement("div");
     let todoTableBodyCellPriority = document.createElement("div");
@@ -936,7 +941,7 @@ function createTableRow(item) {
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
       // passing the data-item attribute of the parent tag to complete function
-      completeTodo(this.parentElement.getAttribute('data-item'), false).then(response => {
+        completeTodo(this.parentElement.getAttribute('data-item'), false).then(response => {
         modalForm.classList.remove("is-active");
         console.log(response);
       }).catch(error => {
@@ -982,7 +987,7 @@ function createTableRow(item) {
       todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
       //todoTableBodyCellDueDate.classList.add("tag", "is-white");
       //todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i>&nbsp;" + item.due.toISOString().slice(0, 10);
-      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">due at</span><span class=\"tag is-dark\">" + item.due.toISOString().slice(0, 10) + "</span>";
+      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">due at</span><span class=\"tag is-dark\">" + item.due.toISOString().slice(0, 10) + "</span></div><i class=\"fas fa-sort-down\"></i>";
       if(item.due < new Date()) {
         todoTableBodyCellDueDate.classList.add("due");
       }
@@ -1059,6 +1064,7 @@ function submitForm() {
         parsedData.push(dataItem);
       }
       return writeDataToFile(parsedData).then(response => {
+        clearModal();
         return Promise.resolve(response);
       }).catch(error => {
         // if writing into file is denied throw alert
@@ -1071,7 +1077,7 @@ function submitForm() {
       modalFormAlert.innerHTML = "Please add a todo into the text field. If you are unsure on how to do this, take a quick look at the <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.";
       modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
       modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
-      return false;
+      return Promise.reject("Info: Will not write empty todo");
     }
   } catch (error) {
     return Promise.reject(error);
@@ -1102,7 +1108,7 @@ function completeTodo(dataItem, deleteItem) {
       dataItem.completed = new Date();
       // delete old dataItem from array and add the new one at it's position
       parsedData.splice(itemId, 1, dataItem);
-    } else {
+    } else if(deleteItem) {
       // Delete item
       parsedData.splice(itemId, 1);
     }
@@ -1156,7 +1162,7 @@ function writeDataToFile() {
 window.onload = function () {
   console.log("Info: Path to file: " + pathToFile);
   // set theme
-  if(selectedTheme) switchTheme(selectedTheme)
+  if(selectedTheme) switchTheme(false)
   // start parsing data
   parseDataFromFile(pathToFile).then(response => {
     console.log(response);

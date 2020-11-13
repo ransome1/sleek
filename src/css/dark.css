@@ -46,6 +46,15 @@ nav ul li.is-highlighted a {
   color: #4A4A4A;
 }
 
+#todoTable .flex-table .flex-row.itemDueDate {
+  color: white;
+  opacity: .7;
+}
+
+#todoTable .flex-table.completed .flex-row.itemDueDate {
+  opacity: .4;
+}
+
 #todoTable .flex-table .flex-row span.tag.contexts {
   background: #075943!important;
   color: #c5ede3!important;
@@ -56,6 +65,16 @@ nav ul li.is-highlighted a {
   color: #f1d6f1!important;
 }
 
+#todoTable .flex-table.completed .flex-row span.tag.contexts {
+  background: #2c2d30!important;
+  color: #4A4A4A!important;
+}
+
+#todoTable .flex-table.completed .flex-row span.tag.projects {
+  background: #3b3b3b!important;
+  color: #636363!important;
+}
+
 #todoTable .flex-table .flex-row .is-white {
   color: #CCCDCF;
   background: none;
@@ -63,6 +82,15 @@ nav ul li.is-highlighted a {
 
 #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
   color: #CCCDCF;
+}
+
+#todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
+  background: #4a4a4a;
+  color: white;
+}
+
+#todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
+  background: #3b3b3b;
 }
 
 #filterDropdown {
@@ -103,6 +131,17 @@ nav ul li.is-highlighted a {
   color: #CCCDCF!important;
 }
 
+#filterDropdown .dropdown-item.is-greyed-out button {
+  background: #2c2d30!important;
+  color: #B5B5B5!important;
+  opacity: .8;
+}
+
+#filterDropdown .dropdown-item.is-greyed-out span.tag {
+    background: #1e2022!important;
+    color: white!important;
+}
+
 .columns #filterColumnClose {
   background: #3B3B3B;
   color: #CCCDCF;
@@ -131,4 +170,53 @@ nav ul li.is-highlighted a {
 #modalForm .modal-content .card #modalFormInput {
   background-color: #2D2E31;
   color: #CCCDCF;
+}
+
+#modalForm .modal-content .card #modalFormInput::placeholder {
+    color: #4a4a4a;
+}
+
+.dueDate svg,
+.dueDate #dueDatePickerInput, .dueDate #dueDatePickerInput::placeholder {
+  color: white;
+}
+
+#modalForm .modal-content .card .card-footer,
+#modalForm .modal-content .card .card-footer-item {
+  border-color: #2D2E31;
+}
+
+#modalForm button {
+  color: white;
+  border-color: #1e2022!important;
+}
+
+.datepicker {
+  background: none;
+}
+
+.datepicker .datepicker-picker {
+  background: #2D2E31;
+}
+
+.datepicker .button,
+.datepicker .button:hover,
+.datepicker-header .datepicker-controls .button:hover {
+  background: none;
+  color: white;
+}
+
+.datepicker .datepicker-footer .datepicker-controls .button {
+  color: white;
+}
+
+.datepicker-cell.selected, .datepicker-cell.selected:hover {
+  color: #2D2E31;
+  background: white;
+}
+
+.datepicker-cell.focused:not(.selected),
+.datepicker-cell:hover {
+  color: #2D2E31;
+  background: #CCCDCF;
 }

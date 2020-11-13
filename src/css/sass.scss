@@ -39,8 +39,12 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
 }
-body, button, input, optgroup, select, textarea, button:focus, button:active, button:active, button:after, button::before, button:active:after {
+body, button, input, optgroup, select, textarea {
   border: none;
+}
+button, button:focus, button:active, button:active, button:after, button::before, button:active:after, .button, .button-is-white {
+  border: none!important;
+  box-shadow: none!important;
 }
 body::-webkit-scrollbar {
   display: none;
@@ -211,7 +215,7 @@ nav {
     button {
       margin: 0 .5rem .5rem 0;
     }
-    div button span.tag {
+    button span.tag {
       z-index: 35;
     }
     div.contexts button  {
@@ -305,8 +309,24 @@ nav {
       background: $dark-grey;
       color: #fff;
     }
-    .flex-row.text span.itemDueDate.due {
+    .flex-row.itemDueDate.due {
       color: $dark-grey;
+      .tags {
+        .is-dark {
+          background: $dark-grey;
+        }
+      }
+    }
+    .flex-row.itemDueDate {
+      color: $dark-grey;
+      .tags {
+        .is-dark {
+          background: $dark-grey;
+        }
+      }
+      svg.fa-sort-down {
+        color: $dark-grey;
+      }
     }
   }
   .flex-table {
@@ -335,9 +355,12 @@ nav {
     }
     .flex-row.text {
       width: auto;
-      max-width: 80%;
+      max-width: 60%;
       cursor: pointer;
-      /*margin-right: auto;*/
+      margin-right: .5em;
+    }
+    .flex-row.categories {
+      margin: 0;
     }
     .flex-row.spacer {
       width: .5em;
@@ -362,30 +385,52 @@ nav {
       margin-right: 0;
     }
     .flex-row.itemDueDate {
+      width: 2.5em;
+      color: $darker-grey;
       position: relative;
-      color: $has-text-grey-light;
       white-space: nowrap;
-      margin-left: .5em;
+      margin: 0;
+      text-align: center;
+      opacity: .8;
+      svg.fa-sort-down {
+        position: absolute;
+        left: .9em;
+        bottom: 2.5em;
+
+        color: $darker-grey;
+        display: none;
+      }
+      .tags {
+        position: absolute;
+        top: -1.42em;
+        left: -3em;
+        display: none;
+        .tag {
+          margin: 0;
+        }
+        .is-dark {
+          background: $darker-grey;
+          font-weight: bold;
+        }
+      }
     }
     .flex-row.itemDueDate.due {
       color: $has-text-danger;
+      .tags .is-dark {
+        background: $has-text-danger;
+        font-weight: bold;
+      }
+      svg.fa-sort-down {
+        color: inherit;
+      }
     }
-    .flex-row.itemDueDate .tags {
-      height: auto;
-      position: absolute;
-      top: -1em;
-      left: -2.7em;
-      display: none;
-    }
-    .flex-row.itemDueDate .tags .tag {
-      margin: 0;
-    }
-    .flex-row.itemDueDate .tags .is-dark {
-      background: $darker-grey;
-      font-weight: bold;
-    }
-    .flex-row.itemDueDate:hover .tags {
-      display: block;
+    .flex-row.itemDueDate:hover {
+      .tags {
+        display: block;
+      }
+      svg.fa-sort-down {
+        display: block;
+      }
     }
     .flex-row.todoTableItemMore {
       margin-left: auto;
@@ -503,7 +548,7 @@ nav {
     background: none;
     color: $has-text-link;
     border: none;
-    border-right: 1px solid $mid-grey;
+    border-right: 1px solid $mid-grey!important;
     cursor: pointer;
   }
 }
@@ -520,6 +565,7 @@ nav {
     color: #3273dc;
     box-shadow: none;
     cursor: pointer;
+    background: none;
   }
 }
 .datepicker {
@@ -542,7 +588,7 @@ nav {
   z-index: 70;
   .modal-background {
     background: #fff;
-    opacity: .25;
+    opacity: .35;
   }
   p {
     margin: .5em 0;
