@@ -120,7 +120,8 @@ const createWindow = () => {
         {
           label: 'sleek on Github',
           click: () => {require('electron').shell.openExternal('https://github.com/ransome1/sleek')}
-        }
+        },
+        {role: 'toggleDevTools'}
       ]
     }
   ];

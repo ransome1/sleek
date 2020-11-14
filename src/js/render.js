@@ -131,28 +131,6 @@ function switchTheme(toggle) {
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
-// rereads the file if it changed
-let md5Previous = null;
-let fsWait = false;
-fs.watch(pathToFile, (event, filename) => {
-  if (filename) {
-    if (fsWait) return;
-    fsWait = setTimeout(() => {
-      fsWait = false;
-    }, 100);
-    const md5Current = md5(fs.readFileSync(pathToFile));
-    if (md5Current === md5Previous) {
-      return;
-    }
-    md5Previous = md5Current;
-    console.log(`${filename} file Changed`);
-    parseDataFromFile(pathToFile).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
-  }
-});
 // persist the highlighting of the button and the dropdown menu
 btnFilter.onclick = function() { showFilters("toggle") }
 
@@ -255,6 +233,38 @@ modalForm.addEventListener ("keydown", function () {
 // ########################################################################################################################
 // FUNCTIONS
 // ########################################################################################################################
+
+function startFileWatcher() {
+  try {
+    if (fs.existsSync(pathToFile)) {
+      let md5Previous = null;
+      let fsWait = false;
+      fs.watch(pathToFile, (event, filename) => {
+        if (fsWait) return;
+        fsWait = setTimeout(() => {
+          fsWait = false;
+        }, 100);
+        if (fs.existsSync(pathToFile)) {
+          const md5Current = md5(fs.readFileSync(pathToFile));
+          if (md5Current === md5Previous) {
+            return;
+          }
+          md5Previous = md5Current;
+        }
+        parseDataFromFile(pathToFile).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
+      });
+      return Promise.resolve("Success: File watcher is now watching: " + pathToFile);
+    } else {
+      return Promise.reject("Info: File watcher did not start as file was not found at: " + pathToFile);
+    }
+  } catch (error) {
+    return Promise.reject("Error in startFileWatcher(): " + error);
+  }
+}
 
 function showCompletedTodos() {
 
@@ -591,6 +601,12 @@ function parseDataFromFile(pathToFile) {
         console.log(response);
         t1 = performance.now();
         console.log("Filters rendered in", t1 - t0, "ms");
+      }).catch(error => {
+        console.log(error);
+      });
+      // start the file watcher
+      startFileWatcher().then(response => {
+        console.log(response);
       }).catch(error => {
         console.log(error);
       });

@@ -80,7 +80,8 @@ nav ul li.is-highlighted a {
   background: none;
 }
 
-#todoTable .flex-table:hover .flex-row.todoTableItemMore a {
+#todoTable .flex-table:hover .flex-row.todoTableItemMore a,
+#todoTable .flex-table .flex-row.todoTableItemMore a {
   color: #CCCDCF;
 }
 

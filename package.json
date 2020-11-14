@@ -57,15 +57,9 @@
     "confinement": "strict",
     "grade": "devel"
   },
-  "publish": {
-    "provider": "github",
-    "owner": "ransome1",
-    "repo": "sleek",
-    "releaseType": "release"
-  },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -lwm --publish always",
+    "dist": "electron-builder -l --publish always",
     "css-build": "node-sass --omit-source-map-url src/css/sass.scss src/css/style.css",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
