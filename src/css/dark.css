@@ -48,7 +48,6 @@ nav ul li.is-highlighted a {
 
 #todoTable .flex-table .flex-row.itemDueDate {
   color: white;
-  opacity: .7;
 }
 
 #todoTable .flex-table.completed .flex-row.itemDueDate {

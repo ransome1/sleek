@@ -244,22 +244,22 @@ nav {
     #todoTable .flex-table .flex-row .is-white {
       background: none; }
     #todoTable .flex-table .flex-row span.tag {
-      margin-left: .5em; }
+      margin-right: .5em; }
     #todoTable .flex-table .flex-row span.tag.projects {
       background: #f1d6f1;
       color: #5f1a5e; }
     #todoTable .flex-table .flex-row span.tag.contexts {
       background: #c5ede3;
       color: #075943; }
+    #todoTable .flex-table .flex-row .categories {
+      padding: 0 0 0 .5em; }
   #todoTable .flex-table .flex-row.checkbox a {
     font-size: 1.25em; }
   #todoTable .flex-table .flex-row.text {
     width: auto;
-    max-width: 60%;
+    max-width: 80%;
     cursor: pointer;
     margin-right: .5em; }
-  #todoTable .flex-table .flex-row.categories {
-    margin: 0; }
   #todoTable .flex-table .flex-row.spacer {
     width: .5em;
     background: transparent; }
@@ -277,22 +277,22 @@ nav {
   #todoTable .flex-table .flex-row.contexts {
     margin-right: 0; }
   #todoTable .flex-table .flex-row.itemDueDate {
-    width: 2.5em;
+    display: inline;
     color: #4a4a4a;
     position: relative;
     white-space: nowrap;
     margin: 0;
-    text-align: center;
-    opacity: .8; }
+    padding: 0 .5em;
+    text-align: center; }
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
-      left: .9em;
-      bottom: 2.5em;
+      left: .7em;
+      bottom: 1.6em;
       color: #4a4a4a;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {
       position: absolute;
-      top: -1.42em;
+      top: -2.42em;
       left: -3em;
       display: none; }
       #todoTable .flex-table .flex-row.itemDueDate .tags .tag {

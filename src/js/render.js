@@ -940,15 +940,14 @@ function createTableRow(item) {
     todoTableBodyCellText.setAttribute("role", "cell");
     todoTableBodyCellText.setAttribute("title", "Edit this todo");
     todoTableBodyCellText.setAttribute("tabindex", 300);
-    let tableContainerCategories = document.createElement("div");
-    tableContainerCategories.setAttribute("class", "flex-row categories");
-    tableContainerCategories.setAttribute("role", "cell");
+    let tableContainerCategories = document.createElement("span");
+    tableContainerCategories.setAttribute("class", "categories");
     let todoTableBodyCellMore = document.createElement("div");
     let todoTableBodyCellPriority = document.createElement("div");
     todoTableBodyCellPriority.setAttribute("role", "cell");
     let todoTableBodyCellSpacer = document.createElement("div");
     todoTableBodyCellSpacer.setAttribute("role", "cell");
-    let todoTableBodyCellDueDate = document.createElement("div");
+    let todoTableBodyCellDueDate = document.createElement("span");
     todoTableBodyCellDueDate.setAttribute("class", "flex-row itemDueDate");
     todoTableBodyCellDueDate.setAttribute("role", "cell");
     // start with the individual config of the items
@@ -1001,8 +1000,6 @@ function createTableRow(item) {
         showForm(dataItem);
       }
     }
-    // add the text cell to the row
-    todoTableBodyRow.appendChild(todoTableBodyCellText);
     // cell for the categories
     categories.forEach(category => {
       if(item[category]) {
@@ -1015,7 +1012,9 @@ function createTableRow(item) {
       }
     });
     // add the categories to the row field to the row
-    todoTableBodyRow.appendChild(tableContainerCategories);
+    //todoTableBodyCellText.appendChild(tableContainerCategories);
+    // add the text cell to the row
+    todoTableBodyCellText.appendChild(tableContainerCategories);
     // check for and add a given due date
     if(item.due) {
       todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
@@ -1025,8 +1024,10 @@ function createTableRow(item) {
       if(item.due < new Date()) {
         todoTableBodyCellDueDate.classList.add("due");
       }
-      todoTableBodyRow.appendChild(todoTableBodyCellDueDate);
+      todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
+    // add the text cell to the row
+    todoTableBodyRow.appendChild(todoTableBodyCellText);
     // add the more dots
     todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMore.setAttribute("role", "cell");
