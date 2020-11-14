@@ -380,11 +380,13 @@ function showOnboarding(variable) {
     onboardingContainer.classList.add("is-active");
     btnAddTodo.forEach(item => item.classList.remove("is-active"));
     btnFilter.classList.remove("is-active");
+    todoTable.classList.remove("is-active");
   } else {
     console.log("Info: Ending onboarding");
     onboardingContainer.classList.remove("is-active");
     btnAddTodo.forEach(item => item.classList.add("is-active"));
     btnFilter.classList.add("is-active");
+    todoTable.classList.add("is-active");
   }
 }
 
