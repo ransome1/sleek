@@ -3,12 +3,14 @@
 // generate the table: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces
 // save and load user data: https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
 // watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/#using-fs.watchfile
+// theme: https://www.geeksforgeeks.org/managing-themes-in-electronjs/
 
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
 
 require('log-timestamp');
+const md5 = require('md5');
 const electron = require("electron");
 const theme = electron.remote.nativeTheme;
 const path = require("path");
@@ -84,19 +86,6 @@ let modalFormStatus;
 // variable for an array to configure if a whole category is being shown or hidden
 let categoriesFiltered = store.get("categoriesFiltered");
 
-// ########################################################################################################################
-// WATCH FOR FILE CHANGES
-// ########################################################################################################################
-
-fs.watchFile(pathToFile, (curr, prev) => {
-  // reread file if it changed
-  parseDataFromFile(pathToFile).then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-});
-
 // ###############
 // INITIAL DOM CONFIG
 // ###############
@@ -109,8 +98,6 @@ toggleShowCompleted.checked = showCompleted;
 // ########################################################################################################################
 // THEME
 // ########################################################################################################################
-
-// https://www.geeksforgeeks.org/managing-themes-in-electronjs/
 const head = document.getElementsByTagName("head")[0];
 const btnTheme = document.getElementById("btnTheme");
 btnTheme.addEventListener("click", () => {
@@ -141,11 +128,31 @@ function switchTheme(toggle) {
   head.appendChild(themeLink);
   store.set("theme", selectedTheme);
 }
-
 // ########################################################################################################################
-// ONCLICK DEFINITIONS AND EVENT LISTENERS
+// ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
-
+// rereads the file if it changed
+let md5Previous = null;
+let fsWait = false;
+fs.watch(pathToFile, (event, filename) => {
+  if (filename) {
+    if (fsWait) return;
+    fsWait = setTimeout(() => {
+      fsWait = false;
+    }, 100);
+    const md5Current = md5(fs.readFileSync(pathToFile));
+    if (md5Current === md5Previous) {
+      return;
+    }
+    md5Previous = md5Current;
+    console.log(`${filename} file Changed`);
+    parseDataFromFile(pathToFile).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+});
 // persist the highlighting of the button and the dropdown menu
 btnFilter.onclick = function() { showFilters("toggle") }
 
