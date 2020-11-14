@@ -496,6 +496,12 @@ function openFile() {
       }).catch(error => {
         console.log(error);
       });
+      // start the file watcher
+      startFileWatcher().then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }).catch(err => {
       console.log("Error: " + err)
@@ -534,6 +540,12 @@ function createFile(showDialog, overwriteFile) {
                 store.set("pathToFile", pathToFile);
                 // pass path and filename on, to extract and parse the raw data to objects
                 parseDataFromFile(pathToFile).then(response => {
+                  console.log(response);
+                }).catch(error => {
+                  console.log(error);
+                });
+                // start the file watcher
+                startFileWatcher().then(response => {
                   console.log(response);
                 }).catch(error => {
                   console.log(error);
@@ -1180,14 +1192,15 @@ window.onload = function () {
   console.log("Info: Path to file: " + pathToFile);
   // set theme
   if(selectedTheme) switchTheme(false)
-  // start the file watcher
-  startFileWatcher().then(response => {
+
+  // start parsing data
+  parseDataFromFile(pathToFile).then(response => {
     console.log(response);
   }).catch(error => {
     console.log(error);
   });
-  // start parsing data
-  parseDataFromFile(pathToFile).then(response => {
+  // start the file watcher
+  startFileWatcher().then(response => {
     console.log(response);
   }).catch(error => {
     console.log(error);

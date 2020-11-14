@@ -35,13 +35,14 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] A basic tabindex is available
 * [x] Due date can be set using a datepicker
 * [x] Todos that include either contexts or projects or both can now be hidden (setting will be persisted)
+* [x] Dark theme
+* [x] File watcher rereads the file if it has been changed (by hand or any other todo.txt application)
 
 ### To be done
 * [ ] Extensive testing & bug fixing
 * [ ] Code refinement and better error handling
 * [ ] Multi language support
-* [ ] Implement a notification function for due dates
-* [ ] Dark theme
+* [ ] Notification function for due dates
 * [ ] Full text search
 * [ ] More visual guidance when adding new todos
 

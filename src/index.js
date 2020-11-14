@@ -93,7 +93,7 @@ const createWindow = () => {
           }
         },
         {
-          label: 'Show or hide completed todos',
+          label: 'Toggle completed todos',
           accelerator: 'CmdOrCtrl+h',
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript('showCompletedTodos()');
