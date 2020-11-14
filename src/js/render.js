@@ -2,11 +2,13 @@
 // read text file: https://www.geeksforgeeks.org/file-upload-in-electronjs/
 // generate the table: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces
 // save and load user data: https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
+// watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/#using-fs.watchfile
 
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
 
+require('log-timestamp');
 const electron = require("electron");
 const theme = electron.remote.nativeTheme;
 const path = require("path");
@@ -81,6 +83,19 @@ let parsedData = [];
 let modalFormStatus;
 // variable for an array to configure if a whole category is being shown or hidden
 let categoriesFiltered = store.get("categoriesFiltered");
+
+// ########################################################################################################################
+// WATCH FOR FILE CHANGES
+// ########################################################################################################################
+
+fs.watchFile(pathToFile, (curr, prev) => {
+  // reread file if it changed
+  parseDataFromFile(pathToFile).then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+});
 
 // ###############
 // INITIAL DOM CONFIG

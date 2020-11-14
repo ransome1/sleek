@@ -158,21 +158,21 @@ nav ul li.is-highlighted a {
  box-shadow: 0 0 1px #2C2D30;
 }
 
-#modalForm .modal-content .card {
+.modal .modal-content .card {
   background: #4A4A4A;
   color: #CCCDCF;
 }
 
-#modalForm .modal-content .card .card-header-title {
+.modal .modal-content .card .card-header-title {
   color: #CCCDCF;
 }
 
-#modalForm .modal-content .card #modalFormInput {
+.modal .modal-content .card #modalFormInput {
   background-color: #2D2E31;
   color: #CCCDCF;
 }
 
-#modalForm .modal-content .card #modalFormInput::placeholder {
+.modal .modal-content .card #modalFormInput::placeholder {
     color: #4a4a4a;
 }
 
@@ -181,11 +181,12 @@ nav ul li.is-highlighted a {
   color: white;
 }
 
-#modalForm .modal-content .card .card-footer,
-#modalForm .modal-content .card .card-footer-item {
+.modal .modal-content .card .card-footer,
+.modal .modal-content .card .card-footer-item {
   border-color: #2D2E31;
 }
 
+.modal button,
 #modalForm button {
   color: white;
   border-color: #1e2022!important;
@@ -219,4 +220,10 @@ nav ul li.is-highlighted a {
 .datepicker-cell:hover {
   color: #2D2E31;
   background: #CCCDCF;
+}
+
+.contentContainer .title.is-1,
+.contentContainer .subtitle,
+.contentContainer .subtitle strong {
+  color: #CCCDCF;
 }

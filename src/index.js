@@ -120,25 +120,14 @@ const createWindow = () => {
         {
           label: 'sleek on Github',
           click: () => {require('electron').shell.openExternal('https://github.com/ransome1/sleek')}
-        },
-        {role: 'toggleDevTools'}
+        }
       ]
     }
   ];
-
   // Build menu from menuTemplate
   const menu = Menu.buildFromTemplate(menuTemplate);
-
   // Set menu to menuTemplate
   Menu.setApplicationMenu(menu)
-
-  // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
-
-  /*mainWindow.on('resize', () => {
-    let { width, height } = mainWindow.getBounds();
-    store.set('windowBounds', { width, height });
-  });*/
 };
 
 // This method will be called when Electron has finished
