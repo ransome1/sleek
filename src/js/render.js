@@ -604,12 +604,6 @@ function parseDataFromFile(pathToFile) {
       }).catch(error => {
         console.log(error);
       });
-      // start the file watcher
-      startFileWatcher().then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
       // if there is a file onboarding is hidden
       showOnboarding(false);
       return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
@@ -1171,24 +1165,6 @@ function writeDataToFile() {
   try {
     //write the data to the file
     fs.writeFileSync(pathToFile, TodoTxt.render(parsedData), {encoding: 'utf-8'});
-    // parsed data will be passed to generate data and build the tables later on
-    t0 = performance.now();
-    generateTodoData().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Table rendered in:", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
-    // parsed data will be passed to generate filter data and build the filter buttons
-    t0 = performance.now();
-    generateFilterData().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Filters rendered:", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
   } catch(error) {
     return Promise.reject("Error in writeDataToFile(): " + error);
@@ -1203,6 +1179,12 @@ window.onload = function () {
   console.log("Info: Path to file: " + pathToFile);
   // set theme
   if(selectedTheme) switchTheme(false)
+  // start the file watcher
+  startFileWatcher().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
   // start parsing data
   parseDataFromFile(pathToFile).then(response => {
     console.log(response);
