@@ -151,11 +151,11 @@ nav {
       background: $mid-grey;
     }
     li.btnAddTodo,
-    li#btnFilter {
+    li#navBtnFilter {
       display: none;
     }
     li.btnAddTodo.is-active,
-    li#btnFilter.is-active {
+    li#navBtnFilter.is-active {
       display: block;
     }
     li.logo {
@@ -390,19 +390,19 @@ nav {
       position: relative;
       white-space: nowrap;
       margin: 0;
-      padding: 0 .5em;
+      padding: 1em .5em;
       text-align: center;
       svg.fa-sort-down {
         position: absolute;
         left: .7em;
-        bottom: 1.6em;
+        bottom: 2.55em;
 
         color: $darker-grey;
         display: none;
       }
       .tags {
         position: absolute;
-        top: -2.42em;
+        top: -1.4em;
         left: -3em;
         display: none;
         .tag {

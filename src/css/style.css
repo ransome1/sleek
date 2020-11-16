@@ -103,10 +103,10 @@ nav {
     nav ul li.is-highlighted {
       background: #ebebeb; }
     nav ul li.btnAddTodo,
-    nav ul li#btnFilter {
+    nav ul li#navBtnFilter {
       display: none; }
     nav ul li.btnAddTodo.is-active,
-    nav ul li#btnFilter.is-active {
+    nav ul li#navBtnFilter.is-active {
       display: block; }
     nav ul li.logo {
       background: #4a4a4a;
@@ -282,17 +282,17 @@ nav {
     position: relative;
     white-space: nowrap;
     margin: 0;
-    padding: 0 .5em;
+    padding: 1em .5em;
     text-align: center; }
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
       left: .7em;
-      bottom: 1.6em;
+      bottom: 2.55em;
       color: #4a4a4a;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {
       position: absolute;
-      top: -2.42em;
+      top: -1.4em;
       left: -3em;
       display: none; }
       #todoTable .flex-table .flex-row.itemDueDate .tags .tag {

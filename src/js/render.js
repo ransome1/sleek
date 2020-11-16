@@ -4,12 +4,14 @@
 // save and load user data: https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
 // watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/#using-fs.watchfile
 // theme: https://www.geeksforgeeks.org/managing-themes-in-electronjs/
-
+// multi language:
+      // https://github.com/i18next/i18next-fs-backend
+      // https://www.i18next.com/overview/getting-started
+      // https://phrase.com/blog/posts/building-an-electron-app-with-internationalization-i18n/
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
-
-require('log-timestamp');
+//require('log-timestamp');
 const md5 = require('md5');
 const electron = require("electron");
 const theme = electron.remote.nativeTheme;
@@ -29,21 +31,34 @@ const store = new Store({
     theme: ""
   }
 });
+const i18next = require('i18next');
+const i18nextBackend = require('i18next-fs-backend');
+const i18nextBrowserLanguageDetector = require('i18next-browser-languagedetector');
 const body = document.getElementById("body");
+const head = document.getElementsByTagName("head")[0];
 const a = document.querySelectorAll("a");
-const btnFilter = document.getElementById("btnFilter");
+const navBtnAddTodo = document.getElementById("navBtnAddTodo");
+const navBtnFilter = document.getElementById("navBtnFilter");
+const navBtnOpenTodoFile = document.getElementById("navBtnOpenTodoFile");
+const navBtnTheme = document.getElementById("navBtnTheme");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
-const btnFormSubmit = document.getElementById("btnFormSubmit");
+const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
+const btnSave = document.getElementById("btnSave");
 const btnItemStatus = document.getElementById("btnItemStatus");
 const btnApplyFilter = document.getElementsByClassName("btnApplyFilter");
-const btnLoadTodoFile = document.querySelectorAll(".btnLoadTodoFile");
 const btnCreateTodoFile = document.getElementById("btnCreateTodoFile");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const toggleShowCompleted = document.getElementById("toggleShowCompleted");
 const onboardingContainer = document.getElementById("onboardingContainer");
+const onboardingContainerHeadline = document.getElementById("onboardingContainerHeadline");
+const onboardingContainerSubtitle = document.getElementById("onboardingContainerSubtitle");
+const onboardingContainerBtnOpen = document.getElementById("onboardingContainerBtnOpen");
+const onboardingContainerBtnCreate = document.getElementById("onboardingContainerBtnCreate");
 const addTodoContainer = document.getElementById("addTodoContainer");
-//const loadingIndicator = document.getElementById("loadingIndicator");
+const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadline");
+const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
+const addTodoContainerButton = document.getElementById("addTodoContainerButton");
 const todoTable = document.getElementById("todoTable");
 const todoTableSelectionInformation = document.getElementById("selectionInformation");
 const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
@@ -51,9 +66,13 @@ const categories = ["contexts", "projects"];
 const filterContainer = document.getElementById("todoFilters");
 const filterDropdown = document.getElementById("filterDropdown");
 const filterColumnClose = document.getElementById("filterColumnClose");
+const filterToggleShowCompleted = document.getElementById("filterToggleShowCompleted");
+const filterBtnResetFilters = document.getElementById("filterBtnResetFilters");
+const selectionBtnResetFilters = document.getElementById("selectionBtnResetFilters");
 const modalForm = document.getElementById('modalForm');
 const modalFormInput = document.getElementById("modalFormInput");
 const modalFormAlert = document.getElementById("modalFormAlert");
+const modalFormHowTo = document.getElementById("modalFormHowTo");
 const modalTitle = document.getElementById("modalTitle");
 const modalBackground = document.querySelectorAll('.modal-background');
 const modalFile = document.getElementById("modalFile");
@@ -85,22 +104,19 @@ let parsedData = [];
 let modalFormStatus;
 // variable for an array to configure if a whole category is being shown or hidden
 let categoriesFiltered = store.get("categoriesFiltered");
-
+// empty hull for the file watcher
+let fileWatcher;
 // ###############
 // INITIAL DOM CONFIG
 // ###############
-
 // prevent manual input in datepicker
 dueDatePickerInput.readOnly = true;
 // set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
-
 // ########################################################################################################################
 // THEME
 // ########################################################################################################################
-const head = document.getElementsByTagName("head")[0];
-const btnTheme = document.getElementById("btnTheme");
-btnTheme.addEventListener("click", () => {
+navBtnTheme.addEventListener("click", () => {
   switchTheme(true);
 });
 let themeLink = null;
@@ -129,10 +145,76 @@ function switchTheme(toggle) {
   store.set("theme", selectedTheme);
 }
 // ########################################################################################################################
+// START: WE START WHEN LANGUAGES ARE READY
+// ########################################################################################################################
+
+// ########################################################################################################################
+// MULTI LANGUAGE SUPPORT
+// ########################################################################################################################
+i18next
+.use(i18nextBackend)
+.use(i18nextBrowserLanguageDetector)
+.init({
+  initImmediate: false,
+  fallbackLng: "de",
+  namespace: "translation",
+  defaultNS: "translation",
+  debug: false,
+  preload: fs.readdirSync(path.join(__dirname, './locales')).filter((fileName) => {
+    const joinedPath = path.join(path.join(__dirname, './locales'), fileName)
+    const isDirectory = fs.lstatSync(joinedPath).isDirectory()
+    return isDirectory
+  }),
+  backend: {
+    loadPath: path.join(__dirname, './locales/{{lng}}/{{ns}}.json'),
+    addPath: path.join(__dirname, './locales/{{lng}}/{{ns}}.missing.json')
+  },
+  saveMissing: true
+}).then(function(t) {
+  navBtnAddTodo.setAttribute("title", i18next.t("addTodo"));
+  navBtnFilter.setAttribute("title", i18next.t("navBtnFilter"));
+  navBtnOpenTodoFile.setAttribute("title", i18next.t("navBtnOpenTodoFile"));
+  navBtnTheme.setAttribute("title", i18next.t("navBtnTheme"));
+  filterToggleShowCompleted.innerHTML = i18next.t("filterToggleShowCompleted");
+  filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
+  selectionBtnResetFilters.innerHTML = i18next.t("resetFilters");
+  modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
+  dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
+  btnSave.innerHTML = i18next.t("save");
+  modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
+  addTodoContainerHeadline.innerHTML = i18next.t("addTodoContainerHeadline");
+  addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
+  addTodoContainerButton.innerHTML = i18next.t("addTodo");
+  onboardingContainerHeadline.innerHTML = i18next.t("onboardingContainerHeadline");
+  onboardingContainerSubtitle.innerHTML = i18next.t("onboardingContainerSubtitle");
+  onboardingContainerBtnOpen.innerHTML = i18next.t("onboardingContainerBtnOpen");
+  onboardingContainerBtnCreate.innerHTML = i18next.t("onboardingContainerBtnCreate");
+  modalFileOverwrite.innerHTML = i18next.t("modalFileOverwrite");
+  modalFileChoose.innerHTML = i18next.t("modalFileChoose");
+  modalFileHeadline.innerHTML = i18next.t("modalFileHeadline");
+  modalFileContent.innerHTML = i18next.t("modalFileContent");
+  // set theme
+  if(selectedTheme) switchTheme(false)
+  // only start if a file has been selected
+  if(pathToFile) {
+    console.log("Info: Path to file: " + pathToFile);
+    // start parsing data
+    parseDataFromFile(pathToFile).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+  } else {
+    console.log("Info: File does not exist or has not been defined yet");
+    // show onboarding if no file has been selected
+    showOnboarding(true);
+  }
+});
+// ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
 // persist the highlighting of the button and the dropdown menu
-btnFilter.onclick = function() { showFilters("toggle") }
+navBtnFilter.onclick = function() { showFilters("toggle") }
 
 filterColumnClose.onclick = function() { showFilters(false) }
 
@@ -147,7 +229,7 @@ todoTable.onclick = function() { if(event.target.classList.contains("flex-table"
 // reread the data but sort it asc
 toggleShowCompleted.onclick = showCompletedTodos;
 
-// persist window bound after resize
+// persist window bounds after resize
 window.addEventListener("resize", function(e) {
   let width = this.outerWidth;
   let height = this.outerHeight;
@@ -185,22 +267,21 @@ a.forEach(el => el.addEventListener("click", function(el) {
 }));
 
 // put a click event on all "open file" buttons
-btnLoadTodoFile.forEach(el => el.onclick = openFile);
+btnOpenTodoFile.forEach(el => el.onclick = openFile);
 
 // onboarding: click will call createFile() function
-btnCreateTodoFile.onclick = function () { createFile(true, false) };
-
-// onboarding: click will call createFile() function
-modalFileChoose.onclick = function() { createFile(true, false); }
-
-// onboarding: click will call createFile() function
-modalFileOverwrite.onclick = function() { createFile(false, true); }
+btnCreateTodoFile.onclick = function () { createFile(true, false) }
+modalFileChoose.onclick = function() { createFile(true, false) }
+modalFileOverwrite.onclick = function() { createFile(false, true) }
 
 // put a listeners on all modal backgrounds
 modalBackground.forEach(el => el.onclick = clearModal);
 
-// click on the cancel button in the footer of the edit modal
-btnModalCancel.forEach(el => el.onclick = clearModal);
+// click on the cancel button in the footer of the add/edit modal
+btnModalCancel.forEach(function(el) {
+  el.innerHTML = i18next.t("cancel");
+  el.onclick = clearModal;
+});
 
 // event intercepted when datepicker changes the date
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
@@ -236,10 +317,12 @@ modalForm.addEventListener ("keydown", function () {
 
 function startFileWatcher() {
   try {
+    console.log(fileWatcher);
+    if(fileWatcher) fileWatcher.close();
     if (fs.existsSync(pathToFile)) {
       let md5Previous = null;
       let fsWait = false;
-      fs.watch(pathToFile, (event, filename) => {
+      fileWatcher = fs.watch(pathToFile, (event, filename) => {
         if (fsWait) return;
         fsWait = setTimeout(() => {
           fsWait = false;
@@ -257,7 +340,7 @@ function startFileWatcher() {
           console.log(error);
         });
       });
-      return Promise.resolve("Success: File watcher is now watching: " + pathToFile);
+      return Promise.resolve("Success: File watcher is watching: " + pathToFile);
     } else {
       return Promise.reject("Info: File watcher did not start as file was not found at: " + pathToFile);
     }
@@ -352,13 +435,13 @@ function showForm(variable) {
         dataItem = new TodoTxtItem(dataItem, [ new DueExtension() ]);
 
         modalFormInput.value = dataItem.toString();
-        modalTitle.innerHTML = 'Edit todo';
+        modalTitle.innerHTML = i18next.t("editTodo");
         btnItemStatus.classList.add("is-active");
         // only show the complete button on open items
         if(dataItem.complete == false) {
-          btnItemStatus.innerHTML = "Mark as done";
+          btnItemStatus.innerHTML = i18next.t("markAsDone");
         } else {
-          btnItemStatus.innerHTML = "Mark as in progress";
+          btnItemStatus.innerHTML = i18next.t("markAsInProgress");
         }
 
         // if so we paste it into the input field
@@ -380,7 +463,7 @@ function showForm(variable) {
           clear: true
         });
         dueDatePickerInput.value = null;
-        modalTitle.innerHTML = 'Add todo';
+        modalTitle.innerHTML = i18next.t("addTodo");
         btnItemStatus.classList.remove("is-active");
       }
       // in any case put focus into the input field
@@ -396,13 +479,13 @@ function showOnboarding(variable) {
     console.log("Info: Starting onboarding");
     onboardingContainer.classList.add("is-active");
     btnAddTodo.forEach(item => item.classList.remove("is-active"));
-    btnFilter.classList.remove("is-active");
+    navBtnFilter.classList.remove("is-active");
     todoTable.classList.remove("is-active");
   } else {
     console.log("Info: Ending onboarding");
     onboardingContainer.classList.remove("is-active");
     btnAddTodo.forEach(item => item.classList.add("is-active"));
-    btnFilter.classList.add("is-active");
+    navBtnFilter.classList.add("is-active");
     todoTable.classList.add("is-active");
   }
 }
@@ -410,18 +493,18 @@ function showOnboarding(variable) {
 function showFilters(variable) {
   switch(variable) {
     case true:
-      btnFilter.classList.add("is-highlighted");
+      navBtnFilter.classList.add("is-highlighted");
       filterDropdown.classList.add("is-active");
       filterDropdown.focus();
       filterColumnClose.classList.add("is-active");
     break;
     case false:
-      btnFilter.classList.remove("is-highlighted");
+      navBtnFilter.classList.remove("is-highlighted");
       filterDropdown.classList.remove("is-active");
       filterColumnClose.classList.remove("is-active");
     break;
     case "toggle":
-      btnFilter.classList.toggle("is-highlighted");
+      navBtnFilter.classList.toggle("is-highlighted");
       filterDropdown.classList.toggle("is-active");
       filterDropdown.focus();
       filterColumnClose.classList.toggle("is-active");
@@ -429,15 +512,6 @@ function showFilters(variable) {
   }
   // if more toggle is open we close it as user doesn't need it anymore
   showMore(false);
-}
-
-function removeDuplicates(items) {
-  // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-  var seen = {};
-  return items.filter(function(item) {
-      var k = JSON.stringify(item);
-      return seen.hasOwnProperty(k) ? false : (seen[k] = true);
-  })
 }
 
 function clearModal() {
@@ -465,14 +539,14 @@ function showAlert(variable) {
 function openFile() {
   // Resolves to a Promise<Object>
   dialog.showOpenDialog({
-    title: 'Select yout todo.txt file',
-    defaultPath: path.join(app.getPath('home')),
-    buttonLabel: 'Open',
+    title: i18next.t("windowTitleOpenFile"),
+    defaultPath: path.join(app.getPath("home")),
+    buttonLabel: i18next.t("windowButtonOpenFile"),
     // Restricting the user to only Text Files.
     filters: [
         {
-            name: 'Text Files',
-            extensions: ['txt']
+            name: i18next.t("windowFileformat"),
+            extensions: ["txt"]
         },
     ],
     properties: ['openFile']
@@ -481,23 +555,14 @@ function openFile() {
     if (!file.canceled) {
       // Updating the filepath variable to user-selected file.
       pathToFile = file.filePaths[0].toString();
-
       // write new path and file name into storage file
       store.set("pathToFile", pathToFile);
       console.log("Success: Storage file updated by new path and filename: " + pathToFile);
-
       // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
       selectedFilters = new Array;
       store.set("selectedFilters", new Array);
-
       // pass path and filename on, to extract and parse the raw data to objects
       parseDataFromFile(pathToFile).then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
-      // start the file watcher
-      startFileWatcher().then(response => {
         console.log(response);
       }).catch(error => {
         console.log(error);
@@ -513,17 +578,18 @@ function createFile(showDialog, overwriteFile) {
   // Resolves to a Promise<Object>
   if(showDialog && !overwriteFile) {
     dialog.showOpenDialog({
-      title: "Choose a folder to save your todo.txt file",
+      title: i18next.t("windowTitleCreateFile"),
       defaultPath: path.join(app.getPath('home')),
-      buttonLabel: "Create todo.txt file here",
+      buttonLabel: i18next.t("windowButtonCreateFile"),
       properties: ["openDirectory", "createDirectory"]
     }).then(file => {
       // Stating whether dialog operation was cancelled or not.
       if (!file.canceled) {
         pathToNewFile = file.filePaths[0].toString();
         if(fs.stat(pathToNewFile + "/todo.txt", function(err, stats) {
-          // file exists, so we ask user to overwrite or choose a different location
+          // file exists
           if(!err) {
+            // so we ask user to overwrite or choose a different location
             showAlert(true);
             return false;
           // file does not exist at given location, so we write a new file with content of sample.txt
@@ -531,8 +597,6 @@ function createFile(showDialog, overwriteFile) {
             fs.writeFile(pathToNewFile + "/todo.txt", "", function (err) {
               if (err) throw err;
               if (!err) {
-
-                showAlert(false);
                 console.log("Success: New todo.txt file created: " + pathToNewFile + "/todo.txt");
                 // Updating the GLOBAL filepath variable to user-selected file.
                 pathToFile = pathToNewFile + "/todo.txt";
@@ -540,12 +604,6 @@ function createFile(showDialog, overwriteFile) {
                 store.set("pathToFile", pathToFile);
                 // pass path and filename on, to extract and parse the raw data to objects
                 parseDataFromFile(pathToFile).then(response => {
-                  console.log(response);
-                }).catch(error => {
-                  console.log(error);
-                });
-                // start the file watcher
-                startFileWatcher().then(response => {
                   console.log(response);
                 }).catch(error => {
                   console.log(error);
@@ -584,6 +642,12 @@ function parseDataFromFile(pathToFile) {
   // we only start if file exists
   if (fs.existsSync(pathToFile)) {
     try {
+      // start the file watcher
+      startFileWatcher().then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
       // we clear the old data array
       parsedData = new Array;
       // each line is one string-entry in an array
@@ -599,27 +663,37 @@ function parseDataFromFile(pathToFile) {
       }
       // clean it up as we don't need this anymore
       parsedDataTemp = null;
-      t0 = performance.now();
-      generateTodoData().then(response => {
-        console.log(response);
-        t1 = performance.now();
-        console.log("Table rendered in", t1 - t0, "ms");
-      }).catch(error => {
-        console.log(error);
-      });
-      // parsed data will be passed to generate filter data and build the filter buttons
-      t0 = performance.now();
-      generateFilterData().then(response => {
-        console.log(response);
-        t1 = performance.now();
-        console.log("Filters rendered in", t1 - t0, "ms");
-      }).catch(error => {
-        console.log(error);
-      });
-      // if there is a file onboarding is hidden
-      showOnboarding(false);
-      return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
-
+      if(parsedData.length>0) {
+        t0 = performance.now();
+        generateTodoData().then(response => {
+          console.log(response);
+          t1 = performance.now();
+          console.log("Table rendered in", t1 - t0, "ms");
+        }).catch(error => {
+          console.log(error);
+        });
+        // parsed data will be passed to generate filter data and build the filter buttons
+        t0 = performance.now();
+        generateFilterData().then(response => {
+          console.log(response);
+          t1 = performance.now();
+          console.log("Filters rendered in", t1 - t0, "ms");
+        }).catch(error => {
+          console.log(error);
+        });
+        // if there is a file onboarding is hidden
+        showOnboarding(false);
+        return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
+      } else {
+        // if there is a file onboarding is hidden
+        showOnboarding(false);
+        // hide/show the addTodoContainer
+        addTodoContainer.classList.add("is-active");
+        todoTable.classList.remove("is-active");
+        // if file is actually empty we don't need the filter drawer
+        navBtnFilter.classList.remove("is-active");
+        return Promise.resolve("Info: File is empty, nothing will be built");
+      }
     } catch(error) {
       showOnboarding(true);
       return Promise.reject("Error in parseDataFromFile(): " + error);
@@ -679,7 +753,7 @@ function generateFilterData() {
         console.log("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
       }
     });
-    return Promise.resolve("Success: All filters have been generated and build");
+    return Promise.resolve("Success: All filters have been generated and built");
   } catch (error) {
     return Promise.reject("Error in generateFilterData(): " + error);
   }
@@ -687,41 +761,115 @@ function generateFilterData() {
 
 function buildFilterButtons(category) {
   try {
-    // only generate filters if there are any
-    if(filtersCounted) {
-      let filterContainer = document.getElementById("todoFilters");
-      // creates a div for the specific filter section
-      let filterContainerSub = document.createElement("div");
-      filterContainerSub.setAttribute("class", "dropdown-item " + category);
-      filterContainerSub.setAttribute("tabindex", -1);
-      // create a sub headline element
-      let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "title is-4 " + category);
-      todoFilterHeadline.setAttribute("tabindex", -1);
-      todoFilterHeadline.innerHTML = "<a href=\"#\" title=\"Hide all todos that contain " + category + "\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + category;
-      // TODO clean up the mess
-      todoFilterHeadline.addEventListener("click", () => {
-        // TODO clean up. this is a duplicate, see above
-        if(categoriesFiltered.includes(category)) {
-          // we remove the category from the array
-          categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
-          //persist the category filters
-          store.set("categoriesFiltered", categoriesFiltered);
-          // we remove the greyed out look from the container
-          filterContainerSub.classList.remove("is-greyed-out");
-          // change the eye icon
-          todoFilterHeadline.innerHTML = "<a href=\"#\" title=\"Hide all todos that contain " + category + "\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + category;
+    // translate headline
+    if(category=="contexts") {
+      headline = i18next.t("filterHeadlineContexts");
+    } else if(category=="projects"){
+      headline = i18next.t("filterHeadlineProjects");
+    }
+    let filterContainer = document.getElementById("todoFilters");
+    // creates a div for the specific filter section
+    let filterContainerSub = document.createElement("div");
+    filterContainerSub.setAttribute("class", "dropdown-item " + category);
+    filterContainerSub.setAttribute("tabindex", -1);
+    // create a sub headline element
+    let todoFilterHeadline = document.createElement("h4");
+    todoFilterHeadline.setAttribute("class", "title is-4 " + category);
+    todoFilterHeadline.setAttribute("tabindex", -1);
+    todoFilterHeadline.setAttribute("data-headline", headline);
+    todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + headline;
+    // TODO clean up the mess
+    todoFilterHeadline.addEventListener("click", () => {
+      // TODO clean up. this is a duplicate, see above
+      if(categoriesFiltered.includes(category)) {
+        // we remove the category from the array
+        categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
+        //persist the category filters
+        store.set("categoriesFiltered", categoriesFiltered);
+        // we remove the greyed out look from the container
+        filterContainerSub.classList.remove("is-greyed-out");
+        // change the eye icon
+        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
+      } else {
+        // we push the category to the filter array
+        categoriesFiltered.push(category);
+        // make sure there are no duplicates
+        // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+        categoriesFiltered.filter(function(item) {
+          let seen = {};
+          let k = JSON.stringify(item);
+          return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+        })
+        //persist the category filters
+        store.set("categoriesFiltered", categoriesFiltered);
+        // we add the greyed out look to the container
+        filterContainerSub.classList.add("is-greyed-out");
+        // change the eye icon
+        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye\"></i></a>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
+      }
+      t0 = performance.now();
+      generateTodoData().then(response => {
+        console.log(response);
+        t1 = performance.now();
+        console.log("Table rendered in:", t1 - t0, "ms");
+      }).catch(error => {
+        console.log(error);
+      });
+    });
+    // TODO clean up. this is a duplicate, see above
+    if(categoriesFiltered.includes(category)) {
+      filterContainerSub.classList.add("is-greyed-out");
+      todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye\"></i></a>&nbsp;" + headline;
+    } else {
+      filterContainerSub.classList.remove("is-greyed-out");
+      todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + headline;
+    }
+    // add the headline before category container
+    filterContainerSub.appendChild(todoFilterHeadline);
+    // build one button each
+    for (let filter in filtersCounted) {
+      let todoFiltersItem = document.createElement("button");
+      todoFiltersItem.setAttribute("class", "btnApplyFilter button");
+      todoFiltersItem.setAttribute("data-filter", filter);
+      todoFiltersItem.setAttribute("data-category", category);
+      todoFiltersItem.setAttribute("tabindex", 415);
+      todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
+      // create the event listener for filter selection by user
+      todoFiltersItem.addEventListener("click", () => {
+        // set highlighting
+        todoFiltersItem.classList.toggle("is-dark");
+        // if no filters are selected, add a first one
+        if (selectedFilters.length > 0) {
+          // get the index of the item that matches the data values the button clic provided
+          let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+          if(index != -1) {
+            // remove the item at the index where it matched
+            selectedFilters.splice(index, 1);
+          } else {
+            // if the item is not already in the array, push it into
+            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+          }
         } else {
-          // we push the category to the filter array
-          categoriesFiltered.push(category);
-          // make sure there are no duplicates
-          categoriesFiltered = removeDuplicates(categoriesFiltered);
+          // this is the first push
+          selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+        }
+        //convert the collected filters to JSON and save it to store.js
+        store.set("selectedFilters", JSON.stringify(selectedFilters));
+        if(categoriesFiltered) {
+          // remove any setting that hides the category of the selected filters
+          if(categoriesFiltered.indexOf(category)>=0) categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
           //persist the category filters
           store.set("categoriesFiltered", categoriesFiltered);
-          // we add the greyed out look to the container
-          filterContainerSub.classList.add("is-greyed-out");
-          // change the eye icon
-          todoFilterHeadline.innerHTML = "<a href=\"#\" title=\"Show all todos that contain " + category + "\"><i class=\"far fa-eye\"></i></a>&nbsp;" + category;
+          // reload the filter section for the visual change
+          // parsed data will be passed to generate filter data and build the filter buttons
+          t0 = performance.now();
+          generateFilterData().then(response => {
+            console.log(response);
+            t1 = performance.now();
+            console.log("Filters rendered:", t1 - t0, "ms");
+          }).catch(error => {
+            console.log(error);
+          });
         }
         t0 = performance.now();
         generateTodoData().then(response => {
@@ -732,83 +880,15 @@ function buildFilterButtons(category) {
           console.log(error);
         });
       });
-      // TODO clean up. this is a duplicate, see above
-      if(categoriesFiltered.includes(category)) {
-        filterContainerSub.classList.add("is-greyed-out");
-        todoFilterHeadline.innerHTML = "<a href=\"#\" title=\"Hide all todos that contain " + category + "\"><i class=\"far fa-eye\"></i></a>&nbsp;" + category;
-      } else {
-        filterContainerSub.classList.remove("is-greyed-out");
-        todoFilterHeadline.innerHTML = "<a href=\"#\" title=\"Hide all todos that contain " + category + "\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + category;
-      }
-      // add the headline before category container
-      filterContainerSub.appendChild(todoFilterHeadline);
-      // build one button each
-      // TODO: why dont put the adventListener on the buttons here?!
-      for (let filter in filtersCounted) {
-        let todoFiltersItem = document.createElement("button");
-        todoFiltersItem.setAttribute("class", "btnApplyFilter button");
-        todoFiltersItem.setAttribute("data-filter", filter);
-        todoFiltersItem.setAttribute("data-category", category);
-        todoFiltersItem.setAttribute("tabindex", 415);
-        todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
-        // create the event listener for filter selection by user
-        todoFiltersItem.addEventListener("click", () => {
-          // set highlighting
-          todoFiltersItem.classList.toggle("is-dark");
-          // if no filters are selected, add a first one
-          if (selectedFilters.length > 0) {
-            // get the index of the item that matches the data values the button clic provided
-            let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
-            if(index != -1) {
-              // remove the item at the index where it matched
-              selectedFilters.splice(index, 1);
-            } else {
-              // if the item is not already in the array, push it into
-              selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-            }
-          } else {
-            // this is the first push
-            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-          }
-          //convert the collected filters to JSON and save it to store.js
-          store.set("selectedFilters", JSON.stringify(selectedFilters));
-          if(categoriesFiltered) {
-            // remove any setting that hides the category of the selected filters
-            if(categoriesFiltered.indexOf(category)>=0) categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
-            //persist the category filters
-            store.set("categoriesFiltered", categoriesFiltered);
-            // reload the filter section for the visual change
-            // parsed data will be passed to generate filter data and build the filter buttons
-            t0 = performance.now();
-            generateFilterData().then(response => {
-              console.log(response);
-              t1 = performance.now();
-              console.log("Filters rendered:", t1 - t0, "ms");
-            }).catch(error => {
-              console.log(error);
-            });
-          }
-          t0 = performance.now();
-          generateTodoData().then(response => {
-            console.log(response);
-            t1 = performance.now();
-            console.log("Table rendered in:", t1 - t0, "ms");
-          }).catch(error => {
-            console.log(error);
-          });
-        });
-        // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
-        selectedFilters.forEach(function(item) {
-          if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
-        });
-        filterContainerSub.appendChild(todoFiltersItem);
-      }
-      // add filters to the specific filter container
-      filterContainer.appendChild(filterContainerSub);
-
-      return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
+      // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
+      selectedFilters.forEach(function(item) {
+        if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
+      });
+      filterContainerSub.appendChild(todoFiltersItem);
     }
-
+    // add filters to the specific filter container
+    filterContainer.appendChild(filterContainerSub);
+    return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
   } catch (error) {
     return Promise.reject("Error in buildFilterButtons(): " + error);
   }
@@ -863,7 +943,7 @@ function generateTodoData() {
     // we show some information on filters if any are set
     if(itemsFiltered.length!=parsedData.length) {
       todoTableSelectionInformation.classList.add("is-active");
-      todoTableSelectionInformation.firstElementChild.innerHTML = "visible todos: <strong>" + itemsFiltered.length + " </strong> of <strong>" + parsedData.length + "</strong>&nbsp;&nbsp;&nbsp;selected filters: <strong>" + selectedFilters.length + "</strong>";
+      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("selectionVisibleTodos") + "&nbsp;<strong>" + itemsFiltered.length + " </strong> " + i18next.t("selectionOf") + " <strong>" + parsedData.length + "</strong>&nbsp;&nbsp;&nbsp;" + i18next.t("selectionSelectedFilters") + ": <strong>" + selectedFilters.length + "</strong>";
     }
     // hide/show the addTodoContainer
     (itemsFiltered.length > 0) ? addTodoContainer.classList.remove("is-active") : addTodoContainer.classList.add("is-active")
@@ -950,7 +1030,7 @@ function createTableRow(item) {
     let todoTableBodyCellText = document.createElement("div");
     todoTableBodyCellText.setAttribute("class", "flex-row text");
     todoTableBodyCellText.setAttribute("role", "cell");
-    todoTableBodyCellText.setAttribute("title", "Edit this todo");
+    todoTableBodyCellText.setAttribute("title", i18next.t("editTodo"));
     todoTableBodyCellText.setAttribute("tabindex", 300);
     let tableContainerCategories = document.createElement("span");
     tableContainerCategories.setAttribute("class", "categories");
@@ -977,10 +1057,11 @@ function createTableRow(item) {
     }
     // add the checkbox
     if(item.complete==true) {
-      todoTableBodyCellCheckbox.setAttribute("title", "Mark as in progress");
+      i18next.t("resetFilters")
+      todoTableBodyCellCheckbox.setAttribute("title", i18next.t("markAsInProgress"));
       todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"fas fa-check-circle\"></i></a>";
     } else {
-      todoTableBodyCellCheckbox.setAttribute("title", "Mark as done");
+      todoTableBodyCellCheckbox.setAttribute("title", i18next.t("markAsDone"));
       todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
     }
     // add a listener on the checkbox to call the completeItem function
@@ -999,7 +1080,7 @@ function createTableRow(item) {
       // use the autoLink lib to attach an icon to every link and put a link on it
       todoTableBodyCellText.innerHTML =  item.text.autoLink({
         callback: function(url) {
-          return url + " <a href=" + url + " title=\"Open this link in your browser\" target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
+          return url + " <a href=" + url + " target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
         }
       });
     }
@@ -1023,16 +1104,11 @@ function createTableRow(item) {
         });
       }
     });
-    // add the categories to the row field to the row
-    //todoTableBodyCellText.appendChild(tableContainerCategories);
     // add the text cell to the row
     todoTableBodyCellText.appendChild(tableContainerCategories);
     // check for and add a given due date
     if(item.due) {
-      todoTableBodyCellDueDate.setAttribute("title", "This todo is due at " + item.due.toISOString().slice(0, 10));
-      //todoTableBodyCellDueDate.classList.add("tag", "is-white");
-      //todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i>&nbsp;" + item.due.toISOString().slice(0, 10);
-      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">due at</span><span class=\"tag is-dark\">" + item.due.toISOString().slice(0, 10) + "</span></div><i class=\"fas fa-sort-down\"></i>";
+      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">" + i18next.t("dueAt") + "</span><span class=\"tag is-dark\">" + item.due.toISOString().slice(0, 10) + "</span></div><i class=\"fas fa-sort-down\"></i>";
       if(item.due < new Date()) {
         todoTableBodyCellDueDate.classList.add("due");
       }
@@ -1043,8 +1119,7 @@ function createTableRow(item) {
     // add the more dots
     todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMore.setAttribute("role", "cell");
-    todoTableBodyCellMore.setAttribute("title", "More options");
-    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">Edit</a><a class=\"dropdown-item\">Delete</a></div></div></div>";
+    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">" + i18next.t("edit") + "</a><a class=\"dropdown-item\">" + i18next.t("delete") + "</a></div></div></div>";
     // click on three-dots-icon to open more menu
     todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
       // only if this element was highlighted before, we will hide instead of show the dropdown
@@ -1115,13 +1190,13 @@ function submitForm() {
         return Promise.resolve(response);
       }).catch(error => {
         // if writing into file is denied throw alert
-        modalFormAlert.innerHTML = "<strong>Error:</strong> Could not write your changes to the file. Please check if the file exists and if you have sufficient permissions to write to it: " + pathToFile;
+        modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + pathToFile;
         modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
         return Promise.reject(error);
       });
     // if the input field is empty, let users know
     } else {
-      modalFormAlert.innerHTML = "Please add a todo into the text field. If you are unsure on how to do this, take a quick look at the <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.";
+      modalFormAlert.innerHTML = i18next.t("formInfoNoInput");
       modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
       modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
       return Promise.reject("Info: Will not write empty todo");
@@ -1182,27 +1257,4 @@ function writeDataToFile() {
   } catch(error) {
     return Promise.reject("Error in writeDataToFile(): " + error);
   }
-}
-
-// ########################################################################################################################
-// START
-// ########################################################################################################################
-
-window.onload = function () {
-  console.log("Info: Path to file: " + pathToFile);
-  // set theme
-  if(selectedTheme) switchTheme(false)
-
-  // start parsing data
-  parseDataFromFile(pathToFile).then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-  // start the file watcher
-  startFileWatcher().then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
 }

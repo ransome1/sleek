@@ -30,12 +30,12 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Filters can be reset
 * [x] Completed todos can be hidden (setting will be persisted)
 * [x] If set the due date is shown on each todo
-* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (show filter drawer), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos))
+* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (show filter drawer), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos), CMD/CTRL + d (toggle dark mode))
 * [x] Todos can be deleted
 * [x] A basic tabindex is available
 * [x] Due date can be set using a datepicker
 * [x] Todos that include either contexts or projects or both can now be hidden (setting will be persisted)
-* [x] Dark theme
+* [x] Dark mode
 * [x] File watcher rereads the file if it has been changed (by hand or any other todo.txt application)
 
 ### To be done

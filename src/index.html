@@ -13,10 +13,10 @@
         <nav>
           <ul>
             <li class="logo">sleek</li>
-            <li class="btnAddTodo"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
-            <li id="btnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
-            <li class="btnLoadTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
-            <li id="btnTheme"><a href="#" tabindex="120"><i class="fas fa-adjust"></i></a></li>
+            <li id="navBtnAddTodo" class="btnAddTodo"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
+            <li id="navBtnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
+            <li id="navBtnOpenTodoFile" class="btnOpenTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
+            <li id="navBtnTheme"><a href="#" tabindex="120"><i class="fas fa-adjust"></i></a></li>
           </ul>
           <section id="filterDropdown" class="dropdown" tabindex="400">
             <div class="container">
@@ -25,10 +25,10 @@
                   <input type="checkbox" id="toggleShowCompleted"  tabindex="410">
                   <span class="slider round"></span>
                 </label>
-                <span class="text">Show completed</span>
+                <span id="filterToggleShowCompleted" class="text"></span>
               </div>
               <div id="todoFilters"></div>
-              <button class="btnResetFilters button is-white"><i class="fas fa-ban"></i>&nbsp;Reset all filters</button>
+              <button class="btnResetFilters button is-white"><i class="fas fa-ban"></i>&nbsp;<span id="filterBtnResetFilters"></span></button>
             </div>
           </section>
           <span href="#" id="filterColumnClose"><i class="fas fa-chevron-left"></i></span>
@@ -37,32 +37,31 @@
       <div class="column content">
         <section id="todoTable">
           <header id="selectionInformation">
-            <span></span>&nbsp;&nbsp;&nbsp;
-            <a href="#" class="btnResetFilters" title="Reset all filters"><i class="fas fa-ban"></i>&nbsp;Reset all filters</a>
+            <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnResetFilters"><i class="fas fa-ban"></i>&nbsp;<span id="selectionBtnResetFilters"></span></a>
           </header>
           <div id="todoTableContainer"></div>
         </section>
         <section id="onboardingContainer" class="contentContainer">
-          <h1 class="title is-1">welcome to sleek</h1>
-          <p class="subtitle">Start either by choosing your <strong>existing</strong> todo.txt file<br>or creating a <strong>new</strong> one.</p>
+          <h1 id="onboardingContainerHeadline" class="title is-1"></h1>
+          <p id="onboardingContainerSubtitle" class="subtitle"></p>
           <p class="file is-boxed is-centered">
-            <a href="#" class="btnOnboarding btnLoadTodoFile" tabindex="505">
+            <a href="#" class="btnOnboarding btnOpenTodoFile" tabindex="505">
               <i class="fas fa-upload"></i>
-              <span class="file-label">Choose existing todo.txt</span>
+              <span id="onboardingContainerBtnOpen" class="file-label"></span>
             </a>
             <a id="btnCreateTodoFile" href="#" class="btnOnboarding" tabindex="505">
               <i class="fas fa-plus-circle"></i>
-              <span class="file-label">Create new todo.txt</span>
+              <span id="onboardingContainerBtnCreate" class="file-label"></span>
             </a>
           </p>
         </section>
         <section id="addTodoContainer" class="contentContainer">
-          <h1 class="title is-1">no todos</h1>
-          <p class="subtitle">This list is empty, let's add some todos.</p>
+          <h1 id="addTodoContainerHeadline" class="title is-1"></h1>
+          <p id="addTodoContainerSubtitle" class="subtitle"></p>
           <p class="file is-boxed is-centered">
             <a href="#" class="btnOnboarding btnAddTodo" tabindex="505">
               <i class="fas fa-plus"></i>
-              <span class="file-label">Add a todo to your list</span>
+              <span id="addTodoContainerButton" class="file-label"></span>
             </a>
           </p>
         </section>
@@ -77,22 +76,20 @@
           </header>
           <div class="card-content">
             <div class="content">
-              <input id="modalFormInput" class="input is-medium" type="text" placeholder="(A) Do something good @context +project" tabindex="300">
+              <input id="modalFormInput" class="input is-medium" type="text" tabindex="300">
               <article class="message">
                 <div id="modalFormAlert" class="message-body"></div>
               </article>
               <div class="field dueDate">
-                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" placeholder="Select a due date" tabindex="305">
+                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" tabindex="305">
               </div>
-              <div class="field">
-                Click here to learn how to use the <a href="https://github.com/todotxt/todo.txt" target="_blank" tabindex="310">todo.txt syntax</a>.
-              </div>
+              <div id="modalFormHowTo" class="field"></div>
             </div>
           </div>
           <footer class="card-footer">
-            <button type="submit" class="card-footer-item" tabindex="315">Save</button>
+            <button id="btnSave" type="submit" class="card-footer-item" tabindex="315"></button>
             <a id="btnItemStatus" class="card-footer-item" tabindex="320"></a>
-            <a class="card-footer-item btnModalCancel" tabindex="325">Cancel</a>
+            <a class="card-footer-item btnModalCancel" tabindex="325"></a>
           </footer>
         </div>
       </div>
@@ -102,17 +99,15 @@
       <div class="modal-content">
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title">todo.txt file already exists</p>
+            <p id="modalFileHeadline" class="card-header-title"></p>
           </header>
           <div class="card-content">
-            <div class="content">
-              There is already a todo.txt located at the chosen directory. Would you like to overwrite the existing todo.txt file (all contents will be lost) or select a different directory?
-            </div>
+            <div class="content" id="modalFileContent"></div>
           </div>
           <footer class="card-footer">
-            <a href="#" id="modalFileOverwrite" class="card-footer-item" tabindex="610">Overwrite existing todo.txt</a>
-            <a href="#" id="modalFileChoose" class="card-footer-item" tabindex="615">Change directory</a>
-            <a href="#" class="card-footer-item btnModalCancel" tabindex="620">Cancel</a>
+            <a href="#" id="modalFileOverwrite" class="card-footer-item" tabindex="610"></a>
+            <a href="#" id="modalFileChoose" class="card-footer-item" tabindex="615"></a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="620"></a>
           </footer>
         </div>
       </div>
