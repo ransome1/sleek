@@ -11,7 +11,6 @@
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
-//require('log-timestamp');
 const md5 = require('md5');
 const electron = require("electron");
 const theme = electron.remote.nativeTheme;
@@ -31,15 +30,12 @@ const store = new Store({
     theme: ""
   }
 });
-const i18next = require('i18next');
-const i18nextBackend = require('i18next-fs-backend');
-const i18nextBrowserLanguageDetector = require('i18next-browser-languagedetector');
+const i18next = require('./configs/i18next.config');
 const body = document.getElementById("body");
 const head = document.getElementsByTagName("head")[0];
 const a = document.querySelectorAll("a");
 const navBtnAddTodo = document.getElementById("navBtnAddTodo");
 const navBtnFilter = document.getElementById("navBtnFilter");
-const navBtnOpenTodoFile = document.getElementById("navBtnOpenTodoFile");
 const navBtnTheme = document.getElementById("navBtnTheme");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
@@ -106,13 +102,38 @@ let modalFormStatus;
 let categoriesFiltered = store.get("categoriesFiltered");
 // empty hull for the file watcher
 let fileWatcher;
-// ###############
-// INITIAL DOM CONFIG
-// ###############
+// ########################################################################################################################
+// INITIAL DOM CONFIGURATION
+// ########################################################################################################################
 // prevent manual input in datepicker
 dueDatePickerInput.readOnly = true;
 // set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
+// ########################################################################################################################
+// TRANSLATIONS
+// ########################################################################################################################
+//navBtnAddTodo.setAttribute("title", i18next.t("addTodo"));
+navBtnFilter.setAttribute("title", i18next.t("toggleFilter"));
+//openFile.setAttribute("title", i18next.t("openFile"));
+navBtnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
+filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
+filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
+selectionBtnResetFilters.innerHTML = i18next.t("resetFilters");
+modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
+dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
+btnSave.innerHTML = i18next.t("save");
+modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
+addTodoContainerHeadline.innerHTML = i18next.t("addTodoContainerHeadline");
+addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
+addTodoContainerButton.innerHTML = i18next.t("addTodo");
+welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
+onboardingContainerSubtitle.innerHTML = i18next.t("onboardingContainerSubtitle");
+onboardingContainerBtnOpen.innerHTML = i18next.t("onboardingContainerBtnOpen");
+onboardingContainerBtnCreate.innerHTML = i18next.t("onboardingContainerBtnCreate");
+modalFileOverwrite.innerHTML = i18next.t("modalFileOverwrite");
+modalFileChoose.innerHTML = i18next.t("modalFileChoose");
+modalFileHeadline.innerHTML = i18next.t("modalFileHeadline");
+modalFileContent.innerHTML = i18next.t("modalFileContent");
 // ########################################################################################################################
 // THEME
 // ########################################################################################################################
@@ -145,72 +166,6 @@ function switchTheme(toggle) {
   store.set("theme", selectedTheme);
 }
 // ########################################################################################################################
-// START: WE START WHEN LANGUAGES ARE READY
-// ########################################################################################################################
-
-// ########################################################################################################################
-// MULTI LANGUAGE SUPPORT
-// ########################################################################################################################
-i18next
-.use(i18nextBackend)
-.use(i18nextBrowserLanguageDetector)
-.init({
-  initImmediate: false,
-  fallbackLng: "de",
-  namespace: "translation",
-  defaultNS: "translation",
-  debug: false,
-  preload: fs.readdirSync(path.join(__dirname, './locales')).filter((fileName) => {
-    const joinedPath = path.join(path.join(__dirname, './locales'), fileName)
-    const isDirectory = fs.lstatSync(joinedPath).isDirectory()
-    return isDirectory
-  }),
-  backend: {
-    loadPath: path.join(__dirname, './locales/{{lng}}/{{ns}}.json'),
-    addPath: path.join(__dirname, './locales/{{lng}}/{{ns}}.missing.json')
-  },
-  saveMissing: true
-}).then(function(t) {
-  navBtnAddTodo.setAttribute("title", i18next.t("addTodo"));
-  navBtnFilter.setAttribute("title", i18next.t("navBtnFilter"));
-  navBtnOpenTodoFile.setAttribute("title", i18next.t("navBtnOpenTodoFile"));
-  navBtnTheme.setAttribute("title", i18next.t("navBtnTheme"));
-  filterToggleShowCompleted.innerHTML = i18next.t("filterToggleShowCompleted");
-  filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
-  selectionBtnResetFilters.innerHTML = i18next.t("resetFilters");
-  modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
-  dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
-  btnSave.innerHTML = i18next.t("save");
-  modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
-  addTodoContainerHeadline.innerHTML = i18next.t("addTodoContainerHeadline");
-  addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
-  addTodoContainerButton.innerHTML = i18next.t("addTodo");
-  onboardingContainerHeadline.innerHTML = i18next.t("onboardingContainerHeadline");
-  onboardingContainerSubtitle.innerHTML = i18next.t("onboardingContainerSubtitle");
-  onboardingContainerBtnOpen.innerHTML = i18next.t("onboardingContainerBtnOpen");
-  onboardingContainerBtnCreate.innerHTML = i18next.t("onboardingContainerBtnCreate");
-  modalFileOverwrite.innerHTML = i18next.t("modalFileOverwrite");
-  modalFileChoose.innerHTML = i18next.t("modalFileChoose");
-  modalFileHeadline.innerHTML = i18next.t("modalFileHeadline");
-  modalFileContent.innerHTML = i18next.t("modalFileContent");
-  // set theme
-  if(selectedTheme) switchTheme(false)
-  // only start if a file has been selected
-  if(pathToFile) {
-    console.log("Info: Path to file: " + pathToFile);
-    // start parsing data
-    parseDataFromFile(pathToFile).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
-  } else {
-    console.log("Info: File does not exist or has not been defined yet");
-    // show onboarding if no file has been selected
-    showOnboarding(true);
-  }
-});
-// ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
 // persist the highlighting of the button and the dropdown menu
@@ -218,7 +173,10 @@ navBtnFilter.onclick = function() { showFilters("toggle") }
 
 filterColumnClose.onclick = function() { showFilters(false) }
 
-btnAddTodo.forEach(el => el.onclick = showForm);
+btnAddTodo.forEach(function(el) {
+  el.setAttribute("title", i18next.t("addTodo"));
+  el.onclick = showForm;
+});
 
 // flush all filters and items by emptying the array and reloading the data
 btnResetFilters.forEach(el => el.onclick = resetFilters);
@@ -267,7 +225,10 @@ a.forEach(el => el.addEventListener("click", function(el) {
 }));
 
 // put a click event on all "open file" buttons
-btnOpenTodoFile.forEach(el => el.onclick = openFile);
+btnOpenTodoFile.forEach(function(el) {
+  el.setAttribute("title", i18next.t("openFile"));
+  el.onclick = openFile;
+});
 
 // onboarding: click will call createFile() function
 btnCreateTodoFile.onclick = function () { createFile(true, false) }
@@ -297,27 +258,24 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   }
 });
 
-// ###############
-// CONFIGURE KEYSTROKES
-// ###############
-
+// ########################################################################################################################
+// KEYBOARD SHORTCUTS
+// ########################################################################################################################
 // toggle filter dropdown when escape key is pressed
 filterDropdown.addEventListener ("keydown", function () {
   if(event.key == 'Escape') showFilters(false);
 });
-
 // put a listeners on all modal backgrounds
 modalForm.addEventListener ("keydown", function () {
   if(event.key == 'Escape') clearModal();
 });
-
 // ########################################################################################################################
 // FUNCTIONS
 // ########################################################################################################################
 
 function startFileWatcher() {
   try {
-    console.log(fileWatcher);
+
     if(fileWatcher) fileWatcher.close();
     if (fs.existsSync(pathToFile)) {
       let md5Previous = null;
@@ -439,9 +397,9 @@ function showForm(variable) {
         btnItemStatus.classList.add("is-active");
         // only show the complete button on open items
         if(dataItem.complete == false) {
-          btnItemStatus.innerHTML = i18next.t("markAsDone");
+          btnItemStatus.innerHTML = i18next.t("done");
         } else {
-          btnItemStatus.innerHTML = i18next.t("markAsInProgress");
+          btnItemStatus.innerHTML = i18next.t("inProgress");
         }
 
         // if so we paste it into the input field
@@ -763,9 +721,9 @@ function buildFilterButtons(category) {
   try {
     // translate headline
     if(category=="contexts") {
-      headline = i18next.t("filterHeadlineContexts");
+      headline = i18next.t("contexts");
     } else if(category=="projects"){
-      headline = i18next.t("filterHeadlineProjects");
+      headline = i18next.t("projects");
     }
     let filterContainer = document.getElementById("todoFilters");
     // creates a div for the specific filter section
@@ -943,7 +901,7 @@ function generateTodoData() {
     // we show some information on filters if any are set
     if(itemsFiltered.length!=parsedData.length) {
       todoTableSelectionInformation.classList.add("is-active");
-      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("selectionVisibleTodos") + "&nbsp;<strong>" + itemsFiltered.length + " </strong> " + i18next.t("selectionOf") + " <strong>" + parsedData.length + "</strong>&nbsp;&nbsp;&nbsp;" + i18next.t("selectionSelectedFilters") + ": <strong>" + selectedFilters.length + "</strong>";
+      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + itemsFiltered.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>&nbsp;&nbsp;&nbsp;" + i18next.t("selectedFilters") + ": <strong>" + selectedFilters.length + "</strong>";
     }
     // hide/show the addTodoContainer
     (itemsFiltered.length > 0) ? addTodoContainer.classList.remove("is-active") : addTodoContainer.classList.add("is-active")
@@ -1058,10 +1016,10 @@ function createTableRow(item) {
     // add the checkbox
     if(item.complete==true) {
       i18next.t("resetFilters")
-      todoTableBodyCellCheckbox.setAttribute("title", i18next.t("markAsInProgress"));
+      todoTableBodyCellCheckbox.setAttribute("title", i18next.t("inProgress"));
       todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"fas fa-check-circle\"></i></a>";
     } else {
-      todoTableBodyCellCheckbox.setAttribute("title", i18next.t("markAsDone"));
+      todoTableBodyCellCheckbox.setAttribute("title", i18next.t("done"));
       todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
     }
     // add a listener on the checkbox to call the completeItem function
@@ -1256,5 +1214,27 @@ function writeDataToFile() {
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
   } catch(error) {
     return Promise.reject("Error in writeDataToFile(): " + error);
+  }
+}
+
+// ########################################################################################################################
+// START
+// ########################################################################################################################
+window.onload = function () {
+  // set theme
+  if(selectedTheme) switchTheme(false)
+  // only start if a file has been selected
+  if(pathToFile) {
+    console.log("Info: Path to file: " + pathToFile);
+    // start parsing data
+    parseDataFromFile(pathToFile).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+  } else {
+    console.log("Info: File does not exist or has not been defined yet");
+    // show onboarding if no file has been selected
+    showOnboarding(true);
   }
 }

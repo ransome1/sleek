@@ -6,7 +6,7 @@ sleek is a simple todo manager based on the <a href="https://github.com/todotxt/
 ### Work in progress
 sleek is under active development. For detailed information on what is being currently developed, what will be and what already has been, you can take a look at this <a href="https://datenkrake.eu/kanboard/?controller=BoardViewController&action=readonly&token=7a2e9e391ee6d324070a0bebcbc7a42b6eef4b19117b4cd3d434933edad9">Kanboard</a>.
 
-![Alt text](assets/sleek.screenshot_main.png?raw=true "Screenshot of sleek")
+![Alt text](assets/screenshots/sleek.screenshot_main.png?raw=true "Screenshot of sleek")
 
 ### Get it from Snap Store
 You can install sleek from Canonicals Snap Store using: `sudo snap install --beta sleek`
@@ -20,31 +20,32 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Onboarding with two functions: Open existing todo.txt file or create a new one
 * [x] Open a todo.txt file and parse it into a table (path to file will be persisted)
 * [x] Todos are grouped by priority
-* [x] Contexts and projects are added as tags to each item
+* [x] Todos are sorted by due date within priority groups
 * [x] State of completion is visible
-* [x] Open todos can be checked to mark them as completed
-* [x] Completed todos can be checked to mark them as in progress
+* [x] Todos can be marked as completed and vice versa
+* [x] Completed todos can be hidden (setting will be persisted)
 * [x] New todos can be added
 * [x] Existing todos can be edited
+* [x] Contexts and projects can be added as tags to each item
+* [x] Todos can be deleted
 * [x] Todos can be filtered by contexts and projects (setting will be persisted)
 * [x] Filters can be reset
-* [x] Completed todos can be hidden (setting will be persisted)
 * [x] If set the due date is shown on each todo
-* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (show filter drawer), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos), CMD/CTRL + d (toggle dark mode))
-* [x] Todos can be deleted
-* [x] A basic tabindex is available
 * [x] Due date can be set using a datepicker
+* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (show filter drawer), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos), CMD/CTRL + d (toggle dark mode))
+* [x] A basic tabindex is available
 * [x] Todos that include either contexts or projects or both can now be hidden (setting will be persisted)
-* [x] Dark mode
-* [x] File watcher rereads the file if it has been changed (by hand or any other todo.txt application)
+* [x] Dark and light mode can be toggled
+* [x] A file watcher rereads the file if it has been changed (by hand or any other todo.txt application)
+* [x] Multiple languages are supported (English & German are implemented so far)
 
 ### To be done
 * [ ] Extensive testing & bug fixing
+* [ ] Performance improvements for older hardware
 * [ ] Code refinement and better error handling
-* [ ] Multi language support
 * [ ] Notification function for due dates
 * [ ] Full text search
-* [ ] More visual guidance when adding new todos
+* [ ] Interactive guidance when adding new todos
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
@@ -54,3 +55,4 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt
 - autolink-js: https://github.com/bryanwoods/autolink-js
 - vanillajs-datepicker: https://github.com/mymth/vanillajs-datepicker
+- i18next: https://github.com/i18next/i18next
