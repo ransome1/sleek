@@ -38,13 +38,13 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Dark and light mode can be toggled
 * [x] A file watcher rereads the file if it has been changed (by hand or any other todo.txt application)
 * [x] Multiple languages are supported (English & German are implemented so far)
+* [x] Full-text search
 
 ### To be done
 * [ ] Extensive testing & bug fixing
 * [ ] Performance improvements for older hardware
 * [ ] Code refinement and better error handling
 * [ ] Notification function for due dates
-* [ ] Full text search
 * [ ] Interactive guidance when adding new todos
 
 ### Used libraries
