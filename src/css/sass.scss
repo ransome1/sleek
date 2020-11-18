@@ -279,9 +279,13 @@ nav {
     display: none;
     font-size: .8em;
     text-align: center;
+    padding: .5em 0;
   }
   #selectionInformation.is-active {
     display: block;
+  }
+  #todoTableContainer {
+    margin: 1em 0;
   }
   .flex-table {
     display: flex;

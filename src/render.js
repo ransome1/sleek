@@ -55,9 +55,13 @@ const addTodoContainer = document.getElementById("addTodoContainer");
 const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadline");
 const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
 const addTodoContainerButton = document.getElementById("addTodoContainerButton");
+const noResultContainer = document.getElementById("noResultContainer");
+const noResultContainerHeadline = document.getElementById("noResultContainerHeadline");
+const noResultContainerSubtitle = document.getElementById("noResultContainerSubtitle");
 const todoTable = document.getElementById("todoTable");
 const todoTableSelectionInformation = document.getElementById("selectionInformation");
 const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
+const todoTableSearch = document.getElementById("todoTableSearch");
 const categories = ["contexts", "projects"];
 const filterContainer = document.getElementById("todoFilters");
 const filterDropdown = document.getElementById("filterDropdown");
@@ -102,6 +106,8 @@ let modalFormStatus;
 let categoriesFiltered = store.get("categoriesFiltered");
 // empty hull for the file watcher
 let fileWatcher;
+// TODO:
+let itemsFiltered = [];
 // ########################################################################################################################
 // INITIAL DOM CONFIGURATION
 // ########################################################################################################################
@@ -109,6 +115,8 @@ let fileWatcher;
 dueDatePickerInput.readOnly = true;
 // set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
+//
+todoTableSearch.placeholder = i18next.t("search");
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
@@ -134,6 +142,8 @@ modalFileOverwrite.innerHTML = i18next.t("modalFileOverwrite");
 modalFileChoose.innerHTML = i18next.t("modalFileChoose");
 modalFileHeadline.innerHTML = i18next.t("modalFileHeadline");
 modalFileContent.innerHTML = i18next.t("modalFileContent");
+noResultContainerHeadline.innerHTML = i18next.t("noResults");
+noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
 // ########################################################################################################################
 // THEME
 // ########################################################################################################################
@@ -258,6 +268,10 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   }
 });
 
+todoTableSearch.addEventListener("input", function () {
+  generateTodoData(this.value);
+});
+
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
@@ -343,6 +357,8 @@ function resetFilters() {
   store.set("selectedFilters", new Array);
   // clear filtered categories
   store.set("categoriesFiltered", new Array);
+  // clear search input
+  todoTableSearch.value = null;
   t0 = performance.now();
   generateTodoData().then(response => {
     console.log(response);
@@ -852,59 +868,73 @@ function buildFilterButtons(category) {
   }
 }
 
-function generateTodoData() {
+function generateTodoData(searchString) {
   try {
-    // new variable for items with or without priority
-    let items = [];
-    // we build a new array according to the showComplete setting
-    if(showCompleted==false) {
-      for(let item in parsedData) {
-        if(parsedData[item].complete==true) continue;
-        items.push(parsedData[item]);
+    //
+    if(!searchString && !todoTableSearch.value) {
+      // new variable for items with or without priority
+      let items = [];
+      // we build a new array according to the showComplete setting
+      if(showCompleted==false) {
+        for(let item in parsedData) {
+          if(parsedData[item].complete==true) continue;
+          items.push(parsedData[item]);
+        }
+      } else {
+        items = parsedData;
       }
-    } else {
-      items = parsedData;
-    }
-    // new variable for items, filtered or not filtered
-    let itemsFiltered = [];
-    // check if a filter has been passed or a whole category is suppose to be hidden
-    if(selectedFilters.length > 0) {
-      // if there are selected filters build the items according to those filters
-      for (let i = 0; i < selectedFilters.length; i++) {
-        for(var j = 0; j < items.length; j++) {
-          if(items[j][selectedFilters[i][1]]) {
-            // check if the selected filter is in one of the array values of the category field
-            // only push into array if it hasn't already been part of the array
-            if(items[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(items[j])) {
-              itemsFiltered.push(items[j]);
+      // new variable for items, filtered or not filtered
+      itemsFiltered = [];
+      // check if a filter has been passed or a whole category is suppose to be hidden
+      if(selectedFilters.length > 0) {
+        // if there are selected filters build the items according to those filters
+        for (let i = 0; i < selectedFilters.length; i++) {
+          for(var j = 0; j < items.length; j++) {
+            if(items[j][selectedFilters[i][1]]) {
+              // check if the selected filter is in one of the array values of the category field
+              // only push into array if it hasn't already been part of the array
+              if(items[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(items[j])) {
+                itemsFiltered.push(items[j]);
+              }
             }
           }
         }
+      // if no filter has been passed, select all items
+      } else {
+        // we remove filter info, if none have been selected
+        todoTableSelectionInformation.classList.remove("is-active");
+        itemsFiltered = items;
       }
-    // if no filter has been passed, select all items
-    } else {
-      // we remove filter info, if none have been selected
-      todoTableSelectionInformation.classList.remove("is-active");
-      itemsFiltered = items;
-    }
-    // if there is at least 1 category to hide
-    if(categoriesFiltered.length > 0) {
-      let temp = itemsFiltered;
-      categoriesFiltered.forEach(category => {
-        // we create a new array where the items attrbite has no values
-        temp = temp.filter(function(item) {
-          return item[category] == null;
+      // if there is at least 1 category to hide
+      if(categoriesFiltered.length > 0) {
+        let temp = itemsFiltered;
+        categoriesFiltered.forEach(category => {
+          // we create a new array where the items attrbite has no values
+          temp = temp.filter(function(item) {
+            return item[category] == null;
+          });
         });
-      });
-      itemsFiltered = temp;
+        itemsFiltered = temp;
+      }
+    // if a search input is detected
+    } else {
+      if(!searchString && todoTableSearch.value) searchString = todoTableSearch.value;
+      // convert everything to lowercase for better search results
+      itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
     }
     // we show some information on filters if any are set
     if(itemsFiltered.length!=parsedData.length) {
       todoTableSelectionInformation.classList.add("is-active");
-      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + itemsFiltered.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>&nbsp;&nbsp;&nbsp;" + i18next.t("selectedFilters") + ": <strong>" + selectedFilters.length + "</strong>";
+      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + itemsFiltered.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>";
     }
-    // hide/show the addTodoContainer
-    (itemsFiltered.length > 0) ? addTodoContainer.classList.remove("is-active") : addTodoContainer.classList.add("is-active")
+    // hide/show the addTodoContainer or noResultTodoContainer
+    if(itemsFiltered.length > 0) {
+      addTodoContainer.classList.remove("is-active");
+      noResultContainer.classList.remove("is-active");
+    } else if(itemsFiltered.length == 0) {
+      addTodoContainer.classList.remove("is-active");
+      noResultContainer.classList.add("is-active");
+    }
     // produce an object where priority a to z + null is key
     itemsFiltered = itemsFiltered.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];

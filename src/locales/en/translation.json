@@ -5,7 +5,7 @@
   "toggleDarkMode": "Toggle dark mode",
   "toggleCompletedTodos": "Toggle completed todos",
   "completedTodos": "Completed todos",
-  "resetFilters": "Reset filters",
+  "resetFilters": "Reset filters and search",
   "contexts": "Contexts",
   "projects": "Projects",
   "visibleTodos": "Visible todos",
@@ -46,5 +46,9 @@
   "file": "File",
   "close": "Close",
   "reload": "Reload",
-  "devTools": "Toggle developer tools"
+  "devTools": "Toggle developer tools",
+  "search": "Search",
+  "noResults": "No results",
+  "noResultContainerSubtitle": "No results found for either for your search nor selected filters",
+  "clear": "Clear"
 }

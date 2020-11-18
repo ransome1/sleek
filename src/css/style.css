@@ -203,9 +203,12 @@ nav {
   #todoTable #selectionInformation {
     display: none;
     font-size: .8em;
-    text-align: center; }
+    text-align: center;
+    padding: .5em 0; }
   #todoTable #selectionInformation.is-active {
     display: block; }
+  #todoTable #todoTableContainer {
+    margin: 1em 0; }
   #todoTable .flex-table {
     display: flex;
     flex-flow: row wrap;

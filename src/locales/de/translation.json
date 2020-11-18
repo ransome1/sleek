@@ -5,7 +5,7 @@
   "toggleDarkMode": "Darkmode ein- und ausschalten",
   "toggleCompletedTodos": "Erledigte Aufgaben ein- und ausblenden",
   "completedTodos": "Erledigte Aufgaben",
-  "resetFilters": "Filter zurücksetzen",
+  "resetFilters": "Filter und Suche zurücksetzen",
   "contexts": "Kontexte",
   "projects": "Projekte",
   "visibleTodos": "Sichtbare Aufgaben",
@@ -46,5 +46,9 @@
   "file": "Datei",
   "close": "Schließen",
   "reload": "Neuladen",
-  "devTools": "Entwickler-Tools ein- und ausblenden"
+  "devTools": "Entwickler-Tools ein- und ausblenden",
+  "search": "Suchen",
+  "noResults": "Keine Ergebnisse",
+  "noResultContainerSubtitle": "Zu Ihrer Suche oder Filterauswahl wurden keine Ergebnisse gefunden",
+  "clear": "Löschen"
 }

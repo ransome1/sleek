@@ -15,6 +15,7 @@ strong {
 input {
   background-color: none;
   color: #CCCDCF;
+  border: none!important;
 }
 
 nav {
@@ -35,6 +36,15 @@ nav ul li.is-highlighted a {
   color: #B5B5B5;
   border-bottom: none;
   background-color: #3B3B3B;
+}
+
+#todoTable #todoTableSearch {
+  color: #CCCDCF;
+  background-color: #2D2E31;
+}
+
+#todoTable #todoTableSearch::placeholder {
+  color: #4a4a4a;
 }
 
 #todoTable .flex-table {

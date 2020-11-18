@@ -4,5 +4,6 @@
   "toggleShowCompleted": "toggleShowCompleted",
   "navBtnAddTodo": "navBtnAddTodo",
   "navBtnTheme": "navBtnTheme",
-  "navBtnFilter": "navBtnFilter"
+  "navBtnFilter": "navBtnFilter",
+  "noResultContainerHeadline": "noResultContainerHeadline"
 }
