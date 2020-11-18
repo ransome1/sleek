@@ -25,7 +25,7 @@ const i18nextOptions = {
 };
 i18next
   .use(i18nextBackend)
-  .use(i18nextBrowserLanguageDetector)
+  //.use(i18nextBrowserLanguageDetector)
 if (!i18next.isInitialized) {
   i18next
     .init(i18nextOptions);

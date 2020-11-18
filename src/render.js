@@ -870,57 +870,61 @@ function buildFilterButtons(category) {
 
 function generateTodoData(searchString) {
   try {
-    //
-    if(!searchString && !todoTableSearch.value) {
-      // new variable for items with or without priority
-      let items = [];
-      // we build a new array according to the showComplete setting
-      if(showCompleted==false) {
-        for(let item in parsedData) {
-          if(parsedData[item].complete==true) continue;
-          items.push(parsedData[item]);
-        }
-      } else {
-        items = parsedData;
+    // new variable for items with or without priority
+    let items = [];
+    // we build a new array according to the showComplete setting
+    if(showCompleted==false) {
+      for(let item in parsedData) {
+        if(parsedData[item].complete==true) continue;
+        items.push(parsedData[item]);
       }
-      // new variable for items, filtered or not filtered
-      itemsFiltered = [];
-      // check if a filter has been passed or a whole category is suppose to be hidden
-      if(selectedFilters.length > 0) {
-        // if there are selected filters build the items according to those filters
-        for (let i = 0; i < selectedFilters.length; i++) {
-          for(var j = 0; j < items.length; j++) {
-            if(items[j][selectedFilters[i][1]]) {
-              // check if the selected filter is in one of the array values of the category field
-              // only push into array if it hasn't already been part of the array
-              if(items[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(items[j])) {
-                itemsFiltered.push(items[j]);
-              }
+    } else {
+      items = parsedData;
+    }
+    // new variable for items, filtered or not filtered
+    itemsFiltered = [];
+    // check if a filter has been passed or a whole category is suppose to be hidden
+    if(selectedFilters.length > 0) {
+      // if there are selected filters build the items according to those filters
+      for (let i = 0; i < selectedFilters.length; i++) {
+        for(var j = 0; j < items.length; j++) {
+          if(items[j][selectedFilters[i][1]]) {
+            // check if the selected filter is in one of the array values of the category field
+            // only push into array if it hasn't already been part of the array
+            if(items[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(items[j])) {
+              itemsFiltered.push(items[j]);
             }
           }
         }
-      // if no filter has been passed, select all items
-      } else {
-        // we remove filter info, if none have been selected
-        todoTableSelectionInformation.classList.remove("is-active");
-        itemsFiltered = items;
       }
-      // if there is at least 1 category to hide
-      if(categoriesFiltered.length > 0) {
-        let temp = itemsFiltered;
-        categoriesFiltered.forEach(category => {
-          // we create a new array where the items attrbite has no values
-          temp = temp.filter(function(item) {
-            return item[category] == null;
-          });
-        });
-        itemsFiltered = temp;
-      }
-    // if a search input is detected
+    // if no filter has been passed, select all items
     } else {
-      if(!searchString && todoTableSearch.value) searchString = todoTableSearch.value;
+      // we remove filter info, if none have been selected
+      todoTableSelectionInformation.classList.remove("is-active");
+      itemsFiltered = items;
+    }
+    // if there is at least 1 category to hide
+    if(categoriesFiltered.length > 0) {
+      let temp = itemsFiltered;
+      categoriesFiltered.forEach(category => {
+        // we create a new array where the items attrbite has no values
+        temp = temp.filter(function(item) {
+          return item[category] == null;
+        });
+      });
+      itemsFiltered = temp;
+    }
+    // if there is a search input detected
+    if(searchString) {
       // convert everything to lowercase for better search results
-      itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      itemsFiltered = itemsFiltered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      //if(itemsFiltered.length == 0) itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+    // if there is a search input detected or if there was a avlue in the input already
+    } if(!searchString && todoTableSearch.value) {
+      searchString = todoTableSearch.value;
+      // convert everything to lowercase for better search results
+      itemsFiltered = itemsFiltered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      //if(itemsFiltered.length == 0) itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
     }
     // we show some information on filters if any are set
     if(itemsFiltered.length!=parsedData.length) {

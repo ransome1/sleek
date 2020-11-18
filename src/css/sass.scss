@@ -24,7 +24,7 @@ $sleek-projects-button-hover: #f7dcf7;
 $sleek-projects-button-bubble: #bc30ba;
 $sleek-projects-button-highlighted: #5f1a5e;
 
-$family-sans-serif: Helvetica, Arial, "FreeSans", "DejaVu Sans",  sans-serif;
+$family-sans-serif: "FreeSans", Helvetica, Arial, "DejaVu Sans",  sans-serif;
 $body-background-color: white;
 $modal-background-background-color: rgba(0, 0, 0, 0.15);
 $modal-z: 50;
@@ -55,7 +55,9 @@ body::-webkit-scrollbar {
 }
 
 /* ONBOARDING */
-
+#noResultContainer.contentContainer {
+  height: 80%;
+}
 .contentContainer {
   width: 100%;
   height: 100%;

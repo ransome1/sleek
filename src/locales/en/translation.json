@@ -49,6 +49,6 @@
   "devTools": "Toggle developer tools",
   "search": "Search",
   "noResults": "No results",
-  "noResultContainerSubtitle": "No results found for either for your search nor selected filters",
+  "noResultContainerSubtitle": "No results found for either your search input nor your selected filters",
   "clear": "Clear"
 }

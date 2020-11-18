@@ -24,6 +24,9 @@ body::-webkit-scrollbar {
   box-shadow: none; }
 
 /* ONBOARDING */
+#noResultContainer.contentContainer {
+  height: 80%; }
+
 .contentContainer {
   width: 100%;
   height: 100%;
@@ -753,7 +756,7 @@ section {
   display: block; }
 
 body, button, input, optgroup, select, textarea {
-  font-family: Helvetica, Arial, "FreeSans", "DejaVu Sans", sans-serif; }
+  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif; }
 
 code,
 pre {
@@ -7350,13 +7353,13 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   font-weight: 700 !important; }
 
 .is-family-primary {
-  font-family: Helvetica, Arial, "FreeSans", "DejaVu Sans", sans-serif !important; }
+  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif !important; }
 
 .is-family-secondary {
-  font-family: Helvetica, Arial, "FreeSans", "DejaVu Sans", sans-serif !important; }
+  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif !important; }
 
 .is-family-sans-serif {
-  font-family: Helvetica, Arial, "FreeSans", "DejaVu Sans", sans-serif !important; }
+  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif !important; }
 
 .is-family-monospace {
   font-family: monospace !important; }
