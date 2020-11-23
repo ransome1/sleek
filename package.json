@@ -60,7 +60,7 @@
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder -l --publish never",
-    "css-build": "node-sass --omit-source-map-url src/css/sass.scss src/css/style.css",
+    "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
   },

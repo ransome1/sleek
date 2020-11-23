@@ -106,7 +106,7 @@ let modalFormStatus;
 let categoriesFiltered = store.get("categoriesFiltered");
 // empty hull for the file watcher
 let fileWatcher;
-// TODO:
+// Empty array for the filtered items later on
 let itemsFiltered = [];
 // ########################################################################################################################
 // INITIAL DOM CONFIGURATION
@@ -283,6 +283,14 @@ filterDropdown.addEventListener ("keydown", function () {
 modalForm.addEventListener ("keydown", function () {
   if(event.key == 'Escape') clearModal();
 });
+// put actions on escape button (in general)
+body.addEventListener ("keydown", function () {
+  if(event.key == "Escape") {
+    todoTableSearch.blur();
+    clearModal();
+  }
+});
+
 // ########################################################################################################################
 // FUNCTIONS
 // ########################################################################################################################
@@ -475,6 +483,7 @@ function showFilters(variable) {
     case false:
       navBtnFilter.classList.remove("is-highlighted");
       filterDropdown.classList.remove("is-active");
+      filterDropdown.blur();
       filterColumnClose.classList.remove("is-active");
     break;
     case "toggle":
@@ -490,7 +499,9 @@ function showFilters(variable) {
 
 function clearModal() {
   modalForm.classList.remove("is-active");
+  modalForm.blur();
   modalFile.classList.remove("is-active");
+  modalFile.blur();
   // empty the data item as we don't need it anymore
   dataItem = null;
   // clean up the modal
@@ -504,12 +515,13 @@ function clearModal() {
 function showAlert(variable) {
   if(variable) {
     modalFile.classList.add("is-active", "is-danger");
+    modalFile.focus();
   } else {
     modalFile.classList.remove("is-active", "is-danger");
+    modalFile.blur();
   }
 };
 
-// TODO: error handling
 function openFile() {
   // Resolves to a Promise<Object>
   dialog.showOpenDialog({
@@ -547,7 +559,6 @@ function openFile() {
   });
 }
 
-// TODO: error handling
 function createFile(showDialog, overwriteFile) {
   // Resolves to a Promise<Object>
   if(showDialog && !overwriteFile) {
@@ -724,7 +735,7 @@ function generateFilterData() {
           console.log(error);
         });
       } else {
-        console.log("Info: No filters for category " + category + " found in todo.txt data, no filter buttons will be generated");
+        console.log("Info: No " + category + " found in todo.txt data, so no filters will be generated");
       }
     });
     return Promise.resolve("Success: All filters have been generated and built");
@@ -745,13 +756,14 @@ function buildFilterButtons(category) {
     // creates a div for the specific filter section
     let filterContainerSub = document.createElement("div");
     filterContainerSub.setAttribute("class", "dropdown-item " + category);
-    filterContainerSub.setAttribute("tabindex", -1);
+    //filterContainerSub.setAttribute("tabindex", -1);
     // create a sub headline element
-    let todoFilterHeadline = document.createElement("h4");
-    todoFilterHeadline.setAttribute("class", "title is-4 " + category);
-    todoFilterHeadline.setAttribute("tabindex", -1);
+    let todoFilterHeadline = document.createElement("a");
+    todoFilterHeadline.setAttribute("class", "headline " + category);
+    todoFilterHeadline.setAttribute("tabindex", 0);
+    todoFilterHeadline.setAttribute("href", "#");
     todoFilterHeadline.setAttribute("data-headline", headline);
-    todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + headline;
+    todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\"></i>&nbsp;" + headline;
     // TODO clean up the mess
     todoFilterHeadline.addEventListener("click", () => {
       // TODO clean up. this is a duplicate, see above
@@ -763,7 +775,7 @@ function buildFilterButtons(category) {
         // we remove the greyed out look from the container
         filterContainerSub.classList.remove("is-greyed-out");
         // change the eye icon
-        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
       } else {
         // we push the category to the filter array
         categoriesFiltered.push(category);
@@ -779,7 +791,7 @@ function buildFilterButtons(category) {
         // we add the greyed out look to the container
         filterContainerSub.classList.add("is-greyed-out");
         // change the eye icon
-        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye\"></i></a>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
       }
       t0 = performance.now();
       generateTodoData().then(response => {
@@ -806,7 +818,7 @@ function buildFilterButtons(category) {
       todoFiltersItem.setAttribute("class", "btnApplyFilter button");
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      todoFiltersItem.setAttribute("tabindex", 415);
+      //todoFiltersItem.setAttribute("tabindex", 415);
       todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
       // create the event listener for filter selection by user
       todoFiltersItem.addEventListener("click", () => {
@@ -870,6 +882,8 @@ function buildFilterButtons(category) {
 
 function generateTodoData(searchString) {
   try {
+    // we only continue if there actually is data
+    if(parsedData.length==0) return Promise.resolve("Info: Won't build anything as there is no data so far");;
     // new variable for items with or without priority
     let items = [];
     // we build a new array according to the showComplete setting
@@ -1019,11 +1033,13 @@ function createTableRow(item) {
     let todoTableBodyCellCheckbox = document.createElement("div");
     todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
     todoTableBodyCellCheckbox.setAttribute("role", "cell");
-    let todoTableBodyCellText = document.createElement("div");
+    let todoTableBodyCellText = document.createElement("a");
     todoTableBodyCellText.setAttribute("class", "flex-row text");
     todoTableBodyCellText.setAttribute("role", "cell");
+    todoTableBodyCellText.setAttribute("tabindex", 0);
+    todoTableBodyCellText.setAttribute("href", "#");
     todoTableBodyCellText.setAttribute("title", i18next.t("editTodo"));
-    todoTableBodyCellText.setAttribute("tabindex", 300);
+    //todoTableBodyCellText.setAttribute("tabindex", 300);
     let tableContainerCategories = document.createElement("span");
     tableContainerCategories.setAttribute("class", "categories");
     let todoTableBodyCellMore = document.createElement("div");
@@ -1051,10 +1067,10 @@ function createTableRow(item) {
     if(item.complete==true) {
       i18next.t("resetFilters")
       todoTableBodyCellCheckbox.setAttribute("title", i18next.t("inProgress"));
-      todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"fas fa-check-circle\"></i></a>";
+      todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\"><i class=\"fas fa-check-circle\"></i></a>";
     } else {
       todoTableBodyCellCheckbox.setAttribute("title", i18next.t("done"));
-      todoTableBodyCellCheckbox.innerHTML = "<a tabindex=\"300\"><i class=\"far fa-circle\"></i></a>";
+      todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\"><i class=\"far fa-circle\"></i></a>";
     }
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
@@ -1072,7 +1088,7 @@ function createTableRow(item) {
       // use the autoLink lib to attach an icon to every link and put a link on it
       todoTableBodyCellText.innerHTML =  item.text.autoLink({
         callback: function(url) {
-          return url + " <a href=" + url + " target=\"_blank\" tabindex=\"300\"><i class=\"fas fa-external-link-alt\"></i></a>";
+          return url + " <a href=" + url + " target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
         }
       });
     }
@@ -1111,7 +1127,7 @@ function createTableRow(item) {
     // add the more dots
     todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMore.setAttribute("role", "cell");
-    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a tabindex=\"200\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">" + i18next.t("edit") + "</a><a class=\"dropdown-item\">" + i18next.t("delete") + "</a></div></div></div>";
+    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a href=\"#\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a href=\"#\" class=\"dropdown-item\">" + i18next.t("edit") + "</a><a class=\"dropdown-item\">" + i18next.t("delete") + "</a></div></div></div>";
     // click on three-dots-icon to open more menu
     todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
       // only if this element was highlighted before, we will hide instead of show the dropdown

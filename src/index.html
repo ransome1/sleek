@@ -13,31 +13,31 @@
         <nav>
           <ul>
             <li class="logo">sleek</li>
-            <li class="btnAddTodo"><a href="#" tabindex="105"><i class="fas fa-plus"></i></a></li>
-            <li id="navBtnFilter"><a href="#" tabindex="110"><i class="fas fa-filter"></i></a></li>
-            <li class="btnOpenTodoFile"><a href="#" tabindex="115"><i class="fas fa-upload"></i></a></li>
-            <li id="navBtnTheme"><a href="#" tabindex="120"><i class="fas fa-adjust"></i></a></li>
+            <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
+            <li id="navBtnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
+            <li class="btnOpenTodoFile"><a href="#" tabindex="0"><i class="fas fa-upload"></i></a></li>
+            <li id="navBtnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
           </ul>
-          <section id="filterDropdown" class="dropdown" tabindex="400">
+          <section id="filterDropdown" class="dropdown" tabindex="0">
             <div class="container">
               <div class="toggle">
                 <label class="switch" for="toggleShowCompleted">
-                  <input type="checkbox" id="toggleShowCompleted"  tabindex="410">
+                  <input type="checkbox" id="toggleShowCompleted" tabindex="0">
                   <span class="slider round"></span>
                 </label>
                 <span id="filterToggleShowCompleted" class="text"></span>
               </div>
               <div id="todoFilters"></div>
-              <button class="btnResetFilters button is-white"><i class="fas fa-ban"></i>&nbsp;<span id="filterBtnResetFilters"></span></button>
+              <button class="btnResetFilters button is-white" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span id="filterBtnResetFilters"></span></button>
             </div>
           </section>
-          <span href="#" id="filterColumnClose"><i class="fas fa-chevron-left"></i></span>
+          <a href="#" id="filterColumnClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
         </nav>
       </div>
       <div class="column content">
-        <section id="todoTable">
+        <section id="todoTable" tabindex="100">
           <div class="control has-icons-left">
-            <input id="todoTableSearch" class="input is-medium" type="search" placeholder="Search">
+            <input id="todoTableSearch" class="input is-medium is-rounded" type="search" placeholder="Search" tabindex="10">
             <span class="icon is-left">
               <i class="fas fa-search"></i>
             </span>
@@ -51,11 +51,11 @@
           <h1 id="welcomeToSleek" class="title is-1"></h1>
           <p id="onboardingContainerSubtitle" class="subtitle"></p>
           <p class="file is-boxed is-centered">
-            <a href="#" class="btnOnboarding btnOpenTodoFile" tabindex="505">
+            <a href="#" class="btnOnboarding btnOpenTodoFile">
               <i class="fas fa-upload"></i>
               <span id="onboardingContainerBtnOpen" class="file-label"></span>
             </a>
-            <a id="btnCreateTodoFile" href="#" class="btnOnboarding" tabindex="505">
+            <a id="btnCreateTodoFile" href="#" class="btnOnboarding">
               <i class="fas fa-plus-circle"></i>
               <span id="onboardingContainerBtnCreate" class="file-label"></span>
             </a>
@@ -65,21 +65,15 @@
           <h1 id="addTodoContainerHeadline" class="title is-1"></h1>
           <p id="addTodoContainerSubtitle" class="subtitle"></p>
           <p class="file is-boxed is-centered">
-            <a href="#" class="btnOnboarding btnAddTodo" tabindex="505">
+            <a href="#" class="btnOnboarding btnAddTodo">
               <i class="fas fa-plus"></i>
               <span id="addTodoContainerButton" class="file-label"></span>
             </a>
           </p>
         </section>
         <section id="noResultContainer" class="contentContainer">
-          <h1 id="noResultContainerHeadline" class="title is-1">No result</h1>
-          <p id="noResultContainerSubtitle" class="subtitle">Nothing found</p>
-          <!--<p class="file is-boxed is-centered">
-            <a href="#" class="btnOnboarding btnAddTodo" tabindex="505">
-              <i class="fas fa-plus"></i>
-              <span id="addTodoContainerButton" class="file-label"></span>
-            </a>
-          </p>-->
+          <h1 id="noResultContainerHeadline" class="title is-1"></h1>
+          <p id="noResultContainerSubtitle" class="subtitle"></p>
         </section>
       </div>
     </div>
@@ -104,8 +98,8 @@
           </div>
           <footer class="card-footer">
             <button id="btnSave" type="submit" class="card-footer-item" tabindex="315"></button>
-            <a id="btnItemStatus" class="card-footer-item" tabindex="320"></a>
-            <a class="card-footer-item btnModalCancel" tabindex="325"></a>
+            <a href="#" id="btnItemStatus" class="card-footer-item" tabindex="320"></a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="325"></a>
           </footer>
         </div>
       </div>
@@ -121,9 +115,9 @@
             <div class="content" id="modalFileContent"></div>
           </div>
           <footer class="card-footer">
-            <a href="#" id="modalFileOverwrite" class="card-footer-item" tabindex="610"></a>
-            <a href="#" id="modalFileChoose" class="card-footer-item" tabindex="615"></a>
-            <a href="#" class="card-footer-item btnModalCancel" tabindex="620"></a>
+            <a href="#" id="modalFileOverwrite" class="card-footer-item" tabindex="0"></a>
+            <a href="#" id="modalFileChoose" class="card-footer-item" tabindex="0"></a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
           </footer>
         </div>
       </div>

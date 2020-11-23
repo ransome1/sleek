@@ -1,216 +1,302 @@
+@charset "utf-8";
+
+$has-text-grey-light: hsl(0, 0%, 71%);
+$light-grey: #f5f5f5;
+$mid-grey: #ebebeb;
+$dark-grey: #ccc;
+$darker-grey: #4a4a4a;
+
+$has-text-link: hsl(217, 71%, 53%);
+
+$has-text-danger: hsl(348, 100%, 61%);
+$has-text-warning: hsl(48, 100%, 67%);
+$has-text-success: hsl(141, 71%, 48%);
+
+$sleek-contexts-button: #c5ede3;
+$sleek-contexts-button-font: #075943;
+$sleek-contexts-button-hover: #c9f2e8;
+$sleek-contexts-button-bubble: #1aa37e;
+$sleek-contexts-button-highlighted: #075943;
+
+$sleek-projects-button: #f1d6f1;
+$sleek-projects-button-font: #5f1a5e;
+$sleek-projects-button-hover: #f7dcf7;
+$sleek-projects-button-bubble: #bc30ba;
+$sleek-projects-button-highlighted: #5f1a5e;
+
+$body-background-color: #1E2022;
+$body-text-color: #CCCDCF;
 /*$modal-background-background-color: rgba(0, 0, 0, 0.15);*/
+$modal-z: 50;
+
 body {
-  background-color: #1E2022;
-  color: #CCCDCF; }
+  background-color: $body-background-color;
+  color: $body-text-color;
+}
 
 a {
-  color: white; }
+  color: white;
+}
 
 button:focus,
-a:focus {
-  outline: 1px dotted #CCCDCF !important; }
+a:focus{
+  outline: 1px dotted $body-text-color!important;
+}
 
 a:hover,
 strong {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 input {
   background-color: none;
-  color: #CCCDCF;
-  border: none !important; }
+  color: $body-text-color;
+  border: none!important;
+}
 
 nav {
-  background-color: #2C2D30; }
+  background-color: #2C2D30;
+}
 
 nav ul li.logo {
-  background: none; }
+  background: none;
+}
 
 nav ul li a {
   color: #B5B5B5;
-  border-bottom: 1px solid #3B3B3B; }
+  border-bottom: 1px solid #3B3B3B;
+}
 
 nav ul li a:hover,
 nav ul li.is-highlighted a,
 nav ul li a:focus {
   color: #B5B5B5;
   border-bottom: none;
-  background-color: #3B3B3B; }
+  background-color: #3B3B3B;
+}
 
 #todoTable #todoTableSearch {
-  color: #CCCDCF;
-  background-color: #2D2E31; }
+  color: $body-text-color;
+  background-color: #2D2E31;
+}
 
 #todoTable #todoTableSearch::placeholder {
-  color: #4a4a4a; }
+  color: #4a4a4a;
+}
 
 #todoTable .flex-table {
-  border-color: #2D2E31; }
+  border-color: #2D2E31;
+}
 
 #todoTable .flex-table .checkbox a {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 #todoTable .flex-table .checkbox a:hover {
-  color: white; }
+  color: white;
+}
 
 #todoTable .flex-table.completed,
 #todoTable .flex-table.completed .flex-row.text,
 #todoTable .flex-table.completed .checkbox a {
-  color: #4A4A4A; }
+  color: #4A4A4A;
+}
 
 #todoTable .flex-table .flex-row.text {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 #todoTable .flex-table .flex-row.itemDueDate {
-  color: white; }
+  color: white;
+}
 
 #todoTable .flex-table.completed .flex-row.itemDueDate {
-  opacity: .4; }
+  opacity: .4;
+}
 
 #todoTable .flex-table .flex-row span.tag.contexts {
-  background: #075943 !important;
-  color: #c5ede3 !important; }
+  background: #075943!important;
+  color: #c5ede3!important;
+}
 
 #todoTable .flex-table .flex-row span.tag.projects {
-  background: #5f1a5e !important;
-  color: #f1d6f1 !important; }
+  background: #5f1a5e!important;
+  color: #f1d6f1!important;
+}
 
 #todoTable .flex-table.completed .flex-row span.tag.contexts {
-  background: #2c2d30 !important;
-  color: #4A4A4A !important; }
+  background: #2c2d30!important;
+  color: #4A4A4A!important;
+}
 
 #todoTable .flex-table.completed .flex-row span.tag.projects {
-  background: #3b3b3b !important;
-  color: #636363 !important; }
+  background: #3b3b3b!important;
+  color: #636363!important;
+}
 
 #todoTable .flex-table .flex-row .is-white {
-  color: #CCCDCF;
-  background: none; }
+  color: $body-text-color;
+  background: none;
+}
 
 #todoTable .flex-table:hover .flex-row.todoTableItemMore a,
 #todoTable .flex-table .flex-row.todoTableItemMore a {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 #todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
   background: #4a4a4a;
-  color: white; }
+  color: white;
+}
 
 #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-  background: #3b3b3b; }
+  background: #3b3b3b;
+}
 
 #filterDropdown {
-  background: #3B3B3B; }
+  background: #3B3B3B;
+}
 
 #filterDropdown .dropdown-item a.headline {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
-#filterDropdown #todoFilters div.contexts button {
+#filterDropdown #todoFilters div.contexts button  {
   background: #075A44;
-  color: #C5EDE3; }
+  color: #C5EDE3;
+}
 
 #filterDropdown #todoFilters div.contexts button:hover,
 #filterDropdown #todoFilters div.contexts button.is-dark {
-  background: #1BA37E; }
+  background: #1BA37E;
+}
 
 #filterDropdown #todoFilters div.contexts button span.tag {
   background: #C5EDE3;
-  color: #075A44; }
+  color: #075A44;
+}
 
-#filterDropdown #todoFilters div.projects button {
+#filterDropdown #todoFilters div.projects button  {
   background: #5F1A5E;
-  color: #F2D6F2; }
+  color: #F2D6F2;
+}
 
 #filterDropdown #todoFilters div.projects button:hover,
 #filterDropdown #todoFilters div.projects button.is-dark {
-  background: #BC30BA; }
+  background: #BC30BA;
+}
 
 #filterDropdown #todoFilters div.projects button span.tag {
   background: #F2D6F2;
-  color: #5F1A5E; }
+  color: #5F1A5E;
+}
 
 #filterDropdown .button.is-white {
-  background-color: #2C2D30 !important;
-  color: #CCCDCF !important; }
+  background-color: #2C2D30!important;
+  color: $body-text-color!important;
+}
 
 #filterDropdown .dropdown-item.is-greyed-out button {
-  background: #2c2d30 !important;
-  color: #B5B5B5 !important;
-  opacity: .8; }
+  background: #2c2d30!important;
+  color: #B5B5B5!important;
+  opacity: .8;
+}
 
 #filterDropdown .dropdown-item.is-greyed-out span.tag {
-  background: #1e2022 !important;
-  color: white !important; }
+    background: #1e2022!important;
+    color: white!important;
+}
 
 .columns a#filterColumnClose {
   background: #3B3B3B;
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 .toggle .switch .slider {
-  background-color: #4a4a4a; }
+  background-color: #4a4a4a;
+}
 
 .toggle .switch input:checked + .slider {
-  background-color: #2C2D30; }
-
+ background-color: #2C2D30;
+}
 .toggle .switch input:focus + .slider {
-  box-shadow: 0 0 1px #2C2D30; }
+ box-shadow: 0 0 1px #2C2D30;
+}
 
 .toggle .switch input:focus {
-  outline: 1px dotted #CCCDCF; }
+  outline: 1px dotted $body-text-color;
+}
 
 .modal .modal-content .card {
   background: #4A4A4A;
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 .modal .modal-content .card .card-header-title {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 .modal .modal-content .card #modalFormInput {
   background-color: #2D2E31;
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 .modal .modal-content .card #modalFormInput::placeholder {
-  color: #4a4a4a; }
+    color: #4a4a4a;
+}
 
 .dueDate svg,
 .dueDate #dueDatePickerInput, .dueDate #dueDatePickerInput::placeholder {
-  color: white; }
+  color: white;
+}
 
 .modal .modal-content .card .card-footer,
 .modal .modal-content .card .card-footer-item {
-  border-color: #2D2E31; }
+  border-color: #2D2E31;
+}
 
 .modal button,
 #modalForm button {
   color: white;
-  border-color: #1e2022 !important; }
+  border-color: #1e2022!important;
+}
 
 #modalForm button:hover {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}
 
 .datepicker {
-  background: none; }
+  background: none;
+}
 
 .datepicker .datepicker-picker {
-  background: #2D2E31; }
+  background: #2D2E31;
+}
 
 .datepicker .button,
 .datepicker .button:hover,
 .datepicker-header .datepicker-controls .button:hover {
   background: none;
-  color: white; }
+  color: white;
+}
 
 .datepicker .datepicker-footer .datepicker-controls .button {
-  color: white; }
+  color: white;
+}
 
 .datepicker-cell.selected, .datepicker-cell.selected:hover {
   color: #2D2E31;
-  background: white; }
+  background: white;
+}
 
 .datepicker-cell.focused:not(.selected),
 .datepicker-cell:hover {
   color: #2D2E31;
-  background: #CCCDCF; }
+  background: $body-text-color;
+}
 
 .contentContainer .title.is-1,
 .contentContainer .subtitle,
 .contentContainer .subtitle strong {
-  color: #CCCDCF; }
+  color: $body-text-color;
+}

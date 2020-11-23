@@ -23,7 +23,7 @@
   "modalFormHowTo": "Click here to learn how to use the <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\" tabindex=\"310\">todo.txt syntax</a>.",
   "cancel": "Cancel",
   "save": "Save",
-  "formTodoInputPlaceholder": "(A) Do something good @context +project",
+  "formTodoInputPlaceholder": "(A) Use the todo.txt Syntax @context +project",
   "addTodoContainerHeadline": "No todos",
   "addTodoContainerSubtitle": "This list is empty, let's add some todos.",
   "welcomeToSleek": "Welcome to sleek",
@@ -47,8 +47,9 @@
   "close": "Close",
   "reload": "Reload",
   "devTools": "Toggle developer tools",
-  "search": "Search",
+  "search": "(A) Search by using the todo.txt syntax @context +project due:",
   "noResults": "No results",
   "noResultContainerSubtitle": "No results found for either your search input nor your selected filters",
-  "clear": "Clear"
+  "clear": "Clear",
+  "find": "Find"
 }

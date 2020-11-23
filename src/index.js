@@ -86,6 +86,13 @@ const createWindow = () => {
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("showForm(true)");
           }
+        },
+        {
+          label: i18next.t("find"),
+          accelerator: "CmdOrCtrl+f",
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
+          }
         }
       ]
     },
@@ -99,13 +106,13 @@ const createWindow = () => {
             mainWindow.webContents.executeJavaScript("switchTheme(\"dark\")");
           }
         },
-        {
+        /*{
           label: i18next.t("toggleFilter"),
           accelerator: "CmdOrCtrl+f",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("showFilters(\"toggle\")");
           }
-        },
+        },*/
         {
           label: i18next.t("toggleCompletedTodos"),
           accelerator: "CmdOrCtrl+h",

@@ -1,7 +1,7 @@
 [![sleek](https://snapcraft.io/sleek/badge.svg)](https://snapcraft.io/sleek)
 # sleek
 ## A simple todo manager based on the concept of todo.txt
-sleek is a simple todo manager based on the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a>. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates. According to this input you will be able to filter your todos using typical filter elements. There is no native cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need it to be. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with a basic text editor or any other todo.txt app.
+sleek is a simple todo manager based on the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a>. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates. According to this input you will be able to filter or search your todos. There is no cloud integration, but as sleek writes your data to a plain text file, you can put anywhere you want. That also means if you don't have sleek at hand or if you don't like it anymore you can just edit the todo.txt file with any text editor or other todo.txt application.
 
 ### Work in progress
 sleek is under active development. For detailed information on what is being currently developed, what will be and what already has been, you can take a look at this <a href="https://datenkrake.eu/kanboard/?controller=BoardViewController&action=readonly&token=7a2e9e391ee6d324070a0bebcbc7a42b6eef4b19117b4cd3d434933edad9">Kanboard</a>.
@@ -16,35 +16,29 @@ You can install sleek from Canonicals Snap Store using: `sudo snap install --bet
 ### or download the binary
 You can find binaries for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
-### Done
-* [x] Onboarding with two functions: Open existing todo.txt file or create a new one
-* [x] Open a todo.txt file and parse it into a table (path to file will be persisted)
+### Features
+* [x] An existing todo.txt file can be used or a new one can be created
+* [x] Todos can be added, edited, marked as complete (and vice versa) or deleted
+* [x] Completed todos can be shown or hidden
 * [x] Todos are grouped by priority
 * [x] Todos are sorted by due date within priority groups
-* [x] State of completion is visible
-* [x] Todos can be marked as completed and vice versa
-* [x] Completed todos can be hidden (setting will be persisted)
-* [x] New todos can be added
-* [x] Existing todos can be edited
-* [x] Contexts and projects can be added as tags to each item
-* [x] Todos can be deleted
-* [x] Todos can be filtered by contexts and projects (setting will be persisted)
-* [x] Filters can be reset
-* [x] If set the due date is shown on each todo
-* [x] Due date can be set using a datepicker
+* [x] Todos can be enriched by contexts, projects, due dates, start dates
+* [x] Todos can be filtered by contexts and projects
+* [x] Todos can be looked up using a full-text search
+* [x] A due date can be set using a datepicker
+* [x] Hyperlinks are detected and can be accessed by click
 * [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (show filter drawer), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos), CMD/CTRL + d (toggle dark mode))
-* [x] A basic tabindex is available
-* [x] Todos that include either contexts or projects or both can now be hidden (setting will be persisted)
+* [x] Todos that include either contexts or projects can be shown or hidden
 * [x] Dark and light mode can be toggled
 * [x] A file watcher rereads the file if it has been changed (by hand or any other todo.txt application)
 * [x] Multiple languages are supported (English & German are implemented so far)
-* [x] Full-text search
 
 ### To be done
-* [ ] Extensive testing & bug fixing
-* [ ] Performance improvements for older hardware
-* [ ] Code refinement and better error handling
+* [ ] Useful tabindex
 * [ ] Notification function for due dates
+* [ ] Extensive testing & bug fixing
+* [ ] Improvements on older hardware
+* [ ] Code refinement and better error handling
 * [ ] Interactive guidance when adding new todos
 
 ### Used libraries

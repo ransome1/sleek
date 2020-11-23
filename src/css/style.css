@@ -1,4 +1,4 @@
-@import url(datepicker-bulma.min.css);
+@import url(../css/datepicker-bulma.min.css);
 html {
   height: 100%; }
 
@@ -22,6 +22,25 @@ body::-webkit-scrollbar {
 :focus {
   outline: none;
   box-shadow: none; }
+
+button:focus,
+a:focus {
+  outline: 1px dotted #3273dc !important; }
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  height: 1.15em;
+  width: 1.15em;
+  border-radius: 30em;
+  background: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg") no-repeat 50% 50%;
+  background-size: contain;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer; }
+
+input[type="search"]:focus::-webkit-search-cancel-button {
+  opacity: .3;
+  pointer-events: all; }
 
 /* ONBOARDING */
 #noResultContainer.contentContainer {
@@ -62,7 +81,7 @@ body::-webkit-scrollbar {
   .columns .column.content {
     overflow-y: auto;
     overflow-x: hidden; }
-  .columns #filterColumnClose {
+  .columns a#filterColumnClose {
     width: 2.5em;
     height: 2.5em;
     display: none;
@@ -74,9 +93,12 @@ body::-webkit-scrollbar {
     top: 47.5%;
     z-index: 30;
     background: #ebebeb;
+    color: #4a4a4a;
     border-radius: 50%;
     cursor: pointer; }
-  .columns nav:hover #filterColumnClose.is-active {
+  .columns a#filterColumnClose:focus {
+    outline: 1px dotted #3273dc; }
+  .columns nav:hover a#filterColumnClose.is-active {
     display: inline-block; }
 
 /* Vertical menu */
@@ -101,8 +123,10 @@ nav {
       line-height: 5em;
       text-align: center;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+    nav ul li a:focus {
+      background: #ebebeb;
+      outline-style: none; }
     nav ul li:hover,
-    nav ul li:focus,
     nav ul li.is-highlighted {
       background: #ebebeb; }
     nav ul li.btnAddTodo,
@@ -130,13 +154,19 @@ nav {
   display: none;
   padding: 0 1.5em;
   background: #ebebeb;
+  /*.dropdown-item a.headline:focus {
+    outline: 1px dotted $has-text-link!important;
+  }*/
   /* FILTERS */ }
   #filterDropdown .dropdown-item {
     width: 100%;
     padding: 0;
     margin: 1.5em 0; }
-  #filterDropdown .dropdown-item h4 {
-    font-size: 1.5em;
+  #filterDropdown .dropdown-item a.headline {
+    width: 100%;
+    float: left;
+    font-size: 1.35em;
+    color: #4a4a4a;
     font-weight: bold;
     margin-bottom: 1.5em; }
   #filterDropdown #btnResetAllFilters {
@@ -160,10 +190,12 @@ nav {
       z-index: 35; }
     #filterDropdown #todoFilters div.contexts button {
       background: #c5ede3;
-      color: #075943;
-      border: none; }
-    #filterDropdown #todoFilters div.contexts button:hover {
+      color: #075943; }
+    #filterDropdown #todoFilters div.contexts button:hover,
+    #filterDropdown #todoFilters div.contexts button:active {
       background: #c9f2e8; }
+    #filterDropdown #todoFilters div.contexts button:focus {
+      outline: 1px dotted #1aa37e !important; }
     #filterDropdown #todoFilters div.contexts button span.tag {
       background: #1aa37e;
       color: #fff;
@@ -176,10 +208,12 @@ nav {
       color: #fff; }
     #filterDropdown #todoFilters div.projects button {
       background: #f1d6f1;
-      color: #5f1a5e;
-      border: none; }
-    #filterDropdown #todoFilters div.projects button:hover {
+      color: #5f1a5e; }
+    #filterDropdown #todoFilters div.projects button:hover,
+    #filterDropdown #todoFilters div.projects button:active {
       background: #f7dcf7; }
+    #filterDropdown #todoFilters div.projects button:focus {
+      outline: 1px dotted #bc30ba !important; }
     #filterDropdown #todoFilters div.projects button span.tag {
       background: #bc30ba;
       color: #fff;
@@ -265,7 +299,8 @@ nav {
     width: auto;
     max-width: 80%;
     cursor: pointer;
-    margin-right: .5em; }
+    margin-right: .5em;
+    color: #4a4a4a; }
   #todoTable .flex-table .flex-row.spacer {
     width: .5em;
     background: transparent; }
@@ -362,6 +397,8 @@ nav {
       -webkit-transform: translateX(25px);
       -ms-transform: translateX(25px);
       transform: translateX(25px); }
+    .toggle .switch input:focus {
+      outline: 1px dotted #3273dc; }
     .toggle .switch .slider {
       position: absolute;
       cursor: pointer;
@@ -388,30 +425,32 @@ nav {
       border-radius: 50%; }
 
 /* MODAL */
-#modalForm .message {
-  display: none;
-  margin: 1em 0; }
-
-#modalForm .is-active {
-  display: block; }
-
-#modalForm .field {
-  margin: .75em 0; }
-
-#modalForm #btnItemStatus {
-  display: none;
-  text-align: center; }
-
-#modalForm #btnItemStatus.is-active {
-  display: block; }
-
-#modalForm button {
-  font-size: 1em;
-  background: none;
-  color: #3273dc;
-  border: none;
-  border-right: 1px solid #ebebeb !important;
-  cursor: pointer; }
+#modalForm {
+  /*a:focus,
+  button:focus {
+    outline: 1px dotted $has-text-link;
+  }*/ }
+  #modalForm .message {
+    display: none;
+    margin: 1em 0; }
+  #modalForm .is-active {
+    display: block; }
+  #modalForm .field {
+    margin: .75em 0; }
+  #modalForm #btnItemStatus {
+    display: none;
+    text-align: center; }
+  #modalForm #btnItemStatus.is-active {
+    display: block; }
+  #modalForm button {
+    font-size: 1em;
+    background: none;
+    color: #3273dc;
+    border: none;
+    border-right: 1px solid #ebebeb !important;
+    cursor: pointer; }
+  #modalForm button:hover {
+    color: black; }
 
 /* DATEPICKER */
 .dueDate svg {

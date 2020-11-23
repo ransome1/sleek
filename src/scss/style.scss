@@ -1,33 +1,5 @@
 @charset "utf-8";
-
-$has-text-grey-light: hsl(0, 0%, 71%);
-$light-grey: #f5f5f5;
-$mid-grey: #ebebeb;
-$dark-grey: #ccc;
-$darker-grey: #4a4a4a;
-
-$has-text-link: hsl(217, 71%, 53%);
-
-$has-text-danger: hsl(348, 100%, 61%);
-$has-text-warning: hsl(48, 100%, 67%);
-$has-text-success: hsl(141, 71%, 48%);
-
-$sleek-contexts-button: #c5ede3;
-$sleek-contexts-button-font: #075943;
-$sleek-contexts-button-hover: #c9f2e8;
-$sleek-contexts-button-bubble: #1aa37e;
-$sleek-contexts-button-highlighted: #075943;
-
-$sleek-projects-button: #f1d6f1;
-$sleek-projects-button-font: #5f1a5e;
-$sleek-projects-button-hover: #f7dcf7;
-$sleek-projects-button-bubble: #bc30ba;
-$sleek-projects-button-highlighted: #5f1a5e;
-
-$family-sans-serif: "FreeSans", Helvetica, Arial, "DejaVu Sans",  sans-serif;
-$body-background-color: white;
-$modal-background-background-color: rgba(0, 0, 0, 0.15);
-$modal-z: 50;
+@import "variables.scss";
 
 html {
   height: 100%;
@@ -52,6 +24,26 @@ body::-webkit-scrollbar {
 :focus {
   outline: none;
   box-shadow: none;
+}
+button:focus,
+a:focus{
+  outline: 1px dotted $has-text-link!important;
+}
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  height: 1.15em;
+  width: 1.15em;
+  border-radius: 30em;
+  background: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg") no-repeat 50% 50%;
+  background-size: contain;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+input[type="search"]:focus::-webkit-search-cancel-button {
+  opacity: .3;
+  pointer-events: all;
 }
 
 /* ONBOARDING */
@@ -103,7 +95,7 @@ body::-webkit-scrollbar {
     overflow-y: auto;
     overflow-x: hidden;
   }
-  #filterColumnClose {
+  a#filterColumnClose {
     width: 2.5em;
     height: 2.5em;
     display: none;
@@ -115,10 +107,14 @@ body::-webkit-scrollbar {
     top: 50% - 2.5%;
     z-index: 30;
     background: $mid-grey;
+    color: $darker-grey;
     border-radius: 50%;
     cursor: pointer;
   }
-  nav:hover #filterColumnClose.is-active {
+  a#filterColumnClose:focus {
+    outline: 1px dotted $has-text-link;
+  }
+  nav:hover a#filterColumnClose.is-active {
     display: inline-block;
   }
 }
@@ -147,8 +143,11 @@ nav {
     	text-align: center;
     	border-bottom: 1px solid rgba(0,0,0,0.05);
     }
+    li a:focus {
+      background: $mid-grey;
+      outline-style: none;
+    }
     li:hover,
-    li:focus,
     li.is-highlighted {
       background: $mid-grey;
     }
@@ -188,11 +187,17 @@ nav {
     padding: 0;
     margin: 1.5em 0;
   }
-  .dropdown-item h4 {
-    font-size: 1.5em;
+  .dropdown-item a.headline {
+    width: 100%;
+    float: left;
+    font-size: 1.35em;
+    color: $darker-grey;
     font-weight: bold;
     margin-bottom: 1.5em;
   }
+  /*.dropdown-item a.headline:focus {
+    outline: 1px dotted $has-text-link!important;
+  }*/
   #btnResetAllFilters {
     display: none;
   }
@@ -223,10 +228,13 @@ nav {
     div.contexts button  {
       background: $sleek-contexts-button;
       color: $sleek-contexts-button-font;
-      border: none;
     }
-    div.contexts button:hover {
+    div.contexts button:hover,
+    div.contexts button:active {
       background: $sleek-contexts-button-hover;
+    }
+    div.contexts button:focus {
+      outline: 1px dotted $sleek-contexts-button-bubble!important;
     }
     div.contexts button span.tag {
       background: $sleek-contexts-button-bubble;
@@ -243,10 +251,13 @@ nav {
     div.projects button {
       background: $sleek-projects-button;
       color: $sleek-projects-button-font;
-      border: none;
     }
-    div.projects button:hover {
+    div.projects button:hover,
+    div.projects button:active {
       background: $sleek-projects-button-hover;
+    }
+    div.projects button:focus {
+      outline: 1px dotted $sleek-projects-button-bubble!important;
     }
     div.projects button span.tag {
       background: $sleek-projects-button-bubble;
@@ -270,7 +281,6 @@ nav {
 }
 
 /* TABLE */
-
 #todoTable {
   width: 100%;
   min-width: 45em;
@@ -367,6 +377,7 @@ nav {
       max-width: 80%;
       cursor: pointer;
       margin-right: .5em;
+      color: $darker-grey;
     }
     .flex-row.spacer {
       width: .5em;
@@ -402,7 +413,6 @@ nav {
         position: absolute;
         left: .7em;
         bottom: 2.55em;
-
         color: $darker-grey;
         display: none;
       }
@@ -498,6 +508,9 @@ nav {
      -ms-transform: translateX(25px);
      transform: translateX(25px);
     }
+    input:focus {
+      outline: 1px dotted $has-text-link;
+    }
     .slider {
      position: absolute;
      cursor: pointer;
@@ -557,6 +570,13 @@ nav {
     border-right: 1px solid $mid-grey!important;
     cursor: pointer;
   }
+  button:hover {
+    color: black;
+  }
+  /*a:focus,
+  button:focus {
+    outline: 1px dotted $has-text-link;
+  }*/
 }
 
 /* DATEPICKER */
@@ -636,5 +656,5 @@ nav {
   }
 }
 
-@import "datepicker-bulma.min.css";
+@import "../css/datepicker-bulma.min.css";
 @import "../../node_modules/bulma/bulma.sass";
