@@ -304,17 +304,31 @@ nav {
     flex-flow: row wrap;
     border-bottom: solid 1px $light-grey;
   }
+  .flex-table#previousDataItem {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+  .flex-table#previousDataItem.is-highlighted {
+    background-color: $light-grey;
+  }
   .flex-table.priority {
     border: none;
     font-weight: bold;
     font-size: 1.5em;
   }
   .flex-table.completed {
-    color: $has-text-grey-light;
     .checkbox a {
       color: $has-text-grey-light;
     }
     strong {
+      color: $has-text-grey-light;
+    }
+    .flex-row.text {
+      color: $has-text-grey-light;
+    }
+    .flex-row.text a {
       color: $has-text-grey-light;
     }
     .flex-row span.tag.projects {

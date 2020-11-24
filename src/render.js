@@ -36,6 +36,7 @@ const head = document.getElementsByTagName("head")[0];
 const a = document.querySelectorAll("a");
 const navBtnAddTodo = document.getElementById("navBtnAddTodo");
 const navBtnFilter = document.getElementById("navBtnFilter");
+const btnFilter = document.querySelectorAll(".btnFilter");
 const navBtnTheme = document.getElementById("navBtnTheme");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
@@ -62,13 +63,14 @@ const todoTable = document.getElementById("todoTable");
 const todoTableSelectionInformation = document.getElementById("selectionInformation");
 const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 const todoTableSearch = document.getElementById("todoTableSearch");
+const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const categories = ["contexts", "projects"];
 const filterContainer = document.getElementById("todoFilters");
 const filterDropdown = document.getElementById("filterDropdown");
 const filterColumnClose = document.getElementById("filterColumnClose");
 const filterToggleShowCompleted = document.getElementById("filterToggleShowCompleted");
 const filterBtnResetFilters = document.getElementById("filterBtnResetFilters");
-const selectionBtnResetFilters = document.getElementById("selectionBtnResetFilters");
+const selectionBtnShowFilters = document.getElementById("selectionBtnShowFilters");
 const modalForm = document.getElementById('modalForm');
 const modalFormInput = document.getElementById("modalFormInput");
 const modalFormAlert = document.getElementById("modalFormAlert");
@@ -96,6 +98,8 @@ if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
 let showCompleted = store.get("showCompleted");
 // create  an empty variable for the data item
 let dataItem;
+// create  an empty variable for the previously saved data item
+let previousDataItem = "";
 // create  an empty variable for the data id used to find position in array later on
 let itemId;
 // create  global variable for parsedData
@@ -121,12 +125,12 @@ todoTableSearch.placeholder = i18next.t("search");
 // TRANSLATIONS
 // ########################################################################################################################
 //navBtnAddTodo.setAttribute("title", i18next.t("addTodo"));
-navBtnFilter.setAttribute("title", i18next.t("toggleFilter"));
+//btnFilter.setAttribute("title", i18next.t("toggleFilter"));
 //openFile.setAttribute("title", i18next.t("openFile"));
 navBtnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
 filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
 filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
-selectionBtnResetFilters.innerHTML = i18next.t("resetFilters");
+selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
 modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
 dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
 btnSave.innerHTML = i18next.t("save");
@@ -179,7 +183,10 @@ function switchTheme(toggle) {
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
 // persist the highlighting of the button and the dropdown menu
-navBtnFilter.onclick = function() { showFilters("toggle") }
+btnFilter.forEach(function(el) {
+  el.setAttribute("title", i18next.t("toggleFilter"));
+  el.onclick = function() { showFilters("toggle") };
+});
 
 filterColumnClose.onclick = function() { showFilters(false) }
 
@@ -297,7 +304,6 @@ body.addEventListener ("keydown", function () {
 
 function startFileWatcher() {
   try {
-
     if(fileWatcher) fileWatcher.close();
     if (fs.existsSync(pathToFile)) {
       let md5Previous = null;
@@ -1017,7 +1023,22 @@ function generateTodoData(searchString) {
         tableContainerContent.appendChild(createTableRow(item));
       });
     }
+    // append the table to the wrapper
     todoTableContainer.appendChild(tableContainerContent);
+
+    // jump to previously edited or added item
+    if (document.getElementById("previousDataItem")) {
+      // scroll to view
+      document.getElementById("previousDataItem").scrollIntoView(true);
+      // trigger a quick background ease in and out
+      document.getElementById("previousDataItem").classList.add("is-highlighted");
+      setTimeout(() => {
+        document.getElementById("previousDataItem").classList.remove("is-highlighted");
+      }, 1000);
+      // empty previous item it is not needed after highlighting once
+      previousDataItem = "";
+    }
+
     return Promise.resolve("Success: Todo data generated and table built");
   } catch(error) {
     return Promise.reject("Error in generateTodoData: " + error);
@@ -1030,6 +1051,11 @@ function createTableRow(item) {
     let todoTableBodyRow = document.createElement("div");
     todoTableBodyRow.setAttribute("role", "rowgroup");
     todoTableBodyRow.setAttribute("class", "flex-table");
+    // if new item was saved, row is being marked
+    if(item.toString()==previousDataItem.toString()) {
+      todoTableBodyRow.setAttribute("id", "previousDataItem");
+      previousDataItem = "";
+    }
     let todoTableBodyCellCheckbox = document.createElement("div");
     todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
     todoTableBodyCellCheckbox.setAttribute("role", "cell");
@@ -1193,15 +1219,18 @@ function submitForm() {
         // we build the array
         parsedData.push(dataItem);
       }
-      return writeDataToFile(parsedData).then(response => {
-        clearModal();
-        return Promise.resolve(response);
-      }).catch(error => {
-        // if writing into file is denied throw alert
-        modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + pathToFile;
-        modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
-        return Promise.reject(error);
-      });
+
+      // empty the data item as we don't need it anymore
+      //dataItem = null;
+      //write the data to the file
+      fs.writeFileSync(pathToFile, TodoTxt.render(parsedData), {encoding: 'utf-8'});
+
+      // save the previously saved dataItem for further use
+      previousDataItem = dataItem;
+      dataItem = null;
+
+      return Promise.resolve("Success: Changes written to file: " + pathToFile);
+
     // if the input field is empty, let users know
     } else {
       modalFormAlert.innerHTML = i18next.t("formInfoNoInput");
@@ -1210,7 +1239,10 @@ function submitForm() {
       return Promise.reject("Info: Will not write empty todo");
     }
   } catch (error) {
-    return Promise.reject(error);
+    // if writing into file is denied throw alert
+    modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + pathToFile;
+    modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
+    return Promise.reject("Error in submitForm(): " + error);
   }
 }
 
@@ -1242,28 +1274,16 @@ function completeTodo(dataItem, deleteItem) {
       // Delete item
       parsedData.splice(itemId, 1);
     }
-    // we need to return the promise like this otherwise it cannot be passed up
-    return writeDataToFile(parsedData).then(response => {
-      return Promise.resolve(response);
-      // if completion has been done in modal, close and clear it
-      //clearModal();
-    }).catch(error => {
-      return Promise.reject("Error in writeDataToFile(): " + error);
-    });
-  } catch(error) {
-    return Promise.reject("Error in completeTodo(): " + error);
-  }
-}
 
-function writeDataToFile() {
-  // empty the data item as we don't need it anymore
-  dataItem = null;
-  try {
+    // empty the data item as we don't need it anymore
+    dataItem = null;
     //write the data to the file
     fs.writeFileSync(pathToFile, TodoTxt.render(parsedData), {encoding: 'utf-8'});
+
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
+
   } catch(error) {
-    return Promise.reject("Error in writeDataToFile(): " + error);
+    return Promise.reject("Error in completeTodo(): " + error);
   }
 }
 

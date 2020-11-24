@@ -250,32 +250,41 @@ nav {
     display: flex;
     flex-flow: row wrap;
     border-bottom: solid 1px #f5f5f5; }
+  #todoTable .flex-table#previousDataItem {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out; }
+  #todoTable .flex-table#previousDataItem.is-highlighted {
+    background-color: #f5f5f5; }
   #todoTable .flex-table.priority {
     border: none;
     font-weight: bold;
     font-size: 1.5em; }
-  #todoTable .flex-table.completed {
+  #todoTable .flex-table.completed .checkbox a {
     color: #b5b5b5; }
-    #todoTable .flex-table.completed .checkbox a {
-      color: #b5b5b5; }
-    #todoTable .flex-table.completed strong {
-      color: #b5b5b5; }
-    #todoTable .flex-table.completed .flex-row span.tag.projects {
-      background: #b5b5b5;
-      color: #fff; }
-    #todoTable .flex-table.completed .flex-row span.tag.contexts {
-      background: #ccc;
-      color: #fff; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate.due {
+  #todoTable .flex-table.completed strong {
+    color: #b5b5b5; }
+  #todoTable .flex-table.completed .flex-row.text {
+    color: #b5b5b5; }
+  #todoTable .flex-table.completed .flex-row.text a {
+    color: #b5b5b5; }
+  #todoTable .flex-table.completed .flex-row span.tag.projects {
+    background: #b5b5b5;
+    color: #fff; }
+  #todoTable .flex-table.completed .flex-row span.tag.contexts {
+    background: #ccc;
+    color: #fff; }
+  #todoTable .flex-table.completed .flex-row.itemDueDate.due {
+    color: #ccc; }
+    #todoTable .flex-table.completed .flex-row.itemDueDate.due .tags .is-dark {
+      background: #ccc; }
+  #todoTable .flex-table.completed .flex-row.itemDueDate {
+    color: #ccc; }
+    #todoTable .flex-table.completed .flex-row.itemDueDate .tags .is-dark {
+      background: #ccc; }
+    #todoTable .flex-table.completed .flex-row.itemDueDate svg.fa-sort-down {
       color: #ccc; }
-      #todoTable .flex-table.completed .flex-row.itemDueDate.due .tags .is-dark {
-        background: #ccc; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate {
-      color: #ccc; }
-      #todoTable .flex-table.completed .flex-row.itemDueDate .tags .is-dark {
-        background: #ccc; }
-      #todoTable .flex-table.completed .flex-row.itemDueDate svg.fa-sort-down {
-        color: #ccc; }
   #todoTable .flex-table .flex-row {
     padding: .75rem 0;
     margin-right: 1em;

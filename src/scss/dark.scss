@@ -88,6 +88,10 @@ nav ul li a:focus {
   border-color: #2D2E31;
 }
 
+#todoTable .flex-table#previousDataItem.is-highlighted {
+  background-color: $darker-grey;
+}
+
 #todoTable .flex-table .checkbox a {
   color: $body-text-color;
 }
