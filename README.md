@@ -6,7 +6,9 @@ sleek is a simple todo manager based on the <a href="https://github.com/todotxt/
 ### Please contribute
 You can help this project by contributing <a href="https://github.com/ransome1/sleek/issues">bug reports</a>, code improvements or even new features. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. To do so just duplicate the "src/locales/en" folder, rename it according to your language code, do your translations in the "translation.json" file and send me a <a href="https://help.github.com/articles/using-pull-requests/">pull request</a>. I will include your translations into the next release.
 
-![Alt text](assets/screenshots/sleek.screenshot_main.png?raw=true "Screenshot of sleek")
+![Alt text](assets/screenshots/main_light.png?raw=true "Screenshot of sleek")
+
+![Alt text](assets/screenshots/main_dark.png?raw=true "Screenshot of sleek in dark mode")
 
 ### Get it from Snap Store
 You can install sleek from Canonicals Snap Store using: `sudo snap install --beta sleek`
