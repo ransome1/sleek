@@ -8,7 +8,7 @@ You can help this project by contributing <a href="https://github.com/ransome1/s
 
 ![Alt text](assets/screenshots/main_light.png?raw=true "Screenshot of sleek")
 
-![Alt text](assets/screenshots/main_dark.png?raw=true "Screenshot of sleek in dark mode")
+![Alt text](assets/screenshots/main_filter_dark.png?raw=true "Screenshot of sleek in dark mode")
 
 ### Get it from Snap Store
 You can install sleek from Canonicals Snap Store using: `sudo snap install --beta sleek`
