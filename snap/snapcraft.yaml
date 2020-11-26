@@ -10,12 +10,14 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 icon: ./assets/icons/icon.png
 license: MIT
 architectures:
-  - build-on: [amd64, i386, arm64, s390x, ppc64el, armhf]
-    run-on: [amd64, i386, arm64, s390x, ppc64el, armhf]
+  - build-on: [amd64, arm64, s390x, ppc64el, armhf]
+    run-on: [amd64, arm64, s390x, ppc64el, armhf]
 apps:
   sleek:
     command: sleek/sleek --no-sandbox
     extensions: [gnome-3-28]
+    plugs:
+    - browser-support
 parts:
   sleek:
     plugin: nodejs
