@@ -29,7 +29,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Todos can be looked up using a full-text search
 * [x] A due date can be set using a datepicker
 * [x] Hyperlinks are detected and can be accessed by click
-* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (find todo), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos), CMD/CTRL + d (toggle dark mode))
+* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (find todo), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos), CMD/CTRL + d (toggle dark mode)
 * [x] Todos that include either contexts or projects can be shown or hidden
 * [x] Dark and light mode can be toggled
 * [x] A file watcher rereads the file if it has been changed (by hand or any other todo.txt application)

@@ -1,8 +1,8 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.1.0",
-  "description": "sleek is a simple todo manager based on the concept of todo.txt. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates and according to this you will be able to filter your todos. There is no native cloud integration in sleek. But as sleek writes your data to a local text file you can put or sync this file anywhere you need. That also means that if you don't have sleek at hand or if you don't like sleek anymore you can just edit the todo.txt file with any text editor or other todo.txt app.",
+  "version": "0.2.1",
+  "description": "A simple todo manager based on the concept of todo.txt",
   "synopsis": "A simple todo manager based on the concept of todo.txt",
   "category": "ProjectManagement",
   "keywords": [
@@ -28,8 +28,7 @@
         "pacman",
         "freebsd",
         "rpm",
-        "AppImage",
-        "snap"
+        "AppImage"
       ]
     },
     "win": {
@@ -55,20 +54,22 @@
   },
   "snap": {
     "confinement": "strict",
-    "grade": "devel"
+    "grade": "stable"
   },
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder -l --publish never",
+    "snap": "electron-builder -l snap --arm64 --publish always",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
+    "desktop-launch": "^1.0.0-beta.2",
     "electron-squirrel-startup": "^1.0.0",
     "electron-util": "^0.14.2",
-    "i18next": "^19.8.3",
+    "i18next": "^19.8.4",
     "i18next-browser-languagedetector": "^6.0.1",
     "i18next-fs-backend": "^1.0.7",
     "md5": "^2.3.0"
