@@ -12,13 +12,23 @@ license: MIT
 architectures:
   - build-on: [amd64, i386, arm64, s390x, ppc64el, armhf]
     run-on: [amd64, i386, arm64, s390x, ppc64el, armhf]
+#  - build-on: amd64
+#    run-on: amd64
+#apps:
+#  sleek:
+#    plugs:
+#      - browser-support
+#      - x11
+#      - opengl
 apps:
   sleek:
-    command: sleek/sleek --no-sandbox
-    extensions: [gnome-3-28]
+    command: desktop-launch "$SNAP/sleek/sleek" "--no-sandbox"
     #plugs:
-    #- desktop
-    #- wayland
+    #- browser-support
+    #- network
+    #- network-bind
+    #- opengl
+    #- pulseaudio
     #- x11
 parts:
   sleek:
@@ -30,6 +40,7 @@ parts:
     build-snaps:
     - node/15/stable
     source: .
+    after: [desktop-gtk3]
     override-build: |
         case $SNAPCRAFT_ARCH_TRIPLET in
           "i386-linux-gnu") ARCH="ia32";;
@@ -43,25 +54,82 @@ parts:
         ./node_modules/.bin/electron-packager . --overwrite --platform=linux --arch=$ARCH --output=release-build --prune=true
         cp -v -R ./sleek-linux-$ARCH/ $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
+    - libx11-xcb1
+    - libasound2
+    - libgconf-2-4
     - libnss3
+    - libxss1
+    - libxtst6
+    # additional
+    - libdrm2
+    - libgbm1
+    - libwayland-server0
+    - libxcb-dri3-0
+    - libatk-bridge2.0-0
+    - libatk1.0-0
+    - libatspi2.0-0
+    - libavahi-client3
+    - libavahi-common3
+    - libcairo-gobject2
+    - libcairo2
+    - libcups2
+    - libdatrie1
+    - libepoxy0
+    - libfontconfig1
+    - libfreetype6
+    - libgdk-pixbuf2.0-0
+    - libgraphite2-3
+    - libgtk-3-0
+    - libharfbuzz0b
+    - libpango-1.0-0
+    - libpangocairo-1.0-0
+    - libpangoft2-1.0-0
+    - libpixman-1-0
+    - libpng16-16
+    - libthai0
+    - libwayland-client0
+    - libwayland-cursor0
+    - libwayland-egl1
+    - libxcb-render0
+    - libxcb-shm0
+    - libxcomposite1
+    - libxcursor1
+    - libxdamage1
+    - libxfixes3
+    - libxi6
+    - libxinerama1
+    - libxkbcommon0
+    - libxrandr2
+    - libxrender1
     build-packages:
     - nodejs
     - npm
-  # This part removes all the files in this snap which already exist in
-  # connected content and base snaps. Since these files will be available
-  # at runtime from the content and base snaps, they do not need to be
-  # included in this snap itself.
-  #
-  # More info: https://forum.snapcraft.io/t/reducing-the-size-of-desktop-snaps/17280#heading--cleanup-part
-  #
-  cleanup:
-    after:  # Make this part run last; list all your other parts here
-      - sleek
-    plugin: nil
-    build-snaps:  # List all content-snaps and base snaps you're using here
-      - core18
-    override-prime: |
-      set -eux
-      for snap in "core18"; do  # List all content-snaps and base snaps you're using here
-          cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
-      done
+    - unzip
+  desktop-gtk3:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    make-parameters: ["FLAVOR=gtk3"]
+    build-packages:
+      - build-essential
+      #- libgtk-3-dev
+    stage-packages:
+      - fonts-liberation
+      - ttf-dejavu-core
+      #- libxkbcommon0  # XKB_CONFIG_ROOT
+      #- ttf-ubuntu-font-family
+      #- dmz-cursor-theme
+      #- light-themes
+      #- adwaita-icon-theme
+      #- gnome-themes-standard
+      #- shared-mime-info
+      #- libgtk-3-0
+      #- libgdk-pixbuf2.0-0
+      #- libglib2.0-bin
+      #- libgtk-3-bin
+      #- unity-gtk3-module
+      #- libappindicator3-1
+      #- locales-all
+      #- xdg-user-dirs
+      #- ibus-gtk3
+      #- libibus-1.0-5
