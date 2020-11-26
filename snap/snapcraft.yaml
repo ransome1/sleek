@@ -16,17 +16,11 @@ apps:
   sleek:
     command: sleek/sleek --no-sandbox
     extensions: [gnome-3-28]
-    #plugs:
-    #- desktop
-    #- wayland
-    #- x11
 parts:
   sleek:
-    # See 'snapcraft plugins'
-    #plugin: nil
     plugin: nodejs
     nodejs-package-manager: npm
-    nodejs-version: 15.2.1
+    nodejs-version: 14.15.1
     build-snaps:
     - node/15/stable
     source: .
