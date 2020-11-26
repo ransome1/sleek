@@ -18,13 +18,16 @@ apps:
     extensions: [gnome-3-28]
     plugs:
     - browser-support
+    - desktop
+    - desktop-legacy
+    - x11
 parts:
   sleek:
     plugin: nodejs
     nodejs-package-manager: npm
     nodejs-version: 14.15.1
     build-snaps:
-    - node/15/stable
+    - node/14/stable
     source: .
     override-build: |
         case $SNAPCRAFT_ARCH_TRIPLET in
@@ -33,7 +36,7 @@ parts:
           "arm-linux-gnueabihf") ARCH="armv7l";;
           "aarch64-linux-gnu") ARCH="arm64";;
           *) echo "ERROR: electron does not support the '$SNAPCRAFT_ARCH_TRIPLET' architecture" && exit 1;;
-        esac
+        esacno
         npm i --package-lock-only &&
         npm audit fix --force &&
         npm install electron electron-packager &&
