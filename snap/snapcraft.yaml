@@ -25,9 +25,9 @@ parts:
   sleek:
     plugin: nodejs
     nodejs-package-manager: npm
-    nodejs-version: 14.15.1
+    nodejs-version: 15.2.1
     build-snaps:
-    - node/14/stable
+    - node/15/stable
     source: .
     override-build: |
         case $SNAPCRAFT_ARCH_TRIPLET in
@@ -36,8 +36,7 @@ parts:
           "arm-linux-gnueabihf") ARCH="armv7l";;
           "aarch64-linux-gnu") ARCH="arm64";;
           *) echo "ERROR: electron does not support the '$SNAPCRAFT_ARCH_TRIPLET' architecture" && exit 1;;
-        esacno
-        npm i --package-lock-only &&
+        esac
         npm audit fix --force &&
         npm install electron electron-packager &&
         ./node_modules/.bin/electron-packager . --overwrite --platform=linux --arch=$ARCH --output=release-build --prune=true
