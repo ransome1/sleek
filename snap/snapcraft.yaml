@@ -12,17 +12,21 @@ license: MIT
 compression: lzo
 architectures:
 - build-on: [amd64, armhf, arm64, s390x, ppc64el]
+plugs:
+  sleek-config:
+    interface: personal-files
+    read:
+    - $HOME/.config/sleek
 apps:
   sleek:
-    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
+    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --no-sandbox
     environment:
       DISABLE_WAYLAND: 1
       TMPDIR: $XDG_RUNTIME_DIR
     extensions: [gnome-3-28]
     plugs:
     - browser-support
-    - personal-files
-    - system-files
+    - sleek-config
 parts:
   sleek:
     plugin: nil
@@ -32,8 +36,6 @@ parts:
     - node/15/stable
     source: .
     override-build: |
-      # workaround for build.snapcraft.io builds
-      # https://bugs.launchpad.net/bugs/1886861
       if [ -n "$http_proxy" ]; then
         export ELECTRON_GET_USE_PROXY=1
         export GLOBAL_AGENT_HTTP_PROXY="${http_proxy}"
@@ -46,6 +48,16 @@ parts:
           $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
     - libnss3
-    #build-packages:
-    #- nodejs
-    #- npm
+  cleanup:
+    after: [ sleek ]
+    plugin: nil
+    build-snaps: [ gnome-3-28-1804 ]
+    override-prime: |
+      set -eux
+      cd /snap/gnome-3-28-1804/current
+      find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/{} \;
+      for CRUFT in bug lintian man; do
+        rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
+      done
+      find $SNAPCRAFT_PRIME/usr/share/doc/ -type f -not -name 'copyright' -delete
+      find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete
