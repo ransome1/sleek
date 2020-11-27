@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "bulma": "^0.9.1",
-    "electron": "10.1.3",
+    "electron": "11.0.3",
     "electron-builder": "^22.9.1",
     "node-sass": "^5.0.0"
   }
