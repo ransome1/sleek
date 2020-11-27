@@ -11,11 +11,14 @@ icon: ./assets/icons/icon.png
 license: MIT
 compression: lzo
 architectures:
-- build-on: [amd64, armhf, arm64, i386, s390x, ppc64el]
+- build-on: [amd64, armhf, arm64, s390x, ppc64el]
 apps:
   sleek:
-    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --no-sandbox
-    extensions: [gnome-3-34]
+    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
+    environment:
+      DISABLE_WAYLAND: 1
+      TMPDIR: $XDG_RUNTIME_DIR
+    extensions: [gnome-3-28]
     plugs:
     - browser-support
 parts:
@@ -41,6 +44,6 @@ parts:
           $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
     - libnss3
-    build-packages:
-    - nodejs
-    - npm
+    #build-packages:
+    #- nodejs
+    #- npm
