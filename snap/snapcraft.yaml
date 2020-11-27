@@ -39,7 +39,7 @@ parts:
         "aarch64-linux-gnu") ARCH="arm64";;
         *) echo "ERROR: electron does not support the '$SNAPCRAFT_ARCH_TRIPLET' architecture" && exit 1;;
       esac
-        npm install -g electron-packager
+        npm install electron-packager
         ./node_modules/.bin/electron-packager . --overwrite --platform=linux --arch=$ARCH --output=release-build --prune=true
         cp -v -R ./sleek-linux-$ARCH/ $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
