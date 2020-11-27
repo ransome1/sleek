@@ -104,6 +104,8 @@ let previousDataItem = "";
 let itemId;
 // create  global variable for parsedData
 let parsedData = [];
+// new variable for items with or without priority
+let items = [];
 //
 let modalFormStatus;
 // variable for an array to configure if a whole category is being shown or hidden
@@ -112,6 +114,8 @@ let categoriesFiltered = store.get("categoriesFiltered");
 let fileWatcher;
 // Empty array for the filtered items later on
 let itemsFiltered = [];
+//
+let itemsGrouped = [];
 // ########################################################################################################################
 // INITIAL DOM CONFIGURATION
 // ########################################################################################################################
@@ -889,9 +893,9 @@ function buildFilterButtons(category) {
 function generateTodoData(searchString) {
   try {
     // we only continue if there actually is data
-    if(parsedData.length==0) return Promise.resolve("Info: Won't build anything as there is no data so far");;
-    // new variable for items with or without priority
-    let items = [];
+    if(parsedData.length==0) return Promise.resolve("Info: Won't build anything as there is no data so far");
+    // clean the items
+    items = [];
     // we build a new array according to the showComplete setting
     if(showCompleted==false) {
       for(let item in parsedData) {
@@ -901,66 +905,71 @@ function generateTodoData(searchString) {
     } else {
       items = parsedData;
     }
-    // new variable for items, filtered or not filtered
-    itemsFiltered = [];
-    // check if a filter has been passed or a whole category is suppose to be hidden
+    // if there are selected filters
     if(selectedFilters.length > 0) {
-      // if there are selected filters build the items according to those filters
-      for (let i = 0; i < selectedFilters.length; i++) {
-        for(var j = 0; j < items.length; j++) {
-          if(items[j][selectedFilters[i][1]]) {
-            // check if the selected filter is in one of the array values of the category field
-            // only push into array if it hasn't already been part of the array
-            if(items[j][selectedFilters[i][1]].includes(selectedFilters[i][0]) && !itemsFiltered.includes(items[j])) {
-              itemsFiltered.push(items[j]);
+      // we iterate through the filters in the order they got selected
+      selectedFilters.forEach(filter => {
+        // check if the filter is a project filter
+        if(filter[1]=="projects") {
+          items.forEach(item => {
+            if(item.projects) {
+              // do the projects of that item match the project filter?
+              if(item.projects.includes(filter[0])) itemsFiltered.push(item);
             }
-          }
+          });
+        // check if the filter is a context filter
+        } else if(filter[1]=="contexts") {
+          items.forEach(item => {
+            if(item.contexts) {
+              // do the contexts of that item match the context filter?
+              if(item.contexts.includes(filter[0])) itemsFiltered.push(item);
+            }
+          });
         }
-      }
-    // if no filter has been passed, select all items
-    } else {
-      // we remove filter info, if none have been selected
-      todoTableSelectionInformation.classList.remove("is-active");
-      itemsFiltered = items;
+        items = itemsFiltered;
+        itemsFiltered = [];
+      });
     }
     // if there is at least 1 category to hide
     if(categoriesFiltered.length > 0) {
-      let temp = itemsFiltered;
+      let temp = items;
       categoriesFiltered.forEach(category => {
         // we create a new array where the items attrbite has no values
         temp = temp.filter(function(item) {
           return item[category] == null;
         });
       });
-      itemsFiltered = temp;
+      items = temp;
     }
     // if there is a search input detected
     if(searchString) {
       // convert everything to lowercase for better search results
-      itemsFiltered = itemsFiltered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      items = items.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
       //if(itemsFiltered.length == 0) itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
     // if there is a search input detected or if there was a avlue in the input already
     } if(!searchString && todoTableSearch.value) {
       searchString = todoTableSearch.value;
       // convert everything to lowercase for better search results
-      itemsFiltered = itemsFiltered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      items = items.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
       //if(itemsFiltered.length == 0) itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
     }
     // we show some information on filters if any are set
-    if(itemsFiltered.length!=parsedData.length) {
+    if(items.length!=parsedData.length) {
       todoTableSelectionInformation.classList.add("is-active");
-      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + itemsFiltered.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>";
+      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>";
+    } else {
+      todoTableSelectionInformation.classList.remove("is-active");
     }
     // hide/show the addTodoContainer or noResultTodoContainer
-    if(itemsFiltered.length > 0) {
+    if(items.length > 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
-    } else if(itemsFiltered.length == 0) {
+    } else if(items.length == 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
     }
     // produce an object where priority a to z + null is key
-    itemsFiltered = itemsFiltered.reduce((r, a) => {
+    itemsGrouped = items.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
      return r;
     }, {});
@@ -972,21 +981,21 @@ function generateTodoData(searchString) {
     // fragment is created to append the nodes
     let tableContainerContent = document.createDocumentFragment();
     // object is converted to an array
-    itemsFiltered = Object.entries(itemsFiltered).sort();
+    itemsGrouped = Object.entries(itemsGrouped).sort();
     // each priority group -> A to Z plus null for all todos with no priority
-    for (let priority in itemsFiltered) {
+    for (let priority in itemsGrouped) {
       let itemsDue = new Array;
       let items = new Array;
       let itemsDueComplete = new Array;
       let itemsComplete = new Array;
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
-      if(itemsFiltered[priority][0]!="null") {
-        let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + itemsFiltered[priority][0] + "</div></div>");
+      if(itemsGrouped[priority][0]!="null") {
+        let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + itemsGrouped[priority][0] + "</div></div>");
         tableContainerContent.appendChild(divider);
       }
-      for (let item in itemsFiltered[priority][1]) {
-        let todo = itemsFiltered[priority][1][item];
+      for (let item in itemsGrouped[priority][1]) {
+        let todo = itemsGrouped[priority][1][item];
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
         if (todo.due && !todo.complete) {

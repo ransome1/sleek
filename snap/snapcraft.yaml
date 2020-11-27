@@ -21,6 +21,8 @@ apps:
     extensions: [gnome-3-28]
     plugs:
     - browser-support
+    - personal-files
+    - system-files
 parts:
   sleek:
     plugin: nil
