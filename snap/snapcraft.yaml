@@ -29,7 +29,7 @@ parts:
     override-build: |
         npm install electron-packager
         ./node_modules/.bin/electron-packager . --overwrite --platform=linux --output=release-build --prune=true
-        cp -v -R ./sleek $SNAPCRAFT_PART_INSTALL/sleek
+        cp -v -R ./sleek-linux-* $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
     - libnss3
     build-packages:
