@@ -62,11 +62,11 @@
     "snap": "electron-builder -l snap --arm64 --publish always",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
-    "start": "npm run css-watch & electron .",
-    "build": "electron-packager ."
+    "start": "npm run css-watch & electron ."
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
+    "electron-packager": "^15.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-util": "^0.14.2",
     "i18next": "^19.8.4",
