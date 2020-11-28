@@ -14,7 +14,7 @@ architectures:
 - build-on: [amd64, armhf, arm64, s390x, ppc64el]
 apps:
   sleek:
-    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --no-sandbox
+    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
     environment:
       DISABLE_WAYLAND: 1
       TMPDIR: $XDG_RUNTIME_DIR
@@ -23,6 +23,7 @@ apps:
     extensions: [gnome-3-28]
     plugs:
     - home
+    - browser-support
 parts:
   sleek:
     plugin: nil

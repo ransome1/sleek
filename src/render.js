@@ -656,6 +656,7 @@ function parseDataFromFile(pathToFile) {
         }).catch(error => {
           console.log(error);
         });
+        /*
         // parsed data will be passed to generate filter data and build the filter buttons
         t0 = performance.now();
         generateFilterData().then(response => {
@@ -665,6 +666,7 @@ function parseDataFromFile(pathToFile) {
         }).catch(error => {
           console.log(error);
         });
+        */
         // if there is a file onboarding is hidden
         showOnboarding(false);
         return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
@@ -697,7 +699,10 @@ function generateFilterData() {
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      parsedData.forEach((item) => {
+      if(items.length==0) {
+        items = parsedData;
+      }
+      items.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
@@ -919,6 +924,17 @@ function generateTodoData(searchString) {
         itemsFiltered = [];
       });
     }
+
+    // filters are generated once the final todos are defined
+    t0 = performance.now();
+    generateFilterData().then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Filters rendered:", t1 - t0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+
     // if there is at least 1 category to hide
     if(categoriesFiltered.length > 0) {
       let temp = items;
@@ -934,13 +950,10 @@ function generateTodoData(searchString) {
     if(searchString) {
       // convert everything to lowercase for better search results
       items = items.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
-      //if(itemsFiltered.length == 0) itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
-    // if there is a search input detected or if there was a avlue in the input already
     } if(!searchString && todoTableSearch.value) {
       searchString = todoTableSearch.value;
       // convert everything to lowercase for better search results
       items = items.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
-      //if(itemsFiltered.length == 0) itemsFiltered = parsedData.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
     }
     // we show some information on filters if any are set
     if(items.length!=parsedData.length) {
