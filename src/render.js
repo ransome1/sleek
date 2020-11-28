@@ -727,9 +727,14 @@ function generateFilterData() {
           return filters;
         }
       }, {});
+
       // sort filters by amount (https://stackoverflow.com/a/1069840)
-      filtersCounted = Object.fromEntries(
+      /*filtersCounted = Object.fromEntries(
         Object.entries(filtersCounted).sort(([,a],[,b]) => b-a)
+      );*/
+      // sort filter alphanummerically (https://stackoverflow.com/a/54427214)
+      filtersCounted = Object.fromEntries(
+        Object.entries(filtersCounted).sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare)
       );
       // build the filter buttons
       if(filters.length > 0) {
