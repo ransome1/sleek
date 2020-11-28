@@ -1,6 +1,6 @@
 {
   "addTodo": "Add a new todo",
-  "toggleFilter": "Toggle filter drawer",
+  "toggleFilter": "Show filters",
   "openFile": "Open todo.txt file",
   "toggleDarkMode": "Toggle dark mode",
   "toggleCompletedTodos": "Toggle completed todos",

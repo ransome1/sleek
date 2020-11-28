@@ -35,6 +35,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Multiple languages are supported
 - German
 - English
+- Italian
 * [x] Useful tabindex
 * [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (find todo), CMD/CTRL + o (open file), CMD/CTRL + h (show or hide completed todos), CMD/CTRL + d (toggle dark mode)
 

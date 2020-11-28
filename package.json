@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "A simple todo manager based on the concept of todo.txt",
   "synopsis": "A simple todo manager based on the concept of todo.txt",
   "category": "ProjectManagement",

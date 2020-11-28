@@ -118,17 +118,14 @@ toggleShowCompleted.checked = showCompleted;
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
-
-console.log(i18next.language);
-
 todoTableSearch.placeholder = i18next.t("search");
 navBtnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
 filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
 filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
 selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
-modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
 dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
 btnSave.innerHTML = i18next.t("save");
+modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
 modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
 addTodoContainerHeadline.innerHTML = i18next.t("addTodoContainerHeadline");
 addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
