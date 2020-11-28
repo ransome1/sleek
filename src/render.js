@@ -115,11 +115,13 @@ let itemsGrouped = [];
 dueDatePickerInput.readOnly = true;
 // set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
-//
-todoTableSearch.placeholder = i18next.t("search");
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
+
+console.log(i18next.language);
+
+todoTableSearch.placeholder = i18next.t("search");
 navBtnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
 filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
 filterBtnResetFilters.innerHTML = i18next.t("resetFilters");

@@ -1,5 +1,5 @@
 {
-    "addTodo": "Neue Aufgabe hinzufügen",
+  "addTodo": "Neue Aufgabe hinzufügen",
   "toggleFilter": "Filter anzeigen",
   "openFile": "todo.txt Datei öffnen",
   "toggleDarkMode": "Darkmode ein- und ausschalten",

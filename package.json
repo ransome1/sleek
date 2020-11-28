@@ -33,7 +33,8 @@
     },
     "win": {
       "target": [
-        "portable"
+        "portable",
+        "appx"
       ],
       "icon": "assets/icons/512x512.ico"
     },
@@ -56,9 +57,16 @@
     "confinement": "strict",
     "grade": "stable"
   },
+  "appx": {
+    "applicationId": "",
+    "displayName": "${productName}",
+    "identityName": "${productName}",
+    "publisher": "${author}"
+  },
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder -lw --publish always",
+    "windows": "electron-builder -w --publish never",
     "snap": "electron-builder -l snap --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
