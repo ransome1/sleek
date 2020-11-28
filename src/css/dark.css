@@ -67,7 +67,7 @@ nav ul li a:focus {
   color: white; }
 
 #todoTable .flex-table.completed .flex-row.itemDueDate {
-  opacity: .4; }
+  opacity: .6; }
 
 #todoTable .flex-table .flex-row span.tag.contexts {
   background: #075943 !important;

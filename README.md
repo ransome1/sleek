@@ -11,7 +11,7 @@ You can help this project by contributing <a href="https://github.com/ransome1/s
 ![Alt text](assets/screenshots/main_filter_dark.png?raw=true "Screenshot of sleek in dark mode")
 
 ### Get it from Snap Store
-You can install sleek from Canonicals Snap Store using: `sudo snap install --beta sleek`
+You can install sleek from Canonicals Snap Store using: `sudo snap install sleek`
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
@@ -25,16 +25,18 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Todos are grouped by priority
 * [x] Todos are sorted by due date within priority groups
 * [x] Todos can be enriched by contexts, projects, due dates, start dates
-* [x] Todos can be filtered by contexts and projects
-* [x] Todos can be looked up using a full-text search
+* [x] Todos can be filtered by contexts and projects (Filters are sorted alphanummerically)
+* [x] Todos can be looked up using full-text search
 * [x] A due date can be set using a datepicker
 * [x] Hyperlinks are detected and can be accessed by click
-* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (find todo), CMD/CTRL + o (open file), CMD/CTRL + h (hide completed todos), CMD/CTRL + d (toggle dark mode)
 * [x] Todos that include either contexts or projects can be shown or hidden
 * [x] Dark and light mode can be toggled
 * [x] A file watcher rereads the file if it has been changed (by hand or any other todo.txt application)
-* [x] Multiple languages are supported (English & German are implemented so far)
+* [x] Multiple languages are supported
+  - German
+  - English
 * [x] Useful tabindex
+* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (find todo), CMD/CTRL + o (open file), CMD/CTRL + h (show or hide completed todos), CMD/CTRL + d (toggle dark mode)
 
 ### To be done
 * [ ] Notification function for due dates
