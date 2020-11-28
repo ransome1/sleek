@@ -33,8 +33,8 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * [x] Dark and light mode can be toggled
 * [x] A file watcher rereads the file if it has been changed (by hand or any other todo.txt application)
 * [x] Multiple languages are supported
-  - German
-  - English
+- German
+- English
 * [x] Useful tabindex
 * [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (find todo), CMD/CTRL + o (open file), CMD/CTRL + h (show or hide completed todos), CMD/CTRL + d (toggle dark mode)
 

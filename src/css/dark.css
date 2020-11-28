@@ -1,4 +1,3 @@
-/*$modal-background-background-color: rgba(0, 0, 0, 0.15);*/
 body {
   background-color: #1E2022;
   color: #CCCDCF; }
@@ -18,6 +17,11 @@ input {
   background-color: none;
   color: #CCCDCF;
   border: none !important; }
+
+input[type="search"]::-webkit-search-cancel-button {
+  background-color: white;
+  -webkit-mask-image: url("../svg/times-circle.svg");
+  mask-image: url("../svg/times-circle.svg"); }
 
 nav {
   background-color: #2C2D30; }
@@ -67,7 +71,7 @@ nav ul li a:focus {
   color: white; }
 
 #todoTable .flex-table.completed .flex-row.itemDueDate {
-  opacity: .6; }
+  opacity: .4; }
 
 #todoTable .flex-table .flex-row span.tag.contexts {
   background: #075943 !important;

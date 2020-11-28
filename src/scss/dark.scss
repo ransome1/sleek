@@ -26,7 +26,6 @@ $sleek-projects-button-highlighted: #5f1a5e;
 
 $body-background-color: #1E2022;
 $body-text-color: #CCCDCF;
-/*$modal-background-background-color: rgba(0, 0, 0, 0.15);*/
 $modal-z: 50;
 
 body {
@@ -52,6 +51,12 @@ input {
   background-color: none;
   color: $body-text-color;
   border: none!important;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  background-color: white;
+  -webkit-mask-image: url("../svg/times-circle.svg");
+  mask-image: url("../svg/times-circle.svg");
 }
 
 nav {

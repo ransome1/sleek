@@ -32,16 +32,20 @@ input[type="search"]::-webkit-search-cancel-button {
   height: 1.15em;
   width: 1.15em;
   border-radius: 30em;
-  background: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg") no-repeat 50% 50%;
-  background-size: contain;
+  background-color: #4a4a4a;
+  -webkit-mask-image: url("../svg/times-circle.svg");
+  mask-image: url("../svg/times-circle.svg");
   opacity: 0;
   pointer-events: none;
   cursor: pointer; }
 
 input[type="search"]:focus::-webkit-search-cancel-button {
-  opacity: .3;
+  opacity: .8;
   pointer-events: all; }
 
+/*.control.has-icons-left .icon, .control.has-icons-right .icon {
+    color: red!important;
+}*/
 /* ONBOARDING */
 #noResultContainer.contentContainer {
   height: 80%; }
