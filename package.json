@@ -66,7 +66,6 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
-    "electron-packager": "^15.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-util": "^0.14.2",
     "i18next": "^19.8.4",
@@ -77,6 +76,7 @@
   "devDependencies": {
     "bulma": "^0.9.1",
     "electron": "11.0.3",
+    "electron-packager": "^15.1.0",
     "electron-builder": "^22.9.1",
     "node-sass": "^5.0.0"
   }
