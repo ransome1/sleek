@@ -18,9 +18,10 @@ apps:
     environment:
       DISABLE_WAYLAND: 1
       TMPDIR: $XDG_RUNTIME_DIR
-    extensions: [gnome-3-34]
+      PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
+      SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
+    extensions: [gnome-3-28]
     plugs:
-    - browser-support
     - home
 parts:
   sleek:

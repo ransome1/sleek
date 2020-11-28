@@ -1,8 +1,8 @@
 node_modules/
 dist/
 package-lock.json
-yarn.lock
-yarn-error.log
-.DS_Store
+*.lock
+*.log
+*.DS_Store
 *.snap
 *.bak

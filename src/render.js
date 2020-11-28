@@ -11,26 +11,6 @@
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
-const md5 = require('md5');
-const electron = require("electron");
-const theme = electron.remote.nativeTheme;
-const path = require("path");
-const dialog = electron.remote.dialog;
-const app = electron.remote.app;
-const fs = require("fs");
-const Store = require("./store.js");
-const store = new Store({
-  configName: "user-preferences",
-  defaults: {
-    windowBounds: { width: 1025, height: 768 },
-    showCompleted: true,
-    selectedFilters: new Array,
-    categoriesFiltered: new Array,
-    pathToFile: "",
-    theme: ""
-  }
-});
-const i18next = require('./configs/i18next.config');
 const body = document.getElementById("body");
 const head = document.getElementsByTagName("head")[0];
 const a = document.querySelectorAll("a");
@@ -87,6 +67,18 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
   format: 'yyyy-mm-dd',
   clearBtn: true
 });
+//
+const store = new Store({
+  configName: "user-preferences",
+  defaults: {
+    windowBounds: { width: 1025, height: 768 },
+    showCompleted: true,
+    selectedFilters: new Array,
+    categoriesFiltered: new Array,
+    pathToFile: "",
+    theme: ""
+  }
+});
 // defining a file path Variable to store user-selected file
 let pathToFile = store.get("pathToFile");
 // empty variable
@@ -128,9 +120,6 @@ todoTableSearch.placeholder = i18next.t("search");
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
-//navBtnAddTodo.setAttribute("title", i18next.t("addTodo"));
-//btnFilter.setAttribute("title", i18next.t("toggleFilter"));
-//openFile.setAttribute("title", i18next.t("openFile"));
 navBtnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
 filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
 filterBtnResetFilters.innerHTML = i18next.t("resetFilters");

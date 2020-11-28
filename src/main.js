@@ -6,7 +6,7 @@ if (require("electron-squirrel-startup")) { // eslint-disable-line global-requir
   app.quit();
 }
 const isMac = process.platform === "darwin";
-const Store = require("./store.js");
+const Store = require("./configs/store.config.js");
 const i18next = require("./configs/i18next.config");
 
 let mainWindow; //do this so that the window object doesn"t get GC"d
@@ -34,7 +34,9 @@ const createWindow = () => {
       worldSafeExecuteJavaScript:true,
       nodeIntegration: true,
       enableRemoteModule: true,
-      spellcheck: false
+      spellcheck: false,
+      contextIsolation: false,
+      preload: path.join(__dirname, "preload.js")
     }
   });
 

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=sleek
+Exec=sleek %U
+Terminal=false
+Type=Application
+Icon=${SNAP}/meta/gui/sleek.png
+StartupWMClass=sleek
+Comment=A simple todo manager based on the concept of todo.txt
+Categories=ProjectManagement;
