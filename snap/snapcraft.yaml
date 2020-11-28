@@ -30,7 +30,7 @@ parts:
     build-environment:
     - PATH: "$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin"
     build-snaps:
-    - node/15/stable
+    - node/12/stable
     source: .
     override-build: |
       if [ -n "$http_proxy" ]; then
