@@ -14,7 +14,7 @@ architectures:
 - build-on: [amd64, armhf, arm64, s390x, ppc64el]
 apps:
   sleek:
-    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
+    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --no-sandbox
     environment:
       DISABLE_WAYLAND: 1
       TMPDIR: $XDG_RUNTIME_DIR
@@ -37,12 +37,12 @@ parts:
         export GLOBAL_AGENT_HTTP_PROXY="${http_proxy}"
         export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
       fi
-      npm install &&
-      npm install electron-packager electron &&
+      npm install
       electron-packager . --overwrite --platform=linux --output=release-build \
           --prune=true --out $SNAPCRAFT_PART_INSTALL/
       mv $SNAPCRAFT_PART_INSTALL/$SNAPCRAFT_PROJECT_NAME-linux-* \
           $SNAPCRAFT_PART_INSTALL/sleek
+    #cp icons/*.png $SNAPCRAFT_PART_INSTALL/
     stage-packages:
     - libnss3
   cleanup:
