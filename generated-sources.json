@@ -1140,13 +1140,6 @@
         "url": "https://registry.npmjs.org/universalify/-/universalify-1.0.0.tgz"
     },
     {
-        "dest": "npm-cache/_cacache/content-v2/sha1/19/b4",
-        "dest-filename": "e55933fa0ef8f556784b9c660f772546a0b8",
-        "sha1": "19b4e55933fa0ef8f556784b9c660f772546a0b8",
-        "type": "file",
-        "url": "https://registry.npmjs.org/electron-squirrel-startup/-/electron-squirrel-startup-1.0.0.tgz"
-    },
-    {
         "dest": "npm-cache/_cacache/content-v2/sha512/a6/79",
         "dest-filename": "d126259a8c3713b44012df74603f75d53bef5c2633a5040d012a4e9c0018dc3f18a1802c22196a6508e1dcd251f8ddfebc6496707a2ba7c289890be4d69e",
         "sha512": "a679d126259a8c3713b44012df74603f75d53bef5c2633a5040d012a4e9c0018dc3f18a1802c22196a6508e1dcd251f8ddfebc6496707a2ba7c289890be4d69e",
