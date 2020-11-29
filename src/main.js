@@ -2,9 +2,9 @@ const { app, BrowserWindow } = require("electron");
 const { is } = require("electron-util");
 const path = require("path");
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) { // eslint-disable-line global-require
+/*if (require("electron-squirrel-startup")) { // eslint-disable-line global-require
   app.quit();
-}
+}*/
 const isMac = process.platform === "darwin";
 const Store = require("./configs/store.config.js");
 const i18next = require("./configs/i18next.config");

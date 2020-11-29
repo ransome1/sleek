@@ -65,14 +65,11 @@
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder -lw --publish never",
-    "windows": "electron-builder -w --publish never",
-    "snap": "electron-builder -l snap --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0",
     "electron-util": "^0.14.2",
     "i18next": "^19.8.4",
     "i18next-browser-languagedetector": "^6.0.1",

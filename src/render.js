@@ -179,35 +179,29 @@ btnFilter.forEach(function(el) {
   el.setAttribute("title", i18next.t("toggleFilter"));
   el.onclick = function() { showFilters("toggle") };
 });
-
+// toggle filter drawer
 filterColumnClose.onclick = function() { showFilters(false) }
-
+// add todo button in nav bar and empty list view
 btnAddTodo.forEach(function(el) {
   el.setAttribute("title", i18next.t("addTodo"));
   el.onclick = showForm;
 });
-
 // flush all filters and items by emptying the array and reloading the data
 btnResetFilters.forEach(el => el.onclick = resetFilters);
-
 // click on the todo table will close more dropdown and remove active state for the dotted button
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
-
 // reread the data but sort it asc
 toggleShowCompleted.onclick = showCompletedTodos;
-
 // persist window bounds after resize
-window.addEventListener("resize", function(e) {
+window.onresize = function() {
   let width = this.outerWidth;
   let height = this.outerHeight;
   store.set('windowBounds', { width, height });
-});
-
+}
 // submit in the form
 modalForm.addEventListener("submit", function(e) {
   // intercept submit
   if (e.preventDefault) e.preventDefault();
-
   submitForm().then(response => {
     // if form returns success we clear the modal
     clearModal();
@@ -216,7 +210,6 @@ modalForm.addEventListener("submit", function(e) {
     console.log(error);
   });
 });
-
 // complete the item using the footer button in modal
 btnItemStatus.onclick = function() {
   completeTodo(dataItem).then(response => {
@@ -227,32 +220,26 @@ btnItemStatus.onclick = function() {
     console.log(error);
   });
 }
-
 // prevent empty hyperlinks from jumping to top after clicking
 a.forEach(el => el.addEventListener("click", function(el) {
   if(el.target.href && el.target.href == "#") el.preventDefault();
 }));
-
 // put a click event on all "open file" buttons
 btnOpenTodoFile.forEach(function(el) {
   el.setAttribute("title", i18next.t("openFile"));
   el.onclick = openFile;
 });
-
 // onboarding: click will call createFile() function
 btnCreateTodoFile.onclick = function () { createFile(true, false) }
 modalFileChoose.onclick = function() { createFile(true, false) }
 modalFileOverwrite.onclick = function() { createFile(false, true) }
-
 // put a listeners on all modal backgrounds
 modalBackground.forEach(el => el.onclick = clearModal);
-
 // click on the cancel button in the footer of the add/edit modal
 btnModalCancel.forEach(function(el) {
   el.innerHTML = i18next.t("cancel");
   el.onclick = clearModal;
 });
-
 // event intercepted when datepicker changes the date
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
@@ -266,11 +253,9 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     dataItemTemp = null;
   }
 });
-
 todoTableSearch.addEventListener("input", function () {
   generateTodoData(this.value);
 });
-
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
@@ -726,7 +711,21 @@ function generateFilterData() {
           return filters;
         }
       }, {});
-
+      // remove duplicates from available filters
+      // https://wsvincent.com/javascript-remove-duplicates-array/
+      filters = [...new Set(filters.join(",").split(","))];
+      // check if selected filters is still part of all available filters
+      selectedFilters.forEach(function(selectedFilter,index,object){
+        if(selectedFilter[1]==category) {
+          // category found, but the selected filter is not part of available filters
+          if(!filters.includes(selectedFilter[0])) {
+            // delete persisted filters
+            selectedFilters.splice(index, 1);
+            // persist the change
+            store.set("selectedFilters", JSON.stringify(selectedFilters));
+          }
+        }
+      });
       // sort filters by amount (https://stackoverflow.com/a/1069840)
       /*filtersCounted = Object.fromEntries(
         Object.entries(filtersCounted).sort(([,a],[,b]) => b-a)
@@ -834,7 +833,7 @@ function buildFilterButtons(category) {
         todoFiltersItem.classList.toggle("is-dark");
         // if no filters are selected, add a first one
         if (selectedFilters.length > 0) {
-          // get the index of the item that matches the data values the button clic provided
+          // get the index of the item that matches the data values the button click provided
           let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
           if(index != -1) {
             // remove the item at the index where it matched
@@ -856,14 +855,14 @@ function buildFilterButtons(category) {
           store.set("categoriesFiltered", categoriesFiltered);
           // reload the filter section for the visual change
           // parsed data will be passed to generate filter data and build the filter buttons
-          t0 = performance.now();
+          /*t0 = performance.now();
           generateFilterData().then(response => {
             console.log(response);
             t1 = performance.now();
             console.log("Filters rendered:", t1 - t0, "ms");
           }).catch(error => {
             console.log(error);
-          });
+          });*/
         }
         t0 = performance.now();
         generateTodoData().then(response => {
