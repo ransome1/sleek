@@ -33,8 +33,7 @@
     },
     "win": {
       "target": [
-        "portable",
-        "appx"
+        "portable"
       ],
       "icon": "assets/icons/512x512.ico"
     },
@@ -65,7 +64,7 @@
   },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -lw --publish always",
+    "dist": "electron-builder -lw --publish never",
     "windows": "electron-builder -w --publish never",
     "snap": "electron-builder -l snap --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",

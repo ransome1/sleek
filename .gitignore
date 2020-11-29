@@ -6,3 +6,8 @@ package-lock.json
 *.DS_Store
 *.snap
 *.bak
+snap/local/
+.flatpak-builder/
+build/
+flatpak-npm-generator.py
+generated-sources.json

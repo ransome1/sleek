@@ -1,0 +1,57 @@
+app-id: org.flathub.sleek
+runtime: org.freedesktop.Platform
+runtime-version: '1.6'
+branch: stable
+sdk: org.freedesktop.Sdk
+base: io.atom.electron.BaseApp
+base-version: stable
+command: run.sh
+separate-locales: false
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=pulseaudio
+  - --share=network
+build-options:
+  cflags: -O2 -g
+  cxxflags: -O2 -g
+  env:
+    NPM_CONFIG_LOGLEVEL: info
+modules:
+  - name: nodejs
+    cleanup:
+      - /include
+      - /share
+      - /app/lib/node_modules/npm/changelogs
+      - /app/lib/node_modules/npm/doc
+      - /app/lib/node_modules/npm/html
+      - /app/lib/node_modules/npm/man
+      - /app/lib/node_modules/npm/scripts
+    sources:
+      - type: archive
+        url: https://nodejs.org/dist/v12.18.3/node-v12.18.3.tar.xz
+        sha256: 71158026579487422fd13cc2553b34cddb76519098aa6030faab52f88c6e0d0e
+  - name: sleek
+    build-options:
+      env:
+        # Need this for electron-download to find the cached electron binary
+        electron_config_cache: /run/build/sleek/npm-cache
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/ransome1/sleek.git
+        dest: main
+      - ../generated-sources.json
+      # Wrapper to launch the app
+      - type: script
+        dest-filename: run.sh
+        commands:
+          - npm start --prefix=/app/main
+    build-commands:
+      # Install npm dependencies
+      - npm install --prefix=main --offline --cache=/run/build/sleek/npm-cache/
+      # Bundle app and dependencies
+      - mkdir -p /app/main /app/bin
+      - cp -ra main/* /app/main/
+      # Install app wrapper
+      - install run.sh /app/bin/

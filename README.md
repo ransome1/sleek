@@ -19,32 +19,46 @@ You can install sleek from Canonicals Snap Store using: `sudo snap install sleek
 You can find binaries for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
 ### Features
-* [x] An existing todo.txt file can be used or a new one can be created
-* [x] Todos can be added, edited, marked as complete (and vice versa) or deleted
-* [x] Completed todos can be shown or hidden
-* [x] Todos are grouped by priority
-* [x] Todos are sorted by due date within priority groups
-* [x] Todos can be enriched by contexts, projects, due dates, start dates
-* [x] Todos can be filtered by contexts and projects (Filters are sorted alphanummerically)
-* [x] Todos can be looked up using full-text search
-* [x] A due date can be set using a datepicker
-* [x] Hyperlinks are detected and can be accessed by click
-* [x] Todos that include either contexts or projects can be shown or hidden
-* [x] Dark and light mode can be toggled
-* [x] A file watcher rereads the file if it has been changed (by hand or any other todo.txt application)
-* [x] Multiple languages are supported
-- German
-- English
-- Italian
-* [x] Useful tabindex
-* [x] Basic keyboard shortcuts are available: CMD/CTRL + n (new todo), CMD/CTRL + f (find todo), CMD/CTRL + o (open file), CMD/CTRL + h (show or hide completed todos), CMD/CTRL + d (toggle dark mode)
+* An existing todo.txt file can be used or a new one can be created
+* Todos can be
+  - added
+  - edited
+  - marked as complete (and vice versa)
+  - deleted
+* Completed todos can be shown or hidden
+* Todos are grouped by priority
+* Todos are sorted by due date within their priorities
+* Todos can be enriched by
+  - Contexts
+  - Projects
+  - Due dates
+  - Start dates
+* Todos can be filtered by contexts and projects
+* Filters are sorted alphanummerically
+* Todos can be looked up using full-text search
+* A due date can be set using a datepicker
+* Hyperlinks are detected automatically and can be clicked using the icon
+* Todos that include either contexts or projects can be shown or hidden
+* Dark and light mode can be toggled
+* A file watcher rereads the file if it has been changed
+* Multiple languages are automatically detected
+  - German
+  - English
+  - Italian
+* Useful tabindex
+* Basic keyboard shortcuts are available:
+  - New todo: CMD/CTRL + n
+  - Find todo: CMD/CTRL + f
+  - Open file: CMD/CTRL + o
+  - Show or hide completed todos: CMD/CTRL + h
+  - Toggle dark mode: CMD/CTRL + d
 
 ### To be done
-* [ ] Notification function for due dates
-* [ ] Extensive testing & bug fixing
-* [ ] Improvements on older hardware
-* [ ] Code refinement and better error handling
-* [ ] Interactive guidance when adding new todos
+* Notification function for due dates
+* Extensive testing & bug fixing
+* Improvements on older hardware
+* Code refinement and better error handling
+* Interactive guidance when adding new todos
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
