@@ -64,6 +64,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 - Electron: https://github.com/electron/electron
 - Electron builder: https://www.electron.build/
 - Electron packager (only for the Snap builds): https://github.com/electron/electron-packager
+- electron-util: https://github.com/sindresorhus/electron-util
 - Bulma CSS: https://bulma.io/
 - Font Awesome: https://fontawesome.com
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt

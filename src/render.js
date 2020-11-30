@@ -726,10 +726,6 @@ function generateFilterData() {
           }
         }
       });
-      // sort filters by amount (https://stackoverflow.com/a/1069840)
-      /*filtersCounted = Object.fromEntries(
-        Object.entries(filtersCounted).sort(([,a],[,b]) => b-a)
-      );*/
       // sort filter alphanummerically (https://stackoverflow.com/a/54427214)
       filtersCounted = Object.fromEntries(
         Object.entries(filtersCounted).sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare)
@@ -821,6 +817,7 @@ function buildFilterButtons(category) {
     filterContainerSub.appendChild(todoFilterHeadline);
     // build one button each
     for (let filter in filtersCounted) {
+      if(!filter) continue;
       let todoFiltersItem = document.createElement("button");
       todoFiltersItem.setAttribute("class", "btnApplyFilter button");
       todoFiltersItem.setAttribute("data-filter", filter);
@@ -873,7 +870,9 @@ function buildFilterButtons(category) {
           console.log(error);
         });
       });
+      //console.log(selectedFilters);
       // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
+      // TODO: do this in the first loop where buttons are built
       selectedFilters.forEach(function(item) {
         if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
       });

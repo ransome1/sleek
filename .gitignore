@@ -1,12 +1,8 @@
 node_modules/
 dist/
-package-lock.json
-*.lock
 *.log
 *.DS_Store
 *.snap
 *.bak
 snap/local/
-.flatpak-builder/
-build/
 flatpak-npm-generator.py

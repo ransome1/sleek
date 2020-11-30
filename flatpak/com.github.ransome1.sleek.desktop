@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=0.3.0
+Name=com.github.ransome1.sleek
+Exec=/app/bin/run.sh %u
+Type=Application
+Icon=com.github.ransome1.sleek
+Categories=Productivity
+Terminal=false
+Comment=A simple todo manager based on the concept of todo.txt
