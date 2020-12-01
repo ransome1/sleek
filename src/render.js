@@ -421,6 +421,7 @@ function showCompletedTodos() {
   }).catch(error => {
     console.log(error);
   });
+  /*
   // parsed data will be passed to generate filter data and build the filter buttons
   t0 = performance.now();
   generateFilterData().then(response => {
@@ -429,7 +430,7 @@ function showCompletedTodos() {
     console.log("Filters rendered:", t1 - t0, "ms");
   }).catch(error => {
     console.log(error);
-  });
+  });*/
 }
 
 function resetFilters() {
@@ -952,6 +953,8 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix) {
       todoFiltersItem.setAttribute("class", "btnApplyFilter button");
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
+      todoFiltersItem.setAttribute("tabindex", 305);
+      todoFiltersItem.setAttribute("href", "#");
       //todoFiltersItem.setAttribute("tabindex", 415);
       todoFiltersItem.innerHTML = filter;
       if(typeAheadPrefix==undefined) {
@@ -1000,14 +1003,19 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix) {
             // only if input is not only the prefix, otherwise all existing prefixes will be removed
             modalFormInput.value = modalFormInput.value.replace(typeAheadPrefix+typeAheadValue, "");
             // add filter from suggestion box
-            modalFormInput.value += typeAheadPrefix+todoFiltersItem.getAttribute('data-filter');
+            modalFormInput.value += typeAheadPrefix+todoFiltersItem.getAttribute('data-filter') + " ";
           } else {
             // add filter from suggestion box
             // TODO: describtion missing
-            modalFormInput.value += todoFiltersItem.getAttribute('data-filter');
+            modalFormInput.value += todoFiltersItem.getAttribute('data-filter') + " ";
           }
+          // empty stuff for second click
+          typeAheadPrefix = null;
+          typeAheadValue = null;
           // put focus back into input so user can continue writing
           modalFormInput.focus();
+          //
+          suggestionDropdown.classList.remove("is-active");
         });
       }
       //console.log(selectedFilters);
