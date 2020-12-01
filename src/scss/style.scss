@@ -177,14 +177,13 @@ nav {
 }
 
 /* FILTER DROPDOWN */
-
 #filterDropdown {
+  display: none;
   width: 30em;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   float: left;
-  display: none;
   padding: 0 1.5em;
   background: $mid-grey;
   .dropdown-item {
@@ -212,7 +211,7 @@ nav {
   .dropdown-item.is-greyed-out {
     opacity: .5;
   }
-  .dropdown-item.is-greyed-out button  {
+  .dropdown-item.is-greyed-out a  {
     background: $dark-grey!important;
     color: $darker-grey!important;
   }
@@ -220,28 +219,38 @@ nav {
     background: $darker-grey!important;
     color: #ccc;
   }
-  /* FILTERS */
+  .dropdown-item.is-greyed-out a.headline,
+  .dropdown-item.is-greyed-out a.headline a {
+    background: none!important;
+  }
   #todoFilters {
     width: 100%;
     margin: 0;
-    button {
-      margin: 0 .5rem .5rem 0;
-    }
-    button span.tag {
-      z-index: 35;
-    }
-    div.contexts button  {
+  }
+}
+#filterDropdown.is-active {
+  display: block;
+}
+.filterDropdown {
+  a.button {
+    margin: 0 .5rem .5rem 0;
+  }
+  a.button span.tag {
+    z-index: 35;
+  }
+  div.contexts {
+    a.button  {
       background: $sleek-contexts-button;
       color: $sleek-contexts-button-font;
     }
-    div.contexts button:hover,
-    div.contexts button:active {
+    a.button:hover,
+    a.button:active {
       background: $sleek-contexts-button-hover;
     }
-    div.contexts button:focus {
+    a.button:focus {
       outline: 1px dotted $sleek-contexts-button-bubble!important;
     }
-    div.contexts button span.tag {
+    a.button span.tag {
       background: $sleek-contexts-button-bubble;
       color: #fff;
       font-weight: bold;
@@ -249,22 +258,24 @@ nav {
       right: -.75em;
       top: -.75em;
     }
-    div.contexts button.is-dark  {
+    a.button.is-dark  {
       background: $sleek-contexts-button-highlighted;
       color: #fff;
     }
-    div.projects button {
+  }
+  div.projects {
+    a.button {
       background: $sleek-projects-button;
       color: $sleek-projects-button-font;
     }
-    div.projects button:hover,
-    div.projects button:active {
+    a.button:hover,
+    a.button:active {
       background: $sleek-projects-button-hover;
     }
-    div.projects button:focus {
+    a.button:focus {
       outline: 1px dotted $sleek-projects-button-bubble!important;
     }
-    div.projects button span.tag {
+    a.button span.tag {
       background: $sleek-projects-button-bubble;
       color: #fff;
       font-weight: bold;
@@ -272,17 +283,14 @@ nav {
       right: -.75em;
       top: -.75em;
     }
-    div.projects button.is-dark {
+    a.button.is-dark {
       background: $sleek-projects-button-highlighted;
       color: #fff;
     }
-    div.column {
-      padding-left: 0;
-    }
   }
-}
-#filterDropdown.is-active {
-  display: block;
+  /*.column {
+    padding-left: 0;
+  }*/
 }
 
 /* TABLE */
@@ -592,10 +600,16 @@ nav {
   button:hover {
     color: black;
   }
-  /*a:focus,
-  button:focus {
-    outline: 1px dotted $has-text-link;
-  }*/
+  #suggestionDropdown {
+    width: 100%;
+    position: relative;
+    .dropdown-trigger {
+      width: inherit;
+    }
+    .dropdown-menu {
+      position: static;
+    }
+  }
 }
 
 /* DATEPICKER */
@@ -663,9 +677,13 @@ nav {
       line-height: 3.5em;
     }
   }
-  #filterDropdown {
+  .filterDropdown {
     width: 29em!important;
     padding: 0 1.5em!important;
+  }
+  #suggestionDropdown.filterDropdown {
+    width: 100%!important;
+    padding: 0!important;
   }
   #todoTable {
     padding: 1.5em;

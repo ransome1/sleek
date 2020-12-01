@@ -45,7 +45,6 @@ const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const categories = ["contexts", "projects"];
-const filterContainer = document.getElementById("todoFilters");
 const filterDropdown = document.getElementById("filterDropdown");
 const filterColumnClose = document.getElementById("filterColumnClose");
 const filterToggleShowCompleted = document.getElementById("filterToggleShowCompleted");
@@ -60,6 +59,8 @@ const modalBackground = document.querySelectorAll('.modal-background');
 const modalFile = document.getElementById("modalFile");
 const modalFileChoose = document.getElementById("modalFileChoose");
 const modalFileOverwrite = document.getElementById("modalFileOverwrite");
+const suggestionDropdown = document.getElementById("suggestionDropdown");
+const suggestionContainer = document.getElementById("suggestionContainer");
 // datepicker declaration and configuation
 const dueDatePickerInput = document.getElementById("dueDatePickerInput");
 const dueDatePicker = new Datepicker(dueDatePickerInput, {
@@ -108,6 +109,8 @@ let fileWatcher;
 let itemsFiltered = [];
 //
 let itemsGrouped = [];
+//
+let filterContainer = document.getElementById("todoFilters");
 // ########################################################################################################################
 // INITIAL DOM CONFIGURATION
 // ########################################################################################################################
@@ -210,6 +213,91 @@ modalForm.addEventListener("submit", function(e) {
     console.log(error);
   });
 });
+
+
+
+
+
+
+
+// ########################################################################################################################
+// TYPE AHEAD FOR PROJECTS AND CONTEXTS IN MODAL
+// ########################################################################################################################
+// defines when the composed filter is being filled with content and when it is emptied
+let startComposing;
+// in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
+let typeAheadValue;
+let typeAheadPrefix;
+// typing in modal form input, keyup otherwise we don't get the full value of the input after release
+modalFormInput.addEventListener("keyup", e => {
+  let lastChar = modalFormInput.value[modalFormInput.value.length - 1];
+  let lastCharMinus1 = modalFormInput.value[modalFormInput.value.length - 2];
+  // if "Space" and "+" follow after another it's assumed a project will follow
+  if((lastChar=="@" && lastCharMinus1==" ") || (lastChar=="+" && lastCharMinus1==" ")) {
+    suggestionDropdown.classList.add("is-active");
+    // start composing category
+    startComposing = true;
+    // define what category it will be
+    typeAheadPrefix = lastChar;
+  // a space will always remove the suggestion bar
+  } else if(e.keyCode === 32 || modalFormInput.value.length === 0) {
+    suggestionDropdown.classList.remove("is-active");
+    //not composing category anymore so we delete it
+    startComposing = false;
+    //
+    typeAheadPrefix = "";
+  // typing backspace and waiting for a space
+  } else if(e.key == "Backspace" && lastChar == " ") {
+    suggestionDropdown.classList.remove("is-active");
+    //not composing category anymore so we delete it
+    startComposing = false;
+    //
+    typeAheadPrefix = "";
+  // intercept a project when it is the first thing to be entered in the input
+  } else if((modalFormInput.value.length == 1 && lastChar=="@") || (modalFormInput.value.length == 1 && lastChar=="+")) {
+    suggestionDropdown.classList.add("is-active");
+    // start composing category
+    startComposing = true;
+    // define what category it will be
+    typeAheadPrefix = lastChar;
+  } else if(startComposing) {
+    startComposing = true;
+  } else {
+    //not composing category anymore so we delete it
+    startComposing = false;
+    //
+    typeAheadPrefix = "";
+  }
+  if(startComposing) {
+    // which category to pass on to generate buttons
+    let typeAheadCategory = "";
+    // clear otherwise it will get stacked to old composed category
+    typeAheadValue = "";
+    if(typeAheadPrefix=="+") {
+      typeAheadValue = modalFormInput.value.split("+").pop();
+      typeAheadCategory = "projects";
+    } else if(typeAheadPrefix=="@") {
+      typeAheadValue = modalFormInput.value.split("@").pop();
+      typeAheadCategory = "contexts";
+    }
+    // build the filter buttons
+    if(typeAheadCategory) {
+      //document.getElementById("suggestionContainer").innerHTML = "";
+      generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix).then(response => {
+        //document.getElementById("suggestionContainer").appendChild(response);
+        console.log(response);
+      }).catch (error => {
+        console.log(error);
+      });
+    }
+  }
+});
+
+
+
+
+
+
 // complete the item using the footer button in modal
 btnItemStatus.onclick = function() {
   completeTodo(dataItem).then(response => {
@@ -251,6 +339,9 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     modalFormInput.value = dataItemTemp.toString();
     // clean up as we don#t need it anymore
     dataItemTemp = null;
+    // if suggestion box was open, it needs to be closed
+    suggestionDropdown.classList.remove("is-active");
+    modalFormInput.focus();
   }
 });
 todoTableSearch.addEventListener("input", function () {
@@ -358,6 +449,7 @@ function resetFilters() {
   }).catch(error => {
     console.log(error);
   });
+  /*
   // parsed data will be passed to generate filter data and build the filter buttons
   t0 = performance.now();
   generateFilterData().then(response => {
@@ -366,7 +458,7 @@ function resetFilters() {
     console.log("Filters rendered:", t1 - t0, "ms");
   }).catch(error => {
     console.log(error);
-  });
+  });*/
 }
 
 function showMore(variable) {
@@ -481,6 +573,9 @@ function showFilters(variable) {
 }
 
 function clearModal() {
+  // hide suggestion box if it was open
+  suggestionDropdown.classList.remove("is-active");
+
   modalForm.classList.remove("is-active");
   modalForm.blur();
   modalFile.classList.remove("is-active");
@@ -674,16 +769,30 @@ function parseDataFromFile(pathToFile) {
   }
 }
 
-function generateFilterData() {
+function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix) {
   try {
+    // container to fill with categories
+    let container;
+    // is this a typeahead request? Default is false
+    // which category or categories to loop through and build
+    let categoriesToBuild = [];
+    if(typeAheadPrefix) {
+      container = suggestionContainer;
+      categoriesToBuild.push(typeAheadCategory);
+      //typeAhead = true;
+    } else {
+      container = filterContainer;
+      categoriesToBuild = categories;
+    }
     // empty the container to prevent duplicates
-    filterContainer.innerHTML = "";
+    container.innerHTML = "";
     // parse through above defined categories, most likely contexts and projects
-    categories.forEach((category) => {
+    categoriesToBuild.forEach((category) => {
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      if(items.length==0) {
+      // TODO: what does the first condition do?
+      if(items.length==0 || typeAheadCategory) {
         items = parsedData;
       }
       items.forEach((item) => {
@@ -700,6 +809,10 @@ function generateFilterData() {
           }
         }
       });
+      // search within filters according to typeAheadValue
+      if(typeAheadPrefix) {
+        filters = filters.filter(function (el) { return el.toString().toLowerCase().includes(typeAheadValue.toLowerCase()); });
+      }
       // delete duplicates and count filters
       filtersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
         if (filter in filters) {
@@ -726,18 +839,20 @@ function generateFilterData() {
           }
         }
       });
+      //if(filters[0]!="") console.log("LEER");
       // sort filter alphanummerically (https://stackoverflow.com/a/54427214)
       filtersCounted = Object.fromEntries(
         Object.entries(filtersCounted).sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare)
       );
       // build the filter buttons
-      if(filters.length > 0) {
-        buildFilterButtons(category).then(response => {
-          console.log(response);
+      if(filters[0]!="") {
+        buildFilterButtons(category, typeAheadValue, typeAheadPrefix).then(response => {
+          container.appendChild(response);
         }).catch (error => {
           console.log(error);
         });
       } else {
+        suggestionDropdown.classList.remove("is-active");
         console.log("Info: No " + category + " found in todo.txt data, so no filters will be generated");
       }
     });
@@ -747,119 +862,55 @@ function generateFilterData() {
   }
 }
 
-function buildFilterButtons(category) {
+function buildFilterButtons(category, typeAheadValue, typeAheadPrefix) {
   try {
+    //
+    let headline;
+    // creates a div for the specific filter section
+    let filterContainerSub = document.createElement("div");
+    filterContainerSub.setAttribute("class", "dropdown-item " + category);
     // translate headline
     if(category=="contexts") {
       headline = i18next.t("contexts");
     } else if(category=="projects"){
       headline = i18next.t("projects");
     }
-    let filterContainer = document.getElementById("todoFilters");
-    // creates a div for the specific filter section
-    let filterContainerSub = document.createElement("div");
-    filterContainerSub.setAttribute("class", "dropdown-item " + category);
-    //filterContainerSub.setAttribute("tabindex", -1);
-    // create a sub headline element
-    let todoFilterHeadline = document.createElement("a");
-    todoFilterHeadline.setAttribute("class", "headline " + category);
-    todoFilterHeadline.setAttribute("tabindex", 0);
-    todoFilterHeadline.setAttribute("href", "#");
-    todoFilterHeadline.setAttribute("data-headline", headline);
-    todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\"></i>&nbsp;" + headline;
-    // TODO clean up the mess
-    todoFilterHeadline.addEventListener("click", () => {
-      // TODO clean up. this is a duplicate, see above
-      if(categoriesFiltered.includes(category)) {
-        // we remove the category from the array
-        categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
-        //persist the category filters
-        store.set("categoriesFiltered", categoriesFiltered);
-        // we remove the greyed out look from the container
-        filterContainerSub.classList.remove("is-greyed-out");
-        // change the eye icon
-        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
-      } else {
-        // we push the category to the filter array
-        categoriesFiltered.push(category);
-        // make sure there are no duplicates
-        // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-        categoriesFiltered.filter(function(item) {
-          let seen = {};
-          let k = JSON.stringify(item);
-          return seen.hasOwnProperty(k) ? false : (seen[k] = true);
-        })
-        //persist the category filters
-        store.set("categoriesFiltered", categoriesFiltered);
-        // we add the greyed out look to the container
-        filterContainerSub.classList.add("is-greyed-out");
-        // change the eye icon
-        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
-      }
-      t0 = performance.now();
-      generateTodoData().then(response => {
-        console.log(response);
-        t1 = performance.now();
-        console.log("Table rendered in:", t1 - t0, "ms");
-      }).catch(error => {
-        console.log(error);
-      });
-    });
-    // TODO clean up. this is a duplicate, see above
-    if(categoriesFiltered.includes(category)) {
-      filterContainerSub.classList.add("is-greyed-out");
-      todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye\"></i></a>&nbsp;" + headline;
-    } else {
-      filterContainerSub.classList.remove("is-greyed-out");
-      todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + headline;
-    }
-    // add the headline before category container
-    filterContainerSub.appendChild(todoFilterHeadline);
-    // build one button each
-    for (let filter in filtersCounted) {
-      if(!filter) continue;
-      let todoFiltersItem = document.createElement("button");
-      todoFiltersItem.setAttribute("class", "btnApplyFilter button");
-      todoFiltersItem.setAttribute("data-filter", filter);
-      todoFiltersItem.setAttribute("data-category", category);
-      //todoFiltersItem.setAttribute("tabindex", 415);
-      todoFiltersItem.innerHTML = filter + " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
-      // create the event listener for filter selection by user
-      todoFiltersItem.addEventListener("click", () => {
-        // set highlighting
-        todoFiltersItem.classList.toggle("is-dark");
-        // if no filters are selected, add a first one
-        if (selectedFilters.length > 0) {
-          // get the index of the item that matches the data values the button click provided
-          let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
-          if(index != -1) {
-            // remove the item at the index where it matched
-            selectedFilters.splice(index, 1);
-          } else {
-            // if the item is not already in the array, push it into
-            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-          }
-        } else {
-          // this is the first push
-          selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-        }
-        //convert the collected filters to JSON and save it to store.js
-        store.set("selectedFilters", JSON.stringify(selectedFilters));
-        if(categoriesFiltered) {
-          // remove any setting that hides the category of the selected filters
-          if(categoriesFiltered.indexOf(category)>=0) categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
+    if(typeAheadPrefix==undefined) {
+      // create a sub headline element
+      let todoFilterHeadline = document.createElement("a");
+      todoFilterHeadline.setAttribute("class", "headline " + category);
+      todoFilterHeadline.setAttribute("tabindex", 0);
+      todoFilterHeadline.setAttribute("href", "#");
+      todoFilterHeadline.setAttribute("data-headline", headline);
+      todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\"></i>&nbsp;" + headline;
+      // TODO clean up the mess
+      todoFilterHeadline.addEventListener("click", () => {
+        // TODO clean up. this is a duplicate, see above
+        if(categoriesFiltered.includes(category)) {
+          // we remove the category from the array
+          categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
           //persist the category filters
           store.set("categoriesFiltered", categoriesFiltered);
-          // reload the filter section for the visual change
-          // parsed data will be passed to generate filter data and build the filter buttons
-          /*t0 = performance.now();
-          generateFilterData().then(response => {
-            console.log(response);
-            t1 = performance.now();
-            console.log("Filters rendered:", t1 - t0, "ms");
-          }).catch(error => {
-            console.log(error);
-          });*/
+          // we remove the greyed out look from the container
+          filterContainerSub.classList.remove("is-greyed-out");
+          // change the eye icon
+          todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
+        } else {
+          // we push the category to the filter array
+          categoriesFiltered.push(category);
+          // make sure there are no duplicates
+          // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+          categoriesFiltered.filter(function(item) {
+            let seen = {};
+            let k = JSON.stringify(item);
+            return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+          })
+          //persist the category filters
+          store.set("categoriesFiltered", categoriesFiltered);
+          // we add the greyed out look to the container
+          filterContainerSub.classList.add("is-greyed-out");
+          // change the eye icon
+          todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
         }
         t0 = performance.now();
         generateTodoData().then(response => {
@@ -870,6 +921,95 @@ function buildFilterButtons(category) {
           console.log(error);
         });
       });
+      // TODO clean up. this is a duplicate, see above
+      if(categoriesFiltered.includes(category)) {
+        filterContainerSub.classList.add("is-greyed-out");
+        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye\"></i></a>&nbsp;" + headline;
+      } else {
+        filterContainerSub.classList.remove("is-greyed-out");
+        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + headline;
+      }
+      // add the headline before category container
+      filterContainerSub.appendChild(todoFilterHeadline);
+      //console.log(todoFilterHeadline);
+    } else {
+      // create a sub headline element
+      let todoFilterHeadline = document.createElement("h4");
+      todoFilterHeadline.setAttribute("class", "is-4 is-title headline " + category);
+      todoFilterHeadline.setAttribute("tabindex", 0);
+      todoFilterHeadline.innerHTML = headline;
+      // add the headline before category container
+      filterContainerSub.appendChild(todoFilterHeadline);
+    }
+    //console.log(todoFilterHeadline);
+    // add the headline before category container
+    //filterContainerSub.appendChild(todoFilterHeadline);
+    // build one button each
+    for (let filter in filtersCounted) {
+      // TODO: describe
+      if(!filter) continue;
+      let todoFiltersItem = document.createElement("a");
+      todoFiltersItem.setAttribute("class", "btnApplyFilter button");
+      todoFiltersItem.setAttribute("data-filter", filter);
+      todoFiltersItem.setAttribute("data-category", category);
+      //todoFiltersItem.setAttribute("tabindex", 415);
+      todoFiltersItem.innerHTML = filter;
+      if(typeAheadPrefix==undefined) {
+        todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
+        // create the event listener for filter selection by user
+        todoFiltersItem.addEventListener("click", () => {
+          // set highlighting
+          todoFiltersItem.classList.toggle("is-dark");
+          // if no filters are selected, add a first one
+          if (selectedFilters.length > 0) {
+            // get the index of the item that matches the data values the button click provided
+            let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+            if(index != -1) {
+              // remove the item at the index where it matched
+              selectedFilters.splice(index, 1);
+            } else {
+              // if the item is not already in the array, push it into
+              selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+            }
+          } else {
+            // this is the first push
+            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+          }
+          //convert the collected filters to JSON and save it to store.js
+          store.set("selectedFilters", JSON.stringify(selectedFilters));
+          if(categoriesFiltered) {
+            // remove any setting that hides the category of the selected filters
+            if(categoriesFiltered.indexOf(category)>=0) categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
+            //persist the category filters
+            store.set("categoriesFiltered", categoriesFiltered);
+          }
+          t0 = performance.now();
+          generateTodoData().then(response => {
+            console.log(response);
+            t1 = performance.now();
+            console.log("Table rendered in:", t1 - t0, "ms");
+          }).catch(error => {
+            console.log(error);
+          });
+        });
+      } else {
+        // add filter to input
+        todoFiltersItem.addEventListener("click", () => {
+          // remove composed filter first, as it is going to be replaced with a filter from suggestion box
+          if(typeAheadValue) {
+            // only if input is not only the prefix, otherwise all existing prefixes will be removed
+            modalFormInput.value = modalFormInput.value.replace(typeAheadPrefix+typeAheadValue, "");
+            // add filter from suggestion box
+            modalFormInput.value += typeAheadPrefix+todoFiltersItem.getAttribute('data-filter');
+          } else {
+            // add filter from suggestion box
+            // TODO: describtion missing
+            modalFormInput.value += todoFiltersItem.getAttribute('data-filter');
+          }
+          // put focus back into input so user can continue writing
+          modalFormInput.focus();
+        });
+      }
       //console.log(selectedFilters);
       // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
       // TODO: do this in the first loop where buttons are built
@@ -879,8 +1019,9 @@ function buildFilterButtons(category) {
       filterContainerSub.appendChild(todoFiltersItem);
     }
     // add filters to the specific filter container
-    filterContainer.appendChild(filterContainerSub);
-    return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
+    //filterContainer.appendChild(filterContainerSub);
+    return Promise.resolve(filterContainerSub);
+    //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
   } catch (error) {
     return Promise.reject("Error in buildFilterButtons(): " + error);
   }

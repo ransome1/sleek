@@ -18,7 +18,7 @@
             <li class="btnOpenTodoFile"><a href="#" tabindex="0"><i class="fas fa-upload"></i></a></li>
             <li id="navBtnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
           </ul>
-          <section id="filterDropdown" class="dropdown" tabindex="0">
+          <section id="filterDropdown" class="filterDropdown dropdown" tabindex="0">
             <div class="container">
               <div class="toggle">
                 <label class="switch" for="toggleShowCompleted">
@@ -86,30 +86,16 @@
           </header>
           <div class="card-content">
             <div class="content">
-
-              <div class="dropdown is-active">
+              <div id="suggestionDropdown" class="filterDropdown dropdown">
                 <div class="dropdown-trigger">
                   <input id="modalFormInput" class="input is-medium" type="text" tabindex="300">
                 </div>
-                <!--<div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                <div class="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    <div class="dropdown-item">
-                      <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
-                    </div>
-                    <hr class="dropdown-divider">
-                    <div class="dropdown-item">
-                      <p>You simply need to use a <code>&lt;div&gt;</code> instead.</p>
-                    </div>
-                    <hr class="dropdown-divider">
-                    <a href="#" class="dropdown-item">
-                      This is a link
-                    </a>
+                    <div id="suggestionContainer" class="dropdown-item"></div>
                   </div>
-                </div>-->
+                </div>
               </div>
-
-
-
               <article class="message">
                 <div id="modalFormAlert" class="message-body"></div>
               </article>

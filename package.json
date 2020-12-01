@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A simple todo manager based on the concept of todo.txt",
   "synopsis": "A simple todo manager based on the concept of todo.txt",
   "category": "ProjectManagement",
@@ -77,10 +77,10 @@
     "md5": "^2.3.0"
   },
   "devDependencies": {
+    "node-sass": "^5.0.0",
     "bulma": "^0.9.1",
     "electron": "11.0.3",
     "electron-packager": "^15.1.0",
-    "electron-builder": "^22.9.1",
-    "node-sass": "^5.0.0"
+    "electron-builder": "^22.9.1"
   }
 }

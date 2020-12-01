@@ -107,38 +107,45 @@ nav ul li a:focus {
 #filterDropdown {
   background: #3B3B3B; }
 
-#filterDropdown .dropdown-item a.headline {
-  color: #CCCDCF; }
+.filterDropdown .dropdown-item a.headline,
+.filterDropdown .dropdown-item a.headline a {
+  color: #CCCDCF !important; }
 
-#filterDropdown #todoFilters div.contexts button {
+.filterDropdown div.contexts a.button {
   background: #075A44;
   color: #C5EDE3; }
 
-#filterDropdown #todoFilters div.contexts button:hover,
-#filterDropdown #todoFilters div.contexts button.is-dark {
+.filterDropdown div.contexts a.button:hover,
+.filterDropdown div.contexts a.button.is-dark {
   background: #1BA37E; }
 
-#filterDropdown #todoFilters div.contexts button span.tag {
+.filterDropdown div.contexts a.button span.tag {
   background: #C5EDE3;
   color: #075A44; }
 
-#filterDropdown #todoFilters div.projects button {
+.filterDropdown div.projects a.button {
   background: #5F1A5E;
   color: #F2D6F2; }
 
-#filterDropdown #todoFilters div.projects button:hover,
-#filterDropdown #todoFilters div.projects button.is-dark {
+.filterDropdown div.projects a.button:hover,
+.filterDropdown div.projects a.button.is-dark {
   background: #BC30BA; }
 
-#filterDropdown #todoFilters div.projects button span.tag {
+.filterDropdown div.projects a.button span.tag {
   background: #F2D6F2;
   color: #5F1A5E; }
 
-#filterDropdown .button.is-white {
+.filterDropdown .button.is-white {
   background-color: #2C2D30 !important;
   color: #CCCDCF !important; }
 
-#filterDropdown .dropdown-item.is-greyed-out button {
+.filterDropdown .dropdown-content {
+  background: #2C2D30 !important; }
+
+.filterDropdown .dropdown-content h4 {
+  color: #CCCDCF !important; }
+
+#filterDropdown .dropdown-item.is-greyed-out a {
   background: #2c2d30 !important;
   color: #B5B5B5 !important;
   opacity: .8; }

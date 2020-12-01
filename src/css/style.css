@@ -150,18 +150,17 @@ nav {
 
 /* FILTER DROPDOWN */
 #filterDropdown {
+  display: none;
   width: 30em;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   float: left;
-  display: none;
   padding: 0 1.5em;
   background: #ebebeb;
   /*.dropdown-item a.headline:focus {
     outline: 1px dotted $has-text-link!important;
-  }*/
-  /* FILTERS */ }
+  }*/ }
   #filterDropdown .dropdown-item {
     width: 100%;
     padding: 0;
@@ -179,60 +178,66 @@ nav {
     display: block; }
   #filterDropdown .dropdown-item.is-greyed-out {
     opacity: .5; }
-  #filterDropdown .dropdown-item.is-greyed-out button {
+  #filterDropdown .dropdown-item.is-greyed-out a {
     background: #ccc !important;
     color: #4a4a4a !important; }
   #filterDropdown .dropdown-item.is-greyed-out span.tag {
     background: #4a4a4a !important;
     color: #ccc; }
+  #filterDropdown .dropdown-item.is-greyed-out a.headline,
+  #filterDropdown .dropdown-item.is-greyed-out a.headline a {
+    background: none !important; }
   #filterDropdown #todoFilters {
     width: 100%;
     margin: 0; }
-    #filterDropdown #todoFilters button {
-      margin: 0 .5rem .5rem 0; }
-    #filterDropdown #todoFilters button span.tag {
-      z-index: 35; }
-    #filterDropdown #todoFilters div.contexts button {
-      background: #c5ede3;
-      color: #075943; }
-    #filterDropdown #todoFilters div.contexts button:hover,
-    #filterDropdown #todoFilters div.contexts button:active {
-      background: #c9f2e8; }
-    #filterDropdown #todoFilters div.contexts button:focus {
-      outline: 1px dotted #1aa37e !important; }
-    #filterDropdown #todoFilters div.contexts button span.tag {
-      background: #1aa37e;
-      color: #fff;
-      font-weight: bold;
-      position: absolute;
-      right: -.75em;
-      top: -.75em; }
-    #filterDropdown #todoFilters div.contexts button.is-dark {
-      background: #075943;
-      color: #fff; }
-    #filterDropdown #todoFilters div.projects button {
-      background: #f1d6f1;
-      color: #5f1a5e; }
-    #filterDropdown #todoFilters div.projects button:hover,
-    #filterDropdown #todoFilters div.projects button:active {
-      background: #f7dcf7; }
-    #filterDropdown #todoFilters div.projects button:focus {
-      outline: 1px dotted #bc30ba !important; }
-    #filterDropdown #todoFilters div.projects button span.tag {
-      background: #bc30ba;
-      color: #fff;
-      font-weight: bold;
-      position: absolute;
-      right: -.75em;
-      top: -.75em; }
-    #filterDropdown #todoFilters div.projects button.is-dark {
-      background: #5f1a5e;
-      color: #fff; }
-    #filterDropdown #todoFilters div.column {
-      padding-left: 0; }
 
 #filterDropdown.is-active {
   display: block; }
+
+.filterDropdown {
+  /*.column {
+    padding-left: 0;
+  }*/ }
+  .filterDropdown a.button {
+    margin: 0 .5rem .5rem 0; }
+  .filterDropdown a.button span.tag {
+    z-index: 35; }
+  .filterDropdown div.contexts a.button {
+    background: #c5ede3;
+    color: #075943; }
+  .filterDropdown div.contexts a.button:hover,
+  .filterDropdown div.contexts a.button:active {
+    background: #c9f2e8; }
+  .filterDropdown div.contexts a.button:focus {
+    outline: 1px dotted #1aa37e !important; }
+  .filterDropdown div.contexts a.button span.tag {
+    background: #1aa37e;
+    color: #fff;
+    font-weight: bold;
+    position: absolute;
+    right: -.75em;
+    top: -.75em; }
+  .filterDropdown div.contexts a.button.is-dark {
+    background: #075943;
+    color: #fff; }
+  .filterDropdown div.projects a.button {
+    background: #f1d6f1;
+    color: #5f1a5e; }
+  .filterDropdown div.projects a.button:hover,
+  .filterDropdown div.projects a.button:active {
+    background: #f7dcf7; }
+  .filterDropdown div.projects a.button:focus {
+    outline: 1px dotted #bc30ba !important; }
+  .filterDropdown div.projects a.button span.tag {
+    background: #bc30ba;
+    color: #fff;
+    font-weight: bold;
+    position: absolute;
+    right: -.75em;
+    top: -.75em; }
+  .filterDropdown div.projects a.button.is-dark {
+    background: #5f1a5e;
+    color: #fff; }
 
 /* TABLE */
 #todoTable {
@@ -438,32 +443,41 @@ nav {
       border-radius: 50%; }
 
 /* MODAL */
-#modalForm {
-  /*a:focus,
-  button:focus {
-    outline: 1px dotted $has-text-link;
-  }*/ }
-  #modalForm .message {
-    display: none;
-    margin: 1em 0; }
-  #modalForm .is-active {
-    display: block; }
-  #modalForm .field {
-    margin: .75em 0; }
-  #modalForm #btnItemStatus {
-    display: none;
-    text-align: center; }
-  #modalForm #btnItemStatus.is-active {
-    display: block; }
-  #modalForm button {
-    font-size: 1em;
-    background: none;
-    color: #3273dc;
-    border: none;
-    border-right: 1px solid #ebebeb !important;
-    cursor: pointer; }
-  #modalForm button:hover {
-    color: black; }
+#modalForm .message {
+  display: none;
+  margin: 1em 0; }
+
+#modalForm .is-active {
+  display: block; }
+
+#modalForm .field {
+  margin: .75em 0; }
+
+#modalForm #btnItemStatus {
+  display: none;
+  text-align: center; }
+
+#modalForm #btnItemStatus.is-active {
+  display: block; }
+
+#modalForm button {
+  font-size: 1em;
+  background: none;
+  color: #3273dc;
+  border: none;
+  border-right: 1px solid #ebebeb !important;
+  cursor: pointer; }
+
+#modalForm button:hover {
+  color: black; }
+
+#modalForm #suggestionDropdown {
+  width: 100%;
+  position: relative; }
+  #modalForm #suggestionDropdown .dropdown-trigger {
+    width: inherit; }
+  #modalForm #suggestionDropdown .dropdown-menu {
+    position: static; }
 
 /* DATEPICKER */
 .dueDate svg {
@@ -515,9 +529,12 @@ nav {
       width: 100%;
       height: 3.5em;
       line-height: 3.5em; }
-  #filterDropdown {
+  .filterDropdown {
     width: 29em !important;
     padding: 0 1.5em !important; }
+  #suggestionDropdown.filterDropdown {
+    width: 100% !important;
+    padding: 0 !important; }
   #todoTable {
     padding: 1.5em; }
   .toggle {
