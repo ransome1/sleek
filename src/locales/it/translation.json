@@ -20,7 +20,7 @@
   "formErrorWritingFile": "<strong>Error:</strong> No se pueden guardar los cambios en el fichero. Comprueba si el fichero todo.txt existe y si tienes suficientes permisos para editarlo",
   "formInfoNoInput": "Por favor, añada un todo en el campo de texto. Si no estás seguro de cómo hacerlo, echa un vistazo rápido a <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "formSelectDueDate": "Seleccionar una fecha de caducidad",
-  "modalFormHowTo": "Haga clic aquí para aprender a usar <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\" tabindex=\"310\">todo.txt syntax</a>.",
+  "modalFormHowTo": "Haga clic aquí para aprender a usar <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "cancel": "Eliminar",
   "save": "guardar",
   "formTodoInputPlaceholder": "(A) Usar el todo.txt Syntax @context +project",

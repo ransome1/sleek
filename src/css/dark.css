@@ -7,7 +7,7 @@ a {
 
 button:focus,
 a:focus {
-  outline: 1px dotted #CCCDCF !important; }
+  outline: 2px solid #CCCDCF !important; }
 
 a:hover,
 strong {
@@ -18,6 +18,10 @@ input {
   color: #CCCDCF;
   border: none !important; }
 
+input:active,
+input:focus {
+  box-shadow: #CCCDCF !important; }
+
 input[type="search"]::-webkit-search-cancel-button {
   background-color: white;
   -webkit-mask-image: url("../svg/times-circle.svg");
@@ -25,20 +29,20 @@ input[type="search"]::-webkit-search-cancel-button {
 
 nav {
   background-color: #2C2D30; }
-
-nav ul li.logo {
-  background: none; }
-
-nav ul li a {
-  color: #B5B5B5;
-  border-bottom: 1px solid #3B3B3B; }
-
-nav ul li a:hover,
-nav ul li.is-highlighted a,
-nav ul li a:focus {
-  color: #B5B5B5;
-  border-bottom: none;
-  background-color: #3B3B3B; }
+  nav ul li.logo {
+    background: none; }
+  nav ul li a {
+    color: #B5B5B5;
+    border-bottom: 1px solid #3B3B3B; }
+  nav ul li a:hover,
+  nav ul li a:focus {
+    color: #B5B5B5;
+    border-bottom: none;
+    background-color: #3B3B3B; }
+  nav ul li.is-highlighted a {
+    color: #B5B5B5;
+    border-bottom: none;
+    background-color: #3B3B3B; }
 
 #todoTable #todoTableSearch {
   color: #CCCDCF;
@@ -47,65 +51,62 @@ nav ul li a:focus {
 #todoTable #todoTableSearch::placeholder {
   color: #4a4a4a; }
 
-#todoTable .flex-table {
-  border-color: #2D2E31; }
-
 #todoTable .flex-table#previousDataItem.is-highlighted {
   background-color: #4a4a4a; }
 
-#todoTable .flex-table .checkbox a {
-  color: #CCCDCF; }
-
-#todoTable .flex-table .checkbox a:hover {
-  color: white; }
-
-#todoTable .flex-table.completed,
-#todoTable .flex-table.completed .flex-row.text,
-#todoTable .flex-table.completed .checkbox a {
+#todoTable .flex-table.completed {
   color: #4A4A4A; }
+  #todoTable .flex-table.completed .flex-row.text,
+  #todoTable .flex-table.completed .checkbox a {
+    color: inherit; }
+  #todoTable .flex-table.completed .flex-row span.tag.contexts {
+    background: #2c2d30 !important;
+    color: inherit !important; }
+  #todoTable .flex-table.completed .flex-row span.tag.projects {
+    background: #3b3b3b !important;
+    color: #636363 !important; }
+  #todoTable .flex-table.completed .flex-row.itemDueDate {
+    opacity: .4; }
 
-#todoTable .flex-table .flex-row.text {
+#todoTable .flex-table:hover .flex-row.todoTableItemMore a {
   color: #CCCDCF; }
 
-#todoTable .flex-table .flex-row.itemDueDate {
-  color: white; }
-
-#todoTable .flex-table.completed .flex-row.itemDueDate {
-  opacity: .4; }
-
-#todoTable .flex-table .flex-row span.tag.contexts {
-  background: #075943 !important;
-  color: #c5ede3 !important; }
-
-#todoTable .flex-table .flex-row span.tag.projects {
-  background: #5f1a5e !important;
-  color: #f1d6f1 !important; }
-
-#todoTable .flex-table.completed .flex-row span.tag.contexts {
-  background: #2c2d30 !important;
-  color: #4A4A4A !important; }
-
-#todoTable .flex-table.completed .flex-row span.tag.projects {
-  background: #3b3b3b !important;
-  color: #636363 !important; }
-
-#todoTable .flex-table .flex-row .is-white {
-  color: #CCCDCF;
-  background: none; }
-
-#todoTable .flex-table:hover .flex-row.todoTableItemMore a,
-#todoTable .flex-table .flex-row.todoTableItemMore a {
-  color: #CCCDCF; }
-
-#todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
-  background: #4a4a4a;
-  color: white; }
-
-#todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-  background: #3b3b3b; }
+#todoTable .flex-table {
+  border-color: #2D2E31; }
+  #todoTable .flex-table .checkbox a {
+    color: #CCCDCF; }
+  #todoTable .flex-table .checkbox a:hover {
+    color: white; }
+  #todoTable .flex-table .flex-row.text {
+    color: #CCCDCF; }
+  #todoTable .flex-table .flex-row.itemDueDate {
+    color: white; }
+  #todoTable .flex-table .flex-row span.tag.contexts {
+    background: #075943 !important;
+    color: #c5ede3 !important; }
+  #todoTable .flex-table .flex-row span.tag.projects {
+    background: #5f1a5e !important;
+    color: #f1d6f1 !important; }
+  #todoTable .flex-table .flex-row .is-white {
+    color: #CCCDCF;
+    background: none; }
+  #todoTable .flex-table .flex-row.todoTableItemMore a {
+    color: #CCCDCF; }
+  #todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
+    background: #4a4a4a;
+    color: white; }
+  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
+    background: #3b3b3b; }
 
 #filterDropdown {
   background: #3B3B3B; }
+  #filterDropdown .dropdown-item.is-greyed-out a {
+    background: #2c2d30 !important;
+    color: #B5B5B5 !important;
+    opacity: .8; }
+  #filterDropdown .dropdown-item.is-greyed-out span.tag {
+    background: #1e2022 !important;
+    color: white !important; }
 
 .filterDropdown .dropdown-item a.headline,
 .filterDropdown .dropdown-item a.headline a {
@@ -114,26 +115,24 @@ nav ul li a:focus {
 .filterDropdown div.contexts a.button {
   background: #075A44;
   color: #C5EDE3; }
+  .filterDropdown div.contexts a.button span.tag {
+    background: #C5EDE3;
+    color: #075A44; }
 
 .filterDropdown div.contexts a.button:hover,
 .filterDropdown div.contexts a.button.is-dark {
   background: #1BA37E; }
 
-.filterDropdown div.contexts a.button span.tag {
-  background: #C5EDE3;
-  color: #075A44; }
-
 .filterDropdown div.projects a.button {
   background: #5F1A5E;
   color: #F2D6F2; }
+  .filterDropdown div.projects a.button span.tag {
+    background: #F2D6F2;
+    color: #5F1A5E; }
 
 .filterDropdown div.projects a.button:hover,
 .filterDropdown div.projects a.button.is-dark {
   background: #BC30BA; }
-
-.filterDropdown div.projects a.button span.tag {
-  background: #F2D6F2;
-  color: #5F1A5E; }
 
 .filterDropdown .button.is-white {
   background-color: #2C2D30 !important;
@@ -145,54 +144,19 @@ nav ul li a:focus {
 .filterDropdown .dropdown-content h4 {
   color: #CCCDCF !important; }
 
-#filterDropdown .dropdown-item.is-greyed-out a {
-  background: #2c2d30 !important;
-  color: #B5B5B5 !important;
-  opacity: .8; }
-
-#filterDropdown .dropdown-item.is-greyed-out span.tag {
-  background: #1e2022 !important;
-  color: white !important; }
-
 .columns a#filterColumnClose {
   background: #3B3B3B;
   color: #CCCDCF; }
 
 .toggle .switch .slider {
   background-color: #4a4a4a; }
+  .toggle .switch .slider input:checked + .slider {
+    background-color: #4a4a4a; }
+  .toggle .switch .slider input:focus + .slider {
+    box-shadow: 0 0 1px #2C2D30; }
+  .toggle .switch .slider input:focus {
+    outline: 2px solid #CCCDCF; }
 
-.toggle .switch input:checked + .slider {
-  background-color: #2C2D30; }
-
-.toggle .switch input:focus + .slider {
-  box-shadow: 0 0 1px #2C2D30; }
-
-.toggle .switch input:focus {
-  outline: 1px dotted #CCCDCF; }
-
-.modal .modal-content .card {
-  background: #4A4A4A;
-  color: #CCCDCF; }
-
-.modal .modal-content .card .card-header-title {
-  color: #CCCDCF; }
-
-.modal .modal-content .card #modalFormInput {
-  background-color: #2D2E31;
-  color: #CCCDCF; }
-
-.modal .modal-content .card #modalFormInput::placeholder {
-  color: #4a4a4a; }
-
-.dueDate svg,
-.dueDate #dueDatePickerInput, .dueDate #dueDatePickerInput::placeholder {
-  color: white; }
-
-.modal .modal-content .card .card-footer,
-.modal .modal-content .card .card-footer-item {
-  border-color: #2D2E31; }
-
-.modal button,
 #modalForm button {
   color: white;
   border-color: #1e2022 !important; }
@@ -200,29 +164,49 @@ nav ul li a:focus {
 #modalForm button:hover {
   color: #CCCDCF; }
 
+.modal .modal-content .card {
+  background: #4A4A4A;
+  color: #CCCDCF; }
+  .modal .modal-content .card .card-header-title {
+    color: #CCCDCF; }
+  .modal .modal-content .card #modalFormInput {
+    background-color: #2D2E31;
+    color: #CCCDCF; }
+  .modal .modal-content .card #modalFormInput::placeholder {
+    color: #4a4a4a; }
+  .modal .modal-content .card .card-footer,
+  .modal .modal-content .card .card-footer-item {
+    border-color: #2D2E31; }
+
+.modal button {
+  color: white;
+  border-color: #1e2022 !important; }
+
+.dueDate svg,
+.dueDate #dueDatePickerInput,
+.dueDate #dueDatePickerInput::placeholder {
+  color: white; }
+
 .datepicker {
   background: none; }
-
-.datepicker .datepicker-picker {
-  background: #2D2E31; }
-
-.datepicker .button,
-.datepicker .button:hover,
-.datepicker-header .datepicker-controls .button:hover {
-  background: none;
-  color: white; }
-
-.datepicker .datepicker-footer .datepicker-controls .button {
-  color: white; }
-
-.datepicker-cell.selected, .datepicker-cell.selected:hover {
-  color: #2D2E31;
-  background: white; }
-
-.datepicker-cell.focused:not(.selected),
-.datepicker-cell:hover {
-  color: #2D2E31;
-  background: #CCCDCF; }
+  .datepicker .datepicker-picker {
+    background: #2D2E31;
+    color: white; }
+    .datepicker .datepicker-picker .button,
+    .datepicker .datepicker-picker .button:hover,
+    .datepicker .datepicker-picker .datepicker-header .datepicker-controls .button:hover {
+      background: none;
+      color: inherit; }
+    .datepicker .datepicker-picker .datepicker-footer .datepicker-controls .button {
+      color: inherit; }
+    .datepicker .datepicker-picker .datepicker-cell.selected,
+    .datepicker .datepicker-picker .datepicker-cell.selected:hover {
+      color: #2D2E31;
+      background: white; }
+    .datepicker .datepicker-picker .datepicker-cell.focused:not(.selected),
+    .datepicker .datepicker-picker .datepicker-cell:hover {
+      color: #2D2E31;
+      background: #CCCDCF; }
 
 .contentContainer .title.is-1,
 .contentContainer .subtitle,

@@ -25,7 +25,7 @@ body::-webkit-scrollbar {
 
 button:focus,
 a:focus {
-  outline: 1px dotted #3273dc !important; }
+  outline: 2px solid #3273dc !important; }
 
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
@@ -100,8 +100,6 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     color: #4a4a4a;
     border-radius: 50%;
     cursor: pointer; }
-  .columns a#filterColumnClose:focus {
-    outline: 1px dotted #3273dc; }
   .columns nav:hover a#filterColumnClose.is-active {
     display: inline-block; }
 
@@ -208,8 +206,6 @@ nav {
   .filterDropdown div.contexts a.button:hover,
   .filterDropdown div.contexts a.button:active {
     background: #c9f2e8; }
-  .filterDropdown div.contexts a.button:focus {
-    outline: 1px dotted #1aa37e !important; }
   .filterDropdown div.contexts a.button span.tag {
     background: #1aa37e;
     color: #fff;
@@ -226,8 +222,6 @@ nav {
   .filterDropdown div.projects a.button:hover,
   .filterDropdown div.projects a.button:active {
     background: #f7dcf7; }
-  .filterDropdown div.projects a.button:focus {
-    outline: 1px dotted #bc30ba !important; }
   .filterDropdown div.projects a.button span.tag {
     background: #bc30ba;
     color: #fff;
@@ -411,12 +405,12 @@ nav {
       background-color: #4a4a4a; }
     .toggle .switch input:focus + .slider {
       box-shadow: 0 0 1px #4a4a4a; }
+    .toggle .switch input:focus {
+      outline: 2px solid #3273dc; }
     .toggle .switch input:checked + .slider:before {
       -webkit-transform: translateX(25px);
       -ms-transform: translateX(25px);
       transform: translateX(25px); }
-    .toggle .switch input:focus {
-      outline: 1px dotted #3273dc; }
     .toggle .switch .slider {
       position: absolute;
       cursor: pointer;

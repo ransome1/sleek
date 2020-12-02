@@ -20,7 +20,7 @@
   "formErrorWritingFile": "<strong>Fehler:</strong> Die Änderungen konnten nicht gespeichert werden. Bitte prüfe, ob die todo.txt Datei existiert und ausreichend Zugriffsrechte gesetzt sind: ",
   "formInfoNoInput": "Schreibe eine Aufgabe in das Textfeld und verwende dazu die todo.txt Syntax. Schau <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">hier</a> nach, welche Möglichkeiten es dabei gibt.",
   "formSelectDueDate": "Fälligkeit festlegen",
-  "modalFormHowTo": "Klicke hier um nachzulesen wie das <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\" tabindex=\"310\">todo.txt Prinzip</a> funktioniert.",
+  "modalFormHowTo": "Klicke hier um nachzulesen wie das <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt Prinzip</a> funktioniert.",
   "cancel": "Abbrechen",
   "save": "Speichern",
   "formTodoInputPlaceholder": "(A) Benutze die todo.txt Syntax @kontext +projekt due:",

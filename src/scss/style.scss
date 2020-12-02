@@ -27,7 +27,7 @@ body::-webkit-scrollbar {
 }
 button:focus,
 a:focus{
-  outline: 1px dotted $has-text-link!important;
+  outline: 2px solid $has-text-link!important;
 }
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
@@ -115,9 +115,6 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     color: $darker-grey;
     border-radius: 50%;
     cursor: pointer;
-  }
-  a#filterColumnClose:focus {
-    outline: 1px dotted $has-text-link;
   }
   nav:hover a#filterColumnClose.is-active {
     display: inline-block;
@@ -247,9 +244,6 @@ nav {
     a.button:active {
       background: $sleek-contexts-button-hover;
     }
-    a.button:focus {
-      outline: 1px dotted $sleek-contexts-button-bubble!important;
-    }
     a.button span.tag {
       background: $sleek-contexts-button-bubble;
       color: #fff;
@@ -271,9 +265,6 @@ nav {
     a.button:hover,
     a.button:active {
       background: $sleek-projects-button-hover;
-    }
-    a.button:focus {
-      outline: 1px dotted $sleek-projects-button-bubble!important;
     }
     a.button span.tag {
       background: $sleek-projects-button-bubble;
@@ -502,7 +493,6 @@ nav {
 }
 
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
-
 /* The switch - the box around the slider */
 .toggle {
   padding: 1.5em 1.5em 1.5em 0;
@@ -530,13 +520,13 @@ nav {
     input:focus + .slider {
      box-shadow: 0 0 1px $darker-grey;
     }
+    input:focus {
+      outline: 2px solid $has-text-link;
+    }
     input:checked + .slider:before {
      -webkit-transform: translateX(25px);
      -ms-transform: translateX(25px);
      transform: translateX(25px);
-    }
-    input:focus {
-      outline: 1px dotted $has-text-link;
     }
     .slider {
      position: absolute;
