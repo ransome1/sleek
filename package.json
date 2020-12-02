@@ -64,7 +64,7 @@
   },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -lw --publish never",
+    "dist": "electron-builder -l snap --publish always",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
