@@ -223,69 +223,80 @@ modalForm.addEventListener("submit", function(e) {
 // ########################################################################################################################
 // TYPE AHEAD FOR PROJECTS AND CONTEXTS IN MODAL
 // ########################################################################################################################
+// get carret caret position
+function getCaretPosition(inputId) {
+  var content = inputId;
+  if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
+    var position = content.selectionStart;
+    return position;
+  } else {
+    return false;
+  }
+}
 // defines when the composed filter is being filled with content and when it is emptied
 let startComposing;
 // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
 let typeAheadValue;
+// + or @
 let typeAheadPrefix;
+// position of cursor
 // typing in modal form input, keyup otherwise we don't get the full value of the input after release
 modalFormInput.addEventListener("keyup", e => {
-  let lastChar = modalFormInput.value[modalFormInput.value.length - 1];
-  let lastCharMinus1 = modalFormInput.value[modalFormInput.value.length - 2];
-  // if "Space" and "+" follow after another it's assumed a project will follow
-  if((lastChar=="@" && lastCharMinus1==" ") || (lastChar=="+" && lastCharMinus1==" ")) {
+
+  let caretPosition = getCaretPosition(modalFormInput);
+  // helps looking for " @" OR " +"
+  let lastTwoChars = modalFormInput.value.slice(caretPosition-2, caretPosition);
+  // char prior to caret position
+  let lastChar = modalFormInput.value.slice(caretPosition-1, caretPosition);
+  //
+  if(lastTwoChars == " @" || lastTwoChars == " +") {
+    suggestionDropdown.classList.add("is-active");
+    typeAheadPrefix = lastTwoChars.slice(1);
+    // start composing category
+    startComposing = true;
+    // read category if there is already one
+  } else if(modalFormInput.value.length == 1 && (modalFormInput.value=="@") || (modalFormInput.value=="+")) {
     suggestionDropdown.classList.add("is-active");
     // start composing category
     startComposing = true;
     // define what category it will be
-    typeAheadPrefix = lastChar;
+    typeAheadPrefix = modalFormInput.value;
+
+    //typeAheadValue += e.key;
   // a space will always remove the suggestion bar
-  } else if(e.keyCode === 32 || modalFormInput.value.length === 0) {
+  // also if input field is empty
+  } else if(lastChar === " " || modalFormInput.value.length === 0) {
     suggestionDropdown.classList.remove("is-active");
     //not composing category anymore so we delete it
     startComposing = false;
     //
     typeAheadPrefix = "";
-  // typing backspace and waiting for a space
-  } else if(e.key == "Backspace" && lastChar == " ") {
-    suggestionDropdown.classList.remove("is-active");
-    //not composing category anymore so we delete it
-    startComposing = false;
     //
-    typeAheadPrefix = "";
-  // intercept a project when it is the first thing to be entered in the input
-  } else if((modalFormInput.value.length == 1 && lastChar=="@") || (modalFormInput.value.length == 1 && lastChar=="+")) {
-    suggestionDropdown.classList.add("is-active");
-    // start composing category
-    startComposing = true;
-    // define what category it will be
-    typeAheadPrefix = lastChar;
-  } else if(startComposing) {
-    startComposing = true;
-  } else {
-    //not composing category anymore so we delete it
-    startComposing = false;
-    //
-    typeAheadPrefix = "";
+    typeAheadValue = "";
   }
+  //
   if(startComposing) {
     // which category to pass on to generate buttons
     let typeAheadCategory = "";
     // clear otherwise it will get stacked to old composed category
     typeAheadValue = "";
     if(typeAheadPrefix=="+") {
-      typeAheadValue = modalFormInput.value.split("+").pop();
       typeAheadCategory = "projects";
     } else if(typeAheadPrefix=="@") {
-      typeAheadValue = modalFormInput.value.split("@").pop();
       typeAheadCategory = "contexts";
     }
+    // splits back until it finds the prefix and next makes sure everything after a SPACE is cut out
+    typeAheadValue = modalFormInput.value.split(typeAheadPrefix).pop().split(" ").shift();
+
     // build the filter buttons
     if(typeAheadCategory) {
-      //document.getElementById("suggestionContainer").innerHTML = "";
-      generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix).then(response => {
+      // parsed data will be passed to generate filter data and build the filter buttons
+      t0 = performance.now();
+      generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
         //document.getElementById("suggestionContainer").appendChild(response);
         console.log(response);
+        t1 = performance.now();
+        console.log("Filters rendered:", t1 - t0, "ms");
       }).catch (error => {
         console.log(error);
       });
@@ -576,6 +587,12 @@ function showFilters(variable) {
 function clearModal() {
   // hide suggestion box if it was open
   suggestionDropdown.classList.remove("is-active");
+  // defines when the composed filter is being filled with content and when it is emptied
+  let startComposing = false;
+  // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
+  let typeAheadValue = "";
+  // + or @
+  let typeAheadPrefix = "";
 
   modalForm.classList.remove("is-active");
   modalForm.blur();
@@ -770,7 +787,7 @@ function parseDataFromFile(pathToFile) {
   }
 }
 
-function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix) {
+function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
     // container to fill with categories
     let container;
@@ -847,7 +864,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix) 
       );
       // build the filter buttons
       if(filters[0]!="") {
-        buildFilterButtons(category, typeAheadValue, typeAheadPrefix).then(response => {
+        buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
           container.appendChild(response);
         }).catch (error => {
           console.log(error);
@@ -863,7 +880,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix) 
   }
 }
 
-function buildFilterButtons(category, typeAheadValue, typeAheadPrefix) {
+function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
     //
     let headline;
@@ -942,9 +959,6 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix) {
       // add the headline before category container
       filterContainerSub.appendChild(todoFilterHeadline);
     }
-    //console.log(todoFilterHeadline);
-    // add the headline before category container
-    //filterContainerSub.appendChild(todoFilterHeadline);
     // build one button each
     for (let filter in filtersCounted) {
       // TODO: describe
@@ -1005,9 +1019,8 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix) {
             // add filter from suggestion box
             modalFormInput.value += typeAheadPrefix+todoFiltersItem.getAttribute('data-filter') + " ";
           } else {
-            // add filter from suggestion box
-            // TODO: describtion missing
-            modalFormInput.value += todoFiltersItem.getAttribute('data-filter') + " ";
+            // add button data value to the exact caret position
+            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
           }
           // empty stuff for second click
           typeAheadPrefix = null;

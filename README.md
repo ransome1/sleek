@@ -33,6 +33,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - Projects
   - Due dates
   - Start dates
+* Available contexts and projects will be suggested according to your input
 * Todos can be filtered by contexts and projects
 * Filters are sorted alphanummerically
 * Todos can be looked up using full-text search
@@ -45,20 +46,20 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - German
   - English
   - Italian
-* Useful tabindex
+  - Spanish
+* Tabindex available
 * Basic keyboard shortcuts are available:
   - New todo: CMD/CTRL + n
   - Find todo: CMD/CTRL + f
-  - Open file: CMD/CTRL + o
   - Show or hide completed todos: CMD/CTRL + h
   - Toggle dark mode: CMD/CTRL + d
+  - Open file: CMD/CTRL + o
 
 ### To be done
 * Notification function for due dates
 * Extensive testing & bug fixing
 * Improvements on older hardware
 * Code refinement and better error handling
-* Interactive guidance when adding new todos
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
