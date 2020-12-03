@@ -216,7 +216,7 @@ nav {
     .slider {
       background-color: #4a4a4a;
       input:checked + .slider {
-        background-color: #4a4a4a;
+        background-color: #2C2D30 !important;
       }
       input:focus + .slider {
         box-shadow: 0 0 1px #2C2D30;
@@ -299,6 +299,12 @@ nav {
   .title.is-1,
   .subtitle,
   .subtitle strong {
+    color: $body-text-color;
+  }
+}
+#suggestionContainer {
+  background: #2D2E31;
+  h4 {
     color: $body-text-color;
   }
 }

@@ -192,46 +192,51 @@ nav {
 #filterDropdown.is-active {
   display: block; }
 
-.filterDropdown {
-  /*.column {
-    padding-left: 0;
-  }*/ }
-  .filterDropdown a.button {
-    margin: 0 .5rem .5rem 0; }
-  .filterDropdown a.button span.tag {
-    z-index: 35; }
-  .filterDropdown div.contexts a.button {
-    background: #c5ede3;
-    color: #075943; }
-  .filterDropdown div.contexts a.button:hover,
-  .filterDropdown div.contexts a.button:active {
-    background: #c9f2e8; }
-  .filterDropdown div.contexts a.button span.tag {
-    background: #1aa37e;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    right: -.75em;
-    top: -.75em; }
-  .filterDropdown div.contexts a.button.is-dark {
-    background: #075943;
-    color: #fff; }
-  .filterDropdown div.projects a.button {
-    background: #f1d6f1;
-    color: #5f1a5e; }
-  .filterDropdown div.projects a.button:hover,
-  .filterDropdown div.projects a.button:active {
-    background: #f7dcf7; }
-  .filterDropdown div.projects a.button span.tag {
-    background: #bc30ba;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    right: -.75em;
-    top: -.75em; }
-  .filterDropdown div.projects a.button.is-dark {
-    background: #5f1a5e;
-    color: #fff; }
+.filterDropdown a.button {
+  margin: 0 .5rem .5rem 0; }
+
+.filterDropdown a.button span.tag {
+  z-index: 35; }
+
+.filterDropdown div.contexts a.button {
+  background: #c5ede3;
+  color: #075943; }
+
+.filterDropdown div.contexts a.button:hover,
+.filterDropdown div.contexts a.button:active {
+  background: #c9f2e8; }
+
+.filterDropdown div.contexts a.button span.tag {
+  background: #1aa37e;
+  color: #fff;
+  font-weight: bold;
+  position: absolute;
+  right: -.75em;
+  top: -.75em; }
+
+.filterDropdown div.contexts a.button.is-dark {
+  background: #075943;
+  color: #fff; }
+
+.filterDropdown div.projects a.button {
+  background: #f1d6f1;
+  color: #5f1a5e; }
+
+.filterDropdown div.projects a.button:hover,
+.filterDropdown div.projects a.button:active {
+  background: #f7dcf7; }
+
+.filterDropdown div.projects a.button span.tag {
+  background: #bc30ba;
+  color: #fff;
+  font-weight: bold;
+  position: absolute;
+  right: -.75em;
+  top: -.75em; }
+
+.filterDropdown div.projects a.button.is-dark {
+  background: #5f1a5e;
+  color: #fff; }
 
 /* TABLE */
 #todoTable {
@@ -465,13 +470,23 @@ nav {
 #modalForm button:hover {
   color: black; }
 
-#modalForm #suggestionDropdown {
-  width: 100%;
-  position: relative; }
-  #modalForm #suggestionDropdown .dropdown-trigger {
-    width: inherit; }
-  #modalForm #suggestionDropdown .dropdown-menu {
-    position: static; }
+#suggestionContainer {
+  height: auto;
+  position: absolute;
+  display: none;
+  z-index: 60;
+  background: white; }
+  #suggestionContainer h4 {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: .3em 0; }
+
+#suggestionContainer.card {
+  height: auto;
+  overfloiw: auto; }
+
+#suggestionContainer.is-active {
+  display: block; }
 
 /* DATEPICKER */
 .dueDate svg {
@@ -524,10 +539,9 @@ nav {
       height: 3.5em;
       line-height: 3.5em; }
   .filterDropdown {
-    width: 29em !important;
+    width: 29em;
     padding: 0 1.5em !important; }
-  #suggestionDropdown.filterDropdown {
-    width: 100% !important;
+  #suggestionContainer.filterDropdown {
     padding: 0 !important; }
   #todoTable {
     padding: 1.5em; }

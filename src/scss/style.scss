@@ -279,9 +279,6 @@ nav {
       color: #fff;
     }
   }
-  /*.column {
-    padding-left: 0;
-  }*/
 }
 
 /* TABLE */
@@ -590,16 +587,25 @@ nav {
   button:hover {
     color: black;
   }
-  #suggestionDropdown {
-    width: 100%;
-    position: relative;
-    .dropdown-trigger {
-      width: inherit;
-    }
-    .dropdown-menu {
-      position: static;
-    }
+}
+#suggestionContainer {
+  height: auto;
+  position: absolute;
+  display: none;
+  z-index: 60;
+  background: $body-background-color;
+  h4 {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: .3em 0;
   }
+}
+#suggestionContainer.card {
+  height: auto;
+  overfloiw: auto;
+}
+#suggestionContainer.is-active {
+  display: block;
 }
 
 /* DATEPICKER */
@@ -668,11 +674,10 @@ nav {
     }
   }
   .filterDropdown {
-    width: 29em!important;
+    width: 29em;
     padding: 0 1.5em!important;
   }
-  #suggestionDropdown.filterDropdown {
-    width: 100%!important;
+  #suggestionContainer.filterDropdown {
     padding: 0!important;
   }
   #todoTable {

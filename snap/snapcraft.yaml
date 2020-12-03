@@ -1,6 +1,6 @@
 name: sleek
 base: core18
-version: '0.4.0'
+version: '0.4.1'
 summary: A simple todo manager based on the concept of todo.txt
 description: |
   sleek is a simple todo manager based on the concept of todo.txt. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them and set due dates. According to this input you will be able to filter and search your todos. There is no cloud integration, but as sleek writes your data to a plain text file, you can put it anywhere you want. That also means if you don't have sleek at hand or if you don't like it anymore you can just edit the todo.txt file with any text editor or other todo.txt application.

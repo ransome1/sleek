@@ -200,6 +200,11 @@ window.onresize = function() {
   let width = this.outerWidth;
   let height = this.outerHeight;
   store.set('windowBounds', { width, height });
+  // Adjust position of suggestion box to input field
+  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+  suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+  suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+  suggestionContainer.style.left = modalFormInputPosition.left + "px";
 }
 // submit in the form
 modalForm.addEventListener("submit", function(e) {
@@ -236,7 +241,7 @@ modalFormInput.addEventListener("keyup", e => {
   //
   let caretPosition = getCaretPosition(modalFormInput);
   let typeAheadCategory = "";
-  if(modalFormInput.value.charAt(caretPosition-1) == "@" || modalFormInput.value.charAt(caretPosition-1) == "+") {
+  if(modalFormInput.value.charAt(caretPosition-2) == " " && (modalFormInput.value.charAt(caretPosition-1) == "@" || modalFormInput.value.charAt(caretPosition-1) == "+")) {
     typeAheadValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
     typeAheadPrefix = modalFormInput.value.charAt(caretPosition-1);
   } else if(modalFormInput.value.charAt(caretPosition) == " ") {
@@ -262,7 +267,7 @@ modalFormInput.addEventListener("keyup", e => {
       console.log(error);
     });
   } else {
-    suggestionDropdown.classList.remove("is-active");
+    suggestionContainer.classList.remove("is-active");
   }
 });
 // complete the item using the footer button in modal
@@ -307,7 +312,7 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     // clean up as we don#t need it anymore
     dataItemTemp = null;
     // if suggestion box was open, it needs to be closed
-    suggestionDropdown.classList.remove("is-active");
+    suggestionContainer.classList.remove("is-active");
     modalFormInput.focus();
   }
 });
@@ -493,6 +498,11 @@ function showForm(variable) {
       }
       // in any case put focus into the input field
       modalFormInput.focus();
+      // Adjust position of suggestion box to input field
+      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+      suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+      suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+      suggestionContainer.style.left = modalFormInputPosition.left + "px";
     }
   } catch (error) {
     console.log(error);
@@ -542,7 +552,7 @@ function showFilters(variable) {
 
 function clearModal() {
   // hide suggestion box if it was open
-  suggestionDropdown.classList.remove("is-active");
+  suggestionContainer.classList.remove("is-active");
   // defines when the composed filter is being filled with content and when it is emptied
   let startComposing = false;
   // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
@@ -819,14 +829,13 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       );
       // build the filter buttons
       if(filters[0]!="") {
-        suggestionDropdown.classList.add("is-active");
         buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
           container.appendChild(response);
         }).catch (error => {
           console.log(error);
         });
       } else {
-        suggestionDropdown.classList.remove("is-active");
+        suggestionContainer.classList.remove("is-active");
         console.log("Info: No " + category + " found in todo.txt data, so no filters will be generated");
       }
     });
@@ -908,6 +917,8 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       filterContainerSub.appendChild(todoFilterHeadline);
       //console.log(todoFilterHeadline);
     } else {
+      // show suggestion box
+      suggestionContainer.classList.add("is-active");
       // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
       todoFilterHeadline.setAttribute("class", "is-4 is-title headline " + category);
@@ -974,15 +985,15 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             // only if input is not only the prefix, otherwise all existing prefixes will be removed
             modalFormInput.value = modalFormInput.value.replace(" " + typeAheadPrefix+typeAheadValue, "");
             // add filter from suggestion box
-            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute('data-filter') + " ";
+            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute('data-filter');
           } else {
             // add button data value to the exact caret position
-            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter') + " ", modalFormInput.value.slice(caretPosition)].join('');
+            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('');
           }
           // put focus back into input so user can continue writing
           modalFormInput.focus();
           //
-          suggestionDropdown.classList.remove("is-active");
+          suggestionContainer.classList.remove("is-active");
         });
       }
       //console.log(selectedFilters);
