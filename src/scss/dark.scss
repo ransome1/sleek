@@ -95,7 +95,8 @@ nav {
   .flex-table.completed {
     color: #4A4A4A;
     .flex-row.text,
-    .checkbox a {
+    .checkbox a,
+    .checkbox a:hover {
       color: inherit;
     }
     .flex-row span.tag.contexts {

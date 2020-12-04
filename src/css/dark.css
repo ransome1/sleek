@@ -57,7 +57,8 @@ nav {
 #todoTable .flex-table.completed {
   color: #4A4A4A; }
   #todoTable .flex-table.completed .flex-row.text,
-  #todoTable .flex-table.completed .checkbox a {
+  #todoTable .flex-table.completed .checkbox a,
+  #todoTable .flex-table.completed .checkbox a:hover {
     color: inherit; }
   #todoTable .flex-table.completed .flex-row span.tag.contexts {
     background: #2c2d30 !important;

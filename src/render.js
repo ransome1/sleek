@@ -1,74 +1,27 @@
-// ### DOCUMENTATION
-// read text file: https://www.geeksforgeeks.org/file-upload-in-electronjs/
-// generate the table: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces
-// save and load user data: https://medium.com/cameron-nokes/how-to-store-user-data-in-electron-3ba6bf66bc1e
-// watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/#using-fs.watchfile
-// theme: https://www.geeksforgeeks.org/managing-themes-in-electronjs/
-// multi language:
-      // https://github.com/i18next/i18next-fs-backend
-      // https://www.i18next.com/overview/getting-started
-      // https://phrase.com/blog/posts/building-an-electron-app-with-internationalization-i18n/
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
-const body = document.getElementById("body");
+const documentIds = document.querySelectorAll("[id]");
+documentIds.forEach(function(id,index) {
+  window[id] = document.getElementById(id.getAttribute("id"));
+});
 const head = document.getElementsByTagName("head")[0];
-const a = document.querySelectorAll("a");
-const navBtnAddTodo = document.getElementById("navBtnAddTodo");
-const navBtnFilter = document.getElementById("navBtnFilter");
+const btnApplyFilter = document.querySelectorAll(".btnApplyFilter");
+const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 const btnFilter = document.querySelectorAll(".btnFilter");
-const navBtnTheme = document.getElementById("navBtnTheme");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
-const btnSave = document.getElementById("btnSave");
-const btnItemStatus = document.getElementById("btnItemStatus");
-const btnApplyFilter = document.getElementsByClassName("btnApplyFilter");
-const btnCreateTodoFile = document.getElementById("btnCreateTodoFile");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
-const toggleShowCompleted = document.getElementById("toggleShowCompleted");
-const onboardingContainer = document.getElementById("onboardingContainer");
-const onboardingContainerHeadline = document.getElementById("onboardingContainerHeadline");
-const onboardingContainerSubtitle = document.getElementById("onboardingContainerSubtitle");
-const onboardingContainerBtnOpen = document.getElementById("onboardingContainerBtnOpen");
-const onboardingContainerBtnCreate = document.getElementById("onboardingContainerBtnCreate");
-const addTodoContainer = document.getElementById("addTodoContainer");
-const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadline");
-const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
-const addTodoContainerButton = document.getElementById("addTodoContainerButton");
-const noResultContainer = document.getElementById("noResultContainer");
-const noResultContainerHeadline = document.getElementById("noResultContainerHeadline");
-const noResultContainerSubtitle = document.getElementById("noResultContainerSubtitle");
-const todoTable = document.getElementById("todoTable");
-const todoTableSelectionInformation = document.getElementById("selectionInformation");
-const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
-const todoTableSearch = document.getElementById("todoTableSearch");
-const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
-const categories = ["contexts", "projects"];
-const filterDropdown = document.getElementById("filterDropdown");
-const filterColumnClose = document.getElementById("filterColumnClose");
-const filterToggleShowCompleted = document.getElementById("filterToggleShowCompleted");
-const filterBtnResetFilters = document.getElementById("filterBtnResetFilters");
-const selectionBtnShowFilters = document.getElementById("selectionBtnShowFilters");
-const modalForm = document.getElementById('modalForm');
-const modalFormInput = document.getElementById("modalFormInput");
-const modalFormAlert = document.getElementById("modalFormAlert");
-const modalFormHowTo = document.getElementById("modalFormHowTo");
-const modalTitle = document.getElementById("modalTitle");
 const modalBackground = document.querySelectorAll('.modal-background');
-const modalFile = document.getElementById("modalFile");
-const modalFileChoose = document.getElementById("modalFileChoose");
-const modalFileOverwrite = document.getElementById("modalFileOverwrite");
-const suggestionDropdown = document.getElementById("suggestionDropdown");
-const suggestionContainer = document.getElementById("suggestionContainer");
-// datepicker declaration and configuation
+const a = document.querySelectorAll("a");
+const categories = ["contexts", "projects"];
 const dueDatePickerInput = document.getElementById("dueDatePickerInput");
 const dueDatePicker = new Datepicker(dueDatePickerInput, {
   autohide: true,
   format: 'yyyy-mm-dd',
   clearBtn: true
 });
-//
 const store = new Store({
   configName: "user-preferences",
   defaults: {
@@ -80,43 +33,28 @@ const store = new Store({
     theme: ""
   }
 });
-// defining a file path Variable to store user-selected file
 let pathToFile = store.get("pathToFile");
-// empty variable
 let pathToNewFile;
-// check store file if filters (come as JSON) have been saved. If so convert the JSON to arrays and them to the main array. If not the array stays empty
 let selectedFilters = store.get("selectedFilters");
 if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
-// get default "show completed? value (false)
 let showCompleted = store.get("showCompleted");
-// create  an empty variable for the data item
 let dataItem;
-// create  an empty variable for the previously saved data item
 let previousDataItem = "";
-// create  an empty variable for the data id used to find position in array later on
 let itemId;
-// create  global variable for parsedData
 let parsedData = [];
-// new variable for items with or without priority
 let items = [];
-//
 let modalFormStatus;
-// variable for an array to configure if a whole category is being shown or hidden
 let categoriesFiltered = store.get("categoriesFiltered");
-// empty hull for the file watcher
 let fileWatcher;
-// Empty array for the filtered items later on
 let itemsFiltered = [];
-//
 let itemsGrouped = [];
-//
 let filterContainer = document.getElementById("todoFilters");
+let themeLink = null;
+let selectedTheme = store.get("theme");
 // ########################################################################################################################
 // INITIAL DOM CONFIGURATION
 // ########################################################################################################################
-// prevent manual input in datepicker
 dueDatePickerInput.readOnly = true;
-// set the checked attribute according to the persisted value
 toggleShowCompleted.checked = showCompleted;
 // ########################################################################################################################
 // TRANSLATIONS
@@ -128,8 +66,6 @@ filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
 selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
 dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
 btnSave.innerHTML = i18next.t("save");
-modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
-modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
 addTodoContainerHeadline.innerHTML = i18next.t("addTodoContainerHeadline");
 addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
 addTodoContainerButton.innerHTML = i18next.t("addTodo");
@@ -141,16 +77,164 @@ modalFileOverwrite.innerHTML = i18next.t("modalFileOverwrite");
 modalFileChoose.innerHTML = i18next.t("modalFileChoose");
 modalFileHeadline.innerHTML = i18next.t("modalFileHeadline");
 modalFileContent.innerHTML = i18next.t("modalFileContent");
+modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
+modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
 noResultContainerHeadline.innerHTML = i18next.t("noResults");
 noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
 // ########################################################################################################################
-// THEME
+// ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
+btnCreateTodoFile.onclick = function () { createFile(true, false) }
+modalFileChoose.onclick = function() { createFile(true, false) }
+modalFileOverwrite.onclick = function() { createFile(false, true) }
+todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
+toggleShowCompleted.onclick = showCompletedTodos;
+filterColumnClose.onclick = function() { showFilters(false) }
+btnItemStatus.onclick = function() {
+  completeTodo(dataItem).then(response => {
+    modalForm.classList.remove("is-active");
+    clearModal();
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+}
 navBtnTheme.addEventListener("click", () => {
   switchTheme(true);
 });
-let themeLink = null;
-let selectedTheme = store.get("theme");
+dueDatePickerInput.addEventListener('changeDate', function (e, details) {
+  // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
+  if(e.detail.date) {
+    // generate the object on what is written into input, so we don't overwrite previous inputs of user
+    dataItemTemp = new TodoTxtItem(modalFormInput.value, [ new DueExtension() ]);
+    dataItemTemp.due = new Date(e.detail.date);
+    dataItemTemp.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
+    modalFormInput.value = dataItemTemp.toString();
+    // clean up as we don#t need it anymore
+    dataItemTemp = null;
+    // if suggestion box was open, it needs to be closed
+    suggestionContainer.classList.remove("is-active");
+    modalFormInput.focus();
+  }
+});
+todoTableSearch.addEventListener("input", function () {
+  generateTodoData(this.value);
+});
+modalForm.addEventListener("submit", function(e) {
+  // intercept submit
+  if (e.preventDefault) e.preventDefault();
+  submitForm().then(response => {
+    // if form returns success we clear the modal
+    clearModal();
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+});
+modalFormInput.addEventListener("keyup", e => {
+  let typeAheadValue ="";
+  let typeAheadPrefix = "";
+  let caretPosition = getCaretPosition(modalFormInput);
+  let typeAheadCategory = "";
+  if(modalFormInput.value.charAt(caretPosition-2) === " " && (modalFormInput.value.charAt(caretPosition-1) === "@" || modalFormInput.value.charAt(caretPosition-1) === "+")) {
+    typeAheadValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
+    typeAheadPrefix = modalFormInput.value.charAt(caretPosition-1);
+  } else if(modalFormInput.value.charAt(caretPosition) === " ") {
+    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
+    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+1);
+  } else if(modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "@" || modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "+") {
+    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift()
+    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
+  }
+  if(typeAheadPrefix) {
+    if(typeAheadPrefix=="+") {
+      typeAheadCategory = "projects";
+    } else if(typeAheadPrefix=="@") {
+      typeAheadCategory = "contexts";
+    }
+    // parsed data will be passed to generate filter data and build the filter buttons
+    t0 = performance.now();
+    generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Filters rendered:", t1 - t0, "ms");
+    }).catch (error => {
+      console.log(error);
+    });
+  } else {
+    suggestionContainer.classList.remove("is-active");
+  }
+});
+modalBackground.forEach(el => el.onclick = clearModal);
+a.forEach(el => el.addEventListener("click", function(el) {
+  if(el.target.href && el.target.href === "#") el.preventDefault();
+}));
+btnOpenTodoFile.forEach(function(el) {
+  el.setAttribute("title", i18next.t("openFile"));
+  el.onclick = openFile;
+});
+btnModalCancel.forEach(function(el) {
+  el.innerHTML = i18next.t("cancel");
+  el.onclick = clearModal;
+});
+btnResetFilters.forEach(el => el.onclick = resetFilters);
+btnFilter.forEach(function(el) {
+  el.setAttribute("title", i18next.t("toggleFilter"));
+  el.onclick = function() { showFilters("toggle") };
+});
+btnAddTodo.forEach(function(el) {
+  el.setAttribute("title", i18next.t("addTodo"));
+  el.onclick = showForm;
+});
+// ########################################################################################################################
+// KEYBOARD SHORTCUTS
+// ########################################################################################################################
+filterDropdown.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') showFilters(false);
+});
+modalForm.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') clearModal();
+});
+body.addEventListener ("keydown", function () {
+  if(event.key === "Escape") {
+    todoTableSearch.blur();
+    clearModal();
+  }
+});
+// ########################################################################################################################
+// START
+// ########################################################################################################################
+window.onload = function () {
+  // set theme
+  if(selectedTheme) switchTheme(false)
+  // only start if a file has been selected
+  if(pathToFile) {
+    console.log("Info: Path to file: " + pathToFile);
+    // start parsing data
+    parseDataFromFile(pathToFile).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+  } else {
+    console.log("Info: File does not exist or has not been defined yet");
+    // show onboarding if no file has been selected
+    showOnboarding(true);
+  }
+}
+window.onresize = function() {
+  let width = this.outerWidth;
+  let height = this.outerHeight;
+  store.set('windowBounds', { width, height });
+  // Adjust position of suggestion box to input field
+  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+  suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+  suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+  suggestionContainer.style.left = modalFormInputPosition.left + "px";
+}
+// ########################################################################################################################
+// FUNCTIONS
+// ########################################################################################################################
 function switchTheme(toggle) {
   if(selectedTheme && !toggle) {
     theme.themeSource = selectedTheme;
@@ -174,54 +258,6 @@ function switchTheme(toggle) {
   head.appendChild(themeLink);
   store.set("theme", selectedTheme);
 }
-// ########################################################################################################################
-// ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
-// ########################################################################################################################
-// persist the highlighting of the button and the dropdown menu
-btnFilter.forEach(function(el) {
-  el.setAttribute("title", i18next.t("toggleFilter"));
-  el.onclick = function() { showFilters("toggle") };
-});
-// toggle filter drawer
-filterColumnClose.onclick = function() { showFilters(false) }
-// add todo button in nav bar and empty list view
-btnAddTodo.forEach(function(el) {
-  el.setAttribute("title", i18next.t("addTodo"));
-  el.onclick = showForm;
-});
-// flush all filters and items by emptying the array and reloading the data
-btnResetFilters.forEach(el => el.onclick = resetFilters);
-// click on the todo table will close more dropdown and remove active state for the dotted button
-todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
-// reread the data but sort it asc
-toggleShowCompleted.onclick = showCompletedTodos;
-// persist window bounds after resize
-window.onresize = function() {
-  let width = this.outerWidth;
-  let height = this.outerHeight;
-  store.set('windowBounds', { width, height });
-  // Adjust position of suggestion box to input field
-  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-  suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
-  suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-  suggestionContainer.style.left = modalFormInputPosition.left + "px";
-}
-// submit in the form
-modalForm.addEventListener("submit", function(e) {
-  // intercept submit
-  if (e.preventDefault) e.preventDefault();
-  submitForm().then(response => {
-    // if form returns success we clear the modal
-    clearModal();
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-});
-// ########################################################################################################################
-// TYPE AHEAD FOR PROJECTS AND CONTEXTS IN MODAL
-// ########################################################################################################################
-// get carret caret position
 function getCaretPosition(inputId) {
   var content = inputId;
   if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
@@ -231,117 +267,6 @@ function getCaretPosition(inputId) {
     return false;
   }
 }
-// position of cursor
-// typing in modal form input, keyup otherwise we don't get the full value of the input after release
-modalFormInput.addEventListener("keyup", e => {
-  // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
-  let typeAheadValue ="";
-  // will be + or @
-  let typeAheadPrefix = "";
-  //
-  let caretPosition = getCaretPosition(modalFormInput);
-  let typeAheadCategory = "";
-  if(modalFormInput.value.charAt(caretPosition-2) == " " && (modalFormInput.value.charAt(caretPosition-1) == "@" || modalFormInput.value.charAt(caretPosition-1) == "+")) {
-    typeAheadValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(caretPosition-1);
-  } else if(modalFormInput.value.charAt(caretPosition) == " ") {
-    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+1);
-  } else if(modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) == "@" || modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) == "+") {
-    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift()
-    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
-  }
-  if(typeAheadPrefix) {
-    if(typeAheadPrefix=="+") {
-      typeAheadCategory = "projects";
-    } else if(typeAheadPrefix=="@") {
-      typeAheadCategory = "contexts";
-    }
-    // parsed data will be passed to generate filter data and build the filter buttons
-    t0 = performance.now();
-    generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Filters rendered:", t1 - t0, "ms");
-    }).catch (error => {
-      console.log(error);
-    });
-  } else {
-    suggestionContainer.classList.remove("is-active");
-  }
-});
-// complete the item using the footer button in modal
-btnItemStatus.onclick = function() {
-  completeTodo(dataItem).then(response => {
-    modalForm.classList.remove("is-active");
-    clearModal();
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-}
-// prevent empty hyperlinks from jumping to top after clicking
-a.forEach(el => el.addEventListener("click", function(el) {
-  if(el.target.href && el.target.href == "#") el.preventDefault();
-}));
-// put a click event on all "open file" buttons
-btnOpenTodoFile.forEach(function(el) {
-  el.setAttribute("title", i18next.t("openFile"));
-  el.onclick = openFile;
-});
-// onboarding: click will call createFile() function
-btnCreateTodoFile.onclick = function () { createFile(true, false) }
-modalFileChoose.onclick = function() { createFile(true, false) }
-modalFileOverwrite.onclick = function() { createFile(false, true) }
-// put a listeners on all modal backgrounds
-modalBackground.forEach(el => el.onclick = clearModal);
-// click on the cancel button in the footer of the add/edit modal
-btnModalCancel.forEach(function(el) {
-  el.innerHTML = i18next.t("cancel");
-  el.onclick = clearModal;
-});
-// event intercepted when datepicker changes the date
-dueDatePickerInput.addEventListener('changeDate', function (e, details) {
-  // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
-  if(e.detail.date) {
-    // generate the object on what is written into input, so we don't overwrite previous inputs of user
-    dataItemTemp = new TodoTxtItem(modalFormInput.value, [ new DueExtension() ]);
-    dataItemTemp.due = new Date(e.detail.date);
-    dataItemTemp.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
-    modalFormInput.value = dataItemTemp.toString();
-    // clean up as we don#t need it anymore
-    dataItemTemp = null;
-    // if suggestion box was open, it needs to be closed
-    suggestionContainer.classList.remove("is-active");
-    modalFormInput.focus();
-  }
-});
-todoTableSearch.addEventListener("input", function () {
-  generateTodoData(this.value);
-});
-// ########################################################################################################################
-// KEYBOARD SHORTCUTS
-// ########################################################################################################################
-// toggle filter dropdown when escape key is pressed
-filterDropdown.addEventListener ("keydown", function () {
-  if(event.key == 'Escape') showFilters(false);
-});
-// put a listeners on all modal backgrounds
-modalForm.addEventListener ("keydown", function () {
-  if(event.key == 'Escape') clearModal();
-});
-// put actions on escape button (in general)
-body.addEventListener ("keydown", function () {
-  if(event.key == "Escape") {
-    todoTableSearch.blur();
-    clearModal();
-  }
-});
-
-// ########################################################################################################################
-// FUNCTIONS
-// ########################################################################################################################
-
 function startFileWatcher() {
   try {
     if(fileWatcher) fileWatcher.close();
@@ -374,7 +299,6 @@ function startFileWatcher() {
     return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
-
 function showCompletedTodos() {
 
   if(showCompleted==false) {
@@ -404,7 +328,6 @@ function showCompletedTodos() {
     console.log(error);
   });*/
 }
-
 function resetFilters() {
   selectedFilters = [];
   categoriesFiltered = new Array;
@@ -433,7 +356,6 @@ function resetFilters() {
     console.log(error);
   });*/
 }
-
 function showMore(variable) {
   if(variable) {
     document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
@@ -445,7 +367,6 @@ function showMore(variable) {
     });
   }
 };
-
 function showForm(variable) {
   try {
     if(variable) {
@@ -468,7 +389,7 @@ function showForm(variable) {
         modalTitle.innerHTML = i18next.t("editTodo");
         btnItemStatus.classList.add("is-active");
         // only show the complete button on open items
-        if(dataItem.complete == false) {
+        if(dataItem.complete === false) {
           btnItemStatus.innerHTML = i18next.t("done");
         } else {
           btnItemStatus.innerHTML = i18next.t("inProgress");
@@ -508,7 +429,6 @@ function showForm(variable) {
     console.log(error);
   }
 }
-
 function showOnboarding(variable) {
   if(variable) {
     console.log("Info: Starting onboarding");
@@ -524,7 +444,6 @@ function showOnboarding(variable) {
     todoTable.classList.add("is-active");
   }
 }
-
 function showFilters(variable) {
   switch(variable) {
     case true:
@@ -549,7 +468,6 @@ function showFilters(variable) {
   // if more toggle is open we close it as user doesn't need it anymore
   showMore(false);
 }
-
 function clearModal() {
   // hide suggestion box if it was open
   suggestionContainer.classList.remove("is-active");
@@ -573,7 +491,6 @@ function clearModal() {
   // clear the content in the input field as it's not needed anymore
   modalFormInput.value = null;
 }
-
 function showAlert(variable) {
   if(variable) {
     modalFile.classList.add("is-active", "is-danger");
@@ -583,7 +500,6 @@ function showAlert(variable) {
     modalFile.blur();
   }
 };
-
 function openFile() {
   // Resolves to a Promise<Object>
   dialog.showOpenDialog({
@@ -620,7 +536,6 @@ function openFile() {
       console.log("Error: " + err)
   });
 }
-
 function createFile(showDialog, overwriteFile) {
   // Resolves to a Promise<Object>
   if(showDialog && !overwriteFile) {
@@ -684,7 +599,6 @@ function createFile(showDialog, overwriteFile) {
     });
   }
 }
-
 function parseDataFromFile(pathToFile) {
   // we only start if file exists
   if (fs.existsSync(pathToFile)) {
@@ -752,7 +666,6 @@ function parseDataFromFile(pathToFile) {
     return Promise.resolve("Info: File does not exist or has not been defined yet");
   }
 }
-
 function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
     // container to fill with categories
@@ -844,7 +757,6 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
     return Promise.reject("Error in generateFilterData(): " + error);
   }
 }
-
 function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
     //
@@ -985,7 +897,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             // only if input is not only the prefix, otherwise all existing prefixes will be removed
             modalFormInput.value = modalFormInput.value.replace(" " + typeAheadPrefix+typeAheadValue, "");
             // add filter from suggestion box
-            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute('data-filter');
+            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute('data-filter') ;
           } else {
             // add button data value to the exact caret position
             modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('');
@@ -1000,7 +912,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
       // TODO: do this in the first loop where buttons are built
       selectedFilters.forEach(function(item) {
-        if(JSON.stringify(item) == '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
+        if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
       });
       filterContainerSub.appendChild(todoFiltersItem);
     }
@@ -1012,7 +924,6 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
     return Promise.reject("Error in buildFilterButtons(): " + error);
   }
 }
-
 function generateTodoData(searchString) {
   try {
     // we only continue if there actually is data
@@ -1070,7 +981,7 @@ function generateTodoData(searchString) {
       categoriesFiltered.forEach(category => {
         // we create a new array where the items attrbite has no values
         temp = temp.filter(function(item) {
-          return item[category] == null;
+          return item[category] === null;
         });
       });
       items = temp;
@@ -1086,16 +997,16 @@ function generateTodoData(searchString) {
     }
     // we show some information on filters if any are set
     if(items.length!=parsedData.length) {
-      todoTableSelectionInformation.classList.add("is-active");
-      todoTableSelectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>";
+      selectionInformation.classList.add("is-active");
+      selectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>";
     } else {
-      todoTableSelectionInformation.classList.remove("is-active");
+      selectionInformation.classList.remove("is-active");
     }
     // hide/show the addTodoContainer or noResultTodoContainer
     if(items.length > 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
-    } else if(items.length == 0) {
+    } else if(items.length === 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
     }
@@ -1184,7 +1095,6 @@ function generateTodoData(searchString) {
     return Promise.reject("Error in generateTodoData: " + error);
   }
 }
-
 function createTableRow(item) {
   try {
     // build the items for one row
@@ -1270,10 +1180,10 @@ function createTableRow(item) {
     // cell for the categories
     categories.forEach(category => {
       if(item[category]) {
-        item[category].forEach(el => {
+        item[category].forEach(item => {
           let todoTableBodyCellCategory = document.createElement("span");
           todoTableBodyCellCategory.setAttribute("class", "tag " + category);
-          todoTableBodyCellCategory.innerHTML = el;
+          todoTableBodyCellCategory.innerHTML = item;
           tableContainerCategories.appendChild(todoTableBodyCellCategory);
         });
       }
@@ -1330,7 +1240,6 @@ function createTableRow(item) {
     return Promise.reject("Error in createTableRow(): " + error);
   }
 }
-
 function submitForm() {
   try {
     // check if there is an input in the text field, otherwise indicate it to the user
@@ -1385,7 +1294,6 @@ function submitForm() {
     return Promise.reject("Error in submitForm(): " + error);
   }
 }
-
 function completeTodo(dataItem, deleteItem) {
   try {
     // convert array of objects to array of strings
@@ -1424,27 +1332,5 @@ function completeTodo(dataItem, deleteItem) {
 
   } catch(error) {
     return Promise.reject("Error in completeTodo(): " + error);
-  }
-}
-
-// ########################################################################################################################
-// START
-// ########################################################################################################################
-window.onload = function () {
-  // set theme
-  if(selectedTheme) switchTheme(false)
-  // only start if a file has been selected
-  if(pathToFile) {
-    console.log("Info: Path to file: " + pathToFile);
-    // start parsing data
-    parseDataFromFile(pathToFile).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
-  } else {
-    console.log("Info: File does not exist or has not been defined yet");
-    // show onboarding if no file has been selected
-    showOnboarding(true);
   }
 }
