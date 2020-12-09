@@ -146,6 +146,7 @@ modalFormInput.addEventListener("keyup", e => {
     typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift()
     typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
   }
+  // suppress suggestion box if caret is at the end of word
   if(typeAheadPrefix) {
     if(typeAheadPrefix=="+") {
       typeAheadCategory = "projects";
@@ -897,10 +898,10 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             // only if input is not only the prefix, otherwise all existing prefixes will be removed
             modalFormInput.value = modalFormInput.value.replace(" " + typeAheadPrefix+typeAheadValue, "");
             // add filter from suggestion box
-            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute('data-filter') ;
+            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute('data-filter');
           } else {
             // add button data value to the exact caret position
-            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('');
+            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
           }
           // put focus back into input so user can continue writing
           modalFormInput.focus();

@@ -76,10 +76,10 @@
     "md5": "^2.3.0"
   },
   "devDependencies": {
-    "node-sass": "^5.0.0",
     "bulma": "^0.9.1",
     "electron": "11.0.3",
-    "electron-packager": "^15.1.0",
-    "electron-builder": "^22.9.1"
+    "electron-builder": "^22.9.1",
+    "electron-packager": "^15.2.0",
+    "node-sass": "^5.0.0"
   }
 }
