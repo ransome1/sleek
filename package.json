@@ -19,6 +19,12 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
+    "files": [
+      "!**/snap/*",
+      "!**/flatpak/*",
+      "!**/.git/*",
+      "!**/dist/*"
+    ],
     "appId": "com.sleek.desktop",
     "linux": {
       "icon": "assets/icons/512x512.png",
@@ -33,14 +39,23 @@
     },
     "win": {
       "target": [
-        "portable"
+        "portable",
+        "appx"
       ],
-      "icon": "assets/icons/512x512.ico"
+      "icon": "assets/icons/512x512.ico",
+      "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"
     },
     "mac": {
       "target": "dmg",
       "icon": "assets/icons/512x512.icns",
       "category": "public.app-category.productivity"
+    },
+    "appx": {
+      "displayName": "sleek - a todo.txt manager",
+      "identityName": "17450RobinAhle.sleektodomanager",
+      "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
+      "publisherDisplayName": "Robin Ahle",
+      "applicationId": "RobinAhle.sleektodomanager"
     }
   },
   "appImage": {
@@ -52,19 +67,10 @@
   "freebsd": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
-  "snap": {
-    "confinement": "strict",
-    "grade": "stable"
-  },
-  "appx": {
-    "applicationId": "",
-    "displayName": "${productName}",
-    "identityName": "${productName}",
-    "publisher": "${author}"
-  },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -l snap --publish always",
+    "dist": "electron-builder -l --publish always",
+    "win": "electron-builder -w appx --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
