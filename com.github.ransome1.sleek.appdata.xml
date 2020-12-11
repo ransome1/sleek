@@ -21,7 +21,7 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">flatpak/com.github.ransome1.sleek.desktop</launchable>
+  <launchable type="desktop-id">com.github.ransome1.sleek.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/main_light.png</image>

@@ -1,5 +1,5 @@
 [Desktop Entry]
-Version=0.3.0
+Version=0.4.1
 Name=com.github.ransome1.sleek
 Exec=/app/bin/run.sh %u
 Type=Application
