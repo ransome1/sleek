@@ -7,3 +7,4 @@ dist/
 snap/local/
 *.py
 *.ini
+.gitignore
