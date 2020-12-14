@@ -10,4 +10,3 @@ snap/local/
 .gitignore
 *.pfx
 System Volume Information/
-package-lock.json
