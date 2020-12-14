@@ -33,8 +33,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/ransome1/sleek.git
-        #branch: master
-        commit: 5529ac10cd09aef563f0704075d9edf5c508fb9e
+        branch: master
+        #commit: fa54bfc332dcce6473953a965e13b91749200b04
         dest: sleek
       - generated-sources.json
 
@@ -42,24 +42,3 @@ modules:
         commands:
           - exec env TMPDIR=$XDG_CACHE_HOME zypak-wrapper /app/sleek/sleek
         dest-filename: sleek.sh
-  - name: appdata
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 com.github.ransome1.sleek.appdata.xml /app/share/metainfo/com.github.ransome1.sleek.appdata.xml
-    sources:
-      - type: file
-        path: com.github.ransome1.sleek.appdata.xml
-  - name: desktop-entry
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 com.github.ransome1.sleek.desktop /app/share/applications/com.github.ransome1.sleek.desktop
-    sources:
-      - type: file
-        path: com.github.ransome1.sleek.desktop
-  #- name: icon
-  #  buildsystem: simple
-  #  build-commands:
-  #    - install -Dm644 com.github.ransome1.sleek.png /app/share/icons/hicolor/128x128/apps/com.github.ransome1.sleek.png
-  #  sources:
-  #    - type: file
-  #      path: com.github.ransome1.sleek.png
