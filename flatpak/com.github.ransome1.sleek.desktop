@@ -1,9 +1,9 @@
 [Desktop Entry]
-Version=0.4.1
-Name=com.github.ransome1.sleek
-Exec=/app/bin/run.sh %u
+Version=0.4.2
+Name=sleek
+Exec=sleek
 Type=Application
 Icon=com.github.ransome1.sleek
-Categories=Productivity
+Categories=Office
 Terminal=false
 Comment=A simple todo manager based on the concept of todo.txt

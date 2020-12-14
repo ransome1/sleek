@@ -1,4 +1,14 @@
 @import url(../css/datepicker-bulma.min.css);
+@font-face {
+  font-family: "FreeSans";
+  src: url("../fonts/FreeSans.otf") format("opentype");
+  src: url("../fonts/FreeSans.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "FreeSansBold";
+  src: url("../fonts/FreeSansBold.otf") format("opentype");
+  src: url("../fonts/FreeSansBold.ttf") format("truetype"); }
+
 html {
   height: 100%; }
 
@@ -43,9 +53,6 @@ input[type="search"]:focus::-webkit-search-cancel-button {
   opacity: .8;
   pointer-events: all; }
 
-/*.control.has-icons-left .icon, .control.has-icons-right .icon {
-    color: red!important;
-}*/
 /* ONBOARDING */
 #noResultContainer.contentContainer {
   height: 80%; }
@@ -62,6 +69,7 @@ input[type="search"]:focus::-webkit-search-cancel-button {
   .contentContainer .fa-file-alt {
     font-size: 6em; }
   .contentContainer .title.is-1 {
+    font-family: "FreeSansBold";
     margin: .5em 0; }
   .contentContainer .subtitle {
     margin: .5em 0; }
@@ -141,7 +149,7 @@ nav {
       background: #4a4a4a;
       color: #fff;
       font-size: 1em;
-      font-weight: bold;
+      font-family: FreeSansBold;
       line-height: 5em;
       text-align: center;
       cursor: default; }
@@ -155,10 +163,7 @@ nav {
   overflow-x: hidden;
   float: left;
   padding: 0 1.5em;
-  background: #ebebeb;
-  /*.dropdown-item a.headline:focus {
-    outline: 1px dotted $has-text-link!important;
-  }*/ }
+  background: #ebebeb; }
   #filterDropdown .dropdown-item {
     width: 100%;
     padding: 0;
@@ -168,7 +173,7 @@ nav {
     float: left;
     font-size: 1.35em;
     color: #4a4a4a;
-    font-weight: bold;
+    font-family: FreeSansBold;
     margin-bottom: 1.5em; }
   #filterDropdown #btnResetAllFilters {
     display: none; }
@@ -209,7 +214,7 @@ nav {
 .filterDropdown div.contexts a.button span.tag {
   background: #1aa37e;
   color: #fff;
-  font-weight: bold;
+  font-family: FreeSansBold;
   position: absolute;
   right: -.75em;
   top: -.75em; }
@@ -229,7 +234,7 @@ nav {
 .filterDropdown div.projects a.button span.tag {
   background: #bc30ba;
   color: #fff;
-  font-weight: bold;
+  font-family: FreeSansBold;
   position: absolute;
   right: -.75em;
   top: -.75em; }
@@ -267,11 +272,12 @@ nav {
     background-color: #f5f5f5; }
   #todoTable .flex-table.priority {
     border: none;
-    font-weight: bold;
+    font-family: FreeSansBold;
     font-size: 1.5em; }
   #todoTable .flex-table.completed .checkbox a {
     color: #b5b5b5; }
   #todoTable .flex-table.completed strong {
+    font-family: "FreeSansBold";
     color: #b5b5b5; }
   #todoTable .flex-table.completed .flex-row.text {
     color: #b5b5b5; }
@@ -357,12 +363,12 @@ nav {
         margin: 0; }
       #todoTable .flex-table .flex-row.itemDueDate .tags .is-dark {
         background: #4a4a4a;
-        font-weight: bold; }
+        font-family: FreeSansBold; }
   #todoTable .flex-table .flex-row.itemDueDate.due {
     color: #ff3860; }
     #todoTable .flex-table .flex-row.itemDueDate.due .tags .is-dark {
       background: #ff3860;
-      font-weight: bold; }
+      font-family: FreeSansBold; }
     #todoTable .flex-table .flex-row.itemDueDate.due svg.fa-sort-down {
       color: inherit; }
   #todoTable .flex-table .flex-row.itemDueDate:hover .tags {
@@ -442,6 +448,9 @@ nav {
       border-radius: 50%; }
 
 /* MODAL */
+#modalForm .card-header-title {
+  font-family: "FreeSansBold"; }
+
 #modalForm .message {
   display: none;
   margin: 1em 0; }
@@ -478,7 +487,7 @@ nav {
   background: white; }
   #suggestionContainer h4 {
     font-size: 1.3em;
-    font-weight: bold;
+    font-family: FreeSansBold;
     margin: .3em 0; }
 
 #suggestionContainer.card {
@@ -506,6 +515,7 @@ nav {
   .datepicker .datepicker-footer {
     background: none; }
     .datepicker .datepicker-footer .datepicker-controls .button {
+      font-family: "FreeSansBold";
       font-size: 1em;
       background: none;
       border-color: transparent;
@@ -537,7 +547,8 @@ nav {
     nav ul li.logo {
       width: 100%;
       height: 3.5em;
-      line-height: 3.5em; }
+      line-height: 3.5em;
+      font-family: "FreeSansBold"; }
   .filterDropdown {
     width: 29em;
     padding: 0 1.5em !important; }
@@ -834,7 +845,7 @@ section {
   display: block; }
 
 body, button, input, optgroup, select, textarea {
-  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif; }
+  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif; }
 
 code,
 pre {
@@ -7431,13 +7442,13 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   font-weight: 700 !important; }
 
 .is-family-primary {
-  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif !important; }
+  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif !important; }
 
 .is-family-secondary {
-  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif !important; }
+  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif !important; }
 
 .is-family-sans-serif {
-  font-family: "FreeSans", Helvetica, Arial, "DejaVu Sans", sans-serif !important; }
+  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif !important; }
 
 .is-family-monospace {
   font-family: monospace !important; }

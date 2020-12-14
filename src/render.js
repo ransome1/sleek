@@ -33,6 +33,12 @@ const store = new Store({
     theme: ""
   }
 });
+const items = {
+  unfiltered: new Array,
+  filtered: new Array,
+  strings: null,
+  grouped: new Array
+}
 let pathToFile = store.get("pathToFile");
 let pathToNewFile;
 let selectedFilters = store.get("selectedFilters");
@@ -41,13 +47,9 @@ let showCompleted = store.get("showCompleted");
 let dataItem;
 let previousDataItem = "";
 let itemId;
-let parsedData = [];
-let items = [];
 let modalFormStatus;
 let categoriesFiltered = store.get("categoriesFiltered");
 let fileWatcher;
-let itemsFiltered = [];
-let itemsGrouped = [];
 let filterContainer = document.getElementById("todoFilters");
 let themeLink = null;
 let selectedTheme = store.get("theme");
@@ -318,16 +320,6 @@ function showCompletedTodos() {
   }).catch(error => {
     console.log(error);
   });
-  /*
-  // parsed data will be passed to generate filter data and build the filter buttons
-  t0 = performance.now();
-  generateFilterData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Filters rendered:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });*/
 }
 function resetFilters() {
   selectedFilters = [];
@@ -346,16 +338,6 @@ function resetFilters() {
   }).catch(error => {
     console.log(error);
   });
-  /*
-  // parsed data will be passed to generate filter data and build the filter buttons
-  t0 = performance.now();
-  generateFilterData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Filters rendered:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });*/
 }
 function showMore(variable) {
   if(variable) {
@@ -385,7 +367,6 @@ function showForm(variable) {
       if(dataItem) {
         // we need to check if there already is a due date in the object
         dataItem = new TodoTxtItem(dataItem, [ new DueExtension() ]);
-
         modalFormInput.value = dataItem.toString();
         modalTitle.innerHTML = i18next.t("editTodo");
         btnItemStatus.classList.add("is-active");
@@ -610,22 +591,20 @@ function parseDataFromFile(pathToFile) {
       }).catch(error => {
         console.log(error);
       });
-      // we clear the old data array
-      parsedData = new Array;
-      // each line is one string-entry in an array
-      let parsedDataTemp = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; }).toString().split("\n");
+      // clear todo txt item from previous sessions
+      items.unfiltered = new Array;
+      // read fresh data from file
+      items.strings = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; }).toString().split("\n");
       // for each array item we generate a todotxt object and assign an id to it
-      for(let i = 0; i < parsedDataTemp.length;i++) {
-        if(!parsedDataTemp[i]) continue;
-        let item = new TodoTxtItem(parsedDataTemp[i], [ new DueExtension() ]);
+      for(let i = 0; i < items.strings.length;i++) {
+        if(!items.strings[i]) continue;
+        let item = new TodoTxtItem(items.strings[i], [ new DueExtension() ]);
         item.id = i;
         // if due is missing we can't sort the array, so we set it to null if it's empty
         if(!item.due) item.due = null;
-        parsedData.push(item);
+        items.unfiltered.push(item);
       }
-      // clean it up as we don't need this anymore
-      parsedDataTemp = null;
-      if(parsedData.length>0) {
+      if(items.unfiltered.length>0) {
         t0 = performance.now();
         generateTodoData().then(response => {
           console.log(response);
@@ -634,17 +613,6 @@ function parseDataFromFile(pathToFile) {
         }).catch(error => {
           console.log(error);
         });
-        /*
-        // parsed data will be passed to generate filter data and build the filter buttons
-        t0 = performance.now();
-        generateFilterData().then(response => {
-          console.log(response);
-          t1 = performance.now();
-          console.log("Filters rendered in", t1 - t0, "ms");
-        }).catch(error => {
-          console.log(error);
-        });
-        */
         // if there is a file onboarding is hidden
         showOnboarding(false);
         return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
@@ -690,10 +658,10 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
       // TODO: what does the first condition do?
-      if(items.length==0 || typeAheadCategory) {
-        items = parsedData;
-      }
-      items.forEach((item) => {
+      /*if(items.length==0 || typeAheadCategory) {
+        items = items.unfiltered;
+      }*/
+      items.unfiltered.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
@@ -928,17 +896,14 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
 function generateTodoData(searchString) {
   try {
     // we only continue if there actually is data
-    if(parsedData.length==0) return Promise.resolve("Info: Won't build anything as there is no data so far");
-    // clean the items
-    items = [];
-    // we build a new array according to the showComplete setting
+    if(items.unfiltered.length==0) return Promise.resolve("Info: Won't build anything as there is no data so far");
+    // items variable to work with from here on
+    items.filtered = items.unfiltered;
+    // filter items according to showCompleted setting
     if(showCompleted==false) {
-      for(let item in parsedData) {
-        if(parsedData[item].complete==true) continue;
-        items.push(parsedData[item]);
-      }
-    } else {
-      items = parsedData;
+      items.filtered = items.filtered.filter(function(item) {
+        return item.complete === false;
+      });
     }
     // if there are selected filters
     if(selectedFilters.length > 0) {
@@ -946,26 +911,17 @@ function generateTodoData(searchString) {
       selectedFilters.forEach(filter => {
         // check if the filter is a project filter
         if(filter[1]=="projects") {
-          items.forEach(item => {
-            if(item.projects) {
-              // do the projects of that item match the project filter?
-              if(item.projects.includes(filter[0])) itemsFiltered.push(item);
-            }
+          items.filtered = items.filtered.filter(function(item) {
+            if(item.projects) return item.projects.includes(filter[0]);
           });
         // check if the filter is a context filter
         } else if(filter[1]=="contexts") {
-          items.forEach(item => {
-            if(item.contexts) {
-              // do the contexts of that item match the context filter?
-              if(item.contexts.includes(filter[0])) itemsFiltered.push(item);
-            }
+          items.filtered = items.filtered.filter(function(item) {
+            if(item.contexts) return item.contexts.includes(filter[0]);
           });
         }
-        items = itemsFiltered;
-        itemsFiltered = [];
       });
     }
-
     // filters are generated once the final todos are defined
     t0 = performance.now();
     generateFilterData().then(response => {
@@ -975,44 +931,41 @@ function generateTodoData(searchString) {
     }).catch(error => {
       console.log(error);
     });
-
     // if there is at least 1 category to hide
     if(categoriesFiltered.length > 0) {
-      let temp = items;
       categoriesFiltered.forEach(category => {
         // we create a new array where the items attrbite has no values
-        temp = temp.filter(function(item) {
+        items.filtered = items.filtered.filter(function(item) {
           return item[category] === null;
         });
       });
-      items = temp;
     }
     // if there is a search input detected
     if(searchString) {
       // convert everything to lowercase for better search results
-      items = items.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      items.filtered = items.filtered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
     } if(!searchString && todoTableSearch.value) {
       searchString = todoTableSearch.value;
       // convert everything to lowercase for better search results
-      items = items.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      items.filtered = items.filtered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
     }
     // we show some information on filters if any are set
-    if(items.length!=parsedData.length) {
+    if(items.filtered.length!=items.unfiltered.length) {
       selectionInformation.classList.add("is-active");
-      selectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.length + " </strong> " + i18next.t("of") + " <strong>" + parsedData.length + "</strong>";
+      selectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.filtered.length + " </strong> " + i18next.t("of") + " <strong>" + items.unfiltered.length + "</strong>";
     } else {
       selectionInformation.classList.remove("is-active");
     }
     // hide/show the addTodoContainer or noResultTodoContainer
-    if(items.length > 0) {
+    if(items.filtered.length > 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
-    } else if(items.length === 0) {
+    } else if(items.filtered.length === 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
     }
     // produce an object where priority a to z + null is key
-    itemsGrouped = items.reduce((r, a) => {
+    items.grouped = items.filtered.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
      return r;
     }, {});
@@ -1024,28 +977,29 @@ function generateTodoData(searchString) {
     // fragment is created to append the nodes
     let tableContainerContent = document.createDocumentFragment();
     // object is converted to an array
-    itemsGrouped = Object.entries(itemsGrouped).sort();
+    items.grouped = Object.entries(items.grouped).sort();
     // each priority group -> A to Z plus null for all todos with no priority
-    for (let priority in itemsGrouped) {
+    for (let priority in items.grouped) {
       let itemsDue = new Array;
-      let items = new Array;
+      let itemsRest = new Array;
       let itemsDueComplete = new Array;
       let itemsComplete = new Array;
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
-      if(itemsGrouped[priority][0]!="null") {
-        let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + itemsGrouped[priority][0] + "</div></div>");
+      if(items.grouped[priority][0]!="null") {
+        let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.grouped[priority][0] + "</div></div>");
         tableContainerContent.appendChild(divider);
       }
-      for (let item in itemsGrouped[priority][1]) {
-        let todo = itemsGrouped[priority][1][item];
+      // TODO: that's ugly refine
+      for (let item in items.grouped[priority][1]) {
+        let todo = items.grouped[priority][1][item];
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
         if (todo.due && !todo.complete) {
           itemsDue.push(todo);
         // incompleted todos with no due date
         } else if(!todo.due && !todo.complete) {
-          items.push(todo);
+          itemsRest.push(todo);
         // completed todos with due date
         } else if(todo.due && todo.complete) {
           itemsDueComplete.push(todo);
@@ -1061,7 +1015,7 @@ function generateTodoData(searchString) {
         tableContainerContent.appendChild(createTableRow(item));
       });
       // all rows for the items with no due date within the priority group are being build
-      items.forEach(item => {
+      itemsRest.forEach(item => {
         tableContainerContent.appendChild(createTableRow(item));
       });
       // array is sorted so the due date is desc
@@ -1253,13 +1207,13 @@ function submitForm() {
       // Edit todo
       } else if(dataItem) {
         // convert array of objects to array of strings to find the index
-        parsedData = parsedData.map(item => item.toString());
+        items.unfiltered = items.unfiltered.map(item => item.toString());
         // get the position of that item in the array
-        itemId = parsedData.indexOf(dataItem);
+        itemId = items.unfiltered.indexOf(dataItem);
         // get the index using the itemId, remove 1 item there and add the value from the input at that position
-        parsedData.splice(itemId, 1, modalForm.elements[0].value);
+        items.unfiltered.splice(itemId, 1, modalForm.elements[0].value);
         // convert all the strings to proper todotxt items again
-        parsedData = parsedData.map(item => new TodoTxtItem(item, [ new DueExtension() ]));
+        items.unfiltered = items.unfiltered.map(item => new TodoTxtItem(item, [ new DueExtension() ]));
       // Add todo
       } else {
         // in case there hasn't been a passed data item, we just push the input value as a new item into the array
@@ -1267,20 +1221,14 @@ function submitForm() {
         // we add the current date to the start date attribute of the todo.txt object
         dataItem.date = new Date();
         // we build the array
-        parsedData.push(dataItem);
+        items.unfiltered.push(dataItem);
       }
-
-      // empty the data item as we don't need it anymore
-      //dataItem = null;
       //write the data to the file
-      fs.writeFileSync(pathToFile, TodoTxt.render(parsedData), {encoding: 'utf-8'});
-
+      fs.writeFileSync(pathToFile, TodoTxt.render(items.unfiltered), {encoding: 'utf-8'});
       // save the previously saved dataItem for further use
       previousDataItem = dataItem;
       dataItem = null;
-
       return Promise.resolve("Success: Changes written to file: " + pathToFile);
-
     // if the input field is empty, let users know
     } else {
       modalFormAlert.innerHTML = i18next.t("formInfoNoInput");
@@ -1297,10 +1245,8 @@ function submitForm() {
 }
 function completeTodo(dataItem, deleteItem) {
   try {
-    // convert array of objects to array of strings
-    let parsedDataString = parsedData.map(item => item.toString());
-    // get the position of that item in the array using the string
-    let itemId = parsedDataString.indexOf(dataItem);
+    // get the position of that item in the array (of strings, not objects) using the string
+    let itemId = items.strings.indexOf(dataItem);
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of dataItem
     if(modalForm.elements[0].value) dataItem = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
@@ -1311,26 +1257,21 @@ function completeTodo(dataItem, deleteItem) {
       dataItem.complete = false;
       dataItem.completed = null;
       // delete old dataItem from array and add the new one at it's position
-      parsedData.splice(itemId, 1, dataItem);
+      items.unfiltered.splice(itemId, 1, dataItem);
     // Mark item as complete
     } else if(!dataItem.complete && !deleteItem) {
-      // if deleteItem has been sent as true, we delete the entry from the parsedData
+      // if deleteItem has been sent as true, we delete the entry from the items.unfiltered
       dataItem.complete = true;
       dataItem.completed = new Date();
       // delete old dataItem from array and add the new one at it's position
-      parsedData.splice(itemId, 1, dataItem);
+      items.unfiltered.splice(itemId, 1, dataItem);
     } else if(deleteItem) {
       // Delete item
-      parsedData.splice(itemId, 1);
+      items.unfiltered.splice(itemId, 1);
     }
-
-    // empty the data item as we don't need it anymore
-    dataItem = null;
     //write the data to the file
-    fs.writeFileSync(pathToFile, TodoTxt.render(parsedData), {encoding: 'utf-8'});
-
+    fs.writeFileSync(pathToFile, TodoTxt.render(items.unfiltered), {encoding: 'utf-8'});
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
-
   } catch(error) {
     return Promise.reject("Error in completeTodo(): " + error);
   }

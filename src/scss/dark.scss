@@ -49,7 +49,7 @@ input {
 }
 input:active,
 input:focus {
-  box-shadow: $body-text-color!important;
+  box-shadow: 0 0 0 0.125em $body-text-color!important;
 }
 input[type="search"]::-webkit-search-cancel-button {
   background-color: white;
@@ -216,15 +216,15 @@ nav {
   .switch {
     .slider {
       background-color: #4a4a4a;
-      input:checked + .slider {
-        background-color: #2C2D30 !important;
-      }
-      input:focus + .slider {
-        box-shadow: 0 0 1px #2C2D30;
-      }
-      input:focus {
-        outline: 2px solid $body-text-color;
-      }
+    }
+    input:checked + .slider {
+      background-color: #2C2D30 !important;
+    }
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2C2D30;
+    }
+    input:focus {
+      outline: 2px solid $body-text-color!important;
     }
   }
 }

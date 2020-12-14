@@ -7,6 +7,12 @@
 
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
+  <developer_name>Robin Ahle</developer_name>
+  <content_rating type="oars-1.0" />
+  <releases>
+    <release version="0.4.2" date="2020-12-14"/>
+  </releases>
+  <url type="homepage">https://github.com/ransome1/sleek</url>
 
   <recommends>
     <control>pointing</control>

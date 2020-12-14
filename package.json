@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A simple todo manager based on the concept of todo.txt",
   "synopsis": "A simple todo manager based on the concept of todo.txt",
   "category": "ProjectManagement",
@@ -69,8 +69,8 @@
   },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -l --publish always",
-    "win": "electron-builder -w appx --publish never",
+    "dist": "electron-builder -l AppImage --publish never",
+    "appx": "electron-builder create-self-signed-cert --publisher ROBINAHLE & electron-builder -w appx --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."

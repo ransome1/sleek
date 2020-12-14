@@ -8,3 +8,6 @@ snap/local/
 *.py
 *.ini
 .gitignore
+*.pfx
+System Volume Information/
+package-lock.json
