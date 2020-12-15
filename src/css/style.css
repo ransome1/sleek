@@ -503,7 +503,7 @@ nav {
 
 .dueDate #dueDatePickerInput,
 .dueDate #dueDatePickerInput::placeholder {
-  width: 75%;
+  width: auto;
   font-size: 1em;
   color: #3273dc;
   box-shadow: none;
