@@ -10,3 +10,4 @@ snap/local/
 .gitignore
 *.pfx
 System Volume Information/
+appx/

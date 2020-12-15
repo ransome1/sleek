@@ -4,6 +4,6 @@ window.theme = electron.remote.nativeTheme;
 window.path = require("path");
 window.app = electron.remote.app;
 window.Store = require("./configs/store.config.js");
-//window.i18next = require('./configs/i18next.config');
+window.i18next = require('./configs/i18next.config');
 window.fs = require('fs');
 window.dialog = electron.remote.dialog;

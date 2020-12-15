@@ -22,8 +22,7 @@
     "files": [
       "!**/snap/*",
       "!**/flatpak/*",
-      "!**/.git/*",
-      "!**/dist/*"
+      "!**/.git/*"
     ],
     "appId": "com.sleek.desktop",
     "linux": {

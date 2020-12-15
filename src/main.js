@@ -7,7 +7,7 @@ const path = require("path");
 }*/
 const isMac = process.platform === "darwin";
 const Store = require("./configs/store.config.js");
-//const i18next = require("./configs/i18next.config");
+const i18next = require("./configs/i18next.config");
 
 let mainWindow; //do this so that the window object doesn"t get GC"d
 
