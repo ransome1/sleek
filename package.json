@@ -20,9 +20,13 @@
   "buildResources": "src",
   "build": {
     "files": [
-      "!**/snap/*",
-      "!**/flatpak/*",
-      "!**/.git/*"
+      "!snap${/*}",
+      "!flatpak${/*}",
+      "!.git${/*}",
+      "!**.pfx",
+      "!**.bak",
+      "!**.md",
+      "!dist/${/*}"
     ],
     "appId": "com.sleek.desktop",
     "linux": {
@@ -36,18 +40,17 @@
         "AppImage"
       ]
     },
-    "win": {
-      "target": [
-        "portable",
-        "appx"
-      ],
-      "icon": "assets/icons/512x512.ico",
-      "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"
-    },
     "mac": {
       "target": "dmg",
       "icon": "assets/icons/512x512.icns",
       "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": [
+        "appx"
+      ],
+      "icon": "assets/icons/sleek.ico",
+      "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"
     },
     "appx": {
       "displayName": "sleek - a todo.txt manager",
@@ -69,7 +72,7 @@
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder -l AppImage --publish never",
-    "appx": "electron-builder create-self-signed-cert --publisher ROBINAHLE & electron-builder -w appx --publish never",
+    "appx": "electron-builder -w appx --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."

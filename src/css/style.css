@@ -351,7 +351,7 @@ nav {
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
       left: .7em;
-      bottom: 2.55em;
+      bottom: 2.675em;
       color: #4a4a4a;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {

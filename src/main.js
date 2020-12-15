@@ -61,50 +61,42 @@ const createWindow = () => {
   // Template for menu
   const menuTemplate = [
     {
-      //label: i18next.t("file"),
-      label: "File",
+      label: i18next.t("file"),
       submenu: [
         {
-          //label: i18next.t("openFile"),
-          label: "Open todo.txt file",
+          label: i18next.t("openFile"),
           accelerator: "CmdOrCtrl+o",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("openFile()");
           }
         },
         {
-          //label: i18next.t("onboardingContainerBtnCreate"),
-          label: "Create new todo.txt",
+          label: i18next.t("onboardingContainerBtnCreate"),
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("createFile(true, false)");
           }
         },
         isMac ? {
           role: "quit",
-          //label: i18next.t("close")
-          label: "Close"
+          label: i18next.t("close")
         } : {
           role: "close",
-          //label: i18next.t("close")
-          label: "Close"
+          label: i18next.t("close")
         }
       ]
     },
     {
-      //label: i18next.t("todos"),
-      label: "Todos",
+      label: i18next.t("todos"),
       submenu: [
         {
-          //label: i18next.t("addTodo"),
-          label: "Add a new todo",
+          label: i18next.t("addTodo"),
           accelerator: "CmdOrCtrl+n",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("showForm(true)");
           }
         },
         {
-          //label: i18next.t("find"),
-          label: "Find",
+          label: i18next.t("find"),
           accelerator: "CmdOrCtrl+f",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
@@ -113,20 +105,17 @@ const createWindow = () => {
       ]
     },
     {
-      //label: i18next.t("view"),
-      label: "View",
+      label: i18next.t("view"),
       submenu: [
         {
-          //label: i18next.t("toggleDarkMode"),
-          label: "Toggle dark mode",
+          label: i18next.t("toggleDarkMode"),
           accelerator: "CmdOrCtrl+d",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("switchTheme(\"dark\")");
           }
         },
         {
-          //label: i18next.t("toggleCompletedTodos"),
-          label: "Toggle completed todos",
+          label: i18next.t("toggleCompletedTodos"),
           accelerator: "CmdOrCtrl+h",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("showCompletedTodos()");
@@ -134,24 +123,20 @@ const createWindow = () => {
         },
         {
           role: "reload",
-          label: "Reload"
-          //label: i18next.t("reload")
+          label: i18next.t("reload")
         }
       ]
     },
     {
-      //label: i18next.t("about"),
-      label: "About",
+      label: i18next.t("about"),
       submenu: [
         {
-          //label: i18next.t("sleekOnGithub"),
-          label: "sleek on Github",
+          label: i18next.t("sleekOnGithub"),
           click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
         },
         {
           role: "toggleDevTools",
-          //label: i18next.t("devTools")
-          label: "Toggle developer tools"
+          label: i18next.t("devTools")
         }
       ]
     }
