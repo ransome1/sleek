@@ -6,16 +6,22 @@ sleek is a simple todo manager based on the <a href="https://github.com/todotxt/
 ### Please contribute
 You can help this project by contributing <a href="https://github.com/ransome1/sleek/issues">bug reports</a>, code improvements or even new features. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. To do so just duplicate the "src/locales/en" folder, rename it according to your language code, do your translations in the "translation.json" file and send me a <a href="https://help.github.com/articles/using-pull-requests/">pull request</a>. I will include your translations into the next release.
 
-![Alt text](assets/screenshots/main_light.png?raw=true "Screenshot of sleek")
-
-![Alt text](assets/screenshots/main_filter_dark.png?raw=true "Screenshot of sleek in dark mode")
+![Alt text](assets/screenshots/main_light.png?raw=true "Screenshot of sleek's main view as seen on MacOS")
+![Alt text](assets/screenshots/main_filter_dark.png?raw=true "Screenshot of sleek's filter drawer in dark mode as seen on MacOS")
 
 ### Get it from Snap Store
 You can install sleek from Canonicals Snap Store using: `sudo snap install sleek`
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
-### or download the binary
+### Get it from Flathub
+Install sleek from <a href="https://flathub.org/apps/details/com.github.ransome1.sleek">Flathub</a> using: `flatpak install flathub com.github.ransome1.sleek`
+
+Run it using: `flatpak run com.github.ransome1.sleek`
+
+Or check sleek on <a href="https://flathub.org/apps/details/com.github.ransome1.sleek">Flathub itself</a>
+
+### Download the binary
 You can find binaries for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
 ### Features
