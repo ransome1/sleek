@@ -10,7 +10,7 @@
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="0.4.2" date="2020-12-15"/>
+    <release version="0.4.2" date="2020-12-16"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 
@@ -30,10 +30,22 @@
   <launchable type="desktop-id">com.github.ransome1.sleek.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/main_light.png</image>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/main.png</image>
     </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/main_filter_dark.png</image>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/main_dark.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/main_filter_dark.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/add_todo_typeahead.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/add_todo.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/edit_todo.png</image>
     </screenshot>
   </screenshots>
 </component>
