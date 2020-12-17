@@ -250,6 +250,9 @@ nav {
   float: left;
   display: none;
   padding: 1.5em 3em; }
+  #todoTable #todoTableSearch:focus {
+    box-shadow: 0 0 0 1px #3273dc !important;
+    outline: none; }
   #todoTable #selectionInformation {
     display: none;
     font-size: .8em;
@@ -351,7 +354,7 @@ nav {
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
       left: .7em;
-      bottom: 2.675em;
+      bottom: 2.68em;
       color: #4a4a4a;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {
@@ -448,6 +451,10 @@ nav {
       border-radius: 50%; }
 
 /* MODAL */
+#modalForm #modalFormInput:focus {
+  box-shadow: 0 0 0 1px #3273dc !important;
+  outline: none; }
+
 #modalForm .card-header-title {
   font-family: "FreeSansBold"; }
 
@@ -496,6 +503,10 @@ nav {
 
 #suggestionContainer.is-active {
   display: block; }
+
+/* MODAL HELP */
+#modalHelp .modal-background {
+  background-color: #c5ede3; }
 
 /* DATEPICKER */
 .dueDate svg {

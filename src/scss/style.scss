@@ -291,6 +291,10 @@ nav {
   float: left;
   display: none;
   padding: 1.5em 3em;
+  #todoTableSearch:focus {
+    box-shadow: 0 0 0 1px $has-text-link!important;
+    outline: none;
+  }
   #selectionInformation {
     display: none;
     font-size: .8em;
@@ -431,7 +435,7 @@ nav {
       svg.fa-sort-down {
         position: absolute;
         left: .7em;
-        bottom: 2.675em;
+        bottom: 2.68em;
         color: $darker-grey;
         display: none;
       }
@@ -563,6 +567,10 @@ nav {
 /* MODAL */
 
 #modalForm {
+  #modalFormInput:focus {
+    box-shadow: 0 0 0 1px $has-text-link!important;
+    outline: none;
+  }
   .card-header-title {
     font-family: "FreeSansBold";
   }
@@ -613,6 +621,14 @@ nav {
 }
 #suggestionContainer.is-active {
   display: block;
+}
+
+/* MODAL HELP */
+
+#modalHelp {
+  .modal-background {
+    background-color: $sleek-contexts-button;
+  }
 }
 
 /* DATEPICKER */

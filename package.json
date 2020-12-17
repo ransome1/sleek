@@ -26,7 +26,12 @@
       "!**.pfx",
       "!**.bak",
       "!**.md",
-      "!dist/${/*}"
+      "!dist/${/*}",
+      "!assets/screenshots${/*}",
+      "!assets/icons${/*}",
+      "assets/icons/512x512.png",
+      "assets/icons/sleek.ico",
+      "assets/icons/icon.png"
     ],
     "appId": "com.sleek.desktop",
     "linux": {

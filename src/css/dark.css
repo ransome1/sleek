@@ -18,10 +18,6 @@ input {
   color: #CCCDCF;
   border: none !important; }
 
-input:active,
-input:focus {
-  box-shadow: 0 0 0 0.125em #CCCDCF !important; }
-
 input[type="search"]::-webkit-search-cancel-button {
   background-color: white;
   -webkit-mask-image: url("../svg/times-circle.svg");
@@ -47,6 +43,14 @@ nav {
 #todoTable #todoTableSearch {
   color: #CCCDCF;
   background-color: #2D2E31; }
+
+#todoTable #todoTableSearch:active,
+#todoTable #todoTableSearch:focus {
+  box-shadow: 0 0 0 2px #CCCDCF !important;
+  outline: none; }
+
+#todoTable #todoTableSearch:placeholder {
+  color: #4a4a4a; }
 
 #todoTable #todoTableSearch::placeholder {
   color: #4a4a4a; }
@@ -161,6 +165,18 @@ nav {
 .toggle .switch input:focus {
   outline: 2px solid #CCCDCF !important; }
 
+#modalForm #modalFormInput {
+  background-color: #2D2E31;
+  color: #CCCDCF; }
+
+#modalForm #modalFormInput:active,
+#modalForm #modalFormInput:focus {
+  box-shadow: 0 0 0 2px #CCCDCF !important;
+  outline: none; }
+
+#modalForm #modalFormInput::placeholder {
+  color: #4a4a4a; }
+
 #modalForm button {
   color: white;
   border-color: #1e2022 !important; }
@@ -173,11 +189,6 @@ nav {
   color: #CCCDCF; }
   .modal .modal-content .card .card-header-title {
     color: #CCCDCF; }
-  .modal .modal-content .card #modalFormInput {
-    background-color: #2D2E31;
-    color: #CCCDCF; }
-  .modal .modal-content .card #modalFormInput::placeholder {
-    color: #4a4a4a; }
   .modal .modal-content .card .card-footer,
   .modal .modal-content .card .card-footer-item {
     border-color: #2D2E31; }
