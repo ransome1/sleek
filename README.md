@@ -6,7 +6,7 @@ sleek is a simple todo manager based on the <a href="https://github.com/todotxt/
 ### Please contribute
 You can help this project by contributing <a href="https://github.com/ransome1/sleek/issues">bug reports</a>, code improvements or even new features. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. To do so just duplicate the "src/locales/en" folder, rename it according to your language code, do your translations in the "translation.json" file and send me a <a href="https://help.github.com/articles/using-pull-requests/">pull request</a>. I will include your translations into the next release.
 
-![Alt text](assets/screenshots/mac/main_light.png?raw=true "Screenshot of sleek's main view as seen on MacOS")
+![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's main view as seen on MacOS")
 ![Alt text](assets/screenshots/mac/main_filter_dark.png?raw=true "Screenshot of sleek's filter drawer in dark mode as seen on MacOS")
 
 ### Get it from Snap Store
