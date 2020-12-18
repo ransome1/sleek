@@ -14,6 +14,10 @@ const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const modalBackground = document.querySelectorAll('.modal-background');
+const modal = document.querySelectorAll('.modal');
+const modalClose = document.querySelectorAll('.modal-close');
+const helpTabs = document.querySelectorAll('#modalHelp ul li');
+const helpTabsCards = document.querySelectorAll('#modalHelp section');
 const a = document.querySelectorAll("a");
 const categories = ["contexts", "projects"];
 const dueDatePickerInput = document.getElementById("dueDatePickerInput");
@@ -29,6 +33,7 @@ const store = new Store({
     showCompleted: true,
     selectedFilters: new Array,
     categoriesFiltered: new Array,
+    closedNotifications: new Array,
     pathToFile: "",
     theme: ""
   }
@@ -39,6 +44,7 @@ const items = {
   strings: null,
   grouped: new Array
 }
+//const { getDoNotDisturb } = require('electron-notification-state');
 let pathToFile = store.get("pathToFile");
 let pathToNewFile;
 let selectedFilters = store.get("selectedFilters");
@@ -53,6 +59,12 @@ let fileWatcher;
 let filterContainer = document.getElementById("todoFilters");
 let themeLink = null;
 let selectedTheme = store.get("theme");
+let closedNotifications = store.get("closedNotifications");
+if(store.get("closedNotifications")) {
+  closedNotifications = store.get("closedNotifications")
+} else {
+  closedNotifications = [];
+}
 // ########################################################################################################################
 // INITIAL DOM CONFIGURATION
 // ########################################################################################################################
@@ -87,11 +99,6 @@ noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
 btnCreateTodoFile.onclick = function () { createFile(true, false) }
-modalFileChoose.onclick = function() { createFile(true, false) }
-modalFileOverwrite.onclick = function() { createFile(false, true) }
-todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
-toggleShowCompleted.onclick = showCompletedTodos;
-filterColumnClose.onclick = function() { showFilters(false) }
 btnItemStatus.onclick = function() {
   completeTodo(dataItem).then(response => {
     modalForm.classList.remove("is-active");
@@ -101,6 +108,12 @@ btnItemStatus.onclick = function() {
     console.log(error);
   });
 }
+navBtnHelp.onclick = function () { modalHelp.classList.add("is-active"); }
+modalFileChoose.onclick = function() { createFile(true, false) }
+modalFileOverwrite.onclick = function() { createFile(false, true) }
+todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
+toggleShowCompleted.onclick = showCompletedTodos;
+filterColumnClose.onclick = function() { showFilters(false) }
 navBtnTheme.addEventListener("click", () => {
   switchTheme(true);
 });
@@ -169,6 +182,9 @@ modalFormInput.addEventListener("keyup", e => {
   }
 });
 modalBackground.forEach(el => el.onclick = clearModal);
+modalClose.forEach(el => el.addEventListener("click", function(el) {
+  this.parentElement.classList.remove("is-active");
+}));
 a.forEach(el => el.addEventListener("click", function(el) {
   if(el.target.href && el.target.href === "#") el.preventDefault();
 }));
@@ -189,6 +205,13 @@ btnAddTodo.forEach(function(el) {
   el.setAttribute("title", i18next.t("addTodo"));
   el.onclick = showForm;
 });
+helpTabs.forEach(el => el.addEventListener("click", function(el) {
+  helpTabs.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  this.classList.add("is-active");
+  showTab(this.classList[0]);
+}));
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
@@ -197,6 +220,9 @@ filterDropdown.addEventListener ("keydown", function () {
 });
 modalForm.addEventListener ("keydown", function () {
   if(event.key === 'Escape') clearModal();
+});
+modalHelp.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') modalHelp.classList.remove("is-active");
 });
 body.addEventListener ("keydown", function () {
   if(event.key === "Escape") {
@@ -238,6 +264,31 @@ window.onresize = function() {
 // ########################################################################################################################
 // FUNCTIONS
 // ########################################################################################################################
+
+function createNotification(todo) {
+console.log(closedNotifications);
+  if( closedNotifications.includes(todo.text)) return false
+
+  const notification = new Notification('due today', {
+    body: todo.text,
+    icon: path.join(__dirname, '../assets/icons/icon.png'),
+  })
+
+  notification.onclick = function() {
+    app.focus();
+    dataItem = todo.toString();
+    showForm(true);
+    if(!closedNotifications.includes(todo.text)) closedNotifications.push(todo.text)
+    //store.set("closedNotifications", closedNotifications);
+  };
+
+}
+function showTab(tab) {
+  helpTabsCards.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  document.getElementById(tab).classList.add("is-active");
+}
 function switchTheme(toggle) {
   if(selectedTheme && !toggle) {
     theme.themeSource = selectedTheme;
@@ -990,12 +1041,16 @@ function generateTodoData(searchString) {
         let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.grouped[priority][0] + "</div></div>");
         tableContainerContent.appendChild(divider);
       }
-      // TODO: that's ugly refine
+      // TODO: that's ugly, refine this
       for (let item in items.grouped[priority][1]) {
         let todo = items.grouped[priority][1][item];
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
         if (todo.due && !todo.complete) {
+
+          // if todo is due today
+          if(todo.due.toISOString().slice(0, 10) === new Date().toISOString().slice(0, 10)) createNotification(todo);
+
           itemsDue.push(todo);
         // incompleted todos with no due date
         } else if(!todo.due && !todo.complete) {
@@ -1008,6 +1063,7 @@ function generateTodoData(searchString) {
           itemsComplete.push(todo);
         }
       }
+
       // array is sorted so the due date is desc
       itemsDue.sort((a, b) => a.due - b.due);
       // all rows for the items with due date within the priority group are being build
@@ -1028,6 +1084,7 @@ function generateTodoData(searchString) {
       itemsComplete.forEach(item => {
         tableContainerContent.appendChild(createTableRow(item));
       });
+
     }
     // append the table to the wrapper
     todoTableContainer.appendChild(tableContainerContent);

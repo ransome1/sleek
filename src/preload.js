@@ -1,4 +1,5 @@
 const electron = require("electron");
+window.notification = electron.remote.Notification;
 window.md5 = require('md5');
 window.theme = electron.remote.nativeTheme;
 window.path = require("path");

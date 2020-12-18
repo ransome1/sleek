@@ -354,7 +354,7 @@ nav {
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
       left: .7em;
-      bottom: 2.68em;
+      bottom: 2.75em;
       color: #4a4a4a;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {
@@ -505,8 +505,35 @@ nav {
   display: block; }
 
 /* MODAL HELP */
-#modalHelp .modal-background {
-  background-color: #c5ede3; }
+#modalHelp {
+  justify-content: normal;
+  padding-top: 2em; }
+  #modalHelp .is-large.delete, #modalHelp .is-large.modal-close {
+    background: #3273dc !important;
+    color: #3273dc !important; }
+  #modalHelp .modal-card {
+    height: 100% !important; }
+  #modalHelp .table {
+    width: 100%; }
+  #modalHelp .modal-background {
+    background-color: white; }
+  #modalHelp .modal-card-body {
+    display: none; }
+  #modalHelp .modal-card-body.is-active {
+    display: block; }
+  #modalHelp p {
+    display: block;
+    margin: 1em 0; }
+  #modalHelp img {
+    width: 100%;
+    margin: 0 auto;
+    display: block; }
+  #modalHelp .arrow {
+    text-align: center;
+    margin: 1em 0; }
+  #modalHelp .card {
+    display: block;
+    margin: 0 auto; }
 
 /* DATEPICKER */
 .dueDate svg {
@@ -3976,7 +4003,7 @@ button.dropdown-item {
     .modal-card {
       margin: 0 auto;
       max-height: calc(100vh - 40px);
-      width: 640px; } }
+      width: 768px; } }
 
 .modal-close {
   background: none;

@@ -17,6 +17,7 @@
             <li id="navBtnFilter" class="btnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li class="btnOpenTodoFile"><a href="#" tabindex="0"><i class="fas fa-upload"></i></a></li>
             <li id="navBtnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
+            <li id="navBtnHelp"><a href="#" tabindex="0"><i class="fas fa-question-circle"></i></a></li>
           </ul>
           <section id="filterDropdown" class="filterDropdown dropdown" tabindex="0">
             <div class="container">
@@ -104,21 +105,95 @@
         </div>
       </div>
     </form>
-    <div id="modalHelp" class="modal is-active">
+    <div id="modalHelp" class="modal">
       <div class="modal-background"></div>
       <div class="modal-card">
-        <section class="modal-card-body">
-          <div class="tabs is-centered">
-            <ul>
-              <li class="is-active"><a>Keyboard shortcuts</a></li>
-              <li><a>Adding a priority</a></li>
-              <li><a>Adding contexts or projects</a></li>
-              <li><a>Adding due dates</a></li>
-            </ul>
+        <div class="tabs is-centered">
+          <ul>
+            <li class="tab1 is-active"><a>Keyboard</a></li>
+            <li class="tab2"><a>Priorities</a></li>
+            <li class="tab3"><a>Contexts & projects</a></li>
+            <li class="tab4"><a>Dates</a></li>
+          </ul>
+        </div>
+        <section id="tab1" class="modal-card-body is-active">
+          <h4 class="title is-4">Keyboard shortcuts</h4>
+          <table class="table is-bordered">
+            <thead>
+              <tr>
+                <th>Function</th>
+                <th>Shortcut on Windows and Linux</th>
+                <th>Shortcut on MacOS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Add new todo</td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
+              </tr>
+              <tr>
+                <td>Find todo / enter search field</td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
+              </tr>
+              <tr>
+                <td>Show or hide completed todos</td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
+              </tr>
+              <tr>
+                <td>Toggle the dark mode</td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
+              </tr>
+              <tr>
+                <td>Open another todo.txt file</td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
+              </tr>
+            </tbod>
+          </table>
+        </section>
+        <section id="tab2" class="modal-card-body">
+          <h4 class="title is-4">Adding a priority</h4>
+          <p>Important todos need to have an important spot on your todo list. To do so you need to by append a simple "(A)" at the beginning of the todo. But you're not bound to (A). Everything from A to Z is possible, but only A to C will have a colored bar next to the todo. All other priorities have a neutral grey colored bar attached.</p>
+          <input class="input is-focused is-medium" type="text" value="(A) This will create a todo with highest priority">
+          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
+          <div class="card is-centered" style="width: 62%;">
+            <div class="card-content">
+              <img src="img/help/screenshot_add_priority.png">
+            </div>
           </div>
         </section>
-        <button class="delete" aria-label="close"></button>
+        <section id="tab3" class="modal-card-body">
+          <h4 class="title is-4">Adding contexts & projects</h4>
+          <p>If you work on projects that consists of several tasks, you can assign these tasks by appending "+" followed by the project name. Contexts define the situation in which this todo is relevant to you. According to David Allen's concept of <a href="https://en.wikipedia.org/wiki/Getting_Things_Done" target="_blank">Getting Things Done</a>, the "context" could be i.e. at home, at work, out shopping, by the phone, at your computer, with a particular person. To add a context just append a "@" plus the context name. For more information on todo.txt <a href="https://github.com/todotxt/todo.txt" target="_blank">click here</a>.</p>
+          <p>Neither projects nor context allow the use of spaces, so write them in one word. You can append as many projects and contexts as you wish.</p>
+          <input class="input is-focused is-medium" type="text" value="A todo with 1 project and 2 contexts +project @context1 @context2">
+          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
+          <div class="card is-centered" style="width: 86%;">
+            <div class="card-content">
+              <img src="img/help/add_contexts_projects.png">
+            </div>
+          </div>
+        </section>
+        <section id="tab4" class="modal-card-body">
+          <h4 class="title is-4">Adding a due date</h4>
+          <p>Todos with due dates will be bumped up your todo list. The closer the due date the higher it will be sorted. Is the due date set to today or to a date in the past, it will be marked red and will stay on top of your list. To add a due date append "due:" and add the due date formatted as YYYY-MM-DD.</p>
+          <p>Alternatively you can use the datepicker just below the input field.</p>
+          <h5 class="title is-5">Adding a start date</h5>
+          <p>sleek will add the start date automatically to the todo once it's created. The start date will be set to the todos' creation date. If you want to change it you need to look for the first date in your todo right after the priority tag.</p>
+          <input class="input is-focused is-medium" type="text" value="This todo is due at some point due:2021-03-07">
+          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
+          <div class="card is-centered" style="width: 65%;">
+            <div class="card-content">
+              <img src="img/help/screenshot_add_due_date.png">
+            </div>
+          </div>
+        </section>
       </div>
+      <button class="modal-close is-large" aria-label="close"></button>
     </div>
     <div id="suggestionContainer" class="filterDropdown card"></div>
     <div id="modalFile" class="modal">

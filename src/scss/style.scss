@@ -435,7 +435,7 @@ nav {
       svg.fa-sort-down {
         position: absolute;
         left: .7em;
-        bottom: 2.68em;
+        bottom: 2.75em;
         color: $darker-grey;
         display: none;
       }
@@ -626,8 +626,42 @@ nav {
 /* MODAL HELP */
 
 #modalHelp {
+  justify-content: normal;
+  padding-top: 2em;
+  .is-large.delete, .is-large.modal-close {
+    background: $has-text-link!important;
+    color: $has-text-link!important;
+  }
+  .modal-card {
+    height: 100%!important;
+  }
+  .table {
+    width: 100%;
+  }
   .modal-background {
-    background-color: $sleek-contexts-button;
+    background-color: white;
+  }
+  .modal-card-body {
+    display: none;
+  }
+  .modal-card-body.is-active {
+    display: block;
+  }
+  p {
+    display: block;
+    margin: 1em 0;
+  }
+  img {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+  }
+  .arrow {
+    text-align:center;
+    margin: 1em 0;
+  }
+  .card {
+    display: block; margin: 0 auto;
   }
 }
 

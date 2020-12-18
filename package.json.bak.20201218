@@ -19,7 +19,21 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "appId": "RobinAhle.sleektodomanager",
+    "files": [
+      "!snap${/*}",
+      "!flatpak${/*}",
+      "!.git${/*}",
+      "!**.pfx",
+      "!**.bak",
+      "!**.md",
+      "!dist/${/*}",
+      "!assets/screenshots${/*}",
+      "!assets/icons${/*}",
+      "assets/icons/512x512.png",
+      "assets/icons/sleek.ico",
+      "assets/icons/icon.png"
+    ],
+    "appId": "com.sleek.desktop",
     "linux": {
       "icon": "assets/icons/512x512.png",
       "category": "ProjectManagement",
