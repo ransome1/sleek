@@ -2,8 +2,8 @@
   "name": "sleek",
   "productName": "sleek",
   "version": "0.5.0",
-  "description": "A simple todo manager based on the concept of todo.txt",
-  "synopsis": "A simple todo manager based on the concept of todo.txt",
+  "description": "sleek is a todo app based on the concept of todo.txt",
+  "synopsis": "sleek is a todo app based on the concept of todo.txt",
   "category": "ProjectManagement",
   "keywords": [
     "todo.txt",
@@ -38,7 +38,7 @@
     },
     "win": {
       "target": [
-        "appx"
+        "portablenpm "
       ],
       "icon": "assets/icons/sleek.ico",
       "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"
@@ -62,7 +62,7 @@
   },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -l AppImage --publish never",
+    "dist": "electron-builder -lw --publish always",
     "appx": "electron-builder -w appx --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
