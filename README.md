@@ -44,7 +44,8 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * Todos can be looked up using full-text search
 * A due date can be set using a datepicker
 * Hyperlinks are detected automatically and can be clicked using the icon
-* Todos that include either contexts or projects can be shown or hidden
+* Basic notifications: Will fire if a todo's due date is set for tomorrow or today
+* Todos that include either contexts or projects can be shown or hidden entirely
 * Dark and light mode can be toggled
 * A file watcher rereads the file if it has been changed
 * Multiple languages are automatically detected
@@ -59,12 +60,6 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - Show or hide completed todos: CMD/CTRL + h
   - Toggle dark mode: CMD/CTRL + d
   - Open file: CMD/CTRL + o
-
-### To be done
-* Notification function for due dates
-* Extensive testing & bug fixing
-* Improvements on older hardware
-* Code refinement and better error handling
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
