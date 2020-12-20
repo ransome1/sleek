@@ -6,4 +6,4 @@ Type=Application
 Icon=com.github.ransome1.sleek
 Categories=Office
 Terminal=false
-Comment=A simple todo manager based on the concept of todo.txt
+Comment=sleek is a todo app based on the concept of todo.txt
