@@ -1,11 +1,13 @@
-const { app, BrowserWindow, nativeTheme } = require("electron");
+const { app, BrowserWindow, nativeTheme, electron } = require("electron");
 const { is } = require("electron-util");
 const path = require("path");
 const isMac = process.platform === "darwin";
 const Store = require("./configs/store.config.js");
 const i18next = require("./configs/i18next.config");
 let mainWindow; //do this so that the window object doesn"t get GC"d
+
 console.log("DARK MODE ON?: " + nativeTheme.shouldUseDarkColors);
+
 const store = new Store({
   configName: "user-preferences",
   defaults: {
@@ -46,6 +48,15 @@ const createWindow = () => {
     e.preventDefault();
     require("electron").shell.openExternal(url);
   });
+
+  // every 60 seconds sleek will reparse the data if app is not focused
+  // important for notifications to show up if sleek is running for a long time in background
+  let timerId = setInterval(() => {
+    if(!mainWindow.isFocused()) {
+      mainWindow.webContents.executeJavaScript("parseDataFromFile()");
+    }
+  }, 120000);
+
   // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
   // Modules to create application menu
   const Menu = require("electron").Menu;
@@ -123,6 +134,12 @@ const createWindow = () => {
       label: i18next.t("about"),
       submenu: [
         {
+          label: i18next.t("help"),
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript("showHelp()");
+          }
+        },
+        {
           label: i18next.t("sleekOnGithub"),
           click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
         },
@@ -162,5 +179,3 @@ app.on("activate", () => {
   }
   app.show();
 });
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and import them here.

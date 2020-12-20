@@ -1,4 +1,3 @@
-[![sleek](https://snapcraft.io/sleek/badge.svg)](https://snapcraft.io/sleek)
 # sleek
 ## A simple todo app based on the concept of todo.txt
 sleek is a simple todo app based on the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a>. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them or set due dates. According to this input you will be able to filter or search your todos. There is no cloud integration, but as sleek writes your data to a plain text file, you can put anywhere you want. That also means if you don't have sleek at hand or if you don't like it anymore you can just edit the todo.txt file with any text editor or other todo.txt application.
@@ -19,7 +18,7 @@ Install sleek from <a href="https://flathub.org/apps/details/com.github.ransome1
 
 Run it using: `flatpak run com.github.ransome1.sleek`
 
-Or check sleek on <a href="https://flathub.org/apps/details/com.github.ransome1.sleek">Flathub itself</a>
+<a href='https://flathub.org/apps/details/com.github.ransome1.sleek'><img width='180' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
 ### Download the binary
 You can find binaries for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.

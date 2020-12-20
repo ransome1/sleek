@@ -1,10 +1,10 @@
 const electron = require("electron");
 window.notification = electron.remote.Notification;
-window.md5 = require('md5');
+window.dialog = electron.remote.dialog;
 window.theme = electron.remote.nativeTheme;
-window.path = require("path");
 window.app = electron.remote.app;
+window.md5 = require('md5');
+window.path = require("path");
 window.Store = require("./configs/store.config.js");
 window.i18next = require('./configs/i18next.config');
 window.fs = require('fs');
-window.dialog = electron.remote.dialog;

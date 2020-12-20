@@ -44,7 +44,6 @@ const items = {
   strings: null,
   grouped: new Array
 }
-//const { getDoNotDisturb } = require('electron-notification-state');
 let pathToFile = store.get("pathToFile");
 let pathToNewFile;
 let selectedFilters = store.get("selectedFilters");
@@ -91,7 +90,6 @@ modalFileOverwrite.innerHTML = i18next.t("modalFileOverwrite");
 modalFileChoose.innerHTML = i18next.t("modalFileChoose");
 modalFileHeadline.innerHTML = i18next.t("modalFileHeadline");
 modalFileContent.innerHTML = i18next.t("modalFileContent");
-modalFormHowTo.innerHTML = i18next.t("modalFormHowTo");
 modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
 noResultContainerHeadline.innerHTML = i18next.t("noResults");
 noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
@@ -108,12 +106,13 @@ btnItemStatus.onclick = function() {
     console.log(error);
   });
 }
-navBtnHelp.onclick = function () { modalHelp.classList.add("is-active"); }
+navBtnHelp.onclick = function () { showHelp(); }
 modalFileChoose.onclick = function() { createFile(true, false) }
 modalFileOverwrite.onclick = function() { createFile(false, true) }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 toggleShowCompleted.onclick = showCompletedTodos;
 filterColumnClose.onclick = function() { showFilters(false) }
+modalFormInputHelp.onclick = function () { showHelp(); }
 navBtnTheme.addEventListener("click", () => {
   switchTheme(true);
 });
@@ -221,13 +220,11 @@ filterDropdown.addEventListener ("keydown", function () {
 modalForm.addEventListener ("keydown", function () {
   if(event.key === 'Escape') clearModal();
 });
-modalHelp.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') modalHelp.classList.remove("is-active");
-});
 body.addEventListener ("keydown", function () {
   if(event.key === "Escape") {
     todoTableSearch.blur();
     clearModal();
+    modalHelp.classList.remove("is-active")
   }
 });
 // ########################################################################################################################
@@ -264,24 +261,79 @@ window.onresize = function() {
 // ########################################################################################################################
 // FUNCTIONS
 // ########################################################################################################################
-
-function createNotification(todo) {
-console.log(closedNotifications);
-  if( closedNotifications.includes(todo.text)) return false
-
-  const notification = new Notification('due today', {
-    body: todo.text,
-    icon: path.join(__dirname, '../assets/icons/icon.png'),
-  })
-
-  notification.onclick = function() {
-    app.focus();
-    dataItem = todo.toString();
-    showForm(true);
-    if(!closedNotifications.includes(todo.text)) closedNotifications.push(todo.text)
-    //store.set("closedNotifications", closedNotifications);
-  };
-
+Date.prototype.isToday = function () {
+  const today = new Date()
+  return this.getDate() === today.getDate() &&
+  this.getMonth() === today.getMonth() &&
+  this.getFullYear() === today.getFullYear();
+};
+Date.prototype.isTomorrow = function () {
+  const today = new Date()
+  return this.getDate() === today.getDate()+1 &&
+  this.getMonth() === today.getMonth() &&
+  this.getFullYear() === today.getFullYear();
+};
+Date.prototype.isPast = function () {
+  const today = new Date()
+  return this.getDate() < today.getDate() &&
+  this.getMonth() === today.getMonth() &&
+  this.getFullYear() === today.getFullYear();
+};
+function showNotification(todo, offset) {
+  // check for necessary permissions
+  navigator.permissions.query({name: 'notifications'}).then(function(result) {
+    // abort if user didn't permit notifications
+    if(!result) return false;
+    // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
+    const hash = md5(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
+    switch (offset) {
+      case 0:
+        title = "due today";
+        break;
+      case 1:
+        title = "due tomorrow";
+        break;
+    }
+    // if notification already has been triggered once it will be discarded
+    if(closedNotifications.includes(hash)) return false
+    // set options for notifcation
+    const newNotification = new notification({
+      title: title,
+      body: todo.text,
+      silent: false,
+      icon: path.join(__dirname, '../assets/icons/icon.png'),
+      hasReply: false,
+      timeoutType: 'never',
+      urgency: 'critical',
+      closeButtonText: 'Close',
+      actions: [ {
+        type: 'button',
+        text: 'Show Button'
+      }]
+    });
+    // send it to UI
+    newNotification.show();
+    // once shown, it will be persisted as hash to it won't be shown a second time
+    closedNotifications.push(hash);
+    store.set("closedNotifications", closedNotifications);
+    // click on button in notification
+    newNotification.addListener('click', () => {
+      app.focus();
+      // if another modal was open it needs to be closed first
+      clearModal();
+      // prrepare the value for the modal
+      dataItem = todo.toString();
+      //load modal
+      showForm(true);
+    },{
+      // remove event listener after it is clicked once
+      once: true
+    });
+  });
+}
+function showHelp() {
+  modalHelp.classList.add("is-active");
+  modalHelp.focus();
 }
 function showTab(tab) {
   helpTabsCards.forEach(function(el) {
@@ -632,7 +684,7 @@ function createFile(showDialog, overwriteFile) {
     });
   }
 }
-function parseDataFromFile(pathToFile) {
+function parseDataFromFile() {
   // we only start if file exists
   if (fs.existsSync(pathToFile)) {
     try {
@@ -853,7 +905,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       suggestionContainer.classList.add("is-active");
       // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "is-4 is-title headline " + category);
+      todoFilterHeadline.setAttribute("class", "is-4 title headline " + category);
       // no need for tab index if the headline is in suggestion box
       if(typeAheadPrefix==undefined) todoFilterHeadline.setAttribute("tabindex", 0);
       todoFilterHeadline.innerHTML = headline;
@@ -1047,9 +1099,10 @@ function generateTodoData(searchString) {
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
         if (todo.due && !todo.complete) {
+          // create notification
 
-          // if todo is due today
-          if(todo.due.toISOString().slice(0, 10) === new Date().toISOString().slice(0, 10)) createNotification(todo);
+          if(todo.due.isToday()) showNotification(todo, 0)
+          if(todo.due.isTomorrow()) showNotification(todo, 1)
 
           itemsDue.push(todo);
         // incompleted todos with no due date
@@ -1203,11 +1256,22 @@ function createTableRow(item) {
     // add the text cell to the row
     todoTableBodyCellText.appendChild(tableContainerCategories);
     // check for and add a given due date
+    let tag;
     if(item.due) {
-      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">" + i18next.t("dueAt") + "</span><span class=\"tag is-dark\">" + item.due.toISOString().slice(0, 10) + "</span></div><i class=\"fas fa-sort-down\"></i>";
-      if(item.due < new Date()) {
-        todoTableBodyCellDueDate.classList.add("due");
+      if(item.due.isToday()) {
+        todoTableBodyCellDueDate.classList.add("isToday");
+        tag = i18next.t("dueToday");
+      } else if(item.due.isTomorrow()) {
+        todoTableBodyCellDueDate.classList.add("isTomorrow");
+        tag = i18next.t("dueTomorrow");
+      } else if(item.due.isPast()) {
+        todoTableBodyCellDueDate.classList.add("isPast");
+        tag = item.due.toISOString().slice(0, 10);
+      } else {
+        tag = item.due.toISOString().slice(0, 10);
       }
+      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">" + i18next.t("dueAt") + "</span><span class=\"tag is-dark\">" + tag + "</span></div><i class=\"fas fa-sort-down\"></i>";
+      // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
     // add the text cell to the row
@@ -1322,9 +1386,25 @@ function completeTodo(dataItem, deleteItem) {
       dataItem.completed = new Date();
       // delete old dataItem from array and add the new one at it's position
       items.unfiltered.splice(itemId, 1, dataItem);
+      if(dataItem.due) {
+        // if set to complete it will be removed from persisted notifcations
+        // the one set for today
+        closedNotifications = closedNotifications.filter(e => e !== md5(dataItem.due.toISOString().slice(0, 10) + dataItem.text)+0);
+        // the one set for tomorrow
+        closedNotifications = closedNotifications.filter(e => e !== md5(dataItem.due.toISOString().slice(0, 10) + dataItem.text)+1);
+        store.set("closedNotifications", closedNotifications);
+      }
     } else if(deleteItem) {
       // Delete item
       items.unfiltered.splice(itemId, 1);
+      if(dataItem.due) {
+        // if deleted it will be removed from persisted notifcations
+        // the one set for today
+        closedNotifications = closedNotifications.filter(e => e !== md5(dataItem.due.toISOString().slice(0, 10) + dataItem.text)+0);
+        // the one set for tomorrow
+        closedNotifications = closedNotifications.filter(e => e !== md5(dataItem.due.toISOString().slice(0, 10) + dataItem.text)+1);
+        store.set("closedNotifications", closedNotifications);
+      }
     }
     //write the data to the file
     fs.writeFileSync(pathToFile, TodoTxt.render(items.unfiltered), {encoding: 'utf-8'});

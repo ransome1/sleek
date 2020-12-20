@@ -23,6 +23,19 @@ input[type="search"]::-webkit-search-cancel-button {
   -webkit-mask-image: url("../svg/times-circle.svg");
   mask-image: url("../svg/times-circle.svg"); }
 
+input {
+  background-color: #2D2E31 !important;
+  color: #CCCDCF !important; }
+
+input:active,
+input:focus,
+input.is-focused {
+  box-shadow: 0 0 0 2px #CCCDCF !important;
+  outline: none; }
+
+input::placeholder {
+  color: #4a4a4a !important; }
+
 nav {
   background-color: #2C2D30; }
   nav ul li.logo {
@@ -165,18 +178,6 @@ nav {
 .toggle .switch input:focus {
   outline: 2px solid #CCCDCF !important; }
 
-#modalForm #modalFormInput {
-  background-color: #2D2E31;
-  color: #CCCDCF; }
-
-#modalForm #modalFormInput:active,
-#modalForm #modalFormInput:focus {
-  box-shadow: 0 0 0 2px #CCCDCF !important;
-  outline: none; }
-
-#modalForm #modalFormInput::placeholder {
-  color: #4a4a4a; }
-
 #modalForm button {
   color: white;
   border-color: #1e2022 !important; }
@@ -200,7 +201,8 @@ nav {
 .dueDate svg,
 .dueDate #dueDatePickerInput,
 .dueDate #dueDatePickerInput::placeholder {
-  color: white; }
+  color: white !important;
+  background: transparent !important; }
 
 .datepicker {
   background: none; }
@@ -222,6 +224,38 @@ nav {
     .datepicker .datepicker-picker .datepicker-cell:hover {
       color: #2D2E31;
       background: #CCCDCF; }
+
+#modalHelp {
+  color: #CCCDCF !important; }
+  #modalHelp input {
+    background-color: #1E2022 !important; }
+  #modalHelp .is-large.delete,
+  #modalHelp .is-large.modal-close,
+  #modalHelp .tag.is-info {
+    background: #CCCDCF !important;
+    color: #2C2D30 !important; }
+  #modalHelp .modal-close::before,
+  #modalHelp .modal-close::after {
+    color: #2C2D30 !important;
+    background: #2C2D30 !important; }
+  #modalHelp .modal-background {
+    background: #2C2D30; }
+  #modalHelp .modal-card,
+  #modalHelp .table {
+    color: #CCCDCF !important; }
+  #modalHelp .title,
+  #modalHelp .table th,
+  #modalHelp a {
+    color: white; }
+  #modalHelp .table tr,
+  #modalHelp .table th {
+    border-color: #3B3B3B; }
+  #modalHelp .tabs ul {
+    border-color: #3B3B3B !important; }
+  #modalHelp .tabs li a {
+    border-color: transparent; }
+  #modalHelp .tabs li.is-active a {
+    border-color: #CCCDCF; }
 
 .contentContainer .title.is-1,
 .contentContainer .subtitle,
