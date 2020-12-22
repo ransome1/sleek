@@ -3,14 +3,14 @@
   <id>com.github.ransome1.sleek</id>
 
   <name>sleek</name>
-  <summary>sleek is a todo app based on the concept of todo.txt</summary>
+  <summary>sleek is an open-source todo app based on the concept of todo.txt</summary>
 
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="0.5.0" date="2020-12-20"/>
+    <release version="0.5.1" date="2020-12-22"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 
@@ -23,7 +23,7 @@
 
   <description>
     <p>
-      sleek is a todo app based on the concept of todo.txt. That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will prioritize them and set due dates. According to this input you will be able to filter and search your todos. There is no cloud integration, but as sleek writes your data to a plain text file, you can put it anywhere you want. That also means if you don't have sleek at hand or if you don't like it anymore you can just edit the todo.txt file with any text editor or other todo.txt application.
+      That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will set priorities and select start and due dates. Based on these simple parameters sleek is able to filter and search your todos or send you notification if one is due. Take a look at sleeks help section to understand how the todo.txt syntax works. Don't worry it's simple. There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere you want. That also means if you don't have sleek at hand or if you don't like it anymore you can just edit the todo.txt file with any text editor or other todo.txt application.
     </p>
   </description>
 

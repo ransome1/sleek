@@ -1,9 +1,9 @@
 [Desktop Entry]
-Version=0.5.0
+Version=0.5.1
 Name=sleek
 Exec=sleek
 Type=Application
 Icon=com.github.ransome1.sleek
 Categories=Office
 Terminal=false
-Comment=sleek is a todo app based on the concept of todo.txt
+Comment=sleek is an open-source todo app based on the concept of todo.txt
