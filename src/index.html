@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>sleek</title>
     <link rel="stylesheet" href="css/style.css">
@@ -16,9 +16,10 @@
             <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li id="navBtnFilter" class="btnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li class="btnOpenTodoFile"><a href="#" tabindex="0"><i class="fas fa-upload"></i></a></li>
-            <li id="navBtnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
+            <li class="btnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
           </ul>
         <ul>
+          <li id="navBtnSettings"><a href="#" tabindex="0"><i class="fas fa-cog"></i></a></li>
           <li id="navBtnHelp"><a href="#" tabindex="0"><i class="fas fa-question-circle"></i></a></li>
         </ul>
           <section id="filterDropdown" class="filterDropdown dropdown" tabindex="0">
@@ -111,20 +112,112 @@
         </div>
       </div>
     </form>
-    <div id="modalHelp" class="modal" tabindex="0">
+    <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           <ul>
-            <li class="tab1 is-active"><a href="#" tabindex="0">Keyboard</a></li>
-            <li class="tab2"><a href="#" tabindex="0">Priorities</a></li>
-            <li class="tab3"><a href="#" tabindex="0">Contexts & projects</a></li>
-            <li class="tab4"><a href="#" tabindex="0">Dates</a></li>
+            <li class="settingsTab1 is-active"><a href="#" tabindex="0">Settings</a></li>
+            <li class="settingsTab2"><a href="#" tabindex="0">About</a></li>
           </ul>
         </div>
-        <section id="tab1" class="modal-card-body is-active">
+        <section id="settingsTab1" class="modal-card-body is-active">
+          <table class="table settings">
+            <tbody>
+              <tr>
+                <td>
+                  <h4 class="title is-4">Notifications</h4>
+                  <p>If enabled sleek will send you notifications for todos that are due today and tomorrow. The app needs to be running for this feature.</p>
+                </td>
+                <td>
+                  <div class="toggle">
+                    <label class="switch">
+                      <input type="checkbox" id="toggleNotifications" tabindex="0">
+                      <span class="slider round"></span>
+                    </label>
+                    <span class="text">Enable</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4 class="title is-4">Dark mode</h4>
+                  <p>If enabled sleek will send you notifications for todos that are due today and tomorrow. The app needs to be running for this feature.</p>
+                </td>
+                <td>
+                  <div class="toggle">
+                    <label class="switch">
+                      <input type="checkbox" id="toggleDarkmode" tabindex="0">
+                      <span class="slider round"></span>
+                    </label>
+                    <span class="text">Enable</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4 class="title is-4">Event tracking</h4>
+                  <p>There is <strong>no tracking in sleek</strong> per default. But if you want to contribute to this project, you can enable this anonymized event tracking. It will track the features you used and send these events using SSL to a private Matomo instance that I host myself. There is no third party provider like Google involved. The data will give me a basic idea on which functions are actually used and which ones don't have a benefit you.</p>
+                </td>
+                <td>
+                  <div class="toggle">
+                    <label class="switch" for="toggleMatomoEvents">
+                      <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
+                      <span class="slider round"></span>
+                    </label>
+                    <span class="text">Enable</span>
+                  </div>
+                </td>
+              </tr>
+            <tbody>
+          </table>
+        </section>
+        <section id="settingsTab2" class="modal-card-body">
+          <h4 class="title is-4">sleek is an open source app</h4>
+          <p>The source code is open and available on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a>. You can help this project by contributing <a href="https://github.com/ransome1/sleek/issues" target="_blank">bug reports, code improvements or even new features</a>. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. It is developed by Robin Ahle. Get in touch with with on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a></p>
+          <h4 class="title is-4">Copyright</h4>
+          <p>sleek is available under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>. See <a href="https://github.com/ransome1/sleek/blob/master/LICENSE" target="_blank">LICENSE</a> for the full license text.</p>
+          <h4 class="title is-4">External libraries</h4>
+          <table class="table">
+            <tbody>
+              <tr>
+                <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
+                <td><a href="https://www.electron.build" target="_blank">Electron builder</a></td>
+                <td><a href="https://github.com/electron/electron-packager" target="_blank">Electron packager</a></td>
+                <td><a href="https://github.com/sindresorhus/electron-util" target="_blank">electron-util</a></td>
+              </tr>
+              <tr>
+                <td><a href="https://bulma.io" target="_blank">Bulma CSS</a></td>
+                <td><a href="https://fontawesome.com" target="_blank">Font Awesome</a></td>
+                <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
+                <td><a href="https://github.com/bryanwoods/autolink-js" target="_blank">autolink-js</a></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
+                <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <button class="modal-close is-large" aria-label="close"></button>
+      </div>
+    </div>
+    <div id="modalHelp" class="modal content" tabindex="0">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <div class="tabs is-centered">
+          <ul>
+            <li class="helpTab1 is-active"><a href="#" tabindex="0">Keyboard</a></li>
+            <li class="helpTab2"><a href="#" tabindex="0">Priorities</a></li>
+            <li class="helpTab3"><a href="#" tabindex="0">Contexts & projects</a></li>
+            <li class="helpTab4"><a href="#" tabindex="0">Dates</a></li>
+          </ul>
+        </div>
+        <section id="helpTab1" class="modal-card-body is-active">
           <h4 class="title is-4">Keyboard shortcuts</h4>
-          <table class="table is-bordered">
+          <table class="table shortcuts">
             <thead>
               <tr>
                 <th>Function</th>
@@ -139,29 +232,34 @@
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
               </tr>
               <tr>
-                <td>Find todo / enter search field</td>
+                <td>Find todo</td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
               </tr>
               <tr>
-                <td>Show or hide completed todos</td>
+                <td>Show/hide completed todos</td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
               </tr>
               <tr>
-                <td>Toggle the dark mode</td>
+                <td>Toggle dark mode</td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
               </tr>
               <tr>
-                <td>Open another todo.txt file</td>
+                <td>Open todo.txt file</td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
+              </tr>
+              <tr>
+                <td>Open settings</td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">,</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">,</span></td>
               </tr>
             </tbod>
           </table>
         </section>
-        <section id="tab2" class="modal-card-body">
+        <section id="helpTab2" class="modal-card-body">
           <h4 class="title is-4">Adding a priority</h4>
           <p>Important todos need to have an important spot on your list. Simply append a "(A)" at the beginning of the todo to achieve this. You're not bound to (A) as everything from A to Z is possible. But only A to C will have a colored bar next to the todo. All other priorities have a neutral grey colored bar attached.</p>
           <input class="input is-focused is-medium" type="text" value="(A) This will create a todo with highest priority" tabindex="-1">
@@ -172,7 +270,7 @@
             </div>
           </div>
         </section>
-        <section id="tab3" class="modal-card-body">
+        <section id="helpTab3" class="modal-card-body">
           <h4 class="title is-4">Adding contexts & projects</h4>
           <p>If you work on projects that consists of several tasks, you can assign these tasks by appending "+" followed by the project name. Contexts define the situation in which this todo is relevant to you. According to David Allen's concept of <a href="https://en.wikipedia.org/wiki/Getting_Things_Done" target="_blank">Getting Things Done</a>, the "context" could be i.e. at home, at work, out shopping, by the phone, at your computer, with a particular person. To add a context just append a "@" plus the context name. For more information on todo.txt <a href="https://github.com/todotxt/todo.txt" target="_blank">click here</a>.</p>
           <p>Neither projects nor context allow the use of spaces, so write them in one word. You can append as many projects and contexts as you wish.</p>
@@ -184,7 +282,7 @@
             </div>
           </div>
         </section>
-        <section id="tab4" class="modal-card-body">
+        <section id="helpTab4" class="modal-card-body">
           <h4 class="title is-4">Adding a start date</h4>
           <p>sleek will add the start date automatically equal to the todos' creation date. If you want to change it you need to look for the first date in your todo right after the priority tag.</p>
           <h4 class="title is-4">Adding a due date</h4>
@@ -197,8 +295,8 @@
             </div>
           </div>
         </section>
+        <button class="modal-close is-large" aria-label="close"></button>
       </div>
-      <button class="modal-close is-large" aria-label="close"></button>
     </div>
     <div id="suggestionContainer" class="filterDropdown card"></div>
     <div id="modalFile" class="modal">
