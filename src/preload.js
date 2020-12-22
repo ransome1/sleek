@@ -1,4 +1,5 @@
 const electron = require("electron");
+const i18next = require('electron-util');
 window.notification = electron.remote.Notification;
 window.dialog = electron.remote.dialog;
 window.theme = electron.remote.nativeTheme;
@@ -8,3 +9,4 @@ window.path = require("path");
 window.Store = require("./configs/store.config.js");
 window.i18next = require('./configs/i18next.config');
 window.fs = require('fs');
+window.is = require("electron-util");

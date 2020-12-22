@@ -42,27 +42,24 @@ a:focus{
 }
 a:hover,
 strong {
-  color: $body-text-color;
+  color: white;
 }
 input {
-  background-color: none;
-  color: $body-text-color;
   border: none!important;
+  background-color: #2D2E31!important;
+  color: $body-text-color!important;
 }
 input[type="search"]::-webkit-search-cancel-button {
   background-color: white;
   -webkit-mask-image: url("../svg/times-circle.svg");
   mask-image: url("../svg/times-circle.svg");
 }
-input {
-  background-color: #2D2E31!important;
-  color: $body-text-color!important;
-}
 input:active,
 input:focus,
-input.is-focused {
+input.is-focused,
+input[type="search"]:focus {
+  outline: none!important;
   box-shadow: 0 0 0 2px $body-text-color!important;
-  outline: none;
 }
 input::placeholder {
     color: #4a4a4a!important;
@@ -93,21 +90,11 @@ nav {
   }
 }
 #todoTable {
-  #todoTableSearch {
-    color: $body-text-color;
-    background-color: #2D2E31;
-  }
-  #todoTableSearch:active,
+  /*#todoTableSearch:active,
   #todoTableSearch:focus {
     box-shadow: 0 0 0 2px $body-text-color!important;
     outline: none;
-  }
-  #todoTableSearch:placeholder {
-      color: #4a4a4a;
-  }
-  #todoTableSearch::placeholder {
-    color: #4a4a4a;
-  }
+  }*/
   .flex-table#previousDataItem.is-highlighted {
     background-color: $darker-grey;
   }
@@ -127,7 +114,13 @@ nav {
       color: #636363!important;
     }
     .flex-row.itemDueDate {
-      opacity: .4;
+      color: #4A4A4A!important;
+    }
+    svg.fa-sort-down {
+      color: #4A4A4A!important;
+    }
+    .flex-row.itemDueDate .tags .tag.is-dark {
+      background: #4A4A4A!important;
     }
   }
   .flex-table:hover .flex-row.todoTableItemMore a {
@@ -240,10 +233,10 @@ nav {
       background-color: #2C2D30 !important;
     }
     input:focus + .slider {
-      box-shadow: 0 0 1px #2C2D30;
+      box-shadow: none;
     }
     input:focus {
-      outline: 2px solid $body-text-color!important;
+      outline: none;
     }
   }
 }
@@ -309,15 +302,15 @@ nav {
     }
   }
 }
-#modalHelp {
+.modal.content {
+  color: $body-text-color!important;
   input {
     background-color: $body-background-color!important;
   }
-  color: $body-text-color!important;
   .is-large.delete,
   .is-large.modal-close,
   .tag.is-info {
-    background: $body-text-color!important;
+    background: white!important;
     color: $nav-background!important;
   }
   .modal-close::before,
@@ -325,29 +318,29 @@ nav {
     color: $nav-background!important;
     background: $nav-background!important;
   }
-  .modal-background {
-    background: $nav-background;
-  }
   .modal-card,
-  .table {
+  table {
+    background: #3B3B3B;
     color: $body-text-color!important;
   }
   .title,
-  .table th,
+  table th,
   a {
     color: white;
   }
-  .table tr,
-  .table th {
-    border-color: #3B3B3B;
+  table tr,
+  table th,
+  table td {
+    border-color: $darker-grey!important;
   }
   .tabs ul {
-    border-color: #3B3B3B!important;
-  }
-  .tabs li a {
     border-color: transparent;
   }
+  .tabs li a {
+    border-color: $darker-grey;
+  }
   .tabs li.is-active a {
+    color: white;
     border-color: $body-text-color;
   }
 }

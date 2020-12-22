@@ -15,9 +15,11 @@ const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const modalBackground = document.querySelectorAll('.modal-background');
 const modal = document.querySelectorAll('.modal');
+const btnTheme = document.querySelectorAll('.btnTheme');
+const modalCards = document.querySelectorAll('.modal-card');
 const modalClose = document.querySelectorAll('.modal-close');
-const helpTabs = document.querySelectorAll('#modalHelp ul li');
-const helpTabsCards = document.querySelectorAll('#modalHelp section');
+const contentTabs = document.querySelectorAll('.modal.content ul li');
+const contentTabsCards = document.querySelectorAll('.modal.content section');
 const a = document.querySelectorAll("a");
 const categories = ["contexts", "projects"];
 const dueDatePickerInput = document.getElementById("dueDatePickerInput");
@@ -35,7 +37,9 @@ const store = new Store({
     categoriesFiltered: new Array,
     closedNotifications: new Array,
     pathToFile: "",
-    theme: ""
+    theme: "",
+    matomoEvents: false,
+    notifcations: true
   }
 });
 const items = {
@@ -59,21 +63,62 @@ let filterContainer = document.getElementById("todoFilters");
 let themeLink = null;
 let selectedTheme = store.get("theme");
 let closedNotifications = store.get("closedNotifications");
+// get the reference for the table containers
+let todoTableContainer = document.getElementById("todoTableContainer");
+let tableContainerDue = document.createDocumentFragment();
+let tableContainerComplete = document.createDocumentFragment();
+let tableContainerDueAndComplete = document.createDocumentFragment();
+let tableContainerNoPriorityNotCompleted = document.createDocumentFragment();
+// fragment is created to append the nodes
+let tableContainerContent = document.createDocumentFragment();
+// build templates for the rows
+let todoTableBodyRowTemplate = document.createElement("div");
+todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
+todoTableBodyRowTemplate.setAttribute("class", "flex-table");
+let todoTableBodyCellCheckboxTemplate  = document.createElement("div");
+todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
+todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
+let todoTableBodyCellTextTemplate = document.createElement("a");
+todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
+todoTableBodyCellTextTemplate.setAttribute("role", "cell");
+todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
+todoTableBodyCellTextTemplate.setAttribute("href", "#");
+todoTableBodyCellTextTemplate.setAttribute("title", i18next.t("editTodo"));
+let tableContainerCategoriesTemplate = document.createElement("span");
+tableContainerCategoriesTemplate.setAttribute("class", "categories");
+let todoTableBodyCellMoreTemplate = document.createElement("div");
+let todoTableBodyCellPriorityTemplate = document.createElement("div");
+todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
+let todoTableBodyCellSpacerTemplate = document.createElement("div");
+todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
+let todoTableBodyCellDueDateTemplate = document.createElement("span");
+todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
+todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
 if(store.get("closedNotifications")) {
   closedNotifications = store.get("closedNotifications")
 } else {
   closedNotifications = [];
 }
+let matomoEvents = store.get("matomoEvents");
+// don't record events when in development
+if (is.development) {
+  matomoEvents = false;
+}
+let notifications = store.get("notifications");
 // ########################################################################################################################
 // INITIAL DOM CONFIGURATION
 // ########################################################################################################################
 dueDatePickerInput.readOnly = true;
 toggleShowCompleted.checked = showCompleted;
+if(selectedTheme=="dark") {
+  toggleDarkmode.checked = true;
+}
+toggleMatomoEvents.checked = matomoEvents;
+toggleNotifications.checked = notifications;
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
 todoTableSearch.placeholder = i18next.t("search");
-navBtnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
 filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
 filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
 selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
@@ -96,6 +141,16 @@ noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
+navBtnHelp.onclick = function () {
+  showContent(modalHelp);
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Help"]);
+}
+navBtnSettings.onclick = function () {
+  showContent(modalSettings);
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
+}
 btnCreateTodoFile.onclick = function () { createFile(true, false) }
 btnItemStatus.onclick = function() {
   completeTodo(dataItem).then(response => {
@@ -105,16 +160,56 @@ btnItemStatus.onclick = function() {
   }).catch(error => {
     console.log(error);
   });
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
 }
-navBtnHelp.onclick = function () { showHelp(); }
 modalFileChoose.onclick = function() { createFile(true, false) }
 modalFileOverwrite.onclick = function() { createFile(false, true) }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
-toggleShowCompleted.onclick = showCompletedTodos;
-filterColumnClose.onclick = function() { showFilters(false) }
-modalFormInputHelp.onclick = function () { showHelp(); }
-navBtnTheme.addEventListener("click", () => {
+toggleShowCompleted.onclick = function() {
+  showCompletedTodos();
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
+}
+toggleMatomoEvents.onclick = function() {
+  matomoEvents = this.checked;
+  store.set('matomoEvents', this.checked);
+  matomoEventsConsent().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting matomoEvents", this.checked])
+}
+toggleNotifications.onclick = function() {
+  notifications = this.checked;
+  store.set('notifications', this.checked);
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Notifications", this.checked])
+}
+toggleDarkmode.onclick = function() {
   switchTheme(true);
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Dark mode", this.checked])
+}
+filterColumnClose.onclick = function() {
+  showFilters(false);
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
+}
+modalFormInputHelp.onclick = function () {
+  showContent(modalHelp);
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Help"]);
+}
+btnTheme.forEach(function(el) {
+  el.setAttribute("title", i18next.t("toggleDarkMode"));
+  el.addEventListener("click", function(el) {
+    switchTheme(true);
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
+  });
 });
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
@@ -129,6 +224,8 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     // if suggestion box was open, it needs to be closed
     suggestionContainer.classList.remove("is-active");
     modalFormInput.focus();
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
   }
 });
 todoTableSearch.addEventListener("input", function () {
@@ -180,57 +277,129 @@ modalFormInput.addEventListener("keyup", e => {
     suggestionContainer.classList.remove("is-active");
   }
 });
-modalBackground.forEach(el => el.onclick = clearModal);
-modalClose.forEach(el => el.addEventListener("click", function(el) {
-  this.parentElement.classList.remove("is-active");
-}));
+modalBackground.forEach(function(el) {
+  el.onclick = function() {
+    //clearModal();
+    el.parentElement.classList.remove("is-active");
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+  }
+});
+modalClose.forEach(function(el) {
+  el.onclick = function() {
+    //clearModal();
+    el.parentElement.parentElement.classList.remove("is-active");
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+  }
+});
 a.forEach(el => el.addEventListener("click", function(el) {
   if(el.target.href && el.target.href === "#") el.preventDefault();
 }));
 btnOpenTodoFile.forEach(function(el) {
   el.setAttribute("title", i18next.t("openFile"));
-  el.onclick = openFile;
+  el.onclick = function () {
+    openFile();
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
+  }
 });
 btnModalCancel.forEach(function(el) {
   el.innerHTML = i18next.t("cancel");
-  el.onclick = clearModal;
+  el.onclick = function() {
+    clearModal();
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
+  }
 });
-btnResetFilters.forEach(el => el.onclick = resetFilters);
+btnResetFilters.forEach(el => el.onclick = function() {
+  resetFilters();
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
+});
 btnFilter.forEach(function(el) {
   el.setAttribute("title", i18next.t("toggleFilter"));
-  el.onclick = function() { showFilters("toggle") };
+  el.onclick = function() {
+    showFilters("toggle");
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
+  };
 });
 btnAddTodo.forEach(function(el) {
+  // title tag for hover
   el.setAttribute("title", i18next.t("addTodo"));
-  el.onclick = showForm;
+  el.onclick = function () {
+    clearModal();
+    showForm(true);
+    // matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
+  }
 });
-helpTabs.forEach(el => el.addEventListener("click", function(el) {
-  helpTabs.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  this.classList.add("is-active");
-  showTab(this.classList[0]);
-}));
+modalFormInput.onfocus = function () {
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Todo input field", "Focused"]);
+};
+todoTableSearch.onfocus = function () {
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Search input field", "Focused"]);
+};
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
 filterDropdown.addEventListener ("keydown", function () {
   if(event.key === 'Escape') showFilters(false);
 });
-modalForm.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') clearModal();
-});
-body.addEventListener ("keydown", function () {
-  if(event.key === "Escape") {
-    todoTableSearch.blur();
-    clearModal();
-    modalHelp.classList.remove("is-active")
+modal.forEach(el => el.addEventListener("keydown", function(el) {
+  if(event.key === 'Escape') {
+    this.classList.remove("is-active");
+    suggestionContainer.classList.remove("is-active");
   }
+}));
+suggestionContainer.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') this.classList.remove("is-active");
 });
+// ########################################################################################################################
+// CONTENT CONTAINER
+// ########################################################################################################################
+contentTabs.forEach(el => el.addEventListener("click", function(el) {
+  contentTabs.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  this.classList.add("is-active");
+  showTab(this.classList[0]);
+  // matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
+}));
+function showContent(section) {
+  contentTabs.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  contentTabsCards.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  let firstTab = section.querySelector(".tabs");
+  firstTab.firstElementChild.firstElementChild.classList.add("is-active");
+  let firstSection = section.querySelector("section");
+  firstSection.classList.add("is-active");
+  section.classList.add("is-active");
+  section.focus();
+}
+function showTab(tab) {
+  contentTabsCards.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  document.getElementById(tab).classList.add("is-active");
+}
 // ########################################################################################################################
 // START
 // ########################################################################################################################
 window.onload = function () {
+  // On app load only call matomo function if opt in is set
+  matomoEventsConsent().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
   // set theme
   if(selectedTheme) switchTheme(false)
   // only start if a file has been selected
@@ -247,6 +416,7 @@ window.onload = function () {
     // show onboarding if no file has been selected
     showOnboarding(true);
   }
+
 }
 window.onresize = function() {
   let width = this.outerWidth;
@@ -279,67 +449,98 @@ Date.prototype.isPast = function () {
   this.getMonth() === today.getMonth() &&
   this.getFullYear() === today.getFullYear();
 };
-function showNotification(todo, offset) {
-  // check for necessary permissions
-  navigator.permissions.query({name: 'notifications'}).then(function(result) {
-    // abort if user didn't permit notifications
-    if(!result) return false;
-    // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
-    const hash = md5(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
-    switch (offset) {
-      case 0:
-        title = "due today";
-        break;
-      case 1:
-        title = "due tomorrow";
-        break;
+function matomoEventsConsent() {
+  try {
+    var _paq = window._paq = window._paq || [];
+    if(matomoEvents) {
+      // user has given consent to process their data
+      _paq.push(['setConsentGiven']);
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['requireConsent']);
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="https://www.robbfolio.de/matomo/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '3']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+      return Promise.resolve("Info: Consent given, Matomo enabled");
+    } else {
+      // revoke matomoEvents consent
+      _paq.push(['forgetConsentGiven']);
+      return Promise.resolve("Info: No consent given, Matomo disabled");
     }
-    // if notification already has been triggered once it will be discarded
-    if(closedNotifications.includes(hash)) return false
-    // set options for notifcation
-    const newNotification = new notification({
-      title: title,
-      body: todo.text,
-      silent: false,
-      icon: path.join(__dirname, '../assets/icons/icon.png'),
-      hasReply: false,
-      timeoutType: 'never',
-      urgency: 'critical',
-      closeButtonText: 'Close',
-      actions: [ {
-        type: 'button',
-        text: 'Show Button'
-      }]
-    });
-    // send it to UI
-    newNotification.show();
-    // once shown, it will be persisted as hash to it won't be shown a second time
-    closedNotifications.push(hash);
-    store.set("closedNotifications", closedNotifications);
-    // click on button in notification
-    newNotification.addListener('click', () => {
-      app.focus();
-      // if another modal was open it needs to be closed first
-      clearModal();
-      // prrepare the value for the modal
-      dataItem = todo.toString();
-      //load modal
-      showForm(true);
-    },{
-      // remove event listener after it is clicked once
-      once: true
-    });
-  });
+  } catch(error) {
+    return Promise.reject("Error in matomoEventsConsent(): " + error);
+  }
 }
-function showHelp() {
-  modalHelp.classList.add("is-active");
-  modalHelp.focus();
+function sortItems(items) {
+  // first step of sorting items: the youngest to the top
+  items.sort((a, b) => b.date - a.date);
+  // array is sorted so the due date is desc
+  items.sort((a, b) => a.due - b.due);
+  return;
 }
-function showTab(tab) {
-  helpTabsCards.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  document.getElementById(tab).classList.add("is-active");
+function showNotification(todo, offset) {
+  try {
+    // abort if user didn't permit notifications within sleek
+    if(!notifications) return Promise.reject("Info: Notification surpressed (turned off in sleek's settings)");
+    // check for necessary permissions
+    return navigator.permissions.query({name: 'notifications'}).then(function(result) {
+      // abort if user didn't permit notifications
+      if(result.state!="granted") return Promise.reject("Info: Notification surpressed (not permitted by OS)");
+      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
+      const hash = md5(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
+      switch (offset) {
+        case 0:
+          title = "due today";
+          break;
+        case 1:
+          title = "due tomorrow";
+          break;
+      }
+      // if notification already has been triggered once it will be discarded
+      if(closedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+      // set options for notifcation
+      const newNotification = new notification({
+        title: title,
+        body: todo.text,
+        silent: false,
+        icon: path.join(__dirname, '../assets/icons/icon.png'),
+        hasReply: false,
+        timeoutType: 'never',
+        urgency: 'critical',
+        closeButtonText: 'Close',
+        actions: [ {
+          type: 'button',
+          text: 'Show Button'
+        }]
+      });
+      // send it to UI
+      newNotification.show();
+      // once shown, it will be persisted as hash to it won't be shown a second time
+      closedNotifications.push(hash);
+      store.set("closedNotifications", closedNotifications);
+      // click on button in notification
+      newNotification.addListener('click', () => {
+        app.focus();
+        // if another modal was open it needs to be closed first
+        clearModal();
+        // prrepare the value for the modal
+        dataItem = todo.toString();
+        //load modal
+        showForm(true);
+      },{
+        // remove event listener after it is clicked once
+        once: true
+      });
+      return Promise.resolve("Info: Notification successfully sent");
+    });
+  } catch(error) {
+    return Promise.reject("Error in showNotification(): " + error);
+  }
 }
 function switchTheme(toggle) {
   if(selectedTheme && !toggle) {
@@ -347,8 +548,10 @@ function switchTheme(toggle) {
   } else if (toggle) {
     if(theme.themeSource=="dark") {
       theme.themeSource = "light";
+      toggleDarkmode.checked = false;
     } else {
       theme.themeSource = "dark";
+      toggleDarkmode.checked = true;
     }
     selectedTheme=theme.themeSource;
   }
@@ -456,6 +659,10 @@ function showMore(variable) {
 function showForm(variable) {
   try {
     if(variable) {
+      // in case a content window was open, it will be closed
+      modal.forEach(function(el) {
+        el.classList.remove("is-active");
+      });
       // in case the more toggle menu is open we close it
       showMore(false);
       // set global variable if the modal is opening
@@ -518,14 +725,14 @@ function showOnboarding(variable) {
   if(variable) {
     console.log("Info: Starting onboarding");
     onboardingContainer.classList.add("is-active");
-    btnAddTodo.forEach(item => item.classList.remove("is-active"));
-    navBtnFilter.classList.remove("is-active");
+    btnAddTodo.forEach(item => item.classList.add("is-hidden"));
+    navBtnFilter.classList.add("is-hidden");
     todoTable.classList.remove("is-active");
   } else {
     console.log("Info: Ending onboarding");
     onboardingContainer.classList.remove("is-active");
-    btnAddTodo.forEach(item => item.classList.add("is-active"));
-    navBtnFilter.classList.add("is-active");
+    btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
+    navBtnFilter.classList.remove("is-hidden");
     todoTable.classList.add("is-active");
   }
 }
@@ -760,10 +967,6 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      // TODO: what does the first condition do?
-      /*if(items.length==0 || typeAheadCategory) {
-        items = items.unfiltered;
-      }*/
       items.unfiltered.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
@@ -888,6 +1091,8 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
         }).catch(error => {
           console.log(error);
         });
+        // matomo event
+        if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on headline", category])
       });
       // TODO clean up. this is a duplicate, see above
       if(categoriesFiltered.includes(category)) {
@@ -960,6 +1165,8 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           }).catch(error => {
             console.log(error);
           });
+          // matomo event
+          if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
         });
       } else {
         // add filter to input
@@ -978,6 +1185,8 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           modalFormInput.focus();
           //
           suggestionContainer.classList.remove("is-active");
+          // matomo event
+          if(matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
       }
       //console.log(selectedFilters);
@@ -1002,7 +1211,7 @@ function generateTodoData(searchString) {
     if(items.unfiltered.length==0) return Promise.resolve("Info: Won't build anything as there is no data so far");
     // items variable to work with from here on
     items.filtered = items.unfiltered;
-    // filter items according to showCompleted setting
+    // if set: remove all completed todos
     if(showCompleted==false) {
       items.filtered = items.filtered.filter(function(item) {
         return item.complete === false;
@@ -1034,7 +1243,7 @@ function generateTodoData(searchString) {
     }).catch(error => {
       console.log(error);
     });
-    // if there is at least 1 category to hide
+    // exclude all filters of a category if set
     if(categoriesFiltered.length > 0) {
       categoriesFiltered.forEach(category => {
         // we create a new array where the items attrbite has no values
@@ -1043,7 +1252,7 @@ function generateTodoData(searchString) {
         });
       });
     }
-    // if there is a search input detected
+    // if search input is detected
     if(searchString) {
       // convert everything to lowercase for better search results
       items.filtered = items.filtered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
@@ -1067,32 +1276,28 @@ function generateTodoData(searchString) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
     }
+    // sort items according to todo.txt logic
+    sortItems(items.filtered);
     // produce an object where priority a to z + null is key
     items.grouped = items.filtered.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
      return r;
     }, {});
+    // show the table in case it was hidden
     todoTable.classList.add("is-active");
-    // get the reference for the table container
-    let todoTableContainer = document.getElementById("todoTableContainer");
-    // empty the table before reading fresh data
+    // empty the table containers before reading fresh data
     todoTableContainer.innerHTML = "";
-    // fragment is created to append the nodes
-    let tableContainerContent = document.createDocumentFragment();
-    // object is converted to an array
+    tableContainerDue.innerHTML = "";
+    tableContainerComplete.innerHTML = "";
+    tableContainerDueAndComplete.innerHTML = "";
+    tableContainerNoPriorityNotCompleted.innerHTML = "";
+    // object is converted to a sorted array
     items.grouped = Object.entries(items.grouped).sort();
     // each priority group -> A to Z plus null for all todos with no priority
     for (let priority in items.grouped) {
-      let itemsDue = new Array;
-      let itemsRest = new Array;
-      let itemsDueComplete = new Array;
-      let itemsComplete = new Array;
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
-      if(items.grouped[priority][0]!="null") {
-        let divider = document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.grouped[priority][0] + "</div></div>");
-        tableContainerContent.appendChild(divider);
-      }
+      if(items.grouped[priority][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.grouped[priority][0] + "</div></div>"))
       // TODO: that's ugly, refine this
       for (let item in items.grouped[priority][1]) {
         let todo = items.grouped[priority][1][item];
@@ -1100,48 +1305,39 @@ function generateTodoData(searchString) {
         // incompleted todos with due date
         if (todo.due && !todo.complete) {
           // create notification
-
-          if(todo.due.isToday()) showNotification(todo, 0)
-          if(todo.due.isTomorrow()) showNotification(todo, 1)
-
-          itemsDue.push(todo);
+          if(todo.due.isToday()) {
+            showNotification(todo, 0).then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+          } else if(todo.due.isTomorrow()) {
+            showNotification(todo, 1).then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+          }
+          tableContainerDue.appendChild(createTableRow(todo));
         // incompleted todos with no due date
         } else if(!todo.due && !todo.complete) {
-          itemsRest.push(todo);
+          tableContainerNoPriorityNotCompleted.appendChild(createTableRow(todo));
         // completed todos with due date
         } else if(todo.due && todo.complete) {
-          itemsDueComplete.push(todo);
+          tableContainerDueAndComplete.appendChild(createTableRow(todo));
         // completed todos with no due date
         } else if(!todo.due && todo.complete) {
-          itemsComplete.push(todo);
+          tableContainerComplete.appendChild(createTableRow(todo));
         }
       }
-
-      // array is sorted so the due date is desc
-      itemsDue.sort((a, b) => a.due - b.due);
-      // all rows for the items with due date within the priority group are being build
-      itemsDue.forEach(item => {
-        tableContainerContent.appendChild(createTableRow(item));
-      });
-      // all rows for the items with no due date within the priority group are being build
-      itemsRest.forEach(item => {
-        tableContainerContent.appendChild(createTableRow(item));
-      });
-      // array is sorted so the due date is desc
-      itemsDueComplete.sort((a, b) => a.due - b.due);
-      // all rows for the items with due date within the priority group are being build
-      itemsDueComplete.forEach(item => {
-        tableContainerContent.appendChild(createTableRow(item));
-      });
-      // all rows for the items with no due date within the priority group are being build
-      itemsComplete.forEach(item => {
-        tableContainerContent.appendChild(createTableRow(item));
-      });
-
+      // append items to priority group
+      tableContainerContent.appendChild(tableContainerDue);
+      tableContainerContent.appendChild(tableContainerNoPriorityNotCompleted);
+      tableContainerContent.appendChild(tableContainerDueAndComplete);
+      tableContainerContent.appendChild(tableContainerComplete);
     }
-    // append the table to the wrapper
+    // append all generated groups to the main container
     todoTableContainer.appendChild(tableContainerContent);
-
     // jump to previously edited or added item
     if (document.getElementById("previousDataItem")) {
       // scroll to view
@@ -1154,7 +1350,6 @@ function generateTodoData(searchString) {
       // empty previous item it is not needed after highlighting once
       previousDataItem = "";
     }
-
     return Promise.resolve("Success: Todo data generated and table built");
   } catch(error) {
     return Promise.reject("Error in generateTodoData: " + error);
@@ -1162,35 +1357,19 @@ function generateTodoData(searchString) {
 }
 function createTableRow(item) {
   try {
-    // build the items for one row
-    let todoTableBodyRow = document.createElement("div");
-    todoTableBodyRow.setAttribute("role", "rowgroup");
-    todoTableBodyRow.setAttribute("class", "flex-table");
+    let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
+    let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);
+    let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
+    let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
+    let todoTableBodyCellMore = todoTableBodyCellMoreTemplate.cloneNode(true);
+    let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
+    let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
+    let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
     // if new item was saved, row is being marked
     if(item.toString()==previousDataItem.toString()) {
       todoTableBodyRow.setAttribute("id", "previousDataItem");
       previousDataItem = "";
     }
-    let todoTableBodyCellCheckbox = document.createElement("div");
-    todoTableBodyCellCheckbox.setAttribute("class", "flex-row checkbox");
-    todoTableBodyCellCheckbox.setAttribute("role", "cell");
-    let todoTableBodyCellText = document.createElement("a");
-    todoTableBodyCellText.setAttribute("class", "flex-row text");
-    todoTableBodyCellText.setAttribute("role", "cell");
-    todoTableBodyCellText.setAttribute("tabindex", 0);
-    todoTableBodyCellText.setAttribute("href", "#");
-    todoTableBodyCellText.setAttribute("title", i18next.t("editTodo"));
-    //todoTableBodyCellText.setAttribute("tabindex", 300);
-    let tableContainerCategories = document.createElement("span");
-    tableContainerCategories.setAttribute("class", "categories");
-    let todoTableBodyCellMore = document.createElement("div");
-    let todoTableBodyCellPriority = document.createElement("div");
-    todoTableBodyCellPriority.setAttribute("role", "cell");
-    let todoTableBodyCellSpacer = document.createElement("div");
-    todoTableBodyCellSpacer.setAttribute("role", "cell");
-    let todoTableBodyCellDueDate = document.createElement("span");
-    todoTableBodyCellDueDate.setAttribute("class", "flex-row itemDueDate");
-    todoTableBodyCellDueDate.setAttribute("role", "cell");
     // start with the individual config of the items
     if(item.complete==true) {
       todoTableBodyRow.setAttribute("class", "flex-table completed");
@@ -1216,12 +1395,14 @@ function createTableRow(item) {
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
       // passing the data-item attribute of the parent tag to complete function
-        completeTodo(this.parentElement.getAttribute('data-item'), false).then(response => {
+      completeTodo(this.parentElement.getAttribute('data-item'), false).then(response => {
         modalForm.classList.remove("is-active");
         console.log(response);
       }).catch(error => {
         console.log(error);
       });
+      // matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
     }
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
     // creates cell for the text
@@ -1240,6 +1421,8 @@ function createTableRow(item) {
         // declaring the item-data value global so other functions can access it
         dataItem = this.parentElement.getAttribute('data-item');
         showForm(dataItem);
+        // matomo event
+        if(matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on todo"]);
       }
     }
     // cell for the categories
@@ -1292,10 +1475,14 @@ function createTableRow(item) {
         });
         // if this element was hidden before, we will show it now
         this.parentElement.parentElement.classList.add("is-active");
+        // matomo event
+        if(matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
         // click on edit
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.onclick = function() {
           dataItem = todoTableBodyCellText.parentElement.getAttribute('data-item');
           showForm(dataItem);
+          // matomo event
+          if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
         }
         // click on delete
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.onclick = function() {
@@ -1305,6 +1492,8 @@ function createTableRow(item) {
           }).catch(error => {
             console.log(error);
           });
+          // matomo event
+          if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
         }
       }
     }
@@ -1346,6 +1535,8 @@ function submitForm() {
       }
       //write the data to the file
       fs.writeFileSync(pathToFile, TodoTxt.render(items.unfiltered), {encoding: 'utf-8'});
+      // matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
       // save the previously saved dataItem for further use
       previousDataItem = dataItem;
       dataItem = null;

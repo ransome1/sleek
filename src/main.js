@@ -49,13 +49,13 @@ const createWindow = () => {
     require("electron").shell.openExternal(url);
   });
 
-  // every 60 seconds sleek will reparse the data if app is not focused
+  // every 10 minutes sleek will reparse the data if app is not focused
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
     if(!mainWindow.isFocused()) {
       mainWindow.webContents.executeJavaScript("parseDataFromFile()");
     }
-  }, 120000);
+  }, 600000);
 
   // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
   // Modules to create application menu
@@ -87,6 +87,17 @@ const createWindow = () => {
           label: i18next.t("close")
         }
       ]
+    },
+    {
+      label: i18next.t("edit"),
+      submenu: [
+      {
+        label: i18next.t("settings"),
+        accelerator: "CmdOrCtrl+,",
+        click: function () {
+          mainWindow.webContents.executeJavaScript("showContent(modalSettings)");
+        }
+      }]
     },
     {
       label: i18next.t("todos"),
@@ -135,8 +146,8 @@ const createWindow = () => {
       submenu: [
         {
           label: i18next.t("help"),
-          click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("showHelp()");
+          click: function () {
+            mainWindow.webContents.executeJavaScript("showContent(modalHelp)");
           }
         },
         {

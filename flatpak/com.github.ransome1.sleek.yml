@@ -12,6 +12,7 @@ finish-args:
   - --share=network
   - --device=dri
   - --filesystem=home
+  - --talk-name=org.freedesktop.Notifications
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.node14
 modules:

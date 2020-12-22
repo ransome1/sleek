@@ -14,7 +14,7 @@ html {
   height: 100%;
 }
 body {
-  font-family: "FreeSansBold";
+  font-family: "FreeSans";
   height: 100%;
   margin: auto;
   -webkit-user-select: none;
@@ -65,8 +65,10 @@ input[type="search"]:focus {
   box-shadow: 0 0 0 2px $has-text-link!important;
   outline: none;
 }
-.title {
+.title,
+strong {
   font-family: "FreeSansBold";
+  font-weight: normal!important;
 }
 
 /* ONBOARDING */
@@ -176,11 +178,11 @@ nav {
     }
     li.btnAddTodo,
     li#navBtnFilter {
-      display: none;
-    }
-    li.btnAddTodo.is-active,
-    li#navBtnFilter.is-active {
       display: block;
+    }
+    li.btnAddTodo.is-hidden,
+    li#navBtnFilter.is-hidden {
+      display: none;
     }
     li.logo {
       background: $darker-grey;
@@ -368,7 +370,7 @@ nav {
       background: $dark-grey;
       color: white;
     }
-    .flex-row.itemDueDate.due {
+    .flex-row.itemDueDate.isPast {
       color: $dark-grey;
       .tags {
         .is-dark {
@@ -568,7 +570,7 @@ nav {
      box-shadow: 0 0 1px $darker-grey;
     }
     input:focus {
-      outline: 2px solid $has-text-link;
+      outline: none;
     }
     input:checked + .slider:before {
      -webkit-transform: translateX(25px);
@@ -629,7 +631,7 @@ nav {
     display: block;
   }
   .field {
-    margin: .75em 0;
+    margin: .75em 0 0 0;
   }
   #btnItemStatus {
     display: none;
@@ -671,48 +673,12 @@ nav {
 
 /* MODAL HELP */
 
-#modalHelp {
-  justify-content: normal;
-  padding-top: 2em;
+.modal.content {
   z-index: 55;
-  .is-large.delete, .is-large.modal-close {
-    background: $has-text-link!important;
-    color: $has-text-link!important;
-    z-index: 60;
-  }
-  .modal-card {
-    height: 100%!important;
-    z-index: 60;
-  }
-  .table {
-    width: 100%;
-    background: none;
-  }
-  .table td {
-    vertical-align: middle;
-    border: none;
-  }
-  .table th {
-    font-family: "FreeSansBold";
-  }
-  .table tr, th {
-    font-family: "FreeSans";
-    border: none;
-    border-bottom: solid 1px $dark-grey;
-  }
-  .table tr:last-child {
-    border: none;
-  }
-  .modal-background {
-    background: $mid-grey;
-    z-index: 55;
-  }
-  .modal-card-body {
-    background: none;
-    display: none;
-  }
-  .modal-card-body.is-active {
-    display: block;
+  margin: 0!important;
+  .title.is-4 {
+    font-size: 1.2em;
+    margin:1em 0 0.5em 0;
   }
   p {
     display: block;
@@ -723,12 +689,96 @@ nav {
     margin: 0 auto;
     display: block;
   }
+  ul {
+    margin-left: 0;
+    border: none;
+  }
+  .is-large.delete,
+  .is-large.modal-close {
+    background: $has-text-link!important;
+    color: $has-text-link!important;
+    z-index: 60;
+    position: absolute!important;
+  }
+  .modal-card {
+    height: auto;
+    z-index: 60;
+    position: relative;
+    background: $mid-grey;
+    padding: 2em;
+  }
+  .modal-background {
+    z-index: 55;
+  }
+  .modal-card-body {
+    background: none;
+    display: none;
+    ul {
+
+    }
+    ul li a {
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      background: none;
+    }
+    table th {
+      font-family: "FreeSansBold";
+    }
+    table td {
+      padding-left: 0;
+      border-bottom: solid 1px $dark-grey;
+    }
+    table a {
+      text-decoration: underline;
+    }
+    table.settings tr {
+      border: none;
+    }
+    table.settings tr td {
+      vertical-align: top;
+      border: none;
+      .toggle {
+        margin-top: 3em;
+      }
+    }
+    table.settings tr td:first-child {
+      width: 75%;
+      padding-right: 3em;
+    }
+    table.shortcuts td {
+      vertical-align: middle;
+      border: none;
+    }
+    table.shortcuts tr, th {
+      font-family: "FreeSans";
+      border: none;
+      border-bottom: solid 1px $dark-grey;
+    }
+    table.shortcuts tr:last-child {
+      border: none;
+    }
+  }
+  .modal-card-body.is-active {
+    display: block;
+  }
   .arrow {
     text-align:center;
     margin: 1em 0;
   }
   .card {
     display: block; margin: 0 auto;
+  }
+  .tabs {
+    margin-bottom: 0;
+  }
+  .tabs li a {
+    border-width: 2px;
+    margin-bottom: 0;
+  }
+  .toggle {
+    padding: .5em 0;
   }
 }
 
@@ -742,7 +792,7 @@ nav {
   #dueDatePickerInput::placeholder {
     width: auto;
     font-size: 1em;
-    color: #3273dc;
+    color: $has-text-link;
     box-shadow: none;
     cursor: pointer;
     background: none;
@@ -759,25 +809,6 @@ nav {
       border-color: transparent;
       color: $has-text-link;
     }
-  }
-}
-
-/* LOADING INDICATOR */
-
-#loadingIndicator {
-  text-align: center;
-  z-index: 70;
-  .modal-background {
-    background: white;
-    opacity: .35;
-  }
-  p {
-    margin: .5em 0;
-  }
-  svg,
-  .fa-spinner {
-    width: 2em;
-    height: 2em;
   }
 }
 
