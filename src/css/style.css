@@ -314,15 +314,17 @@ nav {
   #todoTable .flex-table.completed .flex-row span.tag.contexts {
     background: #ccc;
     color: white; }
-  #todoTable .flex-table.completed .flex-row.itemDueDate.isPast {
+  #todoTable .flex-table.completed .flex-row.itemDueDate.isPast,
+  #todoTable .flex-table.completed .flex-row.itemDueDate.isToday,
+  #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow {
     color: #ccc; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isPast .tags .is-dark {
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isPast .tags .is-dark,
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isToday .tags .is-dark,
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow .tags .is-dark {
       background: #ccc; }
-  #todoTable .flex-table.completed .flex-row.itemDueDate {
-    color: #ccc; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate .tags .is-dark {
-      background: #ccc; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate svg.fa-sort-down {
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isPast svg.fa-sort-down,
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isToday svg.fa-sort-down,
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow svg.fa-sort-down {
       color: #ccc; }
   #todoTable .flex-table .flex-row {
     padding: .75rem 0;
@@ -563,11 +565,12 @@ nav {
     z-index: 60;
     position: absolute !important; }
   .modal.content .modal-card {
+    width: 900px !important;
     height: auto;
     z-index: 60;
-    position: relative;
     background: #ebebeb;
-    padding: 2em; }
+    padding: 2em;
+    border-radius: 0.25rem; }
   .modal.content .modal-background {
     z-index: 55; }
   .modal.content .modal-card-body {
@@ -646,6 +649,8 @@ nav {
 
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
+  .modal.content .modal-card {
+    width: 90% !important; }
   nav ul {
     width: 3.5em;
     height: 100%; }
@@ -661,13 +666,13 @@ nav {
   .filterDropdown {
     width: 29em;
     padding: 0 1.5em !important; }
+    .filterDropdown .toggle {
+      margin: 0 !important;
+      padding: 1.5em 0.5em 1em 0 !important; }
   #suggestionContainer.filterDropdown {
     padding: 0 !important; }
   #todoTable {
-    padding: 1.5em; }
-  .toggle {
-    margin: 0 !important;
-    padding: 1.5em 0.5em 1em 0 !important; } }
+    padding: 1.5em; } }
 
 /*! bulma.io v0.9.1 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
@@ -4060,7 +4065,7 @@ button.dropdown-item {
     display: flex; }
 
 .modal-background {
-  background-color: rgba(0, 0, 0, 0.15); }
+  background-color: rgba(0, 0, 0, 0.25); }
 
 .modal-content,
 .modal-card {
@@ -4074,7 +4079,7 @@ button.dropdown-item {
     .modal-card {
       margin: 0 auto;
       max-height: calc(100vh - 40px);
-      width: 768px; } }
+      width: 800px; } }
 
 .modal-close {
   background: none;

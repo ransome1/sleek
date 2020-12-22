@@ -370,15 +370,9 @@ nav {
       background: $dark-grey;
       color: white;
     }
-    .flex-row.itemDueDate.isPast {
-      color: $dark-grey;
-      .tags {
-        .is-dark {
-          background: $dark-grey;
-        }
-      }
-    }
-    .flex-row.itemDueDate {
+    .flex-row.itemDueDate.isPast,
+    .flex-row.itemDueDate.isToday,
+    .flex-row.itemDueDate.isTomorrow {
       color: $dark-grey;
       .tags {
         .is-dark {
@@ -701,11 +695,12 @@ nav {
     position: absolute!important;
   }
   .modal-card {
+    width: 900px!important;
     height: auto;
     z-index: 60;
-    position: relative;
     background: $mid-grey;
     padding: 2em;
+    border-radius: 0.25rem;
   }
   .modal-background {
     z-index: 55;
@@ -815,6 +810,11 @@ nav {
 /* MEDIA QUERIES */
 
 @media (max-width: 992px) {
+  .modal.content {
+    .modal-card {
+      width: 90%!important;
+    }
+  }
   nav ul {
     width: 3.5em;
     height: 100%;
@@ -833,6 +833,10 @@ nav {
   .filterDropdown {
     width: 29em;
     padding: 0 1.5em!important;
+    .toggle {
+      margin: 0!important;
+      padding: 1.5em .5em 1em 0!important;
+    }
   }
   #suggestionContainer.filterDropdown {
     padding: 0!important;
@@ -840,11 +844,6 @@ nav {
   #todoTable {
     padding: 1.5em;
   }
-  .toggle {
-    margin: 0!important;
-    padding: 1.5em .5em 1em 0!important;
-  }
 }
-
 @import "../css/datepicker.css";
 @import "../../node_modules/bulma/bulma.sass";

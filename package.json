@@ -19,6 +19,15 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
+    "files": [
+      "!snap${/*}",
+      "!flatpak${/*}",
+      "!.git${/*}",
+      "!**.pfx",
+      "!**.bak",
+      "!**.md",
+      "!assets/screenshots${/*}"
+    ],
     "appId": "RobinAhle.sleektodomanager",
     "linux": {
       "icon": "assets/icons/512x512.png",
@@ -38,7 +47,7 @@
     },
     "win": {
       "target": [
-        "portablenpm "
+        "portable"
       ],
       "icon": "assets/icons/sleek.ico",
       "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"

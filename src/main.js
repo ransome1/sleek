@@ -6,7 +6,7 @@ const Store = require("./configs/store.config.js");
 const i18next = require("./configs/i18next.config");
 let mainWindow; //do this so that the window object doesn"t get GC"d
 
-console.log("DARK MODE ON?: " + nativeTheme.shouldUseDarkColors);
+//console.log("DARK MODE ON?: " + nativeTheme.shouldUseDarkColors);
 
 const store = new Store({
   configName: "user-preferences",
