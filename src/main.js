@@ -1,19 +1,18 @@
-const { app, BrowserWindow, nativeTheme, electron } = require("electron");
+const { app, BrowserWindow, nativeTheme, electron, ipcMain } = require("electron");
 const { is } = require("electron-util");
+const fs = require("fs");
 const path = require("path");
 const isMac = process.platform === "darwin";
 const Store = require("./configs/store.config.js");
-const i18next = require("./configs/i18next.config");
-let mainWindow; //do this so that the window object doesn"t get GC"d
-
-//console.log("DARK MODE ON?: " + nativeTheme.shouldUseDarkColors);
-
 const store = new Store({
   configName: "user-preferences",
   defaults: {
-    windowBounds: { width: 1025, height: 768 }
+    windowBounds: { width: 1025, height: 768 },
   }
 });
+const i18next = require("i18next");
+const i18nextBackend = require("i18next-fs-backend");
+const i18nextOptions = require('./configs/i18next.config');
 const createWindow = () => {
   let { width, height } = store.get("windowBounds");
   const mainWindow = new BrowserWindow(
@@ -38,6 +37,7 @@ const createWindow = () => {
   } else {
     mainWindow.setIcon(path.join(__dirname, "../assets/icons/512x512.png"));
   }
+
   if (is.development) {
     mainWindow.webContents.openDevTools();
   }
@@ -48,15 +48,13 @@ const createWindow = () => {
     e.preventDefault();
     require("electron").shell.openExternal(url);
   });
-
   // every 10 minutes sleek will reparse the data if app is not focused
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
     if(!mainWindow.isFocused()) {
       mainWindow.webContents.executeJavaScript("parseDataFromFile()");
     }
-  }, 600000);
-
+  }, 120000);
   // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
   // Modules to create application menu
   const Menu = require("electron").Menu;
@@ -125,7 +123,7 @@ const createWindow = () => {
           label: i18next.t("toggleDarkMode"),
           accelerator: "CmdOrCtrl+d",
           click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("switchTheme(\"dark\")");
+            mainWindow.webContents.executeJavaScript("setTheme(true)");
           }
         },
         {
@@ -164,11 +162,16 @@ const createWindow = () => {
   // Set menu to menuTemplate
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 };
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
+  switchLanguage().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  console.log(nativeTheme.shouldUseDarkColors);
   createWindow();
   if (process.platform === 'win32') {
     app.setAppUserModelId("RobinAhle.sleektodomanager");
@@ -190,3 +193,25 @@ app.on("activate", () => {
   }
   app.show();
 });
+ipcMain.on('synchronous-message', (event, arg) => {
+  if(arg=="restart") {
+    app.relaunch();
+    app.exit();
+  }
+});
+function switchLanguage() {
+  if (store.get("language")) {
+    var language = store.get("language");
+  } else {
+    var language = app.getLocale();
+  }
+  i18next
+  .use(i18nextBackend)
+  .init(i18nextOptions);
+  i18next.changeLanguage(language, (error) => {
+    if (error) return console.log("Error in i18next.changeLanguage():", error);
+    //t('key'); // -> same as i18next.t
+    //Promise.resolve("Success: Language succuessfully set to " + language);
+  });
+  return Promise.resolve("Success: Language succuessfully set to " + language);
+}

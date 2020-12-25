@@ -44,7 +44,8 @@ a:hover,
 strong {
   color: white;
 }
-input {
+input,
+select {
   border: none!important;
   background-color: #2D2E31!important;
   color: $body-text-color!important;
@@ -57,6 +58,7 @@ input[type="search"]::-webkit-search-cancel-button {
 input:active,
 input:focus,
 input.is-focused,
+select:focus,
 input[type="search"]:focus {
   outline: none!important;
   box-shadow: 0 0 0 2px $body-text-color!important;
@@ -306,6 +308,14 @@ nav {
   color: $body-text-color!important;
   input {
     background-color: $body-background-color!important;
+  }
+  select {
+    background-color: $body-background-color!important;
+    color: inherit;
+    border: none;
+  }
+  .select:not(.is-multiple):not(.is-loading)::after {
+    border-color: white!important;
   }
   .is-large.delete,
   .is-large.modal-close,

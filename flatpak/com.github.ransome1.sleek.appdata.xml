@@ -3,14 +3,14 @@
   <id>com.github.ransome1.sleek</id>
 
   <name>sleek</name>
-  <summary>sleek is an open-source todo app based on the concept of todo.txt</summary>
+  <summary>sleek is a todo app based on todo.txt, free and open-source</summary>
 
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="0.5.1" date="2020-12-22"/>
+    <release version="0.5.2" date="2020-12-25"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 
@@ -22,9 +22,53 @@
   </recommends>
 
   <description>
-    <p>
-      That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will set priorities and select start and due dates. Based on these simple parameters sleek is able to filter and search your todos or send you notification if one is due. Take a look at sleeks help section to understand how the todo.txt syntax works. Don't worry it's simple. There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere you want. That also means if you don't have sleek at hand or if you don't like it anymore you can just edit the todo.txt file with any text editor or other todo.txt application.
-    </p>
+    <p>sleek offers a clean and simple interface that can be used with mouse and keyboard, touch devices or keyboard only. You will use an easy to understand but powerful syntax to create todos. According to the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a> you will add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.</p>
+    <p>All that can be done guided by sleeks interface that for instance will present suggestions on contexts and projects while typing and offers a date picker to ease the selection of due dates.</p>
+    <p>There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere and sync it to all your devices. That also means if you don't have sleek at hand or if you don't like it any more you can just edit the todo.txt file with any text editor or other todo.txt application.</p>
+    <h4>Features</h4>
+    <ul>
+      <li>An existing todo.txt file can be used or a new one can be created</li>
+      <li>Todos can be<br>
+        - added<br>
+        - edited<br>
+        - marked as complete (and vice versa)<br>
+        - deleted
+      </li>
+      <li>Completed todos can be shown or hidden</li>
+      <li>Todos are grouped by priority</li>
+      <li>Todos are sorted by due date within their priorities</li>
+      <li>Todos can be enriched by<br>
+        - Contexts<br>
+        - Projects<br>
+        - Due dates<br>
+        - Start dates<br>
+      </li>
+      <li>Available contexts and projects will be suggested according to your input</li>
+      <li>Todos can be filtered by contexts and projects</li>
+      <li>Filters are sorted alphanummerically</li>
+      <li>Todos can be looked up using full-text search</li>
+      <li>A due date can be set using a datepicker</li>
+      <li>Hyperlinks are detected automatically and can be clicked using the icon</li>
+      <li>Basic notifications: Will fire if a todo's due date is set for tomorrow or today</li>
+      <li>Todos that include either contexts or projects can be shown or hidden entirely</li>
+      <li>Dark and light mode can be toggled</li>
+      <li>A file watcher rereads the file if it has been changed</li>
+      <li>Multiple languages are automatically detected or set by hand<br>
+        - German<br>
+        - English<br>
+        - Italian<br>
+        - Spanish
+      </li>
+      <li>Tabindex available</li>
+      <li>Basic keyboard shortcuts are available:<br>
+        - New todo: CMD/CTRL + n<br>
+        - Find todo: CMD/CTRL + f<br>
+        - Show or hide completed todos: CMD/CTRL + h<br>
+        - Toggle dark mode: CMD/CTRL + d<br>
+        - Open file: CMD/CTRL + o<br>
+        - Open sett: CMD/CTRL + o
+      </li>
+    </ul>
   </description>
 
   <launchable type="desktop-id">com.github.ransome1.sleek.desktop</launchable>

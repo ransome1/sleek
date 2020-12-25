@@ -288,12 +288,12 @@ nav {
     border-bottom: solid 1px #ebebeb; }
   #todoTable .flex-table:last-child {
     border: none; }
-  #todoTable .flex-table#previousDataItem {
+  #todoTable .flex-table#previousItem {
     -webkit-transition: background-color 0.5s ease-out;
     -moz-transition: background-color 0.5s ease-out;
     -o-transition: background-color 0.5s ease-out;
     transition: background-color 0.5s ease-out; }
-  #todoTable .flex-table#previousDataItem.is-highlighted {
+  #todoTable .flex-table#previousItem.is-highlighted {
     background-color: #f5f5f5; }
   #todoTable .flex-table.priority {
     border: none;
@@ -584,6 +584,7 @@ nav {
     .modal.content .modal-card-body table th {
       font-family: "FreeSansBold"; }
     .modal.content .modal-card-body table td {
+      vertical-align: middle;
       padding-left: 0;
       border-bottom: solid 1px #ccc; }
     .modal.content .modal-card-body table a {
@@ -593,10 +594,11 @@ nav {
     .modal.content .modal-card-body table.settings tr td {
       vertical-align: top;
       border: none; }
-      .modal.content .modal-card-body table.settings tr td .toggle {
+      .modal.content .modal-card-body table.settings tr td .toggle,
+      .modal.content .modal-card-body table.settings tr td .field {
         margin-top: 3em; }
     .modal.content .modal-card-body table.settings tr td:first-child {
-      width: 75%;
+      width: 85%;
       padding-right: 3em; }
     .modal.content .modal-card-body table.shortcuts td {
       vertical-align: middle;
@@ -650,7 +652,8 @@ nav {
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
   .modal.content .modal-card {
-    width: 90% !important; }
+    width: 90% !important;
+    padding: .5em; }
   nav ul {
     width: 3.5em;
     height: 100%; }
@@ -672,7 +675,11 @@ nav {
   #suggestionContainer.filterDropdown {
     padding: 0 !important; }
   #todoTable {
-    padding: 1.5em; } }
+    padding: 1em; } }
+
+@media (max-width: 768px) {
+  .modal.content .modal-card .card.is-centered {
+    width: 100% !important; } }
 
 /*! bulma.io v0.9.1 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */

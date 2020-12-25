@@ -334,13 +334,13 @@ nav {
   .flex-table:last-child {
     border: none;
   }
-  .flex-table#previousDataItem {
+  .flex-table#previousItem {
     -webkit-transition: background-color 0.5s ease-out;
     -moz-transition: background-color 0.5s ease-out;
     -o-transition: background-color 0.5s ease-out;
     transition: background-color 0.5s ease-out;
   }
-  .flex-table#previousDataItem.is-highlighted {
+  .flex-table#previousItem.is-highlighted {
     background-color: $light-grey;
   }
   .flex-table.priority {
@@ -722,6 +722,7 @@ nav {
       font-family: "FreeSansBold";
     }
     table td {
+      vertical-align: middle;
       padding-left: 0;
       border-bottom: solid 1px $dark-grey;
     }
@@ -734,12 +735,13 @@ nav {
     table.settings tr td {
       vertical-align: top;
       border: none;
-      .toggle {
+      .toggle,
+      .field {
         margin-top: 3em;
       }
     }
     table.settings tr td:first-child {
-      width: 75%;
+      width: 85%;
       padding-right: 3em;
     }
     table.shortcuts td {
@@ -813,6 +815,7 @@ nav {
   .modal.content {
     .modal-card {
       width: 90%!important;
+      padding: .5em;
     }
   }
   nav ul {
@@ -842,7 +845,12 @@ nav {
     padding: 0!important;
   }
   #todoTable {
-    padding: 1.5em;
+    padding: 1em;
+  }
+}
+@media (max-width: 768px) {
+  .modal.content .modal-card .card.is-centered {
+    width: 100%!important;
   }
 }
 @import "../css/datepicker.css";

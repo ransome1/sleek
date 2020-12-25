@@ -48,6 +48,7 @@
   "file": "File",
   "close": "Cerrar",
   "reload": "Recarga",
+  "settings": "Configuraciones",
   "devTools": "Activar las herramientas de desarrollo",
   "search": "(A) Busca usando la sintaxis todo.txt @contexto +proyecto que expira:",
   "noResults": "No hay resultados ",

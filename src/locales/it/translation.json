@@ -48,6 +48,7 @@
   "file": "File",
   "close": "Chiudi",
   "reload": "Ricarica",
+  "settings": "Impostazioni",
   "devTools": "Attiva gli strumenti da sviluppatore",
   "search": "(A) Ricerca utilizzando la sintassi todo.txt @contesto +progetto in scadenza:",
   "noResults": "Nessun risultato ",

@@ -1,9 +1,13 @@
 name: sleek
 base: core18
-version: '0.5.1'
-summary: sleek is an open-source todo app based on the concept of todo.txt
+version: '0.5.2'
+summary: sleek is a todo app based on todo.txt, free and open-source
 description: |
-  That means you will use a simple but powerful syntax to add contexts and projects to your todos, you will set priorities and select start and due dates. Based on these simple parameters sleek is able to filter and search your todos or send you notification if one is due. Take a look at sleeks help section to understand how the todo.txt syntax works. Don't worry it's simple. There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere you want. That also means if you don't have sleek at hand or if you don't like it anymore you can just edit the todo.txt file with any text editor or other todo.txt application.
+  sleek offers a clean and simple interface that can be used with mouse and keyboard, touch devices or keyboard only. You will use an easy to understand but powerful syntax to create todos. According to the concept of todo.txt you will add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.
+
+  All that can be done guided by sleeks interface that for instance will present suggestions on contexts and projects while typing and offers a date picker to ease the selection of due dates.
+
+  There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere and sync it to all your devices. That also means if you don't have sleek at hand or if you don't like it any more you can just edit the todo.txt file with any text editor or other todo.txt application.
 
 grade: stable
 confinement: strict

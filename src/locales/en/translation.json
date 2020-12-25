@@ -48,6 +48,7 @@
   "file": "File",
   "close": "Close",
   "reload": "Reload",
+  "settings": "Settings",
   "devTools": "Toggle developer tools",
   "search": "(A) Search by using the todo.txt syntax @context +project due:",
   "noResults": "No results",

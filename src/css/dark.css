@@ -13,7 +13,8 @@ a:hover,
 strong {
   color: white; }
 
-input {
+input,
+select {
   border: none !important;
   background-color: #2D2E31 !important;
   color: #CCCDCF !important; }
@@ -26,6 +27,7 @@ input[type="search"]::-webkit-search-cancel-button {
 input:active,
 input:focus,
 input.is-focused,
+select:focus,
 input[type="search"]:focus {
   outline: none !important;
   box-shadow: 0 0 0 2px #CCCDCF !important; }
@@ -218,6 +220,12 @@ nav {
   color: #CCCDCF !important; }
   .modal.content input {
     background-color: #1E2022 !important; }
+  .modal.content select {
+    background-color: #1E2022 !important;
+    color: inherit;
+    border: none; }
+  .modal.content .select:not(.is-multiple):not(.is-loading)::after {
+    border-color: white !important; }
   .modal.content .is-large.delete,
   .modal.content .is-large.modal-close,
   .modal.content .tag.is-info {

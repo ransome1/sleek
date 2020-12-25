@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>sleek</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" id="themeLink" href="">
   </head>
   <body id="body">
     <div class="columns is-gapless is-mobile">
@@ -126,6 +127,22 @@
             <tbody>
               <tr>
                 <td>
+                  <h4 class="title is-4">Language</h4>
+                  <p>sleek will automatically set the language according to your computers settings. If you prefer a different language, you can change it manually.</p>
+                </td>
+                <td>
+                  <div class="field">
+                    <div class="control">
+                      <div class="select">
+                        <select id="settingsLanguage">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
                   <h4 class="title is-4">Notifications</h4>
                   <p>If enabled sleek will send you notifications for todos that are due today and tomorrow. The app needs to be running for this feature.</p>
                 </td>
@@ -135,14 +152,13 @@
                       <input type="checkbox" id="toggleNotifications" tabindex="0">
                       <span class="slider round"></span>
                     </label>
-                    <span class="text">Enable</span>
                   </div>
                 </td>
               </tr>
               <tr>
                 <td>
                   <h4 class="title is-4">Dark mode</h4>
-                  <p>If enabled sleek will send you notifications for todos that are due today and tomorrow. The app needs to be running for this feature.</p>
+                  <p>If sleeks regular user interface is too bright for your general taste or for your current environment, the dark mode might be a helpful alternative.</p>
                 </td>
                 <td>
                   <div class="toggle">
@@ -150,14 +166,13 @@
                       <input type="checkbox" id="toggleDarkmode" tabindex="0">
                       <span class="slider round"></span>
                     </label>
-                    <span class="text">Enable</span>
                   </div>
                 </td>
               </tr>
               <tr>
                 <td>
                   <h4 class="title is-4">Event tracking</h4>
-                  <p>There is <strong>no tracking in sleek per default</strong>. But if you want to contribute to this project, you can enable this anonymized event tracking. It will track the features you use and send these events using SSL to a private Matomo instance that I host myself. There is no third party provider like Google involved. The data will give me a basic idea on which functions are actually used and which ones don't have a benefit you.</p>
+                  <p>There is <strong>no tracking in sleek per default</strong>. But if you want to contribute to this project, you can enable this anonymized event tracking. It will track the features you use and send these events using SSL to a private Matomo instance that I host myself. There is no third-party provider like Google involved. The data will give me a basic idea on which functions are actually used and which ones don't have a benefit you.</p>
                 </td>
                 <td>
                   <div class="toggle">
@@ -165,7 +180,6 @@
                       <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
                       <span class="slider round"></span>
                     </label>
-                    <span class="text">Enable</span>
                   </div>
                 </td>
               </tr>
@@ -173,12 +187,12 @@
           </table>
         </section>
         <section id="settingsTab2" class="modal-card-body">
-          <h4 class="title is-4">sleek is an open source app</h4>
-          <p>The source code is open and available on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a>. You can help this project by contributing <a href="https://github.com/ransome1/sleek/issues" target="_blank">bug reports, code improvements or even new features</a>. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. It is developed by Robin Ahle. Get in touch with with on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a>.</p>
+          <h4 class="title is-4">sleek is open source and you can contribute to make it better</h4>
+          <p>The source code is open and available on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a>. You can support this project by contributing <a href="https://github.com/ransome1/sleek/issues" target="_blank">bug reports, code improvements or even new features</a>. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. It is developed by Robin Ahle. Get in touch with me on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a>.</p>
           <h4 class="title is-4">Copyright</h4>
           <p>sleek is available under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>. See <a href="https://github.com/ransome1/sleek/blob/master/LICENSE" target="_blank">LICENSE</a> for the full license text.</p>
           <h4 class="title is-4">External libraries</h4>
-          <table class="table">
+          <table>
             <tbody>
               <tr>
                 <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
@@ -284,9 +298,9 @@
         </section>
         <section id="helpTab4" class="modal-card-body">
           <h4 class="title is-4">Adding a start date</h4>
-          <p>sleek will add the start date automatically equal to the todos' creation date. If you want to change it you need to look for the first date in your todo right after the priority tag.</p>
+          <p>sleek will add the start date automatically equal to the todos' creation date. If you want to change it, you need to look for the first date in your todo right after the priority tag.</p>
           <h4 class="title is-4">Adding a due date</h4>
-          <p>Todos with due dates will be bumped up your list. The closer the due date comes the higher it will be sorted. Is the due date set to today or to a date in the past, it will be marked red and will stay on top of your list. To add a due date append "due:" and add the due date formatted as <strong>YYYY-MM-DD (e.g. due:2021-03-07)</strong>. Alternatively use the datepicker, it will do the formatting for you.</p>
+          <p>Todos with due dates will be bumped up your list. The closer the due date comes the higher it will be sorted. Is the due date set to today or to a date in the past, it will be marked red and will stay on top of your list. To add a due date append "due:" and add the due date formatted as <strong>YYYY-MM-DD (e.g. due:2021-03-07)</strong>. Alternatively use the date picker, it will do the formatting for you.</p>
           <input class="input is-focused is-medium" type="text" value="This todo is due at some point due:2021-03-07" tabindex="-1">
           <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
           <div class="card is-centered" style="width: 55%;">
