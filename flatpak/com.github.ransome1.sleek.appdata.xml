@@ -28,20 +28,20 @@
     <h4>Features</h4>
     <ul>
       <li>An existing todo.txt file can be used or a new one can be created</li>
-      <li>Todos can be<br>
-        - added<br>
-        - edited<br>
-        - marked as complete (and vice versa)<br>
+      <li>Todos can be<br />
+        - added<br />
+        - edited<br />
+        - marked as complete (and vice versa)<br />
         - deleted
       </li>
       <li>Completed todos can be shown or hidden</li>
       <li>Todos are grouped by priority</li>
       <li>Todos are sorted by due date within their priorities</li>
-      <li>Todos can be enriched by<br>
-        - Contexts<br>
-        - Projects<br>
-        - Due dates<br>
-        - Start dates<br>
+      <li>Todos can be enriched by<br />
+        - Contexts<br />
+        - Projects<br />
+        - Due dates<br />
+        - Start dates<br />
       </li>
       <li>Available contexts and projects will be suggested according to your input</li>
       <li>Todos can be filtered by contexts and projects</li>
@@ -53,19 +53,19 @@
       <li>Todos that include either contexts or projects can be shown or hidden entirely</li>
       <li>Dark and light mode can be toggled</li>
       <li>A file watcher rereads the file if it has been changed</li>
-      <li>Multiple languages are automatically detected or set by hand<br>
-        - German<br>
-        - English<br>
-        - Italian<br>
+      <li>Multiple languages are automatically detected or set by hand<br />
+        - German<br />
+        - English<br />
+        - Italian<br />
         - Spanish
       </li>
       <li>Tabindex available</li>
-      <li>Basic keyboard shortcuts are available:<br>
-        - New todo: CMD/CTRL + n<br>
-        - Find todo: CMD/CTRL + f<br>
-        - Show or hide completed todos: CMD/CTRL + h<br>
-        - Toggle dark mode: CMD/CTRL + d<br>
-        - Open file: CMD/CTRL + o<br>
+      <li>Basic keyboard shortcuts are available:<br />
+        - New todo: CMD/CTRL + n<br />
+        - Find todo: CMD/CTRL + f<br />
+        - Show or hide completed todos: CMD/CTRL + h<br />
+        - Toggle dark mode: CMD/CTRL + d<br />
+        - Open file: CMD/CTRL + o<br />
         - Open sett: CMD/CTRL + o
       </li>
     </ul>
