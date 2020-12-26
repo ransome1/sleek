@@ -171,7 +171,7 @@ app.on("ready", () => {
   }).catch(error => {
     console.log(error);
   });
-  console.log(nativeTheme.shouldUseDarkColors);
+  //console.log(nativeTheme.shouldUseDarkColors);
   createWindow();
   if (process.platform === 'win32') {
     app.setAppUserModelId("RobinAhle.sleektodomanager");

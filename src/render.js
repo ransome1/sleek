@@ -334,6 +334,7 @@ btnAddTodo.forEach(function(el) {
   // title tag for hover
   el.setAttribute("title", i18next.t("addTodo"));
   el.onclick = function () {
+    // just in case the form will be cleared first
     clearModal();
     showForm(true);
     // matomo event
@@ -422,14 +423,24 @@ modalFormInput.addEventListener("keyup", e => {
 filterDropdown.addEventListener ("keydown", function () {
   if(event.key === 'Escape') showFilters(false);
 });
-modal.forEach(el => el.addEventListener("keydown", function(el) {
+/*modal.forEach(el => el.addEventListener("keydown", function(el) {
+  if(event.key === 'Escape') {
+    clearModal();
+  }
+}));*/
+suggestionContainer.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') this.classList.remove("is-active");
+});
+modalForm.addEventListener ("keydown", function () {
   if(event.key === 'Escape') {
     this.classList.remove("is-active");
     suggestionContainer.classList.remove("is-active");
-    dueDatePicker.hide();
   }
-}));
-suggestionContainer.addEventListener ("keydown", function () {
+});
+modalHelp.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') this.classList.remove("is-active");
+});
+modalSettings.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
 });
 // ########################################################################################################################
@@ -445,10 +456,6 @@ contentTabs.forEach(el => el.addEventListener("click", function(el) {
   if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
 }));
 function showContent(section) {
-
-  modal.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
   contentTabs.forEach(function(el) {
     el.classList.remove("is-active");
   });
@@ -878,6 +885,8 @@ function clearModal() {
   modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
   // clear the content in the input field as it's not needed anymore
   modalFormInput.value = null;
+  // close datepicker
+  dueDatePicker.hide();
 }
 function showAlert(variable) {
   if(variable) {
@@ -1639,6 +1648,7 @@ function submitForm() {
       if(matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
       // save the previously saved item.current for further use
       item.previous = item.current;
+      item.current = null;
       return Promise.resolve("Success: Changes written to file: " + pathToFile);
     // if the input field is empty, let users know
     } else {
