@@ -433,6 +433,7 @@ suggestionContainer.addEventListener ("keydown", function () {
 });
 modalForm.addEventListener ("keydown", function () {
   if(event.key === 'Escape') {
+    item.current = "";
     this.classList.remove("is-active");
     suggestionContainer.classList.remove("is-active");
   }
@@ -880,7 +881,7 @@ function clearModal() {
   modalFile.classList.remove("is-active");
   modalFile.blur();
   // empty the data item as we don't need it anymore
-  item.current = null;
+  item.current = "";
   // clean up the modal
   modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
   // clear the content in the input field as it's not needed anymore
