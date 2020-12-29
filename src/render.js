@@ -10,7 +10,7 @@ const store = new Store({
     categoriesFiltered: new Array,
     closedNotifications: new Array,
     pathToFile: "",
-    theme: "light",
+    theme: null,
     matomoEvents: false,
     notifications: true,
     language: null,
@@ -31,6 +31,14 @@ if(files) {
 } else {
   files = new Array;
   files.push([1, pathToFile]);
+}
+let theme = store.get("theme");
+if(!theme) {
+  if(nativeTheme.shouldUseDarkColors) {
+    theme = "dark";
+  } else {
+    theme = "light"
+  }
 }
 // ########################################################################################################################
 // LANGUAGE
@@ -62,7 +70,6 @@ i18next
         break;
       default:
         return;
-
     }
     var option = document.createElement("option");
     option.text = languageName;
@@ -500,11 +507,11 @@ function showTab(tab) {
 // THEME CONFIG
 // ########################################################################################################################
 function setTheme(switchTheme) {
-  if(store.get("theme")) {
+  /*if(store.get("theme")) {
     var theme = store.get("theme");
   } else {
     var theme = nativeTheme.themeSource;
-  }
+  }*/
   if(switchTheme) {
     switch (theme) {
       case "dark":
@@ -513,7 +520,7 @@ function setTheme(switchTheme) {
       case "light":
         theme = "dark";
         break;
-      case "system":
+      default:
         theme = "light";
         break;
     }
