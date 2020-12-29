@@ -1743,14 +1743,14 @@ function completeTodo(todo) {
     // first convert the string to a todo.txt object
     todo = new TodoTxtItem(todo, [ new DueExtension() ]);
     // mark item as in progress
-    if(todo.complete && !deleteItem) {
+    if(todo.complete) {
       // if item was already completed we set complete to false and the date to null
       todo.complete = false;
       todo.completed = null;
       // delete old item from array and add the new one at it's position
       items.strings.splice(index, 1, todo);
     // Mark item as complete
-    } else if(!todo.complete && !deleteItem) {
+    } else if(!todo.complete) {
       if(todo.due) {
         var date = convertDate(todo.due);
         // if set to complete it will be removed from persisted notifcations
@@ -1760,7 +1760,6 @@ function completeTodo(todo) {
         closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+1);
         store.set("closedNotifications", closedNotifications);
       }
-      // if deleteItem has been sent as true, we delete the entry from the items.unfiltered
       todo.complete = true;
       todo.completed = new Date();
       // delete old todo from array and add the new one at it's position
