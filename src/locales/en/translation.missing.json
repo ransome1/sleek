@@ -1,5 +1,11 @@
 {
   "help": "help",
   "settings": "settings",
-  "key": "key"
+  "key": "key",
+  "createFile": "createFile",
+  "modalChangeFileOpen": "modalChangeFileOpen",
+  "modalChangeFileCreate": "modalChangeFileCreate",
+  "onboardingContainerBtnCreate": "onboardingContainerBtnCreate",
+  "selected": "selected",
+  "windowTitleOpenFile": "windowTitleOpenFile"
 }

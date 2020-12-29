@@ -37,15 +37,18 @@ button, button:focus, button:active, button:active, button:after, button::before
   border: 1px solid #ccc !important;
   color: #4a4a4a; }
 
-button.is-static {
-  opacity: .75; }
-
 .table {
   width: 100%;
   background-color: transparent !important; }
 
 .table tr td {
   vertical-align: middle; }
+
+table.files tr td:first-child {
+  width: 3em; }
+
+table.files tr td:last-child {
+  cursor: pointer; }
 
 body::-webkit-scrollbar {
   display: none; }
@@ -602,6 +605,7 @@ nav {
       width: 100%;
       background: none; }
     .modal.content .modal-card-body table th {
+      padding-left: 0;
       font-family: "FreeSansBold"; }
     .modal.content .modal-card-body table td {
       vertical-align: middle;

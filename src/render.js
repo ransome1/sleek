@@ -10,7 +10,7 @@ const store = new Store({
     categoriesFiltered: new Array,
     closedNotifications: new Array,
     pathToFile: "",
-    theme: "",
+    theme: "light",
     matomoEvents: false,
     notifications: true,
     language: null,
@@ -26,9 +26,11 @@ let selectedFilters = store.get("selectedFilters");
 let categoriesFiltered = store.get("categoriesFiltered");
 let language = store.get("language");
 let files = store.get("files");
-if(!files) {
+if(files) {
+  files = store.get("files");
+} else {
   files = new Array;
-  files.push(pathToFile);
+  files.push([1, pathToFile]);
 }
 // ########################################################################################################################
 // LANGUAGE
@@ -111,7 +113,8 @@ const btnTheme = document.querySelectorAll('.btnTheme');
 const btnFilter = document.querySelectorAll(".btnFilter");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
-const btnChooseTodoFile = document.querySelectorAll(".btnChooseTodoFile");
+const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
+const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
 // ########################################################################################################################
 // DATEPICKER CONFIG
 // ########################################################################################################################
@@ -197,15 +200,14 @@ addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
 addTodoContainerButton.innerHTML = i18next.t("addTodo");
 welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
 onboardingContainerSubtitle.innerHTML = i18next.t("onboardingContainerSubtitle");
-onboardingContainerBtnOpen.innerHTML = i18next.t("onboardingContainerBtnOpen");
-onboardingContainerBtnCreate.innerHTML = i18next.t("onboardingContainerBtnCreate");
-modalFileOverwrite.innerHTML = i18next.t("modalFileOverwrite");
-modalFileChoose.innerHTML = i18next.t("modalFileChoose");
-modalFileHeadline.innerHTML = i18next.t("modalFileHeadline");
-modalFileContent.innerHTML = i18next.t("modalFileContent");
+onboardingContainerBtnOpen.innerHTML = i18next.t("openFile");
+onboardingContainerBtnCreate.innerHTML = i18next.t("createFile");
 modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
 noResultContainerHeadline.innerHTML = i18next.t("noResults");
 noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
+modalChangeFileTitle.innerHTML = i18next.t("selectFile");
+modalChangeFileOpen.innerHTML = i18next.t("openFile");
+modalChangeFileCreate.innerHTML = i18next.t("createFile");
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
@@ -219,7 +221,6 @@ navBtnSettings.onclick = function () {
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
 }
-btnCreateTodoFile.onclick = function () { createFile(true, false) }
 btnItemStatus.onclick = function() {
   completeTodo(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
     modalForm.classList.remove("is-active");
@@ -231,8 +232,7 @@ btnItemStatus.onclick = function() {
     console.log(error);
   });
 }
-modalFileChoose.onclick = function() { createFile(true, false) }
-modalFileOverwrite.onclick = function() { createFile(false, true) }
+//modalFileChoose.onclick = function() { createFile() }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 toggleShowCompleted.onclick = function() {
   showCompletedTodos();
@@ -315,12 +315,24 @@ btnOpenTodoFile.forEach(function(el) {
     if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
   }
 });
-btnChooseTodoFile.forEach(function(el) {
+btnChangeTodoFile.forEach(function(el) {
   el.setAttribute("title", i18next.t("openFile"));
   el.onclick = function () {
-    chooseFile();
+    if(files.length > 0) {
+      modalChooseFile();
+    } else {
+      openFile();
+    }
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
+  }
+});
+btnCreateTodoFile.forEach(function(el) {
+  el.setAttribute("title", i18next.t("createFile"));
+  el.onclick = function () {
+    createFile()
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
   }
 });
 btnModalCancel.forEach(function(el) {
@@ -446,6 +458,9 @@ modalForm.addEventListener ("keydown", function () {
 modalHelp.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
 });
+modalChangeFile.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') clearModal();
+});
 modalSettings.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
 });
@@ -484,7 +499,6 @@ function showTab(tab) {
 // ########################################################################################################################
 // THEME CONFIG
 // ########################################################################################################################
-//let themeLink = "";
 function setTheme(switchTheme) {
   if(store.get("theme")) {
     var theme = store.get("theme");
@@ -583,53 +597,202 @@ function convertDate(date) {
   return year + "-" + month + "-" + day;
 };
 // ########################################################################################################################
-// FUNCTIONS
+// FILE FUNCTIONS
 // ########################################################################################################################
-function chooseFile() {
+function createFile() {
+  // Resolves to a Promise<Object>
+  dialog.showSaveDialog({
+    title: i18next.t("windowTitleCreateFile"),
+    defaultPath: path.join(app.getPath('home')),
+    buttonLabel: i18next.t("windowButtonCreateFile"),
+    // Restricting the user to only Text Files.
+    filters: [
+        {
+            name: i18next.t("windowFileformat"),
+            extensions: ["txt"]
+        },
+    ],
+    properties: [
+      "openFile",
+      "createDirectory"
+    ]
+  }).then(file => {
+    fs.writeFile(file.filePath, "", function (err) {
+      if (err) throw err;
+      if (!err) {
+        console.log("Success: New todo.txt file created: " + checkPathForFile + "/todo.txt");
+        // updating files array and set this item to default
+        changeFile(file.filePath).then(response => {
+          // if file was changed successfully the data is parsed again
+          parseDataFromFile().then(response => {
+            // when data is parsed the modal needs to be closed
+            clearModal();
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
+      }
+    });
+  }).catch(err => {
+      console.log("Error: " + err)
+  });
+}
+function openFile() {
+  // Resolves to a Promise<Object>
+  dialog.showOpenDialog({
+    title: i18next.t("windowTitleOpenFile"),
+    defaultPath: path.join(app.getPath("home")),
+    buttonLabel: i18next.t("windowButtonOpenFile"),
+    // Restricting the user to only Text Files.
+    filters: [
+        {
+            name: i18next.t("windowFileformat"),
+            extensions: ["txt"]
+        },
+    ],
+    properties: ["openFile"]
+  }).then(file => {
+    // Stating whether dialog operation was cancelled or not.
+    if (!file.canceled) {
+      console.log("Success: Storage file updated by new path and filename: " + pathToFile);
+      // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
+      selectedFilters = new Array;
+      store.set("selectedFilters", new Array);
+      // updating files array and set this item to default
+      changeFile(file.filePaths[0].toString()).then(response => {
+        // if file was changed successfully the data is parsed again
+        parseDataFromFile(pathToFile).then(response => {
+          // when data is parsed the modal needs to be closed
+          clearModal();
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+  }).catch(err => {
+      console.log("Error: " + err)
+  });
+}
+function startFileWatcher() {
+  try {
+    if(fileWatcher) fileWatcher.close();
+    if (fs.existsSync(pathToFile)) {
+      let md5Previous = null;
+      let fsWait = false;
+      fileWatcher = fs.watch(pathToFile, (event, filename) => {
+        if (fsWait) return;
+        fsWait = setTimeout(() => {
+          fsWait = false;
+        }, 100);
+        if (fs.existsSync(pathToFile)) {
+          const md5Current = md5(fs.readFileSync(pathToFile));
+          if (md5Current === md5Previous) {
+            return;
+          }
+          md5Previous = md5Current;
+        }
+        parseDataFromFile(pathToFile).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
+      });
+      return Promise.resolve("Success: File watcher is watching: " + pathToFile);
+    } else {
+      return Promise.reject("Info: File watcher did not start as file was not found at: " + pathToFile);
+    }
+  } catch (error) {
+    return Promise.reject("Error in startFileWatcher(): " + error);
+  }
+}
+function changeFile(path) {
+  try {
+    removeFileFromHistory(path);
+    // remove "active" (1) setting from all files
+    files.forEach(function(file) {
+      file[0] = 0;
+      if(file[1]===path) {
+        file[0] = 1;
+      }
+    });
+    if(!files.includes(path)) files.push([1, path]);
+    pathToFile = path;
+    store.set("pathToFile", pathToFile);
+    store.set("files", files);
+    return Promise.resolve("Success: File changed to: " + path);
+  } catch (error) {
+    return Promise.reject("Error in changeFile(): " + error);
+  }
+}
+function modalChooseFile() {
   modalChangeFile.classList.add("is-active");
+  modalChangeFile.focus();
   modalChangeFileTable.innerHTML = "";
-  files.forEach(item => {
+  for (let file in files) {
     var table = modalChangeFileTable;
+    table.classList.add("files");
     var row = table.insertRow(0);
-    row.setAttribute("data-path", item[1]);
+    row.setAttribute("data-path", files[file][1]);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    if(item[0]===1) {
-      cell1.innerHTML = "<button class=\"button is-static\"><i class=\"fas fa-check\"></i>&nbsp;Selected</button>";
+    if(files[file][0]===1) {
+      cell1.innerHTML = "<button class=\"button is-static\" disabled><i class=\"fas fa-check\"></i>&nbsp;" + i18next.t("selected") + "</button>";
     } else {
-      cell1.innerHTML = "<button class=\"button is-outlined\">Select</button>";
+      cell1.innerHTML = "<button class=\"button is-outlined\">" + i18next.t("select") + "</button>";
       cell1.onclick = function() {
-        var path = this.parentElement.getAttribute("data-path");
-        // remove "active" (1) setting from all files
-        files.forEach(function(file) {
-          file[0] = 0;
-          if(file[1]===path) file[0] = 1;
-        });
-        store.set("files", files);
-        pathToFile = path;
-        store.set("pathToFile", path);
-        // pass path and filename on, to extract and parse the raw data to objects
-        parseDataFromFile(pathToFile).then(response => {
-          clearModal();
+        // set the new path variable and change the array
+        changeFile(this.parentElement.getAttribute("data-path")).then(response => {
+          // if file was changed successfully the data is parsed again
+          parseDataFromFile(pathToFile).then(response => {
+            // when data is parsed the modal needs to be closed
+            clearModal();
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
           console.log(response);
         }).catch(error => {
           console.log(error);
         });
       }
       cell3.innerHTML = "<i class=\"fas fa-trash-alt\"></i>";
+      cell3.title = i18next.t("delete");
       cell3.onclick = function() {
-        var path = this.parentElement.getAttribute("data-path");
-        files = files.filter(function(file) {
-          return file[1] != path;
+        removeFileFromHistory(this.parentElement.getAttribute("data-path")).then(response => {
+          // after array is updated, open the modal again
+          modalChooseFile();
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
         });
-        store.set("files", files);
-        chooseFile();
       }
     }
-    cell2.innerHTML = item[1];
-  });
+    cell2.innerHTML = files[file][1];
+  }
 }
+function removeFileFromHistory(path) {
+  try {
+    files = files.filter(function(file) {
+      return file[1] != path;
+    });
+    store.set("files", files);
+    return Promise.resolve("Success: File removed from history: " + path);
+  } catch (error) {
+    return Promise.reject("Error in removeFileFromHistory(): " + error);
+  }
+}
+// ########################################################################################################################
+// FUNCTIONS
+// ########################################################################################################################
 function inView(element) {
     var box = element.getBoundingClientRect();
     return inViewBox(box);
@@ -740,38 +903,6 @@ function getCaretPosition(inputId) {
     return position;
   } else {
     return false;
-  }
-}
-function startFileWatcher() {
-  try {
-    if(fileWatcher) fileWatcher.close();
-    if (fs.existsSync(pathToFile)) {
-      let md5Previous = null;
-      let fsWait = false;
-      fileWatcher = fs.watch(pathToFile, (event, filename) => {
-        if (fsWait) return;
-        fsWait = setTimeout(() => {
-          fsWait = false;
-        }, 100);
-        if (fs.existsSync(pathToFile)) {
-          const md5Current = md5(fs.readFileSync(pathToFile));
-          if (md5Current === md5Previous) {
-            return;
-          }
-          md5Previous = md5Current;
-        }
-        parseDataFromFile(pathToFile).then(response => {
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        });
-      });
-      return Promise.resolve("Success: File watcher is watching: " + pathToFile);
-    } else {
-      return Promise.reject("Info: File watcher did not start as file was not found at: " + pathToFile);
-    }
-  } catch (error) {
-    return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
 function showCompletedTodos() {
@@ -937,8 +1068,8 @@ function clearModal() {
 
   modalForm.classList.remove("is-active");
   modalForm.blur();
-  modalFile.classList.remove("is-active");
-  modalFile.blur();
+  //modalFile.classList.remove("is-active");
+  //modalFile.blur();
   // remove the data item as we don't need it anymore
   modalForm.removeAttribute("data-item");
   // clean up the modal
@@ -947,141 +1078,6 @@ function clearModal() {
   modalFormInput.value = null;
   // close datepicker
   dueDatePicker.hide();
-}
-function showAlert(variable) {
-  if(variable) {
-    modalFile.classList.add("is-active", "is-danger");
-    modalFile.focus();
-  } else {
-    modalFile.classList.remove("is-active", "is-danger");
-    modalFile.blur();
-  }
-};
-function openFile() {
-  // Resolves to a Promise<Object>
-  dialog.showOpenDialog({
-    title: i18next.t("windowTitleOpenFile"),
-    defaultPath: path.join(app.getPath("home")),
-    buttonLabel: i18next.t("windowButtonOpenFile"),
-    // Restricting the user to only Text Files.
-    filters: [
-        {
-            name: i18next.t("windowFileformat"),
-            extensions: ["txt"]
-        },
-    ],
-    properties: ['openFile']
-  }).then(file => {
-    // Stating whether dialog operation was cancelled or not.
-    if (!file.canceled) {
-      // Updating the filepath variable to user-selected file.
-      pathToFile = file.filePaths[0].toString();
-      // write new path and file name into storage file
-      store.set("pathToFile", pathToFile);
-      // check storage
-      if(files) {
-        // if selected file is already in list, remove it from the array first to avoid duplicates
-        files = files.filter(function(file) {
-          return file[1] != pathToFile;
-        });
-        // remove "active" (1) setting from all files
-        files.forEach(function(file) {
-          file[0] = 0;
-        });
-        // add selected file to array and set it active
-        files.push([1, pathToFile]);
-      // if no files in storage, a first one is added and set active
-      } else {
-        files = new Array;
-        files.push([1, pathToFile]);
-      }
-      // persist new file list
-      store.set("files", files);
-      console.log("Success: Storage file updated by new path and filename: " + pathToFile);
-      // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
-      selectedFilters = new Array;
-      store.set("selectedFilters", new Array);
-      // clear modal if it was open
-      clearModal();
-      // pass path and filename on, to extract and parse the raw data to objects
-      parseDataFromFile(pathToFile).then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
-    }
-  }).catch(err => {
-      console.log("Error: " + err)
-  });
-}
-function createFile(showDialog, overwriteFile) {
-  // Resolves to a Promise<Object>
-  if(showDialog && !overwriteFile) {
-    dialog.showOpenDialog({
-      title: i18next.t("windowTitleCreateFile"),
-      defaultPath: path.join(app.getPath('home')),
-      buttonLabel: i18next.t("windowButtonCreateFile"),
-      properties: ["openDirectory", "createDirectory"]
-    }).then(file => {
-      // Stating whether dialog operation was cancelled or not.
-      if (!file.canceled) {
-        checkPathForFile = file.filePaths[0].toString();
-        if(fs.stat(checkPathForFile + "/todo.txt", function(err, stats) {
-          // file exists
-          if(!err) {
-            // so we ask user to overwrite or choose a different location
-            showAlert(true);
-            return false;
-          // file does not exist at given location, so we write a new file with content of sample.txt
-          } else {
-            fs.writeFile(checkPathForFile + "/todo.txt", "", function (err) {
-              if (err) throw err;
-              if (!err) {
-                console.log("Success: New todo.txt file created: " + checkPathForFile + "/todo.txt");
-                // Updating the GLOBAL filepath variable to user-selected file.
-                pathToFile = checkPathForFile + "/todo.txt";
-                // write new path and file name into storage file
-                store.set("pathToFile", pathToFile);
-                // add file to files Array
-                files = new Array;
-                files.push([1, pathToFile]);
-                // pass path and filename on, to extract and parse the raw data to objects
-                parseDataFromFile(pathToFile).then(response => {
-                  console.log(response);
-                }).catch(error => {
-                  console.log(error);
-                });
-              }
-            });
-          }
-        }));
-      }
-    }).catch(err => {
-        console.log("Error: " + err)
-    });
-  // existing file will be overwritten
-  } else if (!showDialog && overwriteFile) {
-    fs.writeFile(checkPathForFile + "/todo.txt", "", function (err) {
-      if (err) throw err;
-      if (!err) {
-        showAlert(false);
-        console.log("Success: New todo.txt file created: " + checkPathForFile + "/todo.txt");
-        // Updating the GLOBAL filepath variable to user-selected file.
-        pathToFile = checkPathForFile + "/todo.txt";
-        // write new path and file name into storage file
-        store.set("pathToFile", pathToFile);
-        // add file to files Array
-        files = new Array;
-        files.push([1, pathToFile]);
-        // pass path and filename on, to extract and parse the raw data to objects
-        parseDataFromFile(pathToFile).then(response => {
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        });
-      }
-    });
-  }
 }
 function parseDataFromFile() {
   // we only start if file exists
@@ -1540,10 +1536,10 @@ function generateTodoData(searchString) {
         document.getElementById("previousItem").classList.add("is-highlighted");
         setTimeout(() => {
           document.getElementById("previousItem").classList.remove("is-highlighted");
+          // after scrolling the marker will be removed
+          document.getElementById("previousItem").removeAttribute("id");
         }, 1000);
       }
-      // after scrolling the marker will be removed
-      document.removeAttribute("id");
     }
     return Promise.resolve("Success: Todo data generated and table built");
   } catch(error) {
@@ -1590,7 +1586,7 @@ function createTableRow(todo) {
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
       // passing the data-item attribute of the parent tag to complete function
-      completeTodo(this.parentElement.getAttribute('data-item'), false).then(response => {
+      completeTodo(this.parentElement.getAttribute('data-item')).then(response => {
         modalForm.classList.remove("is-active");
         console.log(response);
       }).catch(error => {
@@ -1669,14 +1665,14 @@ function createTableRow(todo) {
         if(matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
         // click on edit
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.onclick = function() {
-          showForm(this.parentElement.getAttribute('data-item'));
+          showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
           // trigger matomo event
           if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
         }
         // click on delete
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.onclick = function() {
           // passing the data-item attribute of the parent tag to complete function
-          completeTodo(todoTableBodyRow.getAttribute('data-item'), true).then(response => {
+          deleteTodo(todoTableBodyRow.getAttribute('data-item')).then(response => {
             console.log(response);
           }).catch(error => {
             console.log(error);
@@ -1738,9 +1734,8 @@ function submitForm() {
     return Promise.reject("Error in submitForm(): " + error);
   }
 }
-function completeTodo(todo, deleteItem) {
+function completeTodo(todo) {
   try {
-    console.log(modalForm.elements[0].value);
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // get index of todo
@@ -1770,23 +1765,37 @@ function completeTodo(todo, deleteItem) {
       todo.completed = new Date();
       // delete old todo from array and add the new one at it's position
       items.strings.splice(index, 1, todo);
-    } else if(deleteItem) {
-      // Delete item
-      if(todo.due) {
-        var date = convertDate(todo.due);
-        // if deleted it will be removed from persisted notifcations
-        // the one set for today
-        closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+0);
-        // the one set for tomorrow
-        closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+1);
-        store.set("closedNotifications", closedNotifications);
-      }
-      items.strings.splice(index, 1);
     }
     //write the data to the file
     fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
   } catch(error) {
     return Promise.reject("Error in completeTodo(): " + error);
+  }
+}
+function deleteTodo(todo) {
+  try {
+    // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
+    if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
+    // get index of todo
+    var index = items.strings.indexOf(todo);
+    // first convert the string to a todo.txt object
+    todo = new TodoTxtItem(todo, [ new DueExtension() ]);
+    // Delete item
+    if(todo.due) {
+      var date = convertDate(todo.due);
+      // if deleted it will be removed from persisted notifcations
+      // the one set for today
+      closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+0);
+      // the one set for tomorrow
+      closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+1);
+      store.set("closedNotifications", closedNotifications);
+    }
+    items.strings.splice(index, 1);
+    //write the data to the file
+    fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
+    return Promise.resolve("Success: Changes written to file: " + pathToFile);
+  } catch(error) {
+    return Promise.reject("Error in deleteTodo(): " + error);
   }
 }
