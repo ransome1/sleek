@@ -759,6 +759,8 @@ nav {
     table.settings tr td {
       vertical-align: top;
       border: none;
+      padding-top: 0;
+      padding-bottom: 0;
       .toggle,
       .field {
         margin-top: 3em;

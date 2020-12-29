@@ -1,8 +1,8 @@
 # sleek
 ## sleek is a todo app based on todo.txt, free and open-source
-sleek offers a clean and simple interface that can be used with mouse and keyboard, touch devices or keyboard only. You will use an easy to understand but powerful syntax to create todos. According to the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a> you will add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.
+sleek offers a clean and simple interface that can be used with mouse and keyboard, keyboard only or touch devices. You will use an easy to understand but powerful syntax to create todos. According to the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a> you can add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.
 
-All that can be done guided by sleeks interface that for instance will present suggestions on contexts and projects while typing and offers a date picker to ease the selection of due dates.
+All that can be done guided by sleeks interface that for instance will present suggestions on contexts and projects while typing or offers a date picker to ease the selection of due dates.
 
 There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere and sync it to all your devices. That also means if you don't have sleek at hand or if you don't like it any more you can just edit the todo.txt file with any text editor or other todo.txt application.
 
@@ -54,6 +54,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * Todos that include either contexts or projects can be shown or hidden entirely
 * Dark and light mode can be toggled
 * A file watcher rereads the file if it has been changed
+* Multiple todo.txt files can be added
 * Multiple languages are automatically detected or can be set by hand
   - English
   - German

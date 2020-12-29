@@ -171,7 +171,6 @@ dueDatePickerInput.readOnly = true;
 toggleShowCompleted.checked = showCompleted;
 toggleMatomoEvents.checked = matomoEvents;
 toggleNotifications.checked = notifications;
-//navBtnHelp.setAttribute("title") = i18next.t("help");
 navBtnHelp.firstElementChild.setAttribute("title", i18next.t("help"));
 navBtnSettings.firstElementChild.setAttribute("title", i18next.t("settings"));
 const categories = ["contexts", "projects"];
@@ -239,7 +238,6 @@ btnItemStatus.onclick = function() {
     console.log(error);
   });
 }
-//modalFileChoose.onclick = function() { createFile() }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 toggleShowCompleted.onclick = function() {
   showCompletedTodos();
@@ -1123,6 +1121,8 @@ function parseDataFromFile() {
       } else {
         // if there is a file onboarding is hidden
         showOnboarding(false);
+        // clean up filters if there were any before
+        todoFilters.innerHTML = "";
         // hide/show the addTodoContainer
         addTodoContainer.classList.add("is-active");
         todoTable.classList.remove("is-active");
@@ -1149,7 +1149,6 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
     if(typeAheadPrefix) {
       container = suggestionContainer;
       categoriesToBuild.push(typeAheadCategory);
-      //typeAhead = true;
     } else {
       container = filterContainer;
       categoriesToBuild = categories;
@@ -1228,17 +1227,15 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
 }
 function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
-    //
-    let headline;
     // creates a div for the specific filter section
     let filterContainerSub = document.createElement("div");
     filterContainerSub.setAttribute("class", "dropdown-item " + category);
     filterContainerSub.setAttribute("tabindex", 0);
     // translate headline
     if(category=="contexts") {
-      headline = i18next.t("contexts");
+      var headline = i18next.t("contexts");
     } else if(category=="projects"){
-      headline = i18next.t("projects");
+      var headline = i18next.t("projects");
     }
     if(typeAheadPrefix==undefined) {
       // create a sub headline element
@@ -1277,7 +1274,6 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           // change the eye icon
           todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
         }
-
         t0 = performance.now();
         generateTodoData().then(response => {
           console.log(response);
@@ -1299,7 +1295,6 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       }
       // add the headline before category container
       filterContainerSub.appendChild(todoFilterHeadline);
-      //console.log(todoFilterHeadline);
     } else {
       // show suggestion box
       suggestionContainer.classList.add("is-active");
@@ -1314,7 +1309,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
     }
     // build one button each
     for (let filter in filtersCounted) {
-      // TODO: describe
+      // skip this loop if no filters are present
       if(!filter) continue;
       let todoFiltersItem = document.createElement("a");
       todoFiltersItem.setAttribute("class", "btnApplyFilter button");
@@ -1344,7 +1339,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             // this is the first push
             selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
           }
-          //convert the collected filters to JSON and save it to store.js
+          // convert the collected filters to JSON and save it to store.js
           store.set("selectedFilters", JSON.stringify(selectedFilters));
           if(categoriesFiltered) {
             // remove any setting that hides the category of the selected filters

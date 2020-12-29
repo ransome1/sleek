@@ -55,7 +55,6 @@ const createWindow = () => {
       mainWindow.webContents.executeJavaScript("parseDataFromFile()");
     }
   }, 120000);
-  //}, 6000);
   // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
   // Modules to create application menu
   const Menu = require("electron").Menu;
@@ -172,11 +171,6 @@ app.on("ready", () => {
   }).catch(error => {
     console.log(error);
   });
-  /*if(nativeTheme.shouldUseDarkColors) {
-    store.set("theme") = "dark";
-  } else {
-    store.set("theme") = "light";
-  }*/
   createWindow();
   if (process.platform === 'win32') {
     app.setAppUserModelId("RobinAhle.sleektodomanager");
@@ -208,15 +202,13 @@ function switchLanguage() {
   if (store.get("language")) {
     var language = store.get("language");
   } else {
-    var language = app.getLocale();
+    var language = app.getLocale().substr(0,2);
   }
   i18next
   .use(i18nextBackend)
   .init(i18nextOptions);
   i18next.changeLanguage(language, (error) => {
     if (error) return console.log("Error in i18next.changeLanguage():", error);
-    //t('key'); // -> same as i18next.t
-    //Promise.resolve("Success: Language succuessfully set to " + language);
   });
   return Promise.resolve("Success: Language succuessfully set to " + language);
 }

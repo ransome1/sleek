@@ -617,7 +617,9 @@ nav {
       border: none; }
     .modal.content .modal-card-body table.settings tr td {
       vertical-align: top;
-      border: none; }
+      border: none;
+      padding-top: 0;
+      padding-bottom: 0; }
       .modal.content .modal-card-body table.settings tr td .toggle,
       .modal.content .modal-card-body table.settings tr td .field {
         margin-top: 3em; }
