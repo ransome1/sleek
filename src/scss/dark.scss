@@ -1,54 +1,45 @@
 @charset "utf-8";
 
-$has-text-grey-light: hsl(0, 0%, 71%);
-$light-grey: #f5f5f5;
-$mid-grey: #ebebeb;
-$dark-grey: #ccc;
-$darker-grey: #4a4a4a;
-
-$nav-background: #2C2D30;
-
-$has-text-link: hsl(217, 71%, 53%);
-
 $has-text-danger: hsl(348, 100%, 61%);
 $has-text-warning: hsl(48, 100%, 67%);
 $has-text-success: hsl(141, 71%, 48%);
 
-$sleek-contexts-button: #c5ede3;
-$sleek-contexts-button-font: #075943;
-$sleek-contexts-button-hover: #c9f2e8;
-$sleek-contexts-button-bubble: #1aa37e;
-$sleek-contexts-button-highlighted: #075943;
+$green-mid: #075A44;
+$green-dark: #1BA37E;
+$green-bright: #c5ede3;
 
-$sleek-projects-button: #f1d6f1;
-$sleek-projects-button-font: #5f1a5e;
-$sleek-projects-button-hover: #f7dcf7;
-$sleek-projects-button-bubble: #bc30ba;
-$sleek-projects-button-highlighted: #5f1a5e;
+$lila-bright: #f1d6f1;
+$lila-mid: #BC30BA;
+$lila-dark: #5f1a5e;
 
-$body-background-color: #1E2022;
-$body-text-color: #CCCDCF;
+$grey-pitchblack: #1d1e20;
+$grey-mid: #2c2d30;
+$grey-bright: #CCCDCF;
+$grey-light: #3B3B3B;
+$grey-lighter: #4d4d4d;
+
 $modal-z: 50;
 body {
-  background-color: $body-background-color;
-  color: $body-text-color;
+  background-color: $grey-pitchblack;
+  color: $grey-bright;
 }
 a {
   color: white;
 }
 button:focus,
 a:focus{
-  outline: 2px solid $body-text-color!important;
+  outline: 2px solid $grey-bright!important;
 }
 a:hover,
+button:hover,
 strong {
-  color: white;
+  color: $grey-bright;
 }
 input,
 select {
   border: none!important;
-  background-color: #2D2E31!important;
-  color: $body-text-color!important;
+  background: $grey-mid!important;
+  color: $grey-bright!important;
 }
 input[type="search"]::-webkit-search-cancel-button {
   background-color: white;
@@ -61,178 +52,190 @@ input.is-focused,
 select:focus,
 input[type="search"]:focus {
   outline: none!important;
-  box-shadow: 0 0 0 2px $body-text-color!important;
+  box-shadow: 0 0 0 2px $grey-bright!important;
 }
 input::placeholder {
-    color: #4a4a4a!important;
+    color: $grey-lighter!important;
+}
+button.is-static {
+  background: $grey-mid!important;
+}
+button.is-outlined:hover {
+  background: $grey-mid!important;
+}
+.table {
+  width: 100%;
+  background-color: transparent!important;
+  color: $grey-bright;
+}
+.table tr td {
+  border-color: $grey-mid!important;
 }
 nav {
-  background-color: $nav-background;
+  background-color: $grey-mid;
   ul {
     li.logo {
       background: none;
     }
     li {
       a {
-        color: #B5B5B5;
-        border-bottom: 1px solid #3B3B3B;
+        color: $grey-bright;
+        border-bottom: 1px solid $grey-light;
       }
       a:hover,
       a:focus {
-        color: #B5B5B5;
+        color: $grey-bright;
         border-bottom: none;
-        background-color: #3B3B3B;
+        background-color: $grey-light;
       }
     }
     li.is-highlighted a {
-      color: #B5B5B5;
+      color: $grey-bright;
       border-bottom: none;
-      background-color: #3B3B3B;
+      background-color: $grey-light;
     }
   }
 }
 #todoTable {
-  /*#todoTableSearch:active,
-  #todoTableSearch:focus {
-    box-shadow: 0 0 0 2px $body-text-color!important;
-    outline: none;
-  }*/
   .flex-table#previousDataItem.is-highlighted {
-    background-color: $darker-grey;
+    background-color: $grey-mid;
   }
   .flex-table.completed {
-    color: #4A4A4A;
+    color: $grey-light;
     .flex-row.text,
     .checkbox a,
     .checkbox a:hover {
       color: inherit;
     }
+    .flex-row span.tag {
+      opacity: .5;
+    }
     .flex-row span.tag.contexts {
-      background: #2c2d30!important;
-      color: inherit!important;
+      background: $grey-mid!important;
+      color: $grey-bright!important;
     }
     .flex-row span.tag.projects {
-      background: #3b3b3b!important;
-      color: #636363!important;
+      background: $grey-light!important;
+      color: $grey-bright!important;
     }
     .flex-row.itemDueDate {
-      color: #4A4A4A!important;
+      color: $grey-mid!important;
     }
     svg.fa-sort-down {
-      color: #4A4A4A!important;
+      color: $grey-mid!important;
     }
     .flex-row.itemDueDate .tags .tag.is-dark {
-      background: #4A4A4A!important;
+      background: $grey-mid!important;
     }
   }
   .flex-table:hover .flex-row.todoTableItemMore a {
-    color: $body-text-color;
+    color: $grey-bright;
   }
   .flex-table {
-    border-color: #2D2E31;
+    border-color: $grey-mid;
     .checkbox a {
-      color: $body-text-color;
+      color: $grey-bright;
     }
     .checkbox a:hover {
       color: white;
     }
     .flex-row.text {
-      color: $body-text-color;
+      color: $grey-bright;
     }
     .flex-row.itemDueDate {
       color: white;
     }
     .flex-row span.tag.contexts {
-      background: #075943!important;
-      color: #c5ede3!important;
+      background: $green-mid!important;
+      color: $green-bright!important;
     }
     .flex-row span.tag.projects {
-      background: #5f1a5e!important;
-      color: #f1d6f1!important;
+      background: $lila-dark!important;
+      color: $lila-bright!important;
     }
     .flex-row .is-white {
-      color: $body-text-color;
+      color: $grey-bright;
       background: none;
     }
     .flex-row.todoTableItemMore a {
-      color: $body-text-color;
+      color: $grey-bright;
     }
     .flex-row.todoTableItemMore .dropdown-content {
-      background: #4a4a4a;
+      background: $grey-mid;
       color: white;
     }
     .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-      background: #3b3b3b;
+      background: $grey-light;
     }
   }
 }
 #filterDropdown {
-  background: #3B3B3B;
+  background: $grey-light;
   .dropdown-item.is-greyed-out a {
-    background: #2c2d30!important;
-    color: #B5B5B5!important;
+    background: $grey-mid!important;
+    color: $grey-bright!important;
     opacity: .8;
   }
   .dropdown-item.is-greyed-out span.tag {
-    background: #1e2022!important;
+    background: $grey-mid!important;
     color: white!important;
   }
 }
 .filterDropdown {
   .dropdown-item a.headline,
   .dropdown-item a.headline a {
-    color: $body-text-color!important;
+    color: $grey-bright!important;
   }
   div.contexts {
     a.button  {
-      background: #075A44;
-      color: #C5EDE3;
+      background: $green-mid;
+      color: $green-bright;
       span.tag {
-        background: #C5EDE3;
-        color: #075A44;
+        background: $green-bright;
+        color: $green-mid;
       }
     }
     a.button:hover,
     a.button.is-dark {
-      background: #1BA37E;
+      background: $green-dark;
     }
   }
   div.projects {
     a.button  {
-      background: #5F1A5E;
-      color: #F2D6F2;
+      background: $lila-dark;
+      color: $lila-bright;
       span.tag {
-        background: #F2D6F2;
-        color: #5F1A5E;
+        background: $lila-bright;
+        color: $lila-dark;
       }
     }
     a.button:hover,
     a.button.is-dark {
-      background: #BC30BA;
+      background: $lila-mid;
     }
   }
   .button.is-white {
-    background-color: #2C2D30!important;
-    color: $body-text-color!important;
+    background-color: $grey-mid!important;
+    color: $grey-bright!important;
   }
   .dropdown-content {
-    background: #2C2D30!important;
+    background: $grey-mid!important;
   }
   .dropdown-content h4 {
-    color: $body-text-color!important;
+    color: $grey-bright!important;
   }
 }
 .columns a#filterColumnClose {
-  background: #3B3B3B;
-  color: $body-text-color;
+  background: $grey-light;
+  color: $grey-bright;
 }
 .toggle {
   .switch {
     .slider {
-      background-color: #4a4a4a;
+      background-color: $grey-mid;
     }
     input:checked + .slider {
-      background-color: #2C2D30 !important;
+      background-color: $grey-mid !important;
     }
     input:focus + .slider {
       box-shadow: none;
@@ -242,32 +245,33 @@ nav {
     }
   }
 }
-#modalForm {
+#modalForm,
+#modalChangeFile {
   button {
     color: white;
-    border-color: #1e2022!important;
+    border-color: $grey-mid!important;
   }
   button:hover {
-    color: $body-text-color;
+    color: $grey-bright;
   }
 }
 .modal {
   .modal-content {
     .card {
-      background: #4A4A4A;
-      color: $body-text-color;
+      background: $grey-light;
+      color: $grey-bright;
       .card-header-title {
-        color: $body-text-color;
+        color: $grey-bright;
       }
       .card-footer,
       .card-footer-item {
-        border-color: #2D2E31;
+        border-color: $grey-mid;
       }
     }
   }
   button {
     color: white;
-    border-color: #1e2022!important;
+    border-color: $grey-mid!important;
   }
 }
 .dueDate {
@@ -281,7 +285,7 @@ nav {
 .datepicker {
   background: none;
   .datepicker-picker {
-    background: #2D2E31;
+    background: $grey-mid;
     color: white;
     .button,
     .button:hover,
@@ -294,23 +298,23 @@ nav {
     }
     .datepicker-cell.selected,
     .datepicker-cell.selected:hover {
-      color: #2D2E31;
+      color: $grey-mid;
       background: white;
     }
     .datepicker-cell.focused:not(.selected),
     .datepicker-cell:hover {
-      color: #2D2E31;
-      background: $body-text-color;
+      color: $grey-mid;
+      background: $grey-bright;
     }
   }
 }
 .modal.content {
-  color: $body-text-color!important;
+  color: $grey-bright!important;
   input {
-    background-color: $body-background-color!important;
+    background-color: $grey-mid!important;
   }
   select {
-    background-color: $body-background-color!important;
+    background-color: $grey-mid!important;
     color: inherit;
     border: none;
   }
@@ -321,49 +325,52 @@ nav {
   .is-large.modal-close,
   .tag.is-info {
     background: white!important;
-    color: $nav-background!important;
+    color: $grey-mid!important;
   }
   .modal-close::before,
   .modal-close::after {
-    color: $nav-background!important;
-    background: $nav-background!important;
+    color: $grey-mid!important;
+    background: $grey-mid!important;
   }
   .modal-card,
   table {
-    background: #3B3B3B;
-    color: $body-text-color!important;
+    background: $grey-light;
+    color: $grey-bright!important;
   }
   .title,
-  table th,
-  a {
+  table th {
     color: white;
   }
   table tr,
   table th,
   table td {
-    border-color: $darker-grey!important;
+    border-color: $grey-mid!important;
   }
   .tabs ul {
     border-color: transparent;
   }
   .tabs li a {
-    border-color: $darker-grey;
+    color: white;
+    border-color: $grey-lighter;
+  }
+  .tabs li a:hover {
+    border-color: $grey-bright;
   }
   .tabs li.is-active a {
     color: white;
-    border-color: $body-text-color;
+    border-color: $grey-bright;
   }
 }
 .contentContainer {
   .title.is-1,
   .subtitle,
   .subtitle strong {
-    color: $body-text-color;
+    color: $grey-bright;
   }
 }
 #suggestionContainer {
-  background: #2D2E31;
+  background: $grey-mid;
   h4 {
-    color: $body-text-color;
+    color: $grey-bright;
   }
 }

@@ -1,5 +1,5 @@
 body {
-  background-color: #1E2022;
+  background-color: #1d1e20;
   color: #CCCDCF; }
 
 a {
@@ -10,13 +10,14 @@ a:focus {
   outline: 2px solid #CCCDCF !important; }
 
 a:hover,
+button:hover,
 strong {
-  color: white; }
+  color: #CCCDCF; }
 
 input,
 select {
   border: none !important;
-  background-color: #2D2E31 !important;
+  background: #2c2d30 !important;
   color: #CCCDCF !important; }
 
 input[type="search"]::-webkit-search-cancel-button {
@@ -33,88 +34,101 @@ input[type="search"]:focus {
   box-shadow: 0 0 0 2px #CCCDCF !important; }
 
 input::placeholder {
-  color: #4a4a4a !important; }
+  color: #4d4d4d !important; }
+
+button.is-static {
+  background: #2c2d30 !important; }
+
+button.is-outlined:hover {
+  background: #2c2d30 !important; }
+
+.table {
+  width: 100%;
+  background-color: transparent !important;
+  color: #CCCDCF; }
+
+.table tr td {
+  border-color: #2c2d30 !important; }
 
 nav {
-  background-color: #2C2D30; }
+  background-color: #2c2d30; }
   nav ul li.logo {
     background: none; }
   nav ul li a {
-    color: #B5B5B5;
+    color: #CCCDCF;
     border-bottom: 1px solid #3B3B3B; }
   nav ul li a:hover,
   nav ul li a:focus {
-    color: #B5B5B5;
+    color: #CCCDCF;
     border-bottom: none;
     background-color: #3B3B3B; }
   nav ul li.is-highlighted a {
-    color: #B5B5B5;
+    color: #CCCDCF;
     border-bottom: none;
     background-color: #3B3B3B; }
 
-#todoTable {
-  /*#todoTableSearch:active,
-  #todoTableSearch:focus {
-    box-shadow: 0 0 0 2px $body-text-color!important;
-    outline: none;
-  }*/ }
-  #todoTable .flex-table#previousDataItem.is-highlighted {
-    background-color: #4a4a4a; }
-  #todoTable .flex-table.completed {
-    color: #4A4A4A; }
-    #todoTable .flex-table.completed .flex-row.text,
-    #todoTable .flex-table.completed .checkbox a,
-    #todoTable .flex-table.completed .checkbox a:hover {
-      color: inherit; }
-    #todoTable .flex-table.completed .flex-row span.tag.contexts {
-      background: #2c2d30 !important;
-      color: inherit !important; }
-    #todoTable .flex-table.completed .flex-row span.tag.projects {
-      background: #3b3b3b !important;
-      color: #636363 !important; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate {
-      color: #4A4A4A !important; }
-    #todoTable .flex-table.completed svg.fa-sort-down {
-      color: #4A4A4A !important; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate .tags .tag.is-dark {
-      background: #4A4A4A !important; }
-  #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
+#todoTable .flex-table#previousDataItem.is-highlighted {
+  background-color: #2c2d30; }
+
+#todoTable .flex-table.completed {
+  color: #3B3B3B; }
+  #todoTable .flex-table.completed .flex-row.text,
+  #todoTable .flex-table.completed .checkbox a,
+  #todoTable .flex-table.completed .checkbox a:hover {
+    color: inherit; }
+  #todoTable .flex-table.completed .flex-row span.tag {
+    opacity: .5; }
+  #todoTable .flex-table.completed .flex-row span.tag.contexts {
+    background: #2c2d30 !important;
+    color: #CCCDCF !important; }
+  #todoTable .flex-table.completed .flex-row span.tag.projects {
+    background: #3B3B3B !important;
+    color: #CCCDCF !important; }
+  #todoTable .flex-table.completed .flex-row.itemDueDate {
+    color: #2c2d30 !important; }
+  #todoTable .flex-table.completed svg.fa-sort-down {
+    color: #2c2d30 !important; }
+  #todoTable .flex-table.completed .flex-row.itemDueDate .tags .tag.is-dark {
+    background: #2c2d30 !important; }
+
+#todoTable .flex-table:hover .flex-row.todoTableItemMore a {
+  color: #CCCDCF; }
+
+#todoTable .flex-table {
+  border-color: #2c2d30; }
+  #todoTable .flex-table .checkbox a {
     color: #CCCDCF; }
-  #todoTable .flex-table {
-    border-color: #2D2E31; }
-    #todoTable .flex-table .checkbox a {
-      color: #CCCDCF; }
-    #todoTable .flex-table .checkbox a:hover {
-      color: white; }
-    #todoTable .flex-table .flex-row.text {
-      color: #CCCDCF; }
-    #todoTable .flex-table .flex-row.itemDueDate {
-      color: white; }
-    #todoTable .flex-table .flex-row span.tag.contexts {
-      background: #075943 !important;
-      color: #c5ede3 !important; }
-    #todoTable .flex-table .flex-row span.tag.projects {
-      background: #5f1a5e !important;
-      color: #f1d6f1 !important; }
-    #todoTable .flex-table .flex-row .is-white {
-      color: #CCCDCF;
-      background: none; }
-    #todoTable .flex-table .flex-row.todoTableItemMore a {
-      color: #CCCDCF; }
-    #todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
-      background: #4a4a4a;
-      color: white; }
-    #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-      background: #3b3b3b; }
+  #todoTable .flex-table .checkbox a:hover {
+    color: white; }
+  #todoTable .flex-table .flex-row.text {
+    color: #CCCDCF; }
+  #todoTable .flex-table .flex-row.itemDueDate {
+    color: white; }
+  #todoTable .flex-table .flex-row span.tag.contexts {
+    background: #075A44 !important;
+    color: #c5ede3 !important; }
+  #todoTable .flex-table .flex-row span.tag.projects {
+    background: #5f1a5e !important;
+    color: #f1d6f1 !important; }
+  #todoTable .flex-table .flex-row .is-white {
+    color: #CCCDCF;
+    background: none; }
+  #todoTable .flex-table .flex-row.todoTableItemMore a {
+    color: #CCCDCF; }
+  #todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
+    background: #2c2d30;
+    color: white; }
+  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
+    background: #3B3B3B; }
 
 #filterDropdown {
   background: #3B3B3B; }
   #filterDropdown .dropdown-item.is-greyed-out a {
     background: #2c2d30 !important;
-    color: #B5B5B5 !important;
+    color: #CCCDCF !important;
     opacity: .8; }
   #filterDropdown .dropdown-item.is-greyed-out span.tag {
-    background: #1e2022 !important;
+    background: #2c2d30 !important;
     color: white !important; }
 
 .filterDropdown .dropdown-item a.headline,
@@ -123,9 +137,9 @@ nav {
 
 .filterDropdown div.contexts a.button {
   background: #075A44;
-  color: #C5EDE3; }
+  color: #c5ede3; }
   .filterDropdown div.contexts a.button span.tag {
-    background: #C5EDE3;
+    background: #c5ede3;
     color: #075A44; }
 
 .filterDropdown div.contexts a.button:hover,
@@ -133,22 +147,22 @@ nav {
   background: #1BA37E; }
 
 .filterDropdown div.projects a.button {
-  background: #5F1A5E;
-  color: #F2D6F2; }
+  background: #5f1a5e;
+  color: #f1d6f1; }
   .filterDropdown div.projects a.button span.tag {
-    background: #F2D6F2;
-    color: #5F1A5E; }
+    background: #f1d6f1;
+    color: #5f1a5e; }
 
 .filterDropdown div.projects a.button:hover,
 .filterDropdown div.projects a.button.is-dark {
   background: #BC30BA; }
 
 .filterDropdown .button.is-white {
-  background-color: #2C2D30 !important;
+  background-color: #2c2d30 !important;
   color: #CCCDCF !important; }
 
 .filterDropdown .dropdown-content {
-  background: #2C2D30 !important; }
+  background: #2c2d30 !important; }
 
 .filterDropdown .dropdown-content h4 {
   color: #CCCDCF !important; }
@@ -158,10 +172,10 @@ nav {
   color: #CCCDCF; }
 
 .toggle .switch .slider {
-  background-color: #4a4a4a; }
+  background-color: #2c2d30; }
 
 .toggle .switch input:checked + .slider {
-  background-color: #2C2D30 !important; }
+  background-color: #2c2d30 !important; }
 
 .toggle .switch input:focus + .slider {
   box-shadow: none; }
@@ -169,25 +183,27 @@ nav {
 .toggle .switch input:focus {
   outline: none; }
 
-#modalForm button {
+#modalForm button,
+#modalChangeFile button {
   color: white;
-  border-color: #1e2022 !important; }
+  border-color: #2c2d30 !important; }
 
-#modalForm button:hover {
+#modalForm button:hover,
+#modalChangeFile button:hover {
   color: #CCCDCF; }
 
 .modal .modal-content .card {
-  background: #4A4A4A;
+  background: #3B3B3B;
   color: #CCCDCF; }
   .modal .modal-content .card .card-header-title {
     color: #CCCDCF; }
   .modal .modal-content .card .card-footer,
   .modal .modal-content .card .card-footer-item {
-    border-color: #2D2E31; }
+    border-color: #2c2d30; }
 
 .modal button {
   color: white;
-  border-color: #1e2022 !important; }
+  border-color: #2c2d30 !important; }
 
 .dueDate svg,
 .dueDate #dueDatePickerInput,
@@ -198,7 +214,7 @@ nav {
 .datepicker {
   background: none; }
   .datepicker .datepicker-picker {
-    background: #2D2E31;
+    background: #2c2d30;
     color: white; }
     .datepicker .datepicker-picker .button,
     .datepicker .datepicker-picker .button:hover,
@@ -209,19 +225,19 @@ nav {
       color: inherit; }
     .datepicker .datepicker-picker .datepicker-cell.selected,
     .datepicker .datepicker-picker .datepicker-cell.selected:hover {
-      color: #2D2E31;
+      color: #2c2d30;
       background: white; }
     .datepicker .datepicker-picker .datepicker-cell.focused:not(.selected),
     .datepicker .datepicker-picker .datepicker-cell:hover {
-      color: #2D2E31;
+      color: #2c2d30;
       background: #CCCDCF; }
 
 .modal.content {
   color: #CCCDCF !important; }
   .modal.content input {
-    background-color: #1E2022 !important; }
+    background-color: #2c2d30 !important; }
   .modal.content select {
-    background-color: #1E2022 !important;
+    background-color: #2c2d30 !important;
     color: inherit;
     border: none; }
   .modal.content .select:not(.is-multiple):not(.is-loading)::after {
@@ -230,27 +246,29 @@ nav {
   .modal.content .is-large.modal-close,
   .modal.content .tag.is-info {
     background: white !important;
-    color: #2C2D30 !important; }
+    color: #2c2d30 !important; }
   .modal.content .modal-close::before,
   .modal.content .modal-close::after {
-    color: #2C2D30 !important;
-    background: #2C2D30 !important; }
+    color: #2c2d30 !important;
+    background: #2c2d30 !important; }
   .modal.content .modal-card,
   .modal.content table {
     background: #3B3B3B;
     color: #CCCDCF !important; }
   .modal.content .title,
-  .modal.content table th,
-  .modal.content a {
+  .modal.content table th {
     color: white; }
   .modal.content table tr,
   .modal.content table th,
   .modal.content table td {
-    border-color: #4a4a4a !important; }
+    border-color: #2c2d30 !important; }
   .modal.content .tabs ul {
     border-color: transparent; }
   .modal.content .tabs li a {
-    border-color: #4a4a4a; }
+    color: white;
+    border-color: #4d4d4d; }
+  .modal.content .tabs li a:hover {
+    border-color: #CCCDCF; }
   .modal.content .tabs li.is-active a {
     color: white;
     border-color: #CCCDCF; }
@@ -261,6 +279,6 @@ nav {
   color: #CCCDCF; }
 
 #suggestionContainer {
-  background: #2D2E31; }
+  background: #2c2d30; }
   #suggestionContainer h4 {
     color: #CCCDCF; }

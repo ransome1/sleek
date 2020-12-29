@@ -16,7 +16,7 @@
             <li class="logo">sleek</li>
             <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li id="navBtnFilter" class="btnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
-            <li class="btnOpenTodoFile"><a href="#" tabindex="0"><i class="fas fa-upload"></i></a></li>
+            <li class="btnChooseTodoFile"><a href="#" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
             <li class="btnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
           </ul>
         <ul>
@@ -331,10 +331,31 @@
         </div>
       </div>
     </div>
+    <div id="modalChangeFile" class="modal" tabindex="0">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">Select a todo.txt file</p>
+          </header>
+          <div class="card-content">
+            <table id="modalChangeFileTable" class="table">
+            </table>
+          </div>
+          <footer class="card-footer">
+            <a href="#" class="card-footer-item btnOpenTodoFile" tabindex="0"><i class="fas fa-upload"></i>&nbsp;Add another todo.txt file</a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
+          </footer>
+        </div>
+      </div>
+    </div>
     <script defer src="js/jsTodoExtensions.js"></script>
     <script defer src="js/jsTodoTxt.js"></script>
     <script defer src="js/autolink.js"></script>
     <script defer src="js/datepicker.min.js"></script>
+    <script defer src="locales/de/datepicker.js"></script>
+    <script defer src="locales/es/datepicker.js"></script>
+    <script defer src="locales/it/datepicker.js"></script>
     <script defer src="render.js"></script>
     <script defer src="js/fontawesome.js"></script>
     <script defer src="js/fontawesome.solid.min.js"></script>

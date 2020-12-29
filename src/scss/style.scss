@@ -28,6 +28,26 @@ button, button:focus, button:active, button:active, button:after, button::before
   border: none!important;
   box-shadow: none!important;
 }
+.button.is-outlined {
+  background: transparent;
+  border: 1px solid $dark-grey!important;
+  color: $darker-grey;
+}
+.button.is-outlined:hover {
+  background: white;
+  border: 1px solid $dark-grey!important;
+  color: $darker-grey;
+}
+button.is-static {
+  opacity: .75;
+}
+.table {
+  width: 100%;
+  background-color: transparent!important;
+}
+.table tr td {
+  vertical-align: middle;
+}
 body::-webkit-scrollbar {
   display: none;
 }

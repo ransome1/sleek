@@ -55,6 +55,7 @@ const createWindow = () => {
       mainWindow.webContents.executeJavaScript("parseDataFromFile()");
     }
   }, 120000);
+  //}, 6000);
   // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
   // Modules to create application menu
   const Menu = require("electron").Menu;
@@ -104,7 +105,7 @@ const createWindow = () => {
           label: i18next.t("addTodo"),
           accelerator: "CmdOrCtrl+n",
           click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("showForm(true)");
+            mainWindow.webContents.executeJavaScript("showForm()");
           }
         },
         {
