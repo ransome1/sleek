@@ -25,7 +25,7 @@
     <p>sleek offers a clean and simple interface that can be used with mouse and keyboard, keyboard only or touch devices. You will use an easy to understand but powerful syntax to create todos. According to the concept of todo.txt you can add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.</p>
     <p>All that can be done guided by sleeks interface that for instance will present suggestions on contexts and projects while typing or offers a date picker to ease the selection of due dates.</p>
     <p>There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere and sync it to all your devices. That also means if you don't have sleek at hand or if you don't like it any more you can just edit the todo.txt file with any text editor or other todo.txt application.</p>
-    <h4>Features</h4>
+    <p>Features</p>
     <ul>
       <li>An existing todo.txt file can be used or a new one can be created</li>
       <li>Todos can be added, edited, marked as complete (and vice versa) or deleted</li>
