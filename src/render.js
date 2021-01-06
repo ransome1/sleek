@@ -649,14 +649,12 @@ function parseDataFromFile() {
       });
       // read fresh data from file
       // this will also adapt syntax errors so it will be corrected later on
-      //items.strings = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; }).toString().split("\n");
       items.strings = new Array;
       items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
-      items.unfiltered = TodoTxt.parse(items.raw);
+      items.unfiltered = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
       items.unfiltered.forEach((item) => {
-        items.strings.push(item.toString());
+        if(item.text) items.strings.push(item.toString())
       });
-
       if(items.unfiltered.length>0) {
         t0 = performance.now();
         generateTodoData().then(response => {
@@ -681,39 +679,6 @@ function parseDataFromFile() {
         navBtnFilter.classList.remove("is-active");
         return Promise.resolve("Info: File is empty, nothing will be built");
       }
-
-      // for each array item we generate a todotxt object
-      /*return createTodoTxtObjects().then(response => {
-        console.log("Success: TodoTXT objects created");
-        //items.unfiltered = response;
-        //items.strings = TodoTxt.render(items.unfiltered);
-        if(items.unfiltered.length>0) {
-          t0 = performance.now();
-          generateTodoData().then(response => {
-            console.log(response);
-            t1 = performance.now();
-            console.log("Table rendered in", t1 - t0, "ms");
-          }).catch(error => {
-            console.log(error);
-          });
-          // if there is a file onboarding is hidden
-          showOnboarding(false);
-          return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
-        } else {
-          // if there is a file onboarding is hidden
-          showOnboarding(false);
-          // clean up filters if there were any before
-          todoFilters.innerHTML = "";
-          // hide/show the addTodoContainer
-          addTodoContainer.classList.add("is-active");
-          todoTable.classList.remove("is-active");
-          // if file is actually empty we don't need the filter drawer
-          navBtnFilter.classList.remove("is-active");
-          return Promise.resolve("Info: File is empty, nothing will be built");
-        }
-      }).catch(error => {
-        console.log(error);
-      });*/
     } catch(error) {
       showOnboarding(true);
       return Promise.reject("Error in parseDataFromFile(): " + error);
@@ -1312,6 +1277,7 @@ function generateTodoData(searchString) {
       // TODO: that's ugly, refine this
       for (let item in items.grouped[priority][1]) {
         let todo = items.grouped[priority][1][item];
+        if(!todo.text) continue;
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
