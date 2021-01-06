@@ -233,6 +233,11 @@ modalChangeFileOpen.innerHTML = i18next.t("openFile");
 modalChangeFileCreate.innerHTML = i18next.t("createFile");
 selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
 welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
+recurrancePickerDaily.innerHTML = i18next.t("daily");
+recurrancePickerWeekly.innerHTML = i18next.t("weekly");
+recurrancePickerMonthly.innerHTML = i18next.t("monthly");
+recurrancePickerAnnually.innerHTML = i18next.t("annually");
+recurrancePickerNoRecurrance.innerHTML = i18next.t("noRecurrance");
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
@@ -535,16 +540,16 @@ function getRecurranceDate(due, recurrance) {
 function setRecurranceInput(recurrance) {
   switch (recurrance) {
     case "d":
-      recurrancePickerInput.value = "Täglich";
+      recurrancePickerInput.value = i18next.t("daily");
       break;
     case "w":
-      recurrancePickerInput.value = "Wöchentlich";
+      recurrancePickerInput.value = i18next.t("weekly");
       break;
     case "m":
-      recurrancePickerInput.value = "Monatlich";
+      recurrancePickerInput.value = i18next.t("monthly");
       break;
     case "y":
-      recurrancePickerInput.value = "Jährlich";
+      recurrancePickerInput.value = i18next.t("annually");
       break;
     case undefined:
       recurrancePickerInput.value = null;
@@ -591,7 +596,7 @@ async function showRecurranceOptions(el) {
   });
 }
 const radioRecurrance = document.querySelectorAll("#recurrancePicker .selection");
-recurrancePickerInput.placeholder = i18next.t("noRepeat");
+recurrancePickerInput.placeholder = i18next.t("noRecurrance");
 recurrancePickerInput.onfocus = function(el) { showRecurranceOptions(el) };
 //recurrancePickerInput.onclick = function(el) { showRecurranceOptions(el) };
 // ########################################################################################################################

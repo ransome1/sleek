@@ -52,5 +52,10 @@
   "noResults": "Nessun risultato ",
   "noResultContainerSubtitle": "Nessun risultato trovato né in base alla tua ricerca né in base ad i filtri selezionati found",
   "clear": "Cancella",
-  "find": "Trova"
+  "find": "Trova",
+  "daily": "Giornaliero",
+  "weekly": "Settimanale",
+  "monthly": "Mensile",
+  "annually": "Annuale",
+  "noRecurrance": "Non reiterazione"
 }

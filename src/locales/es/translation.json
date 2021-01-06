@@ -52,5 +52,10 @@
   "noResults": "No hay resultados ",
   "noResultContainerSubtitle": "No se han encontrado resultados, ni según su búsqueda ni según los filtros seleccionados",
   "clear": "Eliminar",
-  "find": "Buscar"
+  "find": "Buscar",
+  "daily": "Diario",
+  "weekly": "Semanal",
+  "monthly": "Mensual",
+  "annually": "Anual",
+  "noRecurrance": "No repetición"
 }
