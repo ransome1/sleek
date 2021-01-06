@@ -20,7 +20,9 @@
             <li class="btnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
           </ul>
         <ul>
-          <li id="navBtnSettings"><a href="#" tabindex="0"><i class="fas fa-cog"></i></a></li>
+          <li id="navBtnSettings">
+            <a href="#" tabindex="0"><i class="fas fa-cog"></i></a>
+          </li>
           <li id="navBtnHelp"><a href="#" tabindex="0"><i class="fas fa-question-circle"></i></a></li>
         </ul>
           <section id="filterDropdown" class="filterDropdown dropdown" tabindex="0">
@@ -101,8 +103,35 @@
                 <div id="modalFormAlert" class="message-body"></div>
               </article>
               <div class="field dueDate">
-                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" tabindex="310">
+                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" tabindex="310" readonly>
               </div>
+              <div id="recurrancePicker" class="field">
+                <i class="fas fa-redo"></i>&nbsp;<input id="recurrancePickerInput" tabindex="311" readonly>
+                <div id="recurrancePickerContainer" class="card" tabindex="312">
+                  <div class="content">
+                    <label class="radio">
+                      <input type="radio" class="selection" name="recurrance" value="d" tabindex="312">
+                      Täglich
+                    </label>
+                    <label class="radio">
+                      <input type="radio" class="selection" name="recurrance" value="w" tabindex="0">
+                      Wöchentlich
+                    </label>
+                    <label class="radio">
+                      <input type="radio" class="selection" name="recurrance" value="m" tabindex="0">
+                      Monatlich
+                    </label>
+                    <label class="radio">
+                      <input type="radio" class="selection" name="recurrance" value="y" tabindex="0">
+                      Jährlich
+                    </label>
+                  </div>
+                  <footer class="card-footer">
+                    <a href="#" class="card-footer-item selection" tabindex="0" value="">Keine Wiederholung</a>
+                  </footer>
+                </div>
+              </div>
+              <br />
             </div>
           </div>
           <footer class="card-footer">

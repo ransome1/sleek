@@ -57,11 +57,18 @@ input[type="search"]:focus {
 input::placeholder {
     color: $grey-lighter!important;
 }
-button.is-static {
+button.is-link {
   background: $grey-mid!important;
+}
+.button[disabled],
+fieldset[disabled] {
+  background-color: transparent;
 }
 button.is-outlined:hover {
   background: $grey-mid!important;
+}
+svg {
+  color: $grey-bright;
 }
 .table {
   width: 100%;
@@ -73,6 +80,9 @@ button.is-outlined:hover {
 }
 nav {
   background-color: $grey-mid;
+  svg {
+    color: $grey-bright;
+  }
   ul {
     li.logo {
       background: none;
@@ -104,7 +114,8 @@ nav {
     color: $grey-light;
     .flex-row.text,
     .checkbox a,
-    .checkbox a:hover {
+    .checkbox a:hover,
+    svg {
       color: inherit;
     }
     .flex-row span.tag {
@@ -121,7 +132,7 @@ nav {
     .flex-row.itemDueDate {
       color: $grey-mid!important;
     }
-    svg.fa-sort-down {
+    svg {
       color: $grey-mid!important;
     }
     .flex-row.itemDueDate .tags .tag.is-dark {
@@ -274,12 +285,33 @@ nav {
     border-color: $grey-mid!important;
   }
 }
+#recurrancePicker {
+  #recurrancePickerInput,
+  .radio {
+    cursor: pointer;
+    background: none!important;
+    color: white!important;
+  }
+  #recurrancePickerInput::placeholder {
+    color: white!important;
+  }
+  .radio:hover {
+    color: $grey-bright!important;
+  }
+  #recurrancePickerContainer {
+    background: $grey-mid;
+    .card-footer {
+      border-color: $grey-pitchblack;
+    }
+  }
+}
 .dueDate {
   svg,
   #dueDatePickerInput,
   #dueDatePickerInput::placeholder {
     color: white!important;
     background: transparent!important;
+    cursor: pointer;
   }
 }
 .datepicker {

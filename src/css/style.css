@@ -87,10 +87,21 @@ input[type="search"]:focus {
   box-shadow: 0 0 0 2px #3273dc !important;
   outline: none; }
 
+input,
+input::placeholder {
+  width: auto;
+  font-size: 1em;
+  color: #3273dc;
+  box-shadow: none;
+  background: transparent; }
+
 .title,
 strong {
   font-family: "FreeSansBold";
   font-weight: normal !important; }
+
+svg {
+  color: #3273dc; }
 
 /* ONBOARDING */
 #noResultContainer.contentContainer {
@@ -151,13 +162,15 @@ strong {
   .columns nav:hover a#filterColumnClose.is-active {
     display: inline-block; }
 
-/* Vertical menu */
+/* MAIN MENU */
 nav {
   width: auto;
   height: 100%;
   float: left;
   position: relative;
   background: #f5f5f5; }
+  nav svg {
+    color: #4a4a4a; }
   nav ul {
     width: 5em;
     height: 100%;
@@ -194,6 +207,10 @@ nav {
       line-height: 5em;
       text-align: center;
       cursor: default; }
+    nav ul li span.alert {
+      position: absolute;
+      top: 13%;
+      right: 35%; }
   nav ul:nth-child(2) {
     height: auto;
     position: absolute;
@@ -322,33 +339,37 @@ nav {
     border: none;
     font-family: FreeSansBold;
     font-size: 1.5em; }
-  #todoTable .flex-table.completed .checkbox a {
+  #todoTable .flex-table.completed {
     color: #b5b5b5; }
-  #todoTable .flex-table.completed strong {
-    font-family: "FreeSansBold";
-    color: #b5b5b5; }
-  #todoTable .flex-table.completed .flex-row.text {
-    color: #b5b5b5; }
-  #todoTable .flex-table.completed .flex-row.text a {
-    color: #b5b5b5; }
-  #todoTable .flex-table.completed .flex-row span.tag.projects {
-    background: #b5b5b5;
-    color: white; }
-  #todoTable .flex-table.completed .flex-row span.tag.contexts {
-    background: #ccc;
-    color: white; }
-  #todoTable .flex-table.completed .flex-row.itemDueDate.isPast,
-  #todoTable .flex-table.completed .flex-row.itemDueDate.isToday,
-  #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow {
-    color: #ccc; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isPast .tags .is-dark,
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isToday .tags .is-dark,
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow .tags .is-dark {
-      background: #ccc; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isPast svg.fa-sort-down,
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isToday svg.fa-sort-down,
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow svg.fa-sort-down {
+    #todoTable .flex-table.completed .checkbox a {
+      color: #b5b5b5; }
+      #todoTable .flex-table.completed .checkbox a svg {
+        color: inherit; }
+    #todoTable .flex-table.completed strong {
+      font-family: "FreeSansBold";
+      color: #b5b5b5; }
+    #todoTable .flex-table.completed .flex-row.text {
+      color: #b5b5b5; }
+    #todoTable .flex-table.completed .flex-row.text a {
+      color: #b5b5b5; }
+    #todoTable .flex-table.completed .flex-row span.tag.projects {
+      background: #b5b5b5;
+      color: white; }
+    #todoTable .flex-table.completed .flex-row span.tag.contexts {
+      background: #ccc;
+      color: white; }
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isPast,
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isToday,
+    #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow {
       color: #ccc; }
+      #todoTable .flex-table.completed .flex-row.itemDueDate.isPast .tags .is-dark,
+      #todoTable .flex-table.completed .flex-row.itemDueDate.isToday .tags .is-dark,
+      #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow .tags .is-dark {
+        background: #ccc; }
+      #todoTable .flex-table.completed .flex-row.itemDueDate.isPast svg.fa-sort-down,
+      #todoTable .flex-table.completed .flex-row.itemDueDate.isToday svg.fa-sort-down,
+      #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow svg.fa-sort-down {
+        color: #ccc; }
   #todoTable .flex-table .flex-row {
     padding: .75rem 0;
     margin-right: 1em;
@@ -374,6 +395,8 @@ nav {
     cursor: pointer;
     margin-right: .5em;
     color: #4a4a4a; }
+    #todoTable .flex-table .flex-row.text svg {
+      color: inherit; }
   #todoTable .flex-table .flex-row.spacer {
     width: .5em;
     background: transparent; }
@@ -420,22 +443,21 @@ nav {
     #todoTable .flex-table .flex-row.itemDueDate.isToday .tags .is-dark {
       background: #ff3860;
       font-family: FreeSansBold; }
-    #todoTable .flex-table .flex-row.itemDueDate.isToday svg.fa-sort-down {
+    #todoTable .flex-table .flex-row.itemDueDate.isToday svg {
       color: inherit; }
   #todoTable .flex-table .flex-row.itemDueDate.isTomorrow {
     color: #fa745e; }
     #todoTable .flex-table .flex-row.itemDueDate.isTomorrow .tags .is-dark {
-      /*background: $has-text-warning-dark;*/
       background: #fa745e;
       font-family: FreeSansBold; }
-    #todoTable .flex-table .flex-row.itemDueDate.isTomorrow svg.fa-sort-down {
+    #todoTable .flex-table .flex-row.itemDueDate.isTomorrow svg {
       color: #fa745e; }
   #todoTable .flex-table .flex-row.itemDueDate.isPast {
     color: #ff3860; }
     #todoTable .flex-table .flex-row.itemDueDate.isPast .tags .is-dark {
       background: #ff3860;
       font-family: FreeSansBold; }
-    #todoTable .flex-table .flex-row.itemDueDate.isPast svg.fa-sort-down {
+    #todoTable .flex-table .flex-row.itemDueDate.isPast svg {
       color: inherit; }
   #todoTable .flex-table .flex-row:hover .tags {
     display: block; }
@@ -514,38 +536,42 @@ nav {
       border-radius: 50%; }
 
 /* MODAL */
-#modalForm {
-  /*#modalFormInput:focus {
-    box-shadow: 0 0 0 1px $has-text-link!important;
-    outline: none;
-  }*/ }
-  #modalForm #modalFormInputHelp {
-    z-index: 60;
-    cursor: pointer;
-    pointer-events: all; }
-  #modalForm .card-header-title {
-    font-family: "FreeSansBold"; }
-  #modalForm .message {
-    display: none;
-    margin: 1em 0; }
-  #modalForm .is-active {
-    display: block; }
-  #modalForm .field {
-    margin: .75em 0 0 0; }
-  #modalForm #btnItemStatus {
-    display: none;
-    text-align: center; }
-  #modalForm #btnItemStatus.is-active {
-    display: block; }
-  #modalForm button {
-    font-size: 1em;
-    background: none;
-    color: #3273dc;
-    border: none;
-    border-right: 1px solid #ebebeb !important;
-    cursor: pointer; }
-  #modalForm button:hover {
-    color: black; }
+#modalForm #modalFormInputHelp {
+  z-index: 60;
+  cursor: pointer;
+  pointer-events: all; }
+
+#modalForm .card-header-title {
+  font-family: "FreeSansBold"; }
+
+#modalForm .message {
+  display: none;
+  margin: 1em 0; }
+
+#modalForm .is-active {
+  display: block; }
+
+#modalForm .field {
+  float: left;
+  margin: .75em .75em .75em 0; }
+
+#modalForm #btnItemStatus {
+  display: none;
+  text-align: center; }
+
+#modalForm #btnItemStatus.is-active {
+  display: block; }
+
+#modalForm button {
+  font-size: 1em;
+  background: none;
+  color: #3273dc;
+  border: none;
+  border-right: 1px solid #ebebeb !important;
+  cursor: pointer; }
+
+#modalForm button:hover {
+  color: black; }
 
 #suggestionContainer {
   height: auto;
@@ -616,6 +642,7 @@ nav {
     .modal.content .modal-card-body table.settings tr {
       border: none; }
     .modal.content .modal-card-body table.settings tr td {
+      position: relative;
       vertical-align: top;
       border: none;
       padding-top: 0;
@@ -623,6 +650,10 @@ nav {
       .modal.content .modal-card-body table.settings tr td .toggle,
       .modal.content .modal-card-body table.settings tr td .field {
         margin-top: 3em; }
+      .modal.content .modal-card-body table.settings tr td .alert {
+        position: absolute;
+        top: 1em;
+        left: -.8em; }
     .modal.content .modal-card-body table.settings tr td:first-child {
       width: 85%;
       padding-right: 3em; }
@@ -652,28 +683,53 @@ nav {
     padding: .5em 0; }
 
 /* DATEPICKER */
-.dueDate svg {
-  color: #3273dc; }
-
-.dueDate #dueDatePickerInput,
-.dueDate #dueDatePickerInput::placeholder {
-  width: auto;
-  font-size: 1em;
-  color: #3273dc;
-  box-shadow: none;
-  cursor: pointer;
-  background: none; }
+.dueDate {
+  /*#dueDatePickerInput,
+  #dueDatePickerInput::placeholder {
+    width: auto;
+    font-size: 1em;
+    color: $has-text-link;
+    box-shadow: none;
+    cursor: pointer;
+    background: none;
+  }*/ }
+  .dueDate svg {
+    color: #3273dc; }
+  .dueDate #dueDatePickerInput {
+    cursor: pointer; }
 
 .datepicker {
   z-index: 60; }
   .datepicker .datepicker-footer {
     background: none; }
     .datepicker .datepicker-footer .datepicker-controls .button {
-      font-family: "FreeSansBold";
       font-size: 1em;
       background: none;
       border-color: transparent;
       color: #3273dc; }
+
+/* RECURRANCE PICKER */
+#recurrancePicker {
+  position: relative;
+  display: none; }
+  #recurrancePicker #recurrancePickerInput {
+    cursor: pointer; }
+  #recurrancePicker .card {
+    width: 15em;
+    display: none;
+    position: fixed; }
+    #recurrancePicker .card .content {
+      margin: 0;
+      padding: 1em; }
+    #recurrancePicker .card label {
+      width: 100%;
+      padding: 0;
+      margin: .25em 0; }
+  #recurrancePicker .card.is-active {
+    display: block; }
+
+#recurrancePicker.is-active {
+  display: block; }
 
 /* MEDIA QUERIES */
 @media (max-width: 992px) {

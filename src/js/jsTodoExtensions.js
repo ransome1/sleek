@@ -46,11 +46,30 @@ DueExtension.prototype.parsingFunction = function(line) {
 	return [null, null, null];
 };
 
+function RecExtension() {
+	this.name = "rec";
+}
+RecExtension.prototype = new TodoTxtExtension();
+RecExtension.prototype.parsingFunction = function(line) {
+	var rec = null;
+	var recRegex = /rec:([hdwmy])/;
+	var matchRec = recRegex.exec(line);
+	if ( matchRec !== null ) {
+		//var datePieces = matchDue[1].split('-');
+		//dueDate = new Date( datePieces[0], datePieces[1] - 1, datePieces[2] );
+		//return [dueDate, line.replace(dueRegex, ''), matchDue[1]];
+		rec = matchRec[1];
+		return [rec, line.replace(recRegex, ''), matchRec[1]];
+	}
+	return [null, null, null];
+};
+
 // Exported functions for node
 (function(exports){
 
 	exports.TodoTxtExtension = TodoTxtExtension;
 	exports.HiddenExtension = HiddenExtension;
 	exports.DueExtension = DueExtension;
+	exports.RecExtension = RecExtension;
 
 })(typeof exports === 'undefined' ? window : exports);

@@ -46,10 +46,8 @@ if(!theme) {
 if (language) {
   i18next.language = language;
 } else {
-  i18next
-    .use(i18nextBrowserLanguageDetector)
+  i18next.use(i18nextBrowserLanguageDetector)
 }
-// using Promises
 i18next
 .use(i18nextBackend)
 .init(i18nextOptions)
@@ -80,7 +78,7 @@ i18next
 });
 i18next.changeLanguage(language, (err, t) => {
   if (err) return console.log('something went wrong loading', err);
-  //t('key'); // -> same as i18next.t
+  //t('key'); // -> same as i18next.tf
 });
 settingsLanguage.onchange = function(){
   i18next.changeLanguage(this.value, error => {
@@ -100,7 +98,6 @@ const head = document.getElementsByTagName("head")[0];
 const btnApplyFilter = document.querySelectorAll(".btnApplyFilter");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const a = document.querySelectorAll("a");
-let checkPathForFile;
 let fileWatcher;
 let filterContainer = document.getElementById("todoFilters");
 // ########################################################################################################################
@@ -109,34 +106,55 @@ let filterContainer = document.getElementById("todoFilters");
 const modal = document.querySelectorAll('.modal');
 const modalCards = document.querySelectorAll('.modal-card');
 const modalClose = document.querySelectorAll('.modal-close');
+const modalBackground = document.querySelectorAll('.modal-background');
 const contentTabs = document.querySelectorAll('.modal.content ul li');
 const contentTabsCards = document.querySelectorAll('.modal.content section');
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
-const modalBackground = document.querySelectorAll('.modal-background');
+const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
+const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
+const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
 // ########################################################################################################################
 // MAIN MENU CONFIG
 // ########################################################################################################################
 const btnTheme = document.querySelectorAll('.btnTheme');
 const btnFilter = document.querySelectorAll(".btnFilter");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
-const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
-const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
-const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
 // ########################################################################################################################
 // DATEPICKER CONFIG
 // ########################################################################################################################
-const dueDatePickerInput = document.getElementById("dueDatePickerInput");
 const dueDatePicker = new Datepicker(dueDatePickerInput, {
   autohide: true,
   format: "yyyy-mm-dd",
   clearBtn: true,
   language: i18next.language
 });
+dueDatePickerInput.readOnly = true;
+dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
+dueDatePickerInput.addEventListener('changeDate', function (e, details) {
+  let caretPosition = getCaretPosition(modalFormInput);
+  if(modalFormInput.value.substr(caretPosition-5, caretPosition-1).split(" ")[1] === "due:") modalFormInput.value = modalFormInput.value.replace("due:", "");
+  // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
+  if(e.detail.date) {
+    // generate the object on what is written into input, so we don't overwrite previous inputs of user
+    item.currentTemp = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+    item.currentTemp.due = new Date(e.detail.date);
+    item.currentTemp.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
+    modalFormInput.value = item.currentTemp.toString();
+    // clean up as we don#t need it anymore
+    item.currentTemp = null;
+    // if suggestion box was open, it needs to be closed
+    suggestionContainer.classList.remove("is-active");
+    // if a due date is set, the recurrance picker will be shown
+    recurrancePicker.classList.add("is-active");
+    modalFormInput.focus();
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
+  }
+});
 // ########################################################################################################################
-// PREP FOR THE TABLE RENDERING
+// PREP FOR TABLE RENDERING
 // ########################################################################################################################
-const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
-let todoTableContainer = document.getElementById("todoTableContainer");
+let todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 let tableContainerDue = document.createDocumentFragment();
 let tableContainerComplete = document.createDocumentFragment();
 let tableContainerDueAndComplete = document.createDocumentFragment();
@@ -150,6 +168,7 @@ let todoTableBodyCellMoreTemplate = document.createElement("div");
 let todoTableBodyCellPriorityTemplate = document.createElement("div");
 let todoTableBodyCellSpacerTemplate = document.createElement("div");
 let todoTableBodyCellDueDateTemplate = document.createElement("span");
+let todoTableBodyCellRecurranceTemplate = document.createElement("span");
 todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
 todoTableBodyRowTemplate.setAttribute("class", "flex-table");
 todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
@@ -164,10 +183,11 @@ todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
 todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
 todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
 todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
+todoTableBodyCellRecurranceTemplate.setAttribute("class", "flex-row recurrance");
+todoTableBodyCellRecurranceTemplate.setAttribute("role", "cell");
 // ########################################################################################################################
 // INITIAL CONFIGURATION
 // ########################################################################################################################
-dueDatePickerInput.readOnly = true;
 toggleShowCompleted.checked = showCompleted;
 toggleMatomoEvents.checked = matomoEvents;
 toggleNotifications.checked = notifications;
@@ -195,28 +215,30 @@ if (is.development) {
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
+btnSave.innerHTML = i18next.t("save");
 todoTableSearch.placeholder = i18next.t("search");
 filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
 filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
-selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
-dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
-btnSave.innerHTML = i18next.t("save");
 addTodoContainerHeadline.innerHTML = i18next.t("addTodoContainerHeadline");
 addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
 addTodoContainerButton.innerHTML = i18next.t("addTodo");
-welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
 onboardingContainerSubtitle.innerHTML = i18next.t("onboardingContainerSubtitle");
 onboardingContainerBtnOpen.innerHTML = i18next.t("openFile");
 onboardingContainerBtnCreate.innerHTML = i18next.t("createFile");
-modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
 noResultContainerHeadline.innerHTML = i18next.t("noResults");
 noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
+modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
 modalChangeFileTitle.innerHTML = i18next.t("selectFile");
 modalChangeFileOpen.innerHTML = i18next.t("openFile");
 modalChangeFileCreate.innerHTML = i18next.t("createFile");
+selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
+welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
+a.forEach(el => el.addEventListener("click", function(el) {
+  if(el.target.href && el.target.href === "#") el.preventDefault();
+}));
 navBtnHelp.onclick = function () {
   showContent(modalHelp);
   // trigger matomo event
@@ -238,80 +260,6 @@ btnItemStatus.onclick = function() {
     console.log(error);
   });
 }
-todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
-toggleShowCompleted.onclick = function() {
-  showCompletedTodos();
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
-}
-toggleMatomoEvents.onclick = function() {
-  matomoEvents = this.checked;
-  store.set('matomoEvents', this.checked);
-  matomoEventsConsent().then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting matomoEvents", this.checked])
-}
-toggleNotifications.onclick = function() {
-  notifications = this.checked;
-  store.set('notifications', this.checked);
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Notifications", this.checked])
-}
-toggleDarkmode.onclick = function() {
-  setTheme(true);
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Dark mode", this.checked])
-}
-filterColumnClose.onclick = function() {
-  showFilters(false);
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
-}
-modalFormInputHelp.onclick = function () {
-  showContent(modalHelp);
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Help"]);
-}
-modalFormInput.onfocus = function () {
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Todo input field", "Focused"]);
-};
-todoTableSearch.onfocus = function () {
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Search input field", "Focused"]);
-};
-btnTheme.forEach(function(el) {
-  el.setAttribute("title", i18next.t("toggleDarkMode"));
-  el.addEventListener("click", function(el) {
-    setTheme(true);
-    // trigger matomo event
-    if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
-  });
-});
-modalBackground.forEach(function(el) {
-  el.onclick = function() {
-    clearModal();
-    el.parentElement.classList.remove("is-active");
-    suggestionContainer.classList.remove("is-active");
-    // trigger matomo event
-    if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
-  }
-});
-modalClose.forEach(function(el) {
-  el.onclick = function() {
-    //clearModal();
-    el.parentElement.parentElement.classList.remove("is-active");
-    // trigger matomo event
-    if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
-  }
-});
-a.forEach(el => el.addEventListener("click", function(el) {
-  if(el.target.href && el.target.href === "#") el.preventDefault();
-}));
 btnOpenTodoFile.forEach(function(el) {
   el.setAttribute("title", i18next.t("openFile"));
   el.onclick = function () {
@@ -373,27 +321,74 @@ btnAddTodo.forEach(function(el) {
     if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
   }
 });
-dueDatePickerInput.addEventListener('changeDate', function (e, details) {
-  let caretPosition = getCaretPosition(modalFormInput);
-  if(modalFormInput.value.substr(caretPosition-5, caretPosition-1).split(" ")[1] === "due:") modalFormInput.value = modalFormInput.value.replace("due:", "");
-  // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
-  if(e.detail.date) {
-    // generate the object on what is written into input, so we don't overwrite previous inputs of user
-    item.currentTemp = new TodoTxtItem(modalFormInput.value, [ new DueExtension() ]);
-    item.currentTemp.due = new Date(e.detail.date);
-    item.currentTemp.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
-    modalFormInput.value = item.currentTemp.toString();
-    // clean up as we don#t need it anymore
-    item.currentTemp = null;
-    // if suggestion box was open, it needs to be closed
-    suggestionContainer.classList.remove("is-active");
-    modalFormInput.focus();
+btnTheme.forEach(function(el) {
+  el.setAttribute("title", i18next.t("toggleDarkMode"));
+  el.addEventListener("click", function(el) {
+    setTheme(true);
     // trigger matomo event
-    if(matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
-  }
+    if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
+  });
 });
+todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
+todoTableSearch.onfocus = function () {
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Search input field", "Focused"]);
+};
 todoTableSearch.addEventListener("input", function () {
   generateTodoData(this.value);
+});
+toggleShowCompleted.onclick = function() {
+  showCompletedTodos();
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
+}
+toggleMatomoEvents.onclick = function() {
+  matomoEvents = this.checked;
+  store.set('matomoEvents', this.checked);
+  matomoEventsConsent().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting matomoEvents", this.checked])
+}
+toggleNotifications.onclick = function() {
+  notifications = this.checked;
+  store.set('notifications', this.checked);
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Notifications", this.checked])
+}
+toggleDarkmode.onclick = function() {
+  setTheme(true);
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Dark mode", this.checked])
+}
+modalFormInputHelp.onclick = function () {
+  showContent(modalHelp);
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Help"]);
+}
+modalFormInput.onfocus = function () {
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Todo input field", "Focused"]);
+};
+modalBackground.forEach(function(el) {
+  el.onclick = function() {
+    clearModal();
+    el.parentElement.classList.remove("is-active");
+    suggestionContainer.classList.remove("is-active");
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+  }
+});
+modalClose.forEach(function(el) {
+  el.onclick = function() {
+    //clearModal();
+    el.parentElement.parentElement.classList.remove("is-active");
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+  }
 });
 modalForm.addEventListener("submit", function(e) {
   // intercept submit
@@ -422,6 +417,7 @@ modalFormInput.addEventListener("keyup", e => {
     typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
     typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
   } else {
+    suggestionContainer.classList.remove("is-active");
     return false;
   }
   // suppress suggestion box if caret is at the end of word
@@ -444,21 +440,24 @@ modalFormInput.addEventListener("keyup", e => {
     suggestionContainer.classList.remove("is-active");
   }
 });
+filterColumnClose.onclick = function() {
+  showFilters(false);
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
+}
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
-filterDropdown.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') showFilters(false);
-});
-suggestionContainer.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') this.classList.remove("is-active");
-});
 modalForm.addEventListener ("keydown", function () {
   if(event.key === 'Escape') {
     clearModal();
     this.classList.remove("is-active");
     suggestionContainer.classList.remove("is-active");
   }
+});
+modalForm.addEventListener ("click", function () {
+  // close recurrance picker if click is outside of recurrance container
+  if(!event.target.closest("#recurrancePickerContainer") && event.target!=recurrancePickerInput) recurrancePickerContainer.classList.remove("is-active")
 });
 modalHelp.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
@@ -469,38 +468,12 @@ modalChangeFile.addEventListener ("keydown", function () {
 modalSettings.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
 });
-// ########################################################################################################################
-// CONTENT CONTAINER
-// ########################################################################################################################
-contentTabs.forEach(el => el.addEventListener("click", function(el) {
-  contentTabs.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  this.classList.add("is-active");
-  showTab(this.classList[0]);
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
-}));
-function showContent(section) {
-  contentTabs.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  contentTabsCards.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  let firstTab = section.querySelector(".tabs");
-  firstTab.firstElementChild.firstElementChild.classList.add("is-active");
-  let firstSection = section.querySelector("section");
-  firstSection.classList.add("is-active");
-  section.classList.add("is-active");
-  section.focus();
-}
-function showTab(tab) {
-  contentTabsCards.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  document.getElementById(tab).classList.add("is-active");
-}
+suggestionContainer.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') this.classList.remove("is-active");
+});
+filterDropdown.addEventListener ("keydown", function () {
+  if(event.key === 'Escape') showFilters(false);
+});
 // ########################################################################################################################
 // THEME CONFIG
 // ########################################################################################################################
@@ -536,46 +509,101 @@ function setTheme(switchTheme) {
   }
 }
 // ########################################################################################################################
-// START
+// RECURRANT TODOS
 // ########################################################################################################################
-window.onload = function () {
-  // On app load only call matomo function if opt in is set
-  matomoEventsConsent().then(response => {
-    console.log(response);
+function getRecurranceDate(due, recurrance) {
+  switch (recurrance) {
+    case "d":
+    var recurrance = 1;
+    break;
+    case "w":
+    var recurrance = 7;
+    break;
+    case "m":
+    var recurrance = 30;
+    break;
+    case "y":
+    var recurrance = 365;
+    break;
+    default:
+    var recurrance = 0;
+  }
+  var due = due.getTime();
+  due += 1000 * 60 * 60 * 24 * recurrance;
+  return new Date(due);
+}
+function setRecurranceInput(recurrance) {
+  switch (recurrance) {
+    case "d":
+      recurrancePickerInput.value = "Täglich";
+      break;
+    case "w":
+      recurrancePickerInput.value = "Wöchentlich";
+      break;
+    case "m":
+      recurrancePickerInput.value = "Monatlich";
+      break;
+    case "y":
+      recurrancePickerInput.value = "Jährlich";
+      break;
+    case undefined:
+      recurrancePickerInput.value = null;
+      break;
+  }
+}
+async function showRecurranceOptions(el) {
+  recurrancePickerContainer.focus();
+  recurrancePickerContainer.classList.toggle("is-active");
+  // get object from current input
+  var todo = await createTodoTxtObjects(modalFormInput.value).then(response => {
+    return response[0];
   }).catch(error => {
     console.log(error);
   });
-  // set theme
-  setTheme();
-  // only start if a file has been selected
-  if(pathToFile) {
-    console.log("Info: Path to file: " + pathToFile);
-    // start parsing data
-    parseDataFromFile(pathToFile).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
-  } else {
-    console.log("Info: File does not exist or has not been defined yet");
-    // show onboarding if no file has been selected
-    showOnboarding(true);
-  }
-
+  radioRecurrance.forEach(function(el) {
+    // remove old selection
+    el.checked = false;
+    // set pre selection
+    if(todo.rec === el.value) el.checked = true;
+    el.onclick = async function() {
+      // EDIT TODO
+      if(modalFormInput.value) {
+        // TODO: why do I need to write both?
+        if(el.value) {
+          todo.rec = el.value;
+          todo.recString = el.value;
+        } else {
+          todo.rec = null;
+          todo.recString = null;
+          todo = todo.toString().replace(" rec:null","");
+        }
+        modalFormInput.value = todo.toString();
+      // ADD TODO
+      } else {
+        modalFormInput.value = "rec:" + el.value;
+      }
+      setRecurranceInput(el.value);
+      recurrancePickerContainer.classList.remove("is-active");
+      modalFormInput.focus();
+      // trigger matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrance selected: " + el.value]);
+    }
+  });
 }
-window.onresize = function() {
-  let width = this.outerWidth;
-  let height = this.outerHeight;
-  store.set('windowBounds', { width, height });
-  // Adjust position of suggestion box to input field
-  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-  suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
-  suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-  suggestionContainer.style.left = modalFormInputPosition.left + "px";
-}
+const radioRecurrance = document.querySelectorAll("#recurrancePicker .selection");
+recurrancePickerInput.placeholder = i18next.t("noRepeat");
+recurrancePickerInput.onfocus = function(el) { showRecurranceOptions(el) };
+//recurrancePickerInput.onclick = function(el) { showRecurranceOptions(el) };
 // ########################################################################################################################
 // DATE FUNCTIONS
 // ########################################################################################################################
+function convertDate(date) {
+  //https://stackoverflow.com/a/6040556
+  let day = ("0" + (date.getDate())).slice(-2)
+  let month = ("0" + (date.getMonth() + 1)).slice(-2);
+  let year = date.getFullYear();
+  return year + "-" + month + "-" + day;
+};
 Date.prototype.isToday = function () {
   const today = new Date()
   return this.getDate() === today.getDate() &&
@@ -589,21 +617,67 @@ Date.prototype.isTomorrow = function () {
   this.getFullYear() === today.getFullYear();
 };
 Date.prototype.isPast = function () {
-  const today = new Date()
-  return this.getDate() < today.getDate() &&
-  this.getMonth() === today.getMonth() &&
-  this.getFullYear() === today.getFullYear();
-};
-function convertDate(date) {
-  //https://stackoverflow.com/a/6040556
-  let day = ("0" + (date.getDate())).slice(-2)
-  let month = ("0" + (date.getMonth() + 1)).slice(-2);
-  let year = date.getFullYear();
-  return year + "-" + month + "-" + day;
+  const today = new Date();
+  if (this.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) {
+    return true;
+  }
+  return false;
 };
 // ########################################################################################################################
 // FILE FUNCTIONS
 // ########################################################################################################################
+function parseDataFromFile() {
+  // we only start if file exists
+  if (fs.existsSync(pathToFile)) {
+    try {
+      // start the file watcher
+      startFileWatcher().then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+      // read fresh data from file
+      items.strings = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; }).toString().split("\n");
+      // for each array item we generate a todotxt object
+      return createTodoTxtObjects().then(response => {
+        console.log("Success: TodoTXT objects created");
+        items.unfiltered = response;
+        if(items.unfiltered.length>0) {
+          t0 = performance.now();
+          generateTodoData().then(response => {
+            console.log(response);
+            t1 = performance.now();
+            console.log("Table rendered in", t1 - t0, "ms");
+          }).catch(error => {
+            console.log(error);
+          });
+          // if there is a file onboarding is hidden
+          showOnboarding(false);
+          return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
+        } else {
+          // if there is a file onboarding is hidden
+          showOnboarding(false);
+          // clean up filters if there were any before
+          todoFilters.innerHTML = "";
+          // hide/show the addTodoContainer
+          addTodoContainer.classList.add("is-active");
+          todoTable.classList.remove("is-active");
+          // if file is actually empty we don't need the filter drawer
+          navBtnFilter.classList.remove("is-active");
+          return Promise.resolve("Info: File is empty, nothing will be built");
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+    } catch(error) {
+      showOnboarding(true);
+      return Promise.reject("Error in parseDataFromFile(): " + error);
+    }
+  } else {
+    showOnboarding(true);
+    return Promise.resolve("Info: File does not exist or has not been defined yet");
+  }
+}
 function createFile() {
   // Resolves to a Promise<Object>
   dialog.showSaveDialog({
@@ -625,7 +699,7 @@ function createFile() {
     fs.writeFile(file.filePath, "", function (err) {
       if (err) throw err;
       if (!err) {
-        console.log("Success: New todo.txt file created: " + checkPathForFile + "/todo.txt");
+        console.log("Success: New todo.txt file created: " + file.filePath);
         // updating files array and set this item to default
         changeFile(file.filePath).then(response => {
           // if file was changed successfully the data is parsed again
@@ -649,7 +723,7 @@ function createFile() {
 function openFile() {
   // Resolves to a Promise<Object>
   dialog.showOpenDialog({
-    title: i18next.t("windowTitleOpenFile"),
+    title: i18next.t("selectFile"),
     defaultPath: path.join(app.getPath("home")),
     buttonLabel: i18next.t("windowButtonOpenFile"),
     // Restricting the user to only Text Files.
@@ -691,12 +765,7 @@ function startFileWatcher() {
     if(fileWatcher) fileWatcher.close();
     if (fs.existsSync(pathToFile)) {
       let md5Previous = null;
-      let fsWait = false;
       fileWatcher = fs.watch(pathToFile, (event, filename) => {
-        if (fsWait) return;
-        fsWait = setTimeout(() => {
-          fsWait = false;
-        }, 100);
         if (fs.existsSync(pathToFile)) {
           const md5Current = md5(fs.readFileSync(pathToFile));
           if (md5Current === md5Previous) {
@@ -750,9 +819,9 @@ function modalChooseFile() {
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
     if(files[file][0]===1) {
-      cell1.innerHTML = "<button class=\"button is-static\" disabled><i class=\"fas fa-check\"></i>&nbsp;" + i18next.t("selected") + "</button>";
+      cell1.innerHTML = "<button class=\"button\" disabled>" + i18next.t("selected") + "</button>";
     } else {
-      cell1.innerHTML = "<button class=\"button is-outlined\">" + i18next.t("select") + "</button>";
+      cell1.innerHTML = "<button class=\"button is-link\">" + i18next.t("select") + "</button>";
       cell1.onclick = function() {
         // set the new path variable and change the array
         changeFile(this.parentElement.getAttribute("data-path")).then(response => {
@@ -769,7 +838,7 @@ function modalChooseFile() {
           console.log(error);
         });
       }
-      cell3.innerHTML = "<i class=\"fas fa-trash-alt\"></i>";
+      cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
       cell3.title = i18next.t("delete");
       cell3.onclick = function() {
         removeFileFromHistory(this.parentElement.getAttribute("data-path")).then(response => {
@@ -796,245 +865,8 @@ function removeFileFromHistory(path) {
   }
 }
 // ########################################################################################################################
-// FUNCTIONS
+// FILTER FUNCTIONS
 // ########################################################################################################################
-function inView(element) {
-    var box = element.getBoundingClientRect();
-    return inViewBox(box);
-}
-function inViewBox(box) {
-    return ((box.bottom < 0) || (box.top > getWindowSize().h)) ? false : true;
-}
-function getWindowSize() {
-    return { w: document.body.offsetWidth || document.documentElement.offsetWidth || window.innerWidth, h: document.body.offsetHeight || document.documentElement.offsetHeight || window.innerHeight}
-}
-function matomoEventsConsent() {
-  try {
-    var _paq = window._paq = window._paq || [];
-    if(matomoEvents) {
-      // only continue if app is connected to the internet
-      if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
-      // user has given consent to process their data
-      _paq.push(['setConsentGiven']);
-      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-      _paq.push(['requireConsent']);
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="https://www.robbfolio.de/matomo/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '3']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-      })();
-      return Promise.resolve("Info: Consent given, Matomo enabled");
-    } else {
-      // revoke matomoEvents consent
-      _paq.push(['forgetConsentGiven']);
-      return Promise.resolve("Info: No consent given, Matomo disabled");
-    }
-  } catch(error) {
-    return Promise.reject("Error in matomoEventsConsent(): " + error);
-  }
-}
-function sortItems(items) {
-  // first step of sorting items: the youngest to the top
-  items.sort((a, b) => b.date - a.date);
-  // array is sorted so the due date is desc
-  items.sort((a, b) => a.due - b.due);
-  return;
-}
-function showNotification(todo, offset) {
-  try {
-    // abort if user didn't permit notifications within sleek
-    if(!notifications) return Promise.reject("Info: Notification surpressed (turned off in sleek's settings)");
-    // check for necessary permissions
-    return navigator.permissions.query({name: 'notifications'}).then(function(result) {
-      // abort if user didn't permit notifications
-      if(result.state!="granted") return Promise.reject("Info: Notification surpressed (not permitted by OS)");
-      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
-      const hash = md5(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
-      switch (offset) {
-        case 0:
-          title = "due today";
-          break;
-        case 1:
-          title = "due tomorrow";
-          break;
-      }
-      // if notification already has been triggered once it will be discarded
-      if(closedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
-      // set options for notifcation
-      const newNotification = new notification({
-        title: title,
-        body: todo.text,
-        silent: false,
-        icon: path.join(__dirname, '../assets/icons/icon.png'),
-        hasReply: false,
-        timeoutType: 'never',
-        urgency: 'critical',
-        closeButtonText: 'Close',
-        actions: [ {
-          type: 'button',
-          text: 'Show Button'
-        }]
-      });
-      // send it to UI
-      newNotification.show();
-      // once shown, it will be persisted as hash to it won't be shown a second time
-      closedNotifications.push(hash);
-      store.set("closedNotifications", closedNotifications);
-      // click on button in notification
-      newNotification.addListener('click', () => {
-        app.focus();
-        // if another modal was open it needs to be closed first
-        clearModal();
-        //load modal
-        showForm(todo.toString());
-      },{
-        // remove event listener after it is clicked once
-        once: true
-      });
-      return Promise.resolve("Info: Notification successfully sent");
-    });
-  } catch(error) {
-    return Promise.reject("Error in showNotification(): " + error);
-  }
-}
-function getCaretPosition(inputId) {
-  var content = inputId;
-  if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
-    var position = content.selectionStart;
-    return position;
-  } else {
-    return false;
-  }
-}
-function showCompletedTodos() {
-
-  if(showCompleted==false) {
-    showCompleted = true;
-  } else {
-    showCompleted = false;
-  }
-  toggleShowCompleted.checked = showCompleted;
-  // persist the sorting
-  store.set("showCompleted", showCompleted);
-  t0 = performance.now();
-  generateTodoData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Table rendered in:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });
-}
-function resetFilters() {
-  selectedFilters = [];
-  categoriesFiltered = new Array;
-  // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
-  store.set("selectedFilters", new Array);
-  // clear filtered categories
-  store.set("categoriesFiltered", new Array);
-  // clear search input
-  todoTableSearch.value = null;
-  t0 = performance.now();
-  generateTodoData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Table rendered in:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });
-}
-function showMore(variable) {
-  if(variable) {
-    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
-      item.classList.add("is-active")
-    });
-  } else {
-    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
-      item.classList.remove("is-active")
-    });
-  }
-};
-function showForm(todo) {
-  try {
-      // clean up the form before doing anything
-      clearModal();
-      // in case a content window was open, it will be closed
-      modal.forEach(function(el) {
-        el.classList.remove("is-active");
-      });
-      // in case the more toggle menu is open we close it
-      showMore(false);
-      // clear the input value in case there was an old one
-      modalFormInput.value = null;
-      modalForm.classList.toggle("is-active");
-      // clean up the alert box first
-      modalFormAlert.innerHTML = null;
-      modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
-      // here we configure the headline and the footer buttons
-      if(todo) {
-        // put the initially passed todo to the modal data field
-        modalForm.setAttribute("data-item", todo.toString());
-        // we need to check if there already is a due date in the object
-        modalFormInput.value = todo;
-        todo = new TodoTxtItem(todo, [ new DueExtension() ]);
-        modalTitle.innerHTML = i18next.t("editTodo");
-        btnItemStatus.classList.add("is-active");
-        // only show the complete button on open items
-        if(todo.complete === false) {
-          btnItemStatus.innerHTML = i18next.t("done");
-        } else {
-          btnItemStatus.innerHTML = i18next.t("inProgress");
-        }
-
-        // if so we paste it into the input field
-        if(todo.dueString) {
-          dueDatePickerInput.value = todo.dueString;
-        } else {
-        // if not we clean it up
-          dueDatePicker.setDate({
-            clear: true
-          });
-          dueDatePickerInput.value = null;
-        }
-      } else {
-        // if not we clean it up
-        dueDatePicker.setDate({
-          clear: true
-        });
-        dueDatePickerInput.value = null;
-        modalTitle.innerHTML = i18next.t("addTodo");
-        btnItemStatus.classList.remove("is-active");
-      }
-      // in any case put focus into the input field
-      modalFormInput.focus();
-      // Adjust position of suggestion box to input field
-      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-      suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
-      suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-      suggestionContainer.style.left = modalFormInputPosition.left + "px";
-  } catch (error) {
-    console.log(error);
-  }
-}
-function showOnboarding(variable) {
-  if(variable) {
-    console.log("Info: Starting onboarding");
-    onboardingContainer.classList.add("is-active");
-    btnAddTodo.forEach(item => item.classList.add("is-hidden"));
-    navBtnFilter.classList.add("is-hidden");
-    todoTable.classList.remove("is-active");
-  } else {
-    console.log("Info: Ending onboarding");
-    onboardingContainer.classList.remove("is-active");
-    btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
-    navBtnFilter.classList.remove("is-hidden");
-    todoTable.classList.add("is-active");
-  }
-}
 function showFilters(variable) {
   switch(variable) {
     case true:
@@ -1058,86 +890,6 @@ function showFilters(variable) {
   }
   // if more toggle is open we close it as user doesn't need it anymore
   showMore(false);
-}
-function clearModal() {
-  // if file chooser was open it is now being closed
-  modalChangeFile.classList.remove("is-active");
-  // hide suggestion box if it was open
-  suggestionContainer.classList.remove("is-active");
-  // defines when the composed filter is being filled with content and when it is emptied
-  let startComposing = false;
-  // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
-  let typeAheadValue = "";
-  // + or @
-  let typeAheadPrefix = "";
-
-  modalForm.classList.remove("is-active");
-  modalForm.blur();
-  //modalFile.classList.remove("is-active");
-  //modalFile.blur();
-  // remove the data item as we don't need it anymore
-  modalForm.removeAttribute("data-item");
-  // clean up the modal
-  modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
-  // clear the content in the input field as it's not needed anymore
-  modalFormInput.value = null;
-  // close datepicker
-  dueDatePicker.hide();
-}
-function parseDataFromFile() {
-  // we only start if file exists
-  if (fs.existsSync(pathToFile)) {
-    try {
-      // start the file watcher
-      startFileWatcher().then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
-      // clear todo txt item from previous sessions
-      items.unfiltered = new Array;
-      // read fresh data from file
-      items.strings = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; }).toString().split("\n");
-      // for each array item we generate a todotxt object and assign an id to it
-      for(let i = 0; i < items.strings.length;i++) {
-        if(!items.strings[i]) continue;
-        let item = new TodoTxtItem(items.strings[i], [ new DueExtension() ]);
-        // if due is missing we can't sort the array, so we set it to null if it's empty
-        if(!item.due) item.due = null;
-        items.unfiltered.push(item);
-      }
-      if(items.unfiltered.length>0) {
-        t0 = performance.now();
-        generateTodoData().then(response => {
-          console.log(response);
-          t1 = performance.now();
-          console.log("Table rendered in", t1 - t0, "ms");
-        }).catch(error => {
-          console.log(error);
-        });
-        // if there is a file onboarding is hidden
-        showOnboarding(false);
-        return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
-      } else {
-        // if there is a file onboarding is hidden
-        showOnboarding(false);
-        // clean up filters if there were any before
-        todoFilters.innerHTML = "";
-        // hide/show the addTodoContainer
-        addTodoContainer.classList.add("is-active");
-        todoTable.classList.remove("is-active");
-        // if file is actually empty we don't need the filter drawer
-        navBtnFilter.classList.remove("is-active");
-        return Promise.resolve("Info: File is empty, nothing will be built");
-      }
-    } catch(error) {
-      showOnboarding(true);
-      return Promise.reject("Error in parseDataFromFile(): " + error);
-    }
-  } else {
-    showOnboarding(true);
-    return Promise.resolve("Info: File does not exist or has not been defined yet");
-  }
 }
 function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
@@ -1395,6 +1147,27 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
     return Promise.reject("Error in buildFilterButtons(): " + error);
   }
 }
+function resetFilters() {
+  selectedFilters = [];
+  categoriesFiltered = new Array;
+  // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
+  store.set("selectedFilters", new Array);
+  // clear filtered categories
+  store.set("categoriesFiltered", new Array);
+  // clear search input
+  todoTableSearch.value = null;
+  t0 = performance.now();
+  generateTodoData().then(response => {
+    console.log(response);
+    t1 = performance.now();
+    console.log("Table rendered in:", t1 - t0, "ms");
+  }).catch(error => {
+    console.log(error);
+  });
+}
+// ########################################################################################################################
+// TODO FUNCTIONS
+// ########################################################################################################################
 function generateTodoData(searchString) {
   try {
     // we only continue if there actually is data
@@ -1491,6 +1264,21 @@ function generateTodoData(searchString) {
       // TODO: that's ugly, refine this
       for (let item in items.grouped[priority][1]) {
         let todo = items.grouped[priority][1][item];
+        // if this todo is not a recurring one the rec value will be set to null
+        if(!todo.rec) {
+          todo.rec = null;
+        // if item is due today or in the past and has recurrance it will be duplicated
+        } else if(todo.due && todo.rec && !todo.complete && (todo.due.isToday() || todo.due.isPast())) {
+          let recurringItem = Object.assign({}, todo);
+          recurringItem.date = todo.due;
+          recurringItem.due = getRecurranceDate(todo.due, todo.rec);
+          recurringItem.dueString = convertDate(getRecurranceDate(todo.due, todo.rec));
+          if(!items.strings.includes(recurringItem.toString())) {
+            items.strings.push(recurringItem.toString());
+            tableContainerDue.appendChild(createTableRow(recurringItem));
+            writeTodoToFile(recurringItem.toString());
+          }
+        }
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
         if (todo.due && !todo.complete) {
@@ -1548,6 +1336,49 @@ function generateTodoData(searchString) {
     return Promise.reject("Error in generateTodoData: " + error);
   }
 }
+function writeTodoToFile(recurringItem) {
+  // stop filewatcher to avoid loops
+  if(fileWatcher) fileWatcher.close();
+  //append todo as string to file in a new line
+  fs.open(pathToFile, 'a', 666, function(error, id) {
+    if(error) return "Error in fs.open(): " + error;
+    fs.write(id, "\n"+recurringItem, null, 'utf8', function() {
+      fs.close(id, function() {
+        // only start the file watcher again after new todo has been appended
+        startFileWatcher().then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
+        console.log("Success: Recurring todo written to file: " + recurringItem);
+      });
+    });
+  });
+ }
+function createTodoTxtObjects(todo) {
+  try {
+    // clear todo txt item from previous sessions
+    let objects = new Array;
+    // if a single item has been passed
+    if(todo) {
+      let item = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+      objects.push(item);
+    // if no item has been passed, all items in items.strings will be converted
+    } else {
+      for(let i = 0; i < items.strings.length;i++) {
+        // skip empty entries
+        if(!items.strings[i]) continue;
+        let item = new TodoTxtItem(items.strings[i], [ new DueExtension(), new RecExtension() ]);
+        // if due is missing we can't sort the array, so we set it to null if it's empty
+        if(!item.due) item.due = null;
+        objects.push(item);
+      }
+    }
+    return Promise.resolve(objects);
+  } catch(error) {
+    return Promise.reject("Error: Error in createTodoTxtObjects(): " + error);
+  }
+}
 function createTableRow(todo) {
   try {
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
@@ -1558,6 +1389,7 @@ function createTableRow(todo) {
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
     let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
+    let todoTableBodyCellRecurrance = todoTableBodyCellRecurranceTemplate.cloneNode(true);
     // if new item was saved, row is being marked
     if(todo.toString()==item.previous) {
       todoTableBodyRow.setAttribute("id", "previousItem");
@@ -1645,6 +1477,12 @@ function createTableRow(todo) {
       // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
+    // add recurrance icon
+    if(todo.rec) {
+      todoTableBodyCellRecurrance.innerHTML = "<i class=\"fas fa-redo\"></i>";
+      // append the due date to the text item
+      todoTableBodyCellText.appendChild(todoTableBodyCellRecurrance);
+    }
     // add the text cell to the row
     todoTableBodyRow.appendChild(todoTableBodyCellText);
     // add the more dots
@@ -1692,50 +1530,6 @@ function createTableRow(todo) {
     return Promise.reject("Error in createTableRow(): " + error);
   }
 }
-function submitForm() {
-  try {
-    // check if there is an input in the text field, otherwise indicate it to the user!3KL7jeuduikbngbkfuvgflctnfgu
-    // input value and data item are the same, nothing has changed, nothing will be written
-    if (modalForm.getAttribute("data-item")==modalForm.elements[0].value) {
-      return Promise.resolve("Info: Nothing has changed, won't write anything.");
-    // Edit todo
-    } else if(modalForm.getAttribute("data-item")!=null) {
-      // get the position of that item in the array
-      var index = items.strings.indexOf(modalForm.getAttribute("data-item"));
-      // jump to index, remove 1 item there and add the value from the input at that position
-      items.strings.splice(index, 1, modalForm.elements[0].value);
-    // Add todo
-    } else if(modalForm.getAttribute("data-item")==null && modalForm.elements[0].value!="") {
-      // in case there hasn't been a passed data item, we just push the input value as a new item into the array
-      var todo = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension() ]);
-      // we add the current date to the start date attribute of the todo.txt object
-      todo.date = new Date();
-      // we build the array
-      items.strings.push(todo.toString());
-      // mark the todo for anchor jump after next reload
-      item.previous = todo.toString();
-    } else if(modalForm.elements[0].value=="") {
-      modalFormAlert.innerHTML = i18next.t("formInfoNoInput");
-      modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
-      modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
-      return Promise.reject("Info: Will not write empty todo");
-    }
-    //write the data to the file
-    fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
-    // trigger matomo event
-    if(matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
-    // save the previously saved item.current for further use
-    //item.previous = modalForm.elements[0].value;
-    //
-    return Promise.resolve("Success: Changes written to file: " + pathToFile);
-  // if the input field is empty, let users know
-  } catch (error) {
-    // if writing into file is denied throw alert
-    modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + pathToFile;
-    modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
-    return Promise.reject("Error in submitForm(): " + error);
-  }
-}
 function completeTodo(todo) {
   try {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
@@ -1743,7 +1537,7 @@ function completeTodo(todo) {
     // get index of todo
     var index = items.strings.indexOf(todo);
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension() ]);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
     // mark item as in progress
     if(todo.complete) {
       // if item was already completed we set complete to false and the date to null
@@ -1781,7 +1575,7 @@ function deleteTodo(todo) {
     // get index of todo
     var index = items.strings.indexOf(todo);
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension() ]);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
     // Delete item
     if(todo.due) {
       var date = convertDate(todo.due);
@@ -1799,4 +1593,372 @@ function deleteTodo(todo) {
   } catch(error) {
     return Promise.reject("Error in deleteTodo(): " + error);
   }
+}
+function submitForm() {
+  try {
+    // check if there is an input in the text field, otherwise indicate it to the user!3KL7jeuduikbngbkfuvgflctnfgu
+    // input value and data item are the same, nothing has changed, nothing will be written
+    if (modalForm.getAttribute("data-item")==modalForm.elements[0].value) {
+      return Promise.resolve("Info: Nothing has changed, won't write anything.");
+    // Edit todo
+    } else if(modalForm.getAttribute("data-item")!=null) {
+      // get the position of that item in the array
+      var index = items.strings.indexOf(modalForm.getAttribute("data-item"));
+      // jump to index, remove 1 item there and add the value from the input at that position
+      items.strings.splice(index, 1, modalForm.elements[0].value);
+    // Add todo
+    } else if(modalForm.getAttribute("data-item")==null && modalForm.elements[0].value!="") {
+      // in case there hasn't been a passed data item, we just push the input value as a new item into the array
+      var todo = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension(), new RecExtension() ]);
+      // we add the current date to the start date attribute of the todo.txt object
+      todo.date = new Date();
+      // we build the array
+      items.strings.push(todo.toString());
+      // mark the todo for anchor jump after next reload
+      item.previous = todo.toString();
+    } else if(modalForm.elements[0].value=="") {
+      modalFormAlert.innerHTML = i18next.t("formInfoNoInput");
+      modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
+      modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
+      return Promise.reject("Info: Will not write empty todo");
+    }
+    //write the data to the file
+    fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
+    // save the previously saved item.current for further use
+    //
+    return Promise.resolve("Success: Changes written to file: " + pathToFile);
+  // if the input field is empty, let users know
+  } catch (error) {
+    // if writing into file is denied throw alert
+    modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + pathToFile;
+    modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
+    return Promise.reject("Error in submitForm(): " + error);
+  }
+}
+function showCompletedTodos() {
+
+  if(showCompleted==false) {
+    showCompleted = true;
+  } else {
+    showCompleted = false;
+  }
+  toggleShowCompleted.checked = showCompleted;
+  // persist the sorting
+  store.set("showCompleted", showCompleted);
+  t0 = performance.now();
+  generateTodoData().then(response => {
+    console.log(response);
+    t1 = performance.now();
+    console.log("Table rendered in:", t1 - t0, "ms");
+  }).catch(error => {
+    console.log(error);
+  });
+}
+function showForm(todo) {
+  try {
+      // clean up the form before doing anything
+      clearModal();
+      // in case a content window was open, it will be closed
+      modal.forEach(function(el) {
+        el.classList.remove("is-active");
+      });
+      // in case the more toggle menu is open we close it
+      showMore(false);
+      // clear the input value in case there was an old one
+      modalFormInput.value = null;
+      modalForm.classList.toggle("is-active");
+      // clean up the alert box first
+      modalFormAlert.innerHTML = null;
+      modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+      // here we configure the headline and the footer buttons
+      if(todo) {
+        // put the initially passed todo to the modal data field
+        modalForm.setAttribute("data-item", todo.toString());
+        // we need to check if there already is a due date in the object
+        modalFormInput.value = todo;
+        todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+        modalTitle.innerHTML = i18next.t("editTodo");
+        btnItemStatus.classList.add("is-active");
+        // only show the complete button on open items
+        if(todo.complete === false) {
+          btnItemStatus.innerHTML = i18next.t("done");
+        } else {
+          btnItemStatus.innerHTML = i18next.t("inProgress");
+        }
+        // if there is a recurrance
+        if(todo.rec) setRecurranceInput(todo.rec)
+        // if so we paste it into the input field
+        if(todo.dueString) {
+          dueDatePickerInput.value = todo.dueString;
+          // only show the recurrance picker when a due date is set
+          recurrancePicker.classList.add("is-active");
+        } else {
+          // hide the recurrance picker when a due date is not set
+          recurrancePicker.classList.remove("is-active");
+        // if not we clean it up
+          dueDatePicker.setDate({
+            clear: true
+          });
+          dueDatePickerInput.value = null;
+        }
+      } else {
+        // hide the recurrance picker when a due date is not set
+        recurrancePicker.classList.remove("is-active");
+        // if not we clean it up
+        dueDatePicker.setDate({
+          clear: true
+        });
+        dueDatePickerInput.value = null;
+        modalTitle.innerHTML = i18next.t("addTodo");
+        btnItemStatus.classList.remove("is-active");
+      }
+      // in any case put focus into the input field
+      modalFormInput.focus();
+      // Adjust position of suggestion box to input field
+      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+      suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+      suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+      suggestionContainer.style.left = modalFormInputPosition.left + "px";
+  } catch (error) {
+    console.log(error);
+  }
+}
+// ########################################################################################################################
+// HELPER FUNCTIONS
+// ########################################################################################################################
+function inView(element) {
+    var box = element.getBoundingClientRect();
+    return inViewBox(box);
+}
+function inViewBox(box) {
+    return ((box.bottom < 0) || (box.top > getWindowSize().h)) ? false : true;
+}
+function getWindowSize() {
+    return { w: document.body.offsetWidth || document.documentElement.offsetWidth || window.innerWidth, h: document.body.offsetHeight || document.documentElement.offsetHeight || window.innerHeight}
+}
+function getCaretPosition(inputId) {
+  var content = inputId;
+  if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
+    var position = content.selectionStart;
+    return position;
+  } else {
+    return false;
+  }
+}
+function matomoEventsConsent() {
+  try {
+    var _paq = window._paq = window._paq || [];
+    if(matomoEvents) {
+      // only continue if app is connected to the internet
+      if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
+      // user has given consent to process their data
+      _paq.push(['setConsentGiven']);
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['requireConsent']);
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="https://www.robbfolio.de/matomo/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '3']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+      return Promise.resolve("Info: Consent given, Matomo enabled");
+    } else {
+      // revoke matomoEvents consent
+      _paq.push(['forgetConsentGiven']);
+      return Promise.resolve("Info: No consent given, Matomo disabled");
+    }
+  } catch(error) {
+    return Promise.reject("Error in matomoEventsConsent(): " + error);
+  }
+}
+function sortItems(items) {
+  // first step of sorting items: the youngest to the top
+  items.sort((a, b) => b.date - a.date);
+  // array is sorted so the due date is desc
+  items.sort((a, b) => a.due - b.due);
+  return;
+}
+function showNotification(todo, offset) {
+  try {
+    // abort if user didn't permit notifications within sleek
+    if(!notifications) return Promise.reject("Info: Notification surpressed (turned off in sleek's settings)");
+    // check for necessary permissions
+    return navigator.permissions.query({name: 'notifications'}).then(function(result) {
+      // abort if user didn't permit notifications
+      if(result.state!="granted") return Promise.reject("Info: Notification surpressed (not permitted by OS)");
+      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
+      const hash = md5(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
+      switch (offset) {
+        case 0:
+          title = "due today";
+          break;
+        case 1:
+          title = "due tomorrow";
+          break;
+      }
+      // if notification already has been triggered once it will be discarded
+      if(closedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+      // set options for notifcation
+      const newNotification = new notification({
+        title: title,
+        body: todo.text,
+        silent: false,
+        icon: path.join(__dirname, '../assets/icons/icon.png'),
+        hasReply: false,
+        timeoutType: 'never',
+        urgency: 'critical',
+        closeButtonText: 'Close',
+        actions: [ {
+          type: 'button',
+          text: 'Show Button'
+        }]
+      });
+      // send it to UI
+      newNotification.show();
+      // once shown, it will be persisted as hash to it won't be shown a second time
+      closedNotifications.push(hash);
+      store.set("closedNotifications", closedNotifications);
+      // click on button in notification
+      newNotification.addListener('click', () => {
+        app.focus();
+        // if another modal was open it needs to be closed first
+        clearModal();
+        //load modal
+        showForm(todo.toString());
+      },{
+        // remove event listener after it is clicked once
+        once: true
+      });
+      return Promise.resolve("Info: Notification successfully sent");
+    });
+  } catch(error) {
+    return Promise.reject("Error in showNotification(): " + error);
+  }
+}
+function showMore(variable) {
+  if(variable) {
+    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
+      item.classList.add("is-active")
+    });
+  } else {
+    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
+      item.classList.remove("is-active")
+    });
+  }
+};
+function clearModal() {
+  // if recurrance picker was open it is now being closed
+  recurrancePickerContainer.classList.remove("is-active");
+  // if file chooser was open it is now being closed
+  modalChangeFile.classList.remove("is-active");
+  // hide suggestion box if it was open
+  suggestionContainer.classList.remove("is-active");
+  // defines when the composed filter is being filled with content and when it is emptied
+  let startComposing = false;
+  // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
+  let typeAheadValue = "";
+  // + or @
+  let typeAheadPrefix = "";
+  modalForm.classList.remove("is-active");
+  modalForm.blur();
+  // remove the data item as we don't need it anymore
+  modalForm.removeAttribute("data-item");
+  // clean up the modal
+  modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+  // clear the content in the input field as it's not needed anymore
+  modalFormInput.value = null;
+  // clear previous recurrance selection
+  recurrancePickerInput.value = null;
+  // close datepicker
+  dueDatePicker.hide();
+}
+// ########################################################################################################################
+// CONTENT FUNCTIONS
+// ########################################################################################################################
+function showContent(section) {
+  contentTabs.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  contentTabsCards.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  let firstTab = section.querySelector(".tabs");
+  firstTab.firstElementChild.firstElementChild.classList.add("is-active");
+  let firstSection = section.querySelector("section");
+  firstSection.classList.add("is-active");
+  section.classList.add("is-active");
+  section.focus();
+}
+function showTab(tab) {
+  contentTabsCards.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  document.getElementById(tab).classList.add("is-active");
+}
+function showOnboarding(variable) {
+  if(variable) {
+    console.log("Info: Starting onboarding");
+    onboardingContainer.classList.add("is-active");
+    btnAddTodo.forEach(item => item.classList.add("is-hidden"));
+    navBtnFilter.classList.add("is-hidden");
+    todoTable.classList.remove("is-active");
+  } else {
+    console.log("Info: Ending onboarding");
+    onboardingContainer.classList.remove("is-active");
+    btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
+    navBtnFilter.classList.remove("is-hidden");
+    todoTable.classList.add("is-active");
+  }
+}
+contentTabs.forEach(el => el.addEventListener("click", function(el) {
+  contentTabs.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  this.classList.add("is-active");
+  showTab(this.classList[0]);
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
+}));
+// ########################################################################################################################
+// WINDOW
+// ########################################################################################################################
+window.onload = function () {
+  // On app load only call matomo function if opt in is set
+  matomoEventsConsent().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // set theme
+  setTheme();
+  // only start if a file has been selected
+  if(pathToFile) {
+    console.log("Info: Path to file: " + pathToFile);
+    // start parsing data
+    parseDataFromFile(pathToFile).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+  } else {
+    console.log("Info: File does not exist or has not been defined yet");
+    // show onboarding if no file has been selected
+    showOnboarding(true);
+  }
+
+}
+window.onresize = function() {
+  let width = this.outerWidth;
+  let height = this.outerHeight;
+  store.set('windowBounds', { width, height });
+  // Adjust position of suggestion box to input field
+  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+  suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+  suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+  suggestionContainer.style.left = modalFormInputPosition.left + "px";
 }

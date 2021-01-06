@@ -36,11 +36,18 @@ input[type="search"]:focus {
 input::placeholder {
   color: #4d4d4d !important; }
 
-button.is-static {
+button.is-link {
   background: #2c2d30 !important; }
+
+.button[disabled],
+fieldset[disabled] {
+  background-color: transparent; }
 
 button.is-outlined:hover {
   background: #2c2d30 !important; }
+
+svg {
+  color: #CCCDCF; }
 
 .table {
   width: 100%;
@@ -52,6 +59,8 @@ button.is-outlined:hover {
 
 nav {
   background-color: #2c2d30; }
+  nav svg {
+    color: #CCCDCF; }
   nav ul li.logo {
     background: none; }
   nav ul li a {
@@ -74,7 +83,8 @@ nav {
   color: #3B3B3B; }
   #todoTable .flex-table.completed .flex-row.text,
   #todoTable .flex-table.completed .checkbox a,
-  #todoTable .flex-table.completed .checkbox a:hover {
+  #todoTable .flex-table.completed .checkbox a:hover,
+  #todoTable .flex-table.completed svg {
     color: inherit; }
   #todoTable .flex-table.completed .flex-row span.tag {
     opacity: .5; }
@@ -86,7 +96,7 @@ nav {
     color: #CCCDCF !important; }
   #todoTable .flex-table.completed .flex-row.itemDueDate {
     color: #2c2d30 !important; }
-  #todoTable .flex-table.completed svg.fa-sort-down {
+  #todoTable .flex-table.completed svg {
     color: #2c2d30 !important; }
   #todoTable .flex-table.completed .flex-row.itemDueDate .tags .tag.is-dark {
     background: #2c2d30 !important; }
@@ -205,11 +215,29 @@ nav {
   color: white;
   border-color: #2c2d30 !important; }
 
+#recurrancePicker #recurrancePickerInput,
+#recurrancePicker .radio {
+  cursor: pointer;
+  background: none !important;
+  color: white !important; }
+
+#recurrancePicker #recurrancePickerInput::placeholder {
+  color: white !important; }
+
+#recurrancePicker .radio:hover {
+  color: #CCCDCF !important; }
+
+#recurrancePicker #recurrancePickerContainer {
+  background: #2c2d30; }
+  #recurrancePicker #recurrancePickerContainer .card-footer {
+    border-color: #1d1e20; }
+
 .dueDate svg,
 .dueDate #dueDatePickerInput,
 .dueDate #dueDatePickerInput::placeholder {
   color: white !important;
-  background: transparent !important; }
+  background: transparent !important;
+  cursor: pointer; }
 
 .datepicker {
   background: none; }

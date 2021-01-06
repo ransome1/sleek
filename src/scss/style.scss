@@ -88,12 +88,22 @@ input[type="search"]:focus {
   box-shadow: 0 0 0 2px $has-text-link!important;
   outline: none;
 }
+input,
+input::placeholder {
+  width: auto;
+  font-size: 1em;
+  color: $has-text-link;
+  box-shadow: none;
+  background: transparent;
+}
 .title,
 strong {
   font-family: "FreeSansBold";
   font-weight: normal!important;
 }
-
+svg {
+  color: $has-text-link;
+}
 /* ONBOARDING */
 #noResultContainer.contentContainer {
   height: 80%;
@@ -166,7 +176,7 @@ strong {
   }
 }
 
-/* Vertical menu */
+/* MAIN MENU */
 
 nav {
   width: auto;
@@ -174,6 +184,9 @@ nav {
   float: left;
   position: relative;
   background: $light-grey;
+  svg {
+    color: $darker-grey;
+  }
   ul {
     width: 5em;
     height: 100%;
@@ -215,6 +228,11 @@ nav {
       line-height: 5em;
       text-align: center;
       cursor: default;
+    }
+    li span.alert {
+      position: absolute;
+      top: 13%;
+      right: 35%;
     }
   }
   ul:nth-child(2) {
@@ -372,8 +390,12 @@ nav {
     font-size: 1.5em;
   }
   .flex-table.completed {
+    color: $has-text-grey-light;
     .checkbox a {
       color: $has-text-grey-light;
+      svg {
+        color: inherit;
+      }
     }
     strong {
       font-family: "FreeSansBold";
@@ -440,6 +462,9 @@ nav {
       cursor: pointer;
       margin-right: .5em;
       color: $darker-grey;
+      svg {
+        color: inherit;
+      }
     }
     .flex-row.spacer {
       width: .5em;
@@ -499,18 +524,17 @@ nav {
         background: $has-text-danger;
         font-family: FreeSansBold;
       }
-      svg.fa-sort-down {
+      svg {
         color: inherit;
       }
     }
     .flex-row.itemDueDate.isTomorrow {
       color: $has-text-attention;
       .tags .is-dark {
-        /*background: $has-text-warning-dark;*/
         background: $has-text-attention;
         font-family: FreeSansBold;
       }
-      svg.fa-sort-down {
+      svg {
         color: $has-text-attention;
       }
     }
@@ -520,7 +544,7 @@ nav {
         background: $has-text-danger;
         font-family: FreeSansBold;
       }
-      svg.fa-sort-down {
+      svg {
         color: inherit;
       }
     }
@@ -628,10 +652,6 @@ nav {
 /* MODAL */
 
 #modalForm {
-  /*#modalFormInput:focus {
-    box-shadow: 0 0 0 1px $has-text-link!important;
-    outline: none;
-  }*/
   #modalFormInputHelp {
     z-index: 60;
     cursor: pointer;
@@ -648,7 +668,8 @@ nav {
     display: block;
   }
   .field {
-    margin: .75em 0 0 0;
+    float: left;
+    margin: .75em .75em .75em 0;
   }
   #btnItemStatus {
     display: none;
@@ -757,6 +778,7 @@ nav {
       border: none;
     }
     table.settings tr td {
+      position: relative;
       vertical-align: top;
       border: none;
       padding-top: 0;
@@ -764,6 +786,11 @@ nav {
       .toggle,
       .field {
         margin-top: 3em;
+      }
+      .alert {
+        position: absolute;
+        top: 1em;
+        left: -.8em;
       }
     }
     table.settings tr td:first-child {
@@ -811,7 +838,10 @@ nav {
   svg {
     color: $has-text-link;
   }
-  #dueDatePickerInput,
+  #dueDatePickerInput {
+    cursor: pointer;
+  }
+  /*#dueDatePickerInput,
   #dueDatePickerInput::placeholder {
     width: auto;
     font-size: 1em;
@@ -819,14 +849,13 @@ nav {
     box-shadow: none;
     cursor: pointer;
     background: none;
-  }
+  }*/
 }
 .datepicker {
   z-index: 60;
   .datepicker-footer {
     background: none;
     .datepicker-controls .button  {
-      font-family: "FreeSansBold";
       font-size: 1em;
       background: none;
       border-color: transparent;
@@ -835,6 +864,34 @@ nav {
   }
 }
 
+/* RECURRANCE PICKER */
+#recurrancePicker {
+  position: relative;
+  display: none;
+  #recurrancePickerInput {
+    cursor: pointer;
+  }
+  .card {
+    width: 15em;
+    display: none;
+    position: fixed;
+    .content {
+      margin: 0;
+      padding: 1em;
+    }
+    label {
+      width: 100%;
+      padding: 0;
+      margin: .25em 0;
+    }
+  }
+  .card.is-active {
+    display: block;
+  }
+}
+#recurrancePicker.is-active {
+  display: block;
+}
 /* MEDIA QUERIES */
 
 @media (max-width: 992px) {
