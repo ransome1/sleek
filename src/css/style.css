@@ -378,7 +378,7 @@ nav {
     #todoTable .flex-table .flex-row .is-white {
       background: none; }
     #todoTable .flex-table .flex-row span.tag {
-      margin-right: .5em; }
+      margin: .25em .5em .25em 0; }
     #todoTable .flex-table .flex-row span.tag.projects {
       background: #f1d6f1;
       color: #5f1a5e; }

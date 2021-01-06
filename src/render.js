@@ -144,6 +144,7 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     item.currentTemp = null;
     // if suggestion box was open, it needs to be closed
     suggestionContainer.classList.remove("is-active");
+    suggestionContainer.blur();
     // if a due date is set, the recurrence picker will be shown
     recurrencePicker.classList.add("is-active");
     modalFormInput.focus();
@@ -195,9 +196,10 @@ navBtnHelp.firstElementChild.setAttribute("title", i18next.t("help"));
 navBtnSettings.firstElementChild.setAttribute("title", i18next.t("settings"));
 const categories = ["contexts", "projects"];
 const items = {
+  raw: null,
   unfiltered: new Array,
   filtered: new Array,
-  strings: null,
+  strings: new Array,
   grouped: new Array
 }
 const item = {
@@ -383,6 +385,7 @@ modalBackground.forEach(function(el) {
     clearModal();
     el.parentElement.classList.remove("is-active");
     suggestionContainer.classList.remove("is-active");
+    suggestionContainer.blur();
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
   }
@@ -423,6 +426,7 @@ modalFormInput.addEventListener("keyup", e => {
     typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
   } else {
     suggestionContainer.classList.remove("is-active");
+    suggestionContainer.blur();
     return false;
   }
   // suppress suggestion box if caret is at the end of word
@@ -443,6 +447,7 @@ modalFormInput.addEventListener("keyup", e => {
     });
   } else {
     suggestionContainer.classList.remove("is-active");
+    suggestionContainer.blur();
   }
 });
 filterColumnClose.onclick = function() {
@@ -458,6 +463,7 @@ modalForm.addEventListener ("keydown", function () {
     clearModal();
     this.classList.remove("is-active");
     suggestionContainer.classList.remove("is-active");
+    suggestionContainer.blur();
   }
 });
 modalForm.addEventListener ("click", function () {
@@ -642,11 +648,45 @@ function parseDataFromFile() {
         console.log(error);
       });
       // read fresh data from file
-      items.strings = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; }).toString().split("\n");
+      // this will also adapt syntax errors so it will be corrected later on
+      //items.strings = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; }).toString().split("\n");
+      items.strings = new Array;
+      items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
+      items.unfiltered = TodoTxt.parse(items.raw);
+      items.unfiltered.forEach((item) => {
+        items.strings.push(item.toString());
+      });
+
+      if(items.unfiltered.length>0) {
+        t0 = performance.now();
+        generateTodoData().then(response => {
+          console.log(response);
+          t1 = performance.now();
+          console.log("Table rendered in", t1 - t0, "ms");
+        }).catch(error => {
+          console.log(error);
+        });
+        // if there is a file onboarding is hidden
+        showOnboarding(false);
+        return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
+      } else {
+        // if there is a file onboarding is hidden
+        showOnboarding(false);
+        // clean up filters if there were any before
+        todoFilters.innerHTML = "";
+        // hide/show the addTodoContainer
+        addTodoContainer.classList.add("is-active");
+        todoTable.classList.remove("is-active");
+        // if file is actually empty we don't need the filter drawer
+        navBtnFilter.classList.remove("is-active");
+        return Promise.resolve("Info: File is empty, nothing will be built");
+      }
+
       // for each array item we generate a todotxt object
-      return createTodoTxtObjects().then(response => {
+      /*return createTodoTxtObjects().then(response => {
         console.log("Success: TodoTXT objects created");
-        items.unfiltered = response;
+        //items.unfiltered = response;
+        //items.strings = TodoTxt.render(items.unfiltered);
         if(items.unfiltered.length>0) {
           t0 = performance.now();
           generateTodoData().then(response => {
@@ -673,7 +713,7 @@ function parseDataFromFile() {
         }
       }).catch(error => {
         console.log(error);
-      });
+      });*/
     } catch(error) {
       showOnboarding(true);
       return Promise.reject("Error in parseDataFromFile(): " + error);
@@ -974,6 +1014,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
         });
       } else {
         suggestionContainer.classList.remove("is-active");
+        suggestionContainer.blur();
         console.log("Info: No " + category + " found in todo.txt data, so no filters will be generated");
       }
     });
@@ -1055,6 +1096,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
     } else {
       // show suggestion box
       suggestionContainer.classList.add("is-active");
+      suggestionContainer.focus();
       // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
       todoFilterHeadline.setAttribute("class", "is-4 title headline " + category);
@@ -1128,10 +1170,11 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             // add button data value to the exact caret position
             modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
           }
-          // put focus back into input so user can continue writing
-          modalFormInput.focus();
           //
           suggestionContainer.classList.remove("is-active");
+          suggestionContainer.blur();
+          // put focus back into input so user can continue writing
+          modalFormInput.focus();
           // trigger matomo event
           if(matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
@@ -1549,7 +1592,7 @@ function completeTodo(todo) {
       todo.complete = false;
       todo.completed = null;
       // delete old item from array and add the new one at it's position
-      items.strings.splice(index, 1, todo);
+      items.strings.splice(index, 1, todo.toString());
     // Mark item as complete
     } else if(!todo.complete) {
       if(todo.due) {
@@ -1564,7 +1607,7 @@ function completeTodo(todo) {
       todo.complete = true;
       todo.completed = new Date();
       // delete old todo from array and add the new one at it's position
-      items.strings.splice(index, 1, todo);
+      items.strings.splice(index, 1, todo.toString());
     }
     //write the data to the file
     fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
@@ -1863,6 +1906,7 @@ function clearModal() {
   modalChangeFile.classList.remove("is-active");
   // hide suggestion box if it was open
   suggestionContainer.classList.remove("is-active");
+  suggestionContainer.blur();
   // defines when the composed filter is being filled with content and when it is emptied
   let startComposing = false;
   // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
