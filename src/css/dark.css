@@ -215,21 +215,21 @@ nav {
   color: white;
   border-color: #2c2d30 !important; }
 
-#recurrancePicker #recurrancePickerInput,
-#recurrancePicker .radio {
+#recurrencePicker #recurrencePickerInput,
+#recurrencePicker .radio {
   cursor: pointer;
   background: none !important;
   color: white !important; }
 
-#recurrancePicker #recurrancePickerInput::placeholder {
+#recurrencePicker #recurrencePickerInput::placeholder {
   color: white !important; }
 
-#recurrancePicker .radio:hover {
+#recurrencePicker .radio:hover {
   color: #CCCDCF !important; }
 
-#recurrancePicker #recurrancePickerContainer {
+#recurrencePicker #recurrencePickerContainer {
   background: #2c2d30; }
-  #recurrancePicker #recurrancePickerContainer .card-footer {
+  #recurrencePicker #recurrencePickerContainer .card-footer {
     border-color: #1d1e20; }
 
 .dueDate svg,

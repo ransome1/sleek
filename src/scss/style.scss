@@ -865,10 +865,10 @@ nav {
 }
 
 /* RECURRANCE PICKER */
-#recurrancePicker {
+#recurrencePicker {
   position: relative;
   display: none;
-  #recurrancePickerInput {
+  #recurrencePickerInput {
     cursor: pointer;
   }
   .card {
@@ -889,7 +889,7 @@ nav {
     display: block;
   }
 }
-#recurrancePicker.is-active {
+#recurrencePicker.is-active {
   display: block;
 }
 /* MEDIA QUERIES */

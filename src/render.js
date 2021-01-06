@@ -144,8 +144,8 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     item.currentTemp = null;
     // if suggestion box was open, it needs to be closed
     suggestionContainer.classList.remove("is-active");
-    // if a due date is set, the recurrance picker will be shown
-    recurrancePicker.classList.add("is-active");
+    // if a due date is set, the recurrence picker will be shown
+    recurrencePicker.classList.add("is-active");
     modalFormInput.focus();
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
@@ -168,7 +168,7 @@ let todoTableBodyCellMoreTemplate = document.createElement("div");
 let todoTableBodyCellPriorityTemplate = document.createElement("div");
 let todoTableBodyCellSpacerTemplate = document.createElement("div");
 let todoTableBodyCellDueDateTemplate = document.createElement("span");
-let todoTableBodyCellRecurranceTemplate = document.createElement("span");
+let todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
 todoTableBodyRowTemplate.setAttribute("class", "flex-table");
 todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
@@ -183,8 +183,8 @@ todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
 todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
 todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
 todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
-todoTableBodyCellRecurranceTemplate.setAttribute("class", "flex-row recurrance");
-todoTableBodyCellRecurranceTemplate.setAttribute("role", "cell");
+todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
+todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
 // ########################################################################################################################
 // INITIAL CONFIGURATION
 // ########################################################################################################################
@@ -233,11 +233,11 @@ modalChangeFileOpen.innerHTML = i18next.t("openFile");
 modalChangeFileCreate.innerHTML = i18next.t("createFile");
 selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
 welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
-recurrancePickerDaily.innerHTML = i18next.t("daily");
-recurrancePickerWeekly.innerHTML = i18next.t("weekly");
-recurrancePickerMonthly.innerHTML = i18next.t("monthly");
-recurrancePickerAnnually.innerHTML = i18next.t("annually");
-recurrancePickerNoRecurrance.innerHTML = i18next.t("noRecurrance");
+recurrencePickerDaily.innerHTML = i18next.t("daily");
+recurrencePickerWeekly.innerHTML = i18next.t("weekly");
+recurrencePickerMonthly.innerHTML = i18next.t("monthly");
+recurrencePickerAnnually.innerHTML = i18next.t("annually");
+recurrencePickerNoRecurrence.innerHTML = i18next.t("noRecurrence");
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
@@ -461,8 +461,8 @@ modalForm.addEventListener ("keydown", function () {
   }
 });
 modalForm.addEventListener ("click", function () {
-  // close recurrance picker if click is outside of recurrance container
-  if(!event.target.closest("#recurrancePickerContainer") && event.target!=recurrancePickerInput) recurrancePickerContainer.classList.remove("is-active")
+  // close recurrence picker if click is outside of recurrence container
+  if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) recurrencePickerContainer.classList.remove("is-active")
 });
 modalHelp.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
@@ -516,56 +516,56 @@ function setTheme(switchTheme) {
 // ########################################################################################################################
 // RECURRANT TODOS
 // ########################################################################################################################
-function getRecurranceDate(due, recurrance) {
-  switch (recurrance) {
+function getRecurrenceDate(due, recurrence) {
+  switch (recurrence) {
     case "d":
-    var recurrance = 1;
+    var recurrence = 1;
     break;
     case "w":
-    var recurrance = 7;
+    var recurrence = 7;
     break;
     case "m":
-    var recurrance = 30;
+    var recurrence = 30;
     break;
     case "y":
-    var recurrance = 365;
+    var recurrence = 365;
     break;
     default:
-    var recurrance = 0;
+    var recurrence = 0;
   }
   var due = due.getTime();
-  due += 1000 * 60 * 60 * 24 * recurrance;
+  due += 1000 * 60 * 60 * 24 * recurrence;
   return new Date(due);
 }
-function setRecurranceInput(recurrance) {
-  switch (recurrance) {
+function setRecurrenceInput(recurrence) {
+  switch (recurrence) {
     case "d":
-      recurrancePickerInput.value = i18next.t("daily");
+      recurrencePickerInput.value = i18next.t("daily");
       break;
     case "w":
-      recurrancePickerInput.value = i18next.t("weekly");
+      recurrencePickerInput.value = i18next.t("weekly");
       break;
     case "m":
-      recurrancePickerInput.value = i18next.t("monthly");
+      recurrencePickerInput.value = i18next.t("monthly");
       break;
     case "y":
-      recurrancePickerInput.value = i18next.t("annually");
+      recurrencePickerInput.value = i18next.t("annually");
       break;
     case undefined:
-      recurrancePickerInput.value = null;
+      recurrencePickerInput.value = null;
       break;
   }
 }
-async function showRecurranceOptions(el) {
-  recurrancePickerContainer.focus();
-  recurrancePickerContainer.classList.toggle("is-active");
+async function showRecurrenceOptions(el) {
+  recurrencePickerContainer.focus();
+  recurrencePickerContainer.classList.toggle("is-active");
   // get object from current input
   var todo = await createTodoTxtObjects(modalFormInput.value).then(response => {
     return response[0];
   }).catch(error => {
     console.log(error);
   });
-  radioRecurrance.forEach(function(el) {
+  radioRecurrence.forEach(function(el) {
     // remove old selection
     el.checked = false;
     // set pre selection
@@ -587,18 +587,18 @@ async function showRecurranceOptions(el) {
       } else {
         modalFormInput.value = "rec:" + el.value;
       }
-      setRecurranceInput(el.value);
-      recurrancePickerContainer.classList.remove("is-active");
+      setRecurrenceInput(el.value);
+      recurrencePickerContainer.classList.remove("is-active");
       modalFormInput.focus();
       // trigger matomo event
-      if(matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrance selected: " + el.value]);
+      if(matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrence selected: " + el.value]);
     }
   });
 }
-const radioRecurrance = document.querySelectorAll("#recurrancePicker .selection");
-recurrancePickerInput.placeholder = i18next.t("noRecurrance");
-recurrancePickerInput.onfocus = function(el) { showRecurranceOptions(el) };
-//recurrancePickerInput.onclick = function(el) { showRecurranceOptions(el) };
+const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
+recurrencePickerInput.placeholder = i18next.t("noRecurrence");
+recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
+//recurrencePickerInput.onclick = function(el) { showRecurrenceOptions(el) };
 // ########################################################################################################################
 // DATE FUNCTIONS
 // ########################################################################################################################
@@ -1272,12 +1272,12 @@ function generateTodoData(searchString) {
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
-        // if item is due today or in the past and has recurrance it will be duplicated
+        // if item is due today or in the past and has recurrence it will be duplicated
         } else if(todo.due && todo.rec && !todo.complete && (todo.due.isToday() || todo.due.isPast())) {
           let recurringItem = Object.assign({}, todo);
           recurringItem.date = todo.due;
-          recurringItem.due = getRecurranceDate(todo.due, todo.rec);
-          recurringItem.dueString = convertDate(getRecurranceDate(todo.due, todo.rec));
+          recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
+          recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
           if(!items.strings.includes(recurringItem.toString())) {
             items.strings.push(recurringItem.toString());
             tableContainerDue.appendChild(createTableRow(recurringItem));
@@ -1394,7 +1394,7 @@ function createTableRow(todo) {
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
     let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
-    let todoTableBodyCellRecurrance = todoTableBodyCellRecurranceTemplate.cloneNode(true);
+    let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     // if new item was saved, row is being marked
     if(todo.toString()==item.previous) {
       todoTableBodyRow.setAttribute("id", "previousItem");
@@ -1482,11 +1482,11 @@ function createTableRow(todo) {
       // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
-    // add recurrance icon
+    // add recurrence icon
     if(todo.rec) {
-      todoTableBodyCellRecurrance.innerHTML = "<i class=\"fas fa-redo\"></i>";
+      todoTableBodyCellRecurrence.innerHTML = "<i class=\"fas fa-redo\"></i>";
       // append the due date to the text item
-      todoTableBodyCellText.appendChild(todoTableBodyCellRecurrance);
+      todoTableBodyCellText.appendChild(todoTableBodyCellRecurrence);
     }
     // add the text cell to the row
     todoTableBodyRow.appendChild(todoTableBodyCellText);
@@ -1692,16 +1692,16 @@ function showForm(todo) {
         } else {
           btnItemStatus.innerHTML = i18next.t("inProgress");
         }
-        // if there is a recurrance
-        if(todo.rec) setRecurranceInput(todo.rec)
+        // if there is a recurrence
+        if(todo.rec) setRecurrenceInput(todo.rec)
         // if so we paste it into the input field
         if(todo.dueString) {
           dueDatePickerInput.value = todo.dueString;
-          // only show the recurrance picker when a due date is set
-          recurrancePicker.classList.add("is-active");
+          // only show the recurrence picker when a due date is set
+          recurrencePicker.classList.add("is-active");
         } else {
-          // hide the recurrance picker when a due date is not set
-          recurrancePicker.classList.remove("is-active");
+          // hide the recurrence picker when a due date is not set
+          recurrencePicker.classList.remove("is-active");
         // if not we clean it up
           dueDatePicker.setDate({
             clear: true
@@ -1709,8 +1709,8 @@ function showForm(todo) {
           dueDatePickerInput.value = null;
         }
       } else {
-        // hide the recurrance picker when a due date is not set
-        recurrancePicker.classList.remove("is-active");
+        // hide the recurrence picker when a due date is not set
+        recurrencePicker.classList.remove("is-active");
         // if not we clean it up
         dueDatePicker.setDate({
           clear: true
@@ -1857,8 +1857,8 @@ function showMore(variable) {
   }
 };
 function clearModal() {
-  // if recurrance picker was open it is now being closed
-  recurrancePickerContainer.classList.remove("is-active");
+  // if recurrence picker was open it is now being closed
+  recurrencePickerContainer.classList.remove("is-active");
   // if file chooser was open it is now being closed
   modalChangeFile.classList.remove("is-active");
   // hide suggestion box if it was open
@@ -1877,8 +1877,8 @@ function clearModal() {
   modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
   // clear the content in the input field as it's not needed anymore
   modalFormInput.value = null;
-  // clear previous recurrance selection
-  recurrancePickerInput.value = null;
+  // clear previous recurrence selection
+  recurrencePickerInput.value = null;
   // close datepicker
   dueDatePicker.hide();
 }

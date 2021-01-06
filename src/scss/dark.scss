@@ -285,20 +285,20 @@ nav {
     border-color: $grey-mid!important;
   }
 }
-#recurrancePicker {
-  #recurrancePickerInput,
+#recurrencePicker {
+  #recurrencePickerInput,
   .radio {
     cursor: pointer;
     background: none!important;
     color: white!important;
   }
-  #recurrancePickerInput::placeholder {
+  #recurrencePickerInput::placeholder {
     color: white!important;
   }
   .radio:hover {
     color: $grey-bright!important;
   }
-  #recurrancePickerContainer {
+  #recurrencePickerContainer {
     background: $grey-mid;
     .card-footer {
       border-color: $grey-pitchblack;

@@ -709,26 +709,26 @@ nav {
       color: #3273dc; }
 
 /* RECURRANCE PICKER */
-#recurrancePicker {
+#recurrencePicker {
   position: relative;
   display: none; }
-  #recurrancePicker #recurrancePickerInput {
+  #recurrencePicker #recurrencePickerInput {
     cursor: pointer; }
-  #recurrancePicker .card {
+  #recurrencePicker .card {
     width: 15em;
     display: none;
     position: fixed; }
-    #recurrancePicker .card .content {
+    #recurrencePicker .card .content {
       margin: 0;
       padding: 1em; }
-    #recurrancePicker .card label {
+    #recurrencePicker .card label {
       width: 100%;
       padding: 0;
       margin: .25em 0; }
-  #recurrancePicker .card.is-active {
+  #recurrencePicker .card.is-active {
     display: block; }
 
-#recurrancePicker.is-active {
+#recurrencePicker.is-active {
   display: block; }
 
 /* MEDIA QUERIES */
