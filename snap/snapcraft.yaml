@@ -15,7 +15,7 @@ icon: ./assets/icons/icon.png
 license: MIT
 compression: lzo
 architectures:
-- build-on: [amd64, armhf, arm64, s390x, ppc64el]
+- build-on: amd64
   run-on: all
 apps:
   sleek:
