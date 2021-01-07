@@ -21,7 +21,6 @@
   "build": {
     "files": [
       "!snap${/*}",
-      "!dist${/*}",
       "!flatpak${/*}",
       "!.git${/*}",
       "!**.pfx",
