@@ -42,8 +42,13 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * Todos can be enriched by
   - contexts
   - projects
-  - due dates
   - start dates
+  - due dates
+* Todos can repeat themselves based on a given due date. You can use a recurrence picker add it to the text field using:
+  - "rec:d" (daily)
+  - "rec:w" (weekly)
+  - "rec:m" (monthly)
+  - "rec:y" (annually)
 * Available contexts and projects will be suggested according to your input
 * Todos can be filtered by contexts and projects
 * Filters are sorted alphanummerically
