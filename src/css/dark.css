@@ -76,7 +76,7 @@ nav {
     border-bottom: none;
     background-color: #3B3B3B; }
 
-#todoTable .flex-table#previousDataItem.is-highlighted {
+#todoTable .flex-table#previousItem.is-highlighted {
   background-color: #2c2d30; }
 
 #todoTable .flex-table.completed {

@@ -193,12 +193,10 @@ nav {
     nav ul li:hover,
     nav ul li.is-highlighted {
       background: #ebebeb; }
-    nav ul li.btnAddTodo,
     nav ul li#navBtnFilter {
-      display: block; }
-    nav ul li.btnAddTodo.is-hidden,
-    nav ul li#navBtnFilter.is-hidden {
       display: none; }
+    nav ul li#navBtnFilter.is-active {
+      display: block; }
     nav ul li.logo {
       background: #4a4a4a;
       color: white;
@@ -225,8 +223,10 @@ nav {
   overflow-y: auto;
   overflow-x: hidden;
   float: left;
-  padding: 0 1.5em;
+  padding: 1.5em;
   background: #ebebeb; }
+  #filterDropdown .toggle {
+    padding: 0 0 1em 0; }
   #filterDropdown .dropdown-item {
     width: 100%;
     padding: 0;
@@ -313,6 +313,9 @@ nav {
   float: left;
   display: none;
   padding: 1.5em 3em; }
+  #todoTable .icon.is-left svg,
+  #todoTable .icon.is-right svg {
+    color: #4a4a4a; }
   #todoTable #selectionInformation {
     display: none;
     font-size: .8em;

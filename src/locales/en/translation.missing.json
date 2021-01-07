@@ -7,5 +7,6 @@
   "modalChangeFileCreate": "modalChangeFileCreate",
   "onboardingContainerBtnCreate": "onboardingContainerBtnCreate",
   "selected": "selected",
-  "windowTitleOpenFile": "windowTitleOpenFile"
+  "windowTitleOpenFile": "windowTitleOpenFile",
+  "formInfoDuplicate": "formInfoDuplicate"
 }

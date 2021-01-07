@@ -197,10 +197,8 @@ navBtnSettings.firstElementChild.setAttribute("title", i18next.t("settings"));
 const categories = ["contexts", "projects"];
 const items = {
   raw: null,
-  unfiltered: new Array,
-  filtered: new Array,
-  strings: new Array,
-  grouped: new Array
+  objects: new Array,
+  objectsFiltered: new Array
 }
 const item = {
   previous: ""
@@ -562,21 +560,17 @@ function setRecurrenceInput(recurrence) {
       break;
   }
 }
-async function showRecurrenceOptions(el) {
+function showRecurrenceOptions(el) {
   recurrencePickerContainer.focus();
   recurrencePickerContainer.classList.toggle("is-active");
   // get object from current input
-  var todo = await createTodoTxtObjects(modalFormInput.value).then(response => {
-    return response[0];
-  }).catch(error => {
-    console.log(error);
-  });
+  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
   radioRecurrence.forEach(function(el) {
     // remove old selection
     el.checked = false;
     // set pre selection
     if(todo.rec === el.value) el.checked = true;
-    el.onclick = async function() {
+    el.onclick = function() {
       // EDIT TODO
       if(modalFormInput.value) {
         // TODO: why do I need to write both?
@@ -600,6 +594,27 @@ async function showRecurrenceOptions(el) {
       if(matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrence selected: " + el.value]);
     }
   });
+}
+function createRecurringTodo(todo) {
+  try {
+    let recurringItem = Object.assign({}, todo);
+    recurringItem.date = todo.due;
+    recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
+    recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
+    // get index of recurring todo
+    const index = items.objects.map(function(item) {return item.toString(); }).indexOf(recurringItem.toString());
+    // only add recurring todo if it is not already in the list
+    if(index===-1) {
+      items.objects.push(recurringItem);
+      tableContainerDue.appendChild(createTableRow(recurringItem));
+      writeTodoToFile(recurringItem.toString());
+      return Promise.resolve("Success: Recurring todo created and written into file: " + recurringItem);
+    } else {
+      return Promise.resolve("Info: Recurring todo already in file, won't write anything");
+    }
+  } catch(error) {
+    return Promise.reject("Error in createRecurringTodo(): " + error);
+  }
 }
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 recurrencePickerInput.placeholder = i18next.t("noRecurrence");
@@ -648,14 +663,11 @@ function parseDataFromFile() {
         console.log(error);
       });
       // read fresh data from file
-      // this will also adapt syntax errors so it will be corrected later on
-      items.strings = new Array;
       items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
-      items.unfiltered = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
-      items.unfiltered.forEach((item) => {
-        if(item.text) items.strings.push(item.toString())
-      });
-      if(items.unfiltered.length>0) {
+      items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
+      // remove empty objects liek from empty lines in file
+      items.objects = items.objects.filter(function(item) { return item.toString() != "" });
+      if(items.objects.length>0) {
         t0 = performance.now();
         generateTodoData().then(response => {
           console.log(response);
@@ -666,6 +678,7 @@ function parseDataFromFile() {
         });
         // if there is a file onboarding is hidden
         showOnboarding(false);
+        navBtnFilter.classList.add("is-active");
         return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
       } else {
         // if there is a file onboarding is hidden
@@ -811,6 +824,9 @@ function changeFile(path) {
     pathToFile = path;
     store.set("pathToFile", pathToFile);
     store.set("files", files);
+    // remove any preselected filters
+    selectedFilter = [];
+    store.set("selectedFilter", "");
     return Promise.resolve("Success: File changed to: " + path);
   } catch (error) {
     return Promise.reject("Error in changeFile(): " + error);
@@ -922,7 +938,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      items.unfiltered.forEach((item) => {
+      items.objects.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
@@ -1122,6 +1138,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           // trigger matomo event
           if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
         });
+      // suggestion container
       } else {
         // add filter to input
         todoFiltersItem.addEventListener("click", () => {
@@ -1144,7 +1161,6 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           if(matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
       }
-      //console.log(selectedFilters);
       // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
       // TODO: do this in the first loop where buttons are built
       selectedFilters.forEach(function(item) {
@@ -1183,13 +1199,10 @@ function resetFilters() {
 // ########################################################################################################################
 function generateTodoData(searchString) {
   try {
-    // we only continue if there actually is data
-    if(items.unfiltered.length==0) return Promise.resolve("Info: Won't build anything as there is no data so far");
-    // items variable to work with from here on
-    items.filtered = items.unfiltered;
+    items.objectsFiltered = items.objects;
     // if set: remove all completed todos
     if(showCompleted==false) {
-      items.filtered = items.filtered.filter(function(item) {
+      items.objectsFiltered = items.objects.filter(function(item) {
         return item.complete === false;
       });
     }
@@ -1199,12 +1212,12 @@ function generateTodoData(searchString) {
       selectedFilters.forEach(filter => {
         // check if the filter is a project filter
         if(filter[1]=="projects") {
-          items.filtered = items.filtered.filter(function(item) {
+          items.objectsFiltered = items.objectsFiltered.filter(function(item) {
             if(item.projects) return item.projects.includes(filter[0]);
           });
         // check if the filter is a context filter
         } else if(filter[1]=="contexts") {
-          items.filtered = items.filtered.filter(function(item) {
+          items.objectsFiltered = items.objectsFiltered.filter(function(item) {
             if(item.contexts) return item.contexts.includes(filter[0]);
           });
         }
@@ -1223,44 +1236,45 @@ function generateTodoData(searchString) {
     if(categoriesFiltered.length > 0) {
       categoriesFiltered.forEach(category => {
         // we create a new array where the items attrbite has no values
-        items.filtered = items.filtered.filter(function(item) {
+        items.objectsFiltered = items.objectsFiltered.filter(function(item) {
           return item[category] === null;
         });
       });
     }
     // if search input is detected
-    if(searchString) {
+    if(searchString || todoTableSearch.value) {
+      if(todoTableSearch.value) searchString = todoTableSearch.value;
       // convert everything to lowercase for better search results
-      items.filtered = items.filtered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
-    } if(!searchString && todoTableSearch.value) {
-      searchString = todoTableSearch.value;
-      // convert everything to lowercase for better search results
-      items.filtered = items.filtered.filter(function (el) { return el.toString().toLowerCase().includes(searchString.toLowerCase()); });
+      items.objectsFiltered = items.objectsFiltered.filter(function(item) {
+        // if no match (-1) the item is skipped
+        if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false
+        return item;
+      });
     }
     // we show some information on filters if any are set
-    if(items.filtered.length!=items.unfiltered.length) {
+    if(items.objectsFiltered.length!=items.objects.length) {
       selectionInformation.classList.add("is-active");
-      selectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.filtered.length + " </strong> " + i18next.t("of") + " <strong>" + items.unfiltered.length + "</strong>";
+      selectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.objectsFiltered.length + " </strong> " + i18next.t("of") + " <strong>" + items.objects.length + "</strong>";
     } else {
       selectionInformation.classList.remove("is-active");
     }
     // hide/show the addTodoContainer or noResultTodoContainer
-    if(items.filtered.length > 0) {
+    if(items.objectsFiltered.length > 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
-    } else if(items.filtered.length === 0) {
+    } else if(items.objectsFiltered.length === 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
     }
     // sort items according to todo.txt logic
-    sortItems(items.filtered);
+    sortItems(items.objectsFiltered);
     // produce an object where priority a to z + null is key
-    items.grouped = items.filtered.reduce((r, a) => {
+    items.objectsFiltered = items.objectsFiltered.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
      return r;
     }, {});
     // show the table in case it was hidden
-    todoTable.classList.add("is-active");
+    //todoTable.classList.add("is-active");
     // empty the table containers before reading fresh data
     todoTableContainer.innerHTML = "";
     tableContainerDue.innerHTML = "";
@@ -1268,30 +1282,26 @@ function generateTodoData(searchString) {
     tableContainerDueAndComplete.innerHTML = "";
     tableContainerNoPriorityNotCompleted.innerHTML = "";
     // object is converted to a sorted array
-    items.grouped = Object.entries(items.grouped).sort();
+    items.objectsFiltered = Object.entries(items.objectsFiltered).sort();
     // each priority group -> A to Z plus null for all todos with no priority
-    for (let priority in items.grouped) {
+    for (let priority in items.objectsFiltered) {
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
-      if(items.grouped[priority][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.grouped[priority][0] + "</div></div>"))
+      if(items.objectsFiltered[priority][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[priority][0] + "</div></div>"))
       // TODO: that's ugly, refine this
-      for (let item in items.grouped[priority][1]) {
-        let todo = items.grouped[priority][1][item];
+      for (let item in items.objectsFiltered[priority][1]) {
+        let todo = items.objectsFiltered[priority][1][item];
         if(!todo.text) continue;
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
         // if item is due today or in the past and has recurrence it will be duplicated
         } else if(todo.due && todo.rec && !todo.complete && (todo.due.isToday() || todo.due.isPast())) {
-          let recurringItem = Object.assign({}, todo);
-          recurringItem.date = todo.due;
-          recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
-          recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
-          if(!items.strings.includes(recurringItem.toString())) {
-            items.strings.push(recurringItem.toString());
-            tableContainerDue.appendChild(createTableRow(recurringItem));
-            writeTodoToFile(recurringItem.toString());
-          }
+          createRecurringTodo(todo).then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
         }
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
@@ -1350,13 +1360,13 @@ function generateTodoData(searchString) {
     return Promise.reject("Error in generateTodoData: " + error);
   }
 }
-function writeTodoToFile(recurringItem) {
+function writeTodoToFile(todo) {
   // stop filewatcher to avoid loops
   if(fileWatcher) fileWatcher.close();
   //append todo as string to file in a new line
   fs.open(pathToFile, 'a', 666, function(error, id) {
     if(error) return "Error in fs.open(): " + error;
-    fs.write(id, "\n"+recurringItem, null, 'utf8', function() {
+    fs.write(id, "\n"+todo, null, 'utf8', function() {
       fs.close(id, function() {
         // only start the file watcher again after new todo has been appended
         startFileWatcher().then(response => {
@@ -1364,35 +1374,11 @@ function writeTodoToFile(recurringItem) {
         }).catch(error => {
           console.log(error);
         });
-        console.log("Success: Recurring todo written to file: " + recurringItem);
+        console.log("Success: Recurring todo written to file: " + todo);
       });
     });
   });
  }
-function createTodoTxtObjects(todo) {
-  try {
-    // clear todo txt item from previous sessions
-    let objects = new Array;
-    // if a single item has been passed
-    if(todo) {
-      let item = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
-      objects.push(item);
-    // if no item has been passed, all items in items.strings will be converted
-    } else {
-      for(let i = 0; i < items.strings.length;i++) {
-        // skip empty entries
-        if(!items.strings[i]) continue;
-        let item = new TodoTxtItem(items.strings[i], [ new DueExtension(), new RecExtension() ]);
-        // if due is missing we can't sort the array, so we set it to null if it's empty
-        if(!item.due) item.due = null;
-        objects.push(item);
-      }
-    }
-    return Promise.resolve(objects);
-  } catch(error) {
-    return Promise.reject("Error: Error in createTodoTxtObjects(): " + error);
-  }
-}
 function createTableRow(todo) {
   try {
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
@@ -1548,17 +1534,17 @@ function completeTodo(todo) {
   try {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
-    // get index of todo
-    var index = items.strings.indexOf(todo);
     // first convert the string to a todo.txt object
     todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+    // get index of todo
+    const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
     if(todo.complete) {
       // if item was already completed we set complete to false and the date to null
       todo.complete = false;
       todo.completed = null;
       // delete old item from array and add the new one at it's position
-      items.strings.splice(index, 1, todo.toString());
+      items.objects.splice(index, 1, todo);
     // Mark item as complete
     } else if(!todo.complete) {
       if(todo.due) {
@@ -1573,10 +1559,10 @@ function completeTodo(todo) {
       todo.complete = true;
       todo.completed = new Date();
       // delete old todo from array and add the new one at it's position
-      items.strings.splice(index, 1, todo.toString());
+      items.objects.splice(index, 1, todo);
     }
     //write the data to the file
-    fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
+    fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
   } catch(error) {
     return Promise.reject("Error in completeTodo(): " + error);
@@ -1586,10 +1572,10 @@ function deleteTodo(todo) {
   try {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
-    // get index of todo
-    var index = items.strings.indexOf(todo);
     // first convert the string to a todo.txt object
     todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+    // get index of todo
+    const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item
     if(todo.due) {
       var date = convertDate(todo.due);
@@ -1600,9 +1586,9 @@ function deleteTodo(todo) {
       closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+1);
       store.set("closedNotifications", closedNotifications);
     }
-    items.strings.splice(index, 1);
+    items.objects.splice(index, 1);
     //write the data to the file
-    fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
+    fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
   } catch(error) {
     return Promise.reject("Error in deleteTodo(): " + error);
@@ -1612,22 +1598,38 @@ function submitForm() {
   try {
     // check if there is an input in the text field, otherwise indicate it to the user!3KL7jeuduikbngbkfuvgflctnfgu
     // input value and data item are the same, nothing has changed, nothing will be written
-    if (modalForm.getAttribute("data-item")==modalForm.elements[0].value) {
+    if (modalForm.getAttribute("data-item")===modalForm.elements[0].value) {
       return Promise.resolve("Info: Nothing has changed, won't write anything.");
     // Edit todo
     } else if(modalForm.getAttribute("data-item")!=null) {
-      // get the position of that item in the array
-      var index = items.strings.indexOf(modalForm.getAttribute("data-item"));
+      // get index of todo
+      const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
+      // create a todo.txt object
+      let todo = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension(), new RecExtension() ]);
+      // check and prevent duplicate todo
+      if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
+        modalFormAlert.innerHTML = i18next.t("formInfoDuplicate");
+        modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
+        modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
+        return Promise.reject("Info: Todo already exists in file, won't write duplicate");
+      }
       // jump to index, remove 1 item there and add the value from the input at that position
-      items.strings.splice(index, 1, modalForm.elements[0].value);
+      items.objects.splice(index, 1, todo);
     // Add todo
     } else if(modalForm.getAttribute("data-item")==null && modalForm.elements[0].value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       var todo = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension(), new RecExtension() ]);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
+      // check and prevent duplicate todo
+      if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
+        modalFormAlert.innerHTML = i18next.t("formInfoDuplicate");
+        modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
+        modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
+        return Promise.reject("Info: Todo already exists in file, won't write duplicate");
+      }
       // we build the array
-      items.strings.push(todo.toString());
+      items.objects.push(todo);
       // mark the todo for anchor jump after next reload
       item.previous = todo.toString();
     } else if(modalForm.elements[0].value=="") {
@@ -1637,7 +1639,7 @@ function submitForm() {
       return Promise.reject("Info: Will not write empty todo");
     }
     //write the data to the file
-    fs.writeFileSync(pathToFile, items.strings.join("\n").toString(), {encoding: 'utf-8'});
+    fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
     // save the previously saved item.current for further use
@@ -1652,7 +1654,6 @@ function submitForm() {
   }
 }
 function showCompletedTodos() {
-
   if(showCompleted==false) {
     showCompleted = true;
   } else {
