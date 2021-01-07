@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.7.0-Alpha",
+  "version": "0.7.0",
   "description": "sleek is a todo app based on the concept of todo.txt",
   "synopsis": "sleek is a todo app based on the concept of todo.txt",
   "category": "ProjectManagement",
@@ -19,6 +19,16 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
+    "files": [
+      "!snap${/*}",
+      "!flatpak${/*}",
+      "!.git${/*}",
+      "!dist${/*}",
+      "!**.pfx",
+      "!**.bak",
+      "!**.md",
+      "!assets/screenshots${/*}"
+    ],
     "appId": "RobinAhle.sleektodomanager",
     "linux": {
       "icon": "assets/icons/512x512.png",
