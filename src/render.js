@@ -619,7 +619,6 @@ function createRecurringTodo(todo) {
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 recurrencePickerInput.placeholder = i18next.t("noRecurrence");
 recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
-//recurrencePickerInput.onclick = function(el) { showRecurrenceOptions(el) };
 // ########################################################################################################################
 // DATE FUNCTIONS
 // ########################################################################################################################

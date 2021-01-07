@@ -218,7 +218,7 @@ nav {
 /* FILTER DROPDOWN */
 #filterDropdown {
   display: none;
-  width: 30em;
+  width: 35em;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -751,10 +751,10 @@ nav {
       height: 3.5em;
       line-height: 3.5em;
       font-family: "FreeSansBold"; }
-  .filterDropdown {
+  #filterDropdown {
     width: 29em;
     padding: 0 1.5em !important; }
-    .filterDropdown .toggle {
+    #filterDropdown .toggle {
       margin: 0 !important;
       padding: 1.5em 0.5em 1em 0 !important; }
   #suggestionContainer.filterDropdown {

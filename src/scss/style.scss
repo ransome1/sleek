@@ -244,7 +244,7 @@ nav {
 /* FILTER DROPDOWN */
 #filterDropdown {
   display: none;
-  width: 30em;
+  width: 35em;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -921,7 +921,7 @@ nav {
       font-family: "FreeSansBold";
     }
   }
-  .filterDropdown {
+  #filterDropdown {
     width: 29em;
     padding: 0 1.5em!important;
     .toggle {
