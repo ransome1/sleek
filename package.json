@@ -19,15 +19,6 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "files": [
-      "!snap${/*}",
-      "!flatpak${/*}",
-      "!.git${/*}",
-      "!**.pfx",
-      "!**.bak",
-      "!**.md",
-      "!assets/screenshots${/*}"
-    ],
     "appId": "RobinAhle.sleektodomanager",
     "linux": {
       "icon": "assets/icons/512x512.png",
