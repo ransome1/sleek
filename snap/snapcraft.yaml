@@ -15,8 +15,8 @@ icon: ./assets/icons/icon.png
 license: MIT
 compression: lzo
 architectures:
-- build-on: [amd64, armhf, arm64, s390x, ppc64el, i386]
-  run-on: [amd64, armhf, arm64, s390x, ppc64el, i386]
+- build-on: [amd64, i386]
+  run-on: all
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox

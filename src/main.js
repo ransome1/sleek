@@ -210,5 +210,5 @@ function switchLanguage() {
   i18next.changeLanguage(language, (error) => {
     if (error) return console.log("Error in i18next.changeLanguage():", error);
   });
-  return Promise.resolve("Success: Language succuessfully set to " + language);
+  return Promise.resolve("Success: Language set to: " + language.toUpperCase());
 }

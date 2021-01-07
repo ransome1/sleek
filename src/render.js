@@ -1764,27 +1764,28 @@ function getCaretPosition(inputId) {
 function matomoEventsConsent() {
   try {
     var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    if(!is.development) _paq.push(['setConsentGiven']);
+    _paq.push(['requireConsent']);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="https://www.robbfolio.de/matomo/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '3']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
     if(matomoEvents) {
       // only continue if app is connected to the internet
       if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
       // user has given consent to process their data
       _paq.push(['setConsentGiven']);
-      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-      _paq.push(['requireConsent']);
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="https://www.robbfolio.de/matomo/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '3']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-      })();
-      return Promise.resolve("Info: Consent given, Matomo enabled");
+      return Promise.resolve("Info: Consent given, Matomo event tracking enabled");
     } else {
       // revoke matomoEvents consent
       _paq.push(['forgetConsentGiven']);
-      return Promise.resolve("Info: No consent given, Matomo disabled");
+      return Promise.resolve("Info: No consent given, Matomo event tracking disabled");
     }
   } catch(error) {
     return Promise.reject("Error in matomoEventsConsent(): " + error);
