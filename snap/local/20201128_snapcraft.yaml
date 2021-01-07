@@ -12,6 +12,7 @@ license: MIT
 compression: lzo
 architectures:
 - build-on: [amd64, armhf, arm64, s390x, ppc64el, i386]
+  run-on: [amd64, armhf, arm64, s390x, ppc64el, i386]
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
