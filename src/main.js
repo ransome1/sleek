@@ -35,7 +35,7 @@ const createWindow = () => {
   if (process.platform === "win32") {
     mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
   } else {
-    mainWindow.setIcon(path.join(__dirname, "../assets/icons/512x512.png"));
+    mainWindow.setIcon(path.join(__dirname, "../assets/icons/128x128.png"));
   }
 
   if (is.development) {

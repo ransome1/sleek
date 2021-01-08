@@ -1765,10 +1765,16 @@ function matomoEventsConsent() {
   try {
     var _paq = window._paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    if(!is.development) _paq.push(['setConsentGiven']);
-    _paq.push(['requireConsent']);
+    if(is.development) {
+      _paq.push(['setUserId', 'DEVELOPMENT']);
+      _paq.push(['forgetConsentGiven']);
+    } else {
+      _paq.push(['setUserId', md5(os.arch()+os.platform()+os.hostname())]);
+      _paq.push(['setConsentGiven']);
+    }
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
+    _paq.push(['requireConsent']);
     (function() {
       var u="https://www.robbfolio.de/matomo/";
       _paq.push(['setTrackerUrl', u+'matomo.php']);

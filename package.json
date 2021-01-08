@@ -15,7 +15,7 @@
   "copyright": "Copyright © 2020 ${author}",
   "license": "MIT",
   "repository": "https://github.com/ransome1/sleek/",
-  "icon": "assets/icons/512x512.png",
+  "icon": "assets/icons/128x128.png",
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
@@ -31,7 +31,7 @@
     ],
     "appId": "RobinAhle.sleektodomanager",
     "linux": {
-      "icon": "assets/icons/512x512.png",
+      "icon": "assets/icons/128x128.png",
       "category": "ProjectManagement",
       "target": [
         "deb",

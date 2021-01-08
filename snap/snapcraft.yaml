@@ -11,12 +11,11 @@ description: |
 
 grade: stable
 confinement: strict
-icon: ./assets/icons/icon.png
+icon: ./assets/icons/128x128.png
 license: MIT
 compression: lzo
 architectures:
 - build-on: [amd64, armhf, arm64, s390x, ppc64el]
-  run-on: [amd64, armhf, arm64, s390x, ppc64el]
 - build-on: i386
   run-on: i386
 apps:
