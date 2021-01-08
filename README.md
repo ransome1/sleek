@@ -44,7 +44,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - projects
   - start dates
   - due dates
-* Todos can repeat themselves based on a given due date. You can use a recurrence picker add it to the text field using:
+* Todos can repeat themselves based on a given due date. You can use a dedicated picker to add the recurrence or type it in by hand:
   - "rec:d" (daily)
   - "rec:w" (weekly)
   - "rec:m" (monthly)

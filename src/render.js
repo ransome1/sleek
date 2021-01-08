@@ -788,18 +788,20 @@ function startFileWatcher() {
     if (fs.existsSync(pathToFile)) {
       let md5Previous = null;
       fileWatcher = fs.watch(pathToFile, (event, filename) => {
-        if (fs.existsSync(pathToFile)) {
-          const md5Current = md5(fs.readFileSync(pathToFile));
-          if (md5Current === md5Previous) {
-            return;
+        let timer = setInterval(() => {
+          if (fs.existsSync(pathToFile)) {
+            const md5Current = md5(fs.readFileSync(pathToFile));
+            if (md5Current === md5Previous) {
+              return;
+            }
+            md5Previous = md5Current;
           }
-          md5Previous = md5Current;
-        }
-        parseDataFromFile(pathToFile).then(response => {
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        });
+          parseDataFromFile(pathToFile).then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+        }, 60000);
       });
       return Promise.resolve("Success: File watcher is watching: " + pathToFile);
     } else {
