@@ -92,7 +92,11 @@ i18next.changeLanguage(language, (err, t) => {
 });
 settingsLanguage.onchange = function(){
   i18next.changeLanguage(this.value, error => {
-    if(error) return console.log(error);
+    if(error) {
+      // trigger matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Error", "changeLanguage()", error])
+      return console.log(error);
+    }
     config.set("language", this.value);
     ipcRenderer.send("synchronous-message", "restart");
   })
@@ -249,6 +253,27 @@ recurrencePickerWeekly.innerHTML = i18next.t("weekly");
 recurrencePickerMonthly.innerHTML = i18next.t("monthly");
 recurrencePickerAnnually.innerHTML = i18next.t("annually");
 recurrencePickerNoRecurrence.innerHTML = i18next.t("noRecurrence");
+messageLoggingTitle.innerHTML = i18next.t("errorEventLogging");
+messageLoggingBody.innerHTML = i18next.t("messageLoggingBody");
+messageLoggingButton.innerHTML = i18next.t("settings");
+settingsTabSettings.innerHTML = i18next.t("settings");
+settingsTabSettingsLanguage.innerHTML = i18next.t("language");
+settingsTabSettingsLanguageBody.innerHTML = i18next.t("settingsTabSettingsLanguageBody");
+settingsTabSettingsNotifications.innerHTML = i18next.t("notifications");
+settingsTabSettingsNotificationsBody.innerHTML = i18next.t("settingsTabSettingsNotificationsBody");
+settingsTabSettingsDarkmode.innerHTML = i18next.t("darkmode");
+settingsTabSettingsDarkmodeBody.innerHTML = i18next.t("settingsTabSettingsDarkmodeBody");
+settingsTabSettingsLogging.innerHTML = i18next.t("errorEventLogging");
+settingsTabSettingsLoggingBody.innerHTML = i18next.t("settingsTabSettingsLoggingBody");
+settingsTabAbout.innerHTML = i18next.t("about");
+settingsTabAboutContribute.innerHTML = i18next.t("settingsTabAboutContribute");
+settingsTabAboutContributeBody.innerHTML = i18next.t("settingsTabAboutContributeBody");
+settingsTabAboutCopyrightLicense.innerHTML = i18next.t("settingsTabAboutCopyrightLicense");
+settingsTabAboutCopyrightLicenseBody.innerHTML = i18next.t("settingsTabAboutCopyrightLicenseBody");
+settingsTabAboutPrivacy.innerHTML = i18next.t("settingsTabAboutPrivacy");
+settingsTabAboutPrivacyBody.innerHTML = i18next.t("settingsTabAboutPrivacyBody");
+settingsTabAboutExternalLibraries.innerHTML = i18next.t("settingsTabAboutExternalLibraries");
+
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
@@ -636,6 +661,8 @@ function createRecurringTodo(todo) {
       return Promise.resolve("Info: Recurring todo already in file, won't write anything");
     }
   } catch(error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "createRecurringTodo()", error])
     return Promise.reject("Error in createRecurringTodo(): " + error);
   }
 }
@@ -678,6 +705,12 @@ function parseDataFromFile() {
   // we only start if file exists
   if (fs.existsSync(pathToFile)) {
     try {
+      // start the file watcher first
+      startFileWatcher().then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
       // read fresh data from file
       items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
       items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
@@ -711,6 +744,8 @@ function parseDataFromFile() {
       }
     } catch(error) {
       showOnboarding(true);
+      // trigger matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Error", "parseDataFromFile()", error])
       return Promise.reject("Error in parseDataFromFile(): " + error);
     }
   } else {
@@ -733,22 +768,27 @@ function createFile() {
     properties: ["openFile", "createDirectory"]
   }).then(file => {
     fs.writeFile(file.filePath, "", function (error) {
-      if (error) throw error;
-      console.log("Success: New todo.txt file created: " + file.filePath);
-      // updating files array and set this item to default
-      changeFile(file.filePath).then(response => {
-        // if file was changed successfully the data is parsed again
-        parseDataFromFile().then(response => {
-          // when data is parsed the modal needs to be closed
-          clearModal();
+      /*if (error) {
+        console.log("Info: No file selected: " + error);
+        return false
+      }*/
+      if (!file.canceled) {
+        console.log("Success: New todo.txt file created: " + file.filePath);
+        // updating files array and set this item to default
+        changeFile(file.filePath).then(response => {
+          // if file was changed successfully the data is parsed again
+          parseDataFromFile().then(response => {
+            // when data is parsed the modal needs to be closed
+            clearModal();
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
           console.log(response);
         }).catch(error => {
           console.log(error);
         });
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
+      }
     });
   }).catch(error => {
     console.log("Error: " + error)
@@ -832,6 +872,8 @@ function startFileWatcher() {
       return Promise.reject("Info: File watcher did not start as file was not found at: " + pathToFile);
     }
   } catch (error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "startFileWatcher()", error])
     return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
@@ -854,6 +896,8 @@ function changeFile(path) {
     config.set("selectedFilter", "");
     return Promise.resolve("Success: File changed to: " + path);
   } catch (error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
     return Promise.reject("Error in changeFile(): " + error);
   }
 }
@@ -912,6 +956,8 @@ function removeFileFromHistory(path) {
     config.set("files", files);
     return Promise.resolve("Success: File removed from history: " + path);
   } catch (error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "removeFileFromHistory()", error])
     return Promise.reject("Error in removeFileFromHistory(): " + error);
   }
 }
@@ -1026,6 +1072,8 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
     });
     return Promise.resolve("Success: All filters have been generated and built");
   } catch (error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "generateFilterData()", error])
     return Promise.reject("Error in generateFilterData(): " + error);
   }
 }
@@ -1198,6 +1246,8 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
     return Promise.resolve(filterContainerSub);
     //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
   } catch (error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "buildFilterButtons()", error])
     return Promise.reject("Error in buildFilterButtons(): " + error);
   }
 }
@@ -1382,7 +1432,9 @@ function generateTodoData(searchString) {
     }
     return Promise.resolve("Success: Todo data generated and table built");
   } catch(error) {
-    return Promise.reject("Error in generateTodoData: " + error);
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "generateTodoData()", error])
+    return Promise.reject("Error in generateTodoData(): " + error);
   }
 }
 function writeTodoToFile(todo) {
@@ -1390,7 +1442,11 @@ function writeTodoToFile(todo) {
   if(fileWatcher) fileWatcher.close();
   //append todo as string to file in a new line
   fs.open(pathToFile, 'a', 666, function(error, id) {
-    if(error) return "Error in fs.open(): " + error;
+    if(error) {
+      // trigger matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Error", "fs.open()", error])
+      return "Error in fs.open(): " + error;
+    }
     fs.write(id, "\n"+todo, null, 'utf8', function() {
       fs.close(id, function() {
         // only start the file watcher again after new todo has been appended
@@ -1552,6 +1608,8 @@ function createTableRow(todo) {
     // return the fully built row
     return todoTableBodyRow;
   } catch(error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "createTableRow()", error])
     return Promise.reject("Error in createTableRow(): " + error);
   }
 }
@@ -1590,6 +1648,8 @@ function completeTodo(todo) {
     fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
   } catch(error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "completeTodo()", error])
     return Promise.reject("Error in completeTodo(): " + error);
   }
 }
@@ -1616,6 +1676,8 @@ function deleteTodo(todo) {
     fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     return Promise.resolve("Success: Changes written to file: " + pathToFile);
   } catch(error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "deleteTodo()", error])
     return Promise.reject("Error in deleteTodo(): " + error);
   }
 }
@@ -1675,6 +1737,8 @@ function submitForm() {
     // if writing into file is denied throw alert
     modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + pathToFile;
     modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "submitForm()", error])
     return Promise.reject("Error in submitForm(): " + error);
   }
 }
@@ -1762,6 +1826,8 @@ function showForm(todo) {
       suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
       suggestionContainer.style.left = modalFormInputPosition.left + "px";
   } catch (error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
     console.log(error);
   }
 }
@@ -1820,6 +1886,8 @@ function matomoEventsConsent(setting) {
       return Promise.resolve("Info: No consent given, Matomo event tracking disabled");
     }
   } catch(error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "matomoEventsConsent()", error])
     return Promise.reject("Error in matomoEventsConsent(): " + error);
   }
 }
@@ -1884,6 +1952,8 @@ function showNotification(todo, offset) {
       return Promise.resolve("Info: Notification successfully sent");
     });
   } catch(error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "showNotification()", error])
     return Promise.reject("Error in showNotification(): " + error);
   }
 }
@@ -1993,19 +2063,14 @@ window.onload = function () {
   });
   // set theme
   setTheme();
-  // check messages
-  checkDismissedMessages();
+  // TODO: not generic
+  // only show message to users, that haven't enabled matomo yet
+  if(!matomoEvents) checkDismissedMessages()
   // only start if a file has been selected
   if(pathToFile) {
-    // start the file watcher first
-    startFileWatcher().then(response => {
-      console.log("Info: Path to file: " + pathToFile);
-      // start parsing data once the file watcher has started
-      parseDataFromFile(pathToFile).then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
+    console.log("Info: Path to file: " + pathToFile);
+    // start parsing data once the file watcher has started
+    parseDataFromFile(pathToFile).then(response => {
       console.log(response);
     }).catch(error => {
       console.log(error);

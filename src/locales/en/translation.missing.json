@@ -8,5 +8,6 @@
   "onboardingContainerBtnCreate": "onboardingContainerBtnCreate",
   "selected": "selected",
   "windowTitleOpenFile": "windowTitleOpenFile",
-  "formInfoDuplicate": "formInfoDuplicate"
+  "formInfoDuplicate": "formInfoDuplicate",
+  "language": "language"
 }

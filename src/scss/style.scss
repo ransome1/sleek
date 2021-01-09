@@ -167,9 +167,11 @@ svg {
     top: 50% - 2.5%;
     z-index: 30;
     background: $mid-grey;
-    color: $darker-grey;
     border-radius: 50%;
     cursor: pointer;
+    svg {
+      color: $darker-grey;
+    }
   }
   nav:hover a#filterColumnClose.is-active {
     display: inline-block;
@@ -184,9 +186,6 @@ nav {
   float: left;
   position: relative;
   background: $light-grey;
-  svg {
-    color: $darker-grey;
-  }
   ul {
     width: 5em;
     height: 100%;
@@ -203,6 +202,9 @@ nav {
     	line-height: 5em;
     	text-align: center;
     	border-bottom: 1px solid rgba(0,0,0,0.05);
+      svg {
+        color: inherit;
+      }
     }
     li a:focus {
       background: $mid-grey;
@@ -897,7 +899,7 @@ nav {
 #recurrencePicker.is-active {
   display: block;
 }
-.message {
+.message.fixed {
   width: 25em;
   position: fixed;
   right: 2em;

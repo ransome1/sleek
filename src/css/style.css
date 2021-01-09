@@ -156,9 +156,10 @@ svg {
     top: 47.5%;
     z-index: 30;
     background: #ebebeb;
-    color: #4a4a4a;
     border-radius: 50%;
     cursor: pointer; }
+    .columns a#filterColumnClose svg {
+      color: #4a4a4a; }
   .columns nav:hover a#filterColumnClose.is-active {
     display: inline-block; }
 
@@ -169,8 +170,6 @@ nav {
   float: left;
   position: relative;
   background: #f5f5f5; }
-  nav svg {
-    color: #4a4a4a; }
   nav ul {
     width: 5em;
     height: 100%;
@@ -187,6 +186,8 @@ nav {
       line-height: 5em;
       text-align: center;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+      nav ul li a svg {
+        color: inherit; }
     nav ul li a:focus {
       background: #ebebeb;
       outline-style: none; }
@@ -734,13 +735,13 @@ nav {
 #recurrencePicker.is-active {
   display: block; }
 
-.message {
+.message.fixed {
   width: 25em;
   position: fixed;
   right: 2em;
   bottom: 1em;
   display: none; }
-  .message .button {
+  .message.fixed .button {
     margin-top: .5em; }
 
 .message.is-active {

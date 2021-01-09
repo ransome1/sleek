@@ -55,9 +55,10 @@ input[type="search"]:focus {
   box-shadow: 0 0 0 2px $grey-bright!important;
 }
 input::placeholder {
-    color: $grey-lighter!important;
+  color: $grey-lighter!important;
 }
-button.is-link {
+button {
+  color: white!important;
   background: $grey-mid!important;
 }
 .button[disabled],
@@ -238,12 +239,14 @@ nav {
 }
 .columns a#filterColumnClose {
   background: $grey-light;
-  color: $grey-bright;
+  svg {
+    color: $grey-bright!important;
+  }
 }
 .toggle {
   .switch {
     .slider {
-      background-color: $grey-mid;
+      background-color: $grey-lighter;
     }
     input:checked + .slider {
       background-color: $grey-mid !important;
@@ -256,14 +259,14 @@ nav {
     }
   }
 }
-#modalForm,
-#modalChangeFile {
+#modalForm {
   button {
     color: white;
     border-color: $grey-mid!important;
+    background: transparent!important;
   }
   button:hover {
-    color: $grey-bright;
+    color: $grey-bright!important;
   }
 }
 .modal {
@@ -303,6 +306,13 @@ nav {
     .card-footer {
       border-color: $grey-pitchblack;
     }
+  }
+}
+.message.fixed {
+  background: transparent!important;
+  .message-body {
+    color: $grey-bright;
+    background: $grey-light!important;
   }
 }
 .dueDate {

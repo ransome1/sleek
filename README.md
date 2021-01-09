@@ -9,6 +9,11 @@ There is no cloud integration, but as sleek writes your todos into a plain text 
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's main view as seen on MacOS")
 ![Alt text](assets/screenshots/mac/main_filter_dark.png?raw=true "Screenshot of sleek's filter drawer in dark mode as seen on MacOS")
 
+### Get it from Microsoft Store
+You can install sleek from Microsofts Windows Store
+
+<a href='//www.microsoft.com/store/apps/9NWM2WXF60KR?cid=storebadge&ocid=badge'><img src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png' alt='English badge' width='180'/></a>
+
 ### Get it from Snap Store
 You can install sleek from Canonicals Snap Store using: `sudo snap install sleek`
 

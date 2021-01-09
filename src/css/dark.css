@@ -36,7 +36,8 @@ input[type="search"]:focus {
 input::placeholder {
   color: #4d4d4d !important; }
 
-button.is-link {
+button {
+  color: white !important;
   background: #2c2d30 !important; }
 
 .button[disabled],
@@ -178,11 +179,12 @@ nav {
   color: #CCCDCF !important; }
 
 .columns a#filterColumnClose {
-  background: #3B3B3B;
-  color: #CCCDCF; }
+  background: #3B3B3B; }
+  .columns a#filterColumnClose svg {
+    color: #CCCDCF !important; }
 
 .toggle .switch .slider {
-  background-color: #2c2d30; }
+  background-color: #4d4d4d; }
 
 .toggle .switch input:checked + .slider {
   background-color: #2c2d30 !important; }
@@ -193,14 +195,13 @@ nav {
 .toggle .switch input:focus {
   outline: none; }
 
-#modalForm button,
-#modalChangeFile button {
+#modalForm button {
   color: white;
-  border-color: #2c2d30 !important; }
+  border-color: #2c2d30 !important;
+  background: transparent !important; }
 
-#modalForm button:hover,
-#modalChangeFile button:hover {
-  color: #CCCDCF; }
+#modalForm button:hover {
+  color: #CCCDCF !important; }
 
 .modal .modal-content .card {
   background: #3B3B3B;
@@ -231,6 +232,12 @@ nav {
   background: #2c2d30; }
   #recurrencePicker #recurrencePickerContainer .card-footer {
     border-color: #1d1e20; }
+
+.message.fixed {
+  background: transparent !important; }
+  .message.fixed .message-body {
+    color: #CCCDCF;
+    background: #3B3B3B !important; }
 
 .dueDate svg,
 .dueDate #dueDatePickerInput,

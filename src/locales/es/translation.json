@@ -1,7 +1,7 @@
 {
   "addTodo": "Añadir un nuevo todo",
   "toggleFilter": "Activar la sección de filtros",
-  "openFile": "Abrir el fichero de todo.txt",
+  "openFile": "Abrir todo.txt",
   "toggleDarkMode": "Activar el modo oscuro",
   "toggleCompletedTodos": "Activar los todo completados",
   "completedTodos": "Todo completados",
@@ -29,7 +29,7 @@
   "addTodoContainerSubtitle": "Esta lista está vacía, añade un nuevo todo.",
   "welcomeToSleek": "Bienvenido a sleek",
   "onboardingContainerSubtitle": "Comienza eligiendo un archivo <strong>existente</strong> todo.txt o creando un nuevo archivo <strong>nuevo</strong>",
-  "createFile": "Crear un nuevo todo.txt",
+  "createFile": "Crear todo.txt",
   "onboardingContainerBtnOpen": "Elija un todo.txt existente",
   "windowTitleCreateFile": "Elija una carpeta donde guardar su file todo.txt",
   "windowButtonCreateFile": "Crear el file todo.txt aquí",

@@ -1,5 +1,4 @@
 const { app, BrowserWindow, nativeTheme, electron, ipcMain, session } = require("electron");
-const settings = require('electron-settings');
 const { is } = require("electron-util");
 const fs = require("fs");
 const path = require("path");
@@ -73,7 +72,7 @@ const createWindow = () => {
           }
         },
         {
-          label: i18next.t("onboardingContainerBtnCreate"),
+          label: i18next.t("createFile"),
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("createFile(true, false)");
           }

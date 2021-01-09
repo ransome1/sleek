@@ -1,7 +1,7 @@
 {
   "addTodo": "Aggiungi un nuovo todo",
   "toggleFilter": "Mostra filtri",
-  "openFile": "Apri il file todo.txt",
+  "openFile": "Apri todo.txt",
   "toggleDarkMode": "Attiva la modalità scura",
   "toggleCompletedTodos": "Attiva i todo completati",
   "completedTodos": "Todo completati",
@@ -29,7 +29,7 @@
   "addTodoContainerSubtitle": "Questa lista è vuota, aggiungiamo un nuovo todo.",
   "welcomeToSleek": "Benvenuto su sleek",
   "onboardingContainerSubtitle": "Inizia scegliendo un file <strong>esistente</strong> todo.txt o creandone uno <strong>nuovo</strong>.",
-  "createFile": "Crea un nuovo todo.txt",
+  "createFile": "Crea todo.txt",
   "onboardingContainerBtnOpen": "Scegli un todo.txt esistente",
   "windowTitleCreateFile": "Scegli una cartella dove salvare il tuo file todo.txt",
   "windowButtonCreateFile": "Crea file todo.txt qui",
