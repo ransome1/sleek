@@ -1,4 +1,5 @@
-const { app, BrowserWindow, nativeTheme, electron, ipcMain } = require("electron");
+const { app, BrowserWindow, nativeTheme, electron, ipcMain, session } = require("electron");
+const settings = require('electron-settings');
 const { is } = require("electron-util");
 const fs = require("fs");
 const path = require("path");
@@ -29,7 +30,7 @@ const createWindow = () => {
       enableRemoteModule: true,
       spellcheck: false,
       contextIsolation: false,
-      preload: path.join(__dirname, "preload.js")
+      preload: path.join(__dirname, "preload.js"),
     }
   });
   if (process.platform === "win32") {
@@ -162,9 +163,6 @@ const createWindow = () => {
   // Set menu to menuTemplate
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 };
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on("ready", () => {
   switchLanguage().then(response => {
     console.log(response);
@@ -176,9 +174,6 @@ app.on("ready", () => {
     app.setAppUserModelId("RobinAhle.sleektodomanager");
   }
 });
-// Quit when all windows are closed, except on macOS. There, it"s common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -192,12 +187,21 @@ app.on("activate", () => {
   }
   app.show();
 });
-ipcMain.on('synchronous-message', (event, arg) => {
+ipcMain.on("synchronous-message", (event, arg) => {
   if(arg=="restart") {
     app.relaunch();
     app.exit();
   }
 });
+/*ipcMain.on("createSetting", (event, setting) => {
+  createSetting(setting);
+});
+ipcMain.on("getSettings", (event) => {
+  getSettings().then(settings => {
+    console.log(settings);
+    event.reply("reply-getSettings", settings);
+  });
+});*/
 function switchLanguage() {
   if (store.get("language")) {
     var language = store.get("language");
@@ -212,3 +216,25 @@ function switchLanguage() {
   });
   return Promise.resolve("Success: Language set to: " + language.toUpperCase());
 }
+/*function createSetting(setting) {
+  settings.set(setting.key, {
+    data: setting.value
+  });
+}
+function getSettings() {
+  return settings.get("messageLogging").then(value => {
+      return value;
+  })
+  /*return session.defaultSession.cookies.get({}).then((cookies) => {
+    return cookies;
+  }).catch((error) => {
+    console.log(error)
+  })*/
+//}
+/*function removeCookie(name) {
+  return session.defaultSession.cookies.remove("http://localhost/", name).then(() => {
+    console.log("Success: Cookie removed: " + name);
+  }).catch((error) => {
+    console.log(error)
+  })
+}*/

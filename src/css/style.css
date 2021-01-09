@@ -734,6 +734,18 @@ nav {
 #recurrencePicker.is-active {
   display: block; }
 
+.message {
+  width: 25em;
+  position: fixed;
+  right: 2em;
+  bottom: 1em;
+  display: none; }
+  .message .button {
+    margin-top: .5em; }
+
+.message.is-active {
+  display: block; }
+
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
   .modal.content .modal-card {

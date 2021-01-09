@@ -1,5 +1,6 @@
 const electron = require("electron");
 window.os = require("os");
+window.session = electron.session;
 window.ipcRenderer = electron.ipcRenderer;
 window.getCurrentWindow = electron.remote.getCurrentWindow;
 window.notification = electron.remote.Notification;

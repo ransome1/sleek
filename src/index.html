@@ -200,8 +200,8 @@
               </tr>
               <tr>
                 <td>
-                  <h4 class="title is-4">Event tracking</h4>
-                  <p>If you want to contribute to this project, you can enable this anonymized event tracking. It will track the features you use and send these events using an SSL secured connection to a privately hosted Matomo instance. There is no third-party provider involved.</p>
+                  <h4 class="title is-4">Error and event logging</h4>
+                  <p>I want to keep this app tidy and focused on what's important rather than bloating it up with features that have no value to it's users. Therefor I need to understand which features are used and which ones are not. You can contribute to this project, by enabling anonymized error and event logging. It will log all errors that occur and the features you use and send this information to a privately hosted Matomo instance using SSL. More information can be found in sleeks' <a href="https://github.com/ransome1/sleek/blob/master/PRIVACY.md" target="_blank">privacy policy</a>.</p>
                 </td>
                 <td>
                   <div class="toggle">
@@ -219,7 +219,9 @@
           <h4 class="title is-4">sleek is open source and you can contribute to make it better</h4>
           <p>The source code is open and available on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a>. You can support this project by contributing <a href="https://github.com/ransome1/sleek/issues" target="_blank">bug reports, code improvements or even new features</a>. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. It is developed by Robin Ahle. Get in touch with me on <a href="https://github.com/ransome1/sleek" target="_blank">Github</a>.</p>
           <h4 class="title is-4">Copyright</h4>
-          <p>sleek is available under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>. See <a href="https://github.com/ransome1/sleek/blob/master/LICENSE" target="_blank">LICENSE</a> for the full license text.</p>
+          <p>Copyright (c) 2021 Robin Ahle. sleek is available under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>. See <a href="https://github.com/ransome1/sleek/blob/master/LICENSE" target="_blank">LICENSE</a> for the full license text.</p>
+          <h4 class="title is-4">Privacy Policy</h4>
+          <p>I am not interested in who sleek's users are and will therefor not gather unnecessary data. However I would like to know how many users are actively using sleek and, in case a user explicitly agrees to it, how sleek is being used. The data is being anonymized, before it gets send to a privately hosted Matomo instance (www.robbfolio.de/matomo/) exclusively via a secure SSL-encrypted connection. See <a href="https://github.com/ransome1/sleek/blob/master/PRIVACY.md" target="_blank">Privacy Policy</a> for further information.</p>
           <h4 class="title is-4">External libraries</h4>
           <table>
             <tbody>
@@ -244,7 +246,7 @@
             </tbody>
           </table>
         </section>
-        <button class="modal-close is-large" aria-label="close"></button>
+        <button class="modal-close close is-large" aria-label="close"></button>
       </div>
     </div>
     <div id="modalHelp" class="modal content" tabindex="0">
@@ -338,7 +340,7 @@
             </div>
           </div>
         </section>
-        <button class="modal-close is-large" aria-label="close"></button>
+        <button class="modal-close close is-large" aria-label="close"></button>
       </div>
     </div>
     <div id="suggestionContainer" class="filterDropdown card"></div>
@@ -361,6 +363,16 @@
         </div>
       </div>
     </div>
+    <article class="message" data="logging">
+      <div class="message-header">
+        <p>You can help improving sleek</p>
+        <button class="delete close" aria-label="delete" data-message="logging"></button>
+      </div>
+      <div class="message-body">
+        <p>You can support this project by enabling an anonymized error and event logging. It will log errors that occur and features you use. You can enable this feature in settings.</p>
+        <p><button id="btnMessageLogging" class="button" tabindex="0"><i class="fas fa-cog"></i>&nbsp;<span id="openSettings">Open settings</span></button></p>
+      </div>
+    </article>
     <script defer src="js/jsTodoExtensions.js"></script>
     <script defer src="js/jsTodoTxt.js"></script>
     <script defer src="js/autolink.js"></script>

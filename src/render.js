@@ -1,14 +1,15 @@
 // ########################################################################################################################
-// READ FROM STORAGE
+// READ FROM CONFIG
 // ########################################################################################################################
-const store = new Store({
+const config = new Store({
   configName: "user-preferences",
   defaults: {
     windowBounds: { width: 1025, height: 768 },
     showCompleted: true,
     selectedFilters: new Array,
     categoriesFiltered: new Array,
-    closedNotifications: new Array,
+    dismissedNotifications: new Array,
+    dismissedMessages: new Array,
     pathToFile: "",
     theme: null,
     matomoEvents: false,
@@ -17,27 +18,36 @@ const store = new Store({
     files: new Array
   }
 });
-let closedNotifications = store.get("closedNotifications");
-let matomoEvents = store.get("matomoEvents");
-let notifications = store.get("notifications");
-let showCompleted = store.get("showCompleted");
-let pathToFile = store.get("pathToFile");
-let selectedFilters = store.get("selectedFilters");
-let categoriesFiltered = store.get("categoriesFiltered");
-let language = store.get("language");
-let files = store.get("files");
-if(files) {
-  files = store.get("files");
+if(config.get("dismissedNotifications")) {
+  var dismissedNotifications = config.get("dismissedNotifications");
 } else {
-  files = new Array;
+  var dismissedNotifications = new Array;
+}
+if(config.get("dismissedMessages")) {
+  var dismissedMessages = config.get("dismissedMessages");
+} else {
+  var dismissedMessages = new Array;
+}
+let matomoEvents = config.get("matomoEvents");
+let notifications = config.get("notifications");
+let showCompleted = config.get("showCompleted");
+let pathToFile = config.get("pathToFile");
+let selectedFilters = config.get("selectedFilters");
+let categoriesFiltered = config.get("categoriesFiltered");
+let language = config.get("language");
+if(config.get("files")) {
+  var files = config.get("files");
+} else {
+  var files = new Array;
   files.push([1, pathToFile]);
 }
-let theme = store.get("theme");
-if(!theme) {
+if(config.get("theme")) {
+  var theme = config.get("theme");
+} else {
   if(nativeTheme.shouldUseDarkColors) {
-    theme = "dark";
+    var theme = "dark";
   } else {
-    theme = "light"
+    var theme = "light"
   }
 }
 // ########################################################################################################################
@@ -83,7 +93,7 @@ i18next.changeLanguage(language, (err, t) => {
 settingsLanguage.onchange = function(){
   i18next.changeLanguage(this.value, error => {
     if(error) return console.log(error);
-    store.set("language", this.value);
+    config.set("language", this.value);
     ipcRenderer.send("synchronous-message", "restart");
   })
 }
@@ -105,7 +115,7 @@ let filterContainer = document.getElementById("todoFilters");
 // ########################################################################################################################
 const modal = document.querySelectorAll('.modal');
 const modalCards = document.querySelectorAll('.modal-card');
-const modalClose = document.querySelectorAll('.modal-close');
+const modalClose = document.querySelectorAll('.close');
 const modalBackground = document.querySelectorAll('.modal-background');
 const contentTabs = document.querySelectorAll('.modal.content ul li');
 const contentTabsCards = document.querySelectorAll('.modal.content section');
@@ -113,6 +123,7 @@ const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
 const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
 const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
+const messages = document.querySelectorAll(".message");
 // ########################################################################################################################
 // MAIN MENU CONFIG
 // ########################################################################################################################
@@ -254,6 +265,11 @@ navBtnSettings.onclick = function () {
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
 }
+btnMessageLogging.onclick = function () {
+  showContent(modalSettings);
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
+}
 btnItemStatus.onclick = function() {
   completeTodo(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
     modalForm.classList.remove("is-active");
@@ -349,8 +365,8 @@ toggleShowCompleted.onclick = function() {
 }
 toggleMatomoEvents.onclick = function() {
   matomoEvents = this.checked;
-  store.set('matomoEvents', this.checked);
-  matomoEventsConsent().then(response => {
+  config.set('matomoEvents', this.checked);
+  matomoEventsConsent(this.checked).then(response => {
     console.log(response);
   }).catch(error => {
     console.log(error);
@@ -360,7 +376,7 @@ toggleMatomoEvents.onclick = function() {
 }
 toggleNotifications.onclick = function() {
   notifications = this.checked;
-  store.set('notifications', this.checked);
+  config.set('notifications', this.checked);
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Notifications", this.checked])
 }
@@ -390,10 +406,17 @@ modalBackground.forEach(function(el) {
 });
 modalClose.forEach(function(el) {
   el.onclick = function() {
-    //clearModal();
+    if(el.getAttribute("data-message")) {
+      // persist closed message, so it won't show again
+      if(!dismissedMessages.includes(el.getAttribute("data-message"))) dismissedMessages.push(el.getAttribute("data-message"))
+      config.set("dismissedMessages", dismissedMessages);
+      // trigger matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
+    } else {
+      // trigger matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+    }
     el.parentElement.parentElement.classList.remove("is-active");
-    // trigger matomo event
-    if(matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
   }
 });
 modalForm.addEventListener("submit", function(e) {
@@ -487,8 +510,8 @@ filterDropdown.addEventListener ("keydown", function () {
 // THEME CONFIG
 // ########################################################################################################################
 function setTheme(switchTheme) {
-  /*if(store.get("theme")) {
-    var theme = store.get("theme");
+  /*if(config.get("theme")) {
+    var theme = config.get("theme");
   } else {
     var theme = nativeTheme.themeSource;
   }*/
@@ -504,7 +527,7 @@ function setTheme(switchTheme) {
         theme = "light";
         break;
     }
-    store.set("theme", theme);
+    config.set("theme", theme);
   }
   switch (theme) {
     case "light":
@@ -655,18 +678,14 @@ function parseDataFromFile() {
   // we only start if file exists
   if (fs.existsSync(pathToFile)) {
     try {
-      // start the file watcher
-      startFileWatcher().then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
       // read fresh data from file
       items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
       items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
       // remove empty objects liek from empty lines in file
       items.objects = items.objects.filter(function(item) { return item.toString() != "" });
       if(items.objects.length>0) {
+        // if there is a file onboarding is hidden
+        showOnboarding(false);
         t0 = performance.now();
         generateTodoData().then(response => {
           console.log(response);
@@ -675,8 +694,6 @@ function parseDataFromFile() {
         }).catch(error => {
           console.log(error);
         });
-        // if there is a file onboarding is hidden
-        showOnboarding(false);
         navBtnFilter.classList.add("is-active");
         return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
       } else {
@@ -686,6 +703,7 @@ function parseDataFromFile() {
         todoFilters.innerHTML = "";
         // hide/show the addTodoContainer
         addTodoContainer.classList.add("is-active");
+        // hide the table
         todoTable.classList.remove("is-active");
         // if file is actually empty we don't need the filter drawer
         navBtnFilter.classList.remove("is-active");
@@ -701,45 +719,39 @@ function parseDataFromFile() {
   }
 }
 function createFile() {
-  // Resolves to a Promise<Object>
   dialog.showSaveDialog({
     title: i18next.t("windowTitleCreateFile"),
     defaultPath: path.join(app.getPath('home')),
     buttonLabel: i18next.t("windowButtonCreateFile"),
-    // Restricting the user to only Text Files.
+    // Restricting selection to text files only
     filters: [
-        {
-            name: i18next.t("windowFileformat"),
-            extensions: ["txt"]
-        },
+      {
+        name: i18next.t("windowFileformat"),
+        extensions: ["txt"]
+      }
     ],
-    properties: [
-      "openFile",
-      "createDirectory"
-    ]
+    properties: ["openFile", "createDirectory"]
   }).then(file => {
-    fs.writeFile(file.filePath, "", function (err) {
-      if (err) throw err;
-      if (!err) {
-        console.log("Success: New todo.txt file created: " + file.filePath);
-        // updating files array and set this item to default
-        changeFile(file.filePath).then(response => {
-          // if file was changed successfully the data is parsed again
-          parseDataFromFile().then(response => {
-            // when data is parsed the modal needs to be closed
-            clearModal();
-            console.log(response);
-          }).catch(error => {
-            console.log(error);
-          });
+    fs.writeFile(file.filePath, "", function (error) {
+      if (error) throw error;
+      console.log("Success: New todo.txt file created: " + file.filePath);
+      // updating files array and set this item to default
+      changeFile(file.filePath).then(response => {
+        // if file was changed successfully the data is parsed again
+        parseDataFromFile().then(response => {
+          // when data is parsed the modal needs to be closed
+          clearModal();
           console.log(response);
         }).catch(error => {
           console.log(error);
         });
-      }
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
     });
-  }).catch(err => {
-      console.log("Error: " + err)
+  }).catch(error => {
+    console.log("Error: " + error)
   });
 }
 function openFile() {
@@ -762,7 +774,7 @@ function openFile() {
       console.log("Success: Storage file updated by new path and filename: " + pathToFile);
       // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
       selectedFilters = new Array;
-      store.set("selectedFilters", new Array);
+      config.set("selectedFilters", new Array);
       // updating files array and set this item to default
       changeFile(file.filePaths[0].toString()).then(response => {
         // if file was changed successfully the data is parsed again
@@ -788,7 +800,7 @@ function startFileWatcher() {
     if (fs.existsSync(pathToFile)) {
       let md5Previous = null;
       fileWatcher = fs.watch(pathToFile, (event, filename) => {
-        let timer = setInterval(() => {
+        /*let timer = setInterval(() => {
           if (fs.existsSync(pathToFile)) {
             const md5Current = md5(fs.readFileSync(pathToFile));
             if (md5Current === md5Previous) {
@@ -801,7 +813,19 @@ function startFileWatcher() {
           }).catch(error => {
             console.log(error);
           });
-        }, 60000);
+        }, 60000);*/
+        if (fs.existsSync(pathToFile)) {
+          const md5Current = md5(fs.readFileSync(pathToFile));
+          if (md5Current === md5Previous) {
+            return;
+          }
+          md5Previous = md5Current;
+        }
+        parseDataFromFile(pathToFile).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
       });
       return Promise.resolve("Success: File watcher is watching: " + pathToFile);
     } else {
@@ -823,11 +847,11 @@ function changeFile(path) {
     });
     if(!files.includes(path)) files.push([1, path]);
     pathToFile = path;
-    store.set("pathToFile", pathToFile);
-    store.set("files", files);
+    config.set("pathToFile", pathToFile);
+    config.set("files", files);
     // remove any preselected filters
     selectedFilter = [];
-    store.set("selectedFilter", "");
+    config.set("selectedFilter", "");
     return Promise.resolve("Success: File changed to: " + path);
   } catch (error) {
     return Promise.reject("Error in changeFile(): " + error);
@@ -885,7 +909,7 @@ function removeFileFromHistory(path) {
     files = files.filter(function(file) {
       return file[1] != path;
     });
-    store.set("files", files);
+    config.set("files", files);
     return Promise.resolve("Success: File removed from history: " + path);
   } catch (error) {
     return Promise.reject("Error in removeFileFromHistory(): " + error);
@@ -979,7 +1003,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
             // delete persisted filters
             selectedFilters.splice(index, 1);
             // persist the change
-            store.set("selectedFilters", JSON.stringify(selectedFilters));
+            config.set("selectedFilters", JSON.stringify(selectedFilters));
           }
         }
       });
@@ -1032,7 +1056,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           // we remove the category from the array
           categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
           //persist the category filters
-          store.set("categoriesFiltered", categoriesFiltered);
+          config.set("categoriesFiltered", categoriesFiltered);
           // we remove the greyed out look from the container
           filterContainerSub.classList.remove("is-greyed-out");
           // change the eye icon
@@ -1048,7 +1072,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             return seen.hasOwnProperty(k) ? false : (seen[k] = true);
           })
           //persist the category filters
-          store.set("categoriesFiltered", categoriesFiltered);
+          config.set("categoriesFiltered", categoriesFiltered);
           // we add the greyed out look to the container
           filterContainerSub.classList.add("is-greyed-out");
           // change the eye icon
@@ -1121,12 +1145,12 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
           }
           // convert the collected filters to JSON and save it to store.js
-          store.set("selectedFilters", JSON.stringify(selectedFilters));
+          config.set("selectedFilters", JSON.stringify(selectedFilters));
           if(categoriesFiltered) {
             // remove any setting that hides the category of the selected filters
             if(categoriesFiltered.indexOf(category)>=0) categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
             //persist the category filters
-            store.set("categoriesFiltered", categoriesFiltered);
+            config.set("categoriesFiltered", categoriesFiltered);
           }
           t0 = performance.now();
           generateTodoData().then(response => {
@@ -1181,9 +1205,9 @@ function resetFilters() {
   selectedFilters = [];
   categoriesFiltered = new Array;
   // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
-  store.set("selectedFilters", new Array);
+  config.set("selectedFilters", new Array);
   // clear filtered categories
-  store.set("categoriesFiltered", new Array);
+  config.set("categoriesFiltered", new Array);
   // clear search input
   todoTableSearch.value = null;
   t0 = performance.now();
@@ -1552,10 +1576,10 @@ function completeTodo(todo) {
         var date = convertDate(todo.due);
         // if set to complete it will be removed from persisted notifcations
         // the one set for today
-        closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+0);
+        dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+0);
         // the one set for tomorrow
-        closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+1);
-        store.set("closedNotifications", closedNotifications);
+        dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+1);
+        config.set("dismissedNotifications", dismissedNotifications);
       }
       todo.complete = true;
       todo.completed = new Date();
@@ -1582,10 +1606,10 @@ function deleteTodo(todo) {
       var date = convertDate(todo.due);
       // if deleted it will be removed from persisted notifcations
       // the one set for today
-      closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+0);
+      dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+0);
       // the one set for tomorrow
-      closedNotifications = closedNotifications.filter(e => e !== md5(date + todo.text)+1);
-      store.set("closedNotifications", closedNotifications);
+      dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+1);
+      config.set("dismissedNotifications", dismissedNotifications);
     }
     items.objects.splice(index, 1);
     //write the data to the file
@@ -1662,7 +1686,7 @@ function showCompletedTodos() {
   }
   toggleShowCompleted.checked = showCompleted;
   // persist the sorting
-  store.set("showCompleted", showCompleted);
+  config.set("showCompleted", showCompleted);
   t0 = performance.now();
   generateTodoData().then(response => {
     console.log(response);
@@ -1763,7 +1787,7 @@ function getCaretPosition(inputId) {
     return false;
   }
 }
-function matomoEventsConsent() {
+function matomoEventsConsent(setting) {
   try {
     var _paq = window._paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
@@ -1825,7 +1849,7 @@ function showNotification(todo, offset) {
           break;
       }
       // if notification already has been triggered once it will be discarded
-      if(closedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+      if(dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
       // set options for notifcation
       const newNotification = new notification({
         title: title,
@@ -1844,8 +1868,8 @@ function showNotification(todo, offset) {
       // send it to UI
       newNotification.show();
       // once shown, it will be persisted as hash to it won't be shown a second time
-      closedNotifications.push(hash);
-      store.set("closedNotifications", closedNotifications);
+      dismissedNotifications.push(hash);
+      config.set("dismissedNotifications", dismissedNotifications);
       // click on button in notification
       newNotification.addListener('click', () => {
         app.focus();
@@ -1900,6 +1924,15 @@ function clearModal() {
   recurrencePickerInput.value = null;
   // close datepicker
   dueDatePicker.hide();
+}
+function checkDismissedMessages() {
+  messages.forEach((message) => {
+    if(dismissedMessages.includes(message.getAttribute("data"))) {
+      message.classList.remove("is-active");
+    } else {
+      message.classList.add("is-active");
+    }
+  });
 }
 // ########################################################################################################################
 // CONTENT FUNCTIONS
@@ -1960,11 +1993,19 @@ window.onload = function () {
   });
   // set theme
   setTheme();
+  // check messages
+  checkDismissedMessages();
   // only start if a file has been selected
   if(pathToFile) {
-    console.log("Info: Path to file: " + pathToFile);
-    // start parsing data
-    parseDataFromFile(pathToFile).then(response => {
+    // start the file watcher first
+    startFileWatcher().then(response => {
+      console.log("Info: Path to file: " + pathToFile);
+      // start parsing data once the file watcher has started
+      parseDataFromFile(pathToFile).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
       console.log(response);
     }).catch(error => {
       console.log(error);
@@ -1974,12 +2015,11 @@ window.onload = function () {
     // show onboarding if no file has been selected
     showOnboarding(true);
   }
-
 }
 window.onresize = function() {
   let width = this.outerWidth;
   let height = this.outerHeight;
-  store.set('windowBounds', { width, height });
+  config.set('windowBounds', { width, height });
   // Adjust position of suggestion box to input field
   let modalFormInputPosition = modalFormInput.getBoundingClientRect();
   suggestionContainer.style.width = modalFormInput.offsetWidth + "px";

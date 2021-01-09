@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "sleek is a todo app based on the concept of todo.txt",
   "synopsis": "sleek is a todo app based on the concept of todo.txt",
   "category": "ProjectManagement",
@@ -12,7 +12,7 @@
     "tasks"
   ],
   "author": "Robin Ahle <mail@robbfolio.de>",
-  "copyright": "Copyright © 2020 ${author}",
+  "copyright": "Copyright © 2021 ${author}",
   "license": "MIT",
   "repository": "https://github.com/ransome1/sleek/",
   "icon": "assets/icons/icon.png",
