@@ -2055,17 +2055,6 @@ contentTabs.forEach(el => el.addEventListener("click", function(el) {
 // WINDOW
 // ########################################################################################################################
 window.onload = function () {
-  // On app load only call matomo function if opt in is set
-  matomoEventsConsent().then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-  // set theme
-  setTheme();
-  // TODO: not generic
-  // only show message to users, that haven't enabled matomo yet
-  if(!matomoEvents) checkDismissedMessages()
   // only start if a file has been selected
   if(pathToFile) {
     console.log("Info: Path to file: " + pathToFile);
@@ -2080,6 +2069,17 @@ window.onload = function () {
     // show onboarding if no file has been selected
     showOnboarding(true);
   }
+  // On app load only call matomo function if opt in is set
+  matomoEventsConsent().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // set theme
+  setTheme();
+  // TODO: not generic
+  // only show message to users, that haven't enabled matomo yet
+  if(!matomoEvents) checkDismissedMessages()
 }
 window.onresize = function() {
   let width = this.outerWidth;

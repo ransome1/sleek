@@ -30,6 +30,7 @@ apps:
     plugs:
     - home
     - browser-support
+    - network
 parts:
   sleek:
     plugin: nil
