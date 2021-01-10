@@ -1760,7 +1760,7 @@ function showCompletedTodos() {
     console.log(error);
   });
 }
-function showForm(todo) {
+function showForm(todo, templated) {
   try {
       // clean up the form before doing anything
       clearModal();
@@ -1778,12 +1778,26 @@ function showForm(todo) {
       modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
       // here we configure the headline and the footer buttons
       if(todo) {
-        // put the initially passed todo to the modal data field
-        modalForm.setAttribute("data-item", todo.toString());
         // we need to check if there already is a due date in the object
-        modalFormInput.value = todo;
         todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
-        modalTitle.innerHTML = i18next.t("editTodo");
+        if(templated === true) {
+          // this is a new templated todo task
+          // erase the original creation date and description
+          todo.date = null;
+          todo.text = "____________";
+          modalFormInput.value = todo;
+          modalTitle.innerHTML = i18next.t("addTodo");
+          // automatically select the placeholder description
+          let selectStart = modalFormInput.value.indexOf(todo.text);
+          let selectEnd = selectStart + todo.text.length;
+          modalFormInput.setSelectionRange(selectStart, selectEnd);
+        } else {
+          // this is an existing todo task to be edited
+          // put the initially passed todo to the modal data field
+          modalForm.setAttribute("data-item", todo.toString());
+          modalFormInput.value = todo;
+          modalTitle.innerHTML = i18next.t("editTodo");
+        }
         btnItemStatus.classList.add("is-active");
         // only show the complete button on open items
         if(todo.complete === false) {
