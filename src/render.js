@@ -82,6 +82,8 @@ i18next
         break;
       case "es":
         var languageName = "‎Español"
+      case "fr":
+        var languageName = "Français"
         break;
       default:
         return;
