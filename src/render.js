@@ -1569,7 +1569,7 @@ function createTableRow(todo) {
     // add the more dots
     todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMore.setAttribute("role", "cell");
-    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a href=\"#\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a href=\"#\" class=\"dropdown-item\">" + i18next.t("edit") + "</a><a class=\"dropdown-item\">" + i18next.t("delete") + "</a></div></div></div>";
+    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a href=\"#\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a href=\"#\" class=\"dropdown-item\">" + i18next.t("edit") + "</a><a class=\"dropdown-item\">" + i18next.t("delete") + "</a><a class=\"dropdown-item\">" + i18next.t("useAsTemplate") + "</a></div></div></div>";
     // click on three-dots-icon to open more menu
     todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
       // only if this element was highlighted before, we will hide instead of show the dropdown
@@ -1585,13 +1585,13 @@ function createTableRow(todo) {
         // trigger matomo event
         if(matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
         // click on edit
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.firstElementChild.onclick = function() {
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
           showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
           // trigger matomo event
           if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
         }
         // click on delete
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.lastElementChild.onclick = function() {
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
           // passing the data-item attribute of the parent tag to complete function
           deleteTodo(todoTableBodyRow.getAttribute('data-item')).then(response => {
             console.log(response);
@@ -1600,6 +1600,12 @@ function createTableRow(todo) {
           });
           // trigger matomo event
           if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
+        }
+        // click on use as template option
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
+          showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'), true);
+          // trigger matomo event
+          if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
         }
       }
     }
