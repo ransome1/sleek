@@ -15,7 +15,8 @@ const config = new Store({
     matomoEvents: false,
     notifications: true,
     language: null,
-    files: new Array
+    files: new Array,
+    uid: null
   }
 });
 if(config.get("dismissedNotifications")) {
@@ -49,6 +50,12 @@ if(config.get("theme")) {
   } else {
     var theme = "light"
   }
+}
+if(config.get("uid")) {
+  var uid = config.get("uid");
+} else {
+  var uid = Math.random().toString(36).slice(2);
+  config.set("uid", uid);
 }
 // ########################################################################################################################
 // LANGUAGE
@@ -1857,16 +1864,12 @@ function matomoEventsConsent(setting) {
   try {
     // only continue if app is connected to the internet
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
-    const userId = md5(os.arch()+os.platform()+os.hostname()+os.userInfo().username);
-    // exclude development machine
-    if(userId==="0aec92edb8bb35f215517782ba734740") return Promise.resolve("Info: Machine is development machine, logging will be skipped");
     var _paq = window._paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    if(is.development) {
-      _paq.push(['setUserId', 'DEVELOPMENT']);
-    } else {
-      _paq.push(['setUserId', userId]);
+    // exclude development machine
+    if(is.development || uid==="DEVELOPMENT") {
+      return Promise.resolve("Info: Machine is development machine, logging will be skipped");
     }
+    _paq.push(['setUserId', uid]);
     _paq.push(['setCustomDimension', 1, theme]);
     _paq.push(['setCustomDimension', 2, language]);
     _paq.push(['setCustomDimension', 3, notifications]);
