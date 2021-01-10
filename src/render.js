@@ -902,8 +902,8 @@ function changeFile(path) {
     config.set("pathToFile", pathToFile);
     config.set("files", files);
     // remove any preselected filters
-    selectedFilter = [];
-    config.set("selectedFilter", "");
+    selectedFilters = [];
+    config.set("selectedFilters", "");
     return Promise.resolve("Success: File changed to: " + path);
   } catch (error) {
     // trigger matomo event
@@ -1874,7 +1874,7 @@ function matomoEventsConsent(setting) {
     }
     _paq.push(['setUserId', uid]);
     _paq.push(['setCustomDimension', 1, theme]);
-    _paq.push(['setCustomDimension', 2, languageCode]);
+    _paq.push(['setCustomDimension', 2, language]);
     _paq.push(['setCustomDimension', 3, notifications]);
     _paq.push(['setCustomDimension', 4, matomoEvents]);
     _paq.push(['requireConsent']);
