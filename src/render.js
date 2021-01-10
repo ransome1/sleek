@@ -1862,6 +1862,8 @@ function matomoEventsConsent(setting) {
     } else {
       _paq.push(['setUserId', md5(os.arch()+os.platform()+os.hostname())]);
     }
+    _paq.push(['requireConsent']);
+    _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
@@ -1874,12 +1876,9 @@ function matomoEventsConsent(setting) {
     if(matomoEvents) {
       // only continue if app is connected to the internet
       if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
-      _paq.push(['requireConsent']);
       // user has given consent to process their data
-      _paq.push(['setConsentGiven']);
       return Promise.resolve("Info: Consent given, Matomo event tracking enabled");
     } else {
-      _paq.push(['requireConsent']);
       // revoke matomoEvents consent
       _paq.push(['forgetConsentGiven']);
       return Promise.resolve("Info: No consent given, Matomo event tracking disabled");
