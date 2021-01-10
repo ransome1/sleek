@@ -1864,6 +1864,10 @@ function matomoEventsConsent(setting) {
     } else {
       _paq.push(['setUserId', md5(os.arch()+os.platform()+os.hostname())]);
     }
+    _paq.push(['setCustomDimension', 1, theme]);
+    _paq.push(['setCustomDimension', 2, language]);
+    _paq.push(['setCustomDimension', 3, notifications]);
+    _paq.push(['setCustomDimension', 4, matomoEvents]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);

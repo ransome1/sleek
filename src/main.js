@@ -172,6 +172,7 @@ app.on("ready", () => {
   if (process.platform === 'win32') {
     app.setAppUserModelId("RobinAhle.sleektodomanager");
   }
+  console.log(process);
 });
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -179,8 +180,6 @@ app.on("window-all-closed", () => {
   }
 });
 app.on("activate", () => {
-  // On OS X it"s common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
@@ -192,15 +191,6 @@ ipcMain.on("synchronous-message", (event, arg) => {
     app.exit();
   }
 });
-/*ipcMain.on("createSetting", (event, setting) => {
-  createSetting(setting);
-});
-ipcMain.on("getSettings", (event) => {
-  getSettings().then(settings => {
-    console.log(settings);
-    event.reply("reply-getSettings", settings);
-  });
-});*/
 function switchLanguage() {
   if (store.get("language")) {
     var language = store.get("language");
@@ -215,25 +205,3 @@ function switchLanguage() {
   });
   return Promise.resolve("Success: Language set to: " + language.toUpperCase());
 }
-/*function createSetting(setting) {
-  settings.set(setting.key, {
-    data: setting.value
-  });
-}
-function getSettings() {
-  return settings.get("messageLogging").then(value => {
-      return value;
-  })
-  /*return session.defaultSession.cookies.get({}).then((cookies) => {
-    return cookies;
-  }).catch((error) => {
-    console.log(error)
-  })*/
-//}
-/*function removeCookie(name) {
-  return session.defaultSession.cookies.remove("http://localhost/", name).then(() => {
-    console.log("Success: Cookie removed: " + name);
-  }).catch((error) => {
-    console.log(error)
-  })
-}*/

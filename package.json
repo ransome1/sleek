@@ -73,6 +73,7 @@
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder -lmw --publish always",
+    "appimage": "electron-builder -- AppImage --publish never",
     "appx": "electron-builder -w appx --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
