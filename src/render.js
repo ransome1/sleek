@@ -1855,6 +1855,8 @@ function getCaretPosition(inputId) {
 }
 function matomoEventsConsent(setting) {
   try {
+    // only continue if app is connected to the internet
+    if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     var _paq = window._paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
     if(is.development) {
@@ -1874,8 +1876,6 @@ function matomoEventsConsent(setting) {
       g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
     })();
     if(matomoEvents) {
-      // only continue if app is connected to the internet
-      if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
       // user has given consent to process their data
       return Promise.resolve("Info: Consent given, Matomo event tracking enabled");
     } else {
