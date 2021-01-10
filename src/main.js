@@ -172,7 +172,6 @@ app.on("ready", () => {
   if (process.platform === 'win32') {
     app.setAppUserModelId("RobinAhle.sleektodomanager");
   }
-  console.log(process);
 });
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
