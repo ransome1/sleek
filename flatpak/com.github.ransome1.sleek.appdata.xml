@@ -10,7 +10,7 @@
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="0.7.1" date="2021-01-09"/>
+    <release version="0.7.2" date="2021-01-10"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 
@@ -45,7 +45,7 @@
       <li>Dark and light mode can be toggled</li>
       <li>A file watcher rereads the file if it has been changed</li>
       <li>Multiple todo.txt files can be added</li>
-      <li>Multiple languages are automatically detected or set by hand to German, English, Italian and Spanish</li>
+      <li>Multiple languages are automatically detected or set by hand to German, English, Italian, Spanish and French</li>
       <li>Tabindex available</li>
       <li>Basic keyboard shortcuts are available</li>
     </ul>

@@ -1,8 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-//const i18next = require("i18next");
-//const i18nextBackend = require("i18next-fs-backend");
-//const i18nextBrowserLanguageDetector = require("i18next-browser-languagedetector");
 const detectionOptions = {
   order: ["querystring", "navigator"],
   lookupQuerystring: "lng"

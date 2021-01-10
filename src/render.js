@@ -1873,7 +1873,7 @@ function matomoEventsConsent(setting) {
     }
     _paq.push(['setUserId', uid]);
     _paq.push(['setCustomDimension', 1, theme]);
-    _paq.push(['setCustomDimension', 2, language]);
+    _paq.push(['setCustomDimension', 2, languageCode]);
     _paq.push(['setCustomDimension', 3, notifications]);
     _paq.push(['setCustomDimension', 4, matomoEvents]);
     _paq.push(['requireConsent']);
