@@ -54,6 +54,7 @@ if(config.get("theme")) {
 if(config.get("uid")) {
   var uid = config.get("uid");
 } else {
+  // generate random number/string combination as user id and persist it
   var uid = Math.random().toString(36).slice(2);
   config.set("uid", uid);
 }
@@ -70,6 +71,10 @@ i18next
 .init(i18nextOptions)
 .then(function() {
   i18nextOptions.supportedLngs.forEach(function(languageCode) {
+    // persist auto detected language code
+    language = languageCode;
+    config.set("language", language);
+    // generate user friendly entries for language selection menu
     switch (languageCode) {
       case "de":
         var languageName = "Deutsch"
@@ -96,9 +101,8 @@ i18next
     settingsLanguage.add(option);
   });
 });
-i18next.changeLanguage(language, (err, t) => {
-  if (err) return console.log('something went wrong loading', err);
-  //t('key'); // -> same as i18next.tf
+i18next.changeLanguage(language, (error, t) => {
+  if (error) return console.log("Error in i18next.changeLanguage(): " + error);
 });
 settingsLanguage.onchange = function(){
   i18next.changeLanguage(this.value, error => {
@@ -1869,9 +1873,7 @@ function matomoEventsConsent(setting) {
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     var _paq = window._paq = window._paq || [];
     // exclude development machine
-    if(is.development || uid==="DEVELOPMENT") {
-      return Promise.resolve("Info: Machine is development machine, logging will be skipped");
-    }
+    if(is.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
     _paq.push(['setUserId', uid]);
     _paq.push(['setCustomDimension', 1, theme]);
     _paq.push(['setCustomDimension', 2, language]);
