@@ -71,9 +71,6 @@ i18next
 .init(i18nextOptions)
 .then(function() {
   i18nextOptions.supportedLngs.forEach(function(languageCode) {
-    // persist auto detected language code
-    language = languageCode;
-    config.set("language", language);
     // generate user friendly entries for language selection menu
     switch (languageCode) {
       case "de":
@@ -514,6 +511,15 @@ filterColumnClose.onclick = function() {
   showFilters(false);
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
+}
+btnArchiveTodos.onclick = function() {
+  archiveTodos().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // trigger matomo event
+  //if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
 }
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
@@ -1473,7 +1479,34 @@ function writeTodoToFile(todo) {
       });
     });
   });
- }
+}
+function archiveTodos() {
+  try {
+    // define path to done.txt
+    const pathToDoneFile = path.dirname(pathToFile) + "/done.txt";
+    let doneTxtContent = fs.readFileSync(pathToDoneFile, {encoding: 'utf-8'}, function(err,data) { return data; }).split("\n");
+    items.complete = new Array;
+    items.incomplete = new Array;
+    items.objects.forEach(item => {
+      // only consider completed todo that are not already present in done.txt
+      if(item.complete === true && !doneTxtContent.includes(item.toString())) {
+        items.complete.push(item.toString())
+      } else if(item.complete === false) {
+        items.incomplete.push(item.toString())
+      }
+    });
+    if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
+    fs.appendFile(pathToDoneFile, items.complete.join("\n"), error => {
+      if (error) return Promise.reject("Error in appendFile(): " + error)
+      // write incomplete only todos to file
+      fs.writeFileSync(pathToFile, items.incomplete.join("\n").toString(), {encoding: 'utf-8'});
+      // once archiving is successfull, completed items will be removed from todo files
+    });
+    return Promise.resolve("Success: Completed todo moved to: " + pathToDoneFile)
+  } catch(error) {
+    return Promise.reject("Error in archiveTodos(): " + error)
+  }
+}
 function createTableRow(todo) {
   try {
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
@@ -1892,11 +1925,11 @@ function matomoEventsConsent(setting) {
     })();
     if(matomoEvents) {
       // user has given consent to process their data
-      return Promise.resolve("Info: Consent given, Matomo event tracking enabled");
+      return Promise.resolve("Info: Consent given, Matomo error and event logging enabled");
     } else {
       // revoke matomoEvents consent
       _paq.push(['forgetConsentGiven']);
-      return Promise.resolve("Info: No consent given, Matomo event tracking disabled");
+      return Promise.resolve("Info: No consent given, Matomo error and event logging disabled");
     }
   } catch(error) {
     // trigger matomo event
