@@ -1495,13 +1495,13 @@ function archiveTodos() {
         items.incomplete.push(item.toString())
       }
     });
-    if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
     fs.appendFile(pathToDoneFile, items.complete.join("\n"), error => {
       if (error) return Promise.reject("Error in appendFile(): " + error)
       // write incomplete only todos to file
       fs.writeFileSync(pathToFile, items.incomplete.join("\n").toString(), {encoding: 'utf-8'});
       // once archiving is successfull, completed items will be removed from todo files
     });
+    if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
     return Promise.resolve("Success: Completed todo moved to: " + pathToDoneFile)
   } catch(error) {
     return Promise.reject("Error in archiveTodos(): " + error)
