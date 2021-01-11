@@ -33,7 +33,11 @@ let matomoEvents = config.get("matomoEvents");
 let notifications = config.get("notifications");
 let showCompleted = config.get("showCompleted");
 let pathToFile = config.get("pathToFile");
-let selectedFilters = config.get("selectedFilters");
+if(config.get("selectedFilters")) {
+  var selectedFilters = config.get("selectedFilters");
+} else {
+  var selectedFilters = new Array;
+}
 let categoriesFiltered = config.get("categoriesFiltered");
 let language = config.get("language");
 if(config.get("files")) {
@@ -154,8 +158,9 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
   clearBtn: true,
   language: i18next.language
 });
-dueDatePickerInput.readOnly = true;
 dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
+// Adjust Picker width according to length of input
+dueDatePickerInput.setAttribute("size", i18next.t("formSelectDueDate").length)
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   let caretPosition = getCaretPosition(modalFormInput);
   if(modalFormInput.value.substr(caretPosition-5, caretPosition-1).split(" ")[1] === "due:") modalFormInput.value = modalFormInput.value.replace("due:", "");
@@ -284,7 +289,6 @@ settingsTabAboutCopyrightLicenseBody.innerHTML = i18next.t("settingsTabAboutCopy
 settingsTabAboutPrivacy.innerHTML = i18next.t("settingsTabAboutPrivacy");
 settingsTabAboutPrivacyBody.innerHTML = i18next.t("settingsTabAboutPrivacyBody");
 settingsTabAboutExternalLibraries.innerHTML = i18next.t("settingsTabAboutExternalLibraries");
-
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
@@ -613,18 +617,23 @@ function setRecurrenceInput(recurrence) {
   switch (recurrence) {
     case "d":
       recurrencePickerInput.value = i18next.t("daily");
+      recurrencePickerInput.setAttribute("size", i18next.t("daily").length)
       break;
     case "w":
       recurrencePickerInput.value = i18next.t("weekly");
+      recurrencePickerInput.setAttribute("size", i18next.t("weekly").length)
       break;
     case "m":
       recurrencePickerInput.value = i18next.t("monthly");
+      recurrencePickerInput.setAttribute("size", i18next.t("monthly").length)
       break;
     case "y":
       recurrencePickerInput.value = i18next.t("annually");
+      recurrencePickerInput.setAttribute("size", i18next.t("annually").length)
       break;
     case undefined:
       recurrencePickerInput.value = null;
+      recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
       break;
   }
 }
@@ -688,6 +697,7 @@ function createRecurringTodo(todo) {
 }
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 recurrencePickerInput.placeholder = i18next.t("noRecurrence");
+recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
 recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
 // ########################################################################################################################
 // DATE FUNCTIONS
@@ -726,11 +736,11 @@ function parseDataFromFile() {
   if (fs.existsSync(pathToFile)) {
     try {
       // start the file watcher first
-      startFileWatcher().then(response => {
+      /*startFileWatcher().then(response => {
         console.log(response);
       }).catch(error => {
         console.log(error);
-      });
+      });*/
       // read fresh data from file
       items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
       items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
@@ -788,17 +798,13 @@ function createFile() {
     properties: ["openFile", "createDirectory"]
   }).then(file => {
     fs.writeFile(file.filePath, "", function (error) {
-      /*if (error) {
-        console.log("Info: No file selected: " + error);
-        return false
-      }*/
       if (!file.canceled) {
         console.log("Success: New todo.txt file created: " + file.filePath);
         // updating files array and set this item to default
         changeFile(file.filePath).then(response => {
           // if file was changed successfully the data is parsed again
-          parseDataFromFile().then(response => {
-            // when data is parsed the modal needs to be closed
+          // start file watcher
+          startFileWatcher().then(response => {
             clearModal();
             console.log(response);
           }).catch(error => {
@@ -831,6 +837,7 @@ function openFile() {
   }).then(file => {
     // Stating whether dialog operation was cancelled or not.
     if (!file.canceled) {
+      pathToFile = file.filePaths[0].toString();
       console.log("Success: Storage file updated by new path and filename: " + pathToFile);
       // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
       selectedFilters = new Array;
@@ -838,8 +845,8 @@ function openFile() {
       // updating files array and set this item to default
       changeFile(file.filePaths[0].toString()).then(response => {
         // if file was changed successfully the data is parsed again
-        parseDataFromFile(pathToFile).then(response => {
-          // when data is parsed the modal needs to be closed
+        // start file watcher
+        startFileWatcher().then(response => {
           clearModal();
           console.log(response);
         }).catch(error => {
@@ -856,36 +863,19 @@ function openFile() {
 }
 function startFileWatcher() {
   try {
-    if(fileWatcher) fileWatcher.close();
     if (fs.existsSync(pathToFile)) {
-      let md5Previous = null;
+      if(fileWatcher) fileWatcher.close();
       fileWatcher = fs.watch(pathToFile, (event, filename) => {
-        /*let timer = setInterval(() => {
-          if (fs.existsSync(pathToFile)) {
-            const md5Current = md5(fs.readFileSync(pathToFile));
-            if (md5Current === md5Previous) {
-              return;
-            }
-            md5Previous = md5Current;
-          }
-          parseDataFromFile(pathToFile).then(response => {
-            console.log(response);
-          }).catch(error => {
-            console.log(error);
-          });
-        }, 60000);*/
-        if (fs.existsSync(pathToFile)) {
-          const md5Current = md5(fs.readFileSync(pathToFile));
-          if (md5Current === md5Previous) {
-            return;
-          }
-          md5Previous = md5Current;
-        }
         parseDataFromFile(pathToFile).then(response => {
           console.log(response);
         }).catch(error => {
           console.log(error);
         });
+      });
+      parseDataFromFile(pathToFile).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
       });
       return Promise.resolve("Success: File watcher is watching: " + pathToFile);
     } else {
@@ -941,8 +931,8 @@ function modalChooseFile() {
         // set the new path variable and change the array
         changeFile(this.parentElement.getAttribute("data-path")).then(response => {
           // if file was changed successfully the data is parsed again
-          parseDataFromFile(pathToFile).then(response => {
-            // when data is parsed the modal needs to be closed
+          // start file watcher
+          startFileWatcher().then(response => {
             clearModal();
             console.log(response);
           }).catch(error => {
@@ -1483,24 +1473,30 @@ function writeTodoToFile(todo) {
 function archiveTodos() {
   try {
     // define path to done.txt
-    const pathToDoneFile = path.dirname(pathToFile) + "/done.txt";
-    let doneTxtContent = fs.readFileSync(pathToDoneFile, {encoding: 'utf-8'}, function(err,data) { return data; }).split("\n");
-    items.complete = new Array;
-    items.incomplete = new Array;
-    items.objects.forEach(item => {
+    let pathToDoneFile = path.dirname(pathToFile) + "/done.txt";
+    items.complete = items.objects.filter(function(item) { return item.complete === true });
+    items.incomplete = items.objects.filter(function(item) { return item.complete === false });
+    // if done.txt exists, data will be appended
+    if (fs.existsSync(pathToDoneFile)) {
+      // read existing done.txt
+      let doneTxtContent = fs.readFileSync(pathToDoneFile, {encoding: 'utf-8'}, function(err,data) { return data; }).split("\n");
       // only consider completed todo that are not already present in done.txt
-      if(item.complete === true && !doneTxtContent.includes(item.toString())) {
-        items.complete.push(item.toString())
-      } else if(item.complete === false) {
-        items.incomplete.push(item.toString())
+      doneTxtContent.forEach(itemComplete => {
+        items.complete = items.complete.filter(function(item) { return item.toString() != itemComplete.toString() });
+      });
+      //
+      if(items.complete.length>0) {
+        fs.appendFile(pathToDoneFile, "\n" + items.complete.join("\n").toString(), error => {
+          if (error) return Promise.reject("Error in appendFile(): " + error)
+        });
       }
-    });
-    fs.appendFile(pathToDoneFile, items.complete.join("\n"), error => {
-      if (error) return Promise.reject("Error in appendFile(): " + error)
-      // write incomplete only todos to file
-      fs.writeFileSync(pathToFile, items.incomplete.join("\n").toString(), {encoding: 'utf-8'});
-      // once archiving is successfull, completed items will be removed from todo files
-    });
+    // if done.txt does not exist, file will be created and filled with data
+    } else {
+      fs.writeFileSync(pathToDoneFile, items.complete.join("\n").toString(), {encoding: 'utf-8'});
+    }
+    // write incomplete only todos to file
+    fs.writeFileSync(pathToFile, items.incomplete.join("\n").toString(), {encoding: 'utf-8'});
+
     if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
     return Promise.resolve("Success: Completed todo moved to: " + pathToDoneFile)
   } catch(error) {
@@ -2104,8 +2100,8 @@ window.onload = function () {
   // only start if a file has been selected
   if(pathToFile) {
     console.log("Info: Path to file: " + pathToFile);
-    // start parsing data once the file watcher has started
-    parseDataFromFile(pathToFile).then(response => {
+    // start file watcher
+    startFileWatcher().then(response => {
       console.log(response);
     }).catch(error => {
       console.log(error);
