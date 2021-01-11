@@ -11,3 +11,4 @@ snap/local/
 *.pfx
 System Volume Information/
 build/
+Thumbs.db
