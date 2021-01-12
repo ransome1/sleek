@@ -17,9 +17,10 @@ const config = new Store({
     language: null,
     files: new Array,
     uid: null,
-    filterDropdownWidth: null
+    filterDropdownWidth: "560px"
   }
 });
+let { width, height } = config.get("windowBounds");
 if(config.get("dismissedNotifications")) {
   var dismissedNotifications = config.get("dismissedNotifications");
 } else {
@@ -43,13 +44,17 @@ if(config.get("selectedFilters")) {
 } else {
   var selectedFilters = new Array;
 }
-let categoriesFiltered = config.get("categoriesFiltered");
+if(config.get("categoriesFiltered")) {
+  var categoriesFiltered = config.get("categoriesFiltered");
+} else {
+  var categoriesFiltered = new Array;
+}
 let language = config.get("language");
 if(config.get("files")) {
   var files = config.get("files");
 } else {
   var files = new Array;
-  files.push([1, pathToFile]);
+  if(pathToFile) files.push([1, pathToFile]);
 }
 if(config.get("theme")) {
   var theme = config.get("theme");
@@ -60,11 +65,20 @@ if(config.get("theme")) {
     var theme = "light"
   }
 }
+// ########################################################################################################################
+// DEV CONFIG
+// ########################################################################################################################
+const is = electron_util.is;
+if (is.development) {
+  let matomoEvents = false;
+  console.log("Path to user data: " + app.getPath("userData"));
+}
 if(config.get("uid")) {
   var uid = config.get("uid");
 } else {
   // generate random number/string combination as user id and persist it
   var uid = Math.random().toString(36).slice(2);
+  if(is.development) uid = "DEVELOPMENT"
   config.set("uid", uid);
 }
 // ########################################################################################################################
@@ -240,14 +254,6 @@ const item = {
   previous: ""
 }
 if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
-// ########################################################################################################################
-// DEV CONFIG
-// ########################################################################################################################
-const is = electron_util.is;
-if (is.development) {
-  matomoEvents = false;
-  console.log("Path to user data: " + app.getPath("userData"));
-}
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
@@ -749,11 +755,11 @@ function parseDataFromFile() {
       // TODO: Reuse these later
       items.complete = items.objects.filter(function(item) { return item.complete === true });
       items.incomplete = items.objects.filter(function(item) { return item.complete === false });
-      // if settings modal is open and archiving has been completed (will trigger this function) the buttons needs to be disabled until another completed todo is added
-      setButtonState("btnArchiveTodos");
       // remove empty objects liek from empty lines in file
       items.objects = items.objects.filter(function(item) { return item.toString() != "" });
       if(items.objects.length>0) {
+        // if settings modal is open and archiving has been completed (will trigger this function) the buttons needs to be disabled until another completed todo is added
+        setButtonState("btnArchiveTodos");
         // if there is a file onboarding is hidden
         showOnboarding(false);
         t0 = performance.now();
@@ -1623,7 +1629,7 @@ function createTableRow(todo) {
     // add the more dots
     todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMore.setAttribute("role", "cell");
-    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a href=\"#\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a href=\"#\" class=\"dropdown-item\">" + i18next.t("edit") + "</a><a class=\"dropdown-item\">" + i18next.t("delete") + "</a><a class=\"dropdown-item\">" + i18next.t("useAsTemplate") + "</a></div></div></div>";
+    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a href=\"#\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">" + i18next.t("useAsTemplate") + "</a><a href=\"#\" class=\"dropdown-item\">" + i18next.t("edit") + "</a><a class=\"dropdown-item\">" + i18next.t("delete") + "</a></div></div></div>";
     // click on three-dots-icon to open more menu
     todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
       // only if this element was highlighted before, we will hide instead of show the dropdown
@@ -1639,13 +1645,13 @@ function createTableRow(todo) {
         // trigger matomo event
         if(matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
         // click on edit
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
           showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
           // trigger matomo event
           if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
         }
         // click on delete
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
           // passing the data-item attribute of the parent tag to complete function
           deleteTodo(todoTableBodyRow.getAttribute('data-item')).then(response => {
             console.log(response);
@@ -1656,7 +1662,7 @@ function createTableRow(todo) {
           if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
         }
         // click on use as template option
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
           showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'), true);
           // trigger matomo event
           if(matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
@@ -1907,6 +1913,13 @@ function showForm(todo, templated) {
     console.log(error);
   }
 }
+function sortItems(items) {
+  // first step of sorting items: the youngest to the top
+  items.sort((a, b) => b.date - a.date);
+  // array is sorted so the due date is desc
+  items.sort((a, b) => a.due - b.due);
+  return;
+}
 // ########################################################################################################################
 // HELPER FUNCTIONS
 // ########################################################################################################################
@@ -1941,6 +1954,10 @@ function matomoEventsConsent(setting) {
     _paq.push(['setCustomDimension', 2, language]);
     _paq.push(['setCustomDimension', 3, notifications]);
     _paq.push(['setCustomDimension', 4, matomoEvents]);
+    _paq.push(['setCustomDimension', 5, app.getVersion()]);
+    _paq.push(['setCustomDimension', 6, width+"x"+height]);
+    _paq.push(['setCustomDimension', 7, showCompleted]);
+    _paq.push(['setCustomDimension', 8, files.length]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -1965,13 +1982,6 @@ function matomoEventsConsent(setting) {
     if(matomoEvents) _paq.push(["trackEvent", "Error", "matomoEventsConsent()", error])
     return Promise.reject("Error in matomoEventsConsent(): " + error);
   }
-}
-function sortItems(items) {
-  // first step of sorting items: the youngest to the top
-  items.sort((a, b) => b.date - a.date);
-  // array is sorted so the due date is desc
-  items.sort((a, b) => a.due - b.due);
-  return;
 }
 function showNotification(todo, offset) {
   try {
@@ -2179,23 +2189,21 @@ window.onresize = function() {
   suggestionContainer.style.left = modalFormInputPosition.left + "px";
 }
 // ########################################################################################################################
-// DRAGGABLE FILTER DRAWER
+// RESIZEABLE FILTER DRAWER
 // https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
 // ########################################################################################################################
 const getResizeableElement = () => { return document.getElementById("filterDropdown"); };
 const getHandleElement = () => { return document.getElementById("handle"); };
 const minPaneSize = 400;
 const maxPaneSize = document.body.clientWidth * .75
-getResizeableElement().style.setProperty('--max-width', `${maxPaneSize}px`);
-getResizeableElement().style.setProperty('--min-width', `${minPaneSize}px`);
 const setPaneWidth = (width) => {
   getResizeableElement().style
-    .setProperty('--resizeable-width', `${width}px`);
+    .setProperty("--resizeable-width", `${width}px`);
   config.set("filterDropdownWidth", `${width}px`);
 };
 const getPaneWidth = () => {
   const pxWidth = getComputedStyle(getResizeableElement())
-    .getPropertyValue('--resizeable-width');
+    .getPropertyValue("--resizeable-width");
   return parseInt(pxWidth, 10);
 };
 const startDragging = (event) => {
@@ -2208,12 +2216,14 @@ const startDragging = (event) => {
     const primaryButtonPressed = moveEvent.buttons === 1;
     if (!primaryButtonPressed) {
       setPaneWidth(Math.min(Math.max(getPaneWidth(), minPaneSize), maxPaneSize));
-      document.body.removeEventListener('pointermove', mouseDragHandler);
+      document.body.removeEventListener("pointermove", mouseDragHandler);
       return;
     }
-    const paneOriginAdjustment = 'left' === 'right' ? 1 : -1;
+    const paneOriginAdjustment = "left" === "right" ? 1 : -1;
     setPaneWidth((xOffset - moveEvent.pageX ) * paneOriginAdjustment + startingPaneWidth);
   };
-  const remove = document.body.addEventListener('pointermove', mouseDragHandler);
+  const remove = document.body.addEventListener("pointermove", mouseDragHandler);
 };
-getHandleElement().addEventListener('mousedown', startDragging);
+getResizeableElement().style.setProperty("--max-width", `${maxPaneSize}px`);
+getResizeableElement().style.setProperty("--min-width", `${minPaneSize}px`);
+getHandleElement().addEventListener("mousedown", startDragging);

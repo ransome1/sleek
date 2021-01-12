@@ -77,7 +77,7 @@
   "settingsTabAboutPrivacy": "Datenschutzerklärung",
   "settingsTabAboutPrivacyBody": "Ich interessiere mich nicht dafür wer sleek Nutzer sind und erhebe daher keine unnötigen Daten. Dennoch möchte ich wissen, wieviele Nutzer sleek aktiv nutzen und, wenn Nutzer ausdrücklich zustimmen, wie sleek genutzt wird. Alle Daten werden anonymisiert, bevor sie an eine durch mich selbst betriebene Matomo-Instanz übertragen werden. Dies geschieht ausschließlich über eine SSL-verschlüsselte Verbidnung. Weitere Details können in der <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Datenschutzerklärung</a> abgerufen werden.",
   "settingsTabAboutExternalLibraries": "Eingesetzte Software, die nicht von mir stammt",
-  "settingsTabSettingsArchive": "Todos archivieren",
-  "settingsTabSettingsArchiveBody": "Erledigte Todos werden aus der todo.txt-Datei entfernt und in eine done.txt-Datei eingefügt. Diese wird im gleichen Ordner angelegt, falls sie noch nicht existiert.",
+  "settingsTabSettingsArchive": "Aufgaben archivieren",
+  "settingsTabSettingsArchiveBody": "Erledigte Aufgaben werden aus der todo.txt-Datei entfernt und in eine done.txt-Datei eingefügt. Diese wird im gleichen Ordner angelegt, falls sie noch nicht existiert.",
   "settingsTabSettingsArchiveButton": "Archivieren"
 }

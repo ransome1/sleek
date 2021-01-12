@@ -224,7 +224,7 @@ nav {
   float: left;
   padding: 1.5em;
   background: #ebebeb;
-  --resizeable-width: 300px;
+  --resizeable-width: 34em;
   height: 100vh;
   width: var(--resizeable-width);
   min-width: var(--min-width);

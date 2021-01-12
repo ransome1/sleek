@@ -41,6 +41,8 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - edited
   - marked as complete (and vice versa)
   - deleted
+* Existing todos can be used as templates for new ones
+* Todos can be bulked archived to a done.txt file
 * Completed todos can be shown or hidden
 * Todos are grouped by priority
 * Todos are sorted by due date within their priorities
@@ -64,7 +66,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
 * Todos that include either contexts or projects can be shown or hidden entirely
 * Dark and light mode can be toggled
 * A file watcher rereads the file if it has been changed
-* Multiple todo.txt files can be added
+* Multiple todo.txt files can be managed
 * Multiple languages are automatically detected or can be set by hand
   - English
   - German
@@ -79,9 +81,6 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - Toggle dark mode: CMD/CTRL + d
   - Open file: CMD/CTRL + o
   - Open settings: CMD/CTRL + ,
-
-### Contributions
-- French translations by @yannicka
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

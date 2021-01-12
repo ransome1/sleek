@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const isMac = process.platform === "darwin";
 const Store = require("./configs/store.config.js");
-const store = new Store({
+const config = new Store({
   configName: "user-preferences",
   defaults: {
     windowBounds: { width: 1025, height: 768 },
@@ -14,7 +14,8 @@ const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
 const createWindow = () => {
-  let { width, height } = store.get("windowBounds");
+  let { width, height } = config.get("windowBounds");
+  config.set("windowBounds", width, height);
   const mainWindow = new BrowserWindow(
   {
     width: width,
@@ -191,8 +192,8 @@ ipcMain.on("synchronous-message", (event, arg) => {
   }
 });
 function switchLanguage() {
-  if (store.get("language")) {
-    var language = store.get("language");
+  if (config.get("language")) {
+    var language = config.get("language");
   } else {
     var language = app.getLocale().substr(0,2);
   }
@@ -202,5 +203,6 @@ function switchLanguage() {
   i18next.changeLanguage(language, (error) => {
     if (error) return console.log("Error in i18next.changeLanguage():", error);
   });
+  config.set("language", language);
   return Promise.resolve("Success: Language set to: " + language.toUpperCase());
 }
