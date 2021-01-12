@@ -1726,7 +1726,7 @@ function deleteTodo(todo) {
 }
 function submitForm() {
   try {
-    // check if there is an input in the text field, otherwise indicate it to the user!3KL7jeuduikbngbkfuvgflctnfgu
+    // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
     if (modalForm.getAttribute("data-item")===modalForm.elements[0].value) {
       return Promise.resolve("Info: Nothing has changed, won't write anything.");
@@ -1844,7 +1844,7 @@ function showForm(todo) {
         } else {
           // hide the recurrence picker when a due date is not set
           recurrencePicker.classList.remove("is-active");
-        // if not we clean it up
+          // if not we clean it up
           dueDatePicker.setDate({
             clear: true
           });
