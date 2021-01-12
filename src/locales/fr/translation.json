@@ -16,6 +16,7 @@
   "editTodo": "Modifier la tâche",
   "edit": "Modifier",
   "delete": "Supprimer",
+  "useAsTemplate": "Utiliser comme modèle",
   "dueAt": "Date d'échéance",
   "dueToday": "Aujourd'hui",
   "dueTomorrow": "Demain",
@@ -74,5 +75,8 @@
   "settingsTabAboutCopyrightLicenseBody": "Copyright (c) 2021 Robin Ahle. sleek est disponible sous <a href=\"https://opensource.org/licenses/MIT\" target=\"_blank\">la licence MIT</a>. Voir <a href=\"https://github.com/ransome1/sleek/blob/master/LICENSE\" target=\"_blank\">LICENSE</a> pour la licence complète.",
   "settingsTabAboutPrivacy": "Politique de vie privée",
   "settingsTabAboutPrivacyBody": "Je ne m'intéresse pas à l'identité des utilisateurs de sleek et je ne recueillerai donc pas de données inutiles. Cependant, j'aimerais savoir combien d'utilisateurs utilisent activement sleek et, dans le cas où un utilisateur donne explicitement son accord, comment sleek est utilisé. Les données sont rendues anonymes, avant d'être envoyées à une instance Matomo hébergée en privé, exclusivement via une connexion sécurisée et chiffrée SSL. Voir <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">la page de politique de protection de la vie privée</a> pour plus d'informations.",
-  "settingsTabAboutExternalLibraries": "Logiciels externes utilisés"
+  "settingsTabAboutExternalLibraries": "Logiciels externes utilisés",
+  "settingsTabSettingsArchive": "Archiver les tâches",
+  "settingsTabSettingsArchiveBody": "Les tâches complétées vont être supprimées du fichier todo.txt actuel et insérées dans un fichier done.txt. Si ce fichier n'existe pas dans le dossier courant, il sera créé.",
+  "settingsTabSettingsArchiveButton": "Archiver"
 }
