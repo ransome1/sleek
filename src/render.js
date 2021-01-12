@@ -275,6 +275,9 @@ messageLoggingButton.innerHTML = i18next.t("settings");
 settingsTabSettings.innerHTML = i18next.t("settings");
 settingsTabSettingsLanguage.innerHTML = i18next.t("language");
 settingsTabSettingsLanguageBody.innerHTML = i18next.t("settingsTabSettingsLanguageBody");
+settingsTabSettingsArchive.innerHTML = i18next.t("settingsTabSettingsArchive");
+settingsTabSettingsArchiveBody.innerHTML = i18next.t("settingsTabSettingsArchiveBody");
+settingsTabSettingsArchiveButton.innerHTML = i18next.t("settingsTabSettingsArchiveButton");
 settingsTabSettingsNotifications.innerHTML = i18next.t("notifications");
 settingsTabSettingsNotificationsBody.innerHTML = i18next.t("settingsTabSettingsNotificationsBody");
 settingsTabSettingsDarkmode.innerHTML = i18next.t("darkmode");
@@ -390,6 +393,15 @@ btnTheme.forEach(function(el) {
     if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
   });
 });
+btnArchiveTodos.onclick = function() {
+  archiveTodos().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // trigger matomo event
+  //if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
+}
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 todoTableSearch.onfocus = function () {
   // trigger matomo event
@@ -515,15 +527,6 @@ filterColumnClose.onclick = function() {
   showFilters(false);
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
-}
-btnArchiveTodos.onclick = function() {
-  archiveTodos().then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-  // trigger matomo event
-  //if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
 }
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
@@ -738,6 +741,11 @@ function parseDataFromFile() {
       // read fresh data from file
       items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
       items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
+      // TODO: Reuse these later
+      items.complete = items.objects.filter(function(item) { return item.complete === true });
+      items.incomplete = items.objects.filter(function(item) { return item.complete === false });
+      // if settings modal is open, archiving is complete (will trigger this function) the buttons needs to be disabled until another completed todo is added
+      setButtonState("btnArchiveTodos");
       // remove empty objects liek from empty lines in file
       items.objects = items.objects.filter(function(item) { return item.toString() != "" });
       if(items.objects.length>0) {
@@ -1474,8 +1482,6 @@ function archiveTodos() {
   try {
     // define path to done.txt
     let pathToDoneFile = path.dirname(pathToFile) + "/done.txt";
-    items.complete = items.objects.filter(function(item) { return item.complete === true });
-    items.incomplete = items.objects.filter(function(item) { return item.complete === false });
     // if done.txt exists, data will be appended
     if (fs.existsSync(pathToDoneFile)) {
       // read existing done.txt
@@ -2066,10 +2072,28 @@ function checkDismissedMessages() {
     }
   });
 }
+function setButtonState(button) {
+  switch (button) {
+    case "btnArchiveTodos":
+      if(items.complete.length>0) {
+        btnArchiveTodos.disabled = false;
+      } else {
+        btnArchiveTodos.disabled = true;
+      }
+      break;
+    default:
+  }
+}
 // ########################################################################################################################
 // CONTENT FUNCTIONS
 // ########################################################################################################################
 function showContent(section) {
+  switch (section.id) {
+    case "modalSettings":
+      setButtonState("btnArchiveTodos");
+      break;
+    default:
+  }
   contentTabs.forEach(function(el) {
     el.classList.remove("is-active");
   });

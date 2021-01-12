@@ -68,12 +68,15 @@
   "settingsTabSettingsNotificationsBody": "sleek can send you notifications for todos that are due today and tomorrow. The app needs to be running for this feature.",
   "darkmode": "Dark mode",
   "settingsTabSettingsDarkmodeBody": "If sleeks regular user interface is too bright for your general taste or for your current environment, the dark mode might be a helpful alternative.",
-  "settingsTabSettingsLoggingBody": "You can contribute to this project, by enabling anonymized error and event logging. It will log all errors that occur and the features you use and send this information to a privately hosted Matomo instance using SSL. More information can be found in sleeks' <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a>.",
+  "settingsTabSettingsLoggingBody": "You can contribute to this project, by enabling anonymized error and event logging. More information can be found in sleeks' <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a>.",
   "settingsTabAboutContribute": "sleek is open source and you can contribute to make it better",
   "settingsTabAboutContributeBody": "The source code is open and available on <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">Github</a>. You can support this project by contributing <a href=\"https://github.com/ransome1/sleek/issues\" target=\"_blank\">bug reports, code improvements or even new features</a>. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. It is developed by Robin Ahle. Get in touch with me on <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">Github</a>.",
   "settingsTabAboutCopyrightLicense": "Copyright and license",
   "settingsTabAboutCopyrightLicenseBody": "Copyright (c) 2021 Robin Ahle. sleek is available under the <a href=\"https://opensource.org/licenses/MIT\" target=\"_blank\">MIT license</a>. See <a href=\"https://github.com/ransome1/sleek/blob/master/LICENSE\" target=\"_blank\">LICENSE</a> for the full license text.",
   "settingsTabAboutPrivacy": "Privacy Policy",
   "settingsTabAboutPrivacyBody": "I am not interested in who sleek's users are and will therefor not gather unnecessary data. However I would like to know how many users are actively using sleek and, in case a user explicitly agrees to it, how sleek is being used. The data is being anonymized, before it gets send to a privately hosted Matomo instance exclusively via a secure SSL-encrypted connection. See <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Privacy Policy</a> for further information.",
-  "settingsTabAboutExternalLibraries": "Used software that I did not develop"
+  "settingsTabAboutExternalLibraries": "Used software that I did not develop",
+  "settingsTabSettingsArchive": "Archive todos",
+  "settingsTabSettingsArchiveBody": "Completed todos will be removed from the current todo.txt file and inserted into a done.txt file. If this file doesn't already exist in the current directory, it will be created.",
+  "settingsTabSettingsArchiveButton": "Archive"
 }

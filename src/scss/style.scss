@@ -793,6 +793,11 @@ nav {
       .toggle,
       .field {
         margin-top: 3em;
+        .select,
+        select {
+          width: 100%;
+          padding-right: 0;
+        }
       }
       .alert {
         position: absolute;

@@ -654,6 +654,12 @@ nav {
       .modal.content .modal-card-body table.settings tr td .toggle,
       .modal.content .modal-card-body table.settings tr td .field {
         margin-top: 3em; }
+        .modal.content .modal-card-body table.settings tr td .toggle .select,
+        .modal.content .modal-card-body table.settings tr td .toggle select,
+        .modal.content .modal-card-body table.settings tr td .field .select,
+        .modal.content .modal-card-body table.settings tr td .field select {
+          width: 100%;
+          padding-right: 0; }
       .modal.content .modal-card-body table.settings tr td .alert {
         position: absolute;
         top: 1em;
