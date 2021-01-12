@@ -735,12 +735,6 @@ function parseDataFromFile() {
   // we only start if file exists
   if (fs.existsSync(pathToFile)) {
     try {
-      // start the file watcher first
-      /*startFileWatcher().then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });*/
       // read fresh data from file
       items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
       items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
@@ -1002,15 +996,21 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
   try {
     // container to fill with categories
     let container;
+    //
+    let filterBase;
     // is this a typeahead request? Default is false
     // which category or categories to loop through and build
     let categoriesToBuild = [];
     if(typeAheadPrefix) {
       container = suggestionContainer;
       categoriesToBuild.push(typeAheadCategory);
+      // for the suggestion container, so all filters will be shown
+      filterBase = items.objects;
     } else {
       container = filterContainer;
       categoriesToBuild = categories;
+      // for the drawer the filters will be excluded according to previous selection
+      filterBase = items.objectsFiltered;
     }
     // empty the container to prevent duplicates
     container.innerHTML = "";
@@ -1019,7 +1019,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      items.objects.forEach((item) => {
+      filterBase.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
