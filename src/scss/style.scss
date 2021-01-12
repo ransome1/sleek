@@ -173,8 +173,10 @@ svg {
       color: $darker-grey;
     }
   }
-  nav:hover a#filterColumnClose.is-active {
-    display: inline-block;
+  nav:hover {
+    a#filterColumnClose.is-active {
+      display: inline-block;
+    }
   }
 }
 
@@ -246,13 +248,39 @@ nav {
 /* FILTER DROPDOWN */
 #filterDropdown {
   display: none;
-  width: 35em;
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   float: left;
   padding: 1.5em;
   background: $mid-grey;
+
+  --resizeable-width: 300px;
+  height: 100vh;
+  width: var(--resizeable-width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+  /* HANDLE FOR DRAGGING */
+  /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
+  #handle {
+    /*float: right;*/
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 10px;
+    background-color: transparent;
+    z-index: 1;
+  }
+  #handle::after {
+    content: "";
+    width: 10px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: transparent;
+    cursor: ew-resize;
+    z-index: 2;
+  }
   .toggle {
     padding: 0 0 1em 0;
   }
@@ -853,15 +881,6 @@ nav {
   #dueDatePickerInput {
     cursor: pointer;
   }
-  /*#dueDatePickerInput,
-  #dueDatePickerInput::placeholder {
-    width: auto;
-    font-size: 1em;
-    color: $has-text-link;
-    box-shadow: none;
-    cursor: pointer;
-    background: none;
-  }*/
 }
 .datepicker {
   z-index: 60;
@@ -943,7 +962,6 @@ nav {
     }
   }
   #filterDropdown {
-    width: 29em;
     padding: 0 1.5em!important;
     .toggle {
       margin: 0!important;

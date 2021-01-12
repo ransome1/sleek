@@ -16,7 +16,8 @@ const config = new Store({
     notifications: true,
     language: null,
     files: new Array,
-    uid: null
+    uid: null,
+    filterDropdownWidth: null
   }
 });
 if(config.get("dismissedNotifications")) {
@@ -30,6 +31,10 @@ if(config.get("dismissedMessages")) {
   var dismissedMessages = new Array;
 }
 let matomoEvents = config.get("matomoEvents");
+if(config.get("filterDropdownWidth")) {
+  let filterDropdownWidth = config.get("filterDropdownWidth");
+  filterDropdown.setAttribute("style", "--resizeable-width: " + filterDropdownWidth);
+}
 let notifications = config.get("notifications");
 let showCompleted = config.get("showCompleted");
 let pathToFile = config.get("pathToFile");
@@ -400,7 +405,7 @@ btnArchiveTodos.onclick = function() {
     console.log(error);
   });
   // trigger matomo event
-  //if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
+  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Archive"])
 }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 todoTableSearch.onfocus = function () {
@@ -744,7 +749,7 @@ function parseDataFromFile() {
       // TODO: Reuse these later
       items.complete = items.objects.filter(function(item) { return item.complete === true });
       items.incomplete = items.objects.filter(function(item) { return item.complete === false });
-      // if settings modal is open, archiving is complete (will trigger this function) the buttons needs to be disabled until another completed todo is added
+      // if settings modal is open and archiving has been completed (will trigger this function) the buttons needs to be disabled until another completed todo is added
       setButtonState("btnArchiveTodos");
       // remove empty objects liek from empty lines in file
       items.objects = items.objects.filter(function(item) { return item.toString() != "" });
@@ -1846,14 +1851,16 @@ function showForm(todo, templated) {
           let selectStart = modalFormInput.value.indexOf(todo.text);
           let selectEnd = selectStart + todo.text.length;
           modalFormInput.setSelectionRange(selectStart, selectEnd);
+          btnItemStatus.classList.remove("is-active");
         } else {
           // this is an existing todo task to be edited
           // put the initially passed todo to the modal data field
           modalForm.setAttribute("data-item", todo.toString());
           modalFormInput.value = todo;
           modalTitle.innerHTML = i18next.t("editTodo");
+          btnItemStatus.classList.add("is-active");
         }
-        btnItemStatus.classList.add("is-active");
+        //btnItemStatus.classList.add("is-active");
         // only show the complete button on open items
         if(todo.complete === false) {
           btnItemStatus.innerHTML = i18next.t("done");
@@ -2088,12 +2095,6 @@ function setButtonState(button) {
 // CONTENT FUNCTIONS
 // ########################################################################################################################
 function showContent(section) {
-  switch (section.id) {
-    case "modalSettings":
-      setButtonState("btnArchiveTodos");
-      break;
-    default:
-  }
   contentTabs.forEach(function(el) {
     el.classList.remove("is-active");
   });
@@ -2177,3 +2178,42 @@ window.onresize = function() {
   suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
   suggestionContainer.style.left = modalFormInputPosition.left + "px";
 }
+// ########################################################################################################################
+// DRAGGABLE FILTER DRAWER
+// https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
+// ########################################################################################################################
+const getResizeableElement = () => { return document.getElementById("filterDropdown"); };
+const getHandleElement = () => { return document.getElementById("handle"); };
+const minPaneSize = 400;
+const maxPaneSize = document.body.clientWidth * .75
+getResizeableElement().style.setProperty('--max-width', `${maxPaneSize}px`);
+getResizeableElement().style.setProperty('--min-width', `${minPaneSize}px`);
+const setPaneWidth = (width) => {
+  getResizeableElement().style
+    .setProperty('--resizeable-width', `${width}px`);
+  config.set("filterDropdownWidth", `${width}px`);
+};
+const getPaneWidth = () => {
+  const pxWidth = getComputedStyle(getResizeableElement())
+    .getPropertyValue('--resizeable-width');
+  return parseInt(pxWidth, 10);
+};
+const startDragging = (event) => {
+  event.preventDefault();
+  const host = getResizeableElement();
+  const startingPaneWidth = getPaneWidth();
+  const xOffset = event.pageX;
+  const mouseDragHandler = (moveEvent) => {
+    moveEvent.preventDefault();
+    const primaryButtonPressed = moveEvent.buttons === 1;
+    if (!primaryButtonPressed) {
+      setPaneWidth(Math.min(Math.max(getPaneWidth(), minPaneSize), maxPaneSize));
+      document.body.removeEventListener('pointermove', mouseDragHandler);
+      return;
+    }
+    const paneOriginAdjustment = 'left' === 'right' ? 1 : -1;
+    setPaneWidth((xOffset - moveEvent.pageX ) * paneOriginAdjustment + startingPaneWidth);
+  };
+  const remove = document.body.addEventListener('pointermove', mouseDragHandler);
+};
+getHandleElement().addEventListener('mousedown', startDragging);
