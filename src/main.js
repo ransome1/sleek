@@ -15,7 +15,6 @@ const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
 const createWindow = () => {
   let { width, height } = config.get("windowBounds");
-  config.set("windowBounds", width, height);
   const mainWindow = new BrowserWindow(
   {
     width: width,

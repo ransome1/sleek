@@ -42,7 +42,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - marked as complete (and vice versa)
   - deleted
 * Existing todos can be used as templates for new ones
-* Todos can be bulked archived to a done.txt file
+* Todos can be bulk archived to a done.txt file
 * Completed todos can be shown or hidden
 * Todos are grouped by priority
 * Todos are sorted by due date within their priorities

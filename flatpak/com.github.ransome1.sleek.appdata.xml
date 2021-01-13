@@ -10,7 +10,7 @@
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="0.8.0" date="2021-01-12"/>
+    <release version="0.8.0" date="2021-01-13"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 
@@ -29,6 +29,8 @@
     <ul>
       <li>An existing todo.txt file can be used or a new one can be created</li>
       <li>Todos can be added, edited, marked as complete (and vice versa) or deleted</li>
+      <li>Existing todos can be used as templates for new ones</li>
+      <li>Todos can be bulk archived to a done.txt file</li>
       <li>Completed todos can be shown or hidden</li>
       <li>Todos are grouped by priority</li>
       <li>Todos are sorted by due date within their priorities</li>
