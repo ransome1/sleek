@@ -29,6 +29,7 @@
       "!**.md",
       "!assets/screenshots${/*}"
     ],
+    "asar": false,
     "appId": "RobinAhle.sleektodomanager",
     "linux": {
       "icon": "assets/icons/icon.png",
@@ -72,7 +73,7 @@
   },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -lmw --publish always",
+    "dist": "electron-builder -lw --publish never",
     "appimage": "electron-builder -- AppImage --publish never",
     "appx": "electron-builder -w appx --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
@@ -84,7 +85,8 @@
     "i18next": "^19.8.4",
     "i18next-browser-languagedetector": "^6.0.1",
     "i18next-fs-backend": "^1.0.7",
-    "md5": "^2.3.0"
+    "md5": "^2.3.0",
+    "v8-compile-cache": "^2.2.0"
   },
   "devDependencies": {
     "bulma": "^0.9.1",

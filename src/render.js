@@ -1,3 +1,5 @@
+// https://dev.to/xxczaki/how-to-make-your-electron-app-faster-4ifb
+require('v8-compile-cache');
 // ########################################################################################################################
 // READ FROM CONFIG
 // ########################################################################################################################
@@ -10,7 +12,6 @@ const config = new Store({
     categoriesFiltered: new Array,
     dismissedNotifications: new Array,
     dismissedMessages: new Array,
-    pathToFile: "",
     theme: null,
     matomoEvents: false,
     notifications: true,
@@ -38,7 +39,6 @@ if(config.get("filterDropdownWidth")) {
 }
 let notifications = config.get("notifications");
 let showCompleted = config.get("showCompleted");
-let pathToFile = config.get("pathToFile");
 if(config.get("selectedFilters")) {
   var selectedFilters = config.get("selectedFilters");
 } else {
@@ -52,9 +52,10 @@ if(config.get("categoriesFiltered")) {
 let language = config.get("language");
 if(config.get("files")) {
   var files = config.get("files");
+  var file = files.filter(file => { return file[0]===1 });
+  file = file[0][1];
 } else {
   var files = new Array;
-  if(pathToFile) files.push([1, pathToFile]);
 }
 if(config.get("theme")) {
   var theme = config.get("theme");
@@ -142,12 +143,8 @@ const documentIds = document.querySelectorAll("[id]");
 documentIds.forEach(function(id,index) {
   window[id] = document.getElementById(id.getAttribute("id"));
 });
-const head = document.getElementsByTagName("head")[0];
-const btnApplyFilter = document.querySelectorAll(".btnApplyFilter");
-const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const a = document.querySelectorAll("a");
 let fileWatcher;
-let filterContainer = document.getElementById("todoFilters");
 // ########################################################################################################################
 // MODAL CONFIG
 // ########################################################################################################################
@@ -165,7 +162,6 @@ const messages = document.querySelectorAll(".message");
 // ########################################################################################################################
 // MAIN MENU CONFIG
 // ########################################################################################################################
-const btnTheme = document.querySelectorAll('.btnTheme');
 const btnFilter = document.querySelectorAll(".btnFilter");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 // ########################################################################################################################
@@ -182,7 +178,7 @@ dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
 dueDatePickerInput.setAttribute("size", i18next.t("formSelectDueDate").length)
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   let caretPosition = getCaretPosition(modalFormInput);
-  if(modalFormInput.value.substr(caretPosition-5, caretPosition-1).split(" ")[1] === "due:") modalFormInput.value = modalFormInput.value.replace("due:", "");
+  //if(modalFormInput.value.substr(caretPosition-5, caretPosition-1).split(" ")[1] === "due:") modalFormInput.value = modalFormInput.value.replace("due:", "");
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
   if(e.detail.date) {
     // generate the object on what is written into input, so we don't overwrite previous inputs of user
@@ -288,7 +284,7 @@ settingsTabSettingsLanguage.innerHTML = i18next.t("language");
 settingsTabSettingsLanguageBody.innerHTML = i18next.t("settingsTabSettingsLanguageBody");
 settingsTabSettingsArchive.innerHTML = i18next.t("settingsTabSettingsArchive");
 settingsTabSettingsArchiveBody.innerHTML = i18next.t("settingsTabSettingsArchiveBody");
-settingsTabSettingsArchiveButton.innerHTML = i18next.t("settingsTabSettingsArchiveButton");
+settingsTabSettingsArchiveButton.innerHTML = i18next.t("archive");
 settingsTabSettingsNotifications.innerHTML = i18next.t("notifications");
 settingsTabSettingsNotificationsBody.innerHTML = i18next.t("settingsTabSettingsNotificationsBody");
 settingsTabSettingsDarkmode.innerHTML = i18next.t("darkmode");
@@ -303,6 +299,26 @@ settingsTabAboutCopyrightLicenseBody.innerHTML = i18next.t("settingsTabAboutCopy
 settingsTabAboutPrivacy.innerHTML = i18next.t("settingsTabAboutPrivacy");
 settingsTabAboutPrivacyBody.innerHTML = i18next.t("settingsTabAboutPrivacyBody");
 settingsTabAboutExternalLibraries.innerHTML = i18next.t("settingsTabAboutExternalLibraries");
+helpTabKeyboardTitle.innerHTML = i18next.t("shortcuts");
+helpTabPrioritiesTitle.innerHTML = i18next.t("helpTabPrioritiesTitle");
+helpTabPrioritiesBody.innerHTML = i18next.t("helpTabPrioritiesBody");
+helpTabContextsProjectsTitle.innerHTML = i18next.t("helpTabContextsProjectsTitle");
+helpTabContextsProjectsBody.innerHTML = i18next.t("helpTabContextsProjectsBody");
+helpTabDatesRecurrencesTitle1.innerHTML = i18next.t("helpTabDatesRecurrencesTitle1");
+helpTabDatesRecurrencesBody1.innerHTML = i18next.t("helpTabDatesRecurrencesBody1");
+helpTabDatesRecurrencesTitle2.innerHTML = i18next.t("helpTabDatesRecurrencesTitle2");
+helpTabDatesRecurrencesBody2.innerHTML = i18next.t("helpTabDatesRecurrencesBody2");
+helpTab1Title.innerHTML = i18next.t("shortcuts");
+helpTab2Title.innerHTML = i18next.t("priorities");
+helpTab3Title.innerHTML = i18next.t("helpTab3Title");
+helpTab4Title.innerHTML = i18next.t("helpTab4Title");
+helpTabKeyboardTR1TD1.innerHTML = i18next.t("addTodo");
+helpTabKeyboardTR2TD1.innerHTML = i18next.t("findTodo");
+helpTabKeyboardTR3TD1.innerHTML = i18next.t("toggleCompletedTodos");
+helpTabKeyboardTR4TD1.innerHTML = i18next.t("toggleDarkMode");
+helpTabKeyboardTR5TD1.innerHTML = i18next.t("openFile");
+helpTabKeyboardTR6TD1.innerHTML = i18next.t("settings");
+helpTabKeyboardTR1TH1.innerHTML = i18next.t("function");
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
@@ -372,11 +388,11 @@ btnModalCancel.forEach(function(el) {
     if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
   }
 });
-btnResetFilters.forEach(el => el.onclick = function() {
+btnResetFilters.onclick = function() {
   resetFilters();
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
-});
+}
 btnFilter.forEach(function(el) {
   el.setAttribute("title", i18next.t("toggleFilter"));
   el.onclick = function() {
@@ -396,14 +412,14 @@ btnAddTodo.forEach(function(el) {
     if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
   }
 });
-btnTheme.forEach(function(el) {
+btnTheme.onclick = function() {
   el.setAttribute("title", i18next.t("toggleDarkMode"));
   el.addEventListener("click", function(el) {
     setTheme(true);
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
   });
-});
+}
 btnArchiveTodos.onclick = function() {
   archiveTodos().then(response => {
     console.log(response);
@@ -411,7 +427,7 @@ btnArchiveTodos.onclick = function() {
     console.log(error);
   });
   // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Archive"])
+  if(matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
 }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 todoTableSearch.onfocus = function () {
@@ -419,7 +435,11 @@ todoTableSearch.onfocus = function () {
   if(matomoEvents) _paq.push(["trackEvent", "Search input field", "Focused"]);
 };
 todoTableSearch.addEventListener("input", function () {
-  generateTodoData(this.value);
+  generateTodoData(this.value).then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
 });
 toggleShowCompleted.onclick = function() {
   showCompletedTodos();
@@ -435,18 +455,18 @@ toggleMatomoEvents.onclick = function() {
     console.log(error);
   });
   // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting matomoEvents", this.checked])
+  if(matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
 }
 toggleNotifications.onclick = function() {
   notifications = this.checked;
   config.set('notifications', this.checked);
   // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Notifications", this.checked])
+  if(matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
 }
 toggleDarkmode.onclick = function() {
   setTheme(true);
   // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Content", "Click on Setting Dark mode", this.checked])
+  if(matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
 }
 modalFormInputHelp.onclick = function () {
   showContent(modalHelp);
@@ -573,11 +593,6 @@ filterDropdown.addEventListener ("keydown", function () {
 // THEME CONFIG
 // ########################################################################################################################
 function setTheme(switchTheme) {
-  /*if(config.get("theme")) {
-    var theme = config.get("theme");
-  } else {
-    var theme = nativeTheme.themeSource;
-  }*/
   if(switchTheme) {
     switch (theme) {
       case "dark":
@@ -747,10 +762,10 @@ Date.prototype.isPast = function () {
 // ########################################################################################################################
 function parseDataFromFile() {
   // we only start if file exists
-  if (fs.existsSync(pathToFile)) {
+  if (fs.existsSync(file)) {
     try {
       // read fresh data from file
-      items.raw = fs.readFileSync(pathToFile, {encoding: 'utf-8'}, function(err,data) { return data; });
+      items.raw = fs.readFileSync(file, {encoding: 'utf-8'}, function(err,data) { return data; });
       items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
       // TODO: Reuse these later
       items.complete = items.objects.filter(function(item) { return item.complete === true });
@@ -850,13 +865,10 @@ function openFile() {
   }).then(file => {
     // Stating whether dialog operation was cancelled or not.
     if (!file.canceled) {
-      pathToFile = file.filePaths[0].toString();
-      console.log("Success: Storage file updated by new path and filename: " + pathToFile);
-      // reset the (persisted) filters as they won't make any sense when switching to a different todo.txt file for instance
-      selectedFilters = new Array;
-      config.set("selectedFilters", new Array);
+      file = file.filePaths[0].toString();
+      console.log("Success: Storage file updated by new path and filename: " + file);
       // updating files array and set this item to default
-      changeFile(file.filePaths[0].toString()).then(response => {
+      changeFile(file).then(response => {
         // if file was changed successfully the data is parsed again
         // start file watcher
         startFileWatcher().then(response => {
@@ -876,23 +888,23 @@ function openFile() {
 }
 function startFileWatcher() {
   try {
-    if (fs.existsSync(pathToFile)) {
+    if (fs.existsSync(file)) {
       if(fileWatcher) fileWatcher.close();
-      fileWatcher = fs.watch(pathToFile, (event, filename) => {
-        parseDataFromFile(pathToFile).then(response => {
+      fileWatcher = fs.watch(file, (event, filename) => {
+        parseDataFromFile(file).then(response => {
           console.log(response);
         }).catch(error => {
           console.log(error);
         });
       });
-      parseDataFromFile(pathToFile).then(response => {
+      parseDataFromFile(file).then(response => {
         console.log(response);
       }).catch(error => {
         console.log(error);
       });
-      return Promise.resolve("Success: File watcher is watching: " + pathToFile);
+      return Promise.resolve("Success: File watcher is watching: " + file);
     } else {
-      return Promise.reject("Info: File watcher did not start as file was not found at: " + pathToFile);
+      return Promise.reject("Info: File watcher did not start as file was not found at: " + file);
     }
   } catch (error) {
     // trigger matomo event
@@ -911,8 +923,7 @@ function changeFile(path) {
       }
     });
     if(!files.includes(path)) files.push([1, path]);
-    pathToFile = path;
-    config.set("pathToFile", pathToFile);
+    file = path;
     config.set("files", files);
     // remove any preselected filters
     selectedFilters = [];
@@ -1015,8 +1026,6 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
   try {
     // container to fill with categories
     let container;
-    //
-    let filterBase;
     // is this a typeahead request? Default is false
     // which category or categories to loop through and build
     let categoriesToBuild = [];
@@ -1024,12 +1033,12 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       container = suggestionContainer;
       categoriesToBuild.push(typeAheadCategory);
       // for the suggestion container, so all filters will be shown
-      filterBase = items.objects;
+      items.objectsFiltered = items.objects;
     } else {
-      container = filterContainer;
+      container = todoFilters;
       categoriesToBuild = categories;
       // for the drawer the filters will be excluded according to previous selection
-      filterBase = items.objectsFiltered;
+      //filterBase = items.objectsFiltered;
     }
     // empty the container to prevent duplicates
     container.innerHTML = "";
@@ -1038,7 +1047,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      filterBase.forEach((item) => {
+      items.objectsFiltered.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
@@ -1109,9 +1118,9 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
 function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
     // creates a div for the specific filter section
-    let filterContainerSub = document.createElement("div");
-    filterContainerSub.setAttribute("class", "dropdown-item " + category);
-    filterContainerSub.setAttribute("tabindex", 0);
+    let todoFiltersSub = document.createElement("div");
+    todoFiltersSub.setAttribute("class", "dropdown-item " + category);
+    todoFiltersSub.setAttribute("tabindex", 0);
     // translate headline
     if(category=="contexts") {
       var headline = i18next.t("contexts");
@@ -1135,7 +1144,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           //persist the category filters
           config.set("categoriesFiltered", categoriesFiltered);
           // we remove the greyed out look from the container
-          filterContainerSub.classList.remove("is-greyed-out");
+          todoFiltersSub.classList.remove("is-greyed-out");
           // change the eye icon
           todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"0\"></a>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
         } else {
@@ -1151,7 +1160,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           //persist the category filters
           config.set("categoriesFiltered", categoriesFiltered);
           // we add the greyed out look to the container
-          filterContainerSub.classList.add("is-greyed-out");
+          todoFiltersSub.classList.add("is-greyed-out");
           // change the eye icon
           todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
         }
@@ -1168,14 +1177,14 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       });
       // TODO clean up. this is a duplicate, see above
       if(categoriesFiltered.includes(category)) {
-        filterContainerSub.classList.add("is-greyed-out");
+        todoFiltersSub.classList.add("is-greyed-out");
         todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye\"></i></a>&nbsp;" + headline;
       } else {
-        filterContainerSub.classList.remove("is-greyed-out");
+        todoFiltersSub.classList.remove("is-greyed-out");
         todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + headline;
       }
       // add the headline before category container
-      filterContainerSub.appendChild(todoFilterHeadline);
+      todoFiltersSub.appendChild(todoFilterHeadline);
     } else {
       // show suggestion box
       suggestionContainer.classList.add("is-active");
@@ -1187,7 +1196,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       if(typeAheadPrefix==undefined) todoFilterHeadline.setAttribute("tabindex", 0);
       todoFilterHeadline.innerHTML = headline;
       // add the headline before category container
-      filterContainerSub.appendChild(todoFilterHeadline);
+      todoFiltersSub.appendChild(todoFilterHeadline);
     }
     // build one button each
     for (let filter in filtersCounted) {
@@ -1268,11 +1277,11 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       selectedFilters.forEach(function(item) {
         if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
       });
-      filterContainerSub.appendChild(todoFiltersItem);
+      todoFiltersSub.appendChild(todoFiltersItem);
     }
     // add filters to the specific filter container
-    //filterContainer.appendChild(filterContainerSub);
-    return Promise.resolve(filterContainerSub);
+    //todoFilters.appendChild(todoFiltersSub);
+    return Promise.resolve(todoFiltersSub);
     //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
   } catch (error) {
     // trigger matomo event
@@ -1303,12 +1312,11 @@ function resetFilters() {
 // ########################################################################################################################
 function generateTodoData(searchString) {
   try {
-    items.objectsFiltered = items.objects;
     // if set: remove all completed todos
     if(showCompleted==false) {
-      items.objectsFiltered = items.objects.filter(function(item) {
-        return item.complete === false;
-      });
+      items.objectsFiltered = items.incomplete;
+    } else {
+      items.objectsFiltered = items.objects;
     }
     // if there are selected filters
     if(selectedFilters.length > 0) {
@@ -1351,24 +1359,26 @@ function generateTodoData(searchString) {
       // convert everything to lowercase for better search results
       items.objectsFiltered = items.objectsFiltered.filter(function(item) {
         // if no match (-1) the item is skipped
-        if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false
+        if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false;
         return item;
       });
     }
-    // we show some information on filters if any are set
-    if(items.objectsFiltered.length!=items.objects.length) {
-      selectionInformation.classList.add("is-active");
-      selectionInformation.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.objectsFiltered.length + " </strong> " + i18next.t("of") + " <strong>" + items.objects.length + "</strong>";
-    } else {
-      selectionInformation.classList.remove("is-active");
-    }
+    // fill result stat container, if it is necessary
+    showResultStats();
+    // empty the table containers before reading fresh data
+    todoTableContainer.innerHTML = "";
+    tableContainerDue.innerHTML = "";
+    tableContainerComplete.innerHTML = "";
+    tableContainerDueAndComplete.innerHTML = "";
+    tableContainerNoPriorityNotCompleted.innerHTML = "";
     // hide/show the addTodoContainer or noResultTodoContainer
     if(items.objectsFiltered.length > 0) {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
-    } else if(items.objectsFiltered.length === 0) {
+    } else {
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
+      return Promise.resolve("Info: No results to search input or filter selection");
     }
     // sort items according to todo.txt logic
     sortItems(items.objectsFiltered);
@@ -1377,14 +1387,6 @@ function generateTodoData(searchString) {
      r[a.priority] = [...r[a.priority] || [], a];
      return r;
     }, {});
-    // show the table in case it was hidden
-    //todoTable.classList.add("is-active");
-    // empty the table containers before reading fresh data
-    todoTableContainer.innerHTML = "";
-    tableContainerDue.innerHTML = "";
-    tableContainerComplete.innerHTML = "";
-    tableContainerDueAndComplete.innerHTML = "";
-    tableContainerNoPriorityNotCompleted.innerHTML = "";
     // object is converted to a sorted array
     items.objectsFiltered = Object.entries(items.objectsFiltered).sort();
     // each priority group -> A to Z plus null for all todos with no priority
@@ -1470,7 +1472,7 @@ function writeTodoToFile(todo) {
   // stop filewatcher to avoid loops
   if(fileWatcher) fileWatcher.close();
   //append todo as string to file in a new line
-  fs.open(pathToFile, 'a', 666, function(error, id) {
+  fs.open(file, 'a', 666, function(error, id) {
     if(error) {
       // trigger matomo event
       if(matomoEvents) _paq.push(["trackEvent", "Error", "fs.open()", error])
@@ -1491,32 +1493,36 @@ function writeTodoToFile(todo) {
 }
 function archiveTodos() {
   try {
+    // if user archives within done.txt file, operating is canceled
+    if(file.split("/").pop() === "done.txt") return Promise.reject("Info: Current file seems to be a done.txt file, won't archive")
     // define path to done.txt
-    let pathToDoneFile = path.dirname(pathToFile) + "/done.txt";
+    let doneFile = path.dirname(file) + "/done.txt";
     // if done.txt exists, data will be appended
-    if (fs.existsSync(pathToDoneFile)) {
+    if (fs.existsSync(doneFile)) {
       // read existing done.txt
-      let doneTxtContent = fs.readFileSync(pathToDoneFile, {encoding: 'utf-8'}, function(err,data) { return data; }).split("\n");
+      let doneTxtContent = fs.readFileSync(doneFile, {encoding: 'utf-8'}, function(err,data) { return data; }).split("\n");
       // only consider completed todo that are not already present in done.txt
       doneTxtContent.forEach(itemComplete => {
         items.complete = items.complete.filter(function(item) { return item.toString() != itemComplete.toString() });
       });
       //
       if(items.complete.length>0) {
-        fs.appendFile(pathToDoneFile, "\n" + items.complete.join("\n").toString(), error => {
+        fs.appendFile(doneFile, "\n" + items.complete.join("\n").toString(), error => {
           if (error) return Promise.reject("Error in appendFile(): " + error)
         });
       }
     // if done.txt does not exist, file will be created and filled with data
     } else {
-      fs.writeFileSync(pathToDoneFile, items.complete.join("\n").toString(), {encoding: 'utf-8'});
+      fs.writeFileSync(doneFile, items.complete.join("\n").toString(), {encoding: 'utf-8'});
     }
     // write incomplete only todos to file
-    fs.writeFileSync(pathToFile, items.incomplete.join("\n").toString(), {encoding: 'utf-8'});
+    fs.writeFileSync(file, items.incomplete.join("\n").toString(), {encoding: 'utf-8'});
 
     if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
-    return Promise.resolve("Success: Completed todo moved to: " + pathToDoneFile)
+    return Promise.resolve("Success: Completed todo moved to: " + doneFile)
   } catch(error) {
+    // trigger matomo event
+    if(matomoEvents) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
     return Promise.reject("Error in archiveTodos(): " + error)
   }
 }
@@ -1711,8 +1717,8 @@ function completeTodo(todo) {
       items.objects.splice(index, 1, todo);
     }
     //write the data to the file
-    fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
-    return Promise.resolve("Success: Changes written to file: " + pathToFile);
+    fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
+    return Promise.resolve("Success: Changes written to file: " + file);
   } catch(error) {
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Error", "completeTodo()", error])
@@ -1739,8 +1745,8 @@ function deleteTodo(todo) {
     }
     items.objects.splice(index, 1);
     //write the data to the file
-    fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
-    return Promise.resolve("Success: Changes written to file: " + pathToFile);
+    fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
+    return Promise.resolve("Success: Changes written to file: " + file);
   } catch(error) {
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Error", "deleteTodo()", error])
@@ -1792,16 +1798,16 @@ function submitForm() {
       return Promise.reject("Info: Will not write empty todo");
     }
     //write the data to the file
-    fs.writeFileSync(pathToFile, items.objects.join("\n").toString(), {encoding: 'utf-8'});
+    fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
     // save the previously saved item.current for further use
     //
-    return Promise.resolve("Success: Changes written to file: " + pathToFile);
+    return Promise.resolve("Success: Changes written to file: " + file);
   // if the input field is empty, let users know
   } catch (error) {
     // if writing into file is denied throw alert
-    modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + pathToFile;
+    modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + file;
     modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Error", "submitForm()", error])
@@ -1920,6 +1926,15 @@ function sortItems(items) {
   items.sort((a, b) => a.due - b.due);
   return;
 }
+function showResultStats() {
+  // we show some information on filters if any are set
+  if(items.objectsFiltered.length!=items.objects.length) {
+    resultStats.classList.add("is-active");
+    resultStats.firstElementChild.innerHTML = i18next.t("visibleTodos") + "&nbsp;<strong>" + items.objectsFiltered.length + " </strong> " + i18next.t("of") + " <strong>" + items.objects.length + "</strong>";
+  } else {
+    resultStats.classList.remove("is-active");
+  }
+}
 // ########################################################################################################################
 // HELPER FUNCTIONS
 // ########################################################################################################################
@@ -1962,6 +1977,7 @@ function matomoEventsConsent(setting) {
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
+    _paq.push(['trackVisibleContentImpressions']);
     (function() {
       var u="https://www.robbfolio.de/matomo/";
       _paq.push(['setTrackerUrl', u+'matomo.php']);
@@ -2153,8 +2169,8 @@ contentTabs.forEach(el => el.addEventListener("click", function(el) {
 // ########################################################################################################################
 window.onload = function () {
   // only start if a file has been selected
-  if(pathToFile) {
-    console.log("Info: Path to file: " + pathToFile);
+  if(file) {
+    console.log("Info: Path to file: " + file);
     // start file watcher
     startFileWatcher().then(response => {
       console.log(response);

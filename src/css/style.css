@@ -340,12 +340,12 @@ nav {
   #todoTable .icon.is-left svg,
   #todoTable .icon.is-right svg {
     color: #4a4a4a; }
-  #todoTable #selectionInformation {
+  #todoTable #resultStats {
     display: none;
     font-size: .8em;
     text-align: center;
     padding: .5em 0; }
-  #todoTable #selectionInformation.is-active {
+  #todoTable #resultStats.is-active {
     display: block; }
   #todoTable #todoTableContainer {
     margin: 1em 0; }
@@ -645,7 +645,7 @@ nav {
     height: auto;
     z-index: 60;
     background: #ebebeb;
-    padding: 2em;
+    padding: 1em 2em;
     border-radius: 0.25rem; }
   .modal.content .modal-background {
     z-index: 55; }

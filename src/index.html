@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head id="head">
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,7 +17,7 @@
             <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li id="navBtnFilter" class="btnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li class="btnChangeTodoFile"><a href="#" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
-            <li class="btnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
+            <li id="btnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
           </ul>
           <ul>
             <li id="navBtnSettings">
@@ -35,7 +35,7 @@
                 <span id="filterToggleShowCompleted" class="text"></span>
               </div>
               <div id="todoFilters"></div>
-              <button class="btnResetFilters button" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span id="filterBtnResetFilters"></span></button>
+              <button id="btnResetFilters" class="button" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span id="filterBtnResetFilters"></span></button>
             </div>
           <div id="handle"></div>
           </section>
@@ -50,7 +50,7 @@
               <i class="fas fa-search"></i>
             </span>
           </div>
-          <header id="selectionInformation">
+          <header id="resultStats">
             <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>
           </header>
           <div id="todoTableContainer"></div>
@@ -149,10 +149,10 @@
         <div class="tabs is-centered">
           <ul>
             <li class="settingsTab1 is-active"><a href="#" tabindex="0" id="settingsTabSettings"></a></li>
-            <li class="settingsTab2"><a href="#" tabindex="0" id="settingsTabAbout">About</a></li>
+            <li class="settingsTab2"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
           </ul>
         </div>
-        <section id="settingsTab1" class="modal-card-body is-active">
+        <section id="settingsTab1" class="modal-card-body is-active"  data-track-content data-content-name="Settings" data-content-piece="Settings">
           <table class="table settings">
             <tbody>
               <tr>
@@ -227,7 +227,7 @@
             <tbody>
           </table>
         </section>
-        <section id="settingsTab2" class="modal-card-body">
+        <section id="settingsTab2" class="modal-card-body" data-track-content data-content-name="Settings" data-content-piece="About">
           <h4 class="title is-4" id="settingsTabAboutContribute"></h4>
           <p id="settingsTabAboutContributeBody"></p>
           <h4 class="title is-4" id="settingsTabAboutCopyrightLicense"></h4>
@@ -261,64 +261,64 @@
         <button class="modal-close close is-large" aria-label="close"></button>
       </div>
     </div>
-    <div id="modalHelp" class="modal content" tabindex="0">
+    <div id="modalHelp" class="modal content" tabindex="0" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
       <div class="modal-background"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           <ul>
-            <li class="helpTab1 is-active"><a href="#" tabindex="0">Keyboard</a></li>
-            <li class="helpTab2"><a href="#" tabindex="0">Priorities</a></li>
-            <li class="helpTab3"><a href="#" tabindex="0">Contexts & projects</a></li>
-            <li class="helpTab4"><a href="#" tabindex="0">Dates and recurrences</a></li>
+            <li class="helpTab1 is-active"><a href="#" tabindex="0" id="helpTab1Title"></a></li>
+            <li class="helpTab2"><a href="#" tabindex="0" id="helpTab2Title"></a></li>
+            <li class="helpTab3"><a href="#" tabindex="0" id="helpTab3Title"></a></li>
+            <li class="helpTab4"><a href="#" tabindex="0" id="helpTab4Title"></a></li>
           </ul>
         </div>
         <section id="helpTab1" class="modal-card-body is-active">
-          <h4 class="title is-4">Keyboard shortcuts</h4>
+          <h4 class="title is-4" id="helpTabKeyboardTitle"></h4>
           <table class="table shortcuts">
             <thead>
               <tr>
-                <th>Function</th>
-                <th>Shortcut on Windows and Linux</th>
-                <th>Shortcut on MacOS</th>
+                <th id="helpTabKeyboardTR1TH1"></th>
+                <th>Windows/Linux</th>
+                <th>MacOS</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Add new todo</td>
+                <td id="helpTabKeyboardTR1TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
               </tr>
               <tr>
-                <td>Find todo</td>
+                <td id="helpTabKeyboardTR2TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
               </tr>
               <tr>
-                <td>Show/hide completed todos</td>
+                <td id="helpTabKeyboardTR3TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
               </tr>
               <tr>
-                <td>Toggle dark mode</td>
+                <td id="helpTabKeyboardTR4TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
               </tr>
               <tr>
-                <td>Open todo.txt file</td>
+                <td id="helpTabKeyboardTR5TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
               </tr>
               <tr>
-                <td>Open settings</td>
+                <td id="helpTabKeyboardTR6TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">,</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">,</span></td>
               </tr>
             </tbod>
           </table>
         </section>
-        <section id="helpTab2" class="modal-card-body">
-          <h4 class="title is-4">Adding a priority</h4>
-          <p>Important todos need to have an important spot on your list. Simply append a "(A)" at the beginning of the todo to achieve this. You're not bound to (A) as everything from A to Z is possible. But only A to C will have a colored bar next to the todo. All other priorities have a neutral grey colored bar attached.</p>
+        <section id="helpTab2" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding a priority">
+          <h4 class="title is-4" id="helpTabPrioritiesTitle"></h4>
+          <p id="helpTabPrioritiesBody"></p>
           <input class="input is-focused is-medium" type="text" value="(A) This will create a todo with highest priority" tabindex="-1">
           <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
           <div class="card is-centered" style="width: 52%;">
@@ -327,10 +327,9 @@
             </div>
           </div>
         </section>
-        <section id="helpTab3" class="modal-card-body">
-          <h4 class="title is-4">Adding contexts & projects</h4>
-          <p>If you work on projects that consists of several tasks, you can assign these tasks by appending "+" followed by the project name. Contexts define the situation in which this todo is relevant to you. According to David Allen's concept of <a href="https://en.wikipedia.org/wiki/Getting_Things_Done" target="_blank">Getting Things Done</a>, the "context" could be i.e. at home, at work, out shopping, by the phone, at your computer, with a particular person. To add a context just append a "@" plus the context name. For more information on todo.txt <a href="https://github.com/todotxt/todo.txt" target="_blank">click here</a>.</p>
-          <p>Neither projects nor context allow the use of spaces, so write them in one word. You can append as many projects and contexts as you wish.</p>
+        <section id="helpTab3" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding contexts & projects">
+          <h4 class="title is-4" id="helpTabContextsProjectsTitle"></h4>
+          <p id="helpTabContextsProjectsBody"></p>
           <input class="input is-focused is-medium" type="text" value="A todo with 1 project and 2 contexts +project @context1 @context2" tabindex="-1">
           <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
           <div class="card is-centered" style="width: 77%;">
@@ -339,11 +338,11 @@
             </div>
           </div>
         </section>
-        <section id="helpTab4" class="modal-card-body">
-          <h4 class="title is-4">Adding dates</h4>
-          <p>sleek will add the start date automatically equal to the todos' creation date. If you want to change it, you need to look for the first date in your todo right after the priority tag. Todos with due dates will be bumped up your list. The closer the due date comes the higher it will be sorted. Is the due date set to today or to a date in the past, it will be marked red and will stay on top of your list. To add a due date append "due:" and add the due date formatted as <strong>YYYY-MM-DD (e.g. due:2021-03-07)</strong>. Alternatively use the date picker, it will do the formatting for you.</p>
-          <h4 class="title is-4">Adding a recurrence</h4>
-          <p>Once a due date has been set, you can define a recurrence. If for instance a todo is due today and you set up a weekly recurrence, sleek will duplicate the todo and adjust start and due date of the duplicated todo according to your recurrence setting. To set a recurrence use the recurrence picker or type <strong>rec:</strong> and add <strong>d</strong> (daily), <strong>w</strong> (weekly), <strong>m</strong> (monthly) or <strong>y</strong> (annually).</p>
+        <section id="helpTab4" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding dates">
+          <h4 class="title is-4" id="helpTabDatesRecurrencesTitle1"></h4>
+          <p id="helpTabDatesRecurrencesBody1"></p>
+          <h4 class="title is-4" id="helpTabDatesRecurrencesTitle2"></h4>
+          <p id="helpTabDatesRecurrencesBody2"></p>
           <input class="input is-focused is-medium" type="text" value="This todo is due at some point rec:w due:2021-03-07" tabindex="-1">
           <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
           <div class="card is-centered" style="width: 55%;">
@@ -361,15 +360,15 @@
       <div class="modal-content">
         <div class="card">
           <header class="card-header">
-            <p id="modalChangeFileTitle" class="card-header-title">Select a todo.txt file</p>
+            <p id="modalChangeFileTitle" class="card-header-title"></p>
           </header>
           <div class="card-content">
             <table id="modalChangeFileTable" class="table">
             </table>
           </div>
           <footer class="card-footer">
-            <a href="#" class="card-footer-item btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen">Open todo.txt file</span></a>
-            <a href="#" class="card-footer-item btnCreateTodoFile" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate">Create new todo.txt file</span></a>
+            <a href="#" class="card-footer-item btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></a>
+            <a href="#" class="card-footer-item btnCreateTodoFile" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></a>
             <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
           </footer>
         </div>

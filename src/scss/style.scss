@@ -390,13 +390,13 @@ nav {
   .icon.is-right svg {
     color: $darker-grey;
   }
-  #selectionInformation {
+  #resultStats {
     display: none;
     font-size: .8em;
     text-align: center;
     padding: .5em 0;
   }
-  #selectionInformation.is-active {
+  #resultStats.is-active {
     display: block;
   }
   #todoTableContainer {
@@ -778,7 +778,7 @@ nav {
     height: auto;
     z-index: 60;
     background: $mid-grey;
-    padding: 2em;
+    padding: 1em 2em;
     border-radius: 0.25rem;
   }
   .modal-background {

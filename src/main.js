@@ -1,3 +1,5 @@
+// https://dev.to/xxczaki/how-to-make-your-electron-app-faster-4ifb
+require('v8-compile-cache');
 const { app, BrowserWindow, nativeTheme, electron, ipcMain, session } = require("electron");
 const { is } = require("electron-util");
 const fs = require("fs");
@@ -7,7 +9,7 @@ const Store = require("./configs/store.config.js");
 const config = new Store({
   configName: "user-preferences",
   defaults: {
-    windowBounds: { width: 1025, height: 768 },
+    windowBounds: { width: 1100, height: 800 },
   }
 });
 const i18next = require("i18next");
@@ -37,10 +39,8 @@ const createWindow = () => {
   } else {
     mainWindow.setIcon(path.join(__dirname, "../assets/icons/icon.png"));
   }
-
-  if (is.development) {
-    mainWindow.webContents.openDevTools();
-  }
+  // show dev tools if in dev mode
+  if (is.development) mainWindow.webContents.openDevTools()
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
   // open links in external browser
@@ -112,6 +112,12 @@ const createWindow = () => {
           accelerator: "CmdOrCtrl+f",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
+          }
+        },
+        {
+          label: i18next.t("archive"),
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript("archiveTodos()");
           }
         }
       ]

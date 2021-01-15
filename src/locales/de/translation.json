@@ -79,5 +79,5 @@
   "settingsTabAboutExternalLibraries": "Eingesetzte Software, die nicht von mir stammt",
   "settingsTabSettingsArchive": "Aufgaben archivieren",
   "settingsTabSettingsArchiveBody": "Erledigte Aufgaben werden aus der todo.txt-Datei entfernt und in eine done.txt-Datei eingefügt. Diese wird im gleichen Ordner angelegt, falls sie noch nicht existiert.",
-  "settingsTabSettingsArchiveButton": "Archivieren"
+  "archive": "Archivieren"
 }
