@@ -29,7 +29,6 @@
       "!**.md",
       "!assets/screenshots${/*}"
     ],
-    "asar": false,
     "appId": "RobinAhle.sleektodomanager",
     "linux": {
       "icon": "assets/icons/icon.png",
