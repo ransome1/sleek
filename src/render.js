@@ -32,13 +32,25 @@ if(config.get("dismissedMessages")) {
 } else {
   var dismissedMessages = new Array;
 }
-let matomoEvents = config.get("matomoEvents");
+if(config.get("matomoEvents")) {
+  var matomoEvents = config.get("matomoEvents");
+} else {
+  var matomoEvents = false;
+}
 if(config.get("filterDropdownWidth")) {
   let filterDropdownWidth = config.get("filterDropdownWidth");
   filterDropdown.setAttribute("style", "--resizeable-width: " + filterDropdownWidth);
 }
-let notifications = config.get("notifications");
-let showCompleted = config.get("showCompleted");
+if(config.get("notifications")) {
+  var notifications = config.get("notifications");
+} else {
+  var notifications = true;
+}
+if(config.get("showCompleted")) {
+  var showCompleted = config.get("showCompleted");
+} else {
+  var showCompleted = true;
+}
 if(config.get("selectedFilters")) {
   var selectedFilters = config.get("selectedFilters");
 } else {
@@ -468,10 +480,15 @@ toggleDarkmode.onclick = function() {
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
 }
-modalFormInputHelp.onclick = function () {
+/*modalFormInputHelp.onclick = function () {
   showContent(modalHelp);
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Help"]);
+}*/
+modalFormInputResize.onclick = function () {
+  resizeInput(this.getAttribute("data-input-type"));
+  // trigger matomo event
+  //if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
 }
 modalFormInput.onfocus = function () {
   // trigger matomo event
@@ -513,47 +530,7 @@ modalForm.addEventListener("submit", function(e) {
     console.log(error);
   });
 });
-modalFormInput.addEventListener("keyup", e => {
-  let typeAheadValue ="";
-  let typeAheadPrefix = "";
-  let caretPosition = getCaretPosition(modalFormInput);
-  let typeAheadCategory = "";
-  // if datepicker was visible it will be hidden with every new input
-  if(modalFormInput.value.charAt(caretPosition-2) === " " && (modalFormInput.value.charAt(caretPosition-1) === "@" || modalFormInput.value.charAt(caretPosition-1) === "+")) {
-    typeAheadValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(caretPosition-1);
-  } else if(modalFormInput.value.charAt(caretPosition) === " ") {
-    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+1);
-  } else if(modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "@" || modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "+") {
-    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
-  } else {
-    suggestionContainer.classList.remove("is-active");
-    suggestionContainer.blur();
-    return false;
-  }
-  // suppress suggestion box if caret is at the end of word
-  if(typeAheadPrefix) {
-    if(typeAheadPrefix=="+") {
-      typeAheadCategory = "projects";
-    } else if(typeAheadPrefix=="@") {
-      typeAheadCategory = "contexts";
-    }
-    // parsed data will be passed to generate filter data and build the filter buttons
-    t0 = performance.now();
-    generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Filters rendered:", t1 - t0, "ms");
-    }).catch (error => {
-      console.log(error);
-    });
-  } else {
-    suggestionContainer.classList.remove("is-active");
-    suggestionContainer.blur();
-  }
-});
+modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
 filterColumnClose.onclick = function() {
   showFilters(false);
   // trigger matomo event
@@ -1764,7 +1741,8 @@ function submitForm() {
       // get index of todo
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
-      let todo = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension(), new RecExtension() ]);
+      // replace new lines with spaces (https://stackoverflow.com/a/34936253)
+      let todo = new TodoTxtItem(modalForm.elements[0].value.replace(/[\r\n]+/g," "), [ new DueExtension(), new RecExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
         modalFormAlert.innerHTML = i18next.t("formInfoDuplicate");
@@ -1908,11 +1886,13 @@ function showForm(todo, templated) {
       }
       // in any case put focus into the input field
       modalFormInput.focus();
-      // Adjust position of suggestion box to input field
-      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-      suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
-      suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-      suggestionContainer.style.left = modalFormInputPosition.left + "px";
+      // if textarea, resize to content length
+      if(modalFormInput.tagName==="TEXTAREA") {
+        console.log(modalFormInput.tagName);
+        modalFormInput.style.height="auto";
+        modalFormInput.style.height= modalFormInput.scrollHeight+"px";
+      }
+      alignSuggestionContainer();
   } catch (error) {
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
@@ -2116,6 +2096,90 @@ function setButtonState(button) {
       break;
     default:
   }
+}
+function modalFormInputEvents() {
+  // if textarea, resize to content length
+  if(modalFormInput.tagName==="TEXTAREA") {
+    modalFormInput.style.height="auto";
+    modalFormInput.style.height= modalFormInput.scrollHeight+"px";
+  }
+  let typeAheadValue ="";
+  let typeAheadPrefix = "";
+  let caretPosition = getCaretPosition(modalFormInput);
+  let typeAheadCategory = "";
+  // if datepicker was visible it will be hidden with every new input
+  if(modalFormInput.value.charAt(caretPosition-2) === " " && (modalFormInput.value.charAt(caretPosition-1) === "@" || modalFormInput.value.charAt(caretPosition-1) === "+")) {
+    typeAheadValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
+    typeAheadPrefix = modalFormInput.value.charAt(caretPosition-1);
+  } else if(modalFormInput.value.charAt(caretPosition) === " ") {
+    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
+    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+1);
+  } else if(modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "@" || modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "+") {
+    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
+    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
+  } else {
+    suggestionContainer.classList.remove("is-active");
+    suggestionContainer.blur();
+    return false;
+  }
+  // suppress suggestion box if caret is at the end of word
+  if(typeAheadPrefix) {
+    if(typeAheadPrefix=="+") {
+      typeAheadCategory = "projects";
+    } else if(typeAheadPrefix=="@") {
+      typeAheadCategory = "contexts";
+    }
+    // parsed data will be passed to generate filter data and build the filter buttons
+    t0 = performance.now();
+    generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Filters rendered:", t1 - t0, "ms");
+    }).catch (error => {
+      console.log(error);
+    });
+  } else {
+    suggestionContainer.classList.remove("is-active");
+    suggestionContainer.blur();
+  }
+  alignSuggestionContainer();
+}
+function alignSuggestionContainer() {
+  // Adjust position of suggestion box to input field
+  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+  suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+  suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+  suggestionContainer.style.left = modalFormInputPosition.left + "px";
+}
+function resizeInput(type) {
+  switch (type) {
+    case "input":
+      var d = document.createElement('textarea');
+      modalFormInputResize.setAttribute("data-input-type", "textarea");
+      modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
+      break;
+    case "textarea":
+      var d = document.createElement('input');
+      d.type = "text";
+      modalFormInputResize.setAttribute("data-input-type", "input");
+      modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
+      break;
+    default:
+      modalFormInputResize.setAttribute("data-input-type", "input");
+  }
+  d.id = "modalFormInput";
+  d.setAttribute("tabindex", 300);
+  d.setAttribute("class", "input is-medium");
+  d.value = modalFormInput.value;
+  modalFormInput.parentNode.replaceChild(d, modalFormInput);
+  // if textarea, resize to content length
+  if(modalFormInput.tagName==="TEXTAREA") {
+    modalFormInput.style.height="auto";
+    modalFormInput.style.height= modalFormInput.scrollHeight+"px";
+  }
+  alignSuggestionContainer();
+  modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
+  modalFormInput.focus();
 }
 // ########################################################################################################################
 // CONTENT FUNCTIONS

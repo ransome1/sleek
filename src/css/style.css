@@ -563,7 +563,13 @@ nav {
       border-radius: 50%; }
 
 /* MODAL */
-#modalForm #modalFormInputHelp {
+#modalForm textarea#modalFormInput {
+  min-height: 5.5em;
+  overflow: hidden;
+  resize: none; }
+
+#modalForm #modalFormInputHelp,
+#modalForm #modalFormInputResize {
   z-index: 60;
   cursor: pointer;
   pointer-events: all; }

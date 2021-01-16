@@ -687,7 +687,13 @@ nav {
 /* MODAL */
 
 #modalForm {
-  #modalFormInputHelp {
+  textarea#modalFormInput {
+    min-height: 5.5em;
+    overflow: hidden;
+    resize: none;
+  }
+  #modalFormInputHelp,
+  #modalFormInputResize {
     z-index: 60;
     cursor: pointer;
     pointer-events: all;
