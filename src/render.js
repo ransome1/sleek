@@ -18,7 +18,8 @@ const config = new Store({
     language: null,
     files: new Array,
     uid: null,
-    filterDropdownWidth: "560px"
+    filterDropdownWidth: "560px",
+    useTextarea: false
   }
 });
 let { width, height } = config.get("windowBounds");
@@ -77,6 +78,11 @@ if(config.get("theme")) {
   } else {
     var theme = "light"
   }
+}
+if(config.get("useTextarea")) {
+  var useTextarea = config.get("useTextarea");
+} else {
+  var useTextarea = false;
 }
 // ########################################################################################################################
 // DEV CONFIG
@@ -186,6 +192,10 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
   language: i18next.language
 });
 dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
+// closes suggestion box on focus
+dueDatePickerInput.onfocus = function () {
+  suggestionContainer.classList.remove("is-active");
+};
 // Adjust Picker width according to length of input
 dueDatePickerInput.setAttribute("size", i18next.t("formSelectDueDate").length)
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
@@ -262,9 +272,12 @@ const item = {
   previous: ""
 }
 if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
+// adjust input field
+if(useTextarea) resizeInput("input");
 // ########################################################################################################################
 // TRANSLATIONS
 // ########################################################################################################################
+btnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
 btnSave.innerHTML = i18next.t("save");
 todoTableSearch.placeholder = i18next.t("search");
 filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
@@ -424,13 +437,10 @@ btnAddTodo.forEach(function(el) {
     if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
   }
 });
-btnTheme.onclick = function() {
-  el.setAttribute("title", i18next.t("toggleDarkMode"));
-  el.addEventListener("click", function(el) {
-    setTheme(true);
-    // trigger matomo event
-    if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
-  });
+btnTheme.onclick = function(el) {
+  // trigger matomo event
+  if(matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
+  setTheme(true);
 }
 btnArchiveTodos.onclick = function() {
   archiveTodos().then(response => {
@@ -488,11 +498,12 @@ toggleDarkmode.onclick = function() {
 modalFormInputResize.onclick = function () {
   resizeInput(this.getAttribute("data-input-type"));
   // trigger matomo event
-  //if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
+  if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
 }
 modalFormInput.onfocus = function () {
+  suggestionContainer.classList.remove("is-active");
   // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Todo input field", "Focused"]);
+  //if(matomoEvents) _paq.push(["trackEvent", "Todo input field", "Focused"]);
 };
 modalBackground.forEach(function(el) {
   el.onclick = function() {
@@ -596,7 +607,7 @@ function setTheme(switchTheme) {
   }
 }
 // ########################################################################################################################
-// RECURRANT TODOS
+// RECURRENT TODOS
 // ########################################################################################################################
 function getRecurrenceDate(due, recurrence) {
   switch (recurrence) {
@@ -902,9 +913,7 @@ function changeFile(path) {
     if(!files.includes(path)) files.push([1, path]);
     file = path;
     config.set("files", files);
-    // remove any preselected filters
-    selectedFilters = [];
-    config.set("selectedFilters", "");
+    resetFilters();
     return Promise.resolve("Success: File changed to: " + path);
   } catch (error) {
     // trigger matomo event
@@ -917,6 +926,8 @@ function modalChooseFile() {
   modalChangeFile.focus();
   modalChangeFileTable.innerHTML = "";
   for (let file in files) {
+    // skip if file doesn't exist
+    if(!fs.existsSync(files[file][1])) continue;
     var table = modalChangeFileTable;
     table.classList.add("files");
     var row = table.insertRow(0);
@@ -943,6 +954,8 @@ function modalChooseFile() {
         }).catch(error => {
           console.log(error);
         });
+        // trigger matomo event
+        if(matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
       }
       cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
       cell3.title = i18next.t("delete");
@@ -1888,11 +1901,10 @@ function showForm(todo, templated) {
       modalFormInput.focus();
       // if textarea, resize to content length
       if(modalFormInput.tagName==="TEXTAREA") {
-        console.log(modalFormInput.tagName);
         modalFormInput.style.height="auto";
         modalFormInput.style.height= modalFormInput.scrollHeight+"px";
       }
-      alignSuggestionContainer();
+      positionSuggestionContainer();
   } catch (error) {
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
@@ -1953,6 +1965,7 @@ function matomoEventsConsent(setting) {
     _paq.push(['setCustomDimension', 6, width+"x"+height]);
     _paq.push(['setCustomDimension', 7, showCompleted]);
     _paq.push(['setCustomDimension', 8, files.length]);
+    _paq.push(['setCustomDimension', 9, useTextarea]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -2021,6 +2034,8 @@ function showNotification(todo, offset) {
       config.set("dismissedNotifications", dismissedNotifications);
       // click on button in notification
       newNotification.addListener('click', () => {
+        // trigger matomo event
+        if(matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
         app.focus();
         // if another modal was open it needs to be closed first
         clearModal();
@@ -2030,6 +2045,8 @@ function showNotification(todo, offset) {
         // remove event listener after it is clicked once
         once: true
       });
+      // trigger matomo event
+      if(matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
       return Promise.resolve("Info: Notification successfully sent");
     });
   } catch(error) {
@@ -2108,7 +2125,7 @@ function modalFormInputEvents() {
   let caretPosition = getCaretPosition(modalFormInput);
   let typeAheadCategory = "";
   // if datepicker was visible it will be hidden with every new input
-  if(modalFormInput.value.charAt(caretPosition-2) === " " && (modalFormInput.value.charAt(caretPosition-1) === "@" || modalFormInput.value.charAt(caretPosition-1) === "+")) {
+  if((modalFormInput.value.charAt(caretPosition-2) === " " || modalFormInput.value.charAt(caretPosition-2) === "\n") && (modalFormInput.value.charAt(caretPosition-1) === "@" || modalFormInput.value.charAt(caretPosition-1) === "+")) {
     typeAheadValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
     typeAheadPrefix = modalFormInput.value.charAt(caretPosition-1);
   } else if(modalFormInput.value.charAt(caretPosition) === " ") {
@@ -2142,9 +2159,9 @@ function modalFormInputEvents() {
     suggestionContainer.classList.remove("is-active");
     suggestionContainer.blur();
   }
-  alignSuggestionContainer();
+  positionSuggestionContainer();
 }
-function alignSuggestionContainer() {
+function positionSuggestionContainer() {
   // Adjust position of suggestion box to input field
   let modalFormInputPosition = modalFormInput.getBoundingClientRect();
   suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
@@ -2157,12 +2174,16 @@ function resizeInput(type) {
       var d = document.createElement('textarea');
       modalFormInputResize.setAttribute("data-input-type", "textarea");
       modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
+      // persist setting
+      config.set("useTextarea", true);
       break;
     case "textarea":
       var d = document.createElement('input');
       d.type = "text";
       modalFormInputResize.setAttribute("data-input-type", "input");
       modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
+      // persist setting
+      config.set("useTextarea", false);
       break;
     default:
       modalFormInputResize.setAttribute("data-input-type", "input");
@@ -2172,12 +2193,12 @@ function resizeInput(type) {
   d.setAttribute("class", "input is-medium");
   d.value = modalFormInput.value;
   modalFormInput.parentNode.replaceChild(d, modalFormInput);
-  // if textarea, resize to content length
+  // if input is a textarea, adjust height to content length
   if(modalFormInput.tagName==="TEXTAREA") {
     modalFormInput.style.height="auto";
     modalFormInput.style.height= modalFormInput.scrollHeight+"px";
   }
-  alignSuggestionContainer();
+  positionSuggestionContainer();
   modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
   modalFormInput.focus();
 }
@@ -2185,6 +2206,10 @@ function resizeInput(type) {
 // CONTENT FUNCTIONS
 // ########################################################################################################################
 function showContent(section) {
+  // in case a content window was open, it will be closed
+  modal.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
   contentTabs.forEach(function(el) {
     el.classList.remove("is-active");
   });
