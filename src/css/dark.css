@@ -132,50 +132,50 @@ nav {
   #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
     background: #3B3B3B; }
 
-#filterDropdown {
+#filterDrawer {
   background: #3B3B3B; }
-  #filterDropdown .dropdown-item.is-greyed-out a {
+  #filterDrawer .dropdown-item.is-greyed-out a {
     background: #2c2d30 !important;
     color: #CCCDCF !important;
     opacity: .8; }
-  #filterDropdown .dropdown-item.is-greyed-out span.tag {
+  #filterDrawer .dropdown-item.is-greyed-out span.tag {
     background: #2c2d30 !important;
     color: white !important; }
 
-.filterDropdown .dropdown-item a.headline,
-.filterDropdown .dropdown-item a.headline a {
+.filterDrawer .dropdown-item a.headline,
+.filterDrawer .dropdown-item a.headline a {
   color: #CCCDCF !important; }
 
-.filterDropdown div.contexts a.button {
+.filterDrawer div.contexts a.button {
   background: #075A44;
   color: #c5ede3; }
-  .filterDropdown div.contexts a.button span.tag {
+  .filterDrawer div.contexts a.button span.tag {
     background: #c5ede3;
     color: #075A44; }
 
-.filterDropdown div.contexts a.button:hover,
-.filterDropdown div.contexts a.button.is-dark {
+.filterDrawer div.contexts a.button:hover,
+.filterDrawer div.contexts a.button.is-dark {
   background: #1BA37E; }
 
-.filterDropdown div.projects a.button {
+.filterDrawer div.projects a.button {
   background: #5f1a5e;
   color: #f1d6f1; }
-  .filterDropdown div.projects a.button span.tag {
+  .filterDrawer div.projects a.button span.tag {
     background: #f1d6f1;
     color: #5f1a5e; }
 
-.filterDropdown div.projects a.button:hover,
-.filterDropdown div.projects a.button.is-dark {
+.filterDrawer div.projects a.button:hover,
+.filterDrawer div.projects a.button.is-dark {
   background: #BC30BA; }
 
-.filterDropdown .button.is-white {
+.filterDrawer .button.is-white {
   background-color: #2c2d30 !important;
   color: #CCCDCF !important; }
 
-.filterDropdown .dropdown-content {
+.filterDrawer .dropdown-content {
   background: #2c2d30 !important; }
 
-.filterDropdown .dropdown-content h4 {
+.filterDrawer .dropdown-content h4 {
   color: #CCCDCF !important; }
 
 .columns a#filterColumnClose {

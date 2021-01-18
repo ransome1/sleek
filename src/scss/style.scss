@@ -246,7 +246,7 @@ nav {
 }
 
 /* FILTER DROPDOWN */
-#filterDropdown {
+#filterDrawer {
   display: none;
   overflow-y: auto;
   overflow-x: hidden;
@@ -323,10 +323,10 @@ nav {
     margin: 0;
   }
 }
-#filterDropdown.is-active {
+#filterDrawer.is-active {
   display: block;
 }
-.filterDropdown {
+.filterDrawer {
   a.button {
     margin: 0 .5rem .5rem 0;
   }
@@ -967,14 +967,14 @@ nav {
       font-family: "FreeSansBold";
     }
   }
-  #filterDropdown {
+  #filterDrawer {
     padding: 0 1.5em!important;
     .toggle {
       margin: 0!important;
       padding: 1.5em .5em 1em 0!important;
     }
   }
-  #suggestionContainer.filterDropdown {
+  #suggestionContainer.filterDrawer {
     padding: 0!important;
   }
   #todoTable {

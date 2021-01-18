@@ -3,14 +3,14 @@
   <id>com.github.ransome1.sleek</id>
 
   <name>sleek</name>
-  <summary>sleek is a todo app based on todo.txt, free and open-source</summary>
+  <summary>A todo app based on todo.txt, free and open-source</summary>
 
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="0.8.2" date="2021-01-17"/>
+    <release version="0.8.3" date="2021-01-18"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 
@@ -35,18 +35,18 @@
       <li>Todos are grouped by priority</li>
       <li>Todos are sorted by due date within their priorities</li>
       <li>Todos can be enriched by contexts, projects, start dates, due dates</li>
-      <li>Todos can repeat themselves based on a given due date. You can use a recurrence picker add it to the text field using: "rec:d" (daily), "rec:w" (weekly), "rec:m" (monthly), "rec:y" (annually)</li>
+      <li>Todos can repeat themselves based on a given due date. You can use a recurrence picker or add the recurrence to the text field using: "rec:d" (daily), "rec:w" (weekly), "rec:m" (monthly), "rec:y" (annually)</li>
       <li>Available contexts and projects will be suggested according to your input</li>
       <li>Todos can be filtered by contexts and projects</li>
       <li>Filters are sorted alphanummerically</li>
       <li>Todos can be looked up using full-text search</li>
       <li>A due date can be set using a datepicker</li>
       <li>Hyperlinks are detected automatically and can be clicked using the icon</li>
-      <li>Basic notifications: Will fire if a todo's due date is set for tomorrow or today</li>
+      <li>Basic notifications will fire if a todo's due date is set for tomorrow or today</li>
       <li>Todos that include either contexts or projects can be shown or hidden entirely</li>
       <li>Dark and light mode can be toggled</li>
       <li>A file watcher rereads the file if it has been changed</li>
-      <li>Multiple todo.txt files can be added</li>
+      <li>Multiple todo.txt files can be managed</li>
       <li>Multiple languages are automatically detected or set by hand to German, English, Italian, Spanish and French</li>
       <li>Tabindex available</li>
       <li>Basic keyboard shortcuts are available</li>

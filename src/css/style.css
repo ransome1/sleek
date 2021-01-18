@@ -217,7 +217,7 @@ nav {
     left: 0; }
 
 /* FILTER DROPDOWN */
-#filterDropdown {
+#filterDrawer {
   display: none;
   overflow-y: auto;
   overflow-x: hidden;
@@ -231,7 +231,7 @@ nav {
   max-width: var(--max-width);
   /* HANDLE FOR DRAGGING */
   /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */ }
-  #filterDropdown #handle {
+  #filterDrawer #handle {
     /*float: right;*/
     position: absolute;
     right: 0;
@@ -240,7 +240,7 @@ nav {
     width: 10px;
     background-color: transparent;
     z-index: 1; }
-  #filterDropdown #handle::after {
+  #filterDrawer #handle::after {
     content: "";
     width: 10px;
     position: absolute;
@@ -249,56 +249,56 @@ nav {
     background-color: transparent;
     cursor: ew-resize;
     z-index: 2; }
-  #filterDropdown .toggle {
+  #filterDrawer .toggle {
     padding: 0 0 1em 0; }
-  #filterDropdown .dropdown-item {
+  #filterDrawer .dropdown-item {
     width: 100%;
     padding: 0;
     margin: 1.5em 0; }
-  #filterDropdown .dropdown-item a.headline {
+  #filterDrawer .dropdown-item a.headline {
     width: 100%;
     float: left;
     font-size: 1.35em;
     color: #4a4a4a;
     font-family: FreeSansBold;
     margin-bottom: 1.5em; }
-  #filterDropdown #btnResetAllFilters {
+  #filterDrawer #btnResetAllFilters {
     display: none; }
-  #filterDropdown #btnResetAllFilters.is-active {
+  #filterDrawer #btnResetAllFilters.is-active {
     display: block; }
-  #filterDropdown .dropdown-item.is-greyed-out {
+  #filterDrawer .dropdown-item.is-greyed-out {
     opacity: .5; }
-  #filterDropdown .dropdown-item.is-greyed-out a {
+  #filterDrawer .dropdown-item.is-greyed-out a {
     background: #ccc !important;
     color: #4a4a4a !important; }
-  #filterDropdown .dropdown-item.is-greyed-out span.tag {
+  #filterDrawer .dropdown-item.is-greyed-out span.tag {
     background: #4a4a4a !important;
     color: #ccc; }
-  #filterDropdown .dropdown-item.is-greyed-out a.headline,
-  #filterDropdown .dropdown-item.is-greyed-out a.headline a {
+  #filterDrawer .dropdown-item.is-greyed-out a.headline,
+  #filterDrawer .dropdown-item.is-greyed-out a.headline a {
     background: none !important; }
-  #filterDropdown #todoFilters {
+  #filterDrawer #todoFilters {
     width: 100%;
     margin: 0; }
 
-#filterDropdown.is-active {
+#filterDrawer.is-active {
   display: block; }
 
-.filterDropdown a.button {
+.filterDrawer a.button {
   margin: 0 .5rem .5rem 0; }
 
-.filterDropdown a.button span.tag {
+.filterDrawer a.button span.tag {
   z-index: 35; }
 
-.filterDropdown div.contexts a.button {
+.filterDrawer div.contexts a.button {
   background: #c5ede3;
   color: #075943; }
 
-.filterDropdown div.contexts a.button:hover,
-.filterDropdown div.contexts a.button:active {
+.filterDrawer div.contexts a.button:hover,
+.filterDrawer div.contexts a.button:active {
   background: #c9f2e8; }
 
-.filterDropdown div.contexts a.button span.tag {
+.filterDrawer div.contexts a.button span.tag {
   background: #1aa37e;
   color: white;
   font-family: FreeSansBold;
@@ -306,19 +306,19 @@ nav {
   right: -.75em;
   top: -.75em; }
 
-.filterDropdown div.contexts a.button.is-dark {
+.filterDrawer div.contexts a.button.is-dark {
   background: #075943;
   color: white; }
 
-.filterDropdown div.projects a.button {
+.filterDrawer div.projects a.button {
   background: #f1d6f1;
   color: #5f1a5e; }
 
-.filterDropdown div.projects a.button:hover,
-.filterDropdown div.projects a.button:active {
+.filterDrawer div.projects a.button:hover,
+.filterDrawer div.projects a.button:active {
   background: #f7dcf7; }
 
-.filterDropdown div.projects a.button span.tag {
+.filterDrawer div.projects a.button span.tag {
   background: #bc30ba;
   color: white;
   font-family: FreeSansBold;
@@ -326,7 +326,7 @@ nav {
   right: -.75em;
   top: -.75em; }
 
-.filterDropdown div.projects a.button.is-dark {
+.filterDrawer div.projects a.button.is-dark {
   background: #5f1a5e;
   color: white; }
 
@@ -790,12 +790,12 @@ nav {
       height: 3.5em;
       line-height: 3.5em;
       font-family: "FreeSansBold"; }
-  #filterDropdown {
+  #filterDrawer {
     padding: 0 1.5em !important; }
-    #filterDropdown .toggle {
+    #filterDrawer .toggle {
       margin: 0 !important;
       padding: 1.5em 0.5em 1em 0 !important; }
-  #suggestionContainer.filterDropdown {
+  #suggestionContainer.filterDrawer {
     padding: 0 !important; }
   #todoTable {
     padding: 1em; } }

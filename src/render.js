@@ -1,6 +1,15 @@
 // https://dev.to/xxczaki/how-to-make-your-electron-app-faster-4ifb
 require('v8-compile-cache');
 // ########################################################################################################################
+// DECLARATIONS
+// ########################################################################################################################
+const documentIds = document.querySelectorAll("[id]");
+documentIds.forEach(function(id,index) {
+  window[id] = document.getElementById(id.getAttribute("id"));
+});
+const a = document.querySelectorAll("a");
+let fileWatcher;
+// ########################################################################################################################
 // READ FROM CONFIG
 // ########################################################################################################################
 const config = new Store({
@@ -18,8 +27,9 @@ const config = new Store({
     language: null,
     files: new Array,
     uid: null,
-    filterDropdownWidth: "560px",
-    useTextarea: false
+    filterDrawerWidth: "560px",
+    useTextarea: false,
+    filterDrawer: false
   }
 });
 let { width, height } = config.get("windowBounds");
@@ -38,9 +48,9 @@ if(config.get("matomoEvents")) {
 } else {
   var matomoEvents = false;
 }
-if(config.get("filterDropdownWidth")) {
-  let filterDropdownWidth = config.get("filterDropdownWidth");
-  filterDropdown.setAttribute("style", "--resizeable-width: " + filterDropdownWidth);
+if(config.get("filterDrawerWidth")) {
+  let filterDrawerWidth = config.get("filterDrawerWidth");
+  filterDrawer.setAttribute("style", "--resizeable-width: " + filterDrawerWidth);
 }
 if(config.get("notifications")) {
   var notifications = config.get("notifications");
@@ -83,6 +93,11 @@ if(config.get("useTextarea")) {
   var useTextarea = config.get("useTextarea");
 } else {
   var useTextarea = false;
+}
+if(config.get("filterDrawer")) {
+  showFilters(true);
+} else {
+  showFilters(false);
 }
 // ########################################################################################################################
 // DEV CONFIG
@@ -154,15 +169,6 @@ settingsLanguage.onchange = function(){
     ipcRenderer.send("synchronous-message", "restart");
   })
 }
-// ########################################################################################################################
-// DECLARATIONS
-// ########################################################################################################################
-const documentIds = document.querySelectorAll("[id]");
-documentIds.forEach(function(id,index) {
-  window[id] = document.getElementById(id.getAttribute("id"));
-});
-const a = document.querySelectorAll("a");
-let fileWatcher;
 // ########################################################################################################################
 // MODAL CONFIG
 // ########################################################################################################################
@@ -262,6 +268,7 @@ toggleMatomoEvents.checked = matomoEvents;
 toggleNotifications.checked = notifications;
 navBtnHelp.firstElementChild.setAttribute("title", i18next.t("help"));
 navBtnSettings.firstElementChild.setAttribute("title", i18next.t("settings"));
+recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
 const categories = ["contexts", "projects"];
 const items = {
   raw: null,
@@ -490,11 +497,6 @@ toggleDarkmode.onclick = function() {
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
 }
-/*modalFormInputHelp.onclick = function () {
-  showContent(modalHelp);
-  // trigger matomo event
-  if(matomoEvents) _paq.push(["trackEvent", "Form", "Click on Help"]);
-}*/
 modalFormInputResize.onclick = function () {
   resizeInput(this.getAttribute("data-input-type"));
   // trigger matomo event
@@ -502,8 +504,6 @@ modalFormInputResize.onclick = function () {
 }
 modalFormInput.onfocus = function () {
   suggestionContainer.classList.remove("is-active");
-  // trigger matomo event
-  //if(matomoEvents) _paq.push(["trackEvent", "Todo input field", "Focused"]);
 };
 modalBackground.forEach(function(el) {
   el.onclick = function() {
@@ -574,7 +574,7 @@ modalSettings.addEventListener ("keydown", function () {
 suggestionContainer.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
 });
-filterDropdown.addEventListener ("keydown", function () {
+filterDrawer.addEventListener ("keydown", function () {
   if(event.key === 'Escape') showFilters(false);
 });
 // ########################################################################################################################
@@ -992,22 +992,28 @@ function showFilters(variable) {
   switch(variable) {
     case true:
       navBtnFilter.classList.add("is-highlighted");
-      filterDropdown.classList.add("is-active");
-      filterDropdown.focus();
+      filterDrawer.classList.add("is-active");
+      filterDrawer.focus();
       filterColumnClose.classList.add("is-active");
     break;
     case false:
       navBtnFilter.classList.remove("is-highlighted");
-      filterDropdown.classList.remove("is-active");
-      filterDropdown.blur();
+      filterDrawer.classList.remove("is-active");
+      filterDrawer.blur();
       filterColumnClose.classList.remove("is-active");
     break;
     case "toggle":
       navBtnFilter.classList.toggle("is-highlighted");
-      filterDropdown.classList.toggle("is-active");
-      filterDropdown.focus();
+      filterDrawer.classList.toggle("is-active");
+      filterDrawer.focus();
       filterColumnClose.classList.toggle("is-active");
     break;
+  }
+  // persist filter drawer state
+  if(filterDrawer.classList.contains("is-active")) {
+    config.set("filterDrawer", true);
+  } else {
+    config.set("filterDrawer", false);
   }
   // if more toggle is open we close it as user doesn't need it anymore
   showMore(false);
@@ -1027,8 +1033,6 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
     } else {
       container = todoFilters;
       categoriesToBuild = categories;
-      // for the drawer the filters will be excluded according to previous selection
-      //filterBase = items.objectsFiltered;
     }
     // empty the container to prevent duplicates
     container.innerHTML = "";
@@ -2297,14 +2301,14 @@ window.onresize = function() {
 // RESIZEABLE FILTER DRAWER
 // https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
 // ########################################################################################################################
-const getResizeableElement = () => { return document.getElementById("filterDropdown"); };
+const getResizeableElement = () => { return document.getElementById("filterDrawer"); };
 const getHandleElement = () => { return document.getElementById("handle"); };
 const minPaneSize = 400;
 const maxPaneSize = document.body.clientWidth * .75
 const setPaneWidth = (width) => {
   getResizeableElement().style
     .setProperty("--resizeable-width", `${width}px`);
-  config.set("filterDropdownWidth", `${width}px`);
+  config.set("filterDrawerWidth", `${width}px`);
 };
 const getPaneWidth = () => {
   const pxWidth = getComputedStyle(getResizeableElement())

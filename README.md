@@ -81,6 +81,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - Toggle dark mode: CMD/CTRL + d
   - Open file: CMD/CTRL + o
   - Open settings: CMD/CTRL + ,
+  - Toggle side bar: CMD/CTRL + b
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

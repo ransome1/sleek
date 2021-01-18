@@ -181,7 +181,7 @@ nav {
     }
   }
 }
-#filterDropdown {
+#filterDrawer {
   background: $grey-light;
   .dropdown-item.is-greyed-out a {
     background: $grey-mid!important;
@@ -193,7 +193,7 @@ nav {
     color: white!important;
   }
 }
-.filterDropdown {
+.filterDrawer {
   .dropdown-item a.headline,
   .dropdown-item a.headline a {
     color: $grey-bright!important;

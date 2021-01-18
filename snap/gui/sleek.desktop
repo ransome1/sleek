@@ -5,5 +5,5 @@ Terminal=false
 Type=Application
 Icon=${SNAP}/meta/gui/icon.png
 StartupWMClass=sleek
-Comment=sleek is a todo app based on todo.txt, free and open-source
+Comment=A todo app based on todo.txt, free and open-source
 Categories=ProjectManagement

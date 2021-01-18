@@ -126,6 +126,13 @@ const createWindow = () => {
       label: i18next.t("view"),
       submenu: [
         {
+          label: i18next.t("toggleFilter"),
+          accelerator: "CmdOrCtrl+b",
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.executeJavaScript("showFilters(\"toggle\")");
+          }
+        },
+        {
           label: i18next.t("toggleDarkMode"),
           accelerator: "CmdOrCtrl+d",
           click: function (item, focusedWindow) {

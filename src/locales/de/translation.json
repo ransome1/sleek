@@ -51,7 +51,7 @@
   "reload": "Neuladen",
   "settings": "Einstellungen",
   "devTools": "Entwickler-Tools ein- und ausblenden",
-  "search": "(A) Suche mithilfe der todo.txt Syntax @context +projekt due:",
+  "search": "(A) Suche mithilfe der todo.txt Syntax @kontext +projekt due:",
   "noResults": "Keine Ergebnisse",
   "noResultContainerSubtitle": "Zu der Suche oder Filterauswahl wurden keine Ergebnisse gefunden",
   "clear": "Löschen",
