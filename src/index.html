@@ -114,21 +114,25 @@
                 <i class="fas fa-redo"></i>&nbsp;<input id="recurrencePickerInput" tabindex="311" readonly>
                 <div id="recurrencePickerContainer" class="card" tabindex="312">
                   <div class="content">
+                    <div id="recurrencePickerMul">
+                      <span id="recurrencePickerEvery"></span>
+                      <input id="recurrencePickerSpinner" type="number" min="1" max="99">
+                    </div>
                     <label class="radio">
                       <input type="radio" class="selection" name="recurrence" value="d" tabindex="312">
-                      <span id="recurrencePickerDaily"></span>
+                      <span id="recurrencePickerDays"></span>
                     </label>
                     <label class="radio">
                       <input type="radio" class="selection" name="recurrence" value="w" tabindex="0">
-                      <span id="recurrencePickerWeekly"></span>
+                      <span id="recurrencePickerWeeks"></span>
                     </label>
                     <label class="radio">
                       <input type="radio" class="selection" name="recurrence" value="m" tabindex="0">
-                      <span id="recurrencePickerMonthly"></span>
+                      <span id="recurrencePickerMonths"></span>
                     </label>
                     <label class="radio">
                       <input type="radio" class="selection" name="recurrence" value="y" tabindex="0">
-                      <span id="recurrencePickerAnnually"></span>
+                      <span id="recurrencePickerYears"></span>
                     </label>
                   </div>
                   <footer class="card-footer">

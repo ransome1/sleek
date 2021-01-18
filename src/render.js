@@ -283,10 +283,11 @@ modalChangeFileOpen.innerHTML = i18next.t("openFile");
 modalChangeFileCreate.innerHTML = i18next.t("createFile");
 selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
 welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
-recurrencePickerDaily.innerHTML = i18next.t("daily");
-recurrencePickerWeekly.innerHTML = i18next.t("weekly");
-recurrencePickerMonthly.innerHTML = i18next.t("monthly");
-recurrencePickerAnnually.innerHTML = i18next.t("annually");
+recurrencePickerEvery.innerHTML = i18next.t("every");
+recurrencePickerDays.innerHTML = i18next.t("dayDays");
+recurrencePickerWeeks.innerHTML = i18next.t("weekWeeks");
+recurrencePickerMonths.innerHTML = i18next.t("monthMonths");
+recurrencePickerYears.innerHTML = i18next.t("yearYears");
 recurrencePickerNoRecurrence.innerHTML = i18next.t("noRecurrence");
 messageLoggingTitle.innerHTML = i18next.t("errorEventLogging");
 messageLoggingBody.innerHTML = i18next.t("messageLoggingBody");
@@ -598,83 +599,110 @@ function setTheme(switchTheme) {
 // ########################################################################################################################
 // RECURRANT TODOS
 // ########################################################################################################################
+function splitRecurrence(recurrence) {
+  let mul = 1;
+  let period = recurrence;
+  if(recurrence !== undefined &&
+     recurrence.length > 1) {
+    mul = recurrence.substr(0, recurrence.length - 1);
+    period = recurrence.substr(-1);
+  }
+  return {
+    mul: mul,
+    period: period,
+    toString: function() {
+      return this.mul == 1 || this.period === undefined ?
+        this.period : this.mul + this.period;
+    }
+  };
+}
 function getRecurrenceDate(due, recurrence) {
-  switch (recurrence) {
+  let recSplit = splitRecurrence(recurrence);
+  let days = 0;
+  switch (recSplit.period) {
     case "d":
-    var recurrence = 1;
-    break;
+      days = 1;
+      break;
     case "w":
-    var recurrence = 7;
-    break;
+      days = 7;
+      break;
     case "m":
-    var recurrence = 30;
-    break;
+      days = 30;
+      break;
     case "y":
-    var recurrence = 365;
-    break;
-    default:
-    var recurrence = 0;
+      days = 365;
+      break;
   }
   var due = due.getTime();
-  due += 1000 * 60 * 60 * 24 * recurrence;
+  due += 1000 * 60 * 60 * 24 * recSplit.mul * days;
   return new Date(due);
 }
 function setRecurrenceInput(recurrence) {
-  switch (recurrence) {
+  let recSplit = splitRecurrence(recurrence);
+  let label = i18next.t("noRecurrence");
+  switch (recSplit.period) {
     case "d":
-      recurrencePickerInput.value = i18next.t("daily");
-      recurrencePickerInput.setAttribute("size", i18next.t("daily").length)
+      label = i18next.t("every") + " " +
+        recSplit.mul + " " +
+        i18next.t("dayDays");
       break;
     case "w":
-      recurrencePickerInput.value = i18next.t("weekly");
-      recurrencePickerInput.setAttribute("size", i18next.t("weekly").length)
+      label = i18next.t("every") + " " +
+        recSplit.mul + " " +
+        i18next.t("weekWeeks");
       break;
     case "m":
-      recurrencePickerInput.value = i18next.t("monthly");
-      recurrencePickerInput.setAttribute("size", i18next.t("monthly").length)
+      label = i18next.t("every") + " " +
+        recSplit.mul + " " +
+        i18next.t("monthMonths");
       break;
     case "y":
-      recurrencePickerInput.value = i18next.t("annually");
-      recurrencePickerInput.setAttribute("size", i18next.t("annually").length)
-      break;
-    case undefined:
-      recurrencePickerInput.value = null;
-      recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
+      label = i18next.t("every") + " " +
+        recSplit.mul + " " +
+        i18next.t("yearYears");
       break;
   }
+  recurrencePickerInput.value = label;
+  recurrencePickerInput.setAttribute("size", label.length)
 }
 function showRecurrenceOptions(el) {
   recurrencePickerContainer.focus();
   recurrencePickerContainer.classList.toggle("is-active");
   // get object from current input
   let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+  let recSplit = splitRecurrence(todo.rec);
+  recurrencePickerSpinner.value = recSplit.mul;
+  // function to apply recurrence's value on changes
+  let applyRecurrenceValue = function() {
+    let value = recSplit.toString();
+    if(value !== undefined) {
+      todo.rec = value;
+      todo.recString = value;
+    } else {
+      // clear RecExtension
+      todo.rec = undefined;
+      todo.recString = undefined;
+    }
+    setRecurrenceInput(value);
+    modalFormInput.value = todo.toString();
+  }
+  recurrencePickerSpinner.onchange = function() {
+    recSplit.mul = recurrencePickerSpinner.value;
+    applyRecurrenceValue();
+  }
   radioRecurrence.forEach(function(el) {
     // remove old selection
     el.checked = false;
     // set pre selection
-    if(todo.rec === el.value) el.checked = true;
+    if(recSplit.period === el.value) el.checked = true;
     el.onclick = function() {
-      // EDIT TODO
-      if(modalFormInput.value) {
-        // TODO: why do I need to write both?
-        if(el.value) {
-          todo.rec = el.value;
-          todo.recString = el.value;
-        } else {
-          todo.rec = null;
-          todo.recString = null;
-          todo = todo.toString().replace(" rec:null","");
-        }
-        modalFormInput.value = todo.toString();
-      // ADD TODO
-      } else {
-        modalFormInput.value = "rec:" + el.value;
-      }
-      setRecurrenceInput(el.value);
+      recSplit.period = el.value;
+      applyRecurrenceValue();
+      // hide the picker
       recurrencePickerContainer.classList.remove("is-active");
       modalFormInput.focus();
       // trigger matomo event
-      if(matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrence selected: " + el.value]);
+      if(matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrence selected: " + recSplit.period]);
     }
   });
 }
