@@ -95,6 +95,9 @@ input::placeholder {
   box-shadow: none;
   background: transparent; }
 
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1; }
+
 .title,
 strong {
   font-family: "FreeSansBold";
@@ -753,6 +756,8 @@ nav {
       padding: 1em; }
       #recurrencePicker .card .content #recurrencePickerMul {
         margin: .5em 0; }
+        #recurrencePicker .card .content #recurrencePickerMul #recurrencePickerSpinner {
+          max-width: 45px; }
     #recurrencePicker .card label {
       width: 100%;
       padding: 0;
