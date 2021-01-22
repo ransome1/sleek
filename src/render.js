@@ -284,10 +284,10 @@ modalChangeFileCreate.innerHTML = i18next.t("createFile");
 selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
 welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
 recurrencePickerEvery.innerHTML = i18next.t("every");
-recurrencePickerDays.innerHTML = i18next.t("dayDays");
-recurrencePickerWeeks.innerHTML = i18next.t("weekWeeks");
-recurrencePickerMonths.innerHTML = i18next.t("monthMonths");
-recurrencePickerYears.innerHTML = i18next.t("yearYears");
+recurrencePickerDay.innerHTML = i18next.t("day");
+recurrencePickerWeek.innerHTML = i18next.t("week");
+recurrencePickerMonth.innerHTML = i18next.t("month");
+recurrencePickerYear.innerHTML = i18next.t("year");
 recurrencePickerNoRecurrence.innerHTML = i18next.t("noRecurrence");
 messageLoggingTitle.innerHTML = i18next.t("errorEventLogging");
 messageLoggingBody.innerHTML = i18next.t("messageLoggingBody");
@@ -604,7 +604,7 @@ function splitRecurrence(recurrence) {
   let period = recurrence;
   if(recurrence !== undefined &&
      recurrence.length > 1) {
-    mul = recurrence.substr(0, recurrence.length - 1);
+    mul = Number(recurrence.substr(0, recurrence.length - 1));
     period = recurrence.substr(-1);
   }
   return {
@@ -640,30 +640,38 @@ function getRecurrenceDate(due, recurrence) {
 function setRecurrenceInput(recurrence) {
   let recSplit = splitRecurrence(recurrence);
   let label = i18next.t("noRecurrence");
-  switch (recSplit.period) {
-    case "d":
-      label = i18next.t("every") + " " +
-        recSplit.mul + " " +
-        i18next.t("dayDays");
-      break;
-    case "w":
-      label = i18next.t("every") + " " +
-        recSplit.mul + " " +
-        i18next.t("weekWeeks");
-      break;
-    case "m":
-      label = i18next.t("every") + " " +
-        recSplit.mul + " " +
-        i18next.t("monthMonths");
-      break;
-    case "y":
-      label = i18next.t("every") + " " +
-        recSplit.mul + " " +
-        i18next.t("yearYears");
-      break;
+  if(recSplit.period !== undefined) {
+    switch (recSplit.period) {
+      case "d":
+        label = i18next.t("day",
+          {count: recSplit.mul});
+        break;
+      case "w":
+        label = i18next.t("week",
+          {count: recSplit.mul});
+        break;
+      case "m":
+        label = i18next.t("month",
+          {count: recSplit.mul});
+        break;
+      case "y":
+        label = i18next.t("year",
+          {count: recSplit.mul});
+        break;
+    }
+    if(recSplit.mul > 1) {
+      label = recSplit.mul + " " + label;
+    }
+    label = i18next.t("every") + " " + label;
   }
   recurrencePickerInput.value = label;
   recurrencePickerInput.setAttribute("size", label.length)
+}
+function setRecurrenceOptionLabels(mul) {
+  recurrencePickerDay.innerHTML = i18next.t("day", {count: mul});
+  recurrencePickerWeek.innerHTML = i18next.t("week", {count: mul});
+  recurrencePickerMonth.innerHTML = i18next.t("month", {count: mul});
+  recurrencePickerYear.innerHTML = i18next.t("year", {count: mul});
 }
 function showRecurrenceOptions(el) {
   recurrencePickerContainer.focus();
@@ -671,6 +679,7 @@ function showRecurrenceOptions(el) {
   // get object from current input
   let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
   let recSplit = splitRecurrence(todo.rec);
+  setRecurrenceOptionLabels(recSplit.mul);
   recurrencePickerSpinner.value = recSplit.mul;
   // function to apply recurrence's value on changes
   let applyRecurrenceValue = function() {
@@ -687,7 +696,8 @@ function showRecurrenceOptions(el) {
     modalFormInput.value = todo.toString();
   }
   recurrencePickerSpinner.onchange = function() {
-    recSplit.mul = recurrencePickerSpinner.value;
+    recSplit.mul = Number(recurrencePickerSpinner.value);
+    setRecurrenceOptionLabels(recSplit.mul);
     applyRecurrenceValue();
   }
   radioRecurrence.forEach(function(el) {
