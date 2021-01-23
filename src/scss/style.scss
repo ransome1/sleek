@@ -98,6 +98,9 @@ select {
   box-shadow: none;
   background: transparent;
 }
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1
+}
 .title,
 strong {
   font-family: "FreeSansBold";
@@ -938,6 +941,12 @@ nav {
     .content {
       margin: 0;
       padding: 1em;
+      #recurrencePickerMul {
+        margin: .5em 0;
+        #recurrencePickerSpinner {
+          max-width: 45px;
+        }
+      }
     }
     label {
       width: 100%;

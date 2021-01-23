@@ -52,7 +52,7 @@ function RecExtension() {
 RecExtension.prototype = new TodoTxtExtension();
 RecExtension.prototype.parsingFunction = function(line) {
 	var rec = null;
-	var recRegex = /rec:([hdwmy])/;
+	var recRegex = /rec:([hdwmy]|[1-9][0-9]*[hdwmy])/;
 	var matchRec = recRegex.exec(line);
 	if ( matchRec !== null ) {
 		//var datePieces = matchDue[1].split('-');
