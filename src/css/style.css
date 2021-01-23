@@ -97,8 +97,12 @@ select {
   box-shadow: none;
   background: transparent; }
 
-input[type=number]::-webkit-inner-spin-button {
-  opacity: 1; }
+input[type=number] {
+  text-align: center; }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none; }
 
 .title,
 strong {
@@ -756,16 +760,28 @@ nav {
   #recurrencePicker #recurrencePickerInput {
     cursor: pointer; }
   #recurrencePicker .card {
-    width: 15em;
+    width: auto;
     display: none;
     position: fixed; }
     #recurrencePicker .card .content {
       margin: 0;
-      padding: 1em; }
-      #recurrencePicker .card .content #recurrencePickerMul {
-        margin: .5em 0; }
-        #recurrencePicker .card .content #recurrencePickerMul #recurrencePickerSpinner {
-          max-width: 45px; }
+      padding: 1em;
+      display: flex;
+      align-items: center; }
+      #recurrencePicker .card .content div {
+        width: auto;
+        float: left;
+        text-align: center;
+        padding: 0 .5em; }
+      #recurrencePicker .card .content div.options {
+        width: 8em;
+        text-align: left; }
+      #recurrencePicker .card .content #recurrencePickerDecrease,
+      #recurrencePicker .card .content #recurrencePickerIncrease,
+      #recurrencePicker .card .content #recurrencePickerSpinner {
+        font-size: 1.25em; }
+      #recurrencePicker .card .content #recurrencePickerSpinner {
+        width: 2em; }
     #recurrencePicker .card label {
       width: 100%;
       padding: 0;

@@ -98,8 +98,12 @@ select {
   box-shadow: none;
   background: transparent;
 }
-input[type=number]::-webkit-inner-spin-button {
-  opacity: 1
+input[type=number] {
+  text-align: center;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
 }
 .title,
 strong {
@@ -935,17 +939,31 @@ nav {
     cursor: pointer;
   }
   .card {
-    width: 15em;
+    width: auto;
     display: none;
     position: fixed;
     .content {
       margin: 0;
       padding: 1em;
-      #recurrencePickerMul {
-        margin: .5em 0;
-        #recurrencePickerSpinner {
-          max-width: 45px;
-        }
+      display: flex;
+      align-items: center;
+      div {
+        width: auto;
+        float: left;
+        text-align: center;
+        padding: 0 .5em;
+      }
+      div.options {
+        width: 8em;
+        text-align: left;
+      }
+      #recurrencePickerDecrease,
+      #recurrencePickerIncrease,
+      #recurrencePickerSpinner {
+        font-size: 1.25em;
+      }
+      #recurrencePickerSpinner {
+        width: 2em;
       }
     }
     label {

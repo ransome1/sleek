@@ -214,6 +214,8 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     item.currentTemp.due = new Date(e.detail.date);
     item.currentTemp.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
     modalFormInput.value = item.currentTemp.toString();
+    // adjust size of inut
+    dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
     // clean up as we don#t need it anymore
     item.currentTemp = null;
     // if suggestion box was open, it needs to be closed
@@ -221,6 +223,7 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     suggestionContainer.blur();
     // if a due date is set, the recurrence picker will be shown
     recurrencePicker.classList.add("is-active");
+    recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
     modalFormInput.focus();
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
@@ -268,7 +271,7 @@ toggleMatomoEvents.checked = matomoEvents;
 toggleNotifications.checked = notifications;
 navBtnHelp.firstElementChild.setAttribute("title", i18next.t("help"));
 navBtnSettings.firstElementChild.setAttribute("title", i18next.t("settings"));
-recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
+//recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
 const categories = ["contexts", "projects"];
 const items = {
   raw: null,
@@ -506,6 +509,10 @@ modalFormInputResize.onclick = function () {
 modalFormInput.onfocus = function () {
   suggestionContainer.classList.remove("is-active");
 };
+modalFormInput.onblur = function () {
+  //console.log(suggestionContainer.hasFocus());
+  //suggestionContainer.classList.remove("is-active");
+};
 modalBackground.forEach(function(el) {
   el.onclick = function() {
     clearModal();
@@ -549,6 +556,10 @@ filterColumnClose.onclick = function() {
   if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
 }
 priorityPicker.addEventListener("change", e => { setPriority(e.target.value) });
+// close suggestion box if focus comes to priority picker
+priorityPicker.onfocus = function () {
+  suggestionContainer.classList.remove("is-active");
+};
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
@@ -658,28 +669,42 @@ function setRecurrenceInput(recurrence) {
   let recSplit = splitRecurrence(recurrence);
   let label = i18next.t("noRecurrence");
   if(recSplit.period !== undefined) {
-    switch (recSplit.period) {
-      case "d":
-        label = i18next.t("day",
-          {count: recSplit.mul});
-        break;
-      case "w":
-        label = i18next.t("week",
-          {count: recSplit.mul});
-        break;
-      case "m":
-        label = i18next.t("month",
-          {count: recSplit.mul});
-        break;
-      case "y":
-        label = i18next.t("year",
-          {count: recSplit.mul});
-        break;
-    }
     if(recSplit.mul > 1) {
-      label = recSplit.mul + " " + label;
+      switch (recSplit.period) {
+        case "d":
+          label = i18next.t("day",
+            {count: recSplit.mul});
+          break;
+        case "w":
+          label = i18next.t("week",
+            {count: recSplit.mul});
+          break;
+        case "m":
+          label = i18next.t("month",
+            {count: recSplit.mul});
+          break;
+        case "y":
+          label = i18next.t("year",
+            {count: recSplit.mul});
+          break;
+      }
+      label = i18next.t("every") + " " + recSplit.mul + " " + label;
+    } else {
+      switch (recSplit.period) {
+        case "d":
+          label = i18next.t("daily");
+          break;
+        case "w":
+          label = i18next.t("weekly");
+          break;
+        case "m":
+          label = i18next.t("monthly");
+          break;
+        case "y":
+          label = i18next.t("yearly");
+          break;
+      }
     }
-    label = i18next.t("every") + " " + label;
   }
   recurrencePickerInput.value = label;
   recurrencePickerInput.setAttribute("size", label.length)
@@ -716,6 +741,22 @@ function showRecurrenceOptions(el) {
     recSplit.mul = Number(recurrencePickerSpinner.value);
     setRecurrenceOptionLabels(recSplit.mul);
     applyRecurrenceValue();
+  }
+  recurrencePickerIncrease.onclick = function(el) {
+    el.preventDefault();
+    recurrencePickerSpinner.value = parseInt(recurrencePickerSpinner.value) + 1;
+    recSplit.mul = Number(recurrencePickerSpinner.value);
+    setRecurrenceOptionLabels(recSplit.mul);
+    applyRecurrenceValue();
+  }
+  recurrencePickerDecrease.onclick = function(el) {
+    el.preventDefault();
+  	if (parseInt(recurrencePickerSpinner.value) > 1) {
+  	  recurrencePickerSpinner.value = parseInt(recurrencePickerSpinner.value) - 1;
+      recSplit.mul = Number(recurrencePickerSpinner.value);
+      setRecurrenceOptionLabels(recSplit.mul);
+      applyRecurrenceValue();
+    }
   }
   radioRecurrence.forEach(function(el) {
     // remove old selection
@@ -758,7 +799,6 @@ function createRecurringTodo(todo) {
 }
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 recurrencePickerInput.placeholder = i18next.t("noRecurrence");
-recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
 recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
 // ########################################################################################################################
 // DATE FUNCTIONS
@@ -1926,8 +1966,10 @@ function showForm(todo, templated) {
         // if so we paste it into the input field
         if(todo.dueString) {
           dueDatePickerInput.value = todo.dueString;
+          dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
           // only show the recurrence picker when a due date is set
           recurrencePicker.classList.add("is-active");
+          recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
         } else {
           // hide the recurrence picker when a due date is not set
           recurrencePicker.classList.remove("is-active");
@@ -1992,9 +2034,13 @@ function setPriorityInput(priority) {
   }
 }
 function setPriority(priority) {
-  if(!priority) priority = null;
+  if(priority) {
+    priority = priority.toUpperCase();
+  } else {
+    priority = null;
+  }
   todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
-  todo.priority = priority.toUpperCase();
+  todo.priority = priority;
   modalFormInput.value = todo.toString();
 }
 // ########################################################################################################################
