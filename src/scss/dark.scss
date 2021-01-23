@@ -271,6 +271,20 @@ nav {
   button:hover {
     color: $grey-bright!important;
   }
+  .field {
+    input,
+    input::placeholder,
+    select,
+    select::placeholder {
+      color: white!important;
+    }
+    select option {
+      background: $grey-mid;
+    }
+  }
+  ::after {
+    border-color: white!important;
+  }
 }
 .modal {
   .modal-content {

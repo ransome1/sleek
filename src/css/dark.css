@@ -206,6 +206,18 @@ nav {
 #modalForm button:hover {
   color: #CCCDCF !important; }
 
+#modalForm .field input,
+#modalForm .field input::placeholder,
+#modalForm .field select,
+#modalForm .field select::placeholder {
+  color: white !important; }
+
+#modalForm .field select option {
+  background: #2c2d30; }
+
+#modalForm ::after {
+  border-color: white !important; }
+
 .modal .modal-content .card {
   background: #3B3B3B;
   color: #CCCDCF; }

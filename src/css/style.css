@@ -601,7 +601,7 @@ nav {
     #modalForm .field input::placeholder,
     #modalForm .field select,
     #modalForm .field select::placeholder {
-      background: none;
+      background: none !important;
       border: none;
       color: #3273dc !important; }
   #modalForm #btnItemStatus {

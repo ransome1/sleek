@@ -726,7 +726,7 @@ nav {
     input::placeholder,
     select,
     select::placeholder {
-      background: none;
+      background: none!important;
       border: none;
       color: $has-text-link!important;
     }
