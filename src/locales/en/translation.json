@@ -23,7 +23,7 @@
   "formErrorWritingFile": "<strong>Error:</strong> Could not write your changes to the file. Please check if the todo.txt file exists and if you have sufficient permissions to write to it: ",
   "formInfoNoInput": "Please add a todo into the text field. If you are unsure on how to do this, take a quick look at the <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "formInfoDuplicate": "This todo already exists and duplicates won't be written into your todo.txt file.",
-  "formSelectDueDate": "Select a due date",
+  "formSelectDueDate": "Due date",
   "cancel": "Cancel",
   "save": "Save",
   "formTodoInputPlaceholder": "(A) Use the todo.txt Syntax @context +project",

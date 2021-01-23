@@ -15,7 +15,8 @@ strong {
   color: #CCCDCF; }
 
 input,
-select {
+select,
+textarea {
   border: none !important;
   background: #2c2d30 !important;
   color: #CCCDCF !important; }
@@ -29,6 +30,8 @@ input:active,
 input:focus,
 input.is-focused,
 select:focus,
+textarea:active,
+textarea:focus,
 input[type="search"]:focus {
   outline: none !important;
   box-shadow: 0 0 0 2px #CCCDCF !important; }

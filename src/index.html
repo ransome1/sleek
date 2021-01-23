@@ -107,11 +107,52 @@
               <article class="message">
                 <div id="modalFormAlert" class="message-body"></div>
               </article>
+              <div class="select field">
+                  <select id="priorityPicker" tabindex="305">
+                    <option value="">-</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="G">G</option>
+                    <!--<option value="H">H</option>
+                    <option value="I">I</option>
+                    <option value="J">J</option>
+                    <option value="K">K</option>
+                    <option value="L">L</option>
+                    <option value="M">M</option>
+                    <option value="N">N</option>
+                    <option value="O">O</option>
+                    <option value="P">P</option>
+                    <option value="Q">Q</option>
+                    <option value="R">R</option>
+                    <option value="S">S</option>
+                    <option value="T">T</option>
+                    <option value="U">U</option>
+                    <option value="V">V</option>
+                    <option value="W">W</option>
+                    <option value="X">X</option>
+                    <option value="Y">Y</option>
+                    <option value="Z">Z</option>-->
+                  </select>
+                </div>
               <div class="field dueDate">
-                <i class="far fa-clock"></i>&nbsp;<input id="dueDatePickerInput" tabindex="310" readonly>
+                <div class="control has-icons-left">
+                  <input id="dueDatePickerInput" class="input" tabindex="310" readonly>
+                  <a href="#" class="icon is-left" tabindex="-1">
+                    <i class="far fa-clock is-left"></i>
+                  </a>
+                </div>
               </div>
               <div id="recurrencePicker" class="field">
-                <i class="fas fa-redo"></i>&nbsp;<input id="recurrencePickerInput" tabindex="311" readonly>
+                <div class="control has-icons-left">
+                  <input id="recurrencePickerInput" class="input" tabindex="311" readonly>
+                  <a href="#" class="icon is-left" tabindex="-1">
+                    <i class="fas fa-redo"></i>
+                  </a>
+                </div>
                 <div id="recurrencePickerContainer" class="card" tabindex="312">
                   <div class="content">
                     <label class="radio">

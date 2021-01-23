@@ -547,15 +547,21 @@ filterColumnClose.onclick = function() {
   // trigger matomo event
   if(matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
 }
+priorityPicker.addEventListener("change", e => { setPriority(e.target.value) });
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
-modalForm.addEventListener ("keydown", function () {
+modalForm.addEventListener ("keydown", function (e) {
   if(event.key === 'Escape') {
     clearModal();
     this.classList.remove("is-active");
     suggestionContainer.classList.remove("is-active");
     suggestionContainer.blur();
+  } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
+    e.preventDefault();
+    var priority = event.key.substr(0,1);
+    setPriorityInput(priority);
+    setPriority(priority);
   }
 });
 modalForm.addEventListener ("click", function () {
@@ -1847,6 +1853,9 @@ function showForm(todo, templated) {
       if(todo) {
         // we need to check if there already is a due date in the object
         todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+        // set the priority
+        setPriorityInput(todo.priority);
+        //
         if(templated === true) {
           // this is a new templated todo task
           // erase the original creation date and description
@@ -1930,6 +1939,25 @@ function showResultStats() {
   } else {
     resultStats.classList.remove("is-active");
   }
+}
+function setPriorityInput(priority) {
+  if(priority===null) {
+    priorityPicker.selectedIndex = 0;
+    //priorityPicker.setAttribute("size", i18next.t("formSelectDueDate").length);
+  } else {
+    Array.from(priorityPicker.options).forEach(function(option) {
+      if(option.value===priority) {
+        priorityPicker.selectedIndex = option.index;
+        //priorityPicker.setAttribute("size", 2);
+      }
+    });
+  }
+}
+function setPriority(priority) {
+  if(!priority) priority = null;
+  todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+  todo.priority = priority.toUpperCase();
+  modalFormInput.value = todo.toString();
 }
 // ########################################################################################################################
 // HELPER FUNCTIONS
@@ -2071,6 +2099,8 @@ function showMore(variable) {
   }
 };
 function clearModal() {
+  // reset priority setting
+  priorityPicker.selectedIndex = 0;
   // if recurrence picker was open it is now being closed
   recurrencePickerContainer.classList.remove("is-active");
   // if file chooser was open it is now being closed

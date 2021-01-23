@@ -82,6 +82,7 @@ input[type="search"]:focus::-webkit-search-cancel-button {
   pointer-events: all;
 }
 input:focus,
+select:focus,
 input.is-focused,
 input[type="search"]:focus {
   border: none;
@@ -89,7 +90,8 @@ input[type="search"]:focus {
   outline: none;
 }
 input,
-input::placeholder {
+input::placeholder,
+select {
   width: auto;
   font-size: 1em;
   color: $has-text-link;
@@ -709,9 +711,28 @@ nav {
     display: block;
   }
   .field {
+    width: auto;
     float: left;
-    margin: .75em .75em .75em 0;
+    margin: .5em .5em .5em 0;
+    //padding: 0;
+    input,
+    input::placeholder,
+    select,
+    select::placeholder {
+      background: none;
+      border: none;
+      color: $has-text-link!important;
+    }
+    //.select:not(.is-multiple):not(.is-loading)::after
   }
+  ::after {
+    //display: none;
+    //left: 1.125em;
+  }
+  /*.field.dueDate,
+  .field#recurrencePicker {
+    padding: .5em 0 0 0;
+  }*/
   #btnItemStatus {
     display: none;
     text-align: center;
@@ -729,6 +750,9 @@ nav {
   }
   button:hover {
     color: black;
+  }
+  .card-footer {
+    clear: both;
   }
 }
 #suggestionContainer {
@@ -879,13 +903,12 @@ nav {
 }
 
 /* DATEPICKER */
-
+#dueDatePickerInput {
+  cursor: pointer;
+}
 .dueDate {
   svg {
     color: $has-text-link;
-  }
-  #dueDatePickerInput {
-    cursor: pointer;
   }
 }
 .datepicker {

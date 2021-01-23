@@ -81,6 +81,7 @@ input[type="search"]:focus::-webkit-search-cancel-button {
   pointer-events: all; }
 
 input:focus,
+select:focus,
 input.is-focused,
 input[type="search"]:focus {
   border: none;
@@ -88,7 +89,8 @@ input[type="search"]:focus {
   outline: none; }
 
 input,
-input::placeholder {
+input::placeholder,
+select {
   width: auto;
   font-size: 1em;
   color: #3273dc;
@@ -563,48 +565,54 @@ nav {
       border-radius: 50%; }
 
 /* MODAL */
-#modalForm textarea#modalFormInput {
-  min-height: 5.5em;
-  overflow: hidden;
-  resize: none; }
-
-#modalForm #modalFormInputHelp,
-#modalForm #modalFormInputResize {
-  z-index: 60;
-  cursor: pointer;
-  pointer-events: all; }
-
-#modalForm .card-header-title {
-  font-family: "FreeSansBold"; }
-
-#modalForm .message {
-  display: none;
-  margin: 1em 0; }
-
-#modalForm .is-active {
-  display: block; }
-
-#modalForm .field {
-  float: left;
-  margin: .75em .75em .75em 0; }
-
-#modalForm #btnItemStatus {
-  display: none;
-  text-align: center; }
-
-#modalForm #btnItemStatus.is-active {
-  display: block; }
-
-#modalForm button {
-  font-size: 1em;
-  background: none;
-  color: #3273dc;
-  border: none;
-  border-right: 1px solid #ebebeb !important;
-  cursor: pointer; }
-
-#modalForm button:hover {
-  color: black; }
+#modalForm {
+  /*.field.dueDate,
+  .field#recurrencePicker {
+    padding: .5em 0 0 0;
+  }*/ }
+  #modalForm textarea#modalFormInput {
+    min-height: 5.5em;
+    overflow: hidden;
+    resize: none; }
+  #modalForm #modalFormInputHelp,
+  #modalForm #modalFormInputResize {
+    z-index: 60;
+    cursor: pointer;
+    pointer-events: all; }
+  #modalForm .card-header-title {
+    font-family: "FreeSansBold"; }
+  #modalForm .message {
+    display: none;
+    margin: 1em 0; }
+  #modalForm .is-active {
+    display: block; }
+  #modalForm .field {
+    width: auto;
+    float: left;
+    margin: .5em .5em .5em 0; }
+    #modalForm .field input,
+    #modalForm .field input::placeholder,
+    #modalForm .field select,
+    #modalForm .field select::placeholder {
+      background: none;
+      border: none;
+      color: #3273dc !important; }
+  #modalForm #btnItemStatus {
+    display: none;
+    text-align: center; }
+  #modalForm #btnItemStatus.is-active {
+    display: block; }
+  #modalForm button {
+    font-size: 1em;
+    background: none;
+    color: #3273dc;
+    border: none;
+    border-right: 1px solid #ebebeb !important;
+    cursor: pointer; }
+  #modalForm button:hover {
+    color: black; }
+  #modalForm .card-footer {
+    clear: both; }
 
 #suggestionContainer {
   height: auto;
@@ -722,11 +730,11 @@ nav {
     padding: .5em 0; }
 
 /* DATEPICKER */
+#dueDatePickerInput {
+  cursor: pointer; }
+
 .dueDate svg {
   color: #3273dc; }
-
-.dueDate #dueDatePickerInput {
-  cursor: pointer; }
 
 .datepicker {
   z-index: 60; }

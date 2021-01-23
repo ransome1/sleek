@@ -23,7 +23,7 @@
   "formErrorWritingFile": "<strong>Erreur :</strong> impossible d'écrire vos modifications dans le fichier. Veuillez vérifier si le fichier todo.txt existe et si vous disposez des permissions suffisantes pour le modifier :",
   "formInfoNoInput": "Veuillez ajouter une tâche dans le champ de saisie. Si vous n'êtes pas sûr de la manière de procéder, consultez la <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">syntaxe todo.txt</a>.",
   "formInfoDuplicate": "Cette tâche existe déjà et les doublons ne seront pas écrits dans votre fichier todo.txt.",
-  "formSelectDueDate": "Sélectionner une date d'échéance",
+  "formSelectDueDate": "Échéance",
   "cancel": "Annuler",
   "save": "Valider",
   "formTodoInputPlaceholder": "(A) Utiliser la syntaxe todo.txt @contexte +projet",
