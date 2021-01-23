@@ -210,14 +210,14 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
   if(e.detail.date) {
     // generate the object on what is written into input, so we don't overwrite previous inputs of user
-    item.currentTemp = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
-    item.currentTemp.due = new Date(e.detail.date);
-    item.currentTemp.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
-    modalFormInput.value = item.currentTemp.toString();
+    let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+    todo.due = new Date(e.detail.date);
+    todo.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
+    modalFormInput.value = todo.toString();
     // adjust size of inut
     dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
     // clean up as we don#t need it anymore
-    item.currentTemp = null;
+    todo = null;
     // if suggestion box was open, it needs to be closed
     suggestionContainer.classList.remove("is-active");
     suggestionContainer.blur();
@@ -508,10 +508,6 @@ modalFormInputResize.onclick = function () {
 }
 modalFormInput.onfocus = function () {
   suggestionContainer.classList.remove("is-active");
-};
-modalFormInput.onblur = function () {
-  //console.log(suggestionContainer.hasFocus());
-  //suggestionContainer.classList.remove("is-active");
 };
 modalBackground.forEach(function(el) {
   el.onclick = function() {
@@ -842,7 +838,7 @@ function parseDataFromFile() {
       // TODO: Reuse these later
       items.complete = items.objects.filter(function(item) { return item.complete === true });
       items.incomplete = items.objects.filter(function(item) { return item.complete === false });
-      // remove empty objects liek from empty lines in file
+      // remove empty objects like from empty lines in file
       items.objects = items.objects.filter(function(item) { return item.toString() != "" });
       if(items.objects.length>0) {
         // if settings modal is open and archiving has been completed (will trigger this function) the buttons needs to be disabled until another completed todo is added
@@ -1458,8 +1454,6 @@ function generateTodoData(searchString) {
       noResultContainer.classList.add("is-active");
       return Promise.resolve("Info: No results to search input or filter selection");
     }
-    // sort items according to todo.txt logic
-    sortItems(items.objectsFiltered);
     // produce an object where priority a to z + null is key
     items.objectsFiltered = items.objectsFiltered.reduce((r, a) => {
      r[a.priority] = [...r[a.priority] || [], a];
@@ -1472,6 +1466,15 @@ function generateTodoData(searchString) {
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
       if(items.objectsFiltered[priority][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[priority][0] + "</div></div>"))
+      // sort items according to todo.txt logic
+      // second start dates
+      items.objectsFiltered[priority][1].sort(function(a, b) {
+        return b.date - a.date;
+      });
+      // first due dates
+      items.objectsFiltered[priority][1].sort(function(a, b) {
+        return a.due - b.due;
+      });
       // TODO: that's ugly, refine this
       for (let item in items.objectsFiltered[priority][1]) {
         let todo = items.objectsFiltered[priority][1][item];
@@ -2003,13 +2006,6 @@ function showForm(todo, templated) {
     if(matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
     console.log(error);
   }
-}
-function sortItems(items) {
-  // first step of sorting items: the youngest to the top
-  items.sort((a, b) => b.date - a.date);
-  // array is sorted so the due date is desc
-  items.sort((a, b) => a.due - b.due);
-  return;
 }
 function showResultStats() {
   // we show some information on filters if any are set

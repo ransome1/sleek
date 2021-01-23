@@ -779,7 +779,8 @@ nav {
       #recurrencePicker .card .content #recurrencePickerDecrease,
       #recurrencePicker .card .content #recurrencePickerIncrease,
       #recurrencePicker .card .content #recurrencePickerSpinner {
-        font-size: 1.25em; }
+        font-size: 1.25em;
+        padding: .5em; }
       #recurrencePicker .card .content #recurrencePickerSpinner {
         width: 2em; }
     #recurrencePicker .card label {

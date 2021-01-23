@@ -82,6 +82,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - Open file: CMD/CTRL + o
   - Open settings: CMD/CTRL + ,
   - Toggle side bar: CMD/CTRL + b
+  - Set priorities in add/edit todo window: CTRL+SHIFT+[A-Z]
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
