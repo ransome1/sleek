@@ -229,6 +229,13 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     if(matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
   }
 });
+// Actually clear the due date after clicking the Clear button
+document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
+  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+  todo.due = undefined;
+  todo.dueString = undefined;
+  modalFormInput.value = todo.toString();
+});
 // ########################################################################################################################
 // PREP FOR TABLE RENDERING
 // ########################################################################################################################
