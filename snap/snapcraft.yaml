@@ -1,5 +1,5 @@
 name: sleek
-base: core18
+base: core20
 version: '0.8.5'
 summary: A todo app based on todo.txt, free and open-source
 description: |
@@ -26,7 +26,7 @@ apps:
       TMPDIR: $XDG_RUNTIME_DIR
       PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
       SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
-    extensions: [gnome-3-34, kde-neon]
+    extensions: [gnome-3-38, kde-neon]
     plugs:
     - home
     - browser-support
@@ -55,10 +55,10 @@ parts:
   cleanup:
     after: [ sleek ]
     plugin: nil
-    build-snaps: [ gnome-3-34-1804 ]
+    build-snaps: [ gnome-3-38-2004 ]
     override-prime: |
       set -eux
-      for snap in "gnome-3-34-1804"; do  # List all content-snaps you're using here
+      for snap in "gnome-3-38-2004"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do
