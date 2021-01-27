@@ -195,7 +195,15 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
   autohide: true,
   format: "yyyy-mm-dd",
   clearBtn: true,
-  language: i18next.language
+  language: i18next.language,
+  beforeShowDay: function(date) {
+    let today = new Date();
+    if (date.getDate() == today.getDate() &&
+        date.getMonth() == today.getMonth() &&
+        date.getFullYear() == today.getFullYear()) {
+      return { classes: 'today'};
+    }
+  }
 });
 dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
 // closes suggestion box on focus

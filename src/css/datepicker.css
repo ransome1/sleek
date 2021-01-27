@@ -153,13 +153,13 @@
   background-color: #e8e8e8; }
 
 .datepicker-cell.today:not(.selected) {
-  background-color: #00d1b2; }
+  background-color: #00c44142; }
 
 .datepicker-cell.today:not(.selected):not(.disabled) {
-  color: #fff; }
+  color: inherit; }
 
 .datepicker-cell.today.focused:not(.selected) {
-  background-color: #00c4a7; }
+  background-color: #00c44142; }
 
 .datepicker-cell.range-end:not(.selected), .datepicker-cell.range-start:not(.selected) {
   background-color: #b5b5b5;
