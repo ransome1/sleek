@@ -43,7 +43,7 @@ if(config.get("dismissedMessages")) {
 } else {
   var dismissedMessages = new Array;
 }
-if(config.get("matomoEvents")) {
+if(config.get("matomoEvents")!=null) {
   var matomoEvents = config.get("matomoEvents");
 } else {
   var matomoEvents = false;
@@ -52,12 +52,12 @@ if(config.get("filterDrawerWidth")) {
   let filterDrawerWidth = config.get("filterDrawerWidth");
   filterDrawer.setAttribute("style", "--resizeable-width: " + filterDrawerWidth);
 }
-if(config.get("notifications")) {
+if(config.get("notifications")!=null) {
   var notifications = config.get("notifications");
 } else {
   var notifications = true;
 }
-if(config.get("showCompleted")) {
+if(config.get("showCompleted")!=null) {
   var showCompleted = config.get("showCompleted");
 } else {
   var showCompleted = true;
@@ -559,17 +559,24 @@ priorityPicker.onfocus = function () {
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
+body.addEventListener ("keydown", function (e) {
+  if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
+    e.preventDefault();
+    var priority = event.key.substr(0,1);
+    setPriorityInput(priority);
+    setPriority(priority);
+  } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
+    var priority = null;
+    setPriorityInput(priority);
+    setPriority(priority);
+  }
+});
 modalForm.addEventListener ("keydown", function (e) {
   if(event.key === 'Escape') {
     clearModal();
     this.classList.remove("is-active");
     suggestionContainer.classList.remove("is-active");
     suggestionContainer.blur();
-  } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
-    e.preventDefault();
-    var priority = event.key.substr(0,1);
-    setPriorityInput(priority);
-    setPriority(priority);
   }
 });
 modalForm.addEventListener ("click", function () {
@@ -1859,7 +1866,8 @@ function submitForm() {
     // Add todo
     } else if(modalForm.getAttribute("data-item")==null && modalForm.elements[0].value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
-      var todo = new TodoTxtItem(modalForm.elements[0].value, [ new DueExtension(), new RecExtension() ]);
+      // replace new lines with spaces (https://stackoverflow.com/a/34936253)
+      let todo = new TodoTxtItem(modalForm.elements[0].value.replace(/[\r\n]+/g," "), [ new DueExtension(), new RecExtension() ]);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
       // check and prevent duplicate todo
