@@ -1983,6 +1983,7 @@ function showForm(todo, templated) {
         if(todo.rec) setRecurrenceInput(todo.rec)
         // if so we paste it into the input field
         if(todo.dueString) {
+          dueDatePicker.setDate(todo.dueString);
           dueDatePickerInput.value = todo.dueString;
           dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
           // only show the recurrence picker when a due date is set
