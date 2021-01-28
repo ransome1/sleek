@@ -343,6 +343,14 @@ nav {
 }
 .datepicker {
   background: none;
+  .datepicker-cell.today.focused:not(.selected),
+  .datepicker-cell.today:not(.selected) {
+    background: $grey-light!important;
+  }
+  .datepicker-cell.today.focused:not(.selected),
+  .datepicker-cell.today:hover {
+    color: white!important;
+  }
   .datepicker-picker {
     background: $grey-mid;
     color: white;

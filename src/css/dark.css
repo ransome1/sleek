@@ -263,6 +263,12 @@ nav {
 
 .datepicker {
   background: none; }
+  .datepicker .datepicker-cell.today.focused:not(.selected),
+  .datepicker .datepicker-cell.today:not(.selected) {
+    background: #3B3B3B !important; }
+  .datepicker .datepicker-cell.today.focused:not(.selected),
+  .datepicker .datepicker-cell.today:hover {
+    color: white !important; }
   .datepicker .datepicker-picker {
     background: #2c2d30;
     color: white; }

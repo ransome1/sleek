@@ -745,6 +745,9 @@ nav {
 
 .datepicker {
   z-index: 60; }
+  .datepicker .datepicker-cell.today.focused:not(.selected),
+  .datepicker .datepicker-cell.today:not(.selected) {
+    background: #f5f5f5 !important; }
   .datepicker .datepicker-footer {
     background: none; }
     .datepicker .datepicker-footer .datepicker-controls .button {

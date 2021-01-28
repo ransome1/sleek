@@ -920,6 +920,10 @@ nav {
 }
 .datepicker {
   z-index: 60;
+  .datepicker-cell.today.focused:not(.selected),
+  .datepicker-cell.today:not(.selected) {
+    background: $light-grey!important;
+  }
   .datepicker-footer {
     background: none;
     .datepicker-controls .button  {

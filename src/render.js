@@ -794,17 +794,18 @@ function showRecurrenceOptions(el) {
 }
 function createRecurringTodo(todo) {
   try {
+    // like this the object is duplicated and not referenced
     let recurringItem = Object.assign({}, todo);
     recurringItem.date = todo.due;
     recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
     recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
     // get index of recurring todo
-    const index = items.objects.map(function(item) {return item.toString(); }).indexOf(recurringItem.toString());
+    const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringItem.toString().replaceAll(String.fromCharCode(16)," "));
     // only add recurring todo if it is not already in the list
     if(index===-1) {
       items.objects.push(recurringItem);
       tableContainerDue.appendChild(createTableRow(recurringItem));
-      writeTodoToFile(recurringItem.toString());
+      writeTodoToFile(recurringItem);
       return Promise.resolve("Success: Recurring todo created and written into file: " + recurringItem);
     } else {
       return Promise.resolve("Info: Recurring todo already in file, won't write anything");
@@ -1682,14 +1683,14 @@ function createTableRow(todo) {
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
     // creates cell for the text
     if(todo.text) {
-      // replace line feed replacement character with a space
-      todo.text = todo.text.replaceAll(String.fromCharCode(16)," ");
       // use the autoLink lib to attach an icon to every link and put a link on it
       todoTableBodyCellText.innerHTML =  todo.text.autoLink({
         callback: function(url) {
           return url + " <a href=" + url + " target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
         }
       });
+      // replace line feed replacement character with a space
+      todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
     }
     // event listener for the click on the text
     todoTableBodyCellText.onclick = function() {
@@ -2319,6 +2320,8 @@ function resizeInput(type) {
       modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
       // persist setting
       config.set("useTextarea", true);
+      // replace ascii code with line breaks
+      //modalFormInput.value = modalFormInput.value.replaceAll(String.fromCharCode(16), "\r\n");
       break;
     case "textarea":
       var d = document.createElement('input');
@@ -2327,6 +2330,8 @@ function resizeInput(type) {
       modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
       // persist setting
       config.set("useTextarea", false);
+      // replace ascii code with spaces
+      //modalFormInput.value = modalFormInput.value.replaceAll(String.fromCharCode(16), " ");
       break;
     default:
       modalFormInputResize.setAttribute("data-input-type", "input");
