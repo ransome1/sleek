@@ -1667,6 +1667,8 @@ function createTableRow(todo) {
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
     // creates cell for the text
     if(todo.text) {
+      // replace line feed replacement character with a space
+      todo.text = todo.text.replaceAll(String.fromCharCode(16)," ");
       // use the autoLink lib to attach an icon to every link and put a link on it
       todoTableBodyCellText.innerHTML =  todo.text.autoLink({
         callback: function(url) {
@@ -1853,7 +1855,8 @@ function submitForm() {
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(modalForm.elements[0].value.replace(/[\r\n]+/g," "), [ new DueExtension(), new RecExtension() ]);
+      //let todo = new TodoTxtItem(modalForm.elements[0].value.replace(/[\r\n]+/g," "), [ new DueExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new DueExtension(), new RecExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
         modalFormAlert.innerHTML = i18next.t("formInfoDuplicate");
@@ -1867,7 +1870,7 @@ function submitForm() {
     } else if(modalForm.getAttribute("data-item")==null && modalForm.elements[0].value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(modalForm.elements[0].value.replace(/[\r\n]+/g," "), [ new DueExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new DueExtension(), new RecExtension() ]);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
       // check and prevent duplicate todo
@@ -1940,6 +1943,8 @@ function showForm(todo, templated) {
       modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
       // here we configure the headline and the footer buttons
       if(todo) {
+        // replace invisible multiline ascii character with new line
+        todo = todo.replaceAll(String.fromCharCode(16),"\r\n");
         // we need to check if there already is a due date in the object
         todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
         // set the priority
