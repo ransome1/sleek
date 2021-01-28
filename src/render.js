@@ -195,7 +195,15 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
   autohide: true,
   format: "yyyy-mm-dd",
   clearBtn: true,
-  language: i18next.language
+  language: i18next.language,
+  beforeShowDay: function(date) {
+    let today = new Date();
+    if (date.getDate() == today.getDate() &&
+        date.getMonth() == today.getMonth() &&
+        date.getFullYear() == today.getFullYear()) {
+      return { classes: 'today'};
+    }
+  }
 });
 dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
 // closes suggestion box on focus
@@ -228,6 +236,13 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     // trigger matomo event
     if(matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
   }
+});
+// Actually clear the due date after clicking the Clear button
+document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
+  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+  todo.due = undefined;
+  todo.dueString = undefined;
+  modalFormInput.value = todo.toString();
 });
 // ########################################################################################################################
 // PREP FOR TABLE RENDERING
@@ -1981,6 +1996,7 @@ function showForm(todo, templated) {
         if(todo.rec) setRecurrenceInput(todo.rec)
         // if so we paste it into the input field
         if(todo.dueString) {
+          dueDatePicker.setDate(todo.dueString);
           dueDatePickerInput.value = todo.dueString;
           dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
           // only show the recurrence picker when a due date is set
