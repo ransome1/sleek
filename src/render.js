@@ -1492,11 +1492,17 @@ function generateTodoData(searchString) {
       // sort items according to todo.txt logic
       // second start dates
       items.objectsFiltered[priority][1].sort(function(a, b) {
+        if(a.due) return false;
         return b.date - a.date;
       });
-      // first due dates
+      // first sort due dates desc
       items.objectsFiltered[priority][1].sort(function(a, b) {
         return a.due - b.due;
+      });
+      // second sort todos with no due date by start date 
+      items.objectsFiltered[priority][1].sort(function(a, b) {
+        if(a.due) return false;
+        return a.date - b.date;
       });
       // TODO: that's ugly, refine this
       for (let item in items.objectsFiltered[priority][1]) {
