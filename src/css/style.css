@@ -839,15 +839,67 @@ nav {
   .modal.content .modal-card .card.is-centered {
     width: 100% !important; } }
 
-/*! bulma.io v0.9.1 | MIT License | github.com/jgthms/bulma */
+/*! bulma.io v0.9.2 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
-@keyframes spinAround {
-  from {
-    transform: rotate(0deg); }
-  to {
-    transform: rotate(359deg); } }
+.button, .input, .textarea, .select select, .file-cta,
+.file-name, .pagination-previous,
+.pagination-next,
+.pagination-link,
+.pagination-ellipsis {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.5em;
+  justify-content: flex-start;
+  line-height: 1.5;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(0.75em - 1px);
+  padding-right: calc(0.75em - 1px);
+  padding-top: calc(0.5em - 1px);
+  position: relative;
+  vertical-align: top; }
+  .button:focus, .input:focus, .textarea:focus, .select select:focus, .file-cta:focus,
+  .file-name:focus, .pagination-previous:focus,
+  .pagination-next:focus,
+  .pagination-link:focus,
+  .pagination-ellipsis:focus, .is-focused.button, .is-focused.input, .is-focused.textarea, .select select.is-focused, .is-focused.file-cta,
+  .is-focused.file-name, .is-focused.pagination-previous,
+  .is-focused.pagination-next,
+  .is-focused.pagination-link,
+  .is-focused.pagination-ellipsis, .button:active, .input:active, .textarea:active, .select select:active, .file-cta:active,
+  .file-name:active, .pagination-previous:active,
+  .pagination-next:active,
+  .pagination-link:active,
+  .pagination-ellipsis:active, .is-active.button, .is-active.input, .is-active.textarea, .select select.is-active, .is-active.file-cta,
+  .is-active.file-name, .is-active.pagination-previous,
+  .is-active.pagination-next,
+  .is-active.pagination-link,
+  .is-active.pagination-ellipsis {
+    outline: none; }
+  .button[disabled], .input[disabled], .textarea[disabled], .select select[disabled], .file-cta[disabled],
+  .file-name[disabled], .pagination-previous[disabled],
+  .pagination-next[disabled],
+  .pagination-link[disabled],
+  .pagination-ellipsis[disabled],
+  fieldset[disabled] .button,
+  fieldset[disabled] .input,
+  fieldset[disabled] .textarea,
+  fieldset[disabled] .select select,
+  .select fieldset[disabled] select,
+  fieldset[disabled] .file-cta,
+  fieldset[disabled] .file-name,
+  fieldset[disabled] .pagination-previous,
+  fieldset[disabled] .pagination-next,
+  fieldset[disabled] .pagination-link,
+  fieldset[disabled] .pagination-ellipsis {
+    cursor: not-allowed; }
 
-.delete, .modal-close, .button, .file, .breadcrumb, .pagination-previous,
+.button, .file, .breadcrumb, .pagination-previous,
 .pagination-next,
 .pagination-link,
 .pagination-ellipsis, .tabs, .is-unselectable {
@@ -878,6 +930,11 @@ nav {
   margin-bottom: 1.5rem; }
 
 .delete, .modal-close {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   -moz-appearance: none;
   -webkit-appearance: none;
   background-color: rgba(10, 10, 10, 0.2);
@@ -973,64 +1030,6 @@ nav {
   position: absolute;
   right: 0;
   top: 0; }
-
-.button, .input, .textarea, .select select, .file-cta,
-.file-name, .pagination-previous,
-.pagination-next,
-.pagination-link,
-.pagination-ellipsis {
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  align-items: center;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  box-shadow: none;
-  display: inline-flex;
-  font-size: 1rem;
-  height: 2.5em;
-  justify-content: flex-start;
-  line-height: 1.5;
-  padding-bottom: calc(0.5em - 1px);
-  padding-left: calc(0.75em - 1px);
-  padding-right: calc(0.75em - 1px);
-  padding-top: calc(0.5em - 1px);
-  position: relative;
-  vertical-align: top; }
-  .button:focus, .input:focus, .textarea:focus, .select select:focus, .file-cta:focus,
-  .file-name:focus, .pagination-previous:focus,
-  .pagination-next:focus,
-  .pagination-link:focus,
-  .pagination-ellipsis:focus, .is-focused.button, .is-focused.input, .is-focused.textarea, .select select.is-focused, .is-focused.file-cta,
-  .is-focused.file-name, .is-focused.pagination-previous,
-  .is-focused.pagination-next,
-  .is-focused.pagination-link,
-  .is-focused.pagination-ellipsis, .button:active, .input:active, .textarea:active, .select select:active, .file-cta:active,
-  .file-name:active, .pagination-previous:active,
-  .pagination-next:active,
-  .pagination-link:active,
-  .pagination-ellipsis:active, .is-active.button, .is-active.input, .is-active.textarea, .select select.is-active, .is-active.file-cta,
-  .is-active.file-name, .is-active.pagination-previous,
-  .is-active.pagination-next,
-  .is-active.pagination-link,
-  .is-active.pagination-ellipsis {
-    outline: none; }
-  .button[disabled], .input[disabled], .textarea[disabled], .select select[disabled], .file-cta[disabled],
-  .file-name[disabled], .pagination-previous[disabled],
-  .pagination-next[disabled],
-  .pagination-link[disabled],
-  .pagination-ellipsis[disabled],
-  fieldset[disabled] .button,
-  fieldset[disabled] .input,
-  fieldset[disabled] .textarea,
-  fieldset[disabled] .select select,
-  .select fieldset[disabled] select,
-  fieldset[disabled] .file-cta,
-  fieldset[disabled] .file-name,
-  fieldset[disabled] .pagination-previous,
-  fieldset[disabled] .pagination-next,
-  fieldset[disabled] .pagination-link,
-  fieldset[disabled] .pagination-ellipsis {
-    cursor: not-allowed; }
 
 /* Bulma Base */
 /*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
@@ -1208,6 +1207,12 @@ table th {
 table th {
   color: #363636; }
 
+@keyframes spinAround {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(359deg); } }
+
 /* Bulma Elements */
 .box {
   background-color: white;
@@ -1277,6 +1282,14 @@ a.box:active {
       background-color: transparent;
       border-color: transparent;
       box-shadow: none; }
+  .button.is-ghost {
+    background: none;
+    border-color: transparent;
+    color: #3273dc;
+    text-decoration: none; }
+    .button.is-ghost:hover, .button.is-ghost.is-hovered {
+      color: #3273dc;
+      text-decoration: underline; }
   .button.is-white {
     background-color: white;
     border-color: transparent;
@@ -2024,8 +2037,9 @@ a.box:active {
         border-color: transparent;
         color: #cc0f35; }
   .button.is-small {
-    border-radius: 2px;
     font-size: 0.75rem; }
+    .button.is-small:not(.is-rounded) {
+      border-radius: 2px; }
   .button.is-normal {
     font-size: 1rem; }
   .button.is-medium {
@@ -2074,8 +2088,9 @@ a.box:active {
   .buttons:not(:last-child) {
     margin-bottom: 1rem; }
   .buttons.are-small .button:not(.is-normal):not(.is-medium):not(.is-large) {
-    border-radius: 2px;
     font-size: 0.75rem; }
+    .buttons.are-small .button:not(.is-normal):not(.is-medium):not(.is-large):not(.is-rounded) {
+      border-radius: 2px; }
   .buttons.are-medium .button:not(.is-small):not(.is-normal):not(.is-large) {
     font-size: 1.25rem; }
   .buttons.are-large .button:not(.is-small):not(.is-normal):not(.is-medium) {
@@ -2295,6 +2310,24 @@ a.box:active {
   .icon.is-large {
     height: 3rem;
     width: 3rem; }
+
+.icon-text {
+  align-items: flex-start;
+  color: inherit;
+  display: inline-flex;
+  flex-wrap: wrap;
+  line-height: 1.5rem;
+  vertical-align: top; }
+  .icon-text .icon {
+    flex-grow: 0;
+    flex-shrink: 0; }
+    .icon-text .icon:not(:last-child) {
+      margin-right: 0.25em; }
+    .icon-text .icon:not(:first-child) {
+      margin-left: 0.25em; }
+
+div.icon-text {
+  display: flex; }
 
 .image {
   display: block;
@@ -3824,8 +3857,15 @@ a.tag:hover {
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   color: #4a4a4a;
   max-width: 100%;
-  overflow: hidden;
   position: relative; }
+
+.card-header:first-child, .card-content:first-child, .card-footer:first-child {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem; }
+
+.card-header:last-child, .card-content:last-child, .card-footer:last-child {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem; }
 
 .card-header {
   background-color: transparent;
@@ -3853,6 +3893,12 @@ a.tag:hover {
 .card-image {
   display: block;
   position: relative; }
+  .card-image:first-child img {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem; }
+  .card-image:last-child img {
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem; }
 
 .card-content {
   background-color: transparent;
@@ -5167,6 +5213,8 @@ a.navbar-item,
 
 .pagination-list {
   flex-wrap: wrap; }
+  .pagination-list li {
+    list-style: none; }
 
 @media screen and (max-width: 768px) {
   .pagination {
@@ -5474,7 +5522,8 @@ label.panel-block {
   flex-shrink: 1;
   padding: 0.75rem; }
   .columns.is-mobile > .column.is-narrow {
-    flex: none; }
+    flex: none;
+    width: unset; }
   .columns.is-mobile > .column.is-full {
     flex: none;
     width: 100%; }
@@ -5590,7 +5639,8 @@ label.panel-block {
     margin-left: 100%; }
   @media screen and (max-width: 768px) {
     .column.is-narrow-mobile {
-      flex: none; }
+      flex: none;
+      width: unset; }
     .column.is-full-mobile {
       flex: none;
       width: 100%; }
@@ -5706,7 +5756,8 @@ label.panel-block {
       margin-left: 100%; } }
   @media screen and (min-width: 769px), print {
     .column.is-narrow, .column.is-narrow-tablet {
-      flex: none; }
+      flex: none;
+      width: unset; }
     .column.is-full, .column.is-full-tablet {
       flex: none;
       width: 100%; }
@@ -5822,7 +5873,8 @@ label.panel-block {
       margin-left: 100%; } }
   @media screen and (max-width: 1023px) {
     .column.is-narrow-touch {
-      flex: none; }
+      flex: none;
+      width: unset; }
     .column.is-full-touch {
       flex: none;
       width: 100%; }
@@ -5938,7 +5990,8 @@ label.panel-block {
       margin-left: 100%; } }
   @media screen and (min-width: 1024px) {
     .column.is-narrow-desktop {
-      flex: none; }
+      flex: none;
+      width: unset; }
     .column.is-full-desktop {
       flex: none;
       width: 100%; }
@@ -6054,7 +6107,8 @@ label.panel-block {
       margin-left: 100%; } }
   @media screen and (min-width: 1216px) {
     .column.is-narrow-widescreen {
-      flex: none; }
+      flex: none;
+      width: unset; }
     .column.is-full-widescreen {
       flex: none;
       width: 100%; }
@@ -6170,7 +6224,8 @@ label.panel-block {
       margin-left: 100%; } }
   @media screen and (min-width: 1408px) {
     .column.is-narrow-fullhd {
-      flex: none; }
+      flex: none;
+      width: unset; }
     .column.is-full-fullhd {
       flex: none;
       width: 100%; }
@@ -6323,7 +6378,7 @@ label.panel-block {
   --columnGap: 0.75rem;
   margin-left: calc(-1 * var(--columnGap));
   margin-right: calc(-1 * var(--columnGap)); }
-  .columns.is-variable .column {
+  .columns.is-variable > .column {
     padding-left: var(--columnGap);
     padding-right: var(--columnGap); }
   .columns.is-variable.is-0 {
@@ -7084,7 +7139,8 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   box-shadow: none !important; }
 
 .is-clickable {
-  cursor: pointer !important; }
+  cursor: pointer !important;
+  pointer-events: all !important; }
 
 .is-clipped {
   overflow: hidden !important; }

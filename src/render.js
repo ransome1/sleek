@@ -1,5 +1,5 @@
 // https://dev.to/xxczaki/how-to-make-your-electron-app-faster-4ifb
-require('v8-compile-cache');
+//require("v8-compile-cache");
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
@@ -10,29 +10,17 @@ documentIds.forEach(function(id,index) {
 const a = document.querySelectorAll("a");
 let fileWatcher;
 // ########################################################################################################################
+// RECEIVE CONFIG FROM MAIN PROCESS
+// ########################################################################################################################
+window.api.send("toMain", "getConfig");
+window.api.receive("fromMain", (data) => {
+  console.log(data);
+});
+// ########################################################################################################################
 // READ FROM CONFIG
 // ########################################################################################################################
-const config = new Store({
-  configName: "user-preferences",
-  defaults: {
-    windowBounds: { width: 1025, height: 768 },
-    showCompleted: true,
-    selectedFilters: new Array,
-    categoriesFiltered: new Array,
-    dismissedNotifications: new Array,
-    dismissedMessages: new Array,
-    theme: null,
-    matomoEvents: false,
-    notifications: true,
-    language: null,
-    files: new Array,
-    uid: null,
-    filterDrawerWidth: "560px",
-    useTextarea: false,
-    filterDrawer: false
-  }
-});
-let { width, height } = config.get("windowBounds");
+var width = config.data.windowBounds.width;
+var height = config.data.windowBounds.height;
 if(config.get("dismissedNotifications")) {
   var dismissedNotifications = config.get("dismissedNotifications");
 } else {
@@ -72,7 +60,7 @@ if(config.get("categoriesFiltered")) {
 } else {
   var categoriesFiltered = new Array;
 }
-let language = config.get("language");
+var language = config.get("language");
 if(config.get("files")) {
   var files = config.get("files");
   var file = files.filter(file => { return file[0]===1 });
@@ -369,6 +357,7 @@ helpTabKeyboardTR3TD1.innerHTML = i18next.t("toggleCompletedTodos");
 helpTabKeyboardTR4TD1.innerHTML = i18next.t("toggleDarkMode");
 helpTabKeyboardTR5TD1.innerHTML = i18next.t("openFile");
 helpTabKeyboardTR6TD1.innerHTML = i18next.t("settings");
+helpTabKeyboardTR7TD1.innerHTML = i18next.t("helpTabKeyboardTR7TD1");
 helpTabKeyboardTR1TH1.innerHTML = i18next.t("function");
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS

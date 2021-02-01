@@ -1,20 +1,37 @@
 // https://dev.to/xxczaki/how-to-make-your-electron-app-faster-4ifb
-require('v8-compile-cache');
+require("v8-compile-cache");
 const { app, BrowserWindow, nativeTheme, electron, ipcMain, session } = require("electron");
 const { is } = require("electron-util");
 const fs = require("fs");
 const path = require("path");
 const isMac = process.platform === "darwin";
 const Store = require("./configs/store.config.js");
-const config = new Store({
+/*const config = new Store({
   configName: "user-preferences",
   defaults: {
     windowBounds: { width: 1100, height: 800 },
   }
+});*/
+const config = new Store({
+  configName: "user-preferences",
+  defaults: {
+    windowBounds: { width: 1025, height: 768 },
+    showCompleted: true,
+    selectedFilters: new Array,
+    categoriesFiltered: new Array,
+    dismissedNotifications: new Array,
+    dismissedMessages: new Array,
+    theme: null,
+    matomoEvents: false,
+    notifications: true,
+    language: null,
+    files: new Array,
+    uid: null,
+    filterDrawerWidth: "560px",
+    useTextarea: false,
+    filterDrawer: false
+  }
 });
-const i18next = require("i18next");
-const i18nextBackend = require("i18next-fs-backend");
-const i18nextOptions = require('./configs/i18next.config');
 const createWindow = () => {
   let { width, height } = config.get("windowBounds");
   const mainWindow = new BrowserWindow(
@@ -26,11 +43,12 @@ const createWindow = () => {
     simpleFullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
+      enableRemoteModule: false,
       worldSafeExecuteJavaScript:true,
-      nodeIntegration: true,
+      nodeIntegration: false,
       enableRemoteModule: true,
       spellcheck: false,
-      contextIsolation: false,
+      contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     }
   });
@@ -174,7 +192,22 @@ const createWindow = () => {
   ];
   // Set menu to menuTemplate
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+
+  ipcMain.on("toMain", (event, args) => {
+    // Send result back to renderer process
+    if(args==="getConfig") mainWindow.webContents.send("fromMain", config)
+  });
+
+  /*ipcMain.handle('setFullscreen', (event, flag) => {
+
+    console.log(flag);
+  })*/
+
+
 };
+const i18next = require("i18next");
+const i18nextBackend = require("i18next-fs-backend");
+const i18nextOptions = require('./configs/i18next.config');
 app.on("ready", () => {
   switchLanguage().then(response => {
     console.log(response);
@@ -197,12 +230,6 @@ app.on("activate", () => {
   }
   app.show();
 });
-ipcMain.on("synchronous-message", (event, arg) => {
-  if(arg=="restart") {
-    app.relaunch();
-    app.exit();
-  }
-});
 function switchLanguage() {
   if (config.get("language")) {
     var language = config.get("language");
@@ -218,3 +245,14 @@ function switchLanguage() {
   config.set("language", language);
   return Promise.resolve("Success: Language set to: " + language.toUpperCase());
 }
+
+// COMM between contexts
+ipcMain.on("synchronous-message", (event, arg) => {
+  if(arg=="restart") {
+    app.relaunch();
+    app.exit();
+  }
+});
+/*ipcMain.on("sendConfigToMain", (event, arg) => {
+  var config = arg;
+});*/
