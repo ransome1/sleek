@@ -911,7 +911,7 @@ function createFile() {
     filters: [
       {
         name: i18next.t("windowFileformat"),
-        extensions: ["txt"]
+        extensions: ["txt", "md"]
       }
     ],
     properties: ["openFile", "createDirectory"]
@@ -949,7 +949,7 @@ function openFile() {
     filters: [
         {
             name: i18next.t("windowFileformat"),
-            extensions: ["txt"]
+            extensions: ["txt", "md"]
         },
     ],
     properties: ["openFile"]
@@ -1499,7 +1499,7 @@ function generateTodoData(searchString) {
       items.objectsFiltered[priority][1].sort(function(a, b) {
         return a.due - b.due;
       });
-      // second sort todos with no due date by start date 
+      // second sort todos with no due date by start date
       items.objectsFiltered[priority][1].sort(function(a, b) {
         if(a.due) return false;
         return a.date - b.date;
