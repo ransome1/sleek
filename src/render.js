@@ -1489,22 +1489,10 @@ function generateTodoData(searchString) {
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
       if(items.objectsFiltered[priority][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[priority][0] + "</div></div>"))
-      // sort items according to todo.txt logic
-      // second start dates
-      items.objectsFiltered[priority][1].sort(function(a, b) {
-        if(a.due) return false;
-        return b.date - a.date;
-      });
-      // first sort due dates desc
-      items.objectsFiltered[priority][1].sort(function(a, b) {
-        return a.due - b.due;
-      });
-      // second sort todos with no due date by start date
-      items.objectsFiltered[priority][1].sort(function(a, b) {
-        if(a.due) return false;
-        return a.date - b.date;
-      });
-      // TODO: that's ugly, refine this
+      let arrayDue = new Array;
+      let arrayNoPriorityNotCompleted = new Array;
+      let arrayDueAndComplete = new Array;
+      let arrayComplete = new Array;
       for (let item in items.objectsFiltered[priority][1]) {
         let todo = items.objectsFiltered[priority][1][item];
         if(!todo.text) continue;
@@ -1521,7 +1509,7 @@ function generateTodoData(searchString) {
         }
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
-        if (todo.due && !todo.complete) {
+          if (todo.due && !todo.complete) {
           // create notification
           if(todo.due.isToday()) {
             showNotification(todo, 0).then(response => {
@@ -1536,18 +1524,48 @@ function generateTodoData(searchString) {
               console.log(error);
             });
           }
-          tableContainerDue.appendChild(createTableRow(todo));
+          arrayDue.push(todo);
         // incompleted todos with no due date
         } else if(!todo.due && !todo.complete) {
-          tableContainerNoPriorityNotCompleted.appendChild(createTableRow(todo));
+          arrayNoPriorityNotCompleted.push(todo);
         // completed todos with due date
         } else if(todo.due && todo.complete) {
-          tableContainerDueAndComplete.appendChild(createTableRow(todo));
+          arrayDueAndComplete.push(todo);
         // completed todos with no due date
         } else if(!todo.due && todo.complete) {
-          tableContainerComplete.appendChild(createTableRow(todo));
+          arrayComplete.push(todo);
+
         }
       }
+      // sort the arrays and fill fragments
+      // incompleted todos with due date
+      arrayDue.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayDue.forEach(todo => {
+        tableContainerDue.appendChild(createTableRow(todo));
+      });
+      // incompleted todos with no due date
+      arrayNoPriorityNotCompleted.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayNoPriorityNotCompleted.forEach(todo => {
+        tableContainerNoPriorityNotCompleted.appendChild(createTableRow(todo));
+      });
+      // completed todos with due date
+      arrayDueAndComplete.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayDueAndComplete.forEach(todo => {
+        tableContainerDueAndComplete.appendChild(createTableRow(todo));
+      });
+      // completed todos with no due date
+      arrayComplete.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayComplete.forEach(todo => {
+        tableContainerComplete.appendChild(createTableRow(todo));
+      });
       // append items to priority group
       tableContainerContent.appendChild(tableContainerDue);
       tableContainerContent.appendChild(tableContainerNoPriorityNotCompleted);
