@@ -10,43 +10,8 @@ window.nativeTheme = electron.remote.nativeTheme;
 window.app = electron.remote.app;
 window.md5 = require('md5');
 window.path = require("path");
-//window.config = require("./configs/store.config.js");
-//window.i18nextOptions = require('./configs/i18next.config');
-//window.i18next = require("i18next");
-//window.i18nextBackend = require("i18next-fs-backend");
-//window.i18nextBrowserLanguageDetector = require("i18next-browser-languagedetector");
 window.fs = require('fs');
 window.electron_util = require("electron-util");
-
-/*const Store = require("./configs/store.config.js");
-const config = new Store({
-  configName: "user-preferences",
-  defaults: {
-    windowBounds: { width: 1025, height: 768 },
-    showCompleted: true,
-    selectedFilters: new Array,
-    categoriesFiltered: new Array,
-    dismissedNotifications: new Array,
-    dismissedMessages: new Array,
-    theme: null,
-    matomoEvents: false,
-    notifications: true,
-    language: null,
-    files: new Array,
-    uid: null,
-    filterDrawerWidth: "560px",
-    useTextarea: false,
-    filterDrawer: false
-  }
-});*/
-
-/*contextBridge.exposeInMainWorld(
-  "app",
-  {
-    sendConfigToMain: () => ipcRenderer.send("sendConfigToMain", config)
-  }
-)*/
-
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(
@@ -56,6 +21,8 @@ contextBridge.exposeInMainWorld(
       let validChannels = [
         "getConfig",
         "getTranslations",
+        "getFileContent",
+        "setConfig",
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -64,7 +31,9 @@ contextBridge.exposeInMainWorld(
     receive: (channel, func) => {
       let validChannels = [
         "getConfig",
-        "getTranslations",
+        "sendTranslations",
+        "getFileContent",
+        "setConfig",
       ];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`

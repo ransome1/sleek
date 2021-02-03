@@ -5,16 +5,11 @@ const { is } = require("electron-util");
 const fs = require("fs");
 const path = require("path");
 const isMac = process.platform === "darwin";
-const Store = require("./configs/store.config.js");
-/*const config = new Store({
-  configName: "user-preferences",
-  defaults: {
-    windowBounds: { width: 1100, height: 800 },
-  }
-});*/
 const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
+// config setting
+const Store = require("./configs/store.config.js");
 const config = new Store({
   configName: "user-preferences",
   defaults: {
@@ -32,7 +27,7 @@ const config = new Store({
     uid: null,
     filterDrawerWidth: "560px",
     useTextarea: false,
-    filterDrawer: false
+    filterDrawer: false,
   }
 });
 const createWindow = () => {
@@ -196,16 +191,53 @@ const createWindow = () => {
   // Set menu to menuTemplate
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
+
+
+
+
+
+
+
+
+
   // Send result back to renderer process
   ipcMain.on("getConfig", (event, args) => {
     mainWindow.webContents.send("getConfig", config.data)
   });
+  // Write config to file
+  ipcMain.on("setConfig", (event, args) => {
+    config.set(args[0], args[1]);
+  });
   // Send translations back to renderer process
   ipcMain.on("getTranslations", (event, args) => {
-    mainWindow.webContents.send("getTranslations", i18next.getDataByLanguage(config.get("language")).translation)
+    mainWindow.webContents.send("sendTranslations", i18next.getDataByLanguage(config.get("language")).translation)
   });
+  // Check if file exists and send content to renderer process
+  ipcMain.on("getFileContent", (event, args) => {
+    // read fresh data from file
+    const fileContent = fs.readFileSync(config.get("file"), {encoding: 'utf-8'}, function(err,data) { return data; });
+    mainWindow.webContents.send("getFileContent", fileContent)
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 };
 app.on("ready", () => {
+  // add sleeks path to config
+  config.set("path", __dirname);
   switchLanguage().then(response => {
     console.log(response);
   }).catch(error => {
