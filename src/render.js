@@ -12,10 +12,10 @@ let fileWatcher;
 // ########################################################################################################################
 // RECEIVE CONFIG FROM MAIN PROCESS
 // ########################################################################################################################
-/*window.api.send("getConfig");
-window.api.receive("getConfig", (config) => {
+/*window.api.send("getUserData");
+window.api.receive("getUserData", (config) => {
   //addFriendlyLanguageNames(config.language);
-  setConfig(config);
+  setUserData(config);
 });*/
 
 // ########################################################################################################################
@@ -32,7 +32,7 @@ if(config.get("uid")) {
   // generate random number/string combination as user id and persist it
   var uid = Math.random().toString(36).slice(2);
   if(is.development) uid = "DEVELOPMENT"
-  setConfig("uid", uid);
+  setUserData("uid", uid);
 }*/
 // ########################################################################################################################
 // LANGUAGE
@@ -83,10 +83,10 @@ if(config.get("uid")) {
     i18next.changeLanguage(this.value, error => {
       if(error) {
         // trigger matomo event
-        if(config.matomoEvents) _paq.push(["trackEvent", "Error", "changeLanguage()", error])
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "changeLanguage()", error])
         return console.log(error);
       }
-      setConfig("language", this.value);
+      setUserData("language", this.value);
       ipcRenderer.send("synchronous-message", "restart");
     })
   }
@@ -153,7 +153,7 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
     modalFormInput.focus();
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
   }
 });
 // Actually clear the due date after clicking the Clear button
@@ -221,17 +221,17 @@ a.forEach(el => el.addEventListener("click", function(el) {
 navBtnHelp.onclick = function () {
   showContent(modalHelp);
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Help"]);
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Help"]);
 }
 navBtnSettings.onclick = function () {
   showContent(modalSettings);
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
 }
 btnMessageLogging.onclick = function () {
   showContent(modalSettings);
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
 }
 btnItemStatus.onclick = function() {
   completeTodo(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
@@ -239,7 +239,7 @@ btnItemStatus.onclick = function() {
     clearModal();
     console.log(response);
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
   }).catch(error => {
     console.log(error);
   });
@@ -248,7 +248,7 @@ btnOpenTodoFile.forEach(function(el) {
   el.onclick = function () {
     openFile();
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
   }
 });
 btnChangeTodoFile.forEach(function(el) {
@@ -259,14 +259,14 @@ btnChangeTodoFile.forEach(function(el) {
       openFile();
     }
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
   }
 });
 btnCreateTodoFile.forEach(function(el) {
   el.onclick = function () {
     createFile()
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
   }
 });
 btnModalCancel.forEach(function(el) {
@@ -274,19 +274,19 @@ btnModalCancel.forEach(function(el) {
     el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
     clearModal();
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
   }
 });
 btnResetFilters.onclick = function() {
   resetFilters();
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
 }
 btnFilter.forEach(function(el) {
   el.onclick = function() {
     showFilters("toggle");
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
   };
 });
 btnAddTodo.forEach(function(el) {
@@ -295,12 +295,12 @@ btnAddTodo.forEach(function(el) {
     clearModal();
     showForm();
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
   }
 });
 btnTheme.onclick = function(el) {
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
   setTheme(true);
 }
 btnArchiveTodos.onclick = function() {
@@ -310,12 +310,12 @@ btnArchiveTodos.onclick = function() {
     console.log(error);
   });
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
 }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
 todoTableSearch.onfocus = function () {
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Search input field", "Focused"]);
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Search input field", "Focused"]);
 };
 todoTableSearch.addEventListener("input", function () {
   generateTodoData(this.value).then(response => {
@@ -327,34 +327,34 @@ todoTableSearch.addEventListener("input", function () {
 toggleShowCompleted.onclick = function() {
   showCompletedTodos();
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
 }
 toggleMatomoEvents.onclick = function() {
   matomoEvents = this.checked;
-  setConfig('matomoEvents', this.checked);
+  setUserData('matomoEvents', this.checked);
   matomoEventsConsent(this.checked).then(response => {
     console.log(response);
   }).catch(error => {
     console.log(error);
   });
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
 }
 toggleNotifications.onclick = function() {
   notifications = this.checked;
-  setConfig('notifications', this.checked);
+  setUserData('notifications', this.checked);
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
 }
 toggleDarkmode.onclick = function() {
   setTheme(true);
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
 }
 modalFormInputResize.onclick = function () {
   resizeInput(this.getAttribute("data-input-type"));
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
 }
 modalFormInput.onfocus = function () {
   suggestionContainer.classList.remove("is-active");
@@ -366,20 +366,20 @@ modalBackground.forEach(function(el) {
     suggestionContainer.classList.remove("is-active");
     suggestionContainer.blur();
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
   }
 });
 modalClose.forEach(function(el) {
   el.onclick = function() {
     if(el.getAttribute("data-message")) {
       // persist closed message, so it won't show again
-      if(!window.config.dismissedMessages.includes(el.getAttribute("data-message"))) window.config.dismissedMessages.push(el.getAttribute("data-message"))
-      setConfig("dismissedMessages", dismissedMessages);
+      if(!window.userData.dismissedMessages.includes(el.getAttribute("data-message"))) window.userData.dismissedMessages.push(el.getAttribute("data-message"))
+      setUserData("dismissedMessages", dismissedMessages);
       // trigger matomo event
-      if(config.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
     } else {
       // trigger matomo event
-      if(config.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
     }
     el.parentElement.parentElement.classList.remove("is-active");
   }
@@ -399,7 +399,7 @@ modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
 filterColumnClose.onclick = function() {
   showFilters(false);
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
 }
 priorityPicker.addEventListener("change", e => { setPriority(e.target.value) });
 // close suggestion box if focus comes to priority picker
@@ -597,7 +597,7 @@ function showRecurrenceOptions(el) {
       recurrencePickerContainer.classList.remove("is-active");
       modalFormInput.focus();
       // trigger matomo event
-      if(config.matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrence selected: " + recSplit.period]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrence selected: " + recSplit.period]);
     }
   });
 }
@@ -621,7 +621,7 @@ function createRecurringTodo(todo) {
     }
   } catch(error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "createRecurringTodo()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "createRecurringTodo()", error])
     return Promise.reject("Error in createRecurringTodo(): " + error);
   }
 }
@@ -702,7 +702,7 @@ Date.prototype.isPast = function () {
     } catch(error) {
       showOnboarding(true);
       // trigger matomo event
-      if(config.matomoEvents) _paq.push(["trackEvent", "Error", "parseDataFromFile()", error])
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "parseDataFromFile()", error])
       return Promise.reject("Error in parseDataFromFile(): " + error);
     }
   } else {
@@ -811,7 +811,7 @@ function startFileWatcher(config) {
     }*/
   } catch (error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "startFileWatcher()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "startFileWatcher()", error])
     return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
@@ -827,12 +827,12 @@ function changeFile(path) {
     });
     if(!files.includes(path)) files.push([1, path]);
     file = path;
-    setConfig("files", files);
+    setUserData("files", files);
     resetFilters();
     return Promise.resolve("Success: File changed to: " + path);
   } catch (error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
     return Promise.reject("Error in changeFile(): " + error);
   }
 }
@@ -870,7 +870,7 @@ function modalChooseFile() {
           console.log(error);
         });
         // trigger matomo event
-        if(config.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
       }
       cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
       cell3.title = i18next.t("delete");
@@ -892,11 +892,11 @@ function removeFileFromHistory(path) {
     files = files.filter(function(file) {
       return file[1] != path;
     });
-    setConfig("files", files);
+    setUserData("files", files);
     return Promise.resolve("Success: File removed from history: " + path);
   } catch (error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "removeFileFromHistory()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "removeFileFromHistory()", error])
     return Promise.reject("Error in removeFileFromHistory(): " + error);
   }
 }
@@ -926,9 +926,9 @@ function showFilters(variable) {
   }
   // persist filter drawer state
   if(filterDrawer.classList.contains("is-active")) {
-    setConfig("filterDrawer", true);
+    setUserData("filterDrawer", true);
   } else {
-    setConfig("filterDrawer", false);
+    setUserData("filterDrawer", false);
   }
   // if more toggle is open we close it as user doesn't need it anymore
   showMore(false);
@@ -937,9 +937,9 @@ function resetFilters() {
   selectedFilters = [];
   categoriesFiltered = new Array;
   // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
-  setConfig("selectedFilters", new Array);
+  setUserData("selectedFilters", new Array);
   // clear filtered categories
-  setConfig("categoriesFiltered", new Array);
+  setUserData("categoriesFiltered", new Array);
   // clear search input
   todoTableSearch.value = null;
   t0 = performance.now();
@@ -962,7 +962,7 @@ function writeTodoToFile(todo) {
   fs.open(file, 'a', 666, function(error, id) {
     if(error) {
       // trigger matomo event
-      if(config.matomoEvents) _paq.push(["trackEvent", "Error", "fs.open()", error])
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "fs.open()", error])
       return "Error in fs.open(): " + error;
     }
     fs.write(id, "\n"+todo, null, 'utf8', function() {
@@ -1009,7 +1009,7 @@ function archiveTodos() {
     return Promise.resolve("Success: Completed todo moved to: " + doneFile)
   } catch(error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
     return Promise.reject("Error in archiveTodos(): " + error)
   }
 }
@@ -1037,7 +1037,7 @@ function completeTodo(todo) {
         dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+0);
         // the one set for tomorrow
         dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+1);
-        setConfig("dismissedNotifications", dismissedNotifications);
+        setUserData("dismissedNotifications", dismissedNotifications);
       }
       todo.complete = true;
       todo.completed = new Date();
@@ -1049,7 +1049,7 @@ function completeTodo(todo) {
     return Promise.resolve("Success: Changes written to file: " + file);
   } catch(error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "completeTodo()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "completeTodo()", error])
     return Promise.reject("Error in completeTodo(): " + error);
   }
 }
@@ -1069,7 +1069,7 @@ function deleteTodo(todo) {
       dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+0);
       // the one set for tomorrow
       dismissedNotifications = dismissedNotifications.filter(e => e !== md5(date + todo.text)+1);
-      setConfig("dismissedNotifications", dismissedNotifications);
+      setUserData("dismissedNotifications", dismissedNotifications);
     }
     items.objects.splice(index, 1);
     //write the data to the file
@@ -1077,7 +1077,7 @@ function deleteTodo(todo) {
     return Promise.resolve("Success: Changes written to file: " + file);
   } catch(error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "deleteTodo()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "deleteTodo()", error])
     return Promise.reject("Error in deleteTodo(): " + error);
   }
 }
@@ -1131,7 +1131,7 @@ function submitForm() {
     //write the data to the file
     fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
     // save the previously saved item.current for further use
     //
     return Promise.resolve("Success: Changes written to file: " + file);
@@ -1141,7 +1141,7 @@ function submitForm() {
     modalFormAlert.innerHTML = i18next.t("formErrorWritingFile") + file;
     modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "submitForm()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "submitForm()", error])
     return Promise.reject("Error in submitForm(): " + error);
   }
 }
@@ -1153,7 +1153,7 @@ function showCompletedTodos() {
   }
   toggleShowCompleted.checked = showCompleted;
   // persist the sorting
-  setConfig("showCompleted", showCompleted);
+  setUserData("showCompleted", showCompleted);
   t0 = performance.now();
   generateTodoData().then(response => {
     console.log(response);
@@ -1217,49 +1217,6 @@ function getCaretPosition(inputId) {
     return false;
   }
 }
-function matomoEventsConsent(setting) {
-  try {
-    // only continue if app is connected to the internet
-    if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
-    var _paq = window._paq = window._paq || [];
-    // exclude development machine
-    if(is.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
-    _paq.push(['setUserId', uid]);
-    _paq.push(['setCustomDimension', 1, theme]);
-    _paq.push(['setCustomDimension', 2, language]);
-    _paq.push(['setCustomDimension', 3, notifications]);
-    _paq.push(['setCustomDimension', 4, matomoEvents]);
-    _paq.push(['setCustomDimension', 5, app.getVersion()]);
-    _paq.push(['setCustomDimension', 6, width+"x"+height]);
-    _paq.push(['setCustomDimension', 7, showCompleted]);
-    _paq.push(['setCustomDimension', 8, files.length]);
-    _paq.push(['setCustomDimension', 9, useTextarea]);
-    _paq.push(['requireConsent']);
-    _paq.push(['setConsentGiven']);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    _paq.push(['trackVisibleContentImpressions']);
-    (function() {
-      var u="https://www.robbfolio.de/matomo/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '3']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-    if(config.matomoEvents) {
-      // user has given consent to process their data
-      return Promise.resolve("Info: Consent given, Matomo error and event logging enabled");
-    } else {
-      // revoke matomoEvents consent
-      _paq.push(['forgetConsentGiven']);
-      return Promise.resolve("Info: No consent given, Matomo error and event logging disabled");
-    }
-  } catch(error) {
-    // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "matomoEventsConsent()", error])
-    return Promise.reject("Error in matomoEventsConsent(): " + error);
-  }
-}
 function showNotification(todo, offset) {
   try {
     // abort if user didn't permit notifications within sleek
@@ -1299,11 +1256,11 @@ function showNotification(todo, offset) {
       newNotification.show();
       // once shown, it will be persisted as hash to it won't be shown a second time
       dismissedNotifications.push(hash);
-      setConfig("dismissedNotifications", dismissedNotifications);
+      setUserData("dismissedNotifications", dismissedNotifications);
       // click on button in notification
       newNotification.addListener('click', () => {
         // trigger matomo event
-        if(config.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
         app.focus();
         // if another modal was open it needs to be closed first
         clearModal();
@@ -1314,12 +1271,12 @@ function showNotification(todo, offset) {
         once: true
       });
       // trigger matomo event
-      if(config.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
       return Promise.resolve("Info: Notification successfully sent");
     });
   } catch(error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "showNotification()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showNotification()", error])
     return Promise.reject("Error in showNotification(): " + error);
   }
 }
@@ -1365,7 +1322,7 @@ function clearModal() {
 }
 function checkDismissedMessages() {
   messages.forEach((message) => {
-    if(window.config.dismissedMessages.includes(message.getAttribute("data"))) {
+    if(window.userData.dismissedMessages.includes(message.getAttribute("data"))) {
       message.classList.remove("is-active");
     } else {
       message.classList.add("is-active");
@@ -1445,7 +1402,7 @@ function resizeInput(type) {
       modalFormInputResize.setAttribute("data-input-type", "textarea");
       modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
       // persist setting
-      setConfig("useTextarea", true);
+      setUserData("useTextarea", true);
       // replace ascii code with line breaks
       //modalFormInput.value = modalFormInput.value.replaceAll(String.fromCharCode(16), "\r\n");
       break;
@@ -1455,7 +1412,7 @@ function resizeInput(type) {
       modalFormInputResize.setAttribute("data-input-type", "input");
       modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
       // persist setting
-      setConfig("useTextarea", false);
+      setUserData("useTextarea", false);
       // replace ascii code with spaces
       //modalFormInput.value = modalFormInput.value.replaceAll(String.fromCharCode(16), " ");
       break;
@@ -1552,7 +1509,7 @@ contentTabs.forEach(el => el.addEventListener("click", function(el) {
   this.classList.add("is-active");
   showTab(this.classList[0]);
   // trigger matomo event
-  if(config.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
 }));
 // ########################################################################################################################
 // RESIZEABLE FILTER DRAWER
@@ -1565,7 +1522,7 @@ const maxPaneSize = document.body.clientWidth * .75
 const setPaneWidth = (width) => {
   getResizeableElement().style
     .setProperty("--resizeable-width", `${width}px`);
-  setConfig("filterDrawerWidth", `${width}px`);
+  setUserData("filterDrawerWidth", `${width}px`);
 };
 const getPaneWidth = () => {
   const pxWidth = getComputedStyle(getResizeableElement())
@@ -1604,8 +1561,61 @@ getHandleElement().addEventListener("mousedown", startDragging);
 // ########################################################################################################################
 // WINDOW
 // ########################################################################################################################
+function matomoEventsConsent(setting) {
+  try {
+    if(!window.userData.uid) {
+      // generate random number/string combination as user id and persist it
+      var uid = Math.random().toString(36).slice(2);
+      //if(is.development) uid = "DEVELOPMENT"
+      setUserData("uid", uid);
+    }
+    // only continue if app is connected to the internet
+    if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
+    var _paq = window._paq = window._paq || [];
+    // exclude development machine
+    if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
+    _paq.push(['setUserId', window.userData.uid]);
+    _paq.push(['setCustomDimension', 1, window.userData.theme]);
+    _paq.push(['setCustomDimension', 2, window.userData.language]);
+    _paq.push(['setCustomDimension', 3, window.userData.notifications]);
+    _paq.push(['setCustomDimension', 4, window.userData.matomoEvents]);
+    _paq.push(['setCustomDimension', 5, window.appData.version]);
+    _paq.push(['setCustomDimension', 6, window.userData.width+"x"+window.userData.height]);
+    _paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
+    _paq.push(['setCustomDimension', 8, window.userData.files.length]);
+    _paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
+    _paq.push(['requireConsent']);
+    _paq.push(['setConsentGiven']);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    _paq.push(['trackVisibleContentImpressions']);
+    (function() {
+      var u="https://www.robbfolio.de/matomo/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '3']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+    if(window.userData.matomoEvents) {
+      // user has given consent to process their data
+      return Promise.resolve("Info: Consent given, Matomo error and event logging enabled");
+    } else {
+      // revoke matomoEvents consent
+      _paq.push(['forgetConsentGiven']);
+      return Promise.resolve("Info: No consent given, Matomo error and event logging disabled");
+    }
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "matomoEventsConsent()", error])
+    return Promise.reject("Error in matomoEventsConsent(): " + error);
+  }
+}
 function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
+    let selectedFilters = new Array;
+    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
+    let categoriesFiltered = new Array;
+    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
     // creates a div for the specific filter section
     let todoFiltersSub = document.createElement("div");
     todoFiltersSub.setAttribute("class", "dropdown-item " + category);
@@ -1617,6 +1627,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       var headline = window.translations.projects;
     }
     if(typeAheadPrefix==undefined) {
+      let categoriesFiltered = window.userData.categoriesFiltered;
       // create a sub headline element
       let todoFilterHeadline = document.createElement("a");
       todoFilterHeadline.setAttribute("class", "headline " + category);
@@ -1627,18 +1638,18 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
       // TODO clean up the mess
       todoFilterHeadline.addEventListener("click", () => {
         // TODO clean up. this is a duplicate, see above
-        if(window.config.categoriesFiltered.includes(category)) {
+        if(categoriesFiltered.includes(category)) {
           // we remove the category from the array
-          window.config.categoriesFiltered.splice(window.config.categoriesFiltered.indexOf(category), 1);
+          categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
           //persist the category filters
-          setConfig("categoriesFiltered", window.config.categoriesFiltered);
+          setUserData("categoriesFiltered", categoriesFiltered);
           // we remove the greyed out look from the container
           todoFiltersSub.classList.remove("is-greyed-out");
           // change the eye icon
           todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"0\"></a>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
         } else {
           // we push the category to the filter array
-          window.config.categoriesFiltered.push(category);
+          categoriesFiltered.push(category);
           // make sure there are no duplicates
           // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
           categoriesFiltered.filter(function(item) {
@@ -1647,7 +1658,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             return seen.hasOwnProperty(k) ? false : (seen[k] = true);
           })
           //persist the category filters
-          setConfig("categoriesFiltered", window.config.categoriesFiltered);
+          setUserData("categoriesFiltered", categoriesFiltered);
           // we add the greyed out look to the container
           todoFiltersSub.classList.add("is-greyed-out");
           // change the eye icon
@@ -1662,7 +1673,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           console.log(error);
         });
         // trigger matomo event
-        if(window.config.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on headline", category])
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on headline", category])
       });
       // TODO clean up. this is a duplicate, see above
       if(categoriesFiltered.includes(category)) {
@@ -1705,27 +1716,27 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           // set highlighting
           todoFiltersItem.classList.toggle("is-dark");
           // if no filters are selected, add a first one
-          if (window.config.selectedFilters.length > 0) {
+          if (selectedFilters.length > 0) {
             // get the index of the item that matches the data values the button click provided
-            let index = window.config.selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+            let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
             if(index != -1) {
               // remove the item at the index where it matched
-              window.config.selectedFilters.splice(index, 1);
+              selectedFilters.splice(index, 1);
             } else {
               // if the item is not already in the array, push it into
-              window.config.selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+              selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
             }
           } else {
             // this is the first push
-            window.config.selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
           }
           // convert the collected filters to JSON and save it to store.js
-          setConfig("selectedFilters", JSON.stringify(window.config.selectedFilters));
-          if(window.config.categoriesFiltered) {
+          setUserData("selectedFilters", JSON.stringify(selectedFilters));
+          if(categoriesFiltered) {
             // remove any setting that hides the category of the selected filters
-            if(window.config.categoriesFiltered.indexOf(category)>=0) window.config.categoriesFiltered.splice(window.config.categoriesFiltered.indexOf(category), 1);
+            if(categoriesFiltered.indexOf(category)>=0) categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
             //persist the category filters
-            setConfig("categoriesFiltered", window.config.categoriesFiltered);
+            setUserData("categoriesFiltered", categoriesFiltered);
           }
           t0 = performance.now();
           generateTodoData().then(response => {
@@ -1736,7 +1747,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
             console.log(error);
           });
           // trigger matomo event
-          if(window.config.config.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
         });
       // suggestion container
       } else {
@@ -1758,7 +1769,7 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
           // put focus back into input so user can continue writing
           modalFormInput.focus();
           // trigger matomo event
-          if(config.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
       }
       // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
@@ -1774,12 +1785,17 @@ function buildFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosi
     //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
   } catch (error) {
     // trigger matomo event
-    if(window.config.matomoEvents) _paq.push(["trackEvent", "Error", "buildFilterButtons()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "buildFilterButtons()", error])
     return Promise.reject("Error in buildFilterButtons(): " + error);
   }
 }
 function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
+    let items = window.items;
+    let selectedFilters = new Array;
+    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
+    let categoriesFiltered = new Array;
+    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
     // container to fill with categories
     let container;
     // is this a typeahead request? Default is false
@@ -1807,7 +1823,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
           // push all filters found so far into an array
           for (let filter in item[category]) {
             // if user has not opted for showComplete we skip the filter of this particular item
-            if(window.config.showCompleted==false && item.complete==true) {
+            if(window.userData.showCompleted==false && item.complete==true) {
               continue;
             } else {
               filters.push([item[category][filter]]);
@@ -1834,18 +1850,17 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // https://wsvincent.com/javascript-remove-duplicates-array/
       filters = [...new Set(filters.join(",").split(","))];
 
-
-      if (window.config.selectedFilters.length > 0) window.config.selectedFilters = JSON.parse(window.config.selectedFilters);
+      //if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
 
       // check if selected filters is still part of all available filters
-      window.config.selectedFilters.forEach(function(selectedFilter,index,object){
+      selectedFilters.forEach(function(selectedFilter,index,object){
         if(selectedFilter[1]==category) {
           // category found, but the selected filter is not part of available filters
           if(!filters.includes(selectedFilter[0])) {
             // delete persisted filters
             selectedFilters.splice(index, 1);
             // persist the change
-            setConfig("selectedFilters", JSON.stringify(selectedFilters));
+            setUserData("selectedFilters", JSON.stringify(selectedFilters));
           }
         }
       });
@@ -1869,7 +1884,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
     return Promise.resolve("Success: All filters have been generated and built");
   } catch (error) {
     // trigger matomo event
-    if(config.matomoEvents) _paq.push(["trackEvent", "Error", "generateFilterData()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateFilterData()", error])
     return Promise.reject("Error in generateFilterData(): " + error);
   }
 }
@@ -1965,42 +1980,157 @@ function showForm(todo, templated) {
       positionSuggestionContainer();
   } catch (error) {
     // trigger matomo event
-    if(window.config.matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
     console.log(error);
   }
 }
-// TODO: Error handling
 function setTheme(switchTheme) {
   try {
     if(switchTheme) {
-      switch (window.config.theme) {
+      switch (window.userData.theme) {
         case "dark":
-          window.config.theme = "light";
+          window.userData.theme = "light";
           break;
         case "light":
-          window.config.theme = "dark";
+          window.userData.theme = "dark";
           break;
         default:
-          window.config.theme = "light";
+          window.userData.theme = "light";
           break;
       }
-      setConfig("theme", window.config.theme);
+      setUserData("theme", window.userData.theme);
     }
-    switch (window.config.theme) {
+    switch (window.userData.theme) {
       case "light":
         toggleDarkmode.checked = false;
         themeLink.href = "";
         break;
       case "dark":
         toggleDarkmode.checked = true;
-        themeLink.href = window.config.path + "/css/" + window.config.theme + ".css";
+        themeLink.href = window.userData.path + "/css/" + window.userData.theme + ".css";
         break;
     }
-    return Promise.resolve("Success: Theme set to " + window.config.theme);
+    return Promise.resolve("Success: Theme set to " + window.userData.theme);
   } catch(error) {
     // trigger matomo event
-    if(window.config.matomoEvents) _paq.push(["trackEvent", "Error", "setTheme()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTheme()", error])
     return Promise.reject("Error in setTheme(): " + error);
+  }
+}
+function setTranslations() {
+  try {
+    window.api.send("getTranslations");
+    window.api.receive("sendTranslations", (translations) => {
+      // declare translations as global for usage later on
+      window.translations = translations;
+      // ########################################################################################################################
+      // TRANSLATIONS
+      // ########################################################################################################################
+      btnTheme.setAttribute("title", translations.toggleDarkMode);
+      btnSave.innerHTML = translations.save;
+      todoTableSearch.placeholder = translations.search;
+      filterToggleShowCompleted.innerHTML = translations.completedTodos;
+      filterBtnResetFilters.innerHTML = translations.resetFilters;
+      addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
+      addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
+      addTodoContainerButton.innerHTML = translations.addTodo;
+      onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
+      onboardingContainerBtnOpen.innerHTML = translations.openFile;
+      onboardingContainerBtnCreate.innerHTML = translations.createFile;
+      noResultContainerHeadline.innerHTML = translations.noResults;
+      noResultContainerSubtitle.innerHTML = translations.noResultContainerSubtitle;
+      modalFormInput.placeholder = translations.formTodoInputPlaceholder;
+      modalChangeFileTitle.innerHTML = translations.selectFile;
+      modalChangeFileOpen.innerHTML = translations.openFile;
+      modalChangeFileCreate.innerHTML = translations.createFile;
+      selectionBtnShowFilters.innerHTML = translations.toggleFilter;
+      welcomeToSleek.innerHTML = translations.welcomeToSleek;
+      dueDatePickerInput.placeholder = translations.formSelectDueDate;
+      recurrencePickerEvery.innerHTML = translations.every;
+      recurrencePickerDay.innerHTML = translations.day;
+      recurrencePickerWeek.innerHTML = translations.week;
+      recurrencePickerMonth.innerHTML = translations.month;
+      recurrencePickerYear.innerHTML = translations.year;
+      recurrencePickerNoRecurrence.innerHTML = translations.noRecurrence;
+      recurrencePickerInput.placeholder = translations.noRecurrence;
+      messageLoggingTitle.innerHTML = translations.errorEventLogging;
+      messageLoggingBody.innerHTML = translations.messageLoggingBody;
+      messageLoggingButton.innerHTML = translations.settings;
+      settingsTabSettings.innerHTML = translations.settings;
+      settingsTabSettingsLanguage.innerHTML = translations.language;
+      settingsTabSettingsLanguageBody.innerHTML = translations.settingsTabSettingsLanguageBody;
+      settingsTabSettingsArchive.innerHTML = translations.settingsTabSettingsArchive;
+      settingsTabSettingsArchiveBody.innerHTML = translations.settingsTabSettingsArchiveBody;
+      settingsTabSettingsArchiveButton.innerHTML = translations.archive;
+      settingsTabSettingsNotifications.innerHTML = translations.notifications;
+      settingsTabSettingsNotificationsBody.innerHTML = translations.settingsTabSettingsNotificationsBody;
+      settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
+      settingsTabSettingsDarkmodeBody.innerHTML = translations.settingsTabSettingsDarkmodeBody;
+      settingsTabSettingsLogging.innerHTML = translations.errorEventLogging;
+      settingsTabSettingsLoggingBody.innerHTML = translations.settingsTabSettingsLoggingBody;
+      settingsTabAbout.innerHTML = translations.about;
+      settingsTabAboutContribute.innerHTML = translations.settingsTabAboutContribute;
+      settingsTabAboutContributeBody.innerHTML = translations.settingsTabAboutContributeBody;
+      settingsTabAboutCopyrightLicense.innerHTML = translations.settingsTabAboutCopyrightLicense;
+      settingsTabAboutCopyrightLicenseBody.innerHTML = translations.settingsTabAboutCopyrightLicenseBody;
+      settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
+      settingsTabAboutPrivacyBody.innerHTML = translations.settingsTabAboutPrivacyBody;
+      settingsTabAboutExternalLibraries.innerHTML = translations.settingsTabAboutExternalLibraries;
+      helpTabKeyboardTitle.innerHTML = translations.shortcuts;
+      helpTabPrioritiesTitle.innerHTML = translations.helpTabPrioritiesTitle;
+      helpTabPrioritiesBody.innerHTML = translations.helpTabPrioritiesBody;
+      helpTabContextsProjectsTitle.innerHTML = translations.helpTabContextsProjectsTitle;
+      helpTabContextsProjectsBody.innerHTML = translations.helpTabContextsProjectsBody;
+      helpTabDatesRecurrencesTitle1.innerHTML = translations.helpTabDatesRecurrencesTitle1;
+      helpTabDatesRecurrencesBody1.innerHTML = translations.helpTabDatesRecurrencesBody1;
+      helpTabDatesRecurrencesTitle2.innerHTML = translations.helpTabDatesRecurrencesTitle2;
+      helpTabDatesRecurrencesBody2.innerHTML = translations.helpTabDatesRecurrencesBody2;
+      helpTab1Title.innerHTML = translations.shortcuts;
+      helpTab2Title.innerHTML = translations.priorities;
+      helpTab3Title.innerHTML = translations.helpTab3Title;
+      helpTab4Title.innerHTML = translations.helpTab4Title;
+      helpTabKeyboardTR1TD1.innerHTML = translations.addTodo;
+      helpTabKeyboardTR2TD1.innerHTML = translations.findTodo;
+      helpTabKeyboardTR3TD1.innerHTML = translations.toggleCompletedTodos;
+      helpTabKeyboardTR4TD1.innerHTML = translations.toggleDarkMode;
+      helpTabKeyboardTR5TD1.innerHTML = translations.openFile;
+      helpTabKeyboardTR6TD1.innerHTML = translations.settings;
+      helpTabKeyboardTR1TH1.innerHTML = translations.function;
+
+      todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
+      dueDatePickerInput.setAttribute("size", translations.formSelectDueDate.length)
+      navBtnHelp.firstElementChild.setAttribute("title", translations.help);
+      navBtnSettings.firstElementChild.setAttribute("title", translations.settings);
+
+      btnOpenTodoFile.forEach(function(el) {
+        el.setAttribute("title", translations.openFile);
+      });
+
+      btnCreateTodoFile.forEach(function(el) {
+        el.setAttribute("title", translations.createFile);
+      });
+
+      btnChangeTodoFile.forEach(function(el) {
+        el.setAttribute("title", translations.openFile);
+      });
+
+      btnModalCancel.forEach(function(el) {
+        el.innerHTML = translations.cancel;
+      });
+
+      btnFilter.forEach(function(el) {
+        el.setAttribute("title", translations.toggleFilter);
+      });
+
+      btnAddTodo.forEach(function(el) {
+        el.setAttribute("title", translations.addTodo);
+      });
+    });
+    return Promise.resolve("Success: Translations received and applied");
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTranslations()", error])
+    return Promise.reject("Error in setTranslations(): " + error);
   }
 }
 function domConfiguration(config) {
@@ -2008,23 +2138,31 @@ function domConfiguration(config) {
   toggleNotifications.checked = config.notifications;
   toggleShowCompleted.checked = config.showCompleted;
 }
-function getConfig() {
+function getUserData() {
   return new Promise(function(resolve, reject) {
-    window.api.send("getConfig");
-    window.api.receive("getConfig", (config) => {
+    window.api.send("getUserData");
+    window.api.receive("getUserData", (config) => {
       resolve(config);
     });
   });
 }
-// TODO: error handling
-function setConfig(key, value) {
+function getAppData() {
+  return new Promise(function(resolve, reject) {
+    window.api.send("getAppData");
+    window.api.receive("getAppData", (appData) => {
+      resolve(appData);
+    });
+  });
+}
+function setUserData(key, value) {
   try {
-    window.api.send("setConfig", [key, value]);
+    window.userData[key] = value;
+    window.api.send("setUserData", [key, value]);
     return Promise.resolve("Success: Config written to config file");
   } catch(error) {
     // trigger matomo event
-    if(window.config.matomoEvents) _paq.push(["trackEvent", "Error", "setConfig()", error])
-    return Promise.reject("Error in setConfig(): " + error);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setUserData()", error])
+    return Promise.reject("Error in setUserData(): " + error);
   }
 }
 function getFileContent() {
@@ -2040,17 +2178,19 @@ function generateItems(fileContent) {
   items.complete = items.objects.filter(function(item) { return item.complete === true });
   items.incomplete = items.objects.filter(function(item) { return item.complete === false });
   items.objects = items.objects.filter(function(item) { return item.toString() != "" });
-  configureMainView(items);
+  window.items = items;
+  configureMainView();
 }
-function configureMainView(items) {
+function configureMainView() {
   try {
+    let items = window.items;
     if(items.objects.length>0) {
       // if settings modal is open and archiving has been completed (will trigger this function) the buttons needs to be disabled until another completed todo is added
       setButtonState("btnArchiveTodos");
       // if there is a file onboarding is hidden
       showOnboarding(false);
       t0 = performance.now();
-      generateTodoData(items).then(response => {
+      generateTodoData().then(response => {
         console.log(response);
         t1 = performance.now();
         console.log("Table rendered in", t1 - t0, "ms");
@@ -2075,23 +2215,28 @@ function configureMainView(items) {
   } catch(error) {
     showOnboarding(true);
     // trigger matomo event
-    if(window.config.matomoEvents) _paq.push(["trackEvent", "Error", "configureMainView()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureMainView()", error])
     return Promise.reject("Error in configureMainView(): " + error);
   }
 }
 // TODO: searchstring nachpflegen
-function generateTodoData(items) {
+function generateTodoData(searchString) {
   try {
+    let items = window.items;
+    let selectedFilters = new Array;
+    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
+    let categoriesFiltered = new Array;
+    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
     // if set: remove all completed todos
-    if(window.config.showCompleted==false) {
+    if(window.userData.showCompleted==false) {
       items.objectsFiltered = items.incomplete;
     } else {
       items.objectsFiltered = items.objects;
     }
     // if there are selected filters
-    if(window.config.selectedFilters.length > 0) {
+    if(selectedFilters.length > 0) {
       // we iterate through the filters in the order they got selected
-      window.config.selectedFilters.forEach(filter => {
+      selectedFilters.forEach(filter => {
         // check if the filter is a project filter
         if(filter[1]=="projects") {
           items.objectsFiltered = items.objectsFiltered.filter(function(item) {
@@ -2105,7 +2250,6 @@ function generateTodoData(items) {
         }
       });
     }
-
     // filters are generated once the final todos are defined
     t0 = performance.now();
     generateFilterData().then(response => {
@@ -2116,15 +2260,14 @@ function generateTodoData(items) {
       console.log(error);
     });
     // exclude all filters of a category if set
-    if(window.config.categoriesFiltered.length > 0) {
-      window.config.categoriesFiltered.forEach(category => {
+    if(categoriesFiltered.length > 0) {
+      categoriesFiltered.forEach(category => {
         // we create a new array where the items attrbite has no values
         items.objectsFiltered = items.objectsFiltered.filter(function(item) {
           return item[category] === null;
         });
       });
     }
-    /*
     // if search input is detected
     if(searchString || todoTableSearch.value) {
       if(todoTableSearch.value) searchString = todoTableSearch.value;
@@ -2135,7 +2278,6 @@ function generateTodoData(items) {
         return item;
       });
     }
-    */
     // fill result stat container, if it is necessary
     showResultStats();
     // empty the table containers before reading fresh data
@@ -2246,7 +2388,7 @@ function generateTodoData(items) {
     return Promise.resolve("Success: Todo data generated and table built");
   } catch(error) {
     // trigger matomo event
-    if(window.config.matomoEvents) _paq.push(["trackEvent", "Error", "generateTodoData()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateTodoData()", error])
     return Promise.reject("Error in generateTodoData(): " + error);
   }
 }
@@ -2297,7 +2439,7 @@ function createTableRow(todo) {
         console.log(error);
       });
       // trigger matomo event
-      if(window.config.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
     }
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
     // creates cell for the text
@@ -2317,7 +2459,7 @@ function createTableRow(todo) {
       if(!event.target.classList.contains('fa-external-link-alt')) {
         showForm(this.parentElement.getAttribute('data-item'));
         // trigger matomo event
-        if(window.config.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on todo"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on todo"]);
       }
     }
     // cell for the categories
@@ -2374,12 +2516,12 @@ function createTableRow(todo) {
         // if this element was hidden before, we will show it now
         this.parentElement.parentElement.classList.add("is-active");
         // trigger matomo event
-        if(window.config.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
         // click on edit
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
           showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
           // trigger matomo event
-          if(window.config.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
         }
         // click on delete
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
@@ -2390,13 +2532,13 @@ function createTableRow(todo) {
             console.log(error);
           });
           // trigger matomo event
-          if(window.config.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
         }
         // click on use as template option
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
           showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'), true);
           // trigger matomo event
-          if(window.config.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
         }
       }
     }
@@ -2406,17 +2548,24 @@ function createTableRow(todo) {
     return todoTableBodyRow;
   } catch(error) {
     // trigger matomo event
-    if(window.config.matomoEvents) _paq.push(["trackEvent", "Error", "createTableRow()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "createTableRow()", error])
     return Promise.reject("Error in createTableRow(): " + error);
   }
 }
-window.onload = function () {
-  getConfig().then(function(config) {
-    window.config = config;
+window.onload = async function () {
+  // call for translations and apply them
+  await setTranslations().then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });
+  // call user data and continue when result is ready
+  await getUserData().then(function(userData) {
+    window.userData = userData;
     // only start if a file has been selected
     // TODO: read current file from file array
-    console.log("Info: File loaded: " + config.file);
-    if(config.file) {
+    console.log("Info: File loaded: " + userData.file);
+    if(userData.file) {
       getFileContent().then(function(fileContent) {
         console.log("Success: Data extracted from file");
         generateItems(fileContent);
@@ -2428,138 +2577,48 @@ window.onload = function () {
       // show onboarding if no file has been selected
       showOnboarding(true);
     }
-    // TODO configure Matomo call
-    // On app load only call matomo function if opt in is set
-    /*matomoEventsConsent(config.matomoEvents).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });*/
-    // set theme
-    setTheme();
-    // TODO: not generic
     // only show message to users, that haven't enabled matomo yet
-    if(!config.matomoEvents) checkDismissedMessages()
+    if(!userData.matomoEvents) checkDismissedMessages()
   }).catch(function(error) {
-    // Or do something else if it is rejected
     console.log(error);
-    // (it would not happen in this example, since `reject` is not called).
   });
+  // set theme
+  await setTheme().then(function(appData) {
+    window.appData = appData;
+  }).catch(function(error) {
+    console.log(error);
+  });
+  // call app data and continue
+  await getAppData().then(function(appData) {
+    window.appData = appData;
+  }).catch(function(error) {
+    console.log(error);
+  });
+  // On app load only call matomo function if opt in is set
+  await matomoEventsConsent(userData.matomoEvents).then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // set after userData has been set
+  window.onresize = function() {
+    try {
+      let width = this.outerWidth;
+      let height = this.outerHeight;
+      setUserData("windowBounds", { width, height }).then(function() {
+        // Adjust position of suggestion box to input field
+        let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+        suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+        suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+        suggestionContainer.style.left = modalFormInputPosition.left + "px";
+        return Promise.resolve("Success: Window bounds Config written to config file");
+      }).catch(function(error) {
+        return Promise.reject("Error in window.onresize: " + error);
+      });
+    } catch(error) {
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "window.onresize", error])
+      return Promise.reject("Error in window.onresize: " + error);
+    }
+  }
 }
-window.onresize = function() {
-  let width = this.outerWidth;
-  let height = this.outerHeight;
-  setConfig("windowBounds", { width, height });
-  // Adjust position of suggestion box to input field
-  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-  suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
-  suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-  suggestionContainer.style.left = modalFormInputPosition.left + "px";
-}
-window.api.send("getTranslations");
-window.api.receive("sendTranslations", (translations) => {
-  // declare translations as global for usage later on
-  window.translations = translations;
-  // ########################################################################################################################
-  // TRANSLATIONS
-  // ########################################################################################################################
-  btnTheme.setAttribute("title", translations.toggleDarkMode);
-  btnSave.innerHTML = translations.save;
-  todoTableSearch.placeholder = translations.search;
-  filterToggleShowCompleted.innerHTML = translations.completedTodos;
-  filterBtnResetFilters.innerHTML = translations.resetFilters;
-  addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
-  addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
-  addTodoContainerButton.innerHTML = translations.addTodo;
-  onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
-  onboardingContainerBtnOpen.innerHTML = translations.openFile;
-  onboardingContainerBtnCreate.innerHTML = translations.createFile;
-  noResultContainerHeadline.innerHTML = translations.noResults;
-  noResultContainerSubtitle.innerHTML = translations.noResultContainerSubtitle;
-  modalFormInput.placeholder = translations.formTodoInputPlaceholder;
-  modalChangeFileTitle.innerHTML = translations.selectFile;
-  modalChangeFileOpen.innerHTML = translations.openFile;
-  modalChangeFileCreate.innerHTML = translations.createFile;
-  selectionBtnShowFilters.innerHTML = translations.toggleFilter;
-  welcomeToSleek.innerHTML = translations.welcomeToSleek;
-  dueDatePickerInput.placeholder = translations.formSelectDueDate;
-  recurrencePickerEvery.innerHTML = translations.every;
-  recurrencePickerDay.innerHTML = translations.day;
-  recurrencePickerWeek.innerHTML = translations.week;
-  recurrencePickerMonth.innerHTML = translations.month;
-  recurrencePickerYear.innerHTML = translations.year;
-  recurrencePickerNoRecurrence.innerHTML = translations.noRecurrence;
-  recurrencePickerInput.placeholder = translations.noRecurrence;
-  messageLoggingTitle.innerHTML = translations.errorEventLogging;
-  messageLoggingBody.innerHTML = translations.messageLoggingBody;
-  messageLoggingButton.innerHTML = translations.settings;
-  settingsTabSettings.innerHTML = translations.settings;
-  settingsTabSettingsLanguage.innerHTML = translations.language;
-  settingsTabSettingsLanguageBody.innerHTML = translations.settingsTabSettingsLanguageBody;
-  settingsTabSettingsArchive.innerHTML = translations.settingsTabSettingsArchive;
-  settingsTabSettingsArchiveBody.innerHTML = translations.settingsTabSettingsArchiveBody;
-  settingsTabSettingsArchiveButton.innerHTML = translations.archive;
-  settingsTabSettingsNotifications.innerHTML = translations.notifications;
-  settingsTabSettingsNotificationsBody.innerHTML = translations.settingsTabSettingsNotificationsBody;
-  settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
-  settingsTabSettingsDarkmodeBody.innerHTML = translations.settingsTabSettingsDarkmodeBody;
-  settingsTabSettingsLogging.innerHTML = translations.errorEventLogging;
-  settingsTabSettingsLoggingBody.innerHTML = translations.settingsTabSettingsLoggingBody;
-  settingsTabAbout.innerHTML = translations.about;
-  settingsTabAboutContribute.innerHTML = translations.settingsTabAboutContribute;
-  settingsTabAboutContributeBody.innerHTML = translations.settingsTabAboutContributeBody;
-  settingsTabAboutCopyrightLicense.innerHTML = translations.settingsTabAboutCopyrightLicense;
-  settingsTabAboutCopyrightLicenseBody.innerHTML = translations.settingsTabAboutCopyrightLicenseBody;
-  settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
-  settingsTabAboutPrivacyBody.innerHTML = translations.settingsTabAboutPrivacyBody;
-  settingsTabAboutExternalLibraries.innerHTML = translations.settingsTabAboutExternalLibraries;
-  helpTabKeyboardTitle.innerHTML = translations.shortcuts;
-  helpTabPrioritiesTitle.innerHTML = translations.helpTabPrioritiesTitle;
-  helpTabPrioritiesBody.innerHTML = translations.helpTabPrioritiesBody;
-  helpTabContextsProjectsTitle.innerHTML = translations.helpTabContextsProjectsTitle;
-  helpTabContextsProjectsBody.innerHTML = translations.helpTabContextsProjectsBody;
-  helpTabDatesRecurrencesTitle1.innerHTML = translations.helpTabDatesRecurrencesTitle1;
-  helpTabDatesRecurrencesBody1.innerHTML = translations.helpTabDatesRecurrencesBody1;
-  helpTabDatesRecurrencesTitle2.innerHTML = translations.helpTabDatesRecurrencesTitle2;
-  helpTabDatesRecurrencesBody2.innerHTML = translations.helpTabDatesRecurrencesBody2;
-  helpTab1Title.innerHTML = translations.shortcuts;
-  helpTab2Title.innerHTML = translations.priorities;
-  helpTab3Title.innerHTML = translations.helpTab3Title;
-  helpTab4Title.innerHTML = translations.helpTab4Title;
-  helpTabKeyboardTR1TD1.innerHTML = translations.addTodo;
-  helpTabKeyboardTR2TD1.innerHTML = translations.findTodo;
-  helpTabKeyboardTR3TD1.innerHTML = translations.toggleCompletedTodos;
-  helpTabKeyboardTR4TD1.innerHTML = translations.toggleDarkMode;
-  helpTabKeyboardTR5TD1.innerHTML = translations.openFile;
-  helpTabKeyboardTR6TD1.innerHTML = translations.settings;
-  helpTabKeyboardTR1TH1.innerHTML = translations.function;
-
-  todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
-  dueDatePickerInput.setAttribute("size", translations.formSelectDueDate.length)
-  navBtnHelp.firstElementChild.setAttribute("title", translations.help);
-  navBtnSettings.firstElementChild.setAttribute("title", translations.settings);
-
-  btnOpenTodoFile.forEach(function(el) {
-    el.setAttribute("title", translations.openFile);
-  });
-
-  btnCreateTodoFile.forEach(function(el) {
-    el.setAttribute("title", translations.createFile);
-  });
-
-  btnChangeTodoFile.forEach(function(el) {
-    el.setAttribute("title", translations.openFile);
-  });
-
-  btnModalCancel.forEach(function(el) {
-    el.innerHTML = translations.cancel;
-  });
-
-  btnFilter.forEach(function(el) {
-    el.setAttribute("title", translations.toggleFilter);
-  });
-
-  btnAddTodo.forEach(function(el) {
-    el.setAttribute("title", translations.addTodo);
-  });
-});

@@ -10,7 +10,7 @@ const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
 // config setting
 const Store = require("./configs/store.config.js");
-const config = new Store({
+const userData = new Store({
   configName: "user-preferences",
   defaults: {
     windowBounds: { width: 1025, height: 768 },
@@ -30,8 +30,12 @@ const config = new Store({
     filterDrawer: false,
   }
 });
+const appData = {
+  version: app.getVersion(),
+  development: is.development
+}
 const createWindow = () => {
-  let { width, height } = config.get("windowBounds");
+  let { width, height } = userData.get("windowBounds");
   const mainWindow = new BrowserWindow(
   {
     width: width,
@@ -199,29 +203,28 @@ const createWindow = () => {
 
 
 
-
   // Send result back to renderer process
-  ipcMain.on("getConfig", (event, args) => {
-    mainWindow.webContents.send("getConfig", config.data)
+  ipcMain.on("getUserData", (event, args) => {
+    mainWindow.webContents.send("getUserData", userData.data);
+  });
+  // Send result back to renderer process
+  ipcMain.on("getAppData", (event, args) => {
+    mainWindow.webContents.send("getAppData", appData);
   });
   // Write config to file
-  ipcMain.on("setConfig", (event, args) => {
-    config.set(args[0], args[1]);
+  ipcMain.on("setUserData", (event, args) => {
+    userData.set(args[0], args[1]);
   });
   // Send translations back to renderer process
   ipcMain.on("getTranslations", (event, args) => {
-    mainWindow.webContents.send("sendTranslations", i18next.getDataByLanguage(config.get("language")).translation)
+    mainWindow.webContents.send("sendTranslations", i18next.getDataByLanguage(userData.get("language")).translation)
   });
   // Check if file exists and send content to renderer process
   ipcMain.on("getFileContent", (event, args) => {
     // read fresh data from file
-    const fileContent = fs.readFileSync(config.get("file"), {encoding: 'utf-8'}, function(err,data) { return data; });
+    const fileContent = fs.readFileSync(userData.get("file"), {encoding: 'utf-8'}, function(err,data) { return data; });
     mainWindow.webContents.send("getFileContent", fileContent)
   });
-
-
-
-
 
 
 
@@ -237,7 +240,7 @@ const createWindow = () => {
 };
 app.on("ready", () => {
   // add sleeks path to config
-  config.set("path", __dirname);
+  userData.set("path", __dirname);
   switchLanguage().then(response => {
     console.log(response);
   }).catch(error => {
@@ -260,8 +263,8 @@ app.on("activate", () => {
   app.show();
 });
 function switchLanguage() {
-  if (config.get("language")) {
-    var language = config.get("language");
+  if (userData.get("language")) {
+    var language = userData.get("language");
   } else {
     var language = app.getLocale().substr(0,2);
   }
@@ -271,7 +274,7 @@ function switchLanguage() {
   i18next.changeLanguage(language, (error) => {
     if (error) return console.log("Error in i18next.changeLanguage():", error);
   });
-  config.set("language", language);
+  userData.set("language", language);
   return Promise.resolve("Success: Language set to: " + language.toUpperCase());
 }
 // COMM between contexts
