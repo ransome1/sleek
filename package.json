@@ -81,7 +81,7 @@
   },
   "dependencies": {
     "electron-util": "^0.14.2",
-    "i18next": "^19.8.4",
+    "i18next": "^19.8.7",
     "i18next-browser-languagedetector": "^6.0.1",
     "i18next-fs-backend": "^1.0.8",
     "md5": "^2.3.0",
