@@ -12,85 +12,174 @@ let fileWatcher;
 // ########################################################################################################################
 // RECEIVE CONFIG FROM MAIN PROCESS
 // ########################################################################################################################
-window.api.send("toMain", "getConfig");
-window.api.receive("fromMain", (data) => {
-  console.log(data);
+window.api.send("getConfig");
+window.api.receive("getConfig", (config) => {
+  addFriendlyLanguageNames(config.language);
+});
+window.api.send("getTranslations");
+window.api.receive("getTranslations", (translations) => {
+  // ########################################################################################################################
+  // TRANSLATIONS
+  // ########################################################################################################################
+  btnTheme.setAttribute("title", translations.toggleDarkMode);
+  btnSave.innerHTML = translations.save;
+  todoTableSearch.placeholder = translations.search;
+  filterToggleShowCompleted.innerHTML = translations.completedTodos;
+  filterBtnResetFilters.innerHTML = translations.resetFilters;
+  addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
+  addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
+  addTodoContainerButton.innerHTML = translations.addTodo;
+  onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
+  onboardingContainerBtnOpen.innerHTML = translations.openFile;
+  onboardingContainerBtnCreate.innerHTML = translations.createFile;
+  noResultContainerHeadline.innerHTML = translations.noResults;
+  noResultContainerSubtitle.innerHTML = translations.noResultContainerSubtitle;
+  modalFormInput.placeholder = translations.formTodoInputPlaceholder;
+  modalChangeFileTitle.innerHTML = translations.selectFile;
+  modalChangeFileOpen.innerHTML = translations.openFile;
+  modalChangeFileCreate.innerHTML = translations.createFile;
+  selectionBtnShowFilters.innerHTML = translations.toggleFilter;
+  welcomeToSleek.innerHTML = translations.welcomeToSleek;
+  dueDatePickerInput.placeholder = translations.formSelectDueDate;
+  recurrencePickerEvery.innerHTML = translations.every;
+  recurrencePickerDay.innerHTML = translations.day;
+  recurrencePickerWeek.innerHTML = translations.week;
+  recurrencePickerMonth.innerHTML = translations.month;
+  recurrencePickerYear.innerHTML = translations.year;
+  recurrencePickerNoRecurrence.innerHTML = translations.noRecurrence;
+  messageLoggingTitle.innerHTML = translations.errorEventLogging;
+  messageLoggingBody.innerHTML = translations.messageLoggingBody;
+  messageLoggingButton.innerHTML = translations.settings;
+  settingsTabSettings.innerHTML = translations.settings;
+  settingsTabSettingsLanguage.innerHTML = translations.language;
+  settingsTabSettingsLanguageBody.innerHTML = translations.settingsTabSettingsLanguageBody;
+  settingsTabSettingsArchive.innerHTML = translations.settingsTabSettingsArchive;
+  settingsTabSettingsArchiveBody.innerHTML = translations.settingsTabSettingsArchiveBody;
+  settingsTabSettingsArchiveButton.innerHTML = translations.archive;
+  settingsTabSettingsNotifications.innerHTML = translations.notifications;
+  settingsTabSettingsNotificationsBody.innerHTML = translations.settingsTabSettingsNotificationsBody;
+  settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
+  settingsTabSettingsDarkmodeBody.innerHTML = translations.settingsTabSettingsDarkmodeBody;
+  settingsTabSettingsLogging.innerHTML = translations.errorEventLogging;
+  settingsTabSettingsLoggingBody.innerHTML = translations.settingsTabSettingsLoggingBody;
+  settingsTabAbout.innerHTML = translations.about;
+  settingsTabAboutContribute.innerHTML = translations.settingsTabAboutContribute;
+  settingsTabAboutContributeBody.innerHTML = translations.settingsTabAboutContributeBody;
+  settingsTabAboutCopyrightLicense.innerHTML = translations.settingsTabAboutCopyrightLicense;
+  settingsTabAboutCopyrightLicenseBody.innerHTML = translations.settingsTabAboutCopyrightLicenseBody;
+  settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
+  settingsTabAboutPrivacyBody.innerHTML = translations.settingsTabAboutPrivacyBody;
+  settingsTabAboutExternalLibraries.innerHTML = translations.settingsTabAboutExternalLibraries;
+  helpTabKeyboardTitle.innerHTML = translations.shortcuts;
+  helpTabPrioritiesTitle.innerHTML = translations.helpTabPrioritiesTitle;
+  helpTabPrioritiesBody.innerHTML = translations.helpTabPrioritiesBody;
+  helpTabContextsProjectsTitle.innerHTML = translations.helpTabContextsProjectsTitle;
+  helpTabContextsProjectsBody.innerHTML = translations.helpTabContextsProjectsBody;
+  helpTabDatesRecurrencesTitle1.innerHTML = translations.helpTabDatesRecurrencesTitle1;
+  helpTabDatesRecurrencesBody1.innerHTML = translations.helpTabDatesRecurrencesBody1;
+  helpTabDatesRecurrencesTitle2.innerHTML = translations.helpTabDatesRecurrencesTitle2;
+  helpTabDatesRecurrencesBody2.innerHTML = translations.helpTabDatesRecurrencesBody2;
+  helpTab1Title.innerHTML = translations.shortcuts;
+  helpTab2Title.innerHTML = translations.priorities;
+  helpTab3Title.innerHTML = translations.helpTab3Title;
+  helpTab4Title.innerHTML = translations.helpTab4Title;
+  helpTabKeyboardTR1TD1.innerHTML = translations.addTodo;
+  helpTabKeyboardTR2TD1.innerHTML = translations.findTodo;
+  helpTabKeyboardTR3TD1.innerHTML = translations.toggleCompletedTodos;
+  helpTabKeyboardTR4TD1.innerHTML = translations.toggleDarkMode;
+  helpTabKeyboardTR5TD1.innerHTML = translations.openFile;
+  helpTabKeyboardTR6TD1.innerHTML = translations.settings;
+  helpTabKeyboardTR1TH1.innerHTML = translations.function;
+
+  todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
+  dueDatePickerInput.setAttribute("size", translations.formSelectDueDate.length)
+  navBtnHelp.firstElementChild.setAttribute("title", translations.help);
+  navBtnSettings.firstElementChild.setAttribute("title", translations.settings);
 });
 // ########################################################################################################################
 // READ FROM CONFIG
 // ########################################################################################################################
-var width = config.data.windowBounds.width;
-var height = config.data.windowBounds.height;
-if(config.get("dismissedNotifications")) {
-  var dismissedNotifications = config.get("dismissedNotifications");
-} else {
-  var dismissedNotifications = new Array;
-}
-if(config.get("dismissedMessages")) {
-  var dismissedMessages = config.get("dismissedMessages");
-} else {
-  var dismissedMessages = new Array;
-}
-if(config.get("matomoEvents")!=null) {
-  var matomoEvents = config.get("matomoEvents");
-} else {
-  var matomoEvents = false;
-}
-if(config.get("filterDrawerWidth")) {
-  let filterDrawerWidth = config.get("filterDrawerWidth");
-  filterDrawer.setAttribute("style", "--resizeable-width: " + filterDrawerWidth);
-}
-if(config.get("notifications")!=null) {
-  var notifications = config.get("notifications");
-} else {
-  var notifications = true;
-}
-if(config.get("showCompleted")!=null) {
-  var showCompleted = config.get("showCompleted");
-} else {
-  var showCompleted = true;
-}
-if(config.get("selectedFilters")) {
-  var selectedFilters = config.get("selectedFilters");
-} else {
-  var selectedFilters = new Array;
-}
-if(config.get("categoriesFiltered")) {
-  var categoriesFiltered = config.get("categoriesFiltered");
-} else {
-  var categoriesFiltered = new Array;
-}
-var language = config.get("language");
-if(config.get("files")) {
-  var files = config.get("files");
-  var file = files.filter(file => { return file[0]===1 });
-  file = file[0][1];
-} else {
-  var files = new Array;
-}
-if(config.get("theme")) {
-  var theme = config.get("theme");
-} else {
-  if(nativeTheme.shouldUseDarkColors) {
-    var theme = "dark";
+const setConfig = async (config) => {
+
+  domConfiguration(config);
+
+
+  /*var width = config.data.windowBounds.width;
+  var height = config.data.windowBounds.height;
+
+  if(config.get("dismissedNotifications")) {
+    var dismissedNotifications = config.get("dismissedNotifications");
   } else {
-    var theme = "light"
+    var dismissedNotifications = new Array;
   }
+  if(config.get("dismissedMessages")) {
+    var dismissedMessages = config.get("dismissedMessages");
+  } else {
+    var dismissedMessages = new Array;
+  }
+  if(config.get("matomoEvents")!=null) {
+    var matomoEvents = config.get("matomoEvents");
+  } else {
+    var matomoEvents = false;
+  }
+  if(config.get("filterDrawerWidth")) {
+    let filterDrawerWidth = config.get("filterDrawerWidth");
+    filterDrawer.setAttribute("style", "--resizeable-width: " + filterDrawerWidth);
+  }
+  if(config.get("notifications")!=null) {
+    var notifications = config.get("notifications");
+  } else {
+    var notifications = true;
+  }
+
+  if(config.get("showCompleted")!=null) {
+    var showCompleted = config.get("showCompleted");
+  } else {
+    var showCompleted = true;
+  }
+
+  if(config.get("selectedFilters")) {
+    var selectedFilters = config.get("selectedFilters");
+  } else {
+    var selectedFilters = new Array;
+  }
+  if(config.get("categoriesFiltered")) {
+    var categoriesFiltered = config.get("categoriesFiltered");
+  } else {
+    var categoriesFiltered = new Array;
+  }
+  if(config.get("files")) {
+    var files = config.get("files");
+    var file = files.filter(file => { return file[0]===1 });
+    file = file[0][1];
+  } else {
+    var files = new Array;
+  }
+  if(config.get("theme")) {
+    var theme = config.get("theme");
+  } else {
+    if(nativeTheme.shouldUseDarkColors) {
+      var theme = "dark";
+    } else {
+      var theme = "light"
+    }
+  }
+  if(config.get("useTextarea")) {
+    var useTextarea = config.get("useTextarea");
+  } else {
+    var useTextarea = false;
+  }
+  if(config.get("filterDrawer")) {
+    showFilters(true);
+  } else {
+    showFilters(false);
+  }*/
 }
-if(config.get("useTextarea")) {
-  var useTextarea = config.get("useTextarea");
-} else {
-  var useTextarea = false;
-}
-if(config.get("filterDrawer")) {
-  showFilters(true);
-} else {
-  showFilters(false);
-}
+
 // ########################################################################################################################
 // DEV CONFIG
 // ########################################################################################################################
-const is = electron_util.is;
+/*const is = electron_util.is;
 if (is.development) {
   let matomoEvents = false;
   console.log("Path to user data: " + app.getPath("userData"));
@@ -102,61 +191,64 @@ if(config.get("uid")) {
   var uid = Math.random().toString(36).slice(2);
   if(is.development) uid = "DEVELOPMENT"
   config.set("uid", uid);
-}
+}*/
 // ########################################################################################################################
 // LANGUAGE
 // ########################################################################################################################
-if (language) {
-  i18next.language = language;
-} else {
-  i18next.use(i18nextBrowserLanguageDetector)
-}
-i18next
-.use(i18nextBackend)
-.init(i18nextOptions)
-.then(function() {
-  i18nextOptions.supportedLngs.forEach(function(languageCode) {
-    // generate user friendly entries for language selection menu
-    switch (languageCode) {
-      case "de":
-        var languageName = "Deutsch"
-        break;
-      case "en":
-        var languageName = "English"
-        break;
-      case "it":
-        var languageName = "Italiano"
-        break;
-      case "es":
-        var languageName = "‎Español"
-        break;
-      case "fr":
-        var languageName = "Français"
-        break;
-      default:
-        return;
-    }
-    var option = document.createElement("option");
-    option.text = languageName;
-    option.value = languageCode;
-    if(languageCode===language) option.selected = true;
-    settingsLanguage.add(option);
+/*function setLanguage(language) {
+  console.log(language);
+  if (language) {
+    i18next.language = language;
+  } else {
+    i18next.use(i18nextBrowserLanguageDetector)
+  }
+  i18next
+  .use(i18nextBackend)
+  .init(i18nextOptions)
+  .then(function() {
+    i18nextOptions.supportedLngs.forEach(function(languageCode) {
+      // generate user friendly entries for language selection menu
+      switch (languageCode) {
+        case "de":
+          var languageName = "Deutsch"
+          break;
+        case "en":
+          var languageName = "English"
+          break;
+        case "it":
+          var languageName = "Italiano"
+          break;
+        case "es":
+          var languageName = "‎Español"
+          break;
+        case "fr":
+          var languageName = "Français"
+          break;
+        default:
+          return;
+      }
+      var option = document.createElement("option");
+      option.text = languageName;
+      option.value = languageCode;
+      if(languageCode===language) option.selected = true;
+      settingsLanguage.add(option);
+    });
   });
-});
-i18next.changeLanguage(language, (error, t) => {
-  if (error) return console.log("Error in i18next.changeLanguage(): " + error);
-});
-settingsLanguage.onchange = function(){
-  i18next.changeLanguage(this.value, error => {
-    if(error) {
-      // trigger matomo event
-      if(matomoEvents) _paq.push(["trackEvent", "Error", "changeLanguage()", error])
-      return console.log(error);
-    }
-    config.set("language", this.value);
-    ipcRenderer.send("synchronous-message", "restart");
-  })
-}
+  i18next.changeLanguage(language, (error, t) => {
+    if (error) return console.log("Error in i18next.changeLanguage(): " + error);
+  });
+  settingsLanguage.onchange = function(){
+    i18next.changeLanguage(this.value, error => {
+      if(error) {
+        // trigger matomo event
+        if(matomoEvents) _paq.push(["trackEvent", "Error", "changeLanguage()", error])
+        return console.log(error);
+      }
+      config.set("language", this.value);
+      ipcRenderer.send("synchronous-message", "restart");
+    })
+  }
+}*/
 // ########################################################################################################################
 // MODAL CONFIG
 // ########################################################################################################################
@@ -183,7 +275,7 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
   autohide: true,
   format: "yyyy-mm-dd",
   clearBtn: true,
-  language: i18next.language,
+  //language: i18next.language,
   beforeShowDay: function(date) {
     let today = new Date();
     if (date.getDate() == today.getDate() &&
@@ -193,13 +285,11 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
     }
   }
 });
-dueDatePickerInput.placeholder = i18next.t("formSelectDueDate");
 // closes suggestion box on focus
 dueDatePickerInput.onfocus = function () {
   suggestionContainer.classList.remove("is-active");
 };
 // Adjust Picker width according to length of input
-dueDatePickerInput.setAttribute("size", i18next.t("formSelectDueDate").length)
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   let caretPosition = getCaretPosition(modalFormInput);
   //if(modalFormInput.value.substr(caretPosition-5, caretPosition-1).split(" ")[1] === "due:") modalFormInput.value = modalFormInput.value.replace("due:", "");
@@ -258,7 +348,6 @@ todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
 todoTableBodyCellTextTemplate.setAttribute("role", "cell");
 todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
 todoTableBodyCellTextTemplate.setAttribute("href", "#");
-todoTableBodyCellTextTemplate.setAttribute("title", i18next.t("editTodo"));
 tableContainerCategoriesTemplate.setAttribute("class", "categories");
 todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
 todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
@@ -269,11 +358,11 @@ todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
 // ########################################################################################################################
 // INITIAL CONFIGURATION
 // ########################################################################################################################
-toggleShowCompleted.checked = showCompleted;
-toggleMatomoEvents.checked = matomoEvents;
-toggleNotifications.checked = notifications;
-navBtnHelp.firstElementChild.setAttribute("title", i18next.t("help"));
-navBtnSettings.firstElementChild.setAttribute("title", i18next.t("settings"));
+function domConfiguration(config) {
+  toggleMatomoEvents.checked = config.matomoEvents;
+  toggleNotifications.checked = config.notifications;
+  toggleShowCompleted.checked = config.showCompleted;
+}
 //recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
 const categories = ["contexts", "projects"];
 const items = {
@@ -287,78 +376,7 @@ const item = {
 if (selectedFilters.length > 0) selectedFilters = JSON.parse(selectedFilters);
 // adjust input field
 if(useTextarea) resizeInput("input");
-// ########################################################################################################################
-// TRANSLATIONS
-// ########################################################################################################################
-btnTheme.setAttribute("title", i18next.t("toggleDarkMode"));
-btnSave.innerHTML = i18next.t("save");
-todoTableSearch.placeholder = i18next.t("search");
-filterToggleShowCompleted.innerHTML = i18next.t("completedTodos");
-filterBtnResetFilters.innerHTML = i18next.t("resetFilters");
-addTodoContainerHeadline.innerHTML = i18next.t("addTodoContainerHeadline");
-addTodoContainerSubtitle.innerHTML = i18next.t("addTodoContainerSubtitle");
-addTodoContainerButton.innerHTML = i18next.t("addTodo");
-onboardingContainerSubtitle.innerHTML = i18next.t("onboardingContainerSubtitle");
-onboardingContainerBtnOpen.innerHTML = i18next.t("openFile");
-onboardingContainerBtnCreate.innerHTML = i18next.t("createFile");
-noResultContainerHeadline.innerHTML = i18next.t("noResults");
-noResultContainerSubtitle.innerHTML = i18next.t("noResultContainerSubtitle");
-modalFormInput.placeholder = i18next.t("formTodoInputPlaceholder");
-modalChangeFileTitle.innerHTML = i18next.t("selectFile");
-modalChangeFileOpen.innerHTML = i18next.t("openFile");
-modalChangeFileCreate.innerHTML = i18next.t("createFile");
-selectionBtnShowFilters.innerHTML = i18next.t("toggleFilter");
-welcomeToSleek.innerHTML = i18next.t("welcomeToSleek");
-recurrencePickerEvery.innerHTML = i18next.t("every");
-recurrencePickerDay.innerHTML = i18next.t("day");
-recurrencePickerWeek.innerHTML = i18next.t("week");
-recurrencePickerMonth.innerHTML = i18next.t("month");
-recurrencePickerYear.innerHTML = i18next.t("year");
-recurrencePickerNoRecurrence.innerHTML = i18next.t("noRecurrence");
-messageLoggingTitle.innerHTML = i18next.t("errorEventLogging");
-messageLoggingBody.innerHTML = i18next.t("messageLoggingBody");
-messageLoggingButton.innerHTML = i18next.t("settings");
-settingsTabSettings.innerHTML = i18next.t("settings");
-settingsTabSettingsLanguage.innerHTML = i18next.t("language");
-settingsTabSettingsLanguageBody.innerHTML = i18next.t("settingsTabSettingsLanguageBody");
-settingsTabSettingsArchive.innerHTML = i18next.t("settingsTabSettingsArchive");
-settingsTabSettingsArchiveBody.innerHTML = i18next.t("settingsTabSettingsArchiveBody");
-settingsTabSettingsArchiveButton.innerHTML = i18next.t("archive");
-settingsTabSettingsNotifications.innerHTML = i18next.t("notifications");
-settingsTabSettingsNotificationsBody.innerHTML = i18next.t("settingsTabSettingsNotificationsBody");
-settingsTabSettingsDarkmode.innerHTML = i18next.t("darkmode");
-settingsTabSettingsDarkmodeBody.innerHTML = i18next.t("settingsTabSettingsDarkmodeBody");
-settingsTabSettingsLogging.innerHTML = i18next.t("errorEventLogging");
-settingsTabSettingsLoggingBody.innerHTML = i18next.t("settingsTabSettingsLoggingBody");
-settingsTabAbout.innerHTML = i18next.t("about");
-settingsTabAboutContribute.innerHTML = i18next.t("settingsTabAboutContribute");
-settingsTabAboutContributeBody.innerHTML = i18next.t("settingsTabAboutContributeBody");
-settingsTabAboutCopyrightLicense.innerHTML = i18next.t("settingsTabAboutCopyrightLicense");
-settingsTabAboutCopyrightLicenseBody.innerHTML = i18next.t("settingsTabAboutCopyrightLicenseBody");
-settingsTabAboutPrivacy.innerHTML = i18next.t("settingsTabAboutPrivacy");
-settingsTabAboutPrivacyBody.innerHTML = i18next.t("settingsTabAboutPrivacyBody");
-settingsTabAboutExternalLibraries.innerHTML = i18next.t("settingsTabAboutExternalLibraries");
-helpTabKeyboardTitle.innerHTML = i18next.t("shortcuts");
-helpTabPrioritiesTitle.innerHTML = i18next.t("helpTabPrioritiesTitle");
-helpTabPrioritiesBody.innerHTML = i18next.t("helpTabPrioritiesBody");
-helpTabContextsProjectsTitle.innerHTML = i18next.t("helpTabContextsProjectsTitle");
-helpTabContextsProjectsBody.innerHTML = i18next.t("helpTabContextsProjectsBody");
-helpTabDatesRecurrencesTitle1.innerHTML = i18next.t("helpTabDatesRecurrencesTitle1");
-helpTabDatesRecurrencesBody1.innerHTML = i18next.t("helpTabDatesRecurrencesBody1");
-helpTabDatesRecurrencesTitle2.innerHTML = i18next.t("helpTabDatesRecurrencesTitle2");
-helpTabDatesRecurrencesBody2.innerHTML = i18next.t("helpTabDatesRecurrencesBody2");
-helpTab1Title.innerHTML = i18next.t("shortcuts");
-helpTab2Title.innerHTML = i18next.t("priorities");
-helpTab3Title.innerHTML = i18next.t("helpTab3Title");
-helpTab4Title.innerHTML = i18next.t("helpTab4Title");
-helpTabKeyboardTR1TD1.innerHTML = i18next.t("addTodo");
-helpTabKeyboardTR2TD1.innerHTML = i18next.t("findTodo");
-helpTabKeyboardTR3TD1.innerHTML = i18next.t("toggleCompletedTodos");
-helpTabKeyboardTR4TD1.innerHTML = i18next.t("toggleDarkMode");
-helpTabKeyboardTR5TD1.innerHTML = i18next.t("openFile");
-helpTabKeyboardTR6TD1.innerHTML = i18next.t("settings");
-helpTabKeyboardTR7TD1.innerHTML = i18next.t("helpTabKeyboardTR7TD1");
-helpTabKeyboardTR1TH1.innerHTML = i18next.t("function");
+
 // ########################################################################################################################
 // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
 // ########################################################################################################################
@@ -2380,6 +2398,33 @@ function showOnboarding(variable) {
     navBtnFilter.classList.remove("is-hidden");
     todoTable.classList.add("is-active");
   }
+}
+function addFriendlyLanguageNames(languageCode) {
+  // generate user friendly entries for language selection menu
+  switch (languageCode) {
+    case "de":
+      var languageName = "Deutsch"
+      break;
+    case "en":
+      var languageName = "English"
+      break;
+    case "it":
+      var languageName = "Italiano"
+      break;
+    case "es":
+      var languageName = "‎Español"
+      break;
+    case "fr":
+      var languageName = "Français"
+      break;
+    default:
+      return;
+  }
+  var option = document.createElement("option");
+  option.text = languageName;
+  option.value = languageCode;
+  if(languageCode===language) option.selected = true;
+  settingsLanguage.add(option);
 }
 contentTabs.forEach(el => el.addEventListener("click", function(el) {
   contentTabs.forEach(function(el) {

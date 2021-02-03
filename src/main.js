@@ -12,6 +12,9 @@ const Store = require("./configs/store.config.js");
     windowBounds: { width: 1100, height: 800 },
   }
 });*/
+const i18next = require("i18next");
+const i18nextBackend = require("i18next-fs-backend");
+const i18nextOptions = require('./configs/i18next.config');
 const config = new Store({
   configName: "user-preferences",
   defaults: {
@@ -193,21 +196,15 @@ const createWindow = () => {
   // Set menu to menuTemplate
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
-  ipcMain.on("toMain", (event, args) => {
-    // Send result back to renderer process
-    if(args==="getConfig") mainWindow.webContents.send("fromMain", config)
+  // Send result back to renderer process
+  ipcMain.on("getConfig", (event, args) => {
+    mainWindow.webContents.send("getConfig", config.data)
   });
-
-  /*ipcMain.handle('setFullscreen', (event, flag) => {
-
-    console.log(flag);
-  })*/
-
-
+  // Send translations back to renderer process
+  ipcMain.on("getTranslations", (event, args) => {
+    mainWindow.webContents.send("getTranslations", i18next.getDataByLanguage(config.get("language")).translation)
+  });
 };
-const i18next = require("i18next");
-const i18nextBackend = require("i18next-fs-backend");
-const i18nextOptions = require('./configs/i18next.config');
 app.on("ready", () => {
   switchLanguage().then(response => {
     console.log(response);
@@ -245,7 +242,6 @@ function switchLanguage() {
   config.set("language", language);
   return Promise.resolve("Success: Language set to: " + language.toUpperCase());
 }
-
 // COMM between contexts
 ipcMain.on("synchronous-message", (event, arg) => {
   if(arg=="restart") {
@@ -253,6 +249,3 @@ ipcMain.on("synchronous-message", (event, arg) => {
     app.exit();
   }
 });
-/*ipcMain.on("sendConfigToMain", (event, arg) => {
-  var config = arg;
-});*/
