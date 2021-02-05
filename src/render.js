@@ -771,33 +771,6 @@ function showContent(section) {
   section.classList.add("is-active");
   section.focus();
 }
-/*function addFriendlyLanguageNames(languageCode) {
-  // generate user friendly entries for language selection menu
-  switch (languageCode) {
-    case "de":
-      var languageName = "Deutsch"
-      break;
-    case "en":
-      var languageName = "English"
-      break;
-    case "it":
-      var languageName = "Italiano"
-      break;
-    case "es":
-      var languageName = "‎Español"
-      break;
-    case "fr":
-      var languageName = "Français"
-      break;
-    default:
-      return;
-  }
-  var option = document.createElement("option");
-  option.text = languageName;
-  option.value = languageCode;
-  if(languageCode===language) option.selected = true;
-  settingsLanguage.add(option);
-}*/
 // ########################################################################################################################
 // RESIZEABLE FILTER DRAWER
 // https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
@@ -2117,6 +2090,40 @@ function setPriority(priority) {
   todo.priority = priority;
   modalFormInput.value = todo.toString();
 }
+function setFriendlyLanguageNames(languageCode) {
+  try {
+    // generate user friendly entries for language selection menu
+    switch (languageCode) {
+      case "de":
+        var languageName = "Deutsch"
+        break;
+      case "en":
+        var languageName = "English"
+        break;
+      case "it":
+        var languageName = "Italiano"
+        break;
+      case "es":
+        var languageName = "‎Español"
+        break;
+      case "fr":
+        var languageName = "Français"
+        break;
+      default:
+        return;
+    }
+    var option = document.createElement("option");
+    option.text = languageName;
+    option.value = languageCode;
+    //if(languageCode===language) option.selected = true;
+    settingsLanguage.add(option);
+    return Promise.resolve("Success: Friendly language names added to select field in settings");
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setFriendlyLanguageNames()", error])
+    return Promise.reject("Error in setFriendlyLanguageNames(): " + error);
+  }
+}
 
 function getUserData() {
   return new Promise(function(resolve, reject) {
@@ -2133,20 +2140,6 @@ function getAppData() {
       resolve(appData);
     });
   });
-}
-function getCurrentFile() {
-  try {
-    // select the entry that is current
-    const file = window.userData.files.filter(function(file) { return file[0] === 1 });
-    // return path
-    if(file.length>0) return Promise.resolve(file[0][1])
-    // return no path if there is no current file
-    return Promise.reject()
-  } catch (error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "getCurrentFile()", error])
-    return Promise.reject("Error in getCurrentFile(): " + error);
-  }
 }
 function getFileContent(file) {
   try {
@@ -2304,6 +2297,12 @@ function matomoEventsConsent(setting) {
 
 function configureMainView() {
   try {
+    // add friendly language names to settings dropdown
+    setFriendlyLanguageNames(window.userData.language).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
     // check if archive button should be enabled
     setButtonState("btnArchiveTodos");
     // adjust input field
@@ -2566,17 +2565,9 @@ window.onload = async function () {
     });
   });
 
-  // call user data and continue when result is ready
+  // call user data and write it to a global variable
   await getUserData().then(function(userData) {
     window.userData = userData;
-    // get the current file
-    getCurrentFile(userData).then(function(result) {
-      // if result is an array the
-      window.userData.file = result;
-    }).catch(function(error) {
-      console.log(error);
-    });
-    console.log("Success: User data loaded");
   }).catch(function(error) {
     console.log(error);
   });
@@ -2610,7 +2601,6 @@ window.onload = async function () {
     }).catch(function(error) {
       console.log(error);
     });
-    //console.log("Success: Data extracted from file");
     // advice main process to start the filewatcher
     window.api.send("startFileWatcher", window.userData.file);
   }).catch(error => {
@@ -2645,7 +2635,7 @@ window.onload = async function () {
     console.log(error);
   });
 
-  // set after userData has been set
+  // persist window size on resize
   window.onresize = function() {
     try {
       let width = this.outerWidth;

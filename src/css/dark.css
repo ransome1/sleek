@@ -51,7 +51,7 @@ button.is-outlined:hover {
   background: #2c2d30 !important; }
 
 svg {
-  color: #CCCDCF; }
+  color: white; }
 
 .table {
   width: 100%;
@@ -329,7 +329,9 @@ nav {
     color: white;
     border-color: #CCCDCF; }
 
-.contentContainer .title.is-1,
+.contentContainer .title.is-1 {
+  color: white; }
+
 .contentContainer .subtitle,
 .contentContainer .subtitle strong {
   color: #CCCDCF; }

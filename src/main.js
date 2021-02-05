@@ -227,6 +227,22 @@ const createWindow = () => {
   function getFileContent(file) {
     return fs.readFileSync(file, {encoding: 'utf-8'}, function(err,data) { return data; });
   }
+  function getCurrentFile() {
+    try {
+      // remove files that don't exist ant the given path
+      userData.data.files = userData.data.files.filter(function(file) { return fs.existsSync(file[1]) === true });
+      // select the entry that is current
+      const file = userData.data.files.filter(function(file) { return file[0] === 1 });
+      // return path
+      if(file.length>0) return Promise.resolve(file[0][1])
+      // return no path if there is no current file
+      return Promise.reject()
+    } catch (error) {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "getCurrentFile()", error])
+      return Promise.reject("Error in getCurrentFile(): " + error);
+    }
+  }
   /*function appendTodoToFile(todo) {
     // stop filewatcher to avoid loops
     if(fileWatcher) fileWatcher.close();
@@ -255,7 +271,12 @@ const createWindow = () => {
   // ########################################################################################################################
   // Send result back to renderer process
   ipcMain.on("getUserData", (event, args) => {
-    mainWindow.webContents.send("getUserData", userData.data);
+    getCurrentFile().then(response => {
+      userData.data.file = response;
+      mainWindow.webContents.send("getUserData", userData.data);
+    }).catch(error => {
+      console.log(error);
+    });
   });
   // Send result back to renderer process
   ipcMain.on("getAppData", (event, args) => {
