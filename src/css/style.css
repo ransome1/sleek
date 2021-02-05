@@ -37,6 +37,9 @@ button, button:focus, button:active, button:active, button:after, button::before
   border: 1px solid #ccc !important;
   color: #4a4a4a; }
 
+.button.is-link svg {
+  color: white; }
+
 .table {
   width: 100%;
   background-color: transparent !important; }

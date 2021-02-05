@@ -3,13 +3,15 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
   "api", {
     send: (channel, data) => {
-      // whitelist channels
       let validChannels = [
         "getUserData",
         "getTranslations",
         "getFileContent",
         "setUserData",
         "getAppData",
+        "showNotification",
+        "writeToFile",
+        "startFileWatcher",
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -22,6 +24,7 @@ contextBridge.exposeInMainWorld(
         "getUserData",
         "setUserData",
         "getAppData",
+        "reloadContent"
       ];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`

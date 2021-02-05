@@ -1,9 +1,10 @@
 // https://dev.to/xxczaki/how-to-make-your-electron-app-faster-4ifb
-require("v8-compile-cache");
-const { app, BrowserWindow, nativeTheme, electron, ipcMain, session } = require("electron");
+let fileWatcher;
+const { app, BrowserWindow, nativeTheme, electron, ipcMain, session, Notification } = require("electron");
 const { is } = require("electron-util");
 const fs = require("fs");
 const path = require("path");
+
 const isMac = process.platform === "darwin";
 const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
@@ -68,13 +69,13 @@ const createWindow = () => {
     e.preventDefault();
     require("electron").shell.openExternal(url);
   });
-  // every 10 minutes sleek will reparse the data if app is not focused
+  // every 10 minutes sleek will reload renderer if app is not focused
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
     if(!mainWindow.isFocused()) {
-      mainWindow.webContents.executeJavaScript("parseDataFromFile()");
+      mainWindow.reload();
     }
-  }, 120000);
+  }, 600000);
   // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
   // Modules to create application menu
   const Menu = require("electron").Menu;
@@ -163,7 +164,7 @@ const createWindow = () => {
           label: i18next.t("toggleCompletedTodos"),
           accelerator: "CmdOrCtrl+h",
           click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("showCompletedTodos()");
+            mainWindow.webContents.executeJavaScript("toggleCompletedTodos().then(function(result) { console.log(result); }).catch(function(error) { console.log(error); });");
           }
         },
         {
@@ -201,8 +202,57 @@ const createWindow = () => {
 
 
 
-
-
+  // ########################################################################################################################
+  // FUNCTIONS
+  // ########################################################################################################################
+  function startFileWatcher(file) {
+    try {
+      if (fs.existsSync(file)) {
+        if(fileWatcher) fileWatcher.close();
+        fileWatcher = fs.watch(file, (event, filename) => {
+          console.log("Info: File has changed");
+          mainWindow.webContents.send("reloadContent", getFileContent(file))
+          //mainWindow.webContents.executeJavaScript("generateItemsObject(\"" + getFileContent(file) + "\")");
+          });
+        return Promise.resolve("Success: File watcher started, is watching: " + file);
+      } else {
+        return Promise.reject("Info: File watcher did not start as file was not found at: " + file);
+      }
+    } catch (error) {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "startFileWatcher()", error])
+      return Promise.reject("Error in startFileWatcher(): " + error);
+    }
+  }
+  function getFileContent(file) {
+    return fs.readFileSync(file, {encoding: 'utf-8'}, function(err,data) { return data; });
+  }
+  /*function appendTodoToFile(todo) {
+    // stop filewatcher to avoid loops
+    if(fileWatcher) fileWatcher.close();
+    //append todo as string to file in a new line
+    fs.open(file, 'a', 666, function(error, id) {
+      if(error) {
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "fs.open()", error])
+        return "Error in fs.open(): " + error;
+      }
+      fs.write(id, "\n"+todo, null, 'utf8', function() {
+        fs.close(id, function() {
+          // only start the file watcher again after new todo has been appended
+          startFileWatcher().then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+          console.log("Success: Recurring todo written to file: " + todo);
+        });
+      });
+    });
+  }*/
+  // ########################################################################################################################
+  // LISTEN TO REQUESTS FROM RENDERER CONTEXT
+  // ########################################################################################################################
   // Send result back to renderer process
   ipcMain.on("getUserData", (event, args) => {
     mainWindow.webContents.send("getUserData", userData.data);
@@ -215,32 +265,96 @@ const createWindow = () => {
   ipcMain.on("setUserData", (event, args) => {
     userData.set(args[0], args[1]);
   });
+  // Write content to file
+  ipcMain.on("writeToFile", (event, args) => {
+    fs.writeFileSync(args[1], args[0], {encoding: 'utf-8'});
+  });
+  /*
+  // Append content to file
+  ipcMain.on("appendToFile", (event, args) => {
+    fs.appendFile(args[1], "\n" + args[0], error => {
+      if (error) return Promise.reject("Error in appendFile(): " + error)
+    });
+  });
+  */
+  /*
+  // Write content to file
+  ipcMain.on("archiveTodos", (event, args) => {
+    archiveTodos(JSON.parse(args[0]), JSON.parse(args[1]), args[2]).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+  });
+  */
+  // Start the filewatcher
+  ipcMain.on("startFileWatcher", (event, file) => {
+    startFileWatcher(file).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+  });
   // Send translations back to renderer process
   ipcMain.on("getTranslations", (event, args) => {
     mainWindow.webContents.send("sendTranslations", i18next.getDataByLanguage(userData.get("language")).translation)
   });
   // Check if file exists and send content to renderer process
-  ipcMain.on("getFileContent", (event, args) => {
+  ipcMain.on("getFileContent", (event, file) => {
     // read fresh data from file
-    const fileContent = fs.readFileSync(userData.get("file"), {encoding: 'utf-8'}, function(err,data) { return data; });
-    mainWindow.webContents.send("getFileContent", fileContent)
+    mainWindow.webContents.send("getFileContent", getFileContent(file))
   });
-
-
-
-
-
-
-
-
-
-
-
-
+  // Show a notification in OS UI
+  ipcMain.on("showNotification", (event, config) => {
+    config.icon = __dirname + "/../assets/icons/icon.png";
+    // send it to UI
+    const notification = new Notification(config);
+    notification.show();
+    // click on button in notification
+    notification.addListener('click', () => {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
+      // bring mainWindow to foreground
+      mainWindow.focus();
+      // if another modal was open it needs to be closed first and then open the modal and fill it
+      mainWindow.webContents.executeJavaScript("clearModal(); showForm(\"" + config.string + "\", false);");
+    },{
+      // remove event listener after it is clicked once
+      once: true
+    });
+  });
+  // COMM between contexts
+  ipcMain.on("synchronous-message", (event, arg) => {
+    if(arg=="restart") {
+      app.relaunch();
+      app.exit();
+    }
+  });
 };
+
+
+
+function switchLanguage() {
+  if(userData.get("language")) {
+    var language = userData.get("language");
+  } else {
+    var language = app.getLocale().substr(0,2);
+  }
+  i18next
+  .use(i18nextBackend)
+  .init(i18nextOptions);
+  i18next.changeLanguage(language, (error) => {
+    if (error) return console.log("Error in i18next.changeLanguage():", error);
+  });
+  userData.set("language", language);
+  return Promise.resolve("Success: Language set to: " + language.toUpperCase());
+}
+
+
+
 app.on("ready", () => {
   // add sleeks path to config
-  userData.set("path", __dirname);
+  appData.path = __dirname;
   switchLanguage().then(response => {
     console.log(response);
   }).catch(error => {
@@ -261,26 +375,4 @@ app.on("activate", () => {
     createWindow();
   }
   app.show();
-});
-function switchLanguage() {
-  if (userData.get("language")) {
-    var language = userData.get("language");
-  } else {
-    var language = app.getLocale().substr(0,2);
-  }
-  i18next
-  .use(i18nextBackend)
-  .init(i18nextOptions);
-  i18next.changeLanguage(language, (error) => {
-    if (error) return console.log("Error in i18next.changeLanguage():", error);
-  });
-  userData.set("language", language);
-  return Promise.resolve("Success: Language set to: " + language.toUpperCase());
-}
-// COMM between contexts
-ipcMain.on("synchronous-message", (event, arg) => {
-  if(arg=="restart") {
-    app.relaunch();
-    app.exit();
-  }
 });
