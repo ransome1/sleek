@@ -73,7 +73,6 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
     }
   }
 });
-// closes suggestion box on focus
 // Adjust Picker width according to length of input
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   let caretPosition = getCaretPosition(modalFormInput);
@@ -104,7 +103,6 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
 // ########################################################################################################################
 // DEFINE CONSTANTS
 // ########################################################################################################################
-//recurrencePickerInput.setAttribute("size", i18next.t("noRecurrence").length)
 const categories = ["contexts", "projects"];
 const items = {
   raw: null,
@@ -162,7 +160,8 @@ btnArchiveTodos.onclick = function() {
 }
 btnOpenTodoFile.forEach(function(el) {
   el.onclick = function () {
-    openFile();
+    //openFile();
+    window.api.send("openOrCreateFile", "open");
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
   }
@@ -180,7 +179,8 @@ btnChangeTodoFile.forEach(function(el) {
 });
 btnCreateTodoFile.forEach(function(el) {
   el.onclick = function () {
-    createFile()
+    //createFile()
+    window.api.send("openOrCreateFile", "create");
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
   }
@@ -195,7 +195,7 @@ btnModalCancel.forEach(function(el) {
 });
 btnFilter.forEach(function(el) {
   el.onclick = function() {
-    showFilters("toggle");
+    showFilterDrawer("toggle");
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
   };
@@ -308,7 +308,7 @@ modalForm.addEventListener("submit", function(e) {
 });
 modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
 filterColumnClose.onclick = function() {
-  showFilters(false);
+  showFilterDrawer(false);
   // trigger matomo event
   if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
 }
@@ -321,15 +321,6 @@ dueDatePickerInput.onfocus = function () {
   suggestionContainer.classList.remove("is-active");
 };
 recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
-document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
-  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
-  todo.due = undefined;
-  todo.dueString = undefined;
-  // also clear the recurrence option as it doesn't make sense any more
-  todo.rec = undefined;
-  todo.recString = undefined;
-  modalFormInput.value = todo.toString();
-});
 contentTabs.forEach(el => el.addEventListener("click", function(el) {
   contentTabs.forEach(function(el) {
     el.classList.remove("is-active");
@@ -339,6 +330,20 @@ contentTabs.forEach(el => el.addEventListener("click", function(el) {
   // trigger matomo event
   if(window.userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
 }));
+settingsLanguage.onchange = function() {
+  window.userData.language = this.value;
+  window.api.send("setUserData", ["language", window.userData.language]);
+  window.api.send("changeLanguage", this.value);
+}
+document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
+  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+  todo.due = undefined;
+  todo.dueString = undefined;
+  // also clear the recurrence option as it doesn't make sense any more
+  todo.rec = undefined;
+  todo.recString = undefined;
+  modalFormInput.value = todo.toString();
+});
 // ########################################################################################################################
 // KEYBOARD SHORTCUTS
 // ########################################################################################################################
@@ -379,12 +384,8 @@ suggestionContainer.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
 });
 filterDrawer.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') showFilters(false);
+  if(event.key === 'Escape') showFilterDrawer(false);
 });
-// ########################################################################################################################
-// THEME CONFIG
-// ########################################################################################################################
-
 // ########################################################################################################################
 // DATE FUNCTIONS
 // ########################################################################################################################
@@ -468,96 +469,40 @@ Date.prototype.isPast = function () {
     return Promise.resolve("Info: File does not exist or has not been defined yet");
   }
 }*/
-function createFile() {
-  dialog.showSaveDialog({
-    title: i18next.t("windowTitleCreateFile"),
-    defaultPath: path.join(app.getPath('home')),
-    buttonLabel: i18next.t("windowButtonCreateFile"),
-    // Restricting selection to text files only
-    filters: [
-      {
-        name: i18next.t("windowFileformat"),
-        extensions: ["txt"]
-      }
-    ],
-    properties: ["openFile", "createDirectory"]
-  }).then(file => {
-    fs.writeFile(file.filePath, "", function (error) {
-      if (!file.canceled) {
-        console.log("Success: New todo.txt file created: " + file.filePath);
-        // updating files array and set this item to default
-        changeFile(file.filePath).then(response => {
-          // if file was changed successfully the data is parsed again
-          // start file watcher
-          startFileWatcher().then(response => {
-            clearModal();
-            console.log(response);
-          }).catch(error => {
-            console.log(error);
-          });
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        });
-      }
-    });
-  }).catch(error => {
-    console.log("Error: " + error)
-  });
-}
-function openFile() {
-  // Resolves to a Promise<Object>
-  dialog.showOpenDialog({
-    title: i18next.t("selectFile"),
-    defaultPath: path.join(app.getPath("home")),
-    buttonLabel: i18next.t("windowButtonOpenFile"),
-    // Restricting the user to only Text Files.
-    filters: [
-        {
-            name: i18next.t("windowFileformat"),
-            extensions: ["txt"]
-        },
-    ],
-    properties: ["openFile"]
-  }).then(file => {
-    // Stating whether dialog operation was cancelled or not.
-    if (!file.canceled) {
-      file = file.filePaths[0].toString();
-      console.log("Success: Storage file updated by new path and filename: " + file);
-      // updating files array and set this item to default
-      changeFile(config.file).then(response => {
-        // if file was changed successfully the data is parsed again
-        // start file watcher
-        startFileWatcher().then(response => {
-          clearModal();
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        });
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
-    }
-  }).catch(err => {
-      console.log("Error: " + err)
-  });
-}
 function changeFile(path) {
   try {
+    // TODO explain
     removeFileFromHistory(path);
     // remove "active" (1) setting from all files
     window.userData.files.forEach(function(file) {
       file[0] = 0;
-      if(file[1]===path) {
-        file[0] = 1;
-      }
+      if(file[1]===path) file[0] = 1
     });
+    // TODO add active (1) setting to the new file
     if(!window.userData.files.includes(path)) window.userData.files.push([1, path]);
-    file = path;
+    // persist new file path
     setUserData("files", window.userData.files);
+    // also update the current file
+    window.userData.file = path;
+    // clear persisted filters as they propably don't make sense any more
     resetFilters();
-    return Promise.resolve(path);
+    // get content and start building objects and table
+    getFileContent(path).then(function(result) {
+      // only continue if we have the items object
+      generateItemsObject(result).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });
+      // advice main process to start the filewatcher
+      window.api.send("startFileWatcher", window.userData.file);
+    }).catch(error => {
+      console.log(error);
+    });
+    // close the file modal
+    clearModal();
+    // return promise
+    return Promise.resolve("Success: File has been changed to: " + path);
   } catch (error) {
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
@@ -570,7 +515,6 @@ function modalChooseFile() {
   modalChangeFileTable.innerHTML = "";
   for (let file in window.userData.files) {
     // skip if file doesn't exist
-    //if(!fs.existsSync(files[file][1])) continue;
     var table = modalChangeFileTable;
     table.classList.add("files");
     var row = table.insertRow(0);
@@ -584,20 +528,8 @@ function modalChooseFile() {
       cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
       cell1.onclick = function() {
         // set the new path variable and change the array
-        changeFile(this.parentElement.getAttribute("data-path")).then(response => {
-          getFileContent(response).then(function(result) {
-            // only continue if we have the items object
-            generateItemsObject(result).then(function(result) {
-              console.log(result);
-            }).catch(function(error) {
-              console.log(error);
-            });
-            // advice main process to start the filewatcher
-            window.api.send("startFileWatcher", window.userData.file);
-          }).catch(error => {
-            console.log(error);
-          });
-          clearModal();
+        changeFile(this.parentElement.getAttribute("data-path")).then(result => {
+          console.log(result);
         }).catch(error => {
           console.log(error);
         });
@@ -654,7 +586,6 @@ function getCaretPosition(inputId) {
     return false;
   }
 }
-
 function clearModal() {
   // reset priority setting
   priorityPicker.selectedIndex = 0;
@@ -751,27 +682,6 @@ function positionSuggestionContainer() {
   suggestionContainer.style.left = modalFormInputPosition.left + "px";
 }
 // ########################################################################################################################
-// CONTENT FUNCTIONS
-// ########################################################################################################################
-function showContent(section) {
-  // in case a content window was open, it will be closed
-  modal.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  contentTabs.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  contentTabsCards.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  let firstTab = section.querySelector(".tabs");
-  firstTab.firstElementChild.firstElementChild.classList.add("is-active");
-  let firstSection = section.querySelector("section");
-  firstSection.classList.add("is-active");
-  section.classList.add("is-active");
-  section.focus();
-}
-// ########################################################################################################################
 // RESIZEABLE FILTER DRAWER
 // https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
 // ########################################################################################################################
@@ -810,68 +720,9 @@ const startDragging = (event) => {
 getResizeableElement().style.setProperty("--max-width", `${maxPaneSize}px`);
 getResizeableElement().style.setProperty("--min-width", `${minPaneSize}px`);
 getHandleElement().addEventListener("mousedown", startDragging);
-
-
-
-
-
-
-
 // ########################################################################################################################
 //
 // ########################################################################################################################
-function showNotification(todo, offset) {
-  try {
-    let notifications = window.userData.notifications;
-    let dismissedNotifications = window.userData.dismissedNotifications;
-    // abort if user didn't permit notifications within sleek
-    if(!notifications) return Promise.reject("Info: Notification surpressed (turned off in sleek's settings)");
-    // check for necessary permissions
-    return navigator.permissions.query({name: 'notifications'}).then(function(result) {
-      // abort if user didn't permit notifications
-      if(result.state!="granted") return Promise.reject("Info: Notification surpressed (not permitted by OS)");
-      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
-      const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
-      switch (offset) {
-        case 0:
-          title = "due today";
-          break;
-        case 1:
-          title = "due tomorrow";
-          break;
-      }
-      // if notification already has been triggered once it will be discarded
-      if(dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
-      // set options for notifcation
-      const config = {
-        title: title,
-        body: todo.text,
-        silent: false,
-        string: todo.toString(),
-        hasReply: false,
-        timeoutType: 'never',
-        urgency: 'critical',
-        closeButtonText: 'Close',
-        actions: [ {
-          type: 'button',
-          text: 'Show Button'
-        }]
-      }
-      // send notification object to main process for execution
-      window.api.send("showNotification", config);
-      // once shown, it will be persisted as hash to it won't be shown a second time
-      dismissedNotifications.push(hash);
-      setUserData("dismissedNotifications", dismissedNotifications);
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
-      return Promise.resolve("Info: Notification successfully sent");
-    });
-  } catch(error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showNotification()", error])
-    return Promise.reject("Error in showNotification(): " + error);
-  }
-}
 function showResultStats() {
   try {
     // we show some information on filters if any are set
@@ -1065,7 +916,7 @@ function showRecurrenceOptions(el) {
     }
   });
 }
-function showFilters(variable) {
+function showFilterDrawer(variable) {
   switch(variable) {
     case true:
       navBtnFilter.classList.add("is-highlighted");
@@ -1112,7 +963,77 @@ function showMore(variable) {
     });
   }
 };
+function showContent(section) {
+  // in case a content window was open, it will be closed
+  modal.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  contentTabs.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  contentTabsCards.forEach(function(el) {
+    el.classList.remove("is-active");
+  });
+  let firstTab = section.querySelector(".tabs");
+  firstTab.firstElementChild.firstElementChild.classList.add("is-active");
+  let firstSection = section.querySelector("section");
+  firstSection.classList.add("is-active");
+  section.classList.add("is-active");
+  section.focus();
+}
 
+function generateNotification(todo, offset) {
+  try {
+    let notifications = window.userData.notifications;
+    let dismissedNotifications = window.userData.dismissedNotifications;
+    // abort if user didn't permit notifications within sleek
+    if(!notifications) return Promise.reject("Info: Notification surpressed (turned off in sleek's settings)");
+    // check for necessary permissions
+    return navigator.permissions.query({name: 'notifications'}).then(function(result) {
+      // abort if user didn't permit notifications
+      if(result.state!="granted") return Promise.reject("Info: Notification surpressed (not permitted by OS)");
+      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
+      const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
+      switch (offset) {
+        case 0:
+          title = "due today";
+          break;
+        case 1:
+          title = "due tomorrow";
+          break;
+      }
+      // if notification already has been triggered once it will be discarded
+      if(dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+      // set options for notifcation
+      const config = {
+        title: title,
+        body: todo.text,
+        silent: false,
+        string: todo.toString(),
+        hasReply: false,
+        timeoutType: 'never',
+        urgency: 'critical',
+        closeButtonText: 'Close',
+        actions: [ {
+          type: 'button',
+          text: 'Show Button'
+        }]
+      }
+      // send notification object to main process for execution
+      window.api.send("showNotification", config);
+      // once shown, it will be persisted as hash to it won't be shown a second time
+      dismissedNotifications.push(hash);
+      setUserData("dismissedNotifications", dismissedNotifications);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
+      return Promise.resolve("Info: Notification successfully sent");
+    });
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateNotification()", error])
+    return Promise.reject("Error in generateNotification(): " + error);
+  }
+}
 function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
     let selectedFilters = new Array;
@@ -1298,6 +1219,8 @@ function generateHash(str) {
 }
 function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
+    // empty filter container first
+    todoFilters.innerHTML = "";
     let items = window.items;
     let selectedFilters = new Array;
     if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
@@ -1432,7 +1355,7 @@ function generateTableRow(todo) {
     todoTableBodyCellCheckbox.onclick = function() {
       // passing the data-item attribute of the parent tag to complete function
       setTodoComplete(this.parentElement.getAttribute('data-item')).then(response => {
-        modalForm.classList.remove("is-active");
+        //modalForm.classList.remove("is-active");
         console.log(response);
       }).catch(error => {
         console.log(error);
@@ -1446,7 +1369,12 @@ function generateTableRow(todo) {
       // use the autoLink lib to attach an icon to every link and put a link on it
       todoTableBodyCellText.innerHTML =  todo.text.autoLink({
         callback: function(url) {
-          return url + " <a href=" + url + " target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
+          // truncate the url
+          let urlString = url;
+          if(url.length>30) {
+            urlString = url.slice(0, 30) + " [...]";
+          }
+          return urlString + " <a href=" + url + " target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
         }
       });
       // replace line feed replacement character with a space
@@ -1614,8 +1542,8 @@ function generateTodoData(searchString) {
       console.log(error);
     });
     // exclude all filters of a category if set
-    if(categoriesFiltered.length > 0) {
-      categoriesFiltered.forEach(category => {
+    if(window.userData.categoriesFiltered.length > 0) {
+      window.userData.categoriesFiltered.forEach(category => {
         // we create a new array where the items attrbite has no values
         items.objectsFiltered = items.objectsFiltered.filter(function(item) {
           return item[category] === null;
@@ -1692,13 +1620,13 @@ function generateTodoData(searchString) {
           // create notification
           if(todo.due.isToday()) {
             // TODO configure notifications
-            showNotification(todo, 0).then(response => {
+            generateNotification(todo, 0).then(response => {
               console.log(response);
             }).catch(error => {
               console.log(error);
             });
           } else if(todo.due.isTomorrow()) {
-            showNotification(todo, 1).then(response => {
+            generateNotification(todo, 1).then(response => {
               console.log(response);
             }).catch(error => {
               console.log(error);
@@ -1952,6 +1880,8 @@ function setTranslations() {
       helpTabKeyboardTR4TD1.innerHTML = translations.toggleDarkMode;
       helpTabKeyboardTR5TD1.innerHTML = translations.openFile;
       helpTabKeyboardTR6TD1.innerHTML = translations.settings;
+      helpTabKeyboardTR7TD1.innerHTML = translations.helpTabKeyboardTR7TD1;
+      helpTabKeyboardTR8TD1.innerHTML = translations.toggleFilter;
       helpTabKeyboardTR1TH1.innerHTML = translations.function;
 
       todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
@@ -2092,31 +2022,33 @@ function setPriority(priority) {
 }
 function setFriendlyLanguageNames(languageCode) {
   try {
-    // generate user friendly entries for language selection menu
-    switch (languageCode) {
-      case "de":
-        var languageName = "Deutsch"
-        break;
-      case "en":
-        var languageName = "English"
-        break;
-      case "it":
-        var languageName = "Italiano"
-        break;
-      case "es":
-        var languageName = "‎Español"
-        break;
-      case "fr":
-        var languageName = "Français"
-        break;
-      default:
-        return;
-    }
-    var option = document.createElement("option");
-    option.text = languageName;
-    option.value = languageCode;
-    //if(languageCode===language) option.selected = true;
-    settingsLanguage.add(option);
+    window.appData.languages.forEach((language) => {
+      // generate user friendly entries for language selection menu
+      switch (language) {
+        case "de":
+          var friendlyLanguageName = "Deutsch"
+          break;
+        case "en":
+          var friendlyLanguageName = "English"
+          break;
+        case "it":
+          var friendlyLanguageName = "Italiano"
+          break;
+        case "es":
+          var friendlyLanguageName = "‎Español"
+          break;
+        case "fr":
+          var friendlyLanguageName = "Français"
+          break;
+        default:
+          return;
+      }
+      var option = document.createElement("option");
+      option.text = friendlyLanguageName;
+      option.value = language;
+      if(language===window.userData.language) option.selected = true;
+      settingsLanguage.add(option);
+    });
     return Promise.resolve("Success: Friendly language names added to select field in settings");
   } catch(error) {
     // trigger matomo event
@@ -2128,8 +2060,8 @@ function setFriendlyLanguageNames(languageCode) {
 function getUserData() {
   return new Promise(function(resolve, reject) {
     window.api.send("getUserData");
-    window.api.receive("getUserData", (config) => {
-      resolve(config);
+    window.api.receive("getUserData", (userData) => {
+      resolve(userData);
     });
   });
 }
@@ -2145,14 +2077,15 @@ function getFileContent(file) {
   try {
     if(!file) {
       showOnboarding(true);
-      return Promise.resolve("Info: File does not exist or has not been defined yet");
-    }
-    return new Promise(function(resolve, reject) {
-      window.api.send("getFileContent", file);
-      window.api.receive("getFileContent", (content) => {
-        resolve(content);
+      return Promise.reject("Info: File does not exist or has not been defined yet");
+    } else {
+      return new Promise(function(resolve, reject) {
+        window.api.send("getFileContent", file);
+        window.api.receive("getFileContent", (content) => {
+          resolve(content);
+        });
       });
-    });
+    }
   } catch(error) {
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "getFileContent()", error])
@@ -2181,9 +2114,11 @@ function getRecurrenceDate(due, recurrence) {
   return new Date(due);
 }
 
-function toggleCompletedTodos() {
+function toggleCompletedTodos(variable) {
   try {
     if(window.userData.showCompleted==false) {
+      window.userData.showCompleted = true;
+    } else if(variable) {
       window.userData.showCompleted = true;
     } else {
       window.userData.showCompleted = false;
@@ -2191,6 +2126,7 @@ function toggleCompletedTodos() {
     toggleShowCompleted.checked = window.userData.showCompleted;
     // persist the sorting
     setUserData("showCompleted", window.userData.showCompleted);
+    //
     t0 = performance.now();
     generateTodoData().then(response => {
       console.log(response);
@@ -2297,12 +2233,8 @@ function matomoEventsConsent(setting) {
 
 function configureMainView() {
   try {
-    // add friendly language names to settings dropdown
-    setFriendlyLanguageNames(window.userData.language).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
+    // open filter drawer
+    if(userData.filterDrawer) showFilterDrawer(true)
     // check if archive button should be enabled
     setButtonState("btnArchiveTodos");
     // adjust input field
@@ -2406,8 +2338,12 @@ function checkDismissedMessages() {
 
 function resetFilters() {
   try {
-    selectedFilters = [];
-    categoriesFiltered = new Array;
+    //
+    /*toggleCompletedTodos(true).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });*/
     // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
     setUserData("selectedFilters", new Array);
     // clear filtered categories
@@ -2560,14 +2496,43 @@ window.onload = async function () {
   window.api.receive("reloadContent", (content) => {
     generateItemsObject(content).then(function(result) {
       console.log(result);
+      // close any modal
+      clearModal();
     }).catch(function(error) {
       console.log(error);
     });
   });
 
+  // change file
+  window.api.receive("changeFile", (file) => {
+    changeFile(file).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
+  });
+
+  // start onboarding
+  window.api.receive("startOnboarding", (file) => {
+    showOnboarding(true);
+  });
+
+  // set theme
+  window.api.receive("setTheme", (variable) => {
+    setTheme(variable);
+  });
+
+  // call app data and only continue if result is ready
+  await getAppData().then(function(appData) {
+    window.appData = appData;
+  }).catch(function(error) {
+    console.log(error);
+  });
+
   // call user data and write it to a global variable
   await getUserData().then(function(userData) {
     window.userData = userData;
+    if(!userData.file) showOnboarding(true)
   }).catch(function(error) {
     console.log(error);
   });
@@ -2607,16 +2572,9 @@ window.onload = async function () {
     console.log(error);
   });
 
-  // configure main view
-  configureMainView().then(function(result) {
+  // add friendly language names to settings dropdown
+  setFriendlyLanguageNames(window.userData.language).then(function(result) {
     console.log(result);
-  }).catch(function(error) {
-    console.log(error);
-  });
-
-  // call app data and only continue if result is ready
-  await getAppData().then(function(appData) {
-    window.appData = appData;
   }).catch(function(error) {
     console.log(error);
   });

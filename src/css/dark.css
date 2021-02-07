@@ -303,6 +303,8 @@ nav {
   .modal.content .tag.is-info {
     background: white !important;
     color: #2c2d30 !important; }
+  .modal.content .tag:not(body).is-dark {
+    background: #1d1e20 !important; }
   .modal.content .modal-close::before,
   .modal.content .modal-close::after {
     color: #2c2d30 !important;

@@ -394,6 +394,9 @@ nav {
     background: white!important;
     color: $grey-mid!important;
   }
+  .tag:not(body).is-dark {
+    background: $grey-pitchblack!important;
+  }
   .modal-close::before,
   .modal-close::after {
     color: $grey-mid!important;

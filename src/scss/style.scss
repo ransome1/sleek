@@ -87,7 +87,10 @@ input[type="search"]:focus::-webkit-search-cancel-button {
 input:focus,
 select:focus,
 input.is-focused,
-input[type="search"]:focus {
+input[type="search"]:focus,
+textarea:focus,
+textarea.is-focused,
+textarea[type="search"]:focus {
   border: none;
   box-shadow: 0 0 0 2px $has-text-link!important;
   outline: none;
@@ -450,9 +453,9 @@ nav {
     }
     .flex-row.text {
       color: $has-text-grey-light;
-    }
-    .flex-row.text a {
-      color: $has-text-grey-light;
+      a {
+        color: $has-text-grey-light;
+      }
     }
     .flex-row span.tag.projects {
       background: $has-text-grey-light;

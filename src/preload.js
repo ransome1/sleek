@@ -12,6 +12,8 @@ contextBridge.exposeInMainWorld(
         "showNotification",
         "writeToFile",
         "startFileWatcher",
+        "changeLanguage",
+        "openOrCreateFile"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -24,7 +26,10 @@ contextBridge.exposeInMainWorld(
         "getUserData",
         "setUserData",
         "getAppData",
-        "reloadContent"
+        "reloadContent",
+        "changeFile",
+        "startOnboarding",
+        "setTheme"
       ];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`

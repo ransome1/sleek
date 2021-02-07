@@ -86,7 +86,10 @@ input[type="search"]:focus::-webkit-search-cancel-button {
 input:focus,
 select:focus,
 input.is-focused,
-input[type="search"]:focus {
+input[type="search"]:focus,
+textarea:focus,
+textarea.is-focused,
+textarea[type="search"]:focus {
   border: none;
   box-shadow: 0 0 0 2px #3273dc !important;
   outline: none; }
@@ -389,8 +392,8 @@ nav {
       color: #b5b5b5; }
     #todoTable .flex-table.completed .flex-row.text {
       color: #b5b5b5; }
-    #todoTable .flex-table.completed .flex-row.text a {
-      color: #b5b5b5; }
+      #todoTable .flex-table.completed .flex-row.text a {
+        color: #b5b5b5; }
     #todoTable .flex-table.completed .flex-row span.tag.projects {
       background: #b5b5b5;
       color: white; }
