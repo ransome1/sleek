@@ -76,7 +76,8 @@ const userData = new Store({
 const appData = {
   version: app.getVersion(),
   development: is.development,
-  languages: i18nextOptions.supportedLngs
+  languages: i18nextOptions.supportedLngs,
+  path: __dirname
 }
 const createWindow = () => {
   let { width, height } = userData.get("windowBounds");
@@ -94,16 +95,29 @@ const createWindow = () => {
       nodeIntegration: false,
       enableRemoteModule: true,
       spellcheck: false,
+      sandbox: true,
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     }
   });
+  // ########################################################################################################################
+  // INITIAL CONFIGURATION
+  // ########################################################################################################################
   // if language isn't set use locale setting
   if(userData.language) {
     var language = userData.language;
   } else {
     var language = app.getLocale().substr(0,2);
   }
+  // if theme hasn't been set use the OS theme preference
+  if(!userData.get("theme") && nativeTheme.shouldUseDarkColors) {
+    userData.set("theme", "dark");
+  } else {
+    userData.set("theme", "light");
+  }
+  // ########################################################################################################################
+  // MAINWINDOW CONFIGURATION
+  // ########################################################################################################################
   // use ico on Windows and png on all other OS
   if (process.platform === "win32") {
     mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
@@ -126,11 +140,11 @@ const createWindow = () => {
       mainWindow.reload();
     }
   }, 600000);
-  // https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
+  // ########################################################################################################################
+  // MENU CONFIGURATION (https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k)
+  // ########################################################################################################################
   // Modules to create application menu
   const Menu = require("electron").Menu;
-  const MenuItem = require("electron").MenuItem;
-  // Template for menu
   const menuTemplate = [
     {
       label: i18next.t("file"),
@@ -175,7 +189,7 @@ const createWindow = () => {
           label: i18next.t("addTodo"),
           accelerator: "CmdOrCtrl+n",
           click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("showForm()");
+            mainWindow.webContents.send("triggerFunction", "showForm")
           }
         },
         {
@@ -188,7 +202,7 @@ const createWindow = () => {
         {
           label: i18next.t("archive"),
           click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("archiveTodos()");
+            mainWindow.webContents.send("triggerFunction", "archiveTodos")
           }
         }
       ]
@@ -200,22 +214,21 @@ const createWindow = () => {
           label: i18next.t("toggleFilter"),
           accelerator: "CmdOrCtrl+b",
           click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("showFilterDrawer(\"toggle\")");
+            mainWindow.webContents.send("triggerFunction", "showFilterDrawer", ["toggle"])
           }
         },
         {
           label: i18next.t("toggleDarkMode"),
           accelerator: "CmdOrCtrl+d",
           click: function (item, focusedWindow) {
-            //mainWindow.webContents.executeJavaScript("setTheme(true)");
-            mainWindow.webContents.send("setTheme", true)
+            mainWindow.webContents.send("triggerFunction", "setTheme", [true])
           }
         },
         {
           label: i18next.t("toggleCompletedTodos"),
           accelerator: "CmdOrCtrl+h",
           click: function (item, focusedWindow) {
-            mainWindow.webContents.executeJavaScript("toggleCompletedTodos().then(function(result) { console.log(result); }).catch(function(error) { console.log(error); });");
+            mainWindow.webContents.send("triggerFunction", "toggleCompletedTodos")
           }
         },
         {
@@ -254,19 +267,15 @@ const createWindow = () => {
       title: i18next.t("windowTitleCreateFile"),
       defaultPath: path.join(app.getPath('home')),
       buttonLabel: i18next.t("windowButtonCreateFile"),
-      // Restricting selection to text files only
-      filters: [
-        {
-          name: i18next.t("windowFileformat"),
-          extensions: ["txt", "md"]
-        }
-      ],
+      filters: [{
+        name: i18next.t("windowFileformat"),
+        extensions: ["txt", "md"]
+      }],
       properties: ["openFile", "createDirectory"]
     }).then(file => {
       fs.writeFile(file.filePath, "", function (error) {
         if (!file.canceled) {
           console.log("Success: New todo.txt file created: " + file.filePath);
-          // send request to change the file to renderer process
           mainWindow.webContents.send("changeFile", file.filePath)
         }
       });
@@ -275,25 +284,19 @@ const createWindow = () => {
     });
   }
   function openFile() {
-    // Resolves to a Promise<Object>
     dialog.showOpenDialog({
       title: i18next.t("selectFile"),
       defaultPath: path.join(app.getPath("home")),
       buttonLabel: i18next.t("windowButtonOpenFile"),
-      // Restricting the user to only Text Files.
-      filters: [
-          {
-              name: i18next.t("windowFileformat"),
-              extensions: ["txt", "md"]
-          },
-      ],
+      filters: [{
+        name: i18next.t("windowFileformat"),
+        extensions: ["txt", "md"]
+      }],
       properties: ["openFile"]
     }).then(file => {
-      // Stating whether dialog operation was cancelled or not.
       if (!file.canceled) {
         file = file.filePaths[0].toString();
         console.log("Success: Storage file updated by new path and filename: " + file);
-        // send request to change the file to renderer process
         mainWindow.webContents.send("changeFile", file)
       }
     }).catch(err => {
@@ -327,7 +330,6 @@ const createWindow = () => {
     });
     app.relaunch();
     app.exit();
-    // mainWindow.reload();
   });
   // Write config to file
   ipcMain.on("setUserData", (event, args) => {
@@ -365,7 +367,7 @@ const createWindow = () => {
           mainWindow.webContents.send("reloadContent", getFileContent(file))
         // start onboarding if file cannot be found anymore
         } else {
-          mainWindow.webContents.send("startOnboarding")
+          mainWindow.webContents.send("triggerFunction", "showOnboarding", [true])
         }
       });
     }
@@ -399,9 +401,12 @@ const createWindow = () => {
     });
   });
 };
+// ########################################################################################################################
+//
+// ########################################################################################################################
 app.on("ready", () => {
   // add sleeks path to config
-  appData.path = __dirname;
+  //appData.path = __dirname;
   switchLanguage().then(response => {
     console.log(response);
   }).catch(error => {

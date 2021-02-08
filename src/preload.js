@@ -28,8 +28,7 @@ contextBridge.exposeInMainWorld(
         "getAppData",
         "reloadContent",
         "changeFile",
-        "startOnboarding",
-        "setTheme"
+        "triggerFunction"
       ];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`

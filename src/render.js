@@ -171,7 +171,7 @@ btnChangeTodoFile.forEach(function(el) {
     if(window.userData.files.length > 0) {
       modalChooseFile();
     } else {
-      openFile();
+      window.api.send("openOrCreateFile", "open");
     }
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
@@ -195,7 +195,11 @@ btnModalCancel.forEach(function(el) {
 });
 btnFilter.forEach(function(el) {
   el.onclick = function() {
-    showFilterDrawer("toggle");
+    showFilterDrawer("toggle").then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
   };
@@ -308,7 +312,11 @@ modalForm.addEventListener("submit", function(e) {
 });
 modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
 filterColumnClose.onclick = function() {
-  showFilterDrawer(false);
+  showFilterDrawer(false).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });
   // trigger matomo event
   if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
 }
@@ -384,7 +392,13 @@ suggestionContainer.addEventListener ("keydown", function () {
   if(event.key === 'Escape') this.classList.remove("is-active");
 });
 filterDrawer.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') showFilterDrawer(false);
+  if(event.key === 'Escape') {
+    showFilterDrawer(false).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
+  }
 });
 // ########################################################################################################################
 // DATE FUNCTIONS
@@ -830,10 +844,11 @@ function showForm(todo, templated) {
         modalFormInput.style.height= modalFormInput.scrollHeight+"px";
       }
       positionSuggestionContainer();
+      return Promise.resolve("Info: Show/Edit todo window opened");
   } catch (error) {
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
-    console.log(error);
+    return Promise.reject("Error in showForm(): " + error);
   }
 }
 function showOnboarding(variable) {
@@ -917,34 +932,41 @@ function showRecurrenceOptions(el) {
   });
 }
 function showFilterDrawer(variable) {
-  switch(variable) {
-    case true:
-      navBtnFilter.classList.add("is-highlighted");
-      filterDrawer.classList.add("is-active");
-      filterDrawer.focus();
-      filterColumnClose.classList.add("is-active");
-    break;
-    case false:
-      navBtnFilter.classList.remove("is-highlighted");
-      filterDrawer.classList.remove("is-active");
-      filterDrawer.blur();
-      filterColumnClose.classList.remove("is-active");
-    break;
-    case "toggle":
-      navBtnFilter.classList.toggle("is-highlighted");
-      filterDrawer.classList.toggle("is-active");
-      filterDrawer.focus();
-      filterColumnClose.classList.toggle("is-active");
-    break;
+  try {
+    switch(variable) {
+      case true:
+        navBtnFilter.classList.add("is-highlighted");
+        filterDrawer.classList.add("is-active");
+        filterDrawer.focus();
+        filterColumnClose.classList.add("is-active");
+      break;
+      case false:
+        navBtnFilter.classList.remove("is-highlighted");
+        filterDrawer.classList.remove("is-active");
+        filterDrawer.blur();
+        filterColumnClose.classList.remove("is-active");
+      break;
+      case "toggle":
+        navBtnFilter.classList.toggle("is-highlighted");
+        filterDrawer.classList.toggle("is-active");
+        filterDrawer.focus();
+        filterColumnClose.classList.toggle("is-active");
+      break;
+    }
+    // persist filter drawer state
+    if(filterDrawer.classList.contains("is-active")) {
+      setUserData("filterDrawer", true);
+    } else {
+      setUserData("filterDrawer", false);
+    }
+    // if more toggle is open we close it as user doesn't need it anymore
+    showMore(false);
+    return Promise.resolve("Success: Filter drawer toggled");
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showFilterDrawer()", error])
+    return Promise.reject("Error in showFilterDrawer(): " + error);
   }
-  // persist filter drawer state
-  if(filterDrawer.classList.contains("is-active")) {
-    setUserData("filterDrawer", true);
-  } else {
-    setUserData("filterDrawer", false);
-  }
-  // if more toggle is open we close it as user doesn't need it anymore
-  showMore(false);
 }
 function showTab(tab) {
   contentTabsCards.forEach(function(el) {
@@ -1219,8 +1241,6 @@ function generateHash(str) {
 }
 function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
-    // empty filter container first
-    todoFilters.innerHTML = "";
     let items = window.items;
     let selectedFilters = new Array;
     if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
@@ -1236,6 +1256,8 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // for the suggestion container, so all filters will be shown
       items.objectsFiltered = items.objects;
     } else {
+      // empty filter container first
+      todoFilters.innerHTML = "";
       container = todoFilters;
       categoriesToBuild = categories;
     }
@@ -1590,16 +1612,10 @@ function generateTodoData(searchString) {
       // nodes need to be created to add them to the outer fragment
       // this creates a divider row for the priorities
       if(items.objectsFiltered[priority][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[priority][0] + "</div></div>"))
-      // sort items according to todo.txt logic
-      // second start dates
-      items.objectsFiltered[priority][1].sort(function(a, b) {
-        return b.date - a.date;
-      });
-      // first due dates
-      items.objectsFiltered[priority][1].sort(function(a, b) {
-        return a.due - b.due;
-      });
-      // TODO: that's ugly, refine this
+      let arrayDue = new Array;
+      let arrayNoPriorityNotCompleted = new Array;
+      let arrayDueAndComplete = new Array;
+      let arrayComplete = new Array;
       for (let item in items.objectsFiltered[priority][1]) {
         let todo = items.objectsFiltered[priority][1][item];
         if(!todo.text) continue;
@@ -1616,34 +1632,63 @@ function generateTodoData(searchString) {
         }
         // for each sorted group within a priority group an array is created
         // incompleted todos with due date
-        if (todo.due && !todo.complete) {
+          if (todo.due && !todo.complete) {
           // create notification
           if(todo.due.isToday()) {
-            // TODO configure notifications
-            generateNotification(todo, 0).then(response => {
+            showNotification(todo, 0).then(response => {
               console.log(response);
             }).catch(error => {
               console.log(error);
             });
           } else if(todo.due.isTomorrow()) {
-            generateNotification(todo, 1).then(response => {
+            showNotification(todo, 1).then(response => {
               console.log(response);
             }).catch(error => {
               console.log(error);
             });
           }
-          tableContainerDue.appendChild(generateTableRow(todo));
+          arrayDue.push(todo);
         // incompleted todos with no due date
         } else if(!todo.due && !todo.complete) {
-          tableContainerNoPriorityNotCompleted.appendChild(generateTableRow(todo));
+          arrayNoPriorityNotCompleted.push(todo);
         // completed todos with due date
         } else if(todo.due && todo.complete) {
-          tableContainerDueAndComplete.appendChild(generateTableRow(todo));
+          arrayDueAndComplete.push(todo);
         // completed todos with no due date
         } else if(!todo.due && todo.complete) {
-          tableContainerComplete.appendChild(generateTableRow(todo));
+          arrayComplete.push(todo);
+
         }
       }
+      // sort the arrays and fill fragments
+      // incompleted todos with due date
+      arrayDue.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayDue.forEach(todo => {
+        tableContainerDue.appendChild(generateTableRow(todo));
+      });
+      // incompleted todos with no due date
+      arrayNoPriorityNotCompleted.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayNoPriorityNotCompleted.forEach(todo => {
+        tableContainerNoPriorityNotCompleted.appendChild(generateTableRow(todo));
+      });
+      // completed todos with due date
+      arrayDueAndComplete.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayDueAndComplete.forEach(todo => {
+        tableContainerDueAndComplete.appendChild(generateTableRow(todo));
+      });
+      // completed todos with no due date
+      arrayComplete.sort(function(a, b) {
+        return a.due - b.due;
+      });
+      arrayComplete.forEach(todo => {
+        tableContainerComplete.appendChild(generateTableRow(todo));
+      });
       // append items to priority group
       tableContainerContent.appendChild(tableContainerDue);
       tableContainerContent.appendChild(tableContainerNoPriorityNotCompleted);
@@ -2077,7 +2122,7 @@ function getFileContent(file) {
   try {
     if(!file) {
       showOnboarding(true);
-      return Promise.reject("Info: File does not exist or has not been defined yet");
+      return Promise.reject("Info: File does not exist or has not been defined yet. Starting onboarding.");
     } else {
       return new Promise(function(resolve, reject) {
         window.api.send("getFileContent", file);
@@ -2169,6 +2214,7 @@ function toggleInputSize(type) {
   d.id = "modalFormInput";
   d.setAttribute("tabindex", 300);
   d.setAttribute("class", "input is-medium");
+  d.setAttribute("placeholder", translations.formTodoInputPlaceholder);
   d.value = modalFormInput.value;
   modalFormInput.parentNode.replaceChild(d, modalFormInput);
   // if input is a textarea, adjust height to content length
@@ -2234,7 +2280,13 @@ function matomoEventsConsent(setting) {
 function configureMainView() {
   try {
     // open filter drawer
-    if(userData.filterDrawer) showFilterDrawer(true)
+    if(userData.filterDrawer) {
+      showFilterDrawer(true).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });
+    }
     // check if archive button should be enabled
     setButtonState("btnArchiveTodos");
     // adjust input field
@@ -2512,14 +2564,52 @@ window.onload = async function () {
     });
   });
 
-  // start onboarding
-  window.api.receive("startOnboarding", (file) => {
-    showOnboarding(true);
-  });
-
-  // set theme
-  window.api.receive("setTheme", (variable) => {
-    setTheme(variable);
+  // trigger function in renderer process
+  window.api.receive("triggerFunction", (name, args) => {
+    switch (name) {
+      case "toggleCompletedTodos":
+        toggleCompletedTodos().then(function(appData) {
+          window.appData = appData;
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
+      case "setTheme":
+        setTheme(args.join()).then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
+      case "showOnboarding":
+        showOnboarding(args.join()).then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
+      case "showFilterDrawer":
+        showFilterDrawer(args.join()).then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
+      case "archiveTodos":
+        archiveTodos(args.join()).then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
+      case "showForm":
+        showForm().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
+    }
   });
 
   // call app data and only continue if result is ready
