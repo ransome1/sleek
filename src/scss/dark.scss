@@ -72,7 +72,7 @@ button.is-outlined:hover {
   background: $grey-mid!important;
 }
 svg {
-  color: $grey-bright;
+  color: white;
 }
 .table {
   width: 100%;
@@ -394,6 +394,9 @@ nav {
     background: white!important;
     color: $grey-mid!important;
   }
+  .tag:not(body).is-dark {
+    background: $grey-pitchblack!important;
+  }
   .modal-close::before,
   .modal-close::after {
     color: $grey-mid!important;
@@ -429,7 +432,9 @@ nav {
   }
 }
 .contentContainer {
-  .title.is-1,
+  .title.is-1 {
+    color: white;
+  }
   .subtitle,
   .subtitle strong {
     color: $grey-bright;

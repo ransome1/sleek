@@ -51,7 +51,7 @@ button.is-outlined:hover {
   background: #2c2d30 !important; }
 
 svg {
-  color: #CCCDCF; }
+  color: white; }
 
 .table {
   width: 100%;
@@ -303,6 +303,8 @@ nav {
   .modal.content .tag.is-info {
     background: white !important;
     color: #2c2d30 !important; }
+  .modal.content .tag:not(body).is-dark {
+    background: #1d1e20 !important; }
   .modal.content .modal-close::before,
   .modal.content .modal-close::after {
     color: #2c2d30 !important;
@@ -329,7 +331,9 @@ nav {
     color: white;
     border-color: #CCCDCF; }
 
-.contentContainer .title.is-1,
+.contentContainer .title.is-1 {
+  color: white; }
+
 .contentContainer .subtitle,
 .contentContainer .subtitle strong {
   color: #CCCDCF; }
