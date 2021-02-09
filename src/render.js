@@ -1583,13 +1583,13 @@ function generateTodoData(searchString) {
           if (todo.due && !todo.complete) {
           // create notification
           if(todo.due.isToday()) {
-            showNotification(todo, 0).then(response => {
+            generateNotification(todo, 0).then(response => {
               console.log(response);
             }).catch(error => {
               console.log(error);
             });
           } else if(todo.due.isTomorrow()) {
-            showNotification(todo, 1).then(response => {
+            generateNotification(todo, 1).then(response => {
               console.log(response);
             }).catch(error => {
               console.log(error);
