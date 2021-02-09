@@ -95,7 +95,6 @@ const createWindow = () => {
       nodeIntegration: false,
       enableRemoteModule: true,
       spellcheck: false,
-      sandbox: true,
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     }
@@ -104,8 +103,8 @@ const createWindow = () => {
   // INITIAL CONFIGURATION
   // ########################################################################################################################
   // if language isn't set use locale setting
-  if(userData.language) {
-    var language = userData.language;
+  if(userData.data.language) {
+    var language = userData.data.language;
   } else {
     var language = app.getLocale().substr(0,2);
   }
@@ -137,7 +136,8 @@ const createWindow = () => {
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
     if(!mainWindow.isFocused()) {
-      mainWindow.reload();
+      //mainWindow.reload();
+      mainWindow.webContents.send("triggerFunction", "generateTodoData")
     }
   }, 600000);
   // ########################################################################################################################
@@ -215,6 +215,13 @@ const createWindow = () => {
           accelerator: "CmdOrCtrl+b",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "showFilterDrawer", ["toggle"])
+          }
+        },
+        {
+          label: i18next.t("resetFilters"),
+          accelerator: "CmdOrCtrl+l",
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.send("triggerFunction", "resetFilters")
           }
         },
         {
@@ -405,8 +412,6 @@ const createWindow = () => {
 //
 // ########################################################################################################################
 app.on("ready", () => {
-  // add sleeks path to config
-  //appData.path = __dirname;
   switchLanguage().then(response => {
     console.log(response);
   }).catch(error => {

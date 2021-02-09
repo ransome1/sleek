@@ -118,6 +118,10 @@ strong {
 svg {
   color: #3273dc; }
 
+code {
+  background-color: transparent !important;
+  color: inherit !important; }
+
 /* ONBOARDING */
 #noResultContainer.contentContainer {
   height: 80%; }

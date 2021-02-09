@@ -119,6 +119,10 @@ strong {
 svg {
   color: $has-text-link;
 }
+code {
+  background-color: transparent!important;
+  color: inherit!important;
+}
 /* ONBOARDING */
 #noResultContainer.contentContainer {
   height: 80%;

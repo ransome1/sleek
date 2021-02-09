@@ -99,7 +99,6 @@ dueDatePickerInput.addEventListener('changeDate', function (e, details) {
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
   }
 });
-// Actually clear the due date after clicking the Clear button
 // ########################################################################################################################
 // DEFINE CONSTANTS
 // ########################################################################################################################
@@ -432,57 +431,6 @@ Date.prototype.isPast = function () {
 // ########################################################################################################################
 // FILE FUNCTIONS
 // ########################################################################################################################
-/*function parseDataFromFile() {
-  // we only start if file exists
-  if (fs.existsSync(config.file)) {
-    try {
-      // read fresh data from file
-      items.raw = fs.readFileSync(file, {encoding: 'utf-8'}, function(err,data) { return data; });
-      items.objects = TodoTxt.parse(items.raw, [ new DueExtension(), new RecExtension() ]);
-      // TODO: Reuse these later
-      items.complete = items.objects.filter(function(item) { return item.complete === true });
-      items.incomplete = items.objects.filter(function(item) { return item.complete === false });
-      // remove empty objects like from empty lines in file
-      items.objects = items.objects.filter(function(item) { return item.toString() != "" });
-      if(items.objects.length>0) {
-        // if settings modal is open and archiving has been completed (will trigger this function) the buttons needs to be disabled until another completed todo is added
-        setButtonState("btnArchiveTodos");
-        // if there is a file onboarding is hidden
-        showOnboarding(false);
-        t0 = performance.now();
-        generateTodoData().then(response => {
-          console.log(response);
-          t1 = performance.now();
-          console.log("Table rendered in", t1 - t0, "ms");
-        }).catch(error => {
-          console.log(error);
-        });
-        navBtnFilter.classList.add("is-active");
-        return Promise.resolve("Success: Data has been extracted from file and parsed to todo.txt items");
-      } else {
-        // if there is a file onboarding is hidden
-        showOnboarding(false);
-        // clean up filters if there were any before
-        todoFilters.innerHTML = "";
-        // hide/show the addTodoContainer
-        addTodoContainer.classList.add("is-active");
-        // hide the table
-        todoTable.classList.remove("is-active");
-        // if file is actually empty we don't need the filter drawer
-        navBtnFilter.classList.remove("is-active");
-        return Promise.resolve("Info: File is empty, nothing will be built");
-      }
-    } catch(error) {
-      showOnboarding(true);
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "parseDataFromFile()", error])
-      return Promise.reject("Error in parseDataFromFile(): " + error);
-    }
-  } else {
-    showOnboarding(true);
-    return Promise.resolve("Info: File does not exist or has not been defined yet");
-  }
-}*/
 function changeFile(path) {
   try {
     // TODO explain
@@ -1927,6 +1875,7 @@ function setTranslations() {
       helpTabKeyboardTR6TD1.innerHTML = translations.settings;
       helpTabKeyboardTR7TD1.innerHTML = translations.helpTabKeyboardTR7TD1;
       helpTabKeyboardTR8TD1.innerHTML = translations.toggleFilter;
+      helpTabKeyboardTR9TD1.innerHTML = translations.resetFilters;
       helpTabKeyboardTR1TH1.innerHTML = translations.function;
 
       todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
@@ -2232,21 +2181,20 @@ function matomoEventsConsent(setting) {
     if(!window.userData.uid) {
       // generate random number/string combination as user id and persist it
       var uid = Math.random().toString(36).slice(2);
-      //if(is.development) uid = "DEVELOPMENT"
       setUserData("uid", uid);
     }
     // only continue if app is connected to the internet
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     var _paq = window._paq = window._paq || [];
     // exclude development machine
-    if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
+    //if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
     _paq.push(['setUserId', window.userData.uid]);
     _paq.push(['setCustomDimension', 1, window.userData.theme]);
     _paq.push(['setCustomDimension', 2, window.userData.language]);
     _paq.push(['setCustomDimension', 3, window.userData.notifications]);
     _paq.push(['setCustomDimension', 4, window.userData.matomoEvents]);
     _paq.push(['setCustomDimension', 5, window.appData.version]);
-    _paq.push(['setCustomDimension', 6, window.userData.width+"x"+window.userData.height]);
+    _paq.push(['setCustomDimension', 6, window.userData.windowBounds.width+"x"+window.userData.windowBounds.height]);
     _paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
     _paq.push(['setCustomDimension', 8, window.userData.files.length]);
     _paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
@@ -2279,8 +2227,10 @@ function matomoEventsConsent(setting) {
 
 function configureMainView() {
   try {
-    // open filter drawer
-    if(userData.filterDrawer) {
+    // add version number to about tab in settings modal
+    version.innerHTML = window.appData.version;
+    // open filter drawer if it has been persisted
+    if(window.userData.filterDrawer) {
       showFilterDrawer(true).then(function(result) {
         console.log(result);
       }).catch(function(error) {
@@ -2329,35 +2279,6 @@ function configureMainView() {
       navBtnFilter.classList.remove("is-active");
       return Promise.resolve("Info: File is empty");
     }
-    // do different stuff depending on if there are objects or not
-    /*if(window.items.objects.length>0) {
-      // if settings modal is open and archiving has been completed (will trigger this function) the buttons needs to be disabled until another completed todo is added
-      setButtonState("btnArchiveTodos");
-      // if there is a file onboarding is hidden
-      showOnboarding(false).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });
-      navBtnFilter.classList.add("is-active");
-      return Promise.resolve("Success: Main view is configured");
-    } else {
-      // if there is a file but no objects the onboarding is hidden anyway
-      showOnboarding(false).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });
-      // clean up filters if there were any before
-      todoFilters.innerHTML = "";
-      // hide/show the addTodoContainer
-      addTodoContainer.classList.add("is-active");
-      // hide the table
-      todoTable.classList.remove("is-active");
-      // if file is actually empty we don't need the filter drawer
-      navBtnFilter.classList.remove("is-active");
-      return Promise.resolve("Info: File is empty, nothing will be built");
-    }*/
   } catch(error) {
     showOnboarding(true).then(function(result) {
       console.log(result);
@@ -2380,7 +2301,7 @@ function checkDismissedMessages() {
         message.classList.add("is-active");
       }
     });
-    return Promise.resolve();
+    return Promise.resolve("Info: Checked for already dismissed messages");
   } catch(error) {
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "checkDismissedMessages()", error])
@@ -2431,7 +2352,6 @@ function submitForm() {
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      //let todo = new TodoTxtItem(modalForm.elements[0].value.replace(/[\r\n]+/g," "), [ new DueExtension(), new RecExtension() ]);
       let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new DueExtension(), new RecExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
@@ -2439,6 +2359,12 @@ function submitForm() {
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.reject("Info: Todo already exists in file, won't write duplicate");
+      // check if todo text is empty
+      } else if(!todo.text) {
+        modalFormAlert.innerHTML = window.translations.formInfoIncomplete;
+        modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
+        modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
+        return Promise.reject("Info: Todo is incomplete");
       }
       // jump to index, remove 1 item there and add the value from the input at that position
       items.objects.splice(index, 1, todo);
@@ -2455,6 +2381,12 @@ function submitForm() {
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.reject("Info: Todo already exists in file, won't write duplicate");
+      // check if todo text is empty
+      } else if(!todo.text) {
+        modalFormAlert.innerHTML = window.translations.formInfoIncomplete;
+        modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
+        modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
+        return Promise.reject("Info: Todo is incomplete");
       }
       // we build the array
       items.objects.push(todo);
@@ -2467,12 +2399,9 @@ function submitForm() {
       return Promise.reject("Info: Will not write empty todo");
     }
     //write the data to the file
-    //fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
     window.api.send("writeToFile", [items.objects.join("\n").toString(), window.userData.file]);
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
-    // save the previously saved item.current for further use
-    //
     return Promise.resolve("Success: Changes written to file: " + window.userData.file);
   // if the input field is empty, let users know
   } catch (error) {
@@ -2537,7 +2466,7 @@ function archiveTodos() {
     return Promise.resolve("Success: Completed todo moved to: " + doneFile)
   } catch(error) {
     // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
     return Promise.reject("Error in archiveTodos(): " + error)
   }
 }
@@ -2604,6 +2533,13 @@ window.onload = async function () {
         break;
       case "showForm":
         showForm().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
+      case "resetFilters":
+        resetFilters().then(function(result) {
           console.log(result);
         }).catch(function(error) {
           console.log(error);
@@ -2677,7 +2613,7 @@ window.onload = async function () {
   });
 
   // On app load only call matomo function if opt in is set
-  matomoEventsConsent(userData.matomoEvents).then(response => {
+  matomoEventsConsent(window.userData.matomoEvents).then(response => {
     console.log(response);
   }).catch(error => {
     console.log(error);

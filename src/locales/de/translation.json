@@ -24,6 +24,7 @@
   "formErrorWritingFile": "<strong>Fehler:</strong> Die Änderungen konnten nicht gespeichert werden. Bitte prüfe, ob die todo.txt Datei existiert und ausreichend Zugriffsrechte gesetzt sind: ",
   "formInfoNoInput": "Schreibe eine Aufgabe in das Textfeld und verwende dazu die todo.txt Syntax. Schau <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">hier</a> nach, welche Möglichkeiten es dabei gibt.",
   "formInfoDuplicate": "Diese Todo existiert bereits und Duplikate werden nicht in die todo.txt Datei geschrieben.",
+  "formInfoIncomplete": "Deine Eingabe ist nicht vollständig, gebe mindestens einen Text ein.",
   "formSelectDueDate": "Keine Fälligkeit",
   "cancel": "Abbrechen",
   "save": "Speichern",
