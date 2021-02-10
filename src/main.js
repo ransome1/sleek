@@ -27,12 +27,19 @@ function getFileContent(file) {
 }
 function getCurrentFile() {
   try {
-    // remove files that don't exist ant the given path
-    userData.data.files = userData.data.files.filter(function(file) { return fs.existsSync(file[1]) === true });
+    let files = new Array;
+    // in case somebody updates from a very old version where pathToFile was still in use
+    if((!userData.get("files") || userData.get("files").length===0) && userData.get("pathToFile")) {
+      files.push([1, userData.get("pathToFile")]);
+    } else {
+      files = userData.get("files");
+    }
+    // remove files that don't exist at the given path
+    files = files.filter(function(file) { return fs.existsSync(file[1]) === true });
     // persist
-    userData.set("files", userData.data.files);
+    userData.set("files", files);
     // select the entry that is current
-    const file = userData.data.files.filter(function(file) { return file[0] === 1 });
+    const file = files.filter(function(file) { return file[0] === 1 });
     // return path
     if(file.length>0) return Promise.resolve(file[0][1])
     // return no path if there is no current file
@@ -136,7 +143,6 @@ const createWindow = () => {
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
     if(!mainWindow.isFocused()) {
-      //mainWindow.reload();
       mainWindow.webContents.send("triggerFunction", "generateTodoData")
     }
   }, 600000);
@@ -328,7 +334,6 @@ const createWindow = () => {
   });
   // Change language
   ipcMain.on("changeLanguage", (event, language) => {
-    console.log(i18nextOptions);
     i18next
     .use(i18nextBackend)
     .init(i18nextOptions);

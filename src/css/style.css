@@ -724,6 +724,8 @@ nav {
     .modal.content .modal-card-body table.shortcuts td {
       vertical-align: middle;
       border: none; }
+      .modal.content .modal-card-body table.shortcuts td .tag {
+        font-size: 1em !important; }
     .modal.content .modal-card-body table.shortcuts tr, .modal.content .modal-card-body th {
       font-family: "FreeSans";
       border: none;

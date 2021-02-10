@@ -76,7 +76,6 @@ const dueDatePicker = new Datepicker(dueDatePickerInput, {
 // Adjust Picker width according to length of input
 dueDatePickerInput.addEventListener('changeDate', function (e, details) {
   let caretPosition = getCaretPosition(modalFormInput);
-  //if(modalFormInput.value.substr(caretPosition-5, caretPosition-1).split(" ")[1] === "due:") modalFormInput.value = modalFormInput.value.replace("due:", "");
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
   if(e.detail.date) {
     // generate the object on what is written into input, so we don't overwrite previous inputs of user
@@ -223,10 +222,6 @@ btnNoResultContainerResetFilters.onclick = function() {
   if(window.userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
 }
 todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
-todoTableSearch.onfocus = function () {
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Search input field", "Focused"]);
-};
 todoTableSearch.addEventListener("input", function () {
   generateTodoData(this.value).then(response => {
     console.log(response);
@@ -288,7 +283,7 @@ modalClose.forEach(function(el) {
     if(el.getAttribute("data-message")) {
       // persist closed message, so it won't show again
       if(!window.userData.dismissedMessages.includes(el.getAttribute("data-message"))) window.userData.dismissedMessages.push(el.getAttribute("data-message"))
-      setUserData("dismissedMessages", dismissedMessages);
+      setUserData("dismissedMessages", window.userData.dismissedMessages);
       // trigger matomo event
       if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
     } else {
@@ -447,7 +442,11 @@ function changeFile(path) {
     // also update the current file
     window.userData.file = path;
     // clear persisted filters as they propably don't make sense any more
-    resetFilters();
+    resetFilters().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
     // get content and start building objects and table
     getFileContent(path).then(function(result) {
       // only continue if we have the items object
@@ -885,7 +884,7 @@ function showFilterDrawer(variable) {
       case true:
         navBtnFilter.classList.add("is-highlighted");
         filterDrawer.classList.add("is-active");
-        filterDrawer.focus();
+        //filterDrawer.focus();
         filterColumnClose.classList.add("is-active");
       break;
       case false:
@@ -897,7 +896,7 @@ function showFilterDrawer(variable) {
       case "toggle":
         navBtnFilter.classList.toggle("is-highlighted");
         filterDrawer.classList.toggle("is-active");
-        filterDrawer.focus();
+        //filterDrawer.focus();
         filterColumnClose.classList.toggle("is-active");
       break;
     }
@@ -1868,7 +1867,7 @@ function setTranslations() {
       helpTab3Title.innerHTML = translations.helpTab3Title;
       helpTab4Title.innerHTML = translations.helpTab4Title;
       helpTabKeyboardTR1TD1.innerHTML = translations.addTodo;
-      helpTabKeyboardTR2TD1.innerHTML = translations.findTodo;
+      helpTabKeyboardTR2TD1.innerHTML = translations.find;
       helpTabKeyboardTR3TD1.innerHTML = translations.toggleCompletedTodos;
       helpTabKeyboardTR4TD1.innerHTML = translations.toggleDarkMode;
       helpTabKeyboardTR5TD1.innerHTML = translations.openFile;
@@ -2144,8 +2143,6 @@ function toggleInputSize(type) {
       modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
       // persist setting
       setUserData("useTextarea", true);
-      // replace ascii code with line breaks
-      //modalFormInput.value = modalFormInput.value.replaceAll(String.fromCharCode(16), "\r\n");
       break;
     case "textarea":
       var d = document.createElement('input');
@@ -2154,8 +2151,6 @@ function toggleInputSize(type) {
       modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
       // persist setting
       setUserData("useTextarea", false);
-      // replace ascii code with spaces
-      //modalFormInput.value = modalFormInput.value.replaceAll(String.fromCharCode(16), " ");
       break;
     default:
       modalFormInputResize.setAttribute("data-input-type", "input");
@@ -2187,7 +2182,7 @@ function matomoEventsConsent(setting) {
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     var _paq = window._paq = window._paq || [];
     // exclude development machine
-    //if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
+    if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
     _paq.push(['setUserId', window.userData.uid]);
     _paq.push(['setCustomDimension', 1, window.userData.theme]);
     _paq.push(['setCustomDimension', 2, window.userData.language]);
@@ -2293,7 +2288,7 @@ function configureMainView() {
 
 function checkDismissedMessages() {
   try {
-    if(!window.userData.matomoEvents) return Promise.reject("Info: No consent given, will skip function checkDismissedMessages()");
+    if(!window.userData.dismissedMessages) return Promise.reject("Info: No already checked messages found, will skip this check");
     messages.forEach((message) => {
       if(window.userData.dismissedMessages.includes(message.getAttribute("data"))) {
         message.classList.remove("is-active");
@@ -2311,12 +2306,6 @@ function checkDismissedMessages() {
 
 function resetFilters() {
   try {
-    //
-    /*toggleCompletedTodos(true).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });*/
     // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
     setUserData("selectedFilters", new Array);
     // clear filtered categories
@@ -2331,7 +2320,7 @@ function resetFilters() {
     }).catch(error => {
       console.log(error);
     });
-    return Promise.resolve();
+    return Promise.resolve("Success: Filters resetted");
   } catch(error) {
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "resetFilters()", error])
@@ -2525,7 +2514,7 @@ window.onload = async function () {
         });
         break;
       case "archiveTodos":
-        archiveTodos(args.join()).then(function(result) {
+        archiveTodos().then(function(result) {
           console.log(result);
         }).catch(function(error) {
           console.log(error);
@@ -2577,13 +2566,6 @@ window.onload = async function () {
     console.log(error);
   });
 
-  // check for already dismissed messages to prevent them to show up again
-  checkDismissedMessages().then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    console.log(error);
-  });
-
   // get file content and create the items object
   await getFileContent(window.userData.file).then(function(result) {
     // only continue if we have the items object
@@ -2616,6 +2598,13 @@ window.onload = async function () {
   matomoEventsConsent(window.userData.matomoEvents).then(response => {
     console.log(response);
   }).catch(error => {
+    console.log(error);
+  });
+
+  // check for already dismissed messages to prevent them to show up again
+  checkDismissedMessages().then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
     console.log(error);
   });
 
