@@ -1744,11 +1744,13 @@ function setTodoDelete(todo) {
     if(todo.due) {
       var date = convertDate(todo.due);
       // if deleted it will be removed from persisted notifcations
-      // the one set for today
-      window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
-      // the one set for tomorrow
-      window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
-      setUserData("dismissedNotifications", window.userData.dismissedNotifications);
+      if(window.userData.dismissedNotifications) {
+        // the one set for today
+        window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
+        // the one set for tomorrow
+        window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
+        setUserData("dismissedNotifications", window.userData.dismissedNotifications);
+      }
     }
     window.items.objects.splice(index, 1);
     //write the data to the file
