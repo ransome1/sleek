@@ -1712,10 +1712,12 @@ function setTodoComplete(todo) {
         const date = convertDate(todo.due);
         // if set to complete it will be removed from persisted notifcations
         // the one set for today
-        window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
-        // the one set for tomorrow
-        window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
-        setUserData("dismissedNotifications", window.userData.dismissedNotifications);
+        if(window.userData.dismissedNotifications) {
+          window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
+          // the one set for tomorrow
+          window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
+          setUserData("dismissedNotifications", window.userData.dismissedNotifications);
+        }
       }
       todo.complete = true;
       todo.completed = new Date();
@@ -2466,6 +2468,8 @@ window.onload = async function () {
 
   // set listeners
   window.api.receive("reloadContent", (content) => {
+    // advice main process to start the filewatcher
+    window.api.send("startFileWatcher", window.userData.file);
     generateItemsObject(content).then(function(result) {
       console.log(result);
       // close any modal
