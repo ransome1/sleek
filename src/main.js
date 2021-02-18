@@ -115,12 +115,6 @@ const createWindow = () => {
   } else {
     var language = app.getLocale().substr(0,2);
   }
-  // if theme hasn't been set use the OS theme preference
-  if(!userData.get("theme") && nativeTheme.shouldUseDarkColors) {
-    userData.set("theme", "dark");
-  } else {
-    userData.set("theme", "light");
-  }
   // ########################################################################################################################
   // MAINWINDOW CONFIGURATION
   // ########################################################################################################################

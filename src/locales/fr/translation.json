@@ -88,7 +88,7 @@
   "settingsTabAboutExternalLibraries": "Logiciels externes utilisés",
   "settingsTabSettingsArchive": "Archiver les tâches",
   "settingsTabSettingsArchiveBody": "Les tâches complétées vont être supprimées du fichier todo.txt actuel et insérées dans un fichier done.txt. Si ce fichier n'existe pas dans le dossier courant, il sera créé.",
-  "settingsTabSettingsArchiveButton": "Archiver",
+  "archive": "Archiver",
   "shortcuts": "Shortcuts",
   "function": "Function",
   "priorities": "Priorities",

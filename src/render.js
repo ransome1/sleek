@@ -441,12 +441,6 @@ function changeFile(path) {
     setUserData("files", window.userData.files);
     // also update the current file
     window.userData.file = path;
-    // clear persisted filters as they propably don't make sense any more
-    resetFilters().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
     // get content and start building objects and table
     getFileContent(path).then(function(result) {
       // only continue if we have the items object
@@ -455,6 +449,12 @@ function changeFile(path) {
       }).catch(function(error) {
         console.log(error);
       });
+      // clear persisted filters as they propably don't make sense any more
+      /*resetFilters().then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });*/
       // advice main process to start the filewatcher
       window.api.send("startFileWatcher", window.userData.file);
     }).catch(error => {
@@ -1450,6 +1450,7 @@ function generateTableRow(todo) {
 }
 function generateItemsObject(content) {
   try {
+    //if(!content) return Promise.resolve("Info: File is empty, won't build anything");
     items.objects = TodoTxt.parse(content, [ new DueExtension(), new RecExtension() ]);
     items.complete = items.objects.filter(function(item) { return item.complete === true });
     items.incomplete = items.objects.filter(function(item) { return item.complete === false });
