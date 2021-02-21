@@ -1,5 +1,5 @@
-const electron = require('electron');
-const { contextBridge, ipcRenderer } = require('electron');
+//const electron = require('electron');
+const { electron, contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
   "api", {
     send: (channel, data) => {

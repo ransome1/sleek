@@ -417,7 +417,7 @@ nav {
       #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow svg.fa-sort-down {
         color: #ccc; }
   #todoTable .flex-table .flex-row {
-    padding: .75rem 0;
+    padding: .5em 0;
     margin-right: 1em;
     height: auto;
     line-height: 1.5em; }
@@ -470,14 +470,14 @@ nav {
     text-transform: lowercase; }
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
-      left: .7em;
+      right: .7em;
       bottom: 2.75em;
       color: #4a4a4a;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {
       position: absolute;
       top: -1.4em;
-      left: -2.8em;
+      right: -1.5em;
       display: none; }
       #todoTable .flex-table .flex-row.itemDueDate .tags .tag {
         margin: 0; }

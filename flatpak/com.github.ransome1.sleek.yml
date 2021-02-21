@@ -33,9 +33,14 @@ modules:
     sources:
       - type: git
         url: https://github.com/ransome1/sleek.git
-        branch: master
+        commit: 12af7d76256b0bf37607bdefed37f4584ef3b40d
         dest: sleek
+
       - generated-sources.json
+
+      - type: file
+        path: package-lock.json
+        dest: sleek
 
       - type: script
         commands:

@@ -485,7 +485,7 @@ nav {
   }
   .flex-table {
     .flex-row {
-      padding: .75rem 0;
+      padding: .5em 0;
       margin-right: 1em;
       height: auto;
       line-height: 1.5em;
@@ -553,7 +553,7 @@ nav {
       text-transform: lowercase;
       svg.fa-sort-down {
         position: absolute;
-        left: .7em;
+        right: .7em;
         bottom: 2.75em;
         color: $darker-grey;
         display: none;
@@ -561,7 +561,7 @@ nav {
       .tags {
         position: absolute;
         top: -1.4em;
-        left: -2.8em;
+        right: -1.5em;
         display: none;
         .tag {
           margin: 0;
