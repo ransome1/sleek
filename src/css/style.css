@@ -359,13 +359,23 @@ nav {
   #todoTable .icon.is-left svg,
   #todoTable .icon.is-right svg {
     color: #4a4a4a; }
-  #todoTable #resultStats {
-    display: none;
-    font-size: .8em;
-    text-align: center;
-    padding: .5em 0; }
-  #todoTable #resultStats.is-active {
-    display: block; }
+  #todoTable header {
+    /* VIEW CONTAINER */ }
+    #todoTable header .column {
+      padding: .25em 0; }
+    #todoTable header #resultStats {
+      display: none;
+      /*font-size: .8em;*/
+      text-align: center;
+      padding: .75em 0;
+      white-space: nowrap; }
+    #todoTable header #resultStats.is-active {
+      display: block; }
+    #todoTable header #viewContainer .dropdown-content {
+      width: 15em;
+      display: none; }
+    #todoTable header #viewContainer.is-active .dropdown-content {
+      display: block; }
   #todoTable #todoTableContainer {
     margin: 1em 0; }
   #todoTable .flex-table {
@@ -417,7 +427,7 @@ nav {
       #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow svg.fa-sort-down {
         color: #ccc; }
   #todoTable .flex-table .flex-row {
-    padding: .5em 0;
+    padding: .75em 0;
     margin-right: 1em;
     height: auto;
     line-height: 1.5em; }
@@ -464,7 +474,7 @@ nav {
     color: #4a4a4a;
     position: relative;
     white-space: nowrap;
-    margin: 0;
+    margin: 0 .5em 0 0;
     padding: 1em .5em;
     text-align: center;
     text-transform: lowercase; }
@@ -529,7 +539,7 @@ nav {
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .toggle {
-  padding: 1.5em 1.5em 1.5em 0;
+  padding: 1em 1.5em 1em 0;
   margin: 0;
   line-height: 2em; }
   .toggle .switch {
@@ -820,14 +830,49 @@ nav {
 .message.is-active {
   display: block; }
 
+/* COMPACT VIEW */
+body.compact #todoTable {
+  padding: 1em; }
+  body.compact #todoTable .flex-table .flex-row {
+    padding: .25em 0; }
+
+body.compact .filterDrawer div a.button {
+  font-size: 0.75rem; }
+  body.compact .filterDrawer div a.button span.tag {
+    font-size: 0.65rem; }
+
+body.compact .modal.content .modal-card {
+  width: 90% !important;
+  padding: .5em; }
+
+body.compact nav ul {
+  width: 3.5em; }
+  body.compact nav ul li a {
+    width: 3.5em;
+    height: 3.5em;
+    line-height: 3.5em; }
+  body.compact nav ul li.logo {
+    width: 100%;
+    height: 3.5em;
+    line-height: 3.5em;
+    font-family: "FreeSansBold"; }
+
+body.compact #filterDrawer {
+  padding: 0 1.5em !important; }
+  body.compact #filterDrawer .toggle {
+    margin: 0 !important;
+    padding: 1.5em 0.5em 1em 0 !important; }
+
+body.compact #suggestionContainer.filterDrawer {
+  padding: 0 !important; }
+
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
   .modal.content .modal-card {
     width: 90% !important;
     padding: .5em; }
   nav ul {
-    width: 3.5em;
-    height: 100%; }
+    width: 3.5em; }
     nav ul li a {
       width: 3.5em;
       height: 3.5em;

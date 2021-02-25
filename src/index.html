@@ -27,13 +27,6 @@
           </ul>
           <section id="filterDrawer" class="filterDrawer dropdown" tabindex="0">
             <div class="container">
-              <div class="toggle">
-                <label class="switch" for="toggleShowCompleted">
-                  <input type="checkbox" id="toggleShowCompleted" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-                <span id="filterToggleShowCompleted" class="text"></span>
-              </div>
               <div id="todoFilters"></div>
               <button id="btnFiltersResetFilters" class="button btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button>
             </div>
@@ -50,8 +43,50 @@
               <i class="fas fa-search"></i>
             </span>
           </div>
-          <header id="resultStats">
-            <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>
+          <header class="columns">
+            <div class="column"></div>
+            <div id="resultStats" class="column">
+              <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>
+            </div>
+            <div class="column">
+              <div class="dropdown is-active is-right" style="float: right;">
+                <div class="dropdown-trigger">
+                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer">
+                    <i class="fas fa-list"></i>&nbsp;<span id="viewView"></span>
+                  </button>
+                </div>
+                <div id="viewContainer" class="dropdown-menu is-right" role="menu">
+                  <div class="dropdown-content">
+                    <div class="dropdown-item">
+                      <div class="toggle">
+                        <label class="switch" for="toggleShowCompleted">
+                          <input type="checkbox" id="toggleShowCompleted" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                        <span id="viewToggleShowCompleted" class="text"></span>
+                      </div>
+                    </div>
+                    <hr class="dropdown-divider">
+                    <div class="dropdown-item">
+                      <div class="toggle">
+                        <label class="switch" for="toggleView">
+                          <input type="checkbox" id="toggleView" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                        <span id="viewToggleCompactView" class="text"></span>
+                      </div>
+                    </div>
+                    <!--<div class="dropdown-item">
+                      <p><a href="#" id="switchView"><i class="fas fa-th-list"></i> Standard view</a></p>
+                    </div>-->
+                    <!--<hr class="dropdown-divider">
+                    <div class="dropdown-item">
+                      <p><i class="fas fa-list-ul"></i> Compact view</p>
+                    </div>-->
+                  </div>
+                </div>
+              </div>
+            </div>
           </header>
           <div id="todoTableContainer"></div>
         </section>

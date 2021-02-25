@@ -78,6 +78,7 @@ const userData = new Store({
     filterDrawerWidth: "560px",
     useTextarea: false,
     filterDrawer: false,
+    compactView: false
   }
 });
 const appData = {
@@ -114,6 +115,12 @@ const createWindow = () => {
     var language = userData.data.language;
   } else {
     var language = app.getLocale().substr(0,2);
+  }
+  // if theme hasn't been set, sleek will adapt to OS preference
+  if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
+    userData.set("theme", "dark");
+  } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
+    userData.set("theme", "light");
   }
   // ########################################################################################################################
   // MAINWINDOW CONFIGURATION

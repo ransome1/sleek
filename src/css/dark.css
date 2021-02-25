@@ -80,6 +80,16 @@ nav {
     border-bottom: none;
     background-color: #3B3B3B; }
 
+#todoTable header #btnToggleViewContainer {
+  background: transparent !important; }
+
+#todoTable header #viewContainer .dropdown-content {
+  background: #3B3B3B; }
+  #todoTable header #viewContainer .dropdown-content .dropdown-item {
+    color: white !important; }
+  #todoTable header #viewContainer .dropdown-content .dropdown-divider {
+    background: #2c2d30; }
+
 #todoTable .flex-table#previousItem.is-highlighted {
   background-color: #2c2d30; }
 
@@ -130,10 +140,10 @@ nav {
   #todoTable .flex-table .flex-row.todoTableItemMore a {
     color: #CCCDCF; }
   #todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
-    background: #2c2d30;
+    background: #3B3B3B;
     color: white; }
   #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-    background: #3B3B3B; }
+    background: #2c2d30; }
 
 #filterDrawer {
   background: #3B3B3B; }

@@ -221,7 +221,12 @@ btnNoResultContainerResetFilters.onclick = function() {
   // trigger matomo event
   if(window.userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
 }
-todoTable.onclick = function() { if(event.target.classList.contains("flex-table")) showMore(false) }
+todoTable.onclick = function() {
+  if(event.target.classList.contains("flex-table")) {
+      showMore(false);
+      viewContainer.classList.remove("is-active");
+  }
+}
 todoTableSearch.addEventListener("input", function () {
   generateTodoData(this.value).then(response => {
     console.log(response);
@@ -229,6 +234,15 @@ todoTableSearch.addEventListener("input", function () {
     console.log(error);
   });
 });
+toggleView.onclick = function() {
+  toggleCompactView(this.checked).then(response => {
+    console.log(response);
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Toggle compact view"]);
+  }).catch(error => {
+    console.log(error);
+  });
+}
 toggleShowCompleted.onclick = function() {
   toggleCompletedTodos().then(response => {
     console.log(response);
@@ -336,6 +350,9 @@ settingsLanguage.onchange = function() {
   window.userData.language = this.value;
   window.api.send("setUserData", ["language", window.userData.language]);
   window.api.send("changeLanguage", this.value);
+}
+btnToggleViewContainer.onclick = function() {
+  viewContainer.classList.toggle("is-active");
 }
 document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
   let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
@@ -548,6 +565,8 @@ function getCaretPosition(inputId) {
   }
 }
 function clearModal() {
+  // close view container if open
+  viewContainer.classList.remove("is-active");
   // reset priority setting
   priorityPicker.selectedIndex = 0;
   // if recurrence picker was open it is now being closed
@@ -653,7 +672,7 @@ const maxPaneSize = document.body.clientWidth * .75
 const setPaneWidth = (width) => {
   getResizeableElement().style
     .setProperty("--resizeable-width", `${width}px`);
-  setUserData("filterDrawerWidth", `${width}px`);
+  setUserData("filterDrawerWidth", `${width}`);
 };
 const getPaneWidth = () => {
   const pxWidth = getComputedStyle(getResizeableElement())
@@ -1811,7 +1830,9 @@ function setTranslations() {
       btnTheme.setAttribute("title", translations.toggleDarkMode);
       btnSave.innerHTML = translations.save;
       todoTableSearch.placeholder = translations.search;
-      filterToggleShowCompleted.innerHTML = translations.completedTodos;
+      viewToggleShowCompleted.innerHTML = translations.completedTodos;
+      viewToggleCompactView.innerHTML = translations.compactView;
+      viewView.innerHTML = translations.view;
       //filterBtnResetFilters.innerHTML = translations.resetFilters;
       addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
       addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
@@ -1937,6 +1958,7 @@ function setToggles() {
     toggleMatomoEvents.checked = window.userData.matomoEvents;
     toggleNotifications.checked = window.userData.notifications;
     toggleShowCompleted.checked = window.userData.showCompleted;
+    toggleView.checked = window.userData.compactView;
     return Promise.resolve("Success: All toggles set");
   } catch(error) {
     // trigger matomo event
@@ -2112,6 +2134,23 @@ function getRecurrenceDate(due, recurrence) {
   return new Date(due);
 }
 
+function toggleCompactView(checked) {
+  try {
+    window.userData.compactView = checked;
+    if(window.userData.compactView) {
+      body.classList.add("compact");
+    } else {
+      body.classList.remove("compact");
+    }
+    // persist the sorting
+    setUserData("compactView", window.userData.compactView);
+    return Promise.resolve("Success: Compact view set to: " + window.userData.compactView);
+  } catch(error) {
+    // trigger matomo event
+    //if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
+    return Promise.reject("Error in setToggles(): " + error);
+  }
+}
 function toggleCompletedTodos(variable) {
   try {
     if(window.userData.showCompleted==false) {
@@ -2198,6 +2237,7 @@ function matomoEventsConsent(setting) {
     _paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
     _paq.push(['setCustomDimension', 8, window.userData.files.length]);
     _paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
+    _paq.push(['setCustomDimension', 10, window.userData.compactView]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -2227,6 +2267,9 @@ function matomoEventsConsent(setting) {
 
 function configureMainView() {
   try {
+    if(window.userData.filterDrawerWidth) setPaneWidth(window.userData.filterDrawerWidth);
+    // check if compact view is suppose to be active
+    if(window.userData.compactView) body.classList.add("compact");
     // add version number to about tab in settings modal
     version.innerHTML = window.appData.version;
     // open filter drawer if it has been persisted
@@ -2466,7 +2509,6 @@ function archiveTodos() {
 }
 
 window.onload = async function () {
-
   // set listeners
   window.api.receive("reloadContent", (content) => {
     // advice main process to start the filewatcher

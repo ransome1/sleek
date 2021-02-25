@@ -5,6 +5,7 @@
   "toggleDarkMode": "Changer le thème",
   "toggleCompletedTodos": "Afficher/masquer les tâches complétées",
   "completedTodos": "Tâches complétées",
+  "compactView": "Compact view",
   "resetFilters": "Réinitialiser les filtres et la recherche",
   "contexts": "Contextes",
   "projects": "Projets",

@@ -5,6 +5,7 @@
   "toggleDarkMode": "Toggle dark mode",
   "toggleCompletedTodos": "Toggle completed todos",
   "completedTodos": "Completed todos",
+  "compactView": "Compact view",
   "resetFilters": "Reset filters and search",
   "contexts": "Contexts",
   "projects": "Projects",

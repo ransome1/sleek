@@ -111,6 +111,22 @@ nav {
   }
 }
 #todoTable {
+  header {
+    #btnToggleViewContainer {
+      background: transparent!important;
+    }
+    #viewContainer {
+      .dropdown-content {
+        background: $grey-light;
+        .dropdown-item {
+          color: white!important;
+        }
+        .dropdown-divider {
+          background: $grey-mid;
+        }
+      }
+    }
+  }
   .flex-table#previousItem.is-highlighted {
     background-color: $grey-mid;
   }
@@ -176,11 +192,11 @@ nav {
       color: $grey-bright;
     }
     .flex-row.todoTableItemMore .dropdown-content {
-      background: $grey-mid;
+      background: $grey-light;
       color: white;
     }
     .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-      background: $grey-light;
+      background: $grey-mid;
     }
   }
 }
