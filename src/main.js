@@ -187,8 +187,12 @@ const createWindow = () => {
         click: function () {
           mainWindow.webContents.executeJavaScript("showContent(modalSettings)");
         }
-      }]
-    },
+      },
+      { type: "separator" },
+      { label: i18next.t("cut"), accelerator: "CmdOrCtrl+X", selector: "cut:" },
+      { label: i18next.t("copy"), accelerator: "CmdOrCtrl+C", selector: "copy:" },
+      { label: i18next.t("paste"), accelerator: "CmdOrCtrl+V", selector: "paste:" }
+    ]},
     {
       label: i18next.t("todos"),
       submenu: [
@@ -232,17 +236,18 @@ const createWindow = () => {
           }
         },
         {
-          label: i18next.t("toggleDarkMode"),
-          accelerator: "CmdOrCtrl+d",
-          click: function (item, focusedWindow) {
-            mainWindow.webContents.send("triggerFunction", "setTheme", [true])
-          }
-        },
-        {
           label: i18next.t("toggleCompletedTodos"),
           accelerator: "CmdOrCtrl+h",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "toggleCompletedTodos")
+          }
+        },
+        { type: "separator" },
+        {
+          label: i18next.t("toggleDarkMode"),
+          accelerator: "CmdOrCtrl+d",
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.send("triggerFunction", "setTheme", [true])
           }
         },
         {

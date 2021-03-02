@@ -56,12 +56,13 @@ table.files tr td:last-child {
 body::-webkit-scrollbar {
   display: none; }
 
-:focus {
+:focus,
+:focus-visible {
   outline: none;
   box-shadow: none; }
 
-button:focus,
-a:focus {
+button:focus-visible,
+a:focus-visible {
   outline: 2px solid #3273dc !important; }
 
 p a {
@@ -109,6 +110,10 @@ input[type=number] {
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; }
+
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: none !important; }
 
 .title,
 strong {
@@ -751,6 +756,7 @@ nav {
     display: block;
     margin: 0 auto; }
   .modal.content .tabs {
+    height: 6em;
     margin-bottom: 0; }
   .modal.content .tabs li a {
     border-width: 2px;

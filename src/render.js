@@ -386,6 +386,10 @@ modalForm.addEventListener ("keydown", function (e) {
     suggestionContainer.blur();
   }
 });
+body.addEventListener ("click", function () {
+  // close view layer
+  if(viewContainer.classList.contains("is-active") && !event.target.closest("#viewContainer") && !event.target.closest("#btnToggleViewContainer")) viewContainer.classList.remove("is-active")
+});
 modalForm.addEventListener ("click", function () {
   // close recurrence picker if click is outside of recurrence container
   if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) recurrencePickerContainer.classList.remove("is-active")
@@ -2147,8 +2151,8 @@ function toggleCompactView(checked) {
     return Promise.resolve("Success: Compact view set to: " + window.userData.compactView);
   } catch(error) {
     // trigger matomo event
-    //if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
-    return Promise.reject("Error in setToggles(): " + error);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "toggleCompactView()", error])
+    return Promise.reject("Error in toggleCompactView(): " + error);
   }
 }
 function toggleCompletedTodos(variable) {

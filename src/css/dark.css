@@ -5,8 +5,8 @@ body {
 a {
   color: white; }
 
-button:focus,
-a:focus {
+button:focus-visible,
+a:focus-visible {
   outline: 2px solid #CCCDCF !important; }
 
 a:hover,
@@ -38,6 +38,10 @@ input[type="search"]:focus {
 
 input::placeholder {
   color: #4d4d4d !important; }
+
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: none !important; }
 
 button {
   color: white !important;
