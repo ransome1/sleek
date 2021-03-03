@@ -23,6 +23,7 @@ function switchLanguage() {
   }
 }
 function getFileContent(file) {
+  if(!fs.existsSync(file)) return false;
   return fs.readFileSync(file, {encoding: 'utf-8'}, function(err,data) { return data; });
 }
 function getCurrentFile() {

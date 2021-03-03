@@ -666,6 +666,8 @@ nav {
 /* MODAL HELP */
 .modal.content {
   z-index: 55;
+  justify-content: start !important;
+  padding-top: 2.5em;
   margin: 0 !important; }
   .modal.content .title.is-4 {
     font-size: 1.2em;

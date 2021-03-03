@@ -60,7 +60,8 @@ input[type="search"]:focus {
 input::placeholder {
   color: $grey-lighter!important;
 }
-input[type="checkbox"]:focus {
+input[type="checkbox"]:focus,
+input[type="checkbox"]:active {
   outline: none;
   box-shadow: none!important;
 }
