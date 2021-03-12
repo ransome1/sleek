@@ -165,6 +165,8 @@ code {
   margin: 0 !important; }
   .columns .column {
     position: relative; }
+    .columns .column .is-right {
+      float: right; }
   .columns .column.content {
     overflow-y: auto;
     overflow-x: hidden; }
@@ -377,8 +379,10 @@ nav {
     #todoTable header #resultStats.is-active {
       display: block; }
     #todoTable header #viewContainer .dropdown-content {
-      width: 15em;
+      min-width: 15em;
       display: none; }
+      #todoTable header #viewContainer .dropdown-content .dropdown-item .toggle .text {
+        white-space: nowrap; }
     #todoTable header #viewContainer.is-active .dropdown-content {
       display: block; }
   #todoTable #todoTableContainer {
@@ -396,10 +400,130 @@ nav {
     transition: background-color 0.5s ease-out; }
   #todoTable .flex-table#previousItem.is-highlighted {
     background-color: #f5f5f5; }
-  #todoTable .flex-table.priority {
+  #todoTable .flex-table.itemGroup {
     border: none;
     font-family: FreeSansBold;
-    font-size: 1.5em; }
+    font-size: 1.25em; }
+    #todoTable .flex-table.itemGroup svg {
+      color: inherit; }
+  #todoTable .flex-table .flex-row {
+    padding: .75em 0;
+    margin-right: 1em;
+    height: auto;
+    line-height: 1.5em; }
+    #todoTable .flex-table .flex-row .is-white {
+      background: none; }
+    #todoTable .flex-table .flex-row span.tag {
+      margin: .25em .5em .25em 0; }
+    #todoTable .flex-table .flex-row span.tag.projects {
+      background: #f1d6f1;
+      color: #5f1a5e; }
+    #todoTable .flex-table .flex-row span.tag.contexts {
+      background: #c5ede3;
+      color: #075943; }
+    #todoTable .flex-table .flex-row .categories {
+      padding: 0 0 0 .5em; }
+    #todoTable .flex-table .flex-row .priorityTag {
+      font-weight: bold;
+      padding: 0 .35em;
+      margin-right: .5em;
+      background: #ccc;
+      color: #5d5d5d;
+      border-radius: 3px; }
+  #todoTable .flex-table .flex-row.checkbox a {
+    font-size: 1.25em; }
+  #todoTable .flex-table .flex-row.text {
+    width: auto;
+    max-width: 80%;
+    cursor: pointer;
+    margin-right: .5em;
+    color: #4a4a4a; }
+    #todoTable .flex-table .flex-row.text svg {
+      color: inherit; }
+  #todoTable .flex-table .flex-row.spacer {
+    width: .5em;
+    background: transparent; }
+  #todoTable .flex-table .flex-row.priority {
+    min-width: .5em;
+    background: #ccc;
+    opacity: .5; }
+  #todoTable .flex-table .flex-row.priority.A,
+  #todoTable .flex-table .flex-row .priorityTag.A {
+    color: #ffe6eb;
+    background: #ff3860; }
+  #todoTable .flex-table .flex-row.priority.B,
+  #todoTable .flex-table .flex-row .priorityTag.B {
+    color: #fadcd8;
+    background: #fa745e; }
+  #todoTable .flex-table .flex-row.priority.C,
+  #todoTable .flex-table .flex-row .priorityTag.C {
+    color: #fffdf5;
+    background: #ffdd57; }
+  #todoTable .flex-table .flex-row.projects,
+  #todoTable .flex-table .flex-row.contexts {
+    margin-right: 0; }
+  #todoTable .flex-table .flex-row.itemDueDate {
+    display: inline;
+    color: #4a4a4a;
+    position: relative;
+    white-space: nowrap;
+    margin: 0 .5em 0 0;
+    padding: 1em .5em;
+    text-align: center;
+    text-transform: lowercase; }
+    #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
+      position: absolute;
+      right: .7em;
+      bottom: 2.75em;
+      display: none; }
+    #todoTable .flex-table .flex-row.itemDueDate .tags {
+      position: absolute;
+      top: -1.4em;
+      right: -1.5em;
+      display: none; }
+      #todoTable .flex-table .flex-row.itemDueDate .tags .tag {
+        margin: 0; }
+      #todoTable .flex-table .flex-row.itemDueDate .tags .is-dark {
+        background: #4a4a4a;
+        font-family: FreeSansBold; }
+  #todoTable .flex-table .flex-row.isToday {
+    color: #ff3860; }
+    #todoTable .flex-table .flex-row.isToday .tags .is-dark {
+      background: #ff3860;
+      font-family: FreeSansBold; }
+    #todoTable .flex-table .flex-row.isToday svg {
+      color: inherit; }
+  #todoTable .flex-table .flex-row.isTomorrow {
+    color: #fa745e; }
+    #todoTable .flex-table .flex-row.isTomorrow .tags .is-dark {
+      background: #fa745e;
+      font-family: FreeSansBold; }
+    #todoTable .flex-table .flex-row.isTomorrow svg {
+      color: #fa745e; }
+  #todoTable .flex-table .flex-row.isPast {
+    color: #ff3860; }
+    #todoTable .flex-table .flex-row.isPast .tags .is-dark {
+      background: #ff3860;
+      font-family: FreeSansBold; }
+    #todoTable .flex-table .flex-row.isPast svg {
+      color: inherit; }
+  #todoTable .flex-table .flex-row:hover .tags {
+    display: block; }
+  #todoTable .flex-table .flex-row:hover svg.fa-sort-down {
+    display: block; }
+  #todoTable .flex-table .flex-row.todoTableItemMore {
+    margin-left: auto; }
+  #todoTable .flex-table .flex-row.todoTableItemMore a {
+    color: #3273dc;
+    display: none;
+    padding: 0 .5em; }
+  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
+    padding: .75em; }
+  #todoTable .flex-table .flex-row.todoTableItemMore.is-active a,
+  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu {
+    display: block; }
+  #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
+    display: block; }
   #todoTable .flex-table.completed {
     color: #b5b5b5; }
     #todoTable .flex-table.completed .checkbox a {
@@ -419,124 +543,15 @@ nav {
     #todoTable .flex-table.completed .flex-row span.tag.contexts {
       background: #ccc;
       color: white; }
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isPast,
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isToday,
-    #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow {
+    #todoTable .flex-table.completed .flex-row {
       color: #ccc; }
-      #todoTable .flex-table.completed .flex-row.itemDueDate.isPast .tags .is-dark,
-      #todoTable .flex-table.completed .flex-row.itemDueDate.isToday .tags .is-dark,
-      #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow .tags .is-dark {
+      #todoTable .flex-table.completed .flex-row .tags .is-dark {
         background: #ccc; }
-      #todoTable .flex-table.completed .flex-row.itemDueDate.isPast svg.fa-sort-down,
-      #todoTable .flex-table.completed .flex-row.itemDueDate.isToday svg.fa-sort-down,
-      #todoTable .flex-table.completed .flex-row.itemDueDate.isTomorrow svg.fa-sort-down {
-        color: #ccc; }
-  #todoTable .flex-table .flex-row {
-    padding: .75em 0;
-    margin-right: 1em;
-    height: auto;
-    line-height: 1.5em; }
-    #todoTable .flex-table .flex-row .is-white {
-      background: none; }
-    #todoTable .flex-table .flex-row span.tag {
-      margin: .25em .5em .25em 0; }
-    #todoTable .flex-table .flex-row span.tag.projects {
-      background: #f1d6f1;
-      color: #5f1a5e; }
-    #todoTable .flex-table .flex-row span.tag.contexts {
-      background: #c5ede3;
-      color: #075943; }
-    #todoTable .flex-table .flex-row .categories {
-      padding: 0 0 0 .5em; }
-  #todoTable .flex-table .flex-row.checkbox a {
-    font-size: 1.25em; }
-  #todoTable .flex-table .flex-row.text {
-    width: auto;
-    max-width: 80%;
-    cursor: pointer;
-    margin-right: .5em;
-    color: #4a4a4a; }
-    #todoTable .flex-table .flex-row.text svg {
-      color: inherit; }
-  #todoTable .flex-table .flex-row.spacer {
-    width: .5em;
-    background: transparent; }
-  #todoTable .flex-table .flex-row.priority {
-    width: .5em;
-    background: #ccc;
-    opacity: .5; }
-  #todoTable .flex-table .flex-row.priority.A {
-    background: #ff3860; }
-  #todoTable .flex-table .flex-row.priority.B {
-    background: #fa745e; }
-  #todoTable .flex-table .flex-row.priority.C {
-    background: #ffdd57; }
-  #todoTable .flex-table .flex-row.projects,
-  #todoTable .flex-table .flex-row.contexts {
-    margin-right: 0; }
-  #todoTable .flex-table .flex-row.itemDueDate {
-    display: inline;
-    color: #4a4a4a;
-    position: relative;
-    white-space: nowrap;
-    margin: 0 .5em 0 0;
-    padding: 1em .5em;
-    text-align: center;
-    text-transform: lowercase; }
-    #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
-      position: absolute;
-      right: .7em;
-      bottom: 2.75em;
-      color: #4a4a4a;
-      display: none; }
-    #todoTable .flex-table .flex-row.itemDueDate .tags {
-      position: absolute;
-      top: -1.4em;
-      right: -1.5em;
-      display: none; }
-      #todoTable .flex-table .flex-row.itemDueDate .tags .tag {
-        margin: 0; }
-      #todoTable .flex-table .flex-row.itemDueDate .tags .is-dark {
-        background: #4a4a4a;
-        font-family: FreeSansBold; }
-  #todoTable .flex-table .flex-row.itemDueDate.isToday {
-    color: #ff3860; }
-    #todoTable .flex-table .flex-row.itemDueDate.isToday .tags .is-dark {
-      background: #ff3860;
-      font-family: FreeSansBold; }
-    #todoTable .flex-table .flex-row.itemDueDate.isToday svg {
-      color: inherit; }
-  #todoTable .flex-table .flex-row.itemDueDate.isTomorrow {
-    color: #fa745e; }
-    #todoTable .flex-table .flex-row.itemDueDate.isTomorrow .tags .is-dark {
-      background: #fa745e;
-      font-family: FreeSansBold; }
-    #todoTable .flex-table .flex-row.itemDueDate.isTomorrow svg {
-      color: #fa745e; }
-  #todoTable .flex-table .flex-row.itemDueDate.isPast {
-    color: #ff3860; }
-    #todoTable .flex-table .flex-row.itemDueDate.isPast .tags .is-dark {
-      background: #ff3860;
-      font-family: FreeSansBold; }
-    #todoTable .flex-table .flex-row.itemDueDate.isPast svg {
-      color: inherit; }
-  #todoTable .flex-table .flex-row:hover .tags {
-    display: block; }
-  #todoTable .flex-table .flex-row:hover svg.fa-sort-down {
-    display: block; }
-  #todoTable .flex-table .flex-row.todoTableItemMore {
-    margin-left: auto; }
-  #todoTable .flex-table .flex-row.todoTableItemMore a {
-    color: #3273dc;
-    display: none;
-    padding: 0 .5em; }
-  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
-    padding: .75em; }
-  #todoTable .flex-table .flex-row.todoTableItemMore.is-active a,
-  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu {
-    display: block; }
-  #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
-    display: block; }
+      #todoTable .flex-table.completed .flex-row svg {
+        color: inherit; }
+      #todoTable .flex-table.completed .flex-row .priorityTag {
+        color: white;
+        background: #b5b5b5; }
 
 #todoTable.is-active {
   display: block; }
@@ -544,7 +559,7 @@ nav {
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .toggle {
-  padding: 1em 1.5em 1em 0;
+  padding: .5em 1.5em .5em 0;
   margin: 0;
   line-height: 2em; }
   .toggle .switch {
@@ -758,6 +773,7 @@ nav {
     display: block;
     margin: 0 auto; }
   .modal.content .tabs {
+    display: block;
     height: 6em;
     margin-bottom: 0; }
   .modal.content .tabs li a {

@@ -79,14 +79,27 @@ const userData = new Store({
     filterDrawerWidth: "560px",
     useTextarea: false,
     filterDrawer: false,
-    compactView: false
+    compactView: false,
+    sortBy: "priority",
   }
 });
 const appData = {
   version: app.getVersion(),
   development: is.development,
   languages: i18nextOptions.supportedLngs,
-  path: __dirname
+  path: __dirname,
+  os: null
+}
+switch (process.platform) {
+  case "darwin":
+    appData.os = "mac";
+    break;
+  case "win32":
+    appData.os = "windows";
+    break;
+  default:
+    appData.os = "linux";
+    break;
 }
 const createWindow = () => {
   let { width, height } = userData.get("windowBounds");
@@ -117,6 +130,10 @@ const createWindow = () => {
   } else {
     var language = app.getLocale().substr(0,2);
   }
+  // if sorting method is not set
+  if(!userData.data.sortBy) {
+    userData.set("sortBy", "priority");
+  }
   // if theme hasn't been set, sleek will adapt to OS preference
   if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
     userData.set("theme", "dark");
@@ -128,6 +145,7 @@ const createWindow = () => {
   // ########################################################################################################################
   // use ico on Windows and png on all other OS
   if (process.platform === "win32") {
+    userData.set("os", "windows");
     mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
   } else {
     mainWindow.setIcon(path.join(__dirname, "../assets/icons/icon.png"));
@@ -346,9 +364,9 @@ const createWindow = () => {
     .init(i18nextOptions);
     i18next.changeLanguage(language, (error) => {
       if (error) return console.log("Error in i18next.changeLanguage():", error);
+      app.relaunch();
+      app.exit();
     });
-    app.relaunch();
-    app.exit();
   });
   // Write config to file
   ipcMain.on("setUserData", (event, args) => {
@@ -382,12 +400,14 @@ const createWindow = () => {
       fileWatcher = fs.watch(file, (event, filename) => {
         console.log("Info: File has changed");
         // only update content if file still exists
-        if (fs.existsSync(file)) {
-          mainWindow.webContents.send("reloadContent", getFileContent(file))
-        // start onboarding if file cannot be found anymore
-        } else {
-          mainWindow.webContents.send("triggerFunction", "showOnboarding", [true])
-        }
+        setTimeout(function() {
+          if(fs.existsSync(file)) {
+            mainWindow.webContents.send("reloadContent", getFileContent(file))
+          // start onboarding if file cannot be found anymore
+          } else {
+            mainWindow.webContents.send("triggerFunction", "showOnboarding", [true])
+          }
+        }, 300);
       });
     }
   });

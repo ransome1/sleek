@@ -76,6 +76,9 @@ fieldset[disabled] {
 button.is-outlined:hover {
   background: $grey-mid!important;
 }
+::after {
+  border-color: white!important;
+}
 svg {
   color: white;
 }
@@ -136,6 +139,12 @@ nav {
     background-color: $grey-mid;
   }
   .flex-table.completed {
+    .flex-row {
+      .priorityTag {
+        background: $grey-mid!important;
+        color: $grey-lighter!important;
+      }
+    }
     color: $grey-light;
     .flex-row.text,
     .checkbox a,
@@ -178,9 +187,9 @@ nav {
     .flex-row.text {
       color: $grey-bright;
     }
-    .flex-row.itemDueDate {
+    /*.flex-row.itemDueDate {
       color: white;
-    }
+    }*/
     .flex-row span.tag.contexts {
       background: $green-mid!important;
       color: $green-bright!important;
@@ -202,6 +211,11 @@ nav {
     }
     .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
       background: $grey-mid;
+    }
+    .flex-row {
+      .priorityTag.C {
+        background: #c5a943!important;
+      }
     }
   }
 }
@@ -302,9 +316,6 @@ nav {
     select option {
       background: $grey-mid;
     }
-  }
-  ::after {
-    border-color: white!important;
   }
 }
 .modal {

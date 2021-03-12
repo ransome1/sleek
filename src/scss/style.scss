@@ -174,6 +174,9 @@ code {
   margin: 0!important;
   .column {
     position: relative;
+    .is-right {
+      float: right;
+    }
   }
   .column.content {
     overflow-y: auto;
@@ -431,8 +434,15 @@ nav {
     /* VIEW CONTAINER */
     #viewContainer {
       .dropdown-content {
-          width: 15em;
-          display: none;
+        min-width: 15em;
+        display: none;
+        .dropdown-item {
+          .toggle {
+            .text {
+              white-space: nowrap;
+            }
+          }
+        }
       }
     }
     #viewContainer.is-active {
@@ -461,49 +471,12 @@ nav {
   .flex-table#previousItem.is-highlighted {
     background-color: $light-grey;
   }
-  .flex-table.priority {
+  .flex-table.itemGroup {
     border: none;
     font-family: FreeSansBold;
-    font-size: 1.5em;
-  }
-  .flex-table.completed {
-    color: $has-text-grey-light;
-    .checkbox a {
-      color: $has-text-grey-light;
-      svg {
-        color: inherit;
-      }
-    }
-    strong {
-      font-family: "FreeSansBold";
-      color: $has-text-grey-light;
-    }
-    .flex-row.text {
-      color: $has-text-grey-light;
-      a {
-        color: $has-text-grey-light;
-      }
-    }
-    .flex-row span.tag.projects {
-      background: $has-text-grey-light;
-      color: white;
-    }
-    .flex-row span.tag.contexts {
-      background: $dark-grey;
-      color: white;
-    }
-    .flex-row.itemDueDate.isPast,
-    .flex-row.itemDueDate.isToday,
-    .flex-row.itemDueDate.isTomorrow {
-      color: $dark-grey;
-      .tags {
-        .is-dark {
-          background: $dark-grey;
-        }
-      }
-      svg.fa-sort-down {
-        color: $dark-grey;
-      }
+    font-size: 1.25em;
+    svg {
+      color: inherit;
     }
   }
   .flex-table {
@@ -529,6 +502,14 @@ nav {
       .categories {
         padding: 0 0 0 .5em;
       }
+      .priorityTag {
+        font-weight: bold;
+        padding: 0 .35em;
+        margin-right: .5em;
+        background: $dark-grey;
+        color: #5d5d5d;
+        border-radius: 3px;
+      }
     }
     .flex-row.checkbox a {
       font-size: 1.25em;
@@ -548,17 +529,23 @@ nav {
       background: transparent;
     }
     .flex-row.priority {
-      width: .5em;
+      min-width: .5em;
       background: $dark-grey;
       opacity: .5;
     }
-    .flex-row.priority.A {
+    .flex-row.priority.A,
+    .flex-row .priorityTag.A {
+      color: #ffe6eb;
       background: $has-text-danger;
     }
-    .flex-row.priority.B {
+    .flex-row.priority.B,
+    .flex-row .priorityTag.B {
+      color: #fadcd8;
       background: $has-text-attention;
     }
-    .flex-row.priority.C {
+    .flex-row.priority.C,
+    .flex-row .priorityTag.C {
+      color: #fffdf5;
       background: $has-text-warning;
     }
     .flex-row.projects,
@@ -578,7 +565,6 @@ nav {
         position: absolute;
         right: .7em;
         bottom: 2.75em;
-        color: $darker-grey;
         display: none;
       }
       .tags {
@@ -595,7 +581,7 @@ nav {
         }
       }
     }
-    .flex-row.itemDueDate.isToday {
+    .flex-row.isToday {
       color: $has-text-danger;
       .tags .is-dark {
         background: $has-text-danger;
@@ -605,7 +591,7 @@ nav {
         color: inherit;
       }
     }
-    .flex-row.itemDueDate.isTomorrow {
+    .flex-row.isTomorrow {
       color: $has-text-attention;
       .tags .is-dark {
         background: $has-text-attention;
@@ -615,7 +601,7 @@ nav {
         color: $has-text-attention;
       }
     }
-    .flex-row.itemDueDate.isPast {
+    .flex-row.isPast {
       color: $has-text-danger;
       .tags .is-dark {
         background: $has-text-danger;
@@ -654,6 +640,48 @@ nav {
       display: block;
     }
   }
+  .flex-table.completed {
+    color: $has-text-grey-light;
+    .checkbox a {
+      color: $has-text-grey-light;
+      svg {
+        color: inherit;
+      }
+    }
+    strong {
+      font-family: "FreeSansBold";
+      color: $has-text-grey-light;
+    }
+    .flex-row.text {
+      color: $has-text-grey-light;
+      a {
+        color: $has-text-grey-light;
+      }
+    }
+    .flex-row span.tag.projects {
+      background: $has-text-grey-light;
+      color: white;
+    }
+    .flex-row span.tag.contexts {
+      background: $dark-grey;
+      color: white;
+    }
+    .flex-row {
+      color: $dark-grey;
+      .tags {
+        .is-dark {
+          background: $dark-grey;
+        }
+      }
+      svg {
+        color: inherit;
+      }
+      .priorityTag {
+        color: white;
+        background: $has-text-grey-light;
+      }
+    }
+  }
 }
 #todoTable.is-active {
   display: block;
@@ -662,7 +690,7 @@ nav {
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .toggle {
-  padding: 1em 1.5em 1em 0;
+  padding: .5em 1.5em .5em 0;
   margin: 0;
   line-height: 2em;
   .switch {
@@ -936,6 +964,7 @@ nav {
     display: block; margin: 0 auto;
   }
   .tabs {
+    display: block;
     height: 6em;
     margin-bottom: 0;
   }

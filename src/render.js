@@ -351,6 +351,20 @@ settingsLanguage.onchange = function() {
   window.api.send("setUserData", ["language", window.userData.language]);
   window.api.send("changeLanguage", this.value);
 }
+viewSelectSortBy.onchange = async function() {
+  if(this.value) {
+    await setUserData("sortBy", this.value);
+    t0 = performance.now();
+    await generateTodoData().then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Table rendered in:", t1 - t0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+    clearModal();
+  }
+}
 btnToggleViewContainer.onclick = function() {
   viewContainer.classList.toggle("is-active");
 }
@@ -1328,10 +1342,10 @@ function generateTableRow(todo) {
     }
     todoTableBodyRow.setAttribute("data-item", todo.toString());
     // add the priority marker or a white spacer
-    if(todo.priority) {
+    if(todo.priority && window.userData.sortBy==="priority") {
       todoTableBodyCellPriority.setAttribute("class", "flex-row priority " + todo.priority);
       todoTableBodyRow.appendChild(todoTableBodyCellPriority);
-    } else {
+    } else if(!todo.priority && window.userData.sortBy==="priority") {
       todoTableBodyCellSpacer.setAttribute("class", "flex-row spacer");
       todoTableBodyRow.appendChild(todoTableBodyCellSpacer);
     }
@@ -1358,8 +1372,9 @@ function generateTableRow(todo) {
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
     // creates cell for the text
     if(todo.text) {
+      if(todo.priority && window.userData.sortBy==="dueString") todoTableBodyCellText.innerHTML = "<span class=\"priorityTag " + todo.priority + "\">" + todo.priority + "</span>";
       // use the autoLink lib to attach an icon to every link and put a link on it
-      todoTableBodyCellText.innerHTML =  todo.text.autoLink({
+      todoTableBodyCellText.innerHTML +=  todo.text.autoLink({
         callback: function(url) {
           // truncate the url
           let urlString = url;
@@ -1565,30 +1580,87 @@ function generateTodoData(searchString) {
     }).catch(function(error) {
       console.log(error);
     });
-    // empty the table containers before reading fresh data
-    todoTableContainer.innerHTML = "";
-    tableContainerDue.innerHTML = "";
-    tableContainerComplete.innerHTML = "";
-    tableContainerDueAndComplete.innerHTML = "";
-    tableContainerNoPriorityNotCompleted.innerHTML = "";
-    // produce an object where priority a to z + null is key
-    items.objectsFiltered = items.objectsFiltered.reduce((r, a) => {
-     r[a.priority] = [...r[a.priority] || [], a];
-     return r;
-    }, {});
+    // build object according to sorting method
+    if(window.userData.sortBy==="dueString") {
+      var completed = new Array;
+      var noDue = new Array;
+      // produce an object where priority a to z + null is key
+      items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
+        if(a.complete) {
+          completed.push(a);
+        } else if(!a.due) {
+          noDue.push(a);
+        } else {
+          object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
+        }
+        return object;
+      }, {});
+      // assign arrays to object keys
+      items.objectsFiltered.group_20_completed = completed;
+      items.objectsFiltered.group_10_noDue = noDue;
+    } else if(window.userData.sortBy==="priority") {
+      items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
+        object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
+        return object;
+      }, {});
+    }
     // object is converted to a sorted array
-    items.objectsFiltered = Object.entries(items.objectsFiltered).sort();
+    items.objectsFiltered = Object.entries(items.objectsFiltered).sort(function(a,b) {
+      if(a < b) return -1;
+    });
     // each priority group -> A to Z plus null for all todos with no priority
-    for (let priority in items.objectsFiltered) {
+    for (let itemGroup in items.objectsFiltered) {
       // nodes need to be created to add them to the outer fragment
-      // this creates a divider row for the priorities
-      if(items.objectsFiltered[priority][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table priority\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[priority][0] + "</div></div>"))
-      let arrayDue = new Array;
-      let arrayNoPriorityNotCompleted = new Array;
-      let arrayDueAndComplete = new Array;
-      let arrayComplete = new Array;
-      for (let item in items.objectsFiltered[priority][1]) {
-        let todo = items.objectsFiltered[priority][1][item];
+      switch (window.userData.sortBy) {
+        case "priority":
+        // this creates a divider row for the priorities
+          if(items.objectsFiltered[itemGroup][0]!="null") tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"priorityTag " + items.objectsFiltered[itemGroup][0] + "\">" + items.objectsFiltered[itemGroup][0] + "</div></div>"))
+          items.objectsFiltered[itemGroup][1] = items.objectsFiltered[itemGroup][1].sort(function(a, b) {
+            // if the due date is empty, todo is sorted to the end but before the completed ones
+            if(!b.due) return -1;
+            // most recent or already past todo will be sorted to the top
+            return a.due - b.due;
+          });
+          // if todo is completed it will be sorted at the very end
+          items.objectsFiltered[itemGroup][1] = items.objectsFiltered[itemGroup][1].sort(function(a, b) {
+            return a.complete - b.complete;
+          });
+          break;
+        case "dueString":
+          // generate group headlines
+          if(items.objectsFiltered[itemGroup][0]==="group_10_noDue") {
+            if(noDue.length > 0 ) tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + window.translations.formSelectDueDate + "</div></div>"));
+          } else if(items.objectsFiltered[itemGroup][0]==="group_20_completed") {
+            if(completed.length > 0 ) tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due \" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + window.translations.completedTodos + "</div></div>"));
+          } else if(items.objectsFiltered[itemGroup][1][0].due.isToday()) {
+            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\">" + window.translations.dueToday + "</div></div>"));
+          } else if(items.objectsFiltered[itemGroup][1][0].due.isTomorrow()) {
+            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\">" + window.translations.dueTomorrow + "</div></div>"));
+          } else if(items.objectsFiltered[itemGroup][1][0].due.isPast()) {
+            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\">" + items.objectsFiltered[itemGroup][0] + "</div></div>"));
+          } else {
+            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[itemGroup][0] + "</div></div>"));
+          }
+          // sort highest priority first per itemGroup
+          items.objectsFiltered[itemGroup][1].sort(function(a, b) {
+            // if priority is set, group is sorted alphabetically
+            if (a.priority < b.priority) return -1
+            // if priority is not set, item is being sorted at the end
+            if(!b.priority) return -1
+            // if completed, item is being sorted at the end
+          });
+          // sort completed todos according to their completion dates
+          if(items.objectsFiltered[itemGroup][0]==="group_20_completed") {
+            items.objectsFiltered[itemGroup][1].sort(function(a, b) {
+              // group is sorted by completed date, the more recent the higher up the list
+              return b.completed - a.completed;
+            });
+          }
+      }
+      // build the fragments per itemGroup
+      for (let item in items.objectsFiltered[itemGroup][1]) {
+        let todo = items.objectsFiltered[itemGroup][1][item];
+        // if todo has no text, it's skipped
         if(!todo.text) continue;
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
@@ -1601,9 +1673,8 @@ function generateTodoData(searchString) {
             console.log(error);
           });
         }
-        // for each sorted group within a priority group an array is created
         // incompleted todos with due date
-          if (todo.due && !todo.complete) {
+        if (todo.due && !todo.complete) {
           // create notification
           if(todo.due.isToday()) {
             generateNotification(todo, 0).then(response => {
@@ -1618,53 +1689,9 @@ function generateTodoData(searchString) {
               console.log(error);
             });
           }
-          arrayDue.push(todo);
-        // incompleted todos with no due date
-        } else if(!todo.due && !todo.complete) {
-          arrayNoPriorityNotCompleted.push(todo);
-        // completed todos with due date
-        } else if(todo.due && todo.complete) {
-          arrayDueAndComplete.push(todo);
-        // completed todos with no due date
-        } else if(!todo.due && todo.complete) {
-          arrayComplete.push(todo);
-
         }
+        tableContainerContent.appendChild(generateTableRow(todo));
       }
-      // sort the arrays and fill fragments
-      // incompleted todos with due date
-      arrayDue.sort(function(a, b) {
-        return a.due - b.due;
-      });
-      arrayDue.forEach(todo => {
-        tableContainerDue.appendChild(generateTableRow(todo));
-      });
-      // incompleted todos with no due date
-      arrayNoPriorityNotCompleted.sort(function(a, b) {
-        return a.due - b.due;
-      });
-      arrayNoPriorityNotCompleted.forEach(todo => {
-        tableContainerNoPriorityNotCompleted.appendChild(generateTableRow(todo));
-      });
-      // completed todos with due date
-      arrayDueAndComplete.sort(function(a, b) {
-        return a.due - b.due;
-      });
-      arrayDueAndComplete.forEach(todo => {
-        tableContainerDueAndComplete.appendChild(generateTableRow(todo));
-      });
-      // completed todos with no due date
-      arrayComplete.sort(function(a, b) {
-        return a.due - b.due;
-      });
-      arrayComplete.forEach(todo => {
-        tableContainerComplete.appendChild(generateTableRow(todo));
-      });
-      // append items to priority group
-      tableContainerContent.appendChild(tableContainerDue);
-      tableContainerContent.appendChild(tableContainerNoPriorityNotCompleted);
-      tableContainerContent.appendChild(tableContainerDueAndComplete);
-      tableContainerContent.appendChild(tableContainerComplete);
     }
     // append all generated groups to the main container
     todoTableContainer.appendChild(tableContainerContent);
@@ -1836,6 +1863,8 @@ function setTranslations() {
       todoTableSearch.placeholder = translations.search;
       viewToggleShowCompleted.innerHTML = translations.completedTodos;
       viewToggleCompactView.innerHTML = translations.compactView;
+      sortByDueDate.innerHTML = translations.sortByDueDate;
+      sortByPriority.innerHTML = translations.sortByPriority;
       viewView.innerHTML = translations.view;
       //filterBtnResetFilters.innerHTML = translations.resetFilters;
       addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
@@ -2271,6 +2300,22 @@ function matomoEventsConsent(setting) {
 
 function configureMainView() {
   try {
+    // empty the table containers before reading fresh data
+    todoTableContainer.innerHTML = "";
+    // add filename to application title
+    switch (window.appData.os) {
+      case "windows":
+        title.innerHTML = window.userData.file.split("\\").pop() + " - sleek";
+        break;
+      default:
+        title.innerHTML = window.userData.file.split("/").pop() + " - sleek";
+        break;
+    }
+    // set viewContainer sort select
+    Array.from(viewSelectSortBy.options).forEach(function(item) {
+      if(item.value===window.userData.sortBy) item.selected = true
+    });
+    // restore persisted width of filter drawer
     if(window.userData.filterDrawerWidth) setPaneWidth(window.userData.filterDrawerWidth);
     // check if compact view is suppose to be active
     if(window.userData.compactView) body.classList.add("compact");
@@ -2480,7 +2525,15 @@ function archiveTodos() {
     // if user archives within done.txt file, operating is canceled
     if(window.userData.file.split("/").pop() === "done.txt") return Promise.reject("Info: Current file seems to be a done.txt file, won't archive")
     // define path to done.txt
-    let doneFile = window.userData.file.replace(window.userData.file.split("/").pop(), "done.txt");
+    let doneFile;
+    switch (window.appData.os) {
+      case "windows":
+        doneFile = window.userData.file.replace(window.userData.file.split("\\").pop(), window.userData.file.substr(0, window.userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
+        break;
+      default:
+        doneFile = window.userData.file.replace(window.userData.file.split("/").pop(), window.userData.file.substr(0, window.userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
+        break;
+    }
     items.doneTxtObjects = new Array;
     getFileContent(doneFile).then(function(result) {
       if(result) items.doneTxtObjects = TodoTxt.parse(result, [ new DueExtension(), new RecExtension() ]);

@@ -55,6 +55,9 @@ fieldset[disabled] {
 button.is-outlined:hover {
   background: #2c2d30 !important; }
 
+::after {
+  border-color: white !important; }
+
 svg {
   color: white; }
 
@@ -100,6 +103,9 @@ nav {
 
 #todoTable .flex-table.completed {
   color: #3B3B3B; }
+  #todoTable .flex-table.completed .flex-row .priorityTag {
+    background: #2c2d30 !important;
+    color: #4d4d4d !important; }
   #todoTable .flex-table.completed .flex-row.text,
   #todoTable .flex-table.completed .checkbox a,
   #todoTable .flex-table.completed .checkbox a:hover,
@@ -124,15 +130,16 @@ nav {
   color: #CCCDCF; }
 
 #todoTable .flex-table {
-  border-color: #2c2d30; }
+  border-color: #2c2d30;
+  /*.flex-row.itemDueDate {
+      color: white;
+    }*/ }
   #todoTable .flex-table .checkbox a {
     color: #CCCDCF; }
   #todoTable .flex-table .checkbox a:hover {
     color: white; }
   #todoTable .flex-table .flex-row.text {
     color: #CCCDCF; }
-  #todoTable .flex-table .flex-row.itemDueDate {
-    color: white; }
   #todoTable .flex-table .flex-row span.tag.contexts {
     background: #075A44 !important;
     color: #c5ede3 !important; }
@@ -149,6 +156,8 @@ nav {
     color: white; }
   #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
     background: #2c2d30; }
+  #todoTable .flex-table .flex-row .priorityTag.C {
+    background: #c5a943 !important; }
 
 #filterDrawer {
   background: #3B3B3B; }
@@ -229,9 +238,6 @@ nav {
 
 #modalForm .field select option {
   background: #2c2d30; }
-
-#modalForm ::after {
-  border-color: white !important; }
 
 .modal .modal-content .card {
   background: #3B3B3B;

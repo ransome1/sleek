@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>sleek</title>
+    <title id="title">sleek</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" id="themeLink" href="">
   </head>
@@ -49,7 +49,7 @@
               <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>
             </div>
             <div class="column">
-              <div class="dropdown is-active is-right" style="float: right;">
+              <div class="dropdown is-active is-right">
                 <div class="dropdown-trigger">
                   <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer">
                     <i class="fas fa-list"></i>&nbsp;<span id="viewView"></span>
@@ -59,30 +59,35 @@
                   <div class="dropdown-content">
                     <div class="dropdown-item">
                       <div class="toggle">
+                        <span id="viewToggleShowCompleted" class="text"></span>
                         <label class="switch" for="toggleShowCompleted">
                           <input type="checkbox" id="toggleShowCompleted" tabindex="0">
                           <span class="slider round"></span>
                         </label>
-                        <span id="viewToggleShowCompleted" class="text"></span>
                       </div>
                     </div>
-                    <hr class="dropdown-divider">
                     <div class="dropdown-item">
                       <div class="toggle">
+                        <span id="viewToggleCompactView" class="text"></span>
                         <label class="switch" for="toggleView">
                           <input type="checkbox" id="toggleView" tabindex="0">
                           <span class="slider round"></span>
                         </label>
-                        <span id="viewToggleCompactView" class="text"></span>
                       </div>
                     </div>
-                    <!--<div class="dropdown-item">
-                      <p><a href="#" id="switchView"><i class="fas fa-th-list"></i> Standard view</a></p>
-                    </div>-->
-                    <!--<hr class="dropdown-divider">
+                    <hr class="dropdown-divider">
                     <div class="dropdown-item">
-                      <p><i class="fas fa-list-ul"></i> Compact view</p>
-                    </div>-->
+                      <div class="field">
+                        <div class="control">
+                          <div class="select">
+                            <select id="viewSelectSortBy">
+                              <option id="sortByPriority" value="priority"></option>
+                              <option id="sortByDueDate" value="dueString"></option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
