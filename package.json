@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.9.4",
+  "version": "0.9.5-Alpha",
   "description": "A todo app based on todo.txt, free and open-source",
   "synopsis": "A todo app based on todo.txt, free and open-source",
   "category": "ProjectManagement",
@@ -84,7 +84,8 @@
     "electron-util": "^0.14.2",
     "i18next": "^19.8.5",
     "i18next-browser-languagedetector": "^6.0.1",
-    "i18next-fs-backend": "^1.0.8"
+    "i18next-fs-backend": "^1.0.8",
+    "xmldom": "^0.5.0"
   },
   "devDependencies": {
     "electron": "^12.0.0",

@@ -458,6 +458,13 @@ Date.prototype.isPast = function () {
   }
   return false;
 };
+Date.prototype.isFuture = function () {
+  const today = new Date();
+  if (this.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0)) {
+    return true;
+  }
+  return false;
+};
 // ########################################################################################################################
 // FILE FUNCTIONS
 // ########################################################################################################################
@@ -1721,9 +1728,18 @@ function generateRecurringTodo(todo) {
   try {
     // duplicate not reference
     let recurringItem = Object.assign({}, todo);
-    recurringItem.date = todo.due;
-    recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
-    recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
+    // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
+    if(recurringItem.complete) {
+      recurringItem.date = new Date;
+      recurringItem.due = getRecurrenceDate(todo.completed, todo.rec);
+      recurringItem.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
+      recurringItem.complete = false;
+      recurringItem.completed = null;
+    } else {
+      recurringItem.date = todo.due;
+      recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
+      recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
+    }
     // get index of recurring todo
     const index = window.items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringItem.toString().replaceAll(String.fromCharCode(16)," "));
     // only add recurring todo if it is not already in the list
@@ -1772,6 +1788,8 @@ function setTodoComplete(todo) {
       }
       todo.complete = true;
       todo.completed = new Date();
+      // if recurrence is set and the complete
+      if(todo.rec && todo.due.isFuture()) generateRecurringTodo(todo)
       // delete old todo from array and add the new one at it's position
       window.items.objects.splice(index, 1, todo);
     }
