@@ -6,8 +6,12 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
       - name: Commit and push to flathub to trigger build process
+      - uses: actions/checkout@v1
+        with:
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.github_token }}
         run: |
           git remote set-url --push origin git@github.com:flathub/com.github.ransome1.sleek.git
           git commit --allow-empty -m "Build"
