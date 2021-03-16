@@ -57,50 +57,6 @@ const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection"
 const btnFilter = document.querySelectorAll(".btnFilter");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
-// ########################################################################################################################
-// DATEPICKER CONFIG
-// ########################################################################################################################
-const dueDatePicker = new Datepicker(dueDatePickerInput, {
-  autohide: true,
-  format: "yyyy-mm-dd",
-  clearBtn: true,
-  beforeShowDay: function(date) {
-    let today = new Date();
-    if (date.getDate() == today.getDate() &&
-        date.getMonth() == today.getMonth() &&
-        date.getFullYear() == today.getFullYear()) {
-      return { classes: 'today'};
-    }
-  }
-});
-// Adjust Picker width according to length of input
-dueDatePickerInput.addEventListener('changeDate', function (e, details) {
-  let caretPosition = getCaretPosition(modalFormInput);
-  // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
-  if(e.detail.date) {
-    // generate the object on what is written into input, so we don't overwrite previous inputs of user
-    let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
-    todo.due = new Date(e.detail.date);
-    todo.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
-    modalFormInput.value = todo.toString();
-    // adjust size of inut
-    dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
-    // clean up as we don#t need it anymore
-    todo = null;
-    // if suggestion box was open, it needs to be closed
-    suggestionContainer.classList.remove("is-active");
-    suggestionContainer.blur();
-    // if a due date is set, the recurrence picker will be shown
-    recurrencePicker.classList.add("is-active");
-    recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
-    modalFormInput.focus();
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
-  }
-});
-// ########################################################################################################################
-// DEFINE CONSTANTS
-// ########################################################################################################################
 const categories = ["contexts", "projects"];
 const items = {
   raw: null,
@@ -110,325 +66,6 @@ const items = {
 const item = {
   previous: ""
 }
-// ########################################################################################################################
-// ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
-// ########################################################################################################################
-a.forEach(el => el.addEventListener("click", function(el) {
-  if(el.target.href && el.target.href === "#") el.preventDefault();
-}));
-navBtnHelp.onclick = function () {
-  showContent(modalHelp);
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Help"]);
-}
-navBtnSettings.onclick = function () {
-  showContent(modalSettings);
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
-}
-btnMessageLogging.onclick = function () {
-  showContent(modalSettings);
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
-}
-btnItemStatus.onclick = function() {
-  setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
-    modalForm.classList.remove("is-active");
-    clearModal();
-    console.log(response);
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
-  }).catch(error => {
-    console.log(error);
-  });
-}
-btnTheme.onclick = function(el) {
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
-  setTheme(true);
-}
-btnArchiveTodos.onclick = function() {
-  archiveTodos().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
-}
-btnOpenTodoFile.forEach(function(el) {
-  el.onclick = function () {
-    //openFile();
-    window.api.send("openOrCreateFile", "open");
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
-  }
-});
-btnChangeTodoFile.forEach(function(el) {
-  el.onclick = function () {
-    if(window.userData.files.length > 0) {
-      modalChooseFile();
-    } else {
-      window.api.send("openOrCreateFile", "open");
-    }
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
-  }
-});
-btnCreateTodoFile.forEach(function(el) {
-  el.onclick = function () {
-    //createFile()
-    window.api.send("openOrCreateFile", "create");
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
-  }
-});
-btnModalCancel.forEach(function(el) {
-  el.onclick = function() {
-    el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
-    clearModal();
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
-  }
-});
-btnFilter.forEach(function(el) {
-  el.onclick = function() {
-    showFilterDrawer("toggle").then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
-  };
-});
-btnAddTodo.forEach(function(el) {
-  el.onclick = function () {
-    // just in case the form will be cleared first
-    clearModal();
-    showForm();
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
-  }
-});
-btnFiltersResetFilters.onclick = function() {
-  resetFilters();
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
-}
-btnNoResultContainerResetFilters.onclick = function() {
-  resetFilters();
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
-}
-todoTable.onclick = function() {
-  if(event.target.classList.contains("flex-table")) {
-      showMore(false);
-      viewContainer.classList.remove("is-active");
-  }
-}
-todoTableSearch.addEventListener("input", function () {
-  generateTodoData(this.value).then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-});
-toggleView.onclick = function() {
-  toggleCompactView(this.checked).then(response => {
-    console.log(response);
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Toggle compact view"]);
-  }).catch(error => {
-    console.log(error);
-  });
-}
-toggleShowCompleted.onclick = function() {
-  toggleCompletedTodos().then(response => {
-    console.log(response);
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
-  }).catch(error => {
-    console.log(error);
-  });
-}
-toggleMatomoEvents.onclick = function() {
-  matomoEvents = this.checked;
-  setUserData('matomoEvents', this.checked);
-  matomoEventsConsent(this.checked).then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
-}
-toggleNotifications.onclick = function() {
-  notifications = this.checked;
-  setUserData('notifications', this.checked);
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
-}
-toggleDarkmode.onclick = function() {
-  setTheme(true);
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
-}
-modalFormInputResize.onclick = function () {
-  toggleInputSize(this.getAttribute("data-input-type"));
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
-}
-modalFormInput.onfocus = function () {
-  suggestionContainer.classList.remove("is-active");
-};
-modalBackground.forEach(function(el) {
-  el.onclick = function() {
-    clearModal();
-    el.parentElement.classList.remove("is-active");
-    suggestionContainer.classList.remove("is-active");
-    suggestionContainer.blur();
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
-  }
-});
-modalClose.forEach(function(el) {
-  el.onclick = function() {
-    if(el.getAttribute("data-message")) {
-      // persist closed message, so it won't show again
-      if(!window.userData.dismissedMessages.includes(el.getAttribute("data-message"))) window.userData.dismissedMessages.push(el.getAttribute("data-message"))
-      setUserData("dismissedMessages", window.userData.dismissedMessages);
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
-    } else {
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
-    }
-    el.parentElement.parentElement.classList.remove("is-active");
-  }
-});
-modalForm.addEventListener("submit", function(e) {
-  // intercept submit
-  if (e.preventDefault) e.preventDefault();
-  submitForm().then(response => {
-    // if form returns success we clear the modal
-    clearModal();
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-});
-modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
-filterColumnClose.onclick = function() {
-  showFilterDrawer(false).then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    console.log(error);
-  });
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
-}
-priorityPicker.addEventListener("change", e => { setPriority(e.target.value) });
-priorityPicker.onfocus = function () {
-  // close suggestion box if focus comes to priority picker
-  suggestionContainer.classList.remove("is-active");
-};
-dueDatePickerInput.onfocus = function () {
-  suggestionContainer.classList.remove("is-active");
-};
-recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
-contentTabs.forEach(el => el.addEventListener("click", function(el) {
-  contentTabs.forEach(function(el) {
-    el.classList.remove("is-active");
-  });
-  this.classList.add("is-active");
-  showTab(this.classList[0]);
-  // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
-}));
-settingsLanguage.onchange = function() {
-  window.userData.language = this.value;
-  window.api.send("setUserData", ["language", window.userData.language]);
-  window.api.send("changeLanguage", this.value);
-}
-viewSelectSortBy.onchange = async function() {
-  if(this.value) {
-    await setUserData("sortBy", this.value);
-    t0 = performance.now();
-    await generateTodoData().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Table rendered in:", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
-    clearModal();
-  }
-}
-btnToggleViewContainer.onclick = function() {
-  viewContainer.classList.toggle("is-active");
-}
-document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
-  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
-  todo.due = undefined;
-  todo.dueString = undefined;
-  // also clear the recurrence option as it doesn't make sense any more
-  todo.rec = undefined;
-  todo.recString = undefined;
-  modalFormInput.value = todo.toString();
-});
-// ########################################################################################################################
-// KEYBOARD SHORTCUTS
-// ########################################################################################################################
-body.addEventListener ("keydown", function (e) {
-  if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
-    e.preventDefault();
-    var priority = event.key.substr(0,1);
-    setPriorityInput(priority);
-    setPriority(priority);
-  } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
-    var priority = null;
-    setPriorityInput(priority);
-    setPriority(priority);
-  }
-});
-modalForm.addEventListener ("keydown", function (e) {
-  if(event.key === 'Escape') {
-    clearModal();
-    this.classList.remove("is-active");
-    suggestionContainer.classList.remove("is-active");
-    suggestionContainer.blur();
-  }
-});
-body.addEventListener ("click", function () {
-  // close view layer
-  if(viewContainer.classList.contains("is-active") && !event.target.closest("#viewContainer") && !event.target.closest("#btnToggleViewContainer")) viewContainer.classList.remove("is-active")
-});
-modalForm.addEventListener ("click", function () {
-  // close recurrence picker if click is outside of recurrence container
-  if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) recurrencePickerContainer.classList.remove("is-active")
-});
-modalHelp.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') this.classList.remove("is-active");
-});
-modalChangeFile.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') clearModal();
-});
-modalSettings.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') this.classList.remove("is-active");
-});
-suggestionContainer.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') this.classList.remove("is-active");
-});
-filterDrawer.addEventListener ("keydown", function () {
-  if(event.key === 'Escape') {
-    showFilterDrawer(false).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
-  }
-});
 // ########################################################################################################################
 // DATE FUNCTIONS
 // ########################################################################################################################
@@ -1009,10 +646,10 @@ function generateNotification(todo, offset) {
       const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
       switch (offset) {
         case 0:
-          title = "due today";
+          title = window.translations.dueToday;
           break;
         case 1:
-          title = "due tomorrow";
+          title = window.translations.dueTomorrow;
           break;
       }
       // if notification already has been triggered once it will be discarded
@@ -1083,7 +720,8 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
           // we remove the greyed out look from the container
           todoFiltersSub.classList.remove("is-greyed-out");
           // change the eye icon
-          todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"0\"></a>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
+          let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
+          todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"0\"></a>&nbsp;" + dataHeadline;
         } else {
           // we push the category to the filter array
           categoriesFiltered.push(category);
@@ -1094,12 +732,13 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
             let k = JSON.stringify(item);
             return seen.hasOwnProperty(k) ? false : (seen[k] = true);
           })
-          //persist the category filters
+          // persist the category filters
           setUserData("categoriesFiltered", categoriesFiltered);
           // we add the greyed out look to the container
           todoFiltersSub.classList.add("is-greyed-out");
           // change the eye icon
-          todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + todoFilterHeadline.getAttribute("data-headline");
+          let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
+          todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + dataHeadline;
         }
         t0 = performance.now();
         generateTodoData().then(response => {
@@ -1421,14 +1060,14 @@ function generateTableRow(todo) {
       var tag = convertDate(todo.due);
       if(todo.due.isToday()) {
         todoTableBodyCellDueDate.classList.add("isToday");
-        tag = window.translations.dueToday;
+        tag = window.translations.today;
       } else if(todo.due.isTomorrow()) {
         todoTableBodyCellDueDate.classList.add("isTomorrow");
-        tag = window.translations.dueTomorrow;
+        tag = window.translations.tomorrow;
       } else if(todo.due.isPast()) {
         todoTableBodyCellDueDate.classList.add("isPast");
       }
-      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">" + window.translations.dueAt + "</span><span class=\"tag is-dark\">" + tag + "</span></div><i class=\"fas fa-sort-down\"></i>";
+      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">" + window.translations.due + "</span><span class=\"tag is-dark\">" + tag + "</span></div><i class=\"fas fa-sort-down\"></i>";
       // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
@@ -1640,9 +1279,9 @@ function generateTodoData(searchString) {
           } else if(items.objectsFiltered[itemGroup][0]==="group_20_completed") {
             if(completed.length > 0 ) tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due \" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + window.translations.completedTodos + "</div></div>"));
           } else if(items.objectsFiltered[itemGroup][1][0].due.isToday()) {
-            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\">" + window.translations.dueToday + "</div></div>"));
+            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\">" + window.translations.today + "</div></div>"));
           } else if(items.objectsFiltered[itemGroup][1][0].due.isTomorrow()) {
-            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\">" + window.translations.dueTomorrow + "</div></div>"));
+            tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\">" + window.translations.tomorrow + "</div></div>"));
           } else if(items.objectsFiltered[itemGroup][1][0].due.isPast()) {
             tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\">" + items.objectsFiltered[itemGroup][0] + "</div></div>"));
           } else {
@@ -1884,7 +1523,6 @@ function setTranslations() {
       sortByDueDate.innerHTML = translations.sortByDueDate;
       sortByPriority.innerHTML = translations.sortByPriority;
       viewView.innerHTML = translations.view;
-      //filterBtnResetFilters.innerHTML = translations.resetFilters;
       addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
       addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
       addTodoContainerButton.innerHTML = translations.addTodo;
@@ -2316,6 +1954,359 @@ function matomoEventsConsent(setting) {
   }
 }
 
+function configureEvents() {
+  try {
+    // ########################################################################################################################
+    // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
+    // ########################################################################################################################
+    a.forEach(el => el.addEventListener("click", function(el) {
+      if(el.target.href && el.target.href === "#") el.preventDefault();
+    }));
+    navBtnHelp.onclick = function () {
+      showContent(modalHelp);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Help"]);
+    }
+    navBtnSettings.onclick = function () {
+      showContent(modalSettings);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
+    }
+    btnMessageLogging.onclick = function () {
+      showContent(modalSettings);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
+    }
+    btnItemStatus.onclick = function() {
+      setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
+        modalForm.classList.remove("is-active");
+        clearModal();
+        console.log(response);
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+    btnTheme.onclick = function(el) {
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
+      setTheme(true);
+    }
+    btnArchiveTodos.onclick = function() {
+      archiveTodos().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
+    }
+    btnOpenTodoFile.forEach(function(el) {
+      el.onclick = function () {
+        //openFile();
+        window.api.send("openOrCreateFile", "open");
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
+      }
+    });
+    btnChangeTodoFile.forEach(function(el) {
+      el.onclick = function () {
+        if(window.userData.files.length > 0) {
+          modalChooseFile();
+        } else {
+          window.api.send("openOrCreateFile", "open");
+        }
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
+      }
+    });
+    btnCreateTodoFile.forEach(function(el) {
+      el.onclick = function () {
+        //createFile()
+        window.api.send("openOrCreateFile", "create");
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
+      }
+    });
+    btnModalCancel.forEach(function(el) {
+      el.onclick = function() {
+        el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
+        clearModal();
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
+      }
+    });
+    btnFilter.forEach(function(el) {
+      el.onclick = function() {
+        showFilterDrawer("toggle").then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
+      };
+    });
+    btnAddTodo.forEach(function(el) {
+      el.onclick = function () {
+        // just in case the form will be cleared first
+        clearModal();
+        showForm();
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
+      }
+    });
+    btnFiltersResetFilters.onclick = function() {
+      resetFilters();
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
+    }
+    btnNoResultContainerResetFilters.onclick = function() {
+      resetFilters();
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
+    }
+    todoTable.onclick = function() {
+      if(event.target.classList.contains("flex-table")) {
+          showMore(false);
+          viewContainer.classList.remove("is-active");
+      }
+    }
+    todoTableSearch.addEventListener("input", function () {
+      generateTodoData(this.value).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+    });
+    toggleView.onclick = function() {
+      toggleCompactView(this.checked).then(response => {
+        console.log(response);
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Toggle compact view"]);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+    toggleShowCompleted.onclick = function() {
+      toggleCompletedTodos().then(response => {
+        console.log(response);
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+    toggleMatomoEvents.onclick = function() {
+      matomoEvents = this.checked;
+      setUserData('matomoEvents', this.checked);
+      matomoEventsConsent(this.checked).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
+    }
+    toggleNotifications.onclick = function() {
+      notifications = this.checked;
+      setUserData('notifications', this.checked);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
+    }
+    toggleDarkmode.onclick = function() {
+      setTheme(true);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
+    }
+    modalFormInputResize.onclick = function () {
+      toggleInputSize(this.getAttribute("data-input-type"));
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
+    }
+    modalFormInput.onfocus = function () {
+      suggestionContainer.classList.remove("is-active");
+    };
+    modalBackground.forEach(function(el) {
+      el.onclick = function() {
+        clearModal();
+        el.parentElement.classList.remove("is-active");
+        suggestionContainer.classList.remove("is-active");
+        suggestionContainer.blur();
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+      }
+    });
+    modalClose.forEach(function(el) {
+      el.onclick = function() {
+        if(el.getAttribute("data-message")) {
+          // persist closed message, so it won't show again
+          if(!window.userData.dismissedMessages.includes(el.getAttribute("data-message"))) window.userData.dismissedMessages.push(el.getAttribute("data-message"))
+          setUserData("dismissedMessages", window.userData.dismissedMessages);
+          // trigger matomo event
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
+        } else {
+          // trigger matomo event
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+        }
+        el.parentElement.parentElement.classList.remove("is-active");
+      }
+    });
+    modalForm.addEventListener("submit", function(e) {
+      // intercept submit
+      if (e.preventDefault) e.preventDefault();
+      submitForm().then(response => {
+        // if form returns success we clear the modal
+        clearModal();
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+    });
+    modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
+    filterColumnClose.onclick = function() {
+      showFilterDrawer(false).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
+    }
+    priorityPicker.addEventListener("change", e => { setPriority(e.target.value) });
+    priorityPicker.onfocus = function () {
+      // close suggestion box if focus comes to priority picker
+      suggestionContainer.classList.remove("is-active");
+    };
+    dueDatePickerInput.onfocus = function () {
+      suggestionContainer.classList.remove("is-active");
+    };
+    dueDatePickerInput.addEventListener('changeDate', function (e, details) {
+      let caretPosition = getCaretPosition(modalFormInput);
+      // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
+      if(e.detail.date) {
+        // generate the object on what is written into input, so we don't overwrite previous inputs of user
+        let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+        todo.due = new Date(e.detail.date);
+        todo.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
+        modalFormInput.value = todo.toString();
+        // adjust size of inut
+        dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
+        // clean up as we don#t need it anymore
+        todo = null;
+        // if suggestion box was open, it needs to be closed
+        suggestionContainer.classList.remove("is-active");
+        suggestionContainer.blur();
+        // if a due date is set, the recurrence picker will be shown
+        recurrencePicker.classList.add("is-active");
+        recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
+        modalFormInput.focus();
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
+      }
+    });
+    recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
+    contentTabs.forEach(el => el.addEventListener("click", function(el) {
+      contentTabs.forEach(function(el) {
+        el.classList.remove("is-active");
+      });
+      this.classList.add("is-active");
+      showTab(this.classList[0]);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
+    }));
+    settingsLanguage.onchange = function() {
+      window.userData.language = this.value;
+      window.api.send("setUserData", ["language", window.userData.language]);
+      window.api.send("changeLanguage", this.value);
+    }
+    viewSelectSortBy.onchange = async function() {
+      if(this.value) {
+        await setUserData("sortBy", this.value);
+        t0 = performance.now();
+        await generateTodoData().then(response => {
+          console.log(response);
+          t1 = performance.now();
+          console.log("Table rendered in:", t1 - t0, "ms");
+        }).catch(error => {
+          console.log(error);
+        });
+        clearModal();
+      }
+    }
+    btnToggleViewContainer.onclick = function() {
+      viewContainer.classList.toggle("is-active");
+    }
+    document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
+      let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+      todo.due = undefined;
+      todo.dueString = undefined;
+      // also clear the recurrence option as it doesn't make sense any more
+      todo.rec = undefined;
+      todo.recString = undefined;
+      modalFormInput.value = todo.toString();
+    });
+    // ########################################################################################################################
+    // KEYBOARD SHORTCUTS
+    // ########################################################################################################################
+    body.addEventListener ("keydown", function (e) {
+      if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
+        e.preventDefault();
+        var priority = event.key.substr(0,1);
+        setPriorityInput(priority);
+        setPriority(priority);
+      } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
+        var priority = null;
+        setPriorityInput(priority);
+        setPriority(priority);
+      }
+    });
+    modalForm.addEventListener ("keydown", function (e) {
+      if(event.key === 'Escape') {
+        clearModal();
+        this.classList.remove("is-active");
+        suggestionContainer.classList.remove("is-active");
+        suggestionContainer.blur();
+      }
+    });
+    body.addEventListener ("click", function () {
+      // close view layer
+      if(viewContainer.classList.contains("is-active") && !event.target.closest("#viewContainer") && !event.target.closest("#btnToggleViewContainer")) viewContainer.classList.remove("is-active")
+    });
+    modalForm.addEventListener ("click", function () {
+      // close recurrence picker if click is outside of recurrence container
+      if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) recurrencePickerContainer.classList.remove("is-active")
+    });
+    modalHelp.addEventListener ("keydown", function () {
+      if(event.key === 'Escape') this.classList.remove("is-active");
+    });
+    modalChangeFile.addEventListener ("keydown", function () {
+      if(event.key === 'Escape') clearModal();
+    });
+    modalSettings.addEventListener ("keydown", function () {
+      if(event.key === 'Escape') this.classList.remove("is-active");
+    });
+    suggestionContainer.addEventListener ("keydown", function () {
+      if(event.key === 'Escape') this.classList.remove("is-active");
+    });
+    filterDrawer.addEventListener ("keydown", function () {
+      if(event.key === 'Escape') {
+        showFilterDrawer(false).then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
+    });
+    return Promise.resolve("Success: All events have been initialized");
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureEvents()", error])
+    return Promise.reject("Error in configureEvents(): " + error);
+  }
+}
+
 function configureMainView() {
   try {
     // empty the table containers before reading fresh data
@@ -2583,6 +2574,30 @@ function archiveTodos() {
   }
 }
 
+function configureDatepicker() {
+  try {
+    window.dueDatePicker = new Datepicker(dueDatePickerInput, {
+      autohide: true,
+      language: window.userData.language,
+      format: "yyyy-mm-dd",
+      clearBtn: true,
+      beforeShowDay: function(date) {
+        let today = new Date();
+        if (date.getDate() == today.getDate() &&
+            date.getMonth() == today.getMonth() &&
+            date.getFullYear() == today.getFullYear()) {
+          return { classes: 'today'};
+        }
+      }
+    });
+    return Promise.resolve("Success: Datepicker configured")
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureDatepicker()", error])
+    return Promise.reject("Error in configureDatepicker(): " + error)
+  }
+}
+
 window.onload = async function () {
   // set listeners
   window.api.receive("reloadContent", (content) => {
@@ -2683,6 +2698,13 @@ window.onload = async function () {
     console.log(error);
   });
 
+  // configure the datepicker
+  configureDatepicker().then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });
+
   // call for translations and apply them
   setTranslations().then(function(result) {
     console.log(result);
@@ -2706,6 +2728,13 @@ window.onload = async function () {
 
   // add friendly language names to settings dropdown
   setFriendlyLanguageNames(window.userData.language).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });
+
+  // initialize all events
+  configureEvents().then(function(result) {
     console.log(result);
   }).catch(function(error) {
     console.log(error);
