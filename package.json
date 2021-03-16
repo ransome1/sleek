@@ -34,12 +34,31 @@
       "icon": "assets/icons/icon.png",
       "category": "ProjectManagement",
       "target": [
-        "deb"
+        "deb",
+        "freebsd",
+        "rpm",
+        "AppImage"
       ]
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icons/512x512.icns",
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "assets/icons/sleek.ico",
+      "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"
+    },
+    "appx": {
+      "displayName": "sleek - a todo.txt manager",
+      "identityName": "17450RobinAhle.sleektodomanager",
+      "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
+      "publisherDisplayName": "Robin Ahle",
+      "applicationId": "RobinAhle.sleektodomanager"
     }
-  },
-  "freebsd": {
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "appImage": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
@@ -50,7 +69,10 @@
   "deb": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
-  "pacman": {
+  "freebsd": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "deb": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "scripts": {
