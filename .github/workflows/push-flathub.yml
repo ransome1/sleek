@@ -7,8 +7,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.PAT }}
       - name: Commit and push to flathub to trigger build process
         run: |
           git remote set-url --push origin git@github.com:flathub/com.github.ransome1.sleek.git

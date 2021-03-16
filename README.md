@@ -1,5 +1,5 @@
 # sleek
-## sleek is a todo app based on todo.txt, free and open-source
+## A todo app based on todo.txt, free, open-source and available for Linux, Windows and MacOS
 sleek offers a clean and simple interface that can be used with mouse and keyboard, keyboard only or touch devices. You will use an easy to understand but powerful syntax to create todos. According to the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a> you can add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.
 
 All that can be done typing plain text or guided by sleeks interface that for instance will show suggestions on contexts and projects while typing, offers pickers to ease the selection of due dates or set recurrence intervals, if your todos should repeat themselves.
