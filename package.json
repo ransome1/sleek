@@ -34,7 +34,6 @@
       "icon": "assets/icons/icon.png",
       "category": "ProjectManagement",
       "target": [
-        "deb",
         "pacman",
         "freebsd",
         "rpm",
