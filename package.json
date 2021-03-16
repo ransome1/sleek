@@ -34,6 +34,7 @@
       "icon": "assets/icons/icon.png",
       "category": "ProjectManagement",
       "target": [
+        "pacman",
         "deb"
       ]
     }
@@ -47,7 +48,10 @@
   "rpm": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
-  "freebsd": {
+  "deb": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "pacman": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "scripts": {
