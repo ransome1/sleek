@@ -6,7 +6,8 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
-    env: NODE_OPTIONS: '--max_old_space_size=4096'
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
 
     strategy:
       matrix:
