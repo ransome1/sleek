@@ -14,6 +14,8 @@ jobs:
           github_token: ${{ secrets.github_token }}
 
       - run: |
+          git config --global user.email "spam-github@datenkrake.eu"
+          git config --global user.name "ransome1"
           git remote set-url --push origin git@github.com:flathub/com.github.ransome1.sleek.git
           git commit --allow-empty -m "Build"
           git push
