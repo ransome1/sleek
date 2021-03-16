@@ -20,7 +20,9 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 14
+
+      - run: npm install electron-builder --save-dev
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
@@ -32,5 +34,3 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-
-      - run: npm install electron-builder --save-dev
