@@ -6,6 +6,8 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
+    env: NODE_OPTIONS: '--max_old_space_size=4096'
+
     strategy:
       matrix:
         os: [ubuntu-18.04, macos-latest, windows-latest]
@@ -29,3 +31,5 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+      - run: npm install electron-builder --save-dev
