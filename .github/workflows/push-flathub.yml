@@ -16,6 +16,6 @@ jobs:
       - run: |
           git config --global user.email "spam-github@datenkrake.eu"
           git config --global user.name "ransome1"
-          git remote set-url --push origin HEAD:master git@github.com:flathub/com.github.ransome1.sleek.git
+          git remote set-url --push origin https://ransome1:$GITHUB_TOKEN@github.com/ransome1/sleek
           git commit --allow-empty -m "Build"
           git push
