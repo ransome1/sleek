@@ -3,11 +3,13 @@ base: core18
 version: '0.9.5'
 summary: A todo app based on todo.txt, free and open-source
 description: |
-  sleek offers a clean and simple interface that can be used with mouse and keyboard, keyboard only or touch devices. You will use an easy to understand but powerful syntax to create todos. According to the concept of todo.txt you can add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.
+  sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and clean yet offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
 
-  All that can be done typing plain text or guided by sleeks interface that for instance will show suggestions on contexts and projects while typing, offers pickers to ease the selection of due dates or set recurrence intervals, if your todos should repeat themselves.
+  By using sleeks GUI or simply writing in plain text todo.txt format, users can add contexts, projects, priorities, due dates or recurrences to their todos and use these todo.txt attributes as filters or search for them by full text search.
 
-  There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere and sync it to all your devices. That also means if you don't have sleek at hand or if you don't like it any more you can just edit the todo.txt file with any text editor or other todo.txt application.
+  sleek watches todo.txt files continuously for changes so it can be used with other todo.txt apps. Users can switch between bright and dark mode, choose several languages and manage multiple todo.txt files.
+
+  The todo list can be sorted and grouped by priorities or due dates. Todos with due date or repeating todos will trigger alarms with thresholds of 1 or 2 days before the due date. Completed todos can be hidden or archived into separate done.txt files and if users have tons of todos, a compact view can come in handy. 
 
 grade: stable
 confinement: strict

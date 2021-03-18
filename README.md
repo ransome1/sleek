@@ -1,10 +1,12 @@
 # sleek
-## A todo app based on todo.txt, free, open-source and available for Linux, Windows and MacOS
-sleek offers a clean and simple interface that can be used with mouse and keyboard, keyboard only or touch devices. You will use an easy to understand but powerful syntax to create todos. According to the <a href="https://github.com/todotxt/todo.txt">concept of todo.txt</a> you can add contexts to your todos or assign them to projects you're working on. Priorities can be set and if you add due dates sleek will send you notifications just in time.
+## sleek is a todo app based on todo.txt, free and open-source. Available for Linux, Windows and MacOS
+sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and clean yet offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
 
-All that can be done typing plain text or guided by sleeks interface that for instance will show suggestions on contexts and projects while typing, offers pickers to ease the selection of due dates or set recurrence intervals, if your todos should repeat themselves.
+By using sleeks GUI or simply writing in plain text todo.txt format, users can add contexts, projects, priorities, due dates or recurrences to their todos and use these todo.txt attributes as filters or search for them by full text search.
 
-There is no cloud integration, but as sleek writes your todos into a plain text file, you can put it anywhere and sync it to all your devices. That also means if you don't have sleek at hand or if you don't like it any more you can just edit the todo.txt file with any text editor or other todo.txt application.
+sleek watches todo.txt files continuously for changes so it can be used with other todo.txt apps. Users can switch between bright and dark mode, choose several languages and manage multiple todo.txt files.
+
+The todo list can be sorted and grouped by priorities or due dates. Todos with due date or repeating todos will trigger alarms with thresholds of 1 or 2 days before the due date. Completed todos can be hidden or archived into separate done.txt files and if users have tons of todos, a compact view can come in handy.
 
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's main view as seen on MacOS")
 ![Alt text](assets/screenshots/mac/main_filter_dark.png?raw=true "Screenshot of sleek's filter drawer in dark mode as seen on MacOS")
@@ -27,7 +29,7 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 <a href='https://flathub.org/apps/details/com.github.ransome1.sleek'><img width='180' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
 ### Download the binary
-You can find binaries for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
+You can download sleek for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
 ### This app is open source and you can help this project by
 * contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>.
@@ -41,30 +43,31 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - edited
   - marked as complete (and vice versa)
   - deleted
-* Existing todos can be used as templates for new ones
-* Todos can be bulk archived to a done.txt file
+* Dark and light mode can be toggled
+* A compact view is available
+* Completed todos can be bulk archived to a separate done.txt ([name of todo file]_done.txt) file
 * Completed todos can be shown or hidden
-* Todos are grouped by priority
-* Todos are sorted by due date within their priorities
 * Todos can be enriched by
   - contexts
   - projects
   - start dates
   - due dates
+* Multi line todos can be created
+* A due date can be set using a datepicker
 * Todos can repeat themselves based on a given due date. You can use a dedicated picker to add the recurrence or type it in by hand:
   - "rec:d" (daily)
   - "rec:w" (weekly)
   - "rec:m" (monthly)
   - "rec:y" (annually)
+  - also more specific recurrences are possible: "rec:2d" (every 2nd day)
 * Available contexts and projects will be suggested according to your input
 * Todos can be filtered by contexts and projects
+* Todos can be sorted and grouped either by their priorities or due dates
 * Filters are sorted alphanummerically
 * Todos can be looked up using full-text search
-* A due date can be set using a datepicker
 * Hyperlinks are detected automatically and can be clicked using the icon
-* Basic notifications: Will fire if a todo's due date is set for tomorrow or today
+* Alarms will be triggered when a todo is due tomorrow or today
 * Todos that include either contexts or projects can be shown or hidden entirely
-* Dark and light mode can be toggled
 * A file watcher rereads the file if it has been changed
 * Multiple todo.txt files can be managed
 * Multiple languages are automatically detected or can be set by hand
@@ -74,6 +77,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - Spanish
   - French
 * Tabindex available
+* Existing todos can be used as templates for new ones
 * Basic keyboard shortcuts are available:
   - New todo: CMD/CTRL + n
   - Find todo: CMD/CTRL + f
@@ -82,7 +86,7 @@ You can find binaries for Windows, MacOS and Linux on the <a href="https://githu
   - Open file: CMD/CTRL + o
   - Open settings: CMD/CTRL + ,
   - Toggle side bar: CMD/CTRL + b
-  - Set priorities in add/edit todo window: CTRL+SHIFT+[A-Z]
+  - Set priorities (available when add/edit window is open): CTRL+SHIFT+[A-Z]
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
