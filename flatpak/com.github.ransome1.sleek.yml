@@ -33,11 +33,10 @@ modules:
     sources:
       - type: git
         url: https://github.com/ransome1/sleek.git
-        branch: ci
         dest: sleek
         x-checker-data:
           type: git
-          tag-pattern: ^v([\\d.]+)$
+          tag-pattern: ^v([\d.]+)$
 
       - generated-sources.json
 
