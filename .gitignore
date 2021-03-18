@@ -12,3 +12,5 @@ snap/local/
 System Volume Information/
 build/
 Thumbs.db
+flatpak/generated-sources.json
+flatpak/com.github.ransome1.sleek.yml

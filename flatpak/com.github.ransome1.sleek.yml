@@ -33,8 +33,11 @@ modules:
     sources:
       - type: git
         url: https://github.com/ransome1/sleek.git
-        commit: 10c5f9979af9169b8ff56f4d9ebe5d6926342f1b
+        branch: ci
         dest: sleek
+        x-checker-data:
+          type: git
+          tag-pattern: ^v([\\d.]+)$
 
       - generated-sources.json
 
