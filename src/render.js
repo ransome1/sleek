@@ -1512,7 +1512,7 @@ function setTheme(switchTheme) {
     return Promise.reject("Error in setTheme(): " + error);
   }
 }
-async function setTranslations() {
+function setTranslations() {
   try {
     window.api.send("getTranslations");
     window.api.receive("sendTranslations", (translations) => {
@@ -2252,6 +2252,20 @@ function configureEvents() {
     btnToggleViewContainer.onclick = function() {
       viewContainer.classList.toggle("is-active");
     }
+    scaleIncrease.onclick = function() {
+      // set max zoom size
+      if(window.userData.defaultFontSize===25) return false;
+      let defaultFontSize = window.userData.defaultFontSize + 1;
+      setUserData("defaultFontSize", defaultFontSize);
+      html.style.fontSize = defaultFontSize + "px";
+    }
+    scaleDecrease.onclick = function() {
+      // set min zoom size
+      if(window.userData.defaultFontSize===10) return false;
+      let defaultFontSize = window.userData.defaultFontSize - 1;
+      setUserData("defaultFontSize", defaultFontSize);
+      html.style.fontSize = defaultFontSize + "px";
+    }
     document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
       let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
       todo.due = undefined;
@@ -2363,6 +2377,8 @@ function configureTodoTableTemplate() {
 }
 function configureMainView() {
   try {
+    // set scaling factor if default font size has changed
+    if(window.userData.defaultFontSize) html.style.fontSize = window.userData.defaultFontSize + "px";
     // empty the table containers before reading fresh data
     todoTableContainer.innerHTML = "";
     // add filename to application title
@@ -2740,6 +2756,7 @@ window.onload = async function () {
   // call user data and write it to a global variable
   await getUserData().then(function(userData) {
     window.userData = userData;
+    console.log(window.userData.defaultFontSize);
     if(!userData.file) showOnboarding(true)
   }).catch(function(error) {
     console.log(error);
@@ -2760,7 +2777,7 @@ window.onload = async function () {
   });
 
   // call for translations and apply them
-  await setTranslations().then(function(result) {
+  setTranslations().then(function(result) {
     console.log(result);
   }).catch(function(error) {
     console.log(error);

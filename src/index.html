@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="html">
   <head id="head">
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
@@ -43,19 +43,14 @@
               <i class="fas fa-search"></i>
             </span>
           </div>
-          <header class="columns">
-            <div class="column"></div>
-            <div id="resultStats" class="column">
-              <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>
-            </div>
-            <div class="column">
+          <div id="viewContainer" class="column">
               <div class="dropdown is-active is-right">
                 <div class="dropdown-trigger">
                   <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer">
                     <i class="fas fa-list"></i>&nbsp;<span id="viewView"></span>
                   </button>
                 </div>
-                <div id="viewContainer" class="dropdown-menu is-right" role="menu">
+                <div  class="dropdown-menu is-right is-active" role="menu">
                   <div class="dropdown-content">
                     <div class="dropdown-item">
                       <div class="toggle">
@@ -66,6 +61,7 @@
                         </label>
                       </div>
                     </div>
+                    <hr class="dropdown-divider">
                     <div class="dropdown-item">
                       <div class="toggle">
                         <span id="viewToggleCompactView" class="text"></span>
@@ -74,6 +70,12 @@
                           <span class="slider round"></span>
                         </label>
                       </div>
+                    </div>
+                    <hr class="dropdown-divider">
+                    <div class="dropdown-item scale">
+                        <a href="#" id="scaleDecrease"><i class="fas fa-minus-circle"></i></a>
+                        <a href="#" id="scaleIncrease"><i class="fas fa-plus-circle"></i></a>
+                        <span id="scaleDefault">Zoom</span>
                     </div>
                     <hr class="dropdown-divider">
                     <div class="dropdown-item">
@@ -91,6 +93,10 @@
                   </div>
                 </div>
               </div>
+            </div>
+          <header class="columns">
+            <div id="resultStats" class="column">
+              <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>
             </div>
           </header>
           <div id="todoTableContainer"></div>

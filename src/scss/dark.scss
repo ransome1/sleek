@@ -119,22 +119,27 @@ nav {
   }
 }
 #todoTable {
-  header {
-    #btnToggleViewContainer {
-      background: transparent!important;
-    }
-    #viewContainer {
+  #viewContainer {
       .dropdown-content {
         background: $grey-light;
         .dropdown-item {
           color: white!important;
+        }
+        .dropdown-item.scale {
+          a {
+            svg {
+              color: white!important;
+            }
+          }
         }
         .dropdown-divider {
           background: $grey-mid;
         }
       }
     }
-  }
+    #btnToggleViewContainer {
+      background: transparent!important;
+    }
   .flex-table#previousItem.is-highlighted {
     background-color: $grey-mid;
   }

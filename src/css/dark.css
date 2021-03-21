@@ -88,15 +88,17 @@ nav {
     border-bottom: none;
     background-color: #3B3B3B; }
 
-#todoTable header #btnToggleViewContainer {
-  background: transparent !important; }
-
-#todoTable header #viewContainer .dropdown-content {
+#todoTable #viewContainer .dropdown-content {
   background: #3B3B3B; }
-  #todoTable header #viewContainer .dropdown-content .dropdown-item {
+  #todoTable #viewContainer .dropdown-content .dropdown-item {
     color: white !important; }
-  #todoTable header #viewContainer .dropdown-content .dropdown-divider {
+  #todoTable #viewContainer .dropdown-content .dropdown-item.scale a svg {
+    color: white !important; }
+  #todoTable #viewContainer .dropdown-content .dropdown-divider {
     background: #2c2d30; }
+
+#todoTable #btnToggleViewContainer {
+  background: transparent !important; }
 
 #todoTable .flex-table#previousItem.is-highlighted {
   background-color: #2c2d30; }
