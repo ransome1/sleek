@@ -31,8 +31,9 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 ### Download the binary
 You can download sleek for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
-### This app is open source and you can help this project by
-* contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>.
+### Support sleek by
+* star it here on Github, recommend it to others or <a href="https://sourceforge.net/projects/sleek/reviews">review it on SourceForge</a>
+* contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
 * opting in to the optional Matomo tracking feature. It's fully anonymized, and the data will give me a basic idea on which functions are actually used and which ones don't have a benefit you.
 * translating sleek into your own language and contributing your translations. To do so just duplicate the "src/locales/en" folder, rename it according to your language code, do your translations in the "translation.json" file and send me a <a href="https://help.github.com/articles/using-pull-requests/">pull request</a>. I will include your translations into the next release.
 
@@ -68,7 +69,7 @@ You can download sleek for Windows, MacOS and Linux on the <a href="https://gith
 * Hyperlinks are detected automatically and can be clicked using the icon
 * Alarms will be triggered when a todo is due tomorrow or today
 * Todos that include either contexts or projects can be shown or hidden entirely
-* A file watcher rereads the file if it has been changed
+* A file watcher rereads the todo.txt file if it has been changed
 * Multiple todo.txt files can be managed
 * Multiple languages are automatically detected or can be set by hand
   - English

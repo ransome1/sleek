@@ -486,16 +486,32 @@
         </div>
       </div>
     </div>
-    <article class="message fixed" data="logging">
-      <div class="message-header">
-        <p><span id="messageLoggingTitle"></span></p>
-        <button class="delete close" aria-label="delete" data-message="logging"></button>
-      </div>
-      <div class="message-body">
-        <p><span id="messageLoggingBody"></span></p>
-        <p><button id="btnMessageLogging" class="button" tabindex="0"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
-      </div>
-    </article>
+    <section class="messages">
+      <article class="message fixed" data="logging">
+        <div class="message-header">
+          <p><span id="messageLoggingTitle"></span></p>
+          <button class="delete close" aria-label="delete" data-message="logging"></button>
+        </div>
+        <div class="message-body">
+          <p><span id="messageLoggingBody"></span></p>
+          <p><button id="btnMessageLogging" class="button" tabindex="0"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
+        </div>
+      </article>
+      <article class="message fixed" data="share">
+        <div class="message-header">
+          <p><span id="messageShareTitle"></span></p>
+          <button class="delete close" aria-label="delete" data-message="share"></button>
+        </div>
+        <div class="message-body">
+          <p><span id="messageShareBody"></span></p>
+          <p class="brands">
+            <a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-facebook-square"></i></a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-linkedin"></i></a>
+          </p>
+        </div>
+      </article>
+    </section>
     <script defer src="js/jsTodoExtensions.js"></script>
     <script defer src="js/jsTodoTxt.js"></script>
     <script defer src="js/autolink.js"></script>
@@ -508,5 +524,6 @@
     <script defer src="js/fontawesome.js"></script>
     <script defer src="js/fontawesome.solid.min.js"></script>
     <script defer src="js/fontawesome.regular.min.js"></script>
+    <script defer src="js/fontawesome.brands.min.js"></script>
   </body>
 </html>

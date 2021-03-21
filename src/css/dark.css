@@ -130,16 +130,27 @@ nav {
   color: #CCCDCF; }
 
 #todoTable .flex-table {
-  border-color: #2c2d30;
-  /*.flex-row.itemDueDate {
-      color: white;
-    }*/ }
+  border-color: #2c2d30; }
   #todoTable .flex-table .checkbox a {
     color: #CCCDCF; }
   #todoTable .flex-table .checkbox a:hover {
     color: white; }
   #todoTable .flex-table .flex-row.text {
     color: #CCCDCF; }
+  #todoTable .flex-table .flex-row.itemDueDate {
+    color: white; }
+    #todoTable .flex-table .flex-row.itemDueDate .fa-sort-down {
+      color: #2c2d30; }
+  #todoTable .flex-table .flex-row.itemDueDate.isToday,
+  #todoTable .flex-table .flex-row.itemDueDate.isPast {
+    color: #ff3860; }
+    #todoTable .flex-table .flex-row.itemDueDate.isToday .fa-sort-down,
+    #todoTable .flex-table .flex-row.itemDueDate.isPast .fa-sort-down {
+      color: inherit; }
+  #todoTable .flex-table .flex-row.itemDueDate.isTomorrow {
+    color: #ffdd57; }
+    #todoTable .flex-table .flex-row.itemDueDate.isTomorrow .fa-sort-down {
+      color: #ffdd57 !important; }
   #todoTable .flex-table .flex-row span.tag.contexts {
     background: #075A44 !important;
     color: #c5ede3 !important; }

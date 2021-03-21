@@ -79,6 +79,8 @@
   "noRecurrence": "No repetición",
   "errorEventLogging": "Error and event logging",
   "messageLoggingBody": "You can support this project by enabling an anonymized error and event logging. It will log errors that occur and features you use. You can enable this feature in settings.",
+  "messageShareTitle": "sleek te <i class=\"fas fa-heart\"></i>",
+  "messageShareBody": "Este proyecto agradece las críticas honestas sobre <i class=\"fas fa-star\"></i>&nbsp;<a href=\"https://sourceforge.net/projects/sleek/reviews\" target=\"_blank\">SourceForge</a>, informes de errores sobre <i class=\"fab fa-github\"></i>&nbsp;<a href=\"https://github.com/ransome1/sleek/issues\" target=\"_blank\">Github</a> y recomendaciones sobre",
   "language": "Language",
   "settingsTabSettingsLanguageBody": "sleek will automatically set the language according to your computers settings. If you prefer a different language, you can change it manually. <strong>sleek will restart itself. If this doesn't happen, please start the application again manually.</strong>",
   "notifications": "Notifications",

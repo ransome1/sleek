@@ -1052,19 +1052,29 @@ nav {
 #recurrencePicker.is-active {
   display: block;
 }
-.message.fixed {
+.messages {
   width: 25em;
   position: fixed;
   right: 2em;
   bottom: 1em;
-  display: none;
+  .message {
+    display: none;
+  }
+  .message.is-active {
+    display: block;
+    .message-body .brands svg {
+      font-size: 2.25em;
+      margin-right: .2em;
+    }
+  }
   .button {
     margin-top: .5em;
   }
+  .message-body p {
+    margin-bottom: .5em;
+  }
 }
-.message.is-active {
-  display: block;
-}
+
 
 /* COMPACT VIEW */
 

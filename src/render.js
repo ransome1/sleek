@@ -1,44 +1,29 @@
 // ########################################################################################################################
 // DECLARATIONS
 // ########################################################################################################################
+const a = document.querySelectorAll("a");
 const documentIds = document.querySelectorAll("[id]");
 documentIds.forEach(function(id,index) {
   window[id] = document.getElementById(id.getAttribute("id"));
 });
-const a = document.querySelectorAll("a");
 // ########################################################################################################################
 // PREPARE TABLE BUILDING
 // ########################################################################################################################
-let todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
-let tableContainerDue = document.createDocumentFragment();
-let tableContainerComplete = document.createDocumentFragment();
-let tableContainerDueAndComplete = document.createDocumentFragment();
-let tableContainerNoPriorityNotCompleted = document.createDocumentFragment();
-let tableContainerContent = document.createDocumentFragment();
-let todoTableBodyRowTemplate = document.createElement("div");
-let todoTableBodyCellCheckboxTemplate  = document.createElement("div");
-let todoTableBodyCellTextTemplate = document.createElement("a");
-let tableContainerCategoriesTemplate = document.createElement("span");
-let todoTableBodyCellMoreTemplate = document.createElement("div");
-let todoTableBodyCellPriorityTemplate = document.createElement("div");
-let todoTableBodyCellSpacerTemplate = document.createElement("div");
-let todoTableBodyCellDueDateTemplate = document.createElement("span");
-let todoTableBodyCellRecurrenceTemplate = document.createElement("span");
-todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
-todoTableBodyRowTemplate.setAttribute("class", "flex-table");
-todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
-todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
-todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
-todoTableBodyCellTextTemplate.setAttribute("role", "cell");
-todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
-todoTableBodyCellTextTemplate.setAttribute("href", "#");
-tableContainerCategoriesTemplate.setAttribute("class", "categories");
-todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
-todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
-todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
-todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
-todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
-todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
+const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
+const tableContainerDue = document.createDocumentFragment();
+const tableContainerComplete = document.createDocumentFragment();
+const tableContainerDueAndComplete = document.createDocumentFragment();
+const tableContainerNoPriorityNotCompleted = document.createDocumentFragment();
+const tableContainerContent = document.createDocumentFragment();
+const todoTableBodyRowTemplate = document.createElement("div");
+const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
+const todoTableBodyCellTextTemplate = document.createElement("a");
+const tableContainerCategoriesTemplate = document.createElement("span");
+const todoTableBodyCellMoreTemplate = document.createElement("div");
+const todoTableBodyCellPriorityTemplate = document.createElement("div");
+const todoTableBodyCellSpacerTemplate = document.createElement("div");
+const todoTableBodyCellDueDateTemplate = document.createElement("span");
+const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
@@ -58,14 +43,7 @@ const btnFilter = document.querySelectorAll(".btnFilter");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const categories = ["contexts", "projects"];
-const items = {
-  raw: null,
-  objects: new Array,
-  objectsFiltered: new Array
-}
-const item = {
-  previous: ""
-}
+const item = { previous: "" }
 // ########################################################################################################################
 // DATE FUNCTIONS
 // ########################################################################################################################
@@ -150,45 +128,56 @@ function changeFile(path) {
   }
 }
 function modalChooseFile() {
-  modalChangeFile.classList.add("is-active");
-  modalChangeFile.focus();
-  modalChangeFileTable.innerHTML = "";
-  for (let file in window.userData.files) {
-    // skip if file doesn't exist
-    var table = modalChangeFileTable;
-    table.classList.add("files");
-    var row = table.insertRow(0);
-    row.setAttribute("data-path", window.userData.files[file][1]);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    if(window.userData.files[file][0]===1) {
-      cell1.innerHTML = "<button class=\"button\" disabled>" + window.translations.selected + "</button>";
-    } else {
-      cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
-      cell1.onclick = function() {
-        // set the new path variable and change the array
-        changeFile(this.parentElement.getAttribute("data-path")).then(result => {
-          console.log(result);
-        }).catch(error => {
-          console.log(error);
-        });
-        // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
+  try {
+    modalChangeFile.classList.add("is-active");
+    modalChangeFile.focus();
+    modalChangeFileTable.innerHTML = "";
+    for (let file in window.userData.files) {
+      // skip if file doesn't exist
+      var table = modalChangeFileTable;
+      table.classList.add("files");
+      var row = table.insertRow(0);
+      row.setAttribute("data-path", window.userData.files[file][1]);
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+      if(window.userData.files[file][0]===1) {
+        cell1.innerHTML = "<button class=\"button\" disabled>" + window.translations.selected + "</button>";
+      } else {
+        cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
+        cell1.onclick = function() {
+          // set the new path variable and change the array
+          changeFile(this.parentElement.getAttribute("data-path")).then(result => {
+            console.log(result);
+          }).catch(error => {
+            console.log(error);
+          });
+          // trigger matomo event
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
+        }
+        cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
+        cell3.title = window.translations.delete;
+        cell3.onclick = function() {
+          removeFileFromHistory(this.parentElement.getAttribute("data-path")).then(response => {
+            // after array is updated, open the modal again
+            modalChooseFile().then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+        }
       }
-      cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
-      cell3.title = window.translations.delete;
-      cell3.onclick = function() {
-        removeFileFromHistory(this.parentElement.getAttribute("data-path")).then(response => {
-          // after array is updated, open the modal again
-          modalChooseFile();
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        });
-      }
+      cell2.innerHTML = window.userData.files[file][1];
     }
-    cell2.innerHTML = window.userData.files[file][1];
+    return Promise.resolve("Success: File changer modal build and opened");
+  } catch (error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "modalChooseFile()", error])
+    return Promise.reject("Error in modalChooseFile(): " + error);
   }
 }
 function removeFileFromHistory(path) {
@@ -968,6 +957,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
 }
 function generateTableRow(todo) {
   try {
+    // create nodes from templates
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
     let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);
     let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
@@ -1007,8 +997,7 @@ function generateTableRow(todo) {
     todoTableBodyCellCheckbox.onclick = function() {
       // passing the data-item attribute of the parent tag to complete function
       setTodoComplete(this.parentElement.getAttribute('data-item')).then(response => {
-        //modalForm.classList.remove("is-active");
-        console.log(response);
+         console.log(response);
       }).catch(error => {
         console.log(error);
       });
@@ -1067,7 +1056,13 @@ function generateTableRow(todo) {
       } else if(todo.due.isPast()) {
         todoTableBodyCellDueDate.classList.add("isPast");
       }
-      todoTableBodyCellDueDate.innerHTML = "<i class=\"far fa-clock\"></i><div class=\"tags has-addons\"><span class=\"tag\">" + window.translations.due + "</span><span class=\"tag is-dark\">" + tag + "</span></div><i class=\"fas fa-sort-down\"></i>";
+      todoTableBodyCellDueDate.innerHTML = `
+        <i class="far fa-clock"></i>
+        <div class="tags has-addons">
+          <span class="tag">` + window.translations.due + `</span><span class="tag is-dark">` + tag + `</span>
+        </div>
+        <i class="fas fa-sort-down"></i>
+      `;
       // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
@@ -1079,10 +1074,7 @@ function generateTableRow(todo) {
     }
     // add the text cell to the row
     todoTableBodyRow.appendChild(todoTableBodyCellText);
-    // add the more dots
-    todoTableBodyCellMore.setAttribute("class", "flex-row todoTableItemMore");
-    todoTableBodyCellMore.setAttribute("role", "cell");
-    todoTableBodyCellMore.innerHTML = "<div class=\"dropdown is-right\"><div class=\"dropdown-trigger\"><a href=\"#\"><i class=\"fas fa-ellipsis-v\"></i></a></div><div class=\"dropdown-menu\" role=\"menu\"><div class=\"dropdown-content\"><a class=\"dropdown-item\">" + window.translations.useAsTemplate + "</a><a href=\"#\" class=\"dropdown-item\">" + window.translations.edit + "</a><a class=\"dropdown-item\">" + window.translations.delete + "</a></div></div></div>";
+
     // click on three-dots-icon to open more menu
     todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
       // only if this element was highlighted before, we will hide instead of show the dropdown
@@ -1134,8 +1126,7 @@ function generateTableRow(todo) {
 }
 function generateItemsObject(content) {
   try {
-    //if(!content) return Promise.resolve("Info: File is empty, won't build anything");
-    items.objects = TodoTxt.parse(content, [ new DueExtension(), new RecExtension() ]);
+    const items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension() ]) }
     items.complete = items.objects.filter(function(item) { return item.complete === true });
     items.incomplete = items.objects.filter(function(item) { return item.complete === false });
     items.objects = items.objects.filter(function(item) { return item.toString() != "" });
@@ -1158,9 +1149,17 @@ function generateItemsObject(content) {
 }
 function generateTodoData(searchString) {
   try {
-    let items = window.items;
+    // prepare the templates for the table
+    configureTodoTableTemplate().then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+    items = window.items;
+    // selected filters are empty, unless they were persisted
     let selectedFilters = new Array;
     if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
+    // selected categories are empty, unless they were persisted
     let categoriesFiltered = new Array;
     if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
     // if set: remove all completed todos
@@ -1204,14 +1203,17 @@ function generateTodoData(searchString) {
         });
       });
     }
-    // if search input is detected
+    // if search string or previously inserted content in search bar is detected
     if(searchString || todoTableSearch.value) {
       if(todoTableSearch.value) searchString = todoTableSearch.value;
       // convert everything to lowercase for better search results
       items.objectsFiltered = items.objectsFiltered.filter(function(item) {
         // if no match (-1) the item is skipped
-        if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false;
-        return item;
+        if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) {
+          return false;
+        } else {
+          return true;
+        }
       });
     }
     // manipulate the result info box
@@ -1227,28 +1229,31 @@ function generateTodoData(searchString) {
       console.log(error);
     });
     // build object according to sorting method
-    if(window.userData.sortBy==="dueString") {
-      var completed = new Array;
-      var noDue = new Array;
-      // produce an object where priority a to z + null is key
-      items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
-        if(a.complete) {
-          completed.push(a);
-        } else if(!a.due) {
-          noDue.push(a);
-        } else {
+    switch (window.userData.sortBy) {
+      case "dueString":
+        var completed = new Array;
+        var noDue = new Array;
+        // produce an object where priority a to z + null is key
+        items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
+          if(a.complete) {
+            completed.push(a);
+          } else if(!a.due) {
+            noDue.push(a);
+          } else {
+            object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
+          }
+          return object;
+        }, {});
+        // assign arrays to object keys
+        items.objectsFiltered.group_20_completed = completed;
+        items.objectsFiltered.group_10_noDue = noDue;
+        break;
+      case "priority":
+        items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
           object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
-        }
-        return object;
-      }, {});
-      // assign arrays to object keys
-      items.objectsFiltered.group_20_completed = completed;
-      items.objectsFiltered.group_10_noDue = noDue;
-    } else if(window.userData.sortBy==="priority") {
-      items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
-        object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
-        return object;
-      }, {});
+          return object;
+        }, {});
+        break;
     }
     // object is converted to a sorted array
     items.objectsFiltered = Object.entries(items.objectsFiltered).sort(function(a,b) {
@@ -1336,6 +1341,7 @@ function generateTodoData(searchString) {
             });
           }
         }
+        // finally generate the rows
         tableContainerContent.appendChild(generateTableRow(todo));
       }
     }
@@ -1506,7 +1512,7 @@ function setTheme(switchTheme) {
     return Promise.reject("Error in setTheme(): " + error);
   }
 }
-function setTranslations() {
+async function setTranslations() {
   try {
     window.api.send("getTranslations");
     window.api.receive("sendTranslations", (translations) => {
@@ -1548,6 +1554,8 @@ function setTranslations() {
       messageLoggingTitle.innerHTML = translations.errorEventLogging;
       messageLoggingBody.innerHTML = translations.messageLoggingBody;
       messageLoggingButton.innerHTML = translations.settings;
+      messageShareTitle.innerHTML = translations.messageShareTitle;
+      messageShareBody.innerHTML = translations.messageShareBody;
       settingsTabSettings.innerHTML = translations.settings;
       settingsTabSettingsLanguage.innerHTML = translations.language;
       settingsTabSettingsLanguageBody.innerHTML = translations.settingsTabSettingsLanguageBody;
@@ -2013,7 +2021,11 @@ function configureEvents() {
     btnChangeTodoFile.forEach(function(el) {
       el.onclick = function () {
         if(window.userData.files.length > 0) {
-          modalChooseFile();
+          modalChooseFile().then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
         } else {
           window.api.send("openOrCreateFile", "open");
         }
@@ -2164,7 +2176,9 @@ function configureEvents() {
         console.log(error);
       });
     });
-    modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
+    modalFormInput.addEventListener("keyup", e => {
+      modalFormInputEvents();
+    });
     filterColumnClose.onclick = function() {
       showFilterDrawer(false).then(function(result) {
         console.log(result);
@@ -2306,7 +2320,47 @@ function configureEvents() {
     return Promise.reject("Error in configureEvents(): " + error);
   }
 }
-
+function configureTodoTableTemplate() {
+  try {
+    todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
+    todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
+    // add the more dots
+    todoTableBodyCellMoreTemplate.innerHTML = `
+      <div class="dropdown is-right">
+        <div class="dropdown-trigger">
+          <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+        </div>
+        <div class="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a class="dropdown-item">` + window.translations.useAsTemplate + `</a>
+            <a href="#" class="dropdown-item">` + window.translations.edit + `</a>
+            <a class="dropdown-item">` + window.translations.delete + `</a>
+          </div>
+        </div>
+      </div>
+    `;
+    todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
+    todoTableBodyRowTemplate.setAttribute("class", "flex-table");
+    todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
+    todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
+    todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
+    todoTableBodyCellTextTemplate.setAttribute("role", "cell");
+    todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
+    todoTableBodyCellTextTemplate.setAttribute("href", "#");
+    tableContainerCategoriesTemplate.setAttribute("class", "categories");
+    todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
+    todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
+    todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
+    todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
+    todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
+    todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
+    return Promise.resolve("Success: Table templates set up");
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateTableRow()", error])
+    return Promise.reject("Error in generateTableRow(): " + error);
+  }
+}
 function configureMainView() {
   try {
     // empty the table containers before reading fresh data
@@ -2706,7 +2760,7 @@ window.onload = async function () {
   });
 
   // call for translations and apply them
-  setTranslations().then(function(result) {
+  await setTranslations().then(function(result) {
     console.log(result);
   }).catch(function(error) {
     console.log(error);
@@ -2733,13 +2787,6 @@ window.onload = async function () {
     console.log(error);
   });
 
-  // initialize all events
-  configureEvents().then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    console.log(error);
-  });
-
   // set theme
   setTheme().then(function(result) {
     console.log(result);
@@ -2756,6 +2803,13 @@ window.onload = async function () {
 
   // check for already dismissed messages to prevent them to show up again
   checkDismissedMessages().then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });
+
+  // initialize all events
+  configureEvents().then(function(result) {
     console.log(result);
   }).catch(function(error) {
     console.log(error);

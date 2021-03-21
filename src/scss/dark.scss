@@ -187,9 +187,25 @@ nav {
     .flex-row.text {
       color: $grey-bright;
     }
-    /*.flex-row.itemDueDate {
+    .flex-row.itemDueDate {
       color: white;
-    }*/
+      .fa-sort-down {
+        color: $grey-mid;
+      }
+    }
+    .flex-row.itemDueDate.isToday,
+    .flex-row.itemDueDate.isPast {
+      color: $has-text-danger;
+      .fa-sort-down {
+        color: inherit;
+      }
+    }
+    .flex-row.itemDueDate.isTomorrow {
+      color: $has-text-warning;
+      .fa-sort-down {
+        color: $has-text-warning!important;
+      }
+    }
     .flex-row span.tag.contexts {
       background: $green-mid!important;
       color: $green-bright!important;

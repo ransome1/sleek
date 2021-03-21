@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "A todo app based on todo.txt, free, open-source and available for Linux, Windows and MacOS",
   "synopsis": "A todo app based on todo.txt, free, open-source and available for Linux, Windows and MacOS",
   "category": "ProjectManagement",
@@ -53,7 +53,7 @@
       "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"
     },
     "appx": {
-      "displayName": "sleek - a todo.txt manager",
+      "displayName": "sleek - todo.txt",
       "identityName": "17450RobinAhle.sleektodomanager",
       "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
       "publisherDisplayName": "Robin Ahle",
@@ -76,6 +76,7 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder -lw --publish never",
     "appx": "electron-builder -w appx --publish never",
+    "win": "electron-builder -w portable --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."

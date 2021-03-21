@@ -842,17 +842,22 @@ nav {
 #recurrencePicker.is-active {
   display: block; }
 
-.message.fixed {
+.messages {
   width: 25em;
   position: fixed;
   right: 2em;
-  bottom: 1em;
-  display: none; }
-  .message.fixed .button {
+  bottom: 1em; }
+  .messages .message {
+    display: none; }
+  .messages .message.is-active {
+    display: block; }
+    .messages .message.is-active .message-body .brands svg {
+      font-size: 2.25em;
+      margin-right: .2em; }
+  .messages .button {
     margin-top: .5em; }
-
-.message.is-active {
-  display: block; }
+  .messages .message-body p {
+    margin-bottom: .5em; }
 
 /* COMPACT VIEW */
 body.compact #todoTable {
