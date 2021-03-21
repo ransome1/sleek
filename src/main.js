@@ -81,7 +81,7 @@ const userData = new Store({
     filterDrawer: false,
     compactView: false,
     sortBy: "priority",
-    defaultFontSize: 16
+    zoom: 100
   }
 });
 const appData = {
@@ -136,8 +136,8 @@ const createWindow = () => {
     userData.set("sortBy", "priority");
   }
   // if default font size is not set
-  if(!userData.data.defaultFontSize) {
-    userData.set("defaultFontSize", 16);
+  if(!userData.data.zoom) {
+    userData.set("zoom", 100);
   }
   // if theme hasn't been set, sleek will adapt to OS preference
   if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
@@ -264,6 +264,21 @@ const createWindow = () => {
           accelerator: "CmdOrCtrl+h",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "toggleCompletedTodos")
+          }
+        },
+        { type: "separator" },
+        {
+          label: "Zoom In",
+          accelerator: "CmdOrCtrl+=",
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.send("triggerFunction", "zoom", ["in"])
+          }
+        },
+        {
+          label: "Zoom Out",
+          accelerator: "CmdOrCtrl+-",
+          click: function (item, focusedWindow) {
+            mainWindow.webContents.send("triggerFunction", "zoom", ["out"])
           }
         },
         { type: "separator" },

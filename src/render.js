@@ -312,6 +312,31 @@ function positionSuggestionContainer() {
   suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
   suggestionContainer.style.left = modalFormInputPosition.left + "px";
 }
+function zoom(variable) {
+  try {
+    let zoom = window.userData.zoom;
+    if(variable==="in") {
+      // set max zoom size
+      if(window.userData.zoom===175) return Promise.resolve("Info: Maximum zoom reached");
+      zoom = window.userData.zoom + 5;
+      setUserData("zoom", zoom);
+      html.style.zoom = zoom + "%";
+      //html.style.fontSize = zoom + "px";
+      return Promise.resolve("Info: Zoomed in");
+    } else if(variable==="out") {
+      // set min zoom size
+      if(window.userData.zoom===25) return Promise.resolve("Info: Minimum zoom reached");
+      zoom = window.userData.zoom - 5;
+      setUserData("zoom", zoom);
+      html.style.zoom = zoom + "%";
+      return Promise.resolve("Info: Zoomed out");
+    }
+  } catch (error) {
+  // trigger matomo event
+  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "zoom()", error])
+  return Promise.reject("Error in zoom(): " + error);
+  }
+}
 // ########################################################################################################################
 // RESIZEABLE FILTER DRAWER
 // https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
@@ -2252,20 +2277,12 @@ function configureEvents() {
     btnToggleViewContainer.onclick = function() {
       viewContainer.classList.toggle("is-active");
     }
-    scaleIncrease.onclick = function() {
-      // set max zoom size
-      if(window.userData.defaultFontSize===25) return false;
-      let defaultFontSize = window.userData.defaultFontSize + 1;
-      setUserData("defaultFontSize", defaultFontSize);
-      html.style.fontSize = defaultFontSize + "px";
-    }
-    scaleDecrease.onclick = function() {
-      // set min zoom size
-      if(window.userData.defaultFontSize===10) return false;
-      let defaultFontSize = window.userData.defaultFontSize - 1;
-      setUserData("defaultFontSize", defaultFontSize);
-      html.style.fontSize = defaultFontSize + "px";
-    }
+    scaleIncrease.onclick = function(el) {
+      zoom("in")
+    };
+    scaleDecrease.onclick = function(el) {
+      zoom("out")
+    };
     document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
       let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
       todo.due = undefined;
@@ -2378,7 +2395,7 @@ function configureTodoTableTemplate() {
 function configureMainView() {
   try {
     // set scaling factor if default font size has changed
-    if(window.userData.defaultFontSize) html.style.fontSize = window.userData.defaultFontSize + "px";
+    if(window.userData.zoom) html.style.zoom = window.userData.zoom + "%";
     // empty the table containers before reading fresh data
     todoTableContainer.innerHTML = "";
     // add filename to application title
@@ -2743,6 +2760,13 @@ window.onload = async function () {
           console.log(error);
         });
         break;
+      case "zoom":
+        zoom(args.join()).then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        break;
     }
   });
 
@@ -2756,7 +2780,7 @@ window.onload = async function () {
   // call user data and write it to a global variable
   await getUserData().then(function(userData) {
     window.userData = userData;
-    console.log(window.userData.defaultFontSize);
+    console.log(window.userData.zoom);
     if(!userData.file) showOnboarding(true)
   }).catch(function(error) {
     console.log(error);

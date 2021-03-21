@@ -281,9 +281,8 @@ nav {
   float: left;
   padding: 1.5em;
   background: $mid-grey;
-
   --resizeable-width: 34em;
-  height: 100vh;
+  height: 100%;
   width: var(--resizeable-width);
   min-width: var(--min-width);
   max-width: var(--max-width);

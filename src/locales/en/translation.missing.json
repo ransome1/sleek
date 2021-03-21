@@ -1,3 +1,5 @@
 {
-  "paste": "paste"
+  "paste": "paste",
+  "zoomIn": "zoomIn",
+  "zoomOut": "zoomOut"
 }
