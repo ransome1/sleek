@@ -9,7 +9,7 @@ description: |
 
   sleek watches todo.txt files continuously for changes so it can be used with other todo.txt apps. Users can switch between bright and dark mode, choose several languages and manage multiple todo.txt files.
 
-  The todo list can be sorted and grouped by priorities or due dates. Todos with due date or repeating todos will trigger alarms with thresholds of 1 or 2 days before the due date. Completed todos can be hidden or archived into separate done.txt files and if users have tons of todos, a compact view can come in handy. 
+  The todo list can be sorted and grouped by priorities or due dates. Todos with due date or repeating todos will trigger alarms with thresholds of 1 or 2 days before the due date. Completed todos can be hidden or archived into separate done.txt files and if users have tons of todos, a compact view can come in handy.
 
 grade: stable
 confinement: strict
@@ -33,6 +33,7 @@ apps:
     - home
     - browser-support
     - network
+    - removable-media
 parts:
   sleek:
     plugin: nil
