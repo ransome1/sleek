@@ -234,7 +234,7 @@ function clearModal() {
   // + or @
   let typeAheadPrefix = "";
   modalForm.classList.remove("is-active");
-  modalForm.blur();
+  //modalForm.blur();
   // remove the data item as we don't need it anymore
   modalForm.removeAttribute("data-item");
   // clean up the modal
@@ -319,18 +319,18 @@ function zoom(variable) {
       // set max zoom size
       if(window.userData.zoom===175) return Promise.resolve("Info: Maximum zoom reached");
       zoom = window.userData.zoom + 5;
-      setUserData("zoom", zoom);
-      html.style.zoom = zoom + "%";
-      //html.style.fontSize = zoom + "px";
-      return Promise.resolve("Info: Zoomed in");
     } else if(variable==="out") {
       // set min zoom size
       if(window.userData.zoom===25) return Promise.resolve("Info: Minimum zoom reached");
       zoom = window.userData.zoom - 5;
-      setUserData("zoom", zoom);
-      html.style.zoom = zoom + "%";
-      return Promise.resolve("Info: Zoomed out");
+    } else if(variable==="undo") {
+      zoom = 100;
     }
+    html.style.zoom = zoom + "%";
+    // persist zoom setting
+    setUserData("zoom", zoom);
+    // set zoom status in view container
+    return Promise.resolve("Info: Zoomed changed to " + window.userData.zoom + "%");
   } catch (error) {
   // trigger matomo event
   if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "zoom()", error])
@@ -346,8 +346,7 @@ const getHandleElement = () => { return document.getElementById("handle"); };
 const minPaneSize = 400;
 const maxPaneSize = document.body.clientWidth * .75
 const setPaneWidth = (width) => {
-  getResizeableElement().style
-    .setProperty("--resizeable-width", `${width}px`);
+  getResizeableElement().style.setProperty("--resizeable-width", `${width}px`);
   setUserData("filterDrawerWidth", `${width}`);
 };
 const getPaneWidth = () => {
@@ -577,9 +576,10 @@ function showFilterDrawer(variable) {
   try {
     switch(variable) {
       case true:
+        //
         navBtnFilter.classList.add("is-highlighted");
         filterDrawer.classList.add("is-active");
-        //filterDrawer.focus();
+        filterDrawer.focus();
         filterColumnClose.classList.add("is-active");
       break;
       case false:
@@ -591,14 +591,18 @@ function showFilterDrawer(variable) {
       case "toggle":
         navBtnFilter.classList.toggle("is-highlighted");
         filterDrawer.classList.toggle("is-active");
-        //filterDrawer.focus();
+        filterDrawer.focus();
         filterColumnClose.classList.toggle("is-active");
       break;
     }
     // persist filter drawer state
     if(filterDrawer.classList.contains("is-active")) {
+      // if the drawer is open the table needs a fixed width to overlapt the viewport
+      todoTable.style.minWidth = "45em";
       setUserData("filterDrawer", true);
     } else {
+      // undo what has been done 
+      todoTable.style.minWidth = "auto";
       setUserData("filterDrawer", false);
     }
     // if more toggle is open we close it as user doesn't need it anymore
@@ -707,7 +711,6 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
     // creates a div for the specific filter section
     let todoFiltersSub = document.createElement("div");
     todoFiltersSub.setAttribute("class", "dropdown-item " + category);
-    todoFiltersSub.setAttribute("tabindex", 0);
     // translate headline
     if(category=="contexts") {
       var headline = window.translations.contexts;
@@ -722,7 +725,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
       todoFilterHeadline.setAttribute("tabindex", -1);
       todoFilterHeadline.setAttribute("href", "#");
       todoFilterHeadline.setAttribute("data-headline", headline);
-      todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"0\"></a>&nbsp;" + headline;
+      todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
       // TODO clean up the mess
       todoFilterHeadline.addEventListener("click", () => {
         // TODO clean up. this is a duplicate, see above
@@ -735,7 +738,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
           todoFiltersSub.classList.remove("is-greyed-out");
           // change the eye icon
           let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
-          todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"0\"></a>&nbsp;" + dataHeadline;
+          todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"-1\"></a>&nbsp;" + dataHeadline;
         } else {
           // we push the category to the filter array
           categoriesFiltered.push(category);
@@ -752,7 +755,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
           todoFiltersSub.classList.add("is-greyed-out");
           // change the eye icon
           let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
-          todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\"></i>&nbsp;" + dataHeadline;
+          todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + dataHeadline;
         }
         t0 = performance.now();
         generateTodoData().then(response => {
@@ -783,7 +786,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
       let todoFilterHeadline = document.createElement("h4");
       todoFilterHeadline.setAttribute("class", "is-4 title headline " + category);
       // no need for tab index if the headline is in suggestion box
-      if(typeAheadPrefix==undefined) todoFilterHeadline.setAttribute("tabindex", 0);
+      if(typeAheadPrefix==undefined) todoFilterHeadline.setAttribute("tabindex", -1);
       todoFilterHeadline.innerHTML = headline;
       // add the headline before category container
       todoFiltersSub.appendChild(todoFilterHeadline);
@@ -796,7 +799,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
       todoFiltersItem.setAttribute("class", "btnApplyFilter button");
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      if(typeAheadPrefix==undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 305) }
+      if(typeAheadPrefix==undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }
       todoFiltersItem.setAttribute("href", "#");
       todoFiltersItem.innerHTML = filter;
       if(typeAheadPrefix==undefined) {
@@ -848,17 +851,17 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
             // only if input is not only the prefix, otherwise all existing prefixes will be removed
             modalFormInput.value = modalFormInput.value.replace(" " + typeAheadPrefix+typeAheadValue, "");
             // add filter from suggestion box
-            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute('data-filter');
+            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute("data-filter") + " ";
           } else {
             // add button data value to the exact caret position
             modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
           }
-          //
-          suggestionContainer.classList.remove("is-active");
+          // hide the suggestion container after the filter has been selected
           suggestionContainer.blur();
+          suggestionContainer.classList.remove("is-active");
+          // trigger matomo event
           // put focus back into input so user can continue writing
           modalFormInput.focus();
-          // trigger matomo event
           if(window.userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
       }
@@ -1753,14 +1756,23 @@ function setPriorityInput(priority) {
   }
 }
 function setPriority(priority) {
-  if(priority) {
-    priority = priority.toUpperCase();
-  } else {
-    priority = null;
+  try {
+    if(priority) {
+      priority = priority.toUpperCase();
+    } else {
+      priority = null;
+    }
+    todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+    todo.priority = priority;
+    modalFormInput.value = todo.toString();
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Priority changed using picker"]);
+    return Promise.resolve("Success: Priority changed to " + priority)
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setPriority()", error])
+    return Promise.reject("Error in setPriority(): " + error)
   }
-  todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
-  todo.priority = priority;
-  modalFormInput.value = todo.toString();
 }
 function setFriendlyLanguageNames(languageCode) {
   try {
@@ -1933,7 +1945,7 @@ function toggleInputSize(type) {
     modalFormInput.style.height= modalFormInput.scrollHeight+"px";
   }
   positionSuggestionContainer();
-  modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
+  //modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
   modalFormInput.focus();
 }
 
@@ -2202,6 +2214,8 @@ function configureEvents() {
       });
     });
     modalFormInput.addEventListener("keyup", e => {
+      // do not show suggestion container if Escape has been pressed
+      if(e.key==="Escape") return false;
       modalFormInputEvents();
     });
     filterColumnClose.onclick = function() {
@@ -2213,7 +2227,13 @@ function configureEvents() {
       // trigger matomo event
       if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on close button"])
     }
-    priorityPicker.addEventListener("change", e => { setPriority(e.target.value) });
+    priorityPicker.addEventListener("change", e => {
+      setPriority(e.target.value).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+    });
     priorityPicker.onfocus = function () {
       // close suggestion box if focus comes to priority picker
       suggestionContainer.classList.remove("is-active");
@@ -2277,11 +2297,26 @@ function configureEvents() {
     btnToggleViewContainer.onclick = function() {
       viewContainer.classList.toggle("is-active");
     }
-    scaleIncrease.onclick = function(el) {
-      zoom("in")
+    zoomIn.onclick = function(el) {
+      zoom("in").then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
     };
-    scaleDecrease.onclick = function(el) {
-      zoom("out")
+    zoomOut.onclick = function(el) {
+      zoom("out").then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+    };
+    zoomUndo.onclick = function(el) {
+      zoom("undo").then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
     };
     document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
       let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
@@ -2300,21 +2335,36 @@ function configureEvents() {
         e.preventDefault();
         var priority = event.key.substr(0,1);
         setPriorityInput(priority);
-        setPriority(priority);
+        setPriority(priority).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
       } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
         var priority = null;
         setPriorityInput(priority);
-        setPriority(priority);
+        setPriority(priority).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
       }
     });
     modalForm.addEventListener ("keydown", function (e) {
-      if(event.key === 'Escape') {
+      if(event.key === "Escape" && !suggestionContainer.classList.contains("is-active")) {
         clearModal();
         this.classList.remove("is-active");
+      } else if(event.key === "Escape" && suggestionContainer.classList.contains("is-active")) {
+        suggestionContainer.classList.remove("is-active");
+        //suggestionContainer.blur();
+      }
+    });
+    /*suggestionContainer.addEventListener ("keydown", function (e) {
+      if(event.key === 'Escape') {
         suggestionContainer.classList.remove("is-active");
         suggestionContainer.blur();
       }
-    });
+    });*/
     body.addEventListener ("click", function () {
       // close view layer
       if(viewContainer.classList.contains("is-active") && !event.target.closest("#viewContainer") && !event.target.closest("#btnToggleViewContainer")) viewContainer.classList.remove("is-active")
@@ -2396,6 +2446,8 @@ function configureMainView() {
   try {
     // set scaling factor if default font size has changed
     if(window.userData.zoom) html.style.zoom = window.userData.zoom + "%";
+    // set zoom status in view container
+    //zoomStatus.innerHTML = "Zoom (" + window.userData.zoom + "%)";
     // empty the table containers before reading fresh data
     todoTableContainer.innerHTML = "";
     // add filename to application title
@@ -2780,7 +2832,6 @@ window.onload = async function () {
   // call user data and write it to a global variable
   await getUserData().then(function(userData) {
     window.userData = userData;
-    console.log(window.userData.zoom);
     if(!userData.file) showOnboarding(true)
   }).catch(function(error) {
     console.log(error);

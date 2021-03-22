@@ -125,7 +125,7 @@ nav {
         .dropdown-item {
           color: white!important;
         }
-        .dropdown-item.scale {
+        .dropdown-item.zoom {
           a {
             svg {
               color: white!important;
@@ -313,8 +313,8 @@ nav {
     input:focus + .slider {
       box-shadow: none;
     }
-    input:focus {
-      outline: none;
+    input:focus-visible {
+      outline: 2px solid white!important;
     }
   }
 }

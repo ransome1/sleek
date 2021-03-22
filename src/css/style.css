@@ -360,7 +360,6 @@ nav {
 /* TABLE */
 #todoTable {
   width: 100%;
-  min-width: 45em;
   float: left;
   display: none;
   padding: 1.5em 3em;
@@ -396,16 +395,18 @@ nav {
         width: 100%; }
   #todoTable #viewContainer.is-active .dropdown-content {
     display: block; }
-    #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.scale {
+    #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.zoom {
       height: 2.5em;
       line-height: 2.5em;
       padding-top: 0; }
-      #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.scale a {
+      #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.zoom a {
         float: left;
         margin-right: .2em;
         font-size: 1.6em; }
-      #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.scale #scaleDefault {
+      #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.zoom #zoomStatus {
         padding: 0 .55em; }
+      #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.zoom #zoomUndo {
+        cursor: pointer; }
   #todoTable #todoTableContainer {
     margin: 0 0 1em 0; }
   #todoTable .flex-table {
@@ -601,8 +602,8 @@ nav {
       background-color: #4a4a4a; }
     .toggle .switch input:focus + .slider {
       box-shadow: 0 0 1px #4a4a4a; }
-    .toggle .switch input:focus {
-      outline: none; }
+    .toggle .switch input:focus-visible {
+      outline: 2px solid #3273dc; }
     .toggle .switch input:checked + .slider:before {
       -webkit-transform: translateX(1.5625em);
       -ms-transform: translateX(1.5625em);
@@ -687,6 +688,7 @@ nav {
   position: absolute;
   display: none;
   z-index: 50;
+  opacity: .90;
   background: white; }
   #suggestionContainer h4.title {
     font-size: 1.3em;
@@ -885,11 +887,12 @@ body.compact #todoTable {
   padding: 1em; }
   body.compact #todoTable .flex-table .flex-row {
     padding: .25em 0; }
-
-body.compact .filterDrawer div a.button {
-  font-size: 0.75rem; }
-  body.compact .filterDrawer div a.button span.tag {
-    font-size: 0.65rem; }
+  body.compact #todoTable .flex-table .flex-row.itemDueDate .tags {
+    top: -1.9em;
+    right: -1.9em; }
+  body.compact #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
+    right: .2em;
+    bottom: 1.75em; }
 
 body.compact .modal.content .modal-card {
   width: 90% !important;
@@ -944,7 +947,9 @@ body.compact #suggestionContainer.filterDrawer {
 
 @media (max-width: 768px) {
   .modal.content .modal-card .card.is-centered {
-    width: 100% !important; } }
+    width: 100% !important; }
+  #todoTable .flex-table .flex-row.text {
+    max-width: 65%; } }
 
 /*! bulma.io v0.9.2 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */

@@ -16,14 +16,14 @@
             <li class="logo">sleek</li>
             <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li id="navBtnFilter" class="btnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
-            <li class="btnChangeTodoFile"><a href="#" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
-            <li id="btnTheme"><a href="#" tabindex="0"><i class="fas fa-adjust"></i></a></li>
+            <li class="btnChangeTodoFile"><a href="#" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
+            <li id="btnTheme"><a href="#" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
           </ul>
           <ul>
             <li id="navBtnSettings">
-              <a href="#" tabindex="0"><i class="fas fa-cog"></i></a>
+              <a href="#" tabindex="-1"><i class="fas fa-cog"></i></a>
             </li>
-            <li id="navBtnHelp"><a href="#" tabindex="0"><i class="fas fa-question-circle"></i></a></li>
+            <li id="navBtnHelp"><a href="#" tabindex="-1"><i class="fas fa-question-circle"></i></a></li>
           </ul>
           <section id="filterDrawer" class="filterDrawer dropdown" tabindex="0">
             <div class="container">
@@ -36,7 +36,7 @@
         </nav>
       </div>
       <div class="column content">
-        <section id="todoTable" tabindex="100">
+        <section id="todoTable" tabindex="-1">
           <div class="control has-icons-left">
             <input id="todoTableSearch" class="input is-medium" type="search" placeholder="Search" tabindex="10">
             <span class="icon is-left">
@@ -46,7 +46,7 @@
           <div id="viewContainer" class="column">
               <div class="dropdown is-active is-right">
                 <div class="dropdown-trigger">
-                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer">
+                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer" tabindex="-1">
                     <i class="fas fa-list"></i>&nbsp;<span id="viewView"></span>
                   </button>
                 </div>
@@ -72,10 +72,10 @@
                       </div>
                     </div>
                     <hr class="dropdown-divider">
-                    <div class="dropdown-item scale">
-                        <a href="#" id="scaleDecrease"><i class="fas fa-minus-circle"></i></a>
-                        <a href="#" id="scaleIncrease"><i class="fas fa-plus-circle"></i></a>
-                        <span id="scaleDefault">Zoom</span>
+                    <div class="dropdown-item zoom">
+                        <a href="#" id="zoomOut"><i class="fas fa-minus-circle"></i></a>
+                        <a href="#" id="zoomIn"><i class="fas fa-plus-circle"></i></a>
+                        <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
                     </div>
                     <hr class="dropdown-divider">
                     <div class="dropdown-item">
@@ -153,7 +153,7 @@
               <div class="field">
                 <div class="control">
                   <div class="select">
-                    <select id="priorityPicker" tabindex="309">
+                    <select id="priorityPicker" tabindex="305">
                       <option value="">-</option>
                       <option value="A">A</option>
                       <option value="B">B</option>
@@ -195,42 +195,42 @@
               </div>
               <div id="recurrencePicker" class="field">
                 <div class="control has-icons-left">
-                  <input id="recurrencePickerInput" class="input" tabindex="311" readonly>
-                  <a href="#" class="icon is-left" tabindex="-1">
+                  <input id="recurrencePickerInput" class="input" tabindex="-1" readonly>
+                  <a href="#" class="icon is-left">
                     <i class="fas fa-redo"></i>
                   </a>
                 </div>
-                <div id="recurrencePickerContainer" class="card" tabindex="312">
+                <div id="recurrencePickerContainer" class="card">
                   <div class="content">
                     <div>
                       <span id="recurrencePickerEvery"></span>
                     </div>
                     <div id="recurrencePickerMul">
-                      <a href="#" id="recurrencePickerIncrease" tabindex="0"><i class="fas fa-plus-circle"></i></a><br>
-                      <input id="recurrencePickerSpinner" type="number" min="1" max="99" tabindex="0"><br>
-                      <a href="#" id="recurrencePickerDecrease" tabindex="0"><i class="fas fa-minus-circle"></i></a>
+                      <a href="#" id="recurrencePickerIncrease"><i class="fas fa-plus-circle"></i></a><br>
+                      <input id="recurrencePickerSpinner" type="number" min="1" max="99"><br>
+                      <a href="#" id="recurrencePickerDecrease"><i class="fas fa-minus-circle"></i></a>
                     </div>
                     <div class="options">
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="d" tabindex="312">
+                        <input type="radio" class="selection" name="recurrence" value="d">
                         <span id="recurrencePickerDay"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="w" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="w">
                         <span id="recurrencePickerWeek"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="m" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="m">
                         <span id="recurrencePickerMonth"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="y" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="y">
                         <span id="recurrencePickerYear"></span>
                       </label>
                     </div>
                   </div>
                   <footer class="card-footer">
-                    <a href="#" class="card-footer-item selection" tabindex="0" value="" id="recurrencePickerNoRecurrence"></a>
+                    <a href="#" class="card-footer-item selection" value="" id="recurrencePickerNoRecurrence"></a>
                   </footer>
                 </div>
               </div>

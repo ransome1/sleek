@@ -92,7 +92,7 @@ nav {
   background: #3B3B3B; }
   #todoTable #viewContainer .dropdown-content .dropdown-item {
     color: white !important; }
-  #todoTable #viewContainer .dropdown-content .dropdown-item.scale a svg {
+  #todoTable #viewContainer .dropdown-content .dropdown-item.zoom a svg {
     color: white !important; }
   #todoTable #viewContainer .dropdown-content .dropdown-divider {
     background: #2c2d30; }
@@ -232,8 +232,8 @@ nav {
 .toggle .switch input:focus + .slider {
   box-shadow: none; }
 
-.toggle .switch input:focus {
-  outline: none; }
+.toggle .switch input:focus-visible {
+  outline: 2px solid white !important; }
 
 #modalForm button {
   color: white;

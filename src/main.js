@@ -108,8 +108,6 @@ const createWindow = () => {
   {
     width: width,
     height: height,
-    minWidth: 800,
-    minHeight: 600,
     simpleFullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {

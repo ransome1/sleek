@@ -409,7 +409,7 @@ nav {
 /* TABLE */
 #todoTable {
   width: 100%;
-  min-width: 45em;
+  //min-width: 45em;
   float: left;
   display: none;
   padding: 1.5em 3em;
@@ -460,7 +460,7 @@ nav {
   #viewContainer.is-active {
     .dropdown-content {
       display: block;
-      .dropdown-item.scale {
+      .dropdown-item.zoom {
         height: 2.5em;
         line-height: 2.5em;
         padding-top: 0;
@@ -468,10 +468,12 @@ nav {
           float: left;
           margin-right: .2em;
           font-size: 1.6em;
-
         }
-        #scaleDefault {
+        #zoomStatus {
           padding: 0 .55em;
+        }
+        #zoomUndo {
+          cursor: pointer;
         }
       }
     }
@@ -740,8 +742,8 @@ nav {
     input:focus + .slider {
      box-shadow: 0 0 1px $darker-grey;
     }
-    input:focus {
-      outline: none;
+    input:focus-visible {
+      outline: 2px solid $has-text-link;
     }
     input:checked + .slider:before {
      -webkit-transform: translateX(1.5625em);
@@ -853,6 +855,7 @@ nav {
   position: absolute;
   display: none;
   z-index: 50;
+  opacity: .90;
   background: $body-background-color;
   h4.title {
     font-size: 1.3em;
@@ -1101,7 +1104,6 @@ nav {
 }
 
 /* COMPACT VIEW */
-
 body.compact {
   #todoTable {
     padding: 1em;
@@ -1109,12 +1111,16 @@ body.compact {
       .flex-row {
         padding: .25em 0;
       }
-    }
-  }
-  .filterDrawer div a.button, {
-    font-size: 0.75rem;
-    span.tag {
-      font-size: 0.65rem;
+      .flex-row.itemDueDate {
+        .tags {
+          top: -1.9em;
+          right: -1.9em;
+        }
+        svg.fa-sort-down {
+          right: .2em;
+          bottom: 1.75em;
+        }
+      }
     }
   }
   .modal.content {
@@ -1189,6 +1195,9 @@ body.compact {
 @media (max-width: 768px) {
   .modal.content .modal-card .card.is-centered {
     width: 100%!important;
+  }
+  #todoTable .flex-table .flex-row.text {
+    max-width: 65%;
   }
 }
 @import "../css/datepicker.css";
