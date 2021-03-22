@@ -27,7 +27,7 @@ apps:
       PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
       SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
       GTK_USE_PORTALS: 1
-    extensions: [gnome-3-34, kde-neon]
+    extensions: [gnome-3-34]
     plugs:
     - home
     - browser-support
