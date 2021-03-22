@@ -16,6 +16,8 @@ confinement: strict
 icon: ./assets/icons/icon.png
 license: MIT
 compression: lzo
+architectures:
+- build-on: amd64
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
@@ -24,12 +26,12 @@ apps:
       TMPDIR: $XDG_RUNTIME_DIR
       PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
       SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
-    extensions: [gnome-3-28]
+      GTK_USE_PORTALS: 1
+    extensions: [gnome-3-34, kde-neon]
     plugs:
     - home
     - browser-support
     - network
-    - removable-media
 parts:
   sleek:
     plugin: nil
