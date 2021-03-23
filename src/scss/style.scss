@@ -418,6 +418,8 @@ nav {
     color: $darker-grey;
   }
   header {
+    width: 100%;
+    float: left;
     .column {
       padding: .25em 0;
     }
@@ -585,7 +587,7 @@ nav {
       position: relative;
       white-space: nowrap;
       margin: 0 .5em 0 0;
-      padding: 1em .5em;
+      padding: 1em 0;
       text-align: center;
       text-transform: lowercase;
       svg.fa-sort-down {
@@ -1034,7 +1036,7 @@ nav {
 /* RECURRANCE PICKER */
 #recurrencePicker {
   position: relative;
-  display: none;
+  //display: none;
   #recurrencePickerInput {
     cursor: pointer;
   }

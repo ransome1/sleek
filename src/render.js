@@ -107,11 +107,11 @@ function changeFile(path) {
         console.log(error);
       });
       // clear persisted filters as they propably don't make sense any more
-      /*resetFilters().then(function(result) {
+      resetFilters().then(function(result) {
         console.log(result);
       }).catch(function(error) {
         console.log(error);
-      });*/
+      });
       // advice main process to start the filewatcher
       window.api.send("startFileWatcher", window.userData.file);
     }).catch(error => {
@@ -453,10 +453,10 @@ function showForm(todo, templated) {
         if(todo.dueString) {
           dueDatePicker.setDate(todo.dueString);
           dueDatePickerInput.value = todo.dueString;
-          dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
+          //dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
           // only show the recurrence picker when a due date is set
           recurrencePicker.classList.add("is-active");
-          recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
+          //recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
         } else {
           // hide the recurrence picker when a due date is not set
           recurrencePicker.classList.remove("is-active");
@@ -601,7 +601,7 @@ function showFilterDrawer(variable) {
       todoTable.style.minWidth = "45em";
       setUserData("filterDrawer", true);
     } else {
-      // undo what has been done 
+      // undo what has been done
       todoTable.style.minWidth = "auto";
       setUserData("filterDrawer", false);
     }
@@ -1402,7 +1402,14 @@ function generateRecurringTodo(todo) {
     // duplicate not reference
     let recurringItem = Object.assign({}, todo);
     // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
-    if(recurringItem.complete) {
+    if(recurringItem.complete && recurringItem.due) {
+      recurringItem.date = new Date;
+      recurringItem.due = getRecurrenceDate(todo.completed, todo.rec);
+      recurringItem.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
+      recurringItem.complete = false;
+      recurringItem.completed = null;
+    } else if(recurringItem.complete && !recurringItem.due) {
+      //console.log(recurringItem);
       recurringItem.date = new Date;
       recurringItem.due = getRecurrenceDate(todo.completed, todo.rec);
       recurringItem.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
@@ -1451,8 +1458,8 @@ function setTodoComplete(todo) {
       if(todo.due) {
         const date = convertDate(todo.due);
         // if set to complete it will be removed from persisted notifcations
-        // the one set for today
         if(window.userData.dismissedNotifications) {
+          // the one set for today
           window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
           // the one set for tomorrow
           window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
@@ -1461,8 +1468,8 @@ function setTodoComplete(todo) {
       }
       todo.complete = true;
       todo.completed = new Date();
-      // if recurrence is set and the complete
-      if(todo.rec && todo.due.isFuture()) generateRecurringTodo(todo)
+      // if recurrence is set start generating the recurring todo
+      if(todo.rec) generateRecurringTodo(todo)
       // delete old todo from array and add the new one at it's position
       window.items.objects.splice(index, 1, todo);
     }
@@ -1629,7 +1636,7 @@ function setTranslations() {
       helpTabKeyboardTR1TH1.innerHTML = translations.function;
 
       todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
-      dueDatePickerInput.setAttribute("size", translations.formSelectDueDate.length)
+      //dueDatePickerInput.setAttribute("size", translations.formSelectDueDate.length)
       navBtnHelp.firstElementChild.setAttribute("title", translations.help);
       navBtnSettings.firstElementChild.setAttribute("title", translations.settings);
 
@@ -1692,6 +1699,8 @@ function setToggles() {
   }
 }
 function setRecurrenceInput(recurrence) {
+  // adjust the width of the input field
+  //recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
   let recSplit = splitRecurrence(recurrence);
   let label = window.translations.noRecurrence;
   if(recSplit.period !== undefined) {
@@ -1729,7 +1738,7 @@ function setRecurrenceInput(recurrence) {
     }
   }
   recurrencePickerInput.value = label;
-  recurrencePickerInput.setAttribute("size", label.length)
+  //recurrencePickerInput.setAttribute("size", label.length)
 }
 function setRecurrenceOptionLabels(mul) {
   if(mul>1) {
@@ -2251,15 +2260,15 @@ function configureEvents() {
         todo.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
         modalFormInput.value = todo.toString();
         // adjust size of inut
-        dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
+        //dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
         // clean up as we don#t need it anymore
         todo = null;
         // if suggestion box was open, it needs to be closed
         suggestionContainer.classList.remove("is-active");
         suggestionContainer.blur();
         // if a due date is set, the recurrence picker will be shown
-        recurrencePicker.classList.add("is-active");
-        recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
+        //recurrencePicker.classList.add("is-active");
+        //recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
         modalFormInput.focus();
         // trigger matomo event
         if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
@@ -2446,8 +2455,6 @@ function configureMainView() {
   try {
     // set scaling factor if default font size has changed
     if(window.userData.zoom) html.style.zoom = window.userData.zoom + "%";
-    // set zoom status in view container
-    //zoomStatus.innerHTML = "Zoom (" + window.userData.zoom + "%)";
     // empty the table containers before reading fresh data
     todoTableContainer.innerHTML = "";
     // add filename to application title

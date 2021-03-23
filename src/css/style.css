@@ -367,16 +367,19 @@ nav {
   #todoTable .icon.is-left svg,
   #todoTable .icon.is-right svg {
     color: #4a4a4a; }
-  #todoTable header .column {
-    padding: .25em 0; }
-  #todoTable header #resultStats {
-    display: none;
-    /*font-size: .8em;*/
-    text-align: center;
-    padding: .75em 0;
-    white-space: nowrap; }
-  #todoTable header #resultStats.is-active {
-    display: block; }
+  #todoTable header {
+    width: 100%;
+    float: left; }
+    #todoTable header .column {
+      padding: .25em 0; }
+    #todoTable header #resultStats {
+      display: none;
+      /*font-size: .8em;*/
+      text-align: center;
+      padding: .75em 0;
+      white-space: nowrap; }
+    #todoTable header #resultStats.is-active {
+      display: block; }
   #todoTable #viewContainer {
     float: right;
     padding: 0;
@@ -490,7 +493,7 @@ nav {
     position: relative;
     white-space: nowrap;
     margin: 0 .5em 0 0;
-    padding: 1em .5em;
+    padding: 1em 0;
     text-align: center;
     text-transform: lowercase; }
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
@@ -827,8 +830,7 @@ nav {
 
 /* RECURRANCE PICKER */
 #recurrencePicker {
-  position: relative;
-  display: none; }
+  position: relative; }
   #recurrencePicker #recurrencePickerInput {
     cursor: pointer; }
   #recurrencePicker .card {
