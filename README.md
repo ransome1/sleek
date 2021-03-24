@@ -31,6 +31,10 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 ### Download the binary
 You can download sleek for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
+### State of development
+- To see what is being worked on until version 1.0, please check the <a href="https://github.com/ransome1/sleek/projects/1">0.9.x project board</a>
+- The backlog for version 1.0 and beyond is being collected on the <a href="https://github.com/ransome1/sleek/projects/2">1.0 project board</a>
+
 ### Support sleek by
 * star it here on Github, recommend it to others or <a href="https://sourceforge.net/projects/sleek/reviews">review it on SourceForge</a>
 * contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
@@ -88,6 +92,7 @@ You can download sleek for Windows, MacOS and Linux on the <a href="https://gith
   - Open settings: CMD/CTRL + ,
   - Toggle side bar: CMD/CTRL + b
   - Set priorities (available when add/edit window is open): CTRL+SHIFT+[A-Z]
+  - Submit todo (available when add/edit window is open): CTRL + Enter
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

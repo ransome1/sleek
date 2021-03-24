@@ -367,19 +367,16 @@ nav {
   #todoTable .icon.is-left svg,
   #todoTable .icon.is-right svg {
     color: #4a4a4a; }
-  #todoTable header {
-    width: 100%;
-    float: left; }
-    #todoTable header .column {
-      padding: .25em 0; }
-    #todoTable header #resultStats {
-      display: none;
-      /*font-size: .8em;*/
-      text-align: center;
-      padding: .75em 0;
-      white-space: nowrap; }
-    #todoTable header #resultStats.is-active {
-      display: block; }
+  #todoTable header .column {
+    padding: .25em 0; }
+  #todoTable header #resultStats {
+    display: none;
+    /*font-size: .8em;*/
+    text-align: center;
+    padding: .75em 0;
+    white-space: nowrap; }
+  #todoTable header #resultStats.is-active {
+    display: block; }
   #todoTable #viewContainer {
     float: right;
     padding: 0;
@@ -393,6 +390,8 @@ nav {
         padding: 0; }
         #todoTable #viewContainer .dropdown-content .dropdown-item .toggle .text {
           white-space: nowrap; }
+      #todoTable #viewContainer .dropdown-content .dropdown-item svg {
+        color: #4a4a4a; }
       #todoTable #viewContainer .dropdown-content .dropdown-item .select,
       #todoTable #viewContainer .dropdown-content .dropdown-item select {
         width: 100%; }
@@ -411,7 +410,8 @@ nav {
       #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.zoom #zoomUndo {
         cursor: pointer; }
   #todoTable #todoTableContainer {
-    margin: 0 0 1em 0; }
+    width: 100%;
+    float: left; }
   #todoTable .flex-table {
     display: flex;
     flex-flow: row wrap;
@@ -498,7 +498,7 @@ nav {
     text-transform: lowercase; }
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
-      right: .7em;
+      right: .5em;
       bottom: 2.75em;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {
@@ -893,7 +893,7 @@ body.compact #todoTable {
     top: -1.9em;
     right: -1.9em; }
   body.compact #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
-    right: .2em;
+    right: .4em;
     bottom: 1.75em; }
 
 body.compact .modal.content .modal-card {
@@ -913,7 +913,7 @@ body.compact nav ul {
     font-family: "FreeSansBold"; }
 
 body.compact #filterDrawer {
-  padding: 0 1.5em !important; }
+  padding: 1.5em !important; }
   body.compact #filterDrawer .toggle {
     margin: 0 !important;
     padding: 1.5em 0.5em 1em 0 !important; }

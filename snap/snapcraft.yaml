@@ -1,7 +1,7 @@
 name: sleek
 base: core18
 version: '0.9.7'
-summary: A todo app based on todo.txt, free and open-source
+summary: A todo app based on todo.txt for Linux, free and open-source
 description: |
   sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and clean yet offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
 

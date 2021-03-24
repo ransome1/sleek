@@ -337,6 +337,13 @@ function zoom(variable) {
   return Promise.reject("Error in zoom(): " + error);
   }
 }
+function resizeInput(input) {
+  if(input.value) {
+    input.style.width = input.value.length + 6 + "ch";
+  } else if(!this.value && input.placeholder) {
+    input.style.width = input.placeholder.length + 6 + "ch";
+  }
+}
 // ########################################################################################################################
 // RESIZEABLE FILTER DRAWER
 // https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
@@ -1402,10 +1409,10 @@ function generateRecurringTodo(todo) {
     // duplicate not reference
     let recurringItem = Object.assign({}, todo);
     // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
-    if(recurringItem.complete && recurringItem.due) {
+    if(recurringItem.complete && recurringItem.due && recurringItem.due.isFuture()) {
       recurringItem.date = new Date;
-      recurringItem.due = getRecurrenceDate(todo.completed, todo.rec);
-      recurringItem.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
+      recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
+      recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
       recurringItem.complete = false;
       recurringItem.completed = null;
     } else if(recurringItem.complete && !recurringItem.due) {
@@ -1468,10 +1475,10 @@ function setTodoComplete(todo) {
       }
       todo.complete = true;
       todo.completed = new Date();
-      // if recurrence is set start generating the recurring todo
-      if(todo.rec) generateRecurringTodo(todo)
       // delete old todo from array and add the new one at it's position
       window.items.objects.splice(index, 1, todo);
+      // if recurrence is set start generating the recurring todo
+      if(todo.rec) generateRecurringTodo(todo)
     }
     //write the data to the file
     //fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
@@ -1634,6 +1641,7 @@ function setTranslations() {
       helpTabKeyboardTR8TD1.innerHTML = translations.toggleFilter;
       helpTabKeyboardTR9TD1.innerHTML = translations.resetFilters;
       helpTabKeyboardTR1TH1.innerHTML = translations.function;
+      helpTabKeyboardTR10TD1.innerHTML = translations.helpTabKeyboardTR10TD1;
 
       todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
       //dueDatePickerInput.setAttribute("size", translations.formSelectDueDate.length)
@@ -1738,6 +1746,7 @@ function setRecurrenceInput(recurrence) {
     }
   }
   recurrencePickerInput.value = label;
+  resizeInput(recurrencePickerInput);
   //recurrencePickerInput.setAttribute("size", label.length)
 }
 function setRecurrenceOptionLabels(mul) {
@@ -2251,6 +2260,7 @@ function configureEvents() {
       suggestionContainer.classList.remove("is-active");
     };
     dueDatePickerInput.addEventListener('changeDate', function (e, details) {
+      resizeInput(this);
       let caretPosition = getCaretPosition(modalFormInput);
       // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
       if(e.detail.date) {
@@ -2360,6 +2370,15 @@ function configureEvents() {
       }
     });
     modalForm.addEventListener ("keydown", function (e) {
+      if(e.key==="Enter" && e.ctrlKey) {
+        submitForm().then(response => {
+          // if form returns success we clear the modal
+          clearModal();
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        });
+      }
       if(event.key === "Escape" && !suggestionContainer.classList.contains("is-active")) {
         clearModal();
         this.classList.remove("is-active");
@@ -2451,8 +2470,15 @@ function configureTodoTableTemplate() {
     return Promise.reject("Error in generateTableRow(): " + error);
   }
 }
+
+
+
 function configureMainView() {
   try {
+    // set size of due date picker
+    resizeInput(dueDatePickerInput);
+    // set size of recurrence picker
+    resizeInput(recurrencePickerInput);
     // set scaling factor if default font size has changed
     if(window.userData.zoom) html.style.zoom = window.userData.zoom + "%";
     // empty the table containers before reading fresh data

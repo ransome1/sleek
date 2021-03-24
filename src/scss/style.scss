@@ -418,8 +418,6 @@ nav {
     color: $darker-grey;
   }
   header {
-    width: 100%;
-    float: left;
     .column {
       padding: .25em 0;
     }
@@ -452,6 +450,9 @@ nav {
             white-space: nowrap;
           }
         }
+        svg {
+          color: $darker-grey;
+        }
         .select,
         select {
           width: 100%;
@@ -481,7 +482,8 @@ nav {
     }
   }
   #todoTableContainer {
-    margin: 0 0 1em 0;
+    width: 100%;
+    float: left;
   }
   .flex-table {
     display: flex;
@@ -592,7 +594,7 @@ nav {
       text-transform: lowercase;
       svg.fa-sort-down {
         position: absolute;
-        right: .7em;
+        right: .5em;
         bottom: 2.75em;
         display: none;
       }
@@ -1119,7 +1121,7 @@ body.compact {
           right: -1.9em;
         }
         svg.fa-sort-down {
-          right: .2em;
+          right: .4em;
           bottom: 1.75em;
         }
       }
@@ -1146,7 +1148,7 @@ body.compact {
     }
   }
   #filterDrawer {
-    padding: 0 1.5em!important;
+    padding: 1.5em!important;
     .toggle {
       margin: 0!important;
       padding: 1.5em .5em 1em 0!important;

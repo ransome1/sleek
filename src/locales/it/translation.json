@@ -112,5 +112,6 @@
   "helpTabDatesRecurrencesTitle2": "Adding a recurrence",
   "helpTabDatesRecurrencesBody2": "Once a due date has been set, you can define a recurrence. If for instance a todo is due today and you set up a weekly recurrence, sleek will duplicate the todo and adjust start and due date of the duplicated todo according to your recurrence setting. To set a recurrence use the recurrence picker or type <strong>rec:</strong> and add <strong>d</strong> (daily), <strong>w</strong> (weekly), <strong>m</strong> (monthly) or <strong>y</strong> (annually).",
   "helpTabKeyboardTR7TD1": "Set priority<br><small>(Add/Edit todo window needs to be open)</small>",
-  "helpTabKeyboardTR8TD1": "Toggle filter drawer"
+  "helpTabKeyboardTR8TD1": "Toggle filter drawer",
+  "helpTabKeyboardTR10TD1": "Submit todo<br><small>(Add/Edit todo window needs to be open)</small>"
 }

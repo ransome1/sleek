@@ -5,5 +5,5 @@ Terminal=false
 Type=Application
 Icon=${SNAP}/meta/gui/icon.png
 StartupWMClass=sleek
-Comment=A todo app based on todo.txt, free and open-source
+Comment=todo.txt app
 Categories=ProjectManagement

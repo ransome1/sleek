@@ -151,7 +151,7 @@ const createWindow = () => {
     userData.set("os", "windows");
     mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
   } else {
-    mainWindow.setIcon(path.join(__dirname, "../assets/icons/icon.png"));
+    mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.png"));
   }
   // show dev tools if in dev mode
   if (is.development) mainWindow.webContents.openDevTools()
@@ -440,7 +440,7 @@ const createWindow = () => {
   });
   // Show a notification in OS UI
   ipcMain.on("showNotification", (event, config) => {
-    config.icon = __dirname + "/../assets/icons/icon.png";
+    config.icon = __dirname + "/../assets/icons/sleek.png";
     // send it to UI
     const notification = new Notification(config);
     notification.show();
