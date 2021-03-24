@@ -41,7 +41,10 @@
       ]
     },
     "mac": {
-      "target": "dmg",
+      "target": [
+        "dmg",
+        "mas"
+      ],
       "icon": "assets/icons/sleek.icns",
       "category": "public.app-category.productivity"
     },
