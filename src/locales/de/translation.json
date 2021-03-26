@@ -5,6 +5,7 @@
   "toggleDarkMode": "Nachtmodus ein- und ausschalten",
   "toggleCompletedTodos": "Erledigte Aufgaben ein- und ausblenden",
   "completedTodos": "Erledigte Aufgaben",
+  "hiddenTodos": "Versteckte Aufgaben",
   "compactView": "Kompakte Ansicht",
   "sortByPriority": "Nach Priorität sortieren",
   "sortByDueDate": "Nach Fälligkeit sortieren",
@@ -91,11 +92,10 @@
   "settingsTabSettingsDarkmodeBody": "Wenn sleeks Darstellung generell oder lediglich in der aktuellen Umgebung zu hell ist, kann der Nachtmodus eine hilfreiche Alternative sein.",
   "settingsTabSettingsLoggingBody": "Du kannst das Projekt unterstützen, indem Du das anonymisierte Fehler- und Event-Logging aktivierst. Alle Informationen sind in der <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Datenschutzerklärung</a> ausgeführt.",
   "settingsTabAboutContribute": "sleek ist Open Source und Du kannst dabei helfen es zu verbessern",
-  "settingsTabAboutContributeBody": "Der Quellcode ist offen und auf <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">Github</a> einzusehen. Du kannst dieses Projekt unterstützen, indem Du <a href=\"https://github.com/ransome1/sleek/issues\" target=\"_blank\">Fehler meldest, Code Verbesserungen vornimmst, neue Funktionen vorschlägst oder gar entwickelst</a>. Wenn Du sleek in Deiner Sprache nutzen möchtest, kannst Du es übersetzen und mir die Übersetzungen zur Verfügung stellen, damit alle Nutzer davon profitieren. sleek wird entwickelt von Robin Ahle. Du erreichst mich auf <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">Github</a>.",
   "settingsTabAboutCopyrightLicense": "Copyright und Lizenz",
   "settingsTabAboutCopyrightLicenseBody": "Copyright (c) 2021 Robin Ahle. sleek ist unter der <a href=\"https://opensource.org/licenses/MIT\" target=\"_blank\">MIT Lizenz</a> verfügbar. Alle Lizenzinformationen sind unter <a href=\"https://github.com/ransome1/sleek/blob/master/LICENSE\" target=\"_blank\">LICENSE</a> einzusehen.",
   "settingsTabAboutPrivacy": "Datenschutzerklärung",
-  "settingsTabAboutPrivacyBody": "Ich interessiere mich nicht dafür wer sleek Nutzer sind und erhebe daher keine unnötigen Daten. Dennoch möchte ich wissen, wieviele Nutzer sleek aktiv nutzen und, wenn Nutzer ausdrücklich zustimmen, wie sleek genutzt wird. Alle Daten werden anonymisiert, bevor sie an eine durch mich selbst betriebene Matomo-Instanz übertragen werden. Dies geschieht ausschließlich über eine SSL-verschlüsselte Verbidnung. Weitere Details können in der <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Datenschutzerklärung</a> abgerufen werden.",
+  "settingsTabAboutPrivacyBody": "Ich interessiere mich nicht dafür wer sleek Nutzer sind und erhebe daher keine unnötigen Daten. Dennoch möchte ich wissen, wieviele Nutzer sleek aktiv nutzen und, wenn Nutzer ausdrücklich zustimmen, wie sleek genutzt wird. Alle Daten werden anonymisiert, bevor sie an eine durch mich selbst betriebene Matomo-Instanz übertragen werden. Dies geschieht ausschließlich SSL-verschlüsselt. Weitere Details können in der <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Datenschutzerklärung</a> abgerufen werden.",
   "settingsTabAboutExternalLibraries": "Eingesetzte Software, die nicht von mir stammt",
   "settingsTabSettingsArchive": "Aufgaben archivieren",
   "settingsTabSettingsArchiveBody": "Erledigte Aufgaben werden aus der todo.txt-Datei entfernt und in eine done.txt-Datei eingefügt. Diese wird im gleichen Ordner angelegt, falls sie noch nicht existiert.",
@@ -115,5 +115,11 @@
   "helpTabDatesRecurrencesBody2": "Once a due date has been set, you can define a recurrence. If for instance a todo is due today and you set up a weekly recurrence, sleek will duplicate the todo and adjust start and due date of the duplicated todo according to your recurrence setting. To set a recurrence use the recurrence picker or type <strong>rec:</strong> and add <strong>d</strong> (daily), <strong>w</strong> (weekly), <strong>m</strong> (monthly) or <strong>y</strong> (annually).",
   "helpTabKeyboardTR7TD1": "Set priority<br><small>(Add/Edit todo window needs to be open)</small>",
   "helpTabKeyboardTR8TD1": "Toggle filter drawer",
-  "helpTabKeyboardTR10TD1": "Submit todo<br><small>(Add/Edit todo window needs to be open)</small>"
+  "helpTabKeyboardTR10TD1": "Submit todo<br><small>(Add/Edit todo window needs to be open)</small>",
+  "submitIssuesOnGithub": "Fehler auf Github melden",
+  "reviewSourceforge": "Bewertung auf SourceForge",
+  "reviewWindowsStore": "Bewertung im Windows Store",
+  "shareTwitter": "Auf Twitter teilen",
+  "shareFacebook": "Auf Facebook teilen",
+  "shareLinkedin": "Auf LinkedIn teilen"
 }

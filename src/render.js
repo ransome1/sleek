@@ -75,9 +75,7 @@ Date.prototype.isPast = function () {
 };
 Date.prototype.isFuture = function () {
   const today = new Date();
-  if (this.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0)) {
-    return true;
-  }
+  if (this.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0)) return true
   return false;
 };
 // ########################################################################################################################
@@ -455,7 +453,13 @@ function showForm(todo, templated) {
           btnItemStatus.innerHTML = window.translations.inProgress;
         }
         // if there is a recurrence
-        if(todo.rec) setRecurrenceInput(todo.rec)
+        if(todo.rec) {
+          setRecurrenceInput(todo.rec).then(function(result) {
+            console.log(result);
+          }).catch(function(error) {
+            console.log(error);
+          });
+        }
         // if so we paste it into the input field
         if(todo.dueString) {
           dueDatePicker.setDate(todo.dueString);
@@ -539,7 +543,11 @@ function showRecurrenceOptions(el) {
       todo.rec = undefined;
       todo.recString = undefined;
     }
-    setRecurrenceInput(value);
+    setRecurrenceInput(value).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
     modalFormInput.value = todo.toString();
   }
   recurrencePickerSpinner.onchange = function() {
@@ -575,7 +583,7 @@ function showRecurrenceOptions(el) {
       recurrencePickerContainer.classList.remove("is-active");
       modalFormInput.focus();
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Recurrence selected: " + recSplit.period]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + recSplit.period]);
     }
   });
 }
@@ -586,7 +594,7 @@ function showFilterDrawer(variable) {
         //
         navBtnFilter.classList.add("is-highlighted");
         filterDrawer.classList.add("is-active");
-        filterDrawer.focus();
+        //filterDrawer.focus();
         filterColumnClose.classList.add("is-active");
       break;
       case false:
@@ -598,7 +606,7 @@ function showFilterDrawer(variable) {
       case "toggle":
         navBtnFilter.classList.toggle("is-highlighted");
         filterDrawer.classList.toggle("is-active");
-        filterDrawer.focus();
+        //filterDrawer.focus();
         filterColumnClose.classList.toggle("is-active");
       break;
     }
@@ -1161,7 +1169,7 @@ function generateTableRow(todo) {
 }
 function generateItemsObject(content) {
   try {
-    const items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension() ]) }
+    const items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
     items.complete = items.objects.filter(function(item) { return item.complete === true });
     items.incomplete = items.objects.filter(function(item) { return item.complete === false });
     items.objects = items.objects.filter(function(item) { return item.toString() != "" });
@@ -1203,6 +1211,7 @@ function generateTodoData(searchString) {
     } else {
       items.objectsFiltered = items.objects;
     }
+
     // if there are selected filters
     if(selectedFilters.length > 0) {
       // we iterate through the filters in the order they got selected
@@ -1215,11 +1224,14 @@ function generateTodoData(searchString) {
         // check if the filter is a context filter
         } else if(filter[1]=="contexts") {
           items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-            if(item.contexts) return item.contexts.includes(filter[0]);
+            if(item.contexts) {
+              return item.contexts.includes(filter[0]);
+            }
           });
         }
       });
     }
+
     // filters are generated once the final todos are defined
     t0 = performance.now();
     generateFilterData().then(response => {
@@ -1238,6 +1250,18 @@ function generateTodoData(searchString) {
         });
       });
     }
+    // filter hidden todos
+      items.objectsFiltered = items.objectsFiltered.filter(function(item) {
+        if(item.h) {
+          // if h:1 it is skipped
+          viewBoxShowHidden.classList.add("is-active");
+          if(!window.userData.showHidden) return false;
+        } else {
+          viewBoxShowHidden.classList.remove("is-active");
+        }
+        return true;
+      });
+
     // if search string or previously inserted content in search bar is detected
     if(searchString || todoTableSearch.value) {
       if(todoTableSearch.value) searchString = todoTableSearch.value;
@@ -1567,6 +1591,7 @@ function setTranslations() {
       btnSave.innerHTML = translations.save;
       todoTableSearch.placeholder = translations.search;
       viewToggleShowCompleted.innerHTML = translations.completedTodos;
+      viewToggleShowHidden.innerHTML = translations.hiddenTodos;
       viewToggleCompactView.innerHTML = translations.compactView;
       sortByDueDate.innerHTML = translations.sortByDueDate;
       sortByPriority.innerHTML = translations.sortByPriority;
@@ -1612,7 +1637,6 @@ function setTranslations() {
       settingsTabSettingsLoggingBody.innerHTML = translations.settingsTabSettingsLoggingBody;
       settingsTabAbout.innerHTML = translations.about;
       settingsTabAboutContribute.innerHTML = translations.settingsTabAboutContribute;
-      settingsTabAboutContributeBody.innerHTML = translations.settingsTabAboutContributeBody;
       settingsTabAboutCopyrightLicense.innerHTML = translations.settingsTabAboutCopyrightLicense;
       settingsTabAboutCopyrightLicenseBody.innerHTML = translations.settingsTabAboutCopyrightLicenseBody;
       settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
@@ -1642,6 +1666,12 @@ function setTranslations() {
       helpTabKeyboardTR9TD1.innerHTML = translations.resetFilters;
       helpTabKeyboardTR1TH1.innerHTML = translations.function;
       helpTabKeyboardTR10TD1.innerHTML = translations.helpTabKeyboardTR10TD1;
+      submitIssuesOnGithub.innerHTML = translations.submitIssuesOnGithub;
+      reviewSourceforge.innerHTML = translations.reviewSourceforge;
+      reviewWindowsStore.innerHTML = translations.reviewWindowsStore;
+      shareTwitter.innerHTML = translations.shareTwitter;
+      shareFacebook.innerHTML = translations.shareFacebook;
+      shareLinkedin.innerHTML = translations.shareLinkedin;
 
       todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
       //dueDatePickerInput.setAttribute("size", translations.formSelectDueDate.length)
@@ -1698,6 +1728,7 @@ function setToggles() {
     toggleMatomoEvents.checked = window.userData.matomoEvents;
     toggleNotifications.checked = window.userData.notifications;
     toggleShowCompleted.checked = window.userData.showCompleted;
+    toggleShowHidden.checked = window.userData.showHidden;
     toggleView.checked = window.userData.compactView;
     return Promise.resolve("Success: All toggles set");
   } catch(error) {
@@ -1707,47 +1738,53 @@ function setToggles() {
   }
 }
 function setRecurrenceInput(recurrence) {
-  // adjust the width of the input field
-  //recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
-  let recSplit = splitRecurrence(recurrence);
-  let label = window.translations.noRecurrence;
-  if(recSplit.period !== undefined) {
-    if(recSplit.mul > 1) {
-      switch (recSplit.period) {
-        case "d":
-          label = recurrencePickerDay;
-          break;
-        case "w":
-          label = recurrencePickerWeek;
-          break;
-        case "m":
-          label = recurrencePickerMonth;
-          break;
-        case "y":
-          label = recurrencePickerYear;
-          break;
-      }
-      label = window.translations.every + " " + recSplit.mul + " " + label.innerHTML;
-    } else {
-      switch (recSplit.period) {
-        case "d":
-          label = window.translations.daily;
-          break;
-        case "w":
-          label = window.translations.weekly;
-          break;
-        case "m":
-          label = window.translations.monthly;
-          break;
-        case "y":
-          label = window.translations.yearly;
-          break;
+  try {
+    let recSplit = splitRecurrence(recurrence);
+    let label = window.translations.noRecurrence;
+    if(recSplit.period !== undefined) {
+      if(recSplit.mul > 1) {
+        switch (recSplit.period) {
+          case "d":
+            label = recurrencePickerDay;
+            break;
+          case "w":
+            label = recurrencePickerWeek;
+            break;
+          case "m":
+            label = recurrencePickerMonth;
+            break;
+          case "y":
+            label = recurrencePickerYear;
+            break;
+        }
+        label = window.translations.every + " " + recSplit.mul + " " + label.innerHTML;
+      } else {
+        switch (recSplit.period) {
+          case "d":
+            label = window.translations.daily;
+            break;
+          case "w":
+            label = window.translations.weekly;
+            break;
+          case "m":
+            label = window.translations.monthly;
+            break;
+          case "y":
+            label = window.translations.yearly;
+            break;
+        }
       }
     }
+    recurrencePickerInput.value = label;
+    resizeInput(recurrencePickerInput);
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Picker used to add recurrence to input"]);
+    return Promise.resolve("Success: Recurrence added");
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
+    return Promise.reject("Error in setToggles(): " + error);
   }
-  recurrencePickerInput.value = label;
-  resizeInput(recurrencePickerInput);
-  //recurrencePickerInput.setAttribute("size", label.length)
 }
 function setRecurrenceOptionLabels(mul) {
   if(mul>1) {
@@ -1927,8 +1964,36 @@ function toggleCompletedTodos(variable) {
     return Promise.resolve("Success: Show completed todo set to: " + window.userData.showCompleted);
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
-    return Promise.reject("Error in setToggles(): " + error);
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "toggleCompletedTodos()", error])
+    return Promise.reject("Error in toggleCompletedTodos(): " + error);
+  }
+}
+function toggleHiddenTodos(variable) {
+  try {
+    if(window.userData.showHidden==false) {
+      window.userData.showHidden = true;
+    } else if(variable) {
+      window.userData.showHidden = true;
+    } else {
+      window.userData.showHidden = false;
+    }
+    toggleShowHidden.checked = window.userData.showHidden;
+    // persist the sorting
+    setUserData("showHidden", window.userData.showHidden);
+    //
+    t0 = performance.now();
+    generateTodoData().then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Table rendered in:", t1 - t0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+    return Promise.resolve("Success: Show hidden todo set to: " + window.userData.showHidden);
+  } catch(error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "toggleHiddenTodos()", error])
+    return Promise.reject("Error in toggleHiddenTodos(): " + error);
   }
 }
 function toggleInputSize(type) {
@@ -1963,7 +2028,7 @@ function toggleInputSize(type) {
     modalFormInput.style.height= modalFormInput.scrollHeight+"px";
   }
   positionSuggestionContainer();
-  //modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
+  modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
   modalFormInput.focus();
 }
 
@@ -2151,7 +2216,7 @@ function configureEvents() {
       toggleCompactView(this.checked).then(response => {
         console.log(response);
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Toggle compact view"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Toggle compact view"]);
       }).catch(error => {
         console.log(error);
       });
@@ -2160,7 +2225,16 @@ function configureEvents() {
       toggleCompletedTodos().then(response => {
         console.log(response);
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Toggle completed todos"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Toggle completed todos"]);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+    toggleShowHidden.onclick = function() {
+      toggleHiddenTodos().then(response => {
+        console.log(response);
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Toggle hidden todos"]);
       }).catch(error => {
         console.log(error);
       });
@@ -2317,6 +2391,8 @@ function configureEvents() {
       viewContainer.classList.toggle("is-active");
     }
     zoomIn.onclick = function(el) {
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Click on zoom in"]);
       zoom("in").then(response => {
         console.log(response);
       }).catch(error => {
@@ -2324,6 +2400,8 @@ function configureEvents() {
       });
     };
     zoomOut.onclick = function(el) {
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Click on zoom out"]);
       zoom("out").then(response => {
         console.log(response);
       }).catch(error => {
@@ -2331,6 +2409,8 @@ function configureEvents() {
       });
     };
     zoomUndo.onclick = function(el) {
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Click on zoom undo"]);
       zoom("undo").then(response => {
         console.log(response);
       }).catch(error => {
@@ -2431,6 +2511,7 @@ function configureEvents() {
 }
 function configureTodoTableTemplate() {
   try {
+    // TODO: EXPLAIN
     todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
     // add the more dots
@@ -2470,8 +2551,6 @@ function configureTodoTableTemplate() {
     return Promise.reject("Error in generateTableRow(): " + error);
   }
 }
-
-
 
 function configureMainView() {
   try {
@@ -2945,7 +3024,9 @@ window.onload = async function () {
     try {
       let width = this.outerWidth;
       let height = this.outerHeight;
-      setUserData("windowBounds", { width, height }).then(function() {
+      let horizontalPosition = this.pageXOffset;
+      let verticalPosition = this.pageYOffset;
+      setUserData("windowBounds", { width, height, horizontalPosition, verticalPosition }).then(function() {
         // Adjust position of suggestion box to input field
         let modalFormInputPosition = modalFormInput.getBoundingClientRect();
         suggestionContainer.style.width = modalFormInput.offsetWidth + "px";

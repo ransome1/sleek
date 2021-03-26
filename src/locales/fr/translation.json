@@ -5,6 +5,7 @@
   "toggleDarkMode": "Changer le thème",
   "toggleCompletedTodos": "Afficher/masquer les tâches complétées",
   "completedTodos": "Tâches complétées",
+  "hiddenTodos": "Tâches caché",
   "compactView": "Vue compacte",
   "sortByPriority": "Trier par priorité",
   "sortByDueDate": "Trier par date d'échéance",
@@ -90,7 +91,6 @@
   "settingsTabSettingsDarkmodeBody": "Si l'interface utilisateur normale de sleek est trop lumineuse pour vous ou dans votre environnement actuel, le mode sombre peut être une alternative intéressante.",
   "settingsTabSettingsLoggingBody": "Vous pouvez contribuer à ce projet, en permettant l'enregistrement anonyme des erreurs et des événements. Il enregistrera toutes les erreurs qui se produisent et les fonctionnalités que vous utilisez et enverra ces informations à une instance Matomo hébergée en privé en utilisant le protocole SSL. Vous trouverez plus d'informations dans <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">la page de politique de protection de la vie privée</a> de sleek.",
   "settingsTabAboutContribute": "sleek est un logiciel libre et vous pouvez contribuer à l'améliorer",
-  "settingsTabAboutContributeBody": "Le code source est ouvert et disponible sur <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">GitHub</a>. Vous pouvez soutenir ce projet en contribuant avec <a href=\"https://github.com/ransome1/sleek/issues\" target=\"_blank\">des rapports de bogues, des améliorations du code ou même des nouvelles fonctionnalités</a>. De plus, si vous souhaitez utiliser sleek dans votre propre langue, n'hésitez pas à le traduire et à aider le projet en fournissant vos traductions. Il est développé par Robin Ahle. Contactez-moi sur <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">GitHub</a>.",
   "settingsTabAboutCopyrightLicense": "Droits d'auteur, copyright et licences",
   "settingsTabAboutCopyrightLicenseBody": "Copyright (c) 2021 Robin Ahle. sleek est disponible sous <a href=\"https://opensource.org/licenses/MIT\" target=\"_blank\">la licence MIT</a>. Voir <a href=\"https://github.com/ransome1/sleek/blob/master/LICENSE\" target=\"_blank\">LICENSE</a> pour la licence complète.",
   "settingsTabAboutPrivacy": "Politique de vie privée",
@@ -114,5 +114,11 @@
   "helpTabDatesRecurrencesBody2": "Once a due date has been set, you can define a recurrence. If for instance a todo is due today and you set up a weekly recurrence, sleek will duplicate the todo and adjust start and due date of the duplicated todo according to your recurrence setting. To set a recurrence use the recurrence picker or type <strong>rec:</strong> and add <strong>d</strong> (daily), <strong>w</strong> (weekly), <strong>m</strong> (monthly) or <strong>y</strong> (annually).",
   "helpTabKeyboardTR7TD1": "Set priority<br><small>(Add/Edit todo window needs to be open)</small>",
   "helpTabKeyboardTR8TD1": "Toggle filter drawer",
-  "helpTabKeyboardTR10TD1": "Submit todo<br><small>(Add/Edit todo window needs to be open)</small>"
+  "helpTabKeyboardTR10TD1": "Submit todo<br><small>(Add/Edit todo window needs to be open)</small>",
+  "submitIssuesOnGithub": "Submit issues on Github",
+  "reviewSourceforge": "Review sleek on SourceForge",
+  "reviewWindowsStore": "Review sleek on Windows Store",
+  "shareTwitter": "Share sleek on Twitter",
+  "shareFacebook": "Share sleek on Facebook",
+  "shareLinkedin": "Share sleek on LinkedIn"
 }

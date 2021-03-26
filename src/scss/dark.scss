@@ -3,6 +3,7 @@
 $has-text-danger: hsl(348, 100%, 61%);
 $has-text-warning: hsl(48, 100%, 67%);
 $has-text-success: hsl(141, 71%, 48%);
+$has-text-attention: #fa745e;
 
 $green-mid: #075A44;
 $green-dark: #1BA37E;
@@ -126,10 +127,8 @@ nav {
           color: white!important;
         }
         .dropdown-item.zoom {
-          a {
-            svg {
-              color: white!important;
-            }
+          svg {
+            color: white!important;
           }
         }
         .dropdown-divider {
@@ -206,9 +205,9 @@ nav {
       }
     }
     .flex-row.itemDueDate.isTomorrow {
-      color: $has-text-warning;
+      //color: $has-text-warning;
       .fa-sort-down {
-        color: $has-text-warning!important;
+        color: $has-text-attention!important;
       }
     }
     .flex-row span.tag.contexts {

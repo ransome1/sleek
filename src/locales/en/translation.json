@@ -5,6 +5,7 @@
   "toggleDarkMode": "Toggle dark mode",
   "toggleCompletedTodos": "Toggle completed todos",
   "completedTodos": "Completed todos",
+  "hiddenTodos": "Hidden todos",
   "compactView": "Compact view",
   "sortByPriority": "Sort by priority",
   "sortByDueDate": "Sort by due date",
@@ -90,7 +91,6 @@
   "settingsTabSettingsDarkmodeBody": "If sleeks regular user interface is too bright for your general taste or for your current environment, the dark mode might be a helpful alternative.",
   "settingsTabSettingsLoggingBody": "You can contribute to this project, by enabling anonymized error and event logging. More information can be found in sleeks' <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a>.",
   "settingsTabAboutContribute": "sleek is open source and you can contribute to make it better",
-  "settingsTabAboutContributeBody": "The source code is open and available on <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">Github</a>. You can support this project by contributing <a href=\"https://github.com/ransome1/sleek/issues\" target=\"_blank\">bug reports, code improvements or even new features</a>. Also if you want to use sleek in your own language, feel free to translate it and help the project by contributing your translations. It is developed by Robin Ahle. Get in touch with me on <a href=\"https://github.com/ransome1/sleek\" target=\"_blank\">Github</a>.",
   "settingsTabAboutCopyrightLicense": "Copyright and license",
   "settingsTabAboutCopyrightLicenseBody": "Copyright (c) 2021 Robin Ahle. sleek is available under the <a href=\"https://opensource.org/licenses/MIT\" target=\"_blank\">MIT license</a>. See <a href=\"https://github.com/ransome1/sleek/blob/master/LICENSE\" target=\"_blank\">LICENSE</a> for the full license text.",
   "settingsTabAboutPrivacy": "Privacy Policy",
@@ -114,5 +114,11 @@
   "helpTabDatesRecurrencesBody2": "Once a due date has been set, you can define a recurrence. If for instance a todo is due today and you set up a weekly recurrence, sleek will duplicate the todo and adjust start and due date of the duplicated todo according to your recurrence setting. To set a recurrence use the recurrence picker or type <strong>rec:</strong> and add <strong>d</strong> (daily), <strong>w</strong> (weekly), <strong>m</strong> (monthly) or <strong>y</strong> (annually).",
   "helpTabKeyboardTR7TD1": "Set priority<br><small>(Add/Edit todo window needs to be open)</small>",
   "helpTabKeyboardTR8TD1": "Toggle filter drawer",
-  "helpTabKeyboardTR10TD1": "Submit todo<br><small>(Add/Edit todo window needs to be open)</small>"
+  "helpTabKeyboardTR10TD1": "Submit todo<br><small>(Add/Edit todo window needs to be open)</small>",
+  "submitIssuesOnGithub": "Submit issues on Github",
+  "reviewSourceforge": "Review sleek on SourceForge",
+  "reviewWindowsStore": "Review sleek on Windows Store",
+  "shareTwitter": "Share sleek on Twitter",
+  "shareFacebook": "Share sleek on Facebook",
+  "shareLinkedin": "Share sleek on LinkedIn"
 }

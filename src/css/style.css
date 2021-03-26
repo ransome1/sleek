@@ -378,6 +378,7 @@ nav {
   #todoTable header #resultStats.is-active {
     display: block; }
   #todoTable #viewContainer {
+    z-index: 50;
     float: right;
     padding: 0;
     margin-top: .2em; }
@@ -385,7 +386,11 @@ nav {
       min-width: 17em;
       display: none; }
       #todoTable #viewContainer .dropdown-content div.dropdown-item {
-        font-size: 1em !important; }
+        clear: both;
+        font-size: 1em !important;
+        padding: 0 1em; }
+        #todoTable #viewContainer .dropdown-content div.dropdown-item .dropdown-divider {
+          margin: 0.75em 0; }
       #todoTable #viewContainer .dropdown-content .dropdown-item .toggle {
         padding: 0; }
         #todoTable #viewContainer .dropdown-content .dropdown-item .toggle .text {
@@ -395,11 +400,14 @@ nav {
       #todoTable #viewContainer .dropdown-content .dropdown-item .select,
       #todoTable #viewContainer .dropdown-content .dropdown-item select {
         width: 100%; }
+      #todoTable #viewContainer .dropdown-content #viewBoxShowHidden {
+        display: none; }
+      #todoTable #viewContainer .dropdown-content #viewBoxShowHidden.is-active {
+        display: block; }
   #todoTable #viewContainer.is-active .dropdown-content {
     display: block; }
     #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.zoom {
-      height: 2.5em;
-      line-height: 2.5em;
+      line-height: 2em;
       padding-top: 0; }
       #todoTable #viewContainer.is-active .dropdown-content .dropdown-item.zoom a {
         float: left;
@@ -439,7 +447,7 @@ nav {
     #todoTable .flex-table .flex-row .is-white {
       background: none; }
     #todoTable .flex-table .flex-row span.tag {
-      margin: .25em .5em .25em 0; }
+      margin-right: .5em; }
     #todoTable .flex-table .flex-row span.tag.projects {
       background: #f1d6f1;
       color: #5f1a5e; }
@@ -498,7 +506,7 @@ nav {
     text-transform: lowercase; }
     #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
       position: absolute;
-      right: .5em;
+      right: .265em;
       bottom: 2.75em;
       display: none; }
     #todoTable .flex-table .flex-row.itemDueDate .tags {
@@ -532,9 +540,11 @@ nav {
       font-family: FreeSansBold; }
     #todoTable .flex-table .flex-row.isPast svg {
       color: inherit; }
-  #todoTable .flex-table .flex-row:hover .tags {
+  #todoTable .flex-table .flex-row:hover .tags,
+  #todoTable .flex-table .flex-row:focus .tags {
     display: block; }
-  #todoTable .flex-table .flex-row:hover svg.fa-sort-down {
+  #todoTable .flex-table .flex-row:hover svg.fa-sort-down,
+  #todoTable .flex-table .flex-row:focus svg.fa-sort-down {
     display: block; }
   #todoTable .flex-table .flex-row.todoTableItemMore {
     margin-left: auto; }
@@ -871,7 +881,8 @@ nav {
   width: 25em;
   position: fixed;
   right: 2em;
-  bottom: 1em; }
+  bottom: 1em;
+  z-index: 40; }
   .messages .message {
     display: none; }
   .messages .message.is-active {
@@ -893,7 +904,7 @@ body.compact #todoTable {
     top: -1.9em;
     right: -1.9em; }
   body.compact #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
-    right: .4em;
+    right: .225em;
     bottom: 1.75em; }
 
 body.compact .modal.content .modal-card {

@@ -36,7 +36,7 @@ You can download sleek for Windows, MacOS and Linux on the <a href="https://gith
 - The backlog for version 1.0 and beyond is being collected on the <a href="https://github.com/ransome1/sleek/projects/2">1.0 project board</a>
 
 ### Support sleek by
-* star it here on Github, recommend it to others or <a href="https://sourceforge.net/projects/sleek/reviews">review it on SourceForge</a>
+* star it here on Github, recommend it to others or <a href="https://sourceforge.net/projects/sleek/reviews">review it on SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR">Windows Store</a>
 * contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
 * opting in to the optional Matomo tracking feature. It's fully anonymized, and the data will give me a basic idea on which functions are actually used and which ones don't have a benefit you.
 * translating sleek into your own language and contributing your translations. To do so just duplicate the "src/locales/en" folder, rename it according to your language code, do your translations in the "translation.json" file and send me a <a href="https://help.github.com/articles/using-pull-requests/">pull request</a>. I will include your translations into the next release.

@@ -61,8 +61,18 @@
                         </label>
                       </div>
                     </div>
-                    <hr class="dropdown-divider">
+                    <div id="viewBoxShowHidden" class="dropdown-item">
+                      <hr class="dropdown-divider">
+                      <div class="toggle">
+                        <span id="viewToggleShowHidden" class="text"></span>
+                        <label class="switch" for="toggleShowHidden">
+                          <input type="checkbox" id="toggleShowHidden" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </div>
+                    </div>
                     <div class="dropdown-item">
+                      <hr class="dropdown-divider">
                       <div class="toggle">
                         <span id="viewToggleCompactView" class="text"></span>
                         <label class="switch" for="toggleView">
@@ -71,14 +81,14 @@
                         </label>
                       </div>
                     </div>
-                    <hr class="dropdown-divider">
                     <div class="dropdown-item zoom">
+                      <hr class="dropdown-divider">
                         <a href="#" id="zoomOut"><i class="fas fa-minus-circle"></i></a>
                         <a href="#" id="zoomIn"><i class="fas fa-plus-circle"></i></a>
                         <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
                     </div>
-                    <hr class="dropdown-divider">
                     <div class="dropdown-item">
+                      <hr class="dropdown-divider">
                       <div class="field">
                         <div class="control">
                           <div class="select">
@@ -254,7 +264,7 @@
             <li class="settingsTab2"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
           </ul>
         </div>
-        <section id="settingsTab1" class="modal-card-body is-active"  data-track-content data-content-name="Settings" data-content-piece="Settings">
+        <section id="settingsTab1" class="modal-card-body"  data-track-content data-content-name="Settings" data-content-piece="Settings">
           <table class="table settings">
             <tbody>
               <tr>
@@ -331,7 +341,24 @@
         </section>
         <section id="settingsTab2" class="modal-card-body" data-track-content data-content-name="Settings" data-content-piece="About">
           <h4 class="title is-4" id="settingsTabAboutContribute"></h4>
-          <p id="settingsTabAboutContributeBody"></p>
+          <table>
+            <tbody>
+              <tr>
+                <td><i class="fab fa-github"></i></td>
+                <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
+                <td><i class="fas fa-star"></i></td>
+                <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
+                <td><i class="fab fa-windows"></i></td>
+                <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
+              </tr>
+                <td><i class="fab fa-twitter"></i></td>
+                <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
+                <td><i class="fab fa-facebook"></i></td>
+                <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
+                <td><i class="fab fa-linkedin"></i></td>
+                <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
+            </tbody>
+          </table>
           <h4 class="title is-4" id="settingsTabAboutCopyrightLicense"></h4>
           <p id="settingsTabAboutCopyrightLicenseBody"></p>
           <h4 class="title is-4" id="settingsTabAboutPrivacy"></h4>

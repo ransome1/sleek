@@ -92,7 +92,7 @@ nav {
   background: #3B3B3B; }
   #todoTable #viewContainer .dropdown-content .dropdown-item {
     color: white !important; }
-  #todoTable #viewContainer .dropdown-content .dropdown-item.zoom a svg {
+  #todoTable #viewContainer .dropdown-content .dropdown-item.zoom svg {
     color: white !important; }
   #todoTable #viewContainer .dropdown-content .dropdown-divider {
     background: #2c2d30; }
@@ -149,10 +149,8 @@ nav {
     #todoTable .flex-table .flex-row.itemDueDate.isToday .fa-sort-down,
     #todoTable .flex-table .flex-row.itemDueDate.isPast .fa-sort-down {
       color: inherit; }
-  #todoTable .flex-table .flex-row.itemDueDate.isTomorrow {
-    color: #ffdd57; }
-    #todoTable .flex-table .flex-row.itemDueDate.isTomorrow .fa-sort-down {
-      color: #ffdd57 !important; }
+  #todoTable .flex-table .flex-row.itemDueDate.isTomorrow .fa-sort-down {
+    color: #fa745e !important; }
   #todoTable .flex-table .flex-row span.tag.contexts {
     background: #075A44 !important;
     color: #c5ede3 !important; }

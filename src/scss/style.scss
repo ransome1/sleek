@@ -434,6 +434,7 @@ nav {
   }
   /* VIEW CONTAINER */
   #viewContainer {
+    z-index: 50;
     float: right;
     padding: 0;
     margin-top: .2em;
@@ -441,7 +442,12 @@ nav {
       min-width: 17em;
       display: none;
       div.dropdown-item {
+        clear: both;
         font-size: 1em!important;
+        padding: 0 1em;
+        .dropdown-divider {
+          margin: 0.75em 0;
+        }
       }
       .dropdown-item {
         .toggle {
@@ -458,14 +464,19 @@ nav {
           width: 100%;
         }
       }
+      #viewBoxShowHidden {
+        display: none;
+      }
+      #viewBoxShowHidden.is-active {
+        display: block;
+      }
     }
   }
   #viewContainer.is-active {
     .dropdown-content {
       display: block;
       .dropdown-item.zoom {
-        height: 2.5em;
-        line-height: 2.5em;
+        line-height: 2em;
         padding-top: 0;
         a {
           float: left;
@@ -520,7 +531,7 @@ nav {
         background: none;
       }
       span.tag {
-        margin: .25em .5em .25em 0;
+        margin-right: .5em;
       }
       span.tag.projects {
         background: $sleek-projects-button;
@@ -594,7 +605,7 @@ nav {
       text-transform: lowercase;
       svg.fa-sort-down {
         position: absolute;
-        right: .5em;
+        right: .265em;
         bottom: 2.75em;
         display: none;
       }
@@ -642,7 +653,8 @@ nav {
         color: inherit;
       }
     }
-    .flex-row:hover {
+    .flex-row:hover,
+    .flex-row:focus {
       .tags {
         display: block;
       }
@@ -1089,6 +1101,7 @@ nav {
   position: fixed;
   right: 2em;
   bottom: 1em;
+  z-index: 40;
   .message {
     display: none;
   }
@@ -1121,7 +1134,7 @@ body.compact {
           right: -1.9em;
         }
         svg.fa-sort-down {
-          right: .4em;
+          right: .225em;
           bottom: 1.75em;
         }
       }

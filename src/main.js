@@ -65,7 +65,9 @@ const userData = new Store({
   configName: "user-preferences",
   defaults: {
     windowBounds: { width: 1025, height: 768 },
+    maximizeWindow: false,
     showCompleted: true,
+    showHidden: false,
     selectedFilters: new Array,
     categoriesFiltered: new Array,
     dismissedNotifications: new Array,
@@ -120,9 +122,26 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     }
   });
+  mainWindow.on('move', function() {
+    userData.set("windowPosition", this.getPosition());
+  });
+  mainWindow.on('maximize', function() {
+    userData.set("maximizeWindow", true);
+  });
+  mainWindow.on('unmaximize', function() {
+    userData.set("maximizeWindow", false);
+  });
   // ########################################################################################################################
   // INITIAL CONFIGURATION
   // ########################################################################################################################
+  //
+  if(userData.data.maximizeWindow) {
+    mainWindow.maximize();
+  }
+  //
+  if(userData.data.windowPosition) {
+    mainWindow.setPosition(userData.data.windowPosition[0], userData.data.windowPosition[1]);
+  }
   // if language isn't set use locale setting
   if(userData.data.language) {
     var language = userData.data.language;
@@ -440,7 +459,7 @@ const createWindow = () => {
   });
   // Show a notification in OS UI
   ipcMain.on("showNotification", (event, config) => {
-    config.icon = __dirname + "/../assets/icons/sleek.png";
+    config.icon = __dirname + "/../assets/icons/96x96.png";
     // send it to UI
     const notification = new Notification(config);
     notification.show();
