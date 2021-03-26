@@ -10,7 +10,7 @@ jobs:
     - name: Mirror + trigger CI
       uses: SvanBoxel/gitlab-mirror-and-ci-action@master
       with:
-        args: "https://gitlab.com/ransome1/sleek"
+        args: "https://www.opencode.net/ransome/sleek.git"
       env:
         GITLAB_HOSTNAME: "opencode.net"
         GITLAB_USERNAME: "ransome"
