@@ -14,6 +14,6 @@ jobs:
       env:
         GITLAB_HOSTNAME: "opencode.net"
         GITLAB_USERNAME: "ransome"
-        GITLAB_PASSWORD: ${{ secrets.gitlab_password }} // Generate here: https://gitlab.com/profile/personal_access_tokens
-        GITLAB_PROJECT_ID: "https://www.opencode.net/ransome/sleek/edit" // https://gitlab.com/<namespace>/<repository>/edit
-        GITHUB_TOKEN: ${{ secrets.github_token }} // https://docs.github.com/en/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+        GITLAB_PASSWORD: ${{ secrets.gitlab_password }}
+        GITLAB_PROJECT_ID: "https://www.opencode.net/ransome/sleek/edit"
+        GITHUB_TOKEN: ${{ secrets.github_token }}
