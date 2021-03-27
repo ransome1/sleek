@@ -938,23 +938,32 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
             // if user has not opted for showComplete we skip the filter of this particular item
             if(window.userData.showCompleted==false && item.complete==true) {
               continue;
+            } else if(item.h) {
+              filters.push([item[category][filter],0]);
             } else {
-              filters.push([item[category][filter]]);
+              //filters.push([item[category][filter]]);
+              filters.push([item[category][filter],1]);
             }
           }
         }
       });
       // search within filters according to typeAheadValue
       if(typeAheadPrefix) {
-        filters = filters.filter(function (el) { return el.toString().toLowerCase().includes(typeAheadValue.toLowerCase()); });
+        filters = filters.filter(function(el) { return el.toString().toLowerCase().includes(typeAheadValue.toLowerCase()); });
       }
-      // delete duplicates and count filters
-      filtersCounted = filters.join(',').split(',').reduce(function (filters, filter) {
-        if (filter in filters) {
-          filters[filter]++;
-        } else {
-          filters[filter] = 1;
+      // remove duplicates, create the count object and avoid counting filters of hidden todos
+      filtersCounted = filters.reduce(function(filters, filter) {
+        // if filter is already in object and should be counted
+        if (filter[1] && filter[0] in filters) {
+          filters[filter[0]]++;
+        // new filter in object and should be counted
+        } else if(filter[1]) {
+          filters[filter[0]] = 1;
+        // do not count if filter is suppose to be hidden
+        } else if(!filter[1]) {
+          filters[filter[0]] = 0;
         }
+        //console.log(filter[1]);
         if(filters!=null) {
           return filters;
         }
@@ -1251,17 +1260,15 @@ function generateTodoData(searchString) {
       });
     }
     // filter hidden todos
-      items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-        if(item.h) {
-          // if h:1 it is skipped
-          viewBoxShowHidden.classList.add("is-active");
-          if(!window.userData.showHidden) return false;
-        } else {
-          viewBoxShowHidden.classList.remove("is-active");
-        }
-        return true;
-      });
-
+    viewBoxShowHidden.classList.remove("is-active");
+    items.objectsFiltered = items.objectsFiltered.filter(function(item) {
+      if(item.h) {
+        // if h:1 it is skipped
+        viewBoxShowHidden.classList.add("is-active");
+        if(!window.userData.showHidden) return false;
+      }
+      return true;
+    });
     // if search string or previously inserted content in search bar is detected
     if(searchString || todoTableSearch.value) {
       if(todoTableSearch.value) searchString = todoTableSearch.value;
