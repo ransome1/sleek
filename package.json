@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "0.9.8-Beta",
+  "version": "0.9.8",
   "description": "sleek is a todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "sleek is a todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",

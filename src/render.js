@@ -938,10 +938,10 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
             // if user has not opted for showComplete we skip the filter of this particular item
             if(window.userData.showCompleted==false && item.complete==true) {
               continue;
+            // if task is hidden the filter will be marked
             } else if(item.h) {
               filters.push([item[category][filter],0]);
             } else {
-              //filters.push([item[category][filter]]);
               filters.push([item[category][filter],1]);
             }
           }
@@ -954,13 +954,14 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // remove duplicates, create the count object and avoid counting filters of hidden todos
       filtersCounted = filters.reduce(function(filters, filter) {
         // if filter is already in object and should be counted
-        if (filter[1] && filter[0] in filters) {
+        if (filter[1] && (filter[0] in filters)) {
           filters[filter[0]]++;
         // new filter in object and should be counted
         } else if(filter[1]) {
           filters[filter[0]] = 1;
         // do not count if filter is suppose to be hidden
-        } else if(!filter[1]) {
+        // only overwrite value with 0 if the filter doesn't already exist in object
+        } else if(!filter[1] && !(filter[0] in filters)) {
           filters[filter[0]] = 0;
         }
         //console.log(filter[1]);
