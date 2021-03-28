@@ -6,7 +6,7 @@ The following versions of sleek are provided with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.9.x   | :x: |
+| 0.9.x   | :heavy_check_mark: |
 
 ## Reporting a Vulnerability
 

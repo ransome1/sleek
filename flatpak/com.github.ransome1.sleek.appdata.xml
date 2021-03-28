@@ -30,6 +30,7 @@
     <ul>
       <li>An existing todo.txt file can be used or a new one can be created</li>
       <li>Todos can be added, edited, marked as complete (and vice versa) or deleted</li>
+      <li>A todo can be hidden (add "h:1") but its attributes will appear in filter list and auto complete</li> 
       <li>Existing todos can be used as templates for new ones</li>
       <li>Completed todos can be bulk archived to a separate done.txt ([name of todo file]_done.txt) file</li>
       <li>Completed todos can be shown or hidden</li>

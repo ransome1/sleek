@@ -24,7 +24,8 @@ modules:
     buildsystem: simple
     build-commands:
       - npm install --prefix=sleek --offline --cache=$FLATPAK_BUILDER_BUILDDIR/flatpak-node/npm-cache
-      - . flatpak-node/electron-builder-arch-args.sh; npm run --prefix=sleek --offline pack -- $ELECTRON_BUILDER_ARCH_ARGS
+      - . flatpak-node/electron-builder-arch-args.sh; npm run --prefix=sleek --offline
+        pack -- $ELECTRON_BUILDER_ARCH_ARGS
       - mv sleek/dist/linux*unpacked /app/sleek
       - install -Dm755 sleek.sh /app/bin/sleek
       - install -Dm644 sleek/flatpak/com.github.ransome1.sleek.png /app/share/icons/hicolor/128x128/apps/com.github.ransome1.sleek.png
@@ -38,6 +39,8 @@ modules:
           type: git
           tag-pattern: ^v([\d.]+)$
 
+        commit: 47ab1975859f8183e70024ae14b421d79b97d0f2
+        tag: v0.9.7
       - generated-sources.json
 
       - type: script

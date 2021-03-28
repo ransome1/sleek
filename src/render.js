@@ -752,8 +752,9 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
           // we remove the greyed out look from the container
           todoFiltersSub.classList.remove("is-greyed-out");
           // change the eye icon
-          let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
-          todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"-1\"></a>&nbsp;" + dataHeadline;
+          //let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
+          //todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"-1\"></a>&nbsp;" + dataHeadline;
+          todoFilterHeadline.innerHTML += "<i class=\"far fa-slash\" tabindex=\"-1\"></i>&nbsp;";
         } else {
           // we push the category to the filter array
           categoriesFiltered.push(category);
@@ -769,8 +770,9 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
           // we add the greyed out look to the container
           todoFiltersSub.classList.add("is-greyed-out");
           // change the eye icon
-          let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
-          todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + dataHeadline;
+          //let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
+          //todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + dataHeadline;
+          todoFilterHeadline.innerHTML += "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;";
         }
         t0 = performance.now();
         generateTodoData().then(response => {
@@ -820,7 +822,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
       if(typeAheadPrefix==undefined) {
         todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
         // create the event listener for filter selection by user
-        todoFiltersItem.addEventListener("click", () => {
+        todoFiltersItem.addEventListener("click", (el) => {
           // set highlighting
           todoFiltersItem.classList.toggle("is-dark");
           // if no filters are selected, add a first one
@@ -2021,8 +2023,6 @@ function toggleInputSize(type) {
       // persist setting
       setUserData("useTextarea", false);
       break;
-    default:
-      modalFormInputResize.setAttribute("data-input-type", "input");
   }
   d.id = "modalFormInput";
   d.setAttribute("tabindex", 300);

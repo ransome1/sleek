@@ -48,6 +48,7 @@ You can download sleek for Windows, MacOS and Linux on the <a href="https://gith
   - edited
   - marked as complete (and vice versa)
   - deleted
+* A todo can be hidden (add "h:1") but its attributes will appear in filter list and auto complete
 * Dark and light mode can be toggled
 * A compact view is available
 * Completed todos can be bulk archived to a separate done.txt ([name of todo file]_done.txt) file
