@@ -42,12 +42,25 @@ button, button:focus, button:active, button:active, button:after, button::before
 .button.is-link svg {
   color: white;
 }
+table,
 .table {
   width: 100%;
-  background-color: transparent!important;
+  background: transparent!important;
+  border-collapse:separate;
+  margin-bottom: 2em!important;
 }
-.table tr td {
-  vertical-align: middle;
+table tr th {
+  padding: 0 0 1em 0!important;
+  font-size: 1.2em;
+  font-family: "FreeSansBold";
+  border: none!important;
+  //border-top: solid 1px $dark-grey!important;
+}
+table tr td {
+  vertical-align: top!important;
+  border: none!important;
+  //border-top: solid 1px $dark-grey!important;
+  padding: .5em 2em .5em 0!important;
 }
 table.files tr td:first-child {
   width: 3em;
@@ -183,29 +196,6 @@ code {
     overflow-y: auto;
     overflow-x: hidden;
   }
-  a#filterColumnClose {
-    width: 2.5em;
-    height: 2.5em;
-    display: none;
-    line-height: 2.5em;
-    text-align: center;
-    font-size: 1.25em;
-    position: absolute;
-    right: -0.75em;
-    top: 50% - 2.5%;
-    z-index: 30;
-    background: $mid-grey;
-    border-radius: 50%;
-    cursor: pointer;
-    svg {
-      color: $darker-grey;
-    }
-  }
-  nav:hover {
-    a#filterColumnClose.is-active {
-      display: inline-block;
-    }
-  }
 }
 
 /* MAIN MENU */
@@ -273,93 +263,8 @@ nav {
   }
 }
 
-/* FILTER DROPDOWN */
-#filterDrawer {
-  display: none;
-  overflow-y: auto;
-  overflow-x: hidden;
-  float: left;
-  padding: 1.5em;
-  background: $mid-grey;
-  --resizeable-width: 34em;
-  height: 100%;
-  width: var(--resizeable-width);
-  min-width: var(--min-width);
-  max-width: var(--max-width);
-  /* HANDLE FOR DRAGGING */
-  /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
-  #handle {
-    /*float: right;*/
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 1em;
-    background-color: transparent;
-    z-index: 1;
-  }
-  #handle::after {
-    content: "";
-    width: 1em;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    background-color: transparent;
-    cursor: ew-resize;
-    z-index: 2;
-  }
-  .toggle {
-    padding: 0 0 1em 0;
-  }
-  .dropdown-item {
-    width: 100%;
-    padding: 0;
-    margin: 1.5em 0;
-    a.headline {
-      width: 100%;
-      float: left;
-      font-size: 1.35em;
-      color: $darker-grey;
-      font-family: FreeSansBold;
-      margin-bottom: 1.5em;
-    }
-  }
-  #btnResetAllFilters {
-    display: none;
-  }
-  #btnResetAllFilters.is-active {
-    display: block;
-  }
-  .dropdown-item.is-greyed-out {
-    opacity: .5;
-  }
-  .dropdown-item.is-greyed-out a  {
-    background: $dark-grey!important;
-    color: $darker-grey!important;
-  }
-  .dropdown-item.is-greyed-out span.tag  {
-    background: $darker-grey!important;
-    color: #ccc;
-  }
-  .dropdown-item.is-greyed-out a.headline,
-  .dropdown-item.is-greyed-out a.headline a {
-    background: none!important;
-  }
-  #todoFilters {
-    width: 100%;
-    margin: 0;
-  }
-}
-#filterDrawer.is-active {
-  display: block;
-}
-.filterDrawer {
-  a.button {
-    margin: 0 .5rem .5rem 0;
-  }
-  a.button span.tag {
-    z-index: 35;
-  }
+#filterDrawer,
+#suggestionContainer {
   div.contexts {
     a.button  {
       background: $sleek-contexts-button;
@@ -406,41 +311,227 @@ nav {
   }
 }
 
-/* TABLE */
-#todoTable {
-  width: 100%;
-  //min-width: 45em;
+#drawerContainer {
+  width: var(--resizeable-width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+  --resizeable-width: 34em;
+  height: 100%;
   float: left;
   display: none;
-  padding: 1.5em 3em;
+  /* HANDLE FOR DRAGGING */
+  /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
+  #handle {
+    /*float: right;*/
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 1em;
+    background-color: transparent;
+    z-index: 1;
+  }
+  #handle::after {
+    content: "";
+    width: 1em;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: transparent;
+    cursor: ew-resize;
+    z-index: 2;
+  }
+  a.drawerClose {
+    width: 2.5em;
+    height: 2.5em;
+    display: none;
+    line-height: 2.5em;
+    text-align: center;
+    font-size: 1.25em;
+    position: absolute;
+    right: -0.75em;
+    top: 50% - 2.5%;
+    z-index: 30;
+    background: $mid-grey;
+    border-radius: 50%;
+    cursor: pointer;
+    svg {
+      color: $darker-grey;
+    }
+  }
+}
+#drawerContainer:hover {
+  a.drawerClose {
+    display: inline-block;
+  }
+}
+#drawerContainer.is-active {
+  display: block;
+}
+#zoomStatus {
+  padding: 0 .55em;
+}
+#zoomUndo {
+  cursor: pointer;
+}
+.drawer {
+  width: 100%;
+  height: 100%;
+  float: left;
+  display: none!important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2em;
+  background: $mid-grey;
+  .dropdown-item {
+    width: 100%;
+    padding: 0;
+    margin: 0 0 1.5em 0;
+    a.headline {
+      width: 100%;
+      float: left;
+      font-size: 1.35em;
+      color: $darker-grey;
+      font-family: FreeSansBold;
+      margin-bottom: 1.5em;
+    }
+  }
+  a.button {
+    margin: 0 .5rem .5rem 0;
+  }
+  a.button span.tag {
+    z-index: 35;
+  }
+  #btnResetAllFilters {
+    display: none;
+  }
+  #btnResetAllFilters.is-active {
+    display: block;
+  }
+  .dropdown-item.is-greyed-out {
+    opacity: .5;
+  }
+  .dropdown-item.is-greyed-out a  {
+    background: $dark-grey!important;
+    color: $darker-grey!important;
+  }
+  .dropdown-item.is-greyed-out span.tag  {
+    background: $darker-grey!important;
+    color: #ccc;
+  }
+  .dropdown-item.is-greyed-out a.headline,
+  .dropdown-item.is-greyed-out a.headline a {
+    background: none!important;
+  }
+  /*#todoFilters {
+    width: 100%;
+    margin: 0;
+  }*/
+  .icon.is-left {
+    position: absolute;
+    top: .75em;
+    left: .65em;
+  }
+  svg {
+    color: $darker-grey;
+  }
+  /*select {
+    padding-left: 2.5em!important;
+  }*/
+  /*.zoom {
+    a {
+      margin: 0 .2em;
+      font-size: 1.6em;
+    }
+    #zoomStatus {
+      padding: 0 .55em;
+    }
+    #zoomUndo {
+      cursor: pointer;
+    }
+  }*/
+  table tr td:nth-child(odd) {
+    width: auto;
+    //display: flex;
+  }
+  table tr td:nth-child(even) {
+    width: 35%;
+    text-align: center;
+    padding-right: 0!important;
+  }
+}
+.drawer.is-active {
+  display: block!important;
+}
+
+/*#modalView {
+  table tr {
+    td:nth-child(odd) {
+      width: 75%;
+    }
+    td:nth-child(even) {
+      width: 25%;
+      text-align: center
+    }
+  }
+  .icon.is-left {
+    position: absolute;
+    top: .75em;
+    left: .65em;
+  }
+  svg {
+    color: $darker-grey;
+  }
+  select {
+    padding-left: 2.5em;
+  }
+  .zoom {
+    a {
+      margin: 0 .2em;
+      font-size: 1.6em;
+    }
+
+  }
+}*/
+
+/* SEARCH CONTAINER */
+#todoTableSearchContainer {
+  width: 100%;
+  //float: left;
+  //display: flex;
+  padding: 0 1.5em;
+  //box-sizing: border-box;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  .icon.is-left {
+    top: .65em;
+    left: .65em;
+  }
   .icon.is-left svg,
   .icon.is-right svg {
     color: $darker-grey;
   }
-  header {
-    .column {
-      padding: .25em 0;
-    }
-    #resultStats {
-      display: none;
-      /*font-size: .8em;*/
-      text-align: center;
-      padding: .75em 0;
-      white-space: nowrap;
-    }
-    #resultStats.is-active {
-      display: block;
-    }
-  }
-  /* VIEW CONTAINER */
-  #viewContainer {
-    z-index: 50;
-    float: right;
+  /*.column {
+    float: left;
     padding: 0;
-    margin-top: .2em;
+  }*/
+  /*.column:first-child {
+    flex: 1;
+  }*/
+  /* VIEW CONTAINER */
+
+
+  /*#viewContainer {
+    float: left;
+    flex: 0 0 5.5em;
+    padding: 0;
+    margin: .2em 0 .2em .2em;
     .dropdown-content {
-      min-width: 17em;
+      min-width: 18em;
       display: none;
+      padding: 1em 0;
       div.dropdown-item {
         clear: both;
         font-size: 1em!important;
@@ -463,6 +554,9 @@ nav {
         select {
           width: 100%;
         }
+        select {
+          padding-left: 2.5em;
+        }
       }
       #viewBoxShowHidden {
         display: none;
@@ -471,8 +565,11 @@ nav {
         display: block;
       }
     }
+    #btnToggleViewContainer {
+      padding-right: 0;
+    }
   }
-  #viewContainer.is-active {
+  /*#viewContainer.is-active {
     .dropdown-content {
       display: block;
       .dropdown-item.zoom {
@@ -491,12 +588,32 @@ nav {
         }
       }
     }
+  }*/
+}
+
+/* TABLE */
+#todoTable {
+  width: 100%;
+  float: left;
+  display: none;
+  padding: 0 2.5em 1.5em 2.5em;
+  #resultStats {
+    width: 100%;
+    display: none;
+    /*font-size: .8em;*/
+    text-align: center;
+    padding: 0;
+    white-space: nowrap;
+  }
+  #resultStats.is-active {
+    display: block;
   }
   #todoTableContainer {
     width: 100%;
     float: left;
   }
   .flex-table {
+    position: relative;
     display: flex;
     flex-flow: row wrap;
     border-bottom: solid 1px $mid-grey;
@@ -522,6 +639,7 @@ nav {
     }
   }
   .flex-table {
+    display: flex;
     .flex-row {
       padding: .75em 0;
       margin-right: 1em;
@@ -531,7 +649,7 @@ nav {
         background: none;
       }
       span.tag {
-        margin-right: .5em;
+        margin-right: .25em;
       }
       span.tag.projects {
         background: $sleek-projects-button;
@@ -541,11 +659,12 @@ nav {
         background: $sleek-contexts-button;
         color: $sleek-contexts-button-font;
       }
-      .categories {
+      /*.categories {
         padding: 0 0 0 .5em;
-      }
-      .priorityTag {
-        font-weight: bold;
+      }*/
+      .priority,
+      .contexts,
+      .projects {
         padding: 0 .35em;
         margin-right: .5em;
         background: $dark-grey;
@@ -554,13 +673,14 @@ nav {
       }
     }
     .flex-row.checkbox a {
+      flex: 0 0 1em;
       font-size: 1.25em;
     }
     .flex-row.text {
       width: auto;
-      max-width: 80%;
+      flex: 1;
+      max-width: 88%;
       cursor: pointer;
-      margin-right: .5em;
       color: $darker-grey;
       svg {
         color: inherit;
@@ -571,24 +691,32 @@ nav {
       background: transparent;
     }
     .flex-row.priority {
-      min-width: .5em;
+      flex: 0 0 .5em;
       background: $dark-grey;
       opacity: .5;
     }
     .flex-row.priority.A,
-    .flex-row .priorityTag.A {
+    .flex-row .priority.A {
       color: #ffe6eb;
       background: $has-text-danger;
     }
     .flex-row.priority.B,
-    .flex-row .priorityTag.B {
+    .flex-row .priority.B {
       color: #fadcd8;
       background: $has-text-attention;
     }
     .flex-row.priority.C,
-    .flex-row .priorityTag.C {
+    .flex-row .priority.C {
       color: #fffdf5;
       background: $has-text-warning;
+    }
+    .flex-row .contexts {
+      color: $sleek-contexts-button-font;
+      background: $sleek-contexts-button;
+    }
+    .flex-row .projects {
+      color: $sleek-projects-button-font;
+      background: $sleek-projects-button;
     }
     .flex-row.projects,
     .flex-row.contexts {
@@ -599,7 +727,7 @@ nav {
       color: $darker-grey;
       position: relative;
       white-space: nowrap;
-      margin: 0 .5em 0 0;
+      margin: 0 .25em;
       padding: 1em 0;
       text-align: center;
       text-transform: lowercase;
@@ -663,7 +791,10 @@ nav {
       }
     }
     .flex-row.todoTableItemMore {
-      margin-left: auto;
+      //margin-left: auto;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
     .flex-row.todoTableItemMore a {
       color: $has-text-link;
@@ -719,7 +850,7 @@ nav {
       svg {
         color: inherit;
       }
-      .priorityTag {
+      .priority {
         color: white;
         background: $has-text-grey-light;
       }
@@ -733,16 +864,17 @@ nav {
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .toggle {
-  padding: .5em 1.5em .5em 0;
+  //padding: .5em 1.5em .5em 0;
   margin: 0;
-  line-height: 2em;
+  //line-height: 2em;
+  text-align: center;
   .switch {
     position: relative;
     display: inline-block;
     width: 3.5em;
     height: 1.93em;
-    float: left;
-    margin-right: .7em;
+    //float: left;
+    //margin-right: .7em;
     .itemText {
       float: left;
     }
@@ -765,6 +897,8 @@ nav {
      -webkit-transform: translateX(1.5625em);
      -ms-transform: translateX(1.5625em);
      transform: translateX(1.5625em);
+     //background: white url("../svg/check.svg") no-repeat 50% 50%;
+     //background-size: 75% 75%;
     }
     .slider {
      position: absolute;
@@ -873,6 +1007,10 @@ nav {
   z-index: 50;
   opacity: .90;
   background: $body-background-color;
+  padding: .5em 1em;
+  .dropdown-item {
+    margin: 0;
+  }
   h4.title {
     font-size: 1.3em;
     margin: .7em 0;
@@ -880,7 +1018,7 @@ nav {
 }
 #suggestionContainer.card {
   height: auto;
-  overfloiw: auto;
+  overflow: auto;
 }
 #suggestionContainer.is-active {
   display: block;
@@ -937,34 +1075,13 @@ nav {
     ul li a {
       text-decoration: underline;
     }
-    table {
-      width: 100%;
-      background: none;
-    }
-    table th {
-      padding-left: 0;
-      font-family: "FreeSansBold";
-    }
-    table td {
-      vertical-align: middle;
-      padding-left: 0;
-      border-bottom: solid 1px $dark-grey;
-    }
-    table a {
+    /*table a {
       text-decoration: underline;
-    }
-    table.settings tr {
-      border: none;
-    }
+    }*/
     table.settings tr td {
       position: relative;
-      vertical-align: top;
-      border: none;
-      padding-top: 0;
-      padding-bottom: 0;
       .toggle,
       .field {
-        margin-top: 3em;
         .select,
         select {
           width: 100%;
@@ -982,16 +1099,9 @@ nav {
       padding-right: 3em;
     }
     table.shortcuts td {
-      vertical-align: middle;
-      border: none;
       .tag {
         font-size: 1em!important;
       }
-    }
-    table.shortcuts tr, th {
-      font-family: "FreeSans";
-      border: none;
-      border-bottom: solid 1px $dark-grey;
     }
     table.shortcuts tr:last-child {
       border: none;
@@ -1009,16 +1119,16 @@ nav {
   }
   .tabs {
     display: block;
-    height: 6em;
+    height: 4em;
     margin-bottom: 0;
   }
   .tabs li a {
     border-width: 2px;
     margin-bottom: 0;
   }
-  .toggle {
-    padding: .5em 0;
-  }
+  /*.toggle {
+    padding: 1em 0;
+  }*/
 }
 
 /* DATEPICKER */
@@ -1122,8 +1232,18 @@ nav {
 
 /* COMPACT VIEW */
 body.compact {
-  #todoTable {
+  #todoTableSearchContainer {
     padding: 1em;
+    .column {
+      padding: 0;
+      .icon.is-left {
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+  #todoTable {
+    padding: 0 1em 1em 1em;
     .flex-table {
       .flex-row {
         padding: .25em 0;
@@ -1160,14 +1280,14 @@ body.compact {
       font-family: "FreeSansBold";
     }
   }
-  #filterDrawer {
+  .drawer {
     padding: 1.5em!important;
-    .toggle {
+    /*.toggle {
       margin: 0!important;
       padding: 1.5em .5em 1em 0!important;
-    }
+    }*/
   }
-  #suggestionContainer.filterDrawer {
+  #suggestionContainer.drawer {
     padding: 0!important;
   }
 }
@@ -1195,18 +1315,21 @@ body.compact {
       font-family: "FreeSansBold";
     }
   }
-  #filterDrawer {
-    padding: 0 1.5em!important;
-    .toggle {
-      margin: 0!important;
-      padding: 1.5em .5em 1em 0!important;
-    }
-  }
-  #suggestionContainer.filterDrawer {
+  #suggestionContainer.drawer {
     padding: 0!important;
   }
   #todoTable {
+    padding: 0 1em 1em 1em;
+  }
+  #todoTableSearchContainer {
     padding: 1em;
+    .column {
+      padding: 0;
+      .icon.is-left {
+        top: 0;
+        left: 0;
+      }
+    }
   }
 }
 @media (max-width: 768px) {
@@ -1214,8 +1337,9 @@ body.compact {
     width: 100%!important;
   }
   #todoTable .flex-table .flex-row.text {
-    max-width: 65%;
+    max-width: 85%;
   }
 }
+
 @import "../css/datepicker.css";
 @import "../../node_modules/bulma/bulma.sass";

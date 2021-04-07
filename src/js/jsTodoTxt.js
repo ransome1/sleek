@@ -191,6 +191,8 @@ function TodoTxtItem ( line, extensions ) {
 			var i;
 			this.contexts = [];
 			for(i = 0; i < contexts.length; i++) { this.contexts.push( contexts[i].trim().substr( 1 ) ); }
+			// sort array alphanummerically
+			this.contexts.sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare);
 			line = line.replace( TodoTxt._context_replace_re, ' ' );
 		}
 
@@ -199,6 +201,8 @@ function TodoTxtItem ( line, extensions ) {
 		if( null !== projects ) {
 			this.projects = [];
 			for(i = 0; i < projects.length; i++) { this.projects.push( projects[i].trim().substr( 1 ) ); }
+			// sort array alphanummerically
+			this.contexts.sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare);
 			line = line.replace( TodoTxt._project_replace_re, ' ' );
 		}
 

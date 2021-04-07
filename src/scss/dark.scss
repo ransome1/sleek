@@ -83,13 +83,16 @@ button.is-outlined:hover {
 svg {
   color: white;
 }
-.table {
+table {
   width: 100%;
   background-color: transparent!important;
-  color: $grey-bright;
+  color: $grey-bright!important;
 }
-.table tr td {
-  border-color: $grey-mid!important;
+table tr td {
+  border-color: $grey-pitchblack!important;
+}
+table tr th {
+  color: white!important;
 }
 nav {
   background-color: $grey-mid;
@@ -119,32 +122,45 @@ nav {
     }
   }
 }
-#todoTable {
+#todoTableSearchContainer {
+  background-color: $grey-pitchblack;
   #viewContainer {
-      .dropdown-content {
-        background: $grey-light;
-        .dropdown-item {
+    .dropdown-content {
+      background: $grey-light;
+      .dropdown-item {
+        color: white!important;
+      }
+      .dropdown-item.zoom {
+        svg {
           color: white!important;
         }
-        .dropdown-item.zoom {
-          svg {
-            color: white!important;
-          }
-        }
-        .dropdown-divider {
-          background: $grey-mid;
-        }
+      }
+      .dropdown-divider {
+        background: $grey-mid;
+      }
+      .icon.is-left svg,
+      .icon.is-right svg {
+        color: white;
       }
     }
-    #btnToggleViewContainer {
-      background: transparent!important;
-    }
+  }
+  #btnToggleViewContainer {
+    background: transparent!important;
+  }
+}
+#resultStats {
+  .tag {
+    background-color: $grey-mid!important;
+    color: $grey-bright!important;
+  }
+}
+#todoTable {
   .flex-table#previousItem.is-highlighted {
     background-color: $grey-mid;
   }
   .flex-table.completed {
     .flex-row {
-      .priorityTag {
+      .priority {
         background: $grey-mid!important;
         color: $grey-lighter!important;
       }
@@ -159,11 +175,11 @@ nav {
     .flex-row span.tag {
       opacity: .5;
     }
-    .flex-row span.tag.contexts {
+    .flex-row span.contexts {
       background: $grey-mid!important;
       color: $grey-bright!important;
     }
-    .flex-row span.tag.projects {
+    .flex-row span.projects {
       background: $grey-light!important;
       color: $grey-bright!important;
     }
@@ -210,11 +226,11 @@ nav {
         color: $has-text-attention!important;
       }
     }
-    .flex-row span.tag.contexts {
+    .flex-row span.contexts {
       background: $green-mid!important;
       color: $green-bright!important;
     }
-    .flex-row span.tag.projects {
+    .flex-row span.projects {
       background: $lila-dark!important;
       color: $lila-bright!important;
     }
@@ -233,55 +249,40 @@ nav {
       background: $grey-mid;
     }
     .flex-row {
-      .priorityTag.C {
+      .priority.C {
         background: #c5a943!important;
       }
     }
   }
 }
-#filterDrawer {
-  background: $grey-light;
-  .dropdown-item.is-greyed-out a {
-    background: $grey-mid!important;
-    color: $grey-bright!important;
-    opacity: .8;
-  }
-  .dropdown-item.is-greyed-out span.tag {
-    background: $grey-mid!important;
-    color: white!important;
-  }
-}
-.filterDrawer {
-  .dropdown-item a.headline,
-  .dropdown-item a.headline a {
-    color: $grey-bright!important;
-  }
+.drawer {
+  background: $grey-light!important;
   div.contexts {
     a.button  {
-      background: $green-mid;
-      color: $green-bright;
+      background: $green-mid!important;
+      color: $green-bright!important;
       span.tag {
-        background: $green-bright;
-        color: $green-mid;
+        background: $green-bright!important;
+        color: $green-mid!important;
       }
     }
     a.button:hover,
     a.button.is-dark {
-      background: $green-dark;
+      background: $green-dark!important;
     }
   }
   div.projects {
     a.button  {
-      background: $lila-dark;
-      color: $lila-bright;
+      background: $lila-dark!important;
+      color: $lila-bright!important;
       span.tag {
-        background: $lila-bright;
-        color: $lila-dark;
+        background: $lila-bright!important;
+        color: $lila-dark!important;
       }
     }
     a.button:hover,
     a.button.is-dark {
-      background: $lila-mid;
+      background: $lila-mid!important;
     }
   }
   .button.is-white {
@@ -294,9 +295,28 @@ nav {
   .dropdown-content h4 {
     color: $grey-bright!important;
   }
+  .dropdown-item.is-greyed-out a.button,
+  .dropdown-item.is-greyed-out a.button:hover {
+    background: $grey-mid!important;
+    color: $grey-bright!important;
+    opacity: .8;
+  }
+  .dropdown-item.is-greyed-out a.button span.tag {
+    background: $grey-mid!important;
+    color: white!important;
+  }
+  svg {
+    color: $grey-bright!important;
+  }
 }
-.columns a#filterColumnClose {
-  background: $grey-light;
+#filterDrawer {
+  .dropdown-item a.headline,
+  .dropdown-item a.headline a {
+    color: white!important;
+  }
+}
+.drawerClose {
+  background: $grey-light!important;
   svg {
     color: $grey-bright!important;
   }

@@ -61,13 +61,16 @@ button.is-outlined:hover {
 svg {
   color: white; }
 
-.table {
+table {
   width: 100%;
   background-color: transparent !important;
-  color: #CCCDCF; }
+  color: #CCCDCF !important; }
 
-.table tr td {
-  border-color: #2c2d30 !important; }
+table tr td {
+  border-color: #1d1e20 !important; }
+
+table tr th {
+  color: white !important; }
 
 nav {
   background-color: #2c2d30; }
@@ -88,24 +91,32 @@ nav {
     border-bottom: none;
     background-color: #3B3B3B; }
 
-#todoTable #viewContainer .dropdown-content {
-  background: #3B3B3B; }
-  #todoTable #viewContainer .dropdown-content .dropdown-item {
-    color: white !important; }
-  #todoTable #viewContainer .dropdown-content .dropdown-item.zoom svg {
-    color: white !important; }
-  #todoTable #viewContainer .dropdown-content .dropdown-divider {
-    background: #2c2d30; }
+#todoTableSearchContainer {
+  background-color: #1d1e20; }
+  #todoTableSearchContainer #viewContainer .dropdown-content {
+    background: #3B3B3B; }
+    #todoTableSearchContainer #viewContainer .dropdown-content .dropdown-item {
+      color: white !important; }
+    #todoTableSearchContainer #viewContainer .dropdown-content .dropdown-item.zoom svg {
+      color: white !important; }
+    #todoTableSearchContainer #viewContainer .dropdown-content .dropdown-divider {
+      background: #2c2d30; }
+    #todoTableSearchContainer #viewContainer .dropdown-content .icon.is-left svg,
+    #todoTableSearchContainer #viewContainer .dropdown-content .icon.is-right svg {
+      color: white; }
+  #todoTableSearchContainer #btnToggleViewContainer {
+    background: transparent !important; }
 
-#todoTable #btnToggleViewContainer {
-  background: transparent !important; }
+#resultStats .tag {
+  background-color: #2c2d30 !important;
+  color: #CCCDCF !important; }
 
 #todoTable .flex-table#previousItem.is-highlighted {
   background-color: #2c2d30; }
 
 #todoTable .flex-table.completed {
   color: #3B3B3B; }
-  #todoTable .flex-table.completed .flex-row .priorityTag {
+  #todoTable .flex-table.completed .flex-row .priority {
     background: #2c2d30 !important;
     color: #4d4d4d !important; }
   #todoTable .flex-table.completed .flex-row.text,
@@ -115,10 +126,10 @@ nav {
     color: inherit; }
   #todoTable .flex-table.completed .flex-row span.tag {
     opacity: .5; }
-  #todoTable .flex-table.completed .flex-row span.tag.contexts {
+  #todoTable .flex-table.completed .flex-row span.contexts {
     background: #2c2d30 !important;
     color: #CCCDCF !important; }
-  #todoTable .flex-table.completed .flex-row span.tag.projects {
+  #todoTable .flex-table.completed .flex-row span.projects {
     background: #3B3B3B !important;
     color: #CCCDCF !important; }
   #todoTable .flex-table.completed .flex-row.itemDueDate {
@@ -151,10 +162,10 @@ nav {
       color: inherit; }
   #todoTable .flex-table .flex-row.itemDueDate.isTomorrow .fa-sort-down {
     color: #fa745e !important; }
-  #todoTable .flex-table .flex-row span.tag.contexts {
+  #todoTable .flex-table .flex-row span.contexts {
     background: #075A44 !important;
     color: #c5ede3 !important; }
-  #todoTable .flex-table .flex-row span.tag.projects {
+  #todoTable .flex-table .flex-row span.projects {
     background: #5f1a5e !important;
     color: #f1d6f1 !important; }
   #todoTable .flex-table .flex-row .is-white {
@@ -167,58 +178,54 @@ nav {
     color: white; }
   #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
     background: #2c2d30; }
-  #todoTable .flex-table .flex-row .priorityTag.C {
+  #todoTable .flex-table .flex-row .priority.C {
     background: #c5a943 !important; }
 
-#filterDrawer {
-  background: #3B3B3B; }
-  #filterDrawer .dropdown-item.is-greyed-out a {
+.drawer {
+  background: #3B3B3B !important; }
+  .drawer div.contexts a.button {
+    background: #075A44 !important;
+    color: #c5ede3 !important; }
+    .drawer div.contexts a.button span.tag {
+      background: #c5ede3 !important;
+      color: #075A44 !important; }
+  .drawer div.contexts a.button:hover,
+  .drawer div.contexts a.button.is-dark {
+    background: #1BA37E !important; }
+  .drawer div.projects a.button {
+    background: #5f1a5e !important;
+    color: #f1d6f1 !important; }
+    .drawer div.projects a.button span.tag {
+      background: #f1d6f1 !important;
+      color: #5f1a5e !important; }
+  .drawer div.projects a.button:hover,
+  .drawer div.projects a.button.is-dark {
+    background: #BC30BA !important; }
+  .drawer .button.is-white {
+    background-color: #2c2d30 !important;
+    color: #CCCDCF !important; }
+  .drawer .dropdown-content {
+    background: #2c2d30 !important; }
+  .drawer .dropdown-content h4 {
+    color: #CCCDCF !important; }
+  .drawer .dropdown-item.is-greyed-out a.button,
+  .drawer .dropdown-item.is-greyed-out a.button:hover {
     background: #2c2d30 !important;
     color: #CCCDCF !important;
     opacity: .8; }
-  #filterDrawer .dropdown-item.is-greyed-out span.tag {
+  .drawer .dropdown-item.is-greyed-out a.button span.tag {
     background: #2c2d30 !important;
     color: white !important; }
+  .drawer svg {
+    color: #CCCDCF !important; }
 
-.filterDrawer .dropdown-item a.headline,
-.filterDrawer .dropdown-item a.headline a {
-  color: #CCCDCF !important; }
+#filterDrawer .dropdown-item a.headline,
+#filterDrawer .dropdown-item a.headline a {
+  color: white !important; }
 
-.filterDrawer div.contexts a.button {
-  background: #075A44;
-  color: #c5ede3; }
-  .filterDrawer div.contexts a.button span.tag {
-    background: #c5ede3;
-    color: #075A44; }
-
-.filterDrawer div.contexts a.button:hover,
-.filterDrawer div.contexts a.button.is-dark {
-  background: #1BA37E; }
-
-.filterDrawer div.projects a.button {
-  background: #5f1a5e;
-  color: #f1d6f1; }
-  .filterDrawer div.projects a.button span.tag {
-    background: #f1d6f1;
-    color: #5f1a5e; }
-
-.filterDrawer div.projects a.button:hover,
-.filterDrawer div.projects a.button.is-dark {
-  background: #BC30BA; }
-
-.filterDrawer .button.is-white {
-  background-color: #2c2d30 !important;
-  color: #CCCDCF !important; }
-
-.filterDrawer .dropdown-content {
-  background: #2c2d30 !important; }
-
-.filterDrawer .dropdown-content h4 {
-  color: #CCCDCF !important; }
-
-.columns a#filterColumnClose {
-  background: #3B3B3B; }
-  .columns a#filterColumnClose svg {
+.drawerClose {
+  background: #3B3B3B !important; }
+  .drawerClose svg {
     color: #CCCDCF !important; }
 
 .toggle .switch .slider {

@@ -15,7 +15,8 @@
           <ul>
             <li class="logo">sleek</li>
             <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
-            <li id="navBtnFilter" class="btnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
+            <li id="navBtnFilter" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
+            <li id="navBtnView" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
             <li class="btnChangeTodoFile"><a href="#" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
             <li id="btnTheme"><a href="#" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
           </ul>
@@ -25,78 +26,202 @@
             </li>
             <li id="navBtnHelp"><a href="#" tabindex="-1"><i class="fas fa-question-circle"></i></a></li>
           </ul>
-          <section id="filterDrawer" class="filterDrawer dropdown" tabindex="0">
-            <div class="container">
-              <div id="todoFilters"></div>
-              <button id="btnFiltersResetFilters" class="button btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button>
-            </div>
-          <div id="handle"></div>
-          </section>
-          <a href="#" id="filterColumnClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
-        </nav>
-      </div>
-      <div class="column content">
-        <section id="todoTable" tabindex="-1">
-          <div class="control has-icons-left">
-            <input id="todoTableSearch" class="input is-medium" type="search" placeholder="Search" tabindex="10">
-            <span class="icon is-left">
-              <i class="fas fa-search"></i>
-            </span>
-          </div>
-          <div id="viewContainer" class="column">
-              <div class="dropdown is-active is-right">
-                <div class="dropdown-trigger">
-                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer" tabindex="-1">
-                    <i class="fas fa-list"></i>&nbsp;<span id="viewView"></span>
-                  </button>
-                </div>
-                <div  class="dropdown-menu is-right is-active" role="menu">
-                  <div class="dropdown-content">
-                    <div class="dropdown-item">
-                      <div class="toggle">
-                        <span id="viewToggleShowCompleted" class="text"></span>
-                        <label class="switch" for="toggleShowCompleted">
-                          <input type="checkbox" id="toggleShowCompleted" tabindex="0">
-                          <span class="slider round"></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div id="viewBoxShowHidden" class="dropdown-item">
-                      <hr class="dropdown-divider">
-                      <div class="toggle">
-                        <span id="viewToggleShowHidden" class="text"></span>
-                        <label class="switch" for="toggleShowHidden">
-                          <input type="checkbox" id="toggleShowHidden" tabindex="0">
-                          <span class="slider round"></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div class="dropdown-item">
-                      <hr class="dropdown-divider">
-                      <div class="toggle">
-                        <span id="viewToggleCompactView" class="text"></span>
-                        <label class="switch" for="toggleView">
-                          <input type="checkbox" id="toggleView" tabindex="0">
-                          <span class="slider round"></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div class="dropdown-item zoom">
-                      <hr class="dropdown-divider">
-                        <a href="#" id="zoomOut"><i class="fas fa-minus-circle"></i></a>
-                        <a href="#" id="zoomIn"><i class="fas fa-plus-circle"></i></a>
-                        <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
-                    </div>
-                    <div class="dropdown-item">
-                      <hr class="dropdown-divider">
+          <div id="drawerContainer">
+
+            <section id="filterDrawer" class="drawer dropdown" tabindex="0">
+              <div class="container">
+                <div id="todoFilters"></div>
+                <button id="btnFiltersResetFilters" class="button btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button>
+              </div>
+            </section>
+
+            <section id="viewDrawer" class="drawer dropdown" tabindex="0">
+              <div class="container">
+                <table>
+                  <tr>
+                    <th colspan="100%" id="viewHeadlineTodoList"></th>
+                  </tr>
+                  <tr>
+                    <td id="sortBy"></td>
+                    <td>
                       <div class="field">
                         <div class="control">
                           <div class="select">
                             <select id="viewSelectSortBy">
                               <option id="sortByPriority" value="priority"></option>
                               <option id="sortByDueDate" value="dueString"></option>
+                              <option id="sortByContexts" value="contexts"></option>
+                              <option id="sortByProjects" value="projects"></option>
                             </select>
+                            <!--<span class="icon is-small is-left">
+                              <i class="fas fa-sort"></i>
+                            </span>-->
                           </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleShowCompleted"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showCompleted">
+                          <input type="checkbox" id="showCompleted" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewBoxShowHidden"><span id="viewToggleShowHidden"></span></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showHidden">
+                          <input type="checkbox" id="showHidden" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleDueIsToday"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showDueIsToday">
+                          <input type="checkbox" id="showDueIsToday" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleDueIsFuture"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showDueIsFuture">
+                          <input type="checkbox" id="showDueIsFuture" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleDueIsPast"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showDueIsPast">
+                          <input type="checkbox" id="showDueIsPast" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+                <table>
+                  <tr>
+                    <th colspan="100%" id="viewHeadlineAppView"></th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p id="viewToggleCompactView"></p>
+                    </td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="toggleView">
+                          <input type="checkbox" id="toggleView" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Zoom</td>
+                    <td class="zoom">
+                      <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
+                      <span id="zoomStatus"></span><i id="zoomUndo" class="fas fa-undo"></i>
+                      <!--<a href="#" id="zoomOut"><i class="fas fa-minus"></i></a>
+                      <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
+                      <a href="#" id="zoomIn"><i class="fas fa-plus"></i></a>-->
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </section>
+
+            <a href="#" class="drawerClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
+            <div id="handle"></div>
+
+          </div>
+
+          <!--<a href="#" id="filterColumnClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>-->
+        </nav>
+      </div>
+      <div class="column content">
+        <div id="todoTableSearchContainer" class="control has-icons-left">
+          <div class="column">
+            <input id="todoTableSearch" class="input is-medium" type="search" placeholder="Search" tabindex="10">
+            <span class="icon is-left">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+          <!--<div id="viewContainer" class="column">
+            <div class="dropdown is-active is-right">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer" tabindex="-1">
+                  <i class="fas fa-list"></i>&nbsp;<span id="viewView"></span>
+                </button>
+              </div>
+              <div class="dropdown-menu is-right is-active" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <div class="toggle">
+                      <span id="viewToggleShowCompleted" class="text"></span>
+                      <label class="switch" for="toggleShowCompleted">
+                        <input type="checkbox" id="toggleShowCompleted" tabindex="0">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div id="viewBoxShowHidden" class="dropdown-item">
+                    <hr class="dropdown-divider">
+                    <div class="toggle">
+                      <span id="viewToggleShowHidden" class="text"></span>
+                      <label class="switch" for="toggleShowHidden">
+                        <input type="checkbox" id="toggleShowHidden" tabindex="0">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="dropdown-item">
+                    <hr class="dropdown-divider">
+                    <div class="toggle">
+                      <span id="viewToggleCompactView" class="text"></span>
+                      <label class="switch" for="toggleView">
+                        <input type="checkbox" id="toggleView" tabindex="0">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="dropdown-item zoom">
+                    <hr class="dropdown-divider">
+                      <a href="#" id="zoomOut"><i class="fas fa-minus-circle"></i></a>
+                      <a href="#" id="zoomIn"><i class="fas fa-plus-circle"></i></a>
+                      <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
+                  </div>
+                  <div class="dropdown-item">
+                    <hr class="dropdown-divider">
+                    <div class="field">
+                      <div class="control">
+                        <div class="select has-icons-left">
+                          <select id="viewSelectSortBy">
+                            <option id="sortByPriority" value="priority"></option>
+                            <option id="sortByDueDate" value="dueString"></option>
+                            <option id="sortByContexts" value="contexts"></option>
+                            <option id="sortByProjects" value="projects"></option>
+                          </select>
+                          <span class="icon is-small is-left">
+                            <i class="fas fa-sort"></i>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -104,11 +229,15 @@
                 </div>
               </div>
             </div>
-          <header class="columns">
-            <div id="resultStats" class="column">
-              <span></span>&nbsp;&nbsp;&nbsp;<a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>
-            </div>
-          </header>
+          </div>-->
+        </div>
+        <section id="todoTable" tabindex="-1">
+          <div id="resultStats" class="column">
+            <span class="tag">
+              <!--<span></span>&nbsp;&nbsp;&nbsp;
+              <a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>-->
+            </span>
+          </div>
           <div id="todoTableContainer"></div>
         </section>
         <section id="onboardingContainer" class="contentContainer">
@@ -255,6 +384,141 @@
         </div>
       </div>
     </form>
+
+
+
+    <!--<div id="modalView" class="modal content is-active" tabindex="0">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <table>
+          <tr>
+            <th colspan="100%">
+              Todo list
+            </th>
+          </tr>
+          <tr>
+            <td id="">Sort by</td>
+            <td>
+              <div class="field">
+                <div class="control">
+                  <div class="select has-icons-left">
+                    <select id="viewSelectSortBy">
+                      <option id="sortByPriority" value="priority"></option>
+                      <option id="sortByDueDate" value="dueString"></option>
+                      <option id="sortByContexts" value="contexts"></option>
+                      <option id="sortByProjects" value="projects"></option>
+                    </select>
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-sort"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td id="viewToggleShowCompleted"></td>
+            <td>
+              <span class="toggle">
+                <label class="switch" for="toggleShowCompleted">
+                  <input type="checkbox" id="toggleShowCompleted" tabindex="0">
+                  <span class="slider round"></span>
+                </label>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td id="viewBoxShowHidden"><span id="viewToggleShowHidden"></span></td>
+            <td>
+              <span class="toggle">
+                <label class="switch" for="toggleShowHidden">
+                  <input type="checkbox" id="toggleShowHidden" tabindex="0">
+                  <span class="slider round"></span>
+                </label>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Aufgaben, die heute fällig sind</td>
+            <td>
+              <span class="toggle">
+                <label class="switch" for="toggleShowHidden">
+                  <input type="checkbox" id="" tabindex="0">
+                  <span class="slider round"></span>
+                </label>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Aufgaben, die in der Zukunft fällig sind</td>
+            <td>
+              <span class="toggle">
+                <label class="switch" for="toggleShowHidden">
+                  <input type="checkbox" id="" tabindex="0">
+                  <span class="slider round"></span>
+                </label>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Aufgaben, die überfällig sind</td>
+            <td>
+              <span class="toggle">
+                <label class="switch" for="toggleShowHidden">
+                  <input type="checkbox" id="" tabindex="0">
+                  <span class="slider round"></span>
+                </label>
+              </span>
+            </td>
+          </tr>
+          <!--<tr id="viewBoxShowHidden">
+            <td id="viewToggleShowHidden"></td>
+            <td>
+              <div class="toggle">
+                <label class="switch" for="toggleShowHidden">
+                  <input type="checkbox" id="toggleShowHidden" tabindex="0">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </td>
+          </tr>
+
+        </table>
+        <table>
+          <tr>
+            <th colspan="100%">
+              App view
+            </th>
+          </tr>
+            <td>
+              <p id="viewToggleCompactView"></p>
+            </td>
+            <td>
+              <span class="toggle">
+                <label class="switch" for="toggleView">
+                  <input type="checkbox" id="toggleView" tabindex="0">
+                  <span class="slider round"></span>
+                </label>
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Zoom</td>
+            <td class="zoom">
+              <a href="#" id="zoomOut"><i class="fas fa-minus"></i></a>
+              <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
+              <a href="#" id="zoomIn"><i class="fas fa-plus"></i></a>
+            </td>
+          </tr>
+        </table>
+        <button class="modal-close close is-large" aria-label="close"></button>
+      </div>
+    </div>-->
+
+
+
+
     <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -266,125 +530,138 @@
         </div>
         <section id="settingsTab1" class="modal-card-body"  data-track-content data-content-name="Settings" data-content-piece="Settings">
           <table class="table settings">
-            <tbody>
-              <tr>
-                <td>
-                  <h4 class="title is-4" id="settingsTabSettingsLanguage"></h4>
-                  <p id="settingsTabSettingsLanguageBody"></p>
-                </td>
-                <td>
-                  <div class="field">
-                    <div class="control">
-                      <div class="select">
-                        <select id="settingsLanguage">
-                        </select>
-                      </div>
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsLanguage">
+              </th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsLanguageBody"></td>
+              <td>
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="settingsLanguage">
+                      </select>
                     </div>
                   </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h4 class="title is-4" id="settingsTabSettingsArchive"></h4>
-                  <p id="settingsTabSettingsArchiveBody"></p>
-                </td>
-                <td>
-                  <div class="field">
-                    <button id="btnArchiveTodos" class="button" disabled><i class="fas fa-archive"></i>&nbsp;<span id="settingsTabSettingsArchiveButton"></span></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h4 class="title is-4" id="settingsTabSettingsNotifications"></h4>
-                  <p id="settingsTabSettingsNotificationsBody"></p>
-                </td>
-                <td>
-                  <div class="toggle">
-                    <label class="switch">
-                      <input type="checkbox" id="toggleNotifications" tabindex="0">
-                      <span class="slider round"></span>
-                    </label>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h4 class="title is-4" id="settingsTabSettingsDarkmode"></h4>
-                  <p id="settingsTabSettingsDarkmodeBody"></p>
-                </td>
-                <td>
-                  <div class="toggle">
-                    <label class="switch">
-                      <input type="checkbox" id="toggleDarkmode" tabindex="0">
-                      <span class="slider round"></span>
-                    </label>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h4 class="title is-4" id="settingsTabSettingsLogging"></h4>
-                  <p id="settingsTabSettingsLoggingBody"></p>
-                </td>
-                <td>
-                  <div class="toggle">
-                    <label class="switch" for="toggleMatomoEvents">
-                      <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
-                      <span class="slider round"></span>
-                    </label>
-                  </div>
-                </td>
-              </tr>
-            <tbody>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsArchive"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsArchiveBody"></td>
+              <td>
+                <div class="field">
+                  <button id="btnArchiveTodos" class="button" disabled><i class="fas fa-archive"></i>&nbsp;<span id="settingsTabSettingsArchiveButton"></span></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsNotifications"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsNotificationsBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="toggleNotifications" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsDarkmode"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsDarkmodeBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="toggleDarkmode" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsLogging"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsLoggingBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch" for="toggleMatomoEvents">
+                    <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
           </table>
         </section>
         <section id="settingsTab2" class="modal-card-body" data-track-content data-content-name="Settings" data-content-piece="About">
-          <h4 class="title is-4" id="settingsTabAboutContribute"></h4>
           <table>
-            <tbody>
-              <tr>
-                <td><i class="fab fa-github"></i></td>
-                <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
-                <td><i class="fas fa-star"></i></td>
-                <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
-                <td><i class="fab fa-windows"></i></td>
-                <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
-              </tr>
-                <td><i class="fab fa-twitter"></i></td>
-                <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
-                <td><i class="fab fa-facebook"></i></td>
-                <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
-                <td><i class="fab fa-linkedin"></i></td>
-                <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
-            </tbody>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutContribute"></th>
+            </tr>
+            <tr>
+              <td><i class="fab fa-github"></i></td>
+              <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
+              <td><i class="fas fa-star"></i></td>
+              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
+              <td><i class="fab fa-windows"></i></td>
+              <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
+            </tr>
+            <tr>
+              <td><i class="fab fa-twitter"></i></td>
+              <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
+              <td><i class="fab fa-facebook"></i></td>
+              <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
+              <td><i class="fab fa-linkedin"></i></td>
+              <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
+            </tr>
           </table>
-          <h4 class="title is-4" id="settingsTabAboutCopyrightLicense"></h4>
-          <p id="settingsTabAboutCopyrightLicenseBody"></p>
-          <h4 class="title is-4" id="settingsTabAboutPrivacy"></h4>
-          <p id="settingsTabAboutPrivacyBody"></p>
-          <h4 class="title is-4" id="settingsTabAboutExternalLibraries"></h4>
           <table>
-            <tbody>
-              <tr>
-                <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
-                <td><a href="https://github.com/electron-userland/electron-builder" target="_blank">Electron builder</a></td>
-                <td><a href="https://github.com/electron/electron-packager" target="_blank">Electron packager</a></td>
-                <td><a href="https://github.com/sindresorhus/electron-util" target="_blank">electron-util</a></td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/jgthms/bulma" target="_blank">Bulma CSS</a></td>
-                <td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome</a></td>
-                <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
-                <td><a href="https://github.com/bryanwoods/autolink-js" target="_blank">autolink-js</a></td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
-                <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
-                <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
-                <td></td>
-              </tr>
-            </tbody>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutCopyrightLicense"></th>
+            </tr>
+            <tr>
+              <td colspan="100%" id="settingsTabAboutCopyrightLicenseBody"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutPrivacy"></th>
+            </tr>
+            <tr>
+              <td colspan="100%" id="settingsTabAboutPrivacyBody"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutExternalLibraries"></th>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
+              <td><a href="https://github.com/electron-userland/electron-builder" target="_blank">Electron builder</a></td>
+              <td><a href="https://github.com/electron/electron-packager" target="_blank">Electron packager</a></td>
+              <td><a href="https://github.com/sindresorhus/electron-util" target="_blank">electron-util</a></td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/jgthms/bulma" target="_blank">Bulma CSS</a></td>
+              <td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome</a></td>
+              <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
+              <td><a href="https://github.com/bryanwoods/autolink-js" target="_blank">autolink-js</a></td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
+              <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
+              <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
+              <td></td>
+            </tr>
           </table>
           <p><code>v<span id="version"></span></code></p>
         </section>
@@ -405,14 +682,11 @@
         <section id="helpTab1" class="modal-card-body is-active">
           <h4 class="title is-4" id="helpTabKeyboardTitle"></h4>
           <table class="table shortcuts">
-            <thead>
               <tr>
                 <th id="helpTabKeyboardTR1TH1"></th>
                 <th>Windows/Linux</th>
                 <th>MacOS</th>
               </tr>
-            </thead>
-            <tbody>
               <tr>
                 <td id="helpTabKeyboardTR1TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
@@ -463,7 +737,6 @@
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">Enter</span></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">Enter</span></td>
               </tr>
-            </tbody>
           </table>
         </section>
         <section id="helpTab2" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding a priority">
@@ -504,7 +777,7 @@
         <button class="modal-close close is-large" aria-label="close"></button>
       </div>
     </div>
-    <div id="suggestionContainer" class="filterDrawer card"></div>
+    <div id="suggestionContainer" class="drawer card"></div>
     <div id="modalChangeFile" class="modal" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-content">

@@ -68,7 +68,11 @@ You can download sleek for Windows, MacOS and Linux on the <a href="https://gith
   - also more specific recurrences are possible: "rec:2d" (every 2nd day)
 * Available contexts and projects will be suggested according to your input
 * Todos can be filtered by contexts and projects
-* Todos can be sorted and grouped either by their priorities or due dates
+* Todos can be sorted and grouped by
+  - Priorites
+  - Due dates
+  - Projects
+  - Contexts
 * Filters are sorted alphanummerically
 * Todos can be looked up using full-text search
 * Hyperlinks are detected automatically and can be clicked using the icon
