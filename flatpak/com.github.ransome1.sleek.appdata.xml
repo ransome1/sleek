@@ -10,7 +10,7 @@
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="0.9.8" date="2021-03-27"/>
+    <release version="0.9.9" date="2021-04-07"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 
@@ -30,11 +30,11 @@
     <ul>
       <li>An existing todo.txt file can be used or a new one can be created</li>
       <li>Todos can be added, edited, marked as complete (and vice versa) or deleted</li>
-      <li>A todo can be hidden (add "h:1") but its attributes will appear in filter list and auto complete</li> 
+      <li>A todo can be hidden (add "h:1") but its attributes will appear in filter list and auto complete</li>
       <li>Existing todos can be used as templates for new ones</li>
       <li>Completed todos can be bulk archived to a separate done.txt ([name of todo file]_done.txt) file</li>
       <li>Completed todos can be shown or hidden</li>
-      <li>Todos can be sorted and grouped either by their priorities or due dates</li>
+      <li>Todos can be sorted and grouped by their priorities, due dates, contexts or projects</li>
       <li>Todos can be enriched by contexts, projects, start dates, due dates</li>
       <li>Multi line todos can be created</li>
       <li>Todos can repeat themselves based on a given due date. You can use a recurrence picker or add the recurrence to the text field using: "rec:d" (daily), "rec:w" (weekly), "rec:m" (monthly), "rec:y" (annually)</li>
