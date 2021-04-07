@@ -1997,8 +1997,10 @@ function toggleTodos(name, variable) {
     } else {
       window.userData[name] = false;
     }
-    const toggle = "toggle" + name;
-    toggle.checked = window.userData[name];
+    //const toggle = "toggle" + name.charAt(0).toUpperCase() + name.slice(1);
+    console.log(name);
+    console.log(window.userData[name]);
+    document.getElementById(name).checked = window.userData[name];
     // persist the sorting
     setUserData(name, window.userData[name]);
     //
@@ -2952,8 +2954,8 @@ window.onload = async function () {
   // trigger function in renderer process
   window.api.receive("triggerFunction", (name, args) => {
     switch (name) {
-      case "toggleCompletedTodos":
-        toggleCompletedTodos().then(function(appData) {
+      case "toggleTodos":
+        toggleTodos(args.join()).then(function(appData) {
           window.appData = appData;
         }).catch(function(error) {
           console.log(error);

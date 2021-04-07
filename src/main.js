@@ -67,7 +67,7 @@ const userData = new Store({
     windowBounds: { width: 1025, height: 768 },
     maximizeWindow: false,
     showCompleted: true,
-    showHidden: false,
+    showHidden: true,
     showDueIsToday: true,
     showDueIsFuture: true,
     showDueIsPast: true,
@@ -158,6 +158,19 @@ const createWindow = () => {
   // if default font size is not set
   if(!userData.data.zoom) {
     userData.set("zoom", 100);
+  }
+  // if default value for hidden todos is not set
+  if(!userData.data.showHidden) {
+    userData.set("showHidden", true);
+  }
+  if(!userData.data.showDueIsToday) {
+    userData.set("showDueIsToday", true);
+  }
+  if(!userData.data.showDueIsFuture) {
+    userData.set("showDueIsFuture", true);
+  }
+  if(!userData.data.showDueIsPast) {
+    userData.set("showDueIsPast", true);
   }
   // if theme hasn't been set, sleek will adapt to OS preference
   if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
@@ -283,7 +296,7 @@ const createWindow = () => {
           label: i18next.t("toggleCompletedTodos"),
           accelerator: "CmdOrCtrl+h",
           click: function (item, focusedWindow) {
-            mainWindow.webContents.send("triggerFunction", "toggleCompletedTodos")
+            mainWindow.webContents.send("triggerFunction", "toggleTodos", ["showCompleted"])
           }
         },
         { type: "separator" },
