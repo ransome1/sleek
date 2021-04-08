@@ -1355,7 +1355,9 @@ function generateTodoData(searchString) {
     // build object according to sorting method
     items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
       if(window.userData.sortCompletedLast && a.complete) {
-        object[a.complete] = [...object[a.complete] || [], a];
+        object["completed"] = [...object["completed"] || [], a];
+      } else if(window.userData.sortBy==="dueString" && !a.due) {
+        object["noDueDate"] = [...object["noDueDate"] || [], a];
       } else {
         object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
       }
@@ -1364,8 +1366,6 @@ function generateTodoData(searchString) {
     }, {});
     // object is converted to a sorted array
     items.objectsFiltered = Object.entries(items.objectsFiltered).sort(function(a,b) {
-      // when b is null sort it after a
-      if(window.userData.sortCompletedLast && b[0]==="true") return -1;
       // when a is null sort it after b
       if(a[0]==="null") return 1;
       // when b is null sort it after a
@@ -1373,6 +1373,16 @@ function generateTodoData(searchString) {
       // sort alphabetically
       if(a < b) return -1;
     });
+    //
+    if(window.userData.sortCompletedLast) {
+      items.objectsFiltered.sort(function(a,b) {
+        // when a is null sort it after b
+        if(a[0]==="completed") return 1;
+        // when b is null sort it after a
+        if(b[0]==="completed") return -1;
+        return 0;
+      });
+    }
     // if sortCompletedLast a separate array of completed todos is added to the object
     /*if(window.userData.showCompleted && window.userData.sortCompletedLast) {
       items.objectsFiltered.push(["completed", items.complete]);
@@ -1382,7 +1392,7 @@ function generateTodoData(searchString) {
       // nodes need to be created to add them to the outer fragment
       // create a divider row
       // completed todos
-      if(window.userData.sortCompletedLast && items.objectsFiltered[itemGroup][0]==="true") {
+      if(window.userData.sortCompletedLast && items.objectsFiltered[itemGroup][0]==="completed") {
         tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">&nbsp;</div></div>"))
       // for priority, context and project
       } else if(items.objectsFiltered[itemGroup][0]!="null" && window.userData.sortBy!="dueString") {
