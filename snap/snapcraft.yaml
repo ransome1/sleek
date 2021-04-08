@@ -16,6 +16,11 @@ confinement: strict
 icon: ./assets/icons/icon.png
 license: MIT
 compression: lzo
+architectures:
+- build-on: amd64
+- build-on: armhf
+- build-on: arm64
+- build-on: i386
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
