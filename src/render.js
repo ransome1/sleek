@@ -1997,9 +1997,6 @@ function toggleTodos(name, variable) {
     } else {
       window.userData[name] = false;
     }
-    //const toggle = "toggle" + name.charAt(0).toUpperCase() + name.slice(1);
-    console.log(name);
-    console.log(window.userData[name]);
     document.getElementById(name).checked = window.userData[name];
     // persist the sorting
     setUserData(name, window.userData[name]);
@@ -2814,9 +2811,6 @@ function submitForm() {
       items.objects.push(todo);
       // mark the todo for anchor jump after next reload
       item.previous = todo.toString();
-
-
-      console.log(todo)
     } else if(modalForm.elements[0].value=="") {
       modalFormAlert.innerHTML = window.translations.formInfoNoInput;
       modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');

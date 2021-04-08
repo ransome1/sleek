@@ -1,3 +1,10 @@
+var TodoTxtExtension;
+if (typeof require === 'function') {
+	TodoTxtExtension = require('./jsTodoExtensions').TodoTxtExtension;
+} else {
+	TodoTxtExtension = window.TodoTxtExtension;
+}
+
 /*!
 	Shared members and static functions.
 */
@@ -29,13 +36,19 @@ var TodoTxt = {
 
 		\returns An array of TodoTxtItem objects.
 	*/
-	parse: function ( contents, extensions ) {
+	parse: function ( contents, extensions, onError ) {
 		var items = [],
-		    lines = contents.split( "\n" ),
-		    i;
+			lines = contents.split( "\n" ),
+			i;
 		for(i = 0; i < lines.length; i++) {
-			try { items.push( new TodoTxtItem( lines[i], extensions ) ); }
-			catch ( error ) {}
+			try {
+				items.push( new TodoTxtItem( lines[i], extensions ) );
+			}
+			catch ( error ) {
+				if (onError !== undefined) {
+					onError(error)
+				}
+			}
 		}
 		return items;
 	},
@@ -60,7 +73,7 @@ var TodoTxt = {
 	*/
 	render: function( items ) {
 		var lines = [],
-		    i;
+			i;
 		for( i in items ) {
 			if( items.hasOwnProperty(i) ) {
 				lines.push( items[i].toString() );
@@ -191,8 +204,6 @@ function TodoTxtItem ( line, extensions ) {
 			var i;
 			this.contexts = [];
 			for(i = 0; i < contexts.length; i++) { this.contexts.push( contexts[i].trim().substr( 1 ) ); }
-			// sort array alphanummerically
-			this.contexts.sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare);
 			line = line.replace( TodoTxt._context_replace_re, ' ' );
 		}
 
@@ -201,8 +212,6 @@ function TodoTxtItem ( line, extensions ) {
 		if( null !== projects ) {
 			this.projects = [];
 			for(i = 0; i < projects.length; i++) { this.projects.push( projects[i].trim().substr( 1 ) ); }
-			// sort array alphanummerically
-			this.contexts.sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare);
 			line = line.replace( TodoTxt._project_replace_re, ' ' );
 		}
 
@@ -320,7 +329,7 @@ function TodoTxtItem ( line, extensions ) {
 // Exported functions for node
 (function(exports){
 
-  exports.TodoTxt = TodoTxt;
+	exports.TodoTxt = TodoTxt;
 	exports.TodoTxtItem = TodoTxtItem;
 
 })(typeof exports === 'undefined' ? window : exports);
