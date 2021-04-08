@@ -516,6 +516,7 @@ function showOnboarding(variable) {
       navBtnFilter.classList.add("is-hidden");
       navBtnView.classList.add("is-hidden");
       todoTable.classList.remove("is-active");
+      todoTableSearchContainer.classList.remove("is-active");
       return Promise.resolve("Info: Starting onboarding");
     } else {
       onboardingContainer.classList.remove("is-active");
@@ -523,6 +524,7 @@ function showOnboarding(variable) {
       navBtnFilter.classList.remove("is-hidden");
       navBtnView.classList.remove("is-hidden");
       todoTable.classList.add("is-active");
+      todoTableSearchContainer.classList.add("is-active");
       return Promise.resolve("Info: Ending onboarding");
     }
   } catch(error) {
@@ -2688,9 +2690,8 @@ function configureMainView() {
       }).catch(function(error) {
         console.log(error);
       });
-    }
     // open view drawer if it has been persisted
-    if(window.userData.viewDrawer) {
+    } else if(window.userData.viewDrawer) {
       showDrawer(true, navBtnView, viewDrawer).then(function(result) {
         console.log(result);
       }).catch(function(error) {

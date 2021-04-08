@@ -27,14 +27,12 @@
             <li id="navBtnHelp"><a href="#" tabindex="-1"><i class="fas fa-question-circle"></i></a></li>
           </ul>
           <div id="drawerContainer">
-
             <section id="filterDrawer" class="drawer dropdown" tabindex="0">
               <div class="container">
                 <div id="todoFilters"></div>
                 <button id="btnFiltersResetFilters" class="button btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button>
               </div>
             </section>
-
             <section id="viewDrawer" class="drawer dropdown" tabindex="0">
               <div class="container">
                 <table>
@@ -53,9 +51,6 @@
                               <option id="sortByContexts" value="contexts"></option>
                               <option id="sortByProjects" value="projects"></option>
                             </select>
-                            <!--<span class="icon is-small is-left">
-                              <i class="fas fa-sort"></i>
-                            </span>-->
                           </div>
                         </div>
                       </div>
@@ -150,21 +145,14 @@
                     <td class="zoom">
                       <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
                       <span id="zoomStatus"></span><i id="zoomUndo" class="fas fa-undo"></i>
-                      <!--<a href="#" id="zoomOut"><i class="fas fa-minus"></i></a>
-                      <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
-                      <a href="#" id="zoomIn"><i class="fas fa-plus"></i></a>-->
                     </td>
                   </tr>
                 </table>
               </div>
             </section>
-
             <a href="#" class="drawerClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
             <div id="handle"></div>
-
           </div>
-
-          <!--<a href="#" id="filterColumnClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>-->
         </nav>
       </div>
       <div class="column content">
@@ -175,79 +163,10 @@
               <i class="fas fa-search"></i>
             </span>
           </div>
-          <!--<div id="viewContainer" class="column">
-            <div class="dropdown is-active is-right">
-              <div class="dropdown-trigger">
-                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" id="btnToggleViewContainer" tabindex="-1">
-                  <i class="fas fa-list"></i>&nbsp;<span id="viewView"></span>
-                </button>
-              </div>
-              <div class="dropdown-menu is-right is-active" role="menu">
-                <div class="dropdown-content">
-                  <div class="dropdown-item">
-                    <div class="toggle">
-                      <span id="viewToggleShowCompleted" class="text"></span>
-                      <label class="switch" for="toggleShowCompleted">
-                        <input type="checkbox" id="toggleShowCompleted" tabindex="0">
-                        <span class="slider round"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <div id="viewBoxShowHidden" class="dropdown-item">
-                    <hr class="dropdown-divider">
-                    <div class="toggle">
-                      <span id="viewToggleShowHidden" class="text"></span>
-                      <label class="switch" for="toggleShowHidden">
-                        <input type="checkbox" id="toggleShowHidden" tabindex="0">
-                        <span class="slider round"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="dropdown-item">
-                    <hr class="dropdown-divider">
-                    <div class="toggle">
-                      <span id="viewToggleCompactView" class="text"></span>
-                      <label class="switch" for="toggleView">
-                        <input type="checkbox" id="toggleView" tabindex="0">
-                        <span class="slider round"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="dropdown-item zoom">
-                    <hr class="dropdown-divider">
-                      <a href="#" id="zoomOut"><i class="fas fa-minus-circle"></i></a>
-                      <a href="#" id="zoomIn"><i class="fas fa-plus-circle"></i></a>
-                      <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
-                  </div>
-                  <div class="dropdown-item">
-                    <hr class="dropdown-divider">
-                    <div class="field">
-                      <div class="control">
-                        <div class="select has-icons-left">
-                          <select id="viewSelectSortBy">
-                            <option id="sortByPriority" value="priority"></option>
-                            <option id="sortByDueDate" value="dueString"></option>
-                            <option id="sortByContexts" value="contexts"></option>
-                            <option id="sortByProjects" value="projects"></option>
-                          </select>
-                          <span class="icon is-small is-left">
-                            <i class="fas fa-sort"></i>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>-->
         </div>
         <section id="todoTable" tabindex="-1">
           <div id="resultStats" class="column">
-            <span class="tag">
-              <!--<span></span>&nbsp;&nbsp;&nbsp;
-              <a href="#" class="btnFilter"><i class="fas fa-filter"></i>&nbsp;<span id="selectionBtnShowFilters"></span></a>-->
-            </span>
+            <span class="tag"></span>
           </div>
           <div id="todoTableContainer"></div>
         </section>
@@ -395,141 +314,6 @@
         </div>
       </div>
     </form>
-
-
-
-    <!--<div id="modalView" class="modal content is-active" tabindex="0">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <table>
-          <tr>
-            <th colspan="100%">
-              Todo list
-            </th>
-          </tr>
-          <tr>
-            <td id="">Sort by</td>
-            <td>
-              <div class="field">
-                <div class="control">
-                  <div class="select has-icons-left">
-                    <select id="viewSelectSortBy">
-                      <option id="sortByPriority" value="priority"></option>
-                      <option id="sortByDueDate" value="dueString"></option>
-                      <option id="sortByContexts" value="contexts"></option>
-                      <option id="sortByProjects" value="projects"></option>
-                    </select>
-                    <span class="icon is-small is-left">
-                      <i class="fas fa-sort"></i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td id="viewToggleShowCompleted"></td>
-            <td>
-              <span class="toggle">
-                <label class="switch" for="toggleShowCompleted">
-                  <input type="checkbox" id="toggleShowCompleted" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td id="viewBoxShowHidden"><span id="viewToggleShowHidden"></span></td>
-            <td>
-              <span class="toggle">
-                <label class="switch" for="toggleShowHidden">
-                  <input type="checkbox" id="toggleShowHidden" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Aufgaben, die heute fällig sind</td>
-            <td>
-              <span class="toggle">
-                <label class="switch" for="toggleShowHidden">
-                  <input type="checkbox" id="" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Aufgaben, die in der Zukunft fällig sind</td>
-            <td>
-              <span class="toggle">
-                <label class="switch" for="toggleShowHidden">
-                  <input type="checkbox" id="" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Aufgaben, die überfällig sind</td>
-            <td>
-              <span class="toggle">
-                <label class="switch" for="toggleShowHidden">
-                  <input type="checkbox" id="" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-              </span>
-            </td>
-          </tr>
-          <!--<tr id="viewBoxShowHidden">
-            <td id="viewToggleShowHidden"></td>
-            <td>
-              <div class="toggle">
-                <label class="switch" for="toggleShowHidden">
-                  <input type="checkbox" id="toggleShowHidden" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </td>
-          </tr>
-
-        </table>
-        <table>
-          <tr>
-            <th colspan="100%">
-              App view
-            </th>
-          </tr>
-            <td>
-              <p id="viewToggleCompactView"></p>
-            </td>
-            <td>
-              <span class="toggle">
-                <label class="switch" for="toggleView">
-                  <input type="checkbox" id="toggleView" tabindex="0">
-                  <span class="slider round"></span>
-                </label>
-              </span>
-            </td>
-          </tr>
-
-          <tr>
-            <td>Zoom</td>
-            <td class="zoom">
-              <a href="#" id="zoomOut"><i class="fas fa-minus"></i></a>
-              <span id="zoomStatus">Zoom</span><i id="zoomUndo" class="fas fa-undo"></i>
-              <a href="#" id="zoomIn"><i class="fas fa-plus"></i></a>
-            </td>
-          </tr>
-        </table>
-        <button class="modal-close close is-large" aria-label="close"></button>
-      </div>
-    </div>-->
-
-
-
-
     <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">

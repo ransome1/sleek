@@ -54,12 +54,10 @@ table tr th {
   font-size: 1.2em;
   font-family: "FreeSansBold";
   border: none!important;
-  //border-top: solid 1px $dark-grey!important;
 }
 table tr td {
   vertical-align: top!important;
   border: none!important;
-  //border-top: solid 1px $dark-grey!important;
   padding: .5em 2em .5em 0!important;
 }
 table.files tr td:first-child {
@@ -142,7 +140,6 @@ code {
   background-color: transparent!important;
   color: inherit!important;
 }
-/* ONBOARDING */
 #noResultContainer.contentContainer {
   height: 80%;
 }
@@ -180,9 +177,6 @@ code {
 .contentContainer.is-active {
   display: flex;
 }
-
-/* Columns */
-
 .columns {
   height: 100%;
   margin: 0!important;
@@ -197,9 +191,6 @@ code {
     overflow-x: hidden;
   }
 }
-
-/* MAIN MENU */
-
 nav {
   width: auto;
   height: 100%;
@@ -262,7 +253,6 @@ nav {
     left: 0;
   }
 }
-
 #filterDrawer,
 #suggestionContainer {
   div.contexts {
@@ -310,7 +300,6 @@ nav {
     }
   }
 }
-
 #drawerContainer {
   width: var(--resizeable-width);
   min-width: var(--min-width);
@@ -322,7 +311,6 @@ nav {
   /* HANDLE FOR DRAGGING */
   /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
   #handle {
-    /*float: right;*/
     position: absolute;
     right: 0;
     top: 0;
@@ -423,10 +411,6 @@ nav {
   .dropdown-item.is-greyed-out a.headline a {
     background: none!important;
   }
-  /*#todoFilters {
-    width: 100%;
-    margin: 0;
-  }*/
   .icon.is-left {
     position: absolute;
     top: .75em;
@@ -435,24 +419,8 @@ nav {
   svg {
     color: $darker-grey;
   }
-  /*select {
-    padding-left: 2.5em!important;
-  }*/
-  /*.zoom {
-    a {
-      margin: 0 .2em;
-      font-size: 1.6em;
-    }
-    #zoomStatus {
-      padding: 0 .55em;
-    }
-    #zoomUndo {
-      cursor: pointer;
-    }
-  }*/
   table tr td:nth-child(odd) {
     width: auto;
-    //display: flex;
   }
   table tr td:nth-child(even) {
     width: 35%;
@@ -463,44 +431,10 @@ nav {
 .drawer.is-active {
   display: block!important;
 }
-
-/*#modalView {
-  table tr {
-    td:nth-child(odd) {
-      width: 75%;
-    }
-    td:nth-child(even) {
-      width: 25%;
-      text-align: center
-    }
-  }
-  .icon.is-left {
-    position: absolute;
-    top: .75em;
-    left: .65em;
-  }
-  svg {
-    color: $darker-grey;
-  }
-  select {
-    padding-left: 2.5em;
-  }
-  .zoom {
-    a {
-      margin: 0 .2em;
-      font-size: 1.6em;
-    }
-
-  }
-}*/
-
-/* SEARCH CONTAINER */
 #todoTableSearchContainer {
   width: 100%;
-  //float: left;
-  //display: flex;
+  display: none;
   padding: 0 1.5em;
-  //box-sizing: border-box;
   background: white;
   position: sticky;
   top: 0;
@@ -513,85 +447,10 @@ nav {
   .icon.is-right svg {
     color: $darker-grey;
   }
-  /*.column {
-    float: left;
-    padding: 0;
-  }*/
-  /*.column:first-child {
-    flex: 1;
-  }*/
-  /* VIEW CONTAINER */
-
-
-  /*#viewContainer {
-    float: left;
-    flex: 0 0 5.5em;
-    padding: 0;
-    margin: .2em 0 .2em .2em;
-    .dropdown-content {
-      min-width: 18em;
-      display: none;
-      padding: 1em 0;
-      div.dropdown-item {
-        clear: both;
-        font-size: 1em!important;
-        padding: 0 1em;
-        .dropdown-divider {
-          margin: 0.75em 0;
-        }
-      }
-      .dropdown-item {
-        .toggle {
-          padding: 0;
-          .text {
-            white-space: nowrap;
-          }
-        }
-        svg {
-          color: $darker-grey;
-        }
-        .select,
-        select {
-          width: 100%;
-        }
-        select {
-          padding-left: 2.5em;
-        }
-      }
-      #viewBoxShowHidden {
-        display: none;
-      }
-      #viewBoxShowHidden.is-active {
-        display: block;
-      }
-    }
-    #btnToggleViewContainer {
-      padding-right: 0;
-    }
-  }
-  /*#viewContainer.is-active {
-    .dropdown-content {
-      display: block;
-      .dropdown-item.zoom {
-        line-height: 2em;
-        padding-top: 0;
-        a {
-          float: left;
-          margin-right: .2em;
-          font-size: 1.6em;
-        }
-        #zoomStatus {
-          padding: 0 .55em;
-        }
-        #zoomUndo {
-          cursor: pointer;
-        }
-      }
-    }
-  }*/
 }
-
-/* TABLE */
+#todoTableSearchContainer.is-active {
+  display: block;
+}
 #todoTable {
   width: 100%;
   float: left;
@@ -600,7 +459,6 @@ nav {
   #resultStats {
     width: 100%;
     display: none;
-    /*font-size: .8em;*/
     text-align: center;
     padding: 0;
     white-space: nowrap;
@@ -659,9 +517,6 @@ nav {
         background: $sleek-contexts-button;
         color: $sleek-contexts-button-font;
       }
-      /*.categories {
-        padding: 0 0 0 .5em;
-      }*/
       .priority,
       .contexts,
       .projects {
@@ -791,7 +646,6 @@ nav {
       }
     }
     .flex-row.todoTableItemMore {
-      //margin-left: auto;
       position: absolute;
       right: 0;
       top: 0;
@@ -864,21 +718,16 @@ nav {
 #todoTable.is-active {
   display: block;
 }
-
 /* https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .toggle {
-  //padding: .5em 1.5em .5em 0;
   margin: 0;
-  //line-height: 2em;
   text-align: center;
   .switch {
     position: relative;
     display: inline-block;
     width: 3.5em;
     height: 1.93em;
-    //float: left;
-    //margin-right: .7em;
     .itemText {
       float: left;
     }
@@ -901,8 +750,6 @@ nav {
      -webkit-transform: translateX(1.5625em);
      -ms-transform: translateX(1.5625em);
      transform: translateX(1.5625em);
-     //background: white url("../svg/check.svg") no-repeat 50% 50%;
-     //background-size: 75% 75%;
     }
     .slider {
      position: absolute;
@@ -934,9 +781,6 @@ nav {
     }
   }
 }
-
-/* MODAL */
-
 #modalForm {
   textarea#modalFormInput {
     min-height: 5.5em;
@@ -963,7 +807,6 @@ nav {
     width: auto;
     float: left;
     margin: .5em .5em .5em 0;
-    //padding: 0;
     input,
     input::placeholder,
     select,
@@ -972,16 +815,7 @@ nav {
       border: none;
       color: $has-text-link!important;
     }
-    //.select:not(.is-multiple):not(.is-loading)::after
   }
-  ::after {
-    //display: none;
-    //left: 1.125em;
-  }
-  /*.field.dueDate,
-  .field#recurrencePicker {
-    padding: .5em 0 0 0;
-  }*/
   #btnItemStatus {
     display: none;
     text-align: center;
@@ -1027,9 +861,6 @@ nav {
 #suggestionContainer.is-active {
   display: block;
 }
-
-/* MODAL HELP */
-
 .modal.content {
   z-index: 55;
   justify-content: start!important;
@@ -1079,9 +910,6 @@ nav {
     ul li a {
       text-decoration: underline;
     }
-    /*table a {
-      text-decoration: underline;
-    }*/
     table.settings tr td {
       position: relative;
       .toggle,
@@ -1130,12 +958,7 @@ nav {
     border-width: 2px;
     margin-bottom: 0;
   }
-  /*.toggle {
-    padding: 1em 0;
-  }*/
 }
-
-/* DATEPICKER */
 #dueDatePickerInput {
   cursor: pointer;
 }
@@ -1160,11 +983,8 @@ nav {
     }
   }
 }
-
-/* RECURRANCE PICKER */
 #recurrencePicker {
   position: relative;
-  //display: none;
   #recurrencePickerInput {
     cursor: pointer;
   }
@@ -1233,8 +1053,6 @@ nav {
     margin-bottom: .5em;
   }
 }
-
-/* COMPACT VIEW */
 body.compact {
   #todoTableSearchContainer {
     padding: 1em;
@@ -1286,18 +1104,11 @@ body.compact {
   }
   .drawer {
     padding: 1.5em!important;
-    /*.toggle {
-      margin: 0!important;
-      padding: 1.5em .5em 1em 0!important;
-    }*/
   }
   #suggestionContainer.drawer {
     padding: 0!important;
   }
 }
-
-/* MEDIA QUERIES */
-
 @media (max-width: 992px) {
   .modal.content {
     .modal-card {
@@ -1344,6 +1155,5 @@ body.compact {
     max-width: 85%;
   }
 }
-
 @import "../css/datepicker.css";
 @import "../../node_modules/bulma/bulma.sass";

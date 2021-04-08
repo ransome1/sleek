@@ -139,7 +139,6 @@ code {
   background-color: transparent !important;
   color: inherit !important; }
 
-/* ONBOARDING */
 #noResultContainer.contentContainer {
   height: 80%; }
 
@@ -171,7 +170,6 @@ code {
 .contentContainer.is-active {
   display: flex; }
 
-/* Columns */
 .columns {
   height: 100%;
   margin: 0 !important; }
@@ -183,7 +181,6 @@ code {
     overflow-y: auto;
     overflow-x: hidden; }
 
-/* MAIN MENU */
 nav {
   width: auto;
   height: 100%;
@@ -297,7 +294,6 @@ nav {
   /* HANDLE FOR DRAGGING */
   /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */ }
   #drawerContainer #handle {
-    /*float: right;*/
     position: absolute;
     right: 0;
     top: 0;
@@ -351,26 +347,7 @@ nav {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 2em;
-  background: #ebebeb;
-  /*#todoFilters {
-    width: 100%;
-    margin: 0;
-  }*/
-  /*select {
-    padding-left: 2.5em!important;
-  }*/
-  /*.zoom {
-    a {
-      margin: 0 .2em;
-      font-size: 1.6em;
-    }
-    #zoomStatus {
-      padding: 0 .55em;
-    }
-    #zoomUndo {
-      cursor: pointer;
-    }
-  }*/ }
+  background: #ebebeb; }
   .drawer .dropdown-item {
     width: 100%;
     padding: 0;
@@ -417,117 +394,14 @@ nav {
 .drawer.is-active {
   display: block !important; }
 
-/*#modalView {
-  table tr {
-    td:nth-child(odd) {
-      width: 75%;
-    }
-    td:nth-child(even) {
-      width: 25%;
-      text-align: center
-    }
-  }
-  .icon.is-left {
-    position: absolute;
-    top: .75em;
-    left: .65em;
-  }
-  svg {
-    color: $darker-grey;
-  }
-  select {
-    padding-left: 2.5em;
-  }
-  .zoom {
-    a {
-      margin: 0 .2em;
-      font-size: 1.6em;
-    }
-
-  }
-}*/
-/* SEARCH CONTAINER */
 #todoTableSearchContainer {
   width: 100%;
+  display: none;
   padding: 0 1.5em;
   background: white;
   position: sticky;
   top: 0;
-  z-index: 45;
-  /*.column {
-    float: left;
-    padding: 0;
-  }*/
-  /*.column:first-child {
-    flex: 1;
-  }*/
-  /* VIEW CONTAINER */
-  /*#viewContainer {
-    float: left;
-    flex: 0 0 5.5em;
-    padding: 0;
-    margin: .2em 0 .2em .2em;
-    .dropdown-content {
-      min-width: 18em;
-      display: none;
-      padding: 1em 0;
-      div.dropdown-item {
-        clear: both;
-        font-size: 1em!important;
-        padding: 0 1em;
-        .dropdown-divider {
-          margin: 0.75em 0;
-        }
-      }
-      .dropdown-item {
-        .toggle {
-          padding: 0;
-          .text {
-            white-space: nowrap;
-          }
-        }
-        svg {
-          color: $darker-grey;
-        }
-        .select,
-        select {
-          width: 100%;
-        }
-        select {
-          padding-left: 2.5em;
-        }
-      }
-      #viewBoxShowHidden {
-        display: none;
-      }
-      #viewBoxShowHidden.is-active {
-        display: block;
-      }
-    }
-    #btnToggleViewContainer {
-      padding-right: 0;
-    }
-  }
-  /*#viewContainer.is-active {
-    .dropdown-content {
-      display: block;
-      .dropdown-item.zoom {
-        line-height: 2em;
-        padding-top: 0;
-        a {
-          float: left;
-          margin-right: .2em;
-          font-size: 1.6em;
-        }
-        #zoomStatus {
-          padding: 0 .55em;
-        }
-        #zoomUndo {
-          cursor: pointer;
-        }
-      }
-    }
-  }*/ }
+  z-index: 45; }
   #todoTableSearchContainer .icon.is-left {
     top: .65em;
     left: .65em; }
@@ -535,7 +409,9 @@ nav {
   #todoTableSearchContainer .icon.is-right svg {
     color: #4a4a4a; }
 
-/* TABLE */
+#todoTableSearchContainer.is-active {
+  display: block; }
+
 #todoTable {
   width: 100%;
   float: left;
@@ -544,7 +420,6 @@ nav {
   #todoTable #resultStats {
     width: 100%;
     display: none;
-    /*font-size: .8em;*/
     text-align: center;
     padding: 0;
     white-space: nowrap; }
@@ -579,10 +454,7 @@ nav {
       padding: .75em 0;
       margin-right: 1em;
       height: auto;
-      line-height: 1.5em;
-      /*.categories {
-        padding: 0 0 0 .5em;
-      }*/ }
+      line-height: 1.5em; }
       #todoTable .flex-table .flex-row .is-white {
         background: none; }
       #todoTable .flex-table .flex-row span.tag {
@@ -793,55 +665,59 @@ nav {
     .toggle .switch .slider.round:before {
       border-radius: 50%; }
 
-/* MODAL */
-#modalForm {
-  /*.field.dueDate,
-  .field#recurrencePicker {
-    padding: .5em 0 0 0;
-  }*/ }
-  #modalForm textarea#modalFormInput {
-    min-height: 5.5em;
-    overflow: hidden;
-    resize: none; }
-  #modalForm #modalFormInputHelp,
-  #modalForm #modalFormInputResize {
-    z-index: 60;
-    cursor: pointer;
-    pointer-events: all; }
-  #modalForm .card-header-title {
-    font-family: "FreeSansBold"; }
-  #modalForm .message {
-    display: none;
-    margin: 1em 0; }
-  #modalForm .is-active {
-    display: block; }
-  #modalForm .field {
-    width: auto;
-    float: left;
-    margin: .5em .5em .5em 0; }
-    #modalForm .field input,
-    #modalForm .field input::placeholder,
-    #modalForm .field select,
-    #modalForm .field select::placeholder {
-      background: none !important;
-      border: none;
-      color: #3273dc !important; }
-  #modalForm #btnItemStatus {
-    display: none;
-    text-align: center; }
-  #modalForm #btnItemStatus.is-active {
-    display: block; }
-  #modalForm button {
-    font-size: 1em;
-    background: none;
-    color: #3273dc;
+#modalForm textarea#modalFormInput {
+  min-height: 5.5em;
+  overflow: hidden;
+  resize: none; }
+
+#modalForm #modalFormInputHelp,
+#modalForm #modalFormInputResize {
+  z-index: 60;
+  cursor: pointer;
+  pointer-events: all; }
+
+#modalForm .card-header-title {
+  font-family: "FreeSansBold"; }
+
+#modalForm .message {
+  display: none;
+  margin: 1em 0; }
+
+#modalForm .is-active {
+  display: block; }
+
+#modalForm .field {
+  width: auto;
+  float: left;
+  margin: .5em .5em .5em 0; }
+  #modalForm .field input,
+  #modalForm .field input::placeholder,
+  #modalForm .field select,
+  #modalForm .field select::placeholder {
+    background: none !important;
     border: none;
-    border-right: 1px solid #ebebeb !important;
-    cursor: pointer; }
-  #modalForm button:hover {
-    color: black; }
-  #modalForm .card-footer {
-    clear: both; }
+    color: #3273dc !important; }
+
+#modalForm #btnItemStatus {
+  display: none;
+  text-align: center; }
+
+#modalForm #btnItemStatus.is-active {
+  display: block; }
+
+#modalForm button {
+  font-size: 1em;
+  background: none;
+  color: #3273dc;
+  border: none;
+  border-right: 1px solid #ebebeb !important;
+  cursor: pointer; }
+
+#modalForm button:hover {
+  color: black; }
+
+#modalForm .card-footer {
+  clear: both; }
 
 #suggestionContainer {
   height: auto;
@@ -864,15 +740,11 @@ nav {
 #suggestionContainer.is-active {
   display: block; }
 
-/* MODAL HELP */
 .modal.content {
   z-index: 55;
   justify-content: start !important;
   padding-top: 2.5em;
-  margin: 0 !important;
-  /*.toggle {
-    padding: 1em 0;
-  }*/ }
+  margin: 0 !important; }
   .modal.content .title.is-4 {
     font-size: 1.2em;
     margin: 1em 0 0.5em 0; }
@@ -903,10 +775,7 @@ nav {
     z-index: 55; }
   .modal.content .modal-card-body {
     background: none;
-    display: none;
-    /*table a {
-      text-decoration: underline;
-    }*/ }
+    display: none; }
     .modal.content .modal-card-body ul li a {
       text-decoration: underline; }
     .modal.content .modal-card-body table.settings tr td {
@@ -944,7 +813,6 @@ nav {
     border-width: 2px;
     margin-bottom: 0; }
 
-/* DATEPICKER */
 #dueDatePickerInput {
   cursor: pointer; }
 
@@ -964,7 +832,6 @@ nav {
       border-color: transparent;
       color: #3273dc; }
 
-/* RECURRANCE PICKER */
 #recurrencePicker {
   position: relative; }
   #recurrencePicker #recurrencePickerInput {
@@ -1021,7 +888,6 @@ nav {
   .messages .message-body p {
     margin-bottom: .5em; }
 
-/* COMPACT VIEW */
 body.compact #todoTableSearchContainer {
   padding: 1em; }
   body.compact #todoTableSearchContainer .column {
@@ -1058,16 +924,11 @@ body.compact nav ul {
     font-family: "FreeSansBold"; }
 
 body.compact .drawer {
-  padding: 1.5em !important;
-  /*.toggle {
-      margin: 0!important;
-      padding: 1.5em .5em 1em 0!important;
-    }*/ }
+  padding: 1.5em !important; }
 
 body.compact #suggestionContainer.drawer {
   padding: 0 !important; }
 
-/* MEDIA QUERIES */
 @media (max-width: 992px) {
   .modal.content .modal-card {
     width: 90% !important;
