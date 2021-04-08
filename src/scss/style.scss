@@ -852,8 +852,12 @@ nav {
       }
       .priority {
         color: white;
-        background: $has-text-grey-light;
+        background: $has-text-grey-light!important;
       }
+    }
+    .flex-row.priority {
+      color: white;
+      background: $has-text-grey-light!important;
     }
   }
 }

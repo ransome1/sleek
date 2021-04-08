@@ -8,6 +8,7 @@
   "toggleCompletedTodos": "Activar los todo completados",
   "sortBy": "Ordenar por",
   "completedTodos": "Todos completados",
+  "sortCompletedLast": "Todos completados al final",
   "hiddenTodos": "Todos ocultas",
   "compactView": "Vista compacta",
   "priority": "Prioridad",

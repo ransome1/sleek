@@ -1253,7 +1253,8 @@ function generateTodoData(searchString) {
     let categoriesFiltered = new Array;
     if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
     // if set: remove all completed todos
-    if(window.userData.showCompleted==false) {
+    //if(!window.userData.showCompleted || (window.userData.showCompleted && window.userData.sortCompletedLast)) {
+    if(!window.userData.showCompleted) {
       items.objectsFiltered = items.incomplete;
     } else {
       items.objectsFiltered = items.objects;
@@ -1353,11 +1354,18 @@ function generateTodoData(searchString) {
     });
     // build object according to sorting method
     items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
-      object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
+      if(window.userData.sortCompletedLast && a.complete) {
+        object[a.complete] = [...object[a.complete] || [], a];
+      } else {
+        object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
+      }
+      //object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
       return object;
     }, {});
     // object is converted to a sorted array
     items.objectsFiltered = Object.entries(items.objectsFiltered).sort(function(a,b) {
+      // when b is null sort it after a
+      if(window.userData.sortCompletedLast && b[0]==="true") return -1;
       // when a is null sort it after b
       if(a[0]==="null") return 1;
       // when b is null sort it after a
@@ -1365,12 +1373,19 @@ function generateTodoData(searchString) {
       // sort alphabetically
       if(a < b) return -1;
     });
+    // if sortCompletedLast a separate array of completed todos is added to the object
+    /*if(window.userData.showCompleted && window.userData.sortCompletedLast) {
+      items.objectsFiltered.push(["completed", items.complete]);
+    }*/
     // each priority group -> A to Z plus null for all todos with no priority
     for (let itemGroup in items.objectsFiltered) {
       // nodes need to be created to add them to the outer fragment
       // create a divider row
-      // first one is empty
-      if(items.objectsFiltered[itemGroup][0]!="null" && window.userData.sortBy!="dueString") {
+      // completed todos
+      if(window.userData.sortCompletedLast && items.objectsFiltered[itemGroup][0]==="true") {
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">&nbsp;</div></div>"))
+      // for priority, context and project
+      } else if(items.objectsFiltered[itemGroup][0]!="null" && window.userData.sortBy!="dueString") {
         tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"" + items.objectsFiltered[itemGroup][0] + " " + window.userData.sortBy + "\">" + items.objectsFiltered[itemGroup][0].replace(/,/g, ', ') + "</div></div>"))
       // if sorting is by due date
       } else if(window.userData.sortBy==="dueString" && items.objectsFiltered[itemGroup][1][0].due) {
@@ -1383,7 +1398,7 @@ function generateTodoData(searchString) {
         } else {
           tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[itemGroup][0] + "</div></div>"))
         }
-      // for priorities, contexts, projects
+      // create an empty divider row
       } else {
         tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">&nbsp;</div></div>"))
       }
@@ -1410,7 +1425,15 @@ function generateTodoData(searchString) {
         // if all fail, no change to sort order
         return 0;
       });
-
+      // third put completed todos at the end
+      /*if(window.userData.sortCompletedLast) {
+        items.objectsFiltered[itemGroup][1] = items.objectsFiltered[itemGroup][1].sort(function(a, b) {
+          // when a is smaller than b it, a is put after b
+          if(b.complete) return -1
+          // if all fail, no change to sort order
+          return 0;
+        });
+      }*/
       // build the fragments per itemGroup
       for (let item in items.objectsFiltered[itemGroup][1]) {
         let todo = items.objectsFiltered[itemGroup][1][item];
@@ -1637,6 +1660,7 @@ function setTranslations() {
       viewHeadlineTodoList.innerHTML = translations.viewHeadlineTodoList;
       viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
       viewToggleShowCompleted.innerHTML = translations.completedTodos;
+      viewToggleSortCompletedLast.innerHTML = translations.sortCompletedLast;
       viewToggleDueIsToday.innerHTML = translations.dueToday;
       viewToggleDueIsFuture.innerHTML = translations.dueFuture;
       viewToggleDueIsPast.innerHTML = translations.duePast;
@@ -1773,6 +1797,7 @@ function setToggles() {
     toggleMatomoEvents.checked = window.userData.matomoEvents;
     toggleNotifications.checked = window.userData.notifications;
     showCompleted.checked = window.userData.showCompleted;
+    sortCompletedLast.checked = window.userData.sortCompletedLast;
     showHidden.checked = window.userData.showHidden;
     showDueIsToday.checked = window.userData.showDueIsToday;
     showDueIsFuture.checked = window.userData.showDueIsFuture;

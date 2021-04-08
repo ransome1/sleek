@@ -8,6 +8,7 @@
   "toggleCompletedTodos": "Afficher/masquer les tâches complétées",
   "sortBy": "Trier par",
   "completedTodos": "Tâches complétées",
+  "sortCompletedLast": "Tâches terminées à la fin",
   "hiddenTodos": "Tâches caché",
   "compactView": "Vue compacte",
   "priority": "Priorité",

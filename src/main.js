@@ -67,6 +67,7 @@ const userData = new Store({
     windowBounds: { width: 1025, height: 768 },
     maximizeWindow: false,
     showCompleted: true,
+    sortCompletedLast: true,
     showHidden: true,
     showDueIsToday: true,
     showDueIsFuture: true,
@@ -158,6 +159,10 @@ const createWindow = () => {
   // if default font size is not set
   if(!userData.data.zoom) {
     userData.set("zoom", 100);
+  }
+  //
+  if(!userData.data.sortCompletedLast) {
+    userData.set("sortCompletedLast", true);
   }
   // if default value for hidden todos is not set
   if(!userData.data.showHidden) {

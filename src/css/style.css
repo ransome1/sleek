@@ -733,7 +733,10 @@ nav {
         color: inherit; }
       #todoTable .flex-table.completed .flex-row .priority {
         color: white;
-        background: #b5b5b5; }
+        background: #b5b5b5 !important; }
+    #todoTable .flex-table.completed .flex-row.priority {
+      color: white;
+      background: #b5b5b5 !important; }
 
 #todoTable.is-active {
   display: block; }

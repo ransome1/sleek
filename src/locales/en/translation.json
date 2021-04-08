@@ -8,6 +8,7 @@
   "toggleCompletedTodos": "Toggle completed todos",
   "sortBy": "Sort by",
   "completedTodos": "Completed todos",
+  "sortCompletedLast": "Completed todos at the end",
   "hiddenTodos": "Hidden todos",
   "compactView": "Compact view",
   "priority": "Priority",
