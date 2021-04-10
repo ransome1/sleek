@@ -16,11 +16,6 @@ confinement: strict
 icon: ./assets/icons/icon.png
 license: MIT
 compression: lzo
-architectures:
-- build-on: amd64
-- build-on: armhf
-- build-on: arm64
-- build-on: i386
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
@@ -41,7 +36,7 @@ parts:
     build-environment:
     - PATH: "$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin"
     build-snaps:
-    - node/12/stable
+    - node/14/stable
     source: .
     override-build: |
       if [ -n "$http_proxy" ]; then
@@ -59,10 +54,10 @@ parts:
   cleanup:
     after: [ sleek ]
     plugin: nil
-    build-snaps: [ gnome-3-28-1804 ]
+    build-snaps: [ gnome-3-34-1804 ]
     override-prime: |
       set -eux
-      for snap in "gnome-3-28-1804"; do  # List all content-snaps you're using here
+      for snap in "gnome-3-34-1804"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do

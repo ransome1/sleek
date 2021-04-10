@@ -49,7 +49,7 @@ table,
   width: 100%;
   background: transparent !important;
   border-collapse: separate;
-  margin-bottom: 2em !important; }
+  margin-bottom: 2em; }
 
 table tr th {
   padding: 0 !important;
@@ -62,14 +62,14 @@ table tr td {
   border: none !important;
   padding: 0.5em 2em 0.5em 0 !important; }
 
-table.files tr td {
-  vertical-align: middle; }
-
-table.files tr td:first-child {
-  width: 3em; }
-
-table.files tr td:last-child {
-  cursor: pointer; }
+table.files {
+  margin: 0; }
+  table.files tr td {
+    vertical-align: middle; }
+  table.files tr td:first-child {
+    width: 3em; }
+  table.files tr td:last-child {
+    cursor: pointer; }
 
 body::-webkit-scrollbar {
   display: none; }
@@ -391,7 +391,8 @@ nav {
   .drawer svg {
     color: #4a4a4a; }
   .drawer table tr td:nth-child(odd) {
-    width: auto; }
+    width: auto;
+    vertical-align: middle; }
   .drawer table tr td:nth-child(even) {
     width: 35%;
     text-align: center;

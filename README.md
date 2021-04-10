@@ -28,7 +28,11 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 
 <a href='https://flathub.org/apps/details/com.github.ransome1.sleek'><img width='180' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
-### Download the binary
+### Download it for Windows, Linux or MacOS from SourceForge
+You can download sleek for Windows, MacOS and Linux from SourceForge. Please feel free to leave a review while you're there, it's highly appreciated.
+<a href="https://sourceforge.net/p/sleek/"><img alt="Download sleek - a todo.txt app" src="https://sourceforge.net/sflogo.php?type=17&group_id=3345159" width=200></a>
+
+### Download it for Windows, Linux or MacOS from Github
 You can download sleek for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
 
 ### sleeks' Roadmap 2021

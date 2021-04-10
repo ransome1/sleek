@@ -641,6 +641,8 @@ function changeFile(path) {
     // only push new path if it is not already in the user data
     if(!fileFound) window.userData.files.push([1, path]);
     // persist new file path
+    window.userData.file = path;
+    setUserData("file", window.userData.file);
     setUserData("files", window.userData.files);
     // get content and start building objects and table
     getFileContent(path).then(function(result) {
@@ -1671,7 +1673,6 @@ function setTranslations() {
       sortByPriority.innerHTML = translations.priority;
       sortByContexts.innerHTML = translations.contexts;
       sortByProjects.innerHTML = translations.projects;
-      //viewView.innerHTML = translations.view;
       addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
       addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
       addTodoContainerButton.innerHTML = translations.addTodo;

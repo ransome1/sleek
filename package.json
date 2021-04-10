@@ -2,8 +2,8 @@
   "name": "sleek",
   "productName": "sleek",
   "version": "0.9.9",
-  "description": "sleek is a todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
-  "synopsis": "sleek is a todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
+  "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
+  "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
   "keywords": [
     "todo.txt",
@@ -37,7 +37,8 @@
         "deb",
         "freebsd",
         "rpm",
-        "AppImage"
+        "AppImage",
+        "pacman"
       ]
     },
     "mac": {
@@ -74,12 +75,13 @@
   "freebsd": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
+  "pacman": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -lw --publish never",
+    "dist": "electron-builder -lmw --publish never",
     "appx": "electron-builder -w appx --publish never",
-    "appimage": "electron-builder -l AppImage --publish never",
-    "win": "electron-builder -w portable --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."

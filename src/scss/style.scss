@@ -50,7 +50,7 @@ table,
   width: 100%;
   background: transparent!important;
   border-collapse:separate;
-  margin-bottom: 2em!important;
+  margin-bottom: 2em;
 }
 table tr th {
   padding: 0!important;
@@ -63,15 +63,18 @@ table tr td {
   border: none!important;
   padding: .5em 2em .5em 0!important;
 }
-table.files tr {
-  td {
-    vertical-align: middle;
-  }
-  td:first-child {
-    width: 3em;
-  }
-  td:last-child {
-    cursor: pointer;
+table.files {
+  margin: 0;
+  tr {
+    td {
+      vertical-align: middle;
+    }
+    td:first-child {
+      width: 3em;
+    }
+    td:last-child {
+      cursor: pointer;
+    }
   }
 }
 body::-webkit-scrollbar {
@@ -429,6 +432,7 @@ nav {
   }
   table tr td:nth-child(odd) {
     width: auto;
+    vertical-align: middle;
   }
   table tr td:nth-child(even) {
     width: 35%;

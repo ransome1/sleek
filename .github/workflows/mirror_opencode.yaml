@@ -1,4 +1,4 @@
-name: Mirror and run GitLab CI
+name: Mirror to opencode.net
 
 on: [push]
 
