@@ -54,6 +54,7 @@ function getCurrentFile() {
 let fileWatcher;
 const { app, BrowserWindow, nativeTheme, electron, ipcMain, session, Notification, dialog } = require("electron");
 const { is } = require("electron-util");
+//const { autoUpdater } = require('electron-updater');
 const fs = require("fs");
 const path = require("path");
 const isMac = process.platform === "darwin";
@@ -497,6 +498,11 @@ const createWindow = () => {
       once: true
     });
   });
+  // check whether there are any available updates once the main window is ready
+  // https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6
+  /*mainWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });*/
 };
 // ########################################################################################################################
 //
@@ -523,3 +529,11 @@ app.on("activate", () => {
   }
   app.show();
 });
+// event listeners to handle update events
+// https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6
+/*autoUpdater.on('update-available', () => {
+  mainWindow.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update_downloaded');
+});*/
