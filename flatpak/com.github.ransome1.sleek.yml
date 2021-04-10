@@ -21,6 +21,7 @@ modules:
       append-path: /usr/lib/sdk/node14/bin
       env:
         XDG_CACHE_HOME: /run/build/sleek/flatpak-node/cache
+        GTK_USE_PORTAL: 1
     buildsystem: simple
     build-commands:
       - npm install --prefix=sleek --offline --cache=$FLATPAK_BUILDER_BUILDDIR/flatpak-node/npm-cache

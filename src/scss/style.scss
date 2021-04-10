@@ -29,6 +29,9 @@ button, button:focus, button:active, button:active, button:after, button::before
   border: none!important;
   box-shadow: none!important;
 }
+.is-hidden {
+  display: none!important;
+}
 .button.is-outlined {
   background: transparent;
   border: 1px solid $dark-grey!important;
@@ -50,21 +53,26 @@ table,
   margin-bottom: 2em!important;
 }
 table tr th {
-  padding: 0 0 1em 0!important;
+  padding: 0!important;
   font-size: 1.2em;
   font-family: "FreeSansBold";
   border: none!important;
 }
 table tr td {
-  vertical-align: top!important;
+  vertical-align: top;
   border: none!important;
   padding: .5em 2em .5em 0!important;
 }
-table.files tr td:first-child {
-  width: 3em;
-}
-table.files tr td:last-child {
-  cursor: pointer;
+table.files tr {
+  td {
+    vertical-align: middle;
+  }
+  td:first-child {
+    width: 3em;
+  }
+  td:last-child {
+    cursor: pointer;
+  }
 }
 body::-webkit-scrollbar {
   display: none;
@@ -927,8 +935,11 @@ nav {
       }
     }
     table.settings tr td:first-child {
-      width: 85%;
+      width: 80%;
       padding-right: 3em;
+    }
+    table.settings tr td:last-child {
+      text-align: center;
     }
     table.shortcuts td {
       .tag {

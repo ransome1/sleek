@@ -80,184 +80,44 @@ Date.prototype.isFuture = function () {
   return false;
 };
 // ########################################################################################################################
-// FILE FUNCTIONS
-// ########################################################################################################################
-function changeFile(path) {
-  try {
-    // TODO explain
-    removeFileFromHistory(path);
-    // remove "active" (1) setting from all files
-    window.userData.files.forEach(function(file) {
-      file[0] = 0;
-      if(file[1]===path) file[0] = 1
-    });
-    // TODO add active (1) setting to the new file
-    if(!window.userData.files.includes(path)) window.userData.files.push([1, path]);
-    // persist new file path
-    setUserData("files", window.userData.files);
-    // also update the current file
-    window.userData.file = path;
-    // get content and start building objects and table
-    getFileContent(path).then(function(result) {
-      // only continue if we have the items object
-      generateItemsObject(result).then(function(result) {
-        // clear the filter container
-        todoFilters.innerHTML = "";
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });
-      // clear persisted filters as they propably don't make sense any more
-      resetFilters().then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });
-      // advice main process to start the filewatcher
-      window.api.send("startFileWatcher", window.userData.file);
-    }).catch(error => {
-      console.log(error);
-    });
-    // close the file modal
-    clearModal();
-    // return promise
-    return Promise.resolve("Success: File has been changed to: " + path);
-  } catch (error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
-    return Promise.reject("Error in changeFile(): " + error);
-  }
-}
-function modalChooseFile() {
-  try {
-    modalChangeFile.classList.add("is-active");
-    modalChangeFile.focus();
-    modalChangeFileTable.innerHTML = "";
-    for (let file in window.userData.files) {
-      // skip if file doesn't exist
-      var table = modalChangeFileTable;
-      table.classList.add("files");
-      var row = table.insertRow(0);
-      row.setAttribute("data-path", window.userData.files[file][1]);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      if(window.userData.files[file][0]===1) {
-        cell1.innerHTML = "<button class=\"button\" disabled>" + window.translations.selected + "</button>";
-      } else {
-        cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
-        cell1.onclick = function() {
-          // set the new path variable and change the array
-          changeFile(this.parentElement.getAttribute("data-path")).then(result => {
-            console.log(result);
-          }).catch(error => {
-            console.log(error);
-          });
-          // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
-        }
-        cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
-        cell3.title = window.translations.delete;
-        cell3.onclick = function() {
-          removeFileFromHistory(this.parentElement.getAttribute("data-path")).then(response => {
-            // after array is updated, open the modal again
-            modalChooseFile().then(response => {
-              console.log(response);
-            }).catch(error => {
-              console.log(error);
-            });
-            console.log(response);
-          }).catch(error => {
-            console.log(error);
-          });
-        }
-      }
-      cell2.innerHTML = window.userData.files[file][1];
-    }
-    return Promise.resolve("Success: File changer modal build and opened");
-  } catch (error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "modalChooseFile()", error])
-    return Promise.reject("Error in modalChooseFile(): " + error);
-  }
-}
-function removeFileFromHistory(path) {
-  try {
-    files = window.userData.files.filter(function(file) {
-      return file[1] != path;
-    });
-    setUserData("files", files);
-    return Promise.resolve("Success: File removed from history: " + path);
-  } catch (error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "removeFileFromHistory()", error])
-    return Promise.reject("Error in removeFileFromHistory(): " + error);
-  }
-}
-// ########################################################################################################################
 // HELPER FUNCTIONS
 // ########################################################################################################################
-function inView(element) {
-    var box = element.getBoundingClientRect();
-    return inViewBox(box);
-}
-function inViewBox(box) {
-    return ((box.bottom < 0) || (box.top > getWindowSize().h)) ? false : true;
-}
-function getWindowSize() {
-    return { w: document.body.offsetWidth || document.documentElement.offsetWidth || window.innerWidth, h: document.body.offsetHeight || document.documentElement.offsetHeight || window.innerHeight}
-}
-function getCaretPosition(inputId) {
-  var content = inputId;
-  if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
-    var position = content.selectionStart;
-    return position;
-  } else {
-    return false;
-  }
-}
 function clearModal() {
-  // close view container if open
-  //viewContainer.classList.remove("is-active");
-  // reset priority setting
-  priorityPicker.selectedIndex = 0;
-  // if recurrence picker was open it is now being closed
-  recurrencePickerContainer.classList.remove("is-active");
-  // if file chooser was open it is now being closed
-  modalChangeFile.classList.remove("is-active");
-  // hide suggestion box if it was open
-  suggestionContainer.classList.remove("is-active");
-  suggestionContainer.blur();
-  // defines when the composed filter is being filled with content and when it is emptied
-  let startComposing = false;
-  // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
-  let typeAheadValue = "";
-  // + or @
-  let typeAheadPrefix = "";
-  modalForm.classList.remove("is-active");
-  //modalForm.blur();
-  // remove the data item as we don't need it anymore
-  modalForm.removeAttribute("data-item");
-  // clean up the modal
-  modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
-  // clear the content in the input field as it's not needed anymore
-  modalFormInput.value = null;
-  // clear previous recurrence selection
-  recurrencePickerInput.value = null;
-  // close datepicker
-  dueDatePicker.hide();
-}
-function setButtonState(button) {
-  switch (button) {
-    case "btnArchiveTodos":
-      if(items.complete.length>0) {
-        btnArchiveTodos.disabled = false;
-      } else {
-        btnArchiveTodos.disabled = true;
-      }
-      break;
-    default:
+  try {
+    // reset priority setting
+    priorityPicker.selectedIndex = 0;
+    // if recurrence picker was open it is now being closed
+    recurrencePickerContainer.classList.remove("is-active");
+    // if file chooser was open it is now being closed
+    modalChangeFile.classList.remove("is-active");
+    // hide suggestion box if it was open
+    suggestionContainer.classList.remove("is-active");
+    // remove focus from suggestion container
+    suggestionContainer.blur();
+    // defines when the composed filter is being filled with content and when it is emptied
+    let startComposing = false;
+    // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
+    let typeAheadValue = "";
+    // + or @
+    let typeAheadPrefix = "";
+    modalForm.classList.remove("is-active");
+    // remove the data item as we don't need it anymore
+    modalForm.removeAttribute("data-item");
+    // clean up the modal
+    modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+    // clear the content in the input field as it's not needed anymore
+    modalFormInput.value = null;
+    // clear previous recurrence selection
+    recurrencePickerInput.value = null;
+    // close datepicker
+    dueDatePicker.hide();
+    return Promise.resolve("Info: Modal closed and it's values emptied");
+  } catch (error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "clearModal()", error])
+    return Promise.reject("Error in clearModal(): " + error);
   }
+
 }
 function modalFormInputEvents() {
   // if textarea, resize to content length
@@ -408,7 +268,11 @@ function showResultStats() {
 function showForm(todo, templated) {
   try {
       // clean up the form before doing anything
-      clearModal();
+      /*clearModal().then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });*/
       // in case a content window was open, it will be closed
       modal.forEach(function(el) {
         el.classList.remove("is-active");
@@ -493,6 +357,11 @@ function showForm(todo, templated) {
         modalTitle.innerHTML = window.translations.addTodo;
         btnItemStatus.classList.remove("is-active");
       }
+      // adjust size of recurrence picker input field
+      resizeInput(recurrencePickerInput);
+      // adjust size of due date picker input field
+      resizeInput(dueDatePickerInput);
+      //resizeInput(recurrencePickerInput);
       // in any case put focus into the input field
       modalFormInput.focus();
       // if textarea, resize to content length
@@ -698,6 +567,113 @@ function showContent(section) {
   firstSection.classList.add("is-active");
   section.classList.add("is-active");
   section.focus();
+}
+function showFiles() {
+  try {
+    modalChangeFile.classList.add("is-active");
+    modalChangeFile.focus();
+    modalChangeFileTable.innerHTML = "";
+    for (let file in window.userData.files) {
+      // skip if file doesn't exist
+      var table = modalChangeFileTable;
+      table.classList.add("files");
+      var row = table.insertRow(0);
+      row.setAttribute("data-path", window.userData.files[file][1]);
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+      if(window.userData.files[file][0]===1) {
+        cell1.innerHTML = "<button class=\"button\" disabled>" + window.translations.selected + "</button>";
+      } else {
+        cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
+        cell1.onclick = function() {
+          // set the new path variable and change the array
+          changeFile(this.parentElement.getAttribute("data-path")).then(result => {
+            console.log(result);
+          }).catch(error => {
+            console.log(error);
+          });
+          // trigger matomo event
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
+        }
+        cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
+        cell3.title = window.translations.delete;
+        cell3.onclick = function() {
+          let path = this.parentElement.getAttribute("data-path");
+          // remove file from files array
+          files = window.userData.files.filter(function(file) {
+            return file[1] != path;
+          });
+          // persist new files array
+          setUserData("files", files);
+          // after array is updated, open the modal again
+          showFiles().then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+        }
+      }
+      cell2.innerHTML = window.userData.files[file][1];
+    }
+    return Promise.resolve("Success: File changer modal build and opened");
+  } catch (error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showFiles()", error])
+    return Promise.reject("Error in showFiles(): " + error);
+  }
+}
+
+function changeFile(path) {
+  try {
+    // use the loop to check if the new path is already in the user data
+    let fileFound = false;
+    window.userData.files.forEach(function(file) {
+      // if path is found it is set active
+      if(file[1]===path) {
+        file[0] = 1
+        fileFound = true;
+      // if this entry is not equal to the new path it is set 0
+      } else {
+        file[0] = 0;
+      }
+    });
+    // only push new path if it is not already in the user data
+    if(!fileFound) window.userData.files.push([1, path]);
+    // persist new file path
+    setUserData("files", window.userData.files);
+    // get content and start building objects and table
+    getFileContent(path).then(function(result) {
+      // only continue if we have the items object
+      generateItemsObject(result).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });
+      // clear persisted filters as they propably don't make sense any more
+      resetFilters().then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });
+      // advice main process to start the filewatcher
+      window.api.send("startFileWatcher", window.userData.file);
+    }).catch(error => {
+      console.log(error);
+    });
+    // close the file modal
+    clearModal().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
+    // return promise
+    return Promise.resolve("Success: File has been changed to: " + path);
+  } catch (error) {
+    // trigger matomo event
+    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
+    return Promise.reject("Error in changeFile(): " + error);
+  }
 }
 
 function generateNotification(todo, offset) {
@@ -1120,7 +1096,7 @@ function generateTableRow(todo) {
       if(!event.target.classList.contains('fa-external-link-alt')) {
         showForm(this.parentElement.getAttribute('data-item'));
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on todo"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
     }
     // cell for the categories
@@ -1488,7 +1464,7 @@ function generateTodoData(searchString) {
     // jump to previously edited or added item
     if (document.getElementById("previousItem")) {
       // only scroll if new item is not in view
-      if(!inView(document.getElementById("previousItem"))) {
+      if(!document.getElementById("previousItem").getBoundingClientRect()) {
         // scroll to view
         document.getElementById("previousItem").scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
         // trigger a quick background ease in and out
@@ -1548,6 +1524,18 @@ function generateRecurringTodo(todo) {
   }
 }
 
+function setButtonState(button) {
+  switch (button) {
+    case "btnArchiveTodos":
+      if(items.complete.length>0) {
+        btnArchiveTodos.disabled = false;
+      } else {
+        btnArchiveTodos.disabled = true;
+      }
+      break;
+    default:
+  }
+}
 function setTodoComplete(todo) {
   try {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
@@ -1951,6 +1939,18 @@ function setFriendlyLanguageNames(languageCode) {
   }
 }
 
+function getWindowSize() {
+  return { w: document.body.offsetWidth || document.documentElement.offsetWidth || window.innerWidth, h: document.body.offsetHeight || document.documentElement.offsetHeight || window.innerHeight}
+}
+function getCaretPosition(inputId) {
+  var content = inputId;
+  if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
+    var position = content.selectionStart;
+    return position;
+  } else {
+    return false;
+  }
+}
 function getUserData() {
   return new Promise(function(resolve, reject) {
     window.api.send("getUserData");
@@ -2037,6 +2037,12 @@ function toggleTodos(name, variable) {
     document.getElementById(name).checked = window.userData[name];
     // persist the sorting
     setUserData(name, window.userData[name]);
+    // only show completedLast if showCompleted is true
+    if(window.userData.showCompleted) {
+      viewToggleSortCompletedLast.parentElement.classList.remove("is-hidden")
+    } else {
+      viewToggleSortCompletedLast.parentElement.classList.add("is-hidden")
+    }
     //
     t0 = performance.now();
     generateTodoData().then(response => {
@@ -2163,7 +2169,11 @@ function configureEvents() {
     btnItemStatus.onclick = function() {
       setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
         modalForm.classList.remove("is-active");
-        clearModal();
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
         console.log(response);
         // trigger matomo event
         if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
@@ -2196,7 +2206,7 @@ function configureEvents() {
     btnChangeTodoFile.forEach(function(el) {
       el.onclick = function () {
         if(window.userData.files.length > 0) {
-          modalChooseFile().then(response => {
+          showFiles().then(response => {
             console.log(response);
           }).catch(error => {
             console.log(error);
@@ -2219,7 +2229,11 @@ function configureEvents() {
     btnModalCancel.forEach(function(el) {
       el.onclick = function() {
         el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
-        clearModal();
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
         // trigger matomo event
         if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
       }
@@ -2269,7 +2283,11 @@ function configureEvents() {
     btnAddTodo.forEach(function(el) {
       el.onclick = function () {
         // just in case the form will be cleared first
-        clearModal();
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
         showForm();
         // trigger matomo event
         if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
@@ -2302,7 +2320,7 @@ function configureEvents() {
       toggleCompactView(this.checked).then(response => {
         console.log(response);
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Toggle compact view"]);
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Toggle compact view"]);
       }).catch(error => {
         console.log(error);
       });
@@ -2351,7 +2369,11 @@ function configureEvents() {
     };
     modalBackground.forEach(function(el) {
       el.onclick = function() {
-        clearModal();
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
         el.parentElement.classList.remove("is-active");
         suggestionContainer.classList.remove("is-active");
         suggestionContainer.blur();
@@ -2379,7 +2401,11 @@ function configureEvents() {
       if (e.preventDefault) e.preventDefault();
       submitForm().then(response => {
         // if form returns success we clear the modal
-        clearModal();
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
         console.log(response);
       }).catch(error => {
         console.log(error);
@@ -2455,6 +2481,8 @@ function configureEvents() {
       window.userData.language = this.value;
       window.api.send("setUserData", ["language", window.userData.language]);
       window.api.send("changeLanguage", this.value);
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
     }
     viewSelectSortBy.onchange = async function() {
       if(this.value) {
@@ -2467,13 +2495,21 @@ function configureEvents() {
         }).catch(error => {
           console.log(error);
         });
-        clearModal();
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+        // trigger matomo event
+        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Sort by setting changed to: " + this.value]);
       }
     }
     /*btnToggleViewContainer.onclick = function() {
       viewContainer.classList.toggle("is-active");
     }*/
     zoomRangePicker.onchange = function() {
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Zoom ranger dragged"]);
       zoom(this.value).then(response => {
         console.log(response);
       }).catch(error => {
@@ -2482,7 +2518,7 @@ function configureEvents() {
     }
     /*zoomIn.onclick = function(el) {
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Click on zoom in"]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Click on zoom in"]);
       zoom("in").then(response => {
         console.log(response);
       }).catch(error => {
@@ -2491,7 +2527,7 @@ function configureEvents() {
     };
     zoomOut.onclick = function(el) {
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Click on zoom out"]);
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Click on zoom out"]);
       zoom("out").then(response => {
         console.log(response);
       }).catch(error => {
@@ -2499,16 +2535,17 @@ function configureEvents() {
       });
     };*/
     zoomUndo.onclick = function() {
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Container", "Click on zoom undo"]);
       zoom(100).then(response => {
         console.log(response);
       }).catch(error => {
         console.log(error);
       });
+      // trigger matomo event
+      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Click on zoom undo"]);
     };
+    // clear due date and recurrence values from input field
     document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
-      let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
       todo.due = undefined;
       todo.dueString = undefined;
       // also clear the recurrence option as it doesn't make sense any more
@@ -2543,14 +2580,22 @@ function configureEvents() {
       if(e.key==="Enter" && e.ctrlKey) {
         submitForm().then(response => {
           // if form returns success we clear the modal
-          clearModal();
+          clearModal().then(function(result) {
+            console.log(result);
+          }).catch(function(error) {
+            console.log(error);
+          });
           console.log(response);
         }).catch(error => {
           console.log(error);
         });
       }
       if(event.key === "Escape" && !suggestionContainer.classList.contains("is-active")) {
-        clearModal();
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
         this.classList.remove("is-active");
       } else if(event.key === "Escape" && suggestionContainer.classList.contains("is-active")) {
         suggestionContainer.classList.remove("is-active");
@@ -2558,7 +2603,7 @@ function configureEvents() {
       }
     });
     /*suggestionContainer.addEventListener ("keydown", function (e) {
-      if(event.key === 'Escape') {
+      if(event.key === "Escape") {
         suggestionContainer.classList.remove("is-active");
         suggestionContainer.blur();
       }
@@ -2572,19 +2617,25 @@ function configureEvents() {
       if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) recurrencePickerContainer.classList.remove("is-active")
     });
     modalHelp.addEventListener ("keydown", function () {
-      if(event.key === 'Escape') this.classList.remove("is-active");
+      if(event.key === "Escape") this.classList.remove("is-active");
     });
     modalChangeFile.addEventListener ("keydown", function () {
-      if(event.key === 'Escape') clearModal();
+      if(event.key === "Escape") {
+        clearModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
     });
     modalSettings.addEventListener ("keydown", function () {
-      if(event.key === 'Escape') this.classList.remove("is-active");
+      if(event.key === "Escape") this.classList.remove("is-active");
     });
     suggestionContainer.addEventListener ("keydown", function () {
-      if(event.key === 'Escape') this.classList.remove("is-active");
+      if(event.key === "Escape") this.classList.remove("is-active")
     });
     filterDrawer.addEventListener ("keydown", function () {
-      if(event.key === 'Escape') {
+      if(event.key === "Escape") {
         showDrawer(false, navBtnFilter, filterDrawer).then(function(result) {
           console.log(result);
         }).catch(function(error) {
@@ -2593,7 +2644,7 @@ function configureEvents() {
       }
     });
     viewDrawer.addEventListener ("keydown", function () {
-      if(event.key === 'Escape') {
+      if(event.key === "Escape") {
         showDrawer(false, navBtnView, viewDrawer).then(function(result) {
           console.log(result);
         }).catch(function(error) {
@@ -2772,12 +2823,15 @@ function checkDismissedMessages() {
 
 function resetFilters() {
   try {
-    // also clear the persisted filers, by setting it to undefined the object entry will be removed fully
+    // clear the persisted filers, by setting it to undefined the object entry will be removed fully
     setUserData("selectedFilters", new Array);
     // clear filtered categories
     setUserData("categoriesFiltered", new Array);
+    // empty old filter container
+    todoFilters.innerHTML = "";
     // clear search input
     todoTableSearch.value = null;
+    // regenerate the data
     t0 = performance.now();
     generateTodoData().then(response => {
       console.log(response);
@@ -2966,7 +3020,11 @@ window.onload = async function () {
     generateItemsObject(content).then(function(result) {
       console.log(result);
       // close any modal
-      clearModal();
+      clearModal().then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        console.log(error);
+      });
     }).catch(function(error) {
       console.log(error);
     });
