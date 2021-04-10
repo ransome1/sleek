@@ -25,7 +25,7 @@ apps:
       PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
       SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
       GTK_USE_PORTALS: 1
-    extensions: [gnome-3-34]
+    extensions: [gnome-3-28]
     plugs:
     - home
     - browser-support
@@ -54,10 +54,10 @@ parts:
   cleanup:
     after: [ sleek ]
     plugin: nil
-    build-snaps: [ gnome-3-34-1804 ]
+    build-snaps: [ gnome-3-28-1804 ]
     override-prime: |
       set -eux
-      for snap in "gnome-3-34-1804"; do  # List all content-snaps you're using here
+      for snap in "gnome-3-28-1804"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do
