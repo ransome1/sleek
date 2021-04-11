@@ -27,6 +27,19 @@ const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
+// Override function
+const renderer = {
+  link(href, title, text) {
+    return `
+      ${text}
+      <a href="${href}" target=\"_blank\">
+        <i class=\"fas fa-external-link-alt\"></i>
+      </a>
+    `;
+  }
+};
+
+marked.use({ renderer });
 const modal = document.querySelectorAll('.modal');
 const modalCards = document.querySelectorAll('.modal-card');
 const modalClose = document.querySelectorAll('.close');
@@ -1077,7 +1090,7 @@ function generateTableRow(todo) {
     if(todo.text) {
       if(todo.priority && window.userData.sortBy!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority " + todo.priority + "\">" + todo.priority + "</span>";
       // use the autoLink lib to attach an icon to every link and put a link on it
-      todoTableBodyCellText.innerHTML +=  todo.text.autoLink({
+      /*todoTableBodyCellText.innerHTML +=  todo.text.autoLink({
         callback: function(url) {
           // truncate the url
           let urlString = url;
@@ -1086,7 +1099,9 @@ function generateTableRow(todo) {
           }
           return urlString + " <a href=" + url + " target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
         }
-      });
+      });*/
+      // parse text string through markdown parser
+      todoTableBodyCellText.innerHTML =  marked.parseInline(todo.text);
       // replace line feed replacement character with a space
       todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
       // add a spacer to divide text (and link) and categories
@@ -1373,7 +1388,7 @@ function generateTodoData(searchString) {
       // create a divider row
       // completed todos
       if(window.userData.sortCompletedLast && items.objectsFiltered[itemGroup][0]==="completed") {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">&nbsp;</div></div>"))
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
       // for priority, context and project
       } else if(items.objectsFiltered[itemGroup][0]!="null" && window.userData.sortBy!="dueString") {
         tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"" + items.objectsFiltered[itemGroup][0] + " " + window.userData.sortBy + "\">" + items.objectsFiltered[itemGroup][0].replace(/,/g, ', ') + "</div></div>"))
@@ -1390,7 +1405,7 @@ function generateTodoData(searchString) {
         }
       // create an empty divider row
       } else {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">&nbsp;</div></div>"))
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
       }
       // first sort by priority
       items.objectsFiltered[itemGroup][1] = items.objectsFiltered[itemGroup][1].sort(function(a, b) {

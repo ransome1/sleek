@@ -79,6 +79,7 @@ A prioritized backlog for new features and known issues can be found on <a href=
 * Filters are sorted alphanummerically
 * Todos can be looked up using full-text search
 * Hyperlinks are detected automatically and can be clicked using the icon
+* Basic markdown emphasis bold and italic are supported
 * Alarms will be triggered when a todo is due tomorrow or today
 * Todos that include either contexts or projects can be shown or hidden entirely
 * A file watcher rereads the todo.txt file if it has been changed
