@@ -13,7 +13,8 @@ contextBridge.exposeInMainWorld(
         "writeToFile",
         "startFileWatcher",
         "changeLanguage",
-        "openOrCreateFile"
+        "openOrCreateFile",
+        "changeFile"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -27,7 +28,6 @@ contextBridge.exposeInMainWorld(
         "setUserData",
         "getAppData",
         "reloadContent",
-        "changeFile",
         "triggerFunction"
       ];
       if (validChannels.includes(channel)) {

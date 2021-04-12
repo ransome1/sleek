@@ -27,9 +27,24 @@ const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
-// Override function
-const renderer = {
+// configure markdown parser
+marked.setOptions({
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+  sanitize: false,
+  sanitizer: false,
+  smartLists: false,
+  smartypants: false,
+  xhtml: false,
+  baseUrl: "https://"
+});
+renderer = {
   link(href, title, text) {
+    // truncate the url
+    if(text.length>40) {
+      text = text.slice(0, 40) + " [...]";
+    }
     return `
       ${text}
       <a href="${href}" target=\"_blank\">
@@ -38,7 +53,6 @@ const renderer = {
     `;
   }
 };
-
 marked.use({ renderer });
 const modal = document.querySelectorAll('.modal');
 const modalCards = document.querySelectorAll('.modal-card');
@@ -601,11 +615,27 @@ function showFiles() {
         cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
         cell1.onclick = function() {
           // set the new path variable and change the array
-          changeFile(this.parentElement.getAttribute("data-path")).then(result => {
+          /*changeFile(this.parentElement.getAttribute("data-path")).then(result => {
             console.log(result);
           }).catch(error => {
             console.log(error);
-          });
+          });*/
+          /*window.userData.file = this.parentElement.getAttribute("data-path");
+          setUserData("file", window.userData.file);
+          // get file content and create the items object
+          getFileContent(window.userData.file).then(function(result) {
+            // only continue if we have the items object
+            generateItemsObject(result).then(function(result) {
+              console.log(result);
+            }).catch(function(error) {
+              console.log(error);
+            });
+            // advice main process to start the filewatcher
+            window.api.send("startFileWatcher", window.userData.file);
+          }).catch(error => {
+            console.log(error);
+          });*/
+          window.api.send("changeFile", this.parentElement.getAttribute("data-path"));
           // trigger matomo event
           if(window.userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
         }
@@ -629,7 +659,7 @@ function showFiles() {
       }
       cell2.innerHTML = window.userData.files[file][1];
     }
-    return Promise.resolve("Success: File changer modal build and opened");
+    return Promise.resolve("Success: File changer modal built and opened");
   } catch (error) {
     // trigger matomo event
     if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showFiles()", error])
@@ -637,59 +667,7 @@ function showFiles() {
   }
 }
 
-function changeFile(path) {
-  try {
-    // use the loop to check if the new path is already in the user data
-    let fileFound = false;
-    window.userData.files.forEach(function(file) {
-      // if path is found it is set active
-      if(file[1]===path) {
-        file[0] = 1
-        fileFound = true;
-      // if this entry is not equal to the new path it is set 0
-      } else {
-        file[0] = 0;
-      }
-    });
-    // only push new path if it is not already in the user data
-    if(!fileFound) window.userData.files.push([1, path]);
-    // persist new file path
-    window.userData.file = path;
-    setUserData("file", window.userData.file);
-    setUserData("files", window.userData.files);
-    // get content and start building objects and table
-    getFileContent(path).then(function(result) {
-      // only continue if we have the items object
-      generateItemsObject(result).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });
-      // clear persisted filters as they propably don't make sense any more
-      resetFilters().then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });
-      // advice main process to start the filewatcher
-      window.api.send("startFileWatcher", window.userData.file);
-    }).catch(error => {
-      console.log(error);
-    });
-    // close the file modal
-    clearModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
-    // return promise
-    return Promise.resolve("Success: File has been changed to: " + path);
-  } catch (error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
-    return Promise.reject("Error in changeFile(): " + error);
-  }
-}
+
 
 function generateNotification(todo, offset) {
   try {
@@ -1102,6 +1080,7 @@ function generateTableRow(todo) {
       });*/
       // parse text string through markdown parser
       todoTableBodyCellText.innerHTML =  marked.parseInline(todo.text);
+      //todoTableBodyCellText.innerHTML =  todo.text;
       // replace line feed replacement character with a space
       todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
       // add a spacer to divide text (and link) and categories
@@ -1715,6 +1694,7 @@ function setTranslations() {
       messageShareTitle.innerHTML = translations.messageShareTitle;
       messageShareBody.innerHTML = translations.messageShareBody;
       settingsTabSettings.innerHTML = translations.settings;
+      settingsTabSettingsHeadline.innerHTML = translations.settings;
       settingsTabSettingsLanguage.innerHTML = translations.language;
       settingsTabSettingsLanguageBody.innerHTML = translations.settingsTabSettingsLanguageBody;
       settingsTabSettingsArchive.innerHTML = translations.settingsTabSettingsArchive;
@@ -1727,6 +1707,7 @@ function setTranslations() {
       settingsTabSettingsLogging.innerHTML = translations.errorEventLogging;
       settingsTabSettingsLoggingBody.innerHTML = translations.settingsTabSettingsLoggingBody;
       settingsTabAbout.innerHTML = translations.about;
+      settingsTabAboutHeadline.innerHTML = translations.about;
       settingsTabAboutContribute.innerHTML = translations.settingsTabAboutContribute;
       settingsTabAboutCopyrightLicense.innerHTML = translations.settingsTabAboutCopyrightLicense;
       settingsTabAboutCopyrightLicenseBody.innerHTML = translations.settingsTabAboutCopyrightLicenseBody;
@@ -1971,7 +1952,8 @@ function getUserData() {
   return new Promise(function(resolve, reject) {
     window.api.send("getUserData");
     window.api.receive("getUserData", (userData) => {
-      resolve(userData);
+      window.userData = userData;
+      resolve("Success: Userdata written to global variable");
     });
   });
 }
@@ -1992,7 +1974,12 @@ function getFileContent(file) {
       return new Promise(function(resolve, reject) {
         window.api.send("getFileContent", file);
         window.api.receive("getFileContent", (content) => {
-          resolve(content);
+          if(content) {
+            resolve(content);
+          } else {
+            showOnboarding(true);
+            reject("Error: No content returned from main process");
+          }
         });
       });
     }
@@ -2788,6 +2775,7 @@ function configureMainView() {
     // hide/show the addTodoContainer or noResultTodoContainer
     // file has content and objects are shown
     if(window.items.objectsFiltered.length > 0 && window.items.objects.length>0) {
+      todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
       todoTable.classList.add("is-active");
@@ -2795,12 +2783,14 @@ function configureMainView() {
       return Promise.resolve("Info: File has content and results are shown");
     // file is NOT empty but no results
     } else if(window.items.objectsFiltered.length === 0 && window.items.objects.length>0) {
+      todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
       navBtnFilter.classList.add("is-active");
       return Promise.resolve("Info: File has content, but no results are shown due to filters or search input");
     // file is empty
     } else if(window.items.objects.length === 0) {
+      todoTableSearchContainer.classList.remove("is-active");
       addTodoContainer.classList.add("is-active");
       noResultContainer.classList.remove("is-active");
       todoTable.classList.remove("is-active");
@@ -3032,7 +3022,7 @@ window.onload = async function () {
   // set listeners
   window.api.receive("reloadContent", (content) => {
     // advice main process to start the filewatcher
-    window.api.send("startFileWatcher", window.userData.file);
+    //window.api.send("startFileWatcher", window.userData.file);
     generateItemsObject(content).then(function(result) {
       console.log(result);
       // close any modal
@@ -3047,13 +3037,13 @@ window.onload = async function () {
   });
 
   // change file
-  window.api.receive("changeFile", (file) => {
+  /*window.api.receive("changeFile", (file) => {
     changeFile(file).then(function(result) {
       console.log(result);
     }).catch(function(error) {
       console.log(error);
     });
-  });
+  });*/
 
   // trigger function in renderer process
   window.api.receive("triggerFunction", (name, args) => {
@@ -3125,8 +3115,8 @@ window.onload = async function () {
   });
 
   // call user data and write it to a global variable
-  await getUserData().then(function(userData) {
-    window.userData = userData;
+  await getUserData().then(function(response) {
+    console.log(response);
     if(!userData.file) showOnboarding(true)
   }).catch(function(error) {
     console.log(error);

@@ -11,6 +11,12 @@ The todo list can be sorted and grouped by priorities or due dates. Todos with d
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's main view as seen on MacOS")
 ![Alt text](assets/screenshots/mac/main_filter_dark.png?raw=true "Screenshot of sleek's filter drawer in dark mode as seen on MacOS")
 
+### Support sleek by
+* staring, forking and watching it on Github. Once sleek reaches **30 watchers, 30 forks and 75 stars**, we can distribute it to MacOS using the <a href="https://github.com/Homebrew/brew">Homebew Package Manager</a>
+* reviewing it on <a href="https://sourceforge.net/projects/sleek/reviews">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR">Windows Store</a>
+* contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
+* translating sleek into your own language and contributing your translations
+
 ### Get it from Microsoft Store
 You can install sleek from Microsofts Windows Store
 
@@ -28,21 +34,13 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 
 <a href='https://flathub.org/apps/details/com.github.ransome1.sleek'><img width='180' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
-### Download it for Windows, Linux or MacOS from SourceForge
-You can download sleek for Windows, MacOS and Linux from SourceForge. Please feel free to leave a review while you're there, it's highly appreciated.
-<a href="https://sourceforge.net/p/sleek/"><img alt="Download sleek - a todo.txt app" src="https://sourceforge.net/sflogo.php?type=17&group_id=3345159" width=200></a>
-
-### Download it for Windows, Linux or MacOS from Github
-You can download sleek for Windows, MacOS and Linux on the <a href="https://github.com/ransome1/sleek/releases/latest">release page</a>.
+### Download it for Windows, Linux or MacOS
+You can download sleek for Windows, MacOS and Linux from
+- <a href="https://sourceforge.net/p/sleek/">SourceForge</a>
+- <a href="https://github.com/ransome1/sleek/releases/latest">Github</a>
 
 ### sleeks' Roadmap 2021
 A prioritized backlog for new features and known issues can be found on <a href="https://github.com/ransome1/sleek/projects/2">sleeks' roadmap for 2021</a>.
-
-### Support sleek by
-* star it here on Github, recommend it to others or <a href="https://sourceforge.net/projects/sleek/reviews">review it on SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR">Windows Store</a>
-* contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
-* opting in to the optional Matomo tracking feature. It's fully anonymized, and the data will give me a basic idea on which functions are actually used and which ones don't have a benefit you.
-* translating sleek into your own language and contributing your translations. To do so just duplicate the "src/locales/en" folder, rename it according to your language code, do your translations in the "translation.json" file and send me a <a href="https://help.github.com/articles/using-pull-requests/">pull request</a>. I will include your translations into the next release.
 
 ### Features
 * An existing todo.txt file can be used or a new one can be created
@@ -79,7 +77,6 @@ A prioritized backlog for new features and known issues can be found on <a href=
 * Filters are sorted alphanummerically
 * Todos can be looked up using full-text search
 * Hyperlinks are detected automatically and can be clicked using the icon
-* Basic markdown emphasis bold and italic are supported
 * Alarms will be triggered when a todo is due tomorrow or today
 * Todos that include either contexts or projects can be shown or hidden entirely
 * A file watcher rereads the todo.txt file if it has been changed

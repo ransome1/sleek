@@ -51,13 +51,10 @@ function getCurrentFile() {
     return Promise.reject("Error in getCurrentFile(): " + error);
   }
 }
-let fileWatcher;
 const { app, BrowserWindow, nativeTheme, electron, ipcMain, session, Notification, dialog } = require("electron");
 const { is } = require("electron-util");
-//const { autoUpdater } = require('electron-updater');
 const fs = require("fs");
 const path = require("path");
-const isMac = process.platform === "darwin";
 const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
@@ -95,24 +92,12 @@ const appData = {
   version: app.getVersion(),
   development: is.development,
   languages: i18nextOptions.supportedLngs,
-  path: __dirname,
-  os: null
-}
-switch (process.platform) {
-  case "darwin":
-    appData.os = "mac";
-    break;
-  case "win32":
-    appData.os = "windows";
-    break;
-  default:
-    appData.os = "linux";
-    break;
+  path: __dirname
 }
 const createWindow = () => {
+  let fileWatcher;
   let { width, height } = userData.get("windowBounds");
-  const mainWindow = new BrowserWindow(
-  {
+  const mainWindow = new BrowserWindow({
     width: width,
     height: height,
     simpleFullscreen: true,
@@ -127,58 +112,24 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     }
   });
-  mainWindow.on('move', function() {
-    userData.set("windowPosition", this.getPosition());
-  });
-  mainWindow.on('maximize', function() {
-    userData.set("maximizeWindow", true);
-  });
-  mainWindow.on('unmaximize', function() {
-    userData.set("maximizeWindow", false);
-  });
   // ########################################################################################################################
   // INITIAL CONFIGURATION
   // ########################################################################################################################
-  //
-  if(userData.data.maximizeWindow) {
-    mainWindow.maximize();
-  }
-  //
-  if(userData.data.windowPosition) {
-    mainWindow.setPosition(userData.data.windowPosition[0], userData.data.windowPosition[1]);
-  }
-  // if language isn't set use locale setting
+  if(userData.data.maximizeWindow) mainWindow.maximize()
+  if(userData.data.windowPosition) mainWindow.setPosition(userData.data.windowPosition[0], userData.data.windowPosition[1])
   if(userData.data.language) {
     var language = userData.data.language;
   } else {
     var language = app.getLocale().substr(0,2);
   }
-  // if sorting method is not set
-  if(!userData.data.sortBy) {
-    userData.set("sortBy", "priority");
-  }
-  // if default font size is not set
-  if(!userData.data.zoom) {
-    userData.set("zoom", 100);
-  }
-  //
-  if(!userData.data.sortCompletedLast) {
-    userData.set("sortCompletedLast", true);
-  }
-  // if default value for hidden todos is not set
-  if(!userData.data.showHidden) {
-    userData.set("showHidden", true);
-  }
-  if(!userData.data.showDueIsToday) {
-    userData.set("showDueIsToday", true);
-  }
-  if(!userData.data.showDueIsFuture) {
-    userData.set("showDueIsFuture", true);
-  }
-  if(!userData.data.showDueIsPast) {
-    userData.set("showDueIsPast", true);
-  }
-  // if theme hasn't been set, sleek will adapt to OS preference
+  if(!userData.data.files) userData.set("files", new Array);
+  if(!userData.data.sortBy) userData.set("sortBy", "priority")
+  if(!userData.data.zoom) userData.set("zoom", 100)
+  if(!userData.data.sortCompletedLast) userData.set("sortCompletedLast", true)
+  if(!userData.data.showHidden) userData.set("showHidden", true)
+  if(!userData.data.showDueIsToday) userData.set("showDueIsToday", true)
+  if(!userData.data.showDueIsFuture) userData.set("showDueIsFuture", true)
+  if(!userData.data.showDueIsPast) userData.set("showDueIsPast", true)
   if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
     userData.set("theme", "dark");
   } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
@@ -187,12 +138,20 @@ const createWindow = () => {
   // ########################################################################################################################
   // MAINWINDOW CONFIGURATION
   // ########################################################################################################################
-  // use ico on Windows and png on all other OS
-  if (process.platform === "win32") {
-    userData.set("os", "windows");
-    mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
-  } else {
-    mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.png"));
+  // define OS and use ico on Windows and png on all other OS
+  switch (process.platform) {
+    case "darwin":
+      appData.os = "mac";
+      mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.png"));
+      break;
+    case "win32":
+      appData.os = "windows";
+      mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
+      break;
+    default:
+      appData.os = "linux";
+      mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.png"));
+      break;
   }
   // show dev tools if in dev mode
   if (is.development) mainWindow.webContents.openDevTools()
@@ -210,6 +169,15 @@ const createWindow = () => {
       mainWindow.webContents.send("triggerFunction", "generateTodoData")
     }
   }, 600000);
+  mainWindow.on('move', function() {
+    userData.set("windowPosition", this.getPosition());
+  });
+  mainWindow.on('maximize', function() {
+    userData.set("maximizeWindow", true);
+  });
+  mainWindow.on('unmaximize', function() {
+    userData.set("maximizeWindow", false);
+  });
   // ########################################################################################################################
   // MENU CONFIGURATION (https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k)
   // ########################################################################################################################
@@ -232,7 +200,7 @@ const createWindow = () => {
             createFile();
           }
         },
-        isMac ? {
+        appData.os==="mac" ? {
           role: "quit",
           label: i18next.t("close")
         } : {
@@ -307,21 +275,6 @@ const createWindow = () => {
         },
         { type: "separator" },
         {
-          label: "Zoom In",
-          accelerator: "CmdOrCtrl+=",
-          click: function (item, focusedWindow) {
-            mainWindow.webContents.send("triggerFunction", "zoom", ["in"])
-          }
-        },
-        {
-          label: "Zoom Out",
-          accelerator: "CmdOrCtrl+-",
-          click: function (item, focusedWindow) {
-            mainWindow.webContents.send("triggerFunction", "zoom", ["out"])
-          }
-        },
-        { type: "separator" },
-        {
           label: i18next.t("toggleDarkMode"),
           accelerator: "CmdOrCtrl+d",
           click: function (item, focusedWindow) {
@@ -359,62 +312,90 @@ const createWindow = () => {
   // ########################################################################################################################
   // FUNCTIONS THAT NEED TO ACCESS MAINWINDOW
   // ########################################################################################################################
-  function createFile() {
-    dialog.showSaveDialog({
-      title: i18next.t("windowTitleCreateFile"),
-      defaultPath: path.join(app.getPath('home')),
-      buttonLabel: i18next.t("windowButtonCreateFile"),
-      filters: [{
-        name: i18next.t("windowFileformat"),
-        extensions: ["txt", "md"]
-      }],
-      properties: ["openFile", "createDirectory"]
-    }).then(file => {
-      fs.writeFile(file.filePath, "", function (error) {
-        if (!file.canceled) {
-          console.log("Success: New todo.txt file created: " + file.filePath);
-          mainWindow.webContents.send("changeFile", file.filePath)
-        }
-      });
-    }).catch(error => {
-      console.log("Error: " + error)
-    });
-  }
-  function openFile() {
-    dialog.showOpenDialog({
-      title: i18next.t("selectFile"),
-      defaultPath: path.join(app.getPath("home")),
-      buttonLabel: i18next.t("windowButtonOpenFile"),
-      filters: [{
-        name: i18next.t("windowFileformat"),
-        extensions: ["txt", "md"]
-      }],
-      properties: ["openFile"]
-    }).then(file => {
-      if (!file.canceled) {
-        file = file.filePaths[0].toString();
-        console.log("Success: Storage file updated by new path and filename: " + file);
-        mainWindow.webContents.send("changeFile", file)
+  function startFileWatcher(file) {
+    try {
+      if (fs.existsSync(file)) {
+        if(fileWatcher) fileWatcher.close();
+        fileWatcher = fs.watch(file, (event, filename) => {
+          console.log("Info: File has changed");
+          // only update content if file still exists
+          setTimeout(function() {
+            if(fs.existsSync(file)) {
+              mainWindow.webContents.send("reloadContent", getFileContent(file))
+            }
+            // start onboarding if file cannot be found anymore
+            /*} else {
+              mainWindow.webContents.send("triggerFunction", "showOnboarding", [true])
+            }*/
+          }, 300);
+        });
       }
-    }).catch(err => {
-        console.log("Error: " + err)
-    });
+      // return promise
+      return Promise.resolve("Success: Filewatcher is watching: " + file);
+    } catch (error) {
+      // trigger matomo event
+      if(userData.data.matomoEvents) _paq.push(["trackEvent", "Error", "startFileWatcher()", error])
+      return Promise.reject("Error in startFileWatcher(): " + error);
+    }
+  }
+  function changeFile(newFile) {
+    try {
+      // use the loop to check if the new path is already in the user data
+      let fileFound = false;
+      if(userData.data.files) {
+        userData.data.files.forEach(function(file) {
+          // if path is found it is set active
+          if(file[1]===newFile) {
+            file[0] = 1
+            fileFound = true;
+          // if this entry is not equal to the new path it is set 0
+          } else {
+            file[0] = 0;
+          }
+        });
+      }
+      // only push new path if it is not already in the user data
+      if(!fileFound || !userData.data.files) userData.data.files.push([1, newFile]);
+      userData.set("files", userData.data.files);
+      userData.data.file = newFile;
+      userData.set("file", newFile);
+      startFileWatcher(newFile).then(response => {
+        console.log(response);
+        mainWindow.webContents.send("triggerFunction", "getUserData")
+        mainWindow.webContents.send("reloadContent", getFileContent(newFile));
+      }).catch(error => {
+        console.log(error);
+      });
+      // return promise
+      return Promise.resolve("Success: File has been changed to: " + newFile);
+    } catch (error) {
+      // trigger matomo event
+      if(userData.data.matomoEvents) _paq.push(["trackEvent", "Error", "changeFile()", error])
+      return Promise.reject("Error in changeFile(): " + error);
+    }
   }
   // ########################################################################################################################
   // LISTEN TO REQUESTS FROM RENDERER CONTEXT
   // ########################################################################################################################
   // Send result back to renderer process
   ipcMain.on("getUserData", (event, args) => {
-    getCurrentFile().then(response => {
-      userData.data.file = response;
-      mainWindow.webContents.send("getUserData", userData.data);
-    }).catch(error => {
-      console.log(error);
-    });
+    mainWindow.webContents.send("getUserData", userData.data);
+  });
+  // Write config to file
+  ipcMain.on("setUserData", (event, args) => {
+    userData.set(args[0], args[1]);
+    mainWindow.webContents.send("getUserData", userData.data);
   });
   // Send result back to renderer process
   ipcMain.on("getAppData", (event, args) => {
     mainWindow.webContents.send("getAppData", appData);
+  });
+  ipcMain.on("changeFile", (event, file) => {
+    changeFile(file).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
   });
   // Change language
   ipcMain.on("changeLanguage", (event, language) => {
@@ -427,48 +408,86 @@ const createWindow = () => {
       app.exit();
     });
   });
-  // Write config to file
-  ipcMain.on("setUserData", (event, args) => {
-    userData.set(args[0], args[1]);
-    getCurrentFile().then(response => {
-      userData.data.file = response;
-      mainWindow.webContents.send("getUserData", userData.data);
-    }).catch(error => {
-      console.log(error);
-    });
-  });
   // Write content to file
   ipcMain.on("writeToFile", (event, args) => {
     fs.writeFileSync(args[1], args[0], {encoding: 'utf-8'});
   });
   // Open or create file
   ipcMain.on("openOrCreateFile", (event, args) => {
+    // if a file is already active, it's directory will be chosen as default path
+    if(userData.data.path) {
+      var defaultPath = userData.data.path;
+    } else {
+      var defaultPath = path.join(app.getPath('home'))
+    }
+    let file;
     switch (args) {
       case "open":
-        openFile();
+        dialog.showOpenDialog({
+          title: i18next.t("selectFile"),
+          defaultPath: defaultPath,
+          buttonLabel: i18next.t("windowButtonOpenFile"),
+          filters: [{
+            name: i18next.t("windowFileformat"),
+            extensions: ["txt", "md"]
+          }],
+          properties: ["openFile"]
+        }).then(file => {
+          if (!file.canceled) {
+            file = file.filePaths[0].toString();
+            // persist the path
+            userData.data.path = path.dirname(file);
+            userData.set("path", userData.data.path);
+            console.log("Success: Storage file updated by new path and filename: " + file);
+            changeFile(file).then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+          }
+        }).catch(err => {
+            console.log("Error: " + err)
+        });
         break;
       case "create":
-        createFile();
+        dialog.showSaveDialog({
+          title: i18next.t("windowTitleCreateFile"),
+          defaultPath: defaultPath + "/todo.txt",
+          buttonLabel: i18next.t("windowButtonCreateFile"),
+          filters: [{
+            name: i18next.t("windowFileformat"),
+            extensions: ["txt", "md"]
+          }],
+          properties: ["openFile", "createDirectory"]
+        }).then(file => {
+          // close filewatcher, otherwise the change of file will trigger a duplicate reloadContent
+          if(fileWatcher) fileWatcher.close();
+          fs.writeFile(file.filePath, "", function (error) {
+            if (!file.canceled) {
+              // persist the path
+              userData.data.path = path.dirname(file.filePath);
+              userData.set("path", userData.data.path);
+              console.log("Success: New todo.txt file created: " + file.filePath);
+              changeFile(file.filePath).then(response => {
+                console.log(response);
+              }).catch(error => {
+                console.log(error);
+              });
+            }
+          });
+        }).catch(error => {
+          console.log("Error: " + error)
+        });
         break;
     }
   });
-  // Start the filewatcher
+
   ipcMain.on("startFileWatcher", (event, file) => {
-    if (fs.existsSync(file)) {
-      if(fileWatcher) fileWatcher.close();
-      fileWatcher = fs.watch(file, (event, filename) => {
-        console.log("Info: File has changed");
-        // only update content if file still exists
-        setTimeout(function() {
-          if(fs.existsSync(file)) {
-            mainWindow.webContents.send("reloadContent", getFileContent(file))
-          // start onboarding if file cannot be found anymore
-          } else {
-            mainWindow.webContents.send("triggerFunction", "showOnboarding", [true])
-          }
-        }, 300);
-      });
-    }
+    startFileWatcher(file).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
   });
   // Send translations back to renderer process
   ipcMain.on("getTranslations", (event, args) => {
@@ -504,36 +523,19 @@ const createWindow = () => {
     autoUpdater.checkForUpdatesAndNotify();
   });*/
 };
-// ########################################################################################################################
-//
-// ########################################################################################################################
 app.on("ready", () => {
   switchLanguage().then(response => {
     console.log(response);
+    if(process.platform === 'win32') app.setAppUserModelId("RobinAhle.sleektodomanager")
+    createWindow();
   }).catch(error => {
     console.log(error);
   });
-  createWindow();
-  if (process.platform === 'win32') {
-    app.setAppUserModelId("RobinAhle.sleektodomanager");
-  }
 });
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  if (process.platform !== "darwin") app.quit()
 });
 app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+  if (BrowserWindow.getAllWindows().length === 0) createWindow()
   app.show();
 });
-// event listeners to handle update events
-// https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6
-/*autoUpdater.on('update-available', () => {
-  mainWindow.webContents.send('update_available');
-});
-autoUpdater.on('update-downloaded', () => {
-  mainWindow.webContents.send('update_downloaded');
-});*/

@@ -24,7 +24,7 @@ Steps to reproduce the behavior:
 4. See error
 
 **Do you see any error entries in sleeks developer tools?**
-While sleek is open press Ctrl + Shift + I which will open the developer tools. Select the tab "Console" and check if any error entries are written, while you provoke the bug.
+While sleek is open press Ctrl + Shift + I which will open the developer tools. If the shortcut doesn't work, press the Alt key, select the tab "About" and select the developer tools. In the dev tools select the tab "Console" and check if any error entries are written, while you provoke the bug.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
