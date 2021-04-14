@@ -452,11 +452,11 @@ nav {
     transition: background-color 0.5s ease-out; }
   #todoTable .flex-table#previousItem.is-highlighted {
     background-color: #f5f5f5; }
-  #todoTable .flex-table.itemGroup {
+  #todoTable .flex-table.group {
     border: none;
     font-family: FreeSansBold;
     font-size: 1.25em; }
-    #todoTable .flex-table.itemGroup svg {
+    #todoTable .flex-table.group svg {
       color: inherit; }
   #todoTable .flex-table {
     display: flex; }

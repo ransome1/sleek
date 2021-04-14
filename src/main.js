@@ -31,6 +31,10 @@ if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
 } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
   userData.set("theme", "light");
 }
+// TODO set as default in object above
+if(!userData.data.dismissedNotifications) userData.set("dismissedNotifications", []);
+if(!userData.data.dismissedMessages) userData.set("dismissedMessages", []);
+
 const appData = {
   version: app.getVersion(),
   development: is.development,
@@ -69,6 +73,7 @@ const createWindow = () => {
             console.log("Success: Opened file: " + file);
             startFileWatcher(file).then(response => {
               console.log(response);
+              mainWindow.webContents.send("triggerFunction", "clearModal")
             }).catch(error => {
               console.log(error);
             });
@@ -88,7 +93,7 @@ const createWindow = () => {
           }],
           properties: ["openFile", "createDirectory"]
         }).then(file => {
-          // close filewatcher, otherwise the change of file will trigger a duplicate reloadContent
+          // close filewatcher, otherwise the change of file will trigger a duplicate refresh
           if(fileWatcher) fileWatcher.close();
           fs.writeFile(file.filePath, "", function (error) {
             if (!file.canceled) {
@@ -97,6 +102,7 @@ const createWindow = () => {
               console.log("Success: New file created: " + file.filePath);
               startFileWatcher(file.filePath).then(response => {
                 console.log(response);
+                mainWindow.webContents.send("triggerFunction", "clearModal")
               }).catch(error => {
                 console.log(error);
               });
@@ -174,7 +180,7 @@ const createWindow = () => {
           console.log("Info: File " + filename + " has changed");
           setTimeout(function() {
             fileContent(newFile).then(content => {
-              mainWindow.webContents.send("reloadContent", content)
+              mainWindow.webContents.send("refresh", content)
             }).catch(error => {
               console.log(error);
             });
@@ -182,7 +188,7 @@ const createWindow = () => {
         });
       }
       fileContent(newFile).then(content => {
-        mainWindow.webContents.send("reloadContent", content);
+        mainWindow.webContents.send("refresh", content);
       }).catch(error => {
         console.log(error);
       });
@@ -383,7 +389,7 @@ const createWindow = () => {
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
     if(!mainWindow.isFocused()) {
-      mainWindow.webContents.send("triggerFunction", "buildContent")
+      mainWindow.webContents.send("triggerFunction", "startBuilding")
     }
   }, 600000);
   mainWindow.on('move', function() {
@@ -442,8 +448,9 @@ const createWindow = () => {
     });
   });
   // Send translations back to renderer process
-  ipcMain.on("getTranslations", (event, args) => {
-    mainWindow.webContents.send("sendTranslations", i18next.getDataByLanguage(userData.get("language")).translation)
+  ipcMain.on("translations", (event, language) => {
+    const translations = i18next.getDataByLanguage(language).translation;
+    mainWindow.webContents.send("translations", translations)
   });
   // Show a notification in OS UI
   ipcMain.on("showNotification", (event, config) => {

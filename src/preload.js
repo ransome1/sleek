@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld(
         "appData",
         "userData",
         "fileContent",
-        "getTranslations",
+        "translations",
         "showNotification",
         "writeToFile",
         "startFileWatcher",
@@ -20,11 +20,11 @@ contextBridge.exposeInMainWorld(
     },
     receive: (channel, func) => {
       let validChannels = [
-        "sendTranslations",
+        "translations",
         "fileContent",
         "userData",
         "appData",
-        "reloadContent",
+        "refresh",
         "triggerFunction"
       ];
       if (validChannels.includes(channel)) {
