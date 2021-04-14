@@ -42,9 +42,7 @@ marked.setOptions({
 renderer = {
   link(href, title, text) {
     // truncate the url
-    if(text.length>40) {
-      text = text.slice(0, 40) + " [...]";
-    }
+    if(text.length > 40) text = text.slice(0, 40) + " [...]";
     return `
       ${text}
       <a href="${href}" target=\"_blank\">
@@ -141,7 +139,7 @@ function clearModal() {
     return Promise.resolve("Info: Modal closed and it's values emptied");
   } catch (error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "clearModal()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "clearModal()", error])
     return Promise.reject("Error in clearModal(): " + error);
   }
 
@@ -202,15 +200,15 @@ function positionSuggestionContainer() {
 }
 function zoom(zoom, reset) {
   try {
-    //let zoom = window.userData.zoom;
+    //let zoom = userData.zoom;
     /*if(variable==="in") {
       // set max zoom size
-      if(window.userData.zoom===175) return Promise.resolve("Info: Maximum zoom reached");
-      zoom = window.userData.zoom + 5;
+      if(userData.zoom===175) return Promise.resolve("Info: Maximum zoom reached");
+      zoom = userData.zoom + 5;
     } else if(variable==="out") {
       // set min zoom size
-      if(window.userData.zoom===25) return Promise.resolve("Info: Minimum zoom reached");
-      zoom = window.userData.zoom - 5;
+      if(userData.zoom===25) return Promise.resolve("Info: Minimum zoom reached");
+      zoom = userData.zoom - 5;
     } else if(variable==="undo") {
       zoom = 100;
     }*/
@@ -220,10 +218,10 @@ function zoom(zoom, reset) {
     // persist zoom setting
     setUserData("zoom", zoom);
     // set zoom status in view container
-    return Promise.resolve("Info: Zoomed changed to " + window.userData.zoom + "%");
+    return Promise.resolve("Info: Zoom set to " + userData.zoom + "%");
   } catch (error) {
   // trigger matomo event
-  if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "zoom()", error])
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "zoom()", error])
   return Promise.reject("Error in zoom(): " + error);
   }
 }
@@ -278,9 +276,9 @@ getHandleElement().addEventListener("mousedown", startDragging);
 function showResultStats() {
   try {
     // we show some information on filters if any are set
-    if(items.objectsFiltered.length!=items.objects.length) {
+    if(items.filtered.length!=items.objects.length) {
       resultStats.classList.add("is-active");
-      resultStats.firstElementChild.innerHTML = window.translations.visibleTodos + "&nbsp;<strong>" + items.objectsFiltered.length + " </strong>&nbsp;" + window.translations.of + "&nbsp;<strong>" + items.objects.length + "</strong>";
+      resultStats.firstElementChild.innerHTML = translations.visibleTodos + "&nbsp;<strong>" + items.filtered.length + " </strong>&nbsp;" + translations.of + "&nbsp;<strong>" + items.objects.length + "</strong>";
       return Promise.resolve("Info: Filters found, result box is shown");
     } else {
       resultStats.classList.remove("is-active");
@@ -288,7 +286,7 @@ function showResultStats() {
     }
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showResultStats()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "showResultStats()", error])
     return Promise.reject("Error in showResultStats(): " + error);
   }
 }
@@ -327,7 +325,7 @@ function showForm(todo, templated) {
           todo.date = null;
           todo.text = "____________";
           modalFormInput.value = todo;
-          modalTitle.innerHTML = window.translations.addTodo;
+          modalTitle.innerHTML = translations.addTodo;
           // automatically select the placeholder description
           let selectStart = modalFormInput.value.indexOf(todo.text);
           let selectEnd = selectStart + todo.text.length;
@@ -338,15 +336,15 @@ function showForm(todo, templated) {
           // put the initially passed todo to the modal data field
           modalForm.setAttribute("data-item", todo.toString());
           modalFormInput.value = todo;
-          modalTitle.innerHTML = window.translations.editTodo;
+          modalTitle.innerHTML = translations.editTodo;
           btnItemStatus.classList.add("is-active");
         }
         //btnItemStatus.classList.add("is-active");
         // only show the complete button on open items
         if(todo.complete === false) {
-          btnItemStatus.innerHTML = window.translations.done;
+          btnItemStatus.innerHTML = translations.done;
         } else {
-          btnItemStatus.innerHTML = window.translations.inProgress;
+          btnItemStatus.innerHTML = translations.inProgress;
         }
         // if there is a recurrence
         if(todo.rec) {
@@ -381,7 +379,7 @@ function showForm(todo, templated) {
           clear: true
         });
         dueDatePickerInput.value = null;
-        modalTitle.innerHTML = window.translations.addTodo;
+        modalTitle.innerHTML = translations.addTodo;
         btnItemStatus.classList.remove("is-active");
       }
       // adjust size of recurrence picker input field
@@ -400,7 +398,7 @@ function showForm(todo, templated) {
       return Promise.resolve("Info: Show/Edit todo window opened");
   } catch (error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "showForm()", error])
     return Promise.reject("Error in showForm(): " + error);
   }
 }
@@ -425,7 +423,7 @@ function showOnboarding(variable) {
     }
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showOnboarding()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "showOnboarding()", error])
     return Promise.reject("Error in showOnboarding(): " + error);
   }
 }
@@ -488,27 +486,23 @@ function showRecurrenceOptions(el) {
       recurrencePickerContainer.classList.remove("is-active");
       modalFormInput.focus();
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + recSplit.period]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + recSplit.period]);
     }
   });
 }
 function showDrawer(variable, buttonId, drawerId) {
   try {
+    buttonId = document.getElementById(buttonId);
+    drawerId = document.getElementById(drawerId);
     // always hide the drawer container first
     drawerContainer.classList.remove("is-active");
     // next show or hide the single drawers
     switch(variable) {
       case true:
-        //drawerContainer.classList.toggle("is-active");
         buttonId.classList.add("is-highlighted");
         drawerId.classList.add("is-active");
-
-        //filterColumnClose.classList.add("is-active");
       break;
       case false:
-        /*buttonId.classList.remove("is-highlighted");
-        drawerId.classList.remove("is-active");
-        drawerId.blur();*/
         drawers.forEach(function(drawer) {
           drawer.classList.remove("is-active");
         });
@@ -516,14 +510,10 @@ function showDrawer(variable, buttonId, drawerId) {
           navBtn.classList.remove("is-highlighted");
         });
         drawerContainer.classList.remove("is-active");
-        //filterColumnClose.classList.remove("is-active");
       break;
       case "toggle":
-        //drawerContainer.classList.toggle("is-active");
         buttonId.classList.toggle("is-highlighted");
         drawerId.classList.toggle("is-active");
-        //drawerContainer.classList.toggle("is-active");
-        //filterColumnClose.classList.toggle("is-active");
       break;
     }
     // if any of the drawers is active now, also show the container
@@ -540,23 +530,17 @@ function showDrawer(variable, buttonId, drawerId) {
       // if the drawer is open the table needs a fixed width to overlap the viewport
       todoTable.style.minWidth = "45em";
       todoTableSearchContainer.style.minWidth = "45em";
-      //setUserData(drawerId.id, true);
     } else {
       // undo what has been done
       todoTable.style.minWidth = "auto";
       todoTableSearchContainer.style.minWidth = "auto";
-      //setUserData(drawerId.id, false);
-      //setUserData(drawerId.id, false);
-      /*drawers.forEach(function(drawer) {
-        setUserData(drawer.id, false);
-      });*/
     }
     // if more toggle is open we close it as user doesn't need it anymore
     showMore(false);
     return Promise.resolve("Success: Drawer toggled");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showDrawer()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "showDrawer()", error])
     return Promise.reject("Error in showDrawer(): " + error);
   }
 }
@@ -600,51 +584,30 @@ function showFiles() {
     modalChangeFile.classList.add("is-active");
     modalChangeFile.focus();
     modalChangeFileTable.innerHTML = "";
-    for (let file in window.userData.files) {
+    for (let file in userData.files) {
       // skip if file doesn't exist
       var table = modalChangeFileTable;
       table.classList.add("files");
       var row = table.insertRow(0);
-      row.setAttribute("data-path", window.userData.files[file][1]);
+      row.setAttribute("data-path", userData.files[file][1]);
       var cell1 = row.insertCell(0);
       var cell2 = row.insertCell(1);
       var cell3 = row.insertCell(2);
-      if(window.userData.files[file][0]===1) {
-        cell1.innerHTML = "<button class=\"button\" disabled>" + window.translations.selected + "</button>";
+      if(userData.files[file][0]===1) {
+        cell1.innerHTML = "<button class=\"button\" disabled>" + translations.selected + "</button>";
       } else {
-        cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
+        cell1.innerHTML = "<button class=\"button is-link\">" + translations.select + "</button>";
         cell1.onclick = function() {
-          // set the new path variable and change the array
-          /*changeFile(this.parentElement.getAttribute("data-path")).then(result => {
-            console.log(result);
-          }).catch(error => {
-            console.log(error);
-          });*/
-          /*window.userData.file = this.parentElement.getAttribute("data-path");
-          setUserData("file", window.userData.file);
-          // get file content and create the items object
-          getFileContent(window.userData.file).then(function(result) {
-            // only continue if we have the items object
-            generateItemsObject(result).then(function(result) {
-              console.log(result);
-            }).catch(function(error) {
-              console.log(error);
-            });
-            // advice main process to start the filewatcher
-            window.api.send("startFileWatcher", window.userData.file);
-          }).catch(error => {
-            console.log(error);
-          });*/
-          window.api.send("changeFile", this.parentElement.getAttribute("data-path"));
+          window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
           // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
         }
         cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
-        cell3.title = window.translations.delete;
+        cell3.title = translations.delete;
         cell3.onclick = function() {
           let path = this.parentElement.getAttribute("data-path");
           // remove file from files array
-          files = window.userData.files.filter(function(file) {
+          files = userData.files.filter(function(file) {
             return file[1] != path;
           });
           // persist new files array
@@ -657,22 +620,20 @@ function showFiles() {
           });
         }
       }
-      cell2.innerHTML = window.userData.files[file][1];
+      cell2.innerHTML = userData.files[file][1];
     }
     return Promise.resolve("Success: File changer modal built and opened");
   } catch (error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "showFiles()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "showFiles()", error])
     return Promise.reject("Error in showFiles(): " + error);
   }
 }
 
-
-
 function generateNotification(todo, offset) {
   try {
-    let notifications = window.userData.notifications;
-    let dismissedNotifications = window.userData.dismissedNotifications;
+    let notifications = userData.notifications;
+    let dismissedNotifications = userData.dismissedNotifications;
     // abort if user didn't permit notifications within sleek
     if(!notifications) return Promise.reject("Info: Notification surpressed (turned off in sleek's settings)");
     // check for necessary permissions
@@ -683,10 +644,10 @@ function generateNotification(todo, offset) {
       const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
       switch (offset) {
         case 0:
-          title = window.translations.dueToday;
+          title = translations.dueToday;
           break;
         case 1:
-          title = window.translations.dueTomorrow;
+          title = translations.dueTomorrow;
           break;
       }
       // if notification already has been triggered once it will be discarded
@@ -712,32 +673,32 @@ function generateNotification(todo, offset) {
       dismissedNotifications.push(hash);
       setUserData("dismissedNotifications", dismissedNotifications);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
       return Promise.resolve("Info: Notification successfully sent");
     });
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateNotification()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateNotification()", error])
     return Promise.reject("Error in generateNotification(): " + error);
   }
 }
 function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
     let selectedFilters = new Array;
-    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
+    if(userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
     let categoriesFiltered = new Array;
-    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
+    if(userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(userData.categoriesFiltered);
     // creates a div for the specific filter section
     let todoFiltersSub = document.createElement("div");
     todoFiltersSub.setAttribute("class", "dropdown-item " + category);
     // translate headline
     if(category=="contexts") {
-      var headline = window.translations.contexts;
+      var headline = translations.contexts;
     } else if(category=="projects"){
-      var headline = window.translations.projects;
+      var headline = translations.projects;
     }
     if(typeAheadPrefix==undefined) {
-      let categoriesFiltered = window.userData.categoriesFiltered;
+      let categoriesFiltered = userData.categoriesFiltered;
       // create a sub headline element
       let todoFilterHeadline = document.createElement("a");
       todoFilterHeadline.setAttribute("class", "headline " + category);
@@ -778,16 +739,9 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
           //todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + dataHeadline;
           todoFilterHeadline.innerHTML += "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;";
         }
-        t0 = performance.now();
-        generateTodoData().then(response => {
-          console.log(response);
-          t1 = performance.now();
-          console.log("Table rendered in:", t1 - t0, "ms");
-        }).catch(error => {
-          console.log(error);
-        });
+        buildContent();
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on headline", category])
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on headline", category])
       });
       // TODO clean up. this is a duplicate, see above
       if(categoriesFiltered.includes(category)) {
@@ -852,16 +806,9 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
             //persist the category filters
             setUserData("categoriesFiltered", categoriesFiltered);
           }
-          t0 = performance.now();
-          generateTodoData().then(response => {
-            console.log(response);
-            t1 = performance.now();
-            console.log("Table rendered in:", t1 - t0, "ms");
-          }).catch(error => {
-            console.log(error);
-          });
+          buildContent();
           // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
         });
       // suggestion container
       } else {
@@ -883,7 +830,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
           // trigger matomo event
           // put focus back into input so user can continue writing
           modalFormInput.focus();
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
       }
       // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
@@ -899,7 +846,7 @@ function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretP
     //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
   } catch (error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateFilterButtons()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateFilterButtons()", error])
     return Promise.reject("Error in generateFilterButtons(): " + error);
   }
 }
@@ -909,11 +856,11 @@ function generateHash(str) {
 }
 function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
   try {
-    let items = window.items;
+    //let items = window.items;
     let selectedFilters = new Array;
-    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
+    if(userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
     let categoriesFiltered = new Array;
-    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
+    if(userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(userData.categoriesFiltered);
     // container to fill with categories
     let container;
     // which category or categories to loop through and build
@@ -922,7 +869,7 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       container = suggestionContainer;
       categoriesToBuild.push(typeAheadCategory);
       // for the suggestion container, so all filters will be shown
-      items.objectsFiltered = items.objects;
+      items.filtered = items.objects;
     } else {
       // empty filter container first
       todoFilters.innerHTML = "";
@@ -936,13 +883,13 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
       // array to collect all the available filters in the data
       let filters = new Array();
       // run the array and collect all possible filters, duplicates included
-      items.objectsFiltered.forEach((item) => {
+      items.filtered.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
           for (let filter in item[category]) {
             // if user has not opted for showComplete we skip the filter of this particular item
-            if(window.userData.showCompleted==false && item.complete==true) {
+            if(userData.showCompleted==false && item.complete==true) {
               continue;
             // if task is hidden the filter will be marked
             } else if(item.h) {
@@ -1010,473 +957,8 @@ function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, 
     return Promise.resolve("Success: Filter data generated");
   } catch (error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateFilterData()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateFilterData()", error])
     return Promise.reject("Error in generateFilterData(): " + error);
-  }
-}
-function generateTableRow(todo) {
-  try {
-    // create nodes from templates
-    let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
-    let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);
-    let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
-    let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
-    let todoTableBodyCellMore = todoTableBodyCellMoreTemplate.cloneNode(true);
-    let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
-    let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
-    let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
-    let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
-    // if new item was saved, row is being marked
-    if(todo.toString()==item.previous) {
-      todoTableBodyRow.setAttribute("id", "previousItem");
-      item.previous = null;
-    }
-    // start with the individual config of the items
-    if(todo.complete==true) {
-      todoTableBodyRow.setAttribute("class", "flex-table completed");
-    }
-    todoTableBodyRow.setAttribute("data-item", todo.toString());
-    // add the priority marker or a white spacer
-    if(todo.priority && window.userData.sortBy==="priority") {
-      todoTableBodyCellPriority.setAttribute("class", "flex-row priority " + todo.priority);
-      todoTableBodyRow.appendChild(todoTableBodyCellPriority);
-    } else if(!todo.priority && window.userData.sortBy==="priority") {
-      todoTableBodyCellSpacer.setAttribute("class", "flex-row spacer");
-      todoTableBodyRow.appendChild(todoTableBodyCellSpacer);
-    }
-    // add the checkbox
-    if(todo.complete==true) {
-      todoTableBodyCellCheckbox.setAttribute("title", window.translations.inProgress);
-      todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\"><i class=\"fas fa-check-circle\"></i></a>";
-    } else {
-      todoTableBodyCellCheckbox.setAttribute("title", window.translations.done);
-      todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\"><i class=\"far fa-circle\"></i></a>";
-    }
-    // add a listener on the checkbox to call the completeItem function
-    todoTableBodyCellCheckbox.onclick = function() {
-      // passing the data-item attribute of the parent tag to complete function
-      setTodoComplete(this.parentElement.getAttribute('data-item')).then(response => {
-         console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
-    }
-    todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
-    // creates cell for the text
-    if(todo.text) {
-      if(todo.priority && window.userData.sortBy!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority " + todo.priority + "\">" + todo.priority + "</span>";
-      // use the autoLink lib to attach an icon to every link and put a link on it
-      /*todoTableBodyCellText.innerHTML +=  todo.text.autoLink({
-        callback: function(url) {
-          // truncate the url
-          let urlString = url;
-          if(url.length>30) {
-            urlString = url.slice(0, 30) + " [...]";
-          }
-          return urlString + " <a href=" + url + " target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>";
-        }
-      });*/
-      // parse text string through markdown parser
-      todoTableBodyCellText.innerHTML =  marked.parseInline(todo.text);
-      //todoTableBodyCellText.innerHTML =  todo.text;
-      // replace line feed replacement character with a space
-      todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
-      // add a spacer to divide text (and link) and categories
-      todoTableBodyCellText.innerHTML += " ";
-    }
-    // event listener for the click on the text
-    todoTableBodyCellText.onclick = function() {
-      // if the clicked item is not the external link icon, showForm(true) will be called
-      if(!event.target.classList.contains('fa-external-link-alt')) {
-        showForm(this.parentElement.getAttribute('data-item'));
-        // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
-      }
-    }
-    // cell for the categories
-    categories.forEach(category => {
-      if(todo[category]) {
-        todo[category].forEach(el => {
-          let todoTableBodyCellCategory = document.createElement("span");
-          todoTableBodyCellCategory.setAttribute("class", "tag " + category);
-          todoTableBodyCellCategory.innerHTML = el;
-          tableContainerCategories.appendChild(todoTableBodyCellCategory);
-        });
-      }
-    });
-    // add the text cell to the row
-    todoTableBodyCellText.appendChild(tableContainerCategories);
-    // check for and add a given due date
-    if(todo.due) {
-      var tag = convertDate(todo.due);
-      if(todo.due.isToday()) {
-        todoTableBodyCellDueDate.classList.add("isToday");
-        tag = window.translations.today;
-      } else if(todo.due.isTomorrow()) {
-        todoTableBodyCellDueDate.classList.add("isTomorrow");
-        tag = window.translations.tomorrow;
-      } else if(todo.due.isPast()) {
-        todoTableBodyCellDueDate.classList.add("isPast");
-      }
-      todoTableBodyCellDueDate.innerHTML = `
-        <i class="far fa-clock"></i>
-        <div class="tags has-addons">
-          <span class="tag">` + window.translations.due + `</span><span class="tag is-dark">` + tag + `</span>
-        </div>
-        <i class="fas fa-sort-down"></i>
-      `;
-      // append the due date to the text item
-      todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
-    }
-    // add recurrence icon
-    if(todo.rec) {
-      todoTableBodyCellRecurrence.innerHTML = "<i class=\"fas fa-redo\"></i>";
-      // append the due date to the text item
-      todoTableBodyCellText.appendChild(todoTableBodyCellRecurrence);
-    }
-    // add the text cell to the row
-    todoTableBodyRow.appendChild(todoTableBodyCellText);
-
-    // click on three-dots-icon to open more menu
-    todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
-      // only if this element was highlighted before, we will hide instead of show the dropdown
-      if(this.parentElement.parentElement.classList.contains("is-active")) {
-        this.parentElement.parentElement.classList.remove("is-active");
-      } else {
-        // on click we close all other active more buttons and dropdowns
-        document.querySelectorAll(".todoTableItemMore.is-active").forEach(function(item) {
-          item.classList.remove("is-active");
-        });
-        // if this element was hidden before, we will show it now
-        this.parentElement.parentElement.classList.add("is-active");
-        // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
-        // click on edit
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
-          showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
-          // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
-        }
-        // click on delete
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
-          // passing the data-item attribute of the parent tag to complete function
-          setTodoDelete(todoTableBodyRow.getAttribute('data-item')).then(response => {
-            console.log(response);
-          }).catch(error => {
-            console.log(error);
-          });
-          // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
-        }
-        // click on use as template option
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
-          showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'), true);
-          // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
-        }
-      }
-    }
-    // add more container to row
-    todoTableBodyRow.appendChild(todoTableBodyCellMore);
-    // return the fully built row
-    return todoTableBodyRow;
-  } catch(error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateTableRow()", error])
-    return Promise.reject("Error in generateTableRow(): " + error);
-  }
-}
-function generateItemsObject(content) {
-  try {
-    const items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
-    items.complete = items.objects.filter(function(item) { return item.complete === true });
-    items.incomplete = items.objects.filter(function(item) { return item.complete === false });
-    items.objects = items.objects.filter(function(item) { return item.toString() != "" });
-    window.items = items;
-    // start generating the todo data
-    t0 = performance.now();
-    generateTodoData().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Table rendered in", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
-    return Promise.resolve("Success: Items object generated");
-  } catch(error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "getFileContent()", error])
-    return Promise.reject("Error in getFileContent(): " + error);
-  }
-}
-function generateTodoData(searchString) {
-  try {
-    // prepare the templates for the table
-    configureTodoTableTemplate().then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
-    items = window.items;
-    // selected filters are empty, unless they were persisted
-    let selectedFilters = new Array;
-    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
-    // selected categories are empty, unless they were persisted
-    let categoriesFiltered = new Array;
-    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
-    // if set: remove all completed todos
-    //if(!window.userData.showCompleted || (window.userData.showCompleted && window.userData.sortCompletedLast)) {
-    if(!window.userData.showCompleted) {
-      items.objectsFiltered = items.incomplete;
-    } else {
-      items.objectsFiltered = items.objects;
-    }
-    // if there are selected filters
-    if(selectedFilters.length > 0) {
-      // we iterate through the filters in the order they got selected
-      selectedFilters.forEach(filter => {
-        // check if the filter is a project filter
-        if(filter[1]=="projects") {
-          items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-            if(item.projects) return item.projects.includes(filter[0]);
-          });
-        // check if the filter is a context filter
-        } else if(filter[1]=="contexts") {
-          items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-            if(item.contexts) {
-              return item.contexts.includes(filter[0]);
-            }
-          });
-        }
-      });
-    }
-    // filters are generated once the final todos are defined
-    t0 = performance.now();
-    generateFilterData().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Filters rendered:", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
-    // exclude all filters of a category if set
-    if(window.userData.categoriesFiltered.length > 0) {
-      window.userData.categoriesFiltered.forEach(category => {
-        // we create a new array where the items attrbite has no values
-        items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-          return item[category] === null;
-        });
-      });
-    }
-    // filter hidden todos
-    viewBoxShowHidden.classList.remove("is-active");
-    items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-      if(item.h) {
-        // if h:1 it is skipped
-        viewBoxShowHidden.classList.add("is-active");
-        if(!window.userData.showHidden) return false;
-      }
-      return true;
-    });
-    // filter todos due today
-    if(!window.userData.showDueIsToday) {
-      items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-        if(item.due && item.due.isToday()) return false;
-        return true;
-      });
-    }
-    // filter todos due in the past
-    if(!window.userData.showDueIsPast) {
-      items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-        if(item.due && item.due.isPast()) return false;
-        return true;
-      });
-    }
-    // filter todos due in the future
-    if(!window.userData.showDueIsFuture) {
-      items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-        if(item.due && item.due.isFuture()) return false;
-        return true;
-      });
-    }
-    // if search string or previously inserted content in search bar is detected
-    if(searchString || todoTableSearch.value) {
-      if(todoTableSearch.value) searchString = todoTableSearch.value;
-      // convert everything to lowercase for better search results
-      items.objectsFiltered = items.objectsFiltered.filter(function(item) {
-        // if no match (-1) the item is skipped
-        if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) {
-          return false;
-        } else {
-          return true;
-        }
-      });
-    }
-    // manipulate the result info box
-    showResultStats().then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
-    // reconfigure the main view according to amount of objects
-    configureMainView().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
-    // build object according to sorting method
-    items.objectsFiltered = items.objectsFiltered.reduce((object, a) => {
-      if(window.userData.sortCompletedLast && a.complete) {
-        object["completed"] = [...object["completed"] || [], a];
-      } else if(window.userData.sortBy==="dueString" && !a.due) {
-        object["noDueDate"] = [...object["noDueDate"] || [], a];
-      } else {
-        object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
-      }
-      //object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
-      return object;
-    }, {});
-    // object is converted to a sorted array
-    items.objectsFiltered = Object.entries(items.objectsFiltered).sort(function(a,b) {
-      // when a is null sort it after b
-      if(a[0]==="null") return 1;
-      // when b is null sort it after a
-      if(b[0]==="null") return -1;
-      // sort alphabetically
-      if(a < b) return -1;
-    });
-    //
-    if(window.userData.sortCompletedLast) {
-      items.objectsFiltered.sort(function(a,b) {
-        // when a is null sort it after b
-        if(a[0]==="completed") return 1;
-        // when b is null sort it after a
-        if(b[0]==="completed") return -1;
-        return 0;
-      });
-    }
-    // if sortCompletedLast a separate array of completed todos is added to the object
-    /*if(window.userData.showCompleted && window.userData.sortCompletedLast) {
-      items.objectsFiltered.push(["completed", items.complete]);
-    }*/
-    // each priority group -> A to Z plus null for all todos with no priority
-    for (let itemGroup in items.objectsFiltered) {
-      // nodes need to be created to add them to the outer fragment
-      // create a divider row
-      // completed todos
-      if(window.userData.sortCompletedLast && items.objectsFiltered[itemGroup][0]==="completed") {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
-      // for priority, context and project
-      } else if(items.objectsFiltered[itemGroup][0]!="null" && window.userData.sortBy!="dueString") {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"" + items.objectsFiltered[itemGroup][0] + " " + window.userData.sortBy + "\">" + items.objectsFiltered[itemGroup][0].replace(/,/g, ', ') + "</div></div>"))
-      // if sorting is by due date
-      } else if(window.userData.sortBy==="dueString" && items.objectsFiltered[itemGroup][1][0].due) {
-        if(items.objectsFiltered[itemGroup][1][0].due.isToday()) {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\">" + window.translations.today + "</div></div>"));
-        } else if(items.objectsFiltered[itemGroup][1][0].due.isTomorrow()) {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\">" + window.translations.tomorrow + "</div></div>"));
-        } else if(items.objectsFiltered[itemGroup][1][0].due.isPast()) {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\">" + items.objectsFiltered[itemGroup][0] + "</div></div>"));
-        } else {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.objectsFiltered[itemGroup][0] + "</div></div>"))
-        }
-      // create an empty divider row
-      } else {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
-      }
-      // first sort by priority
-      items.objectsFiltered[itemGroup][1] = items.objectsFiltered[itemGroup][1].sort(function(a, b) {
-        // most recent or already past todo will be sorted to the top
-        if (a.priority < b.priority || !b.priority) {
-          return -1;
-        } else if (a.priority > b.priority) {
-          return 1;
-        } else {
-          // if all fail, no change to sort order
-          return 0;
-        }
-      });
-      // second sort by due date
-      items.objectsFiltered[itemGroup][1] = items.objectsFiltered[itemGroup][1].sort(function(a, b) {
-        // when a is smaller than b it, a is put after b
-        if(a.priority===b.priority && a.due < b.due) return -1
-        // when a is is undefined but b is not, b is put before a
-        if(a.priority===b.priority && !a.due && b.due) return 1
-        // when b is is undefined but a is not, a is put before b
-        if(a.priority===b.priority && a.due && !b.due) return -1
-        // if all fail, no change to sort order
-        return 0;
-      });
-      // third put completed todos at the end
-      /*if(window.userData.sortCompletedLast) {
-        items.objectsFiltered[itemGroup][1] = items.objectsFiltered[itemGroup][1].sort(function(a, b) {
-          // when a is smaller than b it, a is put after b
-          if(b.complete) return -1
-          // if all fail, no change to sort order
-          return 0;
-        });
-      }*/
-      // build the fragments per itemGroup
-      for (let item in items.objectsFiltered[itemGroup][1]) {
-        let todo = items.objectsFiltered[itemGroup][1][item];
-        // if todo has no text, it's skipped
-        if(!todo.text) continue;
-        // if this todo is not a recurring one the rec value will be set to null
-        if(!todo.rec) {
-          todo.rec = null;
-        // if item is due today or in the past and has recurrence it will be duplicated
-        } else if(todo.due && todo.rec && !todo.complete && (todo.due.isToday() || todo.due.isPast())) {
-          generateRecurringTodo(todo).then(response => {
-            console.log(response);
-          }).catch(error => {
-            console.log(error);
-          });
-        }
-        // incompleted todos with due date
-        if (todo.due && !todo.complete) {
-          // create notification
-          if(todo.due.isToday()) {
-            generateNotification(todo, 0).then(response => {
-              console.log(response);
-            }).catch(error => {
-              console.log(error);
-            });
-          } else if(todo.due.isTomorrow()) {
-            generateNotification(todo, 1).then(response => {
-              console.log(response);
-            }).catch(error => {
-              console.log(error);
-            });
-          }
-        }
-        // finally generate the rows
-        tableContainerContent.appendChild(generateTableRow(todo));
-      }
-    }
-    // append all generated groups to the main container
-    todoTableContainer.appendChild(tableContainerContent);
-    // jump to previously edited or added item
-    if (document.getElementById("previousItem")) {
-      // only scroll if new item is not in view
-      if(!document.getElementById("previousItem").getBoundingClientRect()) {
-        // scroll to view
-        document.getElementById("previousItem").scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-        // trigger a quick background ease in and out
-        document.getElementById("previousItem").classList.add("is-highlighted");
-        setTimeout(() => {
-          document.getElementById("previousItem").classList.remove("is-highlighted");
-          // after scrolling the marker will be removed
-          document.getElementById("previousItem").removeAttribute("id");
-        }, 1000);
-      }
-    }
-    return Promise.resolve("Success: Todo data generated and table built");
-  } catch(error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateTodoData()", error])
-    return Promise.reject("Error in generateTodoData(): " + error);
   }
 }
 function generateRecurringTodo(todo) {
@@ -1503,19 +985,19 @@ function generateRecurringTodo(todo) {
       recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
     }
     // get index of recurring todo
-    const index = window.items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringItem.toString().replaceAll(String.fromCharCode(16)," "));
+    const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringItem.toString().replaceAll(String.fromCharCode(16)," "));
     // only add recurring todo if it is not already in the list
     if(index===-1) {
-      window.items.objects.push(recurringItem);
-      tableContainerDue.appendChild(generateTableRow(recurringItem));
-      window.api.send("writeToFile", [window.items.objects.join("\n").toString(), window.userData.file]);
+      items.objects.push(recurringItem);
+      tableContainerDue.appendChild(buildTableRow(recurringItem));
+      window.api.send("writeToFile", [items.objects.join("\n").toString(), userData.file]);
       return Promise.resolve("Success: Recurring todo created and written into file: " + recurringItem);
     } else {
       return Promise.resolve("Info: Recurring todo already in file, won't write anything");
     }
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateRecurringTodo()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateRecurringTodo()", error])
     return Promise.reject("Error in generateRecurringTodo(): " + error);
   }
 }
@@ -1539,41 +1021,41 @@ function setTodoComplete(todo) {
     // first convert the string to a todo.txt object
     todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
     // get index of todo
-    const index = window.items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
+    const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
     if(todo.complete) {
       // if item was already completed we set complete to false and the date to null
       todo.complete = false;
       todo.completed = null;
       // delete old item from array and add the new one at it's position
-      window.items.objects.splice(index, 1, todo);
+      items.objects.splice(index, 1, todo);
     // Mark item as complete
     } else if(!todo.complete) {
       if(todo.due) {
         const date = convertDate(todo.due);
         // if set to complete it will be removed from persisted notifcations
-        if(window.userData.dismissedNotifications) {
+        if(userData.dismissedNotifications) {
           // the one set for today
-          window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
+          userData.dismissedNotifications = userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
           // the one set for tomorrow
-          window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
-          setUserData("dismissedNotifications", window.userData.dismissedNotifications);
+          userData.dismissedNotifications = userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
+          setUserData("dismissedNotifications", userData.dismissedNotifications);
         }
       }
       todo.complete = true;
       todo.completed = new Date();
       // delete old todo from array and add the new one at it's position
-      window.items.objects.splice(index, 1, todo);
+      items.objects.splice(index, 1, todo);
       // if recurrence is set start generating the recurring todo
       if(todo.rec) generateRecurringTodo(todo)
     }
     //write the data to the file
     //fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
-    window.api.send("writeToFile", [window.items.objects.join("\n").toString(), window.userData.file]);
-    return Promise.resolve("Success: Changes written to file: " + window.userData.file);
+    window.api.send("writeToFile", [items.objects.join("\n").toString(), userData.file]);
+    return Promise.resolve("Success: Changes written to file: " + userData.file);
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTodoComplete()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTodoComplete()", error])
     return Promise.reject("Error in setTodoComplete(): " + error);
   }
 }
@@ -1584,72 +1066,68 @@ function setTodoDelete(todo) {
     // first convert the string to a todo.txt object
     todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
     // get index of todo
-    const index = window.items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
+    const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item
     if(todo.due) {
       var date = convertDate(todo.due);
       // if deleted it will be removed from persisted notifcations
-      if(window.userData.dismissedNotifications) {
+      if(userData.dismissedNotifications) {
         // the one set for today
-        window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
+        userData.dismissedNotifications = userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+0);
         // the one set for tomorrow
-        window.userData.dismissedNotifications = window.userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
-        setUserData("dismissedNotifications", window.userData.dismissedNotifications);
+        userData.dismissedNotifications = userData.dismissedNotifications.filter(e => e !== generateHash(date + todo.text)+1);
+        setUserData("dismissedNotifications", userData.dismissedNotifications);
       }
     }
-    window.items.objects.splice(index, 1);
+    items.objects.splice(index, 1);
     //write the data to the file
     //fs.writeFileSync(file, items.objects.join("\n").toString(), {encoding: 'utf-8'});
-    window.api.send("writeToFile", [window.items.objects.join("\n").toString(), window.userData.file]);
-    return Promise.resolve("Success: Changes written to file: " + window.userData.file);
+    window.api.send("writeToFile", [items.objects.join("\n").toString(), userData.file]);
+    return Promise.resolve("Success: Changes written to file: " + userData.file);
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTodoDelete()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTodoDelete()", error])
     return Promise.reject("Error in setTodoDelete(): " + error);
   }
 }
 function setTheme(switchTheme) {
   try {
     if(switchTheme) {
-      switch (window.userData.theme) {
+      switch (userData.theme) {
         case "dark":
-          window.userData.theme = "light";
+          userData.theme = "light";
           break;
         case "light":
-          window.userData.theme = "dark";
+          userData.theme = "dark";
           break;
         default:
-          window.userData.theme = "light";
+          userData.theme = "light";
           break;
       }
-      setUserData("theme", window.userData.theme);
+      setUserData("theme", userData.theme);
     }
-    switch (window.userData.theme) {
+    switch (userData.theme) {
       case "light":
         toggleDarkmode.checked = false;
         themeLink.href = "";
         break;
       case "dark":
         toggleDarkmode.checked = true;
-        themeLink.href = window.appData.path + "/css/" + window.userData.theme + ".css";
+        themeLink.href = appData.path + "/css/" + userData.theme + ".css";
         break;
     }
-    return Promise.resolve("Success: Theme set to " + window.userData.theme);
+    return Promise.resolve("Success: Theme set to " + userData.theme);
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTheme()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTheme()", error])
     return Promise.reject("Error in setTheme(): " + error);
   }
 }
 function setTranslations() {
   try {
     window.api.send("getTranslations");
-    window.api.receive("sendTranslations", (translations) => {
-      // declare translations as global for usage later on
-      window.translations = translations;
-      // ########################################################################################################################
-      // TRANSLATIONS
-      // ########################################################################################################################
+    window.api.receive("sendTranslations", (data) => {
+      translations = data;
       btnTheme.setAttribute("title", translations.toggleDarkMode);
       btnSave.innerHTML = translations.save;
       todoTableSearch.placeholder = translations.search;
@@ -1772,45 +1250,51 @@ function setTranslations() {
     });
     return Promise.resolve("Success: Translations received and applied");
   } catch(error) {
+    showError(error);
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTranslations()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setTranslations()", error])
     return Promise.reject("Error in setTranslations(): " + error);
   }
 }
+function showError(message) {
+  errorContainer.classList.add("is-active");
+  errorMessage.innerHTML = message;
+}
+
 function setUserData(key, value) {
   try {
-    window.userData[key] = value;
-    window.api.send("setUserData", [key, value]);
+    userData[key] = value;
+    window.api.send("userData", [key, value]);
     return Promise.resolve("Success: Config written to config file");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setUserData()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setUserData()", error])
     return Promise.reject("Error in setUserData(): " + error);
   }
 }
 function setToggles() {
   try {
     // set the toggles in settings
-    toggleMatomoEvents.checked = window.userData.matomoEvents;
-    toggleNotifications.checked = window.userData.notifications;
-    showCompleted.checked = window.userData.showCompleted;
-    sortCompletedLast.checked = window.userData.sortCompletedLast;
-    showHidden.checked = window.userData.showHidden;
-    showDueIsToday.checked = window.userData.showDueIsToday;
-    showDueIsFuture.checked = window.userData.showDueIsFuture;
-    showDueIsPast.checked = window.userData.showDueIsPast;
-    toggleView.checked = window.userData.compactView;
+    toggleMatomoEvents.checked = userData.matomoEvents;
+    toggleNotifications.checked = userData.notifications;
+    showCompleted.checked = userData.showCompleted;
+    sortCompletedLast.checked = userData.sortCompletedLast;
+    showHidden.checked = userData.showHidden;
+    showDueIsToday.checked = userData.showDueIsToday;
+    showDueIsFuture.checked = userData.showDueIsFuture;
+    showDueIsPast.checked = userData.showDueIsPast;
+    toggleView.checked = userData.compactView;
     return Promise.resolve("Success: All toggles set");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
     return Promise.reject("Error in setToggles(): " + error);
   }
 }
 function setRecurrenceInput(recurrence) {
   try {
     let recSplit = splitRecurrence(recurrence);
-    let label = window.translations.noRecurrence;
+    let label = translations.noRecurrence;
     if(recSplit.period !== undefined) {
       if(recSplit.mul > 1) {
         switch (recSplit.period) {
@@ -1827,20 +1311,20 @@ function setRecurrenceInput(recurrence) {
             label = recurrencePickerYear;
             break;
         }
-        label = window.translations.every + " " + recSplit.mul + " " + label.innerHTML;
+        label = translations.every + " " + recSplit.mul + " " + label.innerHTML;
       } else {
         switch (recSplit.period) {
           case "d":
-            label = window.translations.daily;
+            label = translations.daily;
             break;
           case "w":
-            label = window.translations.weekly;
+            label = translations.weekly;
             break;
           case "m":
-            label = window.translations.monthly;
+            label = translations.monthly;
             break;
           case "y":
-            label = window.translations.yearly;
+            label = translations.yearly;
             break;
         }
       }
@@ -1848,25 +1332,25 @@ function setRecurrenceInput(recurrence) {
     recurrencePickerInput.value = label;
     resizeInput(recurrencePickerInput);
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + label]);
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + label]);
     return Promise.resolve("Success: Recurrence added");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setToggles()", error])
     return Promise.reject("Error in setToggles(): " + error);
   }
 }
 function setRecurrenceOptionLabels(mul) {
   if(mul>1) {
-    recurrencePickerDay.innerHTML = window.translations.day_plural;
-    recurrencePickerWeek.innerHTML = window.translations.week_plural;
-    recurrencePickerMonth.innerHTML = window.translations.month_plural;
-    recurrencePickerYear.innerHTML = window.translations.year_plural;
+    recurrencePickerDay.innerHTML = translations.day_plural;
+    recurrencePickerWeek.innerHTML = translations.week_plural;
+    recurrencePickerMonth.innerHTML = translations.month_plural;
+    recurrencePickerYear.innerHTML = translations.year_plural;
   } else {
-    recurrencePickerDay.innerHTML = window.translations.day;
-    recurrencePickerWeek.innerHTML = window.translations.week;
-    recurrencePickerMonth.innerHTML = window.translations.month;
-    recurrencePickerYear.innerHTML = window.translations.year;
+    recurrencePickerDay.innerHTML = translations.day;
+    recurrencePickerWeek.innerHTML = translations.week;
+    recurrencePickerMonth.innerHTML = translations.month;
+    recurrencePickerYear.innerHTML = translations.year;
   }
 }
 function setPriorityInput(priority) {
@@ -1891,17 +1375,17 @@ function setPriority(priority) {
     todo.priority = priority;
     modalFormInput.value = todo.toString();
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Priority changed to: " + priority]);
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Priority changed to: " + priority]);
     return Promise.resolve("Success: Priority changed to " + priority)
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setPriority()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setPriority()", error])
     return Promise.reject("Error in setPriority(): " + error)
   }
 }
 function setFriendlyLanguageNames(languageCode) {
   try {
-    window.appData.languages.forEach((language) => {
+    appData.languages.forEach((language) => {
       // generate user friendly entries for language selection menu
       switch (language) {
         case "de":
@@ -1925,13 +1409,13 @@ function setFriendlyLanguageNames(languageCode) {
       var option = document.createElement("option");
       option.text = friendlyLanguageName;
       option.value = language;
-      if(language===window.userData.language) option.selected = true;
+      if(language===userData.language) option.selected = true;
       settingsLanguage.add(option);
     });
     return Promise.resolve("Success: Friendly language names added to select field in settings");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "setFriendlyLanguageNames()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setFriendlyLanguageNames()", error])
     return Promise.reject("Error in setFriendlyLanguageNames(): " + error);
   }
 }
@@ -1950,44 +1434,20 @@ function getCaretPosition(inputId) {
 }
 function getUserData() {
   return new Promise(function(resolve, reject) {
-    window.api.send("getUserData");
-    window.api.receive("getUserData", (userData) => {
-      window.userData = userData;
-      resolve("Success: Userdata written to global variable");
+    window.api.send("userData");
+    return window.api.receive("userData", (userData) => {
+      userData = userData;
+      resolve(userData);
     });
   });
 }
 function getAppData() {
   return new Promise(function(resolve, reject) {
-    window.api.send("getAppData");
-    window.api.receive("getAppData", (appData) => {
+    window.api.send("appData");
+    return window.api.receive("appData", (appData) => {
       resolve(appData);
     });
   });
-}
-function getFileContent(file) {
-  try {
-    if(!file) {
-      showOnboarding(true);
-      return Promise.reject("Info: File does not exist or has not been defined yet. Starting onboarding.");
-    } else {
-      return new Promise(function(resolve, reject) {
-        window.api.send("getFileContent", file);
-        window.api.receive("getFileContent", (content) => {
-          if(content) {
-            resolve(content);
-          } else {
-            showOnboarding(true);
-            reject("Error: No content returned from main process");
-          }
-        });
-      });
-    }
-  } catch(error) {
-    // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "getFileContent()", error])
-    return Promise.reject("Error in getFileContent(): " + error);
-  }
 }
 function getRecurrenceDate(due, recurrence) {
   let recSplit = splitRecurrence(recurrence);
@@ -2013,52 +1473,45 @@ function getRecurrenceDate(due, recurrence) {
 
 function toggleCompactView(checked) {
   try {
-    window.userData.compactView = checked;
-    if(window.userData.compactView) {
+    userData.compactView = checked;
+    if(userData.compactView) {
       body.classList.add("compact");
     } else {
       body.classList.remove("compact");
     }
     // persist the sorting
-    setUserData("compactView", window.userData.compactView);
-    return Promise.resolve("Success: Compact view set to: " + window.userData.compactView);
+    setUserData("compactView", userData.compactView);
+    return Promise.resolve("Success: Compact view set to: " + userData.compactView);
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "toggleCompactView()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "toggleCompactView()", error])
     return Promise.reject("Error in toggleCompactView(): " + error);
   }
 }
 function toggleTodos(name, variable) {
   try {
-    if(window.userData[name]==false) {
-      window.userData[name] = true;
+    if(userData[name]==false) {
+      userData[name] = true;
     } else if(variable) {
-      window.userData[name] = true;
+      userData[name] = true;
     } else {
-      window.userData[name] = false;
+      userData[name] = false;
     }
-    document.getElementById(name).checked = window.userData[name];
+    document.getElementById(name).checked = userData[name];
     // persist the sorting
-    setUserData(name, window.userData[name]);
+    setUserData(name, userData[name]);
     // only show completedLast if showCompleted is true
-    if(window.userData.showCompleted) {
+    if(userData.showCompleted) {
       viewToggleSortCompletedLast.parentElement.classList.remove("is-hidden")
     } else {
       viewToggleSortCompletedLast.parentElement.classList.add("is-hidden")
     }
     //
-    t0 = performance.now();
-    generateTodoData().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Table rendered in:", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
-    return Promise.resolve("Success: Show " + name + " todo set to: " + window.userData[name]);
+    buildContent();
+    return Promise.resolve("Success: Show " + name + " todo set to: " + userData[name]);
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "toggleTodos()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "toggleTodos()", error])
     return Promise.reject("Error in toggleTodos(): " + error);
   }
 }
@@ -2098,7 +1551,7 @@ function toggleInputSize(type) {
 
 function matomoEventsConsent(setting) {
   try {
-    if(!window.userData.uid) {
+    if(!userData.uid) {
       // generate random number/string combination as user id and persist it
       var uid = Math.random().toString(36).slice(2);
       setUserData("uid", uid);
@@ -2107,18 +1560,18 @@ function matomoEventsConsent(setting) {
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     var _paq = window._paq = window._paq || [];
     // exclude development machine
-    if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
-    _paq.push(['setUserId', window.userData.uid]);
-    _paq.push(['setCustomDimension', 1, window.userData.theme]);
-    _paq.push(['setCustomDimension', 2, window.userData.language]);
-    _paq.push(['setCustomDimension', 3, window.userData.notifications]);
-    _paq.push(['setCustomDimension', 4, window.userData.matomoEvents]);
-    _paq.push(['setCustomDimension', 5, window.appData.version]);
-    _paq.push(['setCustomDimension', 6, window.userData.windowBounds.width+"x"+window.userData.windowBounds.height]);
-    _paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
-    _paq.push(['setCustomDimension', 8, window.userData.files.length]);
-    _paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
-    _paq.push(['setCustomDimension', 10, window.userData.compactView]);
+    if(appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
+    _paq.push(['setUserId', userData.uid]);
+    _paq.push(['setCustomDimension', 1, userData.theme]);
+    _paq.push(['setCustomDimension', 2, userData.language]);
+    _paq.push(['setCustomDimension', 3, userData.notifications]);
+    _paq.push(['setCustomDimension', 4, userData.matomoEvents]);
+    _paq.push(['setCustomDimension', 5, appData.version]);
+    _paq.push(['setCustomDimension', 6, userData.windowBounds.width+"x"+userData.windowBounds.height]);
+    _paq.push(['setCustomDimension', 7, userData.showCompleted]);
+    _paq.push(['setCustomDimension', 8, userData.files.length]);
+    _paq.push(['setCustomDimension', 9, userData.useTextarea]);
+    _paq.push(['setCustomDimension', 10, userData.compactView]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -2131,7 +1584,7 @@ function matomoEventsConsent(setting) {
       var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
       g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
     })();
-    if(window.userData.matomoEvents) {
+    if(userData.matomoEvents) {
       // user has given consent to process their data
       return Promise.resolve("Info: Consent given, Matomo error and event logging enabled");
     } else {
@@ -2141,7 +1594,7 @@ function matomoEventsConsent(setting) {
     }
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "matomoEventsConsent()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "matomoEventsConsent()", error])
     return Promise.reject("Error in matomoEventsConsent(): " + error);
   }
 }
@@ -2157,17 +1610,17 @@ function configureEvents() {
     navBtnHelp.onclick = function () {
       showContent(modalHelp);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Help"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Help"]);
     }
     navBtnSettings.onclick = function () {
       showContent(modalSettings);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Settings"]);
     }
     btnMessageLogging.onclick = function () {
       showContent(modalSettings);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
     }
     btnItemStatus.onclick = function() {
       setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
@@ -2179,14 +1632,14 @@ function configureEvents() {
         });
         console.log(response);
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
       }).catch(error => {
         console.log(error);
       });
     }
     btnTheme.onclick = function(el) {
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
       setTheme(true);
     }
     btnArchiveTodos.onclick = function() {
@@ -2196,19 +1649,18 @@ function configureEvents() {
           console.log(error);
         });
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
     }
     btnOpenTodoFile.forEach(function(el) {
       el.onclick = function () {
-        //openFile();
         window.api.send("openOrCreateFile", "open");
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
       }
     });
     btnChangeTodoFile.forEach(function(el) {
       el.onclick = function () {
-        if(window.userData.files.length > 0) {
+        if(userData.files.length > 0) {
           showFiles().then(response => {
             console.log(response);
           }).catch(error => {
@@ -2218,15 +1670,14 @@ function configureEvents() {
           window.api.send("openOrCreateFile", "open");
         }
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
       }
     });
     btnCreateTodoFile.forEach(function(el) {
       el.onclick = function () {
-        //createFile()
         window.api.send("openOrCreateFile", "create");
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
       }
     });
     btnModalCancel.forEach(function(el) {
@@ -2238,50 +1689,32 @@ function configureEvents() {
           console.log(error);
         });
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
       }
     });
-    /*btnFilter.forEach(function(el) {
-      el.onclick = function() {
-        showDrawer("toggle", this, filterDrawer).then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
-      };
-    });*/
     navBtnFilter.onclick = function() {
       // close filter drawer first
       viewDrawer.classList.remove("is-active")
       navBtnView.classList.remove("is-highlighted")
-      //if(drawerContainer.classList.contains("is-active")) console.log("DDDDDD"); drawerContainer.classList.remove("is-active")
-      //filterColumnClose.classList.remove("is-active")
-
-      showDrawer("toggle", this, filterDrawer).then(function(result) {
+      showDrawer("toggle", this.id, filterDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
         console.log(error);
       });
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
     }
     navBtnView.onclick = function() {
       // close filter drawer first
       filterDrawer.classList.remove("is-active")
       navBtnFilter.classList.remove("is-highlighted")
-      //if(drawerContainer.classList.contains("is-active")) console.log("DDDDDD"); drawerContainer.classList.remove("is-active")
-      //setUserData("filterDrawer", false);
-      //filterColumnClose.classList.remove("is-active")
-
-      showDrawer("toggle", this, viewDrawer).then(function(result) {
+      showDrawer("toggle", this.id, viewDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
         console.log(error);
       });
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on view"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on view"]);
     }
     btnAddTodo.forEach(function(el) {
       el.onclick = function () {
@@ -2293,37 +1726,37 @@ function configureEvents() {
         });
         showForm();
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
       }
     });
     btnFiltersResetFilters.onclick = function() {
       resetFilters();
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
     }
     btnNoResultContainerResetFilters.onclick = function() {
       resetFilters();
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
+      if(userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
     }
     todoTable.onclick = function() {
       if(event.target.classList.contains("flex-table")) {
-          showMore(false);
-          //viewContainer.classList.remove("is-active");
+        showMore(false);
       }
     }
     todoTableSearch.addEventListener("input", function () {
-      generateTodoData(this.value).then(response => {
+      /*buildContent(this.value).then(response => {
         console.log(response);
       }).catch(error => {
         console.log(error);
-      });
+      });*/
+      buildContent(this.value)
     });
     toggleView.onclick = function() {
       toggleCompactView(this.checked).then(response => {
         console.log(response);
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Toggle compact view"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Toggle compact view"]);
       }).catch(error => {
         console.log(error);
       });
@@ -2334,7 +1767,7 @@ function configureEvents() {
         toggleTodos(this.id).then(response => {
           console.log(response);
           // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Toggle " + this.id + " set to: " + this.value]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Toggle " + this.id + " set to: " + this.value]);
         }).catch(error => {
           console.log(error);
         });
@@ -2349,23 +1782,23 @@ function configureEvents() {
         console.log(error);
       });
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
     }
     toggleNotifications.onclick = function() {
       notifications = this.checked;
       setUserData('notifications', this.checked);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
     }
     toggleDarkmode.onclick = function() {
       setTheme(true);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
     }
     modalFormInputResize.onclick = function () {
       toggleInputSize(this.getAttribute("data-input-type"));
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
     }
     modalFormInput.onfocus = function () {
       suggestionContainer.classList.remove("is-active");
@@ -2381,20 +1814,20 @@ function configureEvents() {
         suggestionContainer.classList.remove("is-active");
         suggestionContainer.blur();
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
       }
     });
     modalClose.forEach(function(el) {
       el.onclick = function() {
         if(el.getAttribute("data-message")) {
           // persist closed message, so it won't show again
-          if(!window.userData.dismissedMessages.includes(el.getAttribute("data-message"))) window.userData.dismissedMessages.push(el.getAttribute("data-message"))
-          setUserData("dismissedMessages", window.userData.dismissedMessages);
+          if(!userData.dismissedMessages.includes(el.getAttribute("data-message"))) userData.dismissedMessages.push(el.getAttribute("data-message"))
+          setUserData("dismissedMessages", userData.dismissedMessages);
           // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
         } else {
           // trigger matomo event
-          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
         }
         el.parentElement.parentElement.classList.remove("is-active");
       }
@@ -2428,7 +1861,7 @@ function configureEvents() {
           console.log(error);
         });
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on close button"])
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on close button"])
       }
     })
     priorityPicker.addEventListener("change", e => {
@@ -2455,19 +1888,15 @@ function configureEvents() {
         todo.due = new Date(e.detail.date);
         todo.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
         modalFormInput.value = todo.toString();
-        // adjust size of inut
-        //dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
         // clean up as we don#t need it anymore
         todo = null;
         // if suggestion box was open, it needs to be closed
         suggestionContainer.classList.remove("is-active");
         suggestionContainer.blur();
-        // if a due date is set, the recurrence picker will be shown
-        //recurrencePicker.classList.add("is-active");
-        //recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
+        // if a due date is set, the recurrence picker will be shown);
         modalFormInput.focus();
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
       }
     });
     recurrencePickerInput.onfocus = function(el) { showRecurrenceOptions(el) };
@@ -2478,65 +1907,40 @@ function configureEvents() {
       this.classList.add("is-active");
       showTab(this.classList[0]);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
     }));
     settingsLanguage.onchange = function() {
-      window.userData.language = this.value;
-      window.api.send("setUserData", ["language", window.userData.language]);
+      userData.language = this.value;
+      window.api.send("userData", ["language", userData.language]);
       window.api.send("changeLanguage", this.value);
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
+    }
+    errorContainerClose.onclick = function() {
+      this.parentElement.classList.remove("is-active")
     }
     viewSelectSortBy.onchange = async function() {
       if(this.value) {
         await setUserData("sortBy", this.value);
-        t0 = performance.now();
-        await generateTodoData().then(response => {
-          console.log(response);
-          t1 = performance.now();
-          console.log("Table rendered in:", t1 - t0, "ms");
-        }).catch(error => {
-          console.log(error);
-        });
+        buildContent();
         clearModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
           console.log(error);
         });
         // trigger matomo event
-        if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Sort by setting changed to: " + this.value]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Sort by setting changed to: " + this.value]);
       }
     }
-    /*btnToggleViewContainer.onclick = function() {
-      viewContainer.classList.toggle("is-active");
-    }*/
     zoomRangePicker.onchange = function() {
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Zoom ranger dragged"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Zoom ranger dragged"]);
       zoom(this.value).then(response => {
         console.log(response);
       }).catch(error => {
         console.log(error);
       });
     }
-    /*zoomIn.onclick = function(el) {
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Click on zoom in"]);
-      zoom("in").then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
-    };
-    zoomOut.onclick = function(el) {
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Click on zoom out"]);
-      zoom("out").then(response => {
-        console.log(response);
-      }).catch(error => {
-        console.log(error);
-      });
-    };*/
     zoomUndo.onclick = function() {
       zoom(100).then(response => {
         console.log(response);
@@ -2544,7 +1948,7 @@ function configureEvents() {
         console.log(error);
       });
       // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Click on zoom undo"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Click on zoom undo"]);
     };
     // clear due date and recurrence values from input field
     document.querySelector(".datepicker .clear-btn").addEventListener('click', function (e) {
@@ -2602,19 +2006,8 @@ function configureEvents() {
         this.classList.remove("is-active");
       } else if(event.key === "Escape" && suggestionContainer.classList.contains("is-active")) {
         suggestionContainer.classList.remove("is-active");
-        //suggestionContainer.blur();
       }
     });
-    /*suggestionContainer.addEventListener ("keydown", function (e) {
-      if(event.key === "Escape") {
-        suggestionContainer.classList.remove("is-active");
-        suggestionContainer.blur();
-      }
-    });*/
-    /*body.addEventListener ("click", function () {
-      // close view layer
-      if(viewContainer.classList.contains("is-active") && !event.target.closest("#viewContainer") && !event.target.closest("#btnToggleViewContainer")) viewContainer.classList.remove("is-active")
-    });*/
     modalForm.addEventListener ("click", function () {
       // close recurrence picker if click is outside of recurrence container
       if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) recurrencePickerContainer.classList.remove("is-active")
@@ -2639,7 +2032,7 @@ function configureEvents() {
     });
     filterDrawer.addEventListener ("keydown", function () {
       if(event.key === "Escape") {
-        showDrawer(false, navBtnFilter, filterDrawer).then(function(result) {
+        showDrawer(false, navBtnFilter.id, filterDrawer.id).then(function(result) {
           console.log(result);
         }).catch(function(error) {
           console.log(error);
@@ -2648,7 +2041,7 @@ function configureEvents() {
     });
     viewDrawer.addEventListener ("keydown", function () {
       if(event.key === "Escape") {
-        showDrawer(false, navBtnView, viewDrawer).then(function(result) {
+        showDrawer(false, navBtnView.id, viewDrawer.id).then(function(result) {
           console.log(result);
         }).catch(function(error) {
           console.log(error);
@@ -2658,12 +2051,13 @@ function configureEvents() {
     return Promise.resolve("Success: All events have been initialized");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureEvents()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureEvents()", error])
     return Promise.reject("Error in configureEvents(): " + error);
   }
 }
 function configureTodoTableTemplate() {
   try {
+    todoTableContainer.innerHTML = "";
     // TODO: EXPLAIN
     todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
@@ -2675,9 +2069,9 @@ function configureTodoTableTemplate() {
         </div>
         <div class="dropdown-menu" role="menu">
           <div class="dropdown-content">
-            <a class="dropdown-item">` + window.translations.useAsTemplate + `</a>
-            <a href="#" class="dropdown-item">` + window.translations.edit + `</a>
-            <a class="dropdown-item">` + window.translations.delete + `</a>
+            <a class="dropdown-item">` + translations.useAsTemplate + `</a>
+            <a href="#" class="dropdown-item">` + translations.edit + `</a>
+            <a class="dropdown-item">` + translations.delete + `</a>
           </div>
         </div>
       </div>
@@ -2700,8 +2094,8 @@ function configureTodoTableTemplate() {
     return Promise.resolve("Success: Table templates set up");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateTableRow()", error])
-    return Promise.reject("Error in generateTableRow(): " + error);
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "buildTableRow()", error])
+    return Promise.reject("Error in buildTableRow(): " + error);
   }
 }
 function configureMainView() {
@@ -2711,42 +2105,44 @@ function configureMainView() {
     // set size of recurrence picker
     resizeInput(recurrencePickerInput);
     // set scaling factor if default font size has changed
-    if(window.userData.zoom) {
-      html.style.zoom = window.userData.zoom + "%";
-      zoomStatus.innerHTML = window.userData.zoom + "%";
-      zoomRangePicker.value = window.userData.zoom;
+    if(userData.zoom) {
+      html.style.zoom = userData.zoom + "%";
+      zoomStatus.innerHTML = userData.zoom + "%";
+      zoomRangePicker.value = userData.zoom;
     }
     // empty the table containers before reading fresh data
-    todoTableContainer.innerHTML = "";
+    //todoTableContainer.innerHTML = "";
     // add filename to application title
-    switch (window.appData.os) {
-      case "windows":
-        title.innerHTML = window.userData.file.split("\\").pop() + " - sleek";
-        break;
-      default:
-        title.innerHTML = window.userData.file.split("/").pop() + " - sleek";
-        break;
+    if(userData.file) {
+      switch (appData.os) {
+        case "windows":
+          title.innerHTML = userData.file.split("\\").pop() + " - sleek";
+          break;
+        default:
+          title.innerHTML = userData.file.split("/").pop() + " - sleek";
+          break;
+      }
     }
     // set viewContainer sort select
     Array.from(viewSelectSortBy.options).forEach(function(item) {
-      if(item.value===window.userData.sortBy) item.selected = true
+      if(item.value===userData.sortBy) item.selected = true
     });
     // restore persisted width of filter drawer
-    if(window.userData.drawerWidth) setPaneWidth(window.userData.drawerWidth);
+    if(userData.drawerWidth) setPaneWidth(userData.drawerWidth);
     // check if compact view is suppose to be active
-    if(window.userData.compactView) body.classList.add("compact");
+    if(userData.compactView) body.classList.add("compact");
     // add version number to about tab in settings modal
-    version.innerHTML = window.appData.version;
+    version.innerHTML = appData.version;
     // open filter drawer if it has been persisted
-    if(window.userData.filterDrawer) {
-      showDrawer(true, navBtnFilter, filterDrawer).then(function(result) {
+    if(userData.filterDrawer) {
+      showDrawer(true, navBtnFilter.id, filterDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
         console.log(error);
       });
     // open view drawer if it has been persisted
-    } else if(window.userData.viewDrawer) {
-      showDrawer(true, navBtnView, viewDrawer).then(function(result) {
+    } else if(userData.viewDrawer) {
+      showDrawer(true, navBtnView.id, viewDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
         console.log(error);
@@ -2755,8 +2151,8 @@ function configureMainView() {
     // check if archive button should be enabled
     setButtonState("btnArchiveTodos");
     // adjust input field
-    if(window.userData.useTextarea) toggleInputSize("input");
-    if(window.userData.file) {
+    if(userData.useTextarea) toggleInputSize("input");
+    if(userData.file) {
       // if there is a file onboarding is hidden
       showOnboarding(false).then(function(result) {
         console.log(result);
@@ -2774,7 +2170,14 @@ function configureMainView() {
     }
     // hide/show the addTodoContainer or noResultTodoContainer
     // file has content and objects are shown
-    if(window.items.objectsFiltered.length > 0 && window.items.objects.length>0) {
+    if(items.objects.length === 0) {
+      todoTableSearchContainer.classList.remove("is-active");
+      addTodoContainer.classList.add("is-active");
+      noResultContainer.classList.remove("is-active");
+      todoTable.classList.remove("is-active");
+      navBtnFilter.classList.remove("is-active");
+      return Promise.resolve("Info: File is empty");
+    } else if(items.filtered.length > 0 && items.objects.length>0) {
       todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
@@ -2782,20 +2185,12 @@ function configureMainView() {
       navBtnFilter.classList.add("is-active");
       return Promise.resolve("Info: File has content and results are shown");
     // file is NOT empty but no results
-    } else if(window.items.objectsFiltered.length === 0 && window.items.objects.length>0) {
+    } else if(items.filtered.length === 0 && items.objects.length>0) {
       todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
       navBtnFilter.classList.add("is-active");
       return Promise.resolve("Info: File has content, but no results are shown due to filters or search input");
-    // file is empty
-    } else if(window.items.objects.length === 0) {
-      todoTableSearchContainer.classList.remove("is-active");
-      addTodoContainer.classList.add("is-active");
-      noResultContainer.classList.remove("is-active");
-      todoTable.classList.remove("is-active");
-      navBtnFilter.classList.remove("is-active");
-      return Promise.resolve("Info: File is empty");
     }
   } catch(error) {
     showOnboarding(true).then(function(result) {
@@ -2804,16 +2199,16 @@ function configureMainView() {
       console.log(error);
     });
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureMainView()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureMainView()", error])
     return Promise.reject("Error in configureMainView(): " + error);
   }
 }
 
 function checkDismissedMessages() {
   try {
-    if(!window.userData.dismissedMessages) return Promise.reject("Info: No already checked messages found, will skip this check");
+    if(!userData.dismissedMessages) return Promise.reject("Info: No already checked messages found, will skip this check");
     messages.forEach((message) => {
-      if(window.userData.dismissedMessages.includes(message.getAttribute("data"))) {
+      if(userData.dismissedMessages.includes(message.getAttribute("data"))) {
         message.classList.remove("is-active");
       } else {
         message.classList.add("is-active");
@@ -2822,7 +2217,7 @@ function checkDismissedMessages() {
     return Promise.resolve("Info: Checked for already dismissed messages");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "checkDismissedMessages()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "checkDismissedMessages()", error])
     return Promise.reject("Error in checkDismissedMessages(): " + error);
   }
 }
@@ -2838,25 +2233,18 @@ function resetFilters() {
     // clear search input
     todoTableSearch.value = null;
     // regenerate the data
-    t0 = performance.now();
-    generateTodoData().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Table rendered in:", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
+    buildContent();
     return Promise.resolve("Success: Filters resetted");
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "resetFilters()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "resetFilters()", error])
     return Promise.reject("Error in resetFilters(): " + error);
   }
 }
 
 function submitForm() {
   try {
-    let items = window.items;
+    //let items = window.items;
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
     if (modalForm.getAttribute("data-item")===modalForm.elements[0].value) {
@@ -2870,13 +2258,13 @@ function submitForm() {
       let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
-        modalFormAlert.innerHTML = window.translations.formInfoDuplicate;
+        modalFormAlert.innerHTML = translations.formInfoDuplicate;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.reject("Info: Todo already exists in file, won't write duplicate");
       // check if todo text is empty
       } else if(!todo.text) {
-        modalFormAlert.innerHTML = window.translations.formInfoIncomplete;
+        modalFormAlert.innerHTML = translations.formInfoIncomplete;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.reject("Info: Todo is incomplete");
@@ -2892,13 +2280,13 @@ function submitForm() {
       todo.date = new Date();
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
-        modalFormAlert.innerHTML = window.translations.formInfoDuplicate;
+        modalFormAlert.innerHTML = translations.formInfoDuplicate;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.reject("Info: Todo already exists in file, won't write duplicate");
       // check if todo text is empty
       } else if(!todo.text) {
-        modalFormAlert.innerHTML = window.translations.formInfoIncomplete;
+        modalFormAlert.innerHTML = translations.formInfoIncomplete;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.reject("Info: Todo is incomplete");
@@ -2908,23 +2296,23 @@ function submitForm() {
       // mark the todo for anchor jump after next reload
       item.previous = todo.toString();
     } else if(modalForm.elements[0].value=="") {
-      modalFormAlert.innerHTML = window.translations.formInfoNoInput;
+      modalFormAlert.innerHTML = translations.formInfoNoInput;
       modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
       modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
       return Promise.reject("Info: Will not write empty todo");
     }
     //write the data to the file
-    window.api.send("writeToFile", [items.objects.join("\n").toString(), window.userData.file]);
+    window.api.send("writeToFile", [items.objects.join("\n").toString(), userData.file]);
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
-    return Promise.resolve("Success: Changes written to file: " + window.userData.file);
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
+    return Promise.resolve("Success: Changes written to file: " + userData.file);
   // if the input field is empty, let users know
   } catch (error) {
     // if writing into file is denied throw alert
-    modalFormAlert.innerHTML = window.translations.formErrorWritingFile + window.userData.file;
+    modalFormAlert.innerHTML = translations.formErrorWritingFile + userData.file;
     modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "submitForm()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "submitForm()", error])
     return Promise.reject("Error in submitForm(): " + error);
   }
 }
@@ -2952,44 +2340,43 @@ function archiveTodos() {
     // cancel operation if there are no completed todos
     if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
     // if user archives within done.txt file, operating is canceled
-    if(window.userData.file.split("/").pop() === "done.txt") return Promise.reject("Info: Current file seems to be a done.txt file, won't archive")
+    if(userData.file.split("/").pop() === "done.txt") return Promise.reject("Info: Current file seems to be a done.txt file, won't archive")
     // define path to done.txt
     let doneFile;
-    switch (window.appData.os) {
+    switch (appData.os) {
       case "windows":
-        doneFile = window.userData.file.replace(window.userData.file.split("\\").pop(), window.userData.file.substr(0, window.userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
+        doneFile = userData.file.replace(userData.file.split("\\").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
         break;
       default:
-        doneFile = window.userData.file.replace(window.userData.file.split("/").pop(), window.userData.file.substr(0, window.userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
+        doneFile = userData.file.replace(userData.file.split("/").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
         break;
     }
-    items.doneTxtObjects = new Array;
-    getFileContent(doneFile).then(function(result) {
-      if(result) items.doneTxtObjects = TodoTxt.parse(result, [ new DueExtension(), new RecExtension() ]);
+    window.api.send("fileContent", doneFile);
+    window.api.receive("fileContent", (content) => {
+      items.doneTxtObjects = new Array;
+      if(content) items.doneTxtObjects = TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
       // in case done file was not empty the completed todos will be appended
       if(items.doneTxtObjects.length>0) {
         // only consider completed todo that are not already present in done.txt
         items.doneTxtObjects.forEach(itemComplete => {
-          window.items.complete = window.items.complete.filter(function(item) { return item.toString() != itemComplete.toString() });
+          items.complete = items.complete.filter(function(item) { return item.toString() != itemComplete.toString() });
         });
         // combine done objects from todo.txt and done.txt
-        window.items.complete = items.doneTxtObjects.concat(window.items.complete);
+        items.complete = items.doneTxtObjects.concat(items.complete);
         // write combined objects to done.txt
-        window.api.send("writeToFile", [window.items.complete.join("\n").toString(), doneFile]);
+        window.api.send("writeToFile", [items.complete.join("\n").toString(), doneFile]);
       // if done.txt did not exist or was empty, file will be created and filled with data
       } else {
         // if done.txt did not exist or was empty, file will be created and filled with data
-        window.api.send("writeToFile", [window.items.complete.join("\n").toString(), doneFile]);
+        window.api.send("writeToFile", [items.complete.join("\n").toString(), doneFile]);
       }
-    }).catch(error => {
-      console.log(error);
+      // write incomplete only todos to todo.txt
+      window.api.send("writeToFile", [items.incomplete.join("\n").toString(), userData.file]);
     });
-    // write incomplete only todos to todo.txt
-    window.api.send("writeToFile", [window.items.incomplete.join("\n").toString(), window.userData.file]);
     return Promise.resolve("Success: Completed todo moved to: " + doneFile)
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
     return Promise.reject("Error in archiveTodos(): " + error)
   }
 }
@@ -2998,7 +2385,7 @@ function configureDatepicker() {
   try {
     window.dueDatePicker = new Datepicker(dueDatePickerInput, {
       autohide: true,
-      language: window.userData.language,
+      language: userData.language,
       format: "yyyy-mm-dd",
       clearBtn: true,
       beforeShowDay: function(date) {
@@ -3013,112 +2400,47 @@ function configureDatepicker() {
     return Promise.resolve("Success: Datepicker configured")
   } catch(error) {
     // trigger matomo event
-    if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureDatepicker()", error])
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureDatepicker()", error])
     return Promise.reject("Error in configureDatepicker(): " + error)
   }
 }
 
+let userData;
+let appData;
+let translations;
+
 window.onload = async function () {
-  // set listeners
-  window.api.receive("reloadContent", (content) => {
-    // advice main process to start the filewatcher
-    //window.api.send("startFileWatcher", window.userData.file);
-    generateItemsObject(content).then(function(result) {
-      console.log(result);
-      // close any modal
-      clearModal().then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });
-    }).catch(function(error) {
-      console.log(error);
-    });
-  });
 
-  // change file
-  /*window.api.receive("changeFile", (file) => {
-    changeFile(file).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
-  });*/
 
-  // trigger function in renderer process
-  window.api.receive("triggerFunction", (name, args) => {
-    switch (name) {
-      case "toggleTodos":
-        toggleTodos(args.join()).then(function(appData) {
-          window.appData = appData;
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-      case "setTheme":
-        setTheme(args.join()).then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-      case "showOnboarding":
-        showOnboarding(args.join()).then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-      case "showFilterDrawer":
-        showDrawer(args.join(), navBtnFilter, filterDrawer).then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-      case "archiveTodos":
-        archiveTodos().then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-      case "showForm":
-        showForm().then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-      case "resetFilters":
-        resetFilters().then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-      case "zoom":
-        zoom(args.join()).then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          console.log(error);
-        });
-        break;
-    }
-  });
-
-  // call app data and only continue if result is ready
-  await getAppData().then(function(appData) {
-    window.appData = appData;
+  //const appData = getAppData();
+  // call user data and only continue if result is ready
+  await getUserData().then(function(response) {
+    userData = response;
   }).catch(function(error) {
     console.log(error);
   });
 
-  // call user data and write it to a global variable
-  await getUserData().then(function(response) {
-    console.log(response);
-    if(!userData.file) showOnboarding(true)
+  // call app data and only continue if result is ready
+  await getAppData().then(function(response) {
+    appData = response;
   }).catch(function(error) {
+    console.log(error);
+  });
+
+  // call for translations and apply them
+  await setTranslations().then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });
+
+  // if there is a file, the file watcher is being triggered
+  if(userData.file) window.api.send("startFileWatcher", userData.file);
+
+  // set zoom
+  zoom(userData.zoom).then(response => {
+    console.log(response);
+  }).catch(error => {
     console.log(error);
   });
 
@@ -3136,29 +2458,8 @@ window.onload = async function () {
     console.log(error);
   });
 
-  // call for translations and apply them
-  setTranslations().then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    console.log(error);
-  });
-
-  // get file content and create the items object
-  await getFileContent(window.userData.file).then(function(result) {
-    // only continue if we have the items object
-    generateItemsObject(result).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      console.log(error);
-    });
-    // advice main process to start the filewatcher
-    window.api.send("startFileWatcher", window.userData.file);
-  }).catch(error => {
-    console.log(error);
-  });
-
   // add friendly language names to settings dropdown
-  setFriendlyLanguageNames(window.userData.language).then(function(result) {
+  setFriendlyLanguageNames(userData.language).then(function(result) {
     console.log(result);
   }).catch(function(error) {
     console.log(error);
@@ -3172,7 +2473,7 @@ window.onload = async function () {
   });
 
   // On app load only call matomo function if opt in is set
-  matomoEventsConsent(window.userData.matomoEvents).then(response => {
+  matomoEventsConsent(userData.matomoEvents).then(response => {
     console.log(response);
   }).catch(error => {
     console.log(error);
@@ -3192,27 +2493,789 @@ window.onload = async function () {
     console.log(error);
   });
 
-  // persist window size on resize
-  window.onresize = function() {
-    try {
-      let width = this.outerWidth;
-      let height = this.outerHeight;
-      let horizontalPosition = this.pageXOffset;
-      let verticalPosition = this.pageYOffset;
-      setUserData("windowBounds", { width, height, horizontalPosition, verticalPosition }).then(function() {
-        // Adjust position of suggestion box to input field
-        let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-        suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
-        suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-        suggestionContainer.style.left = modalFormInputPosition.left + "px";
-        return Promise.resolve("Success: Window bounds Config written to config file");
-      }).catch(function(error) {
-        return Promise.reject("Error in window.onresize: " + error);
-      });
-    } catch(error) {
-      // trigger matomo event
-      if(window.userData.matomoEvents) _paq.push(["trackEvent", "Error", "window.onresize", error])
+}
+
+window.api.receive("triggerFunction", (name, args) => {
+  if(typeof(window[name]) === "function") {
+    if(!args) args = new Array;
+    window[name](...args).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
+  } else {
+    throw("Error: Function " + name + " does not exist.");
+  }
+});
+
+window.onresize = function() {
+  try {
+    let width = this.outerWidth;
+    let height = this.outerHeight;
+    let horizontalPosition = this.pageXOffset;
+    let verticalPosition = this.pageYOffset;
+    setUserData("windowBounds", { width, height, horizontalPosition, verticalPosition }).then(function() {
+      // Adjust position of suggestion box to input field
+      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+      suggestionContainer.style.width = modalFormInput.offsetWidth + "px";
+      suggestionContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+      suggestionContainer.style.left = modalFormInputPosition.left + "px";
+      return Promise.resolve("Success: Window bounds Config written to config file");
+    }).catch(function(error) {
       return Promise.reject("Error in window.onresize: " + error);
-    }
+    });
+  } catch(error) {
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "window.onresize", error])
+    return Promise.reject("Error in window.onresize: " + error);
   }
 }
+
+window.api.receive("reloadContent", (content) => {
+  generateItems(content)
+  .then(function() {
+    buildContent();
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+});
+
+function buildContent(searchString) {
+  t0 = performance.now();
+  filterItems(items, searchString)
+  .then(function(filtered) {
+
+    f0 = performance.now();
+    generateFilterData().then(response => {
+      console.log(response);
+      f1 = performance.now();
+      console.log("Filters build:", f1 - f0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+
+    return buildGroups(filtered)
+  })
+  .then(function(groups) {
+    buildTable(groups);
+  })
+  .then(function() {
+    t1 = performance.now();
+    console.log("Todos build:", t1 - t0, "ms");
+    configureMainView();
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+}
+
+function generateItems(content) {
+  try {
+    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
+    items.complete = items.objects.filter(function(item) { return item.complete === true });
+    items.incomplete = items.objects.filter(function(item) { return item.complete === false });
+    items.objects = items.objects.filter(function(item) { return item.toString() != "" });
+    return Promise.resolve();
+  } catch(error) {
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "generateItemsObject()", error])
+    return Promise.reject("Error in generateItemsObject(): " + error);
+  }
+}
+
+function filterItems(items, searchString) {
+  // prepare the templates for the table
+  /*configureTodoTableTemplate().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });*/
+  // selected filters are empty, unless they were persisted
+  if(userData.selectedFilters && userData.selectedFilters.length>0) {
+    var selectedFilters = JSON.parse(userData.selectedFilters);
+  } else {
+    var selectedFilters = new Array;
+    userData.selectedFilters = selectedFilters;
+  }
+  // selected categories are empty, unless they were persisted
+  if(userData.categoriesFiltered && userData.categoriesFiltered.length>0) {
+    var categoriesFiltered = JSON.parse(userData.categoriesFiltered);
+  } else {
+    var categoriesFiltered = new Array;
+    userData.categoriesFiltered = categoriesFiltered;
+  }
+  // if set, only incomplete todo will be processed from here on
+  if(!userData.showCompleted) {
+    items.filtered = items.incomplete;
+  } else {
+    items.filtered = items.objects;
+  }
+  // if there are selected filters
+  if(selectedFilters.length > 0) {
+    // we iterate through the filters in the order they got selected
+    selectedFilters.forEach(filter => {
+      // check if the filter is a project filter
+      if(filter[1]=="projects") {
+        items.filtered = items.filtered.filter(function(item) {
+          if(item.projects) return item.projects.includes(filter[0]);
+        });
+      // check if the filter is a context filter
+      } else if(filter[1]=="contexts") {
+        items.filtered = items.filtered.filter(function(item) {
+          if(item.contexts) {
+            return item.contexts.includes(filter[0]);
+          }
+        });
+      }
+    });
+  }
+  // filters are generated once the final todos are defined
+  /*t0 = performance.now();
+  generateFilterData().then(response => {
+    console.log(response);
+    t1 = performance.now();
+    console.log("Filters rendered:", t1 - t0, "ms");
+  }).catch(error => {
+    console.log(error);
+  });*/
+  // exclude all filters of a category if set
+  if(userData.categoriesFiltered.length > 0) {
+    userData.categoriesFiltered.forEach(category => {
+      // we create a new array where the items attrbite has no values
+      items.filtered = items.filtered.filter(function(item) {
+        return item[category] === null;
+      });
+    });
+  }
+  // filter hidden todos
+  viewBoxShowHidden.classList.remove("is-active");
+  items.filtered = items.filtered.filter(function(item) {
+    if(item.h) {
+      // if h:1 it is skipped
+      viewBoxShowHidden.classList.add("is-active");
+      if(!userData.showHidden) return false;
+    }
+    return true;
+  });
+  // filter todos due today
+  if(!userData.showDueIsToday) {
+    items.filtered = items.filtered.filter(function(item) {
+      if(item.due && item.due.isToday()) return false;
+      return true;
+    });
+  }
+  // filter todos due in the past
+  if(!userData.showDueIsPast) {
+    items.filtered = items.filtered.filter(function(item) {
+      if(item.due && item.due.isPast()) return false;
+      return true;
+    });
+  }
+  // filter todos due in the future
+  if(!userData.showDueIsFuture) {
+    items.filtered = items.filtered.filter(function(item) {
+      if(item.due && item.due.isFuture()) return false;
+      return true;
+    });
+  }
+  // if search string or previously inserted content in search bar is detected
+  if(searchString || todoTableSearch.value) {
+    if(todoTableSearch.value) searchString = todoTableSearch.value;
+    // convert everything to lowercase for better search results
+    items.filtered = items.filtered.filter(function(item) {
+      // if no match (-1) the item is skipped
+      if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
+  // manipulate the result info box
+  /*showResultStats().then(response => {
+    console.log(response);
+  }).catch(error => {
+    console.log(error);
+  });
+  // reconfigure the main view according to amount of objects
+  configureMainView().then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });*/
+
+  // if sortCompletedLast a separate array of completed todos is added to the object
+  /*if(userData.showCompleted && userData.sortCompletedLast) {
+    items.filtered.push(["completed", items.complete]);
+  }*/
+
+  return Promise.resolve(items.filtered);
+}
+
+function buildGroups(items) {
+  // build object according to sorting method
+  items = items.reduce((object, a) => {
+    if(userData.sortCompletedLast && a.complete) {
+      object["completed"] = [...object["completed"] || [], a];
+    } else if(userData.sortBy==="dueString" && !a.due) {
+      object["noDueDate"] = [...object["noDueDate"] || [], a];
+    } else {
+      object[a[userData.sortBy]] = [...object[a[userData.sortBy]] || [], a];
+    }
+    //object[a[userData.sortBy]] = [...object[a[userData.sortBy]] || [], a];
+    return object;
+  }, {});
+  // object is converted to a sorted array
+  items = Object.entries(items).sort(function(a,b) {
+    // when a is null sort it after b
+    if(a[0]==="null") return 1;
+    // when b is null sort it after a
+    if(b[0]==="null") return -1;
+    // sort alphabetically
+    if(a < b) return -1;
+  });
+  //
+  if(userData.sortCompletedLast) {
+    items.sort(function(a,b) {
+      // when a is null sort it after b
+      if(a[0]==="completed") return 1;
+      // when b is null sort it after a
+      if(b[0]==="completed") return -1;
+      return 0;
+    });
+  }
+  return Promise.resolve(items)
+}
+
+function buildTable(groups) {
+  // prepare the templates for the table
+  configureTodoTableTemplate().then(response => {
+
+    console.log(response);
+
+    for (let group in groups) {
+      // nodes need to be created to add them to the outer fragment
+      // create a divider row
+      // completed todos
+      if(userData.sortCompletedLast && groups[group][0]==="completed") {
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
+      // for priority, context and project
+      } else if(groups[group][0]!="null" && userData.sortBy!="dueString") {
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"" + groups[group][0] + " " + userData.sortBy + "\">" + groups[group][0].replace(/,/g, ', ') + "</div></div>"))
+      // if sorting is by due date
+      } else if(userData.sortBy==="dueString" && groups[group][1][0].due) {
+        if(groups[group][1][0].due.isToday()) {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\">" + translations.today + "</div></div>"));
+        } else if(groups[group][1][0].due.isTomorrow()) {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\">" + translations.tomorrow + "</div></div>"));
+        } else if(groups[group][1][0].due.isPast()) {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\">" + groups[group][0] + "</div></div>"));
+        } else {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + groups[group][0] + "</div></div>"))
+        }
+      // create an empty divider row
+      } else {
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
+      }
+      // first sort by priority
+      groups[group][1] = groups[group][1].sort(function(a, b) {
+        // most recent or already past todo will be sorted to the top
+        if (a.priority < b.priority || !b.priority) {
+          return -1;
+        } else if (a.priority > b.priority) {
+          return 1;
+        } else {
+          // if all fail, no change to sort order
+          return 0;
+        }
+      });
+      // second sort by due date
+      groups[group][1] = groups[group][1].sort(function(a, b) {
+        // when a is smaller than b it, a is put after b
+        if(a.priority===b.priority && a.due < b.due) return -1
+        // when a is is undefined but b is not, b is put before a
+        if(a.priority===b.priority && !a.due && b.due) return 1
+        // when b is is undefined but a is not, a is put before b
+        if(a.priority===b.priority && a.due && !b.due) return -1
+        // if all fail, no change to sort order
+        return 0;
+      });
+      // build the fragments per group
+      for (let item in groups[group][1]) {
+        let todo = groups[group][1][item];
+        // if todo has no text, it's skipped
+        if(!todo.text) continue;
+        // if this todo is not a recurring one the rec value will be set to null
+        if(!todo.rec) {
+          todo.rec = null;
+        // if item is due today or in the past and has recurrence it will be duplicated
+        } else if(todo.due && todo.rec && !todo.complete && (todo.due.isToday() || todo.due.isPast())) {
+          generateRecurringTodo(todo).then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+        }
+        // incompleted todos with due date
+        if (todo.due && !todo.complete) {
+          // create notification
+          if(todo.due.isToday()) {
+            generateNotification(todo, 0).then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+          } else if(todo.due.isTomorrow()) {
+            generateNotification(todo, 1).then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+          }
+        }
+        // finally generate the rows
+        /*buildTableRow(todo).then(row => {
+          tableContainerContent.appendChild(row);
+        });*/
+        tableContainerContent.appendChild(buildTableRow(todo));
+      }
+    }
+    // append all generated groups to the main container
+    todoTableContainer.appendChild(tableContainerContent);
+  }).catch(error => {
+    console.log(error);
+  });
+}
+
+function buildTableRow(todo) {
+  try {
+    // create nodes from templates
+    let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
+    let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);
+    let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
+    let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
+    let todoTableBodyCellMore = todoTableBodyCellMoreTemplate.cloneNode(true);
+    let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
+    let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
+    let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
+    let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
+    // if new item was saved, row is being marked
+    if(todo.toString()==item.previous) {
+      todoTableBodyRow.setAttribute("id", "previousItem");
+      item.previous = null;
+    }
+    // start with the individual config of the items
+    if(todo.complete==true) {
+      todoTableBodyRow.setAttribute("class", "flex-table completed");
+    }
+    todoTableBodyRow.setAttribute("data-item", todo.toString());
+    // add the priority marker or a white spacer
+    if(todo.priority && userData.sortBy==="priority") {
+      todoTableBodyCellPriority.setAttribute("class", "flex-row priority " + todo.priority);
+      todoTableBodyRow.appendChild(todoTableBodyCellPriority);
+    } else if(!todo.priority && userData.sortBy==="priority") {
+      todoTableBodyCellSpacer.setAttribute("class", "flex-row spacer");
+      todoTableBodyRow.appendChild(todoTableBodyCellSpacer);
+    }
+    // add the checkbox
+    if(todo.complete==true) {
+      todoTableBodyCellCheckbox.setAttribute("title", translations.inProgress);
+      todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\"><i class=\"fas fa-check-circle\"></i></a>";
+    } else {
+      todoTableBodyCellCheckbox.setAttribute("title", translations.done);
+      todoTableBodyCellCheckbox.innerHTML = "<a href=\"#\"><i class=\"far fa-circle\"></i></a>";
+    }
+    // add a listener on the checkbox to call the completeItem function
+    todoTableBodyCellCheckbox.onclick = function() {
+      // passing the data-item attribute of the parent tag to complete function
+      setTodoComplete(this.parentElement.getAttribute('data-item')).then(response => {
+         console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
+    }
+    todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
+    // creates cell for the text
+    if(todo.text) {
+      if(todo.priority && userData.sortBy!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority " + todo.priority + "\">" + todo.priority + "</span>";
+      // parse text string through markdown parser
+      todoTableBodyCellText.innerHTML =  marked.parseInline(todo.text);
+      //todoTableBodyCellText.innerHTML =  todo.text;
+      // replace line feed replacement character with a space
+      todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
+      // add a spacer to divide text (and link) and categories
+      todoTableBodyCellText.innerHTML += " ";
+    }
+    // event listener for the click on the text
+    todoTableBodyCellText.onclick = function() {
+      // if the clicked item is not the external link icon, showForm(true) will be called
+      if(!event.target.classList.contains('fa-external-link-alt')) {
+        showForm(this.parentElement.getAttribute('data-item'));
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
+      }
+    }
+    // cell for the categories
+    categories.forEach(category => {
+      if(todo[category]) {
+        todo[category].forEach(el => {
+          let todoTableBodyCellCategory = document.createElement("span");
+          todoTableBodyCellCategory.setAttribute("class", "tag " + category);
+          todoTableBodyCellCategory.innerHTML = el;
+          tableContainerCategories.appendChild(todoTableBodyCellCategory);
+        });
+      }
+    });
+    // add the text cell to the row
+    todoTableBodyCellText.appendChild(tableContainerCategories);
+    // check for and add a given due date
+    if(todo.due) {
+      var tag = convertDate(todo.due);
+      if(todo.due.isToday()) {
+        todoTableBodyCellDueDate.classList.add("isToday");
+        tag = translations.today;
+      } else if(todo.due.isTomorrow()) {
+        todoTableBodyCellDueDate.classList.add("isTomorrow");
+        tag = translations.tomorrow;
+      } else if(todo.due.isPast()) {
+        todoTableBodyCellDueDate.classList.add("isPast");
+      }
+      todoTableBodyCellDueDate.innerHTML = `
+        <i class="far fa-clock"></i>
+        <div class="tags has-addons">
+          <span class="tag">` + translations.due + `</span><span class="tag is-dark">` + tag + `</span>
+        </div>
+        <i class="fas fa-sort-down"></i>
+      `;
+      // append the due date to the text item
+      todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
+    }
+    // add recurrence icon
+    if(todo.rec) {
+      todoTableBodyCellRecurrence.innerHTML = "<i class=\"fas fa-redo\"></i>";
+      // append the due date to the text item
+      todoTableBodyCellText.appendChild(todoTableBodyCellRecurrence);
+    }
+    // add the text cell to the row
+    todoTableBodyRow.appendChild(todoTableBodyCellText);
+
+    // click on three-dots-icon to open more menu
+    todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
+      // only if this element was highlighted before, we will hide instead of show the dropdown
+      if(this.parentElement.parentElement.classList.contains("is-active")) {
+        this.parentElement.parentElement.classList.remove("is-active");
+      } else {
+        // on click we close all other active more buttons and dropdowns
+        document.querySelectorAll(".todoTableItemMore.is-active").forEach(function(item) {
+          item.classList.remove("is-active");
+        });
+        // if this element was hidden before, we will show it now
+        this.parentElement.parentElement.classList.add("is-active");
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
+        // click on edit
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
+          showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
+        }
+        // click on delete
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
+          // passing the data-item attribute of the parent tag to complete function
+          setTodoDelete(todoTableBodyRow.getAttribute('data-item')).then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
+        }
+        // click on use as template option
+        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
+          showForm(todoTableBodyCellMore.parentElement.getAttribute('data-item'), true);
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
+        }
+      }
+    }
+    // add more container to row
+    todoTableBodyRow.appendChild(todoTableBodyCellMore);
+    // return the fully built row
+    return todoTableBodyRow;
+  } catch(error) {
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "buildTableRow()", error])
+    return Promise.reject("Error in buildTableRow(): " + error);
+  }
+}
+
+/*function generateTodoData(searchString) {
+  try {
+    // prepare the templates for the table
+    configureTodoTableTemplate().then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+    items = window.items;
+    // selected filters are empty, unless they were persisted
+    if(userData.selectedFilters && userData.selectedFilters.length>0) {
+      var selectedFilters = JSON.parse(userData.selectedFilters);
+    } else {
+      var selectedFilters = new Array;
+      userData.selectedFilters = selectedFilters;
+    }
+    // selected categories are empty, unless they were persisted
+    if(userData.categoriesFiltered && userData.categoriesFiltered.length>0) {
+      var categoriesFiltered = JSON.parse(userData.categoriesFiltered);
+    } else {
+      var categoriesFiltered = new Array;
+      userData.categoriesFiltered = categoriesFiltered;
+    }
+    // if set, only incomplete todo will be processed from here on
+    if(!userData.showCompleted) {
+      items.filtered = items.incomplete;
+    } else {
+      items.filtered = items.objects;
+    }
+    // if there are selected filters
+    if(selectedFilters.length > 0) {
+      // we iterate through the filters in the order they got selected
+      selectedFilters.forEach(filter => {
+        // check if the filter is a project filter
+        if(filter[1]=="projects") {
+          items.filtered = items.filtered.filter(function(item) {
+            if(item.projects) return item.projects.includes(filter[0]);
+          });
+        // check if the filter is a context filter
+        } else if(filter[1]=="contexts") {
+          items.filtered = items.filtered.filter(function(item) {
+            if(item.contexts) {
+              return item.contexts.includes(filter[0]);
+            }
+          });
+        }
+      });
+    }
+    // filters are generated once the final todos are defined
+    t0 = performance.now();
+    generateFilterData().then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Filters rendered:", t1 - t0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+    // exclude all filters of a category if set
+    if(userData.categoriesFiltered.length > 0) {
+      userData.categoriesFiltered.forEach(category => {
+        // we create a new array where the items attrbite has no values
+        items.filtered = items.filtered.filter(function(item) {
+          return item[category] === null;
+        });
+      });
+    }
+    // filter hidden todos
+    viewBoxShowHidden.classList.remove("is-active");
+    items.filtered = items.filtered.filter(function(item) {
+      if(item.h) {
+        // if h:1 it is skipped
+        viewBoxShowHidden.classList.add("is-active");
+        if(!userData.showHidden) return false;
+      }
+      return true;
+    });
+    // filter todos due today
+    if(!userData.showDueIsToday) {
+      items.filtered = items.filtered.filter(function(item) {
+        if(item.due && item.due.isToday()) return false;
+        return true;
+      });
+    }
+    // filter todos due in the past
+    if(!userData.showDueIsPast) {
+      items.filtered = items.filtered.filter(function(item) {
+        if(item.due && item.due.isPast()) return false;
+        return true;
+      });
+    }
+    // filter todos due in the future
+    if(!userData.showDueIsFuture) {
+      items.filtered = items.filtered.filter(function(item) {
+        if(item.due && item.due.isFuture()) return false;
+        return true;
+      });
+    }
+    // if search string or previously inserted content in search bar is detected
+    if(searchString || todoTableSearch.value) {
+      if(todoTableSearch.value) searchString = todoTableSearch.value;
+      // convert everything to lowercase for better search results
+      items.filtered = items.filtered.filter(function(item) {
+        // if no match (-1) the item is skipped
+        if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+    }
+    // manipulate the result info box
+    showResultStats().then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    });
+    // reconfigure the main view according to amount of objects
+    configureMainView().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      console.log(error);
+    });
+    // build object according to sorting method
+    items.filtered = items.filtered.reduce((object, a) => {
+      if(userData.sortCompletedLast && a.complete) {
+        object["completed"] = [...object["completed"] || [], a];
+      } else if(userData.sortBy==="dueString" && !a.due) {
+        object["noDueDate"] = [...object["noDueDate"] || [], a];
+      } else {
+        object[a[userData.sortBy]] = [...object[a[userData.sortBy]] || [], a];
+      }
+      //object[a[userData.sortBy]] = [...object[a[userData.sortBy]] || [], a];
+      return object;
+    }, {});
+    // object is converted to a sorted array
+    items.filtered = Object.entries(items.filtered).sort(function(a,b) {
+      // when a is null sort it after b
+      if(a[0]==="null") return 1;
+      // when b is null sort it after a
+      if(b[0]==="null") return -1;
+      // sort alphabetically
+      if(a < b) return -1;
+    });
+    //
+    if(userData.sortCompletedLast) {
+      items.filtered.sort(function(a,b) {
+        // when a is null sort it after b
+        if(a[0]==="completed") return 1;
+        // when b is null sort it after a
+        if(b[0]==="completed") return -1;
+        return 0;
+      });
+    }
+    // if sortCompletedLast a separate array of completed todos is added to the object
+    /*if(userData.showCompleted && userData.sortCompletedLast) {
+      items.filtered.push(["completed", items.complete]);
+    }
+
+    // each priority group -> A to Z plus null for all todos with no priority
+    for (let itemGroup in items.filtered) {
+      // nodes need to be created to add them to the outer fragment
+      // create a divider row
+      // completed todos
+      if(userData.sortCompletedLast && items.filtered[itemGroup][0]==="completed") {
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
+      // for priority, context and project
+      } else if(items.filtered[itemGroup][0]!="null" && userData.sortBy!="dueString") {
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"" + items.filtered[itemGroup][0] + " " + userData.sortBy + "\">" + items.filtered[itemGroup][0].replace(/,/g, ', ') + "</div></div>"))
+      // if sorting is by due date
+      } else if(userData.sortBy==="dueString" && items.filtered[itemGroup][1][0].due) {
+        if(items.filtered[itemGroup][1][0].due.isToday()) {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\">" + translations.today + "</div></div>"));
+        } else if(items.filtered[itemGroup][1][0].due.isTomorrow()) {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\">" + translations.tomorrow + "</div></div>"));
+        } else if(items.filtered[itemGroup][1][0].due.isPast()) {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\">" + items.filtered[itemGroup][0] + "</div></div>"));
+        } else {
+          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\">" + items.filtered[itemGroup][0] + "</div></div>"))
+        }
+      // create an empty divider row
+      } else {
+        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table itemGroup\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
+      }
+      // first sort by priority
+      items.filtered[itemGroup][1] = items.filtered[itemGroup][1].sort(function(a, b) {
+        // most recent or already past todo will be sorted to the top
+        if (a.priority < b.priority || !b.priority) {
+          return -1;
+        } else if (a.priority > b.priority) {
+          return 1;
+        } else {
+          // if all fail, no change to sort order
+          return 0;
+        }
+      });
+      // second sort by due date
+      items.filtered[itemGroup][1] = items.filtered[itemGroup][1].sort(function(a, b) {
+        // when a is smaller than b it, a is put after b
+        if(a.priority===b.priority && a.due < b.due) return -1
+        // when a is is undefined but b is not, b is put before a
+        if(a.priority===b.priority && !a.due && b.due) return 1
+        // when b is is undefined but a is not, a is put before b
+        if(a.priority===b.priority && a.due && !b.due) return -1
+        // if all fail, no change to sort order
+        return 0;
+      });
+      // build the fragments per itemGroup
+      for (let item in items.filtered[itemGroup][1]) {
+        let todo = items.filtered[itemGroup][1][item];
+        // if todo has no text, it's skipped
+        if(!todo.text) continue;
+        // if this todo is not a recurring one the rec value will be set to null
+        if(!todo.rec) {
+          todo.rec = null;
+        // if item is due today or in the past and has recurrence it will be duplicated
+        } else if(todo.due && todo.rec && !todo.complete && (todo.due.isToday() || todo.due.isPast())) {
+          generateRecurringTodo(todo).then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.log(error);
+          });
+        }
+        // incompleted todos with due date
+        if (todo.due && !todo.complete) {
+          // create notification
+          if(todo.due.isToday()) {
+            generateNotification(todo, 0).then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+          } else if(todo.due.isTomorrow()) {
+            generateNotification(todo, 1).then(response => {
+              console.log(response);
+            }).catch(error => {
+              console.log(error);
+            });
+          }
+        }
+        // finally generate the rows
+        tableContainerContent.appendChild(buildTableRow(todo));
+      }
+    }
+    // append all generated groups to the main container
+    todoTableContainer.appendChild(tableContainerContent);
+    // jump to previously edited or added item
+    if (document.getElementById("previousItem")) {
+      // only scroll if new item is not in view
+      if(!document.getElementById("previousItem").getBoundingClientRect()) {
+        // scroll to view
+        document.getElementById("previousItem").scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+        // trigger a quick background ease in and out
+        document.getElementById("previousItem").classList.add("is-highlighted");
+        setTimeout(() => {
+          document.getElementById("previousItem").classList.remove("is-highlighted");
+          // after scrolling the marker will be removed
+          document.getElementById("previousItem").removeAttribute("id");
+        }, 1000);
+      }
+    }
+    return Promise.resolve("Success: Todo data generated and table built");
+  } catch(error) {
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "buildContent()", error])
+    return Promise.reject("Error in buildContent(): " + error);
+  }
+}*/

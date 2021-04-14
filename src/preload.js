@@ -4,17 +4,15 @@ contextBridge.exposeInMainWorld(
   "api", {
     send: (channel, data) => {
       let validChannels = [
-        "getUserData",
+        "appData",
+        "userData",
+        "fileContent",
         "getTranslations",
-        "getFileContent",
-        "setUserData",
-        "getAppData",
         "showNotification",
         "writeToFile",
         "startFileWatcher",
         "changeLanguage",
         "openOrCreateFile",
-        "changeFile"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -23,10 +21,9 @@ contextBridge.exposeInMainWorld(
     receive: (channel, func) => {
       let validChannels = [
         "sendTranslations",
-        "getFileContent",
-        "getUserData",
-        "setUserData",
-        "getAppData",
+        "fileContent",
+        "userData",
+        "appData",
         "reloadContent",
         "triggerFunction"
       ];

@@ -32,6 +32,9 @@ button, button:focus, button:active, button:active, button:after, button::before
 .is-hidden {
   display: none!important;
 }
+/*.is-active {
+  display: block!important;
+}*/
 .button.is-outlined {
   background: transparent;
   border: 1px solid $dark-grey!important;
@@ -882,6 +885,9 @@ nav {
     font-size: 1.2em;
     margin:1em 0 0.5em 0;
   }
+  .title.is-3 {
+    font-size: 1.75em;
+  }
   p {
     display: block;
     margin: 1em 0;
@@ -1043,6 +1049,12 @@ nav {
   }
 }
 #recurrencePicker.is-active {
+  display: block;
+}
+#errorContainer {
+  display: none;
+}
+#errorContainer.is-active {
   display: block;
 }
 .messages {
