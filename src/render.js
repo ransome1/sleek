@@ -1770,17 +1770,17 @@ function matomoEventsConsent() {
     var _paq = window._paq = window._paq || [];
     // exclude development machine
     if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
-    _paq.push(['setUserId', window.userData.uid]);
-    _paq.push(['setCustomDimension', 1, window.userData.theme]);
-    _paq.push(['setCustomDimension', 2, window.userData.language]);
-    _paq.push(['setCustomDimension', 3, window.userData.notifications]);
-    _paq.push(['setCustomDimension', 4, window.consent]);
-    _paq.push(['setCustomDimension', 5, window.appData.version]);
-    _paq.push(['setCustomDimension', 6, window.userData.windowBounds.width+"x"+window.userData.windowBounds.height]);
-    _paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
-    _paq.push(['setCustomDimension', 8, window.userData.files.length]);
-    _paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
-    _paq.push(['setCustomDimension', 10, window.userData.compactView]);
+    if(window.userData.uid)_paq.push(['setUserId', window.userData.uid]);
+    if(window.userData.theme)_paq.push(['setCustomDimension', 1, window.userData.theme]);
+    if(window.userData.language)_paq.push(['setCustomDimension', 2, window.userData.language]);
+    if(window.userData.notifications)_paq.push(['setCustomDimension', 3, window.userData.notifications]);
+    if(window.consent)_paq.push(['setCustomDimension', 4, window.consent]);
+    if(window.appData.version)_paq.push(['setCustomDimension', 5, window.appData.version]);
+    if(window.userData.windowBounds)_paq.push(['setCustomDimension', 6, window.userData.windowBounds.width+"x"+window.userData.windowBounds.height]);
+    if(window.userData.showCompleted)_paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
+    if(window.userData.files) _paq.push(['setCustomDimension', 8, window.userData.files.length]);
+    if(window.userData.useTextarea)_paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
+    if(window.userData.compactView)_paq.push(['setCustomDimension', 10, window.userData.compactView]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);

@@ -86,7 +86,7 @@
   },
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -mlw --publish never",
+    "dist": "electron-builder -mwl --publish never",
     "appx": "electron-builder -w appx --publish never",
     "win": "electron-builder -w --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
