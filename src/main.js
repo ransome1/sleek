@@ -34,8 +34,7 @@ if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
 // TODO set as default in object above
 if(!userData.data.dismissedNotifications) userData.set("dismissedNotifications", []);
 if(!userData.data.dismissedMessages) userData.set("dismissedMessages", []);
-if(!userData.data.hideCategories) userData.set("hideCategories", []);
-
+if(!userData.data.hideFilterCategories) userData.set("hideFilterCategories", []);
 const appData = {
   version: app.getVersion(),
   development: is.development,
@@ -79,8 +78,8 @@ const createWindow = () => {
               console.log(error);
             });
           }
-        }).catch(err => {
-            console.log("Error: " + err)
+        }).catch(error => {
+            console.log("Error: " + error)
         });
         break;
       case "create":
@@ -181,7 +180,6 @@ const createWindow = () => {
           console.log("Info: File " + filename + " has changed");
           setTimeout(function() {
             fileContent(newFile).then(content => {
-              console.log(content);
               mainWindow.webContents.send("refresh", content)
             }).catch(error => {
               console.log(error);
@@ -412,7 +410,7 @@ const createWindow = () => {
   // ########################################################################################################################
   // Write config to file
   ipcMain.on("userData", (event, args) => {
-    if(args) userData.set(args[0], args[1])
+    if(args) userData.set(args[0], args[1]);
     mainWindow.webContents.send("userData", userData.data);
   });
   // Send result back to renderer process

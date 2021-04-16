@@ -15,56 +15,48 @@ html {
 }
 body {
   font-family: "FreeSans";
-  font-size: 2em;
+  font-size: 16px;
   height: 100%;
   margin: auto;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
-body, button, input, optgroup, select, textarea {
-  border: none;
-}
 button, button:focus, button:active, button:active, button:after, button::before, button:active:after, .button, .button-is-white {
   border: none!important;
   box-shadow: none!important;
+  background: transparent;
 }
 .is-hidden {
   display: none!important;
 }
-/*.is-active {
-  display: block!important;
-}*/
 .button.is-outlined {
   background: transparent;
-  border: 1px solid $dark-grey!important;
-  color: $darker-grey;
+  border: 1px solid $mid-grey!important;
+  color: $dark-grey;
 }
 .button.is-outlined:hover {
-  background: white;
-  border: 1px solid $dark-grey!important;
-  color: $darker-grey;
+  border: 1px solid $mid-grey!important;
+  color: $dark-grey;
 }
 .button.is-link svg {
   color: white;
 }
-table,
-.table {
+table {
   width: 100%;
-  background: transparent!important;
   border-collapse:separate;
   margin-bottom: 2em;
-}
-table tr th {
-  padding: 0!important;
-  font-size: 1.2em;
-  font-family: "FreeSansBold";
-  border: none!important;
-}
-table tr td {
-  vertical-align: top;
-  border: none!important;
-  padding: .5em 2em .5em 0!important;
+  tr {
+    th {
+      padding: .1em 0!important;
+      font-size: 1.2em;
+      font-family: "FreeSansBold";
+    }
+    td {
+      border: none;
+      padding: .5em 2em .5em 0!important;
+    }
+  }
 }
 table.files {
   margin: 0;
@@ -92,15 +84,12 @@ button:focus-visible,
 a:focus-visible {
   outline: 2px solid $has-text-link!important;
 }
-p a {
-  text-decoration: underline;
-}
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
   height: 1.15em;
   width: 1.15em;
   border-radius: 30em;
-  background-color: $darker-grey;
+  background-color: $dark-grey;
   -webkit-mask-image: url("../svg/times-circle.svg");
   mask-image: url("../svg/times-circle.svg");
   opacity: 0;
@@ -154,8 +143,591 @@ code {
   background-color: transparent!important;
   color: inherit!important;
 }
+nav {
+  width: auto;
+  height: 100%;
+  float: left;
+  position: relative;
+  background: $almost-white;
+  ul {
+    width: 5em;
+    height: 100%;
+    float: left;
+  	list-style-type: none;
+  	margin: 0;
+  	padding: 0;
+    li a {
+      width: 5em;
+      height: 5em;
+      display: block;
+      color: $dark-grey;
+    	cursor: pointer;
+    	line-height: 5em;
+    	text-align: center;
+    	border-bottom: 1px solid rgba(0,0,0,0.05);
+      svg {
+        color: inherit;
+      }
+    }
+    li a:focus {
+      background: $light-grey;
+      outline-style: none;
+    }
+    li:hover,
+    li.is-highlighted {
+      background: $light-grey;
+    }
+    li#navBtnFilter {
+      display: none;
+    }
+    li#navBtnFilter.is-active {
+      display: block;
+    }
+    li.logo {
+      background: $dark-grey;
+      color: white;
+      font-size: 1em;
+      font-family: FreeSansBold;
+      line-height: 5em;
+      text-align: center;
+      cursor: default;
+    }
+    li span.alert {
+      position: absolute;
+      top: 13%;
+      right: 35%;
+    }
+  }
+  ul:nth-child(2) {
+    height: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+}
 #noResultContainer.contentContainer {
   height: 80%;
+}
+#recurrencePicker {
+  position: relative;
+  #recurrencePickerInput {
+    cursor: pointer;
+  }
+  .card {
+    width: auto;
+    display: none;
+    position: fixed;
+    .content {
+      margin: 0;
+      padding: 1em;
+      display: flex;
+      align-items: center;
+      div {
+        width: auto;
+        float: left;
+        text-align: center;
+        padding: 0 .5em;
+      }
+      div.options {
+        width: 8em;
+        text-align: left;
+      }
+      #recurrencePickerDecrease,
+      #recurrencePickerIncrease,
+      #recurrencePickerSpinner {
+        font-size: 1.25em;
+        padding: .5em;
+      }
+      #recurrencePickerSpinner {
+        width: 2em;
+      }
+    }
+    label {
+      width: 100%;
+      padding: 0;
+      margin: .25em 0;
+    }
+  }
+  .card.is-active {
+    display: block;
+  }
+}
+#recurrencePicker.is-active {
+  display: block;
+}
+#errorContainer {
+  display: none;
+}
+#errorContainer.is-active {
+  display: block;
+}
+#drawerContainer {
+  width: var(--resizeable-width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+  --resizeable-width: 34em;
+  height: 100%;
+  float: left;
+  display: none;
+  /* HANDLE FOR DRAGGING */
+  /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
+  #handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 1em;
+    background-color: transparent;
+    z-index: 1;
+  }
+  #handle::after {
+    content: "";
+    width: 1em;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: transparent;
+    cursor: ew-resize;
+    z-index: 2;
+  }
+  a.drawerClose {
+    width: 2.5em;
+    height: 2.5em;
+    display: none;
+    line-height: 2.5em;
+    text-align: center;
+    font-size: 1.25em;
+    position: absolute;
+    right: -0.75em;
+    top: 50% - 2.5%;
+    z-index: 30;
+    background: $light-grey;
+    border-radius: 50%;
+    cursor: pointer;
+    svg {
+      color: $dark-grey;
+    }
+  }
+  .drawer {
+    width: 100%;
+    height: 100%;
+    float: left;
+    display: none!important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 2em;
+    background: $light-grey;
+    .button {
+      margin: 0 .5rem .5rem 0;
+      span.tag {
+        font-family: FreeSansBold;
+        position: absolute;
+        right: -.75em;
+        top: -.75em;
+        z-index: 35;
+      }
+    }
+    h4.is-4 {
+      font-size: 1.35em;
+      color: $dark-grey;
+      font-family: FreeSansBold;
+      margin-bottom: 1.5em;
+      cursor: pointer;
+    }
+    .dropdown-item {
+      width: 100%;
+      padding: 0;
+      margin: 0 0 1.5em 0;
+    }
+    .dropdown-item.is-greyed-out {
+      opacity: .75;
+      -webkit-filter: grayscale(100%);
+    }
+    /*#btnResetAllFilters {
+      display: none;
+    }
+    #btnResetAllFilters.is-active {
+      display: block;
+    }*/
+    /*.icon.is-left {
+      position: absolute;
+      top: .75em;
+      left: .65em;
+    }*/
+    /*svg {
+      color: $dark-grey;
+    }*/
+    table tr td:nth-child(odd) {
+      width: auto;
+      vertical-align: middle;
+    }
+    table tr td:nth-child(even) {
+      width: 35%;
+      text-align: center;
+      padding-right: 0!important;
+    }
+  }
+  .drawer.is-active {
+    display: block!important;
+  }
+}
+#drawerContainer:hover {
+  a.drawerClose {
+    display: inline-block;
+  }
+}
+#drawerContainer.is-active {
+  display: block;
+}
+#zoomStatus {
+  padding: 0 .55em;
+}
+#zoomUndo {
+  cursor: pointer;
+}
+#dueDatePickerInput {
+  cursor: pointer;
+}
+#todoTableSearchContainer {
+  width: 100%;
+  display: none;
+  padding: 0 1.5em;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  .icon.is-left {
+    top: .65em;
+    left: .65em;
+  }
+  .icon.is-left svg,
+  .icon.is-right svg {
+    color: $dark-grey;
+  }
+}
+#todoTableSearchContainer.is-active {
+  display: block;
+}
+#todoTable {
+  width: 100%;
+  float: left;
+  display: none;
+  padding: 0 2.5em 1.5em 2.5em;
+  #resultStats {
+    width: 100%;
+    display: none;
+    text-align: center;
+    padding: 0;
+    white-space: nowrap;
+  }
+  #resultStats.is-active {
+    display: block;
+  }
+  #todoTableContainer {
+    width: 100%;
+    float: left;
+  }
+  .flex-table {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    border-bottom: solid 1px $light-grey;
+  }
+  .flex-table:last-child {
+    border: none;
+  }
+  .flex-table#previousItem {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+  .flex-table#previousItem.is-highlighted {
+    background-color: $almost-white;
+  }
+  .flex-table.group {
+    border: none;
+    font-family: FreeSansBold;
+    svg {
+      color: inherit;
+    }
+    .button {
+      cursor: default;
+      height: auto;
+      line-height: auto;
+      font-size: 1.2em;
+      padding: 0 .4em;
+    }
+  }
+  .flex-table.group.due {
+    .button {
+      padding: 0;
+      background: transparent;
+    }
+  }
+  .flex-table {
+    display: flex;
+    .flex-row {
+      padding: .75em 0;
+      margin-right: 1em;
+      height: auto;
+      line-height: 1.5em;
+      .is-white {
+        background: none;
+      }
+      span.tag {
+        margin-right: .25em;
+      }
+      span.tag.projects {
+        background: $sleek-projects-button;
+      }
+      span.tag.contexts {
+        background: $sleek-contexts-button;
+      }
+    }
+    .flex-row.checkbox a {
+      flex: 0 0 1em;
+      font-size: 1.25em;
+    }
+    .flex-row.text {
+      width: auto;
+      flex: 1;
+      max-width: 88%;
+      cursor: pointer;
+      color: $dark-grey;
+      svg {
+        color: inherit;
+      }
+      .button {
+        font-size: 1em;
+        font-family: FreeSansBold;
+        height: auto;
+        padding: 0em .4em;
+      }
+      .priority {
+        background: transparent;
+        color: darken($mid-grey, 40%);
+        margin-right: .5em;
+      }
+    }
+    .flex-row.spacer {
+      width: .5em;
+      background: transparent;
+    }
+
+    .flex-row.priority {
+      background: $mid-grey;
+      flex: 0 0 .5em;
+      opacity: .5;
+    }
+
+    .flex-row.priority.A,
+    .flex-row .priority.A {
+      color: #ffe6eb;
+      background: $has-text-danger;
+    }
+    .flex-row.priority.B,
+    .flex-row .priority.B {
+      color: #fadcd8;
+      background: $has-text-attention;
+    }
+    .flex-row.priority.C,
+    .flex-row .priority.C {
+      //color: #fffdf5;
+      background: $has-text-warning;
+    }
+    .flex-row .contexts {
+      //color: $sleek-contexts-button-font;
+      background: $sleek-contexts-button;
+    }
+    .flex-row .projects {
+      //color: $sleek-projects-button-font;
+      background: $sleek-projects-button;
+    }
+
+    .flex-row.itemDueDate {
+      display: inline;
+      color: $dark-grey;
+      position: relative;
+      white-space: nowrap;
+      margin: 0 .25em;
+      padding: 1em 0;
+      text-align: center;
+      text-transform: lowercase;
+      svg.fa-sort-down {
+        position: absolute;
+        right: .265em;
+        bottom: 2.75em;
+        display: none;
+      }
+      .tags {
+        position: absolute;
+        top: -1.4em;
+        right: -1.5em;
+        display: none;
+        .tag {
+          margin: 0;
+        }
+        .is-dark {
+          background: $dark-grey;
+          font-family: FreeSansBold;
+        }
+      }
+    }
+    .flex-row.isToday,
+    .flex-row.isToday .button {
+      //padding: 0;
+      color: $has-text-danger;
+      .tags .is-dark {
+        background: $has-text-danger;
+        font-family: FreeSansBold;
+      }
+      svg {
+        color: inherit;
+      }
+    }
+    .flex-row.isTomorrow,
+    .flex-row.isTomorrow .button {
+      //padding: 0;
+      color: $has-text-attention;
+      .tags .is-dark {
+        background: $has-text-attention;
+        font-family: FreeSansBold;
+      }
+      svg {
+        color: $has-text-attention;
+      }
+    }
+    .flex-row.isPast,
+    .flex-row.isPast .button {
+      //padding: 0;
+      color: $has-text-danger;
+      .tags .is-dark {
+        background: $has-text-danger;
+        font-family: FreeSansBold;
+      }
+      svg {
+        color: inherit;
+      }
+    }
+    .flex-row:hover,
+    .flex-row:focus {
+      .tags {
+        display: block;
+      }
+      svg.fa-sort-down {
+        display: block;
+      }
+    }
+    .flex-row.todoTableItemMore {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .flex-row.todoTableItemMore a {
+      color: $has-text-link;
+      display: none;
+      padding: 0 .5em;
+    }
+    .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
+      padding: .75em;
+    }
+    .flex-row.todoTableItemMore.is-active a,
+    .flex-row.todoTableItemMore.is-active .dropdown-menu {
+      display: block;
+    }
+  }
+  .flex-table:hover {
+    .flex-row.todoTableItemMore a {
+      display: block;
+    }
+  }
+  .flex-table.completed {
+    opacity: .5;
+    -webkit-filter: grayscale(100%);
+  }
+}
+#todoTable.is-active {
+  display: block;
+}
+#modalForm {
+  textarea#modalFormInput {
+    min-height: 5.5em;
+    overflow: hidden;
+    resize: none;
+  }
+  #modalFormInputHelp,
+  #modalFormInputResize {
+    z-index: 60;
+    cursor: pointer;
+    pointer-events: all;
+  }
+  .card-header-title {
+    font-family: "FreeSansBold";
+  }
+  .message {
+    display: none;
+    margin: 1em 0;
+  }
+  .is-active {
+    display: block;
+  }
+  .field {
+    width: auto;
+    float: left;
+    margin: .5em .5em .5em 0;
+    input,
+    input::placeholder,
+    select,
+    select::placeholder {
+      background: none!important;
+      border: none;
+      color: $has-text-link!important;
+    }
+  }
+  #btnItemStatus {
+    display: none;
+    text-align: center;
+  }
+  #btnItemStatus.is-active {
+    display: block;
+  }
+  button {
+    font-size: 1em;
+    background: none;
+    color: $has-text-link;
+    border: none;
+    border-right: 1px solid $light-grey!important;
+    cursor: pointer;
+  }
+  .card-footer {
+    clear: both;
+  }
+}
+#autoCompleteContainer {
+  height: auto;
+  position: absolute;
+  display: none;
+  z-index: 50;
+  opacity: .90;
+  padding: .25em .5em;
+  .dropdown-item {
+    margin: 0;
+    .button {
+      margin: 0 .5rem .5rem 0;
+    }
+  }
+  h4.title {
+    font-size: 1.3em;
+    margin: .7em 0;
+  }
+}
+#autoCompleteContainer.card {
+  height: auto;
+  overflow: auto;
+}
+#autoCompleteContainer.is-active {
+  display: block;
 }
 .contentContainer {
   width: 100%;
@@ -205,557 +777,96 @@ code {
     overflow-x: hidden;
   }
 }
-nav {
-  width: auto;
-  height: 100%;
-  float: left;
-  position: relative;
-  background: $light-grey;
-  ul {
-    width: 5em;
-    height: 100%;
-    float: left;
-  	list-style-type: none;
-  	margin: 0;
-  	padding: 0;
-    li a {
-      width: 5em;
-      height: 5em;
-      display: block;
-      color: $darker-grey;
-    	cursor: pointer;
-    	line-height: 5em;
-    	text-align: center;
-    	border-bottom: 1px solid rgba(0,0,0,0.05);
-      svg {
-        color: inherit;
-      }
-    }
-    li a:focus {
-      background: $mid-grey;
-      outline-style: none;
-    }
-    li:hover,
-    li.is-highlighted {
-      background: $mid-grey;
-    }
-    li#navBtnFilter {
-      display: none;
-    }
-    li#navBtnFilter.is-active {
-      display: block;
-    }
-    li.logo {
-      background: $darker-grey;
+.contexts {
+  .button {
+    background: $sleek-contexts-button;
+    color: darken($sleek-contexts-button, 60%);
+    span.tag {
       color: white;
-      font-size: 1em;
-      font-family: FreeSansBold;
-      line-height: 5em;
-      text-align: center;
-      cursor: default;
-    }
-    li span.alert {
-      position: absolute;
-      top: 13%;
-      right: 35%;
+      background: darken($sleek-contexts-button, 50%);
     }
   }
-  ul:nth-child(2) {
-    height: auto;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+  .button.is-dark  {
+    background: darken($sleek-contexts-button, 65%);
+    color: white;
   }
 }
-#filterDrawer,
-#suggestionContainer {
-  div.contexts {
-    a.button  {
-      background: $sleek-contexts-button;
-      color: $sleek-contexts-button-font;
-    }
-    a.button:hover,
-    a.button:active {
-      background: $sleek-contexts-button-hover;
-    }
-    a.button span.tag {
-      background: $sleek-contexts-button-bubble;
+.projects {
+  .button {
+    background: $sleek-projects-button;
+    color: darken($sleek-projects-button, 60%);
+    span.tag {
       color: white;
-      font-family: FreeSansBold;
-      position: absolute;
-      right: -.75em;
-      top: -.75em;
-    }
-    a.button.is-dark  {
-      background: $sleek-contexts-button-highlighted;
-      color: white;
+      background: darken($sleek-projects-button, 50%);
     }
   }
-  div.projects {
-    a.button {
-      background: $sleek-projects-button;
-      color: $sleek-projects-button-font;
-    }
-    a.button:hover,
-    a.button:active {
-      background: $sleek-projects-button-hover;
-    }
-    a.button span.tag {
-      background: $sleek-projects-button-bubble;
-      color: white;
-      font-family: FreeSansBold;
-      position: absolute;
-      right: -.75em;
-      top: -.75em;
-    }
-    a.button.is-dark {
-      background: $sleek-projects-button-highlighted;
-      color: white;
-    }
+  .button.is-dark {
+    background: darken($sleek-projects-button, 65%);
+    color: white;
   }
 }
-#drawerContainer {
-  width: var(--resizeable-width);
-  min-width: var(--min-width);
-  max-width: var(--max-width);
-  --resizeable-width: 34em;
-  height: 100%;
-  float: left;
-  display: none;
-  /* HANDLE FOR DRAGGING */
-  /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
-  #handle {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 1em;
-    background-color: transparent;
-    z-index: 1;
-  }
-  #handle::after {
-    content: "";
-    width: 1em;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    background-color: transparent;
-    cursor: ew-resize;
-    z-index: 2;
-  }
-  a.drawerClose {
-    width: 2.5em;
-    height: 2.5em;
-    display: none;
-    line-height: 2.5em;
-    text-align: center;
-    font-size: 1.25em;
-    position: absolute;
-    right: -0.75em;
-    top: 50% - 2.5%;
-    z-index: 30;
-    background: $mid-grey;
-    border-radius: 50%;
-    cursor: pointer;
-    svg {
-      color: $darker-grey;
-    }
-  }
-}
-#drawerContainer:hover {
-  a.drawerClose {
-    display: inline-block;
-  }
-}
-#drawerContainer.is-active {
-  display: block;
-}
-#zoomStatus {
-  padding: 0 .55em;
-}
-#zoomUndo {
-  cursor: pointer;
-}
-.drawer {
-  width: 100%;
-  height: 100%;
-  float: left;
-  display: none!important;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 2em;
-  background: $mid-grey;
-  h4.is-4 {
+.priority {
+  .button {
     font-size: 1.35em;
-    color: $darker-grey;
     font-family: FreeSansBold;
-    margin-bottom: 1.5em;
-  }
-  .dropdown-item {
-    width: 100%;
-    padding: 0;
-    margin: 0 0 1.5em 0;
-    /*a.headline {
-      width: 100%;
-      float: left;
-      font-size: 1.35em;
-      color: $darker-grey;
-      font-family: FreeSansBold;
-      margin-bottom: 1.5em;
-    }*/
-  }
-  .dropdown-item.is-greyed-out {
-    opacity: .5;
-  }
-  .dropdown-item.is-greyed-out a  {
-    background: $dark-grey!important;
-    color: $darker-grey!important;
-  }
-  .dropdown-item.is-greyed-out span.tag  {
-    background: $darker-grey!important;
-    color: #ccc;
-  }
-  .dropdown-item.is-greyed-out a.headline,
-  .dropdown-item.is-greyed-out a.headline a {
-    background: none!important;
-  }
-  a.button {
-    margin: 0 .5rem .5rem 0;
-  }
-  a.button span.tag {
-    z-index: 35;
-  }
-  #btnResetAllFilters {
-    display: none;
-  }
-  #btnResetAllFilters.is-active {
-    display: block;
-  }
-  /*.dropdown-item.is-greyed-out {
-    opacity: .5;
-  }
-  .dropdown-item.is-greyed-out a  {
-    background: $dark-grey!important;
-    color: $darker-grey!important;
-  }
-  .dropdown-item.is-greyed-out span.tag  {
-    background: $darker-grey!important;
-    color: #ccc;
-  }
-  .dropdown-item.is-greyed-out a.headline,
-  .dropdown-item.is-greyed-out a.headline a {
-    background: none!important;
-  }*/
-  .icon.is-left {
-    position: absolute;
-    top: .75em;
-    left: .65em;
-  }
-  svg {
-    color: $darker-grey;
-  }
-  table tr td:nth-child(odd) {
-    width: auto;
-    vertical-align: middle;
-  }
-  table tr td:nth-child(even) {
-    width: 35%;
-    text-align: center;
-    padding-right: 0!important;
-  }
-}
-.drawer.is-active {
-  display: block!important;
-}
-#todoTableSearchContainer {
-  width: 100%;
-  display: none;
-  padding: 0 1.5em;
-  background: white;
-  position: sticky;
-  top: 0;
-  z-index: 45;
-  .icon.is-left {
-    top: .65em;
-    left: .65em;
-  }
-  .icon.is-left svg,
-  .icon.is-right svg {
-    color: $darker-grey;
-  }
-}
-#todoTableSearchContainer.is-active {
-  display: block;
-}
-#todoTable {
-  width: 100%;
-  float: left;
-  display: none;
-  padding: 0 2.5em 1.5em 2.5em;
-  #resultStats {
-    width: 100%;
-    display: none;
-    text-align: center;
-    padding: 0;
-    white-space: nowrap;
-  }
-  #resultStats.is-active {
-    display: block;
-  }
-  #todoTableContainer {
-    width: 100%;
-    float: left;
-  }
-  .flex-table {
-    position: relative;
-    display: flex;
-    flex-flow: row wrap;
-    border-bottom: solid 1px $mid-grey;
-  }
-  .flex-table:last-child {
-    border: none;
-  }
-  .flex-table#previousItem {
-    -webkit-transition: background-color 0.5s ease-out;
-    -moz-transition: background-color 0.5s ease-out;
-    -o-transition: background-color 0.5s ease-out;
-    transition: background-color 0.5s ease-out;
-  }
-  .flex-table#previousItem.is-highlighted {
-    background-color: $light-grey;
-  }
-  .flex-table.group {
-    border: none;
-    font-family: FreeSansBold;
-    font-size: 1.25em;
-    svg {
+    background: $mid-grey;
+    color: darken($mid-grey, 40%);
+    padding: .25em .7em;
+    height: auto;
+    span.tag {
       color: inherit;
     }
   }
-  .flex-table {
-    display: flex;
-    .flex-row {
-      padding: .75em 0;
-      margin-right: 1em;
-      height: auto;
-      line-height: 1.5em;
-      .is-white {
-        background: none;
-      }
-      span.tag {
-        margin-right: .25em;
-      }
-      span.tag.projects {
-        background: $sleek-projects-button;
-        color: $sleek-projects-button-font;
-      }
-      span.tag.contexts {
-        background: $sleek-contexts-button;
-        color: $sleek-contexts-button-font;
-      }
-      .priority,
-      .contexts,
-      .projects {
-        padding: 0 .35em;
-        margin-right: .5em;
-        background: $dark-grey;
-        color: #5d5d5d;
-        border-radius: 3px;
-      }
+  .button.is-dark {
+    background: darken($mid-grey, 35%);
+    color: white;
+    span.tag {
+      background: darken($mid-grey, 50%);
     }
-    .flex-row.checkbox a {
-      flex: 0 0 1em;
-      font-size: 1.25em;
-    }
-    .flex-row.text {
-      width: auto;
-      flex: 1;
-      max-width: 88%;
-      cursor: pointer;
-      color: $darker-grey;
-      svg {
-        color: inherit;
-      }
-    }
-    .flex-row.spacer {
-      width: .5em;
-      background: transparent;
-    }
-    .flex-row.priority {
-      flex: 0 0 .5em;
-      background: $dark-grey;
-      opacity: .5;
-    }
-    .flex-row.priority.A,
-    .flex-row .priority.A {
-      color: #ffe6eb;
-      background: $has-text-danger;
-    }
-    .flex-row.priority.B,
-    .flex-row .priority.B {
-      color: #fadcd8;
-      background: $has-text-attention;
-    }
-    .flex-row.priority.C,
-    .flex-row .priority.C {
-      color: #fffdf5;
-      background: $has-text-warning;
-    }
-    .flex-row .contexts {
-      color: $sleek-contexts-button-font;
-      background: $sleek-contexts-button;
-    }
-    .flex-row .projects {
-      color: $sleek-projects-button-font;
-      background: $sleek-projects-button;
-    }
-    .flex-row.projects,
-    .flex-row.contexts {
-      margin-right: 0;
-    }
-    .flex-row.itemDueDate {
-      display: inline;
-      color: $darker-grey;
-      position: relative;
-      white-space: nowrap;
-      margin: 0 .25em;
-      padding: 1em 0;
-      text-align: center;
-      text-transform: lowercase;
-      svg.fa-sort-down {
-        position: absolute;
-        right: .265em;
-        bottom: 2.75em;
-        display: none;
-      }
-      .tags {
-        position: absolute;
-        top: -1.4em;
-        right: -1.5em;
-        display: none;
-        .tag {
-          margin: 0;
-        }
-        .is-dark {
-          background: $darker-grey;
-          font-family: FreeSansBold;
-        }
-      }
-    }
-    .flex-row.isToday {
+  }
+  .button.A {
+    background: $has-text-danger;
+    color: lighten($has-text-danger, 35%);
+    span.tag {
       color: $has-text-danger;
-      .tags .is-dark {
-        background: $has-text-danger;
-        font-family: FreeSansBold;
-      }
-      svg {
-        color: inherit;
-      }
+      background: lighten($has-text-danger, 35%);
     }
-    .flex-row.isTomorrow {
+  }
+  .button.A.is-dark {
+    background: darken($has-text-danger, 20%);
+    span.tag {
+      color: darken($has-text-danger, 20%);
+    }
+  }
+  .button.B {
+    color: lighten($has-text-attention, 35%);
+    background: $has-text-attention;
+    span.tag {
       color: $has-text-attention;
-      .tags .is-dark {
-        background: $has-text-attention;
-        font-family: FreeSansBold;
-      }
-      svg {
-        color: $has-text-attention;
-      }
-    }
-    .flex-row.isPast {
-      color: $has-text-danger;
-      .tags .is-dark {
-        background: $has-text-danger;
-        font-family: FreeSansBold;
-      }
-      svg {
-        color: inherit;
-      }
-    }
-    .flex-row:hover,
-    .flex-row:focus {
-      .tags {
-        display: block;
-      }
-      svg.fa-sort-down {
-        display: block;
-      }
-    }
-    .flex-row.todoTableItemMore {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .flex-row.todoTableItemMore a {
-      color: $has-text-link;
-      display: none;
-      padding: 0 .5em;
-    }
-    .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
-      padding: .75em;
-    }
-    .flex-row.todoTableItemMore.is-active a,
-    .flex-row.todoTableItemMore.is-active .dropdown-menu {
-      display: block;
+      background: lighten($has-text-attention, 30%);
     }
   }
-  .flex-table:hover {
-    .flex-row.todoTableItemMore a {
-      display: block;
+  .button.B.is-dark {
+    background: darken($has-text-attention, 20%);
+    span.tag {
+      color: darken($has-text-attention, 20%);
     }
   }
-  .flex-table.completed {
-    color: $has-text-grey-light;
-    .checkbox a {
-      color: $has-text-grey-light;
-      svg {
-        color: inherit;
-      }
+  .button.C {
+    color: lighten($has-text-warning, 35%);
+    background: $has-text-warning;
+    span.tag {
+      color: $has-text-warning;
+      background: lighten($has-text-warning, 30%);
     }
-    strong {
-      font-family: "FreeSansBold";
-      color: $has-text-grey-light;
-    }
-    .flex-row.text {
-      color: $has-text-grey-light;
-      a {
-        color: $has-text-grey-light;
-      }
-    }
-    .flex-row span.tag.projects {
-      background: $has-text-grey-light;
-      color: white;
-    }
-    .flex-row span.tag.contexts {
-      background: $dark-grey;
-      color: white;
-    }
-    .flex-row {
-      color: $dark-grey;
-      .tags {
-        .is-dark {
-          background: $dark-grey;
-        }
-      }
-      svg {
-        color: inherit;
-      }
-      .priority {
-        color: white;
-        background: $has-text-grey-light!important;
-      }
-    }
-    .flex-row.priority {
-      color: white;
-      background: $has-text-grey-light!important;
+  }
+  .button.C.is-dark {
+    background: darken($has-text-warning, 20%);
+    span.tag {
+      color: darken($has-text-warning, 20%);
     }
   }
 }
-#todoTable.is-active {
-  display: block;
-}
-/* https://www.w3schools.com/howto/howto_css_switch.asp */
-/* The switch - the box around the slider */
 .toggle {
   margin: 0;
   text-align: center;
@@ -774,10 +885,10 @@ nav {
      background: none;
     }
     input:checked + .slider {
-     background-color: $darker-grey;
+     background-color: $dark-grey;
     }
     input:focus + .slider {
-     box-shadow: 0 0 1px $darker-grey;
+     box-shadow: 0 0 1px $dark-grey;
     }
     input:focus-visible {
       outline: 2px solid $has-text-link;
@@ -794,7 +905,7 @@ nav {
      left: 0;
      right: 0;
      bottom: 0;
-     background-color: $dark-grey;
+     background-color: $mid-grey;
      -webkit-transition: .4s;
      transition: .4s;
     }
@@ -816,86 +927,6 @@ nav {
      border-radius: 50%;
     }
   }
-}
-#modalForm {
-  textarea#modalFormInput {
-    min-height: 5.5em;
-    overflow: hidden;
-    resize: none;
-  }
-  #modalFormInputHelp,
-  #modalFormInputResize {
-    z-index: 60;
-    cursor: pointer;
-    pointer-events: all;
-  }
-  .card-header-title {
-    font-family: "FreeSansBold";
-  }
-  .message {
-    display: none;
-    margin: 1em 0;
-  }
-  .is-active {
-    display: block;
-  }
-  .field {
-    width: auto;
-    float: left;
-    margin: .5em .5em .5em 0;
-    input,
-    input::placeholder,
-    select,
-    select::placeholder {
-      background: none!important;
-      border: none;
-      color: $has-text-link!important;
-    }
-  }
-  #btnItemStatus {
-    display: none;
-    text-align: center;
-  }
-  #btnItemStatus.is-active {
-    display: block;
-  }
-  button {
-    font-size: 1em;
-    background: none;
-    color: $has-text-link;
-    border: none;
-    border-right: 1px solid $mid-grey!important;
-    cursor: pointer;
-  }
-  button:hover {
-    color: black;
-  }
-  .card-footer {
-    clear: both;
-  }
-}
-#suggestionContainer {
-  height: auto;
-  position: absolute;
-  display: none;
-  z-index: 50;
-  opacity: .90;
-  background: $body-background-color;
-  padding: .5em 1em;
-  .dropdown-item {
-    margin: 0;
-  }
-  h4.title {
-    font-size: 1.3em;
-    margin: .7em 0;
-  }
-}
-#suggestionContainer.card {
-  height: auto;
-  overflow: auto;
-}
-#suggestionContainer.is-active {
-  display: block;
 }
 .modal.content {
   z-index: 55;
@@ -933,7 +964,7 @@ nav {
     width: 900px!important;
     height: auto;
     z-index: 60;
-    background: $mid-grey;
+    background: $light-grey;
     padding: 1em 2em;
     border-radius: 0.25rem;
   }
@@ -1001,9 +1032,6 @@ nav {
     margin-bottom: 0;
   }
 }
-#dueDatePickerInput {
-  cursor: pointer;
-}
 .dueDate {
   svg {
     color: $has-text-link;
@@ -1013,7 +1041,7 @@ nav {
   z-index: 60;
   .datepicker-cell.today.focused:not(.selected),
   .datepicker-cell.today:not(.selected) {
-    background: $light-grey!important;
+    background: $almost-white!important;
   }
   .datepicker-footer {
     background: none;
@@ -1024,59 +1052,6 @@ nav {
       color: $has-text-link;
     }
   }
-}
-#recurrencePicker {
-  position: relative;
-  #recurrencePickerInput {
-    cursor: pointer;
-  }
-  .card {
-    width: auto;
-    display: none;
-    position: fixed;
-    .content {
-      margin: 0;
-      padding: 1em;
-      display: flex;
-      align-items: center;
-      div {
-        width: auto;
-        float: left;
-        text-align: center;
-        padding: 0 .5em;
-      }
-      div.options {
-        width: 8em;
-        text-align: left;
-      }
-      #recurrencePickerDecrease,
-      #recurrencePickerIncrease,
-      #recurrencePickerSpinner {
-        font-size: 1.25em;
-        padding: .5em;
-      }
-      #recurrencePickerSpinner {
-        width: 2em;
-      }
-    }
-    label {
-      width: 100%;
-      padding: 0;
-      margin: .25em 0;
-    }
-  }
-  .card.is-active {
-    display: block;
-  }
-}
-#recurrencePicker.is-active {
-  display: block;
-}
-#errorContainer {
-  display: none;
-}
-#errorContainer.is-active {
-  display: block;
 }
 .messages {
   width: 25em;
@@ -1153,7 +1128,7 @@ body.compact {
   .drawer {
     padding: 1.5em!important;
   }
-  #suggestionContainer.drawer {
+  #autoCompleteContainer.drawer {
     padding: 0!important;
   }
 }
@@ -1178,7 +1153,7 @@ body.compact {
       font-family: "FreeSansBold";
     }
   }
-  #suggestionContainer.drawer {
+  #autoCompleteContainer.drawer {
     padding: 0!important;
   }
   #todoTable {

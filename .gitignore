@@ -9,6 +9,8 @@ snap/local/
 *.ini
 .gitignore
 *.pfx
+*.db:encryptable
+*.db
 System Volume Information/
 build/
 Thumbs.db

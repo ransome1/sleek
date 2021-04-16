@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.0.0-Alpha",
+  "version": "0.9.9",
   "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
@@ -27,7 +27,13 @@
       "!**.pfx",
       "!**.bak",
       "!**.md",
-      "!assets/screenshots${/*}"
+      "!assets/screenshots${/*}",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,__tests__,tests,powered-test,example,examples,*.d.ts}",
+      "!**/node_modules/.bin",
+      "!**/*.{o,hprof,orig,pyc,pyo,rbc}",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.flowconfig,.yarn-metadata.json,.idea,appveyor.yml,.travis.yml,circle.yml,npm-debug.log,.nyc_output,yarn.lock,.yarn-integrity}",
+      "!**/node_modules/search-index/si${/*}"
     ],
     "appId": "RobinAhle.sleektodomanager",
     "linux": {
@@ -37,7 +43,8 @@
         "deb",
         "freebsd",
         "rpm",
-        "AppImage"
+        "AppImage",
+        "pacman"
       ]
     },
     "mac": {
@@ -47,15 +54,11 @@
       "icon": "assets/icons/sleek.icns",
       "category": "public.app-category.productivity"
     },
-    "win": {
-      "target": [
-        "portable"
-      ],
-      "icon": "assets/icons/sleek.ico",
-      "publisherName": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C"
+    "nsis": {
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "appx": {
-      "displayName": "sleek - a todo.txt app for Windows, free and open-source",
+      "displayName": "sleek - Todo.txt app for Windows, free and open-source",
       "identityName": "17450RobinAhle.sleektodomanager",
       "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
       "publisherDisplayName": "Robin Ahle",
@@ -78,7 +81,7 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder -lmw --publish never",
     "appx": "electron-builder -w appx --publish never",
-    "win": "electron-builder -w portable --publish never",
+    "win": "electron-builder -w --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & electron ."
