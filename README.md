@@ -105,7 +105,7 @@ A prioritized backlog for new features and known issues can be found on <a href=
 2. Fork sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
 3. Install dependencies `npm install`
 4. Install electron-builder `npm install electron-builder --save-dev`
-5. Build sleek `npm run dist` (Binaries will be put into the `dist` folder
+5. Build sleek `npm run dist` (Binaries will be put into the `dist` folder)
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
