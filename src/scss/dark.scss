@@ -257,6 +257,9 @@ nav {
 }
 .drawer {
   background: $grey-light!important;
+  h4.is-4 {
+    color: white;
+  }
   div.contexts {
     a.button  {
       background: $green-mid!important;
@@ -292,10 +295,7 @@ nav {
   .dropdown-content {
     background: $grey-mid!important;
   }
-  .dropdown-content h4 {
-    color: $grey-bright!important;
-  }
-  .dropdown-item.is-greyed-out a.button,
+  /*.dropdown-item.is-greyed-out a.button,
   .dropdown-item.is-greyed-out a.button:hover {
     background: $grey-mid!important;
     color: $grey-bright!important;
@@ -304,17 +304,16 @@ nav {
   .dropdown-item.is-greyed-out a.button span.tag {
     background: $grey-mid!important;
     color: white!important;
-  }
+  }*/
   svg {
     color: $grey-bright!important;
   }
 }
-#filterDrawer {
-  .dropdown-item a.headline,
-  .dropdown-item a.headline a {
-    color: white!important;
+/*#filterDrawer {
+  .dropdown-item h4.is-4 {
+    color: white;
   }
-}
+}*/
 .drawerClose {
   background: $grey-light!important;
   svg {

@@ -385,30 +385,24 @@ nav {
   overflow-x: hidden;
   padding: 2em;
   background: $mid-grey;
+  h4.is-4 {
+    font-size: 1.35em;
+    color: $darker-grey;
+    font-family: FreeSansBold;
+    margin-bottom: 1.5em;
+  }
   .dropdown-item {
     width: 100%;
     padding: 0;
     margin: 0 0 1.5em 0;
-    a.headline {
+    /*a.headline {
       width: 100%;
       float: left;
       font-size: 1.35em;
       color: $darker-grey;
       font-family: FreeSansBold;
       margin-bottom: 1.5em;
-    }
-  }
-  a.button {
-    margin: 0 .5rem .5rem 0;
-  }
-  a.button span.tag {
-    z-index: 35;
-  }
-  #btnResetAllFilters {
-    display: none;
-  }
-  #btnResetAllFilters.is-active {
-    display: block;
+    }*/
   }
   .dropdown-item.is-greyed-out {
     opacity: .5;
@@ -425,6 +419,33 @@ nav {
   .dropdown-item.is-greyed-out a.headline a {
     background: none!important;
   }
+  a.button {
+    margin: 0 .5rem .5rem 0;
+  }
+  a.button span.tag {
+    z-index: 35;
+  }
+  #btnResetAllFilters {
+    display: none;
+  }
+  #btnResetAllFilters.is-active {
+    display: block;
+  }
+  /*.dropdown-item.is-greyed-out {
+    opacity: .5;
+  }
+  .dropdown-item.is-greyed-out a  {
+    background: $dark-grey!important;
+    color: $darker-grey!important;
+  }
+  .dropdown-item.is-greyed-out span.tag  {
+    background: $darker-grey!important;
+    color: #ccc;
+  }
+  .dropdown-item.is-greyed-out a.headline,
+  .dropdown-item.is-greyed-out a.headline a {
+    background: none!important;
+  }*/
   .icon.is-left {
     position: absolute;
     top: .75em;

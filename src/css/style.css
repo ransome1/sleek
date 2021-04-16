@@ -356,26 +356,39 @@ nav {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 2em;
-  background: #ebebeb; }
+  background: #ebebeb;
+  /*.dropdown-item.is-greyed-out {
+    opacity: .5;
+  }
+  .dropdown-item.is-greyed-out a  {
+    background: $dark-grey!important;
+    color: $darker-grey!important;
+  }
+  .dropdown-item.is-greyed-out span.tag  {
+    background: $darker-grey!important;
+    color: #ccc;
+  }
+  .dropdown-item.is-greyed-out a.headline,
+  .dropdown-item.is-greyed-out a.headline a {
+    background: none!important;
+  }*/ }
+  .drawer h4.is-4 {
+    font-size: 1.35em;
+    color: #4a4a4a;
+    font-family: FreeSansBold;
+    margin-bottom: 1.5em; }
   .drawer .dropdown-item {
     width: 100%;
     padding: 0;
-    margin: 0 0 1.5em 0; }
-    .drawer .dropdown-item a.headline {
+    margin: 0 0 1.5em 0;
+    /*a.headline {
       width: 100%;
       float: left;
       font-size: 1.35em;
-      color: #4a4a4a;
+      color: $darker-grey;
       font-family: FreeSansBold;
-      margin-bottom: 1.5em; }
-  .drawer a.button {
-    margin: 0 .5rem .5rem 0; }
-  .drawer a.button span.tag {
-    z-index: 35; }
-  .drawer #btnResetAllFilters {
-    display: none; }
-  .drawer #btnResetAllFilters.is-active {
-    display: block; }
+      margin-bottom: 1.5em;
+    }*/ }
   .drawer .dropdown-item.is-greyed-out {
     opacity: .5; }
   .drawer .dropdown-item.is-greyed-out a {
@@ -387,6 +400,14 @@ nav {
   .drawer .dropdown-item.is-greyed-out a.headline,
   .drawer .dropdown-item.is-greyed-out a.headline a {
     background: none !important; }
+  .drawer a.button {
+    margin: 0 .5rem .5rem 0; }
+  .drawer a.button span.tag {
+    z-index: 35; }
+  .drawer #btnResetAllFilters {
+    display: none; }
+  .drawer #btnResetAllFilters.is-active {
+    display: block; }
   .drawer .icon.is-left {
     position: absolute;
     top: .75em;

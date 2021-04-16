@@ -28,7 +28,28 @@ const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
-// configure markdown parser
+const modal = document.querySelectorAll('.modal');
+const modalCards = document.querySelectorAll('.modal-card');
+const modalClose = document.querySelectorAll('.close');
+const modalBackground = document.querySelectorAll('.modal-background');
+const contentTabs = document.querySelectorAll('.modal.content ul li');
+const contentTabsCards = document.querySelectorAll('.modal.content section');
+const btnModalCancel = document.querySelectorAll(".btnModalCancel");
+const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
+const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
+const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
+const messages = document.querySelectorAll(".message");
+const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
+const navBtns = document.querySelectorAll(".navBtn");
+const btnAddTodo = document.querySelectorAll(".btnAddTodo");
+const btnResetFilters = document.querySelectorAll(".btnResetFilters");
+const drawers = document.querySelectorAll(".drawer");
+const item = { previous: "" }
+let categories;
+let visibleRows;
+// ########################################################################################################################
+// CONFIGURE MARKDOWN PARSER
+// ########################################################################################################################
 marked.setOptions({
   pedantic: false,
   gfm: true,
@@ -53,24 +74,6 @@ renderer = {
   }
 };
 marked.use({ renderer });
-const modal = document.querySelectorAll('.modal');
-const modalCards = document.querySelectorAll('.modal-card');
-const modalClose = document.querySelectorAll('.close');
-const modalBackground = document.querySelectorAll('.modal-background');
-const contentTabs = document.querySelectorAll('.modal.content ul li');
-const contentTabsCards = document.querySelectorAll('.modal.content section');
-const btnModalCancel = document.querySelectorAll(".btnModalCancel");
-const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
-const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
-const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
-const messages = document.querySelectorAll(".message");
-const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
-const navBtns = document.querySelectorAll(".navBtn");
-const btnAddTodo = document.querySelectorAll(".btnAddTodo");
-const btnResetFilters = document.querySelectorAll(".btnResetFilters");
-const drawers = document.querySelectorAll(".drawer");
-const categories = ["contexts", "projects"];
-const item = { previous: "" }
 // ########################################################################################################################
 // DATE FUNCTIONS
 // ########################################################################################################################
@@ -123,9 +126,9 @@ function clearModal() {
     // defines when the composed filter is being filled with content and when it is emptied
     let startComposing = false;
     // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
-    let typeAheadValue = "";
+    let autoCompleteValue = "";
     // + or @
-    let typeAheadPrefix = "";
+    let autoCompletePrefix = "";
     modalForm.classList.remove("is-active");
     // remove the data item as we don't need it anymore
     modalForm.removeAttribute("data-item");
@@ -151,35 +154,35 @@ function modalFormInputEvents() {
     modalFormInput.style.height="auto";
     modalFormInput.style.height= modalFormInput.scrollHeight+"px";
   }
-  let typeAheadValue ="";
-  let typeAheadPrefix = "";
+  let autoCompleteValue ="";
+  let autoCompletePrefix = "";
   let caretPosition = getCaretPosition(modalFormInput);
-  let typeAheadCategory = "";
+  let autoCompleteCategory = "";
   // if datepicker was visible it will be hidden with every new input
   if((modalFormInput.value.charAt(caretPosition-2) === " " || modalFormInput.value.charAt(caretPosition-2) === "\n") && (modalFormInput.value.charAt(caretPosition-1) === "@" || modalFormInput.value.charAt(caretPosition-1) === "+")) {
-    typeAheadValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(caretPosition-1);
+    autoCompleteValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
+    autoCompletePrefix = modalFormInput.value.charAt(caretPosition-1);
   } else if(modalFormInput.value.charAt(caretPosition) === " ") {
-    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+1);
+    autoCompleteValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
+    autoCompletePrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition-1)+1);
   } else if(modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "@" || modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1) === "+") {
-    typeAheadValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
-    typeAheadPrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
+    autoCompleteValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
+    autoCompletePrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
   } else {
     suggestionContainer.classList.remove("is-active");
     suggestionContainer.blur();
     return false;
   }
   // suppress suggestion box if caret is at the end of word
-  if(typeAheadPrefix) {
-    if(typeAheadPrefix=="+") {
-      typeAheadCategory = "projects";
-    } else if(typeAheadPrefix=="@") {
-      typeAheadCategory = "contexts";
+  if(autoCompletePrefix) {
+    if(autoCompletePrefix=="+") {
+      autoCompleteCategory = "projects";
+    } else if(autoCompletePrefix=="@") {
+      autoCompleteCategory = "contexts";
     }
     // parsed data will be passed to generate filter data and build the filter buttons
     t0 = performance.now();
-    generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
+    generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
       console.log(response);
       t1 = performance.now();
       console.log("Filters rendered:", t1 - t0, "ms");
@@ -202,17 +205,6 @@ function positionSuggestionContainer() {
 function zoom(zoom, reset) {
   try {
     //let zoom = window.userData.zoom;
-    /*if(variable==="in") {
-      // set max zoom size
-      if(window.userData.zoom===175) return Promise.resolve("Info: Maximum zoom reached");
-      zoom = window.userData.zoom + 5;
-    } else if(variable==="out") {
-      // set min zoom size
-      if(window.userData.zoom===25) return Promise.resolve("Info: Minimum zoom reached");
-      zoom = window.userData.zoom - 5;
-    } else if(variable==="undo") {
-      zoom = 100;
-    }*/
     html.style.zoom = zoom + "%";
     zoomStatus.innerHTML = zoom + "%";
     zoomRangePicker.value = zoom;
@@ -286,28 +278,21 @@ getHandleElement().addEventListener("mousedown", startDragging);
 function showResultStats() {
   try {
     // we show some information on filters if any are set
-    if(items.filtered.length!=items.objects.length) {
+    if(visibleRows!=items.filtered.length) {
       resultStats.classList.add("is-active");
-      resultStats.firstElementChild.innerHTML = window.translations.visibleTodos + "&nbsp;<strong>" + items.filtered.length + " </strong>&nbsp;" + window.translations.of + "&nbsp;<strong>" + items.objects.length + "</strong>";
+      resultStats.firstElementChild.innerHTML = window.translations.visibleTodos + "&nbsp;<strong>" + visibleRows + " </strong>&nbsp;" + window.translations.of + "&nbsp;<strong>" + items.filtered.length + "</strong>";
       return Promise.resolve("Info: Filters found, result box is shown");
     } else {
       resultStats.classList.remove("is-active");
       return Promise.resolve("Info: No filters found, result box is hidden");
     }
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "showResultStats()", error])
-    return Promise.reject("Error in showResultStats(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function showForm(todo, templated) {
   try {
-      // clean up the form before doing anything
-      /*clearModal().then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        console.log(error);
-      });*/
       // in case a content window was open, it will be closed
       modal.forEach(function(el) {
         el.classList.remove("is-active");
@@ -432,9 +417,8 @@ function showOnboarding(variable) {
       return Promise.resolve("Info: Ending onboarding");
     }
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "showOnboarding()", error])
-    return Promise.reject("Error in showOnboarding(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function showRecurrenceOptions(el) {
@@ -502,10 +486,24 @@ function showRecurrenceOptions(el) {
 }
 function showDrawer(variable, buttonId, drawerId) {
   try {
+    switch (drawerId) {
+      case "viewDrawer":
+        if(window.userData.showCompleted) {
+          viewToggleSortCompletedLast.parentElement.classList.remove("is-hidden");
+        } else {
+          viewToggleSortCompletedLast.parentElement.classList.add("is-hidden");
+        }
+        // set viewContainer sort select
+        Array.from(viewSelectSortBy.options).forEach(function(item) {
+          if(item.value===window.userData.sortBy) item.selected = true
+        });
+        break;
+    }
     buttonId = document.getElementById(buttonId);
     drawerId = document.getElementById(drawerId);
     // always hide the drawer container first
     drawerContainer.classList.remove("is-active");
+    //
     // next show or hide the single drawers
     switch(variable) {
       case true:
@@ -549,9 +547,8 @@ function showDrawer(variable, buttonId, drawerId) {
     showMore(false);
     return Promise.resolve("Success: Drawer toggled");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "showDrawer()", error])
-    return Promise.reject("Error in showDrawer(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function showTab(tab) {
@@ -645,7 +642,290 @@ function showFiles() {
     return Promise.reject("Error in showFiles(): " + error);
   }
 }
+function showError(error) {
+  errorContainer.classList.add("is-active");
+  errorMessage.innerHTML = error.functionName + ": " + error;
+  // trigger matomo event
+  if(window.consent) _paq.push(["trackEvent", "Error", error.functionName, error])
+}
 
+function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition) {
+  try {
+    // select the container (filter drawer or autocomplete) in which filters will be shown
+    if(autoCompleteCategory) {
+      var container = suggestionContainer;
+      container.innerHTML = "";
+      // empty default categories
+      categories = [];
+      // fill only with selected autocomplete category
+      categories.push(autoCompleteCategory);
+      // for the suggestion container, so all filters will be shown
+      items.filtered = items.objects;
+    // in filter drawer, filters are adaptive to the shown items
+    } else {
+      // empty filter container first
+      var container = todoFilters;
+      container.innerHTML = "";
+      // needs to be reset every run, because it can be overwritten by previous autocomplete
+      categories = ["contexts", "projects"];
+    }
+    categories.forEach((category) => {
+      // array to collect all the available filters in the data
+      let filters = new Array();
+      // run the array and collect all possible filters, duplicates included
+      items.filtered.forEach((item) => {
+        // check if the object has values in either the project or contexts field
+        if(item[category]) {
+          // push all filters found so far into an array
+          for (let filter in item[category]) {
+            // if user has not opted for showComplete we skip the filter of this particular item
+            if(window.userData.showCompleted==false && item.complete==true) {
+              continue;
+            // if task is hidden the filter will be marked
+            } else if(item.h) {
+              filters.push([item[category][filter],0]);
+            } else {
+              filters.push([item[category][filter],1]);
+            }
+          }
+        }
+      });
+      // search within filters according to autoCompleteValue
+      if(autoCompletePrefix) {
+        filters = filters.filter(function(el) { return el.toString().toLowerCase().includes(autoCompleteValue.toLowerCase()); });
+      }
+      // remove duplicates, create the count object and avoid counting filters of hidden todos
+      filtersCounted = filters.reduce(function(filters, filter) {
+        // if filter is already in object and should be counted
+        if (filter[1] && (filter[0] in filters)) {
+          filters[filter[0]]++;
+        // new filter in object and should be counted
+        } else if(filter[1]) {
+          filters[filter[0]] = 1;
+        // do not count if filter is suppose to be hidden
+        // only overwrite value with 0 if the filter doesn't already exist in object
+        } else if(!filter[1] && !(filter[0] in filters)) {
+          filters[filter[0]] = 0;
+        }
+        if(filters!=null) {
+          return filters;
+        }
+      }, {});
+      // sort filter alphanummerically (https://stackoverflow.com/a/54427214)
+      filtersCounted = Object.fromEntries(
+        Object.entries(filtersCounted).sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare)
+      );
+      // remove duplicates from available filters
+      // https://wsvincent.com/javascript-remove-duplicates-array/
+      filters = [...new Set(filters.join(",").split(","))];
+      // filter persisted filters
+      if(window.userData.selectedFilters.length>0) {
+        selectedFilters = JSON.parse(window.userData.selectedFilters);
+        // check if selected filters is still part of all available filters
+        selectedFilters.forEach(function(selectedFilter,index,object){
+          if(selectedFilter[1]==category) {
+            // category found, but the selected filter is not part of available filters
+            if(!filters.includes(selectedFilter[0])) {
+              // delete persisted filters
+              selectedFilters.splice(index, 1);
+              // persist the change
+              setUserData("selectedFilters", JSON.stringify(selectedFilters));
+            }
+          }
+        });
+      }
+      // build the filter buttons
+      if(filters[0]!="" && filters.length>0) {
+
+        generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
+          container.appendChild(response);
+        }).catch (error => {
+          console.log(error);
+        });
+
+      } else {
+        suggestionContainer.classList.remove("is-active");
+        suggestionContainer.blur();
+        console.log("Info: No " + category + " found in todo.txt data, so no filters will be generated");
+      }
+    });
+    return Promise.resolve("Success: Filter data generated");
+  } catch (error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition) {
+  try {
+    let selectedFilters = new Array;
+    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
+    // creates a div for the specific filter section
+    let todoFiltersSub = document.createElement("div");
+    todoFiltersSub.setAttribute("class", "dropdown-item " + category);
+    // translate headline
+    if(category=="contexts") {
+      var headline = window.translations.contexts;
+    } else if(category=="projects"){
+      var headline = window.translations.projects;
+    }
+    if(autoCompletePrefix==undefined) {
+      // create a sub headline element
+      let todoFilterHeadline = document.createElement("h4");
+      todoFilterHeadline.setAttribute("class", "is-4 title");
+      todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
+      todoFilterHeadline.onclick = function() {
+        let hideCategories = window.userData.hideCategories;
+        if(hideCategories.includes(category)) {
+          hideCategories.splice(hideCategories.indexOf(category),1)
+          this.parentElement.classList.add("is-greyed-out");
+          this.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + headline;
+        } else {
+          hideCategories.push(category);
+          this.parentElement.classList.remove("is-greyed-out");
+          this.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
+          hideCategories = [...new Set(hideCategories.join(",").split(","))];
+        }
+        setUserData("hideCategories", hideCategories)
+        //startBuilding();
+        generateGroups(items.filtered).then(function(groups) {
+          generateTable(groups);
+        });
+      }
+      // add the headline before category container
+      todoFiltersSub.appendChild(todoFilterHeadline);
+    } else {
+      // show suggestion box
+      suggestionContainer.classList.add("is-active");
+      suggestionContainer.focus();
+      // create a sub headline element
+      let todoFilterHeadline = document.createElement("h4");
+      todoFilterHeadline.setAttribute("class", "is-4 title headline " + category);
+      // no need for tab index if the headline is in suggestion box
+      if(autoCompletePrefix==undefined) todoFilterHeadline.setAttribute("tabindex", -1);
+      todoFilterHeadline.innerHTML = headline;
+      // add the headline before category container
+      todoFiltersSub.appendChild(todoFilterHeadline);
+    }
+    // build one button each
+    for (let filter in filtersCounted) {
+      // skip this loop if no filters are present
+      if(!filter) continue;
+      let todoFiltersItem = document.createElement("a");
+      todoFiltersItem.setAttribute("class", "btnApplyFilter button");
+      todoFiltersItem.setAttribute("data-filter", filter);
+      todoFiltersItem.setAttribute("data-category", category);
+      if(autoCompletePrefix==undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }
+      todoFiltersItem.setAttribute("href", "#");
+      todoFiltersItem.innerHTML = filter;
+      if(autoCompletePrefix==undefined) {
+        todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
+        // create the event listener for filter selection by user
+        todoFiltersItem.addEventListener("click", (el) => {
+          // set highlighting
+          todoFiltersItem.classList.toggle("is-dark");
+          // if no filters are selected, add a first one
+          if (selectedFilters.length > 0) {
+            // get the index of the item that matches the data values the button click provided
+            let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
+            if(index != -1) {
+              // remove the item at the index where it matched
+              selectedFilters.splice(index, 1);
+            } else {
+              // if the item is not already in the array, push it into
+              selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+            }
+          } else {
+            // this is the first push
+            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
+          }
+          // convert the collected filters to JSON and save it to store.js
+          setUserData("selectedFilters", JSON.stringify(selectedFilters));
+          startBuilding();
+          // trigger matomo event
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
+        });
+      // suggestion container
+      } else {
+        // add filter to input
+        todoFiltersItem.addEventListener("click", () => {
+          // remove composed filter first, as it is going to be replaced with a filter from suggestion box
+          if(autoCompleteValue) {
+            // only if input is not only the prefix, otherwise all existing prefixes will be removed
+            modalFormInput.value = modalFormInput.value.replace(" " + autoCompletePrefix+autoCompleteValue, "");
+            // add filter from suggestion box
+            modalFormInput.value += " " + autoCompletePrefix+todoFiltersItem.getAttribute("data-filter") + " ";
+          } else {
+            // add button data value to the exact caret position
+            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
+          }
+          // hide the suggestion container after the filter has been selected
+          suggestionContainer.blur();
+          suggestionContainer.classList.remove("is-active");
+          // trigger matomo event
+          // put focus back into input so user can continue writing
+          modalFormInput.focus();
+          if(window.userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
+        });
+      }
+      // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
+      // TODO: do this in the first loop where buttons are built
+      selectedFilters.forEach(function(item) {
+        if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
+      });
+      todoFiltersSub.appendChild(todoFiltersItem);
+    }
+    // add filters to the specific filter container
+    //todoFilters.appendChild(todoFiltersSub);
+    return Promise.resolve(todoFiltersSub);
+    //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
+  } catch (error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+function generateHash(str) {
+  return str.split('').reduce((prevHash, currVal) =>
+    (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
+}
+function generateRecurringTodo(todo) {
+  try {
+    // duplicate not reference
+    let recurringItem = Object.assign({}, todo);
+    // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
+    if(recurringItem.complete && recurringItem.due && recurringItem.due.isFuture()) {
+      recurringItem.date = new Date;
+      recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
+      recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
+      recurringItem.complete = false;
+      recurringItem.completed = null;
+    } else if(recurringItem.complete && !recurringItem.due) {
+      //console.log(recurringItem);
+      recurringItem.date = new Date;
+      recurringItem.due = getRecurrenceDate(todo.completed, todo.rec);
+      recurringItem.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
+      recurringItem.complete = false;
+      recurringItem.completed = null;
+    } else {
+      recurringItem.date = todo.due;
+      recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
+      recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
+    }
+    // get index of recurring todo
+    const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringItem.toString().replaceAll(String.fromCharCode(16)," "));
+    // only add recurring todo if it is not already in the list
+    if(index===-1) {
+      items.objects.push(recurringItem);
+      tableContainerDue.appendChild(generateTableRow(recurringItem));
+      window.api.send("writeToFile", [items.objects.join("\n").toString(), window.userData.file]);
+      return Promise.resolve("Success: Recurring todo created and written into file: " + recurringItem);
+    } else {
+      return Promise.resolve("Info: Recurring todo already in file, won't write anything");
+    }
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
 function generateNotification(todo, offset) {
   try {
     let notifications = window.userData.notifications;
@@ -693,328 +973,8 @@ function generateNotification(todo, offset) {
       return Promise.resolve("Info: Notification successfully sent");
     });
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "generateNotification()", error])
-    return Promise.reject("Error in generateNotification(): " + error);
-  }
-}
-function generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition) {
-  try {
-    let selectedFilters = new Array;
-    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
-    let categoriesFiltered = new Array;
-    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
-    // creates a div for the specific filter section
-    let todoFiltersSub = document.createElement("div");
-    todoFiltersSub.setAttribute("class", "dropdown-item " + category);
-    // translate headline
-    if(category=="contexts") {
-      var headline = window.translations.contexts;
-    } else if(category=="projects"){
-      var headline = window.translations.projects;
-    }
-    if(typeAheadPrefix==undefined) {
-      let categoriesFiltered = window.userData.categoriesFiltered;
-      // create a sub headline element
-      let todoFilterHeadline = document.createElement("a");
-      todoFilterHeadline.setAttribute("class", "headline " + category);
-      todoFilterHeadline.setAttribute("tabindex", -1);
-      todoFilterHeadline.setAttribute("href", "#");
-      todoFilterHeadline.setAttribute("data-headline", headline);
-      todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
-      // TODO clean up the mess
-      todoFilterHeadline.addEventListener("click", () => {
-        // TODO clean up. this is a duplicate, see above
-        if(categoriesFiltered.includes(category)) {
-          // we remove the category from the array
-          categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
-          //persist the category filters
-          setUserData("categoriesFiltered", categoriesFiltered);
-          // we remove the greyed out look from the container
-          todoFiltersSub.classList.remove("is-greyed-out");
-          // change the eye icon
-          //let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
-          //todoFilterHeadline.innerHTML = "<a href=\"#\" class=\"far fa-eye-slash\" tabindex=\"-1\"></a>&nbsp;" + dataHeadline;
-          todoFilterHeadline.innerHTML += "<i class=\"far fa-slash\" tabindex=\"-1\"></i>&nbsp;";
-        } else {
-          // we push the category to the filter array
-          categoriesFiltered.push(category);
-          // make sure there are no duplicates
-          // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-          categoriesFiltered.filter(function(item) {
-            let seen = {};
-            let k = JSON.stringify(item);
-            return seen.hasOwnProperty(k) ? false : (seen[k] = true);
-          })
-          // persist the category filters
-          setUserData("categoriesFiltered", categoriesFiltered);
-          // we add the greyed out look to the container
-          todoFiltersSub.classList.add("is-greyed-out");
-          // change the eye icon
-          //let dataHeadline = todoFilterHeadline.getAttribute("data-headline");
-          //todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + dataHeadline;
-          todoFilterHeadline.innerHTML += "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;";
-        }
-        startBuilding();
-        // trigger matomo event
-        if(window.consent) _paq.push(["trackEvent", "Filter-Drawer", "Click on headline", category])
-      });
-      // TODO clean up. this is a duplicate, see above
-      if(categoriesFiltered.includes(category)) {
-        todoFiltersSub.classList.add("is-greyed-out");
-        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye\"></i></a>&nbsp;" + headline;
-      } else {
-        todoFiltersSub.classList.remove("is-greyed-out");
-        todoFilterHeadline.innerHTML = "<a href=\"#\"><i class=\"far fa-eye-slash\"></i></a>&nbsp;" + headline;
-      }
-      // add the headline before category container
-      todoFiltersSub.appendChild(todoFilterHeadline);
-    } else {
-      // show suggestion box
-      suggestionContainer.classList.add("is-active");
-      suggestionContainer.focus();
-      // create a sub headline element
-      let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "is-4 title headline " + category);
-      // no need for tab index if the headline is in suggestion box
-      if(typeAheadPrefix==undefined) todoFilterHeadline.setAttribute("tabindex", -1);
-      todoFilterHeadline.innerHTML = headline;
-      // add the headline before category container
-      todoFiltersSub.appendChild(todoFilterHeadline);
-    }
-    // build one button each
-    for (let filter in filtersCounted) {
-      // skip this loop if no filters are present
-      if(!filter) continue;
-      let todoFiltersItem = document.createElement("a");
-      todoFiltersItem.setAttribute("class", "btnApplyFilter button");
-      todoFiltersItem.setAttribute("data-filter", filter);
-      todoFiltersItem.setAttribute("data-category", category);
-      if(typeAheadPrefix==undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }
-      todoFiltersItem.setAttribute("href", "#");
-      todoFiltersItem.innerHTML = filter;
-      if(typeAheadPrefix==undefined) {
-        todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
-        // create the event listener for filter selection by user
-        todoFiltersItem.addEventListener("click", (el) => {
-          // set highlighting
-          todoFiltersItem.classList.toggle("is-dark");
-          // if no filters are selected, add a first one
-          if (selectedFilters.length > 0) {
-            // get the index of the item that matches the data values the button click provided
-            let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
-            if(index != -1) {
-              // remove the item at the index where it matched
-              selectedFilters.splice(index, 1);
-            } else {
-              // if the item is not already in the array, push it into
-              selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-            }
-          } else {
-            // this is the first push
-            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-          }
-          // convert the collected filters to JSON and save it to store.js
-          setUserData("selectedFilters", JSON.stringify(selectedFilters));
-          if(categoriesFiltered) {
-            // remove any setting that hides the category of the selected filters
-            if(categoriesFiltered.indexOf(category)>=0) categoriesFiltered.splice(categoriesFiltered.indexOf(category), 1);
-            //persist the category filters
-            setUserData("categoriesFiltered", categoriesFiltered);
-          }
-          startBuilding();
-          // trigger matomo event
-          if(window.consent) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
-        });
-      // suggestion container
-      } else {
-        // add filter to input
-        todoFiltersItem.addEventListener("click", () => {
-          // remove composed filter first, as it is going to be replaced with a filter from suggestion box
-          if(typeAheadValue) {
-            // only if input is not only the prefix, otherwise all existing prefixes will be removed
-            modalFormInput.value = modalFormInput.value.replace(" " + typeAheadPrefix+typeAheadValue, "");
-            // add filter from suggestion box
-            modalFormInput.value += " " + typeAheadPrefix+todoFiltersItem.getAttribute("data-filter") + " ";
-          } else {
-            // add button data value to the exact caret position
-            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
-          }
-          // hide the suggestion container after the filter has been selected
-          suggestionContainer.blur();
-          suggestionContainer.classList.remove("is-active");
-          // trigger matomo event
-          // put focus back into input so user can continue writing
-          modalFormInput.focus();
-          if(window.consent) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
-        });
-      }
-      // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
-      // TODO: do this in the first loop where buttons are built
-      selectedFilters.forEach(function(item) {
-        if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
-      });
-      todoFiltersSub.appendChild(todoFiltersItem);
-    }
-    // add filters to the specific filter container
-    //todoFilters.appendChild(todoFiltersSub);
-    return Promise.resolve(todoFiltersSub);
-    //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
-  } catch (error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "generateFilterButtons()", error])
-    return Promise.reject("Error in generateFilterButtons(): " + error);
-  }
-}
-function generateHash(str) {
-  return str.split('').reduce((prevHash, currVal) =>
-    (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
-}
-function generateFilterData(typeAheadCategory, typeAheadValue, typeAheadPrefix, caretPosition) {
-  try {
-    //let items = window.items;
-    let selectedFilters = new Array;
-    if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
-    let categoriesFiltered = new Array;
-    if(window.userData.categoriesFiltered>0) categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
-    // container to fill with categories
-    let container;
-    // which category or categories to loop through and build
-    let categoriesToBuild = [];
-    if(typeAheadPrefix) {
-      container = suggestionContainer;
-      categoriesToBuild.push(typeAheadCategory);
-      // for the suggestion container, so all filters will be shown
-      items.filtered = items.objects;
-    } else {
-      // empty filter container first
-      todoFilters.innerHTML = "";
-      container = todoFilters;
-      categoriesToBuild = categories;
-    }
-    // empty filter container to prvent duplicates
-    container.innerHTML = "";
-    // parse through above defined categories, most likely contexts and projects
-    categoriesToBuild.forEach((category) => {
-      // array to collect all the available filters in the data
-      let filters = new Array();
-      // run the array and collect all possible filters, duplicates included
-      items.filtered.forEach((item) => {
-        // check if the object has values in either the project or contexts field
-        if(item[category]) {
-          // push all filters found so far into an array
-          for (let filter in item[category]) {
-            // if user has not opted for showComplete we skip the filter of this particular item
-            if(window.userData.showCompleted==false && item.complete==true) {
-              continue;
-            // if task is hidden the filter will be marked
-            } else if(item.h) {
-              filters.push([item[category][filter],0]);
-            } else {
-              filters.push([item[category][filter],1]);
-            }
-          }
-        }
-      });
-      // search within filters according to typeAheadValue
-      if(typeAheadPrefix) {
-        filters = filters.filter(function(el) { return el.toString().toLowerCase().includes(typeAheadValue.toLowerCase()); });
-      }
-      // remove duplicates, create the count object and avoid counting filters of hidden todos
-      filtersCounted = filters.reduce(function(filters, filter) {
-        // if filter is already in object and should be counted
-        if (filter[1] && (filter[0] in filters)) {
-          filters[filter[0]]++;
-        // new filter in object and should be counted
-        } else if(filter[1]) {
-          filters[filter[0]] = 1;
-        // do not count if filter is suppose to be hidden
-        // only overwrite value with 0 if the filter doesn't already exist in object
-        } else if(!filter[1] && !(filter[0] in filters)) {
-          filters[filter[0]] = 0;
-        }
-        //console.log(filter[1]);
-        if(filters!=null) {
-          return filters;
-        }
-      }, {});
-      // remove duplicates from available filters
-      // https://wsvincent.com/javascript-remove-duplicates-array/
-      filters = [...new Set(filters.join(",").split(","))];
-      // check if selected filters is still part of all available filters
-      selectedFilters.forEach(function(selectedFilter,index,object){
-        if(selectedFilter[1]==category) {
-          // category found, but the selected filter is not part of available filters
-          if(!filters.includes(selectedFilter[0])) {
-            // delete persisted filters
-            selectedFilters.splice(index, 1);
-            // persist the change
-            setUserData("selectedFilters", JSON.stringify(selectedFilters));
-          }
-        }
-      });
-      // sort filter alphanummerically (https://stackoverflow.com/a/54427214)
-      filtersCounted = Object.fromEntries(
-        Object.entries(filtersCounted).sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare)
-      );
-      // build the filter buttons
-      if(filters[0]!="" && filters.length>0) {
-        generateFilterButtons(category, typeAheadValue, typeAheadPrefix, caretPosition).then(response => {
-          container.appendChild(response);
-        }).catch (error => {
-          console.log(error);
-        });
-      } else {
-        suggestionContainer.classList.remove("is-active");
-        suggestionContainer.blur();
-        console.log("Info: No " + category + " found in todo.txt data, so no filters will be generated");
-      }
-    });
-    return Promise.resolve("Success: Filter data generated");
-  } catch (error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "generateFilterData()", error])
-    return Promise.reject("Error in generateFilterData(): " + error);
-  }
-}
-function generateRecurringTodo(todo) {
-  try {
-    // duplicate not reference
-    let recurringItem = Object.assign({}, todo);
-    // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
-    if(recurringItem.complete && recurringItem.due && recurringItem.due.isFuture()) {
-      recurringItem.date = new Date;
-      recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
-      recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
-      recurringItem.complete = false;
-      recurringItem.completed = null;
-    } else if(recurringItem.complete && !recurringItem.due) {
-      //console.log(recurringItem);
-      recurringItem.date = new Date;
-      recurringItem.due = getRecurrenceDate(todo.completed, todo.rec);
-      recurringItem.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
-      recurringItem.complete = false;
-      recurringItem.completed = null;
-    } else {
-      recurringItem.date = todo.due;
-      recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
-      recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
-    }
-    // get index of recurring todo
-    const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringItem.toString().replaceAll(String.fromCharCode(16)," "));
-    // only add recurring todo if it is not already in the list
-    if(index===-1) {
-      items.objects.push(recurringItem);
-      tableContainerDue.appendChild(generateTableRow(recurringItem));
-      window.api.send("writeToFile", [items.objects.join("\n").toString(), window.userData.file]);
-      return Promise.resolve("Success: Recurring todo created and written into file: " + recurringItem);
-    } else {
-      return Promise.resolve("Info: Recurring todo already in file, won't write anything");
-    }
-  } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "generateRecurringTodo()", error])
-    return Promise.reject("Error in generateRecurringTodo(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -1070,9 +1030,8 @@ function setTodoComplete(todo) {
     window.api.send("writeToFile", [items.objects.join("\n").toString(), window.userData.file]);
     return Promise.resolve("Success: Changes written to file: " + window.userData.file);
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setTodoComplete()", error])
-    return Promise.reject("Error in setTodoComplete(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function setTodoDelete(todo) {
@@ -1101,9 +1060,8 @@ function setTodoDelete(todo) {
     window.api.send("writeToFile", [items.objects.join("\n").toString(), window.userData.file]);
     return Promise.resolve("Success: Changes written to file: " + window.userData.file);
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setTodoDelete()", error])
-    return Promise.reject("Error in setTodoDelete(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function setTheme(switchTheme) {
@@ -1135,9 +1093,8 @@ function setTheme(switchTheme) {
     }
     return Promise.resolve("Success: Theme set to " + theme);
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setTheme()", error])
-    return Promise.reject("Error in setTheme(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function setTranslations(translations) {
@@ -1263,26 +1220,19 @@ function setTranslations(translations) {
     });
     return Promise.resolve("Success: Translations set");
   } catch(error) {
-    showError(error);
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setTranslations()", error])
-    return Promise.reject("Error in setTranslations(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
-}
-function showError(message) {
-  errorContainer.classList.add("is-active");
-  errorMessage.innerHTML = message;
 }
 
 function setUserData(key, value) {
   try {
     window.userData[key] = value;
     window.api.send("userData", [key, value]);
-    return Promise.resolve("Success: Config written to config file");
+    return Promise.resolve("Success: Config persisted");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setUserData()", error])
-    return Promise.reject("Error in setUserData(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function setToggles() {
@@ -1299,9 +1249,8 @@ function setToggles() {
     toggleView.checked = window.userData.compactView;
     return Promise.resolve("Success: All toggles set");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setToggles()", error])
-    return Promise.reject("Error in setToggles(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function setRecurrenceInput(recurrence) {
@@ -1348,9 +1297,8 @@ function setRecurrenceInput(recurrence) {
     if(window.consent) _paq.push(["trackEvent", "Form", "Recurrence selected: " + label]);
     return Promise.resolve("Success: Recurrence added");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setToggles()", error])
-    return Promise.reject("Error in setToggles(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function setRecurrenceOptionLabels(mul) {
@@ -1391,9 +1339,8 @@ function setPriority(priority) {
     if(window.consent) _paq.push(["trackEvent", "Form", "Priority changed to: " + priority]);
     return Promise.resolve("Success: Priority changed to " + priority)
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setPriority()", error])
-    return Promise.reject("Error in setPriority(): " + error)
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function setFriendlyLanguageNames() {
@@ -1427,9 +1374,8 @@ function setFriendlyLanguageNames() {
     });
     return Promise.resolve("Success: Friendly language names added to select field in settings");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "setFriendlyLanguageNames()", error])
-    return Promise.reject("Error in setFriendlyLanguageNames(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -1495,9 +1441,8 @@ function toggleCompactView(checked) {
     setUserData("compactView", window.userData.compactView);
     return Promise.resolve("Success: Compact view set to: " + window.userData.compactView);
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "toggleCompactView()", error])
-    return Promise.reject("Error in toggleCompactView(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function toggleTodos(name, variable) {
@@ -1512,19 +1457,12 @@ function toggleTodos(name, variable) {
     document.getElementById(name).checked = window.userData[name];
     // persist the sorting
     setUserData(name, window.userData[name]);
-    // only show completedLast if showCompleted is true
-    if(window.userData.showCompleted) {
-      viewToggleSortCompletedLast.parentElement.classList.remove("is-hidden")
-    } else {
-      viewToggleSortCompletedLast.parentElement.classList.add("is-hidden")
-    }
-    //
+    // rebuild the content
     startBuilding();
     return Promise.resolve("Success: Show " + name + " todo set to: " + window.userData[name]);
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "toggleTodos()", error])
-    return Promise.reject("Error in toggleTodos(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function toggleInputSize(type) {
@@ -1605,9 +1543,8 @@ function matomoEventsConsent() {
       return Promise.resolve("Info: No consent given, Matomo error and event logging disabled");
     }
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "matomoEventsConsent()", error])
-    return Promise.reject("Error in matomoEventsConsent(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -2062,9 +1999,8 @@ function configureEvents() {
     });
     return Promise.resolve("Success: All events have been initialized");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "configureEvents()", error])
-    return Promise.reject("Error in configureEvents(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function configureTodoTableTemplate() {
@@ -2105,29 +2041,20 @@ function configureTodoTableTemplate() {
     todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
     return Promise.resolve("Success: Table templates set up");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "generateTableRow()", error])
-    return Promise.reject("Error in generateTableRow(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function configureMainView() {
   try {
-    // jump to previous added item
-    if(document.getElementById("previousItem")) {
-      jumpToItem(document.getElementById("previousItem"));
-    }
-    // set size of due date picker
-    resizeInput(dueDatePickerInput);
-    // set size of recurrence picker
-    resizeInput(recurrencePickerInput);
+    // jump to previously added item
+    if(document.getElementById("previousItem")) jumpToItem(document.getElementById("previousItem"))
     // set scaling factor if default font size has changed
     if(window.userData.zoom) {
       html.style.zoom = window.userData.zoom + "%";
       zoomStatus.innerHTML = window.userData.zoom + "%";
       zoomRangePicker.value = window.userData.zoom;
     }
-    // empty the table containers before reading fresh data
-    //todoTableContainer.innerHTML = "";
     // add filename to application title
     if(window.userData.file) {
       switch (window.appData.os) {
@@ -2139,10 +2066,6 @@ function configureMainView() {
           break;
       }
     }
-    // set viewContainer sort select
-    Array.from(viewSelectSortBy.options).forEach(function(item) {
-      if(item.value===window.userData.sortBy) item.selected = true
-    });
     // restore persisted width of filter drawer
     if(window.userData.drawerWidth) setPaneWidth(window.userData.drawerWidth);
     // check if compact view is suppose to be active
@@ -2186,14 +2109,14 @@ function configureMainView() {
     }
     // hide/show the addTodoContainer or noResultTodoContainer
     // file has content and objects are shown
-    if(items.objects.length === 0) {
+    if(visibleRows === 0) {
       todoTableSearchContainer.classList.remove("is-active");
       addTodoContainer.classList.add("is-active");
       noResultContainer.classList.remove("is-active");
       todoTable.classList.remove("is-active");
       navBtnFilter.classList.remove("is-active");
       return Promise.resolve("Info: File is empty");
-    } else if(items.filtered.length > 0 && items.objects.length>0) {
+    } else if(visibleRows > 0 && items.filtered.length>0) {
       todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.remove("is-active");
@@ -2201,7 +2124,7 @@ function configureMainView() {
       navBtnFilter.classList.add("is-active");
       return Promise.resolve("Info: File has content and results are shown");
     // file is NOT empty but no results
-    } else if(items.filtered.length === 0 && items.objects.length>0) {
+    } else if(visibleRows === 0 && items.filtered.length>0) {
       todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.remove("is-active");
       noResultContainer.classList.add("is-active");
@@ -2214,9 +2137,8 @@ function configureMainView() {
     }).catch(function(error) {
       console.log(error);
     });
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "configureMainView()", error])
-    return Promise.reject("Error in configureMainView(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -2232,9 +2154,8 @@ function checkDismissedMessages(dismissedMessages) {
     });
     return Promise.resolve("Info: Checked for already dismissed messages");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "checkDismissedMessages()", error])
-    return Promise.reject("Error in checkDismissedMessages(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -2242,8 +2163,6 @@ function resetFilters() {
   try {
     // clear the persisted filers, by setting it to undefined the object entry will be removed fully
     setUserData("selectedFilters", new Array);
-    // clear filtered categories
-    setUserData("categoriesFiltered", new Array);
     // empty old filter container
     todoFilters.innerHTML = "";
     // clear search input
@@ -2252,15 +2171,13 @@ function resetFilters() {
     startBuilding();
     return Promise.resolve("Success: Filters resetted");
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "resetFilters()", error])
-    return Promise.reject("Error in resetFilters(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
 function submitForm() {
   try {
-    //let items = window.items;
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
     if (modalForm.getAttribute("data-item")===modalForm.elements[0].value) {
@@ -2391,9 +2308,8 @@ function archiveTodos() {
     });
     return Promise.resolve("Success: Completed todo moved to: " + doneFile)
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "archiveTodos()", error])
-    return Promise.reject("Error in archiveTodos(): " + error)
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -2415,9 +2331,8 @@ function configureDatepicker() {
     });
     return Promise.resolve("Success: Datepicker configured")
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "configureDatepicker()", error])
-    return Promise.reject("Error in configureDatepicker(): " + error)
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -2454,7 +2369,7 @@ window.onload = function () {
   })
   .then(function() {
     return new Promise(function(resolve) {
-      resolve(zoom());
+      resolve(zoom(window.userData.zoom));
     });
   })
   .then(function() {
@@ -2470,11 +2385,6 @@ window.onload = function () {
   .then(function() {
     return new Promise(function(resolve) {
       resolve(matomoEventsConsent());
-    });
-  })
-  .then(function() {
-    return new Promise(function(resolve) {
-      resolve(setFriendlyLanguageNames());
     });
   })
   .then(function() {
@@ -2549,8 +2459,10 @@ function jumpToItem(item) {
 
 function startBuilding(searchString) {
   t0 = performance.now();
-  filterItems(items, searchString)
+  filterItems(items.objects, searchString)
   .then(function(filtered) {
+    items.filtered = filtered;
+
     f0 = performance.now();
     generateFilterData().then(response => {
       console.log(response);
@@ -2559,6 +2471,7 @@ function startBuilding(searchString) {
     }).catch(error => {
       console.log(error);
     });
+
     return generateGroups(filtered)
   })
   .then(function(groups) {
@@ -2566,160 +2479,83 @@ function startBuilding(searchString) {
       resolve(generateTable(groups));
     });
   })
-  .then(function(response) {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Todos build:", t1 - t0, "ms");
+  .then(function() {
     configureMainView();
   })
+  .then(function(response) {
+    // display info based on filtered items
+    showResultStats().then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Todos build:", t1 - t0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+  })
   .catch(function(error) {
-    console.log(error);
+    showError(error);
   });
 }
 
 function generateItems(content) {
   try {
     items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
+    items.objects = items.objects.filter(function(item) {
+      if(!item.text) return false;
+      return true;
+    });
     items.complete = items.objects.filter(function(item) { return item.complete === true });
     items.incomplete = items.objects.filter(function(item) { return item.complete === false });
     items.objects = items.objects.filter(function(item) { return item.toString() != "" });
-    return Promise.resolve();
+    return Promise.resolve(items);
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "generateItemsObject()", error])
-    return Promise.reject("Error in generateItemsObject(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
 function filterItems(items, searchString) {
-  // prepare the templates for the table
-  /*configureTodoTableTemplate().then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });*/
-
-
-  // selected filters are empty, unless they were persisted
-  if(window.userData.selectedFilters && window.userData.selectedFilters.length>0) {
-    var selectedFilters = JSON.parse(window.userData.selectedFilters);
-  } else {
-    var selectedFilters = new Array;
-    window.userData.selectedFilters = selectedFilters;
-  }
-  // selected categories are empty, unless they were persisted
-  if(window.userData.categoriesFiltered && window.userData.categoriesFiltered.length>0) {
-    var categoriesFiltered = JSON.parse(window.userData.categoriesFiltered);
-  } else {
-    var categoriesFiltered = new Array;
-    window.userData.categoriesFiltered = categoriesFiltered;
-  }
-  // if set, only incomplete todo will be processed from here on
-  if(!window.userData.showCompleted) {
-    items.filtered = items.incomplete;
-  } else {
-    items.filtered = items.objects;
-  }
-  // if there are selected filters
-  if(selectedFilters.length > 0) {
-    // we iterate through the filters in the order they got selected
-    selectedFilters.forEach(filter => {
-      // check if the filter is a project filter
-      if(filter[1]=="projects") {
-        items.filtered = items.filtered.filter(function(item) {
-          if(item.projects) return item.projects.includes(filter[0]);
-        });
-      // check if the filter is a context filter
-      } else if(filter[1]=="contexts") {
-        items.filtered = items.filtered.filter(function(item) {
-          if(item.contexts) {
-            return item.contexts.includes(filter[0]);
-          }
-        });
-      }
-    });
-  }
-  // filters are generated once the final todos are defined
-  /*t0 = performance.now();
-  generateFilterData().then(response => {
-    console.log(response);
-    t1 = performance.now();
-    console.log("Filters rendered:", t1 - t0, "ms");
-  }).catch(error => {
-    console.log(error);
-  });*/
-  // exclude all filters of a category if set
-  if(window.userData.categoriesFiltered.length > 0) {
-    window.userData.categoriesFiltered.forEach(category => {
-      // we create a new array where the items attrbite has no values
-      items.filtered = items.filtered.filter(function(item) {
-        return item[category] === null;
-      });
-    });
-  }
-  // filter hidden todos
-  viewBoxShowHidden.classList.remove("is-active");
-  items.filtered = items.filtered.filter(function(item) {
-    if(item.h) {
-      // if h:1 it is skipped
-      viewBoxShowHidden.classList.add("is-active");
-      if(!window.userData.showHidden) return false;
+  try {
+    // selected filters are empty, unless they were persisted
+    if(window.userData.selectedFilters && window.userData.selectedFilters.length>0) {
+      var selectedFilters = JSON.parse(window.userData.selectedFilters);
+    } else {
+      var selectedFilters = new Array;
+      window.userData.selectedFilters = selectedFilters;
     }
-    return true;
-  });
-  // filter todos due today
-  if(!window.userData.showDueIsToday) {
-    items.filtered = items.filtered.filter(function(item) {
-      if(item.due && item.due.isToday()) return false;
+    // apply persisted contexts and projects
+    if(selectedFilters.length > 0) {
+      // we iterate through the filters in the order they got selected
+      selectedFilters.forEach(filter => {
+        if(filter[1]=="projects") {
+          items = items.filter(function(item) {
+            if(item.projects) return item.projects.includes(filter[0]);
+          });
+        } else if(filter[1]=="contexts") {
+          items = items.filter(function(item) {
+            if(item.contexts) {
+              return item.contexts.includes(filter[0]);
+            }
+          });
+        }
+      });
+    }
+    // apply filters or filter by search string
+    items = items.filter(function(item) {
+      if(todoTableSearch.value) searchString = todoTableSearch.value;
+      if((searchString || todoTableSearch.value) && item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false;
+      if(!window.userData.showCompleted && item.complete) return false;
+      if(!window.userData.showDueIsToday && item.due && item.due.isToday()) return false;
+      if(!window.userData.showDueIsPast && item.due && item.due.isPast()) return false;
+      if(!window.userData.showDueIsFuture && item.due && item.due.isFuture()) return false;
+      if(item.text==="") return false;
       return true;
     });
+    return Promise.resolve(items);
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
-  // filter todos due in the past
-  if(!window.userData.showDueIsPast) {
-    items.filtered = items.filtered.filter(function(item) {
-      if(item.due && item.due.isPast()) return false;
-      return true;
-    });
-  }
-  // filter todos due in the future
-  if(!window.userData.showDueIsFuture) {
-    items.filtered = items.filtered.filter(function(item) {
-      if(item.due && item.due.isFuture()) return false;
-      return true;
-    });
-  }
-  // if search string or previously inserted content in search bar is detected
-  if(searchString || todoTableSearch.value) {
-    if(todoTableSearch.value) searchString = todoTableSearch.value;
-    // convert everything to lowercase for better search results
-    items.filtered = items.filtered.filter(function(item) {
-      // if no match (-1) the item is skipped
-      if(item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-  }
-  // manipulate the result info box
-  showResultStats().then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-  // reconfigure the main view according to amount of objects
-  /*configureMainView().then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    console.log(error);
-  });*/
-
-  // if sortCompletedLast a separate array of completed todos is added to the object
-  /*if(window.userData.showCompleted && window.userData.sortCompletedLast) {
-    items.filtered.push(["completed", items.complete]);
-  }*/
-
-  return Promise.resolve(items.filtered);
 }
 
 function generateGroups(items) {
@@ -2757,10 +2593,20 @@ function generateGroups(items) {
   return Promise.resolve(items)
 }
 
+function isTodoVisible(todo) {
+  if(!window.userData.showHidden && todo.h) return false
+  if(!todo.text) return false
+  for(let category in window.userData.hideCategories) {
+    if(Array.isArray(todo[window.userData.hideCategories[category]])) return false
+  }
+  return true;
+}
+
 function generateTable(groups) {
   // prepare the templates for the table
   return configureTodoTableTemplate()
   .then(function() {
+    visibleRows = 0;
     for (let group in groups) {
       // nodes need to be created to add them to the outer fragment
       // create a divider row
@@ -2811,8 +2657,8 @@ function generateTable(groups) {
       // build the fragments per group
       for (let item in groups[group][1]) {
         let todo = groups[group][1][item];
-        // if todo has no text, it's skipped
-        if(!todo.text) continue;
+        // check if todo is suppose to be visible, if not build process is skipped
+        if(!isTodoVisible(todo)) continue
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
@@ -2841,17 +2687,13 @@ function generateTable(groups) {
             });
           }
         }
-        // finally generate the rows
-        /*generateTableRow(todo).then(row => {
-          tableContainerContent.appendChild(row);
-        });*/
         tableContainerContent.appendChild(generateTableRow(todo));
       }
     }
     // append all generated groups to the main container
     todoTableContainer.appendChild(tableContainerContent);
     return new Promise(function(resolve) {
-      resolve("Success: Table generated");
+      resolve();
     });
   }).catch(error => {
     console.log(error);
@@ -2860,6 +2702,7 @@ function generateTable(groups) {
 
 function generateTableRow(todo) {
   try {
+    visibleRows++;
     // create nodes from templates
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
     let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);
@@ -2912,7 +2755,7 @@ function generateTableRow(todo) {
     if(todo.text) {
       if(todo.priority && window.userData.sortBy!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority " + todo.priority + "\">" + todo.priority + "</span>";
       // parse text string through markdown parser
-      todoTableBodyCellText.innerHTML =  marked.parseInline(todo.text);
+      todoTableBodyCellText.innerHTML +=  marked.parseInline(todo.text);
       //todoTableBodyCellText.innerHTML =  todo.text;
       // replace line feed replacement character with a space
       todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
@@ -3016,9 +2859,8 @@ function generateTableRow(todo) {
     // return the fully built row
     return todoTableBodyRow;
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "generateTableRow()", error])
-    return Promise.reject("Error in generateTableRow(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -3039,8 +2881,7 @@ window.onresize = function() {
       return Promise.reject("Error in window.onresize: " + error);
     });
   } catch(error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "window.onresize", error])
-    return Promise.reject("Error in window.onresize: " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }

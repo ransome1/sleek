@@ -34,6 +34,7 @@ if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
 // TODO set as default in object above
 if(!userData.data.dismissedNotifications) userData.set("dismissedNotifications", []);
 if(!userData.data.dismissedMessages) userData.set("dismissedMessages", []);
+if(!userData.data.hideCategories) userData.set("hideCategories", []);
 
 const appData = {
   version: app.getVersion(),
@@ -180,6 +181,7 @@ const createWindow = () => {
           console.log("Info: File " + filename + " has changed");
           setTimeout(function() {
             fileContent(newFile).then(content => {
+              console.log(content);
               mainWindow.webContents.send("refresh", content)
             }).catch(error => {
               console.log(error);
@@ -389,7 +391,11 @@ const createWindow = () => {
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
     if(!mainWindow.isFocused()) {
-      mainWindow.webContents.send("triggerFunction", "startBuilding")
+      fileContent(userData.data.file).then(content => {
+        mainWindow.webContents.send("refresh", content)
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }, 600000);
   mainWindow.on('move', function() {
