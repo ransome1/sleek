@@ -10,30 +10,6 @@ const Store = require("./configs/store.config.js");
 const userData = new Store({
   configName: "user-preferences"
 });
-if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
-  userData.set("theme", "dark");
-} else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
-  userData.set("theme", "light");
-}
-// TODO set as default in object above
-if(!userData.data.windowBounds) userData.set("windowBounds", { width: 1025, height: 769 });
-if(!userData.data.maximizeWindow) userData.set("maximizeWindow", false);
-if(!userData.data.notifications) userData.set("notifications", true);
-if(!userData.data.useTextarea) userData.set("useTextarea", false);
-if(!userData.data.compactView) userData.set("compactView", false);
-if(!userData.data.matomoEvents) userData.set("matomoEvents", false);
-if(!userData.data.drawerWidth) userData.set("drawerWidth", "500");
-if(!userData.data.showDueIsPast) userData.set("showDueIsPast", true);
-if(!userData.data.showDueIsFuture) userData.set("showDueIsFuture", true);
-if(!userData.data.showDueIsToday) userData.set("showDueIsToday", true);
-if(!userData.data.showHidden) userData.set("showHidden", true);
-if(!userData.data.showCompleted) userData.set("showCompleted", true);
-if(!userData.data.sortCompletedLast) userData.set("sortCompletedLast", true);
-if(!userData.data.sortBy) userData.set("sortBy", "priority");
-if(!userData.data.zoom) userData.set("zoom", 100);
-if(!userData.data.dismissedNotifications) userData.set("dismissedNotifications", []);
-if(!userData.data.dismissedMessages) userData.set("dismissedMessages", []);
-if(!userData.data.hideFilterCategories) userData.set("hideFilterCategories", []);
 const appData = {
   version: app.getVersion(),
   development: is.development,
@@ -185,7 +161,7 @@ const createWindow = () => {
             }).catch(error => {
               console.log(error);
             });
-          }, 300);
+          }, 10);
         });
       }
       fileContent(newFile).then(content => {
@@ -218,8 +194,35 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     }
   });
+  // ########################################################################################################################
+  // SET DEFAULT USERDATA
+  // ########################################################################################################################
   if(userData.data.maximizeWindow) mainWindow.maximize()
   if(userData.data.windowPosition) mainWindow.setPosition(userData.data.windowPosition[0], userData.data.windowPosition[1])
+  if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
+    userData.set("theme", "dark");
+  } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
+    userData.set("theme", "light");
+  }
+  // TODO set as default in object above
+  if(userData.data.windowBounds!="") userData.set("windowBounds", { width: 1025, height: 769 });
+  if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
+  if(typeof userData.data.notifcations != "boolean") userData.set("notifications", true);
+  if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
+  if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
+  if(typeof userData.data.matomoEvents != "boolean") userData.set("matomoEvents", false);
+  if(typeof userData.data.drawerWidth != "string") userData.set("drawerWidth", "500");
+  if(typeof userData.data.showDueIsPast != "boolean") userData.set("showDueIsPast", true);
+  if(typeof userData.data.showDueIsFuture != "boolean") userData.set("showDueIsFuture", true);
+  if(typeof userData.data.showDueIsToday != "boolean") userData.set("showDueIsToday", true);
+  if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", true);
+  if(typeof userData.data.showCompleted != "boolean") userData.set("showCompleted", true);
+  if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", true);
+  if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
+  if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
+  if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
+  if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
+  if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
   // ########################################################################################################################
   // TRIGGER
   // ########################################################################################################################

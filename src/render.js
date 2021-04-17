@@ -649,7 +649,9 @@ function startBuilding(searchString) {
     return generateGroups(filtered)
   })
   .then(function(groups) {
+    //configureMainView();
     return new Promise(function(resolve) {
+      //configureMainView();
       resolve(generateTable(groups));
     });
   })
@@ -2844,9 +2846,11 @@ window.onresize = function() {
   try {
     let width = this.outerWidth;
     let height = this.outerHeight;
-    let horizontalPosition = this.pageXOffset;
-    let verticalPosition = this.pageYOffset;
-    setUserData("windowBounds", { width, height, horizontalPosition, verticalPosition }).then(function(response) {
+    /*let horizontalPosition = this.pageXOffset;
+    let verticalPosition = this.pageYOffset;*/
+
+
+    setUserData("windowBounds", { width, height }).then(function(response) {
       console.log(response);
       // Adjust position of suggestion box to input field
       let modalFormInputPosition = modalFormInput.getBoundingClientRect();
