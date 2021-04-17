@@ -381,6 +381,9 @@ nav {
   .message-body {
     color: $lighter-grey;
     background: $even-darker-grey!important;
+    .button {
+      background: $darker-grey!important;
+    }
   }
 }
 .dueDate {

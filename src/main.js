@@ -8,24 +8,7 @@ const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
 const Store = require("./configs/store.config.js");
 const userData = new Store({
-  configName: "user-preferences",
-  defaults: {
-    windowBounds: { width: 1025, height: 769 },
-    maximizeWindow: false,
-    compactView: false,
-    drawerWidth: "500",
-    zoom: 100,
-    sortBy: "priority",
-    sortCompletedLast: true,
-    showCompleted: true,
-    showHidden: true,
-    showDueIsToday: true,
-    showDueIsFuture: true,
-    showDueIsPast: true,
-    matomoEvents: false,
-    notifications: true,
-    useTextarea: false
-  }
+  configName: "user-preferences"
 });
 if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
   userData.set("theme", "dark");
@@ -33,6 +16,21 @@ if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
   userData.set("theme", "light");
 }
 // TODO set as default in object above
+if(!userData.data.windowBounds) userData.set("windowBounds", { width: 1025, height: 769 });
+if(!userData.data.maximizeWindow) userData.set("maximizeWindow", false);
+if(!userData.data.notifications) userData.set("notifications", true);
+if(!userData.data.useTextarea) userData.set("useTextarea", false);
+if(!userData.data.compactView) userData.set("compactView", false);
+if(!userData.data.matomoEvents) userData.set("matomoEvents", false);
+if(!userData.data.drawerWidth) userData.set("drawerWidth", "500");
+if(!userData.data.showDueIsPast) userData.set("showDueIsPast", true);
+if(!userData.data.showDueIsFuture) userData.set("showDueIsFuture", true);
+if(!userData.data.showDueIsToday) userData.set("showDueIsToday", true);
+if(!userData.data.showHidden) userData.set("showHidden", true);
+if(!userData.data.showCompleted) userData.set("showCompleted", true);
+if(!userData.data.sortCompletedLast) userData.set("sortCompletedLast", true);
+if(!userData.data.sortBy) userData.set("sortBy", "priority");
+if(!userData.data.zoom) userData.set("zoom", 100);
 if(!userData.data.dismissedNotifications) userData.set("dismissedNotifications", []);
 if(!userData.data.dismissedMessages) userData.set("dismissedMessages", []);
 if(!userData.data.hideFilterCategories) userData.set("hideFilterCategories", []);

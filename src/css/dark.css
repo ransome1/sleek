@@ -298,6 +298,8 @@ nav {
   .message.fixed .message-body {
     color: #CCCDCF;
     background: #3B3B3B !important; }
+    .message.fixed .message-body .button {
+      background: #2d2d2d !important; }
 
 .dueDate svg,
 .dueDate #dueDatePickerInput,

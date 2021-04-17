@@ -104,6 +104,44 @@ Date.prototype.isFuture = function () {
   return false;
 };
 // ########################################################################################################################
+// RESIZEABLE FILTER DRAWER
+// https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
+// ########################################################################################################################
+const getResizeableElement = () => { return document.getElementById("drawerContainer"); };
+const getHandleElement = () => { return document.getElementById("handle"); };
+const minPaneSize = 400;
+const maxPaneSize = document.body.clientWidth * .75
+const setPaneWidth = (width) => {
+  getResizeableElement().style.setProperty("--resizeable-width", `${width}px`);
+  setUserData("drawerWidth", `${width}`);
+};
+const getPaneWidth = () => {
+  const pxWidth = getComputedStyle(getResizeableElement())
+    .getPropertyValue("--resizeable-width");
+  return parseInt(pxWidth, 10);
+};
+const startDragging = (event) => {
+  event.preventDefault();
+  const host = getResizeableElement();
+  const startingPaneWidth = getPaneWidth();
+  const xOffset = event.pageX;
+  const mouseDragHandler = (moveEvent) => {
+    moveEvent.preventDefault();
+    const primaryButtonPressed = moveEvent.buttons === 1;
+    if (!primaryButtonPressed) {
+      setPaneWidth(Math.min(Math.max(getPaneWidth(), minPaneSize), maxPaneSize));
+      document.body.removeEventListener("pointermove", mouseDragHandler);
+      return;
+    }
+    const paneOriginAdjustment = "left" === "right" ? 1 : -1;
+    setPaneWidth((xOffset - moveEvent.pageX ) * paneOriginAdjustment + startingPaneWidth);
+  };
+  const remove = document.body.addEventListener("pointermove", mouseDragHandler);
+};
+getResizeableElement().style.setProperty("--max-width", `${maxPaneSize}px`);
+getResizeableElement().style.setProperty("--min-width", `${minPaneSize}px`);
+getHandleElement().addEventListener("mousedown", startDragging);
+// ########################################################################################################################
 // HELPER FUNCTIONS
 // ########################################################################################################################
 function clearModal() {
@@ -135,11 +173,10 @@ function clearModal() {
     recurrencePickerInput.value = null;
     // close datepicker
     dueDatePicker.hide();
-    return Promise.resolve("Info: Modal closed and it's values emptied");
+    return Promise.resolve("Info: Modal closed and cleaned up");
   } catch (error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "clearModal()", error])
-    return Promise.reject("Error in clearModal(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 
 }
@@ -208,9 +245,8 @@ function zoom(zoom, reset) {
     // set zoom status in view container
     return Promise.resolve("Info: Zoom set to " + zoom + "%");
   } catch (error) {
-  // trigger matomo event
-  if(window.consent) _paq.push(["trackEvent", "Error", "zoom()", error])
-  return Promise.reject("Error in zoom(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function resizeInput(input) {
@@ -220,53 +256,6 @@ function resizeInput(input) {
     input.style.width = input.placeholder.length + 6 + "ch";
   }
 }
-function isInViewport(item) {
-  const rect = item.getBoundingClientRect();
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
-}
-// ########################################################################################################################
-// RESIZEABLE FILTER DRAWER
-// https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/
-// ########################################################################################################################
-const getResizeableElement = () => { return document.getElementById("drawerContainer"); };
-const getHandleElement = () => { return document.getElementById("handle"); };
-const minPaneSize = 400;
-const maxPaneSize = document.body.clientWidth * .75
-const setPaneWidth = (width) => {
-  getResizeableElement().style.setProperty("--resizeable-width", `${width}px`);
-  setUserData("drawerWidth", `${width}`);
-};
-const getPaneWidth = () => {
-  const pxWidth = getComputedStyle(getResizeableElement())
-    .getPropertyValue("--resizeable-width");
-  return parseInt(pxWidth, 10);
-};
-const startDragging = (event) => {
-  event.preventDefault();
-  const host = getResizeableElement();
-  const startingPaneWidth = getPaneWidth();
-  const xOffset = event.pageX;
-  const mouseDragHandler = (moveEvent) => {
-    moveEvent.preventDefault();
-    const primaryButtonPressed = moveEvent.buttons === 1;
-    if (!primaryButtonPressed) {
-      setPaneWidth(Math.min(Math.max(getPaneWidth(), minPaneSize), maxPaneSize));
-      document.body.removeEventListener("pointermove", mouseDragHandler);
-      return;
-    }
-    const paneOriginAdjustment = "left" === "right" ? 1 : -1;
-    setPaneWidth((xOffset - moveEvent.pageX ) * paneOriginAdjustment + startingPaneWidth);
-  };
-  const remove = document.body.addEventListener("pointermove", mouseDragHandler);
-};
-getResizeableElement().style.setProperty("--max-width", `${maxPaneSize}px`);
-getResizeableElement().style.setProperty("--min-width", `${minPaneSize}px`);
-getHandleElement().addEventListener("mousedown", startDragging);
 // ########################################################################################################################
 //
 // ########################################################################################################################
@@ -387,9 +376,8 @@ function showForm(todo, templated) {
       positionautoCompleteContainer();
       return Promise.resolve("Info: Show/Edit todo window opened");
   } catch (error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "showForm()", error])
-    return Promise.reject("Error in showForm(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function showOnboarding(variable) {
@@ -632,9 +620,8 @@ function showFiles() {
     }
     return Promise.resolve("Success: File changer modal built and opened");
   } catch (error) {
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "showFiles()", error])
-    return Promise.reject("Error in showFiles(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 function showError(error) {
@@ -642,6 +629,46 @@ function showError(error) {
   errorMessage.innerHTML = error.functionName + ": " + error;
   // trigger matomo event
   if(window.consent) _paq.push(["trackEvent", "Error", error.functionName, error])
+}
+
+function startBuilding(searchString) {
+  t0 = performance.now();
+  filterItems(items.objects, searchString)
+  .then(function(filtered) {
+    items.filtered = filtered;
+
+    f0 = performance.now();
+    generateFilterData().then(response => {
+      console.log(response);
+      f1 = performance.now();
+      console.log("Filters build:", f1 - f0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+
+    return generateGroups(filtered)
+  })
+  .then(function(groups) {
+    return new Promise(function(resolve) {
+      resolve(generateTable(groups));
+    });
+  })
+  .then(function() {
+    configureMainView();
+  })
+  .then(function(response) {
+    // display info based on filtered items
+    showResultStats().then(response => {
+      console.log(response);
+      t1 = performance.now();
+      console.log("Todos build:", t1 - t0, "ms");
+    }).catch(error => {
+      console.log(error);
+    });
+  })
+  .catch(function(error) {
+    showError(error);
+  });
 }
 
 function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition) {
@@ -976,6 +1003,61 @@ function generateNotification(todo, offset) {
     return Promise.reject(error);
   }
 }
+function generateItems(content) {
+  try {
+    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
+    items.objects = items.objects.filter(function(item) {
+      if(!item.text) return false;
+      return true;
+    });
+    items.complete = items.objects.filter(function(item) { return item.complete === true });
+    items.incomplete = items.objects.filter(function(item) { return item.complete === false });
+    items.objects = items.objects.filter(function(item) { return item.toString() != "" });
+    return Promise.resolve(items);
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+function generateGroups(items) {
+  // after filters have been built a last selection has to be made including the previous filter choices
+  items = items.filter(function(item) {
+    if(!checkIsTodoVisible(item)) return false;
+    return true;
+  });
+  // build object according to sorting method
+  items = items.reduce((object, a) => {
+    if(window.userData.sortCompletedLast && a.complete) {
+      object["completed"] = [...object["completed"] || [], a];
+    } else if(window.userData.sortBy==="dueString" && !a.due) {
+      object["noDueDate"] = [...object["noDueDate"] || [], a];
+    } else {
+      object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
+    }
+    //object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
+    return object;
+  }, {});
+  // object is converted to a sorted array
+  items = Object.entries(items).sort(function(a,b) {
+    // when a is null sort it after b
+    if(a[0]==="null") return 1;
+    // when b is null sort it after a
+    if(b[0]==="null") return -1;
+    // sort alphabetically
+    if(a < b) return -1;
+  });
+  //
+  if(window.userData.sortCompletedLast) {
+    items.sort(function(a,b) {
+      // when a is null sort it after b
+      if(a[0]==="completed") return 1;
+      // when b is null sort it after a
+      if(b[0]==="completed") return -1;
+      return 0;
+    });
+  }
+  return Promise.resolve(items)
+}
 function generateTable(groups) {
   // prepare the templates for the table
   return configureTodoTableTemplate()
@@ -1032,7 +1114,7 @@ function generateTable(groups) {
       for (let item in groups[group][1]) {
         let todo = groups[group][1][item];
         // check if todo is suppose to be visible, if not build process is skipped
-        //if(!isTodoVisible(todo)) continue
+        //if(!checkIsTodoVisible(todo)) continue
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
@@ -1231,6 +1313,56 @@ function generateTableRow(todo) {
     todoTableBodyRow.appendChild(todoTableBodyCellMore);
     // return the fully built row
     return todoTableBodyRow;
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+
+function filterItems(items, searchString) {
+  try {
+    // selected filters are empty, unless they were persisted
+    if(window.userData.selectedFilters && window.userData.selectedFilters.length>0) {
+      var selectedFilters = JSON.parse(window.userData.selectedFilters);
+    } else {
+      var selectedFilters = new Array;
+      window.userData.selectedFilters = selectedFilters;
+    }
+    // apply persisted contexts and projects
+    if(selectedFilters.length > 0) {
+      // we iterate through the filters in the order they got selected
+      selectedFilters.forEach(filter => {
+        if(filter[1]=="projects") {
+          items = items.filter(function(item) {
+            if(item.projects) return item.projects.includes(filter[0]);
+          });
+        } else if(filter[1]=="contexts") {
+          items = items.filter(function(item) {
+            if(item.contexts) {
+              return item.contexts.includes(filter[0]);
+            }
+          });
+        } else if(filter[1]=="priority") {
+          items = items.filter(function(item) {
+            if(item.priority) {
+              return item.priority.includes(filter[0]);
+            }
+          });
+        }
+      });
+    }
+    // apply filters or filter by search string
+    items = items.filter(function(item) {
+      if(todoTableSearch.value) searchString = todoTableSearch.value;
+      if((searchString || todoTableSearch.value) && item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false;
+      if(!window.userData.showCompleted && item.complete) return false;
+      if(!window.userData.showDueIsToday && item.due && item.due.isToday()) return false;
+      if(!window.userData.showDueIsPast && item.due && item.due.isPast()) return false;
+      if(!window.userData.showDueIsFuture && item.due && item.due.isFuture()) return false;
+      if(item.text==="") return false;
+      return true;
+    });
+    return Promise.resolve(items);
   } catch(error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
@@ -1488,7 +1620,7 @@ function setUserData(key, value) {
   try {
     window.userData[key] = value;
     window.api.send("userData", [key, value]);
-    return Promise.resolve("Success: Config persisted");
+    return Promise.resolve("Success: Config (" + key + ") persisted");
   } catch(error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
@@ -1758,7 +1890,7 @@ function toggleInputSize(type) {
   modalFormInput.focus();
 }
 
-function matomoEventsConsent() {
+function configureMatomo() {
   try {
     if(!window.userData.uid) {
       // generate random number/string combination as user id and persist it
@@ -1806,7 +1938,6 @@ function matomoEventsConsent() {
     return Promise.reject(error);
   }
 }
-
 function configureEvents() {
   try {
     // ########################################################################################################################
@@ -1868,7 +1999,7 @@ function configureEvents() {
     });
     btnChangeTodoFile.forEach(function(el) {
       el.onclick = function () {
-        if(window.userData.files.length > 0) {
+        if(window.userData.files) {
           showFiles().then(response => {
             console.log(response);
           }).catch(error => {
@@ -1979,7 +2110,7 @@ function configureEvents() {
     toggleMatomoEvents.onclick = function() {
       matomoEvents = this.checked;
       setUserData('matomoEvents', this.checked);
-      matomoEventsConsent(this.checked).then(response => {
+      configureMatomo(this.checked).then(response => {
         console.log(response);
       }).catch(error => {
         console.log(error);
@@ -2414,6 +2545,24 @@ function checkDismissedMessages() {
     return Promise.reject(error);
   }
 }
+function checkIsTodoVisible(todo) {
+  if(!window.userData.showHidden && todo.h) return false
+  if(!todo.text) return false
+  for(let category in window.userData.hideFilterCategories) {
+    //if(Array.isArray(todo[window.userData.hideFilterCategories[category]])) return false
+    if(todo[window.userData.hideFilterCategories[category]]) return false
+  }
+  return true;
+}
+function checkIsInViewport(item) {
+  const rect = item.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
 
 function resetFilters() {
   try {
@@ -2502,9 +2651,8 @@ function submitForm() {
     // if writing into file is denied throw alert
     modalFormAlert.innerHTML = window.translations.formErrorWritingFile + window.userData.file;
     modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
-    // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Error", "submitForm()", error])
-    return Promise.reject("Error in submitForm(): " + error);
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
   }
 }
 
@@ -2594,6 +2742,22 @@ function configureDatepicker() {
   }
 }
 
+function jumpToItem(item) {
+  // jump to previously edited or added item
+  // only scroll if new item is not in view
+  if(!checkIsInViewport(item)) {
+    // scroll to view
+    item.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+    // trigger a quick background ease in and out
+    item.classList.add("is-highlighted");
+    setTimeout(() => {
+      item.classList.remove("is-highlighted");
+      // after scrolling the marker will be removed
+      item.removeAttribute("id");
+    }, 1000);
+  }
+}
+
 window.onload = function () {
   // ask main process for app data
   getAppData().then(function(appData) {
@@ -2642,7 +2806,7 @@ window.onload = function () {
   })
   .then(function() {
     return new Promise(function(resolve) {
-      resolve(matomoEventsConsent());
+      resolve(configureMatomo());
     });
   })
   .then(function() {
@@ -2662,14 +2826,42 @@ window.onload = function () {
   })
   .then(function(response) {
     console.log(response);
+    console.log(window.userData.pathToFile);
     if(window.userData.file) {
       window.api.send("startFileWatcher", window.userData.file);
+    // for users who upgrade from very old versions
+    } else if(window.userData.pathToFile) {
+      window.api.send("startFileWatcher", window.userData.pathToFile);
     } else {
       showOnboarding(true);
     }
   }).catch(function(error) {
     console.log(error);
   });
+}
+
+window.onresize = function() {
+  try {
+    let width = this.outerWidth;
+    let height = this.outerHeight;
+    let horizontalPosition = this.pageXOffset;
+    let verticalPosition = this.pageYOffset;
+    setUserData("windowBounds", { width, height, horizontalPosition, verticalPosition }).then(function(response) {
+      console.log(response);
+      // Adjust position of suggestion box to input field
+      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+      autoCompleteContainer.style.width = modalFormInput.offsetWidth + "px";
+      autoCompleteContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+      autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
+      return Promise.resolve("Success: Window bounds Config written to config file");
+    }).catch(function(error) {
+      error.functionName = arguments.callee.name;
+      return Promise.reject(error);
+    });
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
 }
 
 window.api.receive("triggerFunction", (name, args) => {
@@ -2698,200 +2890,3 @@ window.api.receive("refresh", (content) => {
 window.api.receive("userData", (userData) => {
   window.userData = userData;
 });
-
-function jumpToItem(item) {
-  // jump to previously edited or added item
-  // only scroll if new item is not in view
-  if(!isInViewport(item)) {
-    // scroll to view
-    item.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-    // trigger a quick background ease in and out
-    item.classList.add("is-highlighted");
-    setTimeout(() => {
-      item.classList.remove("is-highlighted");
-      // after scrolling the marker will be removed
-      item.removeAttribute("id");
-    }, 1000);
-  }
-}
-
-function startBuilding(searchString) {
-  t0 = performance.now();
-  filterItems(items.objects, searchString)
-  .then(function(filtered) {
-    items.filtered = filtered;
-
-    f0 = performance.now();
-    generateFilterData().then(response => {
-      console.log(response);
-      f1 = performance.now();
-      console.log("Filters build:", f1 - f0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
-
-    return generateGroups(filtered)
-  })
-  .then(function(groups) {
-    return new Promise(function(resolve) {
-      resolve(generateTable(groups));
-    });
-  })
-  .then(function() {
-    configureMainView();
-  })
-  .then(function(response) {
-    // display info based on filtered items
-    showResultStats().then(response => {
-      console.log(response);
-      t1 = performance.now();
-      console.log("Todos build:", t1 - t0, "ms");
-    }).catch(error => {
-      console.log(error);
-    });
-  })
-  .catch(function(error) {
-    showError(error);
-  });
-}
-
-function generateItems(content) {
-  try {
-    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
-    items.objects = items.objects.filter(function(item) {
-      if(!item.text) return false;
-      return true;
-    });
-    items.complete = items.objects.filter(function(item) { return item.complete === true });
-    items.incomplete = items.objects.filter(function(item) { return item.complete === false });
-    items.objects = items.objects.filter(function(item) { return item.toString() != "" });
-    return Promise.resolve(items);
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-
-function filterItems(items, searchString) {
-  try {
-    // selected filters are empty, unless they were persisted
-    if(window.userData.selectedFilters && window.userData.selectedFilters.length>0) {
-      var selectedFilters = JSON.parse(window.userData.selectedFilters);
-    } else {
-      var selectedFilters = new Array;
-      window.userData.selectedFilters = selectedFilters;
-    }
-    // apply persisted contexts and projects
-    if(selectedFilters.length > 0) {
-      // we iterate through the filters in the order they got selected
-      selectedFilters.forEach(filter => {
-        if(filter[1]=="projects") {
-          items = items.filter(function(item) {
-            if(item.projects) return item.projects.includes(filter[0]);
-          });
-        } else if(filter[1]=="contexts") {
-          items = items.filter(function(item) {
-            if(item.contexts) {
-              return item.contexts.includes(filter[0]);
-            }
-          });
-        } else if(filter[1]=="priority") {
-          items = items.filter(function(item) {
-            if(item.priority) {
-              return item.priority.includes(filter[0]);
-            }
-          });
-        }
-      });
-    }
-    // apply filters or filter by search string
-    items = items.filter(function(item) {
-      if(todoTableSearch.value) searchString = todoTableSearch.value;
-      if((searchString || todoTableSearch.value) && item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false;
-      if(!window.userData.showCompleted && item.complete) return false;
-      if(!window.userData.showDueIsToday && item.due && item.due.isToday()) return false;
-      if(!window.userData.showDueIsPast && item.due && item.due.isPast()) return false;
-      if(!window.userData.showDueIsFuture && item.due && item.due.isFuture()) return false;
-      if(item.text==="") return false;
-      return true;
-    });
-    return Promise.resolve(items);
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-
-function generateGroups(items) {
-  // after filters have been built a last selection has to be made including the previous filter choices
-  items = items.filter(function(item) {
-    if(!isTodoVisible(item)) return false;
-    return true;
-  });
-  // build object according to sorting method
-  items = items.reduce((object, a) => {
-    if(window.userData.sortCompletedLast && a.complete) {
-      object["completed"] = [...object["completed"] || [], a];
-    } else if(window.userData.sortBy==="dueString" && !a.due) {
-      object["noDueDate"] = [...object["noDueDate"] || [], a];
-    } else {
-      object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
-    }
-    //object[a[window.userData.sortBy]] = [...object[a[window.userData.sortBy]] || [], a];
-    return object;
-  }, {});
-  // object is converted to a sorted array
-  items = Object.entries(items).sort(function(a,b) {
-    // when a is null sort it after b
-    if(a[0]==="null") return 1;
-    // when b is null sort it after a
-    if(b[0]==="null") return -1;
-    // sort alphabetically
-    if(a < b) return -1;
-  });
-  //
-  if(window.userData.sortCompletedLast) {
-    items.sort(function(a,b) {
-      // when a is null sort it after b
-      if(a[0]==="completed") return 1;
-      // when b is null sort it after a
-      if(b[0]==="completed") return -1;
-      return 0;
-    });
-  }
-  return Promise.resolve(items)
-}
-
-function isTodoVisible(todo) {
-  if(!window.userData.showHidden && todo.h) return false
-  if(!todo.text) return false
-  for(let category in window.userData.hideFilterCategories) {
-    //if(Array.isArray(todo[window.userData.hideFilterCategories[category]])) return false
-    if(todo[window.userData.hideFilterCategories[category]]) return false
-  }
-  return true;
-}
-
-
-
-window.onresize = function() {
-  try {
-    let width = this.outerWidth;
-    let height = this.outerHeight;
-    let horizontalPosition = this.pageXOffset;
-    let verticalPosition = this.pageYOffset;
-    setUserData("windowBounds", { width, height, horizontalPosition, verticalPosition }).then(function() {
-      // Adjust position of suggestion box to input field
-      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-      autoCompleteContainer.style.width = modalFormInput.offsetWidth + "px";
-      autoCompleteContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-      autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
-      return Promise.resolve("Success: Window bounds Config written to config file");
-    }).catch(function(error) {
-      return Promise.reject("Error in window.onresize: " + error);
-    });
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
