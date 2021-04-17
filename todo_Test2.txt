@@ -1,0 +1,27 @@
+(A) Thank Mom for the meatballs {01} @phone
+x 2021-04-07 (B) Schedule Goodwill pickup {02} +GarageSale @phone
+Eskimo pies @GroceryStore {03}
+Really gotta call Mom \this task has no priority\ (A){04} @phone @someday
+(b) Get back to the boss \this task has no priority\ {05}
+(B)->Submit TPS report \this task has no priority\ {06}
+(A) Call Mom 2011-03-02 \this task has no creation date\ {07} due:2021-04-09
+(A) Call Mom  \multiple projects and contexts\ {08} +Family +PeaceLoveAndHappiness @iphone @phone
+Email SoAndSo at soandso@example.com \this task has no context\ {09}
+Learn how to add 2+2 \this task has no project\ {10}
+x 2011-03-03 Call Mom \this task is complete\{11}
+xylophone lesson \this task is incomplete\ {12}
+Make resolutions \this task is incomplete\ {13}
+(A) x Find ticket prices \this task is incomplete\ {14}
+This task has a due date in it {15) due:2021-07-01
+This task has a threshold date in it {16} t:2021-12-15
+(C) This task is a hidden task {17} h:1
+(A) 2021-02-28 A task list with all possible task types \comments\ {18} due:2021-03-30 +todotxt @test
+daily task revisions within Sleek \Daily recurrence\ {19} rec:d
+weekly task revisions within Sleek \Weekly Recurrence\ {20} rec:w
+monthly task revisions within Sleek \Monthly recurrence\ {21} rec:m
+annual task revisions within Sleek \annual recurrence\ {22} rec:y
+2021-03-22 This is a multi line taskcreated within Sleek {23} due:2021-05-01 +todotxt @test
+2021-04-03 Todo with due date tomorrow {24} due:2021-04-06
+2021-04-05 monthly task revisions within Sleek \Monthly recurrence\ {25} due:2021-05-05 rec:m
+(A) 2021-04-07 Todo due today {26} due:2021-04-07
+Call @George about {27} +SuperProject
