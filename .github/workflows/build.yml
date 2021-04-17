@@ -34,7 +34,7 @@ jobs:
 
   publish-aur-package:
     name: Publish AUR package
-    needs: build
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
