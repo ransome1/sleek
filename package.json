@@ -84,9 +84,6 @@
   "freebsd": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
-  "pacman": {
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
-  },
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder -mwl --publish never",
