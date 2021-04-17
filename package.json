@@ -43,8 +43,7 @@
         "deb",
         "freebsd",
         "rpm",
-        "AppImage",
-        "pacman"
+        "AppImage"
       ]
     },
     "mac": {
@@ -85,7 +84,7 @@
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "scripts": {
-    "pack": "NODE_ENV=production && electron-builder",
+    "pack": "NODE_ENV=production && electron-builder --dir",
     "dist": "electron-builder -mwl --publish never",
     "appx": "electron-builder -w appx --publish never",
     "win": "electron-builder -w --publish never",
