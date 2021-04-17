@@ -3,6 +3,7 @@ const { is } = require("electron-util");
 const fs = require("fs");
 const path = require("path");
 const i18next = require("i18next");
+const i18nextLanguageDetector = require("i18next-browser-languagedetector");
 const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
 const Store = require("./configs/store.config.js");
@@ -116,18 +117,20 @@ const createWindow = () => {
   }
   function setLanguage(language) {
     try {
+      i18next
+      .use(i18nextBackend, i18nextLanguageDetector)
+      .init(i18nextOptions);
       if(!language && userData.get("language")) {
         var language = userData.get("language");
-      } else if(!language && !userData.get("language")) {
+      } else if(i18next.language && !language && !userData.get("language")) {
+        var language = i18next.language;
+      } else if(!i18next.language && !language && !userData.get("language")) {
         var language = app.getLocale().substr(0,2);
       }
-      i18next
-      .use(i18nextBackend)
-      .init(i18nextOptions);
       i18next.changeLanguage(language, (error) => {
         if (error) return console.log("Error in setLanguage():", error);
+        userData.set("language", language);
       });
-      userData.set("language", language);
       return Promise.resolve("Success: Language set to: " + language);
     } catch (error) {
       // trigger matomo event
