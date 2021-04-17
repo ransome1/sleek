@@ -43,7 +43,8 @@
         "deb",
         "freebsd",
         "rpm",
-        "AppImage"
+        "AppImage",
+        "pacman"
       ]
     },
     "mac": {
@@ -81,6 +82,9 @@
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "freebsd": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "pacman": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "scripts": {
