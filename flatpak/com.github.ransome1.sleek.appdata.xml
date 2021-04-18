@@ -3,14 +3,14 @@
   <id>com.github.ransome1.sleek</id>
 
   <name>sleek</name>
-  <summary>A todo app based on todo.txt for Linux, free and open-source</summary>
+  <summary>Todo app based on the todo.txt format for Linux, free and open-source</summary>
 
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.0" />
   <releases>
-    <release version="1.0.0-Alpha" date="2021-04-14"/>
+    <release version="1.0.0" date="2021-04-18"/>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
 

@@ -2828,7 +2828,6 @@ window.onload = function () {
   })
   .then(function(response) {
     console.log(response);
-    console.log(window.userData.pathToFile);
     if(window.userData.file) {
       window.api.send("startFileWatcher", window.userData.file);
     // for users who upgrade from very old versions
