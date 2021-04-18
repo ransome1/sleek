@@ -7,7 +7,33 @@ const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
 const Store = require("./configs/store.config.js");
 const userData = new Store({
-  configName: "user-preferences"
+  configName: "user-preferences",
+  defaults: {
+    windowBounds: { width: 1025, height: 768 },
+    maximizeWindow: false,
+    showCompleted: true,
+    sortCompletedLast: true,
+    showHidden: true,
+    showDueIsToday: true,
+    showDueIsFuture: true,
+    showDueIsPast: true,
+    selectedFilters: new Array,
+    categoriesFiltered: new Array,
+    dismissedNotifications: new Array,
+    dismissedMessages: new Array,
+    theme: null,
+    matomoEvents: false,
+    notifications: true,
+    language: null,
+    files: new Array,
+    uid: null,
+    drawerWidth: "560",
+    useTextarea: false,
+    filterDrawer: false,
+    compactView: false,
+    sortBy: "priority",
+    zoom: 100
+  }
 });
 if(process.env.ELECTRON_ENABLE_LOGGING==="true") var isDevelopment = true;
 const appData = {

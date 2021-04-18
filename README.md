@@ -34,6 +34,13 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 
 <a href='https://flathub.org/apps/details/com.github.ransome1.sleek'><img width='180' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
+### Get it from Arch User Repository
+Install sleek from <a href="https://aur.archlinux.org/packages/sleek/">AUR</a> using: `yay -S sleek`
+
+Run it using: `flatpak run com.github.ransome1.sleek`
+
+<a href='https://flathub.org/apps/details/com.github.ransome1.sleek'><img width='180' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
+
 ### Download it for Windows, Linux or MacOS
 You can download sleek for Windows, MacOS and Linux from
 - <a href="https://sourceforge.net/p/sleek/">SourceForge</a>
