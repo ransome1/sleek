@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=sleek
+Exec=/usr/bin/sleek
+Terminal=false
+Type=Application
+Icon=sleek
+Comment=Todo app based on the todo.txt format for Linux, free and open-source
+Categories=ProjectManagement

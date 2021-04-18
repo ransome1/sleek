@@ -1,4 +1,4 @@
-# Maintainer: ransome1 <ransome@uber.space>
+# Maintainer: ransome <ransome@uber.space>
 pkgname="sleek"
 pkgver=1.0.0
 pkgrel=1
@@ -11,30 +11,31 @@ provides=("sleek")
 options=(!strip)
 makedepends=("npm")
 depends=("electron")
-source=("${url}archive/refs/heads/master.zip")
+source=("${url}archive/refs/tags/v${pkgver}.zip")
 sha512sums=("SKIP")
 
 build() {
-  ls
-  unzip -o master.zip
-  cd "sleek-master"
+  unzip -o "v${pkgver}.zip"
+  cd "$srcdir/$pkgname-${pkgver}"
   npm install
 }
 
 package() {
+  cd "$srcdir/$pkgname-${pkgver}"
+
   npm run pack
 
-  install -Dm644 "$srcdir/sleek-master/dist/linux-unpacked/resources/app.asar" "$pkgdir/usr/lib/$pkgname.asar"
+  install -Dm644 "dist/linux-unpacked/resources/app.asar" "$pkgdir/usr/lib/$pkgname.asar"
 
   install -d -Dm644 "${pkgdir}/usr/share"
-  cp -r "${srcdir}/sleek-master/dist/linux-unpacked/${pkgname}" "${pkgdir}/usr/share"
+  cp -r "dist/linux-unpacked/${pkgname}" "${pkgdir}/usr/share"
 
   printf "[Desktop Entry]\nName=${pkgname}\nComment=${pkgdesc}\nExec=/usr/bin/${pkgname}\nTerminal=false\nType=Application\nIcon=sleek\nCategories=ProjectManagement;" > ${pkgname}.desktop
   install -Dm644 "${pkgname}.desktop" -t "$pkgdir/usr/share/applications/"
 
   cat << '__EOF__' | install -Dm755 /dev/stdin "${pkgdir}"/usr/bin/sleek
-  #!/bin/sh
+#!/bin/sh
 
-  exec electron /usr/lib/sleek.asar "$@"
+exec electron /usr/lib/sleek.asar "$@"
 __EOF__
 }
