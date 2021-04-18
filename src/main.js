@@ -231,7 +231,7 @@ const createWindow = () => {
     userData.set("theme", "light");
   }
   // TODO set as default in object above
-  if(userData.data.windowBounds!="") userData.set("windowBounds", { width: 1025, height: 769 });
+  //if(userData.data.windowBounds!="") userData.set("windowBounds", { width: 1025, height: 769 });
   if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
   if(typeof userData.data.notifcations != "boolean") userData.set("notifications", true);
   if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);

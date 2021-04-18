@@ -32,17 +32,17 @@ jobs:
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-  publish-aur-package:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Publish AUR package
-        uses: KSXGitHub/github-actions-deploy-aur@v2
-        with:
-          pkgname: sleek
-          pkgbuild: ./PKGBUILD
-          commit_username: ${{ secrets.AUR_USERNAME }}
-          commit_email: ${{ secrets.AUR_EMAIL }}
-          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-          commit_message: Update to latest sleek release
+#  publish-aur-package:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: Publish AUR package
+#        uses: KSXGitHub/github-actions-deploy-aur@v2
+#        with:
+#          pkgname: sleek
+#          pkgbuild: ./PKGBUILD
+#          commit_username: ${{ secrets.AUR_USERNAME }}
+#          commit_email: ${{ secrets.AUR_EMAIL }}
+#          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+#          commit_message: Update to latest sleek release
