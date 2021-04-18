@@ -1,5 +1,4 @@
 const { app, BrowserWindow, nativeTheme, electron, ipcMain, session, Notification, dialog } = require("electron");
-const { is } = require("electron-util");
 const fs = require("fs");
 const path = require("path");
 const i18next = require("i18next");
@@ -10,9 +9,10 @@ const Store = require("./configs/store.config.js");
 const userData = new Store({
   configName: "user-preferences"
 });
+if(process.env.ELECTRON_ENABLE_LOGGING==="true") var isDevelopment = true;
 const appData = {
   version: app.getVersion(),
-  development: is.development,
+  development: isDevelopment,
   languages: i18nextOptions.supportedLngs,
   path: __dirname
 }
@@ -381,7 +381,9 @@ const createWindow = () => {
       break;
   }
   // show dev tools if in dev mode
-  if (is.development) mainWindow.webContents.openDevTools()
+  if(isDevelopment) {
+    mainWindow.webContents.openDevTools()
+  }
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
   // open links in external browser

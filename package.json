@@ -95,7 +95,6 @@
     "start": "npm run css-watch & electron ."
   },
   "dependencies": {
-    "electron-util": "^0.15.0",
     "i18next": "^20.2.1",
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-fs-backend": "^1.1.1"
