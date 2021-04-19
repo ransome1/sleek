@@ -213,6 +213,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: width,
     height: height,
+    icon: path.join(__dirname, "../assets/icons/sleek.png"),
     simpleFullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {

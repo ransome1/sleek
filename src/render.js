@@ -2001,7 +2001,7 @@ function configureEvents() {
     });
     btnChangeTodoFile.forEach(function(el) {
       el.onclick = function () {
-        if(window.userData.files) {
+        if(typeof window.userData.files === "object") {
           showFiles().then(response => {
             console.log(response);
           }).catch(error => {
