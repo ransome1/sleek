@@ -64,8 +64,8 @@ marked.setOptions({
 renderer = {
   link(href, title, text) {
     // truncate the url
-    if(text.length > 40) text = text.slice(0, 40) + " [...] ";
-    return `${text}<a href="${href}" target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>`;
+    if(text.length > 40) text = text.slice(0, 40) + "[...] ";
+    return `${text} <a href="${href}" target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>`;
   }
 };
 marked.use({ renderer });
@@ -2839,31 +2839,24 @@ window.onload = function () {
   }).catch(function(error) {
     console.log(error);
   });
-}
-
-window.onresize = function() {
-  try {
-    let width = this.outerWidth;
-    let height = this.outerHeight;
-    /*let horizontalPosition = this.pageXOffset;
-    let verticalPosition = this.pageYOffset;*/
-
-
-    setUserData("windowBounds", { width, height }).then(function(response) {
-      console.log(response);
-      // Adjust position of suggestion box to input field
-      let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-      autoCompleteContainer.style.width = modalFormInput.offsetWidth + "px";
-      autoCompleteContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-      autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
-      return Promise.resolve("Success: Window bounds Config written to config file");
-    }).catch(function(error) {
+  window.onresize = function() {
+    try {
+      let width = this.outerWidth;
+      let height = this.outerHeight;
+      setUserData("windowBounds", { width, height }).then(function(response) {
+        // Adjust position of suggestion box to input field
+        let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+        autoCompleteContainer.style.width = modalFormInput.offsetWidth + "px";
+        autoCompleteContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
+        autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
+        return Promise.resolve("Success: Window bounds Config written to config file");
+      }).catch(function(error) {
+        console.log(error);
+      });
+    } catch(error) {
       error.functionName = arguments.callee.name;
       return Promise.reject(error);
-    });
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
+    }
   }
 }
 

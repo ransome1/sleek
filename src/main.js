@@ -35,7 +35,11 @@ const userData = new Store({
     zoom: 100
   }
 });
-if(process.env.ELECTRON_ENABLE_LOGGING==="true") var isDevelopment = true;
+if(process.env.NODE_ENV==="development") {
+  var isDevelopment = true;
+} else {
+  var isDevelopment = false;
+}
 const appData = {
   version: app.getVersion(),
   development: isDevelopment,
@@ -118,15 +122,16 @@ const createWindow = () => {
   function setLanguage(language) {
     try {
       i18next
-      .use(i18nextBackend, i18nextLanguageDetector)
+      .use(i18nextBackend)
       .init(i18nextOptions);
-      if(!language && userData.get("language")) {
-        var language = userData.get("language");
-      } else if(i18next.language && !language && !userData.get("language")) {
-        var language = i18next.language;
-      } else if(!i18next.language && !language && !userData.get("language")) {
+      if(!language && !userData.get("language") && i18nextOptions.supportedLngs.includes(app.getLocale().substr(0,2))) {
         var language = app.getLocale().substr(0,2);
+      } else if(userData.get("language")) {
+        var language = userData.get("language");
+      } else {
+        var language = "en";
       }
+      userData.set("language", language);
       i18next.changeLanguage(language, (error) => {
         if (error) return console.log("Error in setLanguage():", error);
         userData.set("language", language);
