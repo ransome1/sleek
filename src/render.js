@@ -24,7 +24,6 @@ const todoTableBodyCellPriorityTemplate = document.createElement("div");
 const todoTableBodyCellSpacerTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
 const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
-
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
@@ -38,11 +37,12 @@ const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
 const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
 const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
-const messages = document.querySelectorAll(".message");
-const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
-const navBtns = document.querySelectorAll(".navBtn");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
+const btnCopyToClipboard = document.querySelectorAll(".btnCopyToClipboard");
+const navBtns = document.querySelectorAll(".navBtn");
+const messages = document.querySelectorAll(".message");
+const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 const drawers = document.querySelectorAll(".drawer");
 const item = { previous: "" }
 let categories;
@@ -144,7 +144,7 @@ getHandleElement().addEventListener("mousedown", startDragging);
 // ########################################################################################################################
 // HELPER FUNCTIONS
 // ########################################################################################################################
-function clearModal() {
+function resetModal() {
   try {
     // reset priority setting
     priorityPicker.selectedIndex = 0;
@@ -180,7 +180,7 @@ function clearModal() {
   }
 
 }
-function modalFormInputEvents() {
+function modalFormInputEvent() {
   // if textarea, resize to content length
   if(modalFormInput.tagName==="TEXTAREA") {
     modalFormInput.style.height="auto";
@@ -190,7 +190,6 @@ function modalFormInputEvents() {
   let autoCompletePrefix = "";
   let caretPosition = getCaretPosition(modalFormInput);
   let autoCompleteCategory = "";
-  // if datepicker was visible it will be hidden with every new input
   if((modalFormInput.value.charAt(caretPosition-2) === " " || modalFormInput.value.charAt(caretPosition-2) === "\n") && (modalFormInput.value.charAt(caretPosition-1) === "@" || modalFormInput.value.charAt(caretPosition-1) === "+")) {
     autoCompleteValue = modalFormInput.value.substr(caretPosition, modalFormInput.value.lastIndexOf(" ")).split(" ").shift();
     autoCompletePrefix = modalFormInput.value.charAt(caretPosition-1);
@@ -219,15 +218,16 @@ function modalFormInputEvents() {
       t1 = performance.now();
       console.log("Filters rendered:", t1 - t0, "ms");
     }).catch (error => {
-      console.log(error);
+      handleError(error);
     });
   } else {
     autoCompleteContainer.classList.remove("is-active");
     autoCompleteContainer.blur();
   }
-  positionautoCompleteContainer();
+  //positionAutoCompleteContainer();
 }
-function positionautoCompleteContainer() {
+
+function positionAutoCompleteContainer() {
   // Adjust position of suggestion box to input field
   let modalFormInputPosition = modalFormInput.getBoundingClientRect();
   autoCompleteContainer.style.width = modalFormInput.offsetWidth + "px";
@@ -265,10 +265,10 @@ function showResultStats() {
     if(visibleRows!=items.objects.length) {
       resultStats.classList.add("is-active");
       resultStats.firstElementChild.innerHTML = window.translations.visibleTodos + "&nbsp;<strong>" + visibleRows + " </strong>&nbsp;" + window.translations.of + "&nbsp;<strong>" + items.objects.length + "</strong>";
-      return Promise.resolve("Info: Filters found, result box is shown");
+      return Promise.resolve("Info: Result box is shown");
     } else {
       resultStats.classList.remove("is-active");
-      return Promise.resolve("Info: No filters found, result box is hidden");
+      return Promise.resolve("Info: Result box is hidden");
     }
   } catch(error) {
     error.functionName = arguments.callee.name;
@@ -330,7 +330,7 @@ function showForm(todo, templated) {
           setRecurrenceInput(todo.rec).then(function(result) {
             console.log(result);
           }).catch(function(error) {
-            console.log(error);
+            handleError(error);
           });
         }
         // if so we paste it into the input field
@@ -373,7 +373,7 @@ function showForm(todo, templated) {
         modalFormInput.style.height="auto";
         modalFormInput.style.height= modalFormInput.scrollHeight+"px";
       }
-      positionautoCompleteContainer();
+      positionAutoCompleteContainer();
       return Promise.resolve("Info: Show/Edit todo window opened");
   } catch (error) {
     error.functionName = arguments.callee.name;
@@ -426,7 +426,7 @@ function showRecurrenceOptions(el) {
     setRecurrenceInput(value).then(function(result) {
       console.log(result);
     }).catch(function(error) {
-      console.log(error);
+      handleError(error);
     });
     modalFormInput.value = todo.toString();
   }
@@ -590,10 +590,10 @@ function showFiles() {
         cell1.innerHTML = "<button class=\"button is-link\">" + window.translations.select + "</button>";
         cell1.onclick = function() {
           window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
-          clearModal().then(response => {
+          resetModal().then(response => {
             console.log(response);
           }).catch(error => {
-            console.log(error);
+            handleError(error);
           });
           // trigger matomo event
           if(window.consent) _paq.push(["trackEvent", "File", "Click on select button"]);
@@ -612,7 +612,7 @@ function showFiles() {
           showFiles().then(response => {
             console.log(response);
           }).catch(error => {
-            console.log(error);
+            handleError(error);
           });
         }
       }
@@ -624,11 +624,14 @@ function showFiles() {
     return Promise.reject(error);
   }
 }
-function showError(error) {
-  errorContainer.classList.add("is-active");
-  errorMessage.innerHTML = error.functionName + ": " + error;
-  // trigger matomo event
-  if(window.consent) _paq.push(["trackEvent", "Error", error.functionName, error])
+function handleError(error) {
+  if(error) {
+    console.error(error.name +" in function " + error.functionName + ": " + error.message);
+    errorContainer.classList.add("is-active");
+    errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
+    // trigger matomo event
+    if(window.consent) _paq.push(["trackEvent", "Error", error.functionName, error])
+  }
 }
 
 function startBuilding(searchString) {
@@ -643,7 +646,7 @@ function startBuilding(searchString) {
       f1 = performance.now();
       console.log("Filters build:", f1 - f0, "ms");
     }).catch(error => {
-      console.log(error);
+      handleError(error);
     });
 
     return generateGroups(filtered)
@@ -665,11 +668,11 @@ function startBuilding(searchString) {
       t1 = performance.now();
       console.log("Todos build:", t1 - t0, "ms");
     }).catch(error => {
-      console.log(error);
+      handleError(error);
     });
   })
   .catch(function(error) {
-    showError(error);
+    handleError(error);
   });
 }
 
@@ -766,7 +769,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
           }
           container.appendChild(response);
         }).catch (error => {
-          console.log(error);
+          handleError(error);
         });
       } else {
         autoCompleteContainer.classList.remove("is-active");
@@ -1125,7 +1128,7 @@ function generateTable(groups) {
           generateRecurringTodo(todo).then(response => {
             console.log(response);
           }).catch(error => {
-            console.log(error);
+            handleError(error);
           });
         }
         // incompleted todos with due date
@@ -1135,13 +1138,13 @@ function generateTable(groups) {
             generateNotification(todo, 0).then(response => {
               console.log(response);
             }).catch(error => {
-              console.log(error);
+              handleError(error);
             });
           } else if(todo.due.isTomorrow()) {
             generateNotification(todo, 1).then(response => {
               console.log(response);
             }).catch(error => {
-              console.log(error);
+              handleError(error);
             });
           }
         }
@@ -1154,7 +1157,7 @@ function generateTable(groups) {
       resolve();
     });
   }).catch(error => {
-    console.log(error);
+    handleError(error);
   });
 }
 function generateTableRow(todo) {
@@ -1202,7 +1205,7 @@ function generateTableRow(todo) {
       setTodoComplete(this.parentElement.getAttribute('data-item')).then(response => {
          console.log(response);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
@@ -1298,7 +1301,7 @@ function generateTableRow(todo) {
           setTodoDelete(todoTableBodyRow.getAttribute('data-item')).then(response => {
             console.log(response);
           }).catch(error => {
-            console.log(error);
+            handleError(error);
           });
           // trigger matomo event
           if(window.consent) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
@@ -1785,20 +1788,32 @@ function getCaretPosition(inputId) {
   }
 }
 function getUserData() {
-  return new Promise(function(resolve, reject) {
-    window.api.send("userData");
-    return window.api.receive("userData", (userData) => {
-      resolve(userData);
+  try {
+    return new Promise(function(resolve, reject) {
+      window.api.send("userData");
+      return window.api.receive("userData", (userData) => {
+        window.userData = userData;
+        resolve("Success: User data received");
+      });
     });
-  });
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
 }
 function getAppData() {
-  return new Promise(function(resolve, reject) {
-    window.api.send("appData");
-    return window.api.receive("appData", (appData) => {
-      resolve(appData);
+  try {
+    return new Promise(function(resolve, reject) {
+      window.api.send("appData");
+      return window.api.receive("appData", (appData) => {
+        window.appData = appData;
+        resolve("Success: App data received");
+      });
     });
-  });
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
 }
 function getRecurrenceDate(due, recurrence) {
   let recSplit = splitRecurrence(recurrence);
@@ -1887,8 +1902,8 @@ function toggleInputSize(type) {
     modalFormInput.style.height="auto";
     modalFormInput.style.height= modalFormInput.scrollHeight+"px";
   }
-  positionautoCompleteContainer();
-  modalFormInput.addEventListener("keyup", e => { modalFormInputEvents() });
+  positionAutoCompleteContainer();
+  modalFormInput.addEventListener("keyup", e => { modalFormInputEvent() });
   modalFormInput.focus();
 }
 
@@ -1902,15 +1917,14 @@ function configureMatomo() {
     // only continue if app is connected to the internet
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     var _paq = window._paq = window._paq || [];
-    // exclude development machine
-    if(window.appData.development || uid==="DEVELOPMENT") return Promise.resolve("Info: Machine is development machine, logging will be skipped")
+    if(window.appData.development) return Promise.resolve("Info: Machine is development machine, logging will be skipped")
     if(window.userData.uid)_paq.push(['setUserId', window.userData.uid]);
     if(window.userData.theme)_paq.push(['setCustomDimension', 1, window.userData.theme]);
     if(window.userData.language)_paq.push(['setCustomDimension', 2, window.userData.language]);
     if(window.userData.notifications)_paq.push(['setCustomDimension', 3, window.userData.notifications]);
     if(window.consent)_paq.push(['setCustomDimension', 4, window.consent]);
     if(window.appData.version)_paq.push(['setCustomDimension', 5, window.appData.version]);
-    if(window.userData.windowBounds)_paq.push(['setCustomDimension', 6, window.userData.windowBounds.width+"x"+window.userData.windowBounds.height]);
+    if(window.userData.window)_paq.push(['setCustomDimension', 6, window.userData.window.width+"x"+window.userData.window.height]);
     if(window.userData.showCompleted)_paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
     if(window.userData.files) _paq.push(['setCustomDimension', 8, window.userData.files.length]);
     if(window.userData.useTextarea)_paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
@@ -1966,16 +1980,16 @@ function configureEvents() {
     btnItemStatus.onclick = function() {
       setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
         modalForm.classList.remove("is-active");
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         console.log(response);
         // trigger matomo event
         if(window.consent) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
     }
     btnTheme.onclick = function(el) {
@@ -1987,7 +2001,7 @@ function configureEvents() {
       archiveTodos().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "Setting", "Click on Archive"])
@@ -2005,7 +2019,7 @@ function configureEvents() {
           showFiles().then(response => {
             console.log(response);
           }).catch(error => {
-            console.log(error);
+            handleError(error);
           });
         } else {
           window.api.send("openOrCreateFile", "open");
@@ -2024,10 +2038,10 @@ function configureEvents() {
     btnModalCancel.forEach(function(el) {
       el.onclick = function() {
         el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         // trigger matomo event
         if(window.consent) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
@@ -2040,7 +2054,7 @@ function configureEvents() {
       showDrawer("toggle", this.id, filterDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
-        console.log(error);
+        handleError(error);
       });
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "Menu", "Click on filter"]);
@@ -2052,7 +2066,7 @@ function configureEvents() {
       showDrawer("toggle", this.id, viewDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
-        console.log(error);
+        handleError(error);
       });
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "Menu", "Click on view"]);
@@ -2060,16 +2074,25 @@ function configureEvents() {
     btnAddTodo.forEach(function(el) {
       el.onclick = function () {
         // just in case the form will be cleared first
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         showForm();
         // trigger matomo event
         if(window.consent) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
       }
     });
+    btnCopyToClipboard.forEach(function(el) {
+      el.onclick = function () {
+        //console.log(errorMessage.innerHTML);
+        window.api.send("copyToClipboard", [errorMessage.innerHTML]);
+        // trigger matomo event
+        if(window.consent) _paq.push(["trackEvent", "Error-Container", "Click on Copy to clipboard"]);
+      }
+    });
+
     btnFiltersResetFilters.onclick = function() {
       resetFilters();
       // trigger matomo event
@@ -2094,7 +2117,7 @@ function configureEvents() {
         // trigger matomo event
         if(window.consent) _paq.push(["trackEvent", "View-Drawer", "Toggle compact view"]);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
     }
     const viewToggles = document.querySelectorAll('.viewToggle');
@@ -2105,7 +2128,7 @@ function configureEvents() {
           // trigger matomo event
         if(window.consent) _paq.push(["trackEvent", "View-Drawer", "Toggle " + this.id + " set to: " + this.value]);
         }).catch(error => {
-          console.log(error);
+          handleError(error);
         });
       }
     });
@@ -2115,7 +2138,7 @@ function configureEvents() {
       configureMatomo(this.checked).then(response => {
         console.log(response);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
@@ -2141,10 +2164,10 @@ function configureEvents() {
     };
     modalBackground.forEach(function(el) {
       el.onclick = function() {
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         el.parentElement.classList.remove("is-active");
         autoCompleteContainer.classList.remove("is-active");
@@ -2173,28 +2196,29 @@ function configureEvents() {
       if (e.preventDefault) e.preventDefault();
       submitForm().then(response => {
         // if form returns success we clear the modal
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         console.log(response);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
     });
     modalFormInput.addEventListener("keyup", e => {
       // do not show suggestion container if Escape has been pressed
       if(e.key==="Escape") return false;
-      modalFormInputEvents();
+      modalFormInputEvent();
     });
+    // TODO MOVE UP!
     const drawerCloser = document.querySelectorAll(".drawerClose");
     drawerCloser.forEach(function(drawerClose) {
       drawerClose.onclick = function() {
         showDrawer(false).then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         // trigger matomo event
         if(window.consent) _paq.push(["trackEvent", "Drawer", "Click on close button"])
@@ -2204,7 +2228,7 @@ function configureEvents() {
       setPriority(e.target.value).then(response => {
         console.log(response);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
     });
     priorityPicker.onfocus = function () {
@@ -2259,10 +2283,10 @@ function configureEvents() {
       if(this.value) {
         await setUserData("sortBy", this.value);
         startBuilding();
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         // trigger matomo event
         if(window.consent) _paq.push(["trackEvent", "View-Drawer", "Sort by setting changed to: " + this.value]);
@@ -2274,14 +2298,14 @@ function configureEvents() {
       zoom(this.value).then(response => {
         console.log(response);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
     }
     zoomUndo.onclick = function() {
       zoom(100).then(response => {
         console.log(response);
       }).catch(error => {
-        console.log(error);
+        handleError(error);
       });
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "View-Drawer", "Click on zoom undo"]);
@@ -2307,7 +2331,7 @@ function configureEvents() {
         setPriority(priority).then(response => {
           console.log(response);
         }).catch(error => {
-          console.log(error);
+          handleError(error);
         });
       } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
         var priority = null;
@@ -2315,7 +2339,7 @@ function configureEvents() {
         setPriority(priority).then(response => {
           console.log(response);
         }).catch(error => {
-          console.log(error);
+          handleError(error);
         });
       }
     });
@@ -2323,21 +2347,21 @@ function configureEvents() {
       if(e.key==="Enter" && e.ctrlKey) {
         submitForm().then(response => {
           // if form returns success we clear the modal
-          clearModal().then(function(result) {
+          resetModal().then(function(result) {
             console.log(result);
           }).catch(function(error) {
-            console.log(error);
+            handleError(error);
           });
           console.log(response);
         }).catch(error => {
-          console.log(error);
+          handleError(error);
         });
       }
       if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
         this.classList.remove("is-active");
       } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
@@ -2353,10 +2377,10 @@ function configureEvents() {
     });
     modalChangeFile.addEventListener ("keydown", function () {
       if(event.key === "Escape") {
-        clearModal().then(function(result) {
+        resetModal().then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
       }
     });
@@ -2371,7 +2395,7 @@ function configureEvents() {
         showDrawer(false, navBtnFilter.id, filterDrawer.id).then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
       }
     });
@@ -2380,7 +2404,7 @@ function configureEvents() {
         showDrawer(false, navBtnView.id, viewDrawer.id).then(function(result) {
           console.log(result);
         }).catch(function(error) {
-          console.log(error);
+          handleError(error);
         });
       }
     });
@@ -2464,14 +2488,14 @@ function configureMainView() {
       showDrawer(true, navBtnFilter.id, filterDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
-        console.log(error);
+        handleError(error);
       });
     // open view drawer if it has been persisted
     } else if(window.userData.viewDrawer) {
       showDrawer(true, navBtnView.id, viewDrawer.id).then(function(result) {
         console.log(result);
       }).catch(function(error) {
-        console.log(error);
+        handleError(error);
       });
     }
     // check if archive button should be enabled
@@ -2483,14 +2507,14 @@ function configureMainView() {
       showOnboarding(false).then(function(result) {
         console.log(result);
       }).catch(function(error) {
-        console.log(error);
+        handleError(error);
       });
     } else {
       // if there is a file onboarding is hidden
       showOnboarding(true).then(function(result) {
         console.log(result);
       }).catch(function(error) {
-        console.log(error);
+        handleError(error);
       });
       return Promise.resolve("Info: No file selected, showing onboarding");
     }
@@ -2523,7 +2547,7 @@ function configureMainView() {
     showOnboarding(true).then(function(result) {
       console.log(result);
     }).catch(function(error) {
-      console.log(error);
+      handleError(error);
     });
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
@@ -2762,17 +2786,15 @@ function jumpToItem(item) {
 
 window.onload = function () {
   // ask main process for app data
-  getAppData().then(function(appData) {
-    window.appData = appData;
-  }).catch(function(error) {
-    console.log(error);
-  });
-  // ask main process for user data
-  getUserData().then(function(userData) {
-    window.userData = userData;
-    return userData;
+  getAppData().then(function(response) {
+    console.log(response);
+    return new Promise(function(resolve) {
+      // ask main process for user data
+      resolve(getUserData());
+    });
   })
-  .then(function(userData) {
+  .then(function(response) {
+    console.log(response);
     return new Promise(function(resolve) {
       window.api.send("translations", userData.language);
       window.api.receive("translations", (translations) => {
@@ -2786,48 +2808,56 @@ window.onload = function () {
       resolve(setTranslations(translations));
     });
   })
-  .then(function() {
+  .then(function(response) {
+    console.info(response);
     return new Promise(function(resolve) {
       resolve(setFriendlyLanguageNames());
     });
   })
-  .then(function() {
+  .then(function(response) {
+    console.info(response);
     return new Promise(function(resolve) {
       resolve(zoom(window.userData.zoom));
     });
   })
-  .then(function() {
+  .then(function(response) {
+    console.info(response);
     return new Promise(function(resolve) {
       resolve(setTheme());
     });
   })
-  .then(function() {
+  .then(function(response) {
+    console.info(response);
     return new Promise(function(resolve) {
       resolve(configureDatepicker());
     });
   })
-  .then(function() {
-    return new Promise(function(resolve) {
-      resolve(configureMatomo());
-    });
-  })
-  .then(function() {
-    return new Promise(function(resolve) {
-      resolve(checkDismissedMessages());
-    });
-  })
-  .then(function() {
-    return new Promise(function(resolve) {
-      resolve(setToggles());
-    });
-  })
-  .then(function() {
+  .then(function(response) {
+    console.info(response);
     return new Promise(function(resolve) {
       resolve(configureEvents());
     });
   })
   .then(function(response) {
-    console.log(response);
+    console.info(response);
+    return new Promise(function(resolve) {
+      resolve(configureMatomo());
+    });
+  })
+  .then(function(response) {
+    console.info(response);
+    return new Promise(function(resolve) {
+      resolve(checkDismissedMessages());
+    });
+  })
+  .then(function(response) {
+    console.info(response);
+    return new Promise(function(resolve) {
+      resolve(setToggles());
+    });
+  })
+  .then(function(response) {
+    console.info(response);
     if(window.userData.file) {
       window.api.send("startFileWatcher", window.userData.file);
     // for users who upgrade from very old versions
@@ -2837,36 +2867,27 @@ window.onload = function () {
       showOnboarding(true);
     }
   }).catch(function(error) {
-    console.log(error);
+    handleError(error);
   });
   window.onresize = function() {
     try {
-      let width = this.outerWidth;
-      let height = this.outerHeight;
-      setUserData("windowBounds", { width, height }).then(function(response) {
-        // Adjust position of suggestion box to input field
-        let modalFormInputPosition = modalFormInput.getBoundingClientRect();
-        autoCompleteContainer.style.width = modalFormInput.offsetWidth + "px";
-        autoCompleteContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight+2 + "px";
-        autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
-        return Promise.resolve("Success: Window bounds Config written to config file");
-      }).catch(function(error) {
-        console.log(error);
-      });
+      positionAutoCompleteContainer();
     } catch(error) {
-      error.functionName = arguments.callee.name;
+      error.functionName = "window.onresize";
+      handleError(error);
       return Promise.reject(error);
     }
   }
 }
 
 window.api.receive("triggerFunction", (name, args) => {
+  console.log(name);
   if(typeof(window[name]) === "function") {
     if(!args) args = new Array;
     window[name](...args).then(function(result) {
       console.log(result);
     }).catch(function(error) {
-      console.log(error);
+      handleError(error);
     });
   } else {
     throw("Error: Function " + name + " does not exist.");
@@ -2879,7 +2900,7 @@ window.api.receive("refresh", (content) => {
     startBuilding();
   })
   .catch(function(error) {
-    console.log(error);
+    handleError(error);
   });
 });
 

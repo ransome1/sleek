@@ -25,7 +25,7 @@ body {
 button, button:focus, button:active, button:active, button:after, button::before, button:active:after, .button, .button-is-white {
   border: none!important;
   box-shadow: none!important;
-  background: transparent;
+  //background: transparent;
 }
 .is-hidden {
   display: none!important;
@@ -257,6 +257,13 @@ nav {
 }
 #errorContainer {
   display: none;
+  p {
+    margin: .1em 0;
+  }
+  .button,
+  svg {
+    color: white;
+  }
 }
 #errorContainer.is-active {
   display: block;
@@ -446,6 +453,7 @@ nav {
     background-color: $almost-white;
   }
   .flex-table.group {
+    margin-top: .5em;
     border: none;
     font-family: FreeSansBold;
     svg {
@@ -1056,7 +1064,7 @@ nav {
 .messages {
   width: 25em;
   position: fixed;
-  right: 2em;
+  right: 1em;
   bottom: 1em;
   z-index: 40;
   .message {

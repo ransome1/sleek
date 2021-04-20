@@ -23,8 +23,7 @@ body {
 
 button, button:focus, button:active, button:active, button:after, button::before, button:active:after, .button, .button-is-white {
   border: none !important;
-  box-shadow: none !important;
-  background: transparent; }
+  box-shadow: none !important; }
 
 .is-hidden {
   display: none !important; }
@@ -228,6 +227,11 @@ nav {
 
 #errorContainer {
   display: none; }
+  #errorContainer p {
+    margin: .1em 0; }
+  #errorContainer .button,
+  #errorContainer svg {
+    color: white; }
 
 #errorContainer.is-active {
   display: block; }
@@ -393,6 +397,7 @@ nav {
   #todoTable .flex-table#previousItem.is-highlighted {
     background-color: #f5f5f5; }
   #todoTable .flex-table.group {
+    margin-top: .5em;
     border: none;
     font-family: FreeSansBold; }
     #todoTable .flex-table.group svg {
@@ -877,7 +882,7 @@ nav {
 .messages {
   width: 25em;
   position: fixed;
-  right: 2em;
+  right: 1em;
   bottom: 1em;
   z-index: 40; }
   .messages .message {

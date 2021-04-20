@@ -84,12 +84,12 @@
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "scripts": {
-    "pack": "NODE_ENV=production electron-builder --dir",
-    "dist": "NODE_ENV=production electron-builder -mwl --publish never",
-    "appx": "NODE_ENV=production electron-builder -w appx --publish never",
-    "win": "NODE_ENV=production electron-builder -w --publish never",
-    "pacman": "NODE_ENV=production electron-builder -l pacman",
-    "appimage": "NODE_ENV=production electron-builder -l AppImage --publish never",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -mwl --publish never",
+    "appx": "electron-builder -w appx --publish never",
+    "win": "electron-builder -w --publish never",
+    "pacman": "electron-builder -l pacman",
+    "appimage": "electron-builder -l AppImage --publish never",
     "css-build": "node-sass src/scss/ --output src/css/",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch & NODE_ENV=development electron ."

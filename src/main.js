@@ -1,15 +1,14 @@
-const { app, BrowserWindow, nativeTheme, electron, ipcMain, session, Notification, dialog } = require("electron");
+const { app, Tray, BrowserWindow, nativeTheme, electron, ipcMain, Notification, dialog, clipboard } = require("electron");
 const fs = require("fs");
 const path = require("path");
 const i18next = require("i18next");
-const i18nextLanguageDetector = require("i18next-browser-languagedetector");
 const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require('./configs/i18next.config');
 const Store = require("./configs/store.config.js");
 const userData = new Store({
   configName: "user-preferences",
   defaults: {
-    windowBounds: { width: 1025, height: 768 },
+    window: { x: 164, y: 210, width: 1024, height: 768 },
     maximizeWindow: false,
     showCompleted: true,
     sortCompletedLast: true,
@@ -44,7 +43,8 @@ const appData = {
   version: app.getVersion(),
   development: isDevelopment,
   languages: i18nextOptions.supportedLngs,
-  path: __dirname
+  path: __dirname,
+  os: null
 }
 const createWindow = () => {
   // ########################################################################################################################
@@ -78,7 +78,7 @@ const createWindow = () => {
             console.log("Success: Opened file: " + file);
             startFileWatcher(file).then(response => {
               console.log(response);
-              mainWindow.webContents.send("triggerFunction", "clearModal")
+              mainWindow.webContents.send("triggerFunction", "resetModal")
             }).catch(error => {
               console.log(error);
             });
@@ -107,7 +107,7 @@ const createWindow = () => {
               console.log("Success: New file created: " + file.filePath);
               startFileWatcher(file.filePath).then(response => {
                 console.log(response);
-                mainWindow.webContents.send("triggerFunction", "clearModal")
+                mainWindow.webContents.send("triggerFunction", "resetModal")
               }).catch(error => {
                 console.log(error);
               });
@@ -126,9 +126,9 @@ const createWindow = () => {
       .init(i18nextOptions);
       if(!language && !userData.get("language") && i18nextOptions.supportedLngs.includes(app.getLocale().substr(0,2))) {
         var language = app.getLocale().substr(0,2);
-      } else if(userData.get("language")) {
+      } else if(!language && userData.get("language")) {
         var language = userData.get("language");
-      } else {
+      } else if(!language) {
         var language = "en";
       }
       userData.set("language", language);
@@ -208,36 +208,16 @@ const createWindow = () => {
       return Promise.reject("Error in startFileWatcher(): " + error);
     }
   }
-  const { width, height } = userData.get("windowBounds");
   let fileWatcher;
-  const mainWindow = new BrowserWindow({
-    width: width,
-    height: height,
-    icon: path.join(__dirname, "../assets/icons/sleek.png"),
-    simpleFullscreen: true,
-    autoHideMenuBar: true,
-    webPreferences: {
-      enableRemoteModule: false,
-      worldSafeExecuteJavaScript:true,
-      nodeIntegration: false,
-      enableRemoteModule: true,
-      spellcheck: false,
-      contextIsolation: true,
-      preload: path.join(__dirname, "preload.js"),
-    }
-  });
   // ########################################################################################################################
   // SET DEFAULT USERDATA
   // ########################################################################################################################
-  if(userData.data.maximizeWindow) mainWindow.maximize()
-  if(userData.data.windowPosition) mainWindow.setPosition(userData.data.windowPosition[0], userData.data.windowPosition[1])
   if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
     userData.set("theme", "dark");
   } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
     userData.set("theme", "light");
   }
-  // TODO set as default in object above
-  //if(userData.data.windowBounds!="") userData.set("windowBounds", { width: 1025, height: 769 });
+  if(typeof userData.data.window != "object") userData.set("window", { x: 160, y: 240, width: 1024, height: 768 });
   if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
   if(typeof userData.data.notifcations != "boolean") userData.set("notifications", true);
   if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
@@ -255,6 +235,27 @@ const createWindow = () => {
   if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
   if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
   if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
+  // ########################################################################################################################
+  // CREATE WINDOW
+  // ########################################################################################################################
+  //const { x, y, width, height } = userData.get("window");
+  const mainWindow = new BrowserWindow({
+    width: userData.data.width,
+    height: userData.data.height,
+    icon: path.join(__dirname, "../assets/icons/sleek.png"),
+    simpleFullscreen: true,
+    autoHideMenuBar: true,
+    webPreferences: {
+      enableRemoteModule: false,
+      worldSafeExecuteJavaScript:true,
+      nodeIntegration: false,
+      enableRemoteModule: true,
+      spellcheck: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js"),
+    }
+  });
+
   // ########################################################################################################################
   // TRIGGER
   // ########################################################################################################################
@@ -395,7 +396,7 @@ const createWindow = () => {
   // Set menu to menuTemplate
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   // ########################################################################################################################
-  // MAINWINDOW CONFIGURATION
+  // WINDOW CONFIGURATION
   // ########################################################################################################################
   // define OS and use ico on Windows and png on all other OS
   switch (process.platform) {
@@ -416,6 +417,12 @@ const createWindow = () => {
   if(isDevelopment) {
     mainWindow.webContents.openDevTools()
   }
+  /*if(userData.data.maximizeWindow && appData.os === "windows") {
+    mainWindow.maximize();
+  } else {
+    mainWindow.unmaximize();
+  }*/
+  if(userData.data.window) mainWindow.setBounds(userData.data.window)
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
   // open links in external browser
@@ -434,17 +441,24 @@ const createWindow = () => {
       });
     }
   }, 600000);
+  // ########################################################################################################################
+  // WINDOW EVENTS
+  // ########################################################################################################################
+  mainWindow.on('resize', function() {
+    userData.set("window", this.getBounds());
+  });
   mainWindow.on('move', function() {
-    userData.set("windowPosition", this.getPosition());
+    userData.set("window", this.getBounds());
   });
   mainWindow.on('maximize', function() {
     userData.set("maximizeWindow", true);
   });
   mainWindow.on('unmaximize', function() {
     userData.set("maximizeWindow", false);
+    userData.set("window", this.getBounds());
   });
   // ########################################################################################################################
-  // LISTEN TO REQUESTS FROM RENDERER CONTEXT
+  // IPC EVENTS
   // ########################################################################################################################
   // Write config to file
   ipcMain.on("userData", (event, args) => {
@@ -507,13 +521,20 @@ const createWindow = () => {
       // bring mainWindow to foreground
       mainWindow.focus();
       // if another modal was open it needs to be closed first and then open the modal and fill it
-      mainWindow.webContents.executeJavaScript("clearModal(); showForm(\"" + config.string + "\", false);");
+      mainWindow.webContents.executeJavaScript("resetModal(); showForm(\"" + config.string + "\", false);");
     },{
       // remove event listener after it is clicked once
       once: true
     });
   });
+  // Copy text to clipboard
+  ipcMain.on("copyToClipboard", (event, args) => {
+    if(args[0]) clipboard.writeText(args[0], 'selection')
+  });
 };
+// ########################################################################################################################
+// APP EVENTS
+// ########################################################################################################################
 app.on("ready", () => {
   if(process.platform === 'win32') app.setAppUserModelId("RobinAhle.sleektodomanager")
   createWindow();
