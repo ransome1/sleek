@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=sleek
+Exec=sleek %U
+Terminal=false
+Type=Application
+Icon=${SNAP}/meta/gui/icon.png
+StartupWMClass=sleek
+Comment=Todo app based on the todo.txt format for Linux, free and open-source
+Categories=ProjectManagement

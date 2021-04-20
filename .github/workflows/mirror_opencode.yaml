@@ -1,0 +1,19 @@
+name: Mirror to opencode.net
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Mirror + trigger CI
+      uses: SvanBoxel/gitlab-mirror-and-ci-action@master
+      with:
+        args: "https://www.opencode.net/ransome/sleek.git"
+      env:
+        GITLAB_HOSTNAME: "opencode.net"
+        GITLAB_USERNAME: "ransome"
+        GITLAB_PASSWORD: ${{ secrets.gitlab_password }}
+        GITLAB_PROJECT_ID: "https://www.opencode.net/ransome/sleek/edit"
+        GITHUB_TOKEN: ${{ secrets.github_token }}

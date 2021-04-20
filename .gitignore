@@ -1,0 +1,18 @@
+node_modules/
+dist/
+*.log
+*.DS_Store
+*.snap
+*.bak
+snap/local/
+*.py
+*.ini
+.gitignore
+*.db:encryptable
+*.db
+System Volume Information/
+build/
+Thumbs.db
+flatpak/generated-sources.json
+flatpak/com.github.ransome1.sleek.yml
+assets/icons/bak

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html id="html">
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title id="title">sleek</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" id="themeLink" href="">
+  </head>
+  <body id="body">
+    <div class="columns is-gapless is-mobile">
+      <div class="column is-narrow">
+        <nav>
+          <ul>
+            <li class="logo">sleek</li>
+            <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
+            <li id="navBtnFilter" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
+            <li id="navBtnView" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
+            <li class="btnChangeTodoFile"><a href="#" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
+            <li id="btnTheme"><a href="#" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
+          </ul>
+          <ul>
+            <li id="navBtnSettings">
+              <a href="#" tabindex="-1"><i class="fas fa-cog"></i></a>
+            </li>
+            <li id="navBtnHelp"><a href="#" tabindex="-1"><i class="fas fa-question-circle"></i></a></li>
+          </ul>
+          <div id="drawerContainer">
+            <section id="filterDrawer" class="drawer dropdown" tabindex="0">
+              <div class="container">
+                <div id="todoFilters"></div>
+                <button id="btnFiltersResetFilters" class="button btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button>
+              </div>
+            </section>
+            <section id="viewDrawer" class="drawer dropdown" tabindex="0">
+              <div class="container">
+                <table>
+                  <tr>
+                    <th colspan="100%" id="viewHeadlineTodoList"></th>
+                  </tr>
+                  <tr>
+                    <td id="sortBy"></td>
+                    <td>
+                      <div class="field">
+                        <div class="control">
+                          <div class="select">
+                            <select id="viewSelectSortBy">
+                              <option id="sortByPriority" value="priority"></option>
+                              <option id="sortByDueDate" value="dueString"></option>
+                              <option id="sortByContexts" value="contexts"></option>
+                              <option id="sortByProjects" value="projects"></option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleShowCompleted"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showCompleted">
+                          <input type="checkbox" id="showCompleted" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleSortCompletedLast"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="sortCompletedLast">
+                          <input type="checkbox" id="sortCompletedLast" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewBoxShowHidden"><span id="viewToggleShowHidden"></span></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showHidden">
+                          <input type="checkbox" id="showHidden" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleDueIsToday"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showDueIsToday">
+                          <input type="checkbox" id="showDueIsToday" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleDueIsFuture"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showDueIsFuture">
+                          <input type="checkbox" id="showDueIsFuture" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewToggleDueIsPast"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showDueIsPast">
+                          <input type="checkbox" id="showDueIsPast" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+                <table>
+                  <tr>
+                    <th colspan="100%" id="viewHeadlineAppView"></th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p id="viewToggleCompactView"></p>
+                    </td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="toggleView">
+                          <input type="checkbox" id="toggleView" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Zoom</td>
+                    <td class="zoom">
+                      <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
+                      <span id="zoomStatus"></span><i id="zoomUndo" class="fas fa-undo"></i>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </section>
+            <a href="#" class="drawerClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
+            <div id="handle"></div>
+          </div>
+        </nav>
+      </div>
+      <div class="column content">
+        <div id="todoTableSearchContainer" class="control has-icons-left">
+          <div class="column">
+            <input id="todoTableSearch" class="input is-medium" type="search" placeholder="Search" tabindex="10">
+            <span class="icon is-left">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+        </div>
+        <section id="todoTable" tabindex="-1">
+          <div id="resultStats" class="column">
+            <span class="tag"></span>
+          </div>
+          <div id="todoTableContainer"></div>
+        </section>
+        <section id="onboardingContainer" class="contentContainer">
+          <h1 id="welcomeToSleek" class="title is-1"></h1>
+          <p id="onboardingContainerSubtitle" class="subtitle"></p>
+          <p class="file is-boxed is-centered">
+            <a href="#" class="btnOnboarding btnOpenTodoFile">
+              <i class="fas fa-folder-open"></i>
+              <span id="onboardingContainerBtnOpen" class="file-label"></span>
+            </a>
+            <a href="#" class="btnCreateTodoFile btnOnboarding">
+              <i class="fas fa-plus-circle"></i>
+              <span id="onboardingContainerBtnCreate" class="file-label"></span>
+            </a>
+          </p>
+        </section>
+        <section id="addTodoContainer" class="contentContainer">
+          <h1 id="addTodoContainerHeadline" class="title is-1"></h1>
+          <p id="addTodoContainerSubtitle" class="subtitle"></p>
+          <p class="file is-boxed is-centered">
+            <a href="#" class="btnOnboarding btnAddTodo">
+              <i class="fas fa-plus"></i>
+              <span id="addTodoContainerButton" class="file-label"></span>
+            </a>
+          </p>
+        </section>
+        <section id="noResultContainer" class="contentContainer">
+          <h1 id="noResultContainerHeadline" class="title is-1"></h1>
+          <p id="noResultContainerSubtitle" class="subtitle"></p>
+          <p><button id="btnNoResultContainerResetFilters" class="btnResetFilters button is-link" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button></p>
+        </section>
+      </div>
+    </div>
+    <form id="modalForm" class="modal modalFormSubmit">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="card">
+          <header class="card-header">
+            <p id="modalTitle" class="card-header-title"></p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <div class="control has-icons-right">
+                <input id="modalFormInput" class="input is-medium" type="text" tabindex="300">
+                <a href="#" id="modalFormInputResize" class="icon is-right" tabindex="-1" data-input-type="input">
+                  <i class="fas fa-expand-alt"></i>
+                </a>
+              </div>
+              <article class="message">
+                <div id="modalFormAlert" class="message-body"></div>
+              </article>
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="priorityPicker" tabindex="305">
+                      <option value="">-</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                      <option value="E">E</option>
+                      <option value="F">F</option>
+                      <option value="G">G</option>
+                      <option value="H">H</option>
+                      <option value="I">I</option>
+                      <option value="J">J</option>
+                      <option value="K">K</option>
+                      <option value="L">L</option>
+                      <option value="M">M</option>
+                      <option value="N">N</option>
+                      <option value="O">O</option>
+                      <option value="P">P</option>
+                      <option value="Q">Q</option>
+                      <option value="R">R</option>
+                      <option value="S">S</option>
+                      <option value="T">T</option>
+                      <option value="U">U</option>
+                      <option value="V">V</option>
+                      <option value="W">W</option>
+                      <option value="X">X</option>
+                      <option value="Y">Y</option>
+                      <option value="Z">Z</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field dueDate">
+                <div class="control has-icons-left">
+                  <input id="dueDatePickerInput" class="input" tabindex="310" readonly>
+                  <a href="#" class="icon is-left" tabindex="-1">
+                    <i class="far fa-clock is-left"></i>
+                  </a>
+                </div>
+              </div>
+              <div id="recurrencePicker" class="field">
+                <div class="control has-icons-left">
+                  <input id="recurrencePickerInput" class="input" tabindex="-1" readonly>
+                  <a href="#" class="icon is-left">
+                    <i class="fas fa-redo"></i>
+                  </a>
+                </div>
+                <div id="recurrencePickerContainer" class="card">
+                  <div class="content">
+                    <div>
+                      <span id="recurrencePickerEvery"></span>
+                    </div>
+                    <div id="recurrencePickerMul">
+                      <a href="#" id="recurrencePickerIncrease"><i class="fas fa-plus-circle"></i></a><br>
+                      <input id="recurrencePickerSpinner" type="number" min="1" max="99"><br>
+                      <a href="#" id="recurrencePickerDecrease"><i class="fas fa-minus-circle"></i></a>
+                    </div>
+                    <div class="options">
+                      <label class="radio">
+                        <input type="radio" class="selection" name="recurrence" value="d">
+                        <span id="recurrencePickerDay"></span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" class="selection" name="recurrence" value="w">
+                        <span id="recurrencePickerWeek"></span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" class="selection" name="recurrence" value="m">
+                        <span id="recurrencePickerMonth"></span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" class="selection" name="recurrence" value="y">
+                        <span id="recurrencePickerYear"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <footer class="card-footer">
+                    <a href="#" class="card-footer-item selection" value="" id="recurrencePickerNoRecurrence"></a>
+                  </footer>
+                </div>
+              </div>
+              <br />
+            </div>
+          </div>
+          <footer class="card-footer">
+            <button id="btnSave" type="submit" class="card-footer-item" tabindex="315"></button>
+            <a href="#" id="btnItemStatus" class="card-footer-item" tabindex="320"></a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="325"></a>
+          </footer>
+        </div>
+      </div>
+    </form>
+    <div id="modalSettings" class="modal content" tabindex="0">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <div class="tabs is-centered">
+          <ul>
+            <li class="settingsTab1 is-active"><a href="#" tabindex="0" id="settingsTabSettings"></a></li>
+            <li class="settingsTab2"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
+          </ul>
+        </div>
+        <section id="settingsTab1" class="modal-card-body"  data-track-content data-content-name="Settings" data-content-piece="Settings">
+          <h3 class="title is-3" id="settingsTabSettingsHeadline"></h3>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsLanguage">
+              </th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsLanguageBody"></td>
+              <td>
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="settingsLanguage">
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsArchive"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsArchiveBody"></td>
+              <td>
+                <div class="field">
+                  <button id="btnArchiveTodos" class="button" disabled><i class="fas fa-archive"></i>&nbsp;<span id="settingsTabSettingsArchiveButton"></span></button>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsNotifications"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsNotificationsBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="toggleNotifications" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsDarkmode"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsDarkmodeBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="toggleDarkmode" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsLogging"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsLoggingBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch" for="toggleMatomoEvents">
+                    <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </section>
+        <section id="settingsTab2" class="modal-card-body" data-track-content data-content-name="Settings" data-content-piece="About">
+          <h3 class="title is-3" id="settingsTabAboutHeadline"></h3>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutContribute"></th>
+            </tr>
+            <tr>
+              <td><i class="fab fa-github"></i></td>
+              <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
+              <td><i class="fas fa-star"></i></td>
+              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
+              <td><i class="fab fa-windows"></i></td>
+              <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
+            </tr>
+            <tr>
+              <td><i class="fab fa-twitter"></i></td>
+              <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
+              <td><i class="fab fa-facebook"></i></td>
+              <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
+              <td><i class="fab fa-linkedin"></i></td>
+              <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutCopyrightLicense"></th>
+            </tr>
+            <tr>
+              <td colspan="100%" id="settingsTabAboutCopyrightLicenseBody"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutPrivacy"></th>
+            </tr>
+            <tr>
+              <td colspan="100%" id="settingsTabAboutPrivacyBody"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutExternalLibraries"></th>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
+              <td><a href="https://github.com/electron-userland/electron-builder" target="_blank">Electron builder</a></td>
+              <td><a href="https://github.com/electron/electron-packager" target="_blank">Electron packager</a></td>
+              <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/jgthms/bulma" target="_blank">Bulma CSS</a></td>
+              <td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome</a></td>
+              <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
+              <td><a href="https://github.com/markedjs/marked" target="_blank">Marked</a></td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
+              <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+          <p><code>v<span id="version"></span></code></p>
+        </section>
+        <button class="modal-close close is-large" aria-label="close"></button>
+      </div>
+    </div>
+    <div id="modalHelp" class="modal content" tabindex="0" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <div class="tabs is-centered">
+          <ul>
+            <li class="helpTab1 is-active"><a href="#" tabindex="0" id="helpTab1Title"></a></li>
+            <li class="helpTab2"><a href="#" tabindex="0" id="helpTab2Title"></a></li>
+            <li class="helpTab3"><a href="#" tabindex="0" id="helpTab3Title"></a></li>
+            <li class="helpTab4"><a href="#" tabindex="0" id="helpTab4Title"></a></li>
+          </ul>
+        </div>
+        <section id="helpTab1" class="modal-card-body is-active">
+          <h3 class="title is-3" id="helpTabKeyboardTitle"></h3>
+          <table class="shortcuts">
+              <tr>
+                <th id="helpTabKeyboardTR1TH1"></th>
+                <th>Windows/Linux</th>
+                <th>MacOS</th>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR1TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">N</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR2TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">F</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR3TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">H</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR4TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">D</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR5TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">O</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR8TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">B</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">B</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR9TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">L</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">L</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR6TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">,</span></td>
+                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">,</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR7TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl + Shift</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">A-Z</span></td>
+                <td><span class="tag is-dark is-large">Ctrl + Shift</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">A-Z</span></td>
+              </tr>
+              <tr>
+                <td id="helpTabKeyboardTR10TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">Enter</span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i> <span class="tag is-info is-large">Enter</span></td>
+              </tr>
+          </table>
+        </section>
+        <section id="helpTab2" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding a priority">
+          <h3 class="title is-3" id="helpTabPrioritiesTitle"></h3>
+          <p id="helpTabPrioritiesBody"></p>
+          <input class="input is-focused is-medium" type="text" value="(A) This will create a todo with highest priority" tabindex="-1">
+          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
+          <div class="card is-centered" style="width: 52%;">
+            <div class="card-content">
+              <img src="img/help/screenshot_add_priority.png">
+            </div>
+          </div>
+        </section>
+        <section id="helpTab3" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding contexts & projects">
+          <h3 class="title is-3" id="helpTabContextsProjectsTitle"></h3>
+          <p id="helpTabContextsProjectsBody"></p>
+          <input class="input is-focused is-medium" type="text" value="A todo with 1 project and 2 contexts +project @context1 @context2" tabindex="-1">
+          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
+          <div class="card is-centered" style="width: 77%;">
+            <div class="card-content">
+              <img src="img/help/add_contexts_projects.png">
+            </div>
+          </div>
+        </section>
+        <section id="helpTab4" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding dates">
+          <h3 class="title is-3" id="helpTabDatesRecurrencesTitle1"></h3>
+          <p id="helpTabDatesRecurrencesBody1"></p>
+          <h3 class="title is-3" id="helpTabDatesRecurrencesTitle2"></h3>
+          <p id="helpTabDatesRecurrencesBody2"></p>
+          <input class="input is-focused is-medium" type="text" value="This todo is due at some point rec:w due:2021-03-07" tabindex="-1">
+          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
+          <div class="card is-centered" style="width: 55%;">
+            <div class="card-content">
+              <img src="img/help/screenshot_add_due_date.png">
+            </div>
+          </div>
+        </section>
+        <button class="modal-close close is-large" aria-label="close"></button>
+      </div>
+    </div>
+    <div id="autoCompleteContainer" class="drawer card"></div>
+    <div id="modalChangeFile" class="modal" tabindex="0">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="card">
+          <header class="card-header">
+            <p id="modalChangeFileTitle" class="card-header-title"></p>
+          </header>
+          <div class="card-content">
+            <table id="modalChangeFileTable"></table>
+          </div>
+          <footer class="card-footer">
+            <a href="#" class="card-footer-item btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></a>
+            <a href="#" class="card-footer-item btnCreateTodoFile" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <section class="messages">
+      <article class="message fixed" data="logging">
+        <div class="message-header">
+          <p><span id="messageLoggingTitle"></span></p>
+          <button class="delete close" aria-label="delete" data-message="logging"></button>
+        </div>
+        <div class="message-body">
+          <p><span id="messageLoggingBody"></span></p>
+          <p><button id="btnMessageLogging" class="button" tabindex="0"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
+        </div>
+      </article>
+      <article class="message fixed" data="share">
+        <div class="message-header">
+          <p><span id="messageShareTitle"></span></p>
+          <button class="delete close" aria-label="delete" data-message="share"></button>
+        </div>
+        <div class="message-body">
+          <p><span id="messageShareBody"></span></p>
+          <p class="brands">
+            <a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-facebook-square"></i></a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-linkedin"></i></a>
+          </p>
+        </div>
+      </article>
+      <article id="errorContainer" class="notification is-danger" data="error" style="position: relative">
+        <button id="errorContainerClose" class="delete" aria-label="delete" data-message="error"></button>
+        <p id="errorMessage"></p>
+        <p>
+          <a href="#" class="btnCopyToClipboard"><i class="fas fa-copy"></i>&nbsp;Copy to clipboard</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/ransome1/sleek/issues" target="blank"><i class="fab fa-github"></i>&nbsp;Report on Github</a>
+        </p>
+      </article>
+    </section>
+    <script defer src="js/jsTodoExtensions.js"></script>
+    <script defer src="js/jsTodoTxt.js"></script>
+    <script defer src="js/marked.min.js"></script>
+    <script defer src="js/datepicker.min.js"></script>
+    <script defer src="locales/de/datepicker.js"></script>
+    <script defer src="locales/es/datepicker.js"></script>
+    <script defer src="locales/it/datepicker.js"></script>
+    <script defer src="locales/fr/datepicker.js"></script>
+    <script defer src="render.js"></script>
+    <script defer src="js/fontawesome.js"></script>
+    <script defer src="js/fontawesome.solid.min.js"></script>
+    <script defer src="js/fontawesome.regular.min.js"></script>
+    <script defer src="js/fontawesome.brands.min.js"></script>
+  </body>
+</html>
