@@ -38,8 +38,8 @@ modules:
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
-        commit: 255df4b1f41762c771831eca4634a3537477bf1f
-        tag: v1.0.0
+        commit: b7d9562435792b49bc07872d6068942f8c3f3021
+        #tag: v1.0.0
       - generated-sources.json
       - type: script
         commands:

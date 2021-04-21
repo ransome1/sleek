@@ -44,6 +44,7 @@ const navBtns = document.querySelectorAll(".navBtn");
 const messages = document.querySelectorAll(".message");
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 const drawers = document.querySelectorAll(".drawer");
+const drawerCloser = document.querySelectorAll(".drawerClose");
 const item = { previous: "" }
 let categories;
 let visibleRows;
@@ -624,6 +625,7 @@ function showFiles() {
     return Promise.reject(error);
   }
 }
+
 function handleError(error) {
   if(error) {
     console.error(error.name +" in function " + error.functionName + ": " + error.message);
@@ -639,7 +641,6 @@ function startBuilding(searchString) {
   filterItems(items.objects, searchString)
   .then(function(filtered) {
     items.filtered = filtered;
-
     f0 = performance.now();
     generateFilterData().then(response => {
       console.log(response);
@@ -648,13 +649,10 @@ function startBuilding(searchString) {
     }).catch(error => {
       handleError(error);
     });
-
     return generateGroups(filtered)
   })
   .then(function(groups) {
-    //configureMainView();
     return new Promise(function(resolve) {
-      //configureMainView();
       resolve(generateTable(groups));
     });
   })
@@ -788,8 +786,8 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     let selectedFilters = new Array;
     if(window.userData.selectedFilters.length>0) selectedFilters = JSON.parse(window.userData.selectedFilters);
     // creates a div for the specific filter section
-    let todoFiltersSub = document.createElement("div");
-    todoFiltersSub.setAttribute("class", "dropdown-item " + category);
+    let todoFiltersContainer = document.createElement("div");
+    todoFiltersContainer.setAttribute("class", "dropdown-item " + category);
     // translate headline
     if(category=="contexts") {
       var headline = window.translations.contexts;
@@ -803,6 +801,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       let todoFilterHeadline = document.createElement("h4");
       todoFilterHeadline.setAttribute("class", "is-4 title");
       todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
+      // add click event
       todoFilterHeadline.onclick = function() {
         let hideFilterCategories = window.userData.hideFilterCategories;
         if(hideFilterCategories.includes(category)) {
@@ -813,17 +812,15 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
           hideFilterCategories.push(category);
           this.parentElement.classList.add("is-greyed-out");
           this.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + headline;
-
           hideFilterCategories = [...new Set(hideFilterCategories.join(",").split(","))];
         }
         setUserData("hideFilterCategories", hideFilterCategories)
-        //startBuilding();
         generateGroups(items.filtered).then(function(groups) {
           generateTable(groups);
         });
       }
       // add the headline before category container
-      todoFiltersSub.appendChild(todoFilterHeadline);
+      todoFiltersContainer.appendChild(todoFilterHeadline);
     } else {
       // show suggestion box
       autoCompleteContainer.classList.add("is-active");
@@ -835,7 +832,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       if(autoCompletePrefix==undefined) todoFilterHeadline.setAttribute("tabindex", -1);
       todoFilterHeadline.innerHTML = headline;
       // add the headline before category container
-      todoFiltersSub.appendChild(todoFilterHeadline);
+      todoFiltersContainer.appendChild(todoFilterHeadline);
     }
     // build one button each
     for (let filter in filtersCounted) {
@@ -845,9 +842,13 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       todoFiltersItem.setAttribute("class", "button " + filter);
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      if(autoCompletePrefix==undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }
+      if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }
       todoFiltersItem.setAttribute("href", "#");
       todoFiltersItem.innerHTML = filter;
+      // set highlighting if filter/category combination is on selected filters array
+      selectedFilters.forEach(function(item) {
+        if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
+      });
       if(autoCompletePrefix==undefined) {
         todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
         // create the event listener for filter selection by user
@@ -892,23 +893,15 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
           // hide the suggestion container after the filter has been selected
           autoCompleteContainer.blur();
           autoCompleteContainer.classList.remove("is-active");
-          // trigger matomo event
           // put focus back into input so user can continue writing
           modalFormInput.focus();
+          // trigger matomo event
           if(window.userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
       }
-      // after building the buttons we check if they appear in the saved filters, if so we add the highlighting
-      // TODO: do this in the first loop where buttons are built
-      selectedFilters.forEach(function(item) {
-        if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
-      });
-      todoFiltersSub.appendChild(todoFiltersItem);
+      todoFiltersContainer.appendChild(todoFiltersItem);
     }
-    // add filters to the specific filter container
-    //todoFilters.appendChild(todoFiltersSub);
-    return Promise.resolve(todoFiltersSub);
-    //return Promise.resolve("Success: Filter buttons for category " + category + " have been build");
+    return Promise.resolve(todoFiltersContainer);
   } catch (error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
@@ -1063,13 +1056,51 @@ function generateGroups(items) {
   }
   return Promise.resolve(items)
 }
+
+
+
+function sortTodoData(group) {
+  try {
+    // first sort by priority
+    group = group.sort(function(a, b) {
+      // most recent or already past todo will be sorted to the top
+      if (a.priority < b.priority || !b.priority) {
+        return -1;
+      } else if (a.priority > b.priority) {
+        return 1;
+      } else {
+        // if all fail, no change to sort order
+        return 0;
+      }
+    });
+    // second sort by due date
+    group = group.sort(function(a, b) {
+      // when a is smaller than b it, a is put after b
+      if(a.priority===b.priority && a.due < b.due) return -1
+      // when a is is undefined but b is not, b is put before a
+      if(a.priority===b.priority && !a.due && b.due) return 1
+      // when b is is undefined but a is not, a is put before b
+      if(a.priority===b.priority && a.due && !b.due) return -1
+      // if all fail, no change to sort order
+      return 0;
+    });
+
+    return group;
+    /*return new Promise(function(resolve) {
+      resolve(group);
+    });*/
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+
 function generateTable(groups) {
   // prepare the templates for the table
-  return configureTodoTableTemplate()
-  .then(function() {
+  return configureTodoTableTemplate().then(function(response) {
+    console.log(response);
     visibleRows = 0;
     for (let group in groups) {
-      // nodes need to be created to add them to the outer fragment
       // create a divider row
       // completed todos
       if(window.userData.sortCompletedLast && groups[group][0]==="completed") {
@@ -1092,34 +1123,11 @@ function generateTable(groups) {
       } else {
         tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
       }
-      // first sort by priority
-      groups[group][1] = groups[group][1].sort(function(a, b) {
-        // most recent or already past todo will be sorted to the top
-        if (a.priority < b.priority || !b.priority) {
-          return -1;
-        } else if (a.priority > b.priority) {
-          return 1;
-        } else {
-          // if all fail, no change to sort order
-          return 0;
-        }
-      });
-      // second sort by due date
-      groups[group][1] = groups[group][1].sort(function(a, b) {
-        // when a is smaller than b it, a is put after b
-        if(a.priority===b.priority && a.due < b.due) return -1
-        // when a is is undefined but b is not, b is put before a
-        if(a.priority===b.priority && !a.due && b.due) return 1
-        // when b is is undefined but a is not, a is put before b
-        if(a.priority===b.priority && a.due && !b.due) return -1
-        // if all fail, no change to sort order
-        return 0;
-      });
+      // sort items within this group
+      const sortedGroup = sortTodoData(groups[group][1]);
       // build the fragments per group
-      for (let item in groups[group][1]) {
-        let todo = groups[group][1][item];
-        // check if todo is suppose to be visible, if not build process is skipped
-        //if(!checkIsTodoVisible(todo)) continue
+      for (let item in sortedGroup) {
+        let todo = sortedGroup[item];
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
@@ -1150,8 +1158,8 @@ function generateTable(groups) {
         }
         tableContainerContent.appendChild(generateTableRow(todo));
       }
+      // TODO add a catch
     }
-    // append all generated groups to the main container
     todoTableContainer.appendChild(tableContainerContent);
     return new Promise(function(resolve) {
       resolve();
@@ -2211,8 +2219,6 @@ function configureEvents() {
       if(e.key==="Escape") return false;
       modalFormInputEvent();
     });
-    // TODO MOVE UP!
-    const drawerCloser = document.querySelectorAll(".drawerClose");
     drawerCloser.forEach(function(drawerClose) {
       drawerClose.onclick = function() {
         showDrawer(false).then(function(result) {
@@ -2417,10 +2423,8 @@ function configureEvents() {
 function configureTodoTableTemplate() {
   try {
     todoTableContainer.innerHTML = "";
-    // TODO: EXPLAIN
     todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
     todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
-    // add the more dots
     todoTableBodyCellMoreTemplate.innerHTML = `
       <div class="dropdown is-right">
         <div class="dropdown-trigger">
@@ -2549,6 +2553,28 @@ function configureMainView() {
     }).catch(function(error) {
       handleError(error);
     });
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+function configureDatepicker() {
+  try {
+    dueDatePicker = new Datepicker(dueDatePickerInput, {
+      autohide: true,
+      language: window.userData.language,
+      format: "yyyy-mm-dd",
+      clearBtn: true,
+      beforeShowDay: function(date) {
+        let today = new Date();
+        if (date.getDate() == today.getDate() &&
+            date.getMonth() == today.getMonth() &&
+            date.getFullYear() == today.getFullYear()) {
+          return { classes: 'today'};
+        }
+      }
+    });
+    return Promise.resolve("Success: Datepicker configured")
+  } catch(error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
   }
@@ -2739,29 +2765,6 @@ function archiveTodos() {
       window.api.send("writeToFile", [items.incomplete.join("\n").toString(), window.userData.file]);
     });
     return Promise.resolve("Success: Completed todo moved to: " + doneFile)
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-
-function configureDatepicker() {
-  try {
-    dueDatePicker = new Datepicker(dueDatePickerInput, {
-      autohide: true,
-      language: window.userData.language,
-      format: "yyyy-mm-dd",
-      clearBtn: true,
-      beforeShowDay: function(date) {
-        let today = new Date();
-        if (date.getDate() == today.getDate() &&
-            date.getMonth() == today.getMonth() &&
-            date.getFullYear() == today.getFullYear()) {
-          return { classes: 'today'};
-        }
-      }
-    });
-    return Promise.resolve("Success: Datepicker configured")
   } catch(error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
