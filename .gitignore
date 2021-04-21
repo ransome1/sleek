@@ -8,6 +8,7 @@ snap/local/
 *.py
 *.ini
 .gitignore
+.git/
 *.db:encryptable
 *.db
 System Volume Information/

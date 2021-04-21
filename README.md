@@ -22,22 +22,14 @@ The todo list can be sorted and grouped by priorities or due dates. Todos with d
 
 ### Screenshots
 
-![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's main view as seen on MacOS")
-![Alt text](assets/screenshots/mac/main_filter_dark.png?raw=true "Screenshot of sleek's filter drawer in dark mode as seen on MacOS")
+![Alt text](assets/screenshots/linux/todo_list.png?raw=true "Screenshot of sleek's main view on Linux")
+![Alt text](assets/screenshots/linux/multiline_autocomplete_dark.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature on Linux")
 
-<<<<<<< HEAD
 ### Support sleek
 * Star, fork and watch it on Github. Once sleek reaches **30 watchers, 30 forks and 75 stars**, we can distribute it to MacOS using the <a href="https://github.com/Homebrew/brew" target="blank">Homebrew Package Manager</a>
 * Review it on <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
 * Contribute <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
-* Translate sleek into your own language and contributing your translations
-=======
-### Support sleek by
-* staring, forking and watching it on Github. Once sleek reaches **30 watchers, 30 forks and 75 stars**, we can distribute it to MacOS using the <a href="https://github.com/Homebrew/brew" target="blank">Homebrew Package Manager</a>
-* reviewing it on <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
-* contributing <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
-* translating sleek into your own language and contributing your translations
->>>>>>> ffa6e63432ed4c6e870c01362ecc735767509d98
+* Translate sleek into your own language and contribute your translations
 
 ### Get it from Microsoft Store
 You can install sleek from Microsofts Windows Store
@@ -133,15 +125,6 @@ A prioritized backlog for new features and known issues can be found on <a href=
   - Set priorities (available when add/edit window is open): CTRL+SHIFT+[A-Z]
   - Submit todo (available when add/edit window is open): CTRL + Enter
 
-<<<<<<< HEAD
-=======
-### Build sleek from source code
-1. Setup <a href="https://docs.github.com/en/github/getting-started-with-github/set-up-git" target="blank">Git</a> and <a href="https://nodejs.org/" target="blank">node.js</a>
-2. Fork sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
-3. Install dependencies `npm install`
-4. Build sleek `npm run dist` (Binaries for all plattforms will be put into the `dist` folder)
-
->>>>>>> ffa6e63432ed4c6e870c01362ecc735767509d98
 ### Used libraries
 - Electron: https://github.com/electron/electron
 - Electron builder: https://github.com/electron-userland/electron-builder

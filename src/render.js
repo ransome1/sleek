@@ -225,7 +225,6 @@ function modalFormInputEvent() {
     autoCompleteContainer.classList.remove("is-active");
     autoCompleteContainer.blur();
   }
-  //positionAutoCompleteContainer();
 }
 
 function positionAutoCompleteContainer() {
@@ -338,10 +337,8 @@ function showForm(todo, templated) {
         if(todo.dueString) {
           dueDatePicker.setDate(todo.dueString);
           dueDatePickerInput.value = todo.dueString;
-          //dueDatePickerInput.setAttribute("size", dueDatePickerInput.value.length);
           // only show the recurrence picker when a due date is set
           recurrencePicker.classList.add("is-active");
-          //recurrencePickerInput.setAttribute("size", recurrencePickerInput.value.length);
         } else {
           // hide the recurrence picker when a due date is not set
           recurrencePicker.classList.remove("is-active");
@@ -390,7 +387,7 @@ function showOnboarding(variable) {
       navBtnView.classList.add("is-hidden");
       todoTable.classList.remove("is-active");
       todoTableSearchContainer.classList.remove("is-active");
-      return Promise.resolve("Info: Starting onboarding");
+      return Promise.resolve("Info: Show onboarding");
     } else {
       onboardingContainer.classList.remove("is-active");
       btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
@@ -398,7 +395,7 @@ function showOnboarding(variable) {
       navBtnView.classList.remove("is-hidden");
       todoTable.classList.add("is-active");
       todoTableSearchContainer.classList.add("is-active");
-      return Promise.resolve("Info: Ending onboarding");
+      return Promise.resolve("Info: Hide onboarding");
     }
   } catch(error) {
     error.functionName = arguments.callee.name;
@@ -487,7 +484,6 @@ function showDrawer(variable, buttonId, drawerId) {
     drawerId = document.getElementById(drawerId);
     // always hide the drawer container first
     drawerContainer.classList.remove("is-active");
-    //
     // next show or hide the single drawers
     switch(variable) {
       case true:
@@ -1057,8 +1053,6 @@ function generateGroups(items) {
   return Promise.resolve(items)
 }
 
-
-
 function sortTodoData(group) {
   try {
     // first sort by priority
@@ -1084,11 +1078,7 @@ function sortTodoData(group) {
       // if all fail, no change to sort order
       return 0;
     });
-
     return group;
-    /*return new Promise(function(resolve) {
-      resolve(group);
-    });*/
   } catch(error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
@@ -1651,7 +1641,7 @@ function setToggles() {
     showDueIsFuture.checked = window.userData.showDueIsFuture;
     showDueIsPast.checked = window.userData.showDueIsPast;
     toggleView.checked = window.userData.compactView;
-    return Promise.resolve("Success: All toggles set");
+    return Promise.resolve("Success: Toggles set");
   } catch(error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
@@ -1929,14 +1919,21 @@ function configureMatomo() {
     if(window.userData.uid)_paq.push(['setUserId', window.userData.uid]);
     if(window.userData.theme)_paq.push(['setCustomDimension', 1, window.userData.theme]);
     if(window.userData.language)_paq.push(['setCustomDimension', 2, window.userData.language]);
-    if(window.userData.notifications)_paq.push(['setCustomDimension', 3, window.userData.notifications]);
-    if(window.consent)_paq.push(['setCustomDimension', 4, window.consent]);
+    if(typeof window.userData.notifications === "boolean")_paq.push(['setCustomDimension', 3, window.userData.notifications]);
+    if(typeof window.consent === "boolean")_paq.push(['setCustomDimension', 4, window.consent]);
     if(window.appData.version)_paq.push(['setCustomDimension', 5, window.appData.version]);
     if(window.userData.window)_paq.push(['setCustomDimension', 6, window.userData.window.width+"x"+window.userData.window.height]);
-    if(window.userData.showCompleted)_paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
-    if(window.userData.files) _paq.push(['setCustomDimension', 8, window.userData.files.length]);
-    if(window.userData.useTextarea)_paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
-    if(window.userData.compactView)_paq.push(['setCustomDimension', 10, window.userData.compactView]);
+    if(typeof window.userData.showCompleted === "boolean")_paq.push(['setCustomDimension', 7, window.userData.showCompleted]);
+    if(window.userData.files>0) _paq.push(['setCustomDimension', 8, window.userData.files.length]);
+    if(typeof window.userData.useTextarea === "boolean")_paq.push(['setCustomDimension', 9, window.userData.useTextarea]);
+    if(typeof window.userData.compactView === "boolean")_paq.push(['setCustomDimension', 10, window.userData.compactView]);
+    if(typeof window.userData.sortCompletedLast === "boolean")_paq.push(['setCustomDimension', 11, window.userData.sortCompletedLast]);
+    if(typeof window.userData.showHidden === "boolean")_paq.push(['setCustomDimension', 12, window.userData.showHidden]);
+    if(typeof window.userData.showDueIsToday === "boolean")_paq.push(['setCustomDimension', 13, window.userData.showDueIsToday]);
+    if(typeof window.userData.showDueIsFuture === "boolean")_paq.push(['setCustomDimension', 14, window.userData.showDueIsFuture]);
+    if(typeof window.userData.showDueIsPast === "boolean")_paq.push(['setCustomDimension', 15, window.userData.showDueIsPast]);
+    if(window.userData.sortBy)_paq.push(['setCustomDimension', 16, window.userData.sortBy]);
+    if(window.userData.zoom)_paq.push(['setCustomDimension', 17, window.userData.zoom]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -1962,7 +1959,203 @@ function configureMatomo() {
     return Promise.reject(error);
   }
 }
-function configureEvents() {
+function configureTodoTableTemplate() {
+  try {
+    todoTableContainer.innerHTML = "";
+    todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
+    todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
+    todoTableBodyCellMoreTemplate.innerHTML = `
+      <div class="dropdown is-right">
+        <div class="dropdown-trigger">
+          <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+        </div>
+        <div class="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a class="dropdown-item">` + window.translations.useAsTemplate + `</a>
+            <a href="#" class="dropdown-item">` + window.translations.edit + `</a>
+            <a class="dropdown-item">` + window.translations.delete + `</a>
+          </div>
+        </div>
+      </div>
+    `;
+    todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
+    todoTableBodyRowTemplate.setAttribute("class", "flex-table");
+    todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
+    todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
+    todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
+    todoTableBodyCellTextTemplate.setAttribute("role", "cell");
+    todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
+    todoTableBodyCellTextTemplate.setAttribute("href", "#");
+    tableContainerCategoriesTemplate.setAttribute("class", "categories");
+    todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
+    todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
+    todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
+    todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
+    todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
+    todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
+    return Promise.resolve("Success: Table templates set up");
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+function configureMainView() {
+  try {
+    // jump to previously added item
+    if(document.getElementById("previousItem")) jumpToItem(document.getElementById("previousItem"))
+    // set scaling factor if default font size has changed
+    if(window.userData.zoom) {
+      html.style.zoom = window.userData.zoom + "%";
+      zoomStatus.innerHTML = window.userData.zoom + "%";
+      zoomRangePicker.value = window.userData.zoom;
+    }
+    // add filename to application title
+    if(window.userData.file) {
+      switch (window.appData.os) {
+        case "windows":
+          title.innerHTML = window.userData.file.split("\\").pop() + " - sleek";
+          break;
+        default:
+          title.innerHTML = window.userData.file.split("/").pop() + " - sleek";
+          break;
+      }
+    }
+    // restore persisted width of filter drawer
+    if(window.userData.drawerWidth) setPaneWidth(window.userData.drawerWidth);
+    // check if compact view is suppose to be active
+    if(window.userData.compactView) body.classList.add("compact");
+    // add version number to about tab in settings modal
+    version.innerHTML = window.appData.version;
+    // open filter drawer if it has been persisted
+    if(window.userData.filterDrawer) {
+      showDrawer(true, navBtnFilter.id, filterDrawer.id).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    // open view drawer if it has been persisted
+    } else if(window.userData.viewDrawer) {
+      showDrawer(true, navBtnView.id, viewDrawer.id).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    }
+    // check if archive button should be enabled
+    setButtonState("btnArchiveTodos");
+    // adjust input field
+    if(window.userData.useTextarea) toggleInputSize("input");
+    if(window.userData.file) {
+      // if there is a file onboarding is hidden
+      showOnboarding(false).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    } else {
+      // if there is a file onboarding is hidden
+      showOnboarding(true).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+      return Promise.resolve("Info: No file selected, showing onboarding");
+    }
+    // hide/show the addTodoContainer or noResultTodoContainer
+    // file has content and objects are shown
+    if(visibleRows === 0 && items.objects.length>0) {
+      todoTableSearchContainer.classList.add("is-active");
+      addTodoContainer.classList.remove("is-active");
+      noResultContainer.classList.add("is-active");
+      todoTable.classList.remove("is-active");
+      navBtnFilter.classList.remove("is-active");
+      return Promise.resolve("Info: File is empty");
+    } else if(visibleRows > 0 && items.filtered.length>0) {
+      todoTableSearchContainer.classList.add("is-active");
+      addTodoContainer.classList.remove("is-active");
+      noResultContainer.classList.remove("is-active");
+      todoTable.classList.add("is-active");
+      navBtnFilter.classList.add("is-active");
+      return Promise.resolve("Info: File has content and results are shown");
+    // file is NOT empty but no results
+    } else {
+      todoTableSearchContainer.classList.remove("is-active");
+      addTodoContainer.classList.add("is-active");
+      noResultContainer.classList.remove("is-active");
+      navBtnFilter.classList.remove("is-active");
+      todoTable.classList.remove("is-active");
+      return Promise.resolve("Info: File has content, but no results are shown due to filters or search input");
+    }
+  } catch(error) {
+    showOnboarding(true).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+function configureDatepicker() {
+  try {
+    dueDatePicker = new Datepicker(dueDatePickerInput, {
+      autohide: true,
+      language: window.userData.language,
+      format: "yyyy-mm-dd",
+      clearBtn: true,
+      beforeShowDay: function(date) {
+        let today = new Date();
+        if (date.getDate() == today.getDate() &&
+            date.getMonth() == today.getMonth() &&
+            date.getFullYear() == today.getFullYear()) {
+          return { classes: 'today'};
+        }
+      }
+    });
+    return Promise.resolve("Success: Datepicker configured")
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+
+function checkDismissedMessages() {
+  try {
+    const dismissedMessages = window.userData.dismissedMessages;
+    if(!dismissedMessages) return Promise.resolve("Info: No already checked messages found, will skip this check");
+    messages.forEach((message) => {
+      if(dismissedMessages.includes(message.getAttribute("data"))) {
+        message.classList.remove("is-active");
+      } else {
+        message.classList.add("is-active");
+      }
+    });
+    return Promise.resolve("Info: Checked for already dismissed messages");
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+function checkIsTodoVisible(todo) {
+  if(!window.userData.showHidden && todo.h) return false
+  if(!todo.text) return false
+  for(let category in window.userData.hideFilterCategories) {
+    //if(Array.isArray(todo[window.userData.hideFilterCategories[category]])) return false
+    if(todo[window.userData.hideFilterCategories[category]]) return false
+  }
+  return true;
+}
+function checkIsInViewport(item) {
+  const rect = item.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
+function registerEvents() {
   try {
     // ########################################################################################################################
     // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
@@ -2414,206 +2607,11 @@ function configureEvents() {
         });
       }
     });
-    return Promise.resolve("Success: All events have been initialized");
+    return Promise.resolve("Success: Events registered");
   } catch(error) {
     error.functionName = arguments.callee.name;
     return Promise.reject(error);
   }
-}
-function configureTodoTableTemplate() {
-  try {
-    todoTableContainer.innerHTML = "";
-    todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
-    todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
-    todoTableBodyCellMoreTemplate.innerHTML = `
-      <div class="dropdown is-right">
-        <div class="dropdown-trigger">
-          <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-        </div>
-        <div class="dropdown-menu" role="menu">
-          <div class="dropdown-content">
-            <a class="dropdown-item">` + window.translations.useAsTemplate + `</a>
-            <a href="#" class="dropdown-item">` + window.translations.edit + `</a>
-            <a class="dropdown-item">` + window.translations.delete + `</a>
-          </div>
-        </div>
-      </div>
-    `;
-    todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
-    todoTableBodyRowTemplate.setAttribute("class", "flex-table");
-    todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
-    todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
-    todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
-    todoTableBodyCellTextTemplate.setAttribute("role", "cell");
-    todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
-    todoTableBodyCellTextTemplate.setAttribute("href", "#");
-    tableContainerCategoriesTemplate.setAttribute("class", "categories");
-    todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
-    todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
-    todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
-    todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
-    todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
-    todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
-    return Promise.resolve("Success: Table templates set up");
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-function configureMainView() {
-  try {
-    // jump to previously added item
-    if(document.getElementById("previousItem")) jumpToItem(document.getElementById("previousItem"))
-    // set scaling factor if default font size has changed
-    if(window.userData.zoom) {
-      html.style.zoom = window.userData.zoom + "%";
-      zoomStatus.innerHTML = window.userData.zoom + "%";
-      zoomRangePicker.value = window.userData.zoom;
-    }
-    // add filename to application title
-    if(window.userData.file) {
-      switch (window.appData.os) {
-        case "windows":
-          title.innerHTML = window.userData.file.split("\\").pop() + " - sleek";
-          break;
-        default:
-          title.innerHTML = window.userData.file.split("/").pop() + " - sleek";
-          break;
-      }
-    }
-    // restore persisted width of filter drawer
-    if(window.userData.drawerWidth) setPaneWidth(window.userData.drawerWidth);
-    // check if compact view is suppose to be active
-    if(window.userData.compactView) body.classList.add("compact");
-    // add version number to about tab in settings modal
-    version.innerHTML = window.appData.version;
-    // open filter drawer if it has been persisted
-    if(window.userData.filterDrawer) {
-      showDrawer(true, navBtnFilter.id, filterDrawer.id).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        handleError(error);
-      });
-    // open view drawer if it has been persisted
-    } else if(window.userData.viewDrawer) {
-      showDrawer(true, navBtnView.id, viewDrawer.id).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        handleError(error);
-      });
-    }
-    // check if archive button should be enabled
-    setButtonState("btnArchiveTodos");
-    // adjust input field
-    if(window.userData.useTextarea) toggleInputSize("input");
-    if(window.userData.file) {
-      // if there is a file onboarding is hidden
-      showOnboarding(false).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        handleError(error);
-      });
-    } else {
-      // if there is a file onboarding is hidden
-      showOnboarding(true).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        handleError(error);
-      });
-      return Promise.resolve("Info: No file selected, showing onboarding");
-    }
-    // hide/show the addTodoContainer or noResultTodoContainer
-    // file has content and objects are shown
-    if(visibleRows === 0 && items.objects.length>0) {
-      todoTableSearchContainer.classList.add("is-active");
-      addTodoContainer.classList.remove("is-active");
-      noResultContainer.classList.add("is-active");
-      todoTable.classList.remove("is-active");
-      navBtnFilter.classList.remove("is-active");
-      return Promise.resolve("Info: File is empty");
-    } else if(visibleRows > 0 && items.filtered.length>0) {
-      todoTableSearchContainer.classList.add("is-active");
-      addTodoContainer.classList.remove("is-active");
-      noResultContainer.classList.remove("is-active");
-      todoTable.classList.add("is-active");
-      navBtnFilter.classList.add("is-active");
-      return Promise.resolve("Info: File has content and results are shown");
-    // file is NOT empty but no results
-    } else {
-      todoTableSearchContainer.classList.remove("is-active");
-      addTodoContainer.classList.add("is-active");
-      noResultContainer.classList.remove("is-active");
-      navBtnFilter.classList.remove("is-active");
-      todoTable.classList.remove("is-active");
-      return Promise.resolve("Info: File has content, but no results are shown due to filters or search input");
-    }
-  } catch(error) {
-    showOnboarding(true).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-function configureDatepicker() {
-  try {
-    dueDatePicker = new Datepicker(dueDatePickerInput, {
-      autohide: true,
-      language: window.userData.language,
-      format: "yyyy-mm-dd",
-      clearBtn: true,
-      beforeShowDay: function(date) {
-        let today = new Date();
-        if (date.getDate() == today.getDate() &&
-            date.getMonth() == today.getMonth() &&
-            date.getFullYear() == today.getFullYear()) {
-          return { classes: 'today'};
-        }
-      }
-    });
-    return Promise.resolve("Success: Datepicker configured")
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-
-function checkDismissedMessages() {
-  try {
-    const dismissedMessages = window.userData.dismissedMessages;
-    if(!dismissedMessages) return Promise.resolve("Info: No already checked messages found, will skip this check");
-    messages.forEach((message) => {
-      if(dismissedMessages.includes(message.getAttribute("data"))) {
-        message.classList.remove("is-active");
-      } else {
-        message.classList.add("is-active");
-      }
-    });
-    return Promise.resolve("Info: Checked for already dismissed messages");
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-function checkIsTodoVisible(todo) {
-  if(!window.userData.showHidden && todo.h) return false
-  if(!todo.text) return false
-  for(let category in window.userData.hideFilterCategories) {
-    //if(Array.isArray(todo[window.userData.hideFilterCategories[category]])) return false
-    if(todo[window.userData.hideFilterCategories[category]]) return false
-  }
-  return true;
-}
-function checkIsInViewport(item) {
-  const rect = item.getBoundingClientRect();
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
 }
 
 function resetFilters() {
@@ -2838,7 +2836,7 @@ window.onload = function () {
   .then(function(response) {
     console.info(response);
     return new Promise(function(resolve) {
-      resolve(configureEvents());
+      resolve(registerEvents());
     });
   })
   .then(function(response) {

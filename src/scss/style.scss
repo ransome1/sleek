@@ -1064,7 +1064,7 @@ nav {
 .messages {
   width: 25em;
   position: fixed;
-  right: 1em;
+  right: 2em;
   bottom: 1em;
   z-index: 40;
   .message {
@@ -1082,6 +1082,9 @@ nav {
   }
   .message-body p {
     margin-bottom: .5em;
+  }
+  .notification.is-danger {
+    background-color: $has-text-danger;
   }
 }
 body.compact {

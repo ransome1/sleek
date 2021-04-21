@@ -882,7 +882,7 @@ nav {
 .messages {
   width: 25em;
   position: fixed;
-  right: 1em;
+  right: 2em;
   bottom: 1em;
   z-index: 40; }
   .messages .message {
@@ -896,6 +896,8 @@ nav {
     margin-top: .5em; }
   .messages .message-body p {
     margin-bottom: .5em; }
+  .messages .notification.is-danger {
+    background-color: #ff3860; }
 
 body.compact #todoTableSearchContainer {
   padding: 1em; }

@@ -45,8 +45,7 @@ input[type="checkbox"]:active {
   box-shadow: none !important; }
 
 button {
-  color: white !important;
-  background: #3B3B3B !important; }
+  color: white !important; }
 
 .button[disabled],
 fieldset[disabled] {
@@ -250,6 +249,8 @@ nav {
   color: #CCCDCF; }
   .modal .modal-content .card .card-header-title {
     color: white; }
+  .modal .modal-content .card .card-content button {
+    background: #2d2d2d !important; }
   .modal .modal-content .card .card-footer,
   .modal .modal-content .card .card-footer-item {
     border-color: #2d2d2d; }

@@ -49,7 +49,6 @@ input[type="checkbox"]:active {
 }
 button {
   color: white!important;
-  background: $even-darker-grey!important;
 }
 .button[disabled],
 fieldset[disabled] {
@@ -317,6 +316,11 @@ nav {
       color: $lighter-grey;
       .card-header-title {
         color: white;
+      }
+      .card-content {
+        button {
+          background: $darker-grey!important;
+        }
       }
       .card-footer,
       .card-footer-item {
