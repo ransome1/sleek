@@ -26,3 +26,4 @@ package-lock.json
 .yarnclean
 sleek.sublime-project
 sleek.sublime-workspace
+*conflict*

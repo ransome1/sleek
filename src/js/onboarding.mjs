@@ -41,11 +41,11 @@ btnOnboardingCreateTodoFile.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
 }
 
-btnOnboardingOpenTodoFile.onclick = async function() {
+btnOnboardingOpenTodoFile.onclick = function() {
   // if files are already available show file modal
   if(typeof userData.files === "object" && userData.files.length > 0) {
 
-    await generateFileList(true).then(response => {
+    generateFileList().then(response => {
       console.info(response);
     }).catch(error => {
       handleError(error);
@@ -74,6 +74,7 @@ export function showOnboarding() {
       onboardingContainer.classList.add("is-active");
       todoTable.classList.remove("is-active");
       todoTableSearchContainer.classList.remove("is-active");
+      modalChangeFile.classList.remove("is-active");
 
       return Promise.resolve("Info: Onboarding is shown");
 

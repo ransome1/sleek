@@ -2,7 +2,7 @@
 import { appData, userData, setUserData, translations } from "../render.js";
 import { generateGroups, items } from "./todos.mjs";
 import { isToday, isPast } from "./date.mjs";
-import { generateFileList } from "./files.mjs";
+import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 import { _paq } from "./matomo.mjs";
@@ -176,7 +176,19 @@ export function configureMainView() {
     (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
 
     // if files are available generate list and tabs
-    if(userData.files && userData.files.length > 0) generateFileList(false);
+    if(userData.files && userData.files.length > 0) {
+      // generateFileList(false).then(function(response) {
+      //   console.info(response);
+      // }).catch(function(error) {
+      //   handleError(error);
+      // });
+      
+      generateFileTabs().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    }
 
     // close filterContext if open
     if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");

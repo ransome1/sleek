@@ -1,23 +1,22 @@
 "use strict";
-import { pasteItemsToClipboard } from "./helper.mjs";
-import { show, setDueDate, setPriority } from "./form.mjs";
 import { createTodoContext, setTodoComplete, archiveTodos, items } from "./todos.mjs";
-import { userData, translations } from "../render.js";
 import { getConfirmation } from "./prompt.mjs";
-import { showDrawer } from "./drawer.mjs";
-// import { onboarding } from "./onboarding.mjs";
-import { showModal } from "./content.mjs";
+import { pasteItemsToClipboard } from "./helper.mjs";
+import { removeFileFromList } from "./files.mjs";
 import { resetFilters } from "./filters.mjs";
 import { resetModal, handleError } from "./helper.mjs";
-import { removeFileFromList } from "./files.mjs";
+import { show, setDueDate, setPriority } from "./form.mjs";
+import { showDrawer } from "./drawer.mjs";
+import { showModal } from "./content.mjs";
 import { triggerToggle } from "./toggles.mjs";
+import { userData, translations } from "../render.js";
 
 const 
   autoCompleteContainer = document.getElementById("autoCompleteContainer"),
-  modalWindows = document.querySelectorAll(".modal"),
   modalForm = document.getElementById("modalForm"),
-  todoTable = document.getElementById("todoTable"),
-  todoContext = document.getElementById("todoContext");
+  modalWindows = document.querySelectorAll(".modal"),
+  todoContext = document.getElementById("todoContext"),
+  todoTable = document.getElementById("todoTable");
   
 export let 
   currentRow = -1;
@@ -36,15 +35,16 @@ export function focusRow(row) {
 // ******************************************************
 
 export const isInputFocused = () => { return document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput"; }
-const isDrawerOpen = () => { return userData.filterDrawer || userData.viewDrawer; }
 export const isRowFocused = () => { return document.activeElement.classList.contains("todo"); }
-const isContextOpen = () => { return todoContext.classList.contains("is-active"); }
 export const isModalOpen = () => {
   for(let i = 0; i < modalWindows.length; i++) {
     if(modalWindows[i].classList.contains("is-active")) return true;
   }
   return false;
 }
+const isDrawerOpen = () => { return userData.filterDrawer || userData.viewDrawer; }
+const isOnboardingOpen = () => { return document.getElementById("onboardingContainer").classList.contains("is-active"); }
+const isContextOpen = () => { return todoContext.classList.contains("is-active"); }
 
 export async function registerShortcuts() {
   try {
@@ -244,41 +244,6 @@ export async function registerShortcuts() {
         }
 
         // ******************************************************
-        // open new file
-        // ******************************************************
-
-        if((event.ctrlKey || event.metaKey) && event.key === "o" && !isInputFocused()) {
-          window.api.send("openOrCreateFile", "open");
-          return false;
-        }
-
-        // ******************************************************
-        // copy file content to clipboard
-        // ******************************************************      
-
-        if((event.ctrlKey || event.metaKey) && event.key === "c" && !isInputFocused()) {
-          pasteItemsToClipboard(items.filtered);
-          return false;
-        }
-
-        // ******************************************************
-        // close file tab or window
-        // ******************************************************
-
-        if((event.ctrlKey || event.metaKey) && event.key === "w") {
-          const isTabFound = userData.files.findIndex(file => {
-            return file[2] === 1;
-          });
-          if(isTabFound >= 0) {
-            let index = userData.files.findIndex(file => file[0] === 1);
-            removeFileFromList(index, 1);
-          } else {
-            window.api.send("closeWindow");
-          }
-          return false;
-        }
-        
-        // ******************************************************
         // tab through tabs
         // ******************************************************
 
@@ -376,7 +341,7 @@ export async function registerShortcuts() {
 
         if(event.key==="0" && !isInputFocused()) {
           // abort when onboarding is shown
-          if(onboarding) return false;
+          if(isOnboardingOpen()) return false;
           resetFilters(true).then(function(response) {
             console.info(response);
           }).catch(function(error) {
@@ -390,7 +355,7 @@ export async function registerShortcuts() {
         
         if(event.key==="h" && !isInputFocused()) {
           // abort when onboarding is shown
-          if(onboarding) return false;
+          if(isOnboardingOpen()) return false;
 
           const showCompleted = document.getElementById("showCompleted");
           triggerToggle(showCompleted, true).then(function(response) {
@@ -407,7 +372,7 @@ export async function registerShortcuts() {
 
         if(event.key==="t" && !isInputFocused()) {
           // abort when onboarding is shown
-          if(onboarding) return false;
+          if(isOnboardingOpen()) return false;
           triggerToggle("deferredTodos").then(function(response) {
             console.info(response);
           }).catch(function(error) {
@@ -422,7 +387,7 @@ export async function registerShortcuts() {
 
         if(event.key==="a" && !isInputFocused()) {
           // abort when onboarding is shown
-          if(onboarding) return false;
+          if(isOnboardingOpen()) return false;
           // abort when no completed todos are present
           if(items.complete.length===0) return false;
           // handle user confirmation and pass callback function
@@ -436,7 +401,7 @@ export async function registerShortcuts() {
         
         if(event.key==="b" && !isInputFocused()) {
           // abort when onboarding is shown
-          if(onboarding) return false;
+          if(isOnboardingOpen()) return false;
           
           showDrawer(document.getElementById("navBtnFilter")).then(function(result) {
             console.log(result);
@@ -459,8 +424,8 @@ export async function registerShortcuts() {
         // open form
         // ******************************************************
 
-        if(event.key==="n" && !isInputFocused() && !onboarding) {
-          //if(onboarding) return false;
+        if(event.key==="n" && !isInputFocused() && !isOnboardingOpen()) {
+          //if(isOnboardingOpen()) return false;
           show().then(function(response) {
             console.info(response);
           }).catch(function(error) {
@@ -472,6 +437,54 @@ export async function registerShortcuts() {
       }
 
     }, true)
+
+    // ******************************************************
+    // combinations with metaKey only work on keydown
+    // ******************************************************
+
+    window.addEventListener("keydown", async function(event) {
+
+        // ******************************************************
+        // open new file
+        // ******************************************************
+
+        if((event.ctrlKey || event.metaKey) && event.key === "o") {
+          window.api.send("openOrCreateFile", "open");
+          return false;
+        }
+
+        // ******************************************************
+        // copy file content to clipboard
+        // ******************************************************
+
+        if((event.ctrlKey || event.metaKey) && event.key === "c" && !isInputFocused()) {
+          pasteItemsToClipboard(items.filtered);
+          return false;
+        }
+
+        // ******************************************************
+        // close file tab or window
+        // ******************************************************
+
+        if((event.ctrlKey || event.metaKey) && event.key === "w") {
+
+          // get active file
+          const index = userData.files.findIndex(file => file[0] === 1);
+
+          // if all files are removed from tab bar, window will be closed
+          if(index < 1) window.api.send("closeWindow");
+
+          // remove active file from tab bar
+          removeFileFromList(index, false).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          
+          return false;
+        }        
+
+    });
 
     return Promise.resolve("Success: Keyboard shortcuts registered");
 
