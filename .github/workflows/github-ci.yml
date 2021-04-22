@@ -52,11 +52,16 @@ jobs:
           node-version: 14
       - run: npm install electron-builder --save-dev
       - name: Build/release Electron app
+        env:
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
   mirror:
+    needs: release
+    name: Mirror code to opencode.net
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1

@@ -238,7 +238,7 @@ const createWindow = () => {
   }
   if(typeof userData.data.window != "object") userData.set("window", { x: 160, y: 240, width: 1024, height: 768 });
   if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
-  if(typeof userData.data.notifcations != "boolean") userData.set("notifications", true);
+  if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
   if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
   if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
   if(typeof userData.data.matomoEvents != "boolean") userData.set("matomoEvents", false);
