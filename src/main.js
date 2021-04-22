@@ -44,7 +44,26 @@ const appData = {
   development: isDevelopment,
   languages: i18nextOptions.supportedLngs,
   path: __dirname,
-  os: null
+  os: null,
+  channel: null
+}
+// ########################################################################################################################
+// WIP IDENTIFY SOURCE CHANNEL
+// ########################################################################################################################
+if(process.env.APPIMAGE) {
+  appData.channel = "AppImage";
+} else if(process.windowsStore) {
+  appData.channel = "Windows Store";
+} else if(process.mas) {
+  appData.channel = "Apple App Store";
+} else if(process.env.SNAP) {
+  appData.channel = "Snap Store";
+} else if(process.env.FLATPAK_ID) {
+  appData.channel = "Flathub";
+} else if(process.env.AUR) {
+  appData.channel = "AUR";
+} else {
+  appData.channel = "Misc";
 }
 const createWindow = () => {
   // ########################################################################################################################

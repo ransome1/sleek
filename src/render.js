@@ -1934,6 +1934,7 @@ function configureMatomo() {
     if(typeof window.userData.showDueIsPast === "boolean")_paq.push(['setCustomDimension', 15, window.userData.showDueIsPast]);
     if(window.userData.sortBy)_paq.push(['setCustomDimension', 16, window.userData.sortBy]);
     if(window.userData.zoom)_paq.push(['setCustomDimension', 17, window.userData.zoom]);
+    if(window.appData.channel)_paq.push(['setCustomDimension', 18, window.appData.channel]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -2795,6 +2796,12 @@ window.onload = function () {
     });
   })
   .then(function(response) {
+    console.info(response);
+    return new Promise(function(resolve) {
+      resolve(configureMatomo());
+    });
+  })
+  .then(function(response) {
     console.log(response);
     return new Promise(function(resolve) {
       window.api.send("translations", userData.language);
@@ -2837,12 +2844,6 @@ window.onload = function () {
     console.info(response);
     return new Promise(function(resolve) {
       resolve(registerEvents());
-    });
-  })
-  .then(function(response) {
-    console.info(response);
-    return new Promise(function(resolve) {
-      resolve(configureMatomo());
     });
   })
   .then(function(response) {
