@@ -21,10 +21,8 @@
   "build": {
     "files": [
       "!System Volume Information${/*}",
-      "!flatpak${/*}",
       "!build${/*}",
       "!snap${/*}",
-      "!flatpak${/*}",
       "!.git${/*}",
       "!.github${/*}",
       "!dist${/*}",
