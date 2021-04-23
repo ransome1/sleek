@@ -50,7 +50,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - run: npm install electron-builder --save-dev
+      - run: yarn add electron-builder
       - name: Build/release Electron app
         env:
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}

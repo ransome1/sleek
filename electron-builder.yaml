@@ -5,7 +5,6 @@ files:
   - filter:
       - '!__tests__${/*}'
       - '!System Volume Information${/*}'
-      - '!flatpak${/*}'
       - '!build${/*}'
       - '!snap${/*}'
       - '!flatpak${/*}'
