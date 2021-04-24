@@ -59,10 +59,10 @@ You can download sleek for Windows, MacOS and Linux from
 - <a href="https://github.com/ransome1/sleek/releases/latest">Github</a>
 
 ### Build sleek from source code
-1. Setup <a href="https://docs.github.com/en/github/getting-started-with-github/set-up-git" target="blank">Git</a> and <a href="https://nodejs.org/" target="blank">node.js</a>
+1. Setup <a href="https://docs.github.com/en/github/getting-started-with-github/set-up-git" target="blank">Git</a>, <a href="https://nodejs.org/" target="blank">node.js</a> and yarn.
 2. Clone sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
-3. Install dependencies `npm install`
-4. Build sleek `npm run dist` (Binaries for all plattforms will be put into the `dist` folder)
+3. Install dependencies `yarn install`
+4. Build sleek `yarn build:windows` or `yarn build:linux` or `yarn build:macos`
 
 ### sleeks Roadmap 2021
 A prioritized backlog for new features and known issues can be found on <a href="https://github.com/ransome1/sleek/projects/2">sleeks' roadmap for 2021</a>.
