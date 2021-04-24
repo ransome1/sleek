@@ -2,11 +2,11 @@
 ## sleek is a todo app based on todo.txt, free and open-source. Available for Linux, Windows and MacOS
 + [Support sleek](#support-sleek)
 + [Screenshots](#screenshots)
-+ [Get it from Microsoft Store](#get-it-from-microsoft-store)
-+ [Get it from Snap Store](#get-it-from-snap-store)
-+ [Get it from Flathub](#get-it-from-flathub)
-+ [Get it from Arch User Repository](#get-it-from-arch-user-repository)
-+ [Download it on Github](#download-it-on-github)
++ [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
++ [Get it from Snap Store](#get-sleek-from-snap-store)
++ [Get it from Flathub](#get-sleek-from-flathub)
++ [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
++ [Download it on Github](#download-sleek-on-github)
 + [Build sleek from source code](#build-sleek-from-source-code)
 + [sleeks Roadmap 2021](#sleeks-roadmap-2021)
 + [Features](#features)
@@ -31,38 +31,38 @@ The todo list can be sorted and grouped by priorities or due dates. Todos with d
 * Contribute <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
 * Translate sleek into your own language and contribute your translations
 
-### Get it from Microsoft Store
+### Get sleek from Microsoft Store
 You can install sleek from Microsofts Windows Store
 
 <a href="//www.microsoft.com/store/apps/9NWM2WXF60KR?cid=storebadge&ocid=badge" target="blank"><img src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png' alt='English badge' width='180'/></a>
 
-### Get it from Snap Store
+### Get sleek from Snap Store
 You can install sleek from Canonicals Snap Store using: `sudo snap install sleek`
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
-### Get it from Flathub
+### Get sleek from Flathub
 Install sleek from <a href="https://flathub.org/apps/details/com.github.ransome1.sleek" target="blank">Flathub</a> using: `flatpak install flathub com.github.ransome1.sleek`
 
 Run it using: `flatpak run com.github.ransome1.sleek`
 
 <a href="https://flathub.org/apps/details/com.github.ransome1.sleek" target="blank"><img width='180' alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
 
-### Get it from Arch User Repository
+### Get sleek from Arch User Repository
 Install sleek from <a href="https://aur.archlinux.org/packages/sleek/" target="blank">AUR</a>.
 1. Setup <a href="https://github.com/Jguer/yay#installation" target="blank">Yay</a>
 2. `yay -S sleek`
 
-### Download it on Github
+### Download sleek
 You can download sleek for Windows, MacOS and Linux from
 - <a href="https://sourceforge.net/p/sleek/" target="blank">SourceForge</a>
 - <a href="https://github.com/ransome1/sleek/releases/latest">Github</a>
 
 ### Build sleek from source code
-1. Setup <a href="https://docs.github.com/en/github/getting-started-with-github/set-up-git" target="blank">Git</a> and <a href="https://nodejs.org/" target="blank">node.js</a>
-2. Fork sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
-3. Install dependencies `npm install`
-4. Build sleek `npm run dist` (Binaries for all plattforms will be put into the `dist` folder)
+1. Setup <a href="https://docs.github.com/en/github/getting-started-with-github/set-up-git" target="blank">Git</a>, <a href="https://nodejs.org/" target="blank">node.js</a> and <a href="https://yarnpkg.com/getting-started" target="blank">yarn</a>.
+2. Clone sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
+3. Install dependencies `yarn install`
+4. Build sleek `yarn build:windows` or `yarn build:linux` or `yarn build:macos`
 
 ### sleeks Roadmap 2021
 A prioritized backlog for new features and known issues can be found on <a href="https://github.com/ransome1/sleek/projects/2">sleeks' roadmap for 2021</a>.
@@ -129,7 +129,6 @@ A prioritized backlog for new features and known issues can be found on <a href=
 - Electron: https://github.com/electron/electron
 - Electron builder: https://github.com/electron-userland/electron-builder
 - Electron packager (only for the Snap builds): https://github.com/electron/electron-packager
-- electron-util: https://github.com/sindresorhus/electron-util
 - Bulma CSS: https://github.com/jgthms/bulma
 - Font Awesome: https://github.com/FortAwesome/Font-Awesome
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt

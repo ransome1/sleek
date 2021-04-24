@@ -63,6 +63,13 @@ parts:
     plugin: nil
     build-snaps: [ gnome-3-28-1804 ]
     override-prime: |
+      cd sleek
+      ls -l
+      #rm -R sleek/resources/app/dist
+      #rm -R sleek/resources/app/assets/screenshots
+      #rm -R sleek/resources/app/snap
+      #rm -R sleek/resources/app/build
+      #rm -R sleek/sleek-linux-x64
       set -eux
       for snap in "gnome-3-28-1804"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
