@@ -6,6 +6,30 @@ const documentIds = document.querySelectorAll("[id]");
 documentIds.forEach(function(id,index) {
   window[id] = document.getElementById(id.getAttribute("id"));
 });
+
+
+// saved filters:
+let savedFilters = [
+  {
+    label: "high-priority work stuff",
+    selectedFilters: '[["work","contexts"],["A","priority"]]',
+  },
+];
+const savedFiltersList = document.querySelector("#savedFiltersList");
+const saveFilterBtn = document.querySelector("#saveFilterBtn");
+function populateSavedFilters() {
+  savedFiltersList.innerHTML = "";
+  savedFilters.forEach((item) => {
+    const button = document.createElement("button");
+    button.textContent = item.label;
+    button.className = "button";
+    button.addEventListener("click", () => {
+      setUserData("selectedFilters", item.selectedFilters);
+      startBuilding();
+    });
+    savedFiltersList.append(button);
+  });
+}
 // ########################################################################################################################
 // PREPARE TABLE BUILDING
 // ########################################################################################################################
@@ -2158,6 +2182,15 @@ function checkIsInViewport(item) {
 
 function registerEvents() {
   try {
+    saveFilterBtn.addEventListener("click", () => {
+      const { selectedFilters } = window.userData;
+      // TODO: ask user for input
+      // const label = prompt("label");
+      const label = selectedFilters;
+      savedFilters.push({ label, selectedFilters });
+      populateSavedFilters();
+    });
+    populateSavedFilters();
     // ########################################################################################################################
     // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
     // ########################################################################################################################
