@@ -128,7 +128,6 @@ A prioritized backlog for new features and known issues can be found on <a href=
 ### Used libraries
 - Electron: https://github.com/electron/electron
 - Electron builder: https://github.com/electron-userland/electron-builder
-- Electron packager (only for the Snap builds): https://github.com/electron/electron-packager
 - Bulma CSS: https://github.com/jgthms/bulma
 - Font Awesome: https://github.com/FortAwesome/Font-Awesome
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt
