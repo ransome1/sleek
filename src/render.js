@@ -911,20 +911,18 @@ function generateRecurringTodo(todo) {
   try {
     // duplicate not reference
     let recurringItem = Object.assign({}, todo);
+    recurringItem.complete = false;
+    recurringItem.completed = null;
     // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
-    if(recurringItem.complete && recurringItem.due && recurringItem.due.isFuture()) {
+    if(recurringItem.due && recurringItem.due.isFuture()) {
       recurringItem.date = new Date;
       recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
       recurringItem.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
-      recurringItem.complete = false;
-      recurringItem.completed = null;
-    } else if(recurringItem.complete && !recurringItem.due) {
+    } else if(!recurringItem.due) {
       //console.log(recurringItem);
       recurringItem.date = new Date;
       recurringItem.due = getRecurrenceDate(todo.completed, todo.rec);
       recurringItem.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
-      recurringItem.complete = false;
-      recurringItem.completed = null;
     } else {
       recurringItem.date = todo.due;
       recurringItem.due = getRecurrenceDate(todo.due, todo.rec);
