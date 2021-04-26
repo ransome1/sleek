@@ -65,7 +65,7 @@ marked.setOptions({
 renderer = {
   link(href, title, text) {
     // truncate the url
-    if(text.length > 40) text = text.slice(0, 40) + "[...] ";
+    if(text.length > 40) text = text.slice(0, 40) + " [...] ";
     return `${text} <a href="${href}" target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>`;
   }
 };
@@ -792,7 +792,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     } else if(category=="priority"){
       var headline = window.translations.priority;
     }
-    if(autoCompletePrefix==undefined) {
+    if(autoCompletePrefix===undefined) {
       // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
       todoFilterHeadline.setAttribute("class", "is-4 title");
@@ -841,11 +841,11 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }
       todoFiltersItem.setAttribute("href", "#");
       todoFiltersItem.innerHTML = filter;
-      // set highlighting if filter/category combination is on selected filters array
-      selectedFilters.forEach(function(item) {
-        if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
-      });
       if(autoCompletePrefix==undefined) {
+        // set highlighting if filter/category combination is on selected filters array
+        selectedFilters.forEach(function(item) {
+          if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
+        });
         todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
         // create the event listener for filter selection by user
         todoFiltersItem.addEventListener("click", (el) => {
@@ -1050,39 +1050,6 @@ function generateGroups(items) {
   }
   return Promise.resolve(items)
 }
-
-function sortTodoData(group) {
-  try {
-    // first sort by priority
-    group = group.sort(function(a, b) {
-      // most recent or already past todo will be sorted to the top
-      if (a.priority < b.priority || !b.priority) {
-        return -1;
-      } else if (a.priority > b.priority) {
-        return 1;
-      } else {
-        // if all fail, no change to sort order
-        return 0;
-      }
-    });
-    // second sort by due date
-    group = group.sort(function(a, b) {
-      // when a is smaller than b it, a is put after b
-      if(a.priority===b.priority && a.due < b.due) return -1
-      // when a is is undefined but b is not, b is put before a
-      if(a.priority===b.priority && !a.due && b.due) return 1
-      // when b is is undefined but a is not, a is put before b
-      if(a.priority===b.priority && a.due && !b.due) return -1
-      // if all fail, no change to sort order
-      return 0;
-    });
-    return group;
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
-
 function generateTable(groups) {
   // prepare the templates for the table
   return configureTodoTableTemplate().then(function(response) {
@@ -1227,19 +1194,19 @@ function generateTableRow(todo) {
         if(window.consent) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
     }
-    // cell for the categories
-    categories.forEach(category => {
-      if(todo[category] && category!="priority") {
-        todo[category].forEach(el => {
-          let todoTableBodyCellCategory = document.createElement("span");
-          todoTableBodyCellCategory.setAttribute("class", "tag " + category);
-          todoTableBodyCellCategory.innerHTML = el;
-          tableContainerCategories.appendChild(todoTableBodyCellCategory);
-        });
-      }
-    });
-    // add the text cell to the row
-    todoTableBodyCellText.appendChild(tableContainerCategories);
+      // cell for the categories
+      categories.forEach(category => {
+        if(todo[category] && category!="priority") {
+          todo[category].forEach(el => {
+            let todoTableBodyCellCategory = document.createElement("span");
+            todoTableBodyCellCategory.setAttribute("class", "tag " + category);
+            todoTableBodyCellCategory.innerHTML = el;
+            tableContainerCategories.appendChild(todoTableBodyCellCategory);
+          });
+        }
+      });
+      // only add the categories to text cell if it has child nodes
+      if(tableContainerCategories.hasChildNodes()) todoTableBodyCellText.appendChild(tableContainerCategories);
     // check for and add a given due date
     if(todo.due) {
       var tag = convertDate(todo.due);
@@ -1319,6 +1286,39 @@ function generateTableRow(todo) {
     return Promise.reject(error);
   }
 }
+
+function sortTodoData(group) {
+  try {
+    // first sort by priority
+    group = group.sort(function(a, b) {
+      // most recent or already past todo will be sorted to the top
+      if (a.priority < b.priority || !b.priority) {
+        return -1;
+      } else if (a.priority > b.priority) {
+        return 1;
+      } else {
+        // if all fail, no change to sort order
+        return 0;
+      }
+    });
+    // second sort by due date
+    group = group.sort(function(a, b) {
+      // when a is smaller than b it, a is put after b
+      if(a.priority===b.priority && a.due < b.due) return -1
+      // when a is is undefined but b is not, b is put before a
+      if(a.priority===b.priority && !a.due && b.due) return 1
+      // when b is is undefined but a is not, a is put before b
+      if(a.priority===b.priority && a.due && !b.due) return -1
+      // if all fail, no change to sort order
+      return 0;
+    });
+    return group;
+  } catch(error) {
+    error.functionName = arguments.callee.name;
+    return Promise.reject(error);
+  }
+}
+
 
 function filterItems(items, searchString) {
   try {

@@ -108,8 +108,9 @@
     "i18next-fs-backend": "^1.1.1"
   },
   "devDependencies": {
-    "electron": "^12.0.4",
+    "node-sass": "^5.0.0",
     "chai": "^4.3.4",
+    "electron": "^12.0.4",
     "electron-builder": "^22.10.5",
     "jest": "^26.6.3",
     "jest-electron": "^0.1.11",

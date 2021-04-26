@@ -446,6 +446,8 @@ nav {
         background: transparent;
         color: #666666;
         margin-right: .5em; }
+      #todoTable .flex-table .flex-row.text .categories {
+        padding: .5em; }
     #todoTable .flex-table .flex-row.spacer {
       width: .5em;
       background: transparent; }
