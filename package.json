@@ -102,13 +102,13 @@
     "start": "yarn css-build & yarn css-watch & electron ."
   },
   "dependencies": {
-    "electron": "^12.0.4",
     "bulma": "^0.9.2",
     "i18next": "^20.2.1",
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-fs-backend": "^1.1.1"
   },
   "devDependencies": {
+    "electron": "^12.0.4",
     "chai": "^4.3.4",
     "electron-builder": "^22.10.5",
     "jest": "^26.6.3",

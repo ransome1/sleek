@@ -201,7 +201,6 @@ function modalFormInputEvent() {
     autoCompleteValue = modalFormInput.value.substr(modalFormInput.value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
     autoCompletePrefix = modalFormInput.value.charAt(modalFormInput.value.lastIndexOf(" ", caretPosition)+1);
   } else {
-    autoCompletePrefix = null;
     autoCompleteContainer.classList.remove("is-active");
     autoCompleteContainer.blur();
     return false;
