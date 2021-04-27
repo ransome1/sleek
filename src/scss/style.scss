@@ -205,7 +205,7 @@ nav {
     left: 0;
   }
 }
-#noResultContainer.contentContainer {
+.contentContainer {
   height: 80%;
 }
 #recurrencePicker {
@@ -654,8 +654,14 @@ nav {
     }
   }
   .flex-table.completed {
-    opacity: .5;
-    -webkit-filter: grayscale(100%);
+    .flex-row {
+      opacity: .5;
+      -webkit-filter: grayscale(100%);
+    }
+    .flex-row.todoTableItemMore {
+      opacity: 1;
+      -webkit-filter: none;
+    }
   }
 }
 #todoTable.is-active {

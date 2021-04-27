@@ -184,7 +184,7 @@ nav {
     bottom: 0;
     left: 0; }
 
-#noResultContainer.contentContainer {
+.contentContainer {
   height: 80%; }
 
 #recurrencePicker {
@@ -545,9 +545,12 @@ nav {
       display: block; }
   #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
     display: block; }
-  #todoTable .flex-table.completed {
+  #todoTable .flex-table.completed .flex-row {
     opacity: .5;
     -webkit-filter: grayscale(100%); }
+  #todoTable .flex-table.completed .flex-row.todoTableItemMore {
+    opacity: 1;
+    -webkit-filter: none; }
 
 #todoTable.is-active {
   display: block; }

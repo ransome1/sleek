@@ -131,9 +131,6 @@ nav {
   .flex-table:hover .flex-row.todoTableItemMore a {
     color: $lighter-grey;
   }
-  .flex-table.completed {
-    opacity: .4;
-  }
   .flex-table.due {
     .button {
       color: $almost-white;
@@ -259,7 +256,6 @@ nav {
     background: $almost-black!important;
   }
 }
-
 .contexts {
   .button {
     color: $sleek-contexts-button;
@@ -443,5 +439,10 @@ nav {
   .subtitle,
   .subtitle strong {
     color: $lighter-grey;
+  }
+}
+#noResultContainer {
+  button {
+    background: transparent;
   }
 }

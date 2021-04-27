@@ -111,9 +111,6 @@ nav {
 #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
   color: #CCCDCF; }
 
-#todoTable .flex-table.completed {
-  opacity: .4; }
-
 #todoTable .flex-table.due .button {
   color: #f5f5f5; }
 
@@ -344,3 +341,6 @@ nav {
 .contentContainer .subtitle,
 .contentContainer .subtitle strong {
   color: #CCCDCF; }
+
+#noResultContainer button {
+  background: transparent; }
