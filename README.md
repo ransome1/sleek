@@ -6,19 +6,19 @@
 + [Get it from Snap Store](#get-sleek-from-snap-store)
 + [Get it from Flathub](#get-sleek-from-flathub)
 + [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
-+ [Download it on Github](#download-sleek-on-github)
++ [Download it](#download-sleek)
 + [Build sleek from source code](#build-sleek-from-source-code)
 + [sleeks Roadmap 2021](#sleeks-roadmap-2021)
 + [Features](#features)
 + [Used libraries](#used-libraries)
 
-sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and clean yet offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
+sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and simple but still offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
 
-By using sleeks GUI or simply writing in plain text todo.txt format, users can add contexts, projects, priorities, due dates or recurrences to their todos and use these todo.txt attributes as filters or search for them by full text search.
+Users can add contexts, projects, priorities, due dates or recurrences to their todos. These todo.txt attributes can then be used as filters or to group and sort the todo list.
 
-sleek watches todo.txt files continuously for changes so it can be used with other todo.txt apps. Users can switch between bright and dark mode, choose several languages and manage multiple todo.txt files.
+sleek manages and watches multiple todo.txt files continuously for changes, which makes it easy to integrate sleek with other todo.txt apps. Also users can switch between bright and dark mode and choose from multiple languages.
 
-The todo list can be sorted and grouped by priorities or due dates. Todos with due date or repeating todos will trigger alarms with thresholds of 1 or 2 days before the due date. Completed todos can be hidden or archived into separate done.txt files and if users have tons of todos, a compact view can come in handy.
+Todos with due date or repeating todos will trigger notifications and completed todos can be hidden or archived into separate done.txt files. If users have tons of todos, a compact view can come in handy.
 
 ### Screenshots
 

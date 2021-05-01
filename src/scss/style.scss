@@ -392,7 +392,7 @@ nav {
 #zoomUndo {
   cursor: pointer;
 }
-#dueDatePickerInput {
+#datePickerInput {
   cursor: pointer;
 }
 #todoTableSearchContainer {
@@ -797,7 +797,7 @@ nav {
       background: darken($sleek-contexts-button, 50%);
     }
   }
-  .button.is-dark  {
+  .button.is-dark, .button.is-dark:hover, .button.is-dark.is-hovered  {
     background: darken($sleek-contexts-button, 65%);
     color: white;
   }
@@ -811,13 +811,13 @@ nav {
       background: darken($sleek-projects-button, 50%);
     }
   }
-  .button.is-dark {
+  .button.is-dark, .button.is-dark:hover, .button.is-dark.is-hovered {
     background: darken($sleek-projects-button, 65%);
     color: white;
   }
 }
 .priority {
-  .button {
+  .button, .button:hover {
     font-size: 1.35em;
     font-family: FreeSansBold;
     background: $mid-grey;
@@ -828,12 +828,12 @@ nav {
       color: inherit;
     }
   }
-  .button.is-dark {
+  .button.is-dark span.tag {
+    background: darken($mid-grey, 50%);
+  }
+  .button.is-dark, .button.is-dark:hover, .button.is-dark.is-hovered {
     background: darken($mid-grey, 35%);
     color: white;
-    span.tag {
-      background: darken($mid-grey, 50%);
-    }
   }
   .button.A {
     background: $has-text-danger;

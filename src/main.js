@@ -8,7 +8,6 @@ const Store = require("./configs/store.config.js");
 const userData = new Store({
   configName: "user-preferences",
   defaults: {
-    window: { x: 164, y: 210, width: 1024, height: 768 },
     maximizeWindow: false,
     showCompleted: true,
     sortCompletedLast: true,
@@ -17,7 +16,7 @@ const userData = new Store({
     showDueIsFuture: true,
     showDueIsPast: true,
     selectedFilters: new Array,
-    categoriesFiltered: new Array,
+    hideFilterCategories: new Array,
     dismissedNotifications: new Array,
     dismissedMessages: new Array,
     theme: null,
@@ -236,7 +235,11 @@ const createWindow = () => {
   } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
     userData.set("theme", "light");
   }
-  if(typeof userData.data.window != "object") userData.set("window", { x: 160, y: 240, width: 1024, height: 768 });
+  //if(typeof userData.data.window != "object") userData.set("window", { x: 160, y: 240, width: 1024, height: 768 });
+  //if(typeof userData.data.width != "number") userData.set("width", 1024);
+  //if(typeof userData.data.height != "number") userData.set("height", 768);
+  if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
+  if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
   if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
   if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
   if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
@@ -258,9 +261,12 @@ const createWindow = () => {
   // CREATE WINDOW
   // ########################################################################################################################
   //const { x, y, width, height } = userData.get("window");
+
   const mainWindow = new BrowserWindow({
     width: userData.data.width,
     height: userData.data.height,
+    x: userData.data.horizontal,
+    y: userData.data.vertical,
     icon: path.join(__dirname, "../assets/icons/sleek.png"),
     simpleFullscreen: true,
     autoHideMenuBar: true,
@@ -321,7 +327,7 @@ const createWindow = () => {
         label: i18next.t("settings"),
         accelerator: "CmdOrCtrl+,",
         click: function () {
-          mainWindow.webContents.executeJavaScript("showContent(modalSettings)");
+          mainWindow.webContents.send("triggerFunction", "showContent", ["modalSettings"]);
         }
       },
       { type: "separator" },
@@ -398,7 +404,7 @@ const createWindow = () => {
         {
           label: i18next.t("help"),
           click: function () {
-            mainWindow.webContents.executeJavaScript("showContent(modalHelp)");
+            mainWindow.webContents.send("triggerFunction", "showContent", ["modalHelp"])
           }
         },
         {
@@ -436,12 +442,12 @@ const createWindow = () => {
   if(isDevelopment) {
     mainWindow.webContents.openDevTools()
   }
-  /*if(userData.data.maximizeWindow && appData.os === "windows") {
+  if(userData.data.maximizeWindow && appData.os === "windows") {
     mainWindow.maximize();
-  } else {
+  } else if(!userData.data.maximizeWindow && appData.os === "windows") {
     mainWindow.unmaximize();
-  }*/
-  if(userData.data.window) mainWindow.setBounds(userData.data.window)
+  }
+  //if(userData.data.window) mainWindow.setBounds(userData.data.window)
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
   // open links in external browser
@@ -463,18 +469,19 @@ const createWindow = () => {
   // ########################################################################################################################
   // WINDOW EVENTS
   // ########################################################################################################################
-  mainWindow.on('resize', function() {
-    userData.set("window", this.getBounds());
+  mainWindow.on("resize", function() {
+    userData.set("width", this.getBounds().width);
+    userData.set("height", this.getBounds().height);
   });
-  mainWindow.on('move', function() {
-    userData.set("window", this.getBounds());
+  mainWindow.on("move", function() {
+    userData.set("horizontal", this.getBounds().x);
+    userData.set("vertical", this.getBounds().y);
   });
-  mainWindow.on('maximize', function() {
+  mainWindow.on("maximize", function() {
     userData.set("maximizeWindow", true);
   });
-  mainWindow.on('unmaximize', function() {
+  mainWindow.on("unmaximize", function() {
     userData.set("maximizeWindow", false);
-    userData.set("window", this.getBounds());
   });
   // ########################################################################################################################
   // IPC EVENTS

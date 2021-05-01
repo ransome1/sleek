@@ -303,8 +303,8 @@ nav {
       background: #2d2d2d !important; }
 
 .dueDate svg,
-.dueDate #dueDatePickerInput,
-.dueDate #dueDatePickerInput::placeholder {
+.dueDate #datePickerInput,
+.dueDate #datePickerInput::placeholder {
   color: white !important;
   background: transparent !important;
   cursor: pointer; }

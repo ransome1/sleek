@@ -345,7 +345,7 @@ nav {
 #zoomUndo {
   cursor: pointer; }
 
-#dueDatePickerInput {
+#datePickerInput {
   cursor: pointer; }
 
 #todoTableSearchContainer {
@@ -671,7 +671,7 @@ nav {
     color: white;
     background: #2a8971; }
 
-.contexts .button.is-dark {
+.contexts .button.is-dark, .contexts .button.is-dark:hover, .contexts .button.is-dark.is-hovered {
   background: #184e41;
   color: white; }
 
@@ -682,25 +682,26 @@ nav {
     color: white;
     background: #953395; }
 
-.projects .button.is-dark {
+.projects .button.is-dark, .projects .button.is-dark:hover, .projects .button.is-dark.is-hovered {
   background: #5c1f5c;
   color: white; }
 
-.priority .button {
+.priority .button, .priority .button:hover {
   font-size: 1.35em;
   font-family: FreeSansBold;
   background: #ccc;
   color: #666666;
   padding: .25em .7em;
   height: auto; }
-  .priority .button span.tag {
+  .priority .button span.tag, .priority .button:hover span.tag {
     color: inherit; }
 
-.priority .button.is-dark {
+.priority .button.is-dark span.tag {
+  background: #4d4d4d; }
+
+.priority .button.is-dark, .priority .button.is-dark:hover, .priority .button.is-dark.is-hovered {
   background: #737373;
   color: white; }
-  .priority .button.is-dark span.tag {
-    background: #4d4d4d; }
 
 .priority .button.A {
   background: #ff3860;
@@ -4431,7 +4432,7 @@ button.dropdown-item {
     .modal-card {
       margin: 0 auto;
       max-height: calc(100vh - 40px);
-      width: 800px; } }
+      width: 640px; } }
 
 .modal-close {
   background: none;
