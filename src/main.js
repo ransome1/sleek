@@ -1,4 +1,5 @@
-const { app, BrowserWindow, nativeTheme, electron, ipcMain, Notification, dialog, clipboard } = require("electron");
+const { app, BrowserWindow, nativeTheme, electron, ipcMain, Notification, dialog, clipboard, Menu, Tray } = require("electron");
+//const nativeImage = require('electron').nativeImage;
 const fs = require("fs");
 const path = require("path");
 const i18next = require("i18next");
@@ -251,23 +252,20 @@ const createWindow = () => {
   if(typeof userData.data.showDueIsToday != "boolean") userData.set("showDueIsToday", true);
   if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", true);
   if(typeof userData.data.showCompleted != "boolean") userData.set("showCompleted", true);
-  if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", true);
+  if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
   if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
   if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
+  if(typeof userData.data.tray != "boolean") userData.set("tray", false);
   if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
   if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
   if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
-  // ########################################################################################################################
-  // CREATE WINDOW
-  // ########################################################################################################################
-  //const { x, y, width, height } = userData.get("window");
 
   const mainWindow = new BrowserWindow({
     width: userData.data.width,
     height: userData.data.height,
     x: userData.data.horizontal,
     y: userData.data.vertical,
-    icon: path.join(__dirname, "../assets/icons/sleek.png"),
+    icon: path.join(__dirname, "../assets/icons/sleek.svg"),
     simpleFullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
@@ -442,9 +440,9 @@ const createWindow = () => {
   if(isDevelopment) {
     mainWindow.webContents.openDevTools()
   }
-  if(userData.data.maximizeWindow && appData.os === "windows") {
+  if(userData.data.maximizeWindow) {
     mainWindow.maximize();
-  } else if(!userData.data.maximizeWindow && appData.os === "windows") {
+  } else if(!userData.data.maximizeWindow) {
     mainWindow.unmaximize();
   }
   //if(userData.data.window) mainWindow.setBounds(userData.data.window)
@@ -470,18 +468,31 @@ const createWindow = () => {
   // WINDOW EVENTS
   // ########################################################################################################################
   mainWindow.on("resize", function() {
-    userData.set("width", this.getBounds().width);
-    userData.set("height", this.getBounds().height);
+    if(!mainWindow.isMaximized()) {
+      userData.set("maximizeWindow", false);
+      userData.set("width", this.getBounds().width);
+      userData.set("height", this.getBounds().height);
+    } else {
+      userData.set("maximizeWindow", true);
+    }
   });
   mainWindow.on("move", function() {
-    userData.set("horizontal", this.getBounds().x);
-    userData.set("vertical", this.getBounds().y);
+    if(!mainWindow.isMaximized()) {
+      userData.set("maximizeWindow", false);
+      userData.set("horizontal", this.getBounds().x);
+      userData.set("vertical", this.getBounds().y);
+    } else {
+        userData.set("maximizeWindow", true);
+    }
   });
   mainWindow.on("maximize", function() {
     userData.set("maximizeWindow", true);
   });
   mainWindow.on("unmaximize", function() {
     userData.set("maximizeWindow", false);
+  });
+  mainWindow.on("restore", function() {
+    //this.setBounds({ x: userData.data.x, y: userData.data.y, width: userData.data.width, height: userData.data.height })
   });
   // ########################################################################################################################
   // IPC EVENTS
@@ -536,7 +547,7 @@ const createWindow = () => {
   });
   // Show a notification in OS UI
   ipcMain.on("showNotification", (event, config) => {
-    config.icon = __dirname + "/../assets/icons/96x96.png";
+    config.icon = __dirname + "/../assets/icons/sleek.svg";
     // send it to UI
     const notification = new Notification(config);
     notification.show();
@@ -557,6 +568,82 @@ const createWindow = () => {
   ipcMain.on("copyToClipboard", (event, args) => {
     if(args[0]) clipboard.writeText(args[0], 'selection')
   });
+
+
+  function setupTrayIcon() {
+    mainWindow.setSkipTaskbar(true);
+
+    const getTrayIcon = function() {
+      if(process.platform != "win32" && nativeTheme.shouldUseDarkColors) {
+        return path.join(__dirname, "../assets/icons/tray/trayDarkTemplate.png");
+      } else if(process.platform != "win32" && !nativeTheme.shouldUseDarkColors) {
+        return path.join(__dirname, "../assets/icons/tray/trayBrightTemplate.png");
+      } else if(process.platform === "win32" && nativeTheme.shouldUseDarkColors) {
+        return path.join(__dirname, "../assets/icons/tray/trayDarkTemplate.ico");
+      } else if(process.platform === "win32" && !nativeTheme.shouldUseDarkColors) {
+        return path.join(__dirname, "../assets/icons/tray/trayBrightTemplate.ico");
+      }
+    }
+    tray = new Tray(getTrayIcon());
+    const contextMenu = [
+      {
+        label: i18next.t("addTodo"),
+        accelerator: "CmdOrCtrl+n",
+        click: function (item, focusedWindow) {
+          if(mainWindow.isMinimized()) mainWindow.restore();
+          mainWindow.focus();
+          mainWindow.webContents.send("triggerFunction", "showForm")
+        }
+      },
+      {
+        label: "Add clipboard as new todo: " + clipboard.readText(),
+        accelerator: "CmdOrCtrl+n",
+        click: function (item, focusedWindow) {
+          const text = clipboard.readText();
+          console.log(text);
+        }
+      },
+      {
+        label: i18next.t("close"),
+        click: function (item, focusedWindow) {
+          app.exit();
+        }
+      }
+    ]
+    let menu = Menu.buildFromTemplate(contextMenu)
+    tray.setContextMenu(menu)
+    tray.setTitle("sleek");
+    tray.setToolTip("sleek");
+    tray.on('right-click', function() {
+      console.log("DDD");
+      this.popUpContextMenu(menu);
+    });
+    tray.on('click', function() {
+      if(mainWindow.isVisible()) {
+        mainWindow.hide()
+      } else if(mainWindow.isMinimized()) {
+        mainWindow.restore()
+        mainWindow.setSkipTaskbar(true);
+      } else {
+        mainWindow.show()
+        mainWindow.setSkipTaskbar(true);
+      }
+    });
+    mainWindow.on('minimize',function(event){
+      event.preventDefault();
+      mainWindow.minimize();
+    });
+    mainWindow.on('close', function (event) {
+      if(!app.isQuiting){
+        event.preventDefault();
+        mainWindow.minimize();
+      }
+      return false;
+    });
+  }
+
+  if(userData.data.tray) setupTrayIcon();
+
 };
 // ########################################################################################################################
 // APP EVENTS
