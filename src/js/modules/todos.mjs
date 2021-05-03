@@ -594,4 +594,4 @@ function generateHash(str) {
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
 
-export { generateItems, generateGroups, generateTable, items, item, visibleRows };
+export { generateItems, generateGroups, generateTable, items, item, visibleRows, setTodoComplete };

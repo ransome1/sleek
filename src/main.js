@@ -1,11 +1,52 @@
-const { app, BrowserWindow, nativeTheme, electron, ipcMain, Notification, dialog, clipboard, Menu, Tray } = require("electron");
-//const nativeImage = require('electron').nativeImage;
-const fs = require("fs");
+let fileWatcher;
+let translations;
+let tray;
+const { app, nativeTheme, electron, Notification, dialog, clipboard, Menu, ipcMain, BrowserWindow, Tray } = require("electron");
 const path = require("path");
+const fs = require("fs");
 const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
-const i18nextOptions = require('./configs/i18next.config');
+const i18nextOptions = require("./configs/i18next.config");
 const Store = require("./configs/store.config.js");
+const theme = function() {
+  if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
+    return "dark";
+  } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
+    return "light";
+  }
+}
+const isDevelopment = function() {
+  if(process.env.NODE_ENV==="development") {
+    return true;
+  } else {
+    return false;
+  }
+}
+const getChannel = function() {
+  if(process.env.APPIMAGE) {
+    return "AppImage";
+  } else if(process.windowsStore) {
+    return "Windows Store";
+  } else if(process.mas) {
+    return "Apple App Store";
+  } else if(process.env.SNAP) {
+    return "Snap Store";
+  } else if(process.env.FLATPAK_ID) {
+    return "Flathub";
+  } else if(process.env.AUR) {
+    return "AUR";
+  } else {
+    return "Misc";
+  }
+}
+const appData = {
+  version: app.getVersion(),
+  development: isDevelopment(),
+  languages: i18nextOptions.supportedLngs,
+  path: __dirname,
+  os: null,
+  channel: getChannel()
+}
 const userData = new Store({
   configName: "user-preferences",
   defaults: {
@@ -34,47 +75,85 @@ const userData = new Store({
     zoom: 100
   }
 });
-if(process.env.NODE_ENV==="development") {
-  var isDevelopment = true;
-} else {
-  var isDevelopment = false;
+const configureUserData = function() {
+  try {
+    if(typeof userData.data.theme != "string") userData.set("theme", theme());
+    if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
+    if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
+    if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
+    if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
+    if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
+    if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
+    if(typeof userData.data.matomoEvents != "boolean") userData.set("matomoEvents", false);
+    if(typeof userData.data.drawerWidth != "string") userData.set("drawerWidth", "500");
+    if(typeof userData.data.showDueIsPast != "boolean") userData.set("showDueIsPast", true);
+    if(typeof userData.data.showDueIsFuture != "boolean") userData.set("showDueIsFuture", true);
+    if(typeof userData.data.showDueIsToday != "boolean") userData.set("showDueIsToday", true);
+    if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", true);
+    if(typeof userData.data.showCompleted != "boolean") userData.set("showCompleted", true);
+    if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
+    if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
+    if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
+    if(typeof userData.data.tray != "boolean") userData.set("tray", false);
+    if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
+    if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
+    if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
+    return Promise.resolve("Success: User data configured");
+  } catch (error) {
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureUserData()", error])
+    return Promise.reject("Error in configureUserData(): " + error);
+  }
 }
-const appData = {
-  version: app.getVersion(),
-  development: isDevelopment,
-  languages: i18nextOptions.supportedLngs,
-  path: __dirname,
-  os: null,
-  channel: null
-}
+configureUserData().then(response => {
+  console.info(response);
+}).catch(error => {
+  console.error(error);
+});
 // ########################################################################################################################
-// WIP IDENTIFY SOURCE CHANNEL
+// CREATE THE WINDOW
 // ########################################################################################################################
-if(process.env.APPIMAGE) {
-  appData.channel = "AppImage";
-} else if(process.windowsStore) {
-  appData.channel = "Windows Store";
-} else if(process.mas) {
-  appData.channel = "Apple App Store";
-} else if(process.env.SNAP) {
-  appData.channel = "Snap Store";
-} else if(process.env.FLATPAK_ID) {
-  appData.channel = "Flathub";
-} else if(process.env.AUR) {
-  appData.channel = "AUR";
-} else {
-  appData.channel = "Misc";
-}
-const createWindow = () => {
+const createWindow = function() {
   // ########################################################################################################################
-  // FUNCTIONS
+  // SETUP LANGUAGE INITIALLY
   // ########################################################################################################################
-  function openDialog(args) {
+  const setLanguageGetTranslations = function(language) {
+    try {
+      i18next
+      .use(i18nextBackend)
+      .init(i18nextOptions);
+      if(!language && !userData.get("language") && i18nextOptions.supportedLngs.includes(app.getLocale().substr(0,2))) {
+        var language = app.getLocale().substr(0,2);
+      } else if(!language && userData.get("language")) {
+        var language = userData.get("language");
+      } else if(!language) {
+        var language = "en";
+      }
+      userData.set("language", language);
+      i18next.changeLanguage(language, (error) => {
+        if (error) return console.log("Error in setLanguageGetTranslations():", error);
+        userData.set("language", language);
+      });
+      translations = i18next.getDataByLanguage(language).translation;
+      //return translations;
+      return Promise.resolve(translations);
+    } catch (error) {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setLanguageGetTranslations()", error])
+      return Promise.reject("Error in setLanguageGetTranslations(): " + error);
+    }
+  }
+  setLanguageGetTranslations().then(response => {
+    translations = response;
+  }).catch(error => {
+    console.error(error);
+  });
+  const openDialog = function(args) {
     // if a file is already active, it's directory will be chosen as default path
     if(userData.data.path) {
       var defaultPath = userData.data.path;
     } else {
-      var defaultPath = path.join(app.getPath('home'))
+      var defaultPath = path.join(app.getPath("home"))
     }
     let file;
     switch (args) {
@@ -96,10 +175,10 @@ const createWindow = () => {
             userData.set("path", userData.data.path);
             console.log("Success: Opened file: " + file);
             startFileWatcher(file).then(response => {
-              console.log(response);
+              console.info(response);
               mainWindow.webContents.send("triggerFunction", "resetModal")
             }).catch(error => {
-              console.log(error);
+              console.error(error);
             });
           }
         }).catch(error => {
@@ -125,10 +204,10 @@ const createWindow = () => {
               userData.set("path", userData.data.path);
               console.log("Success: New file created: " + file.filePath);
               startFileWatcher(file.filePath).then(response => {
-                console.log(response);
+                console.info(response);
                 mainWindow.webContents.send("triggerFunction", "resetModal")
               }).catch(error => {
-                console.log(error);
+                console.error(error);
               });
             }
           });
@@ -138,31 +217,7 @@ const createWindow = () => {
         break;
     }
   }
-  function setLanguage(language) {
-    try {
-      i18next
-      .use(i18nextBackend)
-      .init(i18nextOptions);
-      if(!language && !userData.get("language") && i18nextOptions.supportedLngs.includes(app.getLocale().substr(0,2))) {
-        var language = app.getLocale().substr(0,2);
-      } else if(!language && userData.get("language")) {
-        var language = userData.get("language");
-      } else if(!language) {
-        var language = "en";
-      }
-      userData.set("language", language);
-      i18next.changeLanguage(language, (error) => {
-        if (error) return console.log("Error in setLanguage():", error);
-        userData.set("language", language);
-      });
-      return Promise.resolve("Success: Language set to: " + language);
-    } catch (error) {
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "setLanguage()", error])
-      return Promise.reject("Error in setLanguage(): " + error);
-    }
-  }
-  function fileContent(file) {
+  const fileContent = function(file) {
     try {
       if(!fs.existsSync(file)) {
         return Promise.resolve(fs.writeFile(file, "", function (error) {
@@ -170,14 +225,14 @@ const createWindow = () => {
           return "";
         }));
       }
-      return Promise.resolve(fs.readFileSync(file, {encoding: 'utf-8'}, function(err,data) { return data; }));
+      return Promise.resolve(fs.readFileSync(file, {encoding: "utf-8"}, function(err,data) { return data; }));
     } catch (error) {
       // trigger matomo event
       if(userData.data.matomoEvents) _paq.push(["trackEvent", "Error", "fileContent()", error])
       return Promise.reject("Error in fileContent(): " + error);
     }
   }
-  function startFileWatcher(newFile) {
+  const startFileWatcher = function(newFile) {
     try {
       // use the loop to check if the new path is already in the user data
       let fileFound = false;
@@ -209,7 +264,7 @@ const createWindow = () => {
             fileContent(newFile).then(content => {
               mainWindow.webContents.send("refresh", content)
             }).catch(error => {
-              console.log(error);
+              console.error(error);
             });
           }, 10);
         });
@@ -217,7 +272,7 @@ const createWindow = () => {
       fileContent(newFile).then(content => {
         mainWindow.webContents.send("refresh", content);
       }).catch(error => {
-        console.log(error);
+        console.error(error);
       });
       // return promise
       return Promise.resolve("Success: Filewatcher is watching: " + newFile);
@@ -227,45 +282,12 @@ const createWindow = () => {
       return Promise.reject("Error in startFileWatcher(): " + error);
     }
   }
-  let fileWatcher;
-  // ########################################################################################################################
-  // SET DEFAULT USERDATA
-  // ########################################################################################################################
-  if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
-    userData.set("theme", "dark");
-  } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
-    userData.set("theme", "light");
-  }
-  //if(typeof userData.data.window != "object") userData.set("window", { x: 160, y: 240, width: 1024, height: 768 });
-  //if(typeof userData.data.width != "number") userData.set("width", 1024);
-  //if(typeof userData.data.height != "number") userData.set("height", 768);
-  if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
-  if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
-  if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
-  if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
-  if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
-  if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
-  if(typeof userData.data.matomoEvents != "boolean") userData.set("matomoEvents", false);
-  if(typeof userData.data.drawerWidth != "string") userData.set("drawerWidth", "500");
-  if(typeof userData.data.showDueIsPast != "boolean") userData.set("showDueIsPast", true);
-  if(typeof userData.data.showDueIsFuture != "boolean") userData.set("showDueIsFuture", true);
-  if(typeof userData.data.showDueIsToday != "boolean") userData.set("showDueIsToday", true);
-  if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", true);
-  if(typeof userData.data.showCompleted != "boolean") userData.set("showCompleted", true);
-  if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
-  if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
-  if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
-  if(typeof userData.data.tray != "boolean") userData.set("tray", false);
-  if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
-  if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
-  if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
-
   const mainWindow = new BrowserWindow({
     width: userData.data.width,
     height: userData.data.height,
     x: userData.data.horizontal,
     y: userData.data.vertical,
-    icon: path.join(__dirname, "../assets/icons/sleek.svg"),
+    icon: path.join(__dirname, "../assets/icons/sleek.png"),
     simpleFullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
@@ -275,83 +297,73 @@ const createWindow = () => {
       enableRemoteModule: true,
       spellcheck: false,
       contextIsolation: true,
-      preload: path.join(__dirname, "preload.js"),
+      preload: __dirname + "/preload.js"
     }
   });
-
   // ########################################################################################################################
-  // TRIGGER
+  // MAIN MENU
   // ########################################################################################################################
-  setLanguage().then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.log(error);
-  });
-  // ########################################################################################################################
-  // MENU CONFIGURATION (https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k)
-  // ########################################################################################################################
-  // Modules to create application menu
-  const Menu = require("electron").Menu;
   const menuTemplate = [
     {
-      label: i18next.t("file"),
+      label: translations.file,
       submenu: [
         {
-          label: i18next.t("openFile"),
+          label: translations.openFile,
           accelerator: "CmdOrCtrl+o",
           click: function (item, focusedWindow) {
             openDialog("open");
           }
         },
         {
-          label: i18next.t("createFile"),
+          label: translations.createFile,
           click: function (item, focusedWindow) {
             openDialog("create");
           }
         },
         appData.os==="mac" ? {
           role: "quit",
-          label: i18next.t("close")
+          label: translations.close
         } : {
           role: "close",
-          label: i18next.t("close")
+          label: translations.close
         }
       ]
     },
     {
-      label: i18next.t("edit"),
+      label: translations.edit,
       submenu: [
       {
-        label: i18next.t("settings"),
+        label: translations.settings,
         accelerator: "CmdOrCtrl+,",
         click: function () {
           mainWindow.webContents.send("triggerFunction", "showContent", ["modalSettings"]);
         }
       },
       { type: "separator" },
-      { label: i18next.t("cut"), accelerator: "CmdOrCtrl+X", selector: "cut:" },
-      { label: i18next.t("copy"), accelerator: "CmdOrCtrl+C", selector: "copy:" },
-      { label: i18next.t("paste"), accelerator: "CmdOrCtrl+V", selector: "paste:" }
+      { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+      { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+      { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+      { role: "selectAll", accelerator: "CmdOrCtrl+A" }
     ]},
     {
-      label: i18next.t("todos"),
+      label: translations.todos,
       submenu: [
         {
-          label: i18next.t("addTodo"),
+          label: translations.addTodo,
           accelerator: "CmdOrCtrl+n",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "showForm")
           }
         },
         {
-          label: i18next.t("find"),
+          label: translations.find,
           accelerator: "CmdOrCtrl+f",
           click: function (item, focusedWindow) {
             mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
           }
         },
         {
-          label: i18next.t("archive"),
+          label: translations.archive,
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "archiveTodos")
           }
@@ -359,24 +371,24 @@ const createWindow = () => {
       ]
     },
     {
-      label: i18next.t("view"),
+      label: translations.view,
       submenu: [
         {
-          label: i18next.t("toggleFilter"),
+          label: translations.toggleFilter,
           accelerator: "CmdOrCtrl+b",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
           }
         },
         {
-          label: i18next.t("resetFilters"),
+          label: translations.resetFilters,
           accelerator: "CmdOrCtrl+l",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "resetFilters")
           }
         },
         {
-          label: i18next.t("toggleCompletedTodos"),
+          label: translations.toggleCompletedTodos,
           accelerator: "CmdOrCtrl+h",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "toggleTodos", ["showCompleted"])
@@ -384,7 +396,7 @@ const createWindow = () => {
         },
         { type: "separator" },
         {
-          label: i18next.t("toggleDarkMode"),
+          label: translations.toggleDarkMode,
           accelerator: "CmdOrCtrl+d",
           click: function (item, focusedWindow) {
             mainWindow.webContents.send("triggerFunction", "setTheme", [true])
@@ -392,32 +404,207 @@ const createWindow = () => {
         },
         {
           role: "reload",
-          label: i18next.t("reload")
+          label: translations.reload
         }
       ]
     },
     {
-      label: i18next.t("about"),
+      label: translations.about,
       submenu: [
         {
-          label: i18next.t("help"),
+          label: translations.help,
           click: function () {
             mainWindow.webContents.send("triggerFunction", "showContent", ["modalHelp"])
           }
         },
         {
-          label: i18next.t("sleekOnGithub"),
+          label: translations.sleekOnGithub,
           click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
         },
         {
           role: "toggleDevTools",
-          label: i18next.t("devTools")
+          label: translations.devTools
         }
       ]
     }
   ];
-  // Set menu to menuTemplate
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+  // ########################################################################################################################
+  // TRAY ICON
+  // ########################################################################################################################
+  const setupTray = function() {
+    mainWindow
+    .on("minimize",function(event){
+      event.preventDefault();
+      mainWindow.minimize();
+    })
+    .on("close", function (event) {
+      if(!app.isQuiting){
+        event.preventDefault();
+        mainWindow.minimize();
+      }
+      return false;
+    })
+    .setSkipTaskbar(true);
+    let trayIcon = path.join(__dirname, "../assets/icons/tray/tray.png");
+    if(process.platform === "win32") trayIcon = path.join(__dirname, "../assets/icons/tray/tray.ico");
+    tray = new Tray(trayIcon);
+    let trayFiles = new Array;
+    if(userData.data.files.length > 1) {
+      userData.data.files.forEach((file, i) => {
+        trayFiles.push(
+          {
+            label: file[1],
+            click: function (item, focusedWindow) {
+              startFileWatcher(file[1]);
+              mainWindow.show();
+              mainWindow.setSkipTaskbar(true);
+            }
+          }
+        )
+      });
+      trayFiles.push(
+        { type: "separator" },
+      );
+    }
+    let contextMenu = [
+      {
+        label: translations.windowButtonOpenFile,
+        click: function (item, focusedWindow) {
+          mainWindow.show();
+          mainWindow.setSkipTaskbar(true);
+        }
+      },
+      {
+        label: translations.addTodo,
+        click: function (item, focusedWindow) {
+          mainWindow.show();
+          mainWindow.focus();
+          mainWindow.webContents.send("triggerFunction", "showForm")
+        }
+      },
+      { type: "separator" },
+      {
+        label: translations.close,
+        click: function (item, focusedWindow) {
+          app.exit();
+        }
+      }
+    ]
+    let menu;
+    if(trayFiles.length>0) {
+      menu = Menu.buildFromTemplate(trayFiles.concat(contextMenu));
+    } else {
+      menu = Menu.buildFromTemplate(contextMenu);
+    }
+    tray.setContextMenu(menu)
+    tray.setTitle("sleek");
+    tray.setToolTip("sleek");
+    tray.on("click", function() {
+      if(mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else {
+        mainWindow.show();
+        mainWindow.setSkipTaskbar(true);
+      }
+    });
+  }
+  if(userData.data.tray) setupTray();
+  // ########################################################################################################################
+  // IPC EVENTS
+  // ########################################################################################################################
+  const configureWindowEvents = function() {
+    try {
+      ipcMain
+      .on("userData", (event, args) => {
+        if(args) userData.set(args[0], args[1]);
+        mainWindow.webContents.send("userData", userData.data);
+      })
+      .on("appData", (event, args) => {
+        // Send result back to renderer process
+        mainWindow.webContents.send("appData", appData);
+      })
+      .on("changeLanguage", (event, language) => {
+        // Change language
+        setLanguageGetTranslations(language).then(response => {
+          if(response) {
+            app.relaunch();
+            app.exit();
+          }
+        }).catch(error => {
+          console.error(error);
+        });
+      })
+      .on("writeToFile", (event, args) => {
+        // Write content to file
+        fs.writeFileSync(args[1], args[0], {encoding: "utf-8"});
+      })
+      .on("openOrCreateFile", (event, args) => {
+        // Open or create file
+        openDialog(args);
+      })
+      .on("startFileWatcher", (event, file) => {
+        startFileWatcher(file).then(response => {
+          console.info(response);
+        }).catch(error => {
+          console.error(error);
+        });
+      })
+      .on("fileContent", (event, file) => {
+        fileContent(file).then(content => {
+          mainWindow.webContents.send("fileContent", content)
+        }).catch(error => {
+          console.error(error);
+        });
+      })
+      .on("translations", (event, language) => {
+        // Send translations back to renderer process
+        setLanguageGetTranslations(language).then(function(translations) {
+          mainWindow.webContents.send("translations", translations)
+        });
+      })
+      .on("showNotification", (event, config) => {
+        // Show a notification in OS UI
+        config.icon = __dirname + "/../assets/icons/sleek.svg";
+        // send it to UI
+        const notification = new Notification(config);
+        notification.show();
+        // click on button in notification
+        notification.addListener("click", () => {
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
+          // bring mainWindow to foreground
+          mainWindow.focus();
+          // if another modal was open it needs to be closed first and then open the modal and fill it
+          mainWindow.webContents.send("triggerFunction", "resetModal");
+          mainWindow.webContents.send("triggerFunction", "showForm", [config.string, false]);
+        },{
+          // remove event listener after it is clicked once
+          once: true
+        });
+      })
+      .on("copyToClipboard", (event, args) => {
+        // Copy text to clipboard
+        if(args[0]) clipboard.writeText(args[0], "selection")
+      })
+      .on("restart", (event, args) => {
+        app.relaunch();
+        app.exit();
+        app.quit();
+      });
+      return Promise.resolve("Success: Window events setup");
+    } catch (error) {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureWindowEvents()", error])
+      return Promise.reject("Error in configureWindowEvents(): " + error);
+    }
+
+  }
+  configureWindowEvents().then(response => {
+    console.info(response);
+  }).catch(error => {
+    console.error(error);
+  });
   // ########################################################################################################################
   // WINDOW CONFIGURATION
   // ########################################################################################################################
@@ -436,8 +623,7 @@ const createWindow = () => {
       mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.png"));
       break;
   }
-  // show dev tools if in dev mode
-  if(isDevelopment) {
+  if(isDevelopment()) {
     mainWindow.webContents.openDevTools()
   }
   if(userData.data.maximizeWindow) {
@@ -445,14 +631,15 @@ const createWindow = () => {
   } else if(!userData.data.maximizeWindow) {
     mainWindow.unmaximize();
   }
-  //if(userData.data.window) mainWindow.setBounds(userData.data.window)
-  // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
   // open links in external browser
   mainWindow.webContents.on("new-window", function(e, url) {
     e.preventDefault();
     require("electron").shell.openExternal(url);
   });
+  // ########################################################################################################################
+  // REFRESH WHEN IN BACKGROUND
+  // ########################################################################################################################
   // every 10 minutes sleek will reload renderer if app is not focused
   // important for notifications to show up if sleek is running for a long time in background
   let timerId = setInterval(() => {
@@ -460,7 +647,7 @@ const createWindow = () => {
       fileContent(userData.data.file).then(content => {
         mainWindow.webContents.send("refresh", content)
       }).catch(error => {
-        console.log(error);
+        console.error(error);
       });
     }
   }, 600000);
@@ -468,194 +655,27 @@ const createWindow = () => {
   // WINDOW EVENTS
   // ########################################################################################################################
   mainWindow.on("resize", function() {
-    if(!mainWindow.isMaximized()) {
+    if(mainWindow.isMaximized()) {
+      userData.set("maximizeWindow", true);
+    } else if(mainWindow.isNormal()) {
       userData.set("maximizeWindow", false);
       userData.set("width", this.getBounds().width);
       userData.set("height", this.getBounds().height);
-    } else {
-      userData.set("maximizeWindow", true);
     }
   });
-  mainWindow.on("move", function() {
-    if(!mainWindow.isMaximized()) {
-      userData.set("maximizeWindow", false);
-      userData.set("horizontal", this.getBounds().x);
-      userData.set("vertical", this.getBounds().y);
-    } else {
-        userData.set("maximizeWindow", true);
-    }
-  });
-  mainWindow.on("maximize", function() {
-    userData.set("maximizeWindow", true);
-  });
-  mainWindow.on("unmaximize", function() {
-    userData.set("maximizeWindow", false);
-  });
-  mainWindow.on("restore", function() {
-    //this.setBounds({ x: userData.data.x, y: userData.data.y, width: userData.data.width, height: userData.data.height })
-  });
-  // ########################################################################################################################
-  // IPC EVENTS
-  // ########################################################################################################################
-  // Write config to file
-  ipcMain.on("userData", (event, args) => {
-    if(args) userData.set(args[0], args[1]);
-    mainWindow.webContents.send("userData", userData.data);
-  });
-  // Send result back to renderer process
-  ipcMain.on("appData", (event, args) => {
-    mainWindow.webContents.send("appData", appData);
-  });
-  // Change language
-  ipcMain.on("changeLanguage", (event, language) => {
-    setLanguage(language).then(response => {
-      if(response) {
-        console.log(response);
-        app.relaunch();
-        app.exit();
-      }
-    }).catch(error => {
-      console.log(error);
-    });
-  });
-  // Write content to file
-  ipcMain.on("writeToFile", (event, args) => {
-    fs.writeFileSync(args[1], args[0], {encoding: 'utf-8'});
-  });
-  // Open or create file
-  ipcMain.on("openOrCreateFile", (event, args) => {
-    openDialog(args);
-  });
-  ipcMain.on("startFileWatcher", (event, file) => {
-    startFileWatcher(file).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    });
-  });
-  ipcMain.on("fileContent", (event, file) => {
-    fileContent(file).then(content => {
-      mainWindow.webContents.send("fileContent", content)
-    }).catch(error => {
-      console.log(error);
-    });
-  });
-  // Send translations back to renderer process
-  ipcMain.on("translations", (event, language) => {
-    const translations = i18next.getDataByLanguage(language).translation;
-    mainWindow.webContents.send("translations", translations)
-  });
-  // Show a notification in OS UI
-  ipcMain.on("showNotification", (event, config) => {
-    config.icon = __dirname + "/../assets/icons/sleek.svg";
-    // send it to UI
-    const notification = new Notification(config);
-    notification.show();
-    // click on button in notification
-    notification.addListener('click', () => {
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
-      // bring mainWindow to foreground
-      mainWindow.focus();
-      // if another modal was open it needs to be closed first and then open the modal and fill it
-      mainWindow.webContents.executeJavaScript("resetModal(); showForm(\"" + config.string + "\", false);");
-    },{
-      // remove event listener after it is clicked once
-      once: true
-    });
-  });
-  // Copy text to clipboard
-  ipcMain.on("copyToClipboard", (event, args) => {
-    if(args[0]) clipboard.writeText(args[0], 'selection')
-  });
-
-
-  function setupTrayIcon() {
-    mainWindow.setSkipTaskbar(true);
-
-    const getTrayIcon = function() {
-      if(process.platform != "win32" && nativeTheme.shouldUseDarkColors) {
-        return path.join(__dirname, "../assets/icons/tray/trayDarkTemplate.png");
-      } else if(process.platform != "win32" && !nativeTheme.shouldUseDarkColors) {
-        return path.join(__dirname, "../assets/icons/tray/trayBrightTemplate.png");
-      } else if(process.platform === "win32" && nativeTheme.shouldUseDarkColors) {
-        return path.join(__dirname, "../assets/icons/tray/trayDarkTemplate.ico");
-      } else if(process.platform === "win32" && !nativeTheme.shouldUseDarkColors) {
-        return path.join(__dirname, "../assets/icons/tray/trayBrightTemplate.ico");
-      }
-    }
-    tray = new Tray(getTrayIcon());
-    const contextMenu = [
-      {
-        label: i18next.t("addTodo"),
-        accelerator: "CmdOrCtrl+n",
-        click: function (item, focusedWindow) {
-          if(mainWindow.isMinimized()) mainWindow.restore();
-          mainWindow.focus();
-          mainWindow.webContents.send("triggerFunction", "showForm")
-        }
-      },
-      {
-        label: "Add clipboard as new todo: " + clipboard.readText(),
-        accelerator: "CmdOrCtrl+n",
-        click: function (item, focusedWindow) {
-          const text = clipboard.readText();
-          console.log(text);
-        }
-      },
-      {
-        label: i18next.t("close"),
-        click: function (item, focusedWindow) {
-          app.exit();
-        }
-      }
-    ]
-    let menu = Menu.buildFromTemplate(contextMenu)
-    tray.setContextMenu(menu)
-    tray.setTitle("sleek");
-    tray.setToolTip("sleek");
-    tray.on('right-click', function() {
-      console.log("DDD");
-      this.popUpContextMenu(menu);
-    });
-    tray.on('click', function() {
-      if(mainWindow.isVisible()) {
-        mainWindow.hide()
-      } else if(mainWindow.isMinimized()) {
-        mainWindow.restore()
-        mainWindow.setSkipTaskbar(true);
-      } else {
-        mainWindow.show()
-        mainWindow.setSkipTaskbar(true);
-      }
-    });
-    mainWindow.on('minimize',function(event){
-      event.preventDefault();
-      mainWindow.minimize();
-    });
-    mainWindow.on('close', function (event) {
-      if(!app.isQuiting){
-        event.preventDefault();
-        mainWindow.minimize();
-      }
-      return false;
-    });
-  }
-
-  if(userData.data.tray) setupTrayIcon();
-
-};
+}
 // ########################################################################################################################
 // APP EVENTS
 // ########################################################################################################################
-app.on("ready", () => {
-  if(process.platform === 'win32') app.setAppUserModelId("RobinAhle.sleektodomanager")
+app
+.on("ready", () => {
+  if(process.platform === "win32") app.setAppUserModelId("RobinAhle.sleektodomanager")
   createWindow();
-});
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit()
-});
-app.on("activate", () => {
+})
+.on("window-all-closed", () => {
+  if(process.platform !== "darwin") app.quit()
+})
+.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
   app.show();
 });

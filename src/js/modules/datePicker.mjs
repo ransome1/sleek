@@ -12,7 +12,6 @@ datePickerInput.onfocus = function () {
   resizeInput(datePickerInput);
 };
 datePickerInput.addEventListener("changeDate", function (e, detail) {
-  //let caretPosition = getCaretPosition(modalFormInput);
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
   if(e.detail.date) {
     // generate the object on what is written into input, so we don't overwrite previous inputs of user

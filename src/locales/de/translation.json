@@ -105,6 +105,8 @@
   "settingsTabAboutExternalLibraries": "Eingesetzte Software, die nicht von mir stammt",
   "settingsTabSettingsArchive": "Aufgaben archivieren",
   "settingsTabSettingsArchiveBody": "Erledigte Aufgaben werden aus der todo.txt-Datei entfernt und in eine done.txt-Datei eingefügt. Diese wird im gleichen Ordner angelegt, falls sie noch nicht existiert.",
+  "settingsTabSettingsTray": "In die Tray-Leiste minimieren",
+  "settingsTabSettingsTrayBody": "In dieser Einstellung wird sleek in die Tray-Leiste minimiert und ist nicht mehr in der Task-Bar sichtbar. <strong>sleek wird sich selbst neustarten. Wenn das nicht passiert, starte das Programm bitte händisch neu.</strong>",
   "archive": "Archivieren",
   "shortcuts": "Shortcuts",
   "function": "Function",

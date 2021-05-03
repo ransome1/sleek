@@ -104,6 +104,8 @@
   "settingsTabAboutExternalLibraries": "Used software that I did not develop",
   "settingsTabSettingsArchive": "Archive todos",
   "settingsTabSettingsArchiveBody": "Completed todos will be removed from the current todo.txt file and inserted into a done.txt file. If this file doesn't already exist in the current directory, it will be created.",
+  "settingsTabSettingsTray": "Minimize to the tray bar",
+  "settingsTabSettingsTrayBody": "With this setting sleek is minimized to the tray bar and is no longer visible in the task bar. <strong>sleek will restart itself. If that doesn't happen, please restart the program manually.</strong>",
   "archive": "Archive",
   "shortcuts": "Shortcuts",
   "function": "Function",

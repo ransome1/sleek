@@ -149,6 +149,7 @@ function showFiles() {
     return Promise.reject(error);
   }
 }
+// TODO Error handling
 function handleError(error) {
   if(error) {
     console.error(error.name +" in function " + error.functionName + ": " + error.message);
@@ -158,6 +159,7 @@ function handleError(error) {
     if(window.consent) _paq.push(["trackEvent", "Error", error.functionName, error])
   }
 }
+// TODO Error handling
 function startBuilding(searchString) {
   t0 = performance.now();
   filters.filterItems(todos.items.objects, searchString)
@@ -293,6 +295,8 @@ function setTranslations(data) {
     settingsTabSettingsNotificationsBody.innerHTML = translations.settingsTabSettingsNotificationsBody;
     settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
     settingsTabSettingsDarkmodeBody.innerHTML = translations.settingsTabSettingsDarkmodeBody;
+    settingsTabSettingsTray.innerHTML = translations.settingsTabSettingsTray;
+    settingsTabSettingsTrayBody.innerHTML = translations.settingsTabSettingsTrayBody;
     settingsTabSettingsLogging.innerHTML = translations.errorEventLogging;
     settingsTabSettingsLoggingBody.innerHTML = translations.settingsTabSettingsLoggingBody;
     settingsTabAbout.innerHTML = translations.about;
@@ -383,6 +387,7 @@ function setToggles() {
     showDueIsFuture.checked = userData.showDueIsFuture;
     showDueIsPast.checked = userData.showDueIsPast;
     toggleView.checked = userData.compactView;
+    toggleTray.checked = userData.tray;
     return Promise.resolve("Success: Toggles set");
   } catch(error) {
     error.functionName = setToggles.name;
@@ -518,6 +523,7 @@ function configureMatomo() {
     if(userData.sortBy)_paq.push(['setCustomDimension', 16, userData.sortBy]);
     if(userData.zoom)_paq.push(['setCustomDimension', 17, userData.zoom]);
     if(appData.channel)_paq.push(['setCustomDimension', 18, appData.channel]);
+    if(appData.tray)_paq.push(['setCustomDimension', 19, appData.tray]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -608,7 +614,7 @@ function configureMainView() {
     // hide/show the addTodoContainer or noResultTodoContainer
     // file has content and objects are shown
     if(todos.visibleRows === 0 && todos.items.objects.length>0) {
-      todoTableSearchContainer.classList.remove("is-active");
+      todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.add("is-active");
       noResultContainer.classList.remove("is-active");
       todoTable.classList.remove("is-active");
@@ -623,7 +629,7 @@ function configureMainView() {
       return Promise.resolve("Info: File has content and results are shown");
     // file is NOT empty but no results
     } else {
-      todoTableSearchContainer.classList.remove("is-active");
+      todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.add("is-active");
       noResultContainer.classList.remove("is-active");
       navBtnFilter.classList.remove("is-active");
@@ -688,21 +694,6 @@ function registerEvents() {
       showContent(modalSettings);
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "Message", "Click on Settings"]);
-    }
-    btnItemStatus.onclick = function() {
-      setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
-        modalForm.classList.remove("is-active");
-        resetModal().then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          handleError(error);
-        });
-        console.log(response);
-        // trigger matomo event
-        if(window.consent) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
-      }).catch(error => {
-        handleError(error);
-      });
     }
     btnTheme.onclick = function(el) {
       // trigger matomo event
@@ -864,6 +855,13 @@ function registerEvents() {
       setTheme(true);
       // trigger matomo event
       if(window.consent) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
+    }
+    toggleTray.onclick = function() {
+      setUserData("tray", this.checked);
+      // trigger matomo event
+      if(window.consent) _paq.push(["trackEvent", "Setting", "Click on Tray", this.checked])
+      // restart
+      window.api.send("restart");
     }
     settingsLanguage.onchange = function() {
       userData.language = this.value;

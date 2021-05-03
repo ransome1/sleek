@@ -103,6 +103,8 @@
   "settingsTabAboutExternalLibraries": "Used software that I did not develop",
   "settingsTabSettingsArchive": "Archive todos",
   "settingsTabSettingsArchiveBody": "Completed todos will be removed from the current todo.txt file and inserted into a done.txt file. If this file doesn't already exist in the current directory, it will be created.",
+  "settingsTabSettingsTray": "Minimizar a la barra de la bandeja",
+  "settingsTabSettingsTrayBody": "Con esta configuración, sleek se minimiza en la barra de la bandeja y ya no es visible en la barra de tareas. <strong>sleek se reiniciará solo. Si eso no sucede, reinicie el programa manualmente.</strong>",
   "archive": "Archive",
   "shortcuts": "Shortcuts",
   "function": "Function",

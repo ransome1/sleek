@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.0.3",
+  "version": "1.0.3-3",
   "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
@@ -31,7 +31,6 @@
       "!**.md",
       "!**.gitignore",
       "!yarn.lock",
-      "!assets/icons/bak${/*}",
       "!assets/screenshots${/*}",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,__tests__,tests,powered-test,example,examples,*.d.ts}",
       "!**/node_modules/.bin",
@@ -52,7 +51,10 @@
       ]
     },
     "mac": {
-      "target": "dmg",
+      "target": {
+        "target": "default",
+        "arch": "universal"
+      },
       "icon": "assets/icons/sleek.icns",
       "category": "public.app-category.productivity"
     },
@@ -112,10 +114,9 @@
   },
   "devDependencies": {
     "chai": "^4.3.4",
-    "electron": "^12.0.4",
+    "electron": "^12.0.6",
     "electron-builder": "^22.10.5",
     "jest": "^26.6.3",
-    "jest-electron": "^0.1.11",
     "mocha": "^8.3.2",
     "node-sass": "^5.0.0",
     "spectron": "^14.0.0"

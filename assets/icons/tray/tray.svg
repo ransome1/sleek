@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1000"
+   height="1000"
+   viewBox="0 0 264.58333 264.58334"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15, custom)"
+   sodipodi:docname="20210503_sleek_tray.svg"
+   inkscape:export-filename="/home/ransome/Development/sleek/assets/icons/tray/tray@4x.png"
+   inkscape:export-xdpi="6.1399999"
+   inkscape:export-ydpi="6.1399999">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient943"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#075a44;stop-opacity:1;"
+         offset="0"
+         id="stop941" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="sleek_gradiant">
+      <stop
+         style="stop-color:#075a44;stop-opacity:1"
+         offset="0"
+         id="stop855" />
+      <stop
+         style="stop-color:#bc30ba;stop-opacity:1"
+         offset="1"
+         id="stop857" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#sleek_gradiant"
+       id="linearGradient863"
+       gradientUnits="userSpaceOnUse"
+       x1="20.609758"
+       y1="-35.978325"
+       x2="-376.78461"
+       y2="-271.12573" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#sleek_gradiant"
+       id="linearGradient913"
+       x1="-264.05746"
+       y1="-60.426601"
+       x2="-5.0754561"
+       y2="-201.82214"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.69044441"
+     inkscape:cx="473.99304"
+     inkscape:cy="542.20488"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer2"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1874"
+     inkscape:window-height="1051"
+     inkscape:window-x="46"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="true"
+     showborder="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="outer gradiant">
+    <rect
+       style="opacity:1;fill:url(#linearGradient863);fill-opacity:1;stroke:none;stroke-width:0.28639;stroke-opacity:1"
+       id="rect184"
+       width="264.29694"
+       height="264.29694"
+       x="-264.44012"
+       y="-264.44012"
+       inkscape:export-filename="/home/ransome/development/sleek/assets/icons/300x300.png"
+       inkscape:export-xdpi="28.799999"
+       inkscape:export-ydpi="28.799999"
+       transform="scale(-1)"
+       ry="132.14847" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="inner gradiant">
+    <rect
+       style="opacity:0.531869;mix-blend-mode:normal;fill:url(#linearGradient913);fill-opacity:1;stroke:none;stroke-width:0.28639;stroke-opacity:1"
+       id="rect184-3"
+       width="195.59337"
+       height="195.59337"
+       x="-230.18045"
+       y="-231.50604"
+       inkscape:export-filename="/home/ransome/development/sleek/assets/icons/300x300.png"
+       inkscape:export-xdpi="28.799999"
+       inkscape:export-ydpi="28.799999"
+       transform="scale(-1)"
+       ry="97.796684"
+       rx="97.796684" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="sleek (text)"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:90.07px;line-height:90%;font-family:FreeSans;-inkscape-font-specification:'FreeSans, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:-4.50352px;word-spacing:0px;stroke-width:0.264583"
+       x="130.22496"
+       y="165.18904"
+       id="text1012-5"
+       inkscape:export-filename="/home/ransome/development/sleek/assets/icons/300x300.png"
+       inkscape:export-xdpi="28.799999"
+       inkscape:export-ydpi="28.799999"><tspan
+         x="128.72379"
+         y="165.18904"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:90.07px;font-family:FreeSans;-inkscape-font-specification:'FreeSans Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-3.00234px;text-anchor:middle;fill:#ffffff;stroke-width:0.264583"
+         dx="0 0 0 0 0 0 0 0 0 0 0"
+         dy="0 0 0 0 0 0 0 0 0 0 0"
+         rotate="0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+         sodipodi:role="line"
+         id="tspan1178-6">sleek</tspan></text>
+  </g>
+</svg>

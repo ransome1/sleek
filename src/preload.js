@@ -13,7 +13,8 @@ contextBridge.exposeInMainWorld(
         "changeLanguage",
         "openOrCreateFile",
         "copyToClipboard",
-        "triggerFunction"
+        "triggerFunction",
+        "restart"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);

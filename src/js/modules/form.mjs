@@ -1,7 +1,7 @@
 "use strict";
 import { showMore, resetModal, handleError, userData, setUserData, translations, resizeInput } from "../../render.js";
 import { generateFilterData } from "./filters.mjs";
-import { items, item } from "./todos.mjs";
+import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput } from "./datePicker.mjs";
 import * as recurrencePicker from "./recurrencePicker.mjs";
 const modal = document.querySelectorAll('.modal');
@@ -10,12 +10,6 @@ modalForm.addEventListener("submit", function(e) {
   // intercept submit
   if (e.preventDefault) e.preventDefault();
   submitForm().then(response => {
-    // if form returns success we clear the modal
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
     console.log(response);
   }).catch(error => {
     handleError(error);
@@ -39,12 +33,6 @@ modalForm.addEventListener ("keydown", function (e) {
     });
   } else if(e.key==="Enter" && e.ctrlKey) {
     submitForm().then(response => {
-      // if form returns success we clear the modal
-      resetModal().then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        handleError(error);
-      });
       console.log(response);
     }).catch(error => {
       handleError(error);
@@ -55,7 +43,7 @@ modalForm.addEventListener ("keydown", function (e) {
     }).catch(function(error) {
       handleError(error);
     });
-    this.classList.remove("is-active");
+    //this.classList.remove("is-active");
   } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
     autoCompleteContainer.classList.remove("is-active");
   }
@@ -119,6 +107,22 @@ priorityPicker.onfocus = function () {
   // close suggestion box if focus comes to priority picker
   autoCompleteContainer.classList.remove("is-active");
 };
+const btnItemStatus = document.getElementById("btnItemStatus");
+btnItemStatus.onclick = function() {
+  setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
+    modalForm.classList.remove("is-active");
+    resetModal().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
+    console.log(response);
+    // trigger matomo event
+    if(window.consent) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
+  }).catch(error => {
+    handleError(error);
+  });
+}
 function show(todo, templated) {
   try {
     // adjust size of recurrence picker input field
@@ -306,10 +310,10 @@ function toggleInputSize(type) {
       break;
   }
   d.id = "modalFormInput";
+  d.value = modalFormInput.value;
   d.setAttribute("tabindex", 300);
   d.setAttribute("class", "input is-medium");
   d.setAttribute("placeholder", translations.formTodoInputPlaceholder);
-  d.value = modalFormInput.value;
   modalFormInput.replaceWith(d);
   // if input is a textarea, adjust height to content length
   if(modalFormInput.tagName==="TEXTAREA") {
@@ -330,6 +334,12 @@ function submitForm() {
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
     if (modalForm.getAttribute("data-item")===modalForm.elements[0].value) {
+      // close and reset any modal
+      resetModal().then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
       return Promise.resolve("Info: Nothing has changed, won't write anything.");
     // Edit todo
     } else if(modalForm.getAttribute("data-item")!=null) {
@@ -386,6 +396,12 @@ function submitForm() {
     //write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
     window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+    // close and reset any modal
+    resetModal().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
     // trigger matomo event
     if(window.consent) _paq.push(["trackEvent", "Form", "Submit"]);
     return Promise.resolve("Success: Changes written to file: " + userData.file);

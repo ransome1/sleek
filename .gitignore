@@ -20,3 +20,4 @@ assets/icons/bak
 squashfs-root/
 test/
 src/__tests__
+yarn.lock
