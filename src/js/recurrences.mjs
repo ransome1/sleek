@@ -1,5 +1,5 @@
 "use strict";
-import { userData } from "../../render.js";
+import { userData } from "../render.js";
 import { items } from "./todos.mjs";
 import { convertDate, isFuture } from "./date.mjs";
 
@@ -72,7 +72,7 @@ function getRecurrenceDate(due, recurrence) {
       days = 365;
       break;
   }
-  var due = due.getTime();
+  due = due.getTime();
   due += 1000 * 60 * 60 * 24 * recSplit.mul * days;
   return new Date(due);
 }

@@ -25,7 +25,6 @@ body {
 button, button:focus, button:active, button:active, button:after, button::before, button:active:after, .button, .button-is-white {
   border: none!important;
   box-shadow: none!important;
-  //background: transparent;
 }
 .is-hidden {
   display: none!important;
@@ -90,8 +89,8 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 1.15em;
   border-radius: 30em;
   background-color: $dark-grey;
-  -webkit-mask-image: url("../svg/times-circle.svg");
-  mask-image: url("../svg/times-circle.svg");
+  -webkit-mask-image: url("../img/svg/times-circle.svg");
+  mask-image: url("../img/svg/times-circle.svg");
   opacity: 0;
   pointer-events: none;
   cursor: pointer;

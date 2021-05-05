@@ -144,7 +144,7 @@
                     <td>Zoom</td>
                     <td class="zoom">
                       <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
-                      <span id="zoomStatus"></span><i id="zoomUndo" class="fas fa-undo"></i>
+                      <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
                     </td>
                   </tr>
                 </table>
@@ -407,8 +407,6 @@
               </td>
             </tr>
           </table>
-
-
           <table class="settings">
             <tr>
               <th colspan="100%" id="settingsTabSettingsLogging"></th>
@@ -654,13 +652,13 @@
         </p>
       </article>
     </section>
-    <script defer src="js/jsTodoExtensions.js"></script>
-    <script defer src="js/jsTodoTxt.js"></script>
-    <script defer src="js/marked.min.js"></script>
+    <script defer src="../node_modules/jstodotxt/jsTodoExtensions.js"></script>
+    <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
+    <script defer src="../node_modules/marked/marked.min.js"></script>
     <script defer type="module" src="render.js"></script>
-    <script defer src="js/fontawesome.js"></script>
-    <script defer src="js/fontawesome.solid.min.js"></script>
-    <script defer src="js/fontawesome.regular.min.js"></script>
-    <script defer src="js/fontawesome.brands.min.js"></script>
+    <script defer src="../node_modules/@fortawesome/fontawesome-free/js/fontawesome.min.js"></script>
+    <script defer src="../node_modules/@fortawesome/fontawesome-free/js/solid.min.js"></script>
+    <script defer src="../node_modules/@fortawesome/fontawesome-free/js/regular.min.js"></script>
+    <script defer src="../node_modules/@fortawesome/fontawesome-free/js/brands.min.js"></script>
   </body>
 </html>

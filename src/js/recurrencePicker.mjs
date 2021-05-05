@@ -1,8 +1,17 @@
 "use strict";
-import { resizeInput, translations, handleError } from "../../render.js";
+import { userData, translations, handleError, _paq } from "../render.js";
+import { resizeInput } from "./form.mjs";
+import { RecExtension } from "./todotxtExtensions.mjs";
 import * as recurrences from "./recurrences.mjs";
+const modalFormInput = document.getElementById("modalFormInput");
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
+const recurrencePickerContainer = document.getElementById("recurrencePickerContainer");
 export const recurrencePickerInput = document.getElementById("recurrencePickerInput");
+const recurrencePickerSpinner = document.getElementById("recurrencePickerSpinner");
+const recurrencePickerDay = document.getElementById("recurrencePickerDay");
+const recurrencePickerWeek = document.getElementById("recurrencePickerWeek");
+const recurrencePickerMonth = document.getElementById("recurrencePickerMonth");
+const recurrencePickerYear = document.getElementById("recurrencePickerYear");
 resizeInput(recurrencePickerInput);
 recurrencePickerInput.onfocus = function(el) { showRecurrences(el) };
 recurrencePickerInput.placeholder = translations.noRecurrence;
@@ -47,18 +56,18 @@ export function setInput(recurrence) {
     recurrencePickerInput.value = label;
     resizeInput(recurrencePickerInput);
     // trigger matomo event
-    if(window.consent) _paq.push(["trackEvent", "Form", "Recurrence selected: " + label]);
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + label]);
     return Promise.resolve("Success: Recurrence added");
   } catch(error) {
     error.functionName = setInput.name;
     return Promise.reject(error);
   }
 }
-function showRecurrences(el) {
+function showRecurrences() {
   recurrencePickerContainer.focus();
   recurrencePickerContainer.classList.toggle("is-active");
   // get object from current input
-  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
   let recSplit = recurrences.splitRecurrence(todo.rec);
   setRecurrenceOptionLabels(recSplit.mul);
   recurrencePickerSpinner.value = recSplit.mul;
@@ -78,42 +87,42 @@ function showRecurrences(el) {
     }).catch(function(error) {
       handleError(error);
     });
-    modalFormInput.value = todo.toString();
+    document.getElementById("modalFormInput").value = todo.toString();
   }
   recurrencePickerSpinner.onchange = function() {
     recSplit.mul = Number(recurrencePickerSpinner.value);
     setRecurrenceOptionLabels(recSplit.mul);
     applyRecurrenceValue();
   }
-  recurrencePickerIncrease.onclick = function(el) {
+  document.getElementById("recurrencePickerIncrease").onclick = function(el) {
     el.preventDefault();
     recurrencePickerSpinner.value = parseInt(recurrencePickerSpinner.value) + 1;
     recSplit.mul = Number(recurrencePickerSpinner.value);
     setRecurrenceOptionLabels(recSplit.mul);
     applyRecurrenceValue();
   }
-  recurrencePickerDecrease.onclick = function(el) {
+  document.getElementById("recurrencePickerDecrease").onclick = function(el) {
     el.preventDefault();
-  	if (parseInt(recurrencePickerSpinner.value) > 1) {
-  	  recurrencePickerSpinner.value = parseInt(recurrencePickerSpinner.value) - 1;
+    if(parseInt(recurrencePickerSpinner.value)>1) {
+      recurrencePickerSpinner.value = parseInt(recurrencePickerSpinner.value)-1;
       recSplit.mul = Number(recurrencePickerSpinner.value);
       setRecurrenceOptionLabels(recSplit.mul);
       applyRecurrenceValue();
     }
   }
-  radioRecurrence.forEach(function(el) {
+  radioRecurrence.forEach(function(radioButton) {
     // remove old selection
-    el.checked = false;
+    radioButton.checked = false;
     // set pre selection
-    if(recSplit.period === el.value) el.checked = true;
-    el.onclick = function() {
-      recSplit.period = el.value;
+    if(recSplit.period === radioButton.value) radioButton.checked = true;
+    radioButton.onclick = function() {
+      recSplit.period = radioButton.value;
       applyRecurrenceValue();
       // hide the picker
       recurrencePickerContainer.classList.remove("is-active");
-      modalFormInput.focus();
+      document.getElementById("modalFormInput").focus();
       // trigger matomo event
-      if(window.consent) _paq.push(["trackEvent", "Form", "Recurrence selected: " + recSplit.period]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + recSplit.period]);
     }
   });
 }

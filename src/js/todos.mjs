@@ -1,9 +1,12 @@
 "use strict";
-import { userData, handleError, translations, setUserData } from "../../render.js";
+import { userData, appData, handleError, translations, setUserData, _paq } from "../render.js";
+import { RecExtension } from "./todotxtExtensions.mjs";
 import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
+const modalForm = document.getElementById("modalForm");
+const todoTableContainer = document.getElementById("todoTableContainer");
 // ########################################################################################################################
 // CONFIGURE MARKDOWN PARSER
 // ########################################################################################################################
@@ -22,7 +25,7 @@ const renderer = {
   link(href, title, text) {
     // truncate the url
     if(text.length > 40) text = text.slice(0, 40) + " [...] ";
-    return `${text} <a href="${href}" target=\"_blank\"><i class=\"fas fa-external-link-alt\"></i></a>`;
+    return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
   }
 };
 marked.use({ renderer });
@@ -30,10 +33,10 @@ marked.use({ renderer });
 // PREPARE TABLE
 // ########################################################################################################################
 const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
-const tableContainerDue = document.createDocumentFragment();
-const tableContainerComplete = document.createDocumentFragment();
-const tableContainerDueAndComplete = document.createDocumentFragment();
-const tableContainerNoPriorityNotCompleted = document.createDocumentFragment();
+//const tableContainerDue = document.createDocumentFragment();
+//const tableContainerComplete = document.createDocumentFragment();
+//const tableContainerDueAndComplete = document.createDocumentFragment();
+//const tableContainerNoPriorityNotCompleted = document.createDocumentFragment();
 const tableContainerContent = document.createDocumentFragment();
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
@@ -105,6 +108,7 @@ function generateGroups(items) {
 function generateTable(groups) {
   // prepare the templates for the table
   return configureTodoTableTemplate().then(function(response) {
+    console.info(response);
     visibleRows = 0;
     for (let group in groups) {
       // create a divider row
@@ -169,7 +173,7 @@ function generateTable(groups) {
     }
     todoTableContainer.appendChild(tableContainerContent);
     return new Promise(function(resolve) {
-      resolve();
+      resolve("Success: Todo table generated");
     });
   }).catch(error => {
     handleError(error);
@@ -223,7 +227,7 @@ function generateTableRow(todo) {
         handleError(error);
       });
       // trigger matomo event
-      if(window.consent) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
     }
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
     // creates cell for the text
@@ -243,7 +247,7 @@ function generateTableRow(todo) {
       if(!event.target.classList.contains('fa-external-link-alt')) {
         show(this.parentElement.getAttribute('data-item'));
         // trigger matomo event
-        if(window.consent) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
     }
       // cell for the categories
@@ -297,18 +301,18 @@ function generateTableRow(todo) {
         this.parentElement.parentElement.classList.remove("is-active");
       } else {
         // on click we close all other active more buttons and dropdowns
-        document.querySelectorAll(".todoTableItemMore.is-active").forEach(function(item) {
+        todoTableItemMore.forEach(function(item) {
           item.classList.remove("is-active");
         });
         // if this element was hidden before, we will show it now
         this.parentElement.parentElement.classList.add("is-active");
         // trigger matomo event
-        if(window.consent) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
         // click on edit
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
           show(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
           // trigger matomo event
-          if(window.consent) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
         }
         // click on delete
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
@@ -319,13 +323,13 @@ function generateTableRow(todo) {
             handleError(error);
           });
           // trigger matomo event
-          if(window.consent) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
         }
         // click on use as template option
         todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
           show(todoTableBodyCellMore.parentElement.getAttribute('data-item'), true);
           // trigger matomo event
-          if(window.consent) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
         }
       }
     }
@@ -449,7 +453,7 @@ function archiveTodos() {
     if(userData.file.split("/").pop() === "done.txt") return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
     // define path to done.txt
     let doneFile;
-    switch (window.appData.os) {
+    switch (appData.os) {
       case "windows":
         doneFile = userData.file.replace(userData.file.split("\\").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
         break;
@@ -581,7 +585,7 @@ function generateNotification(todo, offset) {
       dismissedNotifications.push(hash);
       setUserData("dismissedNotifications", dismissedNotifications);
       // trigger matomo event
-      if(window.consent) _paq.push(["trackEvent", "Notification", "Shown"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
       return Promise.resolve("Info: Notification successfully sent");
     });
   } catch(error) {
@@ -594,4 +598,4 @@ function generateHash(str) {
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
 
-export { generateItems, generateGroups, generateTable, items, item, visibleRows, setTodoComplete };
+export { generateItems, generateGroups, generateTable, items, item, visibleRows, setTodoComplete, archiveTodos };

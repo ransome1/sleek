@@ -1,14 +1,19 @@
 "use strict";
-import { userData, handleError, translations, setUserData, startBuilding } from "../../render.js";
+import { userData, handleError, translations, setUserData, startBuilding, _paq } from "../render.js";
 import { items, generateGroups, generateTable } from "./todos.mjs";
-let categories, filtersCounted, selectedFilters;
+import { isToday, isPast, isFuture } from "./date.mjs";
+const modalFormInput = document.getElementById("modalFormInput");
+const todoTableSearch = document.getElementById("todoTableSearch");
+const autoCompleteContainer = document.getElementById("autoCompleteContainer");
+const todoFilters = document.getElementById("todoFilters");
+let categories, filtersCounted, selectedFilters, container, headline;
 function filterItems(items, searchString) {
   try {
     // selected filters are empty, unless they were persisted
     if(userData.selectedFilters && userData.selectedFilters.length>0) {
-      var selectedFilters = JSON.parse(userData.selectedFilters);
+      selectedFilters = JSON.parse(userData.selectedFilters);
     } else {
-      var selectedFilters = new Array;
+      selectedFilters = new Array;
       userData.selectedFilters = selectedFilters;
     }
     // apply persisted contexts and projects
@@ -39,9 +44,9 @@ function filterItems(items, searchString) {
       if(todoTableSearch.value) searchString = todoTableSearch.value;
       if((searchString || todoTableSearch.value) && item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false;
       if(!userData.showCompleted && item.complete) return false;
-      if(!userData.showDueIsToday && item.due && item.due.isToday()) return false;
-      if(!userData.showDueIsPast && item.due && item.due.isPast()) return false;
-      if(!userData.showDueIsFuture && item.due && item.due.isFuture()) return false;
+      if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
+      if(!userData.showDueIsPast && item.due && isPast(item.due)) return false;
+      if(!userData.showDueIsFuture && item.due && isFuture(item.due)) return false;
       if(item.text==="") return false;
       return true;
     });
@@ -55,7 +60,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
   try {
     // select the container (filter drawer or autocomplete) in which filters will be shown
     if(autoCompleteCategory) {
-      var container = autoCompleteContainer;
+      container = autoCompleteContainer;
       container.innerHTML = "";
       // empty default categories
       categories = [];
@@ -66,7 +71,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
     // in filter drawer, filters are adaptive to the shown items
     } else {
       // empty filter container first
-      var container = todoFilters;
+      container = todoFilters;
       container.innerHTML = "";
       // needs to be reset every run, because it can be overwritten by previous autocomplete
       categories = ["priority", "contexts", "projects"];
@@ -124,7 +129,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       if(userData.selectedFilters.length>0) {
         selectedFilters = JSON.parse(userData.selectedFilters);
         // check if selected filters is still part of all available filters
-        selectedFilters.forEach(function(selectedFilter,index,object){
+        selectedFilters.forEach(function(selectedFilter,index){
           if(selectedFilter[1]==category) {
             // category found, but the selected filter is not part of available filters
             if(!filters.includes(selectedFilter[0])) {
@@ -159,10 +164,8 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
   }
 }
 function selectFilter(filter, category) {
-  // set highlighting
-  //todoFiltersItem.classList.toggle("is-dark");
   // if no filters are selected, add a first one
-  if (selectedFilters.length > 0) {
+  if(selectedFilters.length > 0) {
     // get the index of the item that matches the data values the button click provided
     let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([filter, category]));
     if(index != -1) {
@@ -190,11 +193,11 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     todoFiltersContainer.setAttribute("class", "dropdown-item " + category);
     // translate headline
     if(category=="contexts") {
-      var headline = translations.contexts;
+      headline = translations.contexts;
     } else if(category=="projects"){
-      var headline = translations.projects;
+      headline = translations.projects;
     } else if(category=="priority"){
-      var headline = translations.priority;
+      headline = translations.priority;
     }
     if(autoCompletePrefix===undefined) {
       // create a sub headline element
@@ -253,32 +256,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
         // create the event listener for filter selection by user
         todoFiltersItem.addEventListener("click", () => {
-
           selectFilter(todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category'))
-
-
-
-          /*
-          // set highlighting
-          todoFiltersItem.classList.toggle("is-dark");
-          // if no filters are selected, add a first one
-          if (selectedFilters.length > 0) {
-            // get the index of the item that matches the data values the button click provided
-            let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]));
-            if(index != -1) {
-              // remove the item at the index where it matched
-              selectedFilters.splice(index, 1);
-            } else {
-              // if the item is not already in the array, push it into
-              selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-            }
-          } else {
-            // this is the first push
-            selectedFilters.push([todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category')]);
-          }
-          // convert the collected filters to JSON and save it to store.js
-          setUserData("selectedFilters", JSON.stringify(selectedFilters));
-          startBuilding();*/
           // trigger matomo event
           if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
         });
@@ -313,5 +291,4 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     return Promise.reject(error);
   }
 }
-
 export { filterItems, generateFilterData, selectFilter, categories };

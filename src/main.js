@@ -1,14 +1,12 @@
-let fileWatcher;
-let translations;
-let tray;
-const { app, nativeTheme, electron, Notification, dialog, clipboard, Menu, ipcMain, BrowserWindow, Tray } = require("electron");
+let defaultPath, _paq, fileWatcher, translations, tray;
+const { app, nativeTheme, Notification, dialog, clipboard, Menu, ipcMain, BrowserWindow, Tray } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
 const i18nextOptions = require("./configs/i18next.config");
 const Store = require("./configs/store.config.js");
-const theme = function() {
+const getTheme = function() {
   if(!userData.data.theme && nativeTheme.shouldUseDarkColors) {
     return "dark";
   } else if(!userData.data.theme && !nativeTheme.shouldUseDarkColors) {
@@ -39,12 +37,25 @@ const getChannel = function() {
     return "Misc";
   }
 }
+const getOS = function() {
+  switch (process.platform) {
+    case "darwin":
+      return "mac";
+      break;
+    case "win32":
+      return "windows";
+      break;
+    default:
+      return "linux";
+      break;
+  }
+}
 const appData = {
   version: app.getVersion(),
   development: isDevelopment(),
   languages: i18nextOptions.supportedLngs,
   path: __dirname,
-  os: null,
+  os: getOS(),
   channel: getChannel()
 }
 const userData = new Store({
@@ -77,7 +88,7 @@ const userData = new Store({
 });
 const configureUserData = function() {
   try {
-    if(typeof userData.data.theme != "string") userData.set("theme", theme());
+    if(typeof userData.data.theme != "string") userData.set("theme", getTheme());
     if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
     if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
     if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
@@ -99,7 +110,7 @@ const configureUserData = function() {
     if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
     if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
     return Promise.resolve("Success: User data configured");
-  } catch (error) {
+  } catch(error) {
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureUserData()", error])
     return Promise.reject("Error in configureUserData(): " + error);
@@ -108,6 +119,7 @@ const configureUserData = function() {
 configureUserData().then(response => {
   console.info(response);
 }).catch(error => {
+  mainWindow.webContents.send("triggerFunction", "handleError", [error]);
   console.error(error);
 });
 // ########################################################################################################################
@@ -123,11 +135,11 @@ const createWindow = function() {
       .use(i18nextBackend)
       .init(i18nextOptions);
       if(!language && !userData.get("language") && i18nextOptions.supportedLngs.includes(app.getLocale().substr(0,2))) {
-        var language = app.getLocale().substr(0,2);
+        language = app.getLocale().substr(0,2);
       } else if(!language && userData.get("language")) {
-        var language = userData.get("language");
+        language = userData.get("language");
       } else if(!language) {
-        var language = "en";
+        language = "en";
       }
       userData.set("language", language);
       i18next.changeLanguage(language, (error) => {
@@ -146,17 +158,17 @@ const createWindow = function() {
   setLanguageGetTranslations().then(response => {
     translations = response;
   }).catch(error => {
+    mainWindow.webContents.send("triggerFunction", "handleError", [error]);
     console.error(error);
   });
   const openDialog = function(args) {
     // if a file is already active, it's directory will be chosen as default path
     if(userData.data.path) {
-      var defaultPath = userData.data.path;
+      defaultPath = userData.data.path;
     } else {
-      var defaultPath = path.join(app.getPath("home"))
+      defaultPath = path.join(app.getPath("home"))
     }
-    let file;
-    switch (args) {
+    switch(args) {
       case "open":
         dialog.showOpenDialog({
           title: i18next.t("selectFile"),
@@ -182,7 +194,8 @@ const createWindow = function() {
             });
           }
         }).catch(error => {
-            console.log("Error: " + error)
+          mainWindow.webContents.send("triggerFunction", "handleError", [error])
+          console.error(error)
         });
         break;
       case "create":
@@ -198,7 +211,7 @@ const createWindow = function() {
         }).then(file => {
           // close filewatcher, otherwise the change of file will trigger a duplicate refresh
           if(fileWatcher) fileWatcher.close();
-          fs.writeFile(file.filePath, "", function (error) {
+          fs.writeFile(file.filePath, "", function() {
             if (!file.canceled) {
               userData.data.path = path.dirname(file.filePath);
               userData.set("path", userData.data.path);
@@ -207,12 +220,14 @@ const createWindow = function() {
                 console.info(response);
                 mainWindow.webContents.send("triggerFunction", "resetModal")
               }).catch(error => {
+                mainWindow.webContents.send("triggerFunction", "handleError", [error]);
                 console.error(error);
               });
             }
           });
         }).catch(error => {
-          console.log("Error: " + error)
+          mainWindow.webContents.send("triggerFunction", "handleError", [error]);
+          console.error(error);
         });
         break;
     }
@@ -220,8 +235,11 @@ const createWindow = function() {
   const fileContent = function(file) {
     try {
       if(!fs.existsSync(file)) {
-        return Promise.resolve(fs.writeFile(file, "", function (error) {
-          if(error) return Promise.reject("Error: Could not create file");
+        return Promise.resolve(fs.writeFile(file, "", function(error) {
+          if(error) {
+            mainWindow.webContents.send("triggerFunction", "handleError", [error]);
+            return Promise.reject("Error: Could not create file");
+          }
           return "";
         }));
       }
@@ -256,26 +274,35 @@ const createWindow = function() {
       userData.data.file = newFile;
       userData.set("file", newFile);
       mainWindow.webContents.send("userData", userData.data);
-      if (fs.existsSync(newFile)) {
+      if(fs.existsSync(newFile)) {
         if(fileWatcher) fileWatcher.close();
         fileWatcher = fs.watch(newFile, (event, filename) => {
           console.log("Info: File " + filename + " has changed");
           setTimeout(function() {
-            fileContent(newFile).then(content => {
-              mainWindow.webContents.send("refresh", content)
-            }).catch(error => {
-              console.error(error);
-            });
+            if(fs.existsSync(newFile)) {
+              fileContent(newFile).then(content => {
+                mainWindow.webContents.send("refresh", content)
+              }).catch(error => {
+                mainWindow.webContents.send("triggerFunction", "handleError", [error]);
+                console.error(error);
+              });
+            } else {
+              mainWindow.webContents.send("triggerFunction", "configureMainView");
+            }
           }, 10);
         });
+        fileContent(newFile).then(content => {
+          mainWindow.webContents.send("refresh", content);
+        }).catch(error => {
+          mainWindow.webContents.send("triggerFunction", "handleError", [error]);
+          console.error(error);
+        });
+        // return promise
+        return Promise.resolve("Success: Filewatcher is watching: " + newFile);
+      } else {
+        mainWindow.webContents.send("refresh", false);
+        return Promise.resolve("Error: File " + newFile + " not found.");
       }
-      fileContent(newFile).then(content => {
-        mainWindow.webContents.send("refresh", content);
-      }).catch(error => {
-        console.error(error);
-      });
-      // return promise
-      return Promise.resolve("Success: Filewatcher is watching: " + newFile);
     } catch (error) {
       // trigger matomo event
       if(userData.data.matomoEvents) _paq.push(["trackEvent", "Error", "startFileWatcher()", error])
@@ -291,13 +318,33 @@ const createWindow = function() {
     simpleFullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
-      enableRemoteModule: false,
       worldSafeExecuteJavaScript:true,
       nodeIntegration: false,
       enableRemoteModule: true,
       spellcheck: false,
       contextIsolation: true,
       preload: __dirname + "/preload.js"
+    }
+  });
+  if(appData.os==="windows") mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
+  if(isDevelopment()) mainWindow.webContents.openDevTools()
+  if(userData.data.maximizeWindow) {
+    mainWindow.maximize();
+  } else if(!userData.data.maximizeWindow) {
+    mainWindow.unmaximize();
+  }
+  mainWindow.loadFile(path.join(__dirname, "index.html"));
+  mainWindow.webContents.on("new-window", function(e, url) {
+    e.preventDefault();
+    require("electron").shell.openExternal(url);
+  });
+  mainWindow.on("resize", function() {
+    if(mainWindow.isMaximized()) {
+      userData.set("maximizeWindow", true);
+    } else if(mainWindow.isNormal()) {
+      userData.set("maximizeWindow", false);
+      userData.set("width", this.getBounds().width);
+      userData.set("height", this.getBounds().height);
     }
   });
   // ########################################################################################################################
@@ -310,13 +357,13 @@ const createWindow = function() {
         {
           label: translations.openFile,
           accelerator: "CmdOrCtrl+o",
-          click: function (item, focusedWindow) {
+          click: function () {
             openDialog("open");
           }
         },
         {
           label: translations.createFile,
-          click: function (item, focusedWindow) {
+          click: function () {
             openDialog("create");
           }
         },
@@ -351,20 +398,20 @@ const createWindow = function() {
         {
           label: translations.addTodo,
           accelerator: "CmdOrCtrl+n",
-          click: function (item, focusedWindow) {
+          click: function() {
             mainWindow.webContents.send("triggerFunction", "showForm")
           }
         },
         {
           label: translations.find,
           accelerator: "CmdOrCtrl+f",
-          click: function (item, focusedWindow) {
+          click: function() {
             mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
           }
         },
         {
           label: translations.archive,
-          click: function (item, focusedWindow) {
+          click: function() {
             mainWindow.webContents.send("triggerFunction", "archiveTodos")
           }
         }
@@ -376,21 +423,21 @@ const createWindow = function() {
         {
           label: translations.toggleFilter,
           accelerator: "CmdOrCtrl+b",
-          click: function (item, focusedWindow) {
+          click: function() {
             mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
           }
         },
         {
           label: translations.resetFilters,
           accelerator: "CmdOrCtrl+l",
-          click: function (item, focusedWindow) {
+          click: function() {
             mainWindow.webContents.send("triggerFunction", "resetFilters")
           }
         },
         {
           label: translations.toggleCompletedTodos,
           accelerator: "CmdOrCtrl+h",
-          click: function (item, focusedWindow) {
+          click: function() {
             mainWindow.webContents.send("triggerFunction", "toggleTodos", ["showCompleted"])
           }
         },
@@ -398,7 +445,7 @@ const createWindow = function() {
         {
           label: translations.toggleDarkMode,
           accelerator: "CmdOrCtrl+d",
-          click: function (item, focusedWindow) {
+          click: function() {
             mainWindow.webContents.send("triggerFunction", "setTheme", [true])
           }
         },
@@ -451,11 +498,11 @@ const createWindow = function() {
     tray = new Tray(trayIcon);
     let trayFiles = new Array;
     if(userData.data.files.length > 1) {
-      userData.data.files.forEach((file, i) => {
+      userData.data.files.forEach((file) => {
         trayFiles.push(
           {
             label: file[1],
-            click: function (item, focusedWindow) {
+            click: function() {
               startFileWatcher(file[1]);
               mainWindow.show();
               mainWindow.setSkipTaskbar(true);
@@ -470,14 +517,14 @@ const createWindow = function() {
     let contextMenu = [
       {
         label: translations.windowButtonOpenFile,
-        click: function (item, focusedWindow) {
+        click: function() {
           mainWindow.show();
           mainWindow.setSkipTaskbar(true);
         }
       },
       {
         label: translations.addTodo,
-        click: function (item, focusedWindow) {
+        click: function() {
           mainWindow.show();
           mainWindow.focus();
           mainWindow.webContents.send("triggerFunction", "showForm")
@@ -486,7 +533,7 @@ const createWindow = function() {
       { type: "separator" },
       {
         label: translations.close,
-        click: function (item, focusedWindow) {
+        click: function() {
           app.exit();
         }
       }
@@ -520,7 +567,7 @@ const createWindow = function() {
         if(args) userData.set(args[0], args[1]);
         mainWindow.webContents.send("userData", userData.data);
       })
-      .on("appData", (event, args) => {
+      .on("appData", () => {
         // Send result back to renderer process
         mainWindow.webContents.send("appData", appData);
       })
@@ -532,6 +579,7 @@ const createWindow = function() {
             app.exit();
           }
         }).catch(error => {
+          mainWindow.webContents.send("triggerFunction", "handleError", [error]);
           console.error(error);
         });
       })
@@ -547,6 +595,7 @@ const createWindow = function() {
         startFileWatcher(file).then(response => {
           console.info(response);
         }).catch(error => {
+          mainWindow.webContents.send("triggerFunction", "handleError", [error]);
           console.error(error);
         });
       })
@@ -554,6 +603,7 @@ const createWindow = function() {
         fileContent(file).then(content => {
           mainWindow.webContents.send("fileContent", content)
         }).catch(error => {
+          mainWindow.webContents.send("triggerFunction", "handleError", [error]);
           console.error(error);
         });
       })
@@ -565,7 +615,8 @@ const createWindow = function() {
       })
       .on("showNotification", (event, config) => {
         // Show a notification in OS UI
-        config.icon = __dirname + "/../assets/icons/sleek.svg";
+        //config.icon = __dirname + "/../assets/icons/sleek.svg";
+        config.icon = __dirname + "/../assets/icons/96x96.png";
         // send it to UI
         const notification = new Notification(config);
         notification.show();
@@ -587,13 +638,13 @@ const createWindow = function() {
         // Copy text to clipboard
         if(args[0]) clipboard.writeText(args[0], "selection")
       })
-      .on("restart", (event, args) => {
+      .on("restart", () => {
         app.relaunch();
         app.exit();
         app.quit();
       });
       return Promise.resolve("Success: Window events setup");
-    } catch (error) {
+    } catch(error) {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureWindowEvents()", error])
       return Promise.reject("Error in configureWindowEvents(): " + error);
@@ -603,66 +654,23 @@ const createWindow = function() {
   configureWindowEvents().then(response => {
     console.info(response);
   }).catch(error => {
+    mainWindow.webContents.send("triggerFunction", "handleError", [error]);
     console.error(error);
-  });
-  // ########################################################################################################################
-  // WINDOW CONFIGURATION
-  // ########################################################################################################################
-  // define OS and use ico on Windows and png on all other OS
-  switch (process.platform) {
-    case "darwin":
-      appData.os = "mac";
-      mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.png"));
-      break;
-    case "win32":
-      appData.os = "windows";
-      mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.ico"));
-      break;
-    default:
-      appData.os = "linux";
-      mainWindow.setIcon(path.join(__dirname, "../assets/icons/sleek.png"));
-      break;
-  }
-  if(isDevelopment()) {
-    mainWindow.webContents.openDevTools()
-  }
-  if(userData.data.maximizeWindow) {
-    mainWindow.maximize();
-  } else if(!userData.data.maximizeWindow) {
-    mainWindow.unmaximize();
-  }
-  mainWindow.loadFile(path.join(__dirname, "index.html"));
-  // open links in external browser
-  mainWindow.webContents.on("new-window", function(e, url) {
-    e.preventDefault();
-    require("electron").shell.openExternal(url);
   });
   // ########################################################################################################################
   // REFRESH WHEN IN BACKGROUND
   // ########################################################################################################################
-  // every 10 minutes sleek will reload renderer if app is not focused
-  // important for notifications to show up if sleek is running for a long time in background
-  let timerId = setInterval(() => {
+  // every 10 minutes sleek will reload data and send it to renderer if app is not focused
+  setInterval(() => {
     if(!mainWindow.isFocused()) {
       fileContent(userData.data.file).then(content => {
         mainWindow.webContents.send("refresh", content)
       }).catch(error => {
+        mainWindow.webContents.send("triggerFunction", "handleError", [error]);
         console.error(error);
       });
     }
   }, 600000);
-  // ########################################################################################################################
-  // WINDOW EVENTS
-  // ########################################################################################################################
-  mainWindow.on("resize", function() {
-    if(mainWindow.isMaximized()) {
-      userData.set("maximizeWindow", true);
-    } else if(mainWindow.isNormal()) {
-      userData.set("maximizeWindow", false);
-      userData.set("width", this.getBounds().width);
-      userData.set("height", this.getBounds().height);
-    }
-  });
 }
 // ########################################################################################################################
 // APP EVENTS
