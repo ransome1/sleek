@@ -6,12 +6,22 @@ import * as recurrences from "./recurrences.mjs";
 const modalFormInput = document.getElementById("modalFormInput");
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 const recurrencePickerContainer = document.getElementById("recurrencePickerContainer");
-export const recurrencePickerInput = document.getElementById("recurrencePickerInput");
+const recurrencePickerInput = document.getElementById("recurrencePickerInput");
 const recurrencePickerSpinner = document.getElementById("recurrencePickerSpinner");
 const recurrencePickerDay = document.getElementById("recurrencePickerDay");
+recurrencePickerDay.innerHTML = translations.day;
 const recurrencePickerWeek = document.getElementById("recurrencePickerWeek");
+recurrencePickerWeek.innerHTML = translations.week;
 const recurrencePickerMonth = document.getElementById("recurrencePickerMonth");
+recurrencePickerMonth.innerHTML = translations.month;
 const recurrencePickerYear = document.getElementById("recurrencePickerYear");
+recurrencePickerYear.innerHTML = translations.year;
+const recurrencePickerEvery = document.getElementById("recurrencePickerEvery");
+recurrencePickerEvery.innerHTML = translations.every;
+const recurrencePickerNoRecurrence = document.getElementById("recurrencePickerNoRecurrence");
+recurrencePickerNoRecurrence.innerHTML = translations.noRecurrence;
+
+
 resizeInput(recurrencePickerInput);
 recurrencePickerInput.onfocus = function(el) { showRecurrences(el) };
 recurrencePickerInput.placeholder = translations.noRecurrence;

@@ -1036,6 +1036,7 @@ nav {
     display: block;
     height: 4em;
     margin-bottom: 0;
+    overflow-x: shown;
   }
   .tabs li a {
     border-width: 2px;
@@ -1145,7 +1146,8 @@ body.compact {
     padding: 0!important;
   }
 }
-@media (max-width: 992px) {
+@media  screen and (max-width: 992px),
+        screen and (max-height: 650px) {
   .modal.content {
     .modal-card {
       width: 90%!important;

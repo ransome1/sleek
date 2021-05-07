@@ -126,7 +126,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // https://wsvincent.com/javascript-remove-duplicates-array/
       filters = [...new Set(filters.join(",").split(","))];
       // filter persisted filters
-      if(userData.selectedFilters.length>0) {
+      if(userData.selectedFilters && userData.selectedFilters.length>0) {
         selectedFilters = JSON.parse(userData.selectedFilters);
         // check if selected filters is still part of all available filters
         selectedFilters.forEach(function(selectedFilter,index){
@@ -187,7 +187,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
   try {
     selectedFilters = new Array;
 
-    if(userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
+    if(userData.selectedFilters && userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
     // creates a div for the specific filter section
     let todoFiltersContainer = document.createElement("div");
     todoFiltersContainer.setAttribute("class", "dropdown-item " + category);

@@ -1059,6 +1059,7 @@ nav ul:nth-child(2) {
   display: block;
   height: 4em;
   margin-bottom: 0;
+  overflow-x: shown;
 }
 .modal.content .tabs li a {
   border-width: 2px;
@@ -1162,7 +1163,7 @@ body.compact #autoCompleteContainer.drawer {
   padding: 0 !important;
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 992px), screen and (max-height: 650px) {
   .modal.content .modal-card {
     width: 90% !important;
     padding: 0.5em;

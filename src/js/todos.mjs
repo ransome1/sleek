@@ -378,7 +378,7 @@ function setTodoComplete(todo) {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
@@ -421,7 +421,7 @@ function setTodoDelete(todo) {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item

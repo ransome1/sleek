@@ -22,3 +22,5 @@ squashfs-root/
 test/
 src/__tests__
 .eslintrc.json
+yarn.lock
+appx/

@@ -1,8 +1,8 @@
 "use strict";
-import { setUserData, showMore, userData, handleError, navBtns, _paq } from "../render.js";
+import { setUserData, showMore, userData, handleError, _paq } from "../render.js";
+import { navBtns } from "./navigation.mjs";
 import { getHandleElement, startDragging } from "./drawer_handle.mjs";
 const viewDrawer = document.getElementById("viewDrawer");
-
 const filterDrawer = document.getElementById("filterDrawer");
 const drawerContainer = document.getElementById("drawerContainer");
 const todoTable = document.getElementById("todoTable");
@@ -47,7 +47,6 @@ navBtnView.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on view"]);
 }
-
 // open filter drawer if it has been persisted
 if(userData.filterDrawer) {
   showDrawer(true, navBtnFilter.id, filterDrawer.id).then(function(result) {
@@ -87,11 +86,11 @@ function showDrawer(variable, buttonId, drawerId) {
     const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompletedLast");
     switch (drawerId) {
       case "viewDrawer":
-        if(userData.showCompleted) {
+        /*if(userData.showCompleted) {
           viewToggleSortCompletedLast.parentElement.classList.remove("is-hidden");
         } else {
           viewToggleSortCompletedLast.parentElement.classList.add("is-hidden");
-        }
+        }*/
         // set viewContainer sort select
         Array.from(document.getElementById("viewSelectSortBy").options).forEach(function(item) {
           if(item.value===userData.sortBy) item.selected = true

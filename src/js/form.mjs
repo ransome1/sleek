@@ -61,6 +61,20 @@ modalFormInputResize.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
 }
 const modalBackground = document.querySelectorAll('.modal-background');
+modalBackground.forEach(function(el) {
+  el.onclick = function() {
+    resetModal().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
+    el.parentElement.classList.remove("is-active");
+    autoCompleteContainer.classList.remove("is-active");
+    autoCompleteContainer.blur();
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+  }
+});
 const modalClose = document.querySelectorAll('.close');
 modalClose.forEach(function(el) {
   el.onclick = function() {
@@ -77,26 +91,13 @@ modalClose.forEach(function(el) {
     el.parentElement.parentElement.classList.remove("is-active");
   }
 });
+const modalFormInput = document.getElementById("modalFormInput");
 document.getElementById("modalFormInput").addEventListener("keyup", e => {
   modalFormInputEvent();
   // do not show suggestion container if Escape has been pressed
   if(e.key==="Escape") return false;
 });
 document.getElementById("modalFormInput").placeholder = translations.formTodoInputPlaceholder;
-modalBackground.forEach(function(el) {
-  el.onclick = function() {
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    el.parentElement.classList.remove("is-active");
-    autoCompleteContainer.classList.remove("is-active");
-    autoCompleteContainer.blur();
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
-  }
-});
 const priorityPicker = document.getElementById("priorityPicker");
 priorityPicker.addEventListener("change", e => {
   setPriority(e.target.value).then(response => {
@@ -307,14 +308,12 @@ function toggleInputSize(type) {
   let newInputElement;
   switch (type) {
     case "input":
-      console.log("create textarea");
       newInputElement = document.createElement('textarea');
       modalFormInputResize.setAttribute("data-input-type", "textarea");
       modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
       setUserData("useTextarea", true);
       break;
     case "textarea":
-    console.log("create input");
       newInputElement = document.createElement('input');
       newInputElement.type = "text";
       modalFormInputResize.setAttribute("data-input-type", "input");
@@ -437,4 +436,4 @@ window.onresize = function() {
   }
 }
 
-export { show, positionAutoCompleteContainer, resizeInput};
+export { show, resizeInput};

@@ -50,6 +50,14 @@ input[type="checkbox"]:active {
 button {
   color: white!important;
 }
+.button.is-link,
+.button.is-link:hover {
+  color: $dark-grey!important;
+  background-color: white;
+  svg {
+    color: inherit!important;
+  }
+}
 .button[disabled],
 fieldset[disabled] {
   background-color: transparent;
