@@ -33,10 +33,6 @@ marked.use({ renderer });
 // PREPARE TABLE
 // ########################################################################################################################
 const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
-//const tableContainerDue = document.createDocumentFragment();
-//const tableContainerComplete = document.createDocumentFragment();
-//const tableContainerDueAndComplete = document.createDocumentFragment();
-//const tableContainerNoPriorityNotCompleted = document.createDocumentFragment();
 const tableContainerContent = document.createDocumentFragment();
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
@@ -461,8 +457,8 @@ function archiveTodos() {
         doneFile = userData.file.replace(userData.file.split("/").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
         break;
     }
-    window.api.send("fileContent", doneFile);
-    window.api.receive("fileContent", (content) => {
+    window.api.send("getContent", doneFile);
+    window.api.receive("getContent", (content) => {
       items.doneTxtObjects = new Array;
       if(content) items.doneTxtObjects = TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
       // in case done file was not empty the completed todos will be appended
@@ -482,8 +478,8 @@ function archiveTodos() {
       }
       // write incomplete only todos to todo.txt
       window.api.send("writeToFile", [items.incomplete.join("\n").toString(), userData.file]);
+      return Promise.resolve("Success: Completed todo moved to: " + doneFile)
     });
-    return Promise.resolve("Success: Completed todo moved to: " + doneFile)
   } catch(error) {
     error.functionName = archiveTodos.name;
     return Promise.reject(error);

@@ -544,7 +544,6 @@ const createWindow = async function() {
       .on("writeToFile", (event, args) => {
         // Write content to file
         try {
-          console.log("DDDDDD");
           fs.writeFileSync(args[1], args[0], {encoding: "utf-8"});
           console.log("File written successfully");
         } catch(error) {

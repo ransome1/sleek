@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld(
       let validChannels = [
         "appData",
         "userData",
-        "fileContent",
+        "getContent",
         "translations",
         "showNotification",
         "writeToFile",
@@ -23,7 +23,7 @@ contextBridge.exposeInMainWorld(
     receive: (channel, func) => {
       let validChannels = [
         "translations",
-        "fileContent",
+        "getContent",
         "userData",
         "appData",
         "refresh",
