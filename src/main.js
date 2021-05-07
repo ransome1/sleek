@@ -172,7 +172,7 @@ const createWindow = async function() {
       userData.data.file = file;
       userData.set("file", file);
       getContent(file).then(content => {
-        mainWindow.webContents.send("userData", userData.data);
+        //mainWindow.webContents.send("userData", userData.data);
         mainWindow.webContents.send("refresh", content)
       }).catch(error => {
         console.error(error);

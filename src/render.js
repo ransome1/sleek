@@ -764,6 +764,7 @@ function showFiles() {
       } else {
         cell1.innerHTML = "<button class=\"button is-link\">" + translations.select + "</button>";
         cell1.onclick = function() {
+          console.log(this.parentElement.getAttribute("data-path"));
           window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
           resetModal().then(response => {
             console.info(response);
@@ -806,7 +807,6 @@ async function startBuilding(searchString) {
 
     todos.items.filtered = await filters.filterItems(todos.items.objects, searchString);
 
-
     filters.generateFilterData();
 
     const groups = await todos.generateGroups(todos.items.filtered);
@@ -814,7 +814,7 @@ async function startBuilding(searchString) {
     await todos.generateTable(groups);
 
     configureMainView();
-    
+
     showResultStats();
 
     t1 = performance.now();
@@ -968,8 +968,9 @@ window.api.receive("triggerFunction", (name, args) => {
     return Promise.reject(error);
   }
 });
-window.api.receive("refresh", (data) => {
-  todos.generateItems(data).then(function() {
+window.api.receive("refresh", async function(content) {
+  userData = await getUserData();
+  todos.generateItems(content).then(function() {
     startBuilding();
   }).catch(function(error) {
     handleError(error);
