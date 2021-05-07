@@ -493,7 +493,6 @@ function checkIsTodoVisible(todo) {
   if(!userData.showHidden && todo.h) return false
   if(!todo.text) return false
   for(let category in userData.hideFilterCategories) {
-    //if(Array.isArray(todo[userData.hideFilterCategories[category]])) return false
     if(todo[userData.hideFilterCategories[category]]) return false
   }
   return true;

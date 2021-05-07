@@ -56,14 +56,13 @@ const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const welcomeToSleek = document.getElementById("welcomeToSleek");
 let
-  _paq,
-  a0,
+  _paq, a0,
   a1,
   appData,
   content,
   drawer,
   f0,
-  f1;
+  f1,
   filters,
   form,
   friendlyLanguageName,
@@ -72,7 +71,7 @@ let
   todos,
   translations,
   userData,
-  view,
+  view;
 // ########################################################################################################################
 // FUNCTIONS
 // ########################################################################################################################
@@ -248,7 +247,7 @@ function checkDismissedMessages() {
     return Promise.reject(error);
   }
 }
-function getUserData() {
+/*function getUserData() {
   try {
     window.api.send("userData");
     return new Promise(function(resolve) {
@@ -261,18 +260,43 @@ function getUserData() {
     error.functionName = getUserData.name;
     return Promise.reject(error);
   }
+}*/
+function getUserData() {
+  try {
+    window.api.send("userData");
+    return new Promise(function(resolve) {
+      return window.api.receive("userData", function(data) {
+        resolve(data);
+      });
+    });
+  } catch(error) {
+    error.functionName = getUserData.name;
+    return Promise.reject(error);
+  }
 }
 function getAppData() {
   try {
     window.api.send("appData");
     return new Promise(function(resolve) {
       return window.api.receive("appData", (data) => {
-        appData = data;
-        resolve("Success: App data received");
+        resolve(data);
       });
     });
   } catch(error) {
     error.functionName = getAppData.name;
+    return Promise.reject(error);
+  }
+}
+function getTranslations(language) {
+  try {
+    window.api.send("translations");
+    return new Promise(function(resolve) {
+      return window.api.receive("translations", function(data) {
+        resolve(data);
+      });
+    });
+  } catch(error) {
+    error.functionName = getUserData.name;
     return Promise.reject(error);
   }
 }
@@ -379,7 +403,6 @@ function registerEvents() {
         if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
       }
     });
-
     btnAddTodo.forEach(function(el) {
       el.onclick = function () {
         // just in case the form will be cleared first
@@ -776,118 +799,98 @@ function showFiles() {
     return Promise.reject(error);
   }
 }
-function startBuilding(searchString) {
-  t0 = performance.now();
-  filters.filterItems(todos.items.objects, searchString)
-  .then(function(filtered) {
-    todos.items.filtered = filtered;
-    f0 = performance.now();
-    filters.generateFilterData().then(response => {
-      console.info(response);
-      f1 = performance.now();
-      console.info("Filters build:", f1 - f0, "ms");
-    }).catch(error => {
-      handleError(error);
-    });
-    return todos.generateGroups(filtered)
-  })
-  .then(function(groups) {
-    return new Promise(function(resolve) {
-      resolve(todos.generateTable(groups));
-    });
-  })
-  .then(function(response) {
-    console.info(response);
-    return new Promise(function(resolve) {
-      resolve(configureMainView());
-    });
-  })
-  .then(function(response) {
-    console.info(response);
-    showResultStats().then(response => {
-      console.info(response);
-      t1 = performance.now();
-      console.info("Todos build:", t1 - t0, "ms");
-    }).catch(error => {
-      handleError(error);
-    });
-  })
-  .catch(function(error) {
-    handleError(error);
-  });
+async function startBuilding(searchString) {
+  try {
+
+    t0 = performance.now();
+
+    todos.items.filtered = await filters.filterItems(todos.items.objects, searchString);
+
+
+    filters.generateFilterData();
+
+    const groups = await todos.generateGroups(todos.items.filtered);
+
+    await todos.generateTable(groups);
+
+    configureMainView();
+    
+    showResultStats();
+
+    t1 = performance.now();
+    console.info("Table build:", t1 - t0, "ms");
+
+  } catch(error) {
+    error.functionName = startBuilding.name;
+    return Promise.reject(error);
+  }
 }
 window.onload = async function () {
   a0 = performance.now();
-  await getUserData().then(function(response) {
+
+  userData = await getUserData();
+  appData = await getAppData();
+  translations = await getTranslations();
+  todos = await import("./js/todos.mjs");
+  filters = await import("./js/filters.mjs");
+
+  if(userData.file) {
+    window.api.send("startFileWatcher", userData.file);
+  // for users who upgrade from very old versions
+  } else if(userData.pathToFile) {
+    window.api.send("startFileWatcher", userData.pathToFile);
+  } else {
+    showOnboarding(true).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+  }
+
+  configureMatomo().then(function(response) {
     console.info(response);
   }).catch(function(error) {
     handleError(error);
   });
-  await getAppData().then(function(response) {
+  setTheme().then(function(response) {
     console.info(response);
   }).catch(function(error) {
     handleError(error);
   });
-  window.api.send("translations", userData.language);
-  window.api.receive("translations", async function(data) {
-    translations = data;
-    filters = await import("./js/filters.mjs");
-    todos = await import("./js/todos.mjs");
-    if(userData.file) {
-      window.api.send("startFileWatcher", userData.file);
-    // for users who upgrade from very old versions
-    } else if(userData.pathToFile) {
-      window.api.send("startFileWatcher", userData.pathToFile);
-    } else {
-      showOnboarding(true).then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
-    }
-    configureMatomo().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    setTheme().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    checkDismissedMessages().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    setToggles().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    setTranslations(translations).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    setFriendlyLanguageNames(translations).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    registerEvents().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    form = await import("./js/form.mjs");
-    content = await import("./js/content.mjs");
-    drawer = await import("./js/drawer.mjs");
-    import("./js/view.mjs");
-    import("./js/navigation.mjs");
-    a1 = performance.now();
-    console.info("App build:", a1 - a0, "ms");
+  checkDismissedMessages().then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
   });
+  setToggles().then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
+  setTranslations(translations).then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
+  setFriendlyLanguageNames(translations).then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
+  registerEvents().then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
+
+  form = await import("./js/form.mjs");
+  content = await import("./js/content.mjs");
+  drawer = await import("./js/drawer.mjs");
+  view = await import("./js/view.mjs");
+  await import("./js/navigation.mjs");
+
+  a1 = performance.now();
+  console.info("App build:", a1 - a0, "ms");
 }
 window.api.receive("triggerFunction", (name, args) => {
   try {
@@ -939,7 +942,7 @@ window.api.receive("triggerFunction", (name, args) => {
         });
         break;
       case "toggle":
-        toggle(...args).then(function(response) {
+        view.toggle(...args).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
@@ -972,4 +975,5 @@ window.api.receive("refresh", (data) => {
     handleError(error);
   });
 });
+
 export { resetModal, setUserData, startBuilding, handleError, showMore, userData, appData, translations, modal, _paq };

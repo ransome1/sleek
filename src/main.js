@@ -4,13 +4,8 @@ const path = require("path");
 const fs = require("fs");
 const Store = require("./configs/store.config.js");
 // ########################################################################################################################
-// SETUP USERDATA
+// SETUP APPDATA
 // ########################################################################################################################
-const getTheme = function() {
-  const { nativeTheme } = require("electron");
-  if(nativeTheme.shouldUseDarkColors) return "dark"
-  return "light";
-}
 const isDevelopment = function() {
   if(process.env.NODE_ENV==="development") {
     return true;
@@ -63,7 +58,7 @@ if(process.platform === "win32") trayIcon = path.join(appData.path, "../assets/i
 // ########################################################################################################################
 // CREATE THE WINDOW
 // ########################################################################################################################
-const createWindow = function() {
+const createWindow = async function() {
   const getContent = function(file) {
     try {
       if(!fs.existsSync(file)) {
@@ -205,35 +200,20 @@ const createWindow = function() {
       return Promise.reject("Error in startFileWatcher(): " + error);
     }
   }
-  // ########################################################################################################################
-  // SETUP LANGUAGE
-  // ########################################################################################################################
-  const configureLanguage = function(language) {
-    try {
-      const i18next = require("./configs/i18next.config");
-      if(!language && !userData.data.language) {
-        language = app.getLocale().substr(0,2);
-        //userData.set("language", language);
-      }
-      appData.languages = i18next.options.preload;
-      if(!appData.languages.includes(language)) language = "en";
-      userData.set("language", language)
-      translations = i18next.getDataByLanguage(language).translation;
-      return Promise.resolve("Success: Language and translations setup");
-      //return Promise.resolve("Success: Language set to " + language);
-    } catch (error) {
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureLanguage()", error])
-      return Promise.reject("Error in configureLanguage(): " + error);
-    }
-  }
-  const configureUserData = function() {
+  const getUserData = function() {
     try {
       userData = new Store({
         configName: "user-preferences",
         defaults: {}
       });
-      if(typeof userData.data.theme != "string") userData.set("theme", getTheme());
+      if(typeof userData.data.theme != "string") {
+        const getTheme = function() {
+          const { nativeTheme } = require("electron");
+          if(nativeTheme.shouldUseDarkColors) return "dark"
+          return "light";
+        }
+        userData.set("theme", getTheme());
+      }
       if(typeof userData.data.width != "number") userData.set("width", 1100);
       if(typeof userData.data.height != "number") userData.set("height", 700);
       if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
@@ -256,7 +236,7 @@ const createWindow = function() {
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
-      return Promise.resolve("Success: User data setup");
+      return Promise.resolve(userData);
     } catch(error) {
       error.functionName = configureUserData.id;
       // trigger matomo event
@@ -264,223 +244,24 @@ const createWindow = function() {
       return Promise.reject("Error in configureUserData(): " + error);
     }
   }
-  configureUserData()
-  .then(response => {
-    console.log(response);
-    return new Promise(function(resolve) {
-      resolve(configureLanguage(userData.data.language));
-    });
-  }).then(response => {
-    console.log(response);
-    // ########################################################################################################################
-    // MAIN MENU
-    // ########################################################################################################################
-    const menuTemplate = [
-      {
-        label: translations.file,
-        submenu: [
-          {
-            label: translations.openFile,
-            accelerator: "CmdOrCtrl+o",
-            click: function () {
-              openDialog("open");
-            }
-          },
-          {
-            label: translations.createFile,
-            click: function () {
-              openDialog("create");
-            }
-          },
-          appData.os==="mac" ? {
-            role: "quit",
-            label: translations.close
-          } : {
-            role: "close",
-            label: translations.close
-          }
-        ]
-      },
-      {
-        label: translations.edit,
-        submenu: [
-          {
-            label: translations.settings,
-            accelerator: "CmdOrCtrl+,",
-            click: function () {
-              mainWindow.webContents.send("triggerFunction", "showContent", ["modalSettings"]);
-            }
-          },
-          { type: "separator" },
-          { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
-          { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
-          { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
-          { role: "selectAll", accelerator: "CmdOrCtrl+A" }
-        ]},
-        {
-          label: translations.todos,
-          submenu: [
-            {
-              label: translations.addTodo,
-              accelerator: "CmdOrCtrl+n",
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "showForm")
-              }
-            },
-            {
-              label: translations.find,
-              accelerator: "CmdOrCtrl+f",
-              click: function() {
-                mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
-              }
-            },
-            {
-              label: translations.archive,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "archiveTodos")
-              }
-            }
-          ]
-        },
-        {
-          label: translations.view,
-          submenu: [
-            {
-              label: translations.toggleFilter,
-              accelerator: "CmdOrCtrl+b",
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
-              }
-            },
-            {
-              label: translations.resetFilters,
-              accelerator: "CmdOrCtrl+l",
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "resetFilters")
-              }
-            },
-            {
-              label: translations.toggleCompletedTodos,
-              accelerator: "CmdOrCtrl+h",
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
-              }
-            },
-            { type: "separator" },
-            {
-              label: translations.toggleDarkMode,
-              accelerator: "CmdOrCtrl+d",
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "setTheme", [true])
-              }
-            },
-            {
-              role: "reload",
-              label: translations.reload
-            }
-          ]
-        },
-        {
-          label: translations.about,
-          submenu: [
-            {
-              label: translations.help,
-              click: function () {
-                mainWindow.webContents.send("triggerFunction", "showContent", ["modalHelp"])
-              }
-            },
-            {
-              label: translations.sleekOnGithub,
-              click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
-            },
-            {
-              role: "toggleDevTools",
-              label: translations.devTools
-            }
-          ]
-        }
-      ];
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
-    // ########################################################################################################################
-    // TRAY ICON
-    // ########################################################################################################################
-    const setupTray = function() {
-      mainWindow
-      .on("minimize",function(event){
-        event.preventDefault();
-        mainWindow.hide();
-      })
-      .on("close", function (event) {
-        if(!app.isQuiting){
-          event.preventDefault();
-          mainWindow.hide();
-        }
-        return false;
-      })
-      .setSkipTaskbar(true);
-      tray = new Tray(trayIcon);
-      let trayFiles = new Array;
-      if(userData.data.files && userData.data.files.length > 1) {
-        userData.data.files.forEach((file) => {
-          const menuItem = {
-            label: file[1],
-            type: "radio",
-            checked: false,
-            click: function() {
-              startFileWatcher(file[1]);
-              mainWindow.show();
-              mainWindow.setSkipTaskbar(true);
-            }
-          }
-          if(file[0]) menuItem.checked = true;
-          trayFiles.push(menuItem)
-        });
-        trayFiles.push(
-          { type: "separator" },
-        );
+  const getTranslations = function(language) {
+    try {
+      const i18next = require("./configs/i18next.config");
+      if(!language && !userData.data.language) {
+        language = app.getLocale().substr(0,2);
       }
-      let contextMenu = [
-        {
-          label: translations.windowButtonOpenFile,
-          click: function() {
-            mainWindow.show();
-            //if(!mainWindow.isVisible()) mainWindow.focus();
-          }
-        },
-        {
-          label: translations.addTodo,
-          click: function() {
-            mainWindow.show();
-            mainWindow.webContents.send("triggerFunction", "showForm")
-          }
-        },
-        { type: "separator" },
-        {
-          label: translations.close,
-          click: function() {
-            app.exit();
-          }
-        }
-      ]
-      let menu;
-      if(trayFiles.length>0) {
-        menu = Menu.buildFromTemplate(trayFiles.concat(contextMenu));
-      } else {
-        menu = Menu.buildFromTemplate(contextMenu);
-      }
-      tray.setContextMenu(menu)
-      tray.setTitle("sleek");
-      tray.setToolTip("sleek");
-      // TODO macos exception
-      tray.on("click", function() {
-        mainWindow.show();
-        //if(!mainWindow.isVisible()) mainWindow.show();
-      });
+      appData.languages = i18next.options.preload;
+      if(!appData.languages.includes(language)) language = "en";
+      userData.set("language", language);
+      return Promise.resolve(i18next.getDataByLanguage(language).translation);
+    } catch (error) {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureLanguage()", error])
+      return Promise.reject("Error in configureLanguage(): " + error);
     }
-    if(userData.data.tray) setupTray();
-  }).catch(error => {
-    console.error(error);
-  });
+  }
+  userData = await getUserData();
+  translations = await getTranslations(userData.data.language);
   const mainWindow = new BrowserWindow({
     width: userData.data.width,
     height: userData.data.height,
@@ -503,6 +284,212 @@ const createWindow = function() {
     }
   });
   mainWindow.loadFile(path.join(appData.path, "index.html"));
+  // ########################################################################################################################
+  // MAIN MENU
+  // ########################################################################################################################
+  const menuTemplate = [
+    {
+      label: translations.file,
+      submenu: [
+        {
+          label: translations.openFile,
+          accelerator: "CmdOrCtrl+o",
+          click: function () {
+            openDialog("open");
+          }
+        },
+        {
+          label: translations.createFile,
+          click: function () {
+            openDialog("create");
+          }
+        },
+        appData.os==="mac" ? {
+          role: "quit",
+          label: translations.close
+        } : {
+          role: "close",
+          label: translations.close
+        }
+      ]
+    },
+    {
+      label: translations.edit,
+      submenu: [
+        {
+          label: translations.settings,
+          accelerator: "CmdOrCtrl+,",
+          click: function () {
+            mainWindow.webContents.send("triggerFunction", "showContent", ["modalSettings"]);
+          }
+        },
+        { type: "separator" },
+        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { role: "selectAll", accelerator: "CmdOrCtrl+A" }
+      ]},
+      {
+        label: translations.todos,
+        submenu: [
+          {
+            label: translations.addTodo,
+            accelerator: "CmdOrCtrl+n",
+            click: function() {
+              mainWindow.webContents.send("triggerFunction", "showForm")
+            }
+          },
+          {
+            label: translations.find,
+            accelerator: "CmdOrCtrl+f",
+            click: function() {
+              mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
+            }
+          },
+          {
+            label: translations.archive,
+            click: function() {
+              mainWindow.webContents.send("triggerFunction", "archiveTodos")
+            }
+          }
+        ]
+      },
+      {
+        label: translations.view,
+        submenu: [
+          {
+            label: translations.toggleFilter,
+            accelerator: "CmdOrCtrl+b",
+            click: function() {
+              mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
+            }
+          },
+          {
+            label: translations.resetFilters,
+            accelerator: "CmdOrCtrl+l",
+            click: function() {
+              mainWindow.webContents.send("triggerFunction", "resetFilters")
+            }
+          },
+          {
+            label: translations.toggleCompletedTodos,
+            accelerator: "CmdOrCtrl+h",
+            click: function() {
+              mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
+            }
+          },
+          { type: "separator" },
+          {
+            label: translations.toggleDarkMode,
+            accelerator: "CmdOrCtrl+d",
+            click: function() {
+              mainWindow.webContents.send("triggerFunction", "setTheme", [true])
+            }
+          },
+          {
+            role: "reload",
+            label: translations.reload
+          }
+        ]
+      },
+      {
+        label: translations.about,
+        submenu: [
+          {
+            label: translations.help,
+            click: function () {
+              mainWindow.webContents.send("triggerFunction", "showContent", ["modalHelp"])
+            }
+          },
+          {
+            label: translations.sleekOnGithub,
+            click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
+          },
+          {
+            role: "toggleDevTools",
+            label: translations.devTools
+          }
+        ]
+      }
+    ];
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+  // ########################################################################################################################
+  // TRAY ICON
+  // ########################################################################################################################
+  const setupTray = function() {
+    mainWindow
+    .on("minimize",function(event){
+      event.preventDefault();
+      mainWindow.hide();
+    })
+    .on("close", function (event) {
+      if(!app.isQuiting){
+        event.preventDefault();
+        mainWindow.hide();
+      }
+      return false;
+    })
+    .setSkipTaskbar(true);
+    tray = new Tray(trayIcon);
+    let trayFiles = new Array;
+    if(userData.data.files && userData.data.files.length > 1) {
+      userData.data.files.forEach((file) => {
+        const menuItem = {
+          label: file[1],
+          type: "radio",
+          checked: false,
+          click: function() {
+            startFileWatcher(file[1]);
+            mainWindow.show();
+            mainWindow.setSkipTaskbar(true);
+          }
+        }
+        if(file[0]) menuItem.checked = true;
+        trayFiles.push(menuItem)
+      });
+      trayFiles.push(
+        { type: "separator" },
+      );
+    }
+    let contextMenu = [
+      {
+        label: translations.windowButtonOpenFile,
+        click: function() {
+          mainWindow.show();
+          //if(!mainWindow.isVisible()) mainWindow.focus();
+        }
+      },
+      {
+        label: translations.addTodo,
+        click: function() {
+          mainWindow.show();
+          mainWindow.webContents.send("triggerFunction", "showForm")
+        }
+      },
+      { type: "separator" },
+      {
+        label: translations.close,
+        click: function() {
+          app.exit();
+        }
+      }
+    ]
+    let menu;
+    if(trayFiles.length>0) {
+      menu = Menu.buildFromTemplate(trayFiles.concat(contextMenu));
+    } else {
+      menu = Menu.buildFromTemplate(contextMenu);
+    }
+    tray.setContextMenu(menu)
+    tray.setTitle("sleek");
+    tray.setToolTip("sleek");
+    // TODO macos exception
+    tray.on("click", function() {
+      mainWindow.show();
+      //if(!mainWindow.isVisible()) mainWindow.show();
+    });
+  }
+  if(userData.data.tray) setupTray();
   // ########################################################################################################################
   // INITIAL WINDOW CONFIGURATION
   // ########################################################################################################################
@@ -547,23 +534,17 @@ const createWindow = function() {
         mainWindow.webContents.send("userData", userData.data);
       })
       .on("appData", () => {
-        // Send result back to renderer process
         mainWindow.webContents.send("appData", appData);
       })
       .on("changeLanguage", (event, language) => {
-        // Change language
-        configureLanguage(language).then(response => {
-          if(response) {
-            app.relaunch();
-            app.exit();
-          }
-        }).catch(error => {
-          console.error(error);
-        });
+        userData.set("language", language);
+        app.relaunch();
+        app.exit();
       })
       .on("writeToFile", (event, args) => {
         // Write content to file
         try {
+          console.log("DDDDDD");
           fs.writeFileSync(args[1], args[0], {encoding: "utf-8"});
           console.log("File written successfully");
         } catch(error) {
@@ -573,7 +554,6 @@ const createWindow = function() {
         }
       })
       .on("openOrCreateFile", (event, args) => {
-        // Open or create file
         openDialog(args);
       })
       .on("startFileWatcher", (event, file) => {
@@ -634,7 +614,6 @@ const createWindow = function() {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureWindowEvents()", error])
       return Promise.reject("Error in configureWindowEvents(): " + error);
     }
-
   }
   configureWindowEvents().then(response => {
     console.info(response);
