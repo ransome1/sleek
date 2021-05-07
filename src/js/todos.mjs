@@ -478,8 +478,8 @@ function archiveTodos() {
       }
       // write incomplete only todos to todo.txt
       window.api.send("writeToFile", [items.incomplete.join("\n").toString(), userData.file]);
-      return Promise.resolve("Success: Completed todo moved to: " + doneFile)
     });
+    return Promise.resolve("Success: Completed todo moved to: " + doneFile)
   } catch(error) {
     error.functionName = archiveTodos.name;
     return Promise.reject(error);
