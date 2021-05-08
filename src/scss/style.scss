@@ -25,7 +25,6 @@ body {
 button, button:focus, button:active, button:active, button:after, button::before, button:active:after, .button, .button-is-white {
   border: none!important;
   box-shadow: none!important;
-  //background: transparent;
 }
 .is-hidden {
   display: none!important;
@@ -90,8 +89,8 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 1.15em;
   border-radius: 30em;
   background-color: $dark-grey;
-  -webkit-mask-image: url("../svg/times-circle.svg");
-  mask-image: url("../svg/times-circle.svg");
+  -webkit-mask-image: url("../img/svg/times-circle.svg");
+  mask-image: url("../img/svg/times-circle.svg");
   opacity: 0;
   pointer-events: none;
   cursor: pointer;
@@ -392,7 +391,7 @@ nav {
 #zoomUndo {
   cursor: pointer;
 }
-#dueDatePickerInput {
+#datePickerInput {
   cursor: pointer;
 }
 #todoTableSearchContainer {
@@ -748,7 +747,7 @@ nav {
 }
 .contentContainer {
   width: 100%;
-  height: 100%;
+  height: 90%;
   text-align: center;
   display: none;
   flex-direction: column;
@@ -803,7 +802,7 @@ nav {
       background: darken($sleek-contexts-button, 50%);
     }
   }
-  .button.is-dark  {
+  .button.is-dark, .button.is-dark:hover, .button.is-dark.is-hovered  {
     background: darken($sleek-contexts-button, 65%);
     color: white;
   }
@@ -817,13 +816,13 @@ nav {
       background: darken($sleek-projects-button, 50%);
     }
   }
-  .button.is-dark {
+  .button.is-dark, .button.is-dark:hover, .button.is-dark.is-hovered {
     background: darken($sleek-projects-button, 65%);
     color: white;
   }
 }
 .priority {
-  .button {
+  .button, .button:hover {
     font-size: 1.35em;
     font-family: FreeSansBold;
     background: $mid-grey;
@@ -834,12 +833,12 @@ nav {
       color: inherit;
     }
   }
-  .button.is-dark {
+  .button.is-dark span.tag {
+    background: darken($mid-grey, 50%);
+  }
+  .button.is-dark, .button.is-dark:hover, .button.is-dark.is-hovered {
     background: darken($mid-grey, 35%);
     color: white;
-    span.tag {
-      background: darken($mid-grey, 50%);
-    }
   }
   .button.A {
     background: $has-text-danger;
@@ -1043,6 +1042,7 @@ nav {
     display: block;
     height: 4em;
     margin-bottom: 0;
+    overflow-x: shown;
   }
   .tabs li a {
     border-width: 2px;
@@ -1152,7 +1152,8 @@ body.compact {
     padding: 0!important;
   }
 }
-@media (max-width: 992px) {
+@media  screen and (max-width: 992px),
+        screen and (max-height: 650px) {
   .modal.content {
     .modal-card {
       width: 90%!important;

@@ -102,6 +102,8 @@
   "settingsTabAboutExternalLibraries": "Sofwtare utilizzato che non ho sviluppato io",
   "settingsTabSettingsArchive": "Archivia todo",
   "settingsTabSettingsArchiveBody": "I todo completati verranno rimossi dal file todo.txt corrente è inseriti in un file done.txt. Se questo file non esiste nella cartella corrente, verrà creato.",
+  "settingsTabSettingsTray": "Ridurre a icona sulla barra del vassoio",
+  "settingsTabSettingsTrayBody": "Con questa impostazione, sleek viene ridotto a icona nella barra delle applicazioni e non è più visibile nella barra delle applicazioni. <strong>sleek si riavvierà da solo. Se ciò non accade, riavvia il programma manualmente.</strong>",
   "archive": "Archivio",
   "shortcuts": "Scorciatoie",
   "function": "Funzione",

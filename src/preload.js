@@ -1,11 +1,11 @@
-const { electron, contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld(
   "api", {
     send: (channel, data) => {
       let validChannels = [
         "appData",
         "userData",
-        "fileContent",
+        "getContent",
         "translations",
         "showNotification",
         "writeToFile",
@@ -13,7 +13,8 @@ contextBridge.exposeInMainWorld(
         "changeLanguage",
         "openOrCreateFile",
         "copyToClipboard",
-        "triggerFunction"
+        "triggerFunction",
+        "restart"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -22,7 +23,7 @@ contextBridge.exposeInMainWorld(
     receive: (channel, func) => {
       let validChannels = [
         "translations",
-        "fileContent",
+        "getContent",
         "userData",
         "appData",
         "refresh",

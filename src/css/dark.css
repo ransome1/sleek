@@ -1,30 +1,36 @@
 body {
   background-color: #212224;
-  color: #CCCDCF; }
+  color: #CCCDCF;
+}
 
 a {
-  color: white; }
+  color: white;
+}
 
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid #CCCDCF !important; }
+  outline: 2px solid #CCCDCF !important;
+}
 
 a:hover,
 button:hover,
 strong {
-  color: #CCCDCF; }
+  color: #CCCDCF;
+}
 
 input,
 select,
 textarea {
   border: none !important;
   background: #2d2d2d !important;
-  color: white !important; }
+  color: white !important;
+}
 
-input[type="search"]::-webkit-search-cancel-button {
+input[type=search]::-webkit-search-cancel-button {
   background-color: white;
-  -webkit-mask-image: url("../svg/times-circle.svg");
-  mask-image: url("../svg/times-circle.svg"); }
+  -webkit-mask-image: url("../img/svg/times-circle.svg");
+  mask-image: url("../img/svg/times-circle.svg");
+}
 
 input:active,
 input:focus,
@@ -32,315 +38,408 @@ input.is-focused,
 select:focus,
 textarea:active,
 textarea:focus,
-input[type="search"]:focus {
+input[type=search]:focus {
   outline: none !important;
-  box-shadow: 0 0 0 2px #CCCDCF !important; }
+  box-shadow: 0 0 0 2px #CCCDCF !important;
+}
 
 input::placeholder {
-  color: #4a4a4a !important; }
+  color: #4a4a4a !important;
+}
 
-input[type="checkbox"]:focus,
-input[type="checkbox"]:active {
+input[type=checkbox]:focus,
+input[type=checkbox]:active {
   outline: none;
-  box-shadow: none !important; }
+  box-shadow: none !important;
+}
 
 button {
-  color: white !important; }
+  color: white !important;
+}
+
+.button.is-link,
+.button.is-link:hover {
+  color: #4a4a4a !important;
+  background-color: white;
+}
+.button.is-link svg,
+.button.is-link:hover svg {
+  color: inherit !important;
+}
 
 .button[disabled],
 fieldset[disabled] {
-  background-color: transparent; }
+  background-color: transparent;
+}
 
 button.is-outlined:hover {
-  background: #3B3B3B !important; }
+  background: #3B3B3B !important;
+}
 
 ::after {
-  border-color: white !important; }
+  border-color: white !important;
+}
 
 svg {
-  color: white; }
+  color: white;
+}
 
 table {
   width: 100%;
   background-color: transparent !important;
-  color: #CCCDCF !important; }
+  color: #CCCDCF !important;
+}
 
 table tr td {
-  border-color: #212224 !important; }
+  border-color: #212224 !important;
+}
 
 table tr th {
-  color: white !important; }
+  color: white !important;
+}
 
 nav {
-  background-color: #2d2d2d; }
-  nav svg {
-    color: #CCCDCF; }
-  nav ul li.logo {
-    background: none; }
-  nav ul li a {
-    color: #CCCDCF;
-    border-bottom: 1px solid #3B3B3B; }
-  nav ul li a:hover,
-  nav ul li a:focus {
-    color: #CCCDCF;
-    border-bottom: none;
-    background-color: #3B3B3B; }
-  nav ul li.is-highlighted a {
-    color: #CCCDCF;
-    border-bottom: none;
-    background-color: #3B3B3B; }
+  background-color: #2d2d2d;
+}
+nav svg {
+  color: #CCCDCF;
+}
+nav ul li.logo {
+  background: none;
+}
+nav ul li a {
+  color: #CCCDCF;
+  border-bottom: 1px solid #3B3B3B;
+}
+nav ul li a:hover,
+nav ul li a:focus {
+  color: #CCCDCF;
+  border-bottom: none;
+  background-color: #3B3B3B;
+}
+nav ul li.is-highlighted a {
+  color: #CCCDCF;
+  border-bottom: none;
+  background-color: #3B3B3B;
+}
 
 #drawerContainer .zoom svg {
-  color: white !important; }
-
+  color: white !important;
+}
 #drawerContainer .zoom #zoomStatus {
-  color: white !important; }
+  color: white !important;
+}
 
 #todoTableSearchContainer {
-  background-color: #212224; }
-  #todoTableSearchContainer #btnToggleViewContainer {
-    background: transparent !important; }
+  background-color: #212224;
+}
+#todoTableSearchContainer #btnToggleViewContainer {
+  background: transparent !important;
+}
 
 #resultStats .tag {
   background-color: #3B3B3B !important;
-  color: #CCCDCF !important; }
+  color: #CCCDCF !important;
+}
 
 #todoTable .flex-table#previousItem.is-highlighted {
-  background-color: #3B3B3B; }
-
+  background-color: #3B3B3B;
+}
 #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
-  color: #CCCDCF; }
-
+  color: #CCCDCF;
+}
 #todoTable .flex-table.due .button {
-  color: #f5f5f5; }
-
+  color: #f5f5f5;
+}
 #todoTable .flex-table {
-  border-color: #3B3B3B; }
-  #todoTable .flex-table .checkbox a {
-    color: #CCCDCF; }
-  #todoTable .flex-table .checkbox a:hover {
-    color: white; }
-  #todoTable .flex-table .flex-row.text {
-    color: #CCCDCF; }
-  #todoTable .flex-table .flex-row.itemDueDate {
-    color: white; }
-    #todoTable .flex-table .flex-row.itemDueDate .fa-sort-down {
-      color: #3B3B3B; }
-  #todoTable .flex-table .flex-row.itemDueDate.isToday,
-  #todoTable .flex-table .flex-row.itemDueDate.isPast {
-    color: #ff3860; }
-    #todoTable .flex-table .flex-row.itemDueDate.isToday .fa-sort-down,
-    #todoTable .flex-table .flex-row.itemDueDate.isPast .fa-sort-down {
-      color: inherit; }
-  #todoTable .flex-table .flex-row.itemDueDate.isTomorrow .fa-sort-down {
-    color: #fa745e !important; }
-  #todoTable .flex-table .flex-row span.contexts {
-    color: #c5ede3 !important;
-    background: #1e6251 !important; }
-  #todoTable .flex-table .flex-row span.projects {
-    color: #f1d6f1 !important;
-    background: #6f266f !important; }
-  #todoTable .flex-table .flex-row .is-white {
-    color: #CCCDCF;
-    background: none; }
-  #todoTable .flex-table .flex-row.todoTableItemMore a {
-    color: #CCCDCF; }
-  #todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
-    background: #3B3B3B;
-    color: white; }
-  #todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-    background: #2d2d2d; }
+  border-color: #3B3B3B;
+}
+#todoTable .flex-table .checkbox a {
+  color: #CCCDCF;
+}
+#todoTable .flex-table .checkbox a:hover {
+  color: white;
+}
+#todoTable .flex-table .flex-row.text {
+  color: #CCCDCF;
+}
+#todoTable .flex-table .flex-row.itemDueDate {
+  color: white;
+}
+#todoTable .flex-table .flex-row.itemDueDate .fa-sort-down {
+  color: #3B3B3B;
+}
+#todoTable .flex-table .flex-row.itemDueDate.isToday,
+#todoTable .flex-table .flex-row.itemDueDate.isPast {
+  color: #ff3860;
+}
+#todoTable .flex-table .flex-row.itemDueDate.isToday .fa-sort-down,
+#todoTable .flex-table .flex-row.itemDueDate.isPast .fa-sort-down {
+  color: inherit;
+}
+#todoTable .flex-table .flex-row.itemDueDate.isTomorrow .fa-sort-down {
+  color: #fa745e !important;
+}
+#todoTable .flex-table .flex-row span.contexts {
+  color: #c5ede3 !important;
+  background: #1e6251 !important;
+}
+#todoTable .flex-table .flex-row span.projects {
+  color: #f1d6f1 !important;
+  background: #6f266f !important;
+}
+#todoTable .flex-table .flex-row .is-white {
+  color: #CCCDCF;
+  background: none;
+}
+#todoTable .flex-table .flex-row.todoTableItemMore a {
+  color: #CCCDCF;
+}
+#todoTable .flex-table .flex-row.todoTableItemMore .dropdown-content {
+  background: #3B3B3B;
+  color: white;
+}
+#todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
+  background: #2d2d2d;
+}
 
 #modalForm button {
   color: white;
   border-color: #3B3B3B !important;
-  background: transparent !important; }
-
+  background: transparent !important;
+}
 #modalForm button:hover {
-  color: #CCCDCF !important; }
-
+  color: #CCCDCF !important;
+}
 #modalForm .field input,
 #modalForm .field input::placeholder,
 #modalForm .field select,
 #modalForm .field select::placeholder {
-  color: white !important; }
-
+  color: white !important;
+}
 #modalForm .field select option {
-  background: #3B3B3B; }
+  background: #3B3B3B;
+}
 
 #recurrencePicker #recurrencePickerInput,
 #recurrencePicker .radio {
   cursor: pointer;
   background: none !important;
-  color: white !important; }
-
+  color: white !important;
+}
 #recurrencePicker #recurrencePickerInput::placeholder {
-  color: white !important; }
-
+  color: white !important;
+}
 #recurrencePicker .radio:hover {
-  color: #CCCDCF !important; }
-
+  color: #CCCDCF !important;
+}
 #recurrencePicker #recurrencePickerContainer {
-  background: #2d2d2d; }
-  #recurrencePicker #recurrencePickerContainer .card-footer {
-    border-color: #212224; }
+  background: #2d2d2d;
+}
+#recurrencePicker #recurrencePickerContainer .card-footer {
+  border-color: #212224;
+}
 
 #autoCompleteContainer {
-  background: #3B3B3B; }
-  #autoCompleteContainer h4 {
-    color: #CCCDCF; }
+  background: #3B3B3B;
+}
+#autoCompleteContainer h4 {
+  color: #CCCDCF;
+}
 
 #drawerContainer .drawer {
-  background: #3B3B3B !important; }
-  #drawerContainer .drawer h4.is-4 {
-    color: white; }
-
+  background: #3B3B3B !important;
+}
+#drawerContainer .drawer h4.is-4 {
+  color: white;
+}
 #drawerContainer a.drawerClose {
-  background: #3B3B3B !important; }
-
+  background: #3B3B3B !important;
+}
 #drawerContainer svg {
-  color: #f5f5f5 !important; }
-
+  color: #f5f5f5 !important;
+}
 #drawerContainer #btnFiltersResetFilters {
-  background: #212224 !important; }
+  background: #212224 !important;
+}
 
 .contexts .button {
   color: #c5ede3;
-  background: #247561; }
-  .contexts .button span.tag {
-    color: #184e41;
-    background: #c9eee5; }
-
+  background: #247561;
+}
+.contexts .button span.tag {
+  color: #184e41;
+  background: #c9eee5;
+}
 .contexts .button.is-dark {
   background: #184e41;
-  color: white; }
+  color: white;
+}
 
 .projects .button {
   color: #f1d6f1;
-  background: #822c82; }
-  .projects .button span.tag {
-    color: #5c1f5c;
-    background: #f2daf2; }
-
+  background: #822c82;
+}
+.projects .button span.tag {
+  color: #5c1f5c;
+  background: #f2daf2;
+}
 .projects .button.is-dark {
   background: #5c1f5c;
-  color: white; }
+  color: white;
+}
 
 .priority .button {
-  opacity: .9; }
+  opacity: 0.9;
+}
 
 .toggle .switch .slider {
-  background-color: #4a4a4a; }
-
+  background-color: #4a4a4a;
+}
 .toggle .switch input:checked + .slider {
-  background-color: #2d2d2d !important; }
-
+  background-color: #2d2d2d !important;
+}
 .toggle .switch input:focus + .slider {
-  box-shadow: none; }
-
+  box-shadow: none;
+}
 .toggle .switch input:focus-visible {
-  outline: 2px solid white !important; }
+  outline: 2px solid white !important;
+}
 
 .modal .modal-content .card {
   background: #3B3B3B;
-  color: #CCCDCF; }
-  .modal .modal-content .card .card-header-title {
-    color: white; }
-  .modal .modal-content .card .card-content button {
-    background: #2d2d2d !important; }
-  .modal .modal-content .card .card-footer,
-  .modal .modal-content .card .card-footer-item {
-    border-color: #2d2d2d; }
+  color: #CCCDCF;
+}
+.modal .modal-content .card .card-header-title {
+  color: white;
+}
+.modal .modal-content .card .card-content button {
+  background: #2d2d2d !important;
+}
+.modal .modal-content .card .card-footer,
+.modal .modal-content .card .card-footer-item {
+  border-color: #2d2d2d;
+}
 
 .modal.content {
-  color: #CCCDCF !important; }
-  .modal.content .button {
-    background: #2d2d2d !important; }
-  .modal.content .select:not(.is-multiple):not(.is-loading)::after {
-    border-color: white !important; }
-  .modal.content .is-large.delete,
-  .modal.content .is-large.modal-close,
-  .modal.content .tag.is-info {
-    background: white !important;
-    color: #3B3B3B !important; }
-  .modal.content .tag:not(body).is-dark {
-    background: #212224 !important; }
-  .modal.content .modal-close::before,
-  .modal.content .modal-close::after {
-    color: #3B3B3B !important;
-    background: #3B3B3B !important; }
-  .modal.content .modal-card,
-  .modal.content table {
-    background: #3B3B3B;
-    color: #CCCDCF !important; }
-  .modal.content .title,
-  .modal.content table th {
-    color: white; }
-  .modal.content table tr,
-  .modal.content table th,
-  .modal.content table td {
-    border-color: #2d2d2d !important; }
-  .modal.content .tabs ul {
-    border-color: transparent; }
-  .modal.content .tabs li a {
-    color: white;
-    border-color: #4a4a4a; }
-  .modal.content .tabs li a:hover {
-    border-color: #CCCDCF; }
-  .modal.content .tabs li.is-active a {
-    color: white;
-    border-color: #CCCDCF; }
+  color: #CCCDCF !important;
+}
+.modal.content .button {
+  background: #2d2d2d !important;
+}
+.modal.content .select:not(.is-multiple):not(.is-loading)::after {
+  border-color: white !important;
+}
+.modal.content .is-large.delete,
+.modal.content .is-large.modal-close,
+.modal.content .tag.is-info {
+  background: white !important;
+  color: #3B3B3B !important;
+}
+.modal.content .tag:not(body).is-dark {
+  background: #212224 !important;
+}
+.modal.content .modal-close::before,
+.modal.content .modal-close::after {
+  color: #3B3B3B !important;
+  background: #3B3B3B !important;
+}
+.modal.content .modal-card,
+.modal.content table {
+  background: #3B3B3B;
+  color: #CCCDCF !important;
+}
+.modal.content .title,
+.modal.content table th {
+  color: white;
+}
+.modal.content table tr,
+.modal.content table th,
+.modal.content table td {
+  border-color: #2d2d2d !important;
+}
+.modal.content .tabs ul {
+  border-color: transparent;
+}
+.modal.content .tabs li a {
+  color: white;
+  border-color: #4a4a4a;
+}
+.modal.content .tabs li a:hover {
+  border-color: #CCCDCF;
+}
+.modal.content .tabs li.is-active a {
+  color: white;
+  border-color: #CCCDCF;
+}
 
 .message.fixed {
-  background: transparent !important; }
-  .message.fixed .message-body {
-    color: #CCCDCF;
-    background: #3B3B3B !important; }
-    .message.fixed .message-body .button {
-      background: #2d2d2d !important; }
+  background: transparent !important;
+}
+.message.fixed .message-body {
+  color: #CCCDCF;
+  background: #3B3B3B !important;
+}
+.message.fixed .message-body .button {
+  background: #2d2d2d !important;
+}
 
 .dueDate svg,
-.dueDate #dueDatePickerInput,
-.dueDate #dueDatePickerInput::placeholder {
+.dueDate #datePickerInput,
+.dueDate #datePickerInput::placeholder {
   color: white !important;
   background: transparent !important;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .datepicker {
-  background: transparent; }
-  .datepicker .button {
-    background: transparent !important; }
-  .datepicker .datepicker-cell.today.focused:not(.selected),
-  .datepicker .datepicker-cell.today:not(.selected) {
-    background: #212224 !important; }
-  .datepicker .datepicker-cell.today.focused:not(.selected),
-  .datepicker .datepicker-cell.today:hover {
-    color: white !important; }
-  .datepicker .datepicker-picker {
-    background: #2d2d2d;
-    color: white; }
-    .datepicker .datepicker-picker .button,
-    .datepicker .datepicker-picker .button:hover,
-    .datepicker .datepicker-picker .datepicker-header .datepicker-controls .button:hover {
-      background: none;
-      color: inherit; }
-    .datepicker .datepicker-picker .datepicker-footer .datepicker-controls .button {
-      color: inherit; }
-    .datepicker .datepicker-picker .datepicker-cell.selected,
-    .datepicker .datepicker-picker .datepicker-cell.selected:hover {
-      color: #2d2d2d;
-      background: white; }
-    .datepicker .datepicker-picker .datepicker-cell.focused:not(.selected),
-    .datepicker .datepicker-picker .datepicker-cell:hover {
-      color: #2d2d2d;
-      background: #CCCDCF; }
+  background: transparent;
+}
+.datepicker .button {
+  background: transparent !important;
+}
+.datepicker .datepicker-cell.today.focused:not(.selected),
+.datepicker .datepicker-cell.today:not(.selected) {
+  background: #212224 !important;
+}
+.datepicker .datepicker-cell.today.focused:not(.selected),
+.datepicker .datepicker-cell.today:hover {
+  color: white !important;
+}
+.datepicker .datepicker-picker {
+  background: #2d2d2d;
+  color: white;
+}
+.datepicker .datepicker-picker .button,
+.datepicker .datepicker-picker .button:hover,
+.datepicker .datepicker-picker .datepicker-header .datepicker-controls .button:hover {
+  background: none;
+  color: inherit;
+}
+.datepicker .datepicker-picker .datepicker-footer .datepicker-controls .button {
+  color: inherit;
+}
+.datepicker .datepicker-picker .datepicker-cell.selected,
+.datepicker .datepicker-picker .datepicker-cell.selected:hover {
+  color: #2d2d2d;
+  background: white;
+}
+.datepicker .datepicker-picker .datepicker-cell.focused:not(.selected),
+.datepicker .datepicker-picker .datepicker-cell:hover {
+  color: #2d2d2d;
+  background: #CCCDCF;
+}
 
 .contentContainer .title.is-1 {
-  color: white; }
-
+  color: white;
+}
 .contentContainer .subtitle,
 .contentContainer .subtitle strong {
-  color: #CCCDCF; }
+  color: #CCCDCF;
+}
 
 #noResultContainer button {
-  background: transparent; }
+  background: transparent;
+}
+
+/*# sourceMappingURL=dark.css.map */

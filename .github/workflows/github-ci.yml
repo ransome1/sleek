@@ -1,6 +1,66 @@
 name: Code scan, build & release
 on: push
 jobs:
+  macos:
+    name: MacOS (Build & Release)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run Electron Builder
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          max_attempts: 3
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+  windows:
+    name: Windows (Build & Release)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run Electron Builder
+        env:
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          max_attempts: 3
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+  linux:
+    name: Linux (Build & Release)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run Electron Builder
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          max_attempts: 3
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
   njsscan:
     name: njsscan
     runs-on: ubuntu-latest
@@ -35,72 +95,8 @@ jobs:
       uses: github/codeql-action/autobuild@v1
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
-
-  macos:
-    needs: codeql
-    name: MacOS (Build & Release)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - name: Run Electron Builder
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          max_attempts: 3
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-  windows:
-    needs: codeql
-    name: Windows (Build & Release)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - name: Run Electron Builder
-        env:
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          max_attempts: 3
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-  linux:
-    needs: codeql
-    name: Linux (Build & Release)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - name: Run Electron Builder
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          max_attempts: 3
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
   mirror:
-    needs: [windows, macos, linux]
+    needs: codeql
     name: Mirror code to opencode.net
     runs-on: ubuntu-latest
     steps:

@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
@@ -31,7 +31,6 @@
       "!**.md",
       "!**.gitignore",
       "!yarn.lock",
-      "!assets/icons/bak${/*}",
       "!assets/screenshots${/*}",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,__tests__,tests,powered-test,example,examples,*.d.ts}",
       "!**/node_modules/.bin",
@@ -52,7 +51,10 @@
       ]
     },
     "mac": {
-      "target": "dmg",
+      "target": {
+        "target": "default",
+        "arch": "universal"
+      },
       "icon": "assets/icons/sleek.icns",
       "category": "public.app-category.productivity"
     },
@@ -95,27 +97,31 @@
     "build:appx": "electron-builder -w appx --publish never",
     "build:pacman": "electron-builder -l pacman --publish never",
     "build:appimage": "electron-builder -l AppImage --publish never",
+    "pack": "electron-builder --dir",
+    "lint": "eslint --ext .js, src --ext .mjs, src",
     "jest": "jest",
     "mocha": "mocha",
-    "pack": "electron-builder --dir",
-    "css-build": "node-sass src/scss/ -o src/css/",
-    "css-watch": "node-sass src/scss/ -wo src/css/",
-    "start": "yarn css-build & yarn css-watch & electron ."
+    "sass": "sass -w src/scss/:src/css/",
+    "start": "yarn sass & electron ."
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "bulma": "^0.9.2",
     "i18next": "^20.2.2",
     "i18next-browser-languagedetector": "^6.1.0",
-    "i18next-fs-backend": "^1.1.1"
+    "i18next-fs-backend": "^1.1.1",
+    "jstodotxt": "^0.9.0",
+    "marked": "^2.0.3",
+    "vanillajs-datepicker": "^1.1.4"
   },
   "devDependencies": {
-    "electron": "^12.0.4",
-    "electron-builder": "^22.10.5",
-    "node-sass": "^5.0.0",
-    "spectron": "^14.0.0",
+    "chai": "^4.3.4",
+    "electron": "^12.0.5",
+    "electron-builder": "22.10.5",
+    "eslint": "^7.25.0",
     "jest": "^26.6.3",
-    "jest-electron": "^0.1.11",
     "mocha": "^8.3.2",
-    "chai": "^4.3.4"
+    "sass": "^1.32.12",
+    "spectron": "^14.0.0"
   }
 }
