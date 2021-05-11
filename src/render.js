@@ -155,6 +155,20 @@ function configureMatomo() {
     return Promise.reject(error);
   }
 }
+function setWindowTitle(file) {
+  if(file) {
+    switch (appData.os) {
+      case "windows":
+      document.title = file.split("\\").pop() + " - sleek";
+      break;
+      default:
+      document.title = file.split("/").pop() + " - sleek";
+      break;
+    }
+  } else {
+    document.title = "sleek";
+  }
+}
 function configureMainView() {
   try {
     // set scaling factor if default font size has changed
@@ -171,16 +185,7 @@ function configureMainView() {
       // jump to previously added item
       if(document.getElementById("previousItem")) jumpToItem(document.getElementById("previousItem"))
       // add filename to application title
-      if(userData.file) {
-        switch (appData.os) {
-          case "windows":
-          document.title = userData.file.split("\\").pop() + " - sleek";
-          break;
-          default:
-          document.title = userData.file.split("/").pop() + " - sleek";
-          break;
-        }
-      }
+      setWindowTitle(userData.file);
       // show add todo buttons
       btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
       // remove onboarding
@@ -247,20 +252,6 @@ function checkDismissedMessages() {
     return Promise.reject(error);
   }
 }
-/*function getUserData() {
-  try {
-    window.api.send("userData");
-    return new Promise(function(resolve) {
-      return window.api.receive("userData", (data) => {
-        userData = data;
-        resolve("Success: User data received");
-      });
-    });
-  } catch(error) {
-    error.functionName = getUserData.name;
-    return Promise.reject(error);
-  }
-}*/
 function getUserData() {
   try {
     window.api.send("userData");
@@ -764,7 +755,6 @@ function showFiles() {
       } else {
         cell1.innerHTML = "<button class=\"button is-link\">" + translations.select + "</button>";
         cell1.onclick = function() {
-          console.log(this.parentElement.getAttribute("data-path"));
           window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
           resetModal().then(response => {
             console.info(response);
@@ -796,7 +786,6 @@ function showFiles() {
     }
     return Promise.resolve("Success: File changer modal built and opened");
   } catch (error) {
-    //error.functionName = arguments.callee.name;
     return Promise.reject(error);
   }
 }
@@ -969,12 +958,13 @@ window.api.receive("triggerFunction", (name, args) => {
   }
 });
 window.api.receive("refresh", async function(content) {
-  userData = await getUserData();
   todos.generateItems(content).then(function() {
     startBuilding();
   }).catch(function(error) {
     handleError(error);
   });
+  userData = await getUserData();
+  setWindowTitle(userData.file);
 });
 
 export { resetModal, setUserData, startBuilding, handleError, showMore, userData, appData, translations, modal, _paq };

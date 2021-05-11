@@ -60,7 +60,7 @@ button {
 .button.is-link,
 .button.is-link:hover {
   color: #4a4a4a !important;
-  background-color: white;
+  background-color: white !important;
 }
 .button.is-link svg,
 .button.is-link:hover svg {
@@ -316,8 +316,10 @@ nav ul li.is-highlighted a {
 .modal .modal-content .card .card-header-title {
   color: white;
 }
-.modal .modal-content .card .card-content button {
-  background: #2d2d2d !important;
+.modal .modal-content .card .card-content {
+  /*button {
+    background: $darker-grey!important;
+  }*/
 }
 .modal .modal-content .card .card-footer,
 .modal .modal-content .card .card-footer-item {

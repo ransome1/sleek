@@ -53,7 +53,7 @@ button {
 .button.is-link,
 .button.is-link:hover {
   color: $dark-grey!important;
-  background-color: white;
+  background-color: white!important;
   svg {
     color: inherit!important;
   }
@@ -326,9 +326,9 @@ nav {
         color: white;
       }
       .card-content {
-        button {
+        /*button {
           background: $darker-grey!important;
-        }
+        }*/
       }
       .card-footer,
       .card-footer-item {

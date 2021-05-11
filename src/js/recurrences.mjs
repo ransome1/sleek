@@ -45,7 +45,7 @@ function generateRecurrence(todo) {
     if(index===-1) {
       items.objects.push(recurringTodo);
       //tableContainerDue.appendChild(generateTableRow(recurringTodo));
-      window.api.send("writeToFile", [items.objects.join("\n").toString(), userData.file]);
+      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
       return Promise.resolve("Success: Recurring todo created and written into file: " + recurringTodo);
     } else {
       return Promise.resolve("Info: Recurring todo already in file, won't write anything");
