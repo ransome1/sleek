@@ -802,6 +802,8 @@ async function startBuilding(searchString) {
 
     await todos.generateTable(groups);
 
+    userData = await getUserData();
+
     configureMainView();
 
     showResultStats();
@@ -963,8 +965,6 @@ window.api.receive("refresh", async function(content) {
   }).catch(function(error) {
     handleError(error);
   });
-  userData = await getUserData();
-  setWindowTitle(userData.file);
 });
 
 export { resetModal, setUserData, startBuilding, handleError, showMore, userData, appData, translations, modal, _paq };

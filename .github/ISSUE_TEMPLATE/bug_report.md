@@ -35,4 +35,4 @@ If applicable, add screenshots to help explain your problem.
 **Desktop (please complete the following information):**
  - OS: [e.g. Ubuntu 20.10, Windows 10, Debian 10.9, MacOS 10.15 et cetera]
  - Version of sleek [e.g. 0.9.8]
- - Source: Github, Snap Store, Flathub, Windows Store
+ - Source: Github, SourceForge, Snap Store, Flathub, Windows Store, Arch User Repository
