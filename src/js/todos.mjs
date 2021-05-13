@@ -405,7 +405,7 @@ function setTodoComplete(todo) {
       if(todo.rec) generateRecurrence(todo)
     }
     //write the data to the file
-    window.api.send("writeToFile", [items.objects.join("\n").toString(), userData.file]);
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
     return Promise.resolve("Success: Changes written to file: " + userData.file);
   } catch(error) {
     error.functionName = setTodoComplete.name;
@@ -434,52 +434,53 @@ function setTodoDelete(todo) {
     }
     items.objects.splice(index, 1);
     //write the data to the file
-    window.api.send("writeToFile", [items.objects.join("\n").toString(), userData.file]);
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
     return Promise.resolve("Success: Changes written to file: " + userData.file);
   } catch(error) {
     error.functionName = setTodoDelete.name;
     return Promise.reject(error);
   }
 }
-function archiveTodos() {
+async function archiveTodos() {
   try {
     // cancel operation if there are no completed todos
     if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
     // if user archives within done.txt file, operating is canceled
-    if(userData.file.split("/").pop() === "done.txt") return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
+    if(userData.file.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
     // define path to done.txt
-    let doneFile;
-    switch (appData.os) {
-      case "windows":
-        doneFile = userData.file.replace(userData.file.split("\\").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
-        break;
-      default:
-        doneFile = userData.file.replace(userData.file.split("/").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
-        break;
-    }
-    window.api.send("getContent", doneFile);
-    window.api.receive("getContent", (content) => {
-      items.doneTxtObjects = new Array;
-      if(content) items.doneTxtObjects = TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
-      // in case done file was not empty the completed todos will be appended
-      if(items.doneTxtObjects.length>0) {
-        // only consider completed todo that are not already present in done.txt
-        items.doneTxtObjects.forEach(itemComplete => {
-          items.complete = items.complete.filter(function(item) { return item.toString() != itemComplete.toString() });
-        });
-        // combine done objects from todo.txt and done.txt
-        items.complete = items.doneTxtObjects.concat(items.complete);
-        // write combined objects to done.txt
-        window.api.send("writeToFile", [items.complete.join("\n").toString(), doneFile]);
-      // if done.txt did not exist or was empty, file will be created and filled with data
+    let doneFile = function() {
+      if(appData.os==="windows") {
+        return userData.file.replace(userData.file.split("\\").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
       } else {
-        // if done.txt did not exist or was empty, file will be created and filled with data
-        window.api.send("writeToFile", [items.complete.join("\n").toString(), doneFile]);
+        return userData.file.replace(userData.file.split("/").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
       }
-      // write incomplete only todos to todo.txt
-      window.api.send("writeToFile", [items.incomplete.join("\n").toString(), userData.file]);
+    }
+    const getContentFromDoneFile = new Promise(function(resolve, reject) {
+      window.api.send("getContent", doneFile());
+      return window.api.receive("getContent", (content) => {
+        //resolve(TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]));
+        resolve(content);
+      });
     });
-    return Promise.resolve("Success: Completed todo moved to: " + doneFile)
+    let contentFromDoneFile = await getContentFromDoneFile;
+    let contentForDoneFile = items.complete;
+    if(contentFromDoneFile) {
+      // create array from done file
+      contentFromDoneFile = contentFromDoneFile.split("\n");
+      //combine the two arrays
+      contentForDoneFile  = contentFromDoneFile.concat(items.complete.toString().split(","));
+      // use Set function to remove the duplicates: https://www.javascripttutorial.net/array/javascript-remove-duplicates-from-array/
+      contentForDoneFile= [...new Set(contentForDoneFile)];
+      // remove empty entries
+      contentForDoneFile = contentForDoneFile.filter(function(element) {
+        return element;
+      });
+    }
+    //write completed items to done file
+    window.api.send("writeToFile", [contentForDoneFile.join("\n").toString() + "\n", doneFile()]);
+    // write incompleted items to todo file
+    window.api.send("writeToFile", [items.incomplete.join("\n").toString() + "\n", userData.file]);
+    return Promise.resolve("Success: Completed todos appended to: " + doneFile())
   } catch(error) {
     error.functionName = archiveTodos.name;
     return Promise.reject(error);

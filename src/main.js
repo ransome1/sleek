@@ -172,25 +172,23 @@ const createWindow = async function() {
       userData.data.file = file;
       userData.set("file", file);
       getContent(file).then(content => {
-        //mainWindow.webContents.send("userData", userData.data);
         mainWindow.webContents.send("refresh", content)
       }).catch(error => {
         console.error(error);
       });
       if(fileWatcher) fileWatcher.close();
-      fileWatcher = fs.watch(file, () => {
-        if(fs.existsSync(file)) {
-          setTimeout(function() {
-            getContent(file).then(content => {
-              mainWindow.webContents.send("refresh", content)
-            }).catch(error => {
-              console.error(error);
-            });
-          }, 10);
-        } else {
-          mainWindow.webContents.send("triggerFunction", "showOnboarding", [true]);
-        }
+
+      fileWatcher = fs.watch(file, (event, filename) => {
+        console.log("Info: File " + filename + " has changed");
+        setTimeout(function() {
+          getContent(file).then(content => {
+            mainWindow.webContents.send("refresh", content)
+          }).catch(error => {
+            console.log(error);
+          });
+        }, 10);
       });
+
       return Promise.resolve("Success: Filewatcher is watching: " + file);
     } catch (error) {
       // if something file related crashes, onboarding will be triggered
@@ -456,7 +454,6 @@ const createWindow = async function() {
         label: translations.windowButtonOpenFile,
         click: function() {
           mainWindow.show();
-          //if(!mainWindow.isVisible()) mainWindow.focus();
         }
       },
       {
@@ -486,7 +483,6 @@ const createWindow = async function() {
     // TODO macos exception
     tray.on("click", function() {
       mainWindow.show();
-      //if(!mainWindow.isVisible()) mainWindow.show();
     });
   }
   if(userData.data.tray) setupTray();
@@ -541,11 +537,17 @@ const createWindow = async function() {
         app.relaunch();
         app.exit();
       })
-      .on("writeToFile", (event, args) => {
-        // Write content to file
+      .on("writeToFile", function(event, args) {
         try {
+          // Write content to file
           fs.writeFileSync(args[1], args[0], {encoding: "utf-8"});
-          console.log("File written successfully");
+          // Restart file watcher
+          startFileWatcher(userData.data.file).then(response => {
+            console.info(response);
+          }).catch(error => {
+            console.error(error);
+          });
+          //console.log("File written successfully");
         } catch(error) {
           console.error(error);
           error.functionName = "fs.writeFileSync";

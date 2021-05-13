@@ -50,10 +50,9 @@ input[type="checkbox"]:active {
 button {
   color: white!important;
 }
-.button.is-link,
+button.is-link,
 .button.is-link:hover {
-  color: $dark-grey!important;
-  background-color: white;
+  background-color: $darker-grey!important;
   svg {
     color: inherit!important;
   }
@@ -138,6 +137,9 @@ nav {
   }
   .flex-table:hover .flex-row.todoTableItemMore a {
     color: $lighter-grey;
+  }
+  .flex-table.completed {
+    opacity: .4;
   }
   .flex-table.due {
     .button {
@@ -264,6 +266,7 @@ nav {
     background: $almost-black!important;
   }
 }
+
 .contexts {
   .button {
     color: $sleek-contexts-button;
@@ -322,9 +325,9 @@ nav {
         color: white;
       }
       .card-content {
-        button {
+        /*button {
           background: $darker-grey!important;
-        }
+        }*/
       }
       .card-footer,
       .card-footer-item {
@@ -447,10 +450,5 @@ nav {
   .subtitle,
   .subtitle strong {
     color: $lighter-grey;
-  }
-}
-#noResultContainer {
-  button {
-    background: transparent;
   }
 }

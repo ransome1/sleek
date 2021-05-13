@@ -223,7 +223,7 @@ nav ul:nth-child(2) {
   left: 0;
 }
 
-.contentContainer {
+#noResultContainer.contentContainer {
   height: 80%;
 }
 
@@ -675,13 +675,9 @@ nav ul:nth-child(2) {
 #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
   display: block;
 }
-#todoTable .flex-table.completed .flex-row {
+#todoTable .flex-table.completed {
   opacity: 0.5;
   -webkit-filter: grayscale(100%);
-}
-#todoTable .flex-table.completed .flex-row.todoTableItemMore {
-  opacity: 1;
-  -webkit-filter: none;
 }
 
 #todoTable.is-active {

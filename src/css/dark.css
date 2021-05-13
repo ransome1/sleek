@@ -57,12 +57,11 @@ button {
   color: white !important;
 }
 
-.button.is-link,
+button.is-link,
 .button.is-link:hover {
-  color: #4a4a4a !important;
-  background-color: white;
+  background-color: #2d2d2d !important;
 }
-.button.is-link svg,
+button.is-link svg,
 .button.is-link:hover svg {
   color: inherit !important;
 }
@@ -147,6 +146,9 @@ nav ul li.is-highlighted a {
 }
 #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
   color: #CCCDCF;
+}
+#todoTable .flex-table.completed {
+  opacity: 0.4;
 }
 #todoTable .flex-table.due .button {
   color: #f5f5f5;
@@ -313,8 +315,10 @@ nav ul li.is-highlighted a {
 .modal .modal-content .card .card-header-title {
   color: white;
 }
-.modal .modal-content .card .card-content button {
-  background: #2d2d2d !important;
+.modal .modal-content .card .card-content {
+  /*button {
+    background: $darker-grey!important;
+  }*/
 }
 .modal .modal-content .card .card-footer,
 .modal .modal-content .card .card-footer-item {
@@ -436,10 +440,6 @@ nav ul li.is-highlighted a {
 .contentContainer .subtitle,
 .contentContainer .subtitle strong {
   color: #CCCDCF;
-}
-
-#noResultContainer button {
-  background: transparent;
 }
 
 /*# sourceMappingURL=dark.css.map */
