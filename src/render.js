@@ -75,30 +75,6 @@ let
 // ########################################################################################################################
 // FUNCTIONS
 // ########################################################################################################################
-function showOnboarding(variable) {
-  try {
-    if(variable) {
-      onboardingContainer.classList.add("is-active");
-      btnAddTodo.forEach(item => item.classList.add("is-hidden"));
-      navBtnFilter.classList.add("is-hidden");
-      navBtnView.classList.add("is-hidden");
-      todoTable.classList.remove("is-active");
-      todoTableSearchContainer.classList.remove("is-active");
-      return Promise.resolve("Info: Show onboarding");
-    } else {
-      onboardingContainer.classList.remove("is-active");
-      btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
-      navBtnFilter.classList.remove("is-hidden");
-      navBtnView.classList.remove("is-hidden");
-      todoTable.classList.add("is-active");
-      todoTableSearchContainer.classList.add("is-active");
-      return Promise.resolve("Info: Hide onboarding");
-    }
-  } catch(error) {
-    error.functionName = arguments.callee.name;
-    return Promise.reject(error);
-  }
-}
 function configureMatomo() {
   try {
     if(!userData.uid) {
@@ -155,20 +131,6 @@ function configureMatomo() {
     return Promise.reject(error);
   }
 }
-function setWindowTitle(file) {
-  if(file) {
-    switch (appData.os) {
-      case "windows":
-      document.title = file.split("\\").pop() + " - sleek";
-      break;
-      default:
-      document.title = file.split("/").pop() + " - sleek";
-      break;
-    }
-  } else {
-    document.title = "sleek";
-  }
-}
 function configureMainView() {
   try {
     // set scaling factor if default font size has changed
@@ -197,6 +159,7 @@ function configureMainView() {
       // check if archive button should be enabled
       setButtonState("btnArchiveTodos");
       // file is defined, but content is empty
+      console.log(userData.file);
       if(userData.file && todos.items.objects.length===0) {
         addTodoContainer.classList.add("is-active");
         todoTableSearchContainer.classList.remove("is-active");
@@ -302,7 +265,7 @@ function handleError(error) {
   }
 }
 function jumpToItem(item) {
-  const checkIsInViewport = function(item) {
+  const isInViewport = function(item) {
     const rect = item.getBoundingClientRect();
     return (
       rect.top >= 0 &&
@@ -313,7 +276,7 @@ function jumpToItem(item) {
   }
   // jump to previously edited or added item
   // only scroll if new item is not in view
-  if(!checkIsInViewport(item)) {
+  if(!isInViewport(item)) {
     // scroll to view
     item.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
     // trigger a quick background ease in and out
@@ -472,10 +435,157 @@ function registerEvents() {
     errorContainerClose.onclick = function() {
       this.parentElement.classList.remove("is-active")
     }
-    // ########################################################################################################################
-    // KEYBOARD SHORTCUTS
-    // ########################################################################################################################
-    modalHelp.addEventListener ("keydown", function () {
+    return Promise.resolve("Success: Events registered");
+  } catch(error) {
+    error.functionName = registerEvents.name;
+    return Promise.reject(error);
+  }
+}
+function registerKeyboardShortcuts() {
+  try {
+    window.addEventListener("keyup", function(event) {
+      // open settings
+      if(event.key === "," && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        content.showContent(document.getElementById("modalSettings")).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // open file
+      if((event.ctrlKey || event.metaKey) && event.key === "o") {
+        window.api.send("openOrCreateFile", "open");
+      }
+      // create file
+      if((event.ctrlKey || event.metaKey) && event.key === "c") {
+        window.api.send("openOrCreateFile", "create");
+      }
+      // open help
+      if(event.key === "?" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        content.showContent(document.getElementById("modalHelp")).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // create new todo
+      if(event.key==="n" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        form.show().then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // find todo
+      if(event.key==="f" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        todoTableSearch.focus();
+      }
+      // reset filters
+      if(event.key==="0" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        resetFilters().then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // toggle completed todos
+      if(event.key==="h" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        view.toggle("showCompleted").then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // archive todos
+      if(event.key==="a" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        todos.archiveTodos().then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // toggle dark mode
+      if(event.key==="d" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        setTheme(true).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // show filter drawer
+      if(event.key==="b" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        drawer.showDrawer("toggle", "navBtnFilter", "filterDrawer").then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // reload window
+      if((event.key === "." || event.key === "F5") && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+        location.reload(true);
+      }
+    }, true)
+    // shortcuts for modal form
+    modalForm.addEventListener ("keydown", function(event) {
+      // priority up
+      if(!(event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
+        form.setPriority("up");
+      }
+      // priority down
+      if(!(event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowDown") {
+        form.setPriority("down");
+      }
+      // clear priority
+      if(!(event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        form.setPriority(null);
+      }
+      // set priority directly
+      if(event.altKey && event.key.length===1 && event.key.match(/[A-Z]/i)) {
+        form.setPriority(event.key.substr(0,1)).then(response => {
+          console.log(response);
+        }).catch(error => {
+          handleError(error);
+        });
+      } /*else if((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
+        form.setPriority(null).then(response => {
+          console.log(response);
+        }).catch(error => {
+          handleError(error);
+        });
+      }*/
+      // submit form
+      if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
+        form.submitForm().then(response => {
+          console.log(response);
+        }).catch(error => {
+          handleError(error);
+        });
+      }
+      if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
+        resetModal().then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          handleError(error);
+        });
+        //this.classList.remove("is-active");
+      } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
+        autoCompleteContainer.classList.remove("is-active");
+      }
+      // due date plus 1
+      if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
+        form.setDueDate(1);
+      }
+      // due date minus 1
+      if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowDown") {
+        form.setDueDate(-1);
+      }
+      // reset due date
+      if((event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        form.setDueDate(0);
+      }
+    });
+    // for escape we have specific cases not applied to window
+    modalHelp.addEventListener ("keydown", function() {
       if(event.key === "Escape") this.classList.remove("is-active");
     });
     modalChangeFile.addEventListener ("keydown", function () {
@@ -487,16 +597,15 @@ function registerEvents() {
         });
       }
     });
-    modalSettings.addEventListener ("keydown", function () {
+    modalSettings.addEventListener ("keydown", function() {
       if(event.key === "Escape") this.classList.remove("is-active");
     });
-    autoCompleteContainer.addEventListener ("keydown", function () {
+    autoCompleteContainer.addEventListener ("keydown", function() {
       if(event.key === "Escape") this.classList.remove("is-active")
     });
-
-    return Promise.resolve("Success: Events registered");
+    return Promise.resolve("Success: Keyboard shortcuts registered");
   } catch(error) {
-    error.functionName = registerEvents.name;
+    error.functionName = registerKeyboardShortcuts.name;
     return Promise.reject(error);
   }
 }
@@ -673,6 +782,20 @@ function setToggles() {
     return Promise.reject(error);
   }
 }
+function setWindowTitle(file) {
+  if(file) {
+    switch (appData.os) {
+      case "windows":
+      document.title = file.split("\\").pop() + " - sleek";
+      break;
+      default:
+      document.title = file.split("/").pop() + " - sleek";
+      break;
+    }
+  } else {
+    document.title = "sleek";
+  }
+}
 function setFriendlyLanguageNames() {
   try {
     appData.languages.forEach((language) => {
@@ -705,6 +828,30 @@ function setFriendlyLanguageNames() {
     return Promise.resolve("Success: Friendly language names added to select field in settings");
   } catch(error) {
     error.functionName = setFriendlyLanguageNames.name;
+    return Promise.reject(error);
+  }
+}
+function showOnboarding(variable) {
+  try {
+    if(variable) {
+      onboardingContainer.classList.add("is-active");
+      btnAddTodo.forEach(item => item.classList.add("is-hidden"));
+      navBtnFilter.classList.add("is-hidden");
+      navBtnView.classList.add("is-hidden");
+      todoTable.classList.remove("is-active");
+      todoTableSearchContainer.classList.remove("is-active");
+      return Promise.resolve("Info: Show onboarding");
+    } else {
+      onboardingContainer.classList.remove("is-active");
+      btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
+      navBtnFilter.classList.remove("is-hidden");
+      navBtnView.classList.remove("is-hidden");
+      todoTable.classList.add("is-active");
+      todoTableSearchContainer.classList.add("is-active");
+      return Promise.resolve("Info: Hide onboarding");
+    }
+  } catch(error) {
+    error.functionName = arguments.callee.name;
     return Promise.reject(error);
   }
 }
@@ -869,6 +1016,11 @@ window.onload = async function () {
     handleError(error);
   });
   registerEvents().then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
+  registerKeyboardShortcuts().then(function(response) {
     console.info(response);
   }).catch(function(error) {
     handleError(error);

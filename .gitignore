@@ -20,6 +20,6 @@ assets/icons/bak
 squashfs-root/
 test/
 src/__tests__
-eslintrc.json
+.eslintrc.json
 build/
 test/

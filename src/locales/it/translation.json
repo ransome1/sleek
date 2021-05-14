@@ -47,7 +47,7 @@
   "onboardingContainerSubtitle": "Inizia scegliendo un file <strong>esistente</strong> todo.txt o creandone uno <strong>nuovo</strong>.",
   "createFile": "Crea todo.txt",
   "onboardingContainerBtnOpen": "Scegli un todo.txt esistente",
-  "windowTitleCreateFile": "Scegli una cartella dove salvare il tuo file todo.txt",
+  "windowTitleCreateFile": "Crea todo.txt",
   "windowButtonCreateFile": "Crea file todo.txt qui",
   "selectFile": "Seleziona il file todo.txt",
   "select": "Scegliere",
