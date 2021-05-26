@@ -230,7 +230,7 @@ const createWindow = async function() {
       if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
       if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
       if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
-      if(typeof userData.data.tray != "boolean") userData.set("tray", false);
+      if(typeof appData.tray != "boolean") appData.tray = false;
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
@@ -271,7 +271,6 @@ const createWindow = async function() {
     simpleFullscreen: true,
     autoHideMenuBar: true,
     useContentSize: true,
-    titleBarStyle: "hiddenInset",
     webPreferences: {
       worldSafeExecuteJavaScript:true,
       nodeIntegration: false,
@@ -285,38 +284,67 @@ const createWindow = async function() {
   // ########################################################################################################################
   // MAIN MENU
   // ########################################################################################################################
+  let subMenu;
+  if(appData.os==="mac") {
+    subMenu = [
+      {
+        label: translations.openFile,
+        click: function () {
+          openDialog("open");
+        }
+      },
+      {
+        label: translations.createFile,
+        click: function () {
+          openDialog("create");
+        }
+      },
+      { type: "separator" },
+      {
+        role: "close",
+        accelerator: "Command+W",
+        label: translations.close
+      },
+      {
+        role: "quit",
+        accelerator: "Command+Q",
+        click: function() {
+          app.quit();
+        }
+      }
+    ];
+  } else {
+    subMenu = [
+      {
+        label: translations.openFile,
+        click: function () {
+          openDialog("open");
+        }
+      },
+      {
+        label: translations.createFile,
+        click: function () {
+          openDialog("create");
+        }
+      },
+      { type: "separator" },
+      {
+        role: "close",
+        label: translations.close
+      }
+    ];
+  }
+
   const menuTemplate = [
     {
       label: translations.file,
-      submenu: [
-        {
-          label: translations.openFile,
-          accelerator: "CmdOrCtrl+o",
-          click: function () {
-            openDialog("open");
-          }
-        },
-        {
-          label: translations.createFile,
-          click: function () {
-            openDialog("create");
-          }
-        },
-        appData.os==="mac" ? {
-          role: "quit",
-          label: translations.close
-        } : {
-          role: "close",
-          label: translations.close
-        }
-      ]
+      submenu: subMenu
     },
     {
       label: translations.edit,
       submenu: [
         {
           label: translations.settings,
-          accelerator: "CmdOrCtrl+,",
           click: function () {
             mainWindow.webContents.send("triggerFunction", "showContent", ["modalSettings"]);
           }
@@ -327,89 +355,83 @@ const createWindow = async function() {
         { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
         { role: "selectAll", accelerator: "CmdOrCtrl+A" }
       ]},
-      {
-        label: translations.todos,
-        submenu: [
-          {
-            label: translations.addTodo,
-            accelerator: "CmdOrCtrl+n",
-            click: function() {
-              mainWindow.webContents.send("triggerFunction", "showForm")
-            }
-          },
-          {
-            label: translations.find,
-            accelerator: "CmdOrCtrl+f",
-            click: function() {
-              mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
-            }
-          },
-          {
-            label: translations.archive,
-            click: function() {
-              mainWindow.webContents.send("triggerFunction", "archiveTodos")
-            }
+    {
+      label: translations.todos,
+      submenu: [
+        {
+          label: translations.addTodo,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "showForm")
           }
-        ]
-      },
-      {
-        label: translations.view,
-        submenu: [
-          {
-            label: translations.toggleFilter,
-            accelerator: "CmdOrCtrl+b",
-            click: function() {
-              mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
-            }
-          },
-          {
-            label: translations.resetFilters,
-            accelerator: "CmdOrCtrl+l",
-            click: function() {
-              mainWindow.webContents.send("triggerFunction", "resetFilters")
-            }
-          },
-          {
-            label: translations.toggleCompletedTodos,
-            accelerator: "CmdOrCtrl+h",
-            click: function() {
-              mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
-            }
-          },
-          { type: "separator" },
-          {
-            label: translations.toggleDarkMode,
-            accelerator: "CmdOrCtrl+d",
-            click: function() {
-              mainWindow.webContents.send("triggerFunction", "setTheme", [true])
-            }
-          },
-          {
-            role: "reload",
-            label: translations.reload
+        },
+        {
+          label: translations.find,
+          click: function() {
+            mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
           }
-        ]
-      },
-      {
-        label: translations.about,
-        submenu: [
-          {
-            label: translations.help,
-            click: function () {
-              mainWindow.webContents.send("triggerFunction", "showContent", ["modalHelp"])
-            }
-          },
-          {
-            label: translations.sleekOnGithub,
-            click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
-          },
-          {
-            role: "toggleDevTools",
-            label: translations.devTools
+        },
+        {
+          label: translations.archive,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "archiveTodos")
           }
-        ]
-      }
-    ];
+        }
+      ]
+    },
+    {
+      label: translations.view,
+      submenu: [
+        {
+          label: translations.toggleFilter,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
+          }
+        },
+        {
+          label: translations.resetFilters,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "resetFilters")
+          }
+        },
+        {
+          label: translations.toggleCompletedTodos,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
+          }
+        },
+        { type: "separator" },
+        {
+          label: translations.toggleDarkMode,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "setTheme", [true])
+          }
+        },
+        {
+          role: "reload",
+          label: translations.reload
+        }
+      ]
+    },
+    {
+      label: translations.about,
+      submenu: [
+        {
+          label: translations.help,
+          click: function () {
+            mainWindow.webContents.send("triggerFunction", "showContent", ["modalHelp"])
+          }
+        },
+        {
+          label: translations.sleekOnGithub,
+          click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
+        },
+        {
+          role: "toggleDevTools",
+          label: translations.devTools
+        }
+      ]
+    }
+  ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   // ########################################################################################################################
   // TRAY ICON
@@ -547,7 +569,6 @@ const createWindow = async function() {
           }).catch(error => {
             console.error(error);
           });
-          //console.log("File written successfully");
         } catch(error) {
           console.error(error);
           error.functionName = "fs.writeFileSync";
@@ -640,13 +661,13 @@ const createWindow = async function() {
 // ########################################################################################################################
 app
 .on("ready", () => {
-  if(process.platform === "win32") app.setAppUserModelId("RobinAhle.sleektodomanager")
+  if(appData.os==="windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
   createWindow();
 })
 .on("window-all-closed", () => {
-  if(process.platform !== "darwin") app.quit()
+  if(appData.os!=="mac") app.quit()
 })
 .on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  if (BrowserWindow.getAllWindows().length===0) createWindow()
   app.show();
 });

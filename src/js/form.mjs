@@ -5,112 +5,21 @@ import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput } from "./datePicker.mjs";
 import * as recurrencePicker from "./recurrencePicker.mjs";
+
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const recurrencePickerInput = document.getElementById("recurrencePickerInput");
 const modalTitle = document.getElementById("modalTitle");
 const modalFormAlert = document.getElementById("modalFormAlert");
 const modalForm = document.getElementById("modalForm");
-modalForm.addEventListener("submit", function(e) {
-  // intercept submit
-  if (e.preventDefault) e.preventDefault();
-  submitForm().then(response => {
-    console.log(response);
-  }).catch(error => {
-    handleError(error);
-  });
-});
-modalForm.addEventListener ("keydown", function(e) {
-  if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
-    e.preventDefault();
-    setPriority(event.key.substr(0,1)).then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-  } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
-    setPriority(null).then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-  } else if(e.key==="Enter" && e.ctrlKey) {
-    submitForm().then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-  } else if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    //this.classList.remove("is-active");
-  } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
-    autoCompleteContainer.classList.remove("is-active");
-  }
-});
-modalForm.addEventListener ("click", function() {
-  // close recurrence picker if click is outside of recurrence container
-  if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) document.getElementById("recurrencePickerContainer").classList.remove("is-active")
-});
 const modalFormInputResize = document.getElementById("modalFormInputResize");
-modalFormInputResize.onclick = function() {
-  toggleInputSize(this.getAttribute("data-input-type"));
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
-}
 const modalBackground = document.querySelectorAll('.modal-background');
-modalBackground.forEach(function(el) {
-  el.onclick = function() {
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    el.parentElement.classList.remove("is-active");
-    autoCompleteContainer.classList.remove("is-active");
-    autoCompleteContainer.blur();
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
-  }
-});
 const modalClose = document.querySelectorAll('.close');
-modalClose.forEach(function(el) {
-  el.onclick = function() {
-    if(el.getAttribute("data-message")) {
-      // persist closed message, so it won't show again
-      if(!userData.dismissedMessages.includes(el.getAttribute("data-message"))) userData.dismissedMessages.push(el.getAttribute("data-message"))
-      setUserData("dismissedMessages", userData.dismissedMessages);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
-    } else {
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
-    }
-    el.parentElement.parentElement.classList.remove("is-active");
-  }
-});
 const modalFormInput = document.getElementById("modalFormInput");
-document.getElementById("modalFormInput").addEventListener("keyup", e => {
-  modalFormInputEvent();
-  // do not show suggestion container if Escape has been pressed
-  if(e.key==="Escape") return false;
-});
-document.getElementById("modalFormInput").placeholder = translations.formTodoInputPlaceholder;
 const priorityPicker = document.getElementById("priorityPicker");
-priorityPicker.addEventListener("change", e => {
-  setPriority(e.target.value).then(response => {
-    console.log(response);
-  }).catch(error => {
-    handleError(error);
-  });
-});
-priorityPicker.onfocus = function() {
-  // close suggestion box if focus comes to priority picker
-  autoCompleteContainer.classList.remove("is-active");
-};
 const btnItemStatus = document.getElementById("btnItemStatus");
+
+document.getElementById("modalFormInput").placeholder = translations.formTodoInputPlaceholder;
+
 btnItemStatus.onclick = function() {
   setTodoComplete(this.parentElement.parentElement.parentElement.parentElement.getAttribute("data-item")).then(response => {
     modalForm.classList.remove("is-active");
@@ -126,11 +35,226 @@ btnItemStatus.onclick = function() {
     handleError(error);
   });
 }
+modalFormInputResize.onclick = function() {
+  toggleInputSize(this.getAttribute("data-input-type"));
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
+}
+
+document.getElementById("modalFormInput").addEventListener("keyup", event => {
+  // do not show suggestion container if Escape has been pressed
+  if(event.key==="Escape") return false;
+  modalFormInputEvent();
+});
+modalForm.addEventListener("submit", function(event) {
+  // intercept submit
+  event.preventDefault();
+  submitForm().then(response => {
+    console.log(response);
+  }).catch(error => {
+    handleError(error);
+  });
+});
+/*modalForm.addEventListener ("keydown", function(event) {
+  if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
+    event.preventDefault();
+    setPriority(event.key.substr(0,1)).then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+  } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
+    setPriority(null).then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+  } else if(event.key==="Enter" && event.ctrlKey) {
+    submitForm().then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+  } else if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
+    resetModal().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
+    //this.classList.remove("is-active");
+  } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
+    autoCompleteContainer.classList.remove("is-active");
+  }
+});*/
+modalForm.addEventListener ("click", function() {
+  // close recurrence picker if click is outside of recurrence container
+  if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) document.getElementById("recurrencePickerContainer").classList.remove("is-active")
+});
+priorityPicker.addEventListener("change", e => {
+  setPriority(e.target.value).then(response => {
+    console.log(response);
+  }).catch(error => {
+    handleError(error);
+  });
+});
+
+priorityPicker.onfocus = function() {
+  // close suggestion box if focus comes to priority picker
+  autoCompleteContainer.classList.remove("is-active");
+};
+
+modalBackground.forEach(function(el) {
+  el.onclick = function() {
+    resetModal().then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
+    el.parentElement.classList.remove("is-active");
+    autoCompleteContainer.classList.remove("is-active");
+    autoCompleteContainer.blur();
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+  }
+});
+modalClose.forEach(function(el) {
+  el.onclick = function() {
+    if(el.getAttribute("data-message")) {
+      // persist closed message, so it won't show again
+      if(!userData.dismissedMessages.includes(el.getAttribute("data-message"))) userData.dismissedMessages.push(el.getAttribute("data-message"))
+      setUserData("dismissedMessages", userData.dismissedMessages);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
+    } else {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+    }
+    el.parentElement.parentElement.classList.remove("is-active");
+  }
+});
+
+function getCaretPosition(inputId) {
+  var content = inputId;
+  if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
+    var position = content.selectionStart;
+    return position;
+  } else {
+    return false;
+  }
+}
 function resizeInput(input) {
   if(input.value) {
     input.style.width = input.value.length + 6 + "ch";
   } else if(!input.value && input.placeholder) {
     input.style.width = input.placeholder.length + 6 + "ch";
+  }
+}
+function positionAutoCompleteContainer() {
+  // Adjust position of suggestion box to input field
+  let modalFormInputPosition = document.getElementById("modalFormInput").getBoundingClientRect();
+  autoCompleteContainer.style.width = document.getElementById("modalFormInput").offsetWidth + "px";
+  autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight+2 + "px";
+  autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
+}
+function modalFormInputEvent() {
+  positionAutoCompleteContainer();
+  // if textarea, resize to content length
+  if(document.getElementById("modalFormInput").tagName==="TEXTAREA") {
+    document.getElementById("modalFormInput").style.height="auto";
+    document.getElementById("modalFormInput").style.height= document.getElementById("modalFormInput").scrollHeight+"px";
+  }
+  let autoCompleteValue ="";
+  let autoCompletePrefix = "";
+  let caretPosition = getCaretPosition(modalFormInput);
+  let autoCompleteCategory = "";
+  if((document.getElementById("modalFormInput").value.charAt(caretPosition-2) === " " || document.getElementById("modalFormInput").value.charAt(caretPosition-2) === "\n") && (document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "@" || document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "+")) {
+    autoCompleteValue = document.getElementById("modalFormInput").value.substr(caretPosition, document.getElementById("modalFormInput").value.lastIndexOf(" ")).split(" ").shift();
+    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(caretPosition-1);
+  } else if(document.getElementById("modalFormInput").value.charAt(caretPosition) === " ") {
+    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
+    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+1);
+  } else if(document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "@" || document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "+") {
+    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
+    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1);
+  } else {
+    autoCompleteContainer.classList.remove("is-active");
+    autoCompleteContainer.blur();
+    return false;
+  }
+  // suppress suggestion box if caret is at the end of word
+  if(autoCompletePrefix==="+" || autoCompletePrefix==="@") {
+    if(autoCompletePrefix=="+") {
+      autoCompleteCategory = "projects";
+    } else if(autoCompletePrefix=="@") {
+      autoCompleteCategory = "contexts";
+    }
+    // parsed data will be passed to generate filter data and build the filter buttons
+    generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
+      console.log(response);
+    }).catch (error => {
+      handleError(error);
+    });
+  } else {
+    autoCompleteContainer.classList.remove("is-active");
+    autoCompleteContainer.blur();
+  }
+}
+function setPriority(priority) {
+  try {
+    const setPriorityInput = function(priority) {
+      if(priority===null) {
+        priorityPicker.selectedIndex = 0;
+      } else {
+        Array.from(priorityPicker.options).forEach(function(option) {
+          if(option.value===priority) {
+            priorityPicker.selectedIndex = option.index;
+          }
+        });
+      }
+    }
+    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+    if((priority==="down" || priority==="up") && !todo.priority) {
+      todo.priority = "A";
+    } else if(priority==="up" && todo.priority!="a") {
+      todo.priority = String.fromCharCode(todo.priority.charCodeAt(0)-1).toUpperCase();
+    } else if(priority==="down" && todo.priority!="z") {
+      todo.priority = String.fromCharCode(todo.priority.charCodeAt(0)+1).toUpperCase();
+    } else if(priority && priority.match(/[A-Z]/i)) {
+      todo.priority = priority.toUpperCase();
+    } else {
+      todo.priority = null;
+    }
+    if(todo.priority===null || todo.priority.match(/[a-z]/i)) {
+      document.getElementById("modalFormInput").value = todo.toString();
+      setPriorityInput(todo.priority);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Priority changed to: " + todo.priority]);
+      return Promise.resolve("Success: Priority changed to " + todo.priority)
+    }
+    return Promise.resolve("Info: Priority unchanged")
+  } catch(error) {
+    error.functionName = setPriority.name;
+    return Promise.reject(error);
+  }
+}
+function setDueDate(days) {
+  try {
+    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+    if(days===0) {
+      todo.due = undefined;
+      todo.dueString = undefined;
+    } else if(days && todo.due) {
+      todo.due = new Date(new Date(todo.dueString).setDate(new Date(todo.dueString).getDate() + days));
+      todo.dueString = todo.due.toISOString().substr(0, 10);
+    } else if(days && !todo.due) {
+      todo.due = new Date(new Date().setDate(new Date().getDate() + days));
+      todo.dueString = todo.due.toISOString().substr(0, 10);
+    }
+    document.getElementById("modalFormInput").value = todo.toString();
+    return Promise.resolve("Success: Due date changed to " + todo.dueString)
+  } catch(error) {
+    error.functionName = setDueDate.name;
+    return Promise.reject(error);
   }
 }
 function show(todo, templated) {
@@ -213,134 +337,6 @@ function show(todo, templated) {
     return Promise.reject(error);
   }
 }
-function positionAutoCompleteContainer() {
-  // Adjust position of suggestion box to input field
-  let modalFormInputPosition = document.getElementById("modalFormInput").getBoundingClientRect();
-  autoCompleteContainer.style.width = document.getElementById("modalFormInput").offsetWidth + "px";
-  autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight+2 + "px";
-  autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
-}
-function getCaretPosition(inputId) {
-  var content = inputId;
-  if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
-    var position = content.selectionStart;
-    return position;
-  } else {
-    return false;
-  }
-}
-function modalFormInputEvent() {
-  positionAutoCompleteContainer();
-  // if textarea, resize to content length
-  if(document.getElementById("modalFormInput").tagName==="TEXTAREA") {
-    document.getElementById("modalFormInput").style.height="auto";
-    document.getElementById("modalFormInput").style.height= document.getElementById("modalFormInput").scrollHeight+"px";
-  }
-  let autoCompleteValue ="";
-  let autoCompletePrefix = "";
-  let caretPosition = getCaretPosition(modalFormInput);
-  let autoCompleteCategory = "";
-  if((document.getElementById("modalFormInput").value.charAt(caretPosition-2) === " " || document.getElementById("modalFormInput").value.charAt(caretPosition-2) === "\n") && (document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "@" || document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "+")) {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(caretPosition, document.getElementById("modalFormInput").value.lastIndexOf(" ")).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(caretPosition-1);
-  } else if(document.getElementById("modalFormInput").value.charAt(caretPosition) === " ") {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+1);
-  } else if(document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "@" || document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "+") {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1);
-  } else {
-    autoCompleteContainer.classList.remove("is-active");
-    autoCompleteContainer.blur();
-    return false;
-  }
-  // suppress suggestion box if caret is at the end of word
-  if(autoCompletePrefix==="+" || autoCompletePrefix==="@") {
-    if(autoCompletePrefix=="+") {
-      autoCompleteCategory = "projects";
-    } else if(autoCompletePrefix=="@") {
-      autoCompleteCategory = "contexts";
-    }
-    // parsed data will be passed to generate filter data and build the filter buttons
-    generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
-      console.log(response);
-    }).catch (error => {
-      handleError(error);
-    });
-  } else {
-    autoCompleteContainer.classList.remove("is-active");
-    autoCompleteContainer.blur();
-  }
-}
-function setPriorityInput(priority) {
-  if(priority===null) {
-    priorityPicker.selectedIndex = 0;
-  } else {
-    Array.from(priorityPicker.options).forEach(function(option) {
-      if(option.value===priority) {
-        priorityPicker.selectedIndex = option.index;
-      }
-    });
-  }
-}
-function setPriority(priority) {
-  try {
-    const modalFormInput = document.getElementById("modalFormInput");
-    if(priority) {
-      priority = priority.toUpperCase();
-    } else {
-      priority = null;
-    }
-    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
-    todo.priority = priority;
-    document.getElementById("modalFormInput").value = todo.toString();
-    setPriorityInput(priority);
-
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Priority changed to: " + priority]);
-    return Promise.resolve("Success: Priority changed to " + priority)
-  } catch(error) {
-    error.functionName = setPriority.name;
-    return Promise.reject(error);
-  }
-}
-function toggleInputSize(type) {
-  let newInputElement;
-  switch (type) {
-    case "input":
-      newInputElement = document.createElement('textarea');
-      modalFormInputResize.setAttribute("data-input-type", "textarea");
-      modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
-      setUserData("useTextarea", true);
-      break;
-    case "textarea":
-      newInputElement = document.createElement('input');
-      newInputElement.type = "text";
-      modalFormInputResize.setAttribute("data-input-type", "input");
-      modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
-      setUserData("useTextarea", false);
-      break;
-  }
-  newInputElement.id = "modalFormInput";
-  newInputElement.value = document.getElementById("modalFormInput").value;
-  newInputElement.setAttribute("tabindex", 300);
-  newInputElement.setAttribute("class", "input is-medium");
-  newInputElement.setAttribute("placeholder", translations.formTodoInputPlaceholder);
-  document.getElementById("modalFormInput").replaceWith(newInputElement);
-  // if input is a textarea, adjust height to content length
-  if(document.getElementById("modalFormInput").tagName==="TEXTAREA") {
-    document.getElementById("modalFormInput").style.height="auto";
-    document.getElementById("modalFormInput").style.height = document.getElementById("modalFormInput").scrollHeight+"px";
-  }
-  positionAutoCompleteContainer();
-  document.getElementById("modalFormInput").addEventListener("keyup", e => {
-    modalFormInputEvent();
-    // do not show suggestion container if Escape has been pressed
-    if(e.key==="Escape") return false;
-  });
-  document.getElementById("modalFormInput").focus();
-}
-//needs refactoring
 function submitForm() {
   try {
     // check if there is an input in the text field, otherwise indicate it to the user
@@ -426,6 +422,43 @@ function submitForm() {
     return Promise.reject(error);
   }
 }
+function toggleInputSize(type) {
+  let newInputElement;
+  switch (type) {
+    case "input":
+      newInputElement = document.createElement('textarea');
+      modalFormInputResize.setAttribute("data-input-type", "textarea");
+      modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
+      setUserData("useTextarea", true);
+      break;
+    case "textarea":
+      newInputElement = document.createElement('input');
+      newInputElement.type = "text";
+      modalFormInputResize.setAttribute("data-input-type", "input");
+      modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
+      setUserData("useTextarea", false);
+      break;
+  }
+  newInputElement.id = "modalFormInput";
+  newInputElement.value = document.getElementById("modalFormInput").value;
+  newInputElement.setAttribute("tabindex", 300);
+  newInputElement.setAttribute("class", "input is-medium");
+  newInputElement.setAttribute("placeholder", translations.formTodoInputPlaceholder);
+  document.getElementById("modalFormInput").replaceWith(newInputElement);
+  // if input is a textarea, adjust height to content length
+  if(document.getElementById("modalFormInput").tagName==="TEXTAREA") {
+    document.getElementById("modalFormInput").style.height="auto";
+    document.getElementById("modalFormInput").style.height = document.getElementById("modalFormInput").scrollHeight+"px";
+  }
+  positionAutoCompleteContainer();
+  document.getElementById("modalFormInput").addEventListener("keyup", e => {
+    modalFormInputEvent();
+    // do not show suggestion container if Escape has been pressed
+    if(e.key==="Escape") return false;
+  });
+  document.getElementById("modalFormInput").focus();
+}
+
 window.onresize = function() {
   try {
     positionAutoCompleteContainer();
@@ -436,4 +469,4 @@ window.onresize = function() {
   }
 }
 
-export { show, resizeInput};
+export { show, resizeInput, setPriority, setDueDate, submitForm};

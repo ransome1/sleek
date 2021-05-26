@@ -8,7 +8,7 @@
 + [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
 + [Download it](#download-sleek)
 + [Build sleek from source code](#build-sleek-from-source-code)
-+ [sleeks Roadmap 2021](#sleeks-roadmap-2021)
++ [sleeks state of development](#sleeks-state-of-development)
 + [Features](#features)
 + [Used libraries](#used-libraries)
 
@@ -21,7 +21,6 @@ sleek manages and watches multiple todo.txt files continuously for changes, whic
 Todos with due date or repeating todos will trigger notifications and completed todos can be hidden or archived into separate done.txt files. If users have tons of todos, a compact view can come in handy.
 
 ### Screenshots
-
 ![Alt text](assets/screenshots/linux/todo_list.png?raw=true "Screenshot of sleek's main view on Linux")
 ![Alt text](assets/screenshots/linux/multiline_autocomplete_dark.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature on Linux")
 
@@ -64,8 +63,8 @@ You can download sleek for Windows, MacOS and Linux from
 3. Install dependencies `yarn install --production`
 4. Build sleek `yarn build:windows` or `yarn build:linux` or `yarn build:macos`
 
-### sleeks Roadmap 2021
-A prioritized backlog for new features and known issues can be found on <a href="https://github.com/ransome1/sleek/projects/2">sleeks' roadmap for 2021</a>.
+### sleeks state of development
+A prioritized backlog of new features and known issues can be found <a href="https://github.com/ransome1/sleek/projects/2">here</a>.
 
 ### Features
 * An existing todo.txt file can be used or a new one can be created
@@ -112,18 +111,10 @@ A prioritized backlog for new features and known issues can be found on <a href=
   - Italian
   - Spanish
   - French
+* sleek can be minimized to tray
 * Tabindex available
 * Existing todos can be used as templates for new ones
-* Basic keyboard shortcuts are available:
-  - New todo: CMD/CTRL + n
-  - Find todo: CMD/CTRL + f
-  - Show or hide completed todos: CMD/CTRL + h
-  - Toggle dark mode: CMD/CTRL + d
-  - Open file: CMD/CTRL + o
-  - Open settings: CMD/CTRL + ,
-  - Toggle side bar: CMD/CTRL + b
-  - Set priorities (available when add/edit window is open): CTRL+SHIFT+[A-Z]
-  - Submit todo (available when add/edit window is open): CTRL + Enter
+* <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts</a> following todotxt.net
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

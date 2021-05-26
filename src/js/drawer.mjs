@@ -22,7 +22,24 @@ document.querySelectorAll(".drawerClose").forEach(function(drawerClose) {
   }
 })
 getHandleElement.addEventListener("mousedown", startDragging);
-
+document.getElementById("filterDrawer").addEventListener ("keydown", function () {
+  if(event.key === "Escape") {
+    showDrawer(false, navBtnFilter.id, this.id).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
+  }
+});
+document.getElementById("viewDrawer").addEventListener ("keydown", function () {
+  if(event.key === "Escape") {
+    showDrawer(false, document.getElementById("navBtnView").id, this.id).then(function(result) {
+      console.log(result);
+    }).catch(function(error) {
+      handleError(error);
+    });
+  }
+});
 navBtnFilter.onclick = function() {
   // close filter drawer first
   viewDrawer.classList.remove("is-active")
@@ -63,24 +80,6 @@ if(userData.filterDrawer) {
   });
 }
 
-document.getElementById("filterDrawer").addEventListener ("keydown", function () {
-  if(event.key === "Escape") {
-    showDrawer(false, navBtnFilter.id, this.id).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-  }
-});
-document.getElementById("viewDrawer").addEventListener ("keydown", function () {
-  if(event.key === "Escape") {
-    showDrawer(false, document.getElementById("navBtnView").id, this.id).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-  }
-});
 function showDrawer(variable, buttonId, drawerId) {
   try {
     const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompletedLast");
