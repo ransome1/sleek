@@ -971,12 +971,7 @@ nav {
     position: absolute!important;
   }
   .modal-card {
-    width: 900px!important;
-    height: auto;
     z-index: 60;
-    background: $light-grey;
-    padding: 1em 2em;
-    border-radius: 0.25rem;
   }
   .modal-background {
     z-index: 55;
@@ -984,9 +979,7 @@ nav {
   .modal-card-body {
     background: none;
     display: none;
-    ul {
-
-    }
+    padding: 0 2em 2em 2em;
     ul li a {
       text-decoration: underline;
     }
@@ -1007,10 +1000,11 @@ nav {
       }
     }
     table.settings tr td:first-child {
-      width: 80%;
+      //width: 80%;
       padding-right: 3em;
     }
     table.settings tr td:last-child {
+      min-width: 10em;
       text-align: center;
     }
     table.shortcuts td {
@@ -1033,14 +1027,16 @@ nav {
     display: block; margin: 0 auto;
   }
   .tabs {
-    display: block;
-    height: 4em;
-    margin-bottom: 0;
-    overflow-x: shown;
-  }
-  .tabs li a {
-    border-width: 2px;
-    margin-bottom: 0;
+    display: flex;
+    flex-shrink: 0;
+    //display: block;
+    //height: 4em;
+    //margin-bottom: 0;
+    //overflow-x: shown;
+    li a {
+      border-width: 2px;
+      margin-bottom: 0;
+    }
   }
 }
 .dueDate {

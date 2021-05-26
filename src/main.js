@@ -230,7 +230,7 @@ const createWindow = async function() {
       if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
       if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
       if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
-      if(typeof userData.data.tray != "boolean") userData.set("tray", false);
+      if(typeof appData.tray != "boolean") appData.tray = false;
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
@@ -284,34 +284,61 @@ const createWindow = async function() {
   // ########################################################################################################################
   // MAIN MENU
   // ########################################################################################################################
+  let subMenu;
+  if(appData.os==="mac") {
+    subMenu = [
+      {
+        label: translations.openFile,
+        click: function () {
+          openDialog("open");
+        }
+      },
+      {
+        label: translations.createFile,
+        click: function () {
+          openDialog("create");
+        }
+      },
+      { type: "separator" },
+      {
+        role: "close",
+        accelerator: "Command+W",
+        label: translations.close
+      },
+      {
+        role: "quit",
+        accelerator: "Command+Q",
+        click: function() {
+          app.quit();
+        }
+      }
+    ];
+  } else {
+    subMenu = [
+      {
+        label: translations.openFile,
+        click: function () {
+          openDialog("open");
+        }
+      },
+      {
+        label: translations.createFile,
+        click: function () {
+          openDialog("create");
+        }
+      },
+      { type: "separator" },
+      {
+        role: "close",
+        label: translations.close
+      }
+    ];
+  }
+
   const menuTemplate = [
     {
       label: translations.file,
-      submenu: [
-        {
-          label: translations.openFile,
-          click: function () {
-            openDialog("open");
-          }
-        },
-        {
-          label: translations.createFile,
-          click: function () {
-            openDialog("create");
-          }
-        },
-        { type: "separator" },
-        appData.os==="mac" ? {
-          role: "quit",
-          accelerator: "Command+Q",
-          click: function() {
-            app.quit();
-          }
-        } : {
-          role: "close",
-          label: translations.close
-        }
-      ]
+      submenu: subMenu
     },
     {
       label: translations.edit,

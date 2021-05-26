@@ -999,12 +999,7 @@ nav ul:nth-child(2) {
   position: absolute !important;
 }
 .modal.content .modal-card {
-  width: 900px !important;
-  height: auto;
   z-index: 60;
-  background: #ebebeb;
-  padding: 1em 2em;
-  border-radius: 0.25rem;
 }
 .modal.content .modal-background {
   z-index: 55;
@@ -1012,6 +1007,7 @@ nav ul:nth-child(2) {
 .modal.content .modal-card-body {
   background: none;
   display: none;
+  padding: 0 2em 2em 2em;
 }
 .modal.content .modal-card-body ul li a {
   text-decoration: underline;
@@ -1032,10 +1028,10 @@ nav ul:nth-child(2) {
   left: -0.8em;
 }
 .modal.content .modal-card-body table.settings tr td:first-child {
-  width: 80%;
   padding-right: 3em;
 }
 .modal.content .modal-card-body table.settings tr td:last-child {
+  min-width: 10em;
   text-align: center;
 }
 .modal.content .modal-card-body table.shortcuts td .tag {
@@ -1056,10 +1052,8 @@ nav ul:nth-child(2) {
   margin: 0 auto;
 }
 .modal.content .tabs {
-  display: block;
-  height: 4em;
-  margin-bottom: 0;
-  overflow-x: shown;
+  display: flex;
+  flex-shrink: 0;
 }
 .modal.content .tabs li a {
   border-width: 2px;
@@ -5556,7 +5550,7 @@ button.dropdown-item.is-active {
 .modal-card {
     margin: 0 auto;
     max-height: calc(100vh - 40px);
-    width: 800px;
+    width: 900px;
   }
 }
 

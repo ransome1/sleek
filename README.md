@@ -64,8 +64,8 @@ You can download sleek for Windows, MacOS and Linux from
 3. Install dependencies `yarn install --production`
 4. Build sleek `yarn build:windows` or `yarn build:linux` or `yarn build:macos`
 
-### sleeks Roadmap 2021
-A prioritized backlog for new features and known issues can be found on <a href="https://github.com/ransome1/sleek/projects/2">sleeks' roadmap for 2021</a>.
+### sleeks state of development
+A prioritized backlog of new features and known issues can be found <a href="https://github.com/ransome1/sleek/projects/2">here</a>.
 
 ### Features
 * An existing todo.txt file can be used or a new one can be created
@@ -114,16 +114,7 @@ A prioritized backlog for new features and known issues can be found on <a href=
   - French
 * Tabindex available
 * Existing todos can be used as templates for new ones
-* Basic keyboard shortcuts are available:
-  - New todo: CMD/CTRL + n
-  - Find todo: CMD/CTRL + f
-  - Show or hide completed todos: CMD/CTRL + h
-  - Toggle dark mode: CMD/CTRL + d
-  - Open file: CMD/CTRL + o
-  - Open settings: CMD/CTRL + ,
-  - Toggle side bar: CMD/CTRL + b
-  - Set priorities (available when add/edit window is open): CTRL+SHIFT+[A-Z]
-  - Submit todo (available when add/edit window is open): CTRL + Enter
+* <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts</a> following todotxt.net
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

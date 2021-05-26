@@ -443,6 +443,17 @@ function registerEvents() {
 }
 function registerKeyboardShortcuts() {
   try {
+    // CMD/metaKey only works on keydown
+    window.addEventListener("keydown", function(event) {
+      // open file
+      if((event.ctrlKey || event.metaKey) && event.key === "o") {
+        window.api.send("openOrCreateFile", "open");
+      }
+      // create file
+      if((event.ctrlKey || event.metaKey) && event.key === "c") {
+        window.api.send("openOrCreateFile", "create");
+      }
+    }, true)
     window.addEventListener("keyup", function(event) {
       // open settings
       if(event.key === "," && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
@@ -451,14 +462,6 @@ function registerKeyboardShortcuts() {
         }).catch(function(error) {
           handleError(error);
         });
-      }
-      // open file
-      if((event.ctrlKey || event.metaKey) && event.key === "o") {
-        window.api.send("openOrCreateFile", "open");
-      }
-      // create file
-      if((event.ctrlKey || event.metaKey) && event.key === "c") {
-        window.api.send("openOrCreateFile", "create");
       }
       // open help
       if(event.key === "?" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
@@ -546,13 +549,7 @@ function registerKeyboardShortcuts() {
         }).catch(error => {
           handleError(error);
         });
-      } /*else if((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
-        form.setPriority(null).then(response => {
-          console.log(response);
-        }).catch(error => {
-          handleError(error);
-        });
-      }*/
+      }
       // submit form
       if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
         form.submitForm().then(response => {
@@ -567,7 +564,6 @@ function registerKeyboardShortcuts() {
         }).catch(function(error) {
           handleError(error);
         });
-        //this.classList.remove("is-active");
       } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
         autoCompleteContainer.classList.remove("is-active");
       }
@@ -584,21 +580,11 @@ function registerKeyboardShortcuts() {
         form.setDueDate(0);
       }
     });
-    // for escape we have specific cases not applied to window
-    modalHelp.addEventListener ("keydown", function() {
-      if(event.key === "Escape") this.classList.remove("is-active");
-    });
-    modalChangeFile.addEventListener ("keydown", function () {
-      if(event.key === "Escape") {
-        resetModal().then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
-      }
-    });
-    modalSettings.addEventListener ("keydown", function() {
-      if(event.key === "Escape") this.classList.remove("is-active");
+    // event for closing modal windows
+    modal.forEach(function(element) {
+      element.addEventListener("keyup", function(event) {
+        if(event.key === "Escape") this.classList.remove("is-active");
+      });
     });
     autoCompleteContainer.addEventListener ("keydown", function() {
       if(event.key === "Escape") this.classList.remove("is-active")
