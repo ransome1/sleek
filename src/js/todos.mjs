@@ -246,19 +246,19 @@ function generateTableRow(todo) {
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
     }
-      // cell for the categories
-      categories.forEach(category => {
-        if(todo[category] && category!="priority") {
-          todo[category].forEach(el => {
-            let todoTableBodyCellCategory = document.createElement("span");
-            todoTableBodyCellCategory.setAttribute("class", "tag " + category);
-            todoTableBodyCellCategory.innerHTML = el;
-            tableContainerCategories.appendChild(todoTableBodyCellCategory);
-          });
-        }
-      });
-      // only add the categories to text cell if it has child nodes
-      if(tableContainerCategories.hasChildNodes()) todoTableBodyCellText.appendChild(tableContainerCategories);
+    // cell for the categories
+    categories.forEach(category => {
+      if(todo[category] && category!="priority") {
+        todo[category].forEach(el => {
+          let todoTableBodyCellCategory = document.createElement("span");
+          todoTableBodyCellCategory.setAttribute("class", "tag " + category);
+          todoTableBodyCellCategory.innerHTML = el;
+          tableContainerCategories.appendChild(todoTableBodyCellCategory);
+        });
+      }
+    });
+    // only add the categories to text cell if it has child nodes
+    if(tableContainerCategories.hasChildNodes()) todoTableBodyCellText.appendChild(tableContainerCategories);
     // check for and add a given due date
     if(todo.due) {
       var tag = convertDate(todo.due);

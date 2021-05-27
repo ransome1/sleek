@@ -147,7 +147,7 @@ const createWindow = async function() {
         break;
     }
   }
-  const startFileWatcher = async function(file) {
+  const startFileWatcher = function(file) {
     try {
       if(!fs.existsSync(file)) throw("File not found on disk")
       // use the loop to check if the new path is already in the user data
@@ -171,7 +171,8 @@ const createWindow = async function() {
       userData.set("files", userData.data.files);
       userData.data.file = file;
       userData.set("file", file);
-      fileWatcher = await chokidar.watch(file);
+      if(fileWatcher) fileWatcher.close();
+      fileWatcher = chokidar.watch(file);
       fileWatcher
       .on("add", function() {
         getContent(file).then(content => {

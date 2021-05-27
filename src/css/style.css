@@ -348,6 +348,10 @@ nav ul:nth-child(2) {
   overflow-x: hidden;
   padding: 2em;
   background: #ebebeb;
+  /*.dropdown-item.is-greyed-out {
+    opacity: .75;
+    -webkit-filter: grayscale(100%);
+  }*/
   /*#btnResetAllFilters {
     display: none;
   }
@@ -373,6 +377,13 @@ nav ul:nth-child(2) {
   top: -0.75em;
   z-index: 35;
 }
+#drawerContainer .drawer .is-greyed-out {
+  opacity: 0.75;
+  -webkit-filter: grayscale(100%);
+}
+#drawerContainer .drawer .button.is-greyed-out {
+  cursor: default;
+}
 #drawerContainer .drawer h4.is-4 {
   font-size: 1.35em;
   color: #4a4a4a;
@@ -384,10 +395,6 @@ nav ul:nth-child(2) {
   width: 100%;
   padding: 0;
   margin: 0 0 1.5em 0;
-}
-#drawerContainer .drawer .dropdown-item.is-greyed-out {
-  opacity: 0.75;
-  -webkit-filter: grayscale(100%);
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
@@ -766,6 +773,24 @@ nav ul:nth-child(2) {
 }
 
 #autoCompleteContainer.is-active {
+  display: block;
+}
+
+#filterMenu {
+  display: none;
+  position: fixed;
+  z-index: 60;
+}
+#filterMenu #filterMenuSave {
+  cursor: pointer;
+  border: none;
+  border-right: 1px solid #f5f5f5;
+}
+#filterMenu #filterMenuDelete {
+  color: #ff3860;
+}
+
+#filterMenu.is-active {
   display: block;
 }
 

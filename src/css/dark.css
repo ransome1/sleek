@@ -265,6 +265,17 @@ nav ul li.is-highlighted a {
   background: #212224 !important;
 }
 
+#filterMenu .card {
+  background: #3B3B3B;
+}
+#filterMenu .card #filterMenuSave {
+  background-color: transparent !important;
+  border-right: 1px solid #212224 !important;
+}
+#filterMenu .card-footer {
+  border-top: 1px solid #212224 !important;
+}
+
 .contexts .button {
   color: #c5ede3;
   background: #247561;

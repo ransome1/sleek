@@ -333,6 +333,13 @@ nav {
         z-index: 35;
       }
     }
+    .is-greyed-out {
+      opacity: .75;
+      -webkit-filter: grayscale(100%);
+    }
+    .button.is-greyed-out {
+      cursor: default;
+    }
     h4.is-4 {
       font-size: 1.35em;
       color: $dark-grey;
@@ -345,10 +352,10 @@ nav {
       padding: 0;
       margin: 0 0 1.5em 0;
     }
-    .dropdown-item.is-greyed-out {
+    /*.dropdown-item.is-greyed-out {
       opacity: .75;
       -webkit-filter: grayscale(100%);
-    }
+    }*/
     /*#btnResetAllFilters {
       display: none;
     }
@@ -743,6 +750,22 @@ nav {
   overflow: auto;
 }
 #autoCompleteContainer.is-active {
+  display: block;
+}
+#filterMenu {
+  display: none;
+  position: fixed;
+  z-index: 60;
+  #filterMenuSave {
+    cursor: pointer;
+    border: none;
+    border-right: 1px solid $almost-white;
+  }
+  #filterMenuDelete {
+    color: $has-text-danger;
+  }
+}
+#filterMenu.is-active {
   display: block;
 }
 .contentContainer {

@@ -126,3 +126,4 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 - vanillajs-datepicker: https://github.com/mymth/vanillajs-datepicker
 - i18next: https://github.com/i18next/i18next
 - Matomo: https://github.com/matomo-org/matomo
+- chokidar: https://github.com/paulmillr/chokidar
