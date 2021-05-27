@@ -204,7 +204,7 @@ nav {
     left: 0;
   }
 }
-#noResultContainer.contentContainer {
+.contentContainer {
   height: 80%;
 }
 #recurrencePicker {
@@ -653,8 +653,14 @@ nav {
     }
   }
   .flex-table.completed {
-    opacity: .5;
-    -webkit-filter: grayscale(100%);
+    .flex-row {
+      opacity: .5;
+      -webkit-filter: grayscale(100%);
+    }
+    .flex-row.todoTableItemMore {
+      opacity: 1;
+      -webkit-filter: none;
+    }
   }
 }
 #todoTable.is-active {
@@ -972,6 +978,9 @@ nav {
   }
   .modal-card {
     z-index: 60;
+    background: #ebebeb;
+    padding: 0 2em;
+    border-radius: 0.25rem;
   }
   .modal-background {
     z-index: 55;
@@ -979,7 +988,7 @@ nav {
   .modal-card-body {
     background: none;
     display: none;
-    padding: 0 2em 2em 2em;
+    //padding: 0 2em 2em 2em;
     ul li a {
       text-decoration: underline;
     }

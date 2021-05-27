@@ -8,7 +8,7 @@
 + [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
 + [Download it](#download-sleek)
 + [Build sleek from source code](#build-sleek-from-source-code)
-+ [sleeks Roadmap 2021](#sleeks-roadmap-2021)
++ [sleeks state of development](#sleeks-state-of-development)
 + [Features](#features)
 + [Used libraries](#used-libraries)
 
@@ -21,7 +21,6 @@ sleek manages and watches multiple todo.txt files continuously for changes, whic
 Todos with due date or repeating todos will trigger notifications and completed todos can be hidden or archived into separate done.txt files. If users have tons of todos, a compact view can come in handy.
 
 ### Screenshots
-
 ![Alt text](assets/screenshots/linux/todo_list.png?raw=true "Screenshot of sleek's main view on Linux")
 ![Alt text](assets/screenshots/linux/multiline_autocomplete_dark.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature on Linux")
 
@@ -112,6 +111,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - Italian
   - Spanish
   - French
+* sleek can be minimized to tray
 * Tabindex available
 * Existing todos can be used as templates for new ones
 * <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts</a> following todotxt.net
