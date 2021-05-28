@@ -600,8 +600,11 @@ function registerKeyboardShortcuts() {
         }
       });
     });
-    autoCompleteContainer.addEventListener ("keydown", function() {
-      if(event.key === "Escape") this.classList.remove("is-active")
+    autoCompleteContainer.addEventListener ("keyup", function() {
+      if(event.key === "Escape") {
+        this.classList.remove("is-active");
+        modalFormInput.focus();
+      }
     });
     return Promise.resolve("Success: Keyboard shortcuts registered");
   } catch(error) {

@@ -14,7 +14,7 @@ const modalForm = document.getElementById("modalForm");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
 const modalBackground = document.querySelectorAll('.modal-background');
 const modalClose = document.querySelectorAll('.close');
-const modalFormInput = document.getElementById("modalFormInput");
+//const modalFormInput = document.getElementById("modalFormInput");
 const priorityPicker = document.getElementById("priorityPicker");
 const btnItemStatus = document.getElementById("btnItemStatus");
 
@@ -165,7 +165,7 @@ function modalFormInputEvent() {
   }
   let autoCompleteValue ="";
   let autoCompletePrefix = "";
-  let caretPosition = getCaretPosition(modalFormInput);
+  let caretPosition = getCaretPosition(document.getElementById("modalFormInput"));
   let autoCompleteCategory = "";
   if((document.getElementById("modalFormInput").value.charAt(caretPosition-2) === " " || document.getElementById("modalFormInput").value.charAt(caretPosition-2) === "\n") && (document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "@" || document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "+")) {
     autoCompleteValue = document.getElementById("modalFormInput").value.substr(caretPosition, document.getElementById("modalFormInput").value.lastIndexOf(" ")).split(" ").shift();
@@ -454,7 +454,7 @@ function toggleInputSize(type) {
   document.getElementById("modalFormInput").addEventListener("keyup", e => {
     modalFormInputEvent();
     // do not show suggestion container if Escape has been pressed
-    if(e.key==="Escape") return false;
+    //if(e.key==="Escape") return false;
   });
   document.getElementById("modalFormInput").focus();
 }

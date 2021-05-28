@@ -3,7 +3,7 @@ import { userData, handleError, translations, setUserData, startBuilding, _paq }
 import { items, generateGroups, generateTable } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 
-const modalFormInput = document.getElementById("modalFormInput");
+//const modalFormInput = document.getElementById("modalFormInput");
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const todoFilters = document.getElementById("todoFilters");
@@ -383,16 +383,16 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         todoFiltersItem.addEventListener("click", () => {
           if(autoCompleteValue) {
             // remove composed filter first, then add selected filter
-            modalFormInput.value = modalFormInput.value.slice(0, caretPosition-autoCompleteValue.length) + todoFiltersItem.getAttribute("data-filter") + modalFormInput.value.slice(caretPosition) + " ";
+            document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.slice(0, caretPosition-autoCompleteValue.length-1) + autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + document.getElementById("modalFormInput").value.slice(caretPosition) + " ";
           } else {
             // add button data value to the exact caret position
-            modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
+            document.getElementById("modalFormInput").value = [document.getElementById("modalFormInput").value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), document.getElementById("modalFormInput").value.slice(caretPosition)].join('') + " ";
           }
           // hide the suggestion container after the filter has been selected
           autoCompleteContainer.blur();
           autoCompleteContainer.classList.remove("is-active");
           // put focus back into input so user can continue writing
-          modalFormInput.focus();
+          document.getElementById("modalFormInput").focus();
           // trigger matomo event
           if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
