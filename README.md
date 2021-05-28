@@ -93,7 +93,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - also more specific recurrences are possible: "rec:2d" (every 2nd day)
 * Available contexts and projects will be suggested according to your input
 * Todos can be filtered by contexts, projects and priorities
-* Filters can be bulk changed by right clicking on them
+* Filters can be renamed or deleted by right clicking on them
 * Filters are sorted alphanummerically
 * Todos can be sorted and grouped by
   - Priorites

@@ -95,22 +95,38 @@ jobs:
       uses: github/codeql-action/autobuild@v1
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+#  mirror:
+#    needs: codeql
+#    name: Mirror code to opencode.net
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v1
+#    - name: Mirror + trigger CI
+#      uses: SvanBoxel/gitlab-mirror-and-ci-action@master
+#      with:
+#        args: "https://www.opencode.net/ransome/sleek.git"
+#      env:
+#        GITLAB_HOSTNAME: "opencode.net"
+#        GITLAB_USERNAME: "ransome"
+#        GITLAB_PASSWORD: ${{ secrets.gitlab_password }}
+#        GITLAB_PROJECT_ID: "https://www.opencode.net/ransome/sleek/edit"
+#        GITHUB_TOKEN: ${{ secrets.github_token }}
+
   mirror:
-    needs: codeql
     name: Mirror code to opencode.net
     runs-on: ubuntu-latest
-    steps:
+#    needs: codeql
+    steps:                                              # <-- must use actions/checkout@v1 before mirroring!
     - uses: actions/checkout@v1
-    - name: Mirror + trigger CI
-      uses: SvanBoxel/gitlab-mirror-and-ci-action@master
+    - uses: pixta-dev/repository-mirroring-action@v1
       with:
-        args: "https://www.opencode.net/ransome/sleek.git"
-      env:
-        GITLAB_HOSTNAME: "opencode.net"
-        GITLAB_USERNAME: "ransome"
-        GITLAB_PASSWORD: ${{ secrets.gitlab_password }}
-        GITLAB_PROJECT_ID: "https://www.opencode.net/ransome/sleek/edit"
-        GITHUB_TOKEN: ${{ secrets.github_token }}
+        target_repo_url:
+          git@www.opencode.net:ransome/sleek.git
+        ssh_private_key:                                # <-- use 'secrets' to pass credential information.
+          ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
+
+
+
 
 #  publish-aur-package:
 #    runs-on: ubuntu-latest
