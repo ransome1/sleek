@@ -2,6 +2,7 @@
 import { userData, handleError, translations, setUserData, startBuilding, _paq } from "../render.js";
 import { items, generateGroups, generateTable } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
+
 const modalFormInput = document.getElementById("modalFormInput");
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -10,9 +11,17 @@ const filterMenu = document.getElementById("filterMenu");
 const filterMenuInput = document.getElementById("filterMenuInput");
 const filterMenuSave = document.getElementById("filterMenuSave");
 const filterMenuDelete = document.getElementById("filterMenuDelete");
-filterMenuSave.value = translations.save;
+
+let categories,
+    filtersCounted,
+    filtersCountedReduced,
+    selectedFilters,
+    container,
+    headline;
+
+filterMenuSave.innerHTML = translations.save;
 filterMenuDelete.innerHTML = translations.delete;
-let categories, filtersCounted, filtersCountedReduced, selectedFilters, container, headline;
+
 function saveFilter(newFilter, oldFilter, category) {
   items.objects.forEach((item) => {
     if(category!=="priority" && item[category]) {
@@ -27,14 +36,15 @@ function saveFilter(newFilter, oldFilter, category) {
   //write the data to the file
   // a newline character is added to prevent other todo.txt apps to append new todos to the last line
   window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
-
 }
 function deleteFilter(filter, category) {
   items.objects.forEach((item) => {
-    if(item[category]) {
+    if(category!=="priority" && item[category]) {
       const index = item[category].indexOf(filter);
       if(index!==-1) item[category].splice(index, 1);
       if(item[category].length===0) item[category] = null;
+    } else if(category==="priority" && item[category]===filter) {
+      item[category] = null;
     }
   });
   // persisted filters will be removed
@@ -327,16 +337,25 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         selectedFilters.forEach(function(item) {
           if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
         });
-
-        // context menu
+        // add context menu
         todoFiltersItem.addEventListener("contextmenu", event => {
           filterMenu.style.left = event.x + "px";
           filterMenu.style.top = event.y + "px";
           filterMenu.classList.add("is-active");
           filterMenuInput.value = filter;
           filterMenuInput.focus();
+          filterMenuInput.addEventListener("keyup", function(event) {
+            if(event.key === "Escape") filterMenu.classList.remove("is-active");
+            if(event.key === "Enter") {
+              if(filterMenuInput.value!==filter && filterMenuInput.value) {
+                saveFilter(filterMenuInput.value, filter, category);
+              } else {
+                filterMenu.classList.remove("is-active");
+              }
+            }
+          });
           filterMenuSave.onclick = function() {
-            if(filterMenuInput.value!==filter) {
+            if(filterMenuInput.value!==filter && filterMenuInput.value) {
               saveFilter(filterMenuInput.value, filter, category);
             } else {
               filterMenu.classList.remove("is-active");
@@ -346,7 +365,6 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
             deleteFilter(filter, category);
           }
         });
-
         if(filtersCountedReduced[filter]) {
           todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCountedReduced[filter] + "</span>";
           // create the event listener for filter selection by user
@@ -359,17 +377,13 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
           todoFiltersItem.classList.add("is-greyed-out");
           todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">0</span>";
         }
-
       // autocomplete container
       } else {
         // add filter to input
         todoFiltersItem.addEventListener("click", () => {
-          // remove composed filter first, as it is going to be replaced with a filter from suggestion box
           if(autoCompleteValue) {
-            // only if input is not only the prefix, otherwise all existing prefixes will be removed
-            modalFormInput.value = modalFormInput.value.replace(" " + autoCompletePrefix+autoCompleteValue, "");
-            // add filter from suggestion box
-            modalFormInput.value += " " + autoCompletePrefix+todoFiltersItem.getAttribute("data-filter") + " ";
+            // remove composed filter first, then add selected filter
+            modalFormInput.value = modalFormInput.value.slice(0, caretPosition-autoCompleteValue.length) + todoFiltersItem.getAttribute("data-filter") + modalFormInput.value.slice(caretPosition) + " ";
           } else {
             // add button data value to the exact caret position
             modalFormInput.value = [modalFormInput.value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), modalFormInput.value.slice(caretPosition)].join('') + " ";
@@ -391,4 +405,5 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     return Promise.reject(error);
   }
 }
+
 export { filterItems, generateFilterData, selectFilter, categories };

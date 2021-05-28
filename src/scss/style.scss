@@ -756,11 +756,7 @@ nav {
   display: none;
   position: fixed;
   z-index: 60;
-  #filterMenuSave {
-    cursor: pointer;
-    border: none;
-    border-right: 1px solid $almost-white;
-  }
+
   #filterMenuDelete {
     color: $has-text-danger;
   }

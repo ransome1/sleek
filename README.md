@@ -92,13 +92,14 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - "rec:y" (annually)
   - also more specific recurrences are possible: "rec:2d" (every 2nd day)
 * Available contexts and projects will be suggested according to your input
-* Todos can be filtered by contexts and projects
+* Todos can be filtered by contexts, projects and priorities
+* Filters can be bulk changed by right clicking on them
+* Filters are sorted alphanummerically
 * Todos can be sorted and grouped by
   - Priorites
   - Due dates
   - Projects
   - Contexts
-* Filters are sorted alphanummerically
 * Todos can be looked up using full-text search
 * Hyperlinks are detected automatically and can be clicked using the icon
 * Alarms will be triggered when a todo is due tomorrow or today

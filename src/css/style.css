@@ -781,11 +781,6 @@ nav ul:nth-child(2) {
   position: fixed;
   z-index: 60;
 }
-#filterMenu #filterMenuSave {
-  cursor: pointer;
-  border: none;
-  border-right: 1px solid #f5f5f5;
-}
 #filterMenu #filterMenuDelete {
   color: #ff3860;
 }

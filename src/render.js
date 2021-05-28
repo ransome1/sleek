@@ -537,15 +537,11 @@ function registerKeyboardShortcuts() {
       }
     }, true)
     // shortcuts for search input field
-    todoTableSearch.addEventListener("keydown", function () {
+    todoTableSearch.addEventListener("keyup", function () {
       if(event.key === "Escape") todoTableSearch.blur();
     });
-    // shortcuts for filter menu input field
-    filterMenuInput.addEventListener("keydown", function () {
-      if(event.key === "Escape") filterMenu.classList.remove("is-active");
-    });
     // shortcuts for modal form
-    modalForm.addEventListener ("keydown", function(event) {
+    modalForm.addEventListener ("keyup", function(event) {
       // priority up
       if(!(event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
         form.setPriority("up");
@@ -598,8 +594,10 @@ function registerKeyboardShortcuts() {
     });
     // event for closing modal windows
     modal.forEach(function(element) {
-      element.addEventListener("keyup", function(event) {
-        if(event.key === "Escape") this.classList.remove("is-active");
+      element.addEventListener("keydown", function(event) {
+        if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
+          this.classList.remove("is-active");
+        }
       });
     });
     autoCompleteContainer.addEventListener ("keydown", function() {
