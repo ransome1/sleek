@@ -10,6 +10,8 @@ const recurrencePickerInput = document.getElementById("recurrencePickerInput");
 const recurrencePickerSpinner = document.getElementById("recurrencePickerSpinner");
 const recurrencePickerDay = document.getElementById("recurrencePickerDay");
 recurrencePickerDay.innerHTML = translations.day;
+const recurrencePickerBusinessDay = document.getElementById("recurrencePickerBusinessDay");
+recurrencePickerBusinessDay.innerHTML = translations.bday;
 const recurrencePickerWeek = document.getElementById("recurrencePickerWeek");
 recurrencePickerWeek.innerHTML = translations.week;
 const recurrencePickerMonth = document.getElementById("recurrencePickerMonth");
@@ -33,24 +35,30 @@ export function setInput(recurrence) {
       if(recSplit.mul > 1) {
         switch (recSplit.period) {
           case "d":
-            label = recurrencePickerDay;
+            label = translations.day_plural;
+            break;
+          case "b":
+            label = translations.bday_plural;
             break;
           case "w":
-            label = recurrencePickerWeek;
+            label = translations.week_plural;
             break;
           case "m":
-            label = recurrencePickerMonth;
+            label = translations.month_plural;
             break;
           case "y":
-            label = recurrencePickerYear;
+            label = translations.year_plural;
             break;
         }
-        label = translations.every + " " + recSplit.mul + " " + label.innerHTML;
+        label = translations.every + " " + recSplit.mul + " " + label;
       } else {
         switch (recSplit.period) {
           case "d":
             label = translations.daily;
             break;
+          case "b":
+            label = translations.bdaily;
+            break;  
           case "w":
             label = translations.weekly;
             break;
@@ -138,11 +146,13 @@ function showRecurrences() {
 }
 function setRecurrenceOptionLabels(mul) {
   if(mul>1) {
+    recurrencePickerBusinessDay.innerHTML = translations.bday_plural;
     recurrencePickerDay.innerHTML = translations.day_plural;
     recurrencePickerWeek.innerHTML = translations.week_plural;
     recurrencePickerMonth.innerHTML = translations.month_plural;
     recurrencePickerYear.innerHTML = translations.year_plural;
   } else {
+    recurrencePickerBusinessDay.innerHTML = translations.bday;
     recurrencePickerDay.innerHTML = translations.day;
     recurrencePickerWeek.innerHTML = translations.week;
     recurrencePickerMonth.innerHTML = translations.month;
