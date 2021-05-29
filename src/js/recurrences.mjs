@@ -58,6 +58,7 @@ function generateRecurrence(todo) {
 function getRecurrenceDate(due, recurrence) {
   let recSplit = splitRecurrence(recurrence);
   let days = 0;
+  let months = 0;
   switch (recSplit.period) {
     case "d":
       days = 1;
@@ -66,11 +67,19 @@ function getRecurrenceDate(due, recurrence) {
       days = 7;
       break;
     case "m":
-      days = 30;
+      months = 1;
       break;
     case "y":
-      days = 365;
+      months = 12;
       break;
+  }
+  if (months > 0) {
+    let due_month = due.getMonth() + recSplit.mul * months;
+    let due_year = due.getFullYear() + Math.floor(due_month/12);
+    due_month = due_month % 12;
+    let monthlen = new Date(due_year, due_month+1, 0).getDate();
+    let due_day = Math.min(due.getDate(), monthlen);
+    return new Date(due_year, due_month, due_day);
   }
   due = due.getTime();
   due += 1000 * 60 * 60 * 24 * recSplit.mul * days;
