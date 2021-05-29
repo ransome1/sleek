@@ -27,6 +27,8 @@ const getChannel = function() {
     return "Flathub";
   } else if(process.env.AUR) {
     return "AUR";
+  } else if(process.env.PORTABLE_EXECUTABLE_DIR) {
+    return "Portable";
   } else {
     return "Misc";
   }

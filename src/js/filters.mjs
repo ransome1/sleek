@@ -326,7 +326,8 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       // skip this loop if no filters are present
       if(!filter) continue;
       let todoFiltersItem = document.createElement("a");
-      todoFiltersItem.setAttribute("class", "button " + filter);
+      todoFiltersItem.setAttribute("class", "button");
+      if(category==="priority") todoFiltersItem.classList.add(filter);
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
       if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }

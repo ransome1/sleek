@@ -155,7 +155,8 @@ svg {
   color: #3273dc;
 }
 
-code {
+code, pre {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
   background-color: transparent !important;
   color: inherit !important;
 }
@@ -1158,6 +1159,9 @@ body.compact #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
   right: 0.225em;
   bottom: 1.75em;
 }
+body.compact #todoTable .flex-table.group {
+  font-size: 0.8em;
+}
 body.compact .modal.content .modal-card {
   width: 90% !important;
   padding: 0.5em;
@@ -1178,6 +1182,17 @@ body.compact nav ul li.logo {
 }
 body.compact .drawer {
   padding: 1.5em !important;
+}
+body.compact .drawer .button {
+  font-size: 0.9em;
+}
+body.compact .drawer .button .tag {
+  padding: 0 0.5em;
+  width: auto;
+  height: auto;
+  min-width: 1.5em;
+  min-height: 1.5em;
+  font-size: 0.9em;
 }
 body.compact #autoCompleteContainer.drawer {
   padding: 0 !important;
