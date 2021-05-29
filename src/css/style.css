@@ -155,7 +155,8 @@ svg {
   color: #3273dc;
 }
 
-code {
+code, pre {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
   background-color: transparent !important;
   color: inherit !important;
 }
@@ -348,6 +349,10 @@ nav ul:nth-child(2) {
   overflow-x: hidden;
   padding: 2em;
   background: #ebebeb;
+  /*.dropdown-item.is-greyed-out {
+    opacity: .75;
+    -webkit-filter: grayscale(100%);
+  }*/
   /*#btnResetAllFilters {
     display: none;
   }
@@ -373,6 +378,13 @@ nav ul:nth-child(2) {
   top: -0.75em;
   z-index: 35;
 }
+#drawerContainer .drawer .is-greyed-out {
+  opacity: 0.75;
+  -webkit-filter: grayscale(100%);
+}
+#drawerContainer .drawer .button.is-greyed-out {
+  cursor: default;
+}
 #drawerContainer .drawer h4.is-4 {
   font-size: 1.35em;
   color: #4a4a4a;
@@ -384,10 +396,6 @@ nav ul:nth-child(2) {
   width: 100%;
   padding: 0;
   margin: 0 0 1.5em 0;
-}
-#drawerContainer .drawer .dropdown-item.is-greyed-out {
-  opacity: 0.75;
-  -webkit-filter: grayscale(100%);
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
@@ -769,6 +777,19 @@ nav ul:nth-child(2) {
   display: block;
 }
 
+#filterMenu {
+  display: none;
+  position: fixed;
+  z-index: 60;
+}
+#filterMenu #filterMenuDelete {
+  color: #ff3860;
+}
+
+#filterMenu.is-active {
+  display: block;
+}
+
 .contentContainer {
   width: 100%;
   height: 90%;
@@ -1138,6 +1159,9 @@ body.compact #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
   right: 0.225em;
   bottom: 1.75em;
 }
+body.compact #todoTable .flex-table.group {
+  font-size: 0.8em;
+}
 body.compact .modal.content .modal-card {
   width: 90% !important;
   padding: 0.5em;
@@ -1158,6 +1182,17 @@ body.compact nav ul li.logo {
 }
 body.compact .drawer {
   padding: 1.5em !important;
+}
+body.compact .drawer .button {
+  font-size: 0.9em;
+}
+body.compact .drawer .button .tag {
+  padding: 0 0.5em;
+  width: auto;
+  height: auto;
+  min-width: 1.5em;
+  min-height: 1.5em;
+  font-size: 0.9em;
 }
 body.compact #autoCompleteContainer.drawer {
   padding: 0 !important;

@@ -14,7 +14,6 @@ const modalForm = document.getElementById("modalForm");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
 const modalBackground = document.querySelectorAll('.modal-background');
 const modalClose = document.querySelectorAll('.close');
-const modalFormInput = document.getElementById("modalFormInput");
 const priorityPicker = document.getElementById("priorityPicker");
 const btnItemStatus = document.getElementById("btnItemStatus");
 
@@ -55,37 +54,6 @@ modalForm.addEventListener("submit", function(event) {
     handleError(error);
   });
 });
-/*modalForm.addEventListener ("keydown", function(event) {
-  if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[a-z]/i)) {
-    event.preventDefault();
-    setPriority(event.key.substr(0,1)).then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-  } else if(event.ctrlKey && event.shiftKey && event.key.length===1 && event.key.match(/[_]/i)) {
-    setPriority(null).then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-  } else if(event.key==="Enter" && event.ctrlKey) {
-    submitForm().then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-  } else if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    //this.classList.remove("is-active");
-  } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
-    autoCompleteContainer.classList.remove("is-active");
-  }
-});*/
 modalForm.addEventListener ("click", function() {
   // close recurrence picker if click is outside of recurrence container
   if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) document.getElementById("recurrencePickerContainer").classList.remove("is-active")
@@ -97,7 +65,6 @@ priorityPicker.addEventListener("change", e => {
     handleError(error);
   });
 });
-
 priorityPicker.onfocus = function() {
   // close suggestion box if focus comes to priority picker
   autoCompleteContainer.classList.remove("is-active");
@@ -165,7 +132,7 @@ function modalFormInputEvent() {
   }
   let autoCompleteValue ="";
   let autoCompletePrefix = "";
-  let caretPosition = getCaretPosition(modalFormInput);
+  let caretPosition = getCaretPosition(document.getElementById("modalFormInput"));
   let autoCompleteCategory = "";
   if((document.getElementById("modalFormInput").value.charAt(caretPosition-2) === " " || document.getElementById("modalFormInput").value.charAt(caretPosition-2) === "\n") && (document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "@" || document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "+")) {
     autoCompleteValue = document.getElementById("modalFormInput").value.substr(caretPosition, document.getElementById("modalFormInput").value.lastIndexOf(" ")).split(" ").shift();
@@ -454,7 +421,7 @@ function toggleInputSize(type) {
   document.getElementById("modalFormInput").addEventListener("keyup", e => {
     modalFormInputEvent();
     // do not show suggestion container if Escape has been pressed
-    if(e.key==="Escape") return false;
+    //if(e.key==="Escape") return false;
   });
   document.getElementById("modalFormInput").focus();
 }

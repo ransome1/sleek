@@ -133,6 +133,8 @@ function configureMatomo() {
 }
 function configureMainView() {
   try {
+    // close filterMenu if open
+    if(filterMenu.classList.contains("is-active")) filterMenu.classList.remove("is-active");
     // set scaling factor if default font size has changed
     if(userData.zoom) {
       html.style.zoom = userData.zoom + "%";
@@ -159,7 +161,6 @@ function configureMainView() {
       // check if archive button should be enabled
       setButtonState("btnArchiveTodos");
       // file is defined, but content is empty
-      console.log(userData.file);
       if(userData.file && todos.items.objects.length===0) {
         addTodoContainer.classList.add("is-active");
         todoTableSearchContainer.classList.remove("is-active");
@@ -294,6 +295,13 @@ function registerEvents() {
     // ########################################################################################################################
     // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
     // ########################################################################################################################
+    body.onclick = function(event) {
+      if(filterMenu.classList.contains("is-active")) {
+        if(!filterMenu.contains(event.target)) {
+          filterMenu.classList.remove("is-active");
+        }
+      }
+    }
     a.forEach(el => el.addEventListener("click", function(el) {
       if(el.target.href && el.target.href === "#") el.preventDefault();
     }));
@@ -446,17 +454,17 @@ function registerKeyboardShortcuts() {
     // CMD/metaKey only works on keydown
     window.addEventListener("keydown", function(event) {
       // open file
-      if((event.ctrlKey || event.metaKey) && event.key === "o") {
+      if((event.ctrlKey || event.metaKey) && event.key === "o" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         window.api.send("openOrCreateFile", "open");
       }
       // create file
-      if((event.ctrlKey || event.metaKey) && event.key === "c") {
+      if((event.ctrlKey || event.metaKey) && event.key === "c" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         window.api.send("openOrCreateFile", "create");
       }
     }, true)
     window.addEventListener("keyup", function(event) {
       // open settings
-      if(event.key === "," && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key === "," && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         content.showContent(document.getElementById("modalSettings")).then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -464,7 +472,7 @@ function registerKeyboardShortcuts() {
         });
       }
       // open help
-      if(event.key === "?" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key === "?" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         content.showContent(document.getElementById("modalHelp")).then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -472,7 +480,7 @@ function registerKeyboardShortcuts() {
         });
       }
       // create new todo
-      if(event.key==="n" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key==="n" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         form.show().then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -480,11 +488,11 @@ function registerKeyboardShortcuts() {
         });
       }
       // find todo
-      if(event.key==="f" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key==="f" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         todoTableSearch.focus();
       }
       // reset filters
-      if(event.key==="0" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key==="0" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         resetFilters().then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -492,7 +500,7 @@ function registerKeyboardShortcuts() {
         });
       }
       // toggle completed todos
-      if(event.key==="h" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key==="h" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         view.toggle("showCompleted").then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -500,7 +508,7 @@ function registerKeyboardShortcuts() {
         });
       }
       // archive todos
-      if(event.key==="a" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key==="a" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         todos.archiveTodos().then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -508,7 +516,7 @@ function registerKeyboardShortcuts() {
         });
       }
       // toggle dark mode
-      if(event.key==="d" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key==="d" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         setTheme(true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -516,7 +524,7 @@ function registerKeyboardShortcuts() {
         });
       }
       // show filter drawer
-      if(event.key==="b" && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if(event.key==="b" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         drawer.showDrawer("toggle", "navBtnFilter", "filterDrawer").then(function(result) {
           console.log(result);
         }).catch(function(error) {
@@ -524,12 +532,16 @@ function registerKeyboardShortcuts() {
         });
       }
       // reload window
-      if((event.key === "." || event.key === "F5") && !modalForm.classList.contains("is-active") && document.activeElement.id!="todoTableSearch") {
+      if((event.key === "." || event.key === "F5") && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         location.reload(true);
       }
     }, true)
+    // shortcuts for search input field
+    todoTableSearch.addEventListener("keyup", function () {
+      if(event.key === "Escape") todoTableSearch.blur();
+    });
     // shortcuts for modal form
-    modalForm.addEventListener ("keydown", function(event) {
+    modalForm.addEventListener ("keyup", function(event) {
       // priority up
       if(!(event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
         form.setPriority("up");
@@ -582,12 +594,17 @@ function registerKeyboardShortcuts() {
     });
     // event for closing modal windows
     modal.forEach(function(element) {
-      element.addEventListener("keyup", function(event) {
-        if(event.key === "Escape") this.classList.remove("is-active");
+      element.addEventListener("keydown", function(event) {
+        if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
+          this.classList.remove("is-active");
+        }
       });
     });
-    autoCompleteContainer.addEventListener ("keydown", function() {
-      if(event.key === "Escape") this.classList.remove("is-active")
+    autoCompleteContainer.addEventListener ("keyup", function() {
+      if(event.key === "Escape") {
+        this.classList.remove("is-active");
+        modalFormInput.focus();
+      }
     });
     return Promise.resolve("Success: Keyboard shortcuts registered");
   } catch(error) {

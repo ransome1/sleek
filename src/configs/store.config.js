@@ -6,10 +6,25 @@ class Store {
   constructor(opts) {
     // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
     // app.getPath('userData') will return a string of the user's app data directory path.
-    const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+    let userDataPath;
+    //userDataPath = path.dirname(app.getPath('exe'));
+    //fs.mkdirSync(userDataPath + '\config\sleek');
+
+    //this.path = path.join(userDataPath, opts.configName + '.json');
+
+    //console.log(path.join(path.dirname(process.execPath), 'config', 'sleek'));
+
+    if(process.env.PORTABLE_EXECUTABLE_FILE) {
+      userDataPath = path.join(path.dirname(process.env.PORTABLE_EXECUTABLE_FILE), 'config', 'sleek');
+      if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
+    } else if(!process.env.PORTABLE_EXECUTABLE_FILE && process.platform==="win32") {
+      userDataPath = path.dirname(process.execPath);
+      if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
+    } else {
+      userDataPath = (electron.app || electron.remote.app).getPath('userData');
+    }
     // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
     this.path = path.join(userDataPath, opts.configName + '.json');
-
     this.data = parseDataFile(this.path, opts.defaults);
   }
 

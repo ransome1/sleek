@@ -2,6 +2,7 @@ let userData, defaultPath, _paq, fileWatcher, translations;
 const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow } = require("electron");
 const path = require("path");
 const fs = require("fs");
+const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
 // ########################################################################################################################
 // SETUP APPDATA
@@ -26,6 +27,8 @@ const getChannel = function() {
     return "Flathub";
   } else if(process.env.AUR) {
     return "AUR";
+  } else if(process.env.PORTABLE_EXECUTABLE_DIR) {
+    return "Portable";
   } else {
     return "Misc";
   }
@@ -136,7 +139,6 @@ const createWindow = async function() {
                 console.info(response);
                 mainWindow.webContents.send("triggerFunction", "resetModal")
               }).catch(error => {
-
                 console.error(error);
               });
             }
@@ -171,24 +173,32 @@ const createWindow = async function() {
       userData.set("files", userData.data.files);
       userData.data.file = file;
       userData.set("file", file);
-      getContent(file).then(content => {
-        mainWindow.webContents.send("refresh", content)
-      }).catch(error => {
-        console.error(error);
-      });
       if(fileWatcher) fileWatcher.close();
-
-      fileWatcher = fs.watch(file, (event, filename) => {
-        console.log("Info: File " + filename + " has changed");
-        setTimeout(function() {
-          getContent(file).then(content => {
-            mainWindow.webContents.send("refresh", content)
-          }).catch(error => {
-            console.log(error);
-          });
-        }, 10);
+      fileWatcher = chokidar.watch(file);
+      fileWatcher
+      .on("add", function() {
+        getContent(file).then(content => {
+          mainWindow.webContents.send("refresh", content)
+        }).catch(error => {
+          console.log(error);
+        });
+      })
+      .on("unlink", function() {
+        // Restart file watcher
+        startFileWatcher(userData.data.file).then(response => {
+          console.info(response);
+        }).catch(error => {
+          console.error(error);
+        });
+      })
+      .on("change", function() {
+        console.log("Info: File " + file + " has changed");
+        getContent(file).then(content => {
+          mainWindow.webContents.send("refresh", content)
+        }).catch(error => {
+          console.log(error);
+        });
       });
-
       return Promise.resolve("Success: Filewatcher is watching: " + file);
     } catch (error) {
       // if something file related crashes, onboarding will be triggered

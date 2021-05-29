@@ -266,7 +266,18 @@ nav {
     background: $almost-black!important;
   }
 }
-
+#filterMenu {
+  .card {
+    background: $even-darker-grey;
+    #filterMenuSave {
+      background-color: transparent!important;
+      border-right: 1px solid $almost-black!important;
+    }
+  }
+  .card-footer {
+    border-top: 1px solid $almost-black!important;
+  }
+}
 .contexts {
   .button {
     color: $sleek-contexts-button;
