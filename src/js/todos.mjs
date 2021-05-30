@@ -1,11 +1,12 @@
 "use strict";
-import { userData, appData, handleError, translations, setUserData, _paq } from "../render.js";
+import { userData, appData, handleError, translations, setUserData, _paq, startBuilding } from "../render.js";
 import { RecExtension } from "./todotxtExtensions.mjs";
 import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
 const modalForm = document.getElementById("modalForm");
+const todoTableWrapper = document.getElementById("todoTableWrapper");
 const todoTableContainer = document.getElementById("todoTableContainer");
 // ########################################################################################################################
 // CONFIGURE MARKDOWN PARSER
@@ -44,8 +45,67 @@ const todoTableBodyCellSpacerTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
 const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 const item = { previous: "" }
-let items;
-let visibleRows;
+let
+  items,
+  clusterCounter,
+  clusterSize = Math.ceil(window.innerHeight/35), // 35 being the pixel height of one todo in compact mode
+  clusterThreshold = 0,
+  stopBuilding = false,
+  visibleRows = 0;
+
+  todoTableWrapper.addEventListener("scroll", function(event) {
+    if((event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) && visibleRows<items.filtered.length) {
+      stopBuilding = false;
+      startBuilding(null, true);
+    }
+  });
+
+function configureTodoTableTemplate(append) {
+  try {
+    if(!append) {
+      todoTableContainer.innerHTML = "";
+      visibleRows = 0;
+      clusterThreshold = 0;
+      stopBuilding = false;
+    }
+    todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
+    todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
+    todoTableBodyCellMoreTemplate.innerHTML = `
+      <div class="dropdown is-right">
+        <div class="dropdown-trigger">
+          <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+        </div>
+        <div class="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a class="dropdown-item">` + translations.useAsTemplate + `</a>
+            <a href="#" class="dropdown-item">` + translations.edit + `</a>
+            <a class="dropdown-item">` + translations.delete + `</a>
+          </div>
+        </div>
+      </div>
+    `;
+    todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
+    todoTableBodyRowTemplate.setAttribute("class", "flex-table");
+    todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
+    todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
+    todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
+    todoTableBodyCellTextTemplate.setAttribute("role", "cell");
+    todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
+    todoTableBodyCellTextTemplate.setAttribute("href", "#");
+    todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
+    tableContainerCategoriesTemplate.setAttribute("class", "categories");
+    todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
+    todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
+    todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
+    todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
+    todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
+    todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
+    return Promise.resolve("Success: Table templates set up");
+  } catch(error) {
+    error.functionName = configureTodoTableTemplate.name;
+    return Promise.reject(error);
+  }
+}
 function generateItems(content) {
   try {
     items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
@@ -99,42 +159,50 @@ function generateGroups(items) {
       return 0;
     });
   }
+  // sort the items within the groups
+  items.forEach((group) => {
+    group[1] = sortTodoData(group[1]);
+  });
+
   return Promise.resolve(items)
 }
-function generateTable(groups) {
+function generateTable(groups, append) {
   // prepare the templates for the table
-  return configureTodoTableTemplate().then(function(response) {
+  return configureTodoTableTemplate(append).then(function(response) {
+    clusterCounter = 0;
     console.info(response);
-    visibleRows = 0;
     for (let group in groups) {
+      if(stopBuilding) {
+        stopBuilding = false;
+        break;
+      }
       // create a divider row
+      let dividerRow;
       // completed todos
       if(userData.sortCompletedLast && groups[group][0]==="completed") {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>")
       // for priority, context and project
       } else if(groups[group][0]!="null" && userData.sortBy!="dueString") {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table " + userData.sortBy + " group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>"))
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table " + userData.sortBy + " group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
       // if sorting is by due date
       } else if(userData.sortBy==="dueString" && groups[group][1][0].due) {
         if(isToday(groups[group][1][0].due)) {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\"><span class=\"button\">" + translations.today + "</span></div></div>"));
+          dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\"><span class=\"button\">" + translations.today + "</span></div></div>")
         } else if(isTomorrow(groups[group][1][0].due)) {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\"><span class=\"button\">" + translations.tomorrow + "</span></div></div>"));
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\"><span class=\"button\">" + translations.tomorrow + "</span></div></div>")
         } else if(isPast(groups[group][1][0].due)) {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>"));
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
         } else {
-          tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>"))
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
         }
       // create an empty divider row
-      } else {
-        tableContainerContent.appendChild(document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>"))
-      }
-      // sort items within this group
-      const sortedGroup = sortTodoData(groups[group][1]);
-      //const sortedGroup = groups[group][1];
-      // build the fragments per group
-      for (let item in sortedGroup) {
-        let todo = sortedGroup[item];
+      } /*else {
+        dividerRow = document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>")
+      }*/
+      // add divider row only if it doesn't exist yet
+      if(!document.getElementById(userData.sortBy + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
+      for (let item in groups[group][1]) {
+        let todo = groups[group][1][item];
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
@@ -163,6 +231,14 @@ function generateTable(groups) {
             });
           }
         }
+        if(clusterCounter<clusterThreshold) {
+          clusterCounter++;
+          continue;
+        } else if((visibleRows===clusterSize+clusterThreshold) || visibleRows===items.filtered.length ) {
+          clusterThreshold = visibleRows;
+          stopBuilding = true;
+          break;
+        }
         tableContainerContent.appendChild(generateTableRow(todo));
       }
       // TODO add a catch
@@ -177,6 +253,7 @@ function generateTable(groups) {
 }
 function generateTableRow(todo) {
   try {
+    clusterCounter++;
     visibleRows++;
     // create nodes from templates
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
@@ -493,49 +570,6 @@ function checkIsTodoVisible(todo) {
     if(todo[userData.hideFilterCategories[category]]) return false
   }
   return true;
-}
-function configureTodoTableTemplate() {
-  try {
-    todoTableContainer.innerHTML = "";
-    todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
-    todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
-    todoTableBodyCellMoreTemplate.innerHTML = `
-      <div class="dropdown is-right">
-        <div class="dropdown-trigger">
-          <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-        </div>
-        <div class="dropdown-menu" role="menu">
-          <div class="dropdown-content">
-            <a class="dropdown-item">` + translations.useAsTemplate + `</a>
-            <a href="#" class="dropdown-item">` + translations.edit + `</a>
-            <a class="dropdown-item">` + translations.delete + `</a>
-          </div>
-        </div>
-      </div>
-    `;
-    todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
-    todoTableBodyRowTemplate.setAttribute("class", "flex-table");
-    todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
-    todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
-    todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
-    todoTableBodyCellTextTemplate.setAttribute("role", "cell");
-    todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
-    todoTableBodyCellTextTemplate.setAttribute("href", "#");
-
-    todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
-
-    tableContainerCategoriesTemplate.setAttribute("class", "categories");
-    todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
-    todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
-    todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
-    todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
-    todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
-    todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
-    return Promise.resolve("Success: Table templates set up");
-  } catch(error) {
-    error.functionName = configureTodoTableTemplate.name;
-    return Promise.reject(error);
-  }
 }
 function generateNotification(todo, offset) {
   try {

@@ -157,7 +157,7 @@ svg {
 
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
-  background-color: transparent !important;
+  background-color: #ebebeb;
   color: inherit !important;
 }
 
