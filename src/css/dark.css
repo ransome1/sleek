@@ -336,6 +336,10 @@ nav ul li.is-highlighted a {
   border-color: #2d2d2d;
 }
 
+.column.content .button {
+  background: #2d2d2d !important;
+}
+
 .modal.content {
   color: #CCCDCF !important;
 }

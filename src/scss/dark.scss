@@ -347,6 +347,11 @@ nav {
     }
   }
 }
+.column.content {
+  .button {
+    background: $darker-grey!important;
+  }
+}
 .modal.content {
   color: $lighter-grey!important;
   .button {

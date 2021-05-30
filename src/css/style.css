@@ -28,6 +28,10 @@ button, button:focus, button:active, button:active, button:after, button::before
   box-shadow: none !important;
 }
 
+.button i {
+  color: #3273dc;
+}
+
 .is-hidden {
   display: none !important;
 }
@@ -43,7 +47,7 @@ button, button:focus, button:active, button:active, button:after, button::before
   color: #4a4a4a;
 }
 
-.button.is-link svg {
+.button.is-link i {
   color: white;
 }
 
@@ -150,13 +154,12 @@ strong {
   font-weight: normal !important;
 }
 
-svg {
-  color: #3273dc;
-}
-
+/*svg {
+  color: $has-text-link;
+}*/
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
-  background-color: #ebebeb;
+  background-color: #ebebeb !important;
   color: inherit !important;
 }
 
@@ -184,9 +187,9 @@ nav ul li a {
   line-height: 5em;
   text-align: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-nav ul li a svg {
-  color: inherit;
+  /*svg {
+    color: inherit;
+  }*/
 }
 nav ul li a:focus {
   background: #ebebeb;
@@ -282,8 +285,7 @@ nav ul:nth-child(2) {
 #errorContainer p {
   margin: 0.1em 0;
 }
-#errorContainer .button,
-#errorContainer svg {
+#errorContainer .button {
   color: white;
 }
 
@@ -335,9 +337,9 @@ nav ul:nth-child(2) {
   background: #ebebeb;
   border-radius: 50%;
   cursor: pointer;
-}
-#drawerContainer a.drawerClose svg {
-  color: #4a4a4a;
+  /*svg {
+    color: $dark-grey;
+  }*/
 }
 #drawerContainer .drawer {
   width: 100%;
@@ -391,6 +393,9 @@ nav ul:nth-child(2) {
   margin-bottom: 1.5em;
   cursor: pointer;
 }
+#drawerContainer .drawer h4.is-4 i {
+  color: #3273dc;
+}
 #drawerContainer .drawer .dropdown-item {
   width: 100%;
   padding: 0;
@@ -437,14 +442,14 @@ nav ul:nth-child(2) {
   position: sticky;
   top: 0;
   z-index: 45;
+  /*.icon.is-left svg,
+  .icon.is-right svg {
+    color: $dark-grey;
+  }*/
 }
 #todoTableSearchContainer .icon.is-left {
   top: 0.65em;
   left: 0.65em;
-}
-#todoTableSearchContainer .icon.is-left svg,
-#todoTableSearchContainer .icon.is-right svg {
-  color: #4a4a4a;
 }
 
 #todoTableSearchContainer.is-active {
@@ -493,9 +498,9 @@ nav ul:nth-child(2) {
   margin-top: 0.5em;
   border: none;
   font-family: FreeSansBold;
-}
-#todoTable .flex-table.group svg {
-  color: inherit;
+  /*svg {
+    color: inherit;
+  }*/
 }
 #todoTable .flex-table.group .button {
   cursor: default;
@@ -596,9 +601,9 @@ nav ul:nth-child(2) {
   text-align: center;
   text-transform: lowercase;
 }
-#todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
+#todoTable .flex-table .flex-row.itemDueDate .fa-sort-down {
   position: absolute;
-  right: 0.265em;
+  right: 0.2em;
   bottom: 2.75em;
   display: none;
 }
@@ -658,8 +663,8 @@ nav ul:nth-child(2) {
 #todoTable .flex-table .flex-row:focus .tags {
   display: block;
 }
-#todoTable .flex-table .flex-row:hover svg.fa-sort-down,
-#todoTable .flex-table .flex-row:focus svg.fa-sort-down {
+#todoTable .flex-table .flex-row:hover i.fa-sort-down,
+#todoTable .flex-table .flex-row:focus i.fa-sort-down {
   display: block;
 }
 #todoTable .flex-table .flex-row.todoTableItemMore {
@@ -706,6 +711,10 @@ nav ul:nth-child(2) {
   cursor: pointer;
   pointer-events: all;
 }
+#modalForm #modalFormInputHelp i,
+#modalForm #modalFormInputResize i {
+  color: #3273dc;
+}
 #modalForm .card-header-title {
   font-family: "FreeSansBold";
 }
@@ -715,6 +724,9 @@ nav ul:nth-child(2) {
 }
 #modalForm .is-active {
   display: block;
+}
+#modalForm .icon {
+  color: #3273dc;
 }
 #modalForm .field {
   width: auto;
@@ -816,7 +828,7 @@ nav ul:nth-child(2) {
   padding: 0.25em;
   text-decoration: none;
 }
-.contentContainer .btnOnboarding svg {
+.contentContainer .btnOnboarding i {
   font-size: 5em;
   margin: 0.25em 0;
 }
@@ -1054,11 +1066,11 @@ nav ul:nth-child(2) {
   left: -0.8em;
 }
 .modal.content .modal-card-body table.settings tr td:first-child {
+  width: 80%;
   padding-right: 3em;
 }
 .modal.content .modal-card-body table.settings tr td:last-child {
-  min-width: 12em;
-  text-align: center;
+  width: 20%;
 }
 .modal.content .modal-card-body table.shortcuts td .tag {
   font-size: 1em !important;
@@ -1114,15 +1126,19 @@ nav ul:nth-child(2) {
   bottom: 1em;
   z-index: 40;
 }
+.messages i {
+  color: #3273dc;
+}
 .messages .message {
   display: none;
 }
 .messages .message.is-active {
   display: block;
 }
-.messages .message.is-active .message-body .brands svg {
+.messages .message.is-active .message-body .brands i {
   font-size: 2.25em;
   margin-right: 0.2em;
+  color: #3273dc;
 }
 .messages .button {
   margin-top: 0.5em;
@@ -1154,8 +1170,8 @@ body.compact #todoTable .flex-table .flex-row.itemDueDate .tags {
   top: -1.9em;
   right: -1.9em;
 }
-body.compact #todoTable .flex-table .flex-row.itemDueDate svg.fa-sort-down {
-  right: 0.225em;
+body.compact #todoTable .flex-table .flex-row.itemDueDate i.fa-sort-down {
+  right: 0.2em;
   bottom: 1.75em;
 }
 body.compact #todoTable .flex-table.group {
@@ -5590,7 +5606,7 @@ button.dropdown-item.is-active {
 .modal-card {
     margin: 0 auto;
     max-height: calc(100vh - 40px);
-    width: 900px;
+    width: 80%;
   }
 }
 

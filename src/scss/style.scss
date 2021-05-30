@@ -25,6 +25,9 @@ button, button:focus, button:active, button:active, button:after, button::before
   border: none!important;
   box-shadow: none!important;
 }
+.button i {
+  color: $has-text-link;
+}
 .is-hidden {
   display: none!important;
 }
@@ -37,7 +40,7 @@ button, button:focus, button:active, button:active, button:after, button::before
   border: 1px solid $mid-grey!important;
   color: $dark-grey;
 }
-.button.is-link svg {
+.button.is-link i {
   color: white;
 }
 table {
@@ -134,12 +137,12 @@ strong {
   font-family: "FreeSansBold";
   font-weight: normal!important;
 }
-svg {
+/*svg {
   color: $has-text-link;
-}
+}*/
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace!important;
-  background-color: $light-grey;
+  background-color: $light-grey!important;
   color: inherit!important;
 }
 nav {
@@ -164,9 +167,9 @@ nav {
     	line-height: 5em;
     	text-align: center;
     	border-bottom: 1px solid rgba(0,0,0,0.05);
-      svg {
+      /*svg {
         color: inherit;
-      }
+      }*/
     }
     li a:focus {
       background: $light-grey;
@@ -259,8 +262,7 @@ nav {
   p {
     margin: .1em 0;
   }
-  .button,
-  svg {
+  .button {
     color: white;
   }
 }
@@ -310,9 +312,9 @@ nav {
     background: $light-grey;
     border-radius: 50%;
     cursor: pointer;
-    svg {
+    /*svg {
       color: $dark-grey;
-    }
+    }*/
   }
   .drawer {
     width: 100%;
@@ -346,6 +348,9 @@ nav {
       font-family: FreeSansBold;
       margin-bottom: 1.5em;
       cursor: pointer;
+      i {
+        color: $has-text-link;
+      }
     }
     .dropdown-item {
       width: 100%;
@@ -413,10 +418,10 @@ nav {
     top: .65em;
     left: .65em;
   }
-  .icon.is-left svg,
+  /*.icon.is-left svg,
   .icon.is-right svg {
     color: $dark-grey;
-  }
+  }*/
 }
 #todoTableSearchContainer.is-active {
   display: block;
@@ -462,9 +467,9 @@ nav {
     margin-top: .5em;
     border: none;
     font-family: FreeSansBold;
-    svg {
+    /*svg {
       color: inherit;
-    }
+    }*/
     .button {
       cursor: default;
       height: auto;
@@ -554,11 +559,9 @@ nav {
       background: $has-text-warning;
     }
     .flex-row .contexts {
-      //color: $sleek-contexts-button-font;
       background: $sleek-contexts-button;
     }
     .flex-row .projects {
-      //color: $sleek-projects-button-font;
       background: $sleek-projects-button;
     }
 
@@ -571,9 +574,9 @@ nav {
       padding: 1em 0;
       text-align: center;
       text-transform: lowercase;
-      svg.fa-sort-down {
+      .fa-sort-down {
         position: absolute;
-        right: .265em;
+        right: .2em;
         bottom: 2.75em;
         display: none;
       }
@@ -593,7 +596,6 @@ nav {
     }
     .flex-row.isToday,
     .flex-row.isToday .button {
-      //padding: 0;
       color: $has-text-danger;
       .tags .is-dark {
         background: $has-text-danger;
@@ -605,7 +607,6 @@ nav {
     }
     .flex-row.isTomorrow,
     .flex-row.isTomorrow .button {
-      //padding: 0;
       color: $has-text-attention;
       .tags .is-dark {
         background: $has-text-attention;
@@ -617,7 +618,6 @@ nav {
     }
     .flex-row.isPast,
     .flex-row.isPast .button {
-      //padding: 0;
       color: $has-text-danger;
       .tags .is-dark {
         background: $has-text-danger;
@@ -632,7 +632,7 @@ nav {
       .tags {
         display: block;
       }
-      svg.fa-sort-down {
+      i.fa-sort-down {
         display: block;
       }
     }
@@ -684,6 +684,9 @@ nav {
     z-index: 60;
     cursor: pointer;
     pointer-events: all;
+    i {
+      color: $has-text-link;
+    }
   }
   .card-header-title {
     font-family: "FreeSansBold";
@@ -694,6 +697,9 @@ nav {
   }
   .is-active {
     display: block;
+  }
+  .icon {
+    color: $has-text-link;
   }
   .field {
     width: auto;
@@ -790,7 +796,7 @@ nav {
     padding: .25em;
     text-decoration: none;
   }
-  .btnOnboarding svg {
+  .btnOnboarding i {
     font-size: 5em;
     margin: .25em 0;
   }
@@ -997,7 +1003,7 @@ nav {
   }
   .modal-card {
     z-index: 60;
-    background: #ebebeb;
+    background: $light-grey;
     padding: 0 2em;
     border-radius: 0.25rem;
   }
@@ -1028,12 +1034,11 @@ nav {
       }
     }
     table.settings tr td:first-child {
-      //width: 80%;
+      width: 80%;
       padding-right: 3em;
     }
     table.settings tr td:last-child {
-      min-width: 12em;
-      text-align: center;
+      width: 20%;
     }
     table.shortcuts td {
       .tag {
@@ -1094,14 +1099,18 @@ nav {
   right: 2em;
   bottom: 1em;
   z-index: 40;
+  i {
+    color: $has-text-link;
+  }
   .message {
     display: none;
   }
   .message.is-active {
     display: block;
-    .message-body .brands svg {
+    .message-body .brands i {
       font-size: 2.25em;
       margin-right: .2em;
+      color: $has-text-link;
     }
   }
   .button {
@@ -1136,8 +1145,8 @@ body.compact {
           top: -1.9em;
           right: -1.9em;
         }
-        svg.fa-sort-down {
-          right: .225em;
+        i.fa-sort-down {
+          right: .2em;
           bottom: 1.75em;
         }
       }

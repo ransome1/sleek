@@ -73,9 +73,7 @@ let
   translations,
   userData,
   view;
-// ########################################################################################################################
-// FUNCTIONS
-// ########################################################################################################################
+
 function configureMatomo() {
   try {
     if(!userData.uid) {
@@ -821,7 +819,7 @@ function setFriendlyLanguageNames() {
         friendlyLanguageName = "Français"
         break;
         case "cn":
-        friendlyLanguageName = "Simplified Chinese"
+        friendlyLanguageName = "简体中文"
         break;
         default:
         return;
@@ -909,8 +907,9 @@ function showFiles() {
       } else {
         cell1.innerHTML = "<button class=\"button is-link\">" + translations.select + "</button>";
         cell1.onclick = function() {
-          window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
+          setUserData("selectedFilters", []);
           resetModal().then(response => {
+            window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
             console.info(response);
           }).catch(error => {
             handleError(error);

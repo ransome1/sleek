@@ -270,7 +270,6 @@ function selectFilter(filter, category) {
 function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition) {
   try {
     selectedFilters = new Array;
-
     if(userData.selectedFilters && userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
     // creates a div for the specific filter section
     let todoFiltersContainer = document.createElement("div");
@@ -302,9 +301,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
           hideFilterCategories = [...new Set(hideFilterCategories.join(",").split(","))];
         }
         setUserData("hideFilterCategories", hideFilterCategories)
-        generateGroups(items.filtered).then(function(groups) {
-          generateTable(groups);
-        });
+        startBuilding();
       }
       // add the headline before category container
       todoFiltersContainer.appendChild(todoFilterHeadline);
