@@ -17,7 +17,7 @@
   "contexts": "情境",
   "projects": "项目",
   "visibleTodos": "可见任务",
-  "of": "的",
+  "of": "of",
   "selectedFilters": "选中的过滤器",
   "inProgress": "进行中",
   "done": "标记为完成",
@@ -53,7 +53,7 @@
   "windowButtonCreateFile": "在此处创建todo.txt",
   "selectFile": "选择todo.txt文件",
   "select": "选择",
-  "selected": "选中的",
+  "selected": "当前文件",
   "windowButtonOpenFile": "打开",
   "windowFileformat": "文本文件",
   "sleekOnGithub": "sleek on Github",
@@ -85,7 +85,7 @@
   "year_plural": "年",
   "yearly": "每年",
   "noRecurrence": "不重复",
-  "errorEventLogging": "错误及事件记录(Log)",
+  "errorEventLogging": "错误及事件记录",
   "messageLoggingBody": "如果打开匿名的错误/事件报告会有助于未来的开发. 报告里将包括发生的错误和使用的功能. 你可以在设定里打开. ",
   "messageShareTitle": "sleek <i class=\"fas fa-heart\"></i> 你",
   "messageShareBody": "这个项目欢迎各位的意见<br><i class=\"fas fa-star\"></i>&nbsp;<a href=\"https://sourceforge.net/projects/sleek/reviews\" target=\"_blank\">SourceForge</a>, <i class=\"fab fa-github\"></i>&nbsp;<a href=\"https://github.com/ransome1/sleek/issues\" target=\"_blank\">Github 报告错误</a> 以及推荐",
@@ -115,7 +115,7 @@
   "helpTabPrioritiesTitle": "添加优先度",
   "helpTabPrioritiesBody": "重要任务要加重显示在列表上. 你可以在任务前加 \"(A)\". 你可以选择 (A) 到 (Z), 但是只有A到C有对应颜色. 其他优先度显示为灰色. 可以在新建/编辑窗口里使用Ctrl+Alt+A〜Z设置优先度",
   "helpTabContextsProjectsTitle": "添加情境和项目",
-  "helpTabContextsProjectsBody": "如果你的项目里有多个任务, 你可以在任务里添加 \"+\" 加上项目名. 情境表示该任务和你相关的情形. 根据David Allen著作<a href=\"https://en.wikipedia.org/wiki/Getting_Things_Done\" target=\"_blank\">Getting Things Done</a>, \"context\" 情境可以是家庭, 职场, 外出购物, 打电话, 电脑, 或者某个特定的人. 如果要添加情境, 请输入 \"@\" 和情境名. 更多关于todo.txt的清晰请参见<a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">click here</a>.<br><br>项目名和情境都不允许使用空格, 所以请使用一个单词. 你可以指定多个项目和情境. ",
+  "helpTabContextsProjectsBody": "如果你的项目里有多个任务, 你可以在任务里添加 \"+\" 加上项目名. 情境表示该任务和你相关的情形. 根据David Allen著作<a href=\"https://en.wikipedia.org/wiki/Getting_Things_Done\" target=\"_blank\">Getting Things Done</a>, \"Context\" (情境) 可以是家庭, 职场, 外出购物, 打电话, 电脑, 或者某个特定的人. 如果要添加情境, 请输入 \"@\" 和情境名. 更多关于todo.txt的清晰请参见<a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">click here</a>.<br><br>项目名和情境名都不允许使用空格, 所以请使用一个单词. 你可以指定多个项目和情境. ",
   "helpTabDatesRecurrencesTitle1": "添加日期",
   "helpTabDatesRecurrencesBody1": "sleek会给任务自动添加创建日期. 如果你想要修改可以优先度旁边找到日期选择. 有到期的任务将显示在列表上部, 到期越接近当前日期位置越高. 如果到期设置为今天或者过去的日期, 则会被标记为红色, 且显示在列表最上面. 如果要添加到期可以使用 \"due:\" 日期格式为 <strong>YYYY-MM-DD (e.g. due:2021-03-07)</strong>. 你也可以使用到期选择器, 会自动帮你调整日期格式. ",
   "helpTabDatesRecurrencesTitle2": "添加重复",
@@ -128,5 +128,5 @@
   "reviewWindowsStore": "在Windows Store上给我们建议",
   "shareTwitter": "通过Twitter分享sleek",
   "shareFacebook": "通过Facebook分享sleek",
-  "shareLinkedin": "通过LinkedI分享sleek"
+  "shareLinkedin": "通过LinkedIn分享sleek"
 }
