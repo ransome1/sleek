@@ -110,7 +110,7 @@
   "shortcuts": "快捷键",
   "function": "功能",
   "priorities": "优先度",
-  "helpTab3Title": "Contexts and projects",
+  "helpTab3Title": "情境和项目",
   "helpTab4Title": "日期和重复",
   "helpTabPrioritiesTitle": "添加优先度",
   "helpTabPrioritiesBody": "重要任务要加重显示在列表上. 你可以在任务前加 \"(A)\". 你可以选择 (A) 到 (Z), 但是只有A到C有对应颜色. 其他优先度显示为灰色. 可以在新建/编辑窗口里使用Ctrl+Alt+A〜Z设置优先度",
