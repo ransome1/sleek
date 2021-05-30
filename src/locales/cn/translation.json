@@ -100,7 +100,7 @@
   "settingsTabAboutCopyrightLicense": "版权以及使用许可",
   "settingsTabAboutCopyrightLicenseBody": "版权 (c) 2021 Robin Ahle. sleek 遵循 <a href=\"https://opensource.org/licenses/MIT\" target=\"_blank\">MIT license</a>. 请参照完整授权文本 <a href=\"https://github.com/ransome1/sleek/blob/master/LICENSE\" target=\"_blank\">LICENSE</a>",
   "settingsTabAboutPrivacy": "隐私政策",
-  "settingsTabAboutPrivacyBody": "(作者) 无意知道用户身份, 也不会收集不必要的数据. (作者) 希望知道有多少用户在使用sleek, 如果用户允许, 希望知道用户怎样使用sleek. 收集的数据为匿名, 将会使用SSL加密链接发送到Matomo实例. 详情请参见<a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Privacy Policy</a>",
+  "settingsTabAboutPrivacyBody": "(作者) 无意知道用户身份, 也不会收集不必要的数据. (作者) 希望知道有多少用户在使用sleek, 如果用户允许, 希望知道用户怎样使用sleek. 收集的数据将匿名使用SSL加密链接发送到Matomo实例. 详情请参见<a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Privacy Policy</a>",
   "settingsTabAboutExternalLibraries": "本软件中使用到的外部软件",
   "settingsTabSettingsArchive": "存档任务",
   "settingsTabSettingsArchiveBody": "已完成任务会从当前todo.txt文件移除, 保存到done.txt. 如果还未创建done.txt则会自动创建. ",
