@@ -14,8 +14,7 @@ html {
   height: 100%;
 }
 body {
-  font-family: "FreeSans";
-  font-size: 16px;
+  font: 16px "FreeSans", sans-serif;
   height: 100%;
   margin: auto;
   -webkit-user-select: none;
@@ -140,7 +139,7 @@ svg {
 }
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace!important;
-  background-color: transparent!important;
+  background-color: $light-grey;
   color: inherit!important;
 }
 nav {
@@ -1033,7 +1032,7 @@ nav {
       padding-right: 3em;
     }
     table.settings tr td:last-child {
-      min-width: 10em;
+      min-width: 12em;
       text-align: center;
     }
     table.shortcuts td {

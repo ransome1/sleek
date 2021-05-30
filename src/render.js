@@ -56,6 +56,7 @@ const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const welcomeToSleek = document.getElementById("welcomeToSleek");
 let
+  append = false,
   _paq, a0,
   a1,
   appData,
@@ -819,6 +820,9 @@ function setFriendlyLanguageNames() {
         case "fr":
         friendlyLanguageName = "Français"
         break;
+        case "cn":
+        friendlyLanguageName = "Simplified Chinese"
+        break;
         default:
         return;
       }
@@ -861,9 +865,9 @@ function showOnboarding(variable) {
 function showResultStats() {
   try {
     // we show some information on filters if any are set
-    if(todos.visibleRows!=todos.items.objects.length) {
+    if(todos.items.filtered.length!=todos.items.objects.length) {
       resultStats.classList.add("is-active");
-      resultStats.firstElementChild.innerHTML = translations.visibleTodos + "&nbsp;<strong>" + todos.visibleRows + " </strong>&nbsp;" + translations.of + "&nbsp;<strong>" + todos.items.objects.length + "</strong>";
+      resultStats.firstElementChild.innerHTML = translations.visibleTodos + "&nbsp;<strong>" + todos.items.filtered.length + " </strong>&nbsp;" + translations.of + "&nbsp;<strong>" + todos.items.objects.length + "</strong>";
       return Promise.resolve("Info: Result box is shown");
     } else {
       resultStats.classList.remove("is-active");
@@ -939,7 +943,7 @@ function showFiles() {
     return Promise.reject(error);
   }
 }
-async function startBuilding(searchString) {
+async function startBuilding(searchString, append) {
   try {
 
     t0 = performance.now();
@@ -950,7 +954,7 @@ async function startBuilding(searchString) {
 
     const groups = await todos.generateGroups(todos.items.filtered);
 
-    await todos.generateTable(groups);
+    await todos.generateTable(groups, append);
 
     userData = await getUserData();
 
@@ -958,14 +962,14 @@ async function startBuilding(searchString) {
 
     showResultStats();
 
-    t1 = performance.now();
-    console.info("Table build:", t1 - t0, "ms");
+    console.info("Table build:", performance.now() - t0, "ms");
 
   } catch(error) {
     error.functionName = startBuilding.name;
     return Promise.reject(error);
   }
 }
+
 window.onload = async function () {
   a0 = performance.now();
 

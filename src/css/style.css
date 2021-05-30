@@ -15,8 +15,7 @@ html {
 }
 
 body {
-  font-family: "FreeSans";
-  font-size: 16px;
+  font: 16px "FreeSans", sans-serif;
   height: 100%;
   margin: auto;
   -webkit-user-select: none;
@@ -157,7 +156,7 @@ svg {
 
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
-  background-color: transparent !important;
+  background-color: #ebebeb;
   color: inherit !important;
 }
 
@@ -1058,7 +1057,7 @@ nav ul:nth-child(2) {
   padding-right: 3em;
 }
 .modal.content .modal-card-body table.settings tr td:last-child {
-  min-width: 10em;
+  min-width: 12em;
   text-align: center;
 }
 .modal.content .modal-card-body table.shortcuts td .tag {
