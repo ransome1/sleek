@@ -53,9 +53,9 @@ let
   clusterThreshold = 0,
   stopBuilding = false,
   visibleRows = 0;
-console.log(clusterSize);
+
   todoTableWrapper.addEventListener("scroll", function(event) {
-    if((event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight) && visibleRows<items.filtered.length) {
+    if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight && visibleRows<items.filtered.length) {
       stopBuilding = false;
       startBuilding(null, true);
     }
