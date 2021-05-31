@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  font: 16px "FreeSans", sans-serif;
+  font-size: 16px;
   height: 100%;
   margin: auto;
   -webkit-user-select: none;
@@ -1574,7 +1574,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif;
+  font-family: "FreeSans", Helvetica, "Arial Unicode MS", Arial, "Noto Sans", "DejaVu Sans", "Microsoft JhengHei", "微軟正黑體", "Microsoft YaHei", sans-serif;
 }
 
 code,
@@ -10357,15 +10357,15 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 .is-family-primary {
-  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif !important;
+  font-family: "FreeSans", Helvetica, "Arial Unicode MS", Arial, "Noto Sans", "DejaVu Sans", "Microsoft JhengHei", "微軟正黑體", "Microsoft YaHei", sans-serif !important;
 }
 
 .is-family-secondary {
-  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif !important;
+  font-family: "FreeSans", Helvetica, "Arial Unicode MS", Arial, "Noto Sans", "DejaVu Sans", "Microsoft JhengHei", "微軟正黑體", "Microsoft YaHei", sans-serif !important;
 }
 
 .is-family-sans-serif {
-  font-family: "FreeSans", Helvetica, Arial, "Noto Sans", "DejaVu Sans", sans-serif !important;
+  font-family: "FreeSans", Helvetica, "Arial Unicode MS", Arial, "Noto Sans", "DejaVu Sans", "Microsoft JhengHei", "微軟正黑體", "Microsoft YaHei", sans-serif !important;
 }
 
 .is-family-monospace {

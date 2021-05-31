@@ -5,6 +5,7 @@ import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
+const body = document.getElementById("body");
 const modalForm = document.getElementById("modalForm");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
 const todoTableContainer = document.getElementById("todoTableContainer");
@@ -48,13 +49,13 @@ const item = { previous: "" }
 let
   items,
   clusterCounter,
-  clusterSize = Math.ceil(window.innerHeight/35), // 35 being the pixel height of one todo in compact mode
+  clusterSize = Math.ceil(window.innerHeight/30), // 35 being the pixel height of one todo in compact mode
   clusterThreshold = 0,
   stopBuilding = false,
   visibleRows = 0;
-
+console.log(clusterSize);
   todoTableWrapper.addEventListener("scroll", function(event) {
-    if((event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) && visibleRows<items.filtered.length) {
+    if((event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight) && visibleRows<items.filtered.length) {
       stopBuilding = false;
       startBuilding(null, true);
     }

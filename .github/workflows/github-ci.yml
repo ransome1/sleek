@@ -1,5 +1,8 @@
 name: Code scan, build & release
-on: push
+on:
+  push:
+    tags:
+      - '*'
 jobs:
   macos:
     name: MacOS (Build & Release)

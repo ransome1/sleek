@@ -111,9 +111,9 @@ function getCaretPosition(inputId) {
 }
 function resizeInput(input) {
   if(input.value) {
-    input.style.width = input.value.length + 6 + "ch";
+    input.style.width = input.value.length + 8 + "ch";
   } else if(!input.value && input.placeholder) {
-    input.style.width = input.placeholder.length + 6 + "ch";
+    input.style.width = input.placeholder.length + 8 + "ch";
   }
 }
 function positionAutoCompleteContainer() {

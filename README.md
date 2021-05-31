@@ -112,6 +112,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - Italian
   - Spanish
   - French
+  - Simplified Chinese
 * sleek can be minimized to tray
 * Tabindex available
 * Existing todos can be used as templates for new ones
