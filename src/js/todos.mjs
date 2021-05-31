@@ -139,7 +139,7 @@ function generateTable(groups) {
         if(!todo.rec) {
           todo.rec = null;
         // if item is due today or in the past and has recurrence it will be duplicated
-        } else if(todo.due && todo.rec && !todo.complete && (isToday(todo.due) || isPast(todo.due))) {
+        } else if(userData.generatePastRecurrences && todo.due && todo.rec && !todo.complete && (isToday(todo.due) || isPast(todo.due))) {
           generateRecurrence(todo).then(response => {
             console.log(response);
           }).catch(error => {

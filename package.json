@@ -45,8 +45,6 @@
       "category": "ProjectManagement",
       "target": [
         "deb",
-        "freebsd",
-        "rpm",
         "AppImage"
       ]
     },

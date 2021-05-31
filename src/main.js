@@ -240,6 +240,7 @@ const createWindow = async function() {
       if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
       if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
       if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
+      if(typeof userData.data.generatePastRecurrences != "boolean") userData.set("generatePastRecurrences", true);
       if(typeof appData.tray != "boolean") appData.tray = false;
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
