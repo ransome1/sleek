@@ -85,6 +85,15 @@ function filterItems(items, searchString) {
         }
       });
     }
+    // apply persisted excluded categories filter
+    if(userData.hideFilterCategories.length > 0) {
+      // we iterate through the filters in the order they got selected
+      userData.hideFilterCategories.forEach(filter => {
+        items = items.filter(function(item) {
+          if(!item[filter]) return item;
+        });
+      });
+    }
     // apply filters or filter by search string
     items = items.filter(function(item) {
       if(todoTableSearch.value) searchString = todoTableSearch.value;

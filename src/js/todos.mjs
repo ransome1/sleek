@@ -54,12 +54,12 @@ let
   stopBuilding = false,
   visibleRows = 0;
 
-  todoTableWrapper.addEventListener("scroll", function(event) {
-    if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight && visibleRows<items.filtered.length) {
-      stopBuilding = false;
-      startBuilding(null, true);
-    }
-  });
+todoTableWrapper.addEventListener("scroll", function(event) {
+  if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight && visibleRows<items.filtered.length) {
+    stopBuilding = false;
+    startBuilding(null, true);
+  }
+});
 
 function configureTodoTableTemplate(append) {
   try {
@@ -567,9 +567,9 @@ async function archiveTodos() {
 function checkIsTodoVisible(todo) {
   if(!userData.showHidden && todo.h) return false
   if(!todo.text) return false
-  for(let category in userData.hideFilterCategories) {
+  /*for(let category in userData.hideFilterCategories) {
     if(todo[userData.hideFilterCategories[category]]) return false
-  }
+  }*/
   return true;
 }
 function generateNotification(todo, offset) {

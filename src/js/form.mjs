@@ -231,6 +231,7 @@ function show(todo, templated) {
     // in case the more toggle menu is open we close it
     showMore(false);
     datePickerInput.value = null;
+    recurrencePickerInput.value = null;
     modalForm.classList.toggle("is-active");
     document.getElementById("modalFormInput").value = null;
     document.getElementById("modalFormInput").focus();

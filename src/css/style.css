@@ -1037,7 +1037,7 @@ nav ul:nth-child(2) {
 .modal.content .modal-card {
   z-index: 60;
   background: #ebebeb;
-  padding: 0 2em;
+  padding: 2em;
   border-radius: 0.25rem;
 }
 .modal.content .modal-background {
@@ -1094,7 +1094,7 @@ nav ul:nth-child(2) {
   flex-shrink: 0;
 }
 .modal.content .tabs li a {
-  border-width: 2px;
+  border-width: 3px;
   margin-bottom: 0;
 }
 
@@ -5606,7 +5606,7 @@ button.dropdown-item.is-active {
 .modal-card {
     margin: 0 auto;
     max-height: calc(100vh - 40px);
-    width: 80%;
+    width: 900px;
   }
 }
 

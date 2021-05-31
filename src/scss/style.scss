@@ -1004,7 +1004,7 @@ nav {
   .modal-card {
     z-index: 60;
     background: $light-grey;
-    padding: 0 2em;
+    padding: 2em;
     border-radius: 0.25rem;
   }
   .modal-background {
@@ -1062,12 +1062,8 @@ nav {
   .tabs {
     display: flex;
     flex-shrink: 0;
-    //display: block;
-    //height: 4em;
-    //margin-bottom: 0;
-    //overflow-x: shown;
     li a {
-      border-width: 2px;
+      border-width: 3px;
       margin-bottom: 0;
     }
   }
