@@ -26,19 +26,9 @@ function generateRecurrence(todo) {
     recurringTodo.complete = false;
     recurringTodo.completed = null;
     // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
-    if(recurringTodo.due && isFuture(recurringTodo.due)) {
-      recurringTodo.date = new Date;
-      recurringTodo.due = getRecurrenceDate(todo.due, todo.rec);
-      recurringTodo.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
-    } else if(!recurringTodo.due) {
-      recurringTodo.date = new Date;
-      recurringTodo.due = getRecurrenceDate(todo.completed, todo.rec);
-      recurringTodo.dueString = convertDate(getRecurrenceDate(todo.completed, todo.rec));
-    } else {
-      recurringTodo.date = todo.due;
-      recurringTodo.due = getRecurrenceDate(todo.due, todo.rec);
-      recurringTodo.dueString = convertDate(getRecurrenceDate(todo.due, todo.rec));
-    }
+    recurringTodo.date = new Date;
+    recurringTodo.due = getRecurrenceDate(recurringTodo.date, todo.rec);
+    recurringTodo.dueString = convertDate(getRecurrenceDate(recurringTodo.date, todo.rec));
     // get index of recurring todo
     const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringTodo.toString().replaceAll(String.fromCharCode(16)," "));
     // only add recurring todo if it is not already in the list
@@ -60,6 +50,21 @@ function getRecurrenceDate(due, recurrence) {
   let days = 0;
   let months = 0;
   switch (recSplit.period) {
+    case "b":
+      // add "mul" business days, defined as not Sat or Sun
+      {
+        let bdays_left = recSplit.mul;
+        let millisec_due = due.getTime();
+        let day_of_week = due.getDay(); // 0=Sunday, 1..5 weekday, 6=Saturday
+        while (bdays_left > 0) {
+          millisec_due += 1000 * 60 * 60 * 24;  // add a day to time
+          day_of_week = (day_of_week + 1)% 7;  // new day of week
+          if (day_of_week != 0 && day_of_week != 6) {
+            bdays_left--;  // one business day step accounted for!
+          }
+        }
+        return new Date(millisec_due);
+      }
     case "d":
       days = 1;
       break;

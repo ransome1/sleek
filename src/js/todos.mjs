@@ -181,10 +181,10 @@ function generateTable(groups, append) {
       let dividerRow;
       // completed todos
       if(userData.sortCompletedLast && groups[group][0]==="completed") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>")
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table " + userData.sortBy + " " + groups[group][0] + " group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>")
       // for priority, context and project
       } else if(groups[group][0]!="null" && userData.sortBy!="dueString") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table " + userData.sortBy + " group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table " + userData.sortBy + " " + groups[group][0] + " group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
       // if sorting is by due date
       } else if(userData.sortBy==="dueString" && groups[group][1][0].due) {
         if(isToday(groups[group][1][0].due)) {
@@ -207,13 +207,6 @@ function generateTable(groups, append) {
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) {
           todo.rec = null;
-        // if item is due today or in the past and has recurrence it will be duplicated
-        } else if(todo.due && todo.rec && !todo.complete && (isToday(todo.due) || isPast(todo.due))) {
-          generateRecurrence(todo).then(response => {
-            console.log(response);
-          }).catch(error => {
-            handleError(error);
-          });
         }
         // incompleted todos with due date
         if (todo.due && !todo.complete) {
@@ -232,6 +225,7 @@ function generateTable(groups, append) {
             });
           }
         }
+        //
         if(clusterCounter<clusterThreshold) {
           clusterCounter++;
           continue;
@@ -245,6 +239,7 @@ function generateTable(groups, append) {
       // TODO add a catch
     }
     todoTableContainer.appendChild(tableContainerContent);
+
     return new Promise(function(resolve) {
       resolve("Success: Todo table generated");
     });
@@ -421,10 +416,16 @@ function sortTodoData(group) {
     // first sort by priority
     group = group.sort(function(a, b) {
       // most recent or already past todo will be sorted to the top
-      if (a.priority < b.priority) {
-        return -1;
-      } else if (a.priority > b.priority) {
+      if(a.priority===null && b.priority===null) {
+        return 0;
+      } else if(a.priority===null) {
         return 1;
+      } else if(a.priority!==null && b.priority===null) {
+        return -1;
+      } else if(a.priority > b.priority) {
+        return 1;
+      } else if(a.priority < b.priority) {
+        return -1;
       } else {
         // if all fail, no change to sort order
         return 0;

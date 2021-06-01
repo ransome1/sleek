@@ -298,6 +298,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
       // add click event
       todoFilterHeadline.onclick = function() {
+        document.getElementById("todoTableWrapper").scrollTo(0,0);
         let hideFilterCategories = userData.hideFilterCategories;
         if(hideFilterCategories.includes(category)) {
           hideFilterCategories.splice(hideFilterCategories.indexOf(category),1)
@@ -376,6 +377,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
           todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCountedReduced[filter] + "</span>";
           // create the event listener for filter selection by user
           todoFiltersItem.addEventListener("click", () => {
+            document.getElementById("todoTableWrapper").scrollTo(0,0);
             selectFilter(todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category'))
             // trigger matomo event
             if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);

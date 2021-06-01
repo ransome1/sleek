@@ -235,12 +235,12 @@ const createWindow = async function() {
       if(typeof userData.data.showDueIsPast != "boolean") userData.set("showDueIsPast", true);
       if(typeof userData.data.showDueIsFuture != "boolean") userData.set("showDueIsFuture", true);
       if(typeof userData.data.showDueIsToday != "boolean") userData.set("showDueIsToday", true);
-      if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", true);
+      if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", false);
       if(typeof userData.data.showCompleted != "boolean") userData.set("showCompleted", true);
       if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
       if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
       if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
-      if(typeof appData.tray != "boolean") appData.tray = false;
+      if(typeof userData.data.tray != "boolean") userData.data.tray = false;
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
@@ -264,8 +264,8 @@ const createWindow = async function() {
       return Promise.resolve(i18next.getDataByLanguage(language).translation);
     } catch (error) {
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureLanguage()", error])
-      return Promise.reject("Error in configureLanguage(): " + error);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "getTranslations()", error])
+      return Promise.reject("Error in getTranslations(): " + error);
     }
   }
   userData = await getUserData();
@@ -606,7 +606,7 @@ const createWindow = async function() {
         if(translations) {
           mainWindow.webContents.send("translations", translations);
         } else {
-          configureLanguage(language).then(function(translations) {
+          getTranslations(language).then(function(translations) {
             mainWindow.webContents.send("translations", translations)
           });
         }

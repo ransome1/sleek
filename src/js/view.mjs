@@ -91,7 +91,7 @@ viewToggles.forEach(function(viewToggle) {
 
 function zoom(zoom) {
   try {
-    const zoomStatus = zoom + "%";
+    const zoomStatus = zoom + "\%";
     html.style.zoom = zoomStatus;
     document.getElementById("zoomStatus").innerHTML = zoomStatus;
     zoomRangePicker.value = zoom;

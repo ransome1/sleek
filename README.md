@@ -1,14 +1,14 @@
 # sleek
 ## sleek is a todo app based on todo.txt, free and open-source. Available for Linux, Windows and MacOS
-+ [Support sleek](#support-sleek)
 + [Screenshots](#screenshots)
++ [Support sleek](#support-sleek)
 + [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
 + [Get it from Snap Store](#get-sleek-from-snap-store)
 + [Get it from Flathub](#get-sleek-from-flathub)
 + [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
 + [Download it](#download-sleek)
-+ [Build sleek from source code](#build-sleek-from-source-code)
-+ [sleeks state of development](#sleeks-state-of-development)
++ [Build it from source code](#build-sleek-from-source-code)
++ [State of development](#sleeks-state-of-development)
 + [Features](#features)
 + [Used libraries](#used-libraries)
 
@@ -73,33 +73,23 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - edited
   - marked as complete (and vice versa)
   - deleted
-* A todo can be hidden (add "h:1") but its attributes will appear in filter list and auto complete
+* <a href="https://github.com/ransome1/sleek/wiki/Hidden-todos">A todo can be hidden but its attributes will be available in the filter drawer and autocomplete function</a>
 * Dark and light mode can be toggled
 * A compact view is available
 * Completed todos can be bulk archived to a separate done.txt ([name of todo file]_done.txt) file
 * Completed todos can be shown or hidden
-* Todos can be enriched by
+* Todos can be enriched, sorted and grouped by
   - contexts
   - projects
   - start dates
   - due dates
 * Multi line todos can be created
-* A due date can be set using a datepicker
-* Todos can repeat themselves based on a given due date. You can use a dedicated picker to add the recurrence or type it in by hand:
-  - "rec:d" (daily)
-  - "rec:w" (weekly)
-  - "rec:m" (monthly)
-  - "rec:y" (annually)
-  - also more specific recurrences are possible: "rec:2d" (every 2nd day)
+* Todos can have a due date
+* <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos">Todos can repeat themselves</a>
 * Available contexts and projects will be suggested according to your input
 * Todos can be filtered by contexts, projects and priorities
 * Filters can be renamed or deleted by right clicking on them
 * Filters are sorted alphanummerically
-* Todos can be sorted and grouped by
-  - Priorites
-  - Due dates
-  - Projects
-  - Contexts
 * Todos can be looked up using full-text search
 * Hyperlinks are detected automatically and can be clicked using the icon
 * Alarms will be triggered when a todo is due tomorrow or today
@@ -112,11 +102,11 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - Italian
   - Spanish
   - French
-  - Simplified Chinese
+  - Simplified Chinese (简体中文)
 * sleek can be minimized to tray
 * Tabindex available
 * Existing todos can be used as templates for new ones
-* <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts</a> following todotxt.net
+* <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts following todotxt.net</a>
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

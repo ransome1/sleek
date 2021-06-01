@@ -24,7 +24,6 @@ const i18nextOptions = {
   },
   saveMissing: true
 };
-
 i18next
 .use(LanguageDetector)
 .use(i18nextBackend)

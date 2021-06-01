@@ -104,7 +104,8 @@ function configureMatomo() {
     if(userData.sortBy)_paq.push(['setCustomDimension', 16, userData.sortBy]);
     if(userData.zoom)_paq.push(['setCustomDimension', 17, userData.zoom]);
     if(appData.channel)_paq.push(['setCustomDimension', 18, appData.channel]);
-    if(appData.tray)_paq.push(['setCustomDimension', 19, appData.tray]);
+    if(userData.tray)_paq.push(['setCustomDimension', 19, userData.tray]);
+    console.log(appData.tray);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -613,6 +614,8 @@ function registerKeyboardShortcuts() {
 }
 function resetFilters() {
   try {
+    // scroll back to top
+    document.getElementById("todoTableWrapper").scrollTo(0,0);
     // clear the persisted filers, by setting it to undefined the object entry will be removed fully
     setUserData("selectedFilters", new Array);
     //
@@ -819,7 +822,7 @@ function setFriendlyLanguageNames() {
         friendlyLanguageName = "Français"
         break;
         case "cn":
-        friendlyLanguageName = "简体中文"
+        friendlyLanguageName = "Chinese (简体中文)"
         break;
         default:
         return;

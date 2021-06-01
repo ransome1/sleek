@@ -3,6 +3,10 @@ body {
   color: #CCCDCF;
 }
 
+code, pre {
+  background-color: #212224 !important;
+}
+
 a {
   color: white;
 }
@@ -55,6 +59,10 @@ input[type=checkbox]:active {
 
 button {
   color: white !important;
+  background: transparent !important;
+}
+button i {
+  color: #CCCDCF !important;
 }
 
 button.is-link,
@@ -205,6 +213,9 @@ nav ul li.is-highlighted a {
   background: #2d2d2d;
 }
 
+#modalForm i {
+  color: #CCCDCF !important;
+}
 #modalForm button {
   color: white;
   border-color: #3B3B3B !important;
@@ -254,6 +265,9 @@ nav ul li.is-highlighted a {
 }
 #drawerContainer .drawer h4.is-4 {
   color: white;
+}
+#drawerContainer .drawer h4.is-4 i {
+  color: #CCCDCF !important;
 }
 #drawerContainer a.drawerClose {
   background: #3B3B3B !important;
@@ -336,10 +350,6 @@ nav ul li.is-highlighted a {
   border-color: #2d2d2d;
 }
 
-.column.content .button {
-  background: #2d2d2d !important;
-}
-
 .modal.content {
   color: #CCCDCF !important;
 }
@@ -395,6 +405,9 @@ nav ul li.is-highlighted a {
 .message.fixed {
   background: transparent !important;
 }
+.message.fixed i {
+  color: white !important;
+}
 .message.fixed .message-body {
   color: #CCCDCF;
   background: #3B3B3B !important;
@@ -403,7 +416,6 @@ nav ul li.is-highlighted a {
   background: #2d2d2d !important;
 }
 
-.dueDate svg,
 .dueDate #datePickerInput,
 .dueDate #datePickerInput::placeholder {
   color: white !important;

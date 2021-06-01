@@ -5,6 +5,9 @@ body {
   background-color: $almost-black;
   color: $lighter-grey;
 }
+code, pre {
+  background-color: $almost-black!important;
+}
 a {
   color: white;
 }
@@ -49,6 +52,10 @@ input[type="checkbox"]:active {
 }
 button {
   color: white!important;
+  background: transparent!important;
+  i {
+    color: $lighter-grey!important;
+  }
 }
 button.is-link,
 .button.is-link:hover {
@@ -202,6 +209,9 @@ nav {
   }
 }
 #modalForm {
+  i {
+    color: $lighter-grey!important;
+  }
   button {
     color: white;
     border-color: $even-darker-grey!important;
@@ -253,7 +263,9 @@ nav {
     background: $even-darker-grey!important;
     h4.is-4 {
       color: white;
-
+      i {
+        color: $lighter-grey!important;
+      }
     }
   }
   a.drawerClose {
@@ -349,7 +361,7 @@ nav {
 }
 .column.content {
   .button {
-    background: $darker-grey!important;
+    //background: $darker-grey!important;
   }
 }
 .modal.content {
@@ -405,6 +417,9 @@ nav {
 }
 .message.fixed {
   background: transparent!important;
+  i {
+    color: white!important;
+  }
   .message-body {
     color: $lighter-grey;
     background: $even-darker-grey!important;
@@ -414,7 +429,6 @@ nav {
   }
 }
 .dueDate {
-  svg,
   #datePickerInput,
   #datePickerInput::placeholder {
     color: white!important;

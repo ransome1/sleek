@@ -109,13 +109,6 @@ function getCaretPosition(inputId) {
     return false;
   }
 }
-function resizeInput(input) {
-  if(input.value) {
-    input.style.width = input.value.length + 8 + "ch";
-  } else if(!input.value && input.placeholder) {
-    input.style.width = input.placeholder.length + 8 + "ch";
-  }
-}
 function positionAutoCompleteContainer() {
   // Adjust position of suggestion box to input field
   let modalFormInputPosition = document.getElementById("modalFormInput").getBoundingClientRect();
@@ -164,6 +157,13 @@ function modalFormInputEvent() {
   } else {
     autoCompleteContainer.classList.remove("is-active");
     autoCompleteContainer.blur();
+  }
+}
+function resizeInput(input) {
+  if(input.value) {
+    input.style.width = input.value.length + 6 + "ch";
+  } else if(!input.value && input.placeholder) {
+    input.style.width = input.placeholder.length + 6 + "ch";
   }
 }
 function setPriority(priority) {

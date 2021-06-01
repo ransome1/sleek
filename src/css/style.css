@@ -154,9 +154,6 @@ strong {
   font-weight: normal !important;
 }
 
-/*svg {
-  color: $has-text-link;
-}*/
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
   background-color: #ebebeb !important;
@@ -254,7 +251,6 @@ nav ul:nth-child(2) {
   padding: 0 0.5em;
 }
 #recurrencePicker .card .content div.options {
-  width: 8em;
   text-align: left;
 }
 #recurrencePicker .card .content #recurrencePickerDecrease,
@@ -267,7 +263,7 @@ nav ul:nth-child(2) {
   width: 2em;
 }
 #recurrencePicker .card label {
-  width: 100%;
+  display: block;
   padding: 0;
   margin: 0.25em 0;
 }
@@ -1053,24 +1049,16 @@ nav ul:nth-child(2) {
 .modal.content .modal-card-body table.settings tr td {
   position: relative;
 }
-.modal.content .modal-card-body table.settings tr td .toggle .select,
-.modal.content .modal-card-body table.settings tr td .toggle select,
-.modal.content .modal-card-body table.settings tr td .field .select,
-.modal.content .modal-card-body table.settings tr td .field select {
-  width: 100%;
-  padding-right: 0;
-}
 .modal.content .modal-card-body table.settings tr td .alert {
   position: absolute;
   top: 1em;
   left: -0.8em;
 }
 .modal.content .modal-card-body table.settings tr td:first-child {
-  width: 80%;
   padding-right: 3em;
 }
 .modal.content .modal-card-body table.settings tr td:last-child {
-  width: 20%;
+  width: 25%;
 }
 .modal.content .modal-card-body table.shortcuts td .tag {
   font-size: 1em !important;
