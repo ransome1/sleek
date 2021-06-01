@@ -6,16 +6,23 @@ import { convertDate, isFuture } from "./date.mjs";
 function splitRecurrence(recurrence) {
   let mul = 1;
   let period = recurrence;
+  let plus = false;
   if(recurrence !== undefined && recurrence.length > 1) {
-    mul = Number(recurrence.substr(0, recurrence.length - 1));
+    if (recurrence.substr(0,1) == "+") {
+      plus = true;
+      mul = Number(recurrence.substr(1, recurrence.length - 2));
+    } else {
+      mul = Number(recurrence.substr(0, recurrence.length - 1));
+    }
     period = recurrence.substr(-1);
   }
   return {
     mul: mul,
     period: period,
+    plus: plus,
     toString: function() {
       return this.mul == 1 || this.period === undefined ?
-        this.period : this.mul + this.period;
+        this.period : (this.plus ? "+" : "") + this.mul + this.period;
     }
   };
 }
