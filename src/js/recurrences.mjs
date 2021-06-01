@@ -56,6 +56,10 @@ function getRecurrenceDate(due, recurrence) {
         let bdays_left = recSplit.mul;
         let millisec_due = due.getTime();
         let day_of_week = due.getDay(); // 0=Sunday, 1..5 weekday, 6=Saturday
+<<<<<<< HEAD
+=======
+
+>>>>>>> e518900a46d21e107be1926e260984ff238c1f9f
         while (bdays_left > 0) {
           millisec_due += 1000 * 60 * 60 * 24;  // add a day to time
           day_of_week = (day_of_week + 1)% 7;  // new day of week
