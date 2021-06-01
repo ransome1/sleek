@@ -10,9 +10,13 @@ function splitRecurrence(recurrence) {
   if(recurrence !== undefined && recurrence.length > 1) {
     if (recurrence.substr(0,1) == "+") {
       plus = true;
-      mul = Number(recurrence.substr(1, recurrence.length - 2));
+      if (recurrence.length > 2)
+        mul = Number(recurrence.substr(1, recurrence.length - 2));
     } else {
       mul = Number(recurrence.substr(0, recurrence.length - 1));
+    }
+    if (mul == 0) {
+      mul = 1;
     }
     period = recurrence.substr(-1);
   }
