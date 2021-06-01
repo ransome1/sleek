@@ -3,7 +3,6 @@ import { userData, handleError, translations, setUserData, startBuilding, _paq }
 import { items, generateGroups, generateTable } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 
-//const modalFormInput = document.getElementById("modalFormInput");
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const todoFilters = document.getElementById("todoFilters");
@@ -23,35 +22,51 @@ filterMenuSave.innerHTML = translations.save;
 filterMenuDelete.innerHTML = translations.delete;
 
 function saveFilter(newFilter, oldFilter, category) {
-  items.objects.forEach((item) => {
-    if(category!=="priority" && item[category]) {
-      const index = item[category].findIndex((el) => el === oldFilter);
-      item[category][index] = newFilter;
-    } else if(category==="priority" && item[category]===oldFilter) {
-      item[category] = newFilter.toUpperCase();
-    }
-  });
-  // persisted filters will be removed
-  setUserData("selectedFilters", []);
-  //write the data to the file
-  // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-  window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+  try {
+    items.objects.forEach((item) => {
+      if(category!=="priority" && item[category]) {
+        const index = item[category].findIndex((el) => el === oldFilter);
+        item[category][index] = newFilter;
+      } else if(category==="priority" && item[category]===oldFilter) {
+        item[category] = newFilter.toUpperCase();
+      }
+    });
+    // persisted filters will be removed
+    setUserData("selectedFilters", []);
+    //write the data to the file
+    // a newline character is added to prevent other todo.txt apps to append new todos to the last line
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter renamed"]);
+    return Promise.resolve("Success: Filter renamed");
+  } catch(error) {
+    error.functionName = saveFilter.name;
+    return Promise.reject(error);
+  }
 }
 function deleteFilter(filter, category) {
-  items.objects.forEach((item) => {
-    if(category!=="priority" && item[category]) {
-      const index = item[category].indexOf(filter);
-      if(index!==-1) item[category].splice(index, 1);
-      if(item[category].length===0) item[category] = null;
-    } else if(category==="priority" && item[category]===filter) {
-      item[category] = null;
-    }
-  });
-  // persisted filters will be removed
-  setUserData("selectedFilters", []);
-  //write the data to the file
-  // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-  window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+  try {
+    items.objects.forEach((item) => {
+      if(category!=="priority" && item[category]) {
+        const index = item[category].indexOf(filter);
+        if(index!==-1) item[category].splice(index, 1);
+        if(item[category].length===0) item[category] = null;
+      } else if(category==="priority" && item[category]===filter) {
+        item[category] = null;
+      }
+    });
+    // persisted filters will be removed
+    setUserData("selectedFilters", []);
+    //write the data to the file
+    // a newline character is added to prevent other todo.txt apps to append new todos to the last line
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter deleted"]);
+    return Promise.resolve("Success: Filter deleted");
+  } catch(error) {
+    error.functionName = deleteFilter.name;
+    return Promise.reject(error);
+  }
 }
 function filterItems(items, searchString) {
   try {
@@ -134,8 +149,14 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
     categories.forEach((category) => {
       // array to collect all the available filters in the data
       let filters = new Array();
+      let temp;
       // run the array and collect all possible filters, duplicates included
-      items.objects.forEach((item) => {
+      if(userData.showEmptyFilters) {
+        temp = items.objects;
+      } else {
+        temp = items.filtered;
+      }
+      temp.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
@@ -180,23 +201,6 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // remove duplicates from available filters
       // https://wsvincent.com/javascript-remove-duplicates-array/
       filters = [...new Set(filters.join(",").split(","))];
-      // filter persisted filters
-      /*if(userData.selectedFilters && userData.selectedFilters.length>0) {
-        selectedFilters = JSON.parse(userData.selectedFilters);
-        // check if selected filters is still part of all available filters
-        selectedFilters.forEach(function(selectedFilter,index){
-          if(selectedFilter[1]==category) {
-            // category found, but the selected filter is not part of available filters
-            if(!filters.includes(selectedFilter[0])) {
-              // delete persisted filters
-              selectedFilters.splice(index, 1);
-              // persist the change
-              setUserData("selectedFilters", JSON.stringify(selectedFilters));
-            }
-          }
-        });
-      }*/
-
       // TODO: basically a duplicate
       // count reduced filter when persisted filters are present
       let filtersReduced = new Array();
@@ -233,7 +237,6 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
           return filters;
         }
       }, {});
-
       // build the filter buttons
       if(filters[0]!="" && filters.length>0) {
         generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
@@ -328,6 +331,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       // add the headline before category container
       todoFiltersContainer.appendChild(todoFilterHeadline);
     }
+    // to figure out how many buttons with filters behind them have been build in the end
     // build one button each
     for (let filter in filtersCounted) {
       // skip this loop if no filters are present
@@ -352,25 +356,37 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
           filterMenu.classList.add("is-active");
           filterMenuInput.value = filter;
           filterMenuInput.focus();
-          filterMenuInput.addEventListener("keyup", function(event) {
+          filterMenuInput.onkeyup = function(event) {
             if(event.key === "Escape") filterMenu.classList.remove("is-active");
             if(event.key === "Enter") {
               if(filterMenuInput.value!==filter && filterMenuInput.value) {
-                saveFilter(filterMenuInput.value, filter, category);
+                saveFilter(filterMenuInput.value, filter, category).then(function(response) {
+                  console.info(response);
+                }).catch(function(error) {
+                  handleError(error);
+                });
               } else {
                 filterMenu.classList.remove("is-active");
               }
             }
-          });
+          }
           filterMenuSave.onclick = function() {
             if(filterMenuInput.value!==filter && filterMenuInput.value) {
-              saveFilter(filterMenuInput.value, filter, category);
+              saveFilter(filterMenuInput.value, filter, category).then(function(response) {
+                console.info(response);
+              }).catch(function(error) {
+                handleError(error);
+              });
             } else {
               filterMenu.classList.remove("is-active");
             }
           }
           filterMenuDelete.onclick = function() {
-            deleteFilter(filter, category);
+            deleteFilter(filter, category).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
           }
         });
         if(filtersCountedReduced[filter]) {

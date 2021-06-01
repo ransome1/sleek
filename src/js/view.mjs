@@ -19,6 +19,7 @@ const toggleNotifications = document.getElementById("toggleNotifications");
 const toggleTray = document.getElementById("toggleTray");
 const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
 const viewHeadlineTodoList = document.getElementById("viewHeadlineTodoList");
+const viewHeadlineFilterList = document.getElementById("viewHeadlineFilterList");
 const viewSelectSortBy = document.getElementById("viewSelectSortBy");
 const viewToggleCompactView = document.getElementById("viewToggleCompactView");
 const viewToggleDueIsFuture = document.getElementById("viewToggleDueIsFuture");
@@ -28,6 +29,7 @@ const viewToggles = document.querySelectorAll('.viewToggle');
 const viewToggleShowCompleted = document.getElementById("viewToggleShowCompleted");
 const viewToggleShowHidden = document.getElementById("viewToggleShowHidden");
 const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompletedLast");
+const viewToggleZoom = document.getElementById("viewToggleZoom");
 const zoomRangePicker = document.getElementById("zoomRangePicker");
 const zoomUndo = document.getElementById("zoomUndo");
 
@@ -38,6 +40,7 @@ sortByPriority.innerHTML = translations.priority;
 sortByProjects.innerHTML = translations.projects;
 viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
 viewHeadlineTodoList.innerHTML = translations.viewHeadlineTodoList;
+viewHeadlineFilterList.innerHTML = translations.viewHeadlineFilterList;
 viewToggleDueIsFuture.innerHTML = translations.dueFuture;
 viewToggleDueIsPast.innerHTML = translations.duePast;
 viewToggleDueIsToday.innerHTML = translations.dueToday;
@@ -45,6 +48,9 @@ viewToggleShowCompleted.innerHTML = translations.completedTodos;
 viewToggleShowHidden.innerHTML = translations.hiddenTodos;
 viewToggleSortCompletedLast.innerHTML = translations.sortCompletedLast;
 viewToggleCompactView.innerHTML = translations.compactView;
+zoomRangePicker.innerHTML = translations.zoomRangePicker;
+viewToggleZoom.innerHTML = translations.viewToggleZoom;
+viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 
 viewSelectSortBy.onchange = async function() {
   if(this.value) {
@@ -119,7 +125,7 @@ function toggle(toggleName, variable) {
       startBuilding();
     }
     setUserData(toggle.id, userData[toggle.id]);
-    return Promise.resolve("Success: Show " + toggle.id + " todo set to: " + userData[toggle.id]);
+    return Promise.resolve("Success: " + toggle.id + " set to: " + userData[toggle.id]);
   } catch(error) {
     error.functionName = toggle.name;
     return Promise.reject(error);

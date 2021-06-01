@@ -303,7 +303,7 @@ function generateTableRow(todo) {
     if(todo.text) {
       if(todo.priority && userData.sortBy!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><span class=\"button " + todo.priority + "\">" + todo.priority + "</span></span>";
       // parse text string through markdown parser
-      todoTableBodyCellText.innerHTML +=  marked.parseInline(todo.text);
+      todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parseInline(todo.text) + "</span>";
       //todoTableBodyCellText.innerHTML =  todo.text;
       // replace line feed replacement character with a space
       todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
@@ -575,16 +575,15 @@ function checkIsTodoVisible(todo) {
 }
 function generateNotification(todo, offset) {
   try {
-    let notifications = userData.notifications;
-    let dismissedNotifications = userData.dismissedNotifications;
     // abort if user didn't permit notifications within sleek
-    if(!notifications) return Promise.resolve("Info: Notification surpressed (turned off in sleek's settings)");
+    if(!userData.notifications) return Promise.resolve("Info: Notification surpressed (turned off in sleek's settings)");
     // check for necessary permissions
-    return navigator.permissions.query({name: 'notifications'}).then(function(result) {
+    return navigator.permissions.query({name: "notifications"}).then(function(result) {
       // abort if user didn't permit notifications
       if(result.state!="granted") return Promise.resolve("Info: Notification surpressed (not permitted by OS)");
       // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
-      const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
+      //const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
+      const hash = generateHash(todo.toString()) + offset;
       let title;
       switch (offset) {
         case 0:
@@ -595,7 +594,7 @@ function generateNotification(todo, offset) {
           break;
       }
       // if notification already has been triggered once it will be discarded
-      if(dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+      if(userData.dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
       // set options for notifcation
       const config = {
         title: title,
@@ -611,11 +610,11 @@ function generateNotification(todo, offset) {
           text: 'Show Button'
         }]
       }
+      // once shown, it will be persisted as hash to it won't be shown a second time
+      userData.dismissedNotifications.push(hash);
+      setUserData("dismissedNotifications", userData.dismissedNotifications);
       // send notification object to main process for execution
       window.api.send("showNotification", config);
-      // once shown, it will be persisted as hash to it won't be shown a second time
-      dismissedNotifications.push(hash);
-      setUserData("dismissedNotifications", dismissedNotifications);
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
       return Promise.resolve("Info: Notification successfully sent");
@@ -625,8 +624,8 @@ function generateNotification(todo, offset) {
     return Promise.reject(error);
   }
 }
-function generateHash(str) {
-  return str.split('').reduce((prevHash, currVal) =>
+function generateHash(string) {
+  return string.split('').reduce((prevHash, currVal) =>
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
 

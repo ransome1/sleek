@@ -155,9 +155,6 @@ nav ul li.is-highlighted a {
 #todoTable .flex-table:hover .flex-row.todoTableItemMore a {
   color: #CCCDCF;
 }
-#todoTable .flex-table.completed {
-  opacity: 0.4;
-}
 #todoTable .flex-table.due .button {
   color: #f5f5f5;
 }
@@ -176,18 +173,18 @@ nav ul li.is-highlighted a {
 #todoTable .flex-table .flex-row.itemDueDate {
   color: white;
 }
-#todoTable .flex-table .flex-row.itemDueDate .fa-sort-down {
-  color: #3B3B3B;
+#todoTable .flex-table .flex-row.itemDueDate i {
+  color: inherit;
 }
 #todoTable .flex-table .flex-row.itemDueDate.isToday,
 #todoTable .flex-table .flex-row.itemDueDate.isPast {
   color: #ff3860;
 }
-#todoTable .flex-table .flex-row.itemDueDate.isToday .fa-sort-down,
-#todoTable .flex-table .flex-row.itemDueDate.isPast .fa-sort-down {
+#todoTable .flex-table .flex-row.itemDueDate.isToday i,
+#todoTable .flex-table .flex-row.itemDueDate.isPast i {
   color: inherit;
 }
-#todoTable .flex-table .flex-row.itemDueDate.isTomorrow .fa-sort-down {
+#todoTable .flex-table .flex-row.itemDueDate.isTomorrow i {
   color: #fa745e !important;
 }
 #todoTable .flex-table .flex-row span.contexts {

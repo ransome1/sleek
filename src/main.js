@@ -222,6 +222,7 @@ const createWindow = async function() {
         }
         userData.set("theme", getTheme());
       }
+      console.log(userData.data.dismissedNotifications);
       if(typeof userData.data.width != "number") userData.set("width", 1100);
       if(typeof userData.data.height != "number") userData.set("height", 700);
       if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
@@ -241,9 +242,12 @@ const createWindow = async function() {
       if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
       if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
       if(typeof userData.data.tray != "boolean") userData.data.tray = false;
+      if(typeof userData.data.showEmptyFilters != "boolean") userData.data.showEmptyFilters = true;
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
+
+
       return Promise.resolve(userData);
     } catch(error) {
       error.functionName = configureUserData.id;
@@ -573,12 +577,6 @@ const createWindow = async function() {
         try {
           // Write content to file
           fs.writeFileSync(args[1], args[0], {encoding: "utf-8"});
-          // Restart file watcher
-          startFileWatcher(userData.data.file).then(response => {
-            console.info(response);
-          }).catch(error => {
-            console.error(error);
-          });
         } catch(error) {
           console.error(error);
           error.functionName = "fs.writeFileSync";

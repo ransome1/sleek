@@ -105,7 +105,7 @@ function configureMatomo() {
     if(userData.zoom)_paq.push(['setCustomDimension', 17, userData.zoom]);
     if(appData.channel)_paq.push(['setCustomDimension', 18, appData.channel]);
     if(userData.tray)_paq.push(['setCustomDimension', 19, userData.tray]);
-    console.log(appData.tray);
+    if(typeof userData.showEmptyFilters === "boolean")_paq.push(['setCustomDimension', 20, userData.showEmptyFilters]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -781,6 +781,7 @@ function setToggles() {
     showDueIsPast.checked = userData.showDueIsPast;
     toggleTray.checked = userData.tray;
     compactView.checked = userData.compactView;
+    showEmptyFilters.checked = userData.showEmptyFilters;
     return Promise.resolve("Success: Toggles set");
   } catch(error) {
     error.functionName = setToggles.name;

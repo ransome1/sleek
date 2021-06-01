@@ -302,7 +302,7 @@ nav ul:nth-child(2) {
 }
 #drawerContainer #handle {
   position: absolute;
-  right: 0;
+  right: -1em;
   top: 0;
   height: 100%;
   width: 1em;
@@ -376,8 +376,7 @@ nav ul:nth-child(2) {
   z-index: 35;
 }
 #drawerContainer .drawer .is-greyed-out {
-  opacity: 0.75;
-  -webkit-filter: grayscale(100%);
+  filter: opacity(75%) grayscale(100%);
 }
 #drawerContainer .drawer .button.is-greyed-out {
   cursor: default;
@@ -522,7 +521,7 @@ nav ul:nth-child(2) {
   background: none;
 }
 #todoTable .flex-table .flex-row span.tag {
-  margin-right: 0.25em;
+  margin: 0.25em 0.25em 0 0;
 }
 #todoTable .flex-table .flex-row span.tag.projects {
   background: #f1d6f1;
@@ -540,9 +539,12 @@ nav ul:nth-child(2) {
   max-width: 88%;
   cursor: pointer;
   color: #4a4a4a;
-}
-#todoTable .flex-table .flex-row.text svg {
-  color: inherit;
+  /*svg {
+    color: inherit;
+  }*/
+  /*.categories {
+    margin-bottom: .5em;
+  }*/
 }
 #todoTable .flex-table .flex-row.text .button {
   font-size: 1em;
@@ -555,8 +557,8 @@ nav ul:nth-child(2) {
   color: #666666;
   margin-right: 0.5em;
 }
-#todoTable .flex-table .flex-row.text .categories {
-  padding: 0.5em;
+#todoTable .flex-table .flex-row.text .text {
+  margin-right: 0.5em;
 }
 #todoTable .flex-table .flex-row.spacer {
   width: 0.5em;
@@ -607,6 +609,7 @@ nav ul:nth-child(2) {
   position: absolute;
   top: -1.4em;
   right: -1.5em;
+  z-index: 60;
   display: none;
 }
 #todoTable .flex-table .flex-row.itemDueDate .tags .tag {
@@ -684,11 +687,9 @@ nav ul:nth-child(2) {
   display: block;
 }
 #todoTable .flex-table.completed .flex-row {
-  opacity: 0.5;
-  -webkit-filter: grayscale(100%);
+  filter: opacity(50%) grayscale(100%);
 }
 #todoTable .flex-table.completed .flex-row.todoTableItemMore {
-  opacity: 1;
   -webkit-filter: none;
 }
 
@@ -1033,7 +1034,8 @@ nav ul:nth-child(2) {
 .modal.content .modal-card {
   z-index: 60;
   background: #ebebeb;
-  padding: 2em;
+  padding: 0 2em 2em 2em;
+  max-height: calc(100vh - 5em);
   border-radius: 0.25rem;
 }
 .modal.content .modal-background {

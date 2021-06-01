@@ -278,7 +278,7 @@ nav {
   /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
   #handle {
     position: absolute;
-    right: 0;
+    right: -1em;
     top: 0;
     height: 100%;
     width: 1em;
@@ -333,8 +333,7 @@ nav {
       }
     }
     .is-greyed-out {
-      opacity: .75;
-      -webkit-filter: grayscale(100%);
+      filter: opacity(75%) grayscale(100%);
     }
     .button.is-greyed-out {
       cursor: default;
@@ -492,7 +491,7 @@ nav {
         background: none;
       }
       span.tag {
-        margin-right: .25em;
+        margin: .25em .25em 0 0;
       }
       span.tag.projects {
         background: $sleek-projects-button;
@@ -511,9 +510,9 @@ nav {
       max-width: 88%;
       cursor: pointer;
       color: $dark-grey;
-      svg {
+      /*svg {
         color: inherit;
-      }
+      }*/
       .button {
         font-size: 1em;
         font-family: FreeSansBold;
@@ -525,9 +524,12 @@ nav {
         color: darken($mid-grey, 40%);
         margin-right: .5em;
       }
-      .categories {
-        padding: .5em;
+      .text {
+        margin-right: .5em;
       }
+      /*.categories {
+        margin-bottom: .5em;
+      }*/
     }
     .flex-row.spacer {
       width: .5em;
@@ -581,6 +583,7 @@ nav {
         position: absolute;
         top: -1.4em;
         right: -1.5em;
+        z-index: 60;
         display: none;
         .tag {
           margin: 0;
@@ -658,11 +661,9 @@ nav {
   }
   .flex-table.completed {
     .flex-row {
-      opacity: .5;
-      -webkit-filter: grayscale(100%);
+      filter: opacity(50%) grayscale(100%);
     }
     .flex-row.todoTableItemMore {
-      opacity: 1;
       -webkit-filter: none;
     }
   }
@@ -1001,7 +1002,8 @@ nav {
   .modal-card {
     z-index: 60;
     background: $light-grey;
-    padding: 2em;
+    padding: 0 2em 2em 2em;
+    max-height: calc(100vh - 5em);
     border-radius: 0.25rem;
   }
   .modal-background {

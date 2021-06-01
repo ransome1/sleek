@@ -129,6 +129,24 @@
                 </table>
                 <table>
                   <tr>
+                    <th colspan="100%" id="viewHeadlineFilterList"></th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p id="viewToggleShowEmptyFilters"></p>
+                    </td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="showEmptyFilters">
+                          <input type="checkbox" id="showEmptyFilters" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+                <table>
+                  <tr>
                     <th colspan="100%" id="viewHeadlineAppView"></th>
                   </tr>
                   <tr>
@@ -145,7 +163,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>Zoom</td>
+                    <td id="viewToggleZoom"></td>
                     <td class="zoom">
                       <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
                       <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>

@@ -145,9 +145,6 @@ nav {
   .flex-table:hover .flex-row.todoTableItemMore a {
     color: $lighter-grey;
   }
-  .flex-table.completed {
-    opacity: .4;
-  }
   .flex-table.due {
     .button {
       color: $almost-white;
@@ -166,19 +163,19 @@ nav {
     }
     .flex-row.itemDueDate {
       color: white;
-      .fa-sort-down {
-        color: $even-darker-grey;
+      i {
+        color: inherit;
       }
     }
     .flex-row.itemDueDate.isToday,
     .flex-row.itemDueDate.isPast {
       color: $has-text-danger;
-      .fa-sort-down {
+      i {
         color: inherit;
       }
     }
     .flex-row.itemDueDate.isTomorrow {
-      .fa-sort-down {
+      i {
         color: $has-text-attention!important;
       }
     }
