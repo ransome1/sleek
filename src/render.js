@@ -974,9 +974,9 @@ async function startBuilding(searchString, append) {
 
     const groups = await todos.generateGroups(todos.items.filtered);
 
-    await todos.generateTable(groups, append);
-
     userData = await getUserData();
+
+    await todos.generateTable(groups, append);
 
     configureMainView();
 

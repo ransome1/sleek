@@ -514,6 +514,9 @@ nav {
       line-height: 1.7em;
       cursor: pointer;
       color: $dark-grey;
+      .categories {
+        margin-right: .5em;
+      }
       .button {
         font-size: 1.1em;
         font-family: FreeSansBold;
@@ -558,20 +561,16 @@ nav {
     .flex-row .projects {
       background: $sleek-projects-button;
     }
-
     .flex-row.itemDueDate {
-      display: inline;
       color: $dark-grey;
       position: relative;
       white-space: nowrap;
-      margin: 0 .25em;
-      padding: 1em 0;
-      text-align: center;
+      margin: 0 .25em 0 0;
       text-transform: lowercase;
       .fa-sort-down {
         position: absolute;
-        right: .2em;
-        bottom: 2.75em;
+        right: 0.2em;
+        bottom: 2.25em;
         display: none;
       }
       .tags {
@@ -595,9 +594,6 @@ nav {
       .tags .is-dark {
         background: $has-text-danger;
         font-family: FreeSansBold;
-      }
-      svg {
-        color: inherit;
       }
     }
     .flex-row.isTomorrow,

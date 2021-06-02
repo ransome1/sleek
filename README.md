@@ -14,9 +14,9 @@
 
 sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and simple but still offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
 
-Users can add contexts, projects, priorities, due dates or recurrences to their todos. These todo.txt attributes can then be used as filters or to group and sort the todo list.
+Users can add contexts, projects, priorities, due dates or recurrences to their todos. These todo.txt attributes can then be used in full-text search, as filters or to group and sort the todo list.
 
-sleek manages and watches multiple todo.txt files continuously for changes, which makes it easy to integrate sleek with other todo.txt apps. Also users can switch between bright and dark mode and choose from multiple languages.
+sleek manages and watches multiple todo.txt files continuously for changes, which makes it easy to integrate sleek with other todo.txt apps. Also users can switch to dark mode and choose from multiple languages.
 
 Todos with due date or repeating todos will trigger notifications and completed todos can be hidden or archived into separate done.txt files. If users have tons of todos, a compact view can come in handy.
 
@@ -68,35 +68,32 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 
 ### Features
 * An existing todo.txt file can be used or a new one can be created
-* Todos can be
-  - added
-  - edited
-  - marked as complete (and vice versa)
-  - deleted
+* Todos can be enriched and searched for by
+- priorities
+- contexts
+- projects
+- due dates
+- start dates
+- <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos">recurrences</a>
+- Todo-List can be grouped and sorted by priorities, due dates, contexts or projects
+* Todos can be filtered by contexts, projects and priorities
+* Todos can be looked up by full-text search
+* Autocomplete function suggests available contexts and projects
+* <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts following todotxt.net</a>
+* Tabindex available
 * <a href="https://github.com/ransome1/sleek/wiki/Hidden-todos">A todo can be hidden but its attributes will be available in the filter drawer and autocomplete function</a>
+* Alarms will be shown when a todo is due tomorrow or today
 * Dark and light mode can be toggled
 * A compact view is available
 * Completed todos can be bulk archived to a separate done.txt ([name of todo file]_done.txt) file
 * Completed todos can be shown or hidden
-* Todos can be enriched, sorted and grouped by
-  - contexts
-  - projects
-  - start dates
-  - due dates
 * Multi line todos can be created
-* Todos can have a due date
-* <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos">Todos can repeat themselves</a>
-* Available contexts and projects will be suggested according to your input
-* Todos can be filtered by contexts, projects and priorities
 * Filters can be renamed or deleted by right clicking on them
 * Filters are sorted alphanummerically
-* Todos can be looked up using full-text search
 * Hyperlinks are detected automatically and can be clicked using the icon
-* Alarms will be triggered when a todo is due tomorrow or today
-* Todos that include either contexts or projects can be shown or hidden entirely
 * A file watcher rereads the todo.txt file if it has been changed
 * Multiple todo.txt files can be managed
-* Multiple languages are automatically detected or can be set by hand
+* Multiple languages are either detected or can be set by hand to
   - English
   - German
   - Italian
@@ -104,9 +101,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - French
   - Simplified Chinese (简体中文)
 * sleek can be minimized to tray
-* Tabindex available
 * Existing todos can be used as templates for new ones
-* <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts following todotxt.net</a>
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

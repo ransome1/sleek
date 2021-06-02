@@ -164,7 +164,6 @@ function generateGroups(items) {
   items.forEach((group) => {
     group[1] = sortTodoData(group[1]);
   });
-
   return Promise.resolve(items)
 }
 function generateTable(groups, append) {
@@ -197,17 +196,15 @@ function generateTable(groups, append) {
           dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
         }
       // create an empty divider row
-      } /*else {
+      } else {
         dividerRow = document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>")
-      }*/
+      }
       // add divider row only if it doesn't exist yet
-      if(!document.getElementById(userData.sortBy + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
+      if(!append && !document.getElementById(userData.sortBy + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
       for (let item in groups[group][1]) {
         let todo = groups[group][1][item];
         // if this todo is not a recurring one the rec value will be set to null
-        if(!todo.rec) {
-          todo.rec = null;
-        }
+        if(!todo.rec) todo.rec = null;
         // incompleted todos with due date
         if (todo.due && !todo.complete) {
           // create notification
