@@ -134,5 +134,11 @@
   "reviewWindowsStore": "在Windows Store上给我们建议",
   "shareTwitter": "通过Twitter分享sleek",
   "shareFacebook": "通过Facebook分享sleek",
-  "shareLinkedin": "通过LinkedIn分享sleek"
+  "shareLinkedin": "通过LinkedIn分享sleek",
+  "helpTabKeyboardSubtitle": "When add/edit todo window is open",
+  "helpTabKeyboardTR13TD1": "Increase/decrease priority",
+  "helpTabKeyboardTR14TD1": "Remove priority",
+  "helpTabKeyboardTR15TD1": "Increase/decrease due date",
+  "helpTabKeyboardTR16TD1": "Remove due date",
+  "helpTabKeyboardTR17TD1": "Archive completed todo in done.txt"
 }

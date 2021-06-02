@@ -7,7 +7,7 @@
   "viewHeadlineFilterList": "Barra laterale",
   "viewHeadlineAppView": "Visualizzazione app",
   "viewToggleZoom": "Zumata",
-  "viewToggleShowEmptyFilters": "Filtri vuoti",  
+  "viewToggleShowEmptyFilters": "Filtri vuoti",
   "sortBy": "Ordina per",
   "completedTodos": "Todo completati",
   "sortCompletedLast": "Tutto completato alla fine",
@@ -103,7 +103,7 @@
   "settingsTabAboutContribute": "sleek è open source e tu puoi contribuire a renderlo migliore",
   "settingsTabAboutCopyrightLicense": "Copyright e licenze",
   "settingsTabAboutCopyrightLicenseBody": "Copyright (c) 2021 Robin Ahle. sleek è rilasciato sotto <a href=\"https://opensource.org/licenses/MIT\" target=\"_blank\">MIT license</a>. Vedi <a href=\"https://github.com/ransome1/sleek/blob/master/LICENSE\" target=\"_blank\">LICENZA</a> per il testo completo della licenza.",
-  "settingsTabAboutPrivacy": "Privacy Policy",
+  "settingsTabAboutPrivacy": "Politica sulla riservatezza",
   "settingsTabAboutPrivacyBody": "Non mi interessa chi sono gli utenti di sleek e pertanto non raccolgo nessun dato non necessario . Tuttavia mi piacerebbe sapere quanti utenti stanno attivamente usando sleek e, nel caso un utente dia esplicitamente il suo consenso, come sleek sta venendo usato. I dati verranno resi anonimi, prima che vengano inviati ad una server privato con una istanza di Matomo, esclusivamente tramite una connessione SSL sicura e privata. Vedi la <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Privacy Policy</a> per maggiori informazioni.",
   "settingsTabAboutExternalLibraries": "Sofwtare utilizzato che non ho sviluppato io",
   "settingsTabSettingsArchive": "Archivia todo",
@@ -132,5 +132,12 @@
   "reviewWindowsStore": "Recensisci sleek su Windows Store",
   "shareTwitter": "Condividi sleek su Twitter",
   "shareFacebook": "Condividi sleek su Facebook",
-  "shareLinkedin": "Condividi sleek su LinkedIn"
+  "shareLinkedin": "Condividi sleek su LinkedIn",
+  "helpTabKeyboardSubtitle": "Quando la finestra Aggiungi/Modifica cose da fare è aperta",
+  "helpTabKeyboardTR13TD1": "Aumenta/diminuisci priorità",
+  "helpTabKeyboardTR14TD1": "Rimuovi priorità",
+  "helpTabKeyboardTR15TD1": "Aumenta/diminuisci la data di scadenza",
+  "helpTabKeyboardTR16TD1": "Rimuovi la data di scadenza",
+  "helpTabKeyboardTR17TD1": "Archivia le attività completate in done.txt",
+  "toggleCompletedTodos": "Mostra/Nascondi cose completate"
 }

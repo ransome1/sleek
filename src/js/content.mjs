@@ -61,6 +61,20 @@ const settingsTabSettingsNotificationsBody = document.getElementById("settingsTa
 const settingsTabSettingsTray = document.getElementById("settingsTabSettingsTray");
 const settingsTabSettingsTrayBody = document.getElementById("settingsTabSettingsTrayBody");
 
+const helpTabKeyboardSubtitle = document.getElementById("helpTabKeyboardSubtitle");
+const helpTabKeyboardTR13TD1 = document.getElementById("helpTabKeyboardTR13TD1");
+const helpTabKeyboardTR14TD1 = document.getElementById("helpTabKeyboardTR14TD1");
+const helpTabKeyboardTR15TD1 = document.getElementById("helpTabKeyboardTR15TD1");
+const helpTabKeyboardTR16TD1 = document.getElementById("helpTabKeyboardTR16TD1");
+const helpTabKeyboardTR17TD1 = document.getElementById("helpTabKeyboardTR17TD1");
+
+helpTabKeyboardSubtitle.innerHTML = translations.helpTabKeyboardSubtitle;
+helpTabKeyboardTR13TD1.innerHTML = translations.helpTabKeyboardTR13TD1;
+helpTabKeyboardTR14TD1.innerHTML = translations.helpTabKeyboardTR14TD1;
+helpTabKeyboardTR15TD1.innerHTML = translations.helpTabKeyboardTR15TD1;
+helpTabKeyboardTR16TD1.innerHTML = translations.helpTabKeyboardTR16TD1;
+helpTabKeyboardTR17TD1.innerHTML = translations.helpTabKeyboardTR17TD1;
+
 helpTab1Title.innerHTML = translations.shortcuts;
 helpTab2Title.innerHTML = translations.priorities;
 helpTab3Title.innerHTML = translations.helpTab3Title;

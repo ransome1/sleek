@@ -6,16 +6,27 @@ import { convertDate, isFuture } from "./date.mjs";
 function splitRecurrence(recurrence) {
   let mul = 1;
   let period = recurrence;
+  let plus = false;
   if(recurrence !== undefined && recurrence.length > 1) {
-    mul = Number(recurrence.substr(0, recurrence.length - 1));
+    if (recurrence.substr(0,1) == "+") {
+      plus = true;
+      if (recurrence.length > 2)
+        mul = Number(recurrence.substr(1, recurrence.length - 2));
+    } else {
+      mul = Number(recurrence.substr(0, recurrence.length - 1));
+    }
+    if (mul == 0) {
+      mul = 1;
+    }
     period = recurrence.substr(-1);
   }
   return {
     mul: mul,
     period: period,
+    plus: plus,
     toString: function() {
       return this.mul == 1 || this.period === undefined ?
-        this.period : this.mul + this.period;
+        this.period : (this.plus ? "+" : "") + this.mul + this.period;
     }
   };
 }
@@ -27,8 +38,8 @@ function generateRecurrence(todo) {
     recurringTodo.completed = null;
     // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
     recurringTodo.date = new Date;
-    recurringTodo.due = getRecurrenceDate(recurringTodo.date, todo.rec);
-    recurringTodo.dueString = convertDate(getRecurrenceDate(recurringTodo.date, todo.rec));
+    recurringTodo.due = getRecurrenceDate(todo.due, todo.rec);
+    recurringTodo.dueString = convertDate(recurringTodo.due);
     // get index of recurring todo
     const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringTodo.toString().replaceAll(String.fromCharCode(16)," "));
     // only add recurring todo if it is not already in the list
@@ -47,6 +58,11 @@ function generateRecurrence(todo) {
 }
 function getRecurrenceDate(due, recurrence) {
   let recSplit = splitRecurrence(recurrence);
+  if (!recSplit.plus) {
+    // no plus in recurrence expression, so do the default "non-strict" recurrence.
+    // (Otherwise we will use the previous due date, for strict recurrence.)
+    due = new Date();  // use today's date as base for recurrence
+  }
   let days = 0;
   let months = 0;
   switch (recSplit.period) {

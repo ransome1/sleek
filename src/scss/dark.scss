@@ -128,6 +128,10 @@ nav {
 }
 #todoTableSearchContainer {
   background-color: $almost-black;
+  .icon.is-left i,
+  .icon.is-right i {
+    color: $dark-grey;
+  }
   #btnToggleViewContainer {
     background: transparent!important;
   }

@@ -140,6 +140,10 @@ nav ul li.is-highlighted a {
 #todoTableSearchContainer {
   background-color: #212224;
 }
+#todoTableSearchContainer .icon.is-left i,
+#todoTableSearchContainer .icon.is-right i {
+  color: #4a4a4a;
+}
 #todoTableSearchContainer #btnToggleViewContainer {
   background: transparent !important;
 }

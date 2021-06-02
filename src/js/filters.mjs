@@ -149,14 +149,14 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
     categories.forEach((category) => {
       // array to collect all the available filters in the data
       let filters = new Array();
-      let temp;
+      let filterArray;
       // run the array and collect all possible filters, duplicates included
       if(userData.showEmptyFilters) {
-        temp = items.objects;
+        filterArray = items.objects;
       } else {
-        temp = items.filtered;
+        filterArray = items.filtered;
       }
-      temp.forEach((item) => {
+      filterArray.forEach((item) => {
         // check if the object has values in either the project or contexts field
         if(item[category]) {
           // push all filters found so far into an array
@@ -239,6 +239,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       }, {});
       // build the filter buttons
       if(filters[0]!="" && filters.length>0) {
+        // add category length to total filter count
         generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
           if(userData.hideFilterCategories.includes(category)) {
             response.classList.add("is-greyed-out");

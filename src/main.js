@@ -222,7 +222,6 @@ const createWindow = async function() {
         }
         userData.set("theme", getTheme());
       }
-      console.log(userData.data.dismissedNotifications);
       if(typeof userData.data.width != "number") userData.set("width", 1100);
       if(typeof userData.data.height != "number") userData.set("height", 700);
       if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);

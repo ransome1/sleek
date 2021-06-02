@@ -104,7 +104,7 @@ function configureMatomo() {
     if(userData.sortBy)_paq.push(['setCustomDimension', 16, userData.sortBy]);
     if(userData.zoom)_paq.push(['setCustomDimension', 17, userData.zoom]);
     if(appData.channel)_paq.push(['setCustomDimension', 18, appData.channel]);
-    if(userData.tray)_paq.push(['setCustomDimension', 19, userData.tray]);
+    if(typeof userData.tray === "boolean")_paq.push(['setCustomDimension', 19, userData.tray]);
     if(typeof userData.showEmptyFilters === "boolean")_paq.push(['setCustomDimension', 20, userData.showEmptyFilters]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
@@ -290,6 +290,24 @@ function jumpToItem(item) {
   }
 }
 // TODO Error handling
+
+function debounce(func, wait, immediate) {
+  // https://davidwalsh.name/javascript-debounce-function
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
+
+
 function registerEvents() {
   try {
     // ########################################################################################################################
@@ -400,10 +418,9 @@ function registerEvents() {
         showMore(false);
       }
     }
-    todoTableSearch.addEventListener("input", function () {
-      startBuilding(this.value)
-    });
-
+    todoTableSearch.addEventListener("input", debounce(function() {
+      startBuilding()
+    }, 250));
     toggleMatomoEvents.onclick = function() {
       //matomoEvents = this.checked;
       setUserData('matomoEvents', this.checked);

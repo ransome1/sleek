@@ -78,6 +78,9 @@ table.files tr td:first-child {
 table.files tr td:last-child {
   cursor: pointer;
 }
+table.files tr td:last-child i {
+  color: #3273dc;
+}
 
 body::-webkit-scrollbar {
   display: none;
@@ -379,7 +382,7 @@ nav ul:nth-child(2) {
   filter: opacity(75%) grayscale(100%);
 }
 #drawerContainer .drawer .button.is-greyed-out {
-  cursor: default;
+  cursor: not-allowed;
 }
 #drawerContainer .drawer h4.is-4 {
   font-size: 1.35em;
@@ -437,14 +440,14 @@ nav ul:nth-child(2) {
   position: sticky;
   top: 0;
   z-index: 45;
-  /*.icon.is-left svg,
-  .icon.is-right svg {
-    color: $dark-grey;
-  }*/
 }
 #todoTableSearchContainer .icon.is-left {
   top: 0.65em;
   left: 0.65em;
+}
+#todoTableSearchContainer .icon.is-left i,
+#todoTableSearchContainer .icon.is-right i {
+  color: #ccc;
 }
 
 #todoTableSearchContainer.is-active {
@@ -521,7 +524,7 @@ nav ul:nth-child(2) {
   background: none;
 }
 #todoTable .flex-table .flex-row span.tag {
-  margin: 0.25em 0.25em 0 0;
+  margin: 0 0.25em 0 0;
 }
 #todoTable .flex-table .flex-row span.tag.projects {
   background: #f1d6f1;
@@ -535,22 +538,17 @@ nav ul:nth-child(2) {
 }
 #todoTable .flex-table .flex-row.text {
   width: auto;
-  flex: 1;
   max-width: 88%;
+  flex: 1;
+  line-height: 1.7em;
   cursor: pointer;
   color: #4a4a4a;
-  /*svg {
-    color: inherit;
-  }*/
-  /*.categories {
-    margin-bottom: .5em;
-  }*/
 }
 #todoTable .flex-table .flex-row.text .button {
-  font-size: 1em;
+  font-size: 1.1em;
   font-family: FreeSansBold;
   height: auto;
-  padding: 0em 0.4em;
+  padding: 0 0.4em;
 }
 #todoTable .flex-table .flex-row.text .priority {
   background: transparent;
@@ -609,7 +607,7 @@ nav ul:nth-child(2) {
   position: absolute;
   top: -1.4em;
   right: -1.5em;
-  z-index: 60;
+  z-index: 50;
   display: none;
 }
 #todoTable .flex-table .flex-row.itemDueDate .tags .tag {
@@ -1062,11 +1060,15 @@ nav ul:nth-child(2) {
 .modal.content .modal-card-body table.settings tr td:last-child {
   width: 25%;
 }
-.modal.content .modal-card-body table.shortcuts td .tag {
-  font-size: 1em !important;
+.modal.content .modal-card-body table.shortcuts th:nth-child(2),
+.modal.content .modal-card-body table.shortcuts th:nth-child(3) {
+  width: 13em;
 }
 .modal.content .modal-card-body table.shortcuts tr:last-child {
   border: none;
+}
+.modal.content .modal-card-body table.shortcuts td .tag {
+  font-size: 1em !important;
 }
 .modal.content .modal-card-body.is-active {
   display: block;
@@ -1114,7 +1116,7 @@ nav ul:nth-child(2) {
   position: fixed;
   right: 2em;
   bottom: 1em;
-  z-index: 40;
+  z-index: 55;
 }
 .messages i {
   color: #3273dc;

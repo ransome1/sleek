@@ -59,10 +59,11 @@
         ]
       },
       "icon": "assets/icons/sleek.icns",
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "artifactName": "${productName}-${version}-mac.${ext}"
     },
     "nsis": {
-      "artifactName": "${productName}-${version}-Setup.${ext}"
+      "artifactName": "${productName}-${version}-win-setup.${ext}"
     },
     "win": {
       "target": [

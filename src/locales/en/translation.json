@@ -7,8 +7,8 @@
   "viewHeadlineFilterList": "Filter sidebar",
   "viewHeadlineAppView": "App view",
   "viewToggleZoom": "Zoom",
-  "viewToggleShowEmptyFilters": "Empty filters",  
-  "toggleCompletedTodos": "Toggle completed todos",
+  "viewToggleShowEmptyFilters": "Empty filters",
+  "toggleCompletedTodos": "Show/hide completed todos",
   "sortBy": "Sort by",
   "completedTodos": "Completed todos",
   "sortCompletedLast": "Completed todos at the end",
@@ -134,5 +134,11 @@
   "reviewWindowsStore": "Review sleek on Windows Store",
   "shareTwitter": "Share sleek on Twitter",
   "shareFacebook": "Share sleek on Facebook",
-  "shareLinkedin": "Share sleek on LinkedIn"
+  "shareLinkedin": "Share sleek on LinkedIn",
+  "helpTabKeyboardSubtitle": "When add/edit todo window is open",
+  "helpTabKeyboardTR13TD1": "Increase/decrease priority",
+  "helpTabKeyboardTR14TD1": "Remove priority",
+  "helpTabKeyboardTR15TD1": "Increase/decrease due date",
+  "helpTabKeyboardTR16TD1": "Remove due date",
+  "helpTabKeyboardTR17TD1": "Archive completed todo in done.txt"
 }

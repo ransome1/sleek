@@ -70,6 +70,9 @@ table.files {
     }
     td:last-child {
       cursor: pointer;
+      i {
+        color: $has-text-link;
+      }
     }
   }
 }
@@ -336,7 +339,7 @@ nav {
       filter: opacity(75%) grayscale(100%);
     }
     .button.is-greyed-out {
-      cursor: default;
+      cursor: not-allowed;
     }
     h4.is-4 {
       font-size: 1.35em;
@@ -414,10 +417,10 @@ nav {
     top: .65em;
     left: .65em;
   }
-  /*.icon.is-left svg,
-  .icon.is-right svg {
-    color: $dark-grey;
-  }*/
+  .icon.is-left i,
+  .icon.is-right i {
+    color: $mid-grey;
+  }
 }
 #todoTableSearchContainer.is-active {
   display: block;
@@ -491,7 +494,7 @@ nav {
         background: none;
       }
       span.tag {
-        margin: .25em .25em 0 0;
+        margin: 0 .25em 0 0;
       }
       span.tag.projects {
         background: $sleek-projects-button;
@@ -506,18 +509,16 @@ nav {
     }
     .flex-row.text {
       width: auto;
-      flex: 1;
       max-width: 88%;
+      flex: 1;
+      line-height: 1.7em;
       cursor: pointer;
       color: $dark-grey;
-      /*svg {
-        color: inherit;
-      }*/
       .button {
-        font-size: 1em;
+        font-size: 1.1em;
         font-family: FreeSansBold;
         height: auto;
-        padding: 0em .4em;
+        padding: 0 .4em;
       }
       .priority {
         background: transparent;
@@ -527,21 +528,16 @@ nav {
       .text {
         margin-right: .5em;
       }
-      /*.categories {
-        margin-bottom: .5em;
-      }*/
     }
     .flex-row.spacer {
       width: .5em;
       background: transparent;
     }
-
     .flex-row.priority {
       background: $mid-grey;
       flex: 0 0 .5em;
       opacity: .5;
     }
-
     .flex-row.priority.A,
     .flex-row .priority.A {
       color: #ffe6eb;
@@ -554,7 +550,6 @@ nav {
     }
     .flex-row.priority.C,
     .flex-row .priority.C {
-      //color: #fffdf5;
       background: $has-text-warning;
     }
     .flex-row .contexts {
@@ -583,7 +578,7 @@ nav {
         position: absolute;
         top: -1.4em;
         right: -1.5em;
-        z-index: 60;
+        z-index: 50;
         display: none;
         .tag {
           margin: 0;
@@ -1031,13 +1026,19 @@ nav {
     table.settings tr td:last-child {
       width: 25%;
     }
-    table.shortcuts td {
-      .tag {
-        font-size: 1em!important;
+    table.shortcuts {
+      th:nth-child(2),
+      th:nth-child(3) {
+        width: 13em;
       }
-    }
-    table.shortcuts tr:last-child {
-      border: none;
+      tr:last-child {
+        border: none;
+      }
+      td {
+        .tag {
+          font-size: 1em!important;
+        }
+      }
     }
   }
   .modal-card-body.is-active {
@@ -1085,7 +1086,7 @@ nav {
   position: fixed;
   right: 2em;
   bottom: 1em;
-  z-index: 40;
+  z-index: 55;
   i {
     color: $has-text-link;
   }
