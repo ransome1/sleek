@@ -5,15 +5,7 @@ const fs = require('fs');
 class Store {
   constructor(opts) {
     // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
-    // app.getPath('userData') will return a string of the user's app data directory path.
     let userDataPath;
-    //userDataPath = path.dirname(app.getPath('exe'));
-    //fs.mkdirSync(userDataPath + '\config\sleek');
-
-    //this.path = path.join(userDataPath, opts.configName + '.json');
-
-    //console.log(path.join(path.dirname(process.execPath), 'config', 'sleek'));
-
     if(process.env.PORTABLE_EXECUTABLE_FILE) {
       userDataPath = path.join(path.dirname(process.env.PORTABLE_EXECUTABLE_FILE), 'config', 'sleek');
       if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
@@ -27,12 +19,10 @@ class Store {
     this.path = path.join(userDataPath, opts.configName + '.json');
     this.data = parseDataFile(this.path, opts.defaults);
   }
-
   // This will just return the property on the `data` object
   get(key) {
     return this.data[key];
   }
-
   // ...and this will set it
   set(key, val) {
     this.data[key] = val;
@@ -48,6 +38,7 @@ function parseDataFile(filePath, defaults) {
   // We'll try/catch it in case the file doesn't exist yet, which will be the case on the first application run.
   // `fs.readFileSync` will return a JSON string which we then parse into a Javascript object
   try {
+    console.log("User preferences located at: " + filePath);
     return JSON.parse(fs.readFileSync(filePath));
   } catch(error) {
     // if there was some kind of error, return the passed in defaults instead.

@@ -324,6 +324,7 @@ const createWindow = async function() {
   }
   userData = await getUserData();
   translations = await getTranslations(userData.data.language);
+  console.log("Success: Translation loaded for: " + userData.data.language);
   const mainWindow = new BrowserWindow({
     width: userData.data.width,
     height: userData.data.height,

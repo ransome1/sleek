@@ -21,7 +21,7 @@
             <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li id="navBtnFilter" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li id="navBtnView" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
-            <li class="btnChangeTodoFile"><a href="#" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
+            <li><a href="#" tabindex="-1" id="btnOpenTodoFile"><i class="fas fa-folder-open"></i></a></li>
             <li id="btnTheme"><a href="#" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
           </ul>
           <ul>
@@ -196,11 +196,11 @@
           <h1 id="welcomeToSleek" class="title is-1"></h1>
           <p id="onboardingContainerSubtitle" class="subtitle"></p>
           <p class="file is-boxed is-centered">
-            <a href="#" class="btnOnboarding btnOpenTodoFile">
+            <a href="#" id="btnOnboardingOpenTodoFile" class="btnOnboarding">
               <i class="fas fa-folder-open"></i>
               <span id="onboardingContainerBtnOpen" class="file-label"></span>
             </a>
-            <a href="#" class="btnCreateTodoFile btnOnboarding">
+            <a href="#" id="btnOnboardingCreateTodoFile" class="btnOnboarding">
               <i class="fas fa-plus-circle"></i>
               <span id="onboardingContainerBtnCreate" class="file-label"></span>
             </a>
@@ -685,8 +685,8 @@
             <table id="modalChangeFileTable"></table>
           </div>
           <footer class="card-footer">
-            <a href="#" class="card-footer-item btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></a>
-            <a href="#" class="card-footer-item btnCreateTodoFile" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></a>
+            <a href="#" id="btnFilesOpenTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></a>
+            <a href="#" id="btnFilesCreateTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></a>
             <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
           </footer>
         </div>

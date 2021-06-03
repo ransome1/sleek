@@ -57,6 +57,10 @@ input[type=checkbox]:active {
   box-shadow: none !important;
 }
 
+input[type=range] {
+  background: #4a4a4a !important;
+}
+
 button {
   color: white !important;
   background: transparent !important;
@@ -103,6 +107,10 @@ table tr td {
 
 table tr th {
   color: white !important;
+}
+
+table.files tr td:last-child i {
+  color: white;
 }
 
 nav {
@@ -360,8 +368,8 @@ nav ul li.is-highlighted a {
 .modal.content .select:not(.is-multiple):not(.is-loading)::after {
   border-color: white !important;
 }
-.modal.content .is-large.delete,
-.modal.content .is-large.modal-close,
+.modal.content .delete,
+.modal.content .modal-close,
 .modal.content .tag.is-info {
   background: white !important;
   color: #3B3B3B !important;

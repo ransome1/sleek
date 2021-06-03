@@ -151,6 +151,14 @@ input[type=checkbox]:focus {
   box-shadow: none !important;
 }
 
+input[type=range] {
+  -webkit-appearance: none;
+  height: 0.25em;
+  background: #4a4a4a;
+  border-radius: 10px;
+  outline: none;
+}
+
 .title,
 strong {
   font-family: "FreeSansBold";
@@ -1018,8 +1026,8 @@ nav ul:nth-child(2) {
   margin-left: 0;
   border: none;
 }
-.modal.content .is-large.delete,
-.modal.content .is-large.modal-close {
+.modal.content .delete,
+.modal.content .modal-close {
   background: #3273dc !important;
   color: #3273dc !important;
   z-index: 60;

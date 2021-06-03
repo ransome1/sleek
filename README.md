@@ -69,13 +69,13 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 ### Features
 * An existing todo.txt file can be used or a new one can be created
 * Todos can be enriched and searched for by
-- priorities
-- contexts
-- projects
-- due dates
-- start dates
-- <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos">recurrences</a>
-- Todo-List can be grouped and sorted by priorities, due dates, contexts or projects
+  - priorities
+  - contexts
+  - projects
+  - due dates
+  - start dates
+  - <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos">recurrences</a>
+* Todo-List can be grouped and sorted by priorities, due dates, contexts or projects
 * Todos can be filtered by contexts, projects and priorities
 * Todos can be looked up by full-text search
 * Autocomplete function suggests available contexts and projects

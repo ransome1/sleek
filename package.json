@@ -53,10 +53,7 @@
     "mac": {
       "target": {
         "target": "default",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
+        "arch": "universal"
       },
       "icon": "assets/icons/sleek.icns",
       "category": "public.app-category.productivity",
