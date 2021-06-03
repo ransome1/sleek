@@ -593,25 +593,16 @@ function generateNotification(todo, offset) {
       // if notification already has been triggered once it will be discarded
       if(userData.dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
       // set options for notifcation
-      const config = {
+      let notification = {
         title: title,
         body: todo.text,
-        silent: false,
         string: todo.toString(),
-        hasReply: false,
-        timeoutType: 'never',
-        urgency: 'critical',
-        closeButtonText: 'Close',
-        actions: [ {
-          type: 'button',
-          text: 'Show Button'
-        }]
       }
       // once shown, it will be persisted as hash to it won't be shown a second time
       userData.dismissedNotifications.push(hash);
       setUserData("dismissedNotifications", userData.dismissedNotifications);
       // send notification object to main process for execution
-      window.api.send("showNotification", config);
+      window.api.send("showNotification", notification);
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Shown"]);
       return Promise.resolve("Info: Notification successfully sent");

@@ -127,7 +127,7 @@
   "helpTabDatesRecurrencesTitle2": "添加重复",
   "helpTabDatesRecurrencesBody2": "设置到期后可以定义重复. 如果今天到期任务设置为按周重复, (任务完成时)sleek会复制并设置任务日期. 你可以使用重复选择器, 或者输入 <strong>rec:</strong> 和 <strong>d</strong> (每天), <strong>w</strong> (每周), <strong>m</strong> (每月) or <strong>y</strong> (每年).",
   "helpTabKeyboardTR7TD1": "设置优先度",
-  "helpTabKeyboardTR8TD1": "Toggle filter drawer",
+  "helpTabKeyboardTR8TD1": "切换过滤器抽屉",
   "helpTabKeyboardTR10TD1": "提交任务",
   "submitIssuesOnGithub": "在Github上提交问题",
   "reviewSourceforge": "在SourceForge上给我们建议",
@@ -135,10 +135,10 @@
   "shareTwitter": "通过Twitter分享sleek",
   "shareFacebook": "通过Facebook分享sleek",
   "shareLinkedin": "通过LinkedIn分享sleek",
-  "helpTabKeyboardSubtitle": "When add/edit todo window is open",
-  "helpTabKeyboardTR13TD1": "Increase/decrease priority",
-  "helpTabKeyboardTR14TD1": "Remove priority",
-  "helpTabKeyboardTR15TD1": "Increase/decrease due date",
-  "helpTabKeyboardTR16TD1": "Remove due date",
-  "helpTabKeyboardTR17TD1": "Archive completed todo in done.txt"
+  "helpTabKeyboardSubtitle": "当显示新建/编辑任务窗口",
+  "helpTabKeyboardTR13TD1": "增加/减少优先度",
+  "helpTabKeyboardTR14TD1": "移除优先度",
+  "helpTabKeyboardTR15TD1": "延后/提前到期日期",
+  "helpTabKeyboardTR16TD1": "移除到期日期",
+  "helpTabKeyboardTR17TD1": "将done.txt中已完成任务归档"
 }

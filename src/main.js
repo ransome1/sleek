@@ -5,6 +5,29 @@ const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
 // ########################################################################################################################
+// SETUP APPIMAGE AUTO UPDATER
+// ########################################################################################################################
+const { AppImageUpdater } = require("electron-updater");
+const autoUpdater = new AppImageUpdater();
+autoUpdater.on('update-available', (info) => {
+  console.log("Update available");
+})
+.on('update-not-available', (info) => {
+  console.log("No update");
+})
+.on('error', (err) => {
+  console.log('Error in updater: ' + err);
+})
+.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  console.log(log_message);
+})
+.on('update-downloaded', (info) => {
+  console.log('Update downloaded');
+});
+// ########################################################################################################################
 // SETUP APPDATA
 // ########################################################################################################################
 const isDevelopment = function() {
@@ -254,6 +277,34 @@ const createWindow = async function() {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureUserData()", error])
       return Promise.reject("Error in configureUserData(): " + error);
     }
+  }
+  const showNotification = function(config) {
+    config.silent = false;
+    config.hasReply = false;
+    config.timeoutType = "never";
+    config.urgency = "critical";
+    config.closeButtonText = "Close";
+    config.icon = path.join(appData.path, "../assets/icons/96x96.png");
+    config.actions = [ {
+      type: "button",
+      text: "Show Button"
+    }]
+    // send it to UI
+    const notification = new Notification(config);
+    notification.show();
+    // click on button in notification
+    notification.addListener("click", () => {
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
+      // bring mainWindow to foreground
+      mainWindow.focus();
+      // if another modal was open it needs to be closed first and then open the modal and fill it
+      mainWindow.webContents.send("triggerFunction", "resetModal");
+      mainWindow.webContents.send("triggerFunction", "showForm", [config.string, false]);
+    },{
+      // remove event listener after it is clicked once
+      once: true
+    });
   }
   const getTranslations = function(language) {
     try {
@@ -609,24 +660,7 @@ const createWindow = async function() {
         }
       })
       .on("showNotification", (event, config) => {
-        // Show a notification in OS UI
-        config.icon = path.join(appData.path, "../assets/icons/96x96.png");
-        // send it to UI
-        const notification = new Notification(config);
-        notification.show();
-        // click on button in notification
-        notification.addListener("click", () => {
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
-          // bring mainWindow to foreground
-          mainWindow.focus();
-          // if another modal was open it needs to be closed first and then open the modal and fill it
-          mainWindow.webContents.send("triggerFunction", "resetModal");
-          mainWindow.webContents.send("triggerFunction", "showForm", [config.string, false]);
-        },{
-          // remove event listener after it is clicked once
-          once: true
-        });
+        showNotification(config);
       })
       .on("copyToClipboard", (event, args) => {
         // Copy text to clipboard
@@ -670,6 +704,7 @@ app
 .on("ready", () => {
   if(appData.os==="windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
   createWindow();
+  if(appData.channel==="AppImage") autoUpdater.checkForUpdatesAndNotify();
 })
 .on("window-all-closed", () => {
   if(appData.os!=="mac") app.quit()

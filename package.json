@@ -63,7 +63,7 @@
       "artifactName": "${productName}-${version}-mac.${ext}"
     },
     "nsis": {
-      "artifactName": "${productName}-${version}-win-setup.${ext}"
+      "artifactName": "${productName}-${version}-win-Setup.${ext}"
     },
     "win": {
       "target": [
@@ -114,6 +114,8 @@
     "@fortawesome/fontawesome-free": "^5.15.3",
     "bulma": "^0.9.2",
     "chokidar": "^3.5.1",
+    "electron-log": "^4.3.5",
+    "electron-updater": "^4.3.9",
     "i18next": "^20.2.2",
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-fs-backend": "^1.1.1",

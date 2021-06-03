@@ -839,7 +839,7 @@ function setFriendlyLanguageNames() {
         case "fr":
         friendlyLanguageName = "Français"
         break;
-        case "cn":
+        case "zh":
         friendlyLanguageName = "Chinese (简体中文)"
         break;
         default:
@@ -992,13 +992,11 @@ async function startBuilding(searchString, append) {
 
 window.onload = async function () {
   a0 = performance.now();
-
   userData = await getUserData();
   appData = await getAppData();
   translations = await getTranslations();
   todos = await import("./js/todos.mjs");
   filters = await import("./js/filters.mjs");
-
   if(userData.file) {
     window.api.send("startFileWatcher", userData.file);
   // for users who upgrade from very old versions
@@ -1011,7 +1009,6 @@ window.onload = async function () {
       handleError(error);
     });
   }
-
   configureMatomo().then(function(response) {
     console.info(response);
   }).catch(function(error) {
