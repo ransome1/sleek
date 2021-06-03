@@ -135,6 +135,13 @@ input[type="checkbox"]:focus {
   outline: none;
   box-shadow: none!important;
 }
+input[type="range"] {
+  -webkit-appearance: none;
+  height: .25em;
+  background: $dark-grey;
+  border-radius: 10px;
+  outline: none;
+}
 .title,
 strong {
   font-family: "FreeSansBold";
@@ -983,8 +990,8 @@ nav {
     margin-left: 0;
     border: none;
   }
-  .is-large.delete,
-  .is-large.modal-close {
+  .delete,
+  .modal-close {
     background: $has-text-link!important;
     color: $has-text-link!important;
     z-index: 60;

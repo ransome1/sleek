@@ -18,7 +18,7 @@ const btnFiltersResetFilters = document.getElementById("btnFiltersResetFilters")
 const btnMessageLogging = document.getElementById("btnMessageLogging");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnNoResultContainerResetFilters = document.getElementById("btnNoResultContainerResetFilters");
-const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
+//const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const btnSave = document.getElementById("btnSave");
 const btnTheme = document.getElementById("btnTheme");
@@ -55,6 +55,11 @@ const todoTable = document.getElementById("todoTable");
 const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const welcomeToSleek = document.getElementById("welcomeToSleek");
+const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
+const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
+const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
+const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
+const btnOpenTodoFile = document.getElementById("btnOpenTodoFile");
 let
   append = false,
   _paq, a0,
@@ -342,13 +347,13 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
     }
-    btnOpenTodoFile.forEach(function(el) {
+    /*btnOpenTodoFile.forEach(function(el) {
       el.onclick = function () {
         window.api.send("openOrCreateFile", "open");
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
       }
-    });
+    })
     btnChangeTodoFile.forEach(function(el) {
       el.onclick = function () {
         if(typeof userData.files === "object" && userData.files.length>0) {
@@ -361,16 +366,55 @@ function registerEvents() {
           window.api.send("openOrCreateFile", "open");
         }
         // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Choose file"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Choose file"]);
       }
-    });
-    btnCreateTodoFile.forEach(function(el) {
+    });*/
+    /*btnCreateTodoFile.forEach(function(el) {
       el.onclick = function () {
         window.api.send("openOrCreateFile", "create");
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
       }
-    });
+    });*/
+
+    btnOpenTodoFile.onclick = function() {
+      if(typeof userData.files === "object" && userData.files.length>0) {
+        showFiles().then(response => {
+          console.info(response);
+        }).catch(error => {
+          handleError(error);
+        });
+      } else {
+        window.api.send("openOrCreateFile", "open");
+      }
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "menu", "Click on Files"]);
+    }
+
+    btnFilesCreateTodoFile.onclick = function() {
+      window.api.send("openOrCreateFile", "create");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
+    }
+
+    btnFilesOpenTodoFile.onclick = function() {
+      window.api.send("openOrCreateFile", "open");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
+    }
+
+    btnOnboardingCreateTodoFile.onclick = function() {
+      window.api.send("openOrCreateFile", "create");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
+    }
+
+    btnOnboardingOpenTodoFile.onclick = function() {
+      window.api.send("openOrCreateFile", "open");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
+    }
+
     btnModalCancel.forEach(function(el) {
       el.onclick = function() {
         el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
@@ -751,18 +795,18 @@ function setTranslations() {
     todoTableSearch.placeholder = translations.search;
     welcomeToSleek.innerHTML = translations.welcomeToSleek;
 
-    btnOpenTodoFile.forEach(function(el) {
+    /*btnOpenTodoFile.forEach(function(el) {
       el.setAttribute("title", translations.openFile);
-    });
+    });*/
     btnResetFilters.forEach(function(el) {
       el.getElementsByTagName('span')[0].innerHTML = translations.resetFilters;
     });
-    btnCreateTodoFile.forEach(function(el) {
+    /*btnCreateTodoFile.forEach(function(el) {
       el.setAttribute("title", translations.createFile);
     });
     btnChangeTodoFile.forEach(function(el) {
       el.setAttribute("title", translations.openFile);
-    });
+    });*/
     btnModalCancel.forEach(function(el) {
       el.innerHTML = translations.cancel;
     });

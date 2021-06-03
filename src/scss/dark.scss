@@ -50,6 +50,9 @@ input[type="checkbox"]:active {
   outline: none;
   box-shadow: none!important;
 }
+input[type="range"] {
+  background: $dark-grey!important;
+}
 button {
   color: white!important;
   background: transparent!important;
@@ -87,6 +90,15 @@ table tr td {
 }
 table tr th {
   color: white!important;
+}
+table.files {
+  tr {
+    td:last-child {
+      i {
+        color: white;
+      }
+    }
+  }
 }
 nav {
   background-color: $darker-grey;
@@ -360,11 +372,6 @@ nav {
     }
   }
 }
-.column.content {
-  .button {
-    //background: $darker-grey!important;
-  }
-}
 .modal.content {
   color: $lighter-grey!important;
   .button {
@@ -373,8 +380,8 @@ nav {
   .select:not(.is-multiple):not(.is-loading)::after {
     border-color: white!important;
   }
-  .is-large.delete,
-  .is-large.modal-close,
+  .delete,
+  .modal-close,
   .tag.is-info {
     background: white!important;
     color: $even-darker-grey!important;

@@ -2,13 +2,13 @@ const fs = require("fs");
 const path = require("path");
 const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
-const LanguageDetector = require("i18next-browser-languagedetector");
+//const LanguageDetector = require("i18next-browser-languagedetector");
 const i18nextOptions = {
   initImmediate: false,
   fallbackLng: "en",
-  detection: {
+  /*detection: {
     order: ['localStorage', 'querystring', 'cookie', 'sessionStorage', 'navigator', 'htmlTag', 'path', 'subdomain']
-  },
+  },*/
   namespace: "translation",
   defaultNS: "translation",
   supportedLngs: ["de", "en", "it", "es", "fr", "zh"],
@@ -25,7 +25,7 @@ const i18nextOptions = {
   saveMissing: true
 };
 i18next
-.use(LanguageDetector)
+//.use(LanguageDetector)
 .use(i18nextBackend)
 .init(i18nextOptions);
 i18next.changeLanguage();
