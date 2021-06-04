@@ -408,17 +408,20 @@ const createWindow = async function() {
     {
       label: translations.edit,
       submenu: [
+        { role: "undo", accelerator: "CmdOrCtrl+Z" },
+        { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
+        { type: "separator" },
+        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { role: "selectAll", accelerator: "CmdOrCtrl+A" },
+        { type: "separator" },
         {
           label: translations.settings,
           click: function () {
             mainWindow.webContents.send("triggerFunction", "showContent", ["modalSettings"]);
           }
-        },
-        { type: "separator" },
-        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
-        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
-        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
-        { role: "selectAll", accelerator: "CmdOrCtrl+A" }
+        }
       ]},
     {
       label: translations.todos,
@@ -708,7 +711,7 @@ app
   if(appData.channel==="AppImage") autoUpdater.checkForUpdatesAndNotify();
 })
 .on("window-all-closed", () => {
-  if(appData.os!=="mac") app.quit()
+  if (process.platform !== "darwin") app.quit()
 })
 .on("activate", () => {
   if (BrowserWindow.getAllWindows().length===0) createWindow()

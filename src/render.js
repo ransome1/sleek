@@ -657,7 +657,12 @@ function registerKeyboardShortcuts() {
     modal.forEach(function(element) {
       element.addEventListener("keydown", function(event) {
         if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
-          this.classList.remove("is-active");
+          //this.classList.remove("is-active");
+          resetModal(this).then(function(result) {
+            console.log(result);
+          }).catch(function(error) {
+            handleError(error);
+          });
         }
       });
     });
@@ -693,26 +698,27 @@ function resetFilters() {
     return Promise.reject(error);
   }
 }
-function resetModal() {
+function resetModal(modal) {
   try {
+    if(modal) {
+      // remove is-active from modal
+      modal.classList.remove("is-active");
+      // remove any previously set data-item attributes
+      modal.removeAttribute("data-item");
+    }
     // reset priority setting
     priorityPicker.selectedIndex = 0;
     // if recurrence picker was open it is now being closed
-    //recurrencePickerContainer.classList.remove("is-active");
+    recurrencePickerContainer.classList.remove("is-active");
     // clear previous recurrence selection
-    //recurrencePickerInput.value = null;
+    recurrencePickerInput.value = null;
     // if file chooser was open it is now being closed
     modalChangeFile.classList.remove("is-active");
     // hide suggestion box if it was open
     autoCompleteContainer.classList.remove("is-active");
     // remove focus from suggestion container
     autoCompleteContainer.blur();
-    // defines when the composed filter is being filled with content and when it is emptied
-    //let startComposing = false;
-    // in case a category will be selected from suggestion box we need to remove the category from input value that has been written already
-    //let autoCompleteValue = "";
-    // + or @
-    //let autoCompletePrefix = "";
+    // close
     modalForm.classList.remove("is-active");
     // remove the data item as we don't need it anymore
     modalForm.removeAttribute("data-item");

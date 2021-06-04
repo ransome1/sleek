@@ -226,6 +226,8 @@ function setDueDate(days) {
 }
 function show(todo, templated) {
   try {
+    // remove any previously set data-item attributes
+    modalForm.removeAttribute("data-item");
     // adjust size of recurrence picker input field
     if(userData.useTextarea) toggleInputSize("input");
     // in case the more toggle menu is open we close it
@@ -266,7 +268,6 @@ function show(todo, templated) {
         modalTitle.innerHTML = translations.editTodo;
         btnItemStatus.classList.add("is-active");
       }
-      //btnItemStatus.classList.add("is-active");
       // only show the complete button on open items
       if(todo.complete === false) {
         btnItemStatus.innerHTML = translations.done;
@@ -309,7 +310,7 @@ function submitForm() {
   try {
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
-    if (modalForm.getAttribute("data-item")===modalForm.elements[0].value) {
+    if(modalForm.getAttribute("data-item")===modalForm.elements[0].value) {
       // close and reset any modal
       resetModal().then(function(result) {
         console.log(result);
@@ -318,7 +319,7 @@ function submitForm() {
       });
       return Promise.resolve("Info: Nothing has changed, won't write anything.");
     // Edit todo
-    } else if(modalForm.getAttribute("data-item")!=null) {
+    } else if(modalForm.getAttribute("data-item")) {
       // get index of todo
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
