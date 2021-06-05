@@ -2,6 +2,7 @@
 import { setUserData, showMore, userData, handleError, _paq } from "../render.js";
 import { navBtns } from "./navigation.mjs";
 import { getHandleElement, startDragging } from "./drawer_handle.mjs";
+
 const viewDrawer = document.getElementById("viewDrawer");
 const filterDrawer = document.getElementById("filterDrawer");
 const drawerContainer = document.getElementById("drawerContainer");
@@ -10,6 +11,7 @@ const todoTableSearchContainer = document.getElementById("todoTableSearchContain
 const navBtnFilter = document.getElementById("navBtnFilter");
 const navBtnView = document.getElementById("navBtnView");
 const drawers = document.querySelectorAll(".drawer");
+
 document.querySelectorAll(".drawerClose").forEach(function(drawerClose) {
   drawerClose.onclick = function() {
     showDrawer(false).then(function(result) {
@@ -21,7 +23,6 @@ document.querySelectorAll(".drawerClose").forEach(function(drawerClose) {
     if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on close button"])
   }
 })
-getHandleElement.addEventListener("mousedown", startDragging);
 document.getElementById("filterDrawer").addEventListener ("keydown", function () {
   if(event.key === "Escape") {
     showDrawer(false, navBtnFilter.id, this.id).then(function(result) {
@@ -40,6 +41,8 @@ document.getElementById("viewDrawer").addEventListener ("keydown", function () {
     });
   }
 });
+
+getHandleElement.addEventListener("mousedown", startDragging);
 navBtnFilter.onclick = function() {
   // close filter drawer first
   viewDrawer.classList.remove("is-active")
@@ -64,6 +67,7 @@ navBtnView.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on view"]);
 }
+
 // open filter drawer if it has been persisted
 if(userData.filterDrawer) {
   showDrawer(true, navBtnFilter.id, filterDrawer.id).then(function(result) {
@@ -147,5 +151,3 @@ function showDrawer(variable, buttonId, drawerId) {
     return Promise.reject(error);
   }
 }
-
-export { showDrawer };

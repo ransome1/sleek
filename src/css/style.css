@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import "../css/datepicker.css";
+@import '../css/datepicker.css';
 @font-face {
   font-family: "FreeSans";
   src: url("../fonts/FreeSans.otf") format("opentype");
@@ -195,9 +195,6 @@ nav ul li a {
   line-height: 5em;
   text-align: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  /*svg {
-    color: inherit;
-  }*/
 }
 nav ul li a:focus {
   background: #ebebeb;
@@ -344,9 +341,6 @@ nav ul:nth-child(2) {
   background: #ebebeb;
   border-radius: 50%;
   cursor: pointer;
-  /*svg {
-    color: $dark-grey;
-  }*/
 }
 #drawerContainer .drawer {
   width: 100%;
@@ -357,24 +351,6 @@ nav ul:nth-child(2) {
   overflow-x: hidden;
   padding: 2em;
   background: #ebebeb;
-  /*.dropdown-item.is-greyed-out {
-    opacity: .75;
-    -webkit-filter: grayscale(100%);
-  }*/
-  /*#btnResetAllFilters {
-    display: none;
-  }
-  #btnResetAllFilters.is-active {
-    display: block;
-  }*/
-  /*.icon.is-left {
-    position: absolute;
-    top: .75em;
-    left: .65em;
-  }*/
-  /*svg {
-    color: $dark-grey;
-  }*/
 }
 #drawerContainer .drawer .button {
   margin: 0 0.5rem 0.5rem 0;
@@ -504,9 +480,6 @@ nav ul:nth-child(2) {
   margin-top: 0.5em;
   border: none;
   font-family: FreeSansBold;
-  /*svg {
-    color: inherit;
-  }*/
 }
 #todoTable .flex-table.group .button {
   cursor: default;
@@ -546,11 +519,11 @@ nav ul:nth-child(2) {
 }
 #todoTable .flex-table .flex-row.text {
   width: auto;
-  max-width: 88%;
   flex: 1;
   line-height: 1.7em;
   cursor: pointer;
   color: #4a4a4a;
+  margin-right: 0;
 }
 #todoTable .flex-table .flex-row.text .categories {
   margin-right: 0.5em;
@@ -643,10 +616,6 @@ nav ul:nth-child(2) {
   background: #fa745e;
   font-family: FreeSansBold;
 }
-#todoTable .flex-table .flex-row.isTomorrow svg,
-#todoTable .flex-table .flex-row.isTomorrow .button svg {
-  color: #fa745e;
-}
 #todoTable .flex-table .flex-row.isPast,
 #todoTable .flex-table .flex-row.isPast .button {
   color: #ff3860;
@@ -656,10 +625,6 @@ nav ul:nth-child(2) {
   background: #ff3860;
   font-family: FreeSansBold;
 }
-#todoTable .flex-table .flex-row.isPast svg,
-#todoTable .flex-table .flex-row.isPast .button svg {
-  color: inherit;
-}
 #todoTable .flex-table .flex-row:hover .tags,
 #todoTable .flex-table .flex-row:focus .tags {
   display: block;
@@ -668,31 +633,8 @@ nav ul:nth-child(2) {
 #todoTable .flex-table .flex-row:focus i.fa-sort-down {
   display: block;
 }
-#todoTable .flex-table .flex-row.todoTableItemMore {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-#todoTable .flex-table .flex-row.todoTableItemMore a {
-  color: #3273dc;
-  display: none;
-  padding: 0 0.5em;
-}
-#todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item {
-  padding: 0.75em;
-}
-#todoTable .flex-table .flex-row.todoTableItemMore.is-active a,
-#todoTable .flex-table .flex-row.todoTableItemMore.is-active .dropdown-menu {
-  display: block;
-}
-#todoTable .flex-table:hover .flex-row.todoTableItemMore a {
-  display: block;
-}
 #todoTable .flex-table.completed .flex-row {
   filter: opacity(50%) grayscale(100%);
-}
-#todoTable .flex-table.completed .flex-row.todoTableItemMore {
-  -webkit-filter: none;
 }
 
 #todoTable.is-active {
@@ -784,6 +726,19 @@ nav ul:nth-child(2) {
 }
 
 #autoCompleteContainer.is-active {
+  display: block;
+}
+
+#todoContext {
+  display: none;
+  position: fixed;
+  z-index: 60;
+}
+#todoContext a {
+  color: #3273dc;
+}
+
+#todoContext.is-active {
   display: block;
 }
 
@@ -1094,10 +1049,6 @@ nav ul:nth-child(2) {
   margin-bottom: 0;
 }
 
-.dueDate svg {
-  color: #3273dc;
-}
-
 .datepicker {
   z-index: 60;
 }
@@ -1252,10 +1203,6 @@ body.compact #autoCompleteContainer.drawer {
 @media (max-width: 768px) {
   .modal.content .modal-card .card.is-centered {
     width: 100% !important;
-  }
-
-  #todoTable .flex-table .flex-row.text {
-    max-width: 85%;
   }
 }
 /*! bulma.io v0.9.2 | MIT License | github.com/jgthms/bulma */

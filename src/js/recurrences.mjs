@@ -39,7 +39,7 @@ function generateRecurrence(todo) {
     // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
     recurringTodo.date = new Date;
     // if todo has no due date, the recurrence time frame will be added to the date of completion
-    recurringTodo.due = getRecurrenceDate(todo.due, todo.rec);
+    recurringTodo.due = getDueDate(todo.due, todo.rec);
     recurringTodo.dueString = convertDate(recurringTodo.due);
     // get index of recurring todo
     const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringTodo.toString().replaceAll(String.fromCharCode(16)," "));
@@ -57,7 +57,7 @@ function generateRecurrence(todo) {
     return Promise.reject(error);
   }
 }
-function getRecurrenceDate(due, recurrence) {
+function getDueDate(due, recurrence) {
   let recSplit = splitRecurrence(recurrence);
   if (!recSplit.plus || !due) {
     // no plus in recurrence expression, so do the default "non-strict" recurrence.

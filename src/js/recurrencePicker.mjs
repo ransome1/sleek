@@ -3,30 +3,33 @@ import { userData, translations, handleError, _paq } from "../render.js";
 import { resizeInput } from "./form.mjs";
 import { RecExtension } from "./todotxtExtensions.mjs";
 import * as recurrences from "./recurrences.mjs";
+
 const modalFormInput = document.getElementById("modalFormInput");
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
 const recurrencePickerContainer = document.getElementById("recurrencePickerContainer");
 const recurrencePickerInput = document.getElementById("recurrencePickerInput");
 const recurrencePickerSpinner = document.getElementById("recurrencePickerSpinner");
 const recurrencePickerDay = document.getElementById("recurrencePickerDay");
-recurrencePickerDay.innerHTML = translations.day;
 const recurrencePickerBusinessDay = document.getElementById("recurrencePickerBusinessDay");
-recurrencePickerBusinessDay.innerHTML = translations.bday;
 const recurrencePickerWeek = document.getElementById("recurrencePickerWeek");
-recurrencePickerWeek.innerHTML = translations.week;
 const recurrencePickerMonth = document.getElementById("recurrencePickerMonth");
-recurrencePickerMonth.innerHTML = translations.month;
 const recurrencePickerYear = document.getElementById("recurrencePickerYear");
-recurrencePickerYear.innerHTML = translations.year;
 const recurrencePickerEvery = document.getElementById("recurrencePickerEvery");
-recurrencePickerEvery.innerHTML = translations.every;
 const recurrencePickerNoRecurrence = document.getElementById("recurrencePickerNoRecurrence");
+
+recurrencePickerBusinessDay.innerHTML = translations.bday;
+recurrencePickerWeek.innerHTML = translations.week;
+recurrencePickerMonth.innerHTML = translations.month;
+recurrencePickerDay.innerHTML = translations.day;
+recurrencePickerYear.innerHTML = translations.year;
 recurrencePickerNoRecurrence.innerHTML = translations.noRecurrence;
+recurrencePickerEvery.innerHTML = translations.every;
 
-
-resizeInput(recurrencePickerInput);
 recurrencePickerInput.onfocus = function(el) { showRecurrences(el) };
 recurrencePickerInput.placeholder = translations.noRecurrence;
+
+//resizeInput(recurrencePickerInput);
+
 export function setInput(recurrence) {
   try {
     let recSplit = recurrences.splitRecurrence(recurrence);
@@ -58,7 +61,7 @@ export function setInput(recurrence) {
             break;
           case "b":
             label = translations.bdaily;
-            break;  
+            break;
           case "w":
             label = translations.weekly;
             break;

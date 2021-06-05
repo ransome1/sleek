@@ -58,7 +58,7 @@ const getChannel = function() {
 }
 const getIcon = function() {
   if(appData.os==="windows") return path.join(appData.path, "../assets/icons/sleek.ico");
-  return path.join(appData.path, "../assets/icons/sleek.png")
+  return path.join(appData.path, "../assets/icons/512x512.png")
 }
 const getOS = function() {
   switch(process.platform) {
@@ -268,8 +268,6 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
-
-
       return Promise.resolve(userData);
     } catch(error) {
       error.functionName = configureUserData.id;
@@ -345,6 +343,13 @@ const createWindow = async function() {
       preload: appData.path + "/preload.js"
     }
   });
+  // for Windows a separate node module is needed
+  if(appData.os === "windows") {
+    const Badge = require('electron-windows-badge');
+    const badgeOptions = {}
+    new Badge(mainWindow, badgeOptions);
+  }
+
   mainWindow.loadFile(path.join(appData.path, "index.html"));
   // ########################################################################################################################
   // MAIN MENU
@@ -669,6 +674,9 @@ const createWindow = async function() {
       .on("copyToClipboard", (event, args) => {
         // Copy text to clipboard
         if(args[0]) clipboard.writeText(args[0], "selection")
+      })
+      .on("update-badge", (event, count) => {
+        if(appData.os === "mac") app.setBadgeCount(count);
       })
       .on("restart", () => {
         app.relaunch();

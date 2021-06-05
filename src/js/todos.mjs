@@ -5,10 +5,18 @@ import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
+
 const body = document.getElementById("body");
 const modalForm = document.getElementById("modalForm");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
 const todoTableContainer = document.getElementById("todoTableContainer");
+const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
+const todoContextEdit = document.getElementById("todoContextEdit");
+const todoContextDelete = document.getElementById("todoContextDelete");
+
+todoContextUseAsTemplate.innerHTML = translations.useAsTemplate;
+todoContextEdit.innerHTML = translations.edit;
+todoContextDelete.innerHTML = translations.delete;
 // ########################################################################################################################
 // CONFIGURE MARKDOWN PARSER
 // ########################################################################################################################
@@ -40,7 +48,6 @@ const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
 const todoTableBodyCellTextTemplate = document.createElement("a");
 const tableContainerCategoriesTemplate = document.createElement("span");
-const todoTableBodyCellMoreTemplate = document.createElement("div");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
 const todoTableBodyCellSpacerTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
@@ -60,6 +67,20 @@ todoTableWrapper.addEventListener("scroll", function(event) {
     startBuilding(null, true);
   }
 });
+body.onclick = function(event) {
+  // close filter context if click is outside of it
+  if(filterMenu.classList.contains("is-active")) {
+    if(!filterMenu.contains(event.target)) {
+      filterMenu.classList.remove("is-active");
+    }
+    // close todo context if click is outside of it
+  } else if(todoContext.classList.contains("is-active")) {
+    if(!todoContext.contains(event.target)) {
+      todoContext.classList.remove("is-active");
+      todoContext.removeAttribute("data-item");
+    }
+  }
+}
 
 function configureTodoTableTemplate(append) {
   try {
@@ -69,22 +90,6 @@ function configureTodoTableTemplate(append) {
       clusterThreshold = 0;
       stopBuilding = false;
     }
-    todoTableBodyCellMoreTemplate.setAttribute("class", "flex-row todoTableItemMore");
-    todoTableBodyCellMoreTemplate.setAttribute("role", "cell");
-    todoTableBodyCellMoreTemplate.innerHTML = `
-      <div class="dropdown is-right">
-        <div class="dropdown-trigger">
-          <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-        </div>
-        <div class="dropdown-menu" role="menu">
-          <div class="dropdown-content">
-            <a class="dropdown-item">` + translations.useAsTemplate + `</a>
-            <a href="#" class="dropdown-item">` + translations.edit + `</a>
-            <a class="dropdown-item">` + translations.delete + `</a>
-          </div>
-        </div>
-      </div>
-    `;
     todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
     todoTableBodyRowTemplate.setAttribute("class", "flex-table");
     todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
@@ -253,7 +258,6 @@ function generateTableRow(todo) {
     let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);
     let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
     let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
-    let todoTableBodyCellMore = todoTableBodyCellMoreTemplate.cloneNode(true);
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
     let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
@@ -307,7 +311,7 @@ function generateTableRow(todo) {
       // add a spacer to divide text (and link) and categories
       todoTableBodyCellText.innerHTML += " ";
     }
-    // event listener for the click on the text
+    // click on the text
     todoTableBodyCellText.onclick = function() {
       // if the clicked item is not the external link icon, show(true) will be called
       if(!event.target.classList.contains('fa-external-link-alt')) {
@@ -360,47 +364,43 @@ function generateTableRow(todo) {
     // add the text cell to the row
     todoTableBodyRow.appendChild(todoTableBodyCellText);
 
-    // click on three-dots-icon to open more menu
-    todoTableBodyCellMore.firstElementChild.firstElementChild.onclick = function() {
-      // only if this element was highlighted before, we will hide instead of show the dropdown
-      if(this.parentElement.parentElement.classList.contains("is-active")) {
-        this.parentElement.parentElement.classList.remove("is-active");
-      } else {
-        // on click we close all other active more buttons and dropdowns
-        todoTableItemMore.forEach(function(item) {
-          item.classList.remove("is-active");
-        });
-        // if this element was hidden before, we will show it now
-        this.parentElement.parentElement.classList.add("is-active");
+    todoTableBodyRow.addEventListener("contextmenu", event => {
+      todoContext.style.left = event.x + "px";
+      todoContext.style.top = event.y + "px";
+      todoContext.classList.toggle("is-active");
+
+      todoContext.setAttribute("data-item", todo.toString())
+
+      // click on use as template option
+      todoContext.firstElementChild.children[0].onclick = function() {
+        show(this.parentElement.parentElement.getAttribute('data-item'), true);
+        todoContext.classList.toggle("is-active");
+        todoContext.removeAttribute("data-item");
         // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on More"]);
-        // click on edit
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[1].onclick = function() {
-          show(todoTableBodyCellMore.parentElement.getAttribute('data-item'));
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Edit"]);
-        }
-        // click on delete
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[2].onclick = function() {
-          // passing the data-item attribute of the parent tag to complete function
-          setTodoDelete(todoTableBodyRow.getAttribute('data-item')).then(response => {
-            console.log(response);
-          }).catch(error => {
-            handleError(error);
-          });
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Delete"]);
-        }
-        // click on use as template option
-        todoTableBodyCellMore.firstElementChild.lastElementChild.firstElementChild.children[0].onclick = function() {
-          show(todoTableBodyCellMore.parentElement.getAttribute('data-item'), true);
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-More", "Click on Use as template"]);
-        }
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
       }
-    }
-    // add more container to row
-    todoTableBodyRow.appendChild(todoTableBodyCellMore);
+      todoContext.firstElementChild.children[1].onclick = function() {
+        show(this.parentElement.parentElement.getAttribute('data-item'));
+        todoContext.classList.toggle("is-active");
+        todoContext.removeAttribute("data-item");
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Edit"]);
+      }
+      // click on delete
+      todoContext.firstElementChild.children[2].onclick = function() {
+        // passing the data-item attribute of the parent tag to complete function
+        setTodoDelete(this.parentElement.parentElement.getAttribute('data-item')).then(response => {
+          console.log(response);
+          todoContext.classList.toggle("is-active");
+          todoContext.removeAttribute("data-item");
+        }).catch(error => {
+          handleError(error);
+        });
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
+      }
+    });
+
     // return the fully built row
     return todoTableBodyRow;
   } catch(error) {
@@ -408,6 +408,7 @@ function generateTableRow(todo) {
     return Promise.reject(error);
   }
 }
+const todoContext = document.getElementById("todoContext");
 function sortTodoData(group) {
   try {
     // first sort by priority

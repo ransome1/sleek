@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld(
         "changeLanguage",
         "openOrCreateFile",
         "copyToClipboard",
+        "update-badge",
         "triggerFunction",
         "restart"
       ];
@@ -23,6 +24,7 @@ contextBridge.exposeInMainWorld(
     receive: (channel, func) => {
       let validChannels = [
         "translations",
+        "update-badge",
         "getContent",
         "userData",
         "appData",

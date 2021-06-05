@@ -1,4 +1,5 @@
 "use strict";
+import { isToday } from "./js/date.mjs";
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
@@ -60,6 +61,9 @@ const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreate
 const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
 const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
 const btnOpenTodoFile = document.getElementById("btnOpenTodoFile");
+const todoContext = document.getElementById("todoContext");
+const showEmptyFilters = document.getElementById("showEmptyFilters");
+
 let
   append = false,
   _paq, a0,
@@ -86,6 +90,22 @@ function configureMatomo() {
       var uid = Math.random().toString(36).slice(2);
       setUserData("uid", uid);
     }
+
+    const todoRange = function(count) {
+      if(count<50) {
+        return "<50"
+      } else if (count>50&&count<=100) {
+        return "51-100"
+      } else if(count>100&&count<=150) {
+        return "101-150"
+      } else if(count>151&&count<=200) {
+        return "151-200"
+      } else if(count>201&&count<=300) {
+        return "201-300"
+      } else if(count>300) {
+        return ">301"
+      }
+    }
     // only continue if app is connected to the internet
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     _paq = window._paq = window._paq || [];
@@ -111,6 +131,7 @@ function configureMatomo() {
     if(appData.channel)_paq.push(['setCustomDimension', 18, appData.channel]);
     if(typeof userData.tray === "boolean")_paq.push(['setCustomDimension', 19, userData.tray]);
     if(typeof userData.showEmptyFilters === "boolean")_paq.push(['setCustomDimension', 20, userData.showEmptyFilters]);
+    if(todos.items) _paq.push(['setCustomDimension', 21, todoRange(todos.items.objects.length)]);
     _paq.push(['requireConsent']);
     _paq.push(['setConsentGiven']);
     _paq.push(['trackPageView']);
@@ -139,7 +160,7 @@ function configureMatomo() {
 function configureMainView() {
   try {
     // close filterMenu if open
-    if(filterMenu.classList.contains("is-active")) filterMenu.classList.remove("is-active");
+    if(document.getElementById("filterMenu").classList.contains("is-active")) document.getElementById("filterMenu").classList.remove("is-active");
     // set scaling factor if default font size has changed
     if(userData.zoom) {
       html.style.zoom = userData.zoom + "%";
@@ -295,7 +316,6 @@ function jumpToItem(item) {
   }
 }
 // TODO Error handling
-
 function debounce(func, wait, immediate) {
   // https://davidwalsh.name/javascript-debounce-function
 	var timeout;
@@ -310,21 +330,12 @@ function debounce(func, wait, immediate) {
 		timeout = setTimeout(later, wait);
 		if (callNow) func.apply(context, args);
 	};
-};
-
-
+}
 function registerEvents() {
   try {
     // ########################################################################################################################
     // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
     // ########################################################################################################################
-    body.onclick = function(event) {
-      if(filterMenu.classList.contains("is-active")) {
-        if(!filterMenu.contains(event.target)) {
-          filterMenu.classList.remove("is-active");
-        }
-      }
-    }
     a.forEach(el => el.addEventListener("click", function(el) {
       if(el.target.href && el.target.href === "#") el.preventDefault();
     }));
@@ -1013,6 +1024,15 @@ function showFiles() {
     return Promise.reject(error);
   }
 }
+
+function getBadgeCount() {
+  let count = 0;
+  todos.items.objects.forEach((item) => {
+    if(!item.complete && item.due && isToday(item.due)) count++;
+  });
+  return count;
+}
+
 async function startBuilding(searchString, append) {
   try {
 
@@ -1031,6 +1051,8 @@ async function startBuilding(searchString, append) {
     configureMainView();
 
     showResultStats();
+
+    window.api.send("update-badge", getBadgeCount());
 
     console.info("Table build:", performance.now() - t0, "ms");
 
@@ -1059,11 +1081,6 @@ window.onload = async function () {
       handleError(error);
     });
   }
-  configureMatomo().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    handleError(error);
-  });
   setTheme().then(function(response) {
     console.info(response);
   }).catch(function(error) {
@@ -1105,6 +1122,12 @@ window.onload = async function () {
   drawer = await import("./js/drawer.mjs");
   view = await import("./js/view.mjs");
   await import("./js/navigation.mjs");
+
+  configureMatomo().then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
 
   a1 = performance.now();
   console.info("App build:", a1 - a0, "ms");

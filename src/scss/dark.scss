@@ -63,9 +63,6 @@ button {
 button.is-link,
 .button.is-link:hover {
   background-color: $darker-grey!important;
-  svg {
-    color: inherit!important;
-  }
 }
 .button[disabled],
 fieldset[disabled] {
@@ -76,9 +73,6 @@ button.is-outlined:hover {
 }
 ::after {
   border-color: white!important;
-}
-svg {
-  color: white;
 }
 table {
   width: 100%;
@@ -102,9 +96,6 @@ table.files {
 }
 nav {
   background-color: $darker-grey;
-  svg {
-    color: $lighter-grey;
-  }
   ul {
     li.logo {
       background: none;
@@ -130,9 +121,6 @@ nav {
 }
 #drawerContainer {
   .zoom {
-    svg {
-      color: white!important;
-    }
     #zoomStatus {
       color: white!important;
     }
@@ -157,9 +145,6 @@ nav {
 #todoTable {
   .flex-table#previousItem.is-highlighted {
     background-color: $even-darker-grey;
-  }
-  .flex-table:hover .flex-row.todoTableItemMore a {
-    color: $lighter-grey;
   }
   .flex-table.due {
     .button {
@@ -208,17 +193,7 @@ nav {
         color: $lighter-grey;
         background: none;
       }
-    }
-    .flex-row.todoTableItemMore a {
-      color: $lighter-grey;
-    }
-    .flex-row.todoTableItemMore .dropdown-content {
-      background: $even-darker-grey;
-      color: white;
-    }
-    .flex-row.todoTableItemMore.is-active .dropdown-menu .dropdown-item:hover {
-      background: $darker-grey;
-    }
+
   }
 }
 #modalForm {
@@ -283,9 +258,6 @@ nav {
   }
   a.drawerClose {
     background: $even-darker-grey!important;
-  }
-  svg {
-    color: $almost-white!important;
   }
   #btnFiltersResetFilters {
     background: $almost-black!important;
@@ -359,11 +331,6 @@ nav {
       color: $lighter-grey;
       .card-header-title {
         color: white;
-      }
-      .card-content {
-        /*button {
-          background: $darker-grey!important;
-        }*/
       }
       .card-footer,
       .card-footer-item {
