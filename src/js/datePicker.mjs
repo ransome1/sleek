@@ -1,7 +1,7 @@
 "use strict";
 import { translations, userData, _paq } from "../render.js";
 import { resizeInput } from "./form.mjs";
-import { RecExtension } from "./todotxtExtensions.mjs";
+import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
 import Datepicker from "../../node_modules/vanillajs-datepicker/js/Datepicker.js";
 import de from "../../node_modules/vanillajs-datepicker/js/i18n/locales/de.js";
 import it from "../../node_modules/vanillajs-datepicker/js/i18n/locales/it.js";
@@ -19,7 +19,7 @@ datePickerInput.addEventListener("changeDate", function (e) {
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
   if(e.detail.date) {
     // generate the object on what is written into input, so we don't overwrite previous inputs of user
-    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
     todo.due = new Date(e.detail.date);
     todo.dueString = new Date(e.detail.date.getTime() - (e.detail.date.getTimezoneOffset() * 60000 )).toISOString().split("T")[0];
     // if suggestion box was open, it needs to be closed
@@ -51,7 +51,7 @@ const datePicker = new Datepicker(datePickerInput, {
   }
 });
 document.querySelector(".datepicker .clear-btn").onclick = function() {
-  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
   todo.due = undefined;
   todo.dueString = undefined;
   document.getElementById("modalFormInput").value = todo.toString();

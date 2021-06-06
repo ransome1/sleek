@@ -85,7 +85,7 @@ function showRecurrences() {
   recurrencePickerContainer.focus();
   recurrencePickerContainer.classList.toggle("is-active");
   // get object from current input
-  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
   let recSplit = recurrences.splitRecurrence(todo.rec);
   setRecurrenceOptionLabels(recSplit.mul);
   recurrencePickerSpinner.value = recSplit.mul;
