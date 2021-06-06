@@ -84,6 +84,7 @@ if(process.platform === "win32") trayIcon = path.join(appData.path, "../assets/i
 // ########################################################################################################################
 // CREATE THE WINDOW
 // ########################################################################################################################
+let mainWindow = null;
 const createWindow = async function() {
   const getContent = function(file) {
     try {
@@ -323,7 +324,7 @@ const createWindow = async function() {
   userData = await getUserData();
   translations = await getTranslations(userData.data.language);
   console.log("Success: Translation loaded for: " + userData.data.language);
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: userData.data.width,
     height: userData.data.height,
     x: userData.data.horizontal,
@@ -678,7 +679,7 @@ const createWindow = async function() {
         if(args[0]) clipboard.writeText(args[0], "selection")
       })
       .on("update-badge", (event, count) => {
-        if(appData.os === "mac") app.setBadgeCount(count);
+        if(appData.os==="mac") app.setBadgeCount(count);
       })
       .on("restart", () => {
         app.relaunch();
@@ -722,6 +723,7 @@ app
 })
 .on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit()
+  mainWindow = null;
 })
 .on("activate", () => {
   if (BrowserWindow.getAllWindows().length===0) createWindow()
