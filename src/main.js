@@ -345,8 +345,10 @@ const createWindow = async function() {
   });
   // for Windows a separate node module is needed
   if(appData.os === "windows") {
-    const Badge = require('electron-windows-badge');
-    const badgeOptions = {}
+    const Badge = require("electron-windows-badge");
+    const badgeOptions = {
+      font: "10px arial"
+    }
     new Badge(mainWindow, badgeOptions);
   }
 

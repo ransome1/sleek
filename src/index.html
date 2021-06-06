@@ -228,12 +228,12 @@
       <div class="modal-content">
         <div class="card">
           <header class="card-header">
-            <p id="modalTitle" class="card-header-title"></p>
+            <a id="modalTitle" class="card-header-title"></a>
           </header>
           <div class="card-content">
             <div class="content">
               <div class="control has-icons-right">
-                <input id="modalFormInput" class="input is-medium" type="text" tabindex="300">
+                <input id="modalFormInput" class="input is-medium" type="text" tabindex="0">
                 <a href="#" id="modalFormInputResize" class="icon is-right" tabindex="-1" data-input-type="input">
                   <i class="fas fa-expand-alt"></i>
                 </a>
@@ -244,7 +244,7 @@
               <div class="field">
                 <div class="control">
                   <div class="select">
-                    <select id="priorityPicker" tabindex="305">
+                    <select id="priorityPicker" tabindex="0">
                       <option value="">-</option>
                       <option value="A">A</option>
                       <option value="B">B</option>
@@ -278,7 +278,7 @@
               </div>
               <div class="field dueDate">
                 <div class="control has-icons-left">
-                  <input id="datePickerInput" class="input" tabindex="310" readonly>
+                  <input id="datePickerInput" class="input" tabindex="0" readonly>
                   <a href="#" class="icon is-left" tabindex="-1">
                     <i class="far fa-clock is-left"></i>
                   </a>
@@ -287,7 +287,7 @@
               <div id="recurrencePicker" class="field">
                 <div class="control has-icons-left">
                   <input id="recurrencePickerInput" class="input" tabindex="-1" readonly>
-                  <a href="#" class="icon is-left">
+                  <a href="#" class="icon is-left" tabindex="-1">
                     <i class="fas fa-redo"></i>
                   </a>
                 </div>
@@ -333,9 +333,9 @@
             </div>
           </div>
           <footer class="card-footer">
-            <button id="btnSave" type="submit" class="card-footer-item" tabindex="315"></button>
-            <a href="#" id="btnItemStatus" class="card-footer-item" tabindex="320"></a>
-            <a href="#" class="card-footer-item btnModalCancel" tabindex="325"></a>
+            <button id="btnSave" type="submit" class="card-footer-item" tabindex="0"></button>
+            <a href="#" id="btnItemStatus" class="card-footer-item" tabindex="0"></a>
+            <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
           </footer>
         </div>
       </div>
@@ -512,7 +512,7 @@
           </table>
           <p><code>v<span id="version"></span></code></p>
         </section>
-        <button class="modal-close close is-large" aria-label="close"></button>
+        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
     <div id="modalHelp" class="modal content" tabindex="0" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
@@ -659,7 +659,7 @@
             </div>
           </div>
         </section>
-        <button class="modal-close close is-large" aria-label="close"></button>
+        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
     <div id="autoCompleteContainer" class="drawer card"></div>

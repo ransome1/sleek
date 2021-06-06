@@ -1,5 +1,5 @@
 "use strict";
-import { setUserData, showMore, userData, handleError, _paq } from "../render.js";
+import { setUserData, userData, handleError, _paq } from "../render.js";
 import { navBtns } from "./navigation.mjs";
 import { getHandleElement, startDragging } from "./drawer_handle.mjs";
 
@@ -41,13 +41,11 @@ document.getElementById("viewDrawer").addEventListener ("keydown", function () {
     });
   }
 });
-
 getHandleElement.addEventListener("mousedown", startDragging);
 navBtnFilter.onclick = function() {
-  // close filter drawer first
-  viewDrawer.classList.remove("is-active")
-  navBtnView.classList.remove("is-highlighted")
-  showDrawer("toggle", this.id, filterDrawer.id).then(function(result) {
+  let toggle = true;
+  if(document.getElementById("drawerContainer").classList.contains("is-active")) toggle = false;
+  showDrawer(toggle, "navBtnFilter", "filterDrawer").then(function(result) {
     console.log(result);
   }).catch(function(error) {
     handleError(error);
@@ -56,10 +54,9 @@ navBtnFilter.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
 }
 navBtnView.onclick = function() {
-  // close filter drawer first
-  filterDrawer.classList.remove("is-active")
-  navBtnFilter.classList.remove("is-highlighted")
-  showDrawer("toggle", this.id, viewDrawer.id).then(function(result) {
+  let toggle = true;
+  if(document.getElementById("drawerContainer").classList.contains("is-active")) toggle = false;
+  showDrawer(toggle, this.id, viewDrawer.id).then(function(result) {
     console.log(result);
   }).catch(function(error) {
     handleError(error);
@@ -67,34 +64,28 @@ navBtnView.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on view"]);
 }
-
 // open filter drawer if it has been persisted
-if(userData.filterDrawer) {
-  showDrawer(true, navBtnFilter.id, filterDrawer.id).then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    handleError(error);
-  });
-// open view drawer if it has been persisted
-} else if(userData.viewDrawer) {
-  showDrawer(true, navBtnView.id, viewDrawer.id).then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    handleError(error);
-  });
-}
-
-function showDrawer(variable, buttonId, drawerId) {
+showDrawer(userData.filterDrawer, "navBtnFilter", "filterDrawer").then(function(result) {
+  console.log(result);
+}).catch(function(error) {
+  handleError(error);
+});
+export function showDrawer(variable, buttonId, drawerId) {
   try {
+
+    if(!variable && !buttonId && !drawerId) {
+      drawerContainer.classList.remove("is-active");
+      filterDrawer.classList.remove("is-active");
+      viewDrawer.classList.remove("is-active");
+      navBtnFilter.classList.remove("is-highlighted");
+      navBtnView.classList.remove("is-highlighted");
+      setUserData("filterDrawer", false);
+      return Promise.resolve("Success: Drawer closed");
+    }
     const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompletedLast");
     switch (drawerId) {
       case "viewDrawer":
-        /*if(userData.showCompleted) {
-          viewToggleSortCompletedLast.parentElement.classList.remove("is-hidden");
-        } else {
-          viewToggleSortCompletedLast.parentElement.classList.add("is-hidden");
-        }*/
-        // set viewContainer sort select
+        // highlight persisted selection in dropdown
         Array.from(document.getElementById("viewSelectSortBy").options).forEach(function(item) {
           if(item.value===userData.sortBy) item.selected = true
         });
@@ -109,6 +100,7 @@ function showDrawer(variable, buttonId, drawerId) {
       case true:
         buttonId.classList.add("is-highlighted");
         drawerId.classList.add("is-active");
+        drawerContainer.classList.add("is-active");
       break;
       case false:
         drawers.forEach(function(drawer) {
@@ -119,20 +111,8 @@ function showDrawer(variable, buttonId, drawerId) {
         });
         drawerContainer.classList.remove("is-active");
       break;
-      case "toggle":
-        buttonId.classList.toggle("is-highlighted");
-        drawerId.classList.toggle("is-active");
-      break;
     }
-    // if any of the drawers is active now, also show the container
-    drawers.forEach(function(drawer) {
-      if(drawer.classList.contains("is-active")) {
-        drawerContainer.classList.add("is-active");
-        setUserData(drawer.id, true);
-      } else {
-        setUserData(drawer.id, false);
-      }
-    });
+    setUserData(drawerId.id, variable);
     // persist filter drawer state
     if(drawerId && drawerId.classList.contains("is-active")) {
       // if the drawer is open the table needs a fixed width to overlap the viewport
@@ -143,8 +123,6 @@ function showDrawer(variable, buttonId, drawerId) {
       todoTable.style.minWidth = "auto";
       todoTableSearchContainer.style.minWidth = "auto";
     }
-    // if more toggle is open we close it as user doesn't need it anymore
-    showMore(false);
     return Promise.resolve("Success: Drawer toggled");
   } catch(error) {
     error.functionName = showDrawer.name;

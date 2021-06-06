@@ -1,5 +1,6 @@
 "use strict";
 import { modal, userData, _paq, translations } from "../render.js";
+import { createModalJail } from "../configs/modal.config.mjs";
 
 const reviewSourceforge = document.getElementById("reviewSourceforge");
 const reviewWindowsStore = document.getElementById("reviewWindowsStore");
@@ -165,6 +166,10 @@ function showContent(section) {
     firstSection.classList.add("is-active");
     section.classList.add("is-active");
     section.focus();
+
+    // create the modal jail, so tabbing won't leave modal
+    createModalJail(section);
+
     return Promise.resolve("Info: Content is shown");
   } catch(error) {
     error.functionName = showContent.name;

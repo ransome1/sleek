@@ -346,6 +346,8 @@ nav {
       color: $dark-grey;
       font-family: FreeSansBold;
       margin-bottom: 1.5em;
+    }
+    h4.is-4.clickable {
       cursor: pointer;
       i {
         color: $has-text-link;
@@ -610,6 +612,12 @@ nav {
 #todoTable.is-active {
   display: block;
 }
+
+#modalForm[open]:not(:focus-within) {
+  background-color: rgb(255, 255, 254);
+  transition: background-color 0.01s;
+}
+
 #modalForm {
   textarea#modalFormInput {
     min-height: 5.5em;

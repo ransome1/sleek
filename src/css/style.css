@@ -373,9 +373,11 @@ nav ul:nth-child(2) {
   color: #4a4a4a;
   font-family: FreeSansBold;
   margin-bottom: 1.5em;
+}
+#drawerContainer .drawer h4.is-4.clickable {
   cursor: pointer;
 }
-#drawerContainer .drawer h4.is-4 i {
+#drawerContainer .drawer h4.is-4.clickable i {
   color: #3273dc;
 }
 #drawerContainer .drawer .dropdown-item {
@@ -639,6 +641,11 @@ nav ul:nth-child(2) {
 
 #todoTable.is-active {
   display: block;
+}
+
+#modalForm[open]:not(:focus-within) {
+  background-color: #fffffe;
+  transition: background-color 0.01s;
 }
 
 #modalForm textarea#modalFormInput {

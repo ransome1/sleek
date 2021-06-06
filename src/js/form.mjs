@@ -1,9 +1,10 @@
 "use strict";
-import { showMore, resetModal, handleError, userData, setUserData, translations, _paq } from "../render.js";
+import { resetModal, handleError, userData, setUserData, translations, _paq } from "../render.js";
 import { RecExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput } from "./datePicker.mjs";
+import { createModalJail } from "../configs/modal.config.mjs";
 import * as recurrencePicker from "./recurrencePicker.mjs";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -230,8 +231,6 @@ function show(todo, templated) {
     modalForm.removeAttribute("data-item");
     // adjust size of recurrence picker input field
     if(userData.useTextarea) toggleInputSize("input");
-    // in case the more toggle menu is open we close it
-    showMore(false);
     datePickerInput.value = null;
     recurrencePickerInput.value = null;
     modalForm.classList.toggle("is-active");
@@ -300,6 +299,10 @@ function show(todo, templated) {
       document.getElementById("modalFormInput").style.height="auto";
       document.getElementById("modalFormInput").style.height= document.getElementById("modalFormInput").scrollHeight+"px";
     }
+    
+    // create the modal jail, so tabbing won't leave modal
+    createModalJail(modalForm);
+
     return Promise.resolve("Info: Show/Edit todo window opened");
   } catch (error) {
     error.functionName = show.name;

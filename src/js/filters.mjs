@@ -295,12 +295,11 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     } else if(category=="priority"){
       headline = translations.priority;
     }
-    if(autoCompletePrefix===undefined) {
+    if(autoCompletePrefix===undefined && userData.showEmptyFilters) {
       // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "is-4 title");
+      todoFilterHeadline.setAttribute("class", "is-4 title clickable");
       todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
-      // add click event
       todoFilterHeadline.onclick = function() {
         document.getElementById("todoTableWrapper").scrollTo(0,0);
         let hideFilterCategories = userData.hideFilterCategories;
@@ -317,6 +316,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         setUserData("hideFilterCategories", hideFilterCategories)
         startBuilding();
       }
+      // add click event
       // add the headline before category container
       todoFiltersContainer.appendChild(todoFilterHeadline);
     } else {
@@ -325,7 +325,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       autoCompleteContainer.focus();
       // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "is-4 title headline " + category);
+      todoFilterHeadline.setAttribute("class", "is-4 title");
       // no need for tab index if the headline is in suggestion box
       if(autoCompletePrefix==undefined) todoFilterHeadline.setAttribute("tabindex", -1);
       todoFilterHeadline.innerHTML = headline;
@@ -407,9 +407,13 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       } else {
         // add filter to input
         todoFiltersItem.addEventListener("click", () => {
+          //console.log(todoFiltersItem.getAttribute("data-filter"));
+          //console.log(document.getElementById("modalFormInput").value);
+          //console.log(document.getElementById("modalFormInput").value.replace(autoCompletePrefix + autoCompleteValue, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter")));
           if(autoCompleteValue) {
             // remove composed filter first, then add selected filter
-            document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.slice(0, caretPosition-autoCompleteValue.length-1) + autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + document.getElementById("modalFormInput").value.slice(caretPosition) + " ";
+            //document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.slice(0, caretPosition-autoCompleteValue.length-1) + autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + document.getElementById("modalFormInput").value.slice(caretPosition) + " ";
+            document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.replace(autoCompletePrefix + autoCompleteValue, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + " ");
           } else {
             // add button data value to the exact caret position
             document.getElementById("modalFormInput").value = [document.getElementById("modalFormInput").value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), document.getElementById("modalFormInput").value.slice(caretPosition)].join('') + " ";

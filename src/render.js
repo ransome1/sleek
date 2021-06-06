@@ -1,5 +1,6 @@
 "use strict";
-import { isToday } from "./js/date.mjs";
+import { isToday, isPast } from "./js/date.mjs";
+import { createModalJail } from "./configs/modal.config.mjs";
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
@@ -19,7 +20,6 @@ const btnFiltersResetFilters = document.getElementById("btnFiltersResetFilters")
 const btnMessageLogging = document.getElementById("btnMessageLogging");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnNoResultContainerResetFilters = document.getElementById("btnNoResultContainerResetFilters");
-//const btnOpenTodoFile = document.querySelectorAll(".btnOpenTodoFile");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const btnSave = document.getElementById("btnSave");
 const btnTheme = document.getElementById("btnTheme");
@@ -358,36 +358,6 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
     }
-    /*btnOpenTodoFile.forEach(function(el) {
-      el.onclick = function () {
-        window.api.send("openOrCreateFile", "open");
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Open file"]);
-      }
-    })
-    btnChangeTodoFile.forEach(function(el) {
-      el.onclick = function () {
-        if(typeof userData.files === "object" && userData.files.length>0) {
-          showFiles().then(response => {
-            console.info(response);
-          }).catch(error => {
-            handleError(error);
-          });
-        } else {
-          window.api.send("openOrCreateFile", "open");
-        }
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Choose file"]);
-      }
-    });*/
-    /*btnCreateTodoFile.forEach(function(el) {
-      el.onclick = function () {
-        window.api.send("openOrCreateFile", "create");
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding/Change-Modal", "Click on Create file"]);
-      }
-    });*/
-
     btnOpenTodoFile.onclick = function() {
       if(typeof userData.files === "object" && userData.files.length>0) {
         showFiles().then(response => {
@@ -467,11 +437,6 @@ function registerEvents() {
       resetFilters();
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
-    }
-    todoTable.onclick = function() {
-      if(event.target.classList.contains("flex-table")) {
-        showMore(false);
-      }
     }
     todoTableSearch.addEventListener("input", debounce(function() {
       startBuilding()
@@ -597,7 +562,9 @@ function registerKeyboardShortcuts() {
       }
       // show filter drawer
       if(event.key==="b" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
-        drawer.showDrawer("toggle", "navBtnFilter", "filterDrawer").then(function(result) {
+        let toggle = true;
+        if(document.getElementById("drawerContainer").classList.contains("is-active")) toggle = false;
+        drawer.showDrawer(toggle, "navBtnFilter", "filterDrawer").then(function(result) {
           console.log(result);
         }).catch(function(error) {
           handleError(error);
@@ -958,17 +925,6 @@ function showResultStats() {
     return Promise.reject(error);
   }
 }
-function showMore(variable) {
-  if(variable) {
-    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
-      item.classList.add("is-active")
-    });
-  } else {
-    document.querySelectorAll(".todoTableItemMore").forEach(function(item) {
-      item.classList.remove("is-active")
-    });
-  }
-}
 function showFiles() {
   try {
     let files = userData.files;
@@ -987,7 +943,7 @@ function showFiles() {
       if(files[file][0]===1) {
         cell1.innerHTML = "<button class=\"button\" disabled>" + translations.selected + "</button>";
       } else {
-        cell1.innerHTML = "<button class=\"button is-link\">" + translations.select + "</button>";
+        cell1.innerHTML = "<button class=\"button is-link\" tabindex=\"0\">" + translations.select + "</button>";
         cell1.onclick = function() {
           setUserData("selectedFilters", []);
           resetModal().then(response => {
@@ -999,7 +955,7 @@ function showFiles() {
           // trigger matomo event
           if(userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
         }
-        cell3.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
+        cell3.innerHTML = "<a href=\"#\" tabindex=\"0\"><i class=\"fas fa-minus-circle\"></i></a>";
         cell3.title = translations.delete;
         cell3.onclick = function() {
           let path = this.parentElement.getAttribute("data-path");
@@ -1019,6 +975,8 @@ function showFiles() {
       }
       cell2.innerHTML = files[file][1];
     }
+    // create the modal jail, so tabbing won't leave modal
+    createModalJail(modalChangeFile);
     return Promise.resolve("Success: File changer modal built and opened");
   } catch (error) {
     return Promise.reject(error);
@@ -1028,7 +986,7 @@ function showFiles() {
 function getBadgeCount() {
   let count = 0;
   todos.items.objects.forEach((item) => {
-    if(!item.complete && item.due && isToday(item.due)) count++;
+    if(!item.complete && item.due && (isToday(item.due) || isPast(item.due))) count++;
   });
   return count;
 }
@@ -1116,6 +1074,7 @@ window.onload = async function () {
   }).catch(function(error) {
     handleError(error);
   });
+
 
   form = await import("./js/form.mjs");
   content = await import("./js/content.mjs");
@@ -1216,4 +1175,4 @@ window.api.receive("refresh", async function(content) {
   });
 });
 
-export { resetModal, setUserData, startBuilding, handleError, showMore, userData, appData, translations, modal, _paq };
+export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, _paq };

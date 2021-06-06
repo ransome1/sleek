@@ -63,6 +63,9 @@ button {
 button.is-link,
 .button.is-link:hover {
   background-color: $darker-grey!important;
+  svg {
+    color: inherit!important;
+  }
 }
 .button[disabled],
 fieldset[disabled] {
@@ -73,6 +76,9 @@ button.is-outlined:hover {
 }
 ::after {
   border-color: white!important;
+}
+svg {
+  color: white;
 }
 table {
   width: 100%;
@@ -96,6 +102,9 @@ table.files {
 }
 nav {
   background-color: $darker-grey;
+  svg {
+    color: $lighter-grey;
+  }
   ul {
     li.logo {
       background: none;
@@ -121,6 +130,9 @@ nav {
 }
 #drawerContainer {
   .zoom {
+    svg {
+      color: white!important;
+    }
     #zoomStatus {
       color: white!important;
     }
@@ -146,6 +158,7 @@ nav {
   .flex-table#previousItem.is-highlighted {
     background-color: $even-darker-grey;
   }
+  .flex-table:hover .flex-row,
   .flex-table.due {
     .button {
       color: $almost-white;
@@ -193,7 +206,7 @@ nav {
         color: $lighter-grey;
         background: none;
       }
-
+    }
   }
 }
 #modalForm {
@@ -259,6 +272,9 @@ nav {
   a.drawerClose {
     background: $even-darker-grey!important;
   }
+  svg {
+    color: $almost-white!important;
+  }
   #btnFiltersResetFilters {
     background: $almost-black!important;
   }
@@ -273,6 +289,18 @@ nav {
   }
   .card-footer {
     border-top: 1px solid $almost-black!important;
+  }
+}
+#todoContext {
+  a {
+    color: $lighter-grey;
+  }
+  .dropdown-content {
+    color: white;
+    background-color: $even-darker-grey!important;
+    .dropdown-item:hover {
+      background: $darker-grey;
+    }
   }
 }
 .contexts {
@@ -331,6 +359,11 @@ nav {
       color: $lighter-grey;
       .card-header-title {
         color: white;
+      }
+      .card-content {
+        /*button {
+          background: $darker-grey!important;
+        }*/
       }
       .card-footer,
       .card-footer-item {
