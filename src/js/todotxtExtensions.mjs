@@ -15,18 +15,29 @@ RecExtension.prototype.parsingFunction = function(line) {
 
 export { RecExtension };
 
+// TODO Use SugarDueExtension only for parsing from input field otherwise normal DueExtension
 function SugarDueExtension() {
 	this.name = "due";
 }
 SugarDueExtension.prototype = new TodoTxtExtension();
-SugarDueExtension.prototype.parsingFunction = function(line) {
+SugarDueExtension.prototype.parsingFunction = function (line) {
 	var dueDate = null;
-	var dueRegex = /due:([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\s*/;
-	var matchDue = dueRegex.exec(line);
-	if ( matchDue !== null ) {
-		var datePieces = matchDue[1].split('-');
-		dueDate = new Date( datePieces[0], datePieces[1] - 1, datePieces[2] );
-		return [dueDate, line.replace(dueRegex, ''), matchDue[1]];
+	var indexDueKeyword = line.indexOf("due:");
+
+	// Find keyword due
+	if (indexDueKeyword > 0) {
+		var stringAfterDue = line.substr(indexDueKeyword + 4)
+		var words = stringAfterDue.split(" ");
+		var match = null;
+		
+		// Try to parse a valid date until the end of the text
+		for (var i = 1; i <= words.length; i++) {
+			match = words.slice(0, i).join(" ");
+			dueDate = Sugar.Date.create(match);
+			if (Sugar.Date.isValid(dueDate)) {
+				return [dueDate, line.replace("due:" + match, ''), match];
+			}
+		}
 	}
 	return [null, null, null];
 };
