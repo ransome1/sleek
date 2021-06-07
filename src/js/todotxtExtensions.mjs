@@ -15,7 +15,6 @@ RecExtension.prototype.parsingFunction = function(line) {
 
 export { RecExtension };
 
-// TODO Use SugarDueExtension only for parsing from input field otherwise normal DueExtension
 function SugarDueExtension() {
 	this.name = "due";
 }
@@ -35,7 +34,7 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 			match = words.slice(0, i).join(" ");
 			dueDate = Sugar.Date.create(match);
 			if (Sugar.Date.isValid(dueDate)) {
-				return [dueDate, line.replace("due:" + match, ''), match];
+				return [dueDate, line.replace("due:" + match, ''), Sugar.Date.format(dueDate, '%Y-%m-%d')];
 			}
 		}
 	}
