@@ -1,15 +1,20 @@
 "use strict";
-import { userData, appData, handleError, translations, setUserData, _paq, startBuilding } from "../render.js";
-import { RecExtension } from "./todotxtExtensions.mjs";
+import { userData, appData, handleError, translations, setUserData, startBuilding } from "../render.js";
+import { _paq } from "./matomo.mjs";
 import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
+import "../../node_modules/marked/marked.min.js";
+import { RecExtension } from "./todotxtExtensions.mjs";
+import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import "../../node_modules/jstodotxt/jsTodoTxt.js";
 
 const body = document.getElementById("body");
 const modalForm = document.getElementById("modalForm");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
 const todoTableContainer = document.getElementById("todoTableContainer");
+const todoContext = document.getElementById("todoContext");
 const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
 const todoContextEdit = document.getElementById("todoContextEdit");
 const todoContextDelete = document.getElementById("todoContextDelete");
@@ -42,7 +47,6 @@ marked.use({ renderer });
 // ########################################################################################################################
 // PREPARE TABLE
 // ########################################################################################################################
-const todoTableItemMore = document.querySelectorAll(".todoTableItemMore");
 const tableContainerContent = document.createDocumentFragment();
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
@@ -64,17 +68,12 @@ let
 todoTableWrapper.addEventListener("scroll", function(event) {
   if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight && visibleRows<items.filtered.length) {
     stopBuilding = false;
-    startBuilding(null, true);
+    startBuilding(true);
   }
 });
 body.onclick = function(event) {
-  // close filter context if click is outside of it
-  if(filterMenu.classList.contains("is-active")) {
-    if(!filterMenu.contains(event.target)) {
-      filterMenu.classList.remove("is-active");
-    }
-    // close todo context if click is outside of it
-  } else if(todoContext.classList.contains("is-active")) {
+  // close todo context if click is outside of it
+  if(todoContext.classList.contains("is-active")) {
     if(!todoContext.contains(event.target)) {
       todoContext.classList.remove("is-active");
       todoContext.removeAttribute("data-item");
@@ -408,7 +407,6 @@ function generateTableRow(todo) {
     return Promise.reject(error);
   }
 }
-const todoContext = document.getElementById("todoContext");
 function sortTodoData(group) {
   try {
     // first sort by priority
@@ -532,7 +530,7 @@ async function archiveTodos() {
         return userData.file.replace(userData.file.split("/").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
       }
     }
-    const getContentFromDoneFile = new Promise(function(resolve, reject) {
+    const getContentFromDoneFile = new Promise(function(resolve) {
       window.api.send("getContent", doneFile());
       return window.api.receive("getContent", (content) => {
         //resolve(TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]));

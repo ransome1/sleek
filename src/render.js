@@ -1,6 +1,5 @@
 "use strict";
 import { isToday, isPast } from "./js/date.mjs";
-import { createModalJail } from "./configs/modal.config.mjs";
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
@@ -13,9 +12,7 @@ const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const body = document.getElementById("body");
 const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnArchiveTodos = document.getElementById("btnArchiveTodos");
-const btnChangeTodoFile = document.querySelectorAll(".btnChangeTodoFile");
 const btnCopyToClipboard = document.querySelectorAll(".btnCopyToClipboard");
-const btnCreateTodoFile = document.querySelectorAll(".btnCreateTodoFile");
 const btnFiltersResetFilters = document.getElementById("btnFiltersResetFilters");
 const btnMessageLogging = document.getElementById("btnMessageLogging");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
@@ -36,11 +33,10 @@ const modal = document.querySelectorAll('.modal');
 const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
 const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
-const modalChangeFileTable = document.getElementById("modalChangeFileTable");
 const modalChangeFileTitle = document.getElementById("modalChangeFileTitle");
 const modalForm = document.getElementById("modalForm");
+const modalFormInput = document.getElementById("modalFormInput");
 const modalFormAlert = document.getElementById("modalFormAlert");
-const modalHelp = document.getElementById("modalHelp");
 const modalSettings = document.getElementById("modalSettings");
 const noResultContainer = document.getElementById("noResultContainer");
 const noResultContainerHeadline = document.getElementById("noResultContainerHeadline");
@@ -52,118 +48,38 @@ const onboardingContainerSubtitle = document.getElementById("onboardingContainer
 const resultStats = document.getElementById("resultStats");
 const themeLink = document.getElementById("themeLink");
 const todoFilters = document.getElementById("todoFilters");
-const todoTable = document.getElementById("todoTable");
-const todoTableSearch = document.getElementById("todoTableSearch");
-const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const welcomeToSleek = document.getElementById("welcomeToSleek");
 const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
 const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
 const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
 const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
-const btnOpenTodoFile = document.getElementById("btnOpenTodoFile");
-const todoContext = document.getElementById("todoContext");
-const showEmptyFilters = document.getElementById("showEmptyFilters");
+
+const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
+const todoTable = document.getElementById("todoTable");
+const navBtnFilter = document.getElementById("navBtnFilter");
 
 let
-  append = false,
-  _paq, a0,
+  a0,
   a1,
   appData,
   content,
   drawer,
-  f0,
-  f1,
   filters,
   form,
-  friendlyLanguageName,
+  matomo,
   t0,
-  t1,
   todos,
   translations,
   userData,
   view;
 
-function configureMatomo() {
-  try {
-    if(!userData.uid) {
-      // generate random number/string combination as user id and persist it
-      var uid = Math.random().toString(36).slice(2);
-      setUserData("uid", uid);
-    }
-
-    const todoRange = function(count) {
-      if(count<50) {
-        return "<50"
-      } else if (count>50&&count<=100) {
-        return "51-100"
-      } else if(count>100&&count<=150) {
-        return "101-150"
-      } else if(count>151&&count<=200) {
-        return "151-200"
-      } else if(count>201&&count<=300) {
-        return "201-300"
-      } else if(count>300) {
-        return ">301"
-      }
-    }
-    // only continue if app is connected to the internet
-    if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
-    _paq = window._paq = window._paq || [];
-    if(appData.development) return Promise.resolve("Info: Machine is development machine, logging will be skipped")
-    if(userData.uid)_paq.push(['setUserId', userData.uid]);
-    if(userData.theme)_paq.push(['setCustomDimension', 1, userData.theme]);
-    if(userData.language)_paq.push(['setCustomDimension', 2, userData.language]);
-    if(typeof userData.notifications === "boolean")_paq.push(['setCustomDimension', 3, userData.notifications]);
-    if(typeof userData.matomoEvents === "boolean")_paq.push(['setCustomDimension', 4, userData.matomoEvents]);
-    if(appData.version)_paq.push(['setCustomDimension', 5, appData.version]);
-    if(userData.window)_paq.push(['setCustomDimension', 6, userData.window.width+"x"+userData.window.height]);
-    if(typeof userData.showCompleted === "boolean")_paq.push(['setCustomDimension', 7, userData.showCompleted]);
-    if(userData.files>0) _paq.push(['setCustomDimension', 8, userData.files.length]);
-    if(typeof userData.useTextarea === "boolean")_paq.push(['setCustomDimension', 9, userData.useTextarea]);
-    if(typeof userData.compactView === "boolean")_paq.push(['setCustomDimension', 10, userData.compactView]);
-    if(typeof userData.sortCompletedLast === "boolean")_paq.push(['setCustomDimension', 11, userData.sortCompletedLast]);
-    if(typeof userData.showHidden === "boolean")_paq.push(['setCustomDimension', 12, userData.showHidden]);
-    if(typeof userData.showDueIsToday === "boolean")_paq.push(['setCustomDimension', 13, userData.showDueIsToday]);
-    if(typeof userData.showDueIsFuture === "boolean")_paq.push(['setCustomDimension', 14, userData.showDueIsFuture]);
-    if(typeof userData.showDueIsPast === "boolean")_paq.push(['setCustomDimension', 15, userData.showDueIsPast]);
-    if(userData.sortBy)_paq.push(['setCustomDimension', 16, userData.sortBy]);
-    if(userData.zoom)_paq.push(['setCustomDimension', 17, userData.zoom]);
-    if(appData.channel)_paq.push(['setCustomDimension', 18, appData.channel]);
-    if(typeof userData.tray === "boolean")_paq.push(['setCustomDimension', 19, userData.tray]);
-    if(typeof userData.showEmptyFilters === "boolean")_paq.push(['setCustomDimension', 20, userData.showEmptyFilters]);
-    if(todos.items) _paq.push(['setCustomDimension', 21, todoRange(todos.items.objects.length)]);
-    _paq.push(['requireConsent']);
-    _paq.push(['setConsentGiven']);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    _paq.push(['trackVisibleContentImpressions']);
-    (function() {
-      var u="https://www.robbfolio.de/matomo/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '3']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-    if(userData.matomoEvents) {
-      // user has given consent to process their data
-      return Promise.resolve("Info: Consent given, Matomo error and event logging enabled");
-    } else {
-      // revoke matomoEvents consent
-      _paq.push(['forgetConsentGiven']);
-      return Promise.resolve("Info: No consent given, Matomo error and event logging disabled");
-    }
-  } catch(error) {
-    error.functionName = configureMatomo.name;
-    return Promise.reject(error);
-  }
-}
 function configureMainView() {
   try {
     // close filterMenu if open
     if(document.getElementById("filterMenu").classList.contains("is-active")) document.getElementById("filterMenu").classList.remove("is-active");
     // set scaling factor if default font size has changed
     if(userData.zoom) {
-      html.style.zoom = userData.zoom + "%";
+      document.getElementById("html").style.zoom = userData.zoom + "%";
       document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
       document.getElementById("zoomRangePicker").value = userData.zoom;
     }
@@ -268,7 +184,7 @@ function getAppData() {
     return Promise.reject(error);
   }
 }
-function getTranslations(language) {
+function getTranslations() {
   try {
     window.api.send("translations");
     return new Promise(function(resolve) {
@@ -288,7 +204,7 @@ function handleError(error) {
     errorContainer.classList.add("is-active");
     errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
     // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
+    if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Error", error.functionName, error])
   }
 }
 function jumpToItem(item) {
@@ -316,21 +232,6 @@ function jumpToItem(item) {
   }
 }
 // TODO Error handling
-function debounce(func, wait, immediate) {
-  // https://davidwalsh.name/javascript-debounce-function
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
-}
 function registerEvents() {
   try {
     // ########################################################################################################################
@@ -342,12 +243,12 @@ function registerEvents() {
     btnMessageLogging.onclick = function () {
       content.showContent(modalSettings);
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Message", "Click on Settings"]);
     }
     btnTheme.onclick = function() {
 			setTheme(true);
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Theme"])
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on Theme"])
     }
     btnArchiveTodos.onclick = function() {
       todos.archiveTodos().then(function(response) {
@@ -356,44 +257,30 @@ function registerEvents() {
           handleError(error);
         });
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Archive"])
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Setting", "Click on Archive"])
     }
-    btnOpenTodoFile.onclick = function() {
-      if(typeof userData.files === "object" && userData.files.length>0) {
-        showFiles().then(response => {
-          console.info(response);
-        }).catch(error => {
-          handleError(error);
-        });
-      } else {
-        window.api.send("openOrCreateFile", "open");
-      }
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "menu", "Click on Files"]);
-    }
-
     btnFilesCreateTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "create");
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
     }
 
     btnFilesOpenTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "open");
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
     }
 
     btnOnboardingCreateTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "create");
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
     }
 
     btnOnboardingOpenTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "open");
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
     }
 
     btnModalCancel.forEach(function(el) {
@@ -405,7 +292,7 @@ function registerEvents() {
           handleError(error);
         });
         // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
+        if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Form", "Click on Cancel"]);
       }
     });
     btnAddTodo.forEach(function(el) {
@@ -418,65 +305,30 @@ function registerEvents() {
         });
         form.show();
         // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
+        if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on add todo"]);
       }
     });
     btnCopyToClipboard.forEach(function(el) {
       el.onclick = function () {
         window.api.send("copyToClipboard", [errorMessage.innerHTML]);
         // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Error-Container", "Click on Copy to clipboard"]);
+        if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Error-Container", "Click on Copy to clipboard"]);
       }
     });
     btnFiltersResetFilters.onclick = function() {
       resetFilters();
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
     }
     btnNoResultContainerResetFilters.onclick = function() {
       resetFilters();
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "No Result Container", "Click on reset button"])
     }
-    todoTableSearch.addEventListener("input", debounce(function() {
-      startBuilding()
-    }, 250));
-    toggleMatomoEvents.onclick = function() {
-      //matomoEvents = this.checked;
-      setUserData('matomoEvents', this.checked);
-      configureMatomo(this.checked).then(response => {
-        console.info(response);
-      }).catch(error => {
-        handleError(error);
-      });
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
-    }
-    toggleNotifications.onclick = function() {
-      //notifications = this.checked;
-      setUserData('notifications', this.checked);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
-    }
-    toggleDarkmode.onclick = function() {
-      setTheme(true);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
-    }
-    toggleTray.onclick = function() {
-      setUserData("tray", this.checked);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Tray", this.checked])
-      // restart
-      window.api.send("restart");
-    }
-    settingsLanguage.onchange = function() {
-      userData.language = this.value;
-      window.api.send("userData", ["language", userData.language]);
-      window.api.send("changeLanguage", this.value);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
-    }
+
+
+
+
     errorContainerClose.onclick = function() {
       this.parentElement.classList.remove("is-active")
     }
@@ -524,10 +376,7 @@ function registerKeyboardShortcuts() {
           handleError(error);
         });
       }
-      // find todo
-      if(event.key==="f" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
-        todoTableSearch.focus();
-      }
+
       // reset filters
       if(event.key==="0" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
         resetFilters().then(function(response) {
@@ -575,10 +424,7 @@ function registerKeyboardShortcuts() {
         location.reload(true);
       }
     }, true)
-    // shortcuts for search input field
-    todoTableSearch.addEventListener("keyup", function () {
-      if(event.key === "Escape") todoTableSearch.blur();
-    });
+
     // shortcuts for modal form
     modalForm.addEventListener ("keyup", function(event) {
       // priority up
@@ -667,7 +513,7 @@ function resetFilters() {
     // empty old filter container
     todoFilters.innerHTML = "";
     // clear search input
-    todoTableSearch.value = null;
+    document.getElementById("todoTableSearch").value = null;
     // regenerate the data
     startBuilding();
     return Promise.resolve("Success: Filters resetted");
@@ -685,11 +531,11 @@ function resetModal(modal) {
       modal.removeAttribute("data-item");
     }
     // reset priority setting
-    priorityPicker.selectedIndex = 0;
+    document.getElementById("priorityPicker").selectedIndex = 0;
     // if recurrence picker was open it is now being closed
-    recurrencePickerContainer.classList.remove("is-active");
+    document.getElementById("recurrencePickerContainer").classList.remove("is-active");
     // clear previous recurrence selection
-    recurrencePickerInput.value = null;
+    document.getElementById("recurrencePickerInput").value = null;
     // if file chooser was open it is now being closed
     modalChangeFile.classList.remove("is-active");
     // hide suggestion box if it was open
@@ -741,11 +587,11 @@ function setTheme(switchTheme) {
     }
     switch (theme) {
       case "light":
-      toggleDarkmode.checked = false;
+      document.getElementById("toggleDarkmode").checked = false;
       themeLink.href = "";
       break;
       case "dark":
-      toggleDarkmode.checked = true;
+      document.getElementById("toggleDarkmode").checked = true;
       themeLink.href = appData.path + "/css/" + theme + ".css";
       break;
     }
@@ -761,7 +607,6 @@ function setTranslations() {
     addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
     addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
     btnSave.innerHTML = translations.save;
-    btnTheme.setAttribute("title", translations.toggleDarkMode);
     messageLoggingBody.innerHTML = translations.messageLoggingBody;
     messageLoggingButton.innerHTML = translations.settings;
     messageLoggingTitle.innerHTML = translations.errorEventLogging;
@@ -776,21 +621,10 @@ function setTranslations() {
     onboardingContainerBtnOpen.innerHTML = translations.openFile;
     onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
 
-    todoTableSearch.placeholder = translations.search;
     welcomeToSleek.innerHTML = translations.welcomeToSleek;
-
-    /*btnOpenTodoFile.forEach(function(el) {
-      el.setAttribute("title", translations.openFile);
-    });*/
     btnResetFilters.forEach(function(el) {
       el.getElementsByTagName('span')[0].innerHTML = translations.resetFilters;
     });
-    /*btnCreateTodoFile.forEach(function(el) {
-      el.setAttribute("title", translations.createFile);
-    });
-    btnChangeTodoFile.forEach(function(el) {
-      el.setAttribute("title", translations.openFile);
-    });*/
     btnModalCancel.forEach(function(el) {
       el.innerHTML = translations.cancel;
     });
@@ -813,26 +647,15 @@ function setUserData(key, value) {
     return Promise.reject(error);
   }
 }
-function setToggles() {
+/*function setToggles() {
   try {
-    // set the toggles in settings
-    toggleMatomoEvents.checked = userData.matomoEvents;
-    toggleNotifications.checked = userData.notifications;
-    showCompleted.checked = userData.showCompleted;
-    sortCompletedLast.checked = userData.sortCompletedLast;
-    showHidden.checked = userData.showHidden;
-    showDueIsToday.checked = userData.showDueIsToday;
-    showDueIsFuture.checked = userData.showDueIsFuture;
-    showDueIsPast.checked = userData.showDueIsPast;
-    toggleTray.checked = userData.tray;
-    compactView.checked = userData.compactView;
-    showEmptyFilters.checked = userData.showEmptyFilters;
+
     return Promise.resolve("Success: Toggles set");
   } catch(error) {
     error.functionName = setToggles.name;
     return Promise.reject(error);
   }
-}
+}*/
 function setWindowTitle(file) {
   if(file) {
     switch (appData.os) {
@@ -847,59 +670,21 @@ function setWindowTitle(file) {
     document.title = "sleek";
   }
 }
-function setFriendlyLanguageNames() {
-  try {
-    appData.languages.forEach((language) => {
-      // generate user friendly entries for language selection menu
-      switch (language) {
-        case "de":
-        friendlyLanguageName = "Deutsch"
-        break;
-        case "en":
-        friendlyLanguageName = "English"
-        break;
-        case "it":
-        friendlyLanguageName = "Italiano"
-        break;
-        case "es":
-        friendlyLanguageName = "‎Español"
-        break;
-        case "fr":
-        friendlyLanguageName = "Français"
-        break;
-        case "zh":
-        friendlyLanguageName = "Chinese (简体中文)"
-        break;
-        default:
-        return;
-      }
-      var option = document.createElement("option");
-      option.text = friendlyLanguageName;
-      option.value = language;
-      if(language===userData.language) option.selected = true;
-      settingsLanguage.add(option);
-    });
-    return Promise.resolve("Success: Friendly language names added to select field in settings");
-  } catch(error) {
-    error.functionName = setFriendlyLanguageNames.name;
-    return Promise.reject(error);
-  }
-}
 function showOnboarding(variable) {
   try {
     if(variable) {
       onboardingContainer.classList.add("is-active");
-      btnAddTodo.forEach(item => item.classList.add("is-hidden"));
+      document.querySelectorAll(".btnAddTodo").forEach(item => item.classList.add("is-hidden"));
       navBtnFilter.classList.add("is-hidden");
-      navBtnView.classList.add("is-hidden");
+      document.getElementById("navBtnView").classList.add("is-hidden");
       todoTable.classList.remove("is-active");
       todoTableSearchContainer.classList.remove("is-active");
       return Promise.resolve("Info: Show onboarding");
     } else {
       onboardingContainer.classList.remove("is-active");
-      btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
+      document.querySelectorAll(".btnAddTodo").forEach(item => item.classList.remove("is-hidden"));
       navBtnFilter.classList.remove("is-hidden");
-      navBtnView.classList.remove("is-hidden");
+      document.getElementById("navBtnView").classList.remove("is-hidden");
       todoTable.classList.add("is-active");
       todoTableSearchContainer.classList.add("is-active");
       return Promise.resolve("Info: Hide onboarding");
@@ -925,64 +710,6 @@ function showResultStats() {
     return Promise.reject(error);
   }
 }
-function showFiles() {
-  try {
-    let files = userData.files;
-    modalChangeFile.classList.add("is-active");
-    modalChangeFile.focus();
-    modalChangeFileTable.innerHTML = "";
-    for (let file in files) {
-      // skip if file doesn't exist
-      var table = modalChangeFileTable;
-      table.classList.add("files");
-      var row = table.insertRow(0);
-      row.setAttribute("data-path", files[file][1]);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      if(files[file][0]===1) {
-        cell1.innerHTML = "<button class=\"button\" disabled>" + translations.selected + "</button>";
-      } else {
-        cell1.innerHTML = "<button class=\"button is-link\" tabindex=\"0\">" + translations.select + "</button>";
-        cell1.onclick = function() {
-          setUserData("selectedFilters", []);
-          resetModal().then(response => {
-            window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
-            console.info(response);
-          }).catch(error => {
-            handleError(error);
-          });
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
-        }
-        cell3.innerHTML = "<a href=\"#\" tabindex=\"0\"><i class=\"fas fa-minus-circle\"></i></a>";
-        cell3.title = translations.delete;
-        cell3.onclick = function() {
-          let path = this.parentElement.getAttribute("data-path");
-          // remove file from files array
-          files = files.filter(function(file) {
-            return file[1] != path;
-          });
-          // persist new files array
-          setUserData("files", files);
-          // after array is updated, open the modal again
-          showFiles().then(response => {
-            console.info(response);
-          }).catch(error => {
-            handleError(error);
-          });
-        }
-      }
-      cell2.innerHTML = files[file][1];
-    }
-    // create the modal jail, so tabbing won't leave modal
-    createModalJail(modalChangeFile);
-    return Promise.resolve("Success: File changer modal built and opened");
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
-
 function getBadgeCount() {
   let count = 0;
   todos.items.objects.forEach((item) => {
@@ -990,13 +717,12 @@ function getBadgeCount() {
   });
   return count;
 }
-
-async function startBuilding(searchString, append) {
+async function startBuilding(append) {
   try {
 
     t0 = performance.now();
 
-    todos.items.filtered = await filters.filterItems(todos.items.objects, searchString);
+    todos.items.filtered = await filters.filterItems(todos.items.objects);
 
     filters.generateFilterData();
 
@@ -1049,17 +775,7 @@ window.onload = async function () {
   }).catch(function(error) {
     handleError(error);
   });
-  setToggles().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    handleError(error);
-  });
   setTranslations(translations).then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    handleError(error);
-  });
-  setFriendlyLanguageNames(translations).then(function(response) {
     console.info(response);
   }).catch(function(error) {
     handleError(error);
@@ -1074,20 +790,19 @@ window.onload = async function () {
   }).catch(function(error) {
     handleError(error);
   });
-
-
   form = await import("./js/form.mjs");
   content = await import("./js/content.mjs");
   drawer = await import("./js/drawer.mjs");
   view = await import("./js/view.mjs");
-  await import("./js/navigation.mjs");
-
-  configureMatomo().then(function(response) {
+  import("./js/navigation.mjs");
+  import("./js/files.mjs");
+  import("./js/search.mjs");
+  matomo = await import("./js/matomo.mjs");
+  await matomo.configureMatomo(todos.items.objects.length).then(function(response) {
     console.info(response);
   }).catch(function(error) {
     handleError(error);
   });
-
   a1 = performance.now();
   console.info("App build:", a1 - a0, "ms");
 }
@@ -1175,4 +890,4 @@ window.api.receive("refresh", async function(content) {
   });
 });
 
-export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, _paq };
+export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme };

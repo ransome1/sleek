@@ -1,5 +1,6 @@
 "use strict";
-import { setUserData, userData, handleError, _paq } from "../render.js";
+import { setUserData, userData, handleError } from "../render.js";
+import { _paq } from "./matomo.mjs";
 import { navBtns } from "./navigation.mjs";
 import { getHandleElement, startDragging } from "./drawer_handle.mjs";
 
@@ -82,7 +83,6 @@ export function showDrawer(variable, buttonId, drawerId) {
       setUserData("filterDrawer", false);
       return Promise.resolve("Success: Drawer closed");
     }
-    const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompletedLast");
     switch (drawerId) {
       case "viewDrawer":
         // highlight persisted selection in dropdown

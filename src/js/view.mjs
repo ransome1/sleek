@@ -1,6 +1,9 @@
+"use strict";
 import { userData, setUserData, handleError, startBuilding, translations, resetModal } from "../render.js";
+import { _paq } from "./matomo.mjs";
 
 const html = document.getElementById("html");
+const body = document.getElementById("body");
 const showCompleted = document.getElementById("showCompleted");
 const showDueIsFuture = document.getElementById("showDueIsFuture");
 const showDueIsPast = document.getElementById("showDueIsPast");
@@ -12,10 +15,8 @@ const sortByDueDate = document.getElementById("sortByDueDate");
 const sortByPriority = document.getElementById("sortByPriority");
 const sortByProjects = document.getElementById("sortByProjects");
 const sortCompletedLast = document.getElementById("sortCompletedLast");
-const toggleCompactView = document.getElementById("toggleCompactView");
-const toggleDarkmode = document.getElementById("toggleDarkmode");
-const toggleMatomoEvents = document.getElementById("toggleMatomoEvents");
-const toggleNotifications = document.getElementById("toggleNotifications");
+//const toggleCompactView = document.getElementById("toggleCompactView");
+
 const toggleTray = document.getElementById("toggleTray");
 const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
 const viewHeadlineTodoList = document.getElementById("viewHeadlineTodoList");
@@ -32,6 +33,11 @@ const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompl
 const viewToggleZoom = document.getElementById("viewToggleZoom");
 const zoomRangePicker = document.getElementById("zoomRangePicker");
 const zoomUndo = document.getElementById("zoomUndo");
+const showEmptyFilters = document.getElementById("showEmptyFilters");
+const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyFilters");
+
+const compactView = document.getElementById("compactView");
+
 
 sortBy.innerHTML = translations.sortBy;
 sortByContexts.innerHTML = translations.contexts;
@@ -95,9 +101,20 @@ viewToggles.forEach(function(viewToggle) {
   }
 });
 
+// set the toggles in view sidebar
+showCompleted.checked = userData.showCompleted;
+sortCompletedLast.checked = userData.sortCompletedLast;
+showHidden.checked = userData.showHidden;
+showDueIsToday.checked = userData.showDueIsToday;
+showDueIsFuture.checked = userData.showDueIsFuture;
+showDueIsPast.checked = userData.showDueIsPast;
+toggleTray.checked = userData.tray;
+compactView.checked = userData.compactView;
+showEmptyFilters.checked = userData.showEmptyFilters;
+
 function zoom(zoom) {
   try {
-    const zoomStatus = zoom + "\%";
+    const zoomStatus = zoom + "%";
     html.style.zoom = zoomStatus;
     document.getElementById("zoomStatus").innerHTML = zoomStatus;
     zoomRangePicker.value = zoom;

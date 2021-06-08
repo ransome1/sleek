@@ -9,14 +9,14 @@ const Store = require("./configs/store.config.js");
 // ########################################################################################################################
 const { AppImageUpdater } = require("electron-updater");
 const autoUpdater = new AppImageUpdater();
-autoUpdater.on('update-available', (info) => {
+autoUpdater.on('update-available', () => {
   console.log("Update available");
 })
-.on('update-not-available', (info) => {
+.on('update-not-available', () => {
   console.log("No update");
 })
-.on('error', (err) => {
-  console.log('Error in updater: ' + err);
+.on('error', (error) => {
+  console.log('Error in updater: ' + error);
 })
 .on('download-progress', (progressObj) => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;
@@ -24,7 +24,7 @@ autoUpdater.on('update-available', (info) => {
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
   console.log(log_message);
 })
-.on('update-downloaded', (info) => {
+.on('update-downloaded', () => {
   console.log('Update downloaded');
 });
 // ########################################################################################################################
@@ -217,11 +217,14 @@ const createWindow = async function() {
       })
       .on("change", function() {
         console.log("Info: File " + file + " has changed");
-        getContent(file).then(content => {
-          mainWindow.webContents.send("refresh", content)
-        }).catch(error => {
-          console.log(error);
-        });
+        // wait 10ms before rereading in case the file is being updated with a delay
+        setTimeout(function() {
+          getContent(file).then(content => {
+            mainWindow.webContents.send("refresh", content)
+          }).catch(error => {
+            console.log(error);
+          });
+        }, 10);
       });
       return Promise.resolve("Success: Filewatcher is watching: " + file);
     } catch (error) {
@@ -271,10 +274,10 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
       return Promise.resolve(userData);
     } catch(error) {
-      error.functionName = configureUserData.id;
+      error.functionName = getUserData.id;
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureUserData()", error])
-      return Promise.reject("Error in configureUserData(): " + error);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "getUserData()", error])
+      return Promise.reject("Error in getUserData(): " + error);
     }
   }
   const showNotification = function(config) {

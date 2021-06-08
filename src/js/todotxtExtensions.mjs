@@ -1,3 +1,5 @@
+import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+
 function RecExtension() {
 	this.name = "rec";
 }

@@ -1,6 +1,7 @@
 "use strict";
-import { userData, handleError, translations, setUserData, startBuilding, _paq } from "../render.js";
-import { items, generateGroups, generateTable } from "./todos.mjs";
+import { userData, handleError, translations, setUserData, startBuilding } from "../render.js";
+import { _paq } from "./matomo.mjs";
+import { items } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
@@ -68,7 +69,7 @@ function deleteFilter(filter, category) {
     return Promise.reject(error);
   }
 }
-function filterItems(items, searchString) {
+function filterItems(items) {
   try {
     // selected filters are empty, unless they were persisted
     if(userData.selectedFilters && userData.selectedFilters.length>0) {
@@ -111,8 +112,7 @@ function filterItems(items, searchString) {
     }
     // apply filters or filter by search string
     items = items.filter(function(item) {
-      if(todoTableSearch.value) searchString = todoTableSearch.value;
-      if((searchString || todoTableSearch.value) && item.toString().toLowerCase().indexOf(searchString.toLowerCase()) === -1) return false;
+      if(todoTableSearch.value && item.toString().toLowerCase().indexOf(todoTableSearch.value.toLowerCase()) === -1) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
       if(!userData.showDueIsPast && item.due && isPast(item.due)) return false;

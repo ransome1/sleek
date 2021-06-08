@@ -1,7 +1,10 @@
 "use strict";
-import { userData, translations, handleError, _paq } from "../render.js";
+import { userData, translations, handleError } from "../render.js";
+import { _paq } from "./matomo.mjs";
 import { resizeInput } from "./form.mjs";
 import { RecExtension } from "./todotxtExtensions.mjs";
+import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import "../../node_modules/jstodotxt/jsTodoTxt.js";
 import * as recurrences from "./recurrences.mjs";
 
 const modalFormInput = document.getElementById("modalFormInput");
@@ -88,7 +91,7 @@ function showRecurrences() {
   recurrencePickerContainer.focus();
   recurrencePickerContainer.classList.toggle("is-active");
   // get object from current input
-  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+  let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
   let recSplit = recurrences.splitRecurrence(todo.rec);
   setRecurrenceOptionLabels(recSplit.mul);
   recurrencePickerSpinner.value = recSplit.mul;
@@ -108,7 +111,7 @@ function showRecurrences() {
     }).catch(function(error) {
       handleError(error);
     });
-    document.getElementById("modalFormInput").value = todo.toString();
+    modalFormInput.value = todo.toString();
   }
   recurrencePickerSpinner.onchange = function() {
     recSplit.mul = Number(recurrencePickerSpinner.value);
@@ -141,7 +144,7 @@ function showRecurrences() {
       applyRecurrenceValue();
       // hide the picker
       recurrencePickerContainer.classList.remove("is-active");
-      document.getElementById("modalFormInput").focus();
+      modalFormInput.focus();
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + recSplit.period]);
     }

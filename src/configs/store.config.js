@@ -9,7 +9,7 @@ class Store {
     if(process.env.PORTABLE_EXECUTABLE_FILE) {
       userDataPath = path.join(path.dirname(process.env.PORTABLE_EXECUTABLE_FILE), 'config', 'sleek');
       if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
-    } else if(!process.env.PORTABLE_EXECUTABLE_FILE && process.platform==="win32") {
+    } else if(!process.env.PORTABLE_EXECUTABLE_FILE && !process.windowsStore && process.platform==="win32") {
       userDataPath = path.dirname(process.execPath);
       if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
     } else {

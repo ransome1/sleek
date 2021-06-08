@@ -24,3 +24,5 @@ src/__tests__
 build/
 test/
 package-lock.json
+.vs/
+.vscode/

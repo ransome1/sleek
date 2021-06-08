@@ -1,5 +1,6 @@
 "use strict";
-import { modal, userData, _paq, translations } from "../render.js";
+import { modal, userData, appData, setUserData, translations, handleError, setTheme } from "../render.js";
+import { _paq } from "./matomo.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 
 const reviewSourceforge = document.getElementById("reviewSourceforge");
@@ -8,7 +9,6 @@ const shareFacebook = document.getElementById("shareFacebook");
 const shareLinkedin = document.getElementById("shareLinkedin");
 const shareTwitter = document.getElementById("shareTwitter");
 const submitIssuesOnGithub = document.getElementById("submitIssuesOnGithub");
-
 const contentTabs = document.querySelectorAll('.modal.content ul li');
 const contentTabsCards = document.querySelectorAll('.modal.content section');
 const helpTab1Title = document.getElementById("helpTab1Title");
@@ -68,6 +68,14 @@ const helpTabKeyboardTR14TD1 = document.getElementById("helpTabKeyboardTR14TD1")
 const helpTabKeyboardTR15TD1 = document.getElementById("helpTabKeyboardTR15TD1");
 const helpTabKeyboardTR16TD1 = document.getElementById("helpTabKeyboardTR16TD1");
 const helpTabKeyboardTR17TD1 = document.getElementById("helpTabKeyboardTR17TD1");
+
+const toggleDarkmode = document.getElementById("toggleDarkmode");
+const toggleNotifications = document.getElementById("toggleNotifications");
+
+const toggleTray = document.getElementById("toggleTray");
+
+
+
 
 helpTabKeyboardSubtitle.innerHTML = translations.helpTabKeyboardSubtitle;
 helpTabKeyboardTR13TD1.innerHTML = translations.helpTabKeyboardTR13TD1;
@@ -132,6 +140,7 @@ reviewSourceforge.innerHTML = translations.reviewSourceforge;
 reviewWindowsStore.innerHTML = translations.reviewWindowsStore;
 submitIssuesOnGithub.innerHTML = translations.submitIssuesOnGithub;
 
+
 contentTabs.forEach(tab => tab.addEventListener("click", function() {
   contentTabs.forEach(function(tab) {
     tab.classList.remove("is-active");
@@ -141,6 +150,34 @@ contentTabs.forEach(tab => tab.addEventListener("click", function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
 }));
+settingsLanguage.onchange = function() {
+  userData.language = this.value;
+  window.api.send("userData", ["language", userData.language]);
+  window.api.send("changeLanguage", this.value);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
+}
+toggleNotifications.onclick = function() {
+  //notifications = this.checked;
+  setUserData('notifications', this.checked);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
+}
+toggleDarkmode.onclick = function() {
+  setTheme(true);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
+}
+toggleTray.onclick = function() {
+  setUserData("tray", this.checked);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Tray", this.checked])
+  // restart
+  window.api.send("restart");
+}
+
+toggleNotifications.checked = userData.notifications;
+
 
 function showTab(tab) {
   contentTabsCards.forEach(function(el) {
@@ -148,8 +185,9 @@ function showTab(tab) {
   });
   document.getElementById(tab).classList.add("is-active");
 }
-function showContent(section) {
+function showContent(id) {
   try {
+    const section = document.getElementById(id);
     // in case a content window was open, it will be closed
     modal.forEach(function(el) {
       el.classList.remove("is-active");
@@ -176,5 +214,51 @@ function showContent(section) {
     return Promise.reject(error);
   }
 }
+
+function setFriendlyLanguageNames() {
+  try {
+    appData.languages.forEach((language) => {
+      // generate user friendly entries for language selection menu
+      let friendlyLanguageName;
+      switch (language) {
+        case "de":
+        friendlyLanguageName = "Deutsch"
+        break;
+        case "en":
+        friendlyLanguageName = "English"
+        break;
+        case "it":
+        friendlyLanguageName = "Italiano"
+        break;
+        case "es":
+        friendlyLanguageName = "‎Español"
+        break;
+        case "fr":
+        friendlyLanguageName = "Français"
+        break;
+        case "zh":
+        friendlyLanguageName = "Chinese (简体中文)"
+        break;
+        default:
+        return;
+      }
+      var option = document.createElement("option");
+      option.text = friendlyLanguageName;
+      option.value = language;
+      if(language===userData.language) option.selected = true;
+      settingsLanguage.add(option);
+    });
+    return Promise.resolve("Success: Friendly language names added to select field in settings");
+  } catch(error) {
+    error.functionName = setFriendlyLanguageNames.name;
+    return Promise.reject(error);
+  }
+}
+
+setFriendlyLanguageNames().then(function(response) {
+  console.info(response);
+}).catch(function(error) {
+  handleError(error);
+});
 
 export { showContent };
