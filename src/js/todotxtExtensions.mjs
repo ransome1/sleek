@@ -24,7 +24,7 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 	var indexDueKeyword = line.indexOf("due:");
 
 	// Find keyword due
-	if (indexDueKeyword > 0) {
+	if (indexDueKeyword >= 0) {
 		var stringAfterDue = line.substr(indexDueKeyword + 4)
 		var words = stringAfterDue.split(" ");
 		var match = null;
