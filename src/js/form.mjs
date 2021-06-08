@@ -1,7 +1,7 @@
 "use strict";
 import { resetModal, handleError, userData, setUserData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { RecExtension } from "./todotxtExtensions.mjs";
+import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import "../../node_modules/jstodotxt/jsTodoTxt.js";
 import { generateFilterData } from "./filters.mjs";
@@ -45,6 +45,9 @@ modalFormInputResize.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
 }
 
+/*modalFormInput.addEventListener("keydown", event => {
+  if(event.key==="Tab" && document.getElementById("autoCompleteContainer").classList.contains("is-active")) document.getElementById("autoCompleteContainer").focus();
+});*/
 modalFormInput.addEventListener("keyup", event => {
   // do not show suggestion container if Escape has been pressed
   if(event.key==="Escape") return false;
@@ -184,7 +187,7 @@ function setPriority(priority) {
         });
       }
     }
-    let todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
     if((priority==="down" || priority==="up") && !todo.priority) {
       todo.priority = "A";
     } else if(priority==="up" && todo.priority!="a") {
@@ -211,7 +214,7 @@ function setPriority(priority) {
 }
 function setDueDate(days) {
   try {
-    const todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
     if(days===0) {
       todo.due = undefined;
       todo.dueString = undefined;
@@ -247,7 +250,7 @@ function show(todo, templated) {
       // replace invisible multiline ascii character with new line
       todo = todo.replaceAll(String.fromCharCode(16),"\r\n");
       // we need to check if there already is a due date in the object
-      todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+      todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
       // set the priority
       setPriority(todo.priority);
       //
@@ -331,7 +334,7 @@ function submitForm() {
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
         modalFormAlert.innerHTML = translations.formInfoDuplicate;
@@ -351,7 +354,7 @@ function submitForm() {
     } else if(modalForm.getAttribute("data-item")==null && modalForm.elements[0].value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
       // check and prevent duplicate todo

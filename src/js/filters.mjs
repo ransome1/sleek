@@ -320,14 +320,17 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       // add the headline before category container
       todoFiltersContainer.appendChild(todoFilterHeadline);
     } else {
-      // show suggestion box
-      autoCompleteContainer.classList.add("is-active");
-      autoCompleteContainer.focus();
-      // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
+      // show suggestion box when prefix is present
+      if(autoCompletePrefix!==undefined) {
+        autoCompleteContainer.classList.add("is-active");
+        autoCompleteContainer.focus();
+      }
+      todoFilterHeadline.setAttribute("tabindex", -1);
+      // create a sub headline element
       todoFilterHeadline.setAttribute("class", "is-4 title");
       // no need for tab index if the headline is in suggestion box
-      if(autoCompletePrefix==undefined) todoFilterHeadline.setAttribute("tabindex", -1);
+      //if(autoCompletePrefix==undefined)
       todoFilterHeadline.innerHTML = headline;
       // add the headline before category container
       todoFiltersContainer.appendChild(todoFilterHeadline);
@@ -342,8 +345,8 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       if(category==="priority") todoFiltersItem.classList.add(filter);
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 301) }
       todoFiltersItem.setAttribute("href", "#");
+      if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 0) }
       todoFiltersItem.innerHTML = filter;
       if(autoCompletePrefix==undefined) {
         // set highlighting if filter/category combination is on selected filters array

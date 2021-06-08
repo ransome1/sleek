@@ -680,7 +680,7 @@ nav {
 }
 #autoCompleteContainer {
   height: auto;
-  position: absolute;
+  position: fixed;
   display: none;
   z-index: 50;
   opacity: .90;

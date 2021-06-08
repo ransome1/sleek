@@ -234,6 +234,7 @@
             <div class="content">
               <div class="control has-icons-right">
                 <input id="modalFormInput" class="input is-medium" type="text" tabindex="0">
+                <div id="autoCompleteContainer" class="drawer card"></div>
                 <a href="#" id="modalFormInputResize" class="icon is-right" tabindex="-1" data-input-type="input">
                   <i class="fas fa-expand-alt"></i>
                 </a>
@@ -507,7 +508,7 @@
               <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
               <td><a href="https://github.com/paulmillr/chokidar" target="_blank">chokidar</a></td>
               <td><a href="https://github.com/viktor-shmigol/electron-windows-badge/" target="_blank">Electron Windows Badge</a></td>
-              <td></td>
+              <td><a href="https://github.com/andrewplummer/Sugar" target="_blank">Sugar</a></td>
             </tr>
           </table>
           <p><code>v<span id="version"></span></code></p>
@@ -662,7 +663,6 @@
         <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
-    <div id="autoCompleteContainer" class="drawer card"></div>
     <div id="todoContext" class="dropdown-menu" role="menu">
       <div class="dropdown-content">
         <a id="todoContextUseAsTemplate" class="dropdown-item"></a>
@@ -732,6 +732,7 @@
         </p>
       </article>
     </section>
+    <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
     <script defer type="module" src="render.js"></script>
   </body>
 </html>

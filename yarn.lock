@@ -6135,6 +6135,18 @@ stylelint@^13.13.1:
     v8-compile-cache "^2.3.0"
     write-file-atomic "^3.0.3"
 
+sugar-core@^2.0.0:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/sugar-core/-/sugar-core-2.0.6.tgz#785e0cd64aa7302ea54d47bc1213efe52c006270"
+  integrity sha512-YmLFysR3Si6RImqL1+aB6JH81EXxvXn5iXhPf2PsjfoUYEwCxFDYCQY+zC3WqviuGWzxFaSkkJvkUE05Y03L5Q==
+
+sugar@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/sugar/-/sugar-2.0.6.tgz#aa08e389add27109fb35718598313e0503a4fc39"
+  integrity sha512-s0P2/pjJtAD9VA44+2Gqm3NdC4v+08melA6YubOxzshu628krTbn95/M2GWMrI9rYspZMpYBIrChR46fjQ7xsQ==
+  dependencies:
+    sugar-core "^2.0.0"
+
 sugarss@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/sugarss/-/sugarss-2.0.0.tgz#ddd76e0124b297d40bf3cca31c8b22ecb43bc61d"

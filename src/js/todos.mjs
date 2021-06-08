@@ -6,7 +6,7 @@ import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
 import "../../node_modules/marked/marked.min.js";
-import { RecExtension } from "./todotxtExtensions.mjs";
+import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import "../../node_modules/jstodotxt/jsTodoTxt.js";
 
@@ -113,7 +113,7 @@ function configureTodoTableTemplate(append) {
 }
 function generateItems(content) {
   try {
-    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
+    items = { objects: TodoTxt.parse(content, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]) }
     items.objects = items.objects.filter(function(item) {
       if(!item.text) return false;
       return true;
@@ -449,7 +449,7 @@ function setTodoComplete(todo) {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]);
+    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
@@ -492,7 +492,7 @@ function setTodoDelete(todo) {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]);
+    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item
@@ -533,7 +533,7 @@ async function archiveTodos() {
     const getContentFromDoneFile = new Promise(function(resolve) {
       window.api.send("getContent", doneFile());
       return window.api.receive("getContent", (content) => {
-        //resolve(TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]));
+        //resolve(TodoTxt.parse(content, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]));
         resolve(content);
       });
     });

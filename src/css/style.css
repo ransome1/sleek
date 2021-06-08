@@ -710,7 +710,7 @@ nav ul:nth-child(2) {
 
 #autoCompleteContainer {
   height: auto;
-  position: absolute;
+  position: fixed;
   display: none;
   z-index: 50;
   opacity: 0.9;

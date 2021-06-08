@@ -115,7 +115,7 @@ function configureMainView() {
         noResultContainer.classList.add("is-active");
         return Promise.resolve("Info: No results");
         // TODO explain
-      } else if(userData.file && todos.visibleRows>0 && todos.items.filtered.length>0) {
+      } else if(userData.file && todos.items.filtered.length>0) {
         todoTableSearchContainer.classList.add("is-active");
         addTodoContainer.classList.remove("is-active");
         noResultContainer.classList.remove("is-active");
