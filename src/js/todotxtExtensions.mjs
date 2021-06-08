@@ -30,7 +30,7 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 		var match = null;
 		
 		// Try to parse a valid date until the end of the text
-		for (var i = 1; i <= words.length; i++) {
+		for (var i = Math.max(5, words.length); i > 0; i--) {
 			match = words.slice(0, i).join(" ");
 			dueDate = Sugar.Date.create(match);
 			if (Sugar.Date.isValid(dueDate)) {
