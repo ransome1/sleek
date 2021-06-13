@@ -1,12 +1,14 @@
 "use strict";
 import { handleError, appData, userData, setUserData } from "../render.js";
+import { items } from "./todos.mjs";
 
 const toggleMatomoEvents = document.getElementById("toggleMatomoEvents");
 
 let _paq;
 
-function configureMatomo(items) {
+function configureMatomo() {
   try {
+    if(appData.environment) return Promise.resolve("Info: No tracking in development and testing environment");
     if(!userData.uid) {
       // generate random number/string combination as user id and persist it
       var uid = Math.random().toString(36).slice(2);
