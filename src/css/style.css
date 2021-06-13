@@ -289,6 +289,9 @@ nav ul:nth-child(2) {
 #errorContainer p {
   margin: 0.1em 0;
 }
+#errorContainer i {
+  color: white !important;
+}
 #errorContainer .button {
   color: white;
 }
@@ -327,7 +330,7 @@ nav ul:nth-child(2) {
   cursor: ew-resize;
   z-index: 2;
 }
-#drawerContainer a.drawerClose {
+#drawerContainer #drawerClose {
   width: 2.5em;
   height: 2.5em;
   display: none;
@@ -380,7 +383,7 @@ nav ul:nth-child(2) {
 #drawerContainer .drawer h4.is-4.clickable i {
   color: #3273dc;
 }
-#drawerContainer .drawer .dropdown-item {
+#drawerContainer .drawer section {
   width: 100%;
   padding: 0;
   margin: 0 0 1.5em 0;
@@ -398,7 +401,7 @@ nav ul:nth-child(2) {
   display: block !important;
 }
 
-#drawerContainer:hover a.drawerClose {
+#drawerContainer:hover #drawerClose {
   display: inline-block;
 }
 
@@ -460,66 +463,67 @@ nav ul:nth-child(2) {
   width: 100%;
   float: left;
 }
-#todoTable .flex-table {
+#todoTable .todo {
   position: relative;
   display: flex;
   flex-flow: row wrap;
   border-bottom: solid 1px #ebebeb;
 }
-#todoTable .flex-table:last-child {
+#todoTable .todo:last-child {
   border: none;
 }
-#todoTable .flex-table#previousItem {
+#todoTable .todo#previousItem {
   -webkit-transition: background-color 0.5s ease-out;
   -moz-transition: background-color 0.5s ease-out;
   -o-transition: background-color 0.5s ease-out;
   transition: background-color 0.5s ease-out;
 }
-#todoTable .flex-table#previousItem.is-highlighted {
+#todoTable .todo#previousItem.is-highlighted {
   background-color: #f5f5f5;
 }
-#todoTable .flex-table.group {
+#todoTable .group {
+  min-height: 1em;
   margin-top: 0.5em;
   border: none;
   font-family: FreeSansBold;
 }
-#todoTable .flex-table.group .button {
+#todoTable .group .button {
   cursor: default;
   height: auto;
   line-height: auto;
   font-size: 1.2em;
   padding: 0 0.4em;
 }
-#todoTable .flex-table.group.due .button {
+#todoTable .group.due .button {
   padding: 0;
   background: transparent;
 }
-#todoTable .flex-table {
+#todoTable .todo {
   display: flex;
 }
-#todoTable .flex-table .flex-row {
+#todoTable .cell {
   padding: 0.75em 0;
   margin-right: 1em;
   height: auto;
   line-height: 1.5em;
 }
-#todoTable .flex-table .flex-row .is-white {
+#todoTable .cell .is-white {
   background: none;
 }
-#todoTable .flex-table .flex-row span.tag {
+#todoTable .cell span.tag {
   margin: 0 0.25em 0 0;
 }
-#todoTable .flex-table .flex-row span.tag.projects {
+#todoTable .cell span.tag.projects {
   background: #f1d6f1;
 }
-#todoTable .flex-table .flex-row span.tag.contexts {
+#todoTable .cell span.tag.contexts {
   background: #c5ede3;
 }
-#todoTable .flex-table .flex-row.checkbox a {
+#todoTable .cell.checkbox a {
   flex: 0 0 1em;
   font-size: 1.25em;
 }
-#todoTable .flex-table .flex-row.text {
+#todoTable .cell.text {
   width: auto;
   flex: 1;
   line-height: 1.7em;
@@ -527,115 +531,115 @@ nav ul:nth-child(2) {
   color: #4a4a4a;
   margin-right: 0;
 }
-#todoTable .flex-table .flex-row.text .categories {
+#todoTable .cell.text .categories {
   margin-right: 0.5em;
 }
-#todoTable .flex-table .flex-row.text .button {
+#todoTable .cell.text .button {
   font-size: 1.1em;
   font-family: FreeSansBold;
   height: auto;
   padding: 0 0.4em;
 }
-#todoTable .flex-table .flex-row.text .priority {
+#todoTable .cell.text .priority {
   background: transparent;
   color: #666666;
   margin-right: 0.5em;
 }
-#todoTable .flex-table .flex-row.text .text {
+#todoTable .cell.text .text {
   margin-right: 0.5em;
 }
-#todoTable .flex-table .flex-row.spacer {
+#todoTable .cell.spacer {
   width: 0.5em;
   background: transparent;
 }
-#todoTable .flex-table .flex-row.priority {
+#todoTable .cell.priority {
   background: #ccc;
   flex: 0 0 0.5em;
   opacity: 0.5;
 }
-#todoTable .flex-table .flex-row.priority.A,
-#todoTable .flex-table .flex-row .priority.A {
+#todoTable .cell.priority.A,
+#todoTable .cell .priority.A {
   color: #ffe6eb;
   background: #ff3860;
 }
-#todoTable .flex-table .flex-row.priority.B,
-#todoTable .flex-table .flex-row .priority.B {
+#todoTable .cell.priority.B,
+#todoTable .cell .priority.B {
   color: #fadcd8;
   background: #fa745e;
 }
-#todoTable .flex-table .flex-row.priority.C,
-#todoTable .flex-table .flex-row .priority.C {
+#todoTable .cell.priority.C,
+#todoTable .cell .priority.C {
   background: #ffdd57;
 }
-#todoTable .flex-table .flex-row .contexts {
+#todoTable .cell .contexts {
   background: #c5ede3;
 }
-#todoTable .flex-table .flex-row .projects {
+#todoTable .cell .projects {
   background: #f1d6f1;
 }
-#todoTable .flex-table .flex-row.itemDueDate {
+#todoTable .cell.itemDueDate {
   color: #4a4a4a;
   position: relative;
   white-space: nowrap;
   margin: 0 0.25em 0 0;
   text-transform: lowercase;
 }
-#todoTable .flex-table .flex-row.itemDueDate .fa-sort-down {
+#todoTable .cell.itemDueDate .fa-sort-down {
   position: absolute;
   right: 0.2em;
   bottom: 2.25em;
   display: none;
 }
-#todoTable .flex-table .flex-row.itemDueDate .tags {
+#todoTable .cell.itemDueDate .tags {
   position: absolute;
   top: -1.4em;
   right: -1.5em;
-  z-index: 50;
+  z-index: 40;
   display: none;
 }
-#todoTable .flex-table .flex-row.itemDueDate .tags .tag {
+#todoTable .cell.itemDueDate .tags .tag {
   margin: 0;
 }
-#todoTable .flex-table .flex-row.itemDueDate .tags .is-dark {
+#todoTable .cell.itemDueDate .tags .is-dark {
   background: #4a4a4a;
   font-family: FreeSansBold;
 }
-#todoTable .flex-table .flex-row.isToday,
-#todoTable .flex-table .flex-row.isToday .button {
+#todoTable .cell.isToday,
+#todoTable .cell.isToday .button {
   color: #ff3860;
 }
-#todoTable .flex-table .flex-row.isToday .tags .is-dark,
-#todoTable .flex-table .flex-row.isToday .button .tags .is-dark {
+#todoTable .cell.isToday .tags .is-dark,
+#todoTable .cell.isToday .button .tags .is-dark {
   background: #ff3860;
   font-family: FreeSansBold;
 }
-#todoTable .flex-table .flex-row.isTomorrow,
-#todoTable .flex-table .flex-row.isTomorrow .button {
+#todoTable .cell.isTomorrow,
+#todoTable .cell.isTomorrow .button {
   color: #fa745e;
 }
-#todoTable .flex-table .flex-row.isTomorrow .tags .is-dark,
-#todoTable .flex-table .flex-row.isTomorrow .button .tags .is-dark {
+#todoTable .cell.isTomorrow .tags .is-dark,
+#todoTable .cell.isTomorrow .button .tags .is-dark {
   background: #fa745e;
   font-family: FreeSansBold;
 }
-#todoTable .flex-table .flex-row.isPast,
-#todoTable .flex-table .flex-row.isPast .button {
+#todoTable .cell.isPast,
+#todoTable .cell.isPast .button {
   color: #ff3860;
 }
-#todoTable .flex-table .flex-row.isPast .tags .is-dark,
-#todoTable .flex-table .flex-row.isPast .button .tags .is-dark {
+#todoTable .cell.isPast .tags .is-dark,
+#todoTable .cell.isPast .button .tags .is-dark {
   background: #ff3860;
   font-family: FreeSansBold;
 }
-#todoTable .flex-table .flex-row:hover .tags,
-#todoTable .flex-table .flex-row:focus .tags {
+#todoTable .cell:hover .tags,
+#todoTable .cell:focus .tags {
   display: block;
 }
-#todoTable .flex-table .flex-row:hover i.fa-sort-down,
-#todoTable .flex-table .flex-row:focus i.fa-sort-down {
+#todoTable .cell:hover i.fa-sort-down,
+#todoTable .cell:focus i.fa-sort-down {
   display: block;
 }
-#todoTable .flex-table.completed .flex-row {
+#todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
 }
 
@@ -666,10 +670,6 @@ nav ul:nth-child(2) {
 #modalForm .card-header-title {
   font-family: "FreeSansBold";
 }
-#modalForm .message {
-  display: none;
-  margin: 1em 0;
-}
 #modalForm .is-active {
   display: block;
 }
@@ -688,6 +688,13 @@ nav ul:nth-child(2) {
   background: none !important;
   border: none;
   color: #3273dc !important;
+}
+#modalForm .message {
+  display: none;
+  margin: 1em 0 0 0;
+}
+#modalForm .message.is-active {
+  display: block;
 }
 #modalForm #btnItemStatus {
   display: none;
@@ -714,12 +721,12 @@ nav ul:nth-child(2) {
   display: none;
   z-index: 50;
   opacity: 0.9;
-  padding: 0.25em 0.5em;
+  padding: 0.75em 1em;
 }
-#autoCompleteContainer .dropdown-item {
+#autoCompleteContainer section {
   margin: 0;
 }
-#autoCompleteContainer .dropdown-item .button {
+#autoCompleteContainer section .button {
   margin: 0 0.5rem 0.5rem 0;
 }
 #autoCompleteContainer h4.title {
@@ -749,16 +756,16 @@ nav ul:nth-child(2) {
   display: block;
 }
 
-#filterMenu {
+#filterContext {
   display: none;
   position: fixed;
   z-index: 60;
 }
-#filterMenu #filterMenuDelete {
+#filterContext #filterContextDelete {
   color: #ff3860;
 }
 
-#filterMenu.is-active {
+#filterContext.is-active {
   display: block;
 }
 
@@ -963,7 +970,7 @@ nav ul:nth-child(2) {
 }
 
 .modal.content {
-  z-index: 55;
+  z-index: 60;
   justify-content: start !important;
   padding-top: 2.5em;
   margin: 0 !important;
@@ -1073,34 +1080,34 @@ nav ul:nth-child(2) {
   color: #3273dc;
 }
 
-.messages {
+#messages {
   width: 25em;
   position: fixed;
   right: 2em;
   bottom: 1em;
-  z-index: 55;
+  z-index: 45 !important;
 }
-.messages i {
+#messages i {
   color: #3273dc;
 }
-.messages .message {
+#messages .message {
   display: none;
 }
-.messages .message.is-active {
+#messages .message.is-active {
   display: block;
 }
-.messages .message.is-active .message-body .brands i {
+#messages .message.is-active .message-body .brands i {
   font-size: 2.25em;
   margin-right: 0.2em;
   color: #3273dc;
 }
-.messages .button {
+#messages .button {
   margin-top: 0.5em;
 }
-.messages .message-body p {
+#messages .message-body p {
   margin-bottom: 0.5em;
 }
-.messages .notification.is-danger {
+#messages .notification.is-danger {
   background-color: #ff3860;
 }
 
@@ -1117,19 +1124,16 @@ body.compact #todoTableSearchContainer .column .icon.is-left {
 body.compact #todoTable {
   padding: 0 1em 1em 1em;
 }
-body.compact #todoTable .flex-table .flex-row {
+body.compact #todoTable .todo .cell {
   padding: 0.25em 0;
 }
-body.compact #todoTable .flex-table .flex-row.itemDueDate .tags {
+body.compact #todoTable .todo .cell.itemDueDate .tags {
   top: -1.9em;
   right: -1.9em;
 }
-body.compact #todoTable .flex-table .flex-row.itemDueDate i.fa-sort-down {
+body.compact #todoTable .todo .cell.itemDueDate i.fa-sort-down {
   right: 0.2em;
   bottom: 1.75em;
-}
-body.compact #todoTable .flex-table.group {
-  font-size: 0.8em;
 }
 body.compact .modal.content .modal-card {
   width: 90% !important;

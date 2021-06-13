@@ -161,51 +161,57 @@ nav ul li.is-highlighted a {
   color: #CCCDCF !important;
 }
 
-#todoTable .flex-table#previousItem.is-highlighted {
+#todoTable .todo#previousItem.is-highlighted {
   background-color: #3B3B3B;
 }
-#todoTable .flex-table:hover .flex-row .button,
-#todoTable .flex-table.due .button {
+#todoTable .todo:hover .cell .button,
+#todoTable .todo.due .button {
   color: #f5f5f5;
 }
-#todoTable .flex-table {
+#todoTable .group.due {
+  color: #ebebeb;
+}
+#todoTable .group.due .button {
+  color: inherit;
+}
+#todoTable .todo {
   border-color: #3B3B3B;
 }
-#todoTable .flex-table .checkbox a {
+#todoTable .todo .checkbox a {
   color: #CCCDCF;
 }
-#todoTable .flex-table .checkbox a:hover {
+#todoTable .todo .checkbox a:hover {
   color: white;
 }
-#todoTable .flex-table .flex-row.text {
+#todoTable .todo .cell.text {
   color: #CCCDCF;
 }
-#todoTable .flex-table .flex-row.itemDueDate {
+#todoTable .todo .cell.itemDueDate {
   color: white;
 }
-#todoTable .flex-table .flex-row.itemDueDate i {
+#todoTable .todo .cell.itemDueDate i {
   color: inherit;
 }
-#todoTable .flex-table .flex-row.itemDueDate.isToday,
-#todoTable .flex-table .flex-row.itemDueDate.isPast {
+#todoTable .todo .cell.itemDueDate.isToday,
+#todoTable .todo .cell.itemDueDate.isPast {
   color: #ff3860;
 }
-#todoTable .flex-table .flex-row.itemDueDate.isToday i,
-#todoTable .flex-table .flex-row.itemDueDate.isPast i {
+#todoTable .todo .cell.itemDueDate.isToday i,
+#todoTable .todo .cell.itemDueDate.isPast i {
   color: inherit;
 }
-#todoTable .flex-table .flex-row.itemDueDate.isTomorrow i {
+#todoTable .todo .cell.itemDueDate.isTomorrow i {
   color: #fa745e !important;
 }
-#todoTable .flex-table .flex-row span.contexts {
+#todoTable .todo .cell span.contexts {
   color: #c5ede3 !important;
   background: #1e6251 !important;
 }
-#todoTable .flex-table .flex-row span.projects {
+#todoTable .todo .cell span.projects {
   color: #f1d6f1 !important;
   background: #6f266f !important;
 }
-#todoTable .flex-table .flex-row .is-white {
+#todoTable .todo .cell .is-white {
   color: #CCCDCF;
   background: none;
 }
@@ -266,7 +272,7 @@ nav ul li.is-highlighted a {
 #drawerContainer .drawer h4.is-4 i {
   color: #CCCDCF !important;
 }
-#drawerContainer a.drawerClose {
+#drawerContainer #drawerClose {
   background: #3B3B3B !important;
 }
 #drawerContainer svg {
@@ -276,14 +282,14 @@ nav ul li.is-highlighted a {
   background: #212224 !important;
 }
 
-#filterMenu .card {
+#filterContext .card {
   background: #3B3B3B;
 }
-#filterMenu .card #filterMenuSave {
+#filterContext .card #filterContextSave {
   background-color: transparent !important;
   border-right: 1px solid #212224 !important;
 }
-#filterMenu .card-footer {
+#filterContext .card-footer {
   border-top: 1px solid #212224 !important;
 }
 

@@ -30,13 +30,6 @@ autoUpdater.on('update-available', () => {
 // ########################################################################################################################
 // SETUP APPDATA
 // ########################################################################################################################
-const isDevelopment = function() {
-  if(process.env.NODE_ENV==="development") {
-    return true;
-  } else {
-    return false;
-  }
-}
 const getChannel = function() {
   if(process.env.APPIMAGE) {
     return "AppImage";
@@ -72,8 +65,9 @@ const getOS = function() {
 }
 const appData = {
   version: app.getVersion(),
-  development: isDevelopment(),
+  environment: process.env.NODE_ENV,
   path: __dirname,
+  appPath: app.getAppPath(),
   os: getOS(),
   channel: getChannel()
 }
@@ -175,7 +169,7 @@ const createWindow = async function() {
   }
   const startFileWatcher = function(file) {
     try {
-      if(!fs.existsSync(file)) throw("File not found on disk")
+      if(!fs.existsSync(file)) throw("Error: File not found on disk")
       // use the loop to check if the new path is already in the user data
       let fileFound = false;
       if(userData.data.files) {
@@ -226,6 +220,8 @@ const createWindow = async function() {
           });
         }, 10);
       });
+      // change window title
+      mainWindow.title = path.basename(file) + " - sleek";
       return Promise.resolve("Success: Filewatcher is watching: " + file);
     } catch (error) {
       // if something file related crashes, onboarding will be triggered
@@ -339,7 +335,7 @@ const createWindow = async function() {
     autoHideMenuBar: true,
     useContentSize: true,
     webPreferences: {
-      worldSafeExecuteJavaScript:true,
+      worldSafeExecuteJavaScript: true,
       nodeIntegration: false,
       enableRemoteModule: true,
       spellcheck: false,
@@ -591,7 +587,7 @@ const createWindow = async function() {
   // INITIAL WINDOW CONFIGURATION
   // ########################################################################################################################
   if(userData.data.maximizeWindow) mainWindow.maximize()
-  if(isDevelopment()) mainWindow.webContents.openDevTools()
+  if(appData.environment==="development") mainWindow.webContents.openDevTools()
   // ########################################################################################################################
   // WINDOW EVENTS
   // ########################################################################################################################
@@ -679,7 +675,8 @@ const createWindow = async function() {
       })
       .on("copyToClipboard", (event, args) => {
         // Copy text to clipboard
-        if(args[0]) clipboard.writeText(args[0], "selection")
+        console.log(args[0]);
+        clipboard.writeText(args[0], "selection")
       })
       .on("update-badge", (event, count) => {
         if(appData.os==="mac") app.setBadgeCount(count);

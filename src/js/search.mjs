@@ -16,7 +16,7 @@ todoTableSearch.addEventListener("keyup", function () {
 
 window.addEventListener("keyup", function () {
   // find todo
-  if(event.key==="f" && !document.getElementById("modalForm").classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+  if(event.key==="f" && !document.getElementById("modalForm").classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
     todoTableSearch.focus();
   }
 });

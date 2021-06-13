@@ -265,6 +265,9 @@ nav {
   p {
     margin: .1em 0;
   }
+  i {
+    color: white!important;
+  }
   .button {
     color: white;
   }
@@ -301,7 +304,7 @@ nav {
     cursor: ew-resize;
     z-index: 2;
   }
-  a.drawerClose {
+  #drawerClose {
     width: 2.5em;
     height: 2.5em;
     display: none;
@@ -353,7 +356,7 @@ nav {
         color: $has-text-link;
       }
     }
-    .dropdown-item {
+    section {
       width: 100%;
       padding: 0;
       margin: 0 0 1.5em 0;
@@ -373,7 +376,7 @@ nav {
   }
 }
 #drawerContainer:hover {
-  a.drawerClose {
+  #drawerClose {
     display: inline-block;
   }
 }
@@ -428,25 +431,26 @@ nav {
     width: 100%;
     float: left;
   }
-  .flex-table {
+  .todo {
     position: relative;
     display: flex;
     flex-flow: row wrap;
     border-bottom: solid 1px $light-grey;
   }
-  .flex-table:last-child {
+  .todo:last-child {
     border: none;
   }
-  .flex-table#previousItem {
+  .todo#previousItem {
     -webkit-transition: background-color 0.5s ease-out;
     -moz-transition: background-color 0.5s ease-out;
     -o-transition: background-color 0.5s ease-out;
     transition: background-color 0.5s ease-out;
   }
-  .flex-table#previousItem.is-highlighted {
+  .todo#previousItem.is-highlighted {
     background-color: $almost-white;
   }
-  .flex-table.group {
+  .group {
+    min-height: 1em;
     margin-top: .5em;
     border: none;
     font-family: FreeSansBold;
@@ -458,15 +462,19 @@ nav {
       padding: 0 .4em;
     }
   }
-  .flex-table.group.due {
+  // .group.priority {
+  //   padding: .75em 0;
+  // }
+  .group.due {
     .button {
       padding: 0;
       background: transparent;
     }
   }
-  .flex-table {
+  .todo {
     display: flex;
-    .flex-row {
+  }
+    .cell {
       padding: .75em 0;
       margin-right: 1em;
       height: auto;
@@ -484,11 +492,11 @@ nav {
         background: $sleek-contexts-button;
       }
     }
-    .flex-row.checkbox a {
+    .cell.checkbox a {
       flex: 0 0 1em;
       font-size: 1.25em;
     }
-    .flex-row.text {
+    .cell.text {
       width: auto;
       flex: 1;
       line-height: 1.7em;
@@ -513,36 +521,36 @@ nav {
         margin-right: .5em;
       }
     }
-    .flex-row.spacer {
+    .cell.spacer {
       width: .5em;
       background: transparent;
     }
-    .flex-row.priority {
+    .cell.priority {
       background: $mid-grey;
       flex: 0 0 .5em;
       opacity: .5;
     }
-    .flex-row.priority.A,
-    .flex-row .priority.A {
+    .cell.priority.A,
+    .cell .priority.A {
       color: #ffe6eb;
       background: $has-text-danger;
     }
-    .flex-row.priority.B,
-    .flex-row .priority.B {
+    .cell.priority.B,
+    .cell .priority.B {
       color: #fadcd8;
       background: $has-text-attention;
     }
-    .flex-row.priority.C,
-    .flex-row .priority.C {
+    .cell.priority.C,
+    .cell .priority.C {
       background: $has-text-warning;
     }
-    .flex-row .contexts {
+    .cell .contexts {
       background: $sleek-contexts-button;
     }
-    .flex-row .projects {
+    .cell .projects {
       background: $sleek-projects-button;
     }
-    .flex-row.itemDueDate {
+    .cell.itemDueDate {
       color: $dark-grey;
       position: relative;
       white-space: nowrap;
@@ -558,7 +566,7 @@ nav {
         position: absolute;
         top: -1.4em;
         right: -1.5em;
-        z-index: 50;
+        z-index: 40;
         display: none;
         .tag {
           margin: 0;
@@ -569,32 +577,32 @@ nav {
         }
       }
     }
-    .flex-row.isToday,
-    .flex-row.isToday .button {
+    .cell.isToday,
+    .cell.isToday .button {
       color: $has-text-danger;
       .tags .is-dark {
         background: $has-text-danger;
         font-family: FreeSansBold;
       }
     }
-    .flex-row.isTomorrow,
-    .flex-row.isTomorrow .button {
+    .cell.isTomorrow,
+    .cell.isTomorrow .button {
       color: $has-text-attention;
       .tags .is-dark {
         background: $has-text-attention;
         font-family: FreeSansBold;
       }
     }
-    .flex-row.isPast,
-    .flex-row.isPast .button {
+    .cell.isPast,
+    .cell.isPast .button {
       color: $has-text-danger;
       .tags .is-dark {
         background: $has-text-danger;
         font-family: FreeSansBold;
       }
     }
-    .flex-row:hover,
-    .flex-row:focus {
+    .cell:hover,
+    .cell:focus {
       .tags {
         display: block;
       }
@@ -602,9 +610,8 @@ nav {
         display: block;
       }
     }
-  }
-  .flex-table.completed {
-    .flex-row {
+  .todo.completed {
+    .cell {
       filter: opacity(50%) grayscale(100%);
     }
   }
@@ -636,10 +643,6 @@ nav {
   .card-header-title {
     font-family: 'FreeSansBold';
   }
-  .message {
-    display: none;
-    margin: 1em 0;
-  }
   .is-active {
     display: block;
   }
@@ -658,6 +661,13 @@ nav {
       border: none;
       color: $has-text-link !important;
     }
+  }
+  .message {
+    display: none;
+    margin: 1em 0 0 0;
+  }
+  .message.is-active {
+    display: block;
   }
   #btnItemStatus {
     display: none;
@@ -684,8 +694,8 @@ nav {
   display: none;
   z-index: 50;
   opacity: .90;
-  padding: .25em .5em;
-  .dropdown-item {
+  padding: 0.75em 1em;
+  section {
     margin: 0;
     .button {
       margin: 0 .5rem .5rem 0;
@@ -714,16 +724,16 @@ nav {
 #todoContext.is-active {
   display: block;
 }
-#filterMenu {
+#filterContext {
   display: none;
   position: fixed;
   z-index: 60;
 
-  #filterMenuDelete {
+  #filterContextDelete {
     color: $has-text-danger;
   }
 }
-#filterMenu.is-active {
+#filterContext.is-active {
   display: block;
 }
 .contentContainer {
@@ -926,7 +936,7 @@ nav {
   }
 }
 .modal.content {
-  z-index: 55;
+  z-index: 60;
   justify-content: start !important;
   padding-top: 2.5em;
   margin: 0 !important;
@@ -1038,12 +1048,12 @@ nav {
     }
   }
 }
-.messages {
+#messages {
   width: 25em;
   position: fixed;
   right: 2em;
   bottom: 1em;
-  z-index: 55;
+  z-index: 45!important;
   i {
     color: $has-text-link;
   }
@@ -1081,11 +1091,11 @@ body.compact {
   }
   #todoTable {
     padding: 0 1em 1em 1em;
-    .flex-table {
-      .flex-row {
+    .todo {
+      .cell {
         padding: .25em 0;
       }
-      .flex-row.itemDueDate {
+      .cell.itemDueDate {
         .tags {
           top: -1.9em;
           right: -1.9em;
@@ -1095,9 +1105,6 @@ body.compact {
           bottom: 1.75em;
         }
       }
-    }
-    .flex-table.group  {
-      font-size: .8em;
     }
   }
   .modal.content {
