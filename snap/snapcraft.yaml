@@ -13,7 +13,7 @@ description: |
 
 grade: stable
 confinement: strict
-icon: ./assets/icons/sleek.png
+icon: ./assets/icons/512x512.png
 license: MIT
 compression: lzo
 architectures:
