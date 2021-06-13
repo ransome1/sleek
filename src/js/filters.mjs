@@ -7,10 +7,10 @@ import { isToday, isPast, isFuture } from "./date.mjs";
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const todoFilters = document.getElementById("todoFilters");
-const filterMenu = document.getElementById("filterMenu");
-const filterMenuInput = document.getElementById("filterMenuInput");
-const filterMenuSave = document.getElementById("filterMenuSave");
-const filterMenuDelete = document.getElementById("filterMenuDelete");
+const filterContext = document.getElementById("filterContext");
+const filterContextInput = document.getElementById("filterContextInput");
+const filterContextSave = document.getElementById("filterContextSave");
+const filterContextDelete = document.getElementById("filterContextDelete");
 
 let categories,
     filtersCounted,
@@ -19,8 +19,8 @@ let categories,
     container,
     headline;
 
-filterMenuSave.innerHTML = translations.save;
-filterMenuDelete.innerHTML = translations.delete;
+filterContextSave.innerHTML = translations.save;
+filterContextDelete.innerHTML = translations.delete;
 
 function saveFilter(newFilter, oldFilter, category) {
   try {
@@ -285,8 +285,8 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     selectedFilters = new Array;
     if(userData.selectedFilters && userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
     // creates a div for the specific filter section
-    let todoFiltersContainer = document.createElement("div");
-    todoFiltersContainer.setAttribute("class", "dropdown-item " + category);
+    let todoFiltersContainer = document.createElement("section");
+    todoFiltersContainer.setAttribute("class", category);
     // translate headline
     if(category=="contexts") {
       headline = translations.contexts;
@@ -355,37 +355,37 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         });
         // add context menu
         todoFiltersItem.addEventListener("contextmenu", event => {
-          filterMenu.style.left = event.x + "px";
-          filterMenu.style.top = event.y + "px";
-          filterMenu.classList.add("is-active");
-          filterMenuInput.value = filter;
-          filterMenuInput.focus();
-          filterMenuInput.onkeyup = function(event) {
-            if(event.key === "Escape") filterMenu.classList.remove("is-active");
+          filterContext.style.left = event.x + "px";
+          filterContext.style.top = event.y + "px";
+          filterContext.classList.add("is-active");
+          filterContextInput.value = filter;
+          filterContextInput.focus();
+          filterContextInput.onkeyup = function(event) {
+            if(event.key === "Escape") filterContext.classList.remove("is-active");
             if(event.key === "Enter") {
-              if(filterMenuInput.value!==filter && filterMenuInput.value) {
-                saveFilter(filterMenuInput.value, filter, category).then(function(response) {
+              if(filterContextInput.value!==filter && filterContextInput.value) {
+                saveFilter(filterContextInput.value, filter, category).then(function(response) {
                   console.info(response);
                 }).catch(function(error) {
                   handleError(error);
                 });
               } else {
-                filterMenu.classList.remove("is-active");
+                filterContext.classList.remove("is-active");
               }
             }
           }
-          filterMenuSave.onclick = function() {
-            if(filterMenuInput.value!==filter && filterMenuInput.value) {
-              saveFilter(filterMenuInput.value, filter, category).then(function(response) {
+          filterContextSave.onclick = function() {
+            if(filterContextInput.value!==filter && filterContextInput.value) {
+              saveFilter(filterContextInput.value, filter, category).then(function(response) {
                 console.info(response);
               }).catch(function(error) {
                 handleError(error);
               });
             } else {
-              filterMenu.classList.remove("is-active");
+              filterContext.classList.remove("is-active");
             }
           }
-          filterMenuDelete.onclick = function() {
+          filterContextDelete.onclick = function() {
             deleteFilter(filter, category).then(function(response) {
               console.info(response);
             }).catch(function(error) {
@@ -410,12 +410,8 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       } else {
         // add filter to input
         todoFiltersItem.addEventListener("click", () => {
-          //console.log(todoFiltersItem.getAttribute("data-filter"));
-          //console.log(document.getElementById("modalFormInput").value);
-          //console.log(document.getElementById("modalFormInput").value.replace(autoCompletePrefix + autoCompleteValue, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter")));
           if(autoCompleteValue) {
             // remove composed filter first, then add selected filter
-            //document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.slice(0, caretPosition-autoCompleteValue.length-1) + autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + document.getElementById("modalFormInput").value.slice(caretPosition) + " ";
             document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.replace(autoCompletePrefix + autoCompleteValue, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + " ");
           } else {
             // add button data value to the exact caret position

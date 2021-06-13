@@ -10,23 +10,26 @@ const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadli
 const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const body = document.getElementById("body");
-const btnAddTodo = document.querySelectorAll(".btnAddTodo");
 const btnArchiveTodos = document.getElementById("btnArchiveTodos");
 const btnCopyToClipboard = document.querySelectorAll(".btnCopyToClipboard");
+const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
+const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
 const btnFiltersResetFilters = document.getElementById("btnFiltersResetFilters");
 const btnMessageLogging = document.getElementById("btnMessageLogging");
 const btnModalCancel = document.querySelectorAll(".btnModalCancel");
 const btnNoResultContainerResetFilters = document.getElementById("btnNoResultContainerResetFilters");
+const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
+const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const btnSave = document.getElementById("btnSave");
 const btnTheme = document.getElementById("btnTheme");
 const errorContainer = document.getElementById("errorContainer");
 const errorContainerClose = document.getElementById("errorContainerClose");
 const errorMessage = document.getElementById("errorMessage");
+const filterContext = document.getElementById("filterContext");
 const messageLoggingBody = document.getElementById("messageLoggingBody");
 const messageLoggingButton = document.getElementById("messageLoggingButton");
 const messageLoggingTitle = document.getElementById("messageLoggingTitle");
-const messages = document.querySelectorAll(".message");
 const messageShareBody = document.getElementById("messageShareBody");
 const messageShareTitle = document.getElementById("messageShareTitle");
 const modal = document.querySelectorAll('.modal');
@@ -35,9 +38,10 @@ const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
 const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
 const modalChangeFileTitle = document.getElementById("modalChangeFileTitle");
 const modalForm = document.getElementById("modalForm");
-const modalFormInput = document.getElementById("modalFormInput");
 const modalFormAlert = document.getElementById("modalFormAlert");
-const modalSettings = document.getElementById("modalSettings");
+const modalFormInput = document.getElementById("modalFormInput");
+const navBtnAddTodo = document.getElementById("navBtnAddTodo");
+const navBtnFilter = document.getElementById("navBtnFilter");
 const noResultContainer = document.getElementById("noResultContainer");
 const noResultContainerHeadline = document.getElementById("noResultContainerHeadline");
 const noResultContainerSubtitle = document.getElementById("noResultContainerSubtitle");
@@ -47,16 +51,12 @@ const onboardingContainerBtnOpen = document.getElementById("onboardingContainerB
 const onboardingContainerSubtitle = document.getElementById("onboardingContainerSubtitle");
 const resultStats = document.getElementById("resultStats");
 const themeLink = document.getElementById("themeLink");
+const todoContext = document.getElementById("todoContext");
 const todoFilters = document.getElementById("todoFilters");
-const welcomeToSleek = document.getElementById("welcomeToSleek");
-const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
-const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
-const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
-const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
-
-const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const todoTable = document.getElementById("todoTable");
-const navBtnFilter = document.getElementById("navBtnFilter");
+const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
+const welcomeToSleek = document.getElementById("welcomeToSleek");
+const btnAddTodoContainer = document.getElementById("btnAddTodoContainer");
 
 let
   a0,
@@ -71,12 +71,13 @@ let
   todos,
   translations,
   userData,
+  onboarding,
   view;
 
 function configureMainView() {
   try {
-    // close filterMenu if open
-    if(document.getElementById("filterMenu").classList.contains("is-active")) document.getElementById("filterMenu").classList.remove("is-active");
+    // close filterContext if open
+    if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");
     // set scaling factor if default font size has changed
     if(userData.zoom) {
       document.getElementById("html").style.zoom = userData.zoom + "%";
@@ -90,10 +91,9 @@ function configureMainView() {
     if(typeof todos.items === "object") {
       // jump to previously added item
       if(document.getElementById("previousItem")) jumpToItem(document.getElementById("previousItem"))
-      // add filename to application title
-      setWindowTitle(userData.file);
       // show add todo buttons
-      btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
+      navBtnAddTodo.classList.remove("is-hidden");
+      //btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
       // remove onboarding
       showOnboarding(false).then(function(response) {
         console.info(response);
@@ -143,6 +143,7 @@ function configureMainView() {
 }
 function checkDismissedMessages() {
   try {
+    const messages = document.querySelectorAll("#messages .message");
     const dismissedMessages = userData.dismissedMessages;
     if(!dismissedMessages) return Promise.resolve("Info: No already checked messages found, will skip this check");
     messages.forEach((message) => {
@@ -197,51 +198,75 @@ function getTranslations() {
     return Promise.reject(error);
   }
 }
-// TODO Error handling
 function handleError(error) {
-  if(error) {
-    console.error(error.name +" in function " + error.functionName + ": " + error.message);
-    errorContainer.classList.add("is-active");
-    errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
-    // trigger matomo event
-    if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Error", error.functionName, error])
+  try {
+    if(error) {
+      console.error(error.name +" in function " + error.functionName + ": " + error.message);
+      errorContainer.classList.add("is-active");
+      errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
+      // trigger matomo event
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Error", error.functionName, error])
+    }
+  } catch(error) {
+    error.functionName = handleError.name;
+    return Promise.reject(error);
   }
 }
 function jumpToItem(item) {
-  const isInViewport = function(item) {
-    const rect = item.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }
-  // jump to previously edited or added item
-  // only scroll if new item is not in view
-  if(!isInViewport(item)) {
-    // scroll to view
-    item.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-    // trigger a quick background ease in and out
-    item.classList.add("is-highlighted");
-    setTimeout(() => {
-      item.classList.remove("is-highlighted");
-      // after scrolling the marker will be removed
-      item.removeAttribute("id");
-    }, 1000);
+  try {
+    const isInViewport = function(item) {
+      const rect = item.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    }
+    // jump to previously edited or added item
+    // only scroll if new item is not in view
+    if(!isInViewport(item)) {
+      // scroll to view
+      item.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+      // trigger a quick background ease in and out
+      item.classList.add("is-highlighted");
+      setTimeout(() => {
+        item.classList.remove("is-highlighted");
+        // after scrolling the marker will be removed
+        item.removeAttribute("id");
+      }, 1000);
+    }
+  } catch(error) {
+    error.functionName = jumpToItem.name;
+    return Promise.reject(error);
   }
 }
-// TODO Error handling
 function registerEvents() {
   try {
     // ########################################################################################################################
     // ONCLICK DEFINITIONS, FILE AND EVENT LISTENERS
     // ########################################################################################################################
+    body.onclick = function(event) {
+      // close todo context if click is outside of it
+      if(filterContext.classList.contains("is-active")) {
+        if(!filterContext.contains(event.target)) {
+          filterContext.classList.remove("is-active");
+          filterContext.removeAttribute("data-item");
+        }
+      }
+      // close todo context if click is outside of it
+      if(todoContext.classList.contains("is-active")) {
+        if(!todoContext.contains(event.target)) {
+          todoContext.classList.remove("is-active");
+          todoContext.removeAttribute("data-item");
+        }
+      }
+    }
     a.forEach(el => el.addEventListener("click", function(el) {
       if(el.target.href && el.target.href === "#") el.preventDefault();
     }));
     btnMessageLogging.onclick = function () {
-      content.showContent(modalSettings);
+      content.showContent("modalSettings");
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Message", "Click on Settings"]);
     }
@@ -264,25 +289,21 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
     }
-
     btnFilesOpenTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "open");
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
     }
-
     btnOnboardingCreateTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "create");
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
     }
-
     btnOnboardingOpenTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "open");
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
     }
-
     btnModalCancel.forEach(function(el) {
       el.onclick = function() {
         el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
@@ -295,19 +316,28 @@ function registerEvents() {
         if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Form", "Click on Cancel"]);
       }
     });
-    btnAddTodo.forEach(function(el) {
-      el.onclick = function () {
-        // just in case the form will be cleared first
-        resetModal().then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
-        form.show();
-        // trigger matomo event
-        if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on add todo"]);
-      }
-    });
+    navBtnAddTodo.onclick = function () {
+      // just in case the form will be cleared first
+      resetModal().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        handleError(error);
+      });
+      form.show();
+      // trigger matomo event
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on add todo"]);
+    }
+    btnAddTodoContainer.onclick = function () {
+      // just in case the form will be cleared first
+      resetModal().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        handleError(error);
+      });
+      form.show();
+      // trigger matomo event
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on add todo"]);
+    }
     btnCopyToClipboard.forEach(function(el) {
       el.onclick = function () {
         window.api.send("copyToClipboard", [errorMessage.innerHTML]);
@@ -325,10 +355,6 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "No Result Container", "Click on reset button"])
     }
-
-
-
-
     errorContainerClose.onclick = function() {
       this.parentElement.classList.remove("is-active")
     }
@@ -343,42 +369,47 @@ function registerKeyboardShortcuts() {
     // CMD/metaKey only works on keydown
     window.addEventListener("keydown", function(event) {
       // open file
-      if((event.ctrlKey || event.metaKey) && event.key === "o" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if((event.ctrlKey || event.metaKey) && event.key === "o" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         window.api.send("openOrCreateFile", "open");
       }
       // create file
-      if((event.ctrlKey || event.metaKey) && event.key === "c" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if((event.ctrlKey || event.metaKey) && event.key === "c" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         window.api.send("openOrCreateFile", "create");
       }
     }, true)
     window.addEventListener("keyup", function(event) {
       // open settings
-      if(event.key === "," && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
-        content.showContent(document.getElementById("modalSettings")).then(function(response) {
+      if(event.key === "," && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        content.showContent("modalSettings").then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
         });
       }
       // open help
-      if(event.key === "?" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
-        content.showContent(document.getElementById("modalHelp")).then(function(response) {
+      if(event.key === "?" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        content.showContent("modalHelp").then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
         });
       }
       // create new todo
-      if(event.key==="n" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if(event.key==="n" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        // abort when onboarding is shown
+        if(onboarding) return false;
+
         form.show().then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
         });
       }
-
       // reset filters
-      if(event.key==="0" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if(event.key==="0" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        // abort when onboarding is shown
+        if(onboarding) return false;
+
         resetFilters().then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -386,7 +417,10 @@ function registerKeyboardShortcuts() {
         });
       }
       // toggle completed todos
-      if(event.key==="h" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if(event.key==="h" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        // abort when onboarding is shown
+        if(onboarding) return false;
+
         view.toggle("showCompleted").then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -394,7 +428,10 @@ function registerKeyboardShortcuts() {
         });
       }
       // archive todos
-      if(event.key==="a" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if(event.key==="a" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        // abort when onboarding is shown
+        if(onboarding) return false;
+
         todos.archiveTodos().then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -402,7 +439,7 @@ function registerKeyboardShortcuts() {
         });
       }
       // toggle dark mode
-      if(event.key==="d" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if(event.key==="d" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         setTheme(true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -410,7 +447,10 @@ function registerKeyboardShortcuts() {
         });
       }
       // show filter drawer
-      if(event.key==="b" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if(event.key==="b" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        // abort when onboarding is shown
+        if(onboarding) return false;
+
         let toggle = true;
         if(document.getElementById("drawerContainer").classList.contains("is-active")) toggle = false;
         drawer.showDrawer(toggle, "navBtnFilter", "filterDrawer").then(function(result) {
@@ -420,11 +460,10 @@ function registerKeyboardShortcuts() {
         });
       }
       // reload window
-      if((event.key === "." || event.key === "F5") && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterMenuInput" && document.activeElement.id!="modalFormInput")) {
+      if((event.key === "." || event.key === "F5") && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         location.reload(true);
       }
     }, true)
-
     // shortcuts for modal form
     modalForm.addEventListener ("keyup", function(event) {
       // priority up
@@ -455,15 +494,6 @@ function registerKeyboardShortcuts() {
           handleError(error);
         });
       }
-      if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
-        resetModal().then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          handleError(error);
-        });
-      } else if(event.key === "Escape" && autoCompleteContainer.classList.contains("is-active")) {
-        autoCompleteContainer.classList.remove("is-active");
-      }
       // due date plus 1
       if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
         form.setDueDate(1);
@@ -477,11 +507,20 @@ function registerKeyboardShortcuts() {
         form.setDueDate(0);
       }
     });
+    // escape in autocomplete container
+    autoCompleteContainer.addEventListener ("keyup", function() {
+      if(event.key === "Escape") {
+        this.classList.remove("is-active");
+        modalFormInput.focus();
+      }
+    });
     // event for closing modal windows
     modal.forEach(function(element) {
       element.addEventListener("keydown", function(event) {
-        if(event.key === "Escape" && !autoCompleteContainer.classList.contains("is-active")) {
-          //this.classList.remove("is-active");
+        if(event.key === "Escape") {
+          if(autoCompleteContainer.classList.contains("is-active")) return false;
+          if(document.getElementById("recurrencePickerContainer").classList.contains("is-active")) return false;
+          if(document.querySelector(".datepicker.datepicker-dropdown").classList.contains("is-active")) return false;
           resetModal(this).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -489,12 +528,6 @@ function registerKeyboardShortcuts() {
           });
         }
       });
-    });
-    autoCompleteContainer.addEventListener ("keyup", function() {
-      if(event.key === "Escape") {
-        this.classList.remove("is-active");
-        modalFormInput.focus();
-      }
     });
     return Promise.resolve("Success: Keyboard shortcuts registered");
   } catch(error) {
@@ -620,7 +653,6 @@ function setTranslations() {
     onboardingContainerBtnCreate.innerHTML = translations.createFile;
     onboardingContainerBtnOpen.innerHTML = translations.openFile;
     onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
-
     welcomeToSleek.innerHTML = translations.welcomeToSleek;
     btnResetFilters.forEach(function(el) {
       el.getElementsByTagName('span')[0].innerHTML = translations.resetFilters;
@@ -628,9 +660,7 @@ function setTranslations() {
     btnModalCancel.forEach(function(el) {
       el.innerHTML = translations.cancel;
     });
-    btnAddTodo.forEach(function(el) {
-      el.setAttribute("title", translations.addTodo);
-    });
+    navBtnAddTodo.setAttribute("title", translations.addTodo);
     return Promise.resolve("Success: Translations set");
   } catch(error) {
     error.functionName = setTranslations.name;
@@ -640,6 +670,11 @@ function setTranslations() {
 function setUserData(key, value) {
   try {
     userData[key] = value;
+    // don't persist any data in test
+    if(appData.environment === "testing") {
+      console.log("Info: In testings no user data will be persisted");
+      return Promise.resolve();
+    }
     window.api.send("userData", [key, value]);
     return Promise.resolve("Success: Config (" + key + ") persisted");
   } catch(error) {
@@ -647,34 +682,12 @@ function setUserData(key, value) {
     return Promise.reject(error);
   }
 }
-/*function setToggles() {
-  try {
-
-    return Promise.resolve("Success: Toggles set");
-  } catch(error) {
-    error.functionName = setToggles.name;
-    return Promise.reject(error);
-  }
-}*/
-function setWindowTitle(file) {
-  if(file) {
-    switch (appData.os) {
-      case "windows":
-      document.title = file.split("\\").pop() + " - sleek";
-      break;
-      default:
-      document.title = file.split("/").pop() + " - sleek";
-      break;
-    }
-  } else {
-    document.title = "sleek";
-  }
-}
 function showOnboarding(variable) {
   try {
+    onboarding = variable;
     if(variable) {
       onboardingContainer.classList.add("is-active");
-      document.querySelectorAll(".btnAddTodo").forEach(item => item.classList.add("is-hidden"));
+      navBtnAddTodo.classList.add("is-hidden");
       navBtnFilter.classList.add("is-hidden");
       document.getElementById("navBtnView").classList.add("is-hidden");
       todoTable.classList.remove("is-active");
@@ -682,7 +695,7 @@ function showOnboarding(variable) {
       return Promise.resolve("Info: Show onboarding");
     } else {
       onboardingContainer.classList.remove("is-active");
-      document.querySelectorAll(".btnAddTodo").forEach(item => item.classList.remove("is-hidden"));
+      navBtnAddTodo.classList.remove("is-hidden");
       navBtnFilter.classList.remove("is-hidden");
       document.getElementById("navBtnView").classList.remove("is-hidden");
       todoTable.classList.add("is-active");
@@ -798,7 +811,7 @@ window.onload = async function () {
   import("./js/files.mjs");
   import("./js/search.mjs");
   matomo = await import("./js/matomo.mjs");
-  await matomo.configureMatomo(todos.items.objects.length).then(function(response) {
+  await matomo.configureMatomo().then(function(response) {
     console.info(response);
   }).catch(function(error) {
     handleError(error);
@@ -863,7 +876,7 @@ window.api.receive("triggerFunction", (name, args) => {
         });
         break;
       case "showContent":
-        content.showContent(document.getElementById(args[0])).then(function(response) {
+        content.showContent(args[0]).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);

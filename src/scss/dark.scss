@@ -155,16 +155,22 @@ nav {
   }
 }
 #todoTable {
-  .flex-table#previousItem.is-highlighted {
+  .todo#previousItem.is-highlighted {
     background-color: $even-darker-grey;
   }
-  .flex-table:hover .flex-row,
-  .flex-table.due {
+  .todo:hover .cell,
+  .todo.due {
     .button {
       color: $almost-white;
     }
   }
-  .flex-table {
+  .group.due {
+    color: $light-grey;
+    .button {
+      color: inherit;
+    }
+  }
+  .todo {
     border-color: $even-darker-grey;
     .checkbox a {
       color: $lighter-grey;
@@ -172,28 +178,28 @@ nav {
     .checkbox a:hover {
       color: white;
     }
-    .flex-row.text {
+    .cell.text {
       color: $lighter-grey;
     }
-    .flex-row.itemDueDate {
+    .cell.itemDueDate {
       color: white;
       i {
         color: inherit;
       }
     }
-    .flex-row.itemDueDate.isToday,
-    .flex-row.itemDueDate.isPast {
+    .cell.itemDueDate.isToday,
+    .cell.itemDueDate.isPast {
       color: $has-text-danger;
       i {
         color: inherit;
       }
     }
-    .flex-row.itemDueDate.isTomorrow {
+    .cell.itemDueDate.isTomorrow {
       i {
         color: $has-text-attention!important;
       }
     }
-    .flex-row {
+    .cell {
       span.contexts {
         color: $sleek-contexts-button!important;
         background: darken($sleek-contexts-button, 60%)!important;
@@ -269,7 +275,7 @@ nav {
       }
     }
   }
-  a.drawerClose {
+  #drawerClose {
     background: $even-darker-grey!important;
   }
   svg {
@@ -279,10 +285,10 @@ nav {
     background: $almost-black!important;
   }
 }
-#filterMenu {
+#filterContext {
   .card {
     background: $even-darker-grey;
-    #filterMenuSave {
+    #filterContextSave {
       background-color: transparent!important;
       border-right: 1px solid $almost-black!important;
     }

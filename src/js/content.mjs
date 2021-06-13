@@ -15,12 +15,16 @@ const helpTab1Title = document.getElementById("helpTab1Title");
 const helpTab2Title = document.getElementById("helpTab2Title");
 const helpTab3Title = document.getElementById("helpTab3Title");
 const helpTab4Title = document.getElementById("helpTab4Title");
+const helpTab5Title = document.getElementById("helpTab5Title");
 const helpTabContextsProjectsBody = document.getElementById("helpTabContextsProjectsBody");
 const helpTabContextsProjectsTitle = document.getElementById("helpTabContextsProjectsTitle");
-const helpTabDatesRecurrencesBody1 = document.getElementById("helpTabDatesRecurrencesBody1");
-const helpTabDatesRecurrencesBody2 = document.getElementById("helpTabDatesRecurrencesBody2");
-const helpTabDatesRecurrencesTitle1 = document.getElementById("helpTabDatesRecurrencesTitle1");
-const helpTabDatesRecurrencesTitle2 = document.getElementById("helpTabDatesRecurrencesTitle2");
+const helpTabDatesBody1 = document.getElementById("helpTabDatesBody1");
+const helpTabDatesBody2 = document.getElementById("helpTabDatesBody2");
+
+const helpTabRecurrencesBody1 = document.getElementById("helpTabRecurrencesBody1");
+const helpTabDatesTitle1 = document.getElementById("helpTabDatesTitle1");
+const helpTabDatesTitle2 = document.getElementById("helpTabDatesTitle2");
+const helpTabRecurrencesTitle1 = document.getElementById("helpTabRecurrencesTitle1");
 const helpTabKeyboardTitle = document.getElementById("helpTabKeyboardTitle");
 const helpTabKeyboardTR1TD1 = document.getElementById("helpTabKeyboardTR1TD1");
 const helpTabKeyboardTR1TH1 = document.getElementById("helpTabKeyboardTR1TH1");
@@ -61,21 +65,15 @@ const settingsTabSettingsNotifications = document.getElementById("settingsTabSet
 const settingsTabSettingsNotificationsBody = document.getElementById("settingsTabSettingsNotificationsBody");
 const settingsTabSettingsTray = document.getElementById("settingsTabSettingsTray");
 const settingsTabSettingsTrayBody = document.getElementById("settingsTabSettingsTrayBody");
-
 const helpTabKeyboardSubtitle = document.getElementById("helpTabKeyboardSubtitle");
 const helpTabKeyboardTR13TD1 = document.getElementById("helpTabKeyboardTR13TD1");
 const helpTabKeyboardTR14TD1 = document.getElementById("helpTabKeyboardTR14TD1");
 const helpTabKeyboardTR15TD1 = document.getElementById("helpTabKeyboardTR15TD1");
 const helpTabKeyboardTR16TD1 = document.getElementById("helpTabKeyboardTR16TD1");
 const helpTabKeyboardTR17TD1 = document.getElementById("helpTabKeyboardTR17TD1");
-
 const toggleDarkmode = document.getElementById("toggleDarkmode");
 const toggleNotifications = document.getElementById("toggleNotifications");
-
 const toggleTray = document.getElementById("toggleTray");
-
-
-
 
 helpTabKeyboardSubtitle.innerHTML = translations.helpTabKeyboardSubtitle;
 helpTabKeyboardTR13TD1.innerHTML = translations.helpTabKeyboardTR13TD1;
@@ -83,17 +81,24 @@ helpTabKeyboardTR14TD1.innerHTML = translations.helpTabKeyboardTR14TD1;
 helpTabKeyboardTR15TD1.innerHTML = translations.helpTabKeyboardTR15TD1;
 helpTabKeyboardTR16TD1.innerHTML = translations.helpTabKeyboardTR16TD1;
 helpTabKeyboardTR17TD1.innerHTML = translations.helpTabKeyboardTR17TD1;
-
 helpTab1Title.innerHTML = translations.shortcuts;
 helpTab2Title.innerHTML = translations.priorities;
 helpTab3Title.innerHTML = translations.helpTab3Title;
 helpTab4Title.innerHTML = translations.helpTab4Title;
+helpTab5Title.innerHTML = translations.helpTab5Title;
+
 helpTabContextsProjectsBody.innerHTML = translations.helpTabContextsProjectsBody;
 helpTabContextsProjectsTitle.innerHTML = translations.helpTabContextsProjectsTitle;
-helpTabDatesRecurrencesBody1.innerHTML = translations.helpTabDatesRecurrencesBody1;
-helpTabDatesRecurrencesBody2.innerHTML = translations.helpTabDatesRecurrencesBody2;
-helpTabDatesRecurrencesTitle1.innerHTML = translations.helpTabDatesRecurrencesTitle1;
-helpTabDatesRecurrencesTitle2.innerHTML = translations.helpTabDatesRecurrencesTitle2;
+helpTabDatesBody1.innerHTML = translations.helpTabDatesBody1;
+helpTabDatesBody2.innerHTML = translations.helpTabDatesBody2;
+
+helpTabRecurrencesBody1.innerHTML = translations.helpTabRecurrencesBody1;
+helpTabDatesTitle1.innerHTML = translations.helpTabDatesTitle1;
+helpTabDatesTitle2.innerHTML = translations.helpTabDatesTitle2;
+
+helpTabRecurrencesTitle1.innerHTML = translations.helpTabRecurrencesTitle1;
+
+
 helpTabKeyboardTitle.innerHTML = translations.shortcuts;
 helpTabKeyboardTR10TD1.innerHTML = translations.helpTabKeyboardTR10TD1;
 helpTabKeyboardTR1TD1.innerHTML = translations.addTodo;
@@ -139,7 +144,6 @@ shareTwitter.innerHTML = translations.shareTwitter;
 reviewSourceforge.innerHTML = translations.reviewSourceforge;
 reviewWindowsStore.innerHTML = translations.reviewWindowsStore;
 submitIssuesOnGithub.innerHTML = translations.submitIssuesOnGithub;
-
 
 contentTabs.forEach(tab => tab.addEventListener("click", function() {
   contentTabs.forEach(function(tab) {
@@ -204,10 +208,8 @@ function showContent(id) {
     firstSection.classList.add("is-active");
     section.classList.add("is-active");
     section.focus();
-
     // create the modal jail, so tabbing won't leave modal
     createModalJail(section);
-
     return Promise.resolve("Info: Content is shown");
   } catch(error) {
     error.functionName = showContent.name;
@@ -237,7 +239,10 @@ function setFriendlyLanguageNames() {
         friendlyLanguageName = "Français"
         break;
         case "zh":
-        friendlyLanguageName = "Chinese (简体中文)"
+        friendlyLanguageName = "简体中文"
+        break;
+        case "pt":
+        friendlyLanguageName = "Português do Brasil"
         break;
         default:
         return;

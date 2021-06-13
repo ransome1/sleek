@@ -1,7 +1,6 @@
 "use strict";
 import { setUserData, userData, handleError } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { navBtns } from "./navigation.mjs";
 import { getHandleElement, startDragging } from "./drawer_handle.mjs";
 
 const viewDrawer = document.getElementById("viewDrawer");
@@ -13,17 +12,15 @@ const navBtnFilter = document.getElementById("navBtnFilter");
 const navBtnView = document.getElementById("navBtnView");
 const drawers = document.querySelectorAll(".drawer");
 
-document.querySelectorAll(".drawerClose").forEach(function(drawerClose) {
-  drawerClose.onclick = function() {
-    showDrawer(false).then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on close button"])
-  }
-})
+document.getElementById("drawerClose").onclick = function() {
+  showDrawer(false).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    handleError(error);
+  });
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on close button"])
+}
 document.getElementById("filterDrawer").addEventListener ("keydown", function () {
   if(event.key === "Escape") {
     showDrawer(false, navBtnFilter.id, this.id).then(function(result) {
@@ -106,9 +103,7 @@ export function showDrawer(variable, buttonId, drawerId) {
         drawers.forEach(function(drawer) {
           drawer.classList.remove("is-active");
         });
-        navBtns.forEach(function(navBtn) {
-          navBtn.classList.remove("is-highlighted");
-        });
+        buttonId.classList.remove("is-highlighted");
         drawerContainer.classList.remove("is-active");
       break;
     }

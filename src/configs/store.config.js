@@ -1,22 +1,24 @@
-const electron = require('electron');
-const path = require('path');
-const fs = require('fs');
-
+const electron = require("electron");
+const path = require("path");
+const fs = require("fs");
 class Store {
   constructor(opts) {
     // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
     let userDataPath;
     if(process.env.PORTABLE_EXECUTABLE_FILE) {
-      userDataPath = path.join(path.dirname(process.env.PORTABLE_EXECUTABLE_FILE), 'config', 'sleek');
+      userDataPath = path.join(path.dirname(process.env.PORTABLE_EXECUTABLE_FILE), "config", "sleek");
       if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
     } else if(!process.env.PORTABLE_EXECUTABLE_FILE && !process.windowsStore && process.platform==="win32") {
       userDataPath = path.dirname(process.execPath);
       if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
+    } else if(process.env.NODE_ENV==="testing" && process.env.CUSTOM_PREFERENCES_FOLDER) {
+      // path/env is defined in Mocha test file
+      userDataPath = path.join(electron.app.getAppPath(), "test", process.env.CUSTOM_PREFERENCES_FOLDER)
     } else {
-      userDataPath = (electron.app || electron.remote.app).getPath('userData');
+      userDataPath = (electron.app || electron.remote.app).getPath("userData");
     }
-    // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-    this.path = path.join(userDataPath, opts.configName + '.json');
+    // We"ll use the `configName` property to set the file name and path.join to bring it all together as a string
+    this.path = path.join(userDataPath, opts.configName + ".json");
     this.data = parseDataFile(this.path, opts.defaults);
   }
   // This will just return the property on the `data` object
@@ -26,8 +28,8 @@ class Store {
   // ...and this will set it
   set(key, val) {
     this.data[key] = val;
-    // Wait, I thought using the node.js' synchronous APIs was bad form?
-    // We're not writing a server so there's not nearly the same IO demand on the process
+    // Wait, I thought using the node.js" synchronous APIs was bad form?
+    // We"re not writing a server so there"s not nearly the same IO demand on the process
     // Also if we used an async API and our app was quit before the asynchronous write had a chance to complete,
     // we might lose that data. Note that in a real app, we would try/catch this.
     fs.writeFileSync(this.path, JSON.stringify(this.data));
@@ -35,7 +37,7 @@ class Store {
 }
 
 function parseDataFile(filePath, defaults) {
-  // We'll try/catch it in case the file doesn't exist yet, which will be the case on the first application run.
+  // We"ll try/catch it in case the file doesn"t exist yet, which will be the case on the first application run.
   // `fs.readFileSync` will return a JSON string which we then parse into a Javascript object
   try {
     console.log("User preferences located at: " + filePath);
