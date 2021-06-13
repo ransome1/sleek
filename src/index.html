@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html id="html">
+
   <head id="head">
+
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,17 +13,22 @@
     <link href="../node_modules/@fortawesome/fontawesome-free/css/brands.css" rel="stylesheet">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/solid.css" rel="stylesheet">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/regular.css" rel="stylesheet">
+
   </head>
+
   <body id="body">
+
     <div class="columns is-gapless is-mobile">
+
       <div class="column is-narrow">
+
         <nav>
           <ul>
             <li class="logo">sleek</li>
-            <li class="btnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
-            <li id="navBtnFilter" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
-            <li id="navBtnView" class="navBtn"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
-            <li><a href="#" tabindex="-1" id="btnOpenTodoFile"><i class="fas fa-folder-open"></i></a></li>
+            <li id="navBtnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
+            <li id="navBtnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
+            <li id="navBtnView"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
+            <li id="btnOpenTodoFile"><a href="#" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
             <li id="btnTheme"><a href="#" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
           </ul>
           <ul>
@@ -172,26 +179,34 @@
                 </table>
               </div>
             </section>
-            <a href="#" class="drawerClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
+            <a href="#" id="drawerClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
             <div id="handle"></div>
           </div>
         </nav>
+
       </div>
+
       <div id="todoTableWrapper" class="column content">
-        <div id="todoTableSearchContainer" class="control has-icons-left">
+
+        <section id="todoTableSearchContainer" class="control has-icons-left">
           <div class="column">
             <input id="todoTableSearch" class="input is-medium" type="search" placeholder="Search" tabindex="10">
             <span class="icon is-left">
               <i class="fas fa-search"></i>
             </span>
           </div>
-        </div>
+        </section>
+
         <section id="todoTable" tabindex="-1">
+
           <div id="resultStats" class="column">
             <span class="tag"></span>
           </div>
+
           <div id="todoTableContainer"></div>
+
         </section>
+
         <section id="onboardingContainer" class="contentContainer">
           <h1 id="welcomeToSleek" class="title is-1"></h1>
           <p id="onboardingContainerSubtitle" class="subtitle"></p>
@@ -206,30 +221,32 @@
             </a>
           </p>
         </section>
+
         <section id="addTodoContainer" class="contentContainer">
           <h1 id="addTodoContainerHeadline" class="title is-1"></h1>
           <p id="addTodoContainerSubtitle" class="subtitle"></p>
           <p class="file is-boxed is-centered">
-            <a href="#" class="btnOnboarding btnAddTodo">
+            <a href="#" id="btnAddTodoContainer" class="btnOnboarding">
               <i class="fas fa-plus"></i>
               <span id="addTodoContainerButton" class="file-label"></span>
             </a>
           </p>
         </section>
+
         <section id="noResultContainer" class="contentContainer">
           <h1 id="noResultContainerHeadline" class="title is-1"></h1>
           <p id="noResultContainerSubtitle" class="subtitle"></p>
           <p><button id="btnNoResultContainerResetFilters" class="btnResetFilters button" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button></p>
         </section>
+
       </div>
     </div>
+
     <form id="modalForm" class="modal modalFormSubmit">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
-          <header class="card-header">
-            <a id="modalTitle" class="card-header-title"></a>
-          </header>
+          <header id="modalTitle" class="card-header card-header-title"></header>
           <div class="card-content">
             <div class="content">
               <div class="control has-icons-right">
@@ -287,7 +304,7 @@
               </div>
               <div id="recurrencePicker" class="field">
                 <div class="control has-icons-left">
-                  <input id="recurrencePickerInput" class="input" tabindex="-1" readonly>
+                  <input id="recurrencePickerInput" class="input" readonly tabindex="-1">
                   <a href="#" class="icon is-left" tabindex="-1">
                     <i class="fas fa-redo"></i>
                   </a>
@@ -341,6 +358,7 @@
         </div>
       </div>
     </form>
+
     <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -516,6 +534,7 @@
         <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
+
     <div id="modalHelp" class="modal content" tabindex="0" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -525,6 +544,7 @@
             <li class="helpTab2"><a href="#" tabindex="0" id="helpTab2Title"></a></li>
             <li class="helpTab3"><a href="#" tabindex="0" id="helpTab3Title"></a></li>
             <li class="helpTab4"><a href="#" tabindex="0" id="helpTab4Title"></a></li>
+            <li class="helpTab5"><a href="#" tabindex="0" id="helpTab5Title"></a></li>
           </ul>
         </div>
         <section id="helpTab1" class="modal-card-body is-active">
@@ -628,41 +648,45 @@
         <section id="helpTab2" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding a priority">
           <h3 class="title is-3" id="helpTabPrioritiesTitle"></h3>
           <p id="helpTabPrioritiesBody"></p>
-          <input class="input is-focused is-medium" type="text" value="(A) This will create a todo with highest priority" tabindex="-1">
-          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
-          <div class="card is-centered" style="width: 52%;">
+          <div class="card is-centered" style="width: 100%;">
             <div class="card-content">
-              <img src="img/help/screenshot_add_priority.png">
+              <img src="img/help/adding_todo_with_prio_a.gif">
             </div>
           </div>
         </section>
         <section id="helpTab3" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding contexts & projects">
           <h3 class="title is-3" id="helpTabContextsProjectsTitle"></h3>
           <p id="helpTabContextsProjectsBody"></p>
-          <input class="input is-focused is-medium" type="text" value="A todo with 1 project and 2 contexts +project @context1 @context2" tabindex="-1">
-          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
-          <div class="card is-centered" style="width: 77%;">
+          <div class="card is-centered" style="width: 100%;">
             <div class="card-content">
-              <img src="img/help/add_contexts_projects.png">
+              <img src="img/help/adding_context_project.gif">
             </div>
           </div>
         </section>
         <section id="helpTab4" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding dates">
-          <h3 class="title is-3" id="helpTabDatesRecurrencesTitle1"></h3>
-          <p id="helpTabDatesRecurrencesBody1"></p>
-          <h3 class="title is-3" id="helpTabDatesRecurrencesTitle2"></h3>
-          <p id="helpTabDatesRecurrencesBody2"></p>
-          <input class="input is-focused is-medium" type="text" value="This todo is due at some point rec:w due:2021-03-07" tabindex="-1">
-          <h3 class="title is-3 arrow"><i class="fas fa-arrow-down"></i></h3>
-          <div class="card is-centered" style="width: 55%;">
+          <h3 class="title is-3" id="helpTabDatesTitle1"></h3>
+          <p id="helpTabDatesBody1"></p>
+          <h3 class="title is-4" id="helpTabDatesTitle2"></h4>
+          <p id="helpTabDatesBody2"></p>
+          <div class="card is-centered" style="width: 100%;">
             <div class="card-content">
-              <img src="img/help/screenshot_add_due_date.png">
+              <img src="img/help/adding_date_with_sugar.gif">
+            </div>
+          </div>
+        </section>
+        <section id="helpTab5" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="Adding recurrences">
+          <h3 class="title is-3" id="helpTabRecurrencesTitle1"></h3>
+          <p id="helpTabRecurrencesBody1"></p>
+          <div class="card is-centered" style="width: 100%;">
+            <div class="card-content">
+              <img src="img/help/recurrences.gif">
             </div>
           </div>
         </section>
         <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
+
     <div id="todoContext" class="dropdown-menu" role="menu">
       <div class="dropdown-content">
         <a id="todoContextUseAsTemplate" class="dropdown-item"></a>
@@ -670,17 +694,19 @@
         <a id="todoContextDelete" class="dropdown-item"></a>
       </div>
     </div>
-    <div id="filterMenu" class="flex-row ">
+
+    <div id="filterContext">
       <div class="card">
         <div class="card-content">
-          <input id="filterMenuInput" class="input" type="text">
+          <input id="filterContextInput" class="input" type="text">
         </div>
         <footer class="card-footer">
-          <a href="#" id="filterMenuSave" class="card-footer-item"></a>
-          <a href="#" id="filterMenuDelete" class="card-footer-item"></a>
+          <a href="#" id="filterContextSave" class="card-footer-item"></a>
+          <a href="#" id="filterContextDelete" class="card-footer-item"></a>
         </footer>
       </div>
     </div>
+
     <div id="modalChangeFile" class="modal" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-content">
@@ -699,7 +725,8 @@
         </div>
       </div>
     </div>
-    <section class="messages">
+
+    <section id="messages">
       <article class="message fixed" data="logging">
         <div class="message-header">
           <p><span id="messageLoggingTitle"></span></p>
@@ -732,7 +759,8 @@
         </p>
       </article>
     </section>
-    <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
+
     <script defer type="module" src="render.js"></script>
+
   </body>
 </html>

@@ -1,4 +1,5 @@
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import "../../node_modules/sugar/dist/sugar.min.js";
 
 function RecExtension() {
 	this.name = "rec";
@@ -15,13 +16,12 @@ RecExtension.prototype.parsingFunction = function(line) {
 	return [null, null, null];
 };
 
-export { RecExtension };
-
 function SugarDueExtension() {
 	this.name = "due";
 }
 SugarDueExtension.prototype = new TodoTxtExtension();
 SugarDueExtension.prototype.parsingFunction = function (line) {
+
 	var dueDate = null;
 	var indexDueKeyword = line.indexOf("due:");
 
@@ -30,7 +30,7 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 		var stringAfterDue = line.substr(indexDueKeyword + 4)
 		var words = stringAfterDue.split(" ");
 		var match = null;
-		
+
 		// Try to parse a valid date until the end of the text
 		for (var i = Math.max(5, words.length); i > 0; i--) {
 			match = words.slice(0, i).join(" ");
@@ -43,4 +43,4 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
-export { SugarDueExtension };
+export { RecExtension, SugarDueExtension };

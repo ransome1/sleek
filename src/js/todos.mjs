@@ -5,19 +5,19 @@ import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
-import "../../node_modules/marked/marked.min.js";
 import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
+import "../../node_modules/marked/marked.min.js";
+
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import "../../node_modules/jstodotxt/jsTodoTxt.js";
 
-const body = document.getElementById("body");
 const modalForm = document.getElementById("modalForm");
-const todoTableWrapper = document.getElementById("todoTableWrapper");
-const todoTableContainer = document.getElementById("todoTableContainer");
 const todoContext = document.getElementById("todoContext");
-const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
-const todoContextEdit = document.getElementById("todoContextEdit");
 const todoContextDelete = document.getElementById("todoContextDelete");
+const todoContextEdit = document.getElementById("todoContextEdit");
+const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
+const todoTableContainer = document.getElementById("todoTableContainer");
+const todoTableWrapper = document.getElementById("todoTableWrapper");
 
 todoContextUseAsTemplate.innerHTML = translations.useAsTemplate;
 todoContextEdit.innerHTML = translations.edit;
@@ -71,15 +71,6 @@ todoTableWrapper.addEventListener("scroll", function(event) {
     startBuilding(true);
   }
 });
-body.onclick = function(event) {
-  // close todo context if click is outside of it
-  if(todoContext.classList.contains("is-active")) {
-    if(!todoContext.contains(event.target)) {
-      todoContext.classList.remove("is-active");
-      todoContext.removeAttribute("data-item");
-    }
-  }
-}
 
 function configureTodoTableTemplate(append) {
   try {
@@ -89,22 +80,15 @@ function configureTodoTableTemplate(append) {
       clusterThreshold = 0;
       stopBuilding = false;
     }
-    todoTableBodyRowTemplate.setAttribute("role", "rowgroup");
-    todoTableBodyRowTemplate.setAttribute("class", "flex-table");
-    todoTableBodyCellCheckboxTemplate.setAttribute("class", "flex-row checkbox");
-    todoTableBodyCellCheckboxTemplate.setAttribute("role", "cell");
-    todoTableBodyCellTextTemplate.setAttribute("class", "flex-row text");
-    todoTableBodyCellTextTemplate.setAttribute("role", "cell");
+    todoTableBodyRowTemplate.setAttribute("class", "todo");
+    todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
+    todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
     todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
     todoTableBodyCellTextTemplate.setAttribute("href", "#");
     todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
     tableContainerCategoriesTemplate.setAttribute("class", "categories");
-    todoTableBodyCellPriorityTemplate.setAttribute("role", "cell");
-    todoTableBodyCellSpacerTemplate.setAttribute("role", "cell");
-    todoTableBodyCellDueDateTemplate.setAttribute("class", "flex-row itemDueDate");
-    todoTableBodyCellDueDateTemplate.setAttribute("role", "cell");
-    todoTableBodyCellRecurrenceTemplate.setAttribute("class", "flex-row recurrence");
-    todoTableBodyCellRecurrenceTemplate.setAttribute("role", "cell");
+    todoTableBodyCellDueDateTemplate.setAttribute("class", "cell itemDueDate");
+    todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell recurrence");
     return Promise.resolve("Success: Table templates set up");
   } catch(error) {
     error.functionName = configureTodoTableTemplate.name;
@@ -184,24 +168,24 @@ function generateTable(groups, append) {
       let dividerRow;
       // completed todos
       if(userData.sortCompletedLast && groups[group][0]==="completed") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table " + userData.sortBy + " " + groups[group][0] + " group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>")
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"group " + userData.sortBy + " " + groups[group][0] + "\"><div class=\"cell\"></div></div>")
       // for priority, context and project
       } else if(groups[group][0]!="null" && userData.sortBy!="dueString") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table " + userData.sortBy + " " + groups[group][0] + " group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"group " + userData.sortBy + " " + groups[group][0] + "\"><div class=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
       // if sorting is by due date
       } else if(userData.sortBy==="dueString" && groups[group][1][0].due) {
         if(isToday(groups[group][1][0].due)) {
-          dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isToday\" role=\"cell\"><span class=\"button\">" + translations.today + "</span></div></div>")
+          dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"group due\"><div class=\"cell isToday\"><span class=\"button\">" + translations.today + "</span></div></div>")
         } else if(isTomorrow(groups[group][1][0].due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isTomorrow\" role=\"cell\"><span class=\"button\">" + translations.tomorrow + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"group due\"><div class=\"cell isTomorrow\"><span class=\"button\">" + translations.tomorrow + "</span></div></div>")
         } else if(isPast(groups[group][1][0].due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row isPast\" role=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"group due\"><div class=\"cell isPast\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
         } else {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"flex-table group due\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy + groups[group][0] + "\" class=\"group due\"><div class=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
         }
       // create an empty divider row
       } else {
-        dividerRow = document.createRange().createContextualFragment("<div class=\"flex-table group\" role=\"rowgroup\"><div class=\"flex-row\" role=\"cell\"></div></div>")
+        dividerRow = document.createRange().createContextualFragment("<div class=\"group\"></div>")
       }
       // add divider row only if it doesn't exist yet
       if(!append && !document.getElementById(userData.sortBy + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
@@ -268,15 +252,15 @@ function generateTableRow(todo) {
     }
     // start with the individual config of the items
     if(todo.complete==true) {
-      todoTableBodyRow.setAttribute("class", "flex-table completed");
+      todoTableBodyRow.setAttribute("class", "todo completed");
     }
     todoTableBodyRow.setAttribute("data-item", todo.toString());
     // add the priority marker or a white spacer
     if(todo.priority && userData.sortBy==="priority") {
-      todoTableBodyCellPriority.setAttribute("class", "flex-row priority " + todo.priority);
+      todoTableBodyCellPriority.setAttribute("class", "cell priority " + todo.priority);
       todoTableBodyRow.appendChild(todoTableBodyCellPriority);
     } else if(!todo.priority && userData.sortBy==="priority") {
-      todoTableBodyCellSpacer.setAttribute("class", "flex-row spacer");
+      todoTableBodyCellSpacer.setAttribute("class", "cell spacer");
       todoTableBodyRow.appendChild(todoTableBodyCellSpacer);
     }
     // add the checkbox
@@ -290,7 +274,7 @@ function generateTableRow(todo) {
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
       // passing the data-item attribute of the parent tag to complete function
-      setTodoComplete(this.parentElement.getAttribute('data-item')).then(response => {
+      setTodoComplete(this.parentElement.getAttribute("data-item")).then(response => {
          console.log(response);
       }).catch(error => {
         handleError(error);
@@ -304,8 +288,7 @@ function generateTableRow(todo) {
       if(todo.priority && userData.sortBy!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><span class=\"button " + todo.priority + "\">" + todo.priority + "</span></span>";
       // parse text string through markdown parser
       todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parseInline(todo.text) + "</span>";
-      //todoTableBodyCellText.innerHTML =  todo.text;
-      // replace line feed replacement character with a space
+      // replace line feed character with a space
       todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
       // add a spacer to divide text (and link) and categories
       todoTableBodyCellText.innerHTML += " ";
@@ -314,7 +297,7 @@ function generateTableRow(todo) {
     todoTableBodyCellText.onclick = function() {
       // if the clicked item is not the external link icon, show(true) will be called
       if(!event.target.classList.contains('fa-external-link-alt')) {
-        show(this.parentElement.getAttribute('data-item'));
+        show(this.parentElement.getAttribute("data-item"));
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
@@ -447,7 +430,7 @@ function sortTodoData(group) {
 function setTodoComplete(todo) {
   try {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
-    if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
+    //if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
     todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]);
     // get index of todo
@@ -533,7 +516,6 @@ async function archiveTodos() {
     const getContentFromDoneFile = new Promise(function(resolve) {
       window.api.send("getContent", doneFile());
       return window.api.receive("getContent", (content) => {
-        //resolve(TodoTxt.parse(content, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]));
         resolve(content);
       });
     });
@@ -564,9 +546,6 @@ async function archiveTodos() {
 function checkIsTodoVisible(todo) {
   if(!userData.showHidden && todo.h) return false
   if(!todo.text) return false
-  /*for(let category in userData.hideFilterCategories) {
-    if(todo[userData.hideFilterCategories[category]]) return false
-  }*/
   return true;
 }
 function generateNotification(todo, offset) {
