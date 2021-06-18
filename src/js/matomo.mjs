@@ -8,6 +8,10 @@ let _paq;
 
 function configureMatomo() {
   try {
+    _paq = window._paq = window._paq || [];
+    // only continue if app is connected to the internet
+    if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
+    // only continue if machine is no dvelopment machine
     if(appData.environment) return Promise.resolve("Info: No tracking in development and testing environment");
     if(!userData.uid) {
       // generate random number/string combination as user id and persist it
@@ -29,10 +33,6 @@ function configureMatomo() {
         return ">301"
       }
     }
-    // only continue if app is connected to the internet
-    if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
-    _paq = window._paq = window._paq || [];
-    //if(appData.development) return Promise.resolve("Info: Machine is development machine, logging will be skipped")
     if(userData.uid)_paq.push(['setUserId', userData.uid]);
     if(userData.theme)_paq.push(['setCustomDimension', 1, userData.theme]);
     if(userData.language)_paq.push(['setCustomDimension', 2, userData.language]);
@@ -82,7 +82,6 @@ function configureMatomo() {
 }
 
 toggleMatomoEvents.onclick = function() {
-  //matomoEvents = this.checked;
   setUserData('matomoEvents', this.checked);
   configureMatomo(this.checked).then(response => {
     console.info(response);

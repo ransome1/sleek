@@ -345,7 +345,7 @@ nav {
       cursor: not-allowed;
     }
     h4.is-4 {
-      font-size: 1.35em;
+      font-size: 1.25em;
       color: $dark-grey;
       font-family: FreeSansBold;
       margin-bottom: 1.5em;
@@ -736,6 +736,12 @@ nav {
 #filterContext.is-active {
   display: block;
 }
+#modalPrompt {
+  z-index: 60;
+  .modal-content {
+    width: 20em;
+  }
+}
 .contentContainer {
   width: 100%;
   height: 90%;
@@ -814,7 +820,7 @@ nav {
 }
 .priority {
   .button, .button:hover {
-    font-size: 1.35em;
+    font-size: 1.25em;
     font-family: FreeSansBold;
     background: $mid-grey;
     color: darken($mid-grey, 40%);
@@ -1127,17 +1133,24 @@ body.compact {
       font-family: 'FreeSansBold';
     }
   }
-  .drawer {
-    padding: 1.5em !important;
-    .button {
-      font-size: .9em;
-      .tag {
-        padding: 0 .5em;
-        width: auto;
-        height: auto;
-        min-width: 1.5em;
-        min-height: 1.5em;
+  #drawerContainer {
+    .drawer {
+      padding: 1.5em !important;
+      .is-4 {
+        font-size: 1.1em;
+      }
+      .button {
         font-size: .9em;
+        margin: 0 0.3em 0.3em 0;
+        padding: 0.25em 0.6em;
+        .tag {
+          padding: 0 .5em;
+          width: auto;
+          height: auto;
+          min-width: 1.5em;
+          min-height: 1.5em;
+          font-size: .9em;
+        }
       }
     }
   }

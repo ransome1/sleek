@@ -106,7 +106,7 @@
   "settingsTabSettingsArchive": "Archivar todos",
   "settingsTabSettingsArchiveBody": "Los todos completados se eliminarán del archivo todo.txt actual y se insertarán en un archivo done.txt. Si este archivo aún no existe en el directorio actual, se creará.",
   "settingsTabSettingsDarkmodeBody": "Si la interfaz de usuario regular sleek es demasiado brillante para su gusto general o para su entorno actual, el modo oscuro podría ser una alternativa útil.",
-  "settingsTabSettingsLanguageBody": "sleek establecerá automáticamente el idioma de acuerdo con la configuración de su computadora. Si prefiere un idioma diferente, puede cambiarlo manualmente. <strong> elegante se reiniciará solo. Si esto no sucede, vuelva a iniciar la aplicación manualmente. </strong>",
+  "settingsTabSettingsLanguageBody": "sleek establecerá automáticamente el idioma de acuerdo con la configuración de su computadora. Si prefiere un idioma diferente, puede cambiarlo manualmente.",
   "settingsTabSettingsLoggingBody": "Puede contribuir a este proyecto habilitando el registro anónimo de errores y eventos. Puede encontrar más información en la elegante <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\"> política de privacidad </a>.",
   "settingsTabSettingsNotificationsBody": "sleek puede enviarle notificaciones para todos los que vencen hoy y mañana. La aplicación debe estar ejecutándose para esta función.",
   "settingsTabSettingsTray": "Minimizar a la barra de la bandeja",
@@ -142,5 +142,10 @@
   "windowTitleCreateFile": "Crea todo.txt",
   "year": "año",
   "year_plural": "añares",
-  "yearly": "Anual"
+  "yearly": "Anual",
+  "archivingPrompt": "Todos los todos completados se moverán de este archivo a un archivo done.txt en el mismo directorio.",
+  "confirm": "Confirmar",
+  "archivingCompletedTitle": "Archivado completado",
+  "archivingCompletedBody": "Todos completados movidos con éxito a ",
+  "restartPrompt": "Para este cambio, sleek necesita reiniciarse. Si esto no sucede, vuelva a iniciar la aplicación manualmente."
 }
