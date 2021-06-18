@@ -27,53 +27,47 @@ describe("Add/Edit window", function () {
     const todoTableContainer = await app.client.$("#todoTableContainer");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[8];
-    todo.click();
-    return await modalForm.isDisplayed().then(async() => {
+    setTimeout(async () => {
+      await todo.click();
+      await modalForm.waitForDisplayed({ timeout: 10000 });
       const modalFormInput = await app.client.$("#modalFormInput");
       const value = await modalFormInput.getValue();
       assert.equal(value, "2021-04-03 Todo with due date tomorrow due:2021-06-11");
-    })
+    }, 1000);
   })
 
   it("Modal is opened, autocomplete shown and third project added to todo input field", async () => {
     const navBtnAddTodo = await app.client.$("#navBtnAddTodo");
-    navBtnAddTodo.click();
-
     let modalFormInput = await app.client.$("#modalFormInput");
-    await modalFormInput.setValue("+");
-
     const autoCompleteContainer = await app.client.$("#autoCompleteContainer");
-    const projects = await autoCompleteContainer.$$(".button");
-    projects[2].click();
-
-    modalFormInput = await app.client.$("#modalFormInput");
-    const value = await modalFormInput.getValue();
-    assert.equal(value, "+PeaceLoveAndHappiness ")
-
+    setTimeout(async () => {
+      navBtnAddTodo.click();
+      await modalFormInput.setValue("+");
+      const projects = await autoCompleteContainer.$$(".button");
+      projects[2].click();
+      modalFormInput = await app.client.$("#modalFormInput");
+      const value = await modalFormInput.getValue();
+      assert.equal(value, "+PeaceLoveAndHappiness ")
+    }, 1000);
   })
 
   it("Modal is opened, input is resized, autocomplete shown and second context added to todo input field", async () => {
     const navBtnAddTodo = await app.client.$("#navBtnAddTodo");
-    navBtnAddTodo.click();
-
-    let modalFormInputResize = await app.client.$("#modalFormInputResize");
-    modalFormInputResize.click();
-
-    let modalFormInput = await app.client.$("#modalFormInput");
-    await modalFormInput.setValue("@");
-
     const autoCompleteContainer = await app.client.$("#autoCompleteContainer");
-    const contexts = await autoCompleteContainer.$$(".button");
-    contexts[2].click();
-
-    modalFormInput = await app.client.$("#modalFormInput");
-    const value = await modalFormInput.getValue();
-
-    modalFormInputResize = await app.client.$("#modalFormInputResize");
-    modalFormInputResize.click();
-
-    assert.equal(value, "@phone ")
-
+    let modalFormInput = await app.client.$("#modalFormInput");
+    let modalFormInputResize = await app.client.$("#modalFormInputResize");
+    setTimeout(async () => {
+      navBtnAddTodo.click();
+      modalFormInputResize.click();
+      await modalFormInput.setValue("@");
+      const contexts = await autoCompleteContainer.$$(".button");
+      await contexts[2].click();
+      modalFormInput = await app.client.$("#modalFormInput");
+      const value = await modalFormInput.getValue();
+      modalFormInputResize = await app.client.$("#modalFormInputResize");
+      modalFormInputResize.click();
+      assert.equal(value, "@phone ")
+    }, 1000);
   })
 
 })

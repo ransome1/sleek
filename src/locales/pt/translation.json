@@ -106,7 +106,7 @@
   "settingsTabSettingsArchive": "Todos Arquivados",
   "settingsTabSettingsArchiveBody": "Todos concluídos serão removidos do arquivo todo.txt atual e inseridos em um arquivo done.txt. Se este arquivo ainda não existir no diretório atual, ele será criado.",
   "settingsTabSettingsDarkmodeBody": "Se a interface de usuário regular do sleek for muito clara para o seu gosto geral ou para o seu ambiente atual, o modo noturno pode ser uma alternativa útil.",
-  "settingsTabSettingsLanguageBody": "O sleek definirá automaticamente o idioma de acordo com as configurações do seu computador. Se preferir um idioma diferente, você pode alterá-lo manualmente. <strong>Sleek irá reiniciar sozinho. Se isso não acontecer, reinicie o aplicativo manualmente.</strong> ",
+  "settingsTabSettingsLanguageBody": "O sleek definirá automaticamente o idioma de acordo com as configurações do seu computador. Se preferir um idioma diferente, você pode alterá-lo manualmente.",
   "settingsTabSettingsLoggingBody": "Você pode contribuir para este projeto, habilitando erros anônimos e registro de eventos. Mais informações podem ser encontradas na <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">política de privacidade</a> do sleek.",
   "settingsTabSettingsNotificationsBody": "O sleek pode enviar notificações para tarefas pendentes hoje e amanhã. O aplicativo precisa estar em execução para este recurso.",
   "settingsTabSettingsTray": "Minimize para a barra da bandeja",
@@ -143,5 +143,10 @@
   "windowTitleCreateFile": "Criar todo.txt",
   "year": "ano",
   "year_plural": "anos",
-  "yearly": "Anualmente"
+  "yearly": "Anualmente",
+  "archivingPrompt": "Todas as tarefas concluídas serão movidas deste arquivo para um arquivo done.txt no mesmo diretório.",
+  "confirm": "Confirme",
+  "archivingCompletedTitle": "Arquivamento concluído",
+  "archivingCompletedBody": "Todos concluídos movidos com sucesso para ",
+  "restartPrompt": "Para essa mudança, o sleek precisa ser reiniciado. Se isso não acontecer, reinicie o aplicativo manualmente."
 }

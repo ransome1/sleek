@@ -247,8 +247,6 @@ function show(todo, templated) {
       // replace invisible multiline ascii character with new line
       // we need to check if there already is a due date in the object
       todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]);
-      // pass todo string to form data item
-      modalForm.setAttribute("data-item", todo.toString());
       // set the priority
       setPriority(todo.priority);
       //
@@ -265,6 +263,8 @@ function show(todo, templated) {
         document.getElementById("modalFormInput").setSelectionRange(selectStart, selectEnd);
         btnItemStatus.classList.remove("is-active");
       } else {
+        // pass todo string to form data item
+        modalForm.setAttribute("data-item", todo.toString());
         // this is an existing todo task to be edited
         // put the initially passed todo to the modal data field
         //modalForm.setAttribute("data-item", todo.toString());

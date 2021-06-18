@@ -26,8 +26,8 @@
           <ul>
             <li class="logo">sleek</li>
             <li id="navBtnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
-            <li id="navBtnFilter"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
-            <li id="navBtnView"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
+            <li id="navBtnFilter" class="drawer" data-drawer="filterDrawer"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
+            <li id="navBtnView" class="drawer" data-drawer="viewDrawer"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
             <li id="btnOpenTodoFile"><a href="#" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
             <li id="btnTheme"><a href="#" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
           </ul>
@@ -304,11 +304,7 @@
               </div>
               <div id="recurrencePicker" class="field">
                 <div class="control has-icons-left">
-<<<<<<< HEAD
-                  <input id="recurrencePickerInput" class="input" tabindex="0" readonly>
-=======
                   <input id="recurrencePickerInput" class="input" readonly tabindex="-1">
->>>>>>> develop
                   <a href="#" class="icon is-left" tabindex="-1">
                     <i class="fas fa-redo"></i>
                   </a>
@@ -691,11 +687,11 @@
       </div>
     </div>
 
-    <div id="todoContext" class="dropdown-menu" role="menu">
+    <div id="todoContext" class="dropdown-menu" role="menu" tabindex="0">
       <div class="dropdown-content">
-        <a id="todoContextUseAsTemplate" class="dropdown-item"></a>
-        <a id="todoContextEdit" href="#" class="dropdown-item"></a>
-        <a id="todoContextDelete" class="dropdown-item"></a>
+        <a id="todoContextUseAsTemplate" class="dropdown-item" tabindex="0"></a>
+        <a id="todoContextEdit" href="#" class="dropdown-item" tabindex="0"></a>
+        <a id="todoContextDelete" class="dropdown-item" tabindex="0"></a>
       </div>
     </div>
 
@@ -730,7 +726,21 @@
       </div>
     </div>
 
+    <div id="modalPrompt" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="card">
+          <div id="modalPromptContent" class="card-content"></div>
+          <footer class="card-footer">
+            <a href="#" id="modalPromptConfirm" class="card-footer-item" tabindex="0">Confirm</a>
+            <a href="#" id="modalPromptCancel" class="card-footer-item" tabindex="0">Cancel</a>
+          </footer>
+        </div>
+      </div>
+    </div>
+
     <section id="messages">
+
       <article class="message fixed" data="logging">
         <div class="message-header">
           <p><span id="messageLoggingTitle"></span></p>
@@ -741,6 +751,7 @@
           <p><button id="btnMessageLogging" class="button" tabindex="0"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
         </div>
       </article>
+
       <article class="message fixed" data="share">
         <div class="message-header">
           <p><span id="messageShareTitle"></span></p>
@@ -755,6 +766,7 @@
           </p>
         </div>
       </article>
+
       <article id="errorContainer" class="notification is-danger" data="error" style="position: relative">
         <button id="errorContainerClose" class="delete" aria-label="delete" data-message="error"></button>
         <p id="errorMessage"></p>

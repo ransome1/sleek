@@ -277,16 +277,10 @@ const createWindow = async function() {
     }
   }
   const showNotification = function(config) {
-    config.silent = false;
     config.hasReply = false;
-    config.timeoutType = "never";
-    config.urgency = "critical";
+    config.urgency = "normal";
     config.closeButtonText = "Close";
     config.icon = path.join(appData.path, "../assets/icons/96x96.png");
-    config.actions = [ {
-      type: "button",
-      text: "Show Button"
-    }]
     // send it to UI
     const notification = new Notification(config);
     notification.show();

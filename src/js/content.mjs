@@ -1,5 +1,5 @@
 "use strict";
-import { modal, userData, appData, setUserData, translations, handleError, setTheme } from "../render.js";
+import { modal, userData, appData, setUserData, translations, handleError, setTheme, getConfirmation } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 
@@ -20,7 +20,6 @@ const helpTabContextsProjectsBody = document.getElementById("helpTabContextsProj
 const helpTabContextsProjectsTitle = document.getElementById("helpTabContextsProjectsTitle");
 const helpTabDatesBody1 = document.getElementById("helpTabDatesBody1");
 const helpTabDatesBody2 = document.getElementById("helpTabDatesBody2");
-
 const helpTabRecurrencesBody1 = document.getElementById("helpTabRecurrencesBody1");
 const helpTabDatesTitle1 = document.getElementById("helpTabDatesTitle1");
 const helpTabDatesTitle2 = document.getElementById("helpTabDatesTitle2");
@@ -86,19 +85,14 @@ helpTab2Title.innerHTML = translations.priorities;
 helpTab3Title.innerHTML = translations.helpTab3Title;
 helpTab4Title.innerHTML = translations.helpTab4Title;
 helpTab5Title.innerHTML = translations.helpTab5Title;
-
 helpTabContextsProjectsBody.innerHTML = translations.helpTabContextsProjectsBody;
 helpTabContextsProjectsTitle.innerHTML = translations.helpTabContextsProjectsTitle;
 helpTabDatesBody1.innerHTML = translations.helpTabDatesBody1;
 helpTabDatesBody2.innerHTML = translations.helpTabDatesBody2;
-
 helpTabRecurrencesBody1.innerHTML = translations.helpTabRecurrencesBody1;
 helpTabDatesTitle1.innerHTML = translations.helpTabDatesTitle1;
 helpTabDatesTitle2.innerHTML = translations.helpTabDatesTitle2;
-
 helpTabRecurrencesTitle1.innerHTML = translations.helpTabRecurrencesTitle1;
-
-
 helpTabKeyboardTitle.innerHTML = translations.shortcuts;
 helpTabKeyboardTR10TD1.innerHTML = translations.helpTabKeyboardTR10TD1;
 helpTabKeyboardTR1TD1.innerHTML = translations.addTodo;
@@ -154,16 +148,12 @@ contentTabs.forEach(tab => tab.addEventListener("click", function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
 }));
-settingsLanguage.onchange = function() {
-  userData.language = this.value;
-  window.api.send("userData", ["language", userData.language]);
-  window.api.send("changeLanguage", this.value);
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
+
+settingsLanguage.onchange = function(event) {
+  getConfirmation(setLanguage, translations.restartPrompt, this.value);
 }
 toggleNotifications.onclick = function() {
-  //notifications = this.checked;
-  setUserData('notifications', this.checked);
+  setUserData("notifications", this.checked);
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Notifications", this.checked])
 }
@@ -172,17 +162,28 @@ toggleDarkmode.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Dark mode", this.checked])
 }
-toggleTray.onclick = function() {
-  setUserData("tray", this.checked);
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Tray", this.checked])
-  // restart
-  window.api.send("restart");
+toggleTray.onclick = function(event) {
+  event.preventDefault();
+  getConfirmation(setTray, translations.restartPrompt, this.checked);
 }
 
 toggleNotifications.checked = userData.notifications;
 
-
+function setTray(setting) {
+  setUserData("tray", setting);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Tray changed to: " + setting]);
+  window.api.send("restart");
+  return Promise.resolve("Info: Tray changed to: " + setting);
+}
+function setLanguage(language) {
+  if(appData.environment==="testing") return false;
+  userData.language = language;
+  window.api.send("userData", ["language", userData.language]);
+  window.api.send("changeLanguage", language);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + language]);
+}
 function showTab(tab) {
   contentTabsCards.forEach(function(el) {
     el.classList.remove("is-active");

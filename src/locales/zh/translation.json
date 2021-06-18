@@ -106,7 +106,7 @@
   "settingsTabSettingsArchive": "存档任务",
   "settingsTabSettingsArchiveBody": "已完成任务会从当前todo.txt文件移除, 保存到done.txt. 如果还未创建done.txt则会自动创建. ",
   "settingsTabSettingsDarkmodeBody": "如果sleek界面太明亮不适合你的口味/环境, 不妨切换成暗色模式. ",
-  "settingsTabSettingsLanguageBody": "sleek会按照你的计算机设定自动切换语言, 也可以手动更换语言 <strong>sleek会自动重启. 如果没有自动重启请手动打开sleek. </strong>",
+  "settingsTabSettingsLanguageBody": "sleek会按照你的计算机设定自动切换语言, 也可以手动更换语言.",
   "settingsTabSettingsLoggingBody": "如果允许记录匿名错误和事件, 会对开发有帮助. 更多信息请参见' <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a>.",
   "settingsTabSettingsNotificationsBody": "sleek可以提醒你今天和明天到期的任务. 请保持sleek运行. ",
   "settingsTabSettingsTray": "最小化到系统托盘",
@@ -143,5 +143,10 @@
   "windowTitleCreateFile": "创建todo.txt",
   "year": "年",
   "year_plural": "年",
-  "yearly": "每年"
+  "yearly": "每年",
+  "archivingPrompt": "所有已完成的待办事项将从该文件移动到同一目录中的 done.txt 文件。",
+  "confirm": "确认",
+  "archivingCompletedTitle": "归档完成",
+  "archivingCompletedBody": "已完成的待办事项成功移至 ",
+  "restartPrompt": "对于这种变化，sleek 需要重新启动。 如果这没有发生，请手动重新启动应用程序。"
 }

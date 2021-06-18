@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.0.6",
+  "version": "1.0.6-1",
   "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
@@ -104,8 +104,8 @@
     "build:appimage": "electron-builder -l AppImage --publish never",
     "pack": "electron-builder --dir",
     "lint": "eslint --ext .js, src --ext .mjs, src",
-    "test": "mocha --timeout 5000",
-    "test1": "mocha ./test/settings.js --timeout 5000",
+    "test": "mocha --timeout 10000",
+    "test1": "mocha ./test/createTodos.js --timeout 10000",
     "sass": "sass -w src/scss/:src/css/",
     "start": "yarn sass & electron ."
   },
