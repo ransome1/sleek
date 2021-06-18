@@ -106,7 +106,7 @@
   "settingsTabSettingsArchive": "Archive todos",
   "settingsTabSettingsArchiveBody": "Completed todos will be removed from the current todo.txt file and inserted into a done.txt file. If this file doesn't already exist in the current directory, it will be created.",
   "settingsTabSettingsDarkmodeBody": "If sleeks regular user interface is too bright for your general taste or for your current environment, the dark mode might be a helpful alternative.",
-  "settingsTabSettingsLanguageBody": "sleek will automatically set the language according to your computers settings. If you prefer a different language, you can change it manually. <strong>sleek will restart itself. If this doesn't happen, please start the application again manually.</strong>",
+  "settingsTabSettingsLanguageBody": "sleek will automatically set the language according to your computers settings. If you prefer a different language, you can change it manually.",
   "settingsTabSettingsLoggingBody": "You can contribute to this project, by enabling anonymized error and event logging. More information can be found in sleeks' <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a>.",
   "settingsTabSettingsNotificationsBody": "sleek can send you notifications for todos that are due today and tomorrow. The app needs to be running for this feature.",
   "settingsTabSettingsTray": "Minimize to the tray bar",
@@ -143,5 +143,10 @@
   "windowTitleCreateFile": "Create todo.txt",
   "year": "year",
   "year_plural": "years",
-  "yearly": "Yearly"
+  "yearly": "Yearly",
+  "archivingPrompt": "All completed todos will be moved from this file to a done.txt file in the same directory.",
+  "confirm": "Confirm",
+  "archivingCompletedTitle": "Archiving completed",
+  "archivingCompletedBody": "Completed todos successfully moved to ",
+  "restartPrompt": "For this change sleek needs to restart itself. If this doesn't happen, please start the application again manually."
 }

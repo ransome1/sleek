@@ -106,7 +106,7 @@
   "settingsTabSettingsArchive": "Archivia todo",
   "settingsTabSettingsArchiveBody": "I todo completati verranno rimossi dal file todo.txt corrente è inseriti in un file done.txt. Se questo file non esiste nella cartella corrente, verrà creato.",
   "settingsTabSettingsDarkmodeBody": "Se l'interfaccia standard di sleek è troppo chiara per i tuoi gusti o per il tuo ambiente corrente, la modalità scura può essere una buona alternativa.",
-  "settingsTabSettingsLanguageBody": "sleek imposta automaticamente la lingua in base alle impostazioni del tuo computer. Se preferisci una lingua diversa, puoi cambiarla manualmente. <strong>sleek si riavvierà. Se questo non succede, riavvia manualmente l'applicazione.</strong>",
+  "settingsTabSettingsLanguageBody": "sleek imposta automaticamente la lingua in base alle impostazioni del tuo computer. Se preferisci una lingua diversa, puoi cambiarla manualmente.",
   "settingsTabSettingsLoggingBody": "Puoi contribuire a questo progetto, abilitando la registrazione anonima degli errori e degli eventi. Maggior informazioni possono essere trovate nella <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a> di sleek.",
   "settingsTabSettingsNotificationsBody": "sleek può inviare notifiche per le cose da fare che sono in scadenza oggi o domani. L'applicazione deve essere avviata per questa caratteristica.",
   "settingsTabSettingsTray": "Ridurre a icona sulla barra del vassoio",
@@ -142,5 +142,10 @@
   "windowTitleCreateFile": "Crea todo.txt",
   "year": "Anno",
   "year_plural": "Anni",
-  "yearly": "Annuale"
+  "yearly": "Annuale",
+  "archivingPrompt": "Tutte le cose da fare completate verranno spostate da questo file a un file done.txt nella stessa directory.",
+  "confirm": "Confermare",
+  "archivingCompletedTitle": "Archiviazione completata",
+  "archivingCompletedBody": "Le cose da fare completate sono state spostate con successo in ",
+  "restartPrompt": "Per questo cambiamento, sleek deve riavviarsi. Se ciò non accade, riavvia l'applicazione manualmente."
 }

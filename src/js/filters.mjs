@@ -22,6 +22,10 @@ let categories,
 filterContextSave.innerHTML = translations.save;
 filterContextDelete.innerHTML = translations.delete;
 
+filterContextInput.addEventListener("keydown", (event) => {
+  if(event.code==="Space") event.preventDefault();
+})
+
 function saveFilter(newFilter, oldFilter, category) {
   try {
     items.objects.forEach((item) => {
