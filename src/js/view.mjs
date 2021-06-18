@@ -15,8 +15,6 @@ const sortByDueDate = document.getElementById("sortByDueDate");
 const sortByPriority = document.getElementById("sortByPriority");
 const sortByProjects = document.getElementById("sortByProjects");
 const sortCompletedLast = document.getElementById("sortCompletedLast");
-//const toggleCompactView = document.getElementById("toggleCompactView");
-
 const toggleTray = document.getElementById("toggleTray");
 const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
 const viewHeadlineTodoList = document.getElementById("viewHeadlineTodoList");
@@ -35,9 +33,7 @@ const zoomRangePicker = document.getElementById("zoomRangePicker");
 const zoomUndo = document.getElementById("zoomUndo");
 const showEmptyFilters = document.getElementById("showEmptyFilters");
 const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyFilters");
-
 const compactView = document.getElementById("compactView");
-
 
 sortBy.innerHTML = translations.sortBy;
 sortByContexts.innerHTML = translations.contexts;
@@ -72,7 +68,8 @@ viewSelectSortBy.onchange = async function() {
   }
 }
 zoomRangePicker.onchange = function() {
-  zoom(this.value).then(response => {
+  const value = this.value;
+  zoom(value).then(response => {
     console.log(response);
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Zoom ranger dragged"]);
@@ -114,9 +111,8 @@ showEmptyFilters.checked = userData.showEmptyFilters;
 
 function zoom(zoom) {
   try {
-    const zoomStatus = zoom + "%";
-    html.style.zoom = zoomStatus;
-    document.getElementById("zoomStatus").innerHTML = zoomStatus;
+    html.style.zoom = zoom + "%";
+    document.getElementById("zoomStatus").innerHTML = zoom + "%";
     zoomRangePicker.value = zoom;
     // persist zoom setting
     setUserData("zoom", zoom);

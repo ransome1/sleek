@@ -71,6 +71,9 @@ todoTableWrapper.addEventListener("scroll", function(event) {
     startBuilding(true);
   }
 });
+todoContext.addEventListener("keyup", function(event) {
+  if(event.key==="Escape") this.classList.remove("is-active");
+});
 
 function configureTodoTableTemplate(append) {
   try {
@@ -347,6 +350,7 @@ function generateTableRow(todo) {
     todoTableBodyRow.appendChild(todoTableBodyCellText);
 
     todoTableBodyRow.addEventListener("contextmenu", event => {
+      todoContext.focus();
       todoContext.style.left = event.x + "px";
       todoContext.style.top = event.y + "px";
       todoContext.classList.toggle("is-active");
@@ -537,6 +541,9 @@ async function archiveTodos() {
     window.api.send("writeToFile", [contentForDoneFile.join("\n").toString() + "\n", doneFile()]);
     // write incompleted items to todo file
     window.api.send("writeToFile", [items.incomplete.join("\n").toString() + "\n", userData.file]);
+    // send notifcation on success
+    generateNotification(null, null, translations.archivingCompletedTitle, translations.archivingCompletedBody + doneFile());
+
     return Promise.resolve("Success: Completed todos appended to: " + doneFile())
   } catch(error) {
     error.functionName = archiveTodos.name;
@@ -548,7 +555,7 @@ function checkIsTodoVisible(todo) {
   if(!todo.text) return false
   return true;
 }
-function generateNotification(todo, offset) {
+function generateNotification(todo, offset, customTitle, customBody) {
   try {
     // abort if user didn't permit notifications within sleek
     if(!userData.notifications) return Promise.resolve("Info: Notification surpressed (turned off in sleek's settings)");
@@ -556,29 +563,45 @@ function generateNotification(todo, offset) {
     return navigator.permissions.query({name: "notifications"}).then(function(result) {
       // abort if user didn't permit notifications
       if(result.state!="granted") return Promise.resolve("Info: Notification surpressed (not permitted by OS)");
-      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
-      //const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
-      const hash = generateHash(todo.toString()) + offset;
-      let title;
-      switch (offset) {
-        case 0:
-          title = translations.dueToday;
-          break;
-        case 1:
-          title = translations.dueTomorrow;
-          break;
+      let notification;
+      if(todo) {
+        // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
+        //const hash = generateHash(todo.due.toISOString().slice(0, 10) + todo.text) + offset;
+        const hash = generateHash(todo.toString()) + offset;
+        let title;
+        switch (offset) {
+          case 0:
+            title = translations.dueToday;
+            break;
+          case 1:
+            title = translations.dueTomorrow;
+            break;
+        }
+        // if notification already has been triggered once it will be discarded
+        if(userData.dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+        // set options for notifcation
+        notification = {
+          title: title,
+          body: todo.text,
+          string: todo.toString(),
+          timeoutType: "never",
+          silent: false,
+          actions: [{
+            type: "button",
+            text: "Show Button"
+          }]
+        }
+        // once shown, it will be persisted as hash to it won't be shown a second time
+        userData.dismissedNotifications.push(hash);
+        setUserData("dismissedNotifications", userData.dismissedNotifications);
+      } else {
+        notification = {
+          title: customTitle,
+          body: customBody,
+          timeoutType: "default",
+          silent: true
+        }
       }
-      // if notification already has been triggered once it will be discarded
-      if(userData.dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
-      // set options for notifcation
-      let notification = {
-        title: title,
-        body: todo.text,
-        string: todo.toString(),
-      }
-      // once shown, it will be persisted as hash to it won't be shown a second time
-      userData.dismissedNotifications.push(hash);
-      setUserData("dismissedNotifications", userData.dismissedNotifications);
       // send notification object to main process for execution
       window.api.send("showNotification", notification);
       // trigger matomo event

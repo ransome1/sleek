@@ -30,7 +30,7 @@ describe("Full-text search", function () {
       const todo = await todoTableContainer.$$(".todo");
       const attribute = await todo[0].getAttribute("data-item");
       return attribute === "Learn how to add 2+2";
-    }, 5000, "Expected value to be different after 5s");
+    }, 10000, "Expected value to be different after 5s");
   })
 
 })

@@ -1,5 +1,6 @@
 "use strict";
 import { isToday, isPast } from "./js/date.mjs";
+import { createModalJail } from "./configs/modal.config.mjs";
 // ########################################################################################################################
 // DEFINE ELEMENTS
 // ########################################################################################################################
@@ -57,6 +58,10 @@ const todoTable = document.getElementById("todoTable");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const welcomeToSleek = document.getElementById("welcomeToSleek");
 const btnAddTodoContainer = document.getElementById("btnAddTodoContainer");
+const modalPrompt = document.getElementById("modalPrompt");
+const modalPromptContent = document.getElementById("modalPromptContent");
+const modalPromptConfirm = document.getElementById("modalPromptConfirm");
+const modalPromptCancel = document.getElementById("modalPromptCancel");
 
 let
   a0,
@@ -74,6 +79,38 @@ let
   onboarding,
   view;
 
+function getConfirmationResponse() {
+  return new Promise((resolve, reject) => {
+    modalPromptConfirm.onclick = function() {
+      resolve("Info: Prompt confirmed");
+    }
+    modalPromptCancel.onclick = function() {
+      reject("Info: Prompt canceled");
+    }
+  });
+};
+async function getConfirmation() {
+  const fn = arguments[0];
+  const vars = Array.prototype.slice.call(arguments, 2);
+  modalPrompt.classList.add("is-active");
+  modalPromptContent.innerHTML = arguments[1];
+  createModalJail(modalPrompt);
+  modalPromptConfirm.focus();
+  // wait for user response
+  await getConfirmationResponse().then(function(response) {
+    console.info(response);
+    modalPrompt.classList.remove("is-active");
+    // if action is confirmed, start function
+    fn.apply(null, vars).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+  }).catch(function(error) {
+    console.info(error);
+    modalPrompt.classList.remove("is-active");
+  });
+}
 function configureMainView() {
   try {
     // close filterContext if open
@@ -202,8 +239,10 @@ function handleError(error) {
   try {
     if(error) {
       console.error(error.name +" in function " + error.functionName + ": " + error.message);
-      errorContainer.classList.add("is-active");
-      errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
+      if(appData.environment==="development") {
+        errorContainer.classList.add("is-active");
+        errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
+      }
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Error", error.functionName, error])
     }
@@ -276,11 +315,12 @@ function registerEvents() {
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on Theme"])
     }
     btnArchiveTodos.onclick = function() {
-      todos.archiveTodos().then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
+      // abort when onboarding is shown
+      if(onboarding) return false;
+      // abort when no completed todos are present
+      if(todos.items.complete.length===0) return false;
+      // handle user confirmation and pass callback function
+      getConfirmation(todos.archiveTodos, translations.archivingPrompt);
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Setting", "Click on Archive"])
     }
@@ -316,17 +356,6 @@ function registerEvents() {
         if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Form", "Click on Cancel"]);
       }
     });
-    navBtnAddTodo.onclick = function () {
-      // just in case the form will be cleared first
-      resetModal().then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
-      form.show();
-      // trigger matomo event
-      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on add todo"]);
-    }
     btnAddTodoContainer.onclick = function () {
       // just in case the form will be cleared first
       resetModal().then(function(response) {
@@ -431,12 +460,10 @@ function registerKeyboardShortcuts() {
       if(event.key==="a" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         // abort when onboarding is shown
         if(onboarding) return false;
-
-        todos.archiveTodos().then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
+        // abort when no completed todos are present
+        if(todos.items.complete.length===0) return false;
+        // handle user confirmation and pass callback function
+        getConfirmation(todos.archiveTodos, translations.archivingPrompt);
       }
       // toggle dark mode
       if(event.key==="d" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
@@ -448,12 +475,7 @@ function registerKeyboardShortcuts() {
       }
       // show filter drawer
       if(event.key==="b" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        // abort when onboarding is shown
-        if(onboarding) return false;
-
-        let toggle = true;
-        if(document.getElementById("drawerContainer").classList.contains("is-active")) toggle = false;
-        drawer.showDrawer(toggle, "navBtnFilter", "filterDrawer").then(function(result) {
+        drawer.showDrawer(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
           console.log(result);
         }).catch(function(error) {
           handleError(error);
@@ -654,6 +676,8 @@ function setTranslations() {
     onboardingContainerBtnOpen.innerHTML = translations.openFile;
     onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
     welcomeToSleek.innerHTML = translations.welcomeToSleek;
+    modalPromptConfirm.innerHTML = translations.confirm;
+    modalPromptCancel.innerHTML = translations.cancel;
     btnResetFilters.forEach(function(el) {
       el.getElementsByTagName('span')[0].innerHTML = translations.resetFilters;
     });
@@ -903,4 +927,4 @@ window.api.receive("refresh", async function(content) {
   });
 });
 
-export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme };
+export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };

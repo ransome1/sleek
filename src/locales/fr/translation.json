@@ -106,7 +106,7 @@
   "settingsTabSettingsArchive": "Archiver les tâches",
   "settingsTabSettingsArchiveBody": "Les tâches complétées vont être supprimées du fichier todo.txt actuel et insérées dans un fichier done.txt. Si ce fichier n'existe pas dans le dossier courant, il sera créé.",
   "settingsTabSettingsDarkmodeBody": "Si l'interface utilisateur normale de sleek est trop lumineuse pour vous ou dans votre environnement actuel, le mode sombre peut être une alternative intéressante.",
-  "settingsTabSettingsLanguageBody": "sleek définit automatiquement la langue en fonction des paramètres de votre ordinateur. Si vous préférez une autre langue, vous pouvez la changer manuellement. <strong>sleek redémarrera de lui-même. Si cela ne se produit pas, veuillez redémarrer le programme manuellement.</strong>",
+  "settingsTabSettingsLanguageBody": "sleek définit automatiquement la langue en fonction des paramètres de votre ordinateur. Si vous préférez une autre langue, vous pouvez la changer manuellement.",
   "settingsTabSettingsLoggingBody": "Vous pouvez contribuer à ce projet, en permettant l'enregistrement anonyme des erreurs et des événements. Il enregistrera toutes les erreurs qui se produisent et les fonctionnalités que vous utilisez et enverra ces informations à une instance Matomo hébergée en privé en utilisant le protocole SSL. Vous trouverez plus d'informations dans <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">la page de politique de protection de la vie privée</a> de sleek.",
   "settingsTabSettingsNotificationsBody": "sleek peut vous envoyer des notifications pour les tâches qui sont à finir aujourd'hui ou demain. L'application doit tourner pour que cette fonctionnalité soit active.",
   "settingsTabSettingsTray": "Réduire à la barre de plateau",
@@ -143,5 +143,10 @@
   "windowTitleCreateFile": "Créer todo.txt",
   "year": "an",
   "year_plural": "ans",
-  "yearly": "Tous les ans"
+  "yearly": "Tous les ans",
+  "archivingPrompt": "Toutes les tâches terminées seront déplacées de ce fichier vers un fichier done.txt dans le même répertoire.",
+  "confirm": "Confirmer",
+  "archivingCompletedTitle": "Archivage terminé",
+  "archivingCompletedBody": "Les tâches terminées ont été déplacées avec succès vers ",
+  "restartPrompt": "Pour ce changement, sleek doit redémarrer. Si cela ne se produit pas, veuillez redémarrer l'application manuellement."
 }

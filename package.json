@@ -104,8 +104,8 @@
     "build:appimage": "electron-builder -l AppImage --publish never",
     "pack": "electron-builder --dir",
     "lint": "eslint --ext .js, src --ext .mjs, src",
-    "test": "mocha --timeout 5000",
-    "test1": "mocha ./test/settings.js --timeout 5000",
+    "test": "mocha --timeout 10000",
+    "test1": "mocha ./test/createTodos.js --timeout 10000",
     "sass": "sass -w src/scss/:src/css/",
     "start": "yarn sass & electron ."
   },

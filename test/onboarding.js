@@ -28,6 +28,11 @@ describe("Onboarding", function () {
     })
   })
 
+  it("App title is 'sleek'", async function () {
+    const title = await app.client.getTitle();
+    assert.equal(title, "sleek");
+  })
+
   it("Onboarding is shown", async () => {
     const onboardingContainer = await app.client.$("#onboardingContainer");
     await onboardingContainer.waitForDisplayed({ timeout: 3000 });

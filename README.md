@@ -82,7 +82,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 * <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts following todotxt.net</a>
 * Tabindex available
 * <a href="https://github.com/ransome1/sleek/wiki/Hidden-todos">A todo can be hidden but its attributes will be available in the filter drawer and autocomplete function</a>
-* Alarms will be shown when a todo is due tomorrow or today
+* Due dates trigger alarms and appear as badges in sleeks icon
 * Dark and light mode can be toggled
 * A compact view is available
 * Completed todos can be bulk archived to a separate done.txt ([name of todo file]_done.txt) file
