@@ -51,7 +51,6 @@ const onboardingContainerBtnCreate = document.getElementById("onboardingContaine
 const onboardingContainerBtnOpen = document.getElementById("onboardingContainerBtnOpen");
 const onboardingContainerSubtitle = document.getElementById("onboardingContainerSubtitle");
 const resultStats = document.getElementById("resultStats");
-const themeLink = document.getElementById("themeLink");
 const todoContext = document.getElementById("todoContext");
 const todoFilters = document.getElementById("todoFilters");
 const todoTable = document.getElementById("todoTable");
@@ -129,7 +128,7 @@ function configureMainView() {
       // jump to previously added item
       if(document.getElementById("previousItem")) jumpToItem(document.getElementById("previousItem"))
       // show add todo buttons
-      navBtnAddTodo.classList.remove("is-hidden");
+      //navBtnAddTodo.classList.remove("is-hidden");
       //btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
       // remove onboarding
       showOnboarding(false).then(function(response) {
@@ -139,7 +138,20 @@ function configureMainView() {
       });
       // check if archive button should be enabled
       setButtonState("btnArchiveTodos");
-      // file is defined, but content is empty
+      // configure navigation
+      if(filters.filterCounter===0) {
+        // hide filter nav button
+        navBtnFilter.classList.add("is-hidden");
+        // close filter drawer
+        drawer.show(navBtnFilter, document.getElementById(navBtnFilter.getAttribute("data-drawer")), true).then(function(result) {
+          console.log(result);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      } else {
+        navBtnFilter.classList.remove("is-hidden");
+      }
+      // configure table view
       if(userData.file && todos.items.objects.length===0) {
         addTodoContainer.classList.add("is-active");
         todoTableSearchContainer.classList.remove("is-active");
@@ -157,7 +169,6 @@ function configureMainView() {
         addTodoContainer.classList.remove("is-active");
         noResultContainer.classList.remove("is-active");
         todoTable.classList.add("is-active");
-        navBtnFilter.classList.add("is-active");
         return Promise.resolve("Info: File has content and results are shown");
       }
     } else {
@@ -475,7 +486,7 @@ function registerKeyboardShortcuts() {
       }
       // show filter drawer
       if(event.key==="b" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        drawer.showDrawer(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
+        drawer.show(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
           console.log(result);
         }).catch(function(error) {
           handleError(error);
@@ -642,12 +653,12 @@ function setTheme(switchTheme) {
     }
     switch (theme) {
       case "light":
+      body.classList.remove("dark");
       document.getElementById("toggleDarkmode").checked = false;
-      themeLink.href = "";
       break;
       case "dark":
+      body.classList.add("dark");
       document.getElementById("toggleDarkmode").checked = true;
-      themeLink.href = appData.path + "/css/" + theme + ".css";
       break;
     }
     return Promise.resolve("Success: Theme set to " + theme);
@@ -790,6 +801,7 @@ window.onload = async function () {
   translations = await getTranslations();
   todos = await import("./js/todos.mjs");
   filters = await import("./js/filters.mjs");
+  drawer = await import("./js/drawer.mjs");
   if(userData.file) {
     window.api.send("startFileWatcher", userData.file);
   // for users who upgrade from very old versions
@@ -829,7 +841,6 @@ window.onload = async function () {
   });
   form = await import("./js/form.mjs");
   content = await import("./js/content.mjs");
-  drawer = await import("./js/drawer.mjs");
   view = await import("./js/view.mjs");
   import("./js/navigation.mjs");
   import("./js/files.mjs");
@@ -869,14 +880,10 @@ window.api.receive("triggerFunction", (name, args) => {
         });
         break;
       case "archiveTodos":
-        todos.archiveTodos(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
+        getConfirmation(todos.archiveTodos, translations.archivingPrompt);
         break;
       case "showDrawer":
-        drawer.showDrawer(...args).then(function(response) {
+        drawer.show(...args).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);

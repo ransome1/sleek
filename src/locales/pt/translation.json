@@ -110,7 +110,7 @@
   "settingsTabSettingsLoggingBody": "Você pode contribuir para este projeto, habilitando erros anônimos e registro de eventos. Mais informações podem ser encontradas na <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">política de privacidade</a> do sleek.",
   "settingsTabSettingsNotificationsBody": "O sleek pode enviar notificações para tarefas pendentes hoje e amanhã. O aplicativo precisa estar em execução para este recurso.",
   "settingsTabSettingsTray": "Minimize para a barra da bandeja",
-  "settingsTabSettingsTrayBody": "Com essa configuração, o sleek é minimizado na barra da bandeja e não fica mais visível na barra de tarefas. <strong>sleek irá reiniciar sozinho. Se isso não acontecer, reinicie o programa manualmente.</strong>",
+  "settingsTabSettingsTrayBody": "Com essa configuração, o sleek é minimizado na barra da bandeja e não fica mais visível na barra de tarefas.",
   "shareFacebook": "Compartilhe o sleek no Facebook",
   "shareLinkedin": "Compartilhe o sleek no LinkedIn",
   "shareTwitter": "Compartilhe o sleek no Twitter",

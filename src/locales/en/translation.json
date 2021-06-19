@@ -110,7 +110,7 @@
   "settingsTabSettingsLoggingBody": "You can contribute to this project, by enabling anonymized error and event logging. More information can be found in sleeks' <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a>.",
   "settingsTabSettingsNotificationsBody": "sleek can send you notifications for todos that are due today and tomorrow. The app needs to be running for this feature.",
   "settingsTabSettingsTray": "Minimize to the tray bar",
-  "settingsTabSettingsTrayBody": "With this setting sleek is minimized to the tray bar and is no longer visible in the task bar. <strong>sleek will restart itself. If that doesn't happen, please restart the program manually.</strong>",
+  "settingsTabSettingsTrayBody": "With this setting sleek is minimized to the tray bar and is no longer visible in the task bar.",
   "shareFacebook": "Share sleek on Facebook",
   "shareLinkedin": "Share sleek on LinkedIn",
   "shareTwitter": "Share sleek on Twitter",

@@ -110,7 +110,7 @@
   "settingsTabSettingsLoggingBody": "Puoi contribuire a questo progetto, abilitando la registrazione anonima degli errori e degli eventi. Maggior informazioni possono essere trovate nella <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a> di sleek.",
   "settingsTabSettingsNotificationsBody": "sleek può inviare notifiche per le cose da fare che sono in scadenza oggi o domani. L'applicazione deve essere avviata per questa caratteristica.",
   "settingsTabSettingsTray": "Ridurre a icona sulla barra del vassoio",
-  "settingsTabSettingsTrayBody": "Con questa impostazione, sleek viene ridotto a icona nella barra delle applicazioni e non è più visibile nella barra delle applicazioni. <strong>sleek si riavvierà da solo. Se ciò non accade, riavvia il programma manualmente.</strong>",
+  "settingsTabSettingsTrayBody": "Con questa impostazione, sleek viene ridotto a icona nella barra delle applicazioni e non è più visibile nella barra delle applicazioni.",
   "shareFacebook": "Condividi sleek su Facebook",
   "shareLinkedin": "Condividi sleek su LinkedIn",
   "shareTwitter": "Condividi sleek su Twitter",

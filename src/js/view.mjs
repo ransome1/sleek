@@ -109,6 +109,13 @@ toggleTray.checked = userData.tray;
 compactView.checked = userData.compactView;
 showEmptyFilters.checked = userData.showEmptyFilters;
 
+// set index according to persisted sorting method
+Array.from(document.querySelector("#viewSelectSortBy").options).forEach((item, i) => {
+  if(userData.sortBy === item.value) {
+    viewSelectSortBy.selectedIndex = i;
+  }
+});
+
 function zoom(zoom) {
   try {
     html.style.zoom = zoom + "%";

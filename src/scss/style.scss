@@ -1,5 +1,6 @@
 @charset 'utf-8';
 @import 'variables.scss';
+@import 'dark.scss';
 @font-face {
   font-family: 'FreeSans';
   src: url('../fonts/FreeSans.otf') format('opentype');
@@ -43,10 +44,18 @@ button, button:focus, button:active, button:active, button:after, button::before
 .button.is-link i {
   color: white;
 }
+.button.is-greyed-out {
+  cursor: not-allowed;
+}
+.is-greyed-out {
+  filter: opacity(75%) grayscale(100%);
+  .tag {
+    display: none;
+  }
+}
 table {
   width: 100%;
   border-collapse:separate;
-  margin-bottom: 2em;
   tr {
     th {
       padding: .1em 0 !important;
@@ -159,13 +168,11 @@ nav {
   position: relative;
   background: $almost-white;
   ul {
-    width: 5em;
-    height: 100%;
     float: left;
   	list-style-type: none;
   	margin: 0;
   	padding: 0;
-    li a {
+    li {
       width: 5em;
       height: 5em;
       display: block;
@@ -175,7 +182,7 @@ nav {
     	text-align: center;
     	border-bottom: 1px solid rgba(0,0,0,0.05);
     }
-    li a:focus {
+    li:focus {
       background: $light-grey;
       outline-style: none;
     }
@@ -183,19 +190,13 @@ nav {
     li.is-highlighted {
       background: $light-grey;
     }
-    li#navBtnFilter {
+    li#navBtnFilter.is-hidden {
       display: none;
-    }
-    li#navBtnFilter.is-active {
-      display: block;
     }
     li.logo {
       background: $dark-grey;
       color: white;
-      font-size: 1em;
       font-family: FreeSansBold;
-      line-height: 5em;
-      text-align: center;
       cursor: default;
     }
     li span.alert {
@@ -338,15 +339,8 @@ nav {
         z-index: 35;
       }
     }
-    .is-greyed-out {
-      filter: opacity(75%) grayscale(100%);
-    }
-    .button.is-greyed-out {
-      cursor: not-allowed;
-    }
     h4.is-4 {
       font-size: 1.25em;
-      color: $dark-grey;
       font-family: FreeSansBold;
       margin-bottom: 1.5em;
     }
@@ -360,6 +354,9 @@ nav {
       width: 100%;
       padding: 0;
       margin: 0 0 1.5em 0;
+    }
+    table {
+      margin-bottom: 2em;
     }
     table tr td:nth-child(odd) {
       width: auto;
@@ -414,6 +411,7 @@ nav {
 }
 #todoTable {
   width: 100%;
+  min-width: 30em;
   float: left;
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
@@ -462,9 +460,6 @@ nav {
       padding: 0 .4em;
     }
   }
-  // .group.priority {
-  //   padding: .75em 0;
-  // }
   .group.due {
     .button {
       padding: 0;
@@ -475,15 +470,16 @@ nav {
     display: flex;
   }
     .cell {
+      line-height: 1.7em;
       padding: .75em 0;
       margin-right: 1em;
       height: auto;
-      line-height: 1.5em;
+      cursor: pointer;
       .is-white {
         background: none;
       }
       span.tag {
-        margin: 0 .25em 0 0;
+        margin: 0 0.25em 0 0;
       }
       span.tag.projects {
         background: $sleek-projects-button;
@@ -499,8 +495,6 @@ nav {
     .cell.text {
       width: auto;
       flex: 1;
-      line-height: 1.7em;
-      cursor: pointer;
       color: $dark-grey;
       margin-right: 0;
       .categories {
@@ -559,7 +553,7 @@ nav {
       .fa-sort-down {
         position: absolute;
         right: 0.2em;
-        bottom: 2.25em;
+        bottom: 2.1em;
         display: none;
       }
       .tags {
@@ -719,6 +713,7 @@ nav {
   z-index: 60;
   a {
     color: $has-text-link;
+    padding: 0.75em 1em;
   }
 }
 #todoContext.is-active {
@@ -819,13 +814,19 @@ nav {
   }
 }
 .priority {
-  .button, .button:hover {
-    font-size: 1.25em;
+  .button {
+    font-size: 1.2em;
     font-family: FreeSansBold;
     background: $mid-grey;
     color: darken($mid-grey, 40%);
     padding: .25em .7em;
     height: auto;
+    span.tag {
+      color: inherit;
+    }
+  }
+  .button:hover {
+    color: darken($mid-grey, 40%);
     span.tag {
       color: inherit;
     }
@@ -1084,7 +1085,7 @@ nav {
     background-color: $has-text-danger;
   }
 }
-body.compact {
+@mixin compact() {
   #todoTableSearchContainer {
     padding: 1em;
     .column {
@@ -1096,10 +1097,13 @@ body.compact {
     }
   }
   #todoTable {
-    padding: 0 1em 1em 1em;
+    padding: 0 1.5em 1.5em 1.5em;
     .todo {
       .cell {
         padding: .25em 0;
+        .text {
+          margin: 0;
+        }
       }
       .cell.itemDueDate {
         .tags {
@@ -1108,100 +1112,60 @@ body.compact {
         }
         i.fa-sort-down {
           right: .2em;
-          bottom: 1.75em;
+          bottom: 1.7em;
+          color: inherit;
         }
       }
     }
   }
-  .modal.content {
-    .modal-card {
-      width: 90% !important;
-      padding: .5em;
-    }
-  }
   nav ul {
     width: 3.5em;
-    li a {
+    li {
       width: 3.5em;
       height: 3.5em;
       line-height: 3.5em;
     }
-    li.logo {
-      width: 100%;
-      height: 3.5em;
-      line-height: 3.5em;
-      font-family: 'FreeSansBold';
-    }
   }
-  #drawerContainer {
-    .drawer {
-      padding: 1.5em !important;
-      .is-4 {
-        font-size: 1.1em;
-      }
+  #autoCompleteContainer,
+  .drawer {
+    padding: 1.5em;
+    .is-4 {
+      font-size: 1.1em;
+    }
+    .priority {
       .button {
+        font-size: 1em;
+      }
+    }
+    .button {
+      font-size: 0.9em;
+      margin: 0 0.3em 0.3em 0!important;
+      padding: 0.25em 0.6em;
+      .tag {
+        padding: 0 .5em;
+        width: auto;
+        height: auto;
+        min-width: 1.5em;
+        min-height: 1.5em;
         font-size: .9em;
-        margin: 0 0.3em 0.3em 0;
-        padding: 0.25em 0.6em;
-        .tag {
-          padding: 0 .5em;
-          width: auto;
-          height: auto;
-          min-width: 1.5em;
-          min-height: 1.5em;
-          font-size: .9em;
-        }
       }
     }
   }
-  #autoCompleteContainer.drawer {
-    padding: 0 !important;
-  }
-}
-@media  screen and (max-width: 992px),
-        screen and (max-height: 650px) {
-  .modal.content {
-    .modal-card {
-      width: 90% !important;
-      padding: .5em;
-    }
-  }
-  nav ul {
-    width: 3.5em;
-    li a {
-      width: 3.5em;
-      height: 3.5em;
-    	line-height: 3.5em;
-    }
-
-    li.logo {
-      width: 100%;
-      height: 3.5em;
-      line-height: 3.5em;
-      font-family: 'FreeSansBold';
-    }
-  }
-  #autoCompleteContainer.drawer {
-    padding: 0 !important;
-  }
-  #todoTable {
-    padding: 0 1em 1em 1em;
-  }
-  #todoTableSearchContainer {
+  #autoCompleteContainer {
     padding: 1em;
-    .column {
-      padding: 0;
-      .icon.is-left {
-        top: 0;
-        left: 0;
-      }
+    h4 {
+      margin-top: 0;
     }
   }
 }
-@media (max-width: 768px) {
-  .modal.content .modal-card .card.is-centered {
-    width: 100% !important;
-  }
+@media screen and (max-width: 992px),
+screen and (max-height: 650px) {
+  @include compact;
 }
-@import '../css/datepicker.css';
+body.compact {
+  @include compact;
+}
+
+
+@import 'datepicker.scss';
 @import '../../node_modules/bulma/bulma.sass';

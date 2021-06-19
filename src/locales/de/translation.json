@@ -111,7 +111,7 @@
   "settingsTabSettingsLoggingBody": "Du kannst das Projekt unterstützen, indem Du das anonymisierte Fehler- und Event-Logging aktivierst. Alle Informationen sind in der <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">Datenschutzerklärung</a> ausgeführt.",
   "settingsTabSettingsNotificationsBody": "sleek kann Benachrichtigungen anzeigen, wenn eine Todo morgen oder heute fällig ist. Dazu muss sleek mindestens im Hintergrund aktiv sein.",
   "settingsTabSettingsTray": "In die Tray-Leiste minimieren",
-  "settingsTabSettingsTrayBody": "In dieser Einstellung wird sleek in die Tray-Leiste minimiert und ist nicht mehr in der Task-Bar sichtbar. <strong>sleek wird sich selbst neustarten. Wenn das nicht passiert, starte das Programm bitte händisch neu.</strong>",
+  "settingsTabSettingsTrayBody": "In dieser Einstellung wird sleek in die Tray-Leiste minimiert und ist nicht mehr in der Task-Bar sichtbar.",
   "shareFacebook": "Auf Facebook teilen",
   "shareLinkedin": "Auf LinkedIn teilen",
   "shareTwitter": "Auf Twitter teilen",

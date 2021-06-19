@@ -8,10 +8,24 @@ const todoTable = document.getElementById("todoTable");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const navBtnFilter = document.getElementById("navBtnFilter");
 const navBtnView = document.getElementById("navBtnView");
-const drawers = document.querySelectorAll("nav ul li.drawer");
+const drawers = document.querySelectorAll("nav ul li.drawerTrigger");
+
+if(userData.filterDrawer) {
+  show(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    handleError(error);
+  });
+} else if(userData.viewDrawer) {
+  show(document.getElementById("navBtnView"), document.getElementById("navBtnView").getAttribute("data-drawer")).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    handleError(error);
+  });
+}
 
 document.getElementById("drawerClose").onclick = function() {
-  showDrawer(null, null, true).then(function(result) {
+  show(null, null, true).then(function(result) {
     console.log(result);
   }).catch(function(error) {
     handleError(error);
@@ -21,7 +35,7 @@ document.getElementById("drawerClose").onclick = function() {
 }
 document.getElementById("filterDrawer").addEventListener ("keydown", function () {
   if(event.key === "Escape") {
-    showDrawer(false, navBtnFilter.id, this.id).then(function(result) {
+    show(false, navBtnFilter.id, this.id).then(function(result) {
       console.log(result);
     }).catch(function(error) {
       handleError(error);
@@ -30,7 +44,7 @@ document.getElementById("filterDrawer").addEventListener ("keydown", function ()
 });
 document.getElementById("viewDrawer").addEventListener ("keydown", function () {
   if(event.key === "Escape") {
-    showDrawer(false, document.getElementById("navBtnView").id, this.id).then(function(result) {
+    show(false, document.getElementById("navBtnView").id, this.id).then(function(result) {
       console.log(result);
     }).catch(function(error) {
       handleError(error);
@@ -39,7 +53,7 @@ document.getElementById("viewDrawer").addEventListener ("keydown", function () {
 });
 getHandleElement.addEventListener("mousedown", startDragging);
 navBtnFilter.onclick = function() {
-  showDrawer(this, this.getAttribute("data-drawer")).then(function(result) {
+  show(this, this.getAttribute("data-drawer")).then(function(result) {
     console.log(result);
   }).catch(function(error) {
     handleError(error);
@@ -48,7 +62,7 @@ navBtnFilter.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
 }
 navBtnView.onclick = function() {
-  showDrawer(this, this.getAttribute("data-drawer")).then(function(result) {
+  show(this, this.getAttribute("data-drawer")).then(function(result) {
     console.log(result);
   }).catch(function(error) {
     handleError(error);
@@ -57,13 +71,13 @@ navBtnView.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on view"]);
 }
 
-export function showDrawer(button, drawer, close) {
+export function show(button, drawer, close) {
   try {
     // close drawers and the container and persist it
     if(close) {
-      drawerContainer.classList.remove("is-active");
       drawers.forEach((item) => {
         item.classList.remove("is-highlighted");
+        drawerContainer.classList.remove("is-active");
         document.getElementById(item.getAttribute("data-drawer")).classList.remove("is-active");
         setUserData(item.getAttribute("data-drawer"), false);
       });
@@ -82,6 +96,7 @@ export function showDrawer(button, drawer, close) {
       drawers.forEach((item) => {
         item.classList.remove("is-highlighted");
         document.getElementById(item.getAttribute("data-drawer")).classList.remove("is-active");
+        setUserData(document.getElementById(item.getAttribute("data-drawer")).id, false);
       });
       drawer.classList.add("is-active");
       button.classList.add("is-highlighted");
@@ -89,7 +104,7 @@ export function showDrawer(button, drawer, close) {
       return Promise.resolve("Success: Drawer opened");
     }
   } catch(error) {
-    error.functionName = showDrawer.name;
+    error.functionName = show.name;
     return Promise.reject(error);
   }
 }

@@ -1,9 +1,8 @@
 "use strict";
+import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import { resetModal, handleError, userData, setUserData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
-//import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import "../../node_modules/jstodotxt/jsTodoTxt.js";
 import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput } from "./datePicker.mjs";
@@ -187,7 +186,7 @@ function setPriority(priority) {
         });
       }
     }
-    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value);
     if((priority==="down" || priority==="up") && !todo.priority) {
       todo.priority = "A";
     } else if(priority==="up" && todo.priority!="a") {
@@ -214,7 +213,7 @@ function setPriority(priority) {
 }
 function setDueDate(days) {
   try {
-    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension() ]);
     if(days===0) {
       todo.due = undefined;
       todo.dueString = undefined;
@@ -246,14 +245,14 @@ function show(todo, templated) {
     if(todo) {
       // replace invisible multiline ascii character with new line
       // we need to check if there already is a due date in the object
-      todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]);
+      todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
       // set the priority
       setPriority(todo.priority);
       //
       if(templated === true) {
         // this is a new templated todo task
         // erase the original creation date and description
-        todo.date = null;
+        todo.date = new Date();
         todo.text = "____________";
         document.getElementById("modalFormInput").value = todo.toString();
         modalTitle.innerHTML = translations.addTodo;
@@ -266,8 +265,6 @@ function show(todo, templated) {
         // pass todo string to form data item
         modalForm.setAttribute("data-item", todo.toString());
         // this is an existing todo task to be edited
-        // put the initially passed todo to the modal data field
-        //modalForm.setAttribute("data-item", todo.toString());
         // replace special char with line breaks before passing it to textarea
         if(userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16),"\r\n");
         // replace special char with space before passing it to regular input

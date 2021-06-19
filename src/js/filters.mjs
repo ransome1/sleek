@@ -13,6 +13,7 @@ const filterContextSave = document.getElementById("filterContextSave");
 const filterContextDelete = document.getElementById("filterContextDelete");
 
 let categories,
+    filterCounter = 0,
     filtersCounted,
     filtersCountedReduced,
     selectedFilters,
@@ -132,6 +133,8 @@ function filterItems(items) {
 }
 function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition) {
   try {
+    // reset filter counter
+    filterCounter = 0;
     // select the container (filter drawer or autocomplete) in which filters will be shown
     if(autoCompleteCategory) {
       container = autoCompleteContainer;
@@ -286,6 +289,7 @@ function selectFilter(filter, category) {
 }
 function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition) {
   try {
+    let hideFilterCategories = userData.hideFilterCategories;
     selectedFilters = new Array;
     if(userData.selectedFilters && userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
     // creates a div for the specific filter section
@@ -302,25 +306,27 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     if(autoCompletePrefix===undefined && userData.showEmptyFilters) {
       // create a sub headline element
       let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "is-4 title clickable");
-      todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
+      todoFilterHeadline.setAttribute("class", "is-4 clickable");
+      // setup greyed out state
+      if(hideFilterCategories.includes(category)) {
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + headline;
+        todoFilterHeadline.classList.add("is-greyed-out");
+      } else {
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
+        todoFilterHeadline.classList.remove("is-greyed-out");
+      }
+      // add click event
       todoFilterHeadline.onclick = function() {
         document.getElementById("todoTableWrapper").scrollTo(0,0);
-        let hideFilterCategories = userData.hideFilterCategories;
         if(hideFilterCategories.includes(category)) {
           hideFilterCategories.splice(hideFilterCategories.indexOf(category),1)
-          this.parentElement.classList.remove("is-greyed-out");
-          this.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
         } else {
           hideFilterCategories.push(category);
-          this.parentElement.classList.add("is-greyed-out");
-          this.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + headline;
           hideFilterCategories = [...new Set(hideFilterCategories.join(",").split(","))];
         }
         setUserData("hideFilterCategories", hideFilterCategories)
         startBuilding();
       }
-      // add click event
       // add the headline before category container
       todoFiltersContainer.appendChild(todoFilterHeadline);
     } else {
@@ -332,7 +338,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       }
       todoFilterHeadline.setAttribute("tabindex", -1);
       // create a sub headline element
-      todoFilterHeadline.setAttribute("class", "is-4 title");
+      todoFilterHeadline.setAttribute("class", "is-4");
       // no need for tab index if the headline is in suggestion box
       //if(autoCompletePrefix==undefined)
       todoFilterHeadline.innerHTML = headline;
@@ -407,6 +413,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
             if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
           });
         } else {
+          todoFiltersItem.disabled = true;
           todoFiltersItem.classList.add("is-greyed-out");
           todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">0</span>";
         }
@@ -430,6 +437,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
           if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
         });
       }
+      filterCounter++;
       todoFiltersContainer.appendChild(todoFiltersItem);
     }
     return Promise.resolve(todoFiltersContainer);
@@ -439,4 +447,4 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
   }
 }
 
-export { filterItems, generateFilterData, selectFilter, categories };
+export { filterItems, generateFilterData, selectFilter, categories, filterCounter };

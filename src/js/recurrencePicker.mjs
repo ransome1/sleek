@@ -2,9 +2,7 @@
 import { userData, translations, handleError } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { resizeInput } from "./form.mjs";
-import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
-import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import "../../node_modules/jstodotxt/jsTodoTxt.js";
+import { RecExtension } from "./todotxtExtensions.mjs";
 import * as recurrences from "./recurrences.mjs";
 
 const radioRecurrence = document.querySelectorAll("#recurrencePicker .selection");
@@ -96,7 +94,7 @@ function showRecurrences() {
   recurrencePickerContainer.classList.toggle("is-active");
   recurrencePickerIncrease.focus();
   // get object from current input
-  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+  let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new RecExtension() ]);
   let recSplit = recurrences.splitRecurrence(todo.rec);
   setRecurrenceOptionLabels(recSplit.mul);
   recurrencePickerSpinner.value = recSplit.mul;

@@ -24,3 +24,5 @@ build/
 package-lock.json
 .vs/
 .vscode/
+.stylelintrc.json
+src/css/

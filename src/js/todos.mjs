@@ -1,15 +1,12 @@
 "use strict";
-import { userData, appData, handleError, translations, setUserData, startBuilding } from "../render.js";
+import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import { userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
-import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
-import "../../node_modules/marked/marked.min.js";
-
-import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import "../../node_modules/jstodotxt/jsTodoTxt.js";
+import { RecExtension } from "./todotxtExtensions.mjs";
 
 const modalForm = document.getElementById("modalForm");
 const todoContext = document.getElementById("todoContext");
@@ -53,9 +50,10 @@ const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
 const todoTableBodyCellTextTemplate = document.createElement("a");
 const tableContainerCategoriesTemplate = document.createElement("span");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
-const todoTableBodyCellSpacerTemplate = document.createElement("div");
+//const todoTableBodyCellSpacerTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
 const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
+const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const item = { previous: "" }
 let
   items,
@@ -100,7 +98,7 @@ function configureTodoTableTemplate(append) {
 }
 function generateItems(content) {
   try {
-    items = { objects: TodoTxt.parse(content, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]) }
+    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
     items.objects = items.objects.filter(function(item) {
       if(!item.text) return false;
       return true;
@@ -129,7 +127,6 @@ function generateGroups(items) {
     } else {
       object[a[userData.sortBy]] = [...object[a[userData.sortBy]] || [], a];
     }
-    //object[a[userData.sortBy]] = [...object[a[userData.sortBy]] || [], a];
     return object;
   }, {});
   // object is converted to a sorted array
@@ -237,6 +234,7 @@ function generateTable(groups, append) {
 }
 function generateTableRow(todo) {
   try {
+    //TODO: clean up
     clusterCounter++;
     visibleRows++;
     // create nodes from templates
@@ -245,9 +243,10 @@ function generateTableRow(todo) {
     let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
     let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
-    let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
+    //let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
+    let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
     // if new item was saved, row is being marked
     if(todo.toString()==item.previous) {
       todoTableBodyRow.setAttribute("id", "previousItem");
@@ -262,10 +261,10 @@ function generateTableRow(todo) {
     if(todo.priority && userData.sortBy==="priority") {
       todoTableBodyCellPriority.setAttribute("class", "cell priority " + todo.priority);
       todoTableBodyRow.appendChild(todoTableBodyCellPriority);
-    } else if(!todo.priority && userData.sortBy==="priority") {
+    } /*else if(!todo.priority && userData.sortBy==="priority") {
       todoTableBodyCellSpacer.setAttribute("class", "cell spacer");
       todoTableBodyRow.appendChild(todoTableBodyCellSpacer);
-    }
+    }*/
     // add the checkbox
     if(todo.complete==true) {
       todoTableBodyCellCheckbox.setAttribute("title", translations.inProgress);
@@ -286,6 +285,20 @@ function generateTableRow(todo) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
     }
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
+
+    // add archiving icon
+    if(todo.complete) {
+      todoTableBodyCellArchive.setAttribute("class", "cell archive");
+      todoTableBodyCellArchive.innerHTML = "<i class=\"fas fa-archive\"></i>";
+      todoTableBodyCellArchive.onclick = function() {
+        getConfirmation(archiveTodos, translations.archivingPrompt);
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Archive button"]);
+      }
+      // append the due date to the text item
+      todoTableBodyRow.appendChild(todoTableBodyCellArchive);
+    }
+
     // creates cell for the text
     if(todo.text) {
       if(todo.priority && userData.sortBy!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><span class=\"button " + todo.priority + "\">" + todo.priority + "</span></span>";
@@ -308,10 +321,10 @@ function generateTableRow(todo) {
     // cell for the categories
     categories.forEach(category => {
       if(todo[category] && category!="priority") {
-        todo[category].forEach(el => {
+        todo[category].forEach(element => {
           let todoTableBodyCellCategory = document.createElement("span");
           todoTableBodyCellCategory.setAttribute("class", "tag " + category);
-          todoTableBodyCellCategory.innerHTML = el;
+          todoTableBodyCellCategory.innerHTML = element;
           tableContainerCategories.appendChild(todoTableBodyCellCategory);
         });
       }
@@ -335,8 +348,7 @@ function generateTableRow(todo) {
         <div class="tags has-addons">
           <span class="tag">` + translations.due + `</span><span class="tag is-dark">` + tag + `</span>
         </div>
-        <i class="fas fa-sort-down"></i>
-      `;
+        <i class="fas fa-sort-down"></i>`;
       // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
@@ -346,6 +358,7 @@ function generateTableRow(todo) {
       // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellRecurrence);
     }
+
     // add the text cell to the row
     todoTableBodyRow.appendChild(todoTableBodyCellText);
 
@@ -436,7 +449,7 @@ function setTodoComplete(todo) {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     //if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]);
+    todo = new TodoTxtItem(todo);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
@@ -479,7 +492,7 @@ function setTodoDelete(todo) {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new RecExtension(), new HiddenExtension() ]);
+    todo = new TodoTxtItem(todo);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item

@@ -110,7 +110,7 @@
   "settingsTabSettingsLoggingBody": "Vous pouvez contribuer à ce projet, en permettant l'enregistrement anonyme des erreurs et des événements. Il enregistrera toutes les erreurs qui se produisent et les fonctionnalités que vous utilisez et enverra ces informations à une instance Matomo hébergée en privé en utilisant le protocole SSL. Vous trouverez plus d'informations dans <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">la page de politique de protection de la vie privée</a> de sleek.",
   "settingsTabSettingsNotificationsBody": "sleek peut vous envoyer des notifications pour les tâches qui sont à finir aujourd'hui ou demain. L'application doit tourner pour que cette fonctionnalité soit active.",
   "settingsTabSettingsTray": "Réduire à la barre de plateau",
-  "settingsTabSettingsTrayBody": "Avec ce paramètre, sleek est réduite à la barre de plateau et n'est plus visible dans la barre des tâches. <strong>sleek redémarrera de lui-même. Si cela ne se produit pas, veuillez redémarrer le programme manuellement.</strong>",
+  "settingsTabSettingsTrayBody": "Avec ce paramètre, sleek est réduite à la barre de plateau et n'est plus visible dans la barre des tâches.",
   "shareFacebook": "Partagez sleek sur Facebook",
   "shareLinkedin": "Partagez sleek sur LinkedIn",
   "shareTwitter": "Partagez sleek sur Twitter",

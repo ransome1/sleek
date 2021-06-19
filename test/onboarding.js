@@ -52,6 +52,16 @@ describe("Onboarding", function () {
 
   })
 
+  it("Filter button is not displayed", async () => {
+
+    setTimeout(async () => {
+      const navBtnFilter = await app.client.$("#navBtnFilter");
+      const isDisplayed = await navBtnFilter.isDisplayed();
+      if(isDisplayed) throw new Error("Filter button is clickable but not suppose to")
+    }, 1000);
+
+  })
+
   it("Theme button is clickable", async () => {
 
     const btnTheme = await app.client.$("#btnTheme");
@@ -89,6 +99,5 @@ describe("Onboarding", function () {
     await messages[1].waitForDisplayed({ timeout: 3000 });
 
   })
-
 
 })
