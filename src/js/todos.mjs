@@ -243,7 +243,6 @@ function generateTableRow(todo) {
     let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
     let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
-    //let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
@@ -261,10 +260,7 @@ function generateTableRow(todo) {
     if(todo.priority && userData.sortBy==="priority") {
       todoTableBodyCellPriority.setAttribute("class", "cell priority " + todo.priority);
       todoTableBodyRow.appendChild(todoTableBodyCellPriority);
-    } /*else if(!todo.priority && userData.sortBy==="priority") {
-      todoTableBodyCellSpacer.setAttribute("class", "cell spacer");
-      todoTableBodyRow.appendChild(todoTableBodyCellSpacer);
-    }*/
+    }
     // add the checkbox
     if(todo.complete==true) {
       todoTableBodyCellCheckbox.setAttribute("title", translations.inProgress);
@@ -367,7 +363,6 @@ function generateTableRow(todo) {
       todoContext.style.left = event.x + "px";
       todoContext.style.top = event.y + "px";
       todoContext.classList.toggle("is-active");
-
       todoContext.setAttribute("data-item", todo.toString())
 
       // click on use as template option

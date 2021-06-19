@@ -18,7 +18,6 @@ flatpak/generated-sources.json
 flatpak/com.github.ransome1.sleek.yml
 assets/icons/bak
 squashfs-root/
-src/__tests__
 .eslintrc.json
 build/
 package-lock.json
