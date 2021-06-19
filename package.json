@@ -88,9 +88,6 @@
   "deb": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
-  "pacman": {
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
-  },
   "freebsd": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
@@ -100,12 +97,13 @@
     "build:linux": "electron-builder -l --publish never",
     "build:appx": "electron-builder -w appx --publish never",
     "build:pacman": "electron-builder -l pacman --publish never",
-    "build:appimage": "electron-builder -l AppImage --publish never",
+    "build:appimage": "yarn build:css && electron-builder -l AppImage --publish never",
     "pack": "electron-builder --dir",
     "lint": "eslint --ext .js, src --ext .mjs, src",
     "test": "mocha --timeout 10000",
-    "test1": "mocha ./test/createTodos.js --timeout 10000",
-    "sass": "sass -w src/scss/:src/css/",
+    "test1": "mocha ./test/onboarding.js --timeout 10000",
+    "build:css": "sass src/scss/style.scss:src/css/style.css",
+    "sass": "sass -w src/scss/style.scss:src/css/style.css",
     "start": "yarn sass & electron ."
   },
   "dependencies": {
@@ -127,8 +125,6 @@
     "eslint": "^7.25.0",
     "mocha": "^9.0.0",
     "sass": "^1.34.1",
-    "spectron": "14.0.0",
-    "stylelint": "^13.13.1",
-    "stylelint-config-sass-guidelines": "^8.0.0"
+    "spectron": "14.0.0"
   }
 }

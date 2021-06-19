@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title id="title">sleek</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" id="themeLink" href="">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css" rel="stylesheet">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/brands.css" rel="stylesheet">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/solid.css" rel="stylesheet">
@@ -25,17 +24,15 @@
         <nav>
           <ul>
             <li class="logo">sleek</li>
-            <li id="navBtnAddTodo"><a href="#" tabindex="0"><i class="fas fa-plus"></i></a></li>
-            <li id="navBtnFilter" class="drawer" data-drawer="filterDrawer"><a href="#" tabindex="0"><i class="fas fa-filter"></i></a></li>
-            <li id="navBtnView" class="drawer" data-drawer="viewDrawer"><a href="#" tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
-            <li id="btnOpenTodoFile"><a href="#" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
-            <li id="btnTheme"><a href="#" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
+            <li id="navBtnAddTodo" tabindex="0"><i class="fas fa-plus"></i></li>
+            <li id="navBtnFilter" class="drawerTrigger" data-drawer="filterDrawer" tabindex="0"><i class="fas fa-filter"></i></li>
+            <li id="navBtnView" class="drawerTrigger" data-drawer="viewDrawer"tabindex="0"><i class="fas fa-sliders-h"></i></li>
+            <li id="btnOpenTodoFile" tabindex="-1"><i class="fas fa-folder-open"></i></li>
+            <li id="btnTheme" tabindex="-1"><i class="fas fa-adjust"></i></li>
           </ul>
           <ul>
-            <li id="navBtnSettings">
-              <a href="#" tabindex="-1"><i class="fas fa-cog"></i></a>
-            </li>
-            <li id="navBtnHelp"><a href="#" tabindex="-1"><i class="fas fa-question-circle"></i></a></li>
+            <li id="navBtnSettings" tabindex="-1"><i class="fas fa-cog"></i></li>
+            <li id="navBtnHelp" tabindex="-1"><i class="fas fa-question-circle"></i></li>
           </ul>
           <div id="drawerContainer">
             <section id="filterDrawer" class="drawer dropdown" tabindex="0">
@@ -776,6 +773,9 @@
       </article>
     </section>
 
+    <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
+    <script defer src="../node_modules/marked/marked.min.js"></script>
+    <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
     <script defer type="module" src="render.js"></script>
 
   </body>

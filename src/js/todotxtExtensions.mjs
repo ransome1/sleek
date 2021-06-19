@@ -1,5 +1,4 @@
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import "../../node_modules/sugar/dist/sugar.min.js";
 
 function RecExtension() {
 	this.name = "rec";

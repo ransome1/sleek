@@ -52,6 +52,14 @@ describe("Onboarding", function () {
 
   })
 
+  it("Filter button is not clickable", async () => {
+
+    const navBtnFilter = await app.client.$("#navBtnFilter");
+    const isClickable = await navBtnFilter.isClickable();
+    if(isClickable) throw new Error("Filter button is clickable but not suppose to")
+
+  })
+
   it("Theme button is clickable", async () => {
 
     const btnTheme = await app.client.$("#btnTheme");

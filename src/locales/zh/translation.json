@@ -110,7 +110,7 @@
   "settingsTabSettingsLoggingBody": "如果允许记录匿名错误和事件, 会对开发有帮助. 更多信息请参见' <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\">privacy policy</a>.",
   "settingsTabSettingsNotificationsBody": "sleek可以提醒你今天和明天到期的任务. 请保持sleek运行. ",
   "settingsTabSettingsTray": "最小化到系统托盘",
-  "settingsTabSettingsTrayBody": "选中这个设定会让sleek最小化时隐藏到托盘(而非在任务栏<strong>sleek会自动重启. 如果没有自动重启请手动打开sleek. </strong>",
+  "settingsTabSettingsTrayBody": "选中这个设定会让sleek最小化时隐藏到托盘(而非在任务栏.",
   "shareFacebook": "通过Facebook分享sleek",
   "shareLinkedin": "通过LinkedIn分享sleek",
   "shareTwitter": "通过Twitter分享sleek",

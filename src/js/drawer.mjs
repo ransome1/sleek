@@ -8,7 +8,21 @@ const todoTable = document.getElementById("todoTable");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const navBtnFilter = document.getElementById("navBtnFilter");
 const navBtnView = document.getElementById("navBtnView");
-const drawers = document.querySelectorAll("nav ul li.drawer");
+const drawers = document.querySelectorAll("nav ul li.drawerTrigger");
+
+if(userData.filterDrawer) {
+  showDrawer(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    handleError(error);
+  });
+} else if(userData.viewDrawer) {
+  showDrawer(document.getElementById("navBtnView"), document.getElementById("navBtnView").getAttribute("data-drawer")).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    handleError(error);
+  });
+}
 
 document.getElementById("drawerClose").onclick = function() {
   showDrawer(null, null, true).then(function(result) {
@@ -82,6 +96,7 @@ export function showDrawer(button, drawer, close) {
       drawers.forEach((item) => {
         item.classList.remove("is-highlighted");
         document.getElementById(item.getAttribute("data-drawer")).classList.remove("is-active");
+        setUserData(document.getElementById(item.getAttribute("data-drawer")).id, false);
       });
       drawer.classList.add("is-active");
       button.classList.add("is-highlighted");

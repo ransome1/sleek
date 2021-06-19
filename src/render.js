@@ -51,7 +51,6 @@ const onboardingContainerBtnCreate = document.getElementById("onboardingContaine
 const onboardingContainerBtnOpen = document.getElementById("onboardingContainerBtnOpen");
 const onboardingContainerSubtitle = document.getElementById("onboardingContainerSubtitle");
 const resultStats = document.getElementById("resultStats");
-const themeLink = document.getElementById("themeLink");
 const todoContext = document.getElementById("todoContext");
 const todoFilters = document.getElementById("todoFilters");
 const todoTable = document.getElementById("todoTable");
@@ -150,6 +149,7 @@ function configureMainView() {
         addTodoContainer.classList.remove("is-active");
         todoTableSearchContainer.classList.add("is-active");
         noResultContainer.classList.add("is-active");
+        navBtnFilter.classList.add("is-hidden");
         return Promise.resolve("Info: No results");
         // TODO explain
       } else if(userData.file && todos.items.filtered.length>0) {
@@ -157,7 +157,6 @@ function configureMainView() {
         addTodoContainer.classList.remove("is-active");
         noResultContainer.classList.remove("is-active");
         todoTable.classList.add("is-active");
-        navBtnFilter.classList.add("is-active");
         return Promise.resolve("Info: File has content and results are shown");
       }
     } else {
@@ -642,12 +641,12 @@ function setTheme(switchTheme) {
     }
     switch (theme) {
       case "light":
+      body.classList.remove("dark");
       document.getElementById("toggleDarkmode").checked = false;
-      themeLink.href = "";
       break;
       case "dark":
+      body.classList.add("dark");
       document.getElementById("toggleDarkmode").checked = true;
-      themeLink.href = appData.path + "/css/" + theme + ".css";
       break;
     }
     return Promise.resolve("Success: Theme set to " + theme);
@@ -869,11 +868,7 @@ window.api.receive("triggerFunction", (name, args) => {
         });
         break;
       case "archiveTodos":
-        todos.archiveTodos(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
+        getConfirmation(todos.archiveTodos, translations.archivingPrompt);
         break;
       case "showDrawer":
         drawer.showDrawer(...args).then(function(response) {

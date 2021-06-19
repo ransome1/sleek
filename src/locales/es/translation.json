@@ -110,7 +110,7 @@
   "settingsTabSettingsLoggingBody": "Puede contribuir a este proyecto habilitando el registro anónimo de errores y eventos. Puede encontrar más información en la elegante <a href=\"https://github.com/ransome1/sleek/blob/master/PRIVACY.md\" target=\"_blank\"> política de privacidad </a>.",
   "settingsTabSettingsNotificationsBody": "sleek puede enviarle notificaciones para todos los que vencen hoy y mañana. La aplicación debe estar ejecutándose para esta función.",
   "settingsTabSettingsTray": "Minimizar a la barra de la bandeja",
-  "settingsTabSettingsTrayBody": "Con esta configuración, sleek se minimiza en la barra de la bandeja y ya no es visible en la barra de tareas. <strong>sleek se reiniciará solo. Si eso no sucede, reinicie el programa manualmente.</strong>",
+  "settingsTabSettingsTrayBody": "Con esta configuración, sleek se minimiza en la barra de la bandeja y ya no es visible en la barra de tareas.",
   "shareFacebook": "Comparte sleek en Facebook",
   "shareLinkedin": "Comparte sleek en LinkedIn",
   "shareTwitter": "Comparte sleek en Twitter",
