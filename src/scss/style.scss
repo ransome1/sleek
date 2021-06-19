@@ -45,13 +45,17 @@ button, button:focus, button:active, button:active, button:after, button::before
   color: white;
 }
 .button.is-greyed-out {
-  filter: opacity(75%) grayscale(100%);
   cursor: not-allowed;
+}
+.is-greyed-out {
+  filter: opacity(75%) grayscale(100%);
+  .tag {
+    display: none;
+  }
 }
 table {
   width: 100%;
   border-collapse:separate;
-  margin-bottom: 2em;
   tr {
     th {
       padding: .1em 0 !important;
@@ -351,6 +355,9 @@ nav {
       padding: 0;
       margin: 0 0 1.5em 0;
     }
+    table {
+      margin-bottom: 2em;
+    }
     table tr td:nth-child(odd) {
       width: auto;
       vertical-align: middle;
@@ -463,6 +470,7 @@ nav {
     display: flex;
   }
     .cell {
+      line-height: 1.7em;
       padding: .75em 0;
       margin-right: 1em;
       height: auto;
@@ -471,7 +479,7 @@ nav {
         background: none;
       }
       span.tag {
-        margin: 0 .25em 0 0;
+        margin: 0 0.25em 0 0;
       }
       span.tag.projects {
         background: $sleek-projects-button;
@@ -480,9 +488,6 @@ nav {
         background: $sleek-contexts-button;
       }
     }
-    .cell.archive {
-      line-height: 1.6em;
-    }
     .cell.checkbox a {
       flex: 0 0 1em;
       font-size: 1.25em;
@@ -490,7 +495,6 @@ nav {
     .cell.text {
       width: auto;
       flex: 1;
-      line-height: 1.7em;
       color: $dark-grey;
       margin-right: 0;
       .categories {
@@ -549,7 +553,7 @@ nav {
       .fa-sort-down {
         position: absolute;
         right: 0.2em;
-        bottom: 2.2em;
+        bottom: 2.1em;
         display: none;
       }
       .tags {
@@ -709,6 +713,7 @@ nav {
   z-index: 60;
   a {
     color: $has-text-link;
+    padding: 0.75em 1em;
   }
 }
 #todoContext.is-active {
@@ -810,6 +815,7 @@ nav {
 }
 .priority {
   .button {
+    font-size: 1.2em;
     font-family: FreeSansBold;
     background: $mid-grey;
     color: darken($mid-grey, 40%);
@@ -1120,14 +1126,20 @@ nav {
       line-height: 3.5em;
     }
   }
+  #autoCompleteContainer,
   .drawer {
     padding: 1.5em;
     .is-4 {
       font-size: 1.1em;
     }
+    .priority {
+      .button {
+        font-size: 1em;
+      }
+    }
     .button {
       font-size: 0.9em;
-      margin: 0 0.25em 0.25em 0!important;
+      margin: 0 0.3em 0.3em 0!important;
       padding: 0.25em 0.6em;
       .tag {
         padding: 0 .5em;
@@ -1137,6 +1149,12 @@ nav {
         min-height: 1.5em;
         font-size: .9em;
       }
+    }
+  }
+  #autoCompleteContainer {
+    padding: 1em;
+    h4 {
+      margin-top: 0;
     }
   }
 }

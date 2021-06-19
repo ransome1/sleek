@@ -50,7 +50,7 @@ const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
 const todoTableBodyCellTextTemplate = document.createElement("a");
 const tableContainerCategoriesTemplate = document.createElement("span");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
-const todoTableBodyCellSpacerTemplate = document.createElement("div");
+//const todoTableBodyCellSpacerTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
 const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 const todoTableBodyCellArchiveTemplate = document.createElement("span");
@@ -243,7 +243,7 @@ function generateTableRow(todo) {
     let todoTableBodyCellText = todoTableBodyCellTextTemplate.cloneNode(true);
     let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
-    let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
+    //let todoTableBodyCellSpacer = todoTableBodyCellSpacerTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
@@ -261,10 +261,10 @@ function generateTableRow(todo) {
     if(todo.priority && userData.sortBy==="priority") {
       todoTableBodyCellPriority.setAttribute("class", "cell priority " + todo.priority);
       todoTableBodyRow.appendChild(todoTableBodyCellPriority);
-    } else if(!todo.priority && userData.sortBy==="priority") {
+    } /*else if(!todo.priority && userData.sortBy==="priority") {
       todoTableBodyCellSpacer.setAttribute("class", "cell spacer");
       todoTableBodyRow.appendChild(todoTableBodyCellSpacer);
-    }
+    }*/
     // add the checkbox
     if(todo.complete==true) {
       todoTableBodyCellCheckbox.setAttribute("title", translations.inProgress);

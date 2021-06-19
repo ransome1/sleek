@@ -52,11 +52,13 @@ describe("Onboarding", function () {
 
   })
 
-  it("Filter button is not clickable", async () => {
+  it("Filter button is not displayed", async () => {
 
-    const navBtnFilter = await app.client.$("#navBtnFilter");
-    const isClickable = await navBtnFilter.isClickable();
-    if(isClickable) throw new Error("Filter button is clickable but not suppose to")
+    setTimeout(async () => {
+      const navBtnFilter = await app.client.$("#navBtnFilter");
+      const isDisplayed = await navBtnFilter.isDisplayed();
+      if(isDisplayed) throw new Error("Filter button is clickable but not suppose to")
+    }, 1000);
 
   })
 
@@ -97,6 +99,5 @@ describe("Onboarding", function () {
     await messages[1].waitForDisplayed({ timeout: 3000 });
 
   })
-
 
 })

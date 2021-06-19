@@ -498,14 +498,19 @@ button, button:focus, button:active, button:active, button:after, button::before
 }
 
 .button.is-greyed-out {
-  filter: opacity(75%) grayscale(100%);
   cursor: not-allowed;
+}
+
+.is-greyed-out {
+  filter: opacity(75%) grayscale(100%);
+}
+.is-greyed-out .tag {
+  display: none;
 }
 
 table {
   width: 100%;
   border-collapse: separate;
-  margin-bottom: 2em;
 }
 table tr th {
   padding: 0.1em 0 !important;
@@ -824,6 +829,9 @@ nav ul:nth-child(2) {
   padding: 0;
   margin: 0 0 1.5em 0;
 }
+#drawerContainer .drawer table {
+  margin-bottom: 2em;
+}
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
   vertical-align: middle;
@@ -939,6 +947,7 @@ nav ul:nth-child(2) {
   display: flex;
 }
 #todoTable .cell {
+  line-height: 1.7em;
   padding: 0.75em 0;
   margin-right: 1em;
   height: auto;
@@ -956,9 +965,6 @@ nav ul:nth-child(2) {
 #todoTable .cell span.tag.contexts {
   background: #c5ede3;
 }
-#todoTable .cell.archive {
-  line-height: 1.6em;
-}
 #todoTable .cell.checkbox a {
   flex: 0 0 1em;
   font-size: 1.25em;
@@ -966,7 +972,6 @@ nav ul:nth-child(2) {
 #todoTable .cell.text {
   width: auto;
   flex: 1;
-  line-height: 1.7em;
   color: #4a4a4a;
   margin-right: 0;
 }
@@ -1026,7 +1031,7 @@ nav ul:nth-child(2) {
 #todoTable .cell.itemDueDate .fa-sort-down {
   position: absolute;
   right: 0.2em;
-  bottom: 2.2em;
+  bottom: 2.1em;
   display: none;
 }
 #todoTable .cell.itemDueDate .tags {
@@ -1189,6 +1194,7 @@ nav ul:nth-child(2) {
 }
 #todoContext a {
   color: #3273dc;
+  padding: 0.75em 1em;
 }
 
 #todoContext.is-active {
@@ -1293,6 +1299,7 @@ nav ul:nth-child(2) {
 }
 
 .priority .button {
+  font-size: 1.2em;
   font-family: FreeSansBold;
   background: #ccc;
   color: #666666;
@@ -1602,24 +1609,39 @@ nav ul:nth-child(2) {
     line-height: 3.5em;
   }
 
-  .drawer {
+  #autoCompleteContainer,
+.drawer {
     padding: 1.5em;
   }
-  .drawer .is-4 {
+  #autoCompleteContainer .is-4,
+.drawer .is-4 {
     font-size: 1.1em;
   }
-  .drawer .button {
+  #autoCompleteContainer .priority .button,
+.drawer .priority .button {
+    font-size: 1em;
+  }
+  #autoCompleteContainer .button,
+.drawer .button {
     font-size: 0.9em;
-    margin: 0 0.25em 0.25em 0 !important;
+    margin: 0 0.3em 0.3em 0 !important;
     padding: 0.25em 0.6em;
   }
-  .drawer .button .tag {
+  #autoCompleteContainer .button .tag,
+.drawer .button .tag {
     padding: 0 0.5em;
     width: auto;
     height: auto;
     min-width: 1.5em;
     min-height: 1.5em;
     font-size: 0.9em;
+  }
+
+  #autoCompleteContainer {
+    padding: 1em;
+  }
+  #autoCompleteContainer h4 {
+    margin-top: 0;
   }
 }
 body.compact #todoTableSearchContainer {
@@ -1658,17 +1680,25 @@ body.compact nav ul li {
   height: 3.5em;
   line-height: 3.5em;
 }
+body.compact #autoCompleteContainer,
 body.compact .drawer {
   padding: 1.5em;
 }
+body.compact #autoCompleteContainer .is-4,
 body.compact .drawer .is-4 {
   font-size: 1.1em;
 }
+body.compact #autoCompleteContainer .priority .button,
+body.compact .drawer .priority .button {
+  font-size: 1em;
+}
+body.compact #autoCompleteContainer .button,
 body.compact .drawer .button {
   font-size: 0.9em;
-  margin: 0 0.25em 0.25em 0 !important;
+  margin: 0 0.3em 0.3em 0 !important;
   padding: 0.25em 0.6em;
 }
+body.compact #autoCompleteContainer .button .tag,
 body.compact .drawer .button .tag {
   padding: 0 0.5em;
   width: auto;
@@ -1676,6 +1706,12 @@ body.compact .drawer .button .tag {
   min-width: 1.5em;
   min-height: 1.5em;
   font-size: 0.9em;
+}
+body.compact #autoCompleteContainer {
+  padding: 1em;
+}
+body.compact #autoCompleteContainer h4 {
+  margin-top: 0;
 }
 
 .datepicker {
