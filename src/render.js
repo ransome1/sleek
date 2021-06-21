@@ -11,7 +11,7 @@ const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadli
 const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const body = document.getElementById("body");
-const btnArchiveTodos = document.getElementById("btnArchiveTodos");
+//const btnArchiveTodos = document.getElementById("btnArchiveTodos");
 const btnCopyToClipboard = document.querySelectorAll(".btnCopyToClipboard");
 const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
 const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
@@ -87,7 +87,7 @@ function getConfirmationResponse() {
       reject("Info: Prompt canceled");
     }
   });
-};
+}
 async function getConfirmation() {
   const fn = arguments[0];
   const vars = Array.prototype.slice.call(arguments, 2);
@@ -127,9 +127,6 @@ function configureMainView() {
     if(typeof todos.items === "object") {
       // jump to previously added item
       if(document.getElementById("previousItem")) jumpToItem(document.getElementById("previousItem"))
-      // show add todo buttons
-      //navBtnAddTodo.classList.remove("is-hidden");
-      //btnAddTodo.forEach(item => item.classList.remove("is-hidden"));
       // remove onboarding
       showOnboarding(false).then(function(response) {
         console.info(response);
@@ -137,7 +134,7 @@ function configureMainView() {
         handleError(error);
       });
       // check if archive button should be enabled
-      setButtonState("btnArchiveTodos");
+      //setButtonState("btnArchiveTodos");
       // configure navigation
       if(filters.filterCounter===0) {
         // hide filter nav button
@@ -325,16 +322,16 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on Theme"])
     }
-    btnArchiveTodos.onclick = function() {
-      // abort when onboarding is shown
-      if(onboarding) return false;
-      // abort when no completed todos are present
-      if(todos.items.complete.length===0) return false;
-      // handle user confirmation and pass callback function
-      getConfirmation(todos.archiveTodos, translations.archivingPrompt);
-      // trigger matomo event
-      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Setting", "Click on Archive"])
-    }
+    // btnArchiveTodos.onclick = function() {
+    //   // abort when onboarding is shown
+    //   if(onboarding) return false;
+    //   // abort when no completed todos are present
+    //   if(todos.items.complete.length===0) return false;
+    //   // handle user confirmation and pass callback function
+    //   getConfirmation(todos.archiveTodos, translations.archivingPrompt);
+    //   // trigger matomo event
+    //   if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Setting", "Click on Archive"])
+    // }
     btnFilesCreateTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "create");
       // trigger matomo event
@@ -622,18 +619,18 @@ function resetModal(modal) {
     return Promise.reject(error);
   }
 }
-function setButtonState(button) {
-  switch (button) {
-    case "btnArchiveTodos":
-    if(todos.items.complete.length>0) {
-      btnArchiveTodos.disabled = false;
-    } else {
-      btnArchiveTodos.disabled = true;
-    }
-    break;
-    default:
-  }
-}
+// function setButtonState(button) {
+//   switch (button) {
+//     case "btnArchiveTodos":
+//     if(todos.items.complete.length>0) {
+//       btnArchiveTodos.disabled = false;
+//     } else {
+//       btnArchiveTodos.disabled = true;
+//     }
+//     break;
+//     default:
+//   }
+// }
 function setTheme(switchTheme) {
   try {
     let theme = userData.theme;

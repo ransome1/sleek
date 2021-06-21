@@ -149,5 +149,6 @@
   "confirm": "Bestätigen",
   "archivingCompletedTitle": "Archivierung abgeschlossen",
   "archivingCompletedBody": "Erledigte Todos erfolgreich verschoben nach ",
-  "restartPrompt": "Für diese Änderung muss sich sleek selbst neustarten. Wenn das nicht passiert, starte das Programm bitte händisch neu."
+  "restartPrompt": "Für diese Änderung muss sich sleek selbst neustarten. Wenn das nicht passiert, starte das Programm bitte händisch neu.",
+  "deleteCategoryPrompt": "Dieser Filter wird unwiderruflich aus allen Todos entfernt."
 }

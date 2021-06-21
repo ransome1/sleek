@@ -4,8 +4,6 @@ import { _paq } from "./matomo.mjs";
 import { getHandleElement, startDragging } from "./drawer_handle.mjs";
 
 const drawerContainer = document.getElementById("drawerContainer");
-const todoTable = document.getElementById("todoTable");
-const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const navBtnFilter = document.getElementById("navBtnFilter");
 const navBtnView = document.getElementById("navBtnView");
 const drawers = document.querySelectorAll("nav ul li.drawerTrigger");
