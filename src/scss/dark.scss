@@ -428,6 +428,15 @@ body.dark {
       border-color: $lighter-grey;
     }
   }
+  .drag-box,
+  .drag-box.tag,
+  .drag-box:hover {
+    border-bottom: 1px solid $darker-grey;
+    color: white;
+    i {
+      color: $lighter-grey;
+    }
+  }
   .message.fixed {
     background: transparent!important;
     i {

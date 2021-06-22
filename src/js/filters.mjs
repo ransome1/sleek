@@ -1,5 +1,5 @@
 "use strict";
-import { userData, handleError, translations, setUserData, startBuilding } from "../render.js";
+import { userData, handleError, translations, setUserData, startBuilding, getConfirmation } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
@@ -117,7 +117,9 @@ function filterItems(items) {
     }
     // apply filters or filter by search string
     items = items.filter(function(item) {
+      if(!item.text) return false
       if(todoTableSearch.value && item.toString().toLowerCase().indexOf(todoTableSearch.value.toLowerCase()) === -1) return false;
+      if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
       if(!userData.showDueIsPast && item.due && isPast(item.due)) return false;
@@ -187,7 +189,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // remove duplicates, create the count object and avoid counting filters of hidden todos
       filtersCounted = filters.reduce(function(filters, filter) {
         // if filter is already in object and should be counted
-        if (filter[1] && (filter[0] in filters)) {
+        if(filter[1] && (filter[0] in filters)) {
           filters[filter[0]]++;
         // new filter in object and should be counted
         } else if(filter[1]) {
@@ -208,7 +210,6 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // remove duplicates from available filters
       // https://wsvincent.com/javascript-remove-duplicates-array/
       filters = [...new Set(filters.join(",").split(","))];
-      // TODO: basically a duplicate
       // count reduced filter when persisted filters are present
       let filtersReduced = new Array();
       items.filtered.forEach((item) => {
@@ -396,11 +397,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
             }
           }
           filterContextDelete.onclick = function() {
-            deleteFilter(filter, category).then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              handleError(error);
-            });
+            getConfirmation(deleteFilter, translations.deleteCategoryPrompt, filter, category);
           }
         });
         if(filtersCountedReduced[filter]) {

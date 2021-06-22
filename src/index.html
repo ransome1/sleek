@@ -50,18 +50,7 @@
                   <tr>
                     <td id="sortBy"></td>
                     <td>
-                      <div class="field">
-                        <div class="control">
-                          <div class="select">
-                            <select id="viewSelectSortBy">
-                              <option id="sortByPriority" value="priority"></option>
-                              <option id="sortByDueDate" value="dueString"></option>
-                              <option id="sortByContexts" value="contexts"></option>
-                              <option id="sortByProjects" value="projects"></option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
+                      <ol id="sortByContainer" class="drag-container"></ol>
                     </td>
                   </tr>
                   <tr>
@@ -152,6 +141,19 @@
                 <table>
                   <tr>
                     <th colspan="100%" id="viewHeadlineAppView"></th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p id="settingsTabSettingsDarkmode"></p>
+                    </td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch">
+                          <input type="checkbox" id="toggleDarkmode" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
                   </tr>
                   <tr>
                     <td>
@@ -388,19 +390,6 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsTabSettingsArchive"></th>
-            </tr>
-            <tr>
-              <td id="settingsTabSettingsArchiveBody"></td>
-              <td>
-                <div class="field">
-                  <button id="btnArchiveTodos" class="button" disabled><i class="fas fa-archive"></i>&nbsp;<span id="settingsTabSettingsArchiveButton"></span></button>
-                </div>
-              </td>
-            </tr>
-          </table>
-          <table class="settings">
-            <tr>
               <th colspan="100%" id="settingsTabSettingsNotifications"></th>
             </tr>
             <tr>
@@ -409,22 +398,6 @@
                 <span class="toggle">
                   <label class="switch">
                     <input type="checkbox" id="toggleNotifications" tabindex="0">
-                    <span class="slider round"></span>
-                  </label>
-                </span>
-              </td>
-            </tr>
-          </table>
-          <table class="settings">
-            <tr>
-              <th colspan="100%" id="settingsTabSettingsDarkmode"></th>
-            </tr>
-            <tr>
-              <td id="settingsTabSettingsDarkmodeBody"></td>
-              <td>
-                <span class="toggle">
-                  <label class="switch">
-                    <input type="checkbox" id="toggleDarkmode" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>

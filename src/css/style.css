@@ -382,6 +382,17 @@ body.dark .modal.content .tabs li.is-active a {
   color: white;
   border-color: #CCCDCF;
 }
+body.dark .drag-box,
+body.dark .drag-box.tag,
+body.dark .drag-box:hover {
+  border-bottom: 1px solid #2d2d2d;
+  color: white;
+}
+body.dark .drag-box i,
+body.dark .drag-box.tag i,
+body.dark .drag-box:hover i {
+  color: #CCCDCF;
+}
 body.dark .message.fixed {
   background: transparent !important;
 }
@@ -504,9 +515,6 @@ button, button:focus, button:active, button:active, button:after, button::before
 .is-greyed-out {
   filter: opacity(75%) grayscale(100%);
 }
-.is-greyed-out .tag {
-  display: none;
-}
 
 table {
   width: 100%;
@@ -559,8 +567,8 @@ input[type=search]::-webkit-search-cancel-button {
   width: 1.15em;
   border-radius: 30em;
   background-color: #4a4a4a;
-  -webkit-mask-image: url("../img/svg/times-circle.svg");
-  mask-image: url("../img/svg/times-circle.svg");
+  -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+  mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   opacity: 0;
   pointer-events: none;
   cursor: pointer;
@@ -813,6 +821,9 @@ nav ul:nth-child(2) {
   top: -0.75em;
   z-index: 35;
 }
+#drawerContainer .drawer .button.is-greyed-out .tag {
+  display: none;
+}
 #drawerContainer .drawer h4.is-4 {
   font-size: 1.25em;
   font-family: FreeSansBold;
@@ -843,6 +854,9 @@ nav ul:nth-child(2) {
 }
 #drawerContainer .drawer.is-active {
   display: block !important;
+}
+#drawerContainer #viewDrawer .button {
+  margin: 0;
 }
 
 #drawerContainer:hover #drawerClose {
@@ -1164,7 +1178,6 @@ nav ul:nth-child(2) {
   position: fixed;
   display: none;
   z-index: 50;
-  opacity: 0.9;
   padding: 0.75em 1em;
 }
 #autoCompleteContainer section {
@@ -1219,6 +1232,39 @@ nav ul:nth-child(2) {
 }
 #modalPrompt .modal-content {
   width: 20em;
+}
+
+#sortByContainer {
+  width: auto;
+  cursor: grab;
+  list-style: none;
+}
+#sortByContainer li:last-child {
+  border: none;
+}
+
+.drag-box,
+.drag-box.tag,
+.drag-box:hover {
+  cursor: grab;
+  text-align: left;
+  margin: 0 0 0.25em 0;
+  padding: 0.4em 1em 0.5em 1em;
+  white-space: nowrap;
+  border-bottom: 1px solid #ccc;
+}
+.drag-box i,
+.drag-box.tag i,
+.drag-box:hover i {
+  margin-right: 1em;
+  color: #3273dc;
+}
+
+.drag-box-dragging,
+.drag-helper {
+  list-style: none;
+  cursor: grab;
+  border: none !important;
 }
 
 .contentContainer {
@@ -1629,9 +1675,9 @@ nav ul:nth-child(2) {
   }
   #autoCompleteContainer .button .tag,
 .drawer .button .tag {
-    padding: 0 0.5em;
     width: auto;
     height: auto;
+    padding: 0 0.5em;
     min-width: 1.5em;
     min-height: 1.5em;
     font-size: 0.9em;
@@ -1700,9 +1746,9 @@ body.compact .drawer .button {
 }
 body.compact #autoCompleteContainer .button .tag,
 body.compact .drawer .button .tag {
-  padding: 0 0.5em;
   width: auto;
   height: auto;
+  padding: 0 0.5em;
   min-width: 1.5em;
   min-height: 1.5em;
   font-size: 0.9em;

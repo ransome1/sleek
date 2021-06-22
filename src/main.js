@@ -268,6 +268,7 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
+      if(!Array.isArray(userData.data.sortByLevel)) userData.set("sortByLevel", ["priority", "dueString", "contexts", "projects"]);
       return Promise.resolve(userData);
     } catch(error) {
       error.functionName = getUserData.id;

@@ -49,13 +49,10 @@ button, button:focus, button:active, button:active, button:after, button::before
 }
 .is-greyed-out {
   filter: opacity(75%) grayscale(100%);
-  .tag {
-    display: none;
-  }
 }
 table {
   width: 100%;
-  border-collapse:separate;
+  border-collapse: separate;
   tr {
     th {
       padding: .1em 0 !important;
@@ -103,8 +100,8 @@ input[type='search']::-webkit-search-cancel-button {
   width: 1.15em;
   border-radius: 30em;
   background-color: $dark-grey;
-  -webkit-mask-image: url('../img/svg/times-circle.svg');
-  mask-image: url('../img/svg/times-circle.svg');
+  -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+  mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   opacity: 0;
   pointer-events: none;
   cursor: pointer;
@@ -339,6 +336,11 @@ nav {
         z-index: 35;
       }
     }
+    .button.is-greyed-out {
+      .tag {
+        display: none;
+      }
+    }
     h4.is-4 {
       font-size: 1.25em;
       font-family: FreeSansBold;
@@ -370,6 +372,11 @@ nav {
   }
   .drawer.is-active {
     display: block !important;
+  }
+  #viewDrawer {
+    .button {
+      margin: 0;
+    }
   }
 }
 #drawerContainer:hover {
@@ -613,12 +620,10 @@ nav {
 #todoTable.is-active {
   display: block;
 }
-
 #modalForm[open]:not(:focus-within) {
   background-color: rgb(255, 255, 254);
   transition: background-color 0.01s;
 }
-
 #modalForm {
   textarea#modalFormInput {
     min-height: 5.5em;
@@ -687,7 +692,6 @@ nav {
   position: fixed;
   display: none;
   z-index: 50;
-  opacity: .90;
   padding: 0.75em 1em;
   section {
     margin: 0;
@@ -737,6 +741,37 @@ nav {
     width: 20em;
   }
 }
+
+#sortByContainer {
+  width: auto;
+  cursor: grab;
+  list-style: none;
+  li:last-child {
+    border: none;
+  }
+}
+.drag-box,
+.drag-box.tag,
+.drag-box:hover {
+  cursor: grab;
+  text-align: left;
+  margin: 0 0 0.25em 0;
+  padding: 0.4em 1em 0.5em 1em;
+  white-space: nowrap;
+  border-bottom: 1px solid $mid-grey;
+  i {
+    margin-right: 1em;
+    color: $has-text-link;
+  }
+}
+.drag-box-dragging,
+.drag-helper {
+  list-style: none;
+  cursor: grab;
+  border: none!important;
+}
+
+
 .contentContainer {
   width: 100%;
   height: 90%;
@@ -1142,9 +1177,9 @@ nav {
       margin: 0 0.3em 0.3em 0!important;
       padding: 0.25em 0.6em;
       .tag {
-        padding: 0 .5em;
         width: auto;
         height: auto;
+        padding: 0 .5em;
         min-width: 1.5em;
         min-height: 1.5em;
         font-size: .9em;

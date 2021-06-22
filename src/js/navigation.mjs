@@ -17,7 +17,7 @@ btnTheme.setAttribute("title", translations.toggleDarkMode);
 navBtnAddTodo.onclick = function () {
   show();
   // trigger matomo event
-  if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on add todo"]);
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
 }
 navBtnHelp.onclick = function () {
   showContent("modalHelp");
