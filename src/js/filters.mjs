@@ -3,6 +3,7 @@ import { userData, handleError, translations, setUserData, startBuilding, getCon
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
+import * as filterlang from "./filterlang.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -74,6 +75,110 @@ function deleteFilter(filter, category) {
     return Promise.reject(error);
   }
 }
+
+function runQuery(item, compiledQuery) {
+  // a simple stack machine that executes postfix opcode list
+  let stack = [];
+  let operand1 = false;
+  let operand2 = false;
+  let next = 0;
+  let q = compiledQuery.slice(); // shallow copy
+  while (q.length > 0) {
+    const opcode = q.shift();
+    switch(opcode) {
+      case "priority":
+        stack.push(item.priority);
+        break;
+      case "due":
+        let d = item.due;
+        if (d) {
+          // normalize date to have time of midnight in local zone
+          // we represent dates as millisec from epoch to simplify comparison
+          d = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+        }
+        stack.push(d);
+        break;
+      case "complete":
+        stack.push(item.complete);
+        break;
+      case "string":
+        next = q.shift();  // the string value to match
+        stack.push(item.toString().toLowerCase().indexOf(next.toLowerCase()) !== -1);
+        break;
+      case "regex":
+        next = q.shift();  // the regex to match
+        stack.push(next.test(item.toString()));
+        break;
+      case "==":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 == operand2);
+        break;
+      case "!=":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 != operand2);
+        break;
+      case "<":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 < operand2);
+        break;
+      case "<=":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 <= operand2);
+        break;
+      case ">":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 > operand2);
+        break;
+      case ">=":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 >= operand2);
+        break;
+      case "++":
+        next = q.shift();
+        if (next == "*") {
+          stack.push(item.projects ? true : false);
+        } else {
+          stack.push(item.projects && item.projects.includes(next));
+        }
+        break;
+      case "@@":
+        next = q.shift();
+        if (next == "*") {
+          stack.push(item.contexts ? true : false);
+        } else {
+          stack.push(item.contexts && item.contexts.includes(next));
+        }
+        break;
+      case "||":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 || operand2);
+        break;
+      case "&&":
+        operand2 = stack.pop();
+        operand1 = stack.pop();
+        stack.push(operand1 && operand2);
+        break;
+      case "!!":
+        operand1 = stack.pop();
+        stack.push(!operand1);
+        break;
+      default:
+        // should be a data item like a string or date in millisec, ...
+        stack.push(opcode);
+        break;
+    }
+  }
+  // console.log("runQuery: result is "+stack.slice(-1));
+  return stack.pop();
+}
+
 function filterItems(items) {
   try {
     // selected filters are empty, unless they were persisted
@@ -115,10 +220,25 @@ function filterItems(items) {
         });
       });
     }
+    if (todoTableSearch.value && todoTableSearch.value.startsWith("?")) {
+      // if search starts with "?", parse it with filter query language grammar
+      try {
+        let query = filterlang.parse(todoTableSearch.value.slice(1));
+        if (query.length > 0) {
+          items = items.filter(function(item) {
+            return runQuery(item, query);
+          });
+        }
+      } catch(e) {
+        // if query is malformed, don't match anything, so user can tell that
+        // query is busted.
+        items = [];
+      }
+    }
     // apply filters or filter by search string
     items = items.filter(function(item) {
       if(!item.text) return false
-      if(todoTableSearch.value && item.toString().toLowerCase().indexOf(todoTableSearch.value.toLowerCase()) === -1) return false;
+      if(todoTableSearch.value && !todoTableSearch.value.startsWith("?") && item.toString().toLowerCase().indexOf(todoTableSearch.value.toLowerCase()) === -1) return false;
       if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;

@@ -64,19 +64,35 @@ function getDueDate(due, recurrence) {
     // (Otherwise we will use the previous due date, for strict recurrence.)
     due = new Date();  // use today's date as base for recurrence
   }
+  return addIntervalToDate(due, recSplit.mul, recSplit.period);
+}
+
+// addIntervalToDate used to compute recurrences, but now also used to add
+// or subtract a time interval to/from dates in filter query language.
+// Therefore it must now handle negative count values.
+function addIntervalToDate(due, count, unit) {
   let days = 0;
   let months = 0;
-  switch (recSplit.period) {
+  switch (unit) {
     case "b":
       // add "mul" business days, defined as not Sat or Sun
       {
-        let bdays_left = recSplit.mul;
+        let incr = 1;
+        let bdays_left = count;
+        if (count < 0) {
+          incr = -1;
+          bdays_left = -count;
+        }
         let millisec_due = due.getTime();
         let day_of_week = due.getDay(); // 0=Sunday, 1..5 weekday, 6=Saturday
         while (bdays_left > 0) {
-          millisec_due += 1000 * 60 * 60 * 24;  // add a day to time
-          day_of_week = (day_of_week + 1)% 7;  // new day of week
-          if (day_of_week != 0 && day_of_week != 6) {
+          millisec_due += 1000 * 60 * 60 * 24 * incr;  // add a day to time
+          if (incr > 0) {
+            day_of_week = (day_of_week < 6 ? day_of_week + incr : 0);
+          } else {
+            day_of_week = (day_of_week > 0 ? day_of_week + incr : 6);
+          }
+          if (day_of_week > 0 && day_of_week < 6) {
             bdays_left--;  // one business day step accounted for!
           }
         }
@@ -96,7 +112,7 @@ function getDueDate(due, recurrence) {
       break;
   }
   if (months > 0) {
-    let due_month = due.getMonth() + recSplit.mul * months;
+    let due_month = due.getMonth() + count * months;
     let due_year = due.getFullYear() + Math.floor(due_month/12);
     due_month = due_month % 12;
     let monthlen = new Date(due_year, due_month+1, 0).getDate();
@@ -104,8 +120,8 @@ function getDueDate(due, recurrence) {
     return new Date(due_year, due_month, due_day);
   }
   due = due.getTime();
-  due += 1000 * 60 * 60 * 24 * recSplit.mul * days;
+  due += 1000 * 60 * 60 * 24 * count * days;
   return new Date(due);
 }
 
-export { splitRecurrence, generateRecurrence };
+export { splitRecurrence, generateRecurrence, addIntervalToDate };
