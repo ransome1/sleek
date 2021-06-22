@@ -365,7 +365,7 @@ nav {
       vertical-align: middle;
     }
     table tr td:nth-child(even) {
-      width: 35%;
+      width: auto;
       text-align: center;
       padding-right: 0 !important;
     }
@@ -376,6 +376,13 @@ nav {
   #viewDrawer {
     .button {
       margin: 0;
+    }
+    table {
+      tr {
+        th h3 {
+          margin-top: 1em;
+        }
+      }
     }
   }
 }
@@ -615,6 +622,9 @@ nav {
     .cell {
       filter: opacity(50%) grayscale(100%);
     }
+    .cell.priority {
+      background: $has-text-link;
+    }
   }
 }
 #todoTable.is-active {
@@ -744,25 +754,32 @@ nav {
 
 #sortByContainer {
   width: auto;
+  float: none;
   list-style: none;
   li {
     width: 100%;
     height: auto!important;
     line-height: 1.5em!important;
-    margin: 0;
-    padding: 0.75em 0.5em;
+    margin: 0 0 2px 0;
+    padding: 0.5em 1em;
     cursor: grab;
     white-space: nowrap;
-    border-bottom: 1px solid $mid-grey;
+    background: white;
     text-align: left;
+    border-radius: 0.2em;
+    border: none;
     i {
-      margin-right: 1em;
       color: $has-text-link;
+      font-size: 0.9em;
+      margin-right: 1em;
     }
   }
-  li:last-child {
-    border: none;
+  li.drag-sort-active {
+    border-left: 0.2em solid $has-text-link;
   }
+  // li:last-child {
+  //   border: none;
+  // }
 }
 // .drag-box,
 // .drag-box.tag,

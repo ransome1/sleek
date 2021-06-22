@@ -1,6 +1,6 @@
 {
   "about": "説明",
-  "addTodo": "",
+  "addTodo": "新しいタスクを作成",
   "addTodoContainerHeadline": "タスクがない",
   "addTodoContainerSubtitle": "リストは空であり, タスクを追加しましょう",
   "archive": "アーカイブ",

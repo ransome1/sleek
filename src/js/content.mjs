@@ -244,7 +244,7 @@ function setFriendlyLanguageNames() {
         friendlyLanguageName = "Português do Brasil"
         break;
         case "jp":
-        friendlyLanguageName = "｢日本語｣"
+        friendlyLanguageName = "日本語"
         break;
         default:
         return;

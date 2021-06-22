@@ -56,11 +56,10 @@ viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 for(let i=0; i < userData.sortByLevel.length; i++) {
   let sortBy = userData.sortByLevel[i];
   const sortByContainerElement = document.createElement("li");
-  //sortByContainerElement.setAttribute("class", "drag-box");
   sortByContainerElement.setAttribute("data-id", sortBy);
 
   if(sortBy==="dueString") sortBy = "dueDate";
-  sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-lines\" dragobj=\"0\"></i>";
+  sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-vertical\"></i>";
   sortByContainerElement.innerHTML += translations[sortBy];
   sortByContainer.appendChild(sortByContainerElement);
   if(i === userData.sortByLevel.length) resolve();

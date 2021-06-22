@@ -430,11 +430,17 @@ body.dark {
   }
   #sortByContainer {
     li {
-      border-bottom: 1px solid $darker-grey;
+      background: $darker-grey;
       color: white;
       i {
-        color: $lighter-grey;
+        color: $light-grey;
       }
+    }
+    li:hover {
+
+    }
+    li.drag-sort-active {
+      border-left: 0.2em solid white;
     }
   }
   .message.fixed {

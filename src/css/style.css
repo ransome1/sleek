@@ -383,11 +383,14 @@ body.dark .modal.content .tabs li.is-active a {
   border-color: #CCCDCF;
 }
 body.dark #sortByContainer li {
-  border-bottom: 1px solid #2d2d2d;
+  background: #2d2d2d;
   color: white;
 }
 body.dark #sortByContainer li i {
-  color: #CCCDCF;
+  color: #ebebeb;
+}
+body.dark #sortByContainer li.drag-sort-active {
+  border-left: 0.2em solid white;
 }
 body.dark .message.fixed {
   background: transparent !important;
@@ -844,7 +847,7 @@ nav ul:nth-child(2) {
   vertical-align: middle;
 }
 #drawerContainer .drawer table tr td:nth-child(even) {
-  width: 35%;
+  width: auto;
   text-align: center;
   padding-right: 0 !important;
 }
@@ -853,6 +856,9 @@ nav ul:nth-child(2) {
 }
 #drawerContainer #viewDrawer .button {
   margin: 0;
+}
+#drawerContainer #viewDrawer table tr th h3 {
+  margin-top: 1em;
 }
 
 #drawerContainer:hover #drawerClose {
@@ -1096,6 +1102,9 @@ nav ul:nth-child(2) {
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
 }
+#todoTable .todo.completed .cell.priority {
+  background: #3273dc;
+}
 
 #todoTable.is-active {
   display: block;
@@ -1232,25 +1241,29 @@ nav ul:nth-child(2) {
 
 #sortByContainer {
   width: auto;
+  float: none;
   list-style: none;
 }
 #sortByContainer li {
   width: 100%;
   height: auto !important;
   line-height: 1.5em !important;
-  margin: 0;
-  padding: 0.75em 0.5em;
+  margin: 0 0 2px 0;
+  padding: 0.5em 1em;
   cursor: grab;
   white-space: nowrap;
-  border-bottom: 1px solid #ccc;
+  background: white;
   text-align: left;
+  border-radius: 0.2em;
+  border: none;
 }
 #sortByContainer li i {
-  margin-right: 1em;
   color: #3273dc;
+  font-size: 0.9em;
+  margin-right: 1em;
 }
-#sortByContainer li:last-child {
-  border: none;
+#sortByContainer li.drag-sort-active {
+  border-left: 0.2em solid #3273dc;
 }
 
 .contentContainer {
