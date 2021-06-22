@@ -382,15 +382,11 @@ body.dark .modal.content .tabs li.is-active a {
   color: white;
   border-color: #CCCDCF;
 }
-body.dark .drag-box,
-body.dark .drag-box.tag,
-body.dark .drag-box:hover {
+body.dark #sortByContainer li {
   border-bottom: 1px solid #2d2d2d;
   color: white;
 }
-body.dark .drag-box i,
-body.dark .drag-box.tag i,
-body.dark .drag-box:hover i {
+body.dark #sortByContainer li i {
   color: #CCCDCF;
 }
 body.dark .message.fixed {
@@ -1236,35 +1232,25 @@ nav ul:nth-child(2) {
 
 #sortByContainer {
   width: auto;
-  cursor: grab;
   list-style: none;
 }
-#sortByContainer li:last-child {
-  border: none;
-}
-
-.drag-box,
-.drag-box.tag,
-.drag-box:hover {
+#sortByContainer li {
+  width: 100%;
+  height: auto !important;
+  line-height: 1.5em !important;
+  margin: 0;
+  padding: 0.75em 0.5em;
   cursor: grab;
-  text-align: left;
-  margin: 0 0 0.25em 0;
-  padding: 0.4em 1em 0.5em 1em;
   white-space: nowrap;
   border-bottom: 1px solid #ccc;
+  text-align: left;
 }
-.drag-box i,
-.drag-box.tag i,
-.drag-box:hover i {
+#sortByContainer li i {
   margin-right: 1em;
   color: #3273dc;
 }
-
-.drag-box-dragging,
-.drag-helper {
-  list-style: none;
-  cursor: grab;
-  border: none !important;
+#sortByContainer li:last-child {
+  border: none;
 }
 
 .contentContainer {

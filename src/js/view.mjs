@@ -1,7 +1,7 @@
 "use strict";
 import { userData, setUserData, handleError, startBuilding, translations, resetModal } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { dragonfly } from "../configs/dragonfly.mjs";
+//import { dragonfly } from "../configs/dragonfly.mjs";
 
 const html = document.getElementById("html");
 const body = document.getElementById("body");
@@ -52,28 +52,23 @@ zoomRangePicker.innerHTML = translations.zoomRangePicker;
 viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 
+// build the sort by list
 for(let i=0; i < userData.sortByLevel.length; i++) {
   let sortBy = userData.sortByLevel[i];
   const sortByContainerElement = document.createElement("li");
-  sortByContainerElement.setAttribute("class", "drag-box");
+  //sortByContainerElement.setAttribute("class", "drag-box");
   sortByContainerElement.setAttribute("data-id", sortBy);
 
   if(sortBy==="dueString") sortBy = "dueDate";
-  sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-lines\" dragobj=\"0\"></i>" + translations[sortBy];
+  sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-lines\" dragobj=\"0\"></i>";
+  sortByContainerElement.innerHTML += translations[sortBy];
   sortByContainer.appendChild(sortByContainerElement);
   if(i === userData.sortByLevel.length) resolve();
 }
 
-dragonfly("#sortByContainer", function () {
-  let sortByLevel = new Array;
-  const children = sortByContainer.children;
-  for(let i=0; i<children.length; i++) {
-    if(!children[i].getAttribute("data-id")) continue;
-    sortByLevel.push(children[i].getAttribute("data-id"));
-  }
-  setUserData("sortByLevel", sortByLevel);
-  startBuilding();
-});
+import { enableDragSort } from "../configs/dragndrop.mjs";
+
+enableDragSort("drag-sort-enable");
 
 zoomRangePicker.onchange = function() {
   const value = this.value;

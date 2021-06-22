@@ -110,6 +110,16 @@ async function getConfirmation() {
     modalPrompt.classList.remove("is-active");
   });
 }
+function reorderSortingLevel() {
+  let sortByLevel = new Array;
+  const children = sortByContainer.children;
+  for(let i=0; i<children.length; i++) {
+    if(!children[i].getAttribute("data-id")) continue;
+    sortByLevel.push(children[i].getAttribute("data-id"));
+  }
+  setUserData("sortByLevel", sortByLevel);
+  startBuilding();
+}
 function configureMainView() {
   try {
     // close filterContext if open
@@ -619,18 +629,6 @@ function resetModal(modal) {
     return Promise.reject(error);
   }
 }
-// function setButtonState(button) {
-//   switch (button) {
-//     case "btnArchiveTodos":
-//     if(todos.items.complete.length>0) {
-//       btnArchiveTodos.disabled = false;
-//     } else {
-//       btnArchiveTodos.disabled = true;
-//     }
-//     break;
-//     default:
-//   }
-// }
 function setTheme(switchTheme) {
   try {
     let theme = userData.theme;
@@ -931,4 +929,4 @@ window.api.receive("refresh", async function(content) {
   });
 });
 
-export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };
+export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation, reorderSortingLevel };

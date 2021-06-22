@@ -744,32 +744,46 @@ nav {
 
 #sortByContainer {
   width: auto;
-  cursor: grab;
   list-style: none;
+  li {
+    width: 100%;
+    height: auto!important;
+    line-height: 1.5em!important;
+    margin: 0;
+    padding: 0.75em 0.5em;
+    cursor: grab;
+    white-space: nowrap;
+    border-bottom: 1px solid $mid-grey;
+    text-align: left;
+    i {
+      margin-right: 1em;
+      color: $has-text-link;
+    }
+  }
   li:last-child {
     border: none;
   }
 }
-.drag-box,
-.drag-box.tag,
-.drag-box:hover {
-  cursor: grab;
-  text-align: left;
-  margin: 0 0 0.25em 0;
-  padding: 0.4em 1em 0.5em 1em;
-  white-space: nowrap;
-  border-bottom: 1px solid $mid-grey;
-  i {
-    margin-right: 1em;
-    color: $has-text-link;
-  }
-}
-.drag-box-dragging,
-.drag-helper {
-  list-style: none;
-  cursor: grab;
-  border: none!important;
-}
+// .drag-box,
+// .drag-box.tag,
+// .drag-box:hover {
+//   cursor: grab;
+//   text-align: left;
+//   margin: 0 0 0.25em 0;
+//   padding: 0.4em 1em 0.5em 1em;
+//   white-space: nowrap;
+//   border-bottom: 1px solid $mid-grey;
+//   i {
+//     margin-right: 1em;
+//     color: $has-text-link;
+//   }
+// }
+// .drag-box-dragging,
+// .drag-helper {
+//   list-style: none;
+//   cursor: grab;
+//   border: none!important;
+// }
 
 
 .contentContainer {
