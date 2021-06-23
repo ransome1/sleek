@@ -4,6 +4,9 @@
 // specifically for todo.txt searching and filtering.
 
 function runQuery(item, compiledQuery) {
+  if (!compiledQuery) {
+    return true;  // a null query matches everything
+  }
   let stack = [];
   let operand1 = false;
   let operand2 = false;
@@ -69,16 +72,26 @@ function runQuery(item, compiledQuery) {
         next = q.shift();
         if (next == "*") {
           stack.push(item.projects ? true : false);
+        } else if (next.startsWith('"')) {
+          stack.push(item.projects && item.projects.includes(next.slice(1,-1)));
         } else {
-          stack.push(item.projects && item.projects.includes(next));
+          // match the prefix of the project name
+          stack.push(item.projects && item.projects.findIndex(function(p) {
+            return p.startsWith(next);
+          }) > -1);
         }
         break;
       case "@@":
         next = q.shift();
         if (next == "*") {
           stack.push(item.contexts ? true : false);
+        } else if (next.startsWith('"')) {
+          stack.push(item.contexts && item.contexts.includes(next.slice(1,-1)));
         } else {
-          stack.push(item.contexts && item.contexts.includes(next));
+          // match the prefix of the context name
+          stack.push(item.contexts && item.contexts.findIndex(function(c) {
+            return c.startsWith(next);
+          }) > -1);
         }
         break;
       case "||":
