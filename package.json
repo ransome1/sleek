@@ -97,12 +97,13 @@
     "build:linux": "electron-builder -l --publish never",
     "build:appx": "electron-builder -w appx --publish never",
     "build:pacman": "electron-builder -l pacman --publish never",
-    "build:appimage": "yarn build:css && electron-builder -l AppImage --publish never",
+    "build:appimage": "yarn build:css && yarn build:pegjs && electron-builder -l AppImage --publish never",
     "pack": "electron-builder --dir",
     "lint": "eslint --ext .js, src --ext .mjs, src",
     "test": "mocha --timeout 10000",
     "test1": "mocha ./test/onboarding.js --timeout 10000",
     "build:css": "sass src/scss/style.scss:src/css/style.css",
+    "build:pegjs": "peggy --format es --output src/js/filterlang.mjs src/js/filterlang.pegjs",
     "sass": "sass -w src/scss/style.scss:src/css/style.css",
     "start": "yarn sass & electron ."
   },
@@ -124,6 +125,7 @@
     "electron-builder": "22.10.5",
     "eslint": "^7.25.0",
     "mocha": "^9.0.0",
+    "peggy": "^1.2.0",
     "sass": "^1.34.1",
     "spectron": "14.0.0"
   }

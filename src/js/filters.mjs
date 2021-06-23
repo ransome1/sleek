@@ -3,6 +3,8 @@ import { userData, handleError, translations, setUserData, startBuilding, getCon
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
+import * as filterlang from "./filterlang.mjs";
+import { runQuery } from "./filterquery.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -115,10 +117,25 @@ function filterItems(items) {
         });
       });
     }
+    if (todoTableSearch.value && todoTableSearch.value.startsWith("?")) {
+      // if search starts with "?", parse it with filter query language grammar
+      try {
+        let query = filterlang.parse(todoTableSearch.value.slice(1));
+        if (query.length > 0) {
+          items = items.filter(function(item) {
+            return runQuery(item, query);
+          });
+        }
+      } catch(e) {
+        // if query is malformed, don't match anything, so user can tell that
+        // query is busted.
+        items = [];
+      }
+    }
     // apply filters or filter by search string
     items = items.filter(function(item) {
       if(!item.text) return false
-      if(todoTableSearch.value && item.toString().toLowerCase().indexOf(todoTableSearch.value.toLowerCase()) === -1) return false;
+      if(todoTableSearch.value && !todoTableSearch.value.startsWith("?") && item.toString().toLowerCase().indexOf(todoTableSearch.value.toLowerCase()) === -1) return false;
       if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
