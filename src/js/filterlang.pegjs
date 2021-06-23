@@ -29,12 +29,10 @@ boolExpr
 
 project
     = "+" left:name      { return ["++", left]; }
-    / "+*"               { return ["++", "*"]; }
     / "+"               { return ["++", "*"]; }
 
 context
     = "@" left:name      { return ["@@", left]; }
-    / "@*"               { return ["@@", "*"]; }
     / "@"               { return ["@@", "*"]; }
 
 OrOp
@@ -116,10 +114,10 @@ number
     = [0-9]+ { return text(); }
     
 StringLiteral "string"
-    = '"' chars:DoubleStringCharacter* '"' {
+    = '"' chars:DoubleStringCharacter* '"'? {
         return chars.join("");
     }
-    / "'" chars:SingleStringCharacter* "'" {
+    / "'" chars:SingleStringCharacter* "'"? {
         return chars.join("");
     }
 
@@ -135,7 +133,7 @@ RegexLiteral "regex"
     = "/" chars:RegexCharacter* "/"  "i" {
         return new RegExp(chars.join(""), "i");
     }
-    / "/" chars:RegexCharacter* "/" {
+    / "/" chars:RegexCharacter* "/"? {
         return new RegExp(chars.join(""));
     }
 
@@ -148,6 +146,7 @@ SourceCharacter
   
 name
 	= '"' [a-zA-Z_][a-zA-Z_0-9]* '"'    { return text(); }
+	/ [a-zA-Z_][a-zA-Z_0-9]*  '"'       { return '"' + text(); }
 	/ [a-zA-Z_][a-zA-Z_0-9]*            { return text(); }
 
 _ "whitespace"
