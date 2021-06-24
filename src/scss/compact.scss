@@ -1,0 +1,93 @@
+//  ####################################
+//  COMPACT
+//  ####################################
+
+@mixin compact() {
+  table tr td {
+    padding: 0.25em 1.5em 0.25em 0 !important
+  }
+  #sortByContainer li {
+    padding: 0.25em 0.5em;
+  }
+  #todoTableSearchContainer {
+    padding: 1em;
+    .column {
+      padding: 0;
+      .icon.is-left {
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+  #todoTable {
+    padding: 0 1.5em 1.5em 1.5em;
+    .group:first-child {
+      margin-top: 0;
+    }
+    .todo {
+      .cell {
+        padding: .25em 0;
+        .text {
+          margin: 0;
+        }
+      }
+      .cell.itemDueDate {
+        .tags {
+          top: -1.9em;
+          right: -1.9em;
+        }
+        i.fa-sort-down {
+          right: .2em;
+          bottom: 1.7em;
+          color: inherit;
+        }
+      }
+    }
+  }
+  nav ul {
+    width: 3.5em;
+    li {
+      width: 3.5em;
+      height: 3.5em;
+      line-height: 3.5em;
+    }
+  }
+  #autoCompleteContainer,
+  .drawer {
+    padding: 1.5em;
+    .is-4 {
+      font-size: 1.1em;
+    }
+    .priority {
+      .button {
+        font-size: 1em;
+      }
+    }
+    .button {
+      font-size: 0.9em;
+      margin: 0 0.3em 0.3em 0!important;
+      padding: 0.25em 0.6em;
+      .tag {
+        width: auto;
+        height: auto;
+        padding: 0 .5em;
+        min-width: 1.5em;
+        min-height: 1.5em;
+        font-size: .9em;
+      }
+    }
+  }
+  #autoCompleteContainer {
+    padding: 1em;
+    h4 {
+      margin-top: 0;
+    }
+  }
+}
+@media screen and (max-width: 992px),
+screen and (max-height: 650px) {
+  @include compact;
+}
+body.compact {
+  @include compact;
+}

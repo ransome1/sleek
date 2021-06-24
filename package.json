@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
@@ -92,9 +92,9 @@
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "scripts": {
-    "build:windows": "electron-builder -w --publish never",
-    "build:macos": "electron-builder -m --publish never",
-    "build:linux": "electron-builder -l --publish never",
+    "build:windows": "yarn build:css && yarn build:pegjs && electron-builder -w --publish never",
+    "build:macos": "yarn build:css && yarn build:pegjs && electron-builder -m --publish never",
+    "build:linux": "yarn build:css && yarn build:pegjs && electron-builder -l --publish never",
     "build:appx": "electron-builder -w appx --publish never",
     "build:pacman": "electron-builder -l pacman --publish never",
     "build:appimage": "yarn build:css && yarn build:pegjs && electron-builder -l AppImage --publish never",

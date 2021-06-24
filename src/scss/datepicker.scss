@@ -1,5 +1,20 @@
 .datepicker {
-  display: none; }
+  display: none;
+  z-index: 60;
+  .datepicker-cell.today.focused:not(.selected),
+  .datepicker-cell.today:not(.selected) {
+    background: $almost-white !important;
+  }
+  .datepicker-footer {
+    background: none;
+    .datepicker-controls .button  {
+      font-size: 1em;
+      background: none;
+      border-color: transparent;
+      color: $has-text-link;
+    }
+  }
+}
 
 .datepicker.active {
   display: block; }

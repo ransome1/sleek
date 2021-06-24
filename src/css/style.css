@@ -674,6 +674,9 @@ nav ul:nth-child(2) {
 .contentContainer {
   height: 80%;
 }
+.contentContainer p {
+  padding: 0 10%;
+}
 
 #recurrencePicker {
   position: relative;
@@ -905,22 +908,24 @@ nav ul:nth-child(2) {
   display: block;
 }
 
-#todoTable {
-  width: 100%;
-  min-width: 30em;
-  float: left;
-  display: none;
-  padding: 0 2.5em 1.5em 2.5em;
-}
-#todoTable #resultStats {
+#resultStats {
   width: 100%;
   display: none;
   text-align: center;
   padding: 0;
   white-space: nowrap;
 }
-#todoTable #resultStats.is-active {
+
+#resultStats.is-active {
   display: block;
+}
+
+#todoTable {
+  width: 100%;
+  min-width: 30em;
+  float: left;
+  display: none;
+  padding: 0 2.5em 1.5em 2.5em;
 }
 #todoTable #todoTableContainer {
   width: 100%;
@@ -1226,13 +1231,6 @@ nav ul:nth-child(2) {
   display: block;
 }
 
-#modalPrompt {
-  z-index: 60;
-}
-#modalPrompt .modal-content {
-  width: 20em;
-}
-
 #sortByContainer {
   width: auto;
   float: none;
@@ -1311,11 +1309,13 @@ nav ul:nth-child(2) {
   overflow-x: hidden;
 }
 
-.contexts .button {
+.contexts .button,
+.contexts .button:hover {
   background: #c5ede3;
   color: #1e6251;
 }
-.contexts .button span.tag {
+.contexts .button span.tag,
+.contexts .button:hover span.tag {
   color: white;
   background: #2a8971;
 }
@@ -1324,11 +1324,13 @@ nav ul:nth-child(2) {
   color: white;
 }
 
-.projects .button {
+.projects .button,
+.projects .button:hover {
   background: #f1d6f1;
   color: #6f266f;
 }
-.projects .button span.tag {
+.projects .button span.tag,
+.projects .button:hover span.tag {
   color: white;
   background: #953395;
 }
@@ -1337,7 +1339,8 @@ nav ul:nth-child(2) {
   color: white;
 }
 
-.priority .button {
+.priority .button,
+.priority .button:hover {
   font-size: 1.2em;
   font-family: FreeSansBold;
   background: #ccc;
@@ -1345,7 +1348,8 @@ nav ul:nth-child(2) {
   padding: 0.25em 0.7em;
   height: auto;
 }
-.priority .button span.tag {
+.priority .button span.tag,
+.priority .button:hover span.tag {
   color: inherit;
 }
 .priority .button:hover {
@@ -1466,6 +1470,13 @@ nav ul:nth-child(2) {
   border-radius: 50%;
 }
 
+#modalPrompt {
+  z-index: 60;
+}
+#modalPrompt .modal-content {
+  width: 20em;
+}
+
 .modal .card-header-title {
   font-family: "FreeSansBold";
   padding: 1em 1.5em 0 1.5em;
@@ -1572,23 +1583,6 @@ nav ul:nth-child(2) {
 .modal.content .tabs li a {
   border-width: 3px;
   margin-bottom: 0;
-}
-
-.datepicker {
-  z-index: 60;
-}
-.datepicker .datepicker-cell.today.focused:not(.selected),
-.datepicker .datepicker-cell.today:not(.selected) {
-  background: #f5f5f5 !important;
-}
-.datepicker .datepicker-footer {
-  background: none;
-}
-.datepicker .datepicker-footer .datepicker-controls .button {
-  font-size: 1em;
-  background: none;
-  border-color: transparent;
-  color: #3273dc;
 }
 
 #messages {
@@ -1789,6 +1783,20 @@ body.compact #autoCompleteContainer h4 {
 
 .datepicker {
   display: none;
+  z-index: 60;
+}
+.datepicker .datepicker-cell.today.focused:not(.selected),
+.datepicker .datepicker-cell.today:not(.selected) {
+  background: #f5f5f5 !important;
+}
+.datepicker .datepicker-footer {
+  background: none;
+}
+.datepicker .datepicker-footer .datepicker-controls .button {
+  font-size: 1em;
+  background: none;
+  border-color: transparent;
+  color: #3273dc;
 }
 
 .datepicker.active {
