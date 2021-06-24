@@ -1,6 +1,7 @@
 "use strict";
 import { userData, setUserData, handleError, startBuilding, translations, resetModal } from "../render.js";
 import { _paq } from "./matomo.mjs";
+//import { dragonfly } from "../configs/dragonfly.mjs";
 
 const html = document.getElementById("html");
 const body = document.getElementById("body");
@@ -34,12 +35,9 @@ const zoomUndo = document.getElementById("zoomUndo");
 const showEmptyFilters = document.getElementById("showEmptyFilters");
 const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyFilters");
 const compactView = document.getElementById("compactView");
+const sortByContainer = document.getElementById("sortByContainer");
 
 sortBy.innerHTML = translations.sortBy;
-sortByContexts.innerHTML = translations.contexts;
-sortByDueDate.innerHTML = translations.dueDate;
-sortByPriority.innerHTML = translations.priority;
-sortByProjects.innerHTML = translations.projects;
 viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
 viewHeadlineTodoList.innerHTML = translations.viewHeadlineTodoList;
 viewHeadlineFilterList.innerHTML = translations.viewHeadlineFilterList;
@@ -54,19 +52,23 @@ zoomRangePicker.innerHTML = translations.zoomRangePicker;
 viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 
-viewSelectSortBy.onchange = async function() {
-  if(this.value) {
-    await setUserData("sortBy", this.value);
-    startBuilding();
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "View-Drawer", "Sort by setting changed to: " + this.value]);
-  }
+// build the sort by list
+for(let i=0; i < userData.sortByLevel.length; i++) {
+  let sortBy = userData.sortByLevel[i];
+  const sortByContainerElement = document.createElement("li");
+  sortByContainerElement.setAttribute("data-id", sortBy);
+
+  if(sortBy==="dueString") sortBy = "dueDate";
+  sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-vertical\"></i>";
+  sortByContainerElement.innerHTML += translations[sortBy];
+  sortByContainer.appendChild(sortByContainerElement);
+  if(i === userData.sortByLevel.length) resolve();
 }
+
+import { enableDragSort } from "../configs/dragndrop.mjs";
+
+enableDragSort("drag-sort-enable");
+
 zoomRangePicker.onchange = function() {
   const value = this.value;
   zoom(value).then(response => {
@@ -108,13 +110,6 @@ showDueIsPast.checked = userData.showDueIsPast;
 toggleTray.checked = userData.tray;
 compactView.checked = userData.compactView;
 showEmptyFilters.checked = userData.showEmptyFilters;
-
-// set index according to persisted sorting method
-Array.from(document.querySelector("#viewSelectSortBy").options).forEach((item, i) => {
-  if(userData.sortBy === item.value) {
-    viewSelectSortBy.selectedIndex = i;
-  }
-});
 
 function zoom(zoom) {
   try {

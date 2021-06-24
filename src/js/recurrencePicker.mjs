@@ -92,7 +92,7 @@ export function setInput(recurrence) {
 }
 function showRecurrences() {
   recurrencePickerContainer.classList.toggle("is-active");
-  recurrencePickerIncrease.focus();
+  document.getElementById("recurrencePickerIncrease").focus();
   // get object from current input
   let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new RecExtension() ]);
   let recSplit = recurrences.splitRecurrence(todo.rec);

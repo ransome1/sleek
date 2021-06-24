@@ -50,18 +50,7 @@
                   <tr>
                     <td id="sortBy"></td>
                     <td>
-                      <div class="field">
-                        <div class="control">
-                          <div class="select">
-                            <select id="viewSelectSortBy">
-                              <option id="sortByPriority" value="priority"></option>
-                              <option id="sortByDueDate" value="dueString"></option>
-                              <option id="sortByContexts" value="contexts"></option>
-                              <option id="sortByProjects" value="projects"></option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
+                      <ul id="sortByContainer" class="drag-sort-enable"></ul>
                     </td>
                   </tr>
                   <tr>
@@ -130,10 +119,10 @@
                       </span>
                     </td>
                   </tr>
-                </table>
-                <table>
                   <tr>
-                    <th colspan="100%" id="viewHeadlineFilterList"></th>
+                    <th colspan="100%">
+                      <h3 id="viewHeadlineFilterList" class="is-3"></h3>
+                    </th>
                   </tr>
                   <tr>
                     <td>
@@ -148,10 +137,23 @@
                       </span>
                     </td>
                   </tr>
-                </table>
-                <table>
                   <tr>
-                    <th colspan="100%" id="viewHeadlineAppView"></th>
+                    <th colspan="100%">
+                      <h3 id="viewHeadlineAppView" class="is-3"></h3>
+                    </th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p id="settingsTabSettingsDarkmode"></p>
+                    </td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch">
+                          <input type="checkbox" id="toggleDarkmode" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
                   </tr>
                   <tr>
                     <td>
@@ -187,18 +189,18 @@
 
         <section id="todoTableSearchContainer" class="control has-icons-left">
           <div class="column">
-            <input id="todoTableSearch" class="input is-medium" type="search" placeholder="Search" tabindex="10">
+            <input id="todoTableSearch" class="input is-medium" type="text" placeholder="Search" tabindex="10">
             <span class="icon is-left">
               <i class="fas fa-search"></i>
             </span>
           </div>
         </section>
 
-        <section id="todoTable" tabindex="-1">
+        <div id="resultStats">
+          <span class="tag"></span>
+        </div>
 
-          <div id="resultStats" class="column">
-            <span class="tag"></span>
-          </div>
+        <section id="todoTable" tabindex="-1">
 
           <div id="todoTableContainer"></div>
 
@@ -243,7 +245,7 @@
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
-          <header id="modalTitle" class="card-header card-header-title"></header>
+          <header id="modalTitle" class="card-header-title"></header>
           <div class="card-content">
             <div class="content">
               <div class="control has-icons-right">
@@ -388,19 +390,6 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsTabSettingsArchive"></th>
-            </tr>
-            <tr>
-              <td id="settingsTabSettingsArchiveBody"></td>
-              <td>
-                <div class="field">
-                  <button id="btnArchiveTodos" class="button" disabled><i class="fas fa-archive"></i>&nbsp;<span id="settingsTabSettingsArchiveButton"></span></button>
-                </div>
-              </td>
-            </tr>
-          </table>
-          <table class="settings">
-            <tr>
               <th colspan="100%" id="settingsTabSettingsNotifications"></th>
             </tr>
             <tr>
@@ -409,22 +398,6 @@
                 <span class="toggle">
                   <label class="switch">
                     <input type="checkbox" id="toggleNotifications" tabindex="0">
-                    <span class="slider round"></span>
-                  </label>
-                </span>
-              </td>
-            </tr>
-          </table>
-          <table class="settings">
-            <tr>
-              <th colspan="100%" id="settingsTabSettingsDarkmode"></th>
-            </tr>
-            <tr>
-              <td id="settingsTabSettingsDarkmodeBody"></td>
-              <td>
-                <span class="toggle">
-                  <label class="switch">
-                    <input type="checkbox" id="toggleDarkmode" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -708,7 +681,7 @@
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
-          <header class="card-header">
+          <header>
             <p id="modalChangeFileTitle" class="card-header-title"></p>
           </header>
           <div class="card-content">

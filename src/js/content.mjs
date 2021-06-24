@@ -50,11 +50,11 @@ const settingsTabAboutHeadline = document.getElementById("settingsTabAboutHeadli
 const settingsTabAboutPrivacy = document.getElementById("settingsTabAboutPrivacy");
 const settingsTabAboutPrivacyBody = document.getElementById("settingsTabAboutPrivacyBody");
 const settingsTabSettings = document.getElementById("settingsTabSettings");
-const settingsTabSettingsArchive = document.getElementById("settingsTabSettingsArchive");
-const settingsTabSettingsArchiveBody = document.getElementById("settingsTabSettingsArchiveBody");
-const settingsTabSettingsArchiveButton = document.getElementById("settingsTabSettingsArchiveButton");
+//const settingsTabSettingsArchive = document.getElementById("settingsTabSettingsArchive");
+//const settingsTabSettingsArchiveBody = document.getElementById("settingsTabSettingsArchiveBody");
+//const settingsTabSettingsArchiveButton = document.getElementById("settingsTabSettingsArchiveButton");
 const settingsTabSettingsDarkmode = document.getElementById("settingsTabSettingsDarkmode");
-const settingsTabSettingsDarkmodeBody = document.getElementById("settingsTabSettingsDarkmodeBody");
+//const settingsTabSettingsDarkmodeBody = document.getElementById("settingsTabSettingsDarkmodeBody");
 const settingsTabSettingsHeadline = document.getElementById("settingsTabSettingsHeadline");
 const settingsTabSettingsLanguage = document.getElementById("settingsTabSettingsLanguage");
 const settingsTabSettingsLanguageBody = document.getElementById("settingsTabSettingsLanguageBody");
@@ -118,11 +118,9 @@ settingsTabAboutHeadline.innerHTML = translations.about;
 settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
 settingsTabAboutPrivacyBody.innerHTML = translations.settingsTabAboutPrivacyBody;
 settingsTabSettings.innerHTML = translations.settings;
-settingsTabSettingsArchive.innerHTML = translations.settingsTabSettingsArchive;
-settingsTabSettingsArchiveBody.innerHTML = translations.settingsTabSettingsArchiveBody;
-settingsTabSettingsArchiveButton.innerHTML = translations.archive;
+//settingsTabSettingsArchive.innerHTML = translations.settingsTabSettingsArchive;
+//settingsTabSettingsArchiveButton.innerHTML = translations.archive;
 settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
-settingsTabSettingsDarkmodeBody.innerHTML = translations.settingsTabSettingsDarkmodeBody;
 settingsTabSettingsHeadline.innerHTML = translations.settings;
 settingsTabSettingsLanguage.innerHTML = translations.language;
 settingsTabSettingsLanguageBody.innerHTML = translations.settingsTabSettingsLanguageBody;
@@ -149,7 +147,7 @@ contentTabs.forEach(tab => tab.addEventListener("click", function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
 }));
 
-settingsLanguage.onchange = function(event) {
+settingsLanguage.onchange = function() {
   getConfirmation(setLanguage, translations.restartPrompt, this.value);
 }
 toggleNotifications.onclick = function() {
@@ -244,6 +242,9 @@ function setFriendlyLanguageNames() {
         break;
         case "pt":
         friendlyLanguageName = "Português do Brasil"
+        break;
+        case "jp":
+        friendlyLanguageName = "日本語"
         break;
         default:
         return;

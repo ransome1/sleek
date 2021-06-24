@@ -147,5 +147,6 @@
   "confirm": "Confirmar",
   "archivingCompletedTitle": "Archivado completado",
   "archivingCompletedBody": "Todos completados movidos con éxito a ",
-  "restartPrompt": "Para este cambio, sleek necesita reiniciarse. Si esto no sucede, vuelva a iniciar la aplicación manualmente."
+  "restartPrompt": "Para este cambio, sleek necesita reiniciarse. Si esto no sucede, vuelva a iniciar la aplicación manualmente.",
+  "deleteCategoryPrompt": "Este filtro se eliminará irrevocablemente de todas las tareas."
 }

@@ -1,15 +1,15 @@
-@charset 'utf-8';
-@import 'variables.scss';
-@import 'dark.scss';
+@charset "utf-8";
+@import "variables.scss";
+@import "dark.scss";
 @font-face {
-  font-family: 'FreeSans';
-  src: url('../fonts/FreeSans.otf') format('opentype');
-  src: url('../fonts/FreeSans.ttf') format('truetype');
+  font-family: "FreeSans";
+  src: url("../fonts/FreeSans.otf") format("opentype");
+  src: url("../fonts/FreeSans.ttf") format("truetype");
 }
 @font-face {
-  font-family: 'FreeSansBold';
-  src: url('../fonts/FreeSansBold.otf') format('opentype');
-  src: url('../fonts/FreeSansBold.ttf') format('truetype');
+  font-family: "FreeSansBold";
+  src: url("../fonts/FreeSansBold.otf") format("opentype");
+  src: url("../fonts/FreeSansBold.ttf") format("truetype");
 }
 html {
   height: 100%;
@@ -22,6 +22,13 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
 }
+body::-webkit-scrollbar {
+  display: none;
+}
+//  ####################################
+//  BUTTONS
+//  ####################################
+
 button, button:focus, button:active, button:active, button:after, button::before, button:active:after, .button, .button-is-white {
   border: none !important;
   box-shadow: none !important;
@@ -49,18 +56,20 @@ button, button:focus, button:active, button:active, button:after, button::before
 }
 .is-greyed-out {
   filter: opacity(75%) grayscale(100%);
-  .tag {
-    display: none;
-  }
 }
+
+//  ####################################
+//  TABLE
+//  ####################################
+
 table {
   width: 100%;
-  border-collapse:separate;
+  border-collapse: separate;
   tr {
     th {
       padding: .1em 0 !important;
       font-size: 1.2em;
-      font-family: 'FreeSansBold';
+      font-family: "FreeSansBold";
     }
     td {
       border: none;
@@ -85,75 +94,104 @@ table.files {
     }
   }
 }
-body::-webkit-scrollbar {
-  display: none;
-}
+
+//  ####################################
+//  FOCUS OUTLINES
+//  ####################################
+
 :focus,
 :focus-visible {
   outline: none;
   box-shadow: none;
 }
 button:focus-visible,
-a:focus-visible {
-  outline: 2px solid $has-text-link !important;
-}
-input[type='search']::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  height: 1.15em;
-  width: 1.15em;
-  border-radius: 30em;
-  background-color: $dark-grey;
-  -webkit-mask-image: url('../img/svg/times-circle.svg');
-  mask-image: url('../img/svg/times-circle.svg');
-  opacity: 0;
-  pointer-events: none;
-  cursor: pointer;
-}
-input[type='search']:focus::-webkit-search-cancel-button {
-  opacity: .8;
-  pointer-events: all;
-}
-input:focus,
+a:focus-visible,
+li:focus-visible,
 select:focus,
-input.is-focused,
-input[type='search']:focus,
+input:focus,
 textarea:focus,
-textarea.is-focused,
-textarea[type='search']:focus {
-  border: none;
-  box-shadow: 0 0 0 2px $has-text-link !important;
-  outline: none;
+input[type="text"]:focus {
+  box-shadow: 0 0 0 2px $has-text-link inset!important;
+  outline: none!important;
+  border: none!important;
 }
+
+//  ####################################
+//  INPUT
+//  ####################################
+
 input,
-input::placeholder,
 select {
-  width: auto;
-  font-size: 1em;
-  color: $has-text-link;
-  box-shadow: none;
-  background: transparent;
+  border: none!important;
+  color: $has-text-link!important;
 }
-input[type=number] {
+
+input[type="text"] {
+  border: 1px solid $mid-grey!important;
+  color: $darker-grey!important;
+}
+
+input[type="text"]::placeholder {
+  color: $mid-grey!important;
+}
+
+input::placeholder {
+  color: $has-text-link!important;
+}
+
+//TODO reactivate
+// input[type="text"]::-webkit-search-cancel-button {
+//   -webkit-appearance: none;
+//   height: 1.15em;
+//   width: 1.15em;
+//   border-radius: 30em;
+//   background-color: $dark-grey;
+//   -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+//   mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+//   opacity: 0;
+//   pointer-events: none;
+//   cursor: pointer;
+// }
+// input:focus,
+// input.is-focused,
+// select:focus,
+// textarea:focus,
+// textarea.is-focused {
+//   box-shadow: none!important;
+//   outline: none;
+//   border: none;
+// }
+// input,
+// input::placeholder,
+// select {
+//   width: auto;
+//   font-size: 1em;
+//   color: $has-text-link;
+//   box-shadow: none;
+//   background: transparent;
+// }
+input[type="number"] {
   text-align: center;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
-input[type='checkbox']:focus {
-  outline: none;
-  box-shadow: none !important;
-}
-input[type='range'] {
+input[type="range"] {
   -webkit-appearance: none;
   height: .25em;
   background: $dark-grey;
   border-radius: 10px;
   outline: none;
 }
+
+//  ####################################
+//  TEXT
+//  ####################################
+
 .title,
 strong {
-  font-family: 'FreeSansBold';
+  font-family: "FreeSansBold";
   font-weight: normal !important;
 }
 code, pre {
@@ -161,6 +199,11 @@ code, pre {
   background-color: $light-grey !important;
   color: inherit !important;
 }
+
+//  ####################################
+//  NAVIGATION
+//  ####################################
+
 nav {
   width: auto;
   height: 100%;
@@ -212,8 +255,16 @@ nav {
     left: 0;
   }
 }
+
+//  ####################################
+//TODO
+//  ####################################
+
 .contentContainer {
   height: 80%;
+  p {
+    padding: 0 10%;
+  }
 }
 #recurrencePicker {
   position: relative;
@@ -296,7 +347,7 @@ nav {
     z-index: 1;
   }
   #handle::after {
-    content: '';
+    content: "";
     width: 1em;
     position: absolute;
     top: 0;
@@ -339,10 +390,15 @@ nav {
         z-index: 35;
       }
     }
+    .button.is-greyed-out {
+      .tag {
+        display: none;
+      }
+    }
     h4.is-4 {
       font-size: 1.25em;
       font-family: FreeSansBold;
-      margin-bottom: 1.5em;
+      margin-bottom: 0.75em;
     }
     h4.is-4.clickable {
       cursor: pointer;
@@ -355,15 +411,12 @@ nav {
       padding: 0;
       margin: 0 0 1.5em 0;
     }
-    table {
-      margin-bottom: 2em;
-    }
     table tr td:nth-child(odd) {
       width: auto;
       vertical-align: middle;
     }
     table tr td:nth-child(even) {
-      width: 35%;
+      width: auto;
       text-align: center;
       padding-right: 0 !important;
     }
@@ -371,6 +424,36 @@ nav {
   .drawer.is-active {
     display: block !important;
   }
+  .drawer::-webkit-scrollbar {
+    background-color: transparent;
+    width: .8em
+  }
+  .drawer::-webkit-scrollbar-thumb:window-inactive,
+  .drawer::-webkit-scrollbar-thumb {
+    background: $mid-grey;
+    border-radius: 5px;
+  }
+  #viewDrawer {
+    .button {
+      margin: 0;
+    }
+    table {
+      tr {
+        th h3 {
+          margin-top: 1em;
+        }
+      }
+    }
+  }
+}
+#todoTableWrapper::-webkit-scrollbar {
+  background-color: transparent;
+  width: .8em
+}
+#todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
+#todoTableWrapper::-webkit-scrollbar-thumb {
+  background: $mid-grey;
+  border-radius: 5px;
 }
 #drawerContainer:hover {
   #drawerClose {
@@ -409,22 +492,22 @@ nav {
 #todoTableSearchContainer.is-active {
   display: block;
 }
+#resultStats {
+  width: 100%;
+  display: none;
+  text-align: center;
+  padding: 0;
+  white-space: nowrap;
+}
+#resultStats.is-active {
+  display: block;
+}
 #todoTable {
   width: 100%;
   min-width: 30em;
   float: left;
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
-  #resultStats {
-    width: 100%;
-    display: none;
-    text-align: center;
-    padding: 0;
-    white-space: nowrap;
-  }
-  #resultStats.is-active {
-    display: block;
-  }
   #todoTableContainer {
     width: 100%;
     float: left;
@@ -449,7 +532,7 @@ nav {
   }
   .group {
     min-height: 1em;
-    margin-top: .5em;
+    margin: .5em 0;
     border: none;
     font-family: FreeSansBold;
     .button {
@@ -468,13 +551,12 @@ nav {
   }
   .todo {
     display: flex;
-  }
+    cursor: pointer;
     .cell {
       line-height: 1.7em;
       padding: .75em 0;
       margin-right: 1em;
       height: auto;
-      cursor: pointer;
       .is-white {
         background: none;
       }
@@ -604,21 +686,23 @@ nav {
         display: block;
       }
     }
+  }
   .todo.completed {
     .cell {
       filter: opacity(50%) grayscale(100%);
+    }
+    .cell.priority {
+      background: $has-text-link;
     }
   }
 }
 #todoTable.is-active {
   display: block;
 }
-
 #modalForm[open]:not(:focus-within) {
   background-color: rgb(255, 255, 254);
   transition: background-color 0.01s;
 }
-
 #modalForm {
   textarea#modalFormInput {
     min-height: 5.5em;
@@ -635,7 +719,7 @@ nav {
     }
   }
   .card-header-title {
-    font-family: 'FreeSansBold';
+    font-family: "FreeSansBold";
   }
   .is-active {
     display: block;
@@ -647,14 +731,6 @@ nav {
     width: auto;
     float: left;
     margin: .5em .5em .5em 0;
-    input,
-    input::placeholder,
-    select,
-    select::placeholder {
-      background: none !important;
-      border: none;
-      color: $has-text-link !important;
-    }
   }
   .message {
     display: none;
@@ -687,7 +763,6 @@ nav {
   position: fixed;
   display: none;
   z-index: 50;
-  opacity: .90;
   padding: 0.75em 1em;
   section {
     margin: 0;
@@ -731,10 +806,30 @@ nav {
 #filterContext.is-active {
   display: block;
 }
-#modalPrompt {
-  z-index: 60;
-  .modal-content {
-    width: 20em;
+#sortByContainer {
+  width: auto;
+  float: none;
+  list-style: none;
+  li {
+    width: 100%;
+    height: auto!important;
+    line-height: 1.5em!important;
+    margin: 0 0 2px 0;
+    padding: 0.5em 1em;
+    cursor: grab;
+    white-space: nowrap;
+    background: white;
+    text-align: left;
+    border-radius: 0.2em;
+    border: none;
+    i {
+      color: $has-text-link;
+      font-size: 0.9em;
+      margin-right: 1em;
+    }
+  }
+  li.drag-sort-active {
+    border-left: 0.2em solid $has-text-link;
   }
 }
 .contentContainer {
@@ -751,7 +846,7 @@ nav {
     font-size: 6em;
   }
   .title.is-1 {
-    font-family: 'FreeSansBold';
+    font-family: "FreeSansBold";
     margin: .5em 0;
   }
   .subtitle {
@@ -786,7 +881,8 @@ nav {
   }
 }
 .contexts {
-  .button {
+  .button,
+  .button:hover {
     background: $sleek-contexts-button;
     color: darken($sleek-contexts-button, 60%);
     span.tag {
@@ -800,7 +896,8 @@ nav {
   }
 }
 .projects {
-  .button {
+  .button,
+  .button:hover {
     background: $sleek-projects-button;
     color: darken($sleek-projects-button, 60%);
     span.tag {
@@ -814,7 +911,8 @@ nav {
   }
 }
 .priority {
-  .button {
+  .button,
+  .button:hover {
     font-size: 1.2em;
     font-family: FreeSansBold;
     background: $mid-grey;
@@ -881,6 +979,11 @@ nav {
     }
   }
 }
+
+//  ####################################
+//  TOGGLE
+//  ####################################
+
 .toggle {
   margin: 0;
   text-align: center;
@@ -925,7 +1028,7 @@ nav {
     }
     .slider:before {
      position: absolute;
-     content: '';
+     content: "";
      height: 1.5625em;
      width: 1.5625em;
      left: 0.1875em;
@@ -940,6 +1043,24 @@ nav {
     .slider.round:before {
      border-radius: 50%;
     }
+  }
+}
+
+//  ####################################
+//  MODAL
+//  ####################################
+
+#modalPrompt {
+  z-index: 60;
+  .modal-content {
+    width: 20em;
+  }
+}
+
+.modal {
+  .card-header-title {
+    font-family: "FreeSansBold";
+    padding: 1em 1.5em 0 1.5em;
   }
 }
 .modal.content {
@@ -990,13 +1111,25 @@ nav {
     ul li a {
       text-decoration: underline;
     }
-    table.settings tr td {
-      position: relative;
-
-      .alert {
-        position: absolute;
-        top: 1em;
-        left: -.8em;
+    table.settings {
+      tr {
+        td {
+          padding-top: 1em!important;
+          .alert {
+            position: absolute;
+            top: 1em;
+            left: -.8em;
+          }
+        }
+        td:nth-child(odd) {
+          width: auto;
+          vertical-align: middle;
+        }
+        td:nth-child(even) {
+          width: auto;
+          text-align: center;
+          padding-right: 0 !important;
+        }
       }
     }
     table.settings tr td:first-child {
@@ -1039,22 +1172,11 @@ nav {
     }
   }
 }
-.datepicker {
-  z-index: 60;
-  .datepicker-cell.today.focused:not(.selected),
-  .datepicker-cell.today:not(.selected) {
-    background: $almost-white !important;
-  }
-  .datepicker-footer {
-    background: none;
-    .datepicker-controls .button  {
-      font-size: 1em;
-      background: none;
-      border-color: transparent;
-      color: $has-text-link;
-    }
-  }
-}
+
+//  ####################################
+//  MESSAGES
+//  ####################################
+
 #messages {
   width: 25em;
   position: fixed;
@@ -1085,87 +1207,7 @@ nav {
     background-color: $has-text-danger;
   }
 }
-@mixin compact() {
-  #todoTableSearchContainer {
-    padding: 1em;
-    .column {
-      padding: 0;
-      .icon.is-left {
-        top: 0;
-        left: 0;
-      }
-    }
-  }
-  #todoTable {
-    padding: 0 1.5em 1.5em 1.5em;
-    .todo {
-      .cell {
-        padding: .25em 0;
-        .text {
-          margin: 0;
-        }
-      }
-      .cell.itemDueDate {
-        .tags {
-          top: -1.9em;
-          right: -1.9em;
-        }
-        i.fa-sort-down {
-          right: .2em;
-          bottom: 1.7em;
-          color: inherit;
-        }
-      }
-    }
-  }
-  nav ul {
-    width: 3.5em;
-    li {
-      width: 3.5em;
-      height: 3.5em;
-      line-height: 3.5em;
-    }
-  }
-  #autoCompleteContainer,
-  .drawer {
-    padding: 1.5em;
-    .is-4 {
-      font-size: 1.1em;
-    }
-    .priority {
-      .button {
-        font-size: 1em;
-      }
-    }
-    .button {
-      font-size: 0.9em;
-      margin: 0 0.3em 0.3em 0!important;
-      padding: 0.25em 0.6em;
-      .tag {
-        padding: 0 .5em;
-        width: auto;
-        height: auto;
-        min-width: 1.5em;
-        min-height: 1.5em;
-        font-size: .9em;
-      }
-    }
-  }
-  #autoCompleteContainer {
-    padding: 1em;
-    h4 {
-      margin-top: 0;
-    }
-  }
-}
-@media screen and (max-width: 992px),
-screen and (max-height: 650px) {
-  @include compact;
-}
-body.compact {
-  @include compact;
-}
 
-
-@import 'datepicker.scss';
-@import '../../node_modules/bulma/bulma.sass';
+@import "compact.scss";
+@import "datepicker.scss";
+@import "../../node_modules/bulma/bulma.sass";
