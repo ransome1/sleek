@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.0.8",
+  "version": "1.0.7",
   "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
@@ -122,10 +122,9 @@
   },
   "devDependencies": {
     "electron": "12.0.10",
-    "electron-builder": "22.10.5",
+    "electron-builder": "^22.11.7",
     "eslint": "^7.25.0",
     "mocha": "^9.0.0",
-    "peggy": "^1.2.0",
     "sass": "^1.34.1",
     "spectron": "14.0.0"
   }
