@@ -3,8 +3,6 @@ import { userData, handleError, translations, setUserData, startBuilding, getCon
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
-import * as filterlang from "./filterlang.mjs";
-import { runQuery } from "./filterquery.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
