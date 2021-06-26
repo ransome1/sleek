@@ -1,0 +1,54 @@
+//  ####################################
+//  SEARCH
+//  ####################################
+
+#todoTableSearchContainer {
+  display: none;
+  margin: 0.5em 2.5em;
+  padding-bottom: 0.5em;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  #todoTableSearchAddTodo {
+    display: none;
+    position: absolute;
+    top: 2.6em;
+    right: 5em;
+    color: white;
+    background: $has-text-link;
+    text-decoration: none;
+  }
+  #todoTableSearchAddTodo.is-active {
+    display: flex!important;
+  }
+  #todoTableSearchAddTodo:focus,
+  #todoTableSearchAddTodo:focus-visible {
+    background-color: darken($has-text-link, 20%);
+  }
+  input[type="search"] {
+    padding-left: 3.5em;
+  }
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 1.2em;
+    width: 1.2em;
+    display: inline-block;
+    background-color: $has-text-link;
+    -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+    mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+    cursor: pointer;
+    margin-top: -0.9em;
+  }
+  label {
+    left: 5.9em;
+  }
+  i.fa-search {
+    font-size: 1.3em;
+    position: absolute;
+    top: 0.9em;
+    left: 1.4em;
+    z-index: 60;
+    padding: 0.75em 0.75em 0.75em 0;
+  }
+}

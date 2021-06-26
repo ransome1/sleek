@@ -14,17 +14,17 @@ const recurrencePickerInput = document.getElementById("recurrencePickerInput");
 const modalTitle = document.getElementById("modalTitle");
 const modalFormAlert = document.getElementById("modalFormAlert");
 const modalForm = document.getElementById("modalForm");
+const modalFormInputLabel = document.getElementById("modalFormInputLabel");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
 const modalBackground = document.querySelectorAll('.modal-background');
 const modalClose = document.querySelectorAll('.close');
 const priorityPicker = document.getElementById("priorityPicker");
 const btnItemStatus = document.getElementById("btnItemStatus");
 
-document.getElementById("modalFormInput").placeholder = translations.formTodoInputPlaceholder;
+modalFormInputLabel.innerHTML = translations.todoTxtSyntax;
 
 btnItemStatus.onclick = function() {
   setTodoComplete(modalForm.getAttribute("data-item")).then(response => {
-    //modalForm.classList.remove("is-active");
     resetModal().then(function(result) {
       console.log(result);
     }).catch(function(error) {
@@ -44,9 +44,18 @@ modalFormInputResize.onclick = function() {
 }
 document.getElementById("modalFormInput").addEventListener("keyup", event => {
   // do not show suggestion container if Escape has been pressed
-  if(event.key==="Escape") return false;
+  if(event.key==="Escape") {
+    autoCompleteContainer.classList.remove("is-active");
+    return false;
+  }
   modalFormInputEvent();
 });
+document.getElementById("modalFormInput").onfocus = function() {
+  modalForm.classList.add("is-focused");
+}
+document.getElementById("modalFormInput").onblur = function() {
+  modalForm.classList.remove("is-focused");
+}
 modalForm.addEventListener("submit", function(event) {
   // intercept submit
   event.preventDefault();
@@ -115,7 +124,7 @@ function positionAutoCompleteContainer() {
   // Adjust position of suggestion box to input field
   let modalFormInputPosition = document.getElementById("modalFormInput").getBoundingClientRect();
   autoCompleteContainer.style.width = document.getElementById("modalFormInput").offsetWidth + "px";
-  autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight+2 + "px";
+  autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight - 40 + "px";
   autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
 }
 function modalFormInputEvent() {
@@ -404,6 +413,7 @@ function submitForm() {
     return Promise.reject(error);
   }
 }
+
 function toggleInputSize(type) {
   let newInputElement;
   switch (type) {
@@ -424,7 +434,7 @@ function toggleInputSize(type) {
   newInputElement.id = "modalFormInput";
   newInputElement.setAttribute("tabindex", 0);
   newInputElement.setAttribute("class", "input is-medium");
-  newInputElement.setAttribute("placeholder", translations.formTodoInputPlaceholder);
+  //newInputElement.setAttribute("placeholder", translations.formTodoInputPlaceholder);
   // replace old element with the new one
   document.getElementById("modalFormInput").replaceWith(newInputElement);
   // replace special char with line break before passing it to textarea
@@ -437,6 +447,12 @@ function toggleInputSize(type) {
   document.getElementById("modalFormInput").addEventListener("keyup", () => {
     modalFormInputEvent();
   });
+  document.getElementById("modalFormInput").onfocus = function() {
+    modalForm.classList.add("is-focused");
+  }
+  document.getElementById("modalFormInput").onblur = function() {
+    modalForm.classList.remove("is-focused");
+  }
   document.getElementById("modalFormInput").focus();
   createModalJail(modalForm);
 }

@@ -9,14 +9,10 @@ body.dark {
   a {
     color: white;
   }
-  button:focus-visible,
-  a:focus-visible {
-    outline: 2px solid $lighter-grey!important;
-  }
   a:hover,
   button:hover,
   strong {
-    color: $lighter-grey;
+    color: $lighter-grey!important;
   }
   input,
   select {
@@ -25,28 +21,18 @@ body.dark {
     color: white!important;
   }
   input[type="text"],
+  input[type="search"],
   textarea {
     background: $darker-grey!important;
     border: none;
     color: white;
   }
 
-  //TODO reactivate
-  // input[type="search"]::-webkit-search-cancel-button {
-  //   background-color: white;
-  //   -webkit-mask-image: url("../img/svg/times-circle.svg");
-  //   mask-image: url("../img/svg/times-circle.svg");
-  // }
-  input:active,
   input:focus,
-  input.is-focused,
-  select:focus,
-  textarea:active,
-  textarea:focus,
-  input[type="search"]:focus {
-    outline: none!important;
-    box-shadow: 0 0 0 2px $lighter-grey!important;
+  select:focus {
+    background-color: $darker-grey!important;
   }
+
   input::placeholder {
     color: $dark-grey!important;
   }
@@ -65,6 +51,7 @@ body.dark {
       color: $lighter-grey!important;
     }
   }
+
   button.is-link,
   .button.is-link:hover {
     background-color: $darker-grey!important;
@@ -114,17 +101,17 @@ body.dark {
       li.logo {
         background: none;
       }
-      li {
+      li a {
         color: $lighter-grey;
         border-bottom: 1px solid $even-darker-grey;
       }
-      li:hover,
-      li:focus {
+      li a:hover,
+      li a:focus {
         color: $lighter-grey;
         border-bottom: none;
         background-color: $even-darker-grey;
       }
-      li.is-highlighted {
+      li a.is-highlighted {
         color: $lighter-grey;
         border-bottom: none;
         background-color: $even-darker-grey;
@@ -143,9 +130,19 @@ body.dark {
   }
   #todoTableSearchContainer {
     background-color: $almost-black;
-    .icon.is-left i,
-    .icon.is-right i {
-      color: $dark-grey;
+    input[type="search"]::-webkit-search-cancel-button {
+      background-color: $almost-white;
+    }
+    #todoTableSearchAddTodo {
+      background: $almost-white;
+      color: $almost-black;
+    }
+    #todoTableSearchAddTodo:focus,
+    #todoTableSearchAddTodo:focus-visible {
+      background: white;
+    }
+    i.fa-search {
+      color: $almost-white;
     }
     #btnToggleViewContainer {
       background: transparent!important;
@@ -226,13 +223,9 @@ body.dark {
       color: $lighter-grey!important;
     }
     button {
-      color: white;
       border-color: $even-darker-grey!important;
       border-right: 1px solid $almost-black!important;
       background: transparent!important;
-    }
-    button:hover {
-      color: $lighter-grey!important;
     }
     .field {
       input,
@@ -243,6 +236,16 @@ body.dark {
       }
       select option {
         background: $even-darker-grey;
+      }
+    }
+    #autoCompleteContainer {
+      background: $darker-grey;
+      h4 {
+        color: white;
+      }
+      section::-webkit-scrollbar-thumb:window-inactive,
+      section::-webkit-scrollbar-thumb {
+        background: $dark-grey;
       }
     }
   }
@@ -266,12 +269,6 @@ body.dark {
       }
     }
   }
-  #autoCompleteContainer {
-    background: $even-darker-grey;
-    h4 {
-      color: $lighter-grey;
-    }
-  }
   #drawerContainer {
     .drawer {
       background: $even-darker-grey!important;
@@ -279,6 +276,21 @@ body.dark {
         color: white;
         i {
           color: $lighter-grey!important;
+        }
+      }
+      #sortByContainer {
+        li {
+          background: $darker-grey;
+          color: white;
+          i {
+            color: $light-grey;
+          }
+        }
+        li:hover {
+
+        }
+        li.drag-sort-active {
+          border-left: 0.2em solid white;
         }
       }
     }
@@ -333,6 +345,9 @@ body.dark {
         background: lighten($sleek-contexts-button, 1%);
       }
     }
+    .button:focus-visible {
+      background: darken($sleek-contexts-button, 45%);
+    }
     .button.is-dark  {
       background: darken($sleek-contexts-button, 65%);
       color: white;
@@ -346,6 +361,9 @@ body.dark {
         color: darken($sleek-projects-button, 65%);
         background: lighten($sleek-projects-button, 1%);
       }
+    }
+    .button:focus-visible {
+      background: darken($sleek-projects-button, 45%);
     }
     .button.is-dark {
       background: darken($sleek-projects-button, 65%);
@@ -385,12 +403,17 @@ body.dark {
         .card-footer-item {
           border-color: $darker-grey;
         }
+        .card-footer-item:hover {
+          color: $lighter-grey;
+        }
       }
     }
   }
   .modal.content {
     color: $lighter-grey!important;
-    .button {
+    .button,
+    button,
+    select {
       background: $darker-grey!important;
     }
     .select:not(.is-multiple):not(.is-loading)::after {
@@ -439,21 +462,6 @@ body.dark {
       border-color: $lighter-grey;
     }
   }
-  #sortByContainer {
-    li {
-      background: $darker-grey;
-      color: white;
-      i {
-        color: $light-grey;
-      }
-    }
-    li:hover {
-
-    }
-    li.drag-sort-active {
-      border-left: 0.2em solid white;
-    }
-  }
   .message.fixed {
     background: transparent!important;
     i {
@@ -470,8 +478,6 @@ body.dark {
   .dueDate {
     #datePickerInput,
     #datePickerInput::placeholder {
-      color: white!important;
-      background: transparent!important;
       cursor: pointer;
     }
   }

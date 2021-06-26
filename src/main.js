@@ -170,27 +170,36 @@ const createWindow = async function() {
   const startFileWatcher = function(file) {
     try {
       if(!fs.existsSync(file)) throw("Error: File not found on disk")
-      // use the loop to check if the new path is already in the user data
-      let fileFound = false;
-      if(userData.data.files) {
-        userData.data.files.forEach(function(element) {
-          // if path is found it is set active
-          if(element[1]===file) {
-            element[0] = 1
-            fileFound = true;
-          // if this entry is not equal to the new path it is set 0
-          } else {
-            element[0] = 0;
-          }
-        });
+      // skip persisted files and go with ENV if set
+      if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
+        file = process.env.SLEEK_CUSTOM_FILE;
+      // regular process
       } else {
-        userData.data.files = new Array;
+        // use the loop to check if the new path is already in the user data
+        let fileFound = false;
+        if(userData.data.files) {
+          userData.data.files.forEach(function(element) {
+            // if path is found it is set active
+            if(element[1]===file) {
+              element[0] = 1
+              fileFound = true;
+              // if this entry is not equal to the new path it is set 0
+            } else {
+              element[0] = 0;
+            }
+          });
+        } else {
+          userData.data.files = new Array;
+        }
+        // only push new path if it is not already in the user data
+        if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file]);
+        userData.set("files", userData.data.files);
+        userData.data.file = file;
+        userData.set("file", file);
       }
-      // only push new path if it is not already in the user data
-      if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file]);
-      userData.set("files", userData.data.files);
-      userData.data.file = file;
-      userData.set("file", file);
+
+      console.log(file);
+
       if(fileWatcher) fileWatcher.close();
       fileWatcher = chokidar.watch(file);
       fileWatcher
@@ -261,14 +270,13 @@ const createWindow = async function() {
       if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", false);
       if(typeof userData.data.showCompleted != "boolean") userData.set("showCompleted", true);
       if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
-      if(typeof userData.data.sortBy != "string") userData.set("sortBy", "priority");
       if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
       if(typeof userData.data.tray != "boolean") userData.data.tray = false;
       if(typeof userData.data.showEmptyFilters != "boolean") userData.data.showEmptyFilters = true;
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
-      if(!Array.isArray(userData.data.sortByLevel)) userData.set("sortByLevel", ["priority", "dueString", "contexts", "projects"]);
+      if(!Array.isArray(userData.data.sortBy)) userData.set("sortBy", ["priority", "dueString", "contexts", "projects"]);
       return Promise.resolve(userData);
     } catch(error) {
       error.functionName = getUserData.id;

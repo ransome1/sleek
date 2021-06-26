@@ -32,11 +32,11 @@
 
 .datepicker-picker {
   display: inline-block;
-  border-radius: 4px;
+  border-radius: $radius;
   background-color: #fff; }
 
 .datepicker-dropdown .datepicker-picker {
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1); }
+  box-shadow: 0 0 1em rgba(10, 10, 10, 0.1), 0 0 1em rgba(10, 10, 10, 0.1); }
 
 .datepicker-picker span {
   display: block;

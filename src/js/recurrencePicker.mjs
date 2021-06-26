@@ -39,7 +39,7 @@ recurrencePickerContainer.addEventListener("keyup", function(event) {
 export function setInput(recurrence) {
   try {
     let recSplit = recurrences.splitRecurrence(recurrence);
-    let label = translations.noRecurrence;
+    let label;
     if(recSplit.period !== undefined) {
       if(recSplit.mul > 1) {
         switch (recSplit.period) {
@@ -79,8 +79,10 @@ export function setInput(recurrence) {
             break;
         }
       }
+      recurrencePickerInput.value = label;
+    } else {
+      recurrencePickerInput.value = null;
     }
-    recurrencePickerInput.value = label;
     resizeInput(recurrencePickerInput);
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Recurrence selected: " + label]);

@@ -3,6 +3,28 @@
 //  ####################################
 
 @mixin compact() {
+
+  .inputWrapper {
+    position: relative;
+    padding-top: 0.5em;
+    input[type="search"],
+    input[type="text"],
+    textarea {
+      padding: 1.5em;
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: $mid-grey;
+    }
+    label {
+      display: none;
+    }
+  }
+
+  #modalForm #modalFormInputResize {
+    top: 1.65em;
+  }
+
   table tr td {
     padding: 0.25em 1.5em 0.25em 0 !important
   }
@@ -10,13 +32,15 @@
     padding: 0.25em 0.5em;
   }
   #todoTableSearchContainer {
-    padding: 1em;
-    .column {
-      padding: 0;
-      .icon.is-left {
-        top: 0;
-        left: 0;
-      }
+    margin: 0.5em 1.5em 0 1.5em;
+    input[type="search"]::-webkit-search-cancel-button {
+      margin-top: 0;
+    }
+    i.fa-search {
+      top: 0.65em;
+    }
+    .tag {
+      top: 2.2em;
     }
   }
   #todoTable {
@@ -46,14 +70,15 @@
   }
   nav ul {
     width: 3.5em;
-    li {
+    li a,
+    li.logo {
       width: 3.5em;
       height: 3.5em;
       line-height: 3.5em;
     }
   }
   #autoCompleteContainer,
-  .drawer {
+  #drawerContainer .drawer {
     padding: 1.5em;
     .is-4 {
       font-size: 1.1em;

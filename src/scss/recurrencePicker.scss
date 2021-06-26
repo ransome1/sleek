@@ -1,0 +1,42 @@
+#recurrencePicker {
+  position: relative;
+  #recurrencePickerInput {
+    cursor: pointer;
+  }
+  .card {
+    width: auto;
+    display: none;
+    position: fixed;
+    .content {
+      margin: 0;
+      padding: 1em;
+      display: flex;
+      align-items: center;
+      div {
+        width: auto;
+        float: left;
+        text-align: center;
+        padding: 0 .5em;
+      }
+      div.options {
+        text-align: left;
+      }
+      #recurrencePickerDecrease,
+      #recurrencePickerIncrease,
+      #recurrencePickerSpinner {
+        font-size: 1.25em;
+        padding: .5em;
+      }
+      #recurrencePickerSpinner {
+        width: 2em;
+      }
+    }
+    label {
+      font-size: 1em;
+      color: $darker-grey;
+      display: block;
+      padding: 0;
+      margin: .25em 0;
+    }
+  }
+}

@@ -111,13 +111,13 @@ async function getConfirmation() {
   });
 }
 function reorderSortingLevel() {
-  let sortByLevel = new Array;
+  let sortBy = new Array;
   const children = sortByContainer.children;
   for(let i=0; i<children.length; i++) {
     if(!children[i].getAttribute("data-id")) continue;
-    sortByLevel.push(children[i].getAttribute("data-id"));
+    sortBy.push(children[i].getAttribute("data-id"));
   }
-  setUserData("sortByLevel", sortByLevel);
+  setUserData("sortBy", sortBy);
   startBuilding();
 }
 function configureMainView() {

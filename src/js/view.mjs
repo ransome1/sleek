@@ -1,7 +1,6 @@
 "use strict";
 import { userData, setUserData, handleError, startBuilding, translations, resetModal } from "../render.js";
 import { _paq } from "./matomo.mjs";
-//import { dragonfly } from "../configs/dragonfly.mjs";
 
 const html = document.getElementById("html");
 const body = document.getElementById("body");
@@ -53,8 +52,8 @@ viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 
 // build the sort by list
-for(let i=0; i < userData.sortByLevel.length; i++) {
-  let sortBy = userData.sortByLevel[i];
+for(let i=0; i < userData.sortBy.length; i++) {
+  let sortBy = userData.sortBy[i];
   const sortByContainerElement = document.createElement("li");
   sortByContainerElement.setAttribute("data-id", sortBy);
 
@@ -62,7 +61,7 @@ for(let i=0; i < userData.sortByLevel.length; i++) {
   sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-vertical\"></i>";
   sortByContainerElement.innerHTML += translations[sortBy];
   sortByContainer.appendChild(sortByContainerElement);
-  if(i === userData.sortByLevel.length) resolve();
+  if(i === userData.sortBy.length) resolve();
 }
 
 import { enableDragSort } from "../configs/dragndrop.mjs";

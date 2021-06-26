@@ -1,19 +1,18 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation } from "../render.js";
+import { userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation, resetModal } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
-import { RecExtension } from "./todotxtExtensions.mjs";
+import { SugarDueExtension, RecExtension } from "./todotxtExtensions.mjs";
 
 const modalForm = document.getElementById("modalForm");
 const todoContext = document.getElementById("todoContext");
 const todoContextDelete = document.getElementById("todoContextDelete");
 const todoContextEdit = document.getElementById("todoContextEdit");
 const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
-const todoTableContainer = document.getElementById("todoTableContainer");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
 
 todoContextUseAsTemplate.innerHTML = translations.useAsTemplate;
@@ -78,7 +77,7 @@ function configureTodoTableTemplate(append) {
   try {
     // setting up for the first cluster
     if(!append) {
-      todoTableContainer.innerHTML = "";
+      todoTable.innerHTML = "";
       visibleRows = 0;
       clusterThreshold = 0;
       stopBuilding = false;
@@ -115,7 +114,7 @@ function generateItems(content) {
   }
 }
 function generateGroups(items) {
-  const sortBy = userData.sortByLevel[0];
+  const sortBy = userData.sortBy[0];
   // build object according to sorting method
   items = items.reduce((object, a) => {
     if(userData.sortCompletedLast && a.complete) {
@@ -167,27 +166,27 @@ async function generateTable(groups, append) {
       let dividerRow;
       // completed todos
       if(userData.sortCompletedLast && groups[group][0]==="completed") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortByLevel[0] + groups[group][0] + "\" class=\"group " + userData.sortByLevel[0] + " " + groups[group][0] + "\"><div class=\"cell\"></div></div>")
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group " + userData.sortBy[0] + " " + groups[group][0] + "\"><div class=\"cell\"></div></div>")
       // for priority, context and project
-      } else if(groups[group][0]!="null" && userData.sortByLevel[0]!="dueString") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortByLevel[0] + groups[group][0] + "\" class=\"group " + userData.sortByLevel[0] + " " + groups[group][0] + "\"><div class=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
+      } else if(groups[group][0]!="null" && userData.sortBy[0]!="dueString") {
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group " + userData.sortBy[0] + " " + groups[group][0] + "\"><div class=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
       // if sorting is by due date
-      } else if(userData.sortByLevel[0]==="dueString" && groups[group][1][0].due) {
+      } else if(userData.sortBy[0]==="dueString" && groups[group][1][0].due) {
         if(isToday(groups[group][1][0].due)) {
-          dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortByLevel[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isToday\"><span class=\"button\">" + translations.today + "</span></div></div>")
+          dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isToday\"><span class=\"button\">" + translations.today + "</span></div></div>")
         } else if(isTomorrow(groups[group][1][0].due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortByLevel[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isTomorrow\"><span class=\"button\">" + translations.tomorrow + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isTomorrow\"><span class=\"button\">" + translations.tomorrow + "</span></div></div>")
         } else if(isPast(groups[group][1][0].due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortByLevel[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isPast\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isPast\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
         } else {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortByLevel[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
         }
       // create an empty divider row
       } else {
         dividerRow = document.createRange().createContextualFragment("<div class=\"group\"></div>")
       }
       // add divider row only if it doesn't exist yet
-      if(!append && !document.getElementById(userData.sortByLevel[0] + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
+      if(!append && !document.getElementById(userData.sortBy[0] + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
       for (let item in groups[group][1]) {
         //
         if(clusterCounter<clusterThreshold) {
@@ -221,7 +220,7 @@ async function generateTable(groups, append) {
         tableContainerContent.appendChild(generateTableRow(todo));
       }
     }
-    todoTableContainer.appendChild(tableContainerContent);
+    todoTable.appendChild(tableContainerContent);
     return Promise.resolve("Success: Todo table generated");
   } catch(error) {
     error.functionName = archiveTodos.name;
@@ -253,7 +252,7 @@ function generateTableRow(todo) {
     }
     todoTableBodyRow.setAttribute("data-item", todo.toString());
     // add the priority marker or a white spacer
-    if(todo.priority && userData.sortByLevel[0]==="priority") {
+    if(todo.priority && userData.sortBy[0]==="priority") {
       todoTableBodyCellPriority.setAttribute("class", "cell priority " + todo.priority);
       todoTableBodyRow.appendChild(todoTableBodyCellPriority);
     }
@@ -280,7 +279,7 @@ function generateTableRow(todo) {
     // add archiving icon
     if(todo.complete) {
       todoTableBodyCellArchive.setAttribute("class", "cell archive");
-      todoTableBodyCellArchive.innerHTML = "<i class=\"fas fa-archive\"></i>";
+      todoTableBodyCellArchive.innerHTML = "<a href=\"#\"><i class=\"fas fa-archive\"></i></a>";
       todoTableBodyCellArchive.onclick = function() {
         getConfirmation(archiveTodos, translations.archivingPrompt);
         // trigger matomo event
@@ -299,7 +298,7 @@ function generateTableRow(todo) {
     }
     // creates cell for the text
     if(todo.text) {
-      if(todo.priority && userData.sortByLevel[0]!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><span class=\"button " + todo.priority + "\">" + todo.priority + "</span></span>";
+      if(todo.priority && userData.sortBy[0]!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><span class=\"button " + todo.priority + "\">" + todo.priority + "</span></span>";
       // parse text string through markdown parser
       todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parseInline(todo.text) + "</span>";
       // replace line feed character with a space
@@ -359,30 +358,30 @@ function generateTableRow(todo) {
     // add the text cell to the row
     todoTableBodyRow.appendChild(todoTableBodyCellText);
     todoTableBodyRow.addEventListener("contextmenu", event => {
-      todoContext.focus();
+      //todoContextUseAsTemplate.focus();
       todoContext.style.left = event.x + "px";
       todoContext.style.top = event.y + "px";
       todoContext.classList.toggle("is-active");
       todoContext.setAttribute("data-item", todo.toString())
       // click on use as template option
-      todoContext.firstElementChild.children[0].onclick = function() {
-        show(this.parentElement.parentElement.getAttribute('data-item'), true);
+      todoContextUseAsTemplate.onclick = function() {
+        show(todoContext.getAttribute('data-item'), true);
         todoContext.classList.toggle("is-active");
         todoContext.removeAttribute("data-item");
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
       }
-      todoContext.firstElementChild.children[1].onclick = function() {
-        show(this.parentElement.parentElement.getAttribute('data-item'));
+      todoContextEdit.onclick = function() {
+        show(todoContext.getAttribute('data-item'));
         todoContext.classList.toggle("is-active");
         todoContext.removeAttribute("data-item");
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Edit"]);
       }
       // click on delete
-      todoContext.firstElementChild.children[2].onclick = function() {
+      todoContextDelete.onclick = function() {
         // passing the data-item attribute of the parent tag to complete function
-        setTodoDelete(this.parentElement.parentElement.getAttribute('data-item')).then(response => {
+        setTodoDelete(todoContext.getAttribute('data-item')).then(response => {
           console.log(response);
           todoContext.classList.toggle("is-active");
           todoContext.removeAttribute("data-item");
@@ -402,14 +401,14 @@ function generateTableRow(todo) {
 }
 function sortTodoData(group) {
   try {
-    for(let i = 1; i < userData.sortByLevel.length; i++) {
+    for(let i = 1; i < userData.sortBy.length; i++) {
       group.sort(function(a, b) {
         // only continue if the two items have the same filters from the previous iteration
-        if(i>1 && JSON.stringify(a[userData.sortByLevel[i-2]]) !== JSON.stringify(b[userData.sortByLevel[i-2]]) ) return;
-        if(i>1 &&  JSON.stringify(a[userData.sortByLevel[i-1]]) !== JSON.stringify(b[userData.sortByLevel[i-1]]) ) return;
+        if(i>1 && JSON.stringify(a[userData.sortBy[i-2]]) !== JSON.stringify(b[userData.sortBy[i-2]]) ) return;
+        if(i>1 &&  JSON.stringify(a[userData.sortBy[i-1]]) !== JSON.stringify(b[userData.sortBy[i-1]]) ) return;
         let
-          item1 = a[userData.sortByLevel[i]],
-          item2 = b[userData.sortByLevel[i]];
+          item1 = a[userData.sortBy[i]],
+          item2 = b[userData.sortBy[i]];
         // when item1 is empty or bigger than item2 it will be sorted after item2
         if(!item1 && item2 || item1 > item2) {
           return 1;
@@ -494,6 +493,29 @@ function setTodoDelete(todo) {
     return Promise.resolve("Success: Changes written to file: " + userData.file);
   } catch(error) {
     error.functionName = setTodoDelete.name;
+    return Promise.reject(error);
+  }
+}
+function addTodo(todo) {
+  try {
+    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+    // abort if there is no text
+    if(!todo.text) return Promise.resolve("Info: Text is missing, no todo is written");
+    // we add the current date to the start date attribute of the todo.txt object
+    todo.date = new Date();
+    // get index of todo
+    const index = items.objects.map(function(item) { return item.toString(); }).indexOf(todo.toString());
+    if(index===-1) {
+      // we build the array
+      items.objects.push(todo);
+      //write the data to the file
+      // a newline character is added to prevent other todo.txt apps to append new todos to the last line
+      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+      return Promise.resolve("Success: New todo added to file: " + userData.file);
+    } else {
+      return Promise.resolve("Info: Todo already in file, nothing will be written");
+    }
+  } catch (error) {
     return Promise.reject(error);
   }
 }
@@ -606,4 +628,4 @@ function generateHash(string) {
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
 
-export { generateItems, generateGroups, generateTable, items, item, visibleRows, setTodoComplete, archiveTodos };
+export { generateItems, generateGroups, generateTable, items, item, visibleRows, setTodoComplete, archiveTodos, addTodo };

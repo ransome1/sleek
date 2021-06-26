@@ -1,0 +1,248 @@
+//  ####################################
+//  TODO TABLE CONTEXT MENU
+//  ####################################
+
+#todoContext {
+  display: none;
+  position: fixed;
+  z-index: 60;
+  a {
+    color: $has-text-link;
+    padding: 0.75em 1.5em;
+  }
+  .card-content {
+    padding: 0;
+  }
+}
+
+//  ####################################
+//  TABLE WRAPPER
+//  ####################################
+
+#todoTableWrapper::-webkit-scrollbar {
+  background-color: transparent;
+  width: .8em
+}
+#todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
+#todoTableWrapper::-webkit-scrollbar-thumb {
+  background: $mid-grey;
+  border-radius: 5px;
+}
+
+//  ####################################
+//  RESULT COUNTER
+//  ####################################
+
+#resultStats {
+  width: 100%;
+  display: none;
+  text-align: center;
+  white-space: nowrap;
+  .tag {
+    background: transparent;
+    position: relative;
+    top: -1px;
+  }
+}
+
+//  ####################################
+//  TABLE
+//  ####################################
+
+#todoTable {
+  width: 100%;
+  min-width: 30em;
+  float: left;
+  display: none;
+  padding: 0 2.5em 1.5em 2.5em;
+  margin-top: 1em;
+  .todo {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    border-bottom: solid 1px $light-grey;
+  }
+  .todo:last-child {
+    border: none;
+  }
+  .todo#previousItem {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+  .todo#previousItem.is-highlighted {
+    background-color: $almost-white;
+  }
+  .group {
+    min-height: 1em;
+    margin-top: 1.5em 0 0.5em 0;
+    border: none;
+    font-family: FreeSansBold;
+    .button {
+      cursor: default;
+      height: auto;
+      line-height: auto;
+      font-size: 1.2em;
+      padding: 0 .4em;
+    }
+  }
+  .group.priority {
+    .button {
+      font-size: 1.2em;
+      padding: 0.25em 0.7em;
+    }
+  }
+  .group.due {
+    .button {
+      padding: 0;
+      background: transparent;
+    }
+  }
+  .todo {
+    display: flex;
+    cursor: pointer;
+  }
+  .todo.completed {
+    .cell {
+      filter: opacity(50%) grayscale(100%);
+    }
+    .cell.priority {
+      background: $has-text-link;
+    }
+  }
+  .cell {
+    line-height: 1.7em;
+    padding: .75em 0;
+    margin-right: 1em;
+    height: auto;
+    .is-white {
+      background: none;
+    }
+    span.tag {
+      margin: 0 0.25em 0 0;
+    }
+    span.tag.projects {
+      background: $sleek-projects-button;
+    }
+    span.tag.contexts {
+      background: $sleek-contexts-button;
+    }
+  }
+  .cell.checkbox a {
+    flex: 0 0 1em;
+    font-size: 1.25em;
+  }
+  .cell.text {
+    width: auto;
+    flex: 1;
+    color: $dark-grey;
+    margin-right: 0;
+    .categories {
+      margin-right: .5em;
+    }
+    .button {
+      font-size: 1.1em;
+      font-family: FreeSansBold;
+      height: auto;
+      padding: 0 .4em;
+    }
+    .priority {
+      background: transparent;
+      color: darken($mid-grey, 40%);
+      margin-right: .5em;
+    }
+    .text {
+      margin-right: .5em;
+    }
+  }
+  .cell.spacer {
+    width: .5em;
+    background: transparent;
+  }
+  .cell.priority {
+    background: $mid-grey;
+    flex: 0 0 .5em;
+    opacity: .5;
+  }
+  .cell.priority.A,
+  .cell .priority.A {
+    color: #ffe6eb;
+    background: $has-text-danger;
+  }
+  .cell.priority.B,
+  .cell .priority.B {
+    color: #fadcd8;
+    background: $has-text-attention;
+  }
+  .cell.priority.C,
+  .cell .priority.C {
+    background: $has-text-warning;
+  }
+  .cell .contexts {
+    background: $sleek-contexts-button;
+  }
+  .cell .projects {
+    background: $sleek-projects-button;
+  }
+  .cell.itemDueDate {
+    color: $dark-grey;
+    position: relative;
+    white-space: nowrap;
+    margin: 0 .25em 0 0;
+    text-transform: lowercase;
+    .fa-sort-down {
+      position: absolute;
+      right: 0.2em;
+      bottom: 2.1em;
+      display: none;
+    }
+    .tags {
+      position: absolute;
+      top: -1.4em;
+      right: -1.5em;
+      z-index: 40;
+      display: none;
+      .tag {
+        margin: 0;
+      }
+      .is-dark {
+        background: $dark-grey;
+        font-family: FreeSansBold;
+      }
+    }
+  }
+  .cell.isToday,
+  .cell.isToday .button {
+    color: $has-text-danger;
+    .tags .is-dark {
+      background: $has-text-danger;
+      font-family: FreeSansBold;
+    }
+  }
+  .cell.isTomorrow,
+  .cell.isTomorrow .button {
+    color: $has-text-attention;
+    .tags .is-dark {
+      background: $has-text-attention;
+      font-family: FreeSansBold;
+    }
+  }
+  .cell.isPast,
+  .cell.isPast .button {
+    color: $has-text-danger;
+    .tags .is-dark {
+      background: $has-text-danger;
+      font-family: FreeSansBold;
+    }
+  }
+  .cell:hover,
+  .cell:focus {
+    .tags {
+      display: block;
+    }
+    i.fa-sort-down {
+      display: block;
+    }
+  }
+}
