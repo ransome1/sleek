@@ -75,9 +75,10 @@ function runQuery(item, compiledQuery) {
         } else if (next.startsWith('"')) {
           stack.push(item.projects && item.projects.includes(next.slice(1,-1)));
         } else {
-          // match for next as a substring of the project name
+          // case-insensitive match for next as a substring of the project name
+          let pattern = next.toLowerCase();
           stack.push(item.projects && item.projects.findIndex(function(p) {
-            return p.indexOf(next) > -1;
+            return p.toLowerCase().indexOf(pattern) > -1;
           }) > -1);
         }
         break;
@@ -88,9 +89,10 @@ function runQuery(item, compiledQuery) {
         } else if (next.startsWith('"')) {
           stack.push(item.contexts && item.contexts.includes(next.slice(1,-1)));
         } else {
-          // match for next as a substring of the context name
+          // case-insensitive match for next as a substring of the context name
+          let pattern = next.toLowerCase();
           stack.push(item.contexts && item.contexts.findIndex(function(c) {
-            return c.indexOf(next) > -1;
+            return c.toLowerCase().indexOf(pattern) > -1;
           }) > -1);
         }
         break;
