@@ -6,7 +6,8 @@
   display: none;
   position: fixed;
   z-index: 60;
-
+  border-radius: $radius;
+  box-shadow: 0 0 1em $mid-grey;
   #filterContextDelete {
     color: $has-text-danger;
   }
@@ -95,8 +96,10 @@
         border-left: 0.2em solid $has-text-link;
       }
     }
-    .button {
+    button {
+      position: relative;
       margin: 0 .5rem .5rem 0;
+      padding: 0.5em 0.75em;
       span.tag {
         font-family: FreeSansBold;
         position: absolute;
@@ -105,7 +108,7 @@
         z-index: 35;
       }
     }
-    .button.is-greyed-out {
+    button.is-greyed-out {
       .tag {
         display: none;
       }
@@ -113,13 +116,20 @@
     h4.is-4 {
       font-size: 1.25em;
       font-family: FreeSansBold;
-      margin-bottom: 0.75em;
+      margin-bottom: 0em;
     }
     h4.is-4.clickable {
       cursor: pointer;
+      display: inline;
       i {
         color: $has-text-link;
       }
+    }
+    h4.is-4.clickable::after {
+      height: 1em;
+      display: block;
+      content: '\A';
+      white-space: pre;
     }
     section {
       width: 100%;
@@ -146,7 +156,7 @@
     border-radius: $radius;
   }
   #viewDrawer {
-    .button {
+    button {
       margin: 0;
     }
     table {

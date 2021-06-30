@@ -13,24 +13,20 @@
 //  GENERAL MODAL
 //  ####################################
 
-.modal {
-  .card-header-title {
-    font-family: "FreeSansBold";
-    padding: 1em 1.5em 0 1.5em;
-  }
-}
 .modal.is-active {
   display: flex!important;
 }
 .modal.content {
   z-index: 60;
   margin: 0 !important;
-  .title.is-4 {
-    font-size: 1.2em;
-    margin:1em 0 0.5em 0;
-  }
+  // .title.is-4 {
+  //   font-size: 1.2em;
+  //   margin:1em 0 0.5em 0;
+  // }
   .title.is-3 {
-    font-size: 1.75em;
+    font-family: "FreeSansBold";
+    font-size: 1.7em;
+    font-weight: normal;
   }
   p {
     display: block;
@@ -113,6 +109,15 @@
       }
     }
   }
+  .modal-card-body::-webkit-scrollbar {
+    background-color: transparent;
+    width: .8em
+  }
+  .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+  .modal-card-body::-webkit-scrollbar-thumb {
+    background: $mid-grey;
+    border-radius: 5px;
+  }
   .arrow {
     text-align:center;
     margin: 1em 0;
@@ -138,7 +143,7 @@
 #modalForm {
   #modalFormInput {
     z-index: 60;
-    padding-right: 2.5em;
+    padding-right: 3em;
   }
   textarea {
     min-height: 5.5em;
@@ -149,7 +154,7 @@
   #modalFormInputResize {
     position: absolute;
     z-index: 60;
-    top: 1.85em;
+    top: 1.75em;
     right: 1.2em;
     cursor: pointer;
     pointer-events: all;
@@ -157,9 +162,6 @@
       font-size: 1.2em;
       color: $has-text-link;
     }
-  }
-  .card-header-title {
-    font-family: "FreeSansBold";
   }
   .icon {
     color: $has-text-link;
@@ -172,20 +174,6 @@
   .message {
     display: none;
     margin: 1em 0 0 0;
-  }
-  #btnItemStatus {
-    display: none;
-    text-align: center;
-  }
-  button {
-    font-size: 1em;
-    background: none;
-    border: none;
-    border-right: 1px solid $light-grey !important;
-    cursor: pointer;
-  }
-  .card-footer {
-    clear: both;
   }
   #autoCompleteContainer {
     position: fixed;
@@ -200,9 +188,12 @@
       max-height: 25em;
       overflow-y: scroll;
       margin: 0;
-      .button {
+      button {
         margin: 0 .5rem .5rem 0;
       }
+      // button:focus-visible {
+      //   background: white!important;
+      // }
     }
     section::-webkit-scrollbar {
       background-color: transparent;

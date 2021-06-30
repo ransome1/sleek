@@ -99,7 +99,7 @@ function configureTodoTableTemplate(append) {
 }
 function generateItems(content) {
   try {
-    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new RecExtension(), new HiddenExtension() ]) }
+    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]) }
     items.objects = items.objects.filter(function(item) {
       if(!item.text) return false;
       return true;
@@ -169,17 +169,17 @@ async function generateTable(groups, append) {
         dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group " + userData.sortBy[0] + " " + groups[group][0] + "\"><div class=\"cell\"></div></div>")
       // for priority, context and project
       } else if(groups[group][0]!="null" && userData.sortBy[0]!="dueString") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group " + userData.sortBy[0] + " " + groups[group][0] + "\"><div class=\"cell\"><span class=\"button " + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</span></div></div>")
+        dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group " + userData.sortBy[0] + " " + groups[group][0] + "\"><div class=\"cell\"><button tabindex=\"-1\" class=\"" + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</button></div></div>")
       // if sorting is by due date
       } else if(userData.sortBy[0]==="dueString" && groups[group][1][0].due) {
         if(isToday(groups[group][1][0].due)) {
-          dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isToday\"><span class=\"button\">" + translations.today + "</span></div></div>")
+          dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isToday\">" + translations.today + "</button></div></div>")
         } else if(isTomorrow(groups[group][1][0].due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isTomorrow\"><span class=\"button\">" + translations.tomorrow + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isTomorrow\">" + translations.tomorrow + "</button></div></div>")
         } else if(isPast(groups[group][1][0].due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isPast\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isPast\">" + groups[group][0] + "</button></div></div>")
         } else {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell\"><span class=\"button\">" + groups[group][0] + "</span></div></div>")
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell\">" + groups[group][0] + "</div></div>")
         }
       // create an empty divider row
       } else {
@@ -298,7 +298,7 @@ function generateTableRow(todo) {
     }
     // creates cell for the text
     if(todo.text) {
-      if(todo.priority && userData.sortBy[0]!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><span class=\"button " + todo.priority + "\">" + todo.priority + "</span></span>";
+      if(todo.priority && userData.sortBy[0]!="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><button class=\"" + todo.priority + "\">" + todo.priority + "</button></span>";
       // parse text string through markdown parser
       todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parseInline(todo.text) + "</span>";
       // replace line feed character with a space
@@ -429,7 +429,7 @@ function sortTodoData(group) {
 function setTodoComplete(todo) {
   try {
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new RecExtension(), new DueExtension(), new HiddenExtension() ]);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
@@ -470,9 +470,9 @@ function setTodoComplete(todo) {
 function setTodoDelete(todo) {
   try {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
-    if(modalForm.elements[0].value) todo = modalForm.elements[0].value;
+    if(document.getElementById("modalFormInput").value) todo = document.getElementById("modalFormInput").value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item

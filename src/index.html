@@ -27,7 +27,7 @@
             <li><a href="#" id="navBtnAddTodo" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li><a href="#" id="navBtnFilter" class="drawerTrigger" data-drawer="filterDrawer" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li><a href="#" id="navBtnView" class="drawerTrigger" data-drawer="viewDrawer"tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
-            <li><a href="#" id="btnOpenTodoFile" tabindex="-1"><i class="fas fa-folder-open"></i></a></li>
+            <li><a href="#" id="btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
             <li><a href="#" id="btnTheme" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
           </ul>
           <ul>
@@ -38,7 +38,7 @@
             <section id="filterDrawer" class="drawer dropdown" tabindex="0">
               <div class="container">
                 <div id="todoFilters"></div>
-                <button id="btnFiltersResetFilters" class="button btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button>
+                <button id="btnFiltersResetFilters" class="btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button>
               </div>
             </section>
             <section id="viewDrawer" class="drawer dropdown" tabindex="0">
@@ -189,14 +189,14 @@
 
         <section id="todoTableSearchContainer" class="inputWrapper">
           <i class="fas fa-search"></i>
-          <label id="todoTableSearchLabel" for="todoTableSearch">Search by todo.txt syntax</label>
+          <label id="todoTableSearchLabel" for="todoTableSearch"></label>
           <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
           <a href="#" id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;Add as new todo</a>
+          <section id="resultStats">
+            <span class="tag"></span>
+          </section>
         </section>
 
-        <section id="resultStats">
-          <span class="tag"></span>
-        </section>
 
         <section id="todoTable" tabindex="-1"></section>
 
@@ -219,7 +219,7 @@
           <h1 id="addTodoContainerHeadline" class="title is-1"></h1>
           <p id="addTodoContainerSubtitle" class="subtitle"></p>
           <p class="file is-boxed is-centered">
-            <a href="#" id="btnAddTodoContainer" class="btnOnboarding">
+            <a href="#" id="btnAddTodoContainer" class="btnOnboarding" tabindex="0">
               <i class="fas fa-plus"></i>
               <span id="addTodoContainerButton" class="file-label"></span>
             </a>
@@ -229,25 +229,23 @@
         <section id="noResultContainer" class="contentContainer">
           <h1 id="noResultContainerHeadline" class="title is-1"></h1>
           <p id="noResultContainerSubtitle" class="subtitle"></p>
-          <p><button id="btnNoResultContainerResetFilters" class="btnResetFilters button" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button></p>
+          <p><button id="btnNoResultContainerResetFilters" class="btnResetFilters" tabindex="0"><i class="fas fa-ban"></i>&nbsp;<span></span></button></p>
         </section>
 
       </div>
     </div>
 
-    <form id="modalForm" class="modal">
+    <section id="modalForm" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
-          <header id="modalTitle" class="card-header-title"></header>
           <div class="card-content">
               <div class="inputWrapper">
-                <label id="modalFormInputLabel" for="modalFormInput">Search by todo.txt syntax</label>
+                <label id="modalFormInputLabel" for="modalFormInput"></label>
                 <input id="modalFormInput" class="input is-medium" type="text" tabindex="0" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
                 <a href="#" id="modalFormInputResize" class="icon is-right" tabindex="-1" data-input-type="input"><i class="fas fa-expand-alt"></i></a>
               </div>
-              <div id="autoCompleteContainer" class="card"></div>
-
+              <section id="autoCompleteContainer" class="card"></section>
               <article class="message">
                 <div id="modalFormAlert" class="message-body"></div>
               </article>
@@ -342,13 +340,13 @@
 
           </div>
           <footer class="card-footer">
-            <button id="btnSave" type="submit" class="card-footer-item" tabindex="0"></button>
-            <a href="#" id="btnItemStatus" class="card-footer-item" tabindex="0"></a>
-            <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
+            <button id="btnSave" class="card-footer-item" tabindex="0"></button>
+            <button id="btnItemStatus" class="card-footer-item" tabindex="0"></button>
+            <button class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
       </div>
-    </form>
+    </section>
 
     <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background"></div>
@@ -662,11 +660,11 @@
     <div id="filterContext">
       <div class="card">
         <div class="card-content">
-          <input id="filterContextInput" class="input" type="text">
+          <input id="filterContextInput" class="input" type="text" tabindex="0">
         </div>
         <footer class="card-footer">
-          <a href="#" id="filterContextSave" class="card-footer-item"></a>
-          <a href="#" id="filterContextDelete" class="card-footer-item"></a>
+          <button id="filterContextSave" class="card-footer-item" tabindex="0"></button>
+          <button id="filterContextDelete" class="card-footer-item" tabindex="0"></button
         </footer>
       </div>
     </div>
@@ -675,16 +673,13 @@
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
-          <header>
-            <p id="modalChangeFileTitle" class="card-header-title"></p>
-          </header>
           <div class="card-content">
             <table id="modalChangeFileTable"></table>
           </div>
           <footer class="card-footer">
-            <a href="#" id="btnFilesOpenTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></a>
-            <a href="#" id="btnFilesCreateTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></a>
-            <a href="#" class="card-footer-item btnModalCancel" tabindex="0"></a>
+            <button id="btnFilesOpenTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></button>
+            <button id="btnFilesCreateTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></button>
+            <button class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
       </div>
@@ -696,8 +691,8 @@
         <div class="card">
           <div id="modalPromptContent" class="card-content"></div>
           <footer class="card-footer">
-            <a href="#" id="modalPromptConfirm" class="card-footer-item" tabindex="0">Confirm</a>
-            <a href="#" id="modalPromptCancel" class="card-footer-item" tabindex="0">Cancel</a>
+            <button id="modalPromptConfirm" class="card-footer-item" tabindex="0"></a>
+            <button id="modalPromptCancel" role="cancel" class="card-footer-item" tabindex="0"></a>
           </footer>
         </div>
       </div>
@@ -708,25 +703,25 @@
       <article class="message fixed" data="logging">
         <div class="message-header">
           <p><span id="messageLoggingTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="logging"></button>
+          <button class="delete close" aria-label="delete" data-message="logging" tabindex="-1"></button>
         </div>
         <div class="message-body">
           <p><span id="messageLoggingBody"></span></p>
-          <p><button id="btnMessageLogging" class="button" tabindex="0"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
+          <p><button id="btnMessageLogging" tabindex="-1"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
         </div>
       </article>
 
       <article class="message fixed" data="share">
         <div class="message-header">
           <p><span id="messageShareTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="share"></button>
+          <button class="delete close" aria-label="delete" data-message="share" tabindex="-1"></button>
         </div>
         <div class="message-body">
           <p><span id="messageShareBody"></span></p>
           <p class="brands">
-            <a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-facebook-square"></i></a>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a tabindex="-1" href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a tabindex="-1" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-facebook-square"></i></a>
+            <a tabindex="-1" href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-linkedin"></i></a>
           </p>
         </div>
       </article>

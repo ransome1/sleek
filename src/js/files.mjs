@@ -1,5 +1,5 @@
 "use strict";
-import { resetModal, handleError, userData, setUserData, translations } from "../render.js";
+import { resetFilters, resetModal, handleError, userData, setUserData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 
@@ -22,11 +22,15 @@ function showFiles() {
       let cell3 = row.insertCell(2);
       row.setAttribute("data-path", files[file][1]);
       if(files[file][0]===1) {
-        cell1.innerHTML = "<button class=\"button\" disabled>" + translations.selected + "</button>";
+        cell1.innerHTML = "<button disabled>" + translations.selected + "</button>";
       } else {
-        cell1.innerHTML = "<button class=\"button is-link\" tabindex=\"0\">" + translations.select + "</button>";
+        cell1.innerHTML = "<button tabindex=\"0\">" + translations.select + "</button>";
         cell1.onclick = function() {
-          setUserData("selectedFilters", []);
+          resetFilters().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
           resetModal().then(response => {
             window.api.send("startFileWatcher", this.parentElement.getAttribute("data-path"));
             console.info(response);

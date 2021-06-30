@@ -11,7 +11,6 @@ import * as recurrencePicker from "./recurrencePicker.mjs";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const recurrencePickerInput = document.getElementById("recurrencePickerInput");
-const modalTitle = document.getElementById("modalTitle");
 const modalFormAlert = document.getElementById("modalFormAlert");
 const modalForm = document.getElementById("modalForm");
 const modalFormInputLabel = document.getElementById("modalFormInputLabel");
@@ -19,6 +18,7 @@ const modalFormInputResize = document.getElementById("modalFormInputResize");
 const modalBackground = document.querySelectorAll('.modal-background');
 const modalClose = document.querySelectorAll('.close');
 const priorityPicker = document.getElementById("priorityPicker");
+const btnSave = document.getElementById("btnSave");
 const btnItemStatus = document.getElementById("btnItemStatus");
 
 modalFormInputLabel.innerHTML = translations.todoTxtSyntax;
@@ -42,14 +42,56 @@ modalFormInputResize.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Resize"]);
 }
-document.getElementById("modalFormInput").addEventListener("keyup", event => {
+btnSave.onclick = function() {
+  submitForm().then(response => {
+    console.log(response);
+  }).catch(error => {
+    handleError(error);
+  });
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Submit"]);
+}
+function keyUp() {
   // do not show suggestion container if Escape has been pressed
   if(event.key==="Escape") {
     autoCompleteContainer.classList.remove("is-active");
     return false;
   }
   modalFormInputEvent();
+}
+
+function keyDown() {
+  // regular submit
+  if(document.getElementById("modalFormInput").type !=="textarea" && event.key === "Enter") {
+    submitForm().then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Enter for Submit"]);
+  }
+
+  // submit form with Ctrl/CMD and Enter
+  if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
+    submitForm().then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Ctrl/CMD and Enter for Submit"]);
+  }
+}
+
+document.getElementById("modalFormInput").addEventListener("keyup", event => {
+  keyUp();
 });
+
+document.getElementById("modalFormInput").addEventListener("keydown", event => {
+  keyDown();
+});
+
 document.getElementById("modalFormInput").onfocus = function() {
   modalForm.classList.add("is-focused");
 }
@@ -57,13 +99,7 @@ document.getElementById("modalFormInput").onblur = function() {
   modalForm.classList.remove("is-focused");
 }
 modalForm.addEventListener("submit", function(event) {
-  // intercept submit
-  event.preventDefault();
-  submitForm().then(response => {
-    console.log(response);
-  }).catch(error => {
-    handleError(error);
-  });
+  event.preventDefault;
 });
 modalForm.addEventListener ("click", function() {
   // close recurrence picker if click is outside of recurrence container
@@ -127,7 +163,8 @@ function positionAutoCompleteContainer() {
   autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight - 40 + "px";
   autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
 }
-function modalFormInputEvent() {
+function modalFormInputEvent(event) {
+  //if(event.key==="Enter") return false;
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
   let autoCompleteValue ="";
@@ -150,7 +187,7 @@ function modalFormInputEvent() {
   }
   // suppress suggestion box if caret is at the end of word
   if(autoCompletePrefix==="+" || autoCompletePrefix==="@") {
-    if(autoCompletePrefix=="+") {
+    if(autoCompletePrefix==="+") {
       autoCompleteCategory = "projects";
     } else if(autoCompletePrefix=="@") {
       autoCompleteCategory = "contexts";
@@ -166,10 +203,14 @@ function modalFormInputEvent() {
     autoCompleteContainer.blur();
   }
 }
-function resizeInput(input) {
+// TODO add try catch
+async function resizeInput(input) {
   // resizing modalFormInput
   if(input.tagName==="TEXTAREA" && input.id==="modalFormInput") {
-    input.style.height="auto";
+    // reduce height after lines are being deleted
+    input.style.height = "auto"
+    // wait until the textarea is rendered
+    await input.scrollHeight;
     input.style.height = input.scrollHeight+"px";
     return false;
   } else if (input.type==="text" && input.id==="modalFormInput") {
@@ -242,6 +283,8 @@ function setDueDate(days) {
 }
 function show(todo, templated) {
   try {
+    // switch to textarea if needed
+    if(userData.useTextarea) toggleInputSize("input");
     // remove any previously set data-item attributes
     modalForm.removeAttribute("data-item");
     // adjust size of recurrence picker input field
@@ -264,12 +307,12 @@ function show(todo, templated) {
         todo.date = new Date();
         todo.text = "____________";
         document.getElementById("modalFormInput").value = todo.toString();
-        modalTitle.innerHTML = translations.addTodo;
+        //modalTitle.innerHTML = translations.addTodo;
         // automatically select the placeholder description
         let selectStart = document.getElementById("modalFormInput").value.indexOf(todo.text);
         let selectEnd = selectStart + todo.text.length;
         document.getElementById("modalFormInput").setSelectionRange(selectStart, selectEnd);
-        btnItemStatus.classList.remove("is-active");
+        btnItemStatus.classList.add("is-hidden");
       } else {
         // pass todo string to form data item
         modalForm.setAttribute("data-item", todo.toString());
@@ -279,8 +322,8 @@ function show(todo, templated) {
         // replace special char with space before passing it to regular input
         if(!userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16)," ");
         //document.getElementById("modalFormInput").value = todo.toString();
-        modalTitle.innerHTML = translations.editTodo;
-        btnItemStatus.classList.add("is-active");
+        //modalTitle.innerHTML = translations.editTodo;
+        btnItemStatus.classList.remove("is-hidden");
       }
       // only show the complete button on open items
       if(todo.complete === false) {
@@ -301,15 +344,13 @@ function show(todo, templated) {
         datePickerInput.value = todo.dueString;
       }
     } else {
-      modalTitle.innerHTML = translations.addTodo;
-      btnItemStatus.classList.remove("is-active");
+      //modalTitle.innerHTML = translations.addTodo;
+      btnItemStatus.classList.add("is-hidden");
     }
-    // switch to textarea if needed
-    if(userData.useTextarea) toggleInputSize("input");
     // adjust size of picker inputs
     resizeInput(datePickerInput);
     resizeInput(recurrencePickerInput);
-    resizeInput(document.getElementById("modalFormInput"));
+    //resizeInput(document.getElementById("modalFormInput"));
     // create the modal jail, so tabbing won't leave modal
     createModalJail(modalForm);
     // show modal and set focus to input element
@@ -332,7 +373,7 @@ function submitForm() {
     }
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
-    if(modalForm.getAttribute("data-item") === modalForm.elements[0].value) {
+    if(modalForm.getAttribute("data-item") === document.getElementById("modalFormInput").value) {
       // close and reset any modal
       resetModal().then(function(result) {
         console.log(result);
@@ -346,7 +387,7 @@ function submitForm() {
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
         modalFormAlert.innerHTML = translations.formInfoDuplicate;
@@ -363,10 +404,10 @@ function submitForm() {
       // jump to index, remove 1 item there and add the value from the input at that position
       items.objects.splice(index, 1, todo);
     // Add todo
-    } else if(modalForm.getAttribute("data-item")==null && modalForm.elements[0].value!="") {
+    } else if(modalForm.getAttribute("data-item")==null && document.getElementById("modalFormInput").value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(modalForm.elements[0].value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
       // check and prevent duplicate todo
@@ -386,7 +427,7 @@ function submitForm() {
       items.objects.push(todo);
       // mark the todo for anchor jump after next reload
       item.previous = todo.toString();
-    } else if(modalForm.elements[0].value=="") {
+    } else if(document.getElementById("modalFormInput").value=="") {
       modalFormAlert.innerHTML = translations.formInfoNoInput;
       modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
       modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
@@ -434,6 +475,7 @@ function toggleInputSize(type) {
   newInputElement.id = "modalFormInput";
   newInputElement.setAttribute("tabindex", 0);
   newInputElement.setAttribute("class", "input is-medium");
+  //newInputElement.value = document.getElementById("modalFormInput").value.replaceAll(String.fromCharCode(16)," ");
   //newInputElement.setAttribute("placeholder", translations.formTodoInputPlaceholder);
   // replace old element with the new one
   document.getElementById("modalFormInput").replaceWith(newInputElement);
@@ -444,9 +486,9 @@ function toggleInputSize(type) {
 
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
-  document.getElementById("modalFormInput").addEventListener("keyup", () => {
-    modalFormInputEvent();
-  });
+  // document.getElementById("modalFormInput").addEventListener("keyup", () => {
+  //   modalFormInputEvent();
+  // });
   document.getElementById("modalFormInput").onfocus = function() {
     modalForm.classList.add("is-focused");
   }
@@ -455,6 +497,13 @@ function toggleInputSize(type) {
   }
   document.getElementById("modalFormInput").focus();
   createModalJail(modalForm);
+
+  document.getElementById("modalFormInput").addEventListener("keydown", () => {
+    keyDown();
+  });
+  document.getElementById("modalFormInput").addEventListener("keyup", () => {
+    keyUp();
+  });
 }
 
 window.onresize = function() {
@@ -467,4 +516,4 @@ window.onresize = function() {
   }
 }
 
-export { show, resizeInput, setPriority, setDueDate, submitForm};
+export { show, resizeInput, setPriority, setDueDate, submitForm, toggleInputSize};

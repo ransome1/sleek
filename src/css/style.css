@@ -10,7 +10,6 @@ body.dark a {
   color: white;
 }
 body.dark a:hover,
-body.dark button:hover,
 body.dark strong {
   color: #CCCDCF !important;
 }
@@ -31,6 +30,12 @@ body.dark input:focus,
 body.dark select:focus {
   background-color: #2d2d2d !important;
 }
+body.dark .is-focused .inputWrapper label,
+body.dark .is-focused .inputWrapper i.fa-search,
+body.dark .inputWrapper.is-focused label,
+body.dark .inputWrapper.is-focused i.fa-search {
+  color: #f5f5f5;
+}
 body.dark input::placeholder {
   color: #5a5a5a !important;
 }
@@ -42,24 +47,23 @@ body.dark input[type=checkbox]:active {
 body.dark input[type=range] {
   background: #5a5a5a !important;
 }
+body.dark input[type=range]::-webkit-slider-thumb {
+  background: #f5f5f5;
+  box-shadow: 0 0 1em #212224;
+}
 body.dark button {
-  color: white !important;
-  background: transparent !important;
+  color: #f5f5f5;
+  background: #2d2d2d;
 }
 body.dark button i {
-  color: #CCCDCF !important;
+  color: #CCCDCF;
 }
-body.dark button.is-link,
-body.dark .button.is-link:hover {
-  background-color: #2d2d2d !important;
+body.dark button:focus-visible {
+  color: white;
+  background: #5a5a5a;
 }
-body.dark button.is-link svg,
-body.dark .button.is-link:hover svg {
-  color: inherit !important;
-}
-body.dark .button[disabled],
-body.dark fieldset[disabled] {
-  background-color: transparent;
+body.dark button:disabled {
+  opacity: 0.5;
 }
 body.dark button.is-outlined:hover {
   background: #3B3B3B !important;
@@ -81,8 +85,18 @@ body.dark table tr td {
 body.dark table tr th {
   color: white !important;
 }
-body.dark table.files tr td:last-child i {
+body.dark table.files tr td:last-child a {
   color: white;
+}
+body.dark table.files tr td:last-child a:focus-visible {
+  color: #212224 !important;
+}
+body.dark table.files button {
+  color: #f5f5f5;
+  background: #212224;
+}
+body.dark table.files button:disabled {
+  opacity: 0.5;
 }
 body.dark nav {
   background-color: #2d2d2d;
@@ -121,47 +135,55 @@ body.dark #todoTableSearchContainer input[type=search]::-webkit-search-cancel-bu
   background-color: #f5f5f5;
 }
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo {
-  background: #f5f5f5;
+  background: #CCCDCF;
   color: #212224;
 }
+body.dark #todoTableSearchContainer #todoTableSearchAddTodo:hover,
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo:focus,
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
-  background: white;
-}
-body.dark #todoTableSearchContainer i.fa-search {
-  color: #f5f5f5;
+  color: #212224 !important;
+  background: #f5f5f5;
 }
 body.dark #todoTableSearchContainer #btnToggleViewContainer {
   background: transparent !important;
 }
 body.dark #resultStats .tag {
-  background-color: #3B3B3B !important;
   color: #CCCDCF !important;
+}
+body.dark #resultStats .tag strong {
+  color: white !important;
 }
 body.dark #todoTable .todo#previousItem.is-highlighted {
   background-color: #3B3B3B;
 }
-body.dark #todoTable .todo:hover .cell .button,
-body.dark #todoTable .todo.due .button {
+body.dark #todoTable .todo:hover .cell button,
+body.dark #todoTable .todo.due button {
   color: #f5f5f5;
 }
 body.dark #todoTable .group.due {
   color: #ebebeb;
 }
-body.dark #todoTable .group.due .button {
+body.dark #todoTable .group.due button {
   color: inherit;
 }
 body.dark #todoTable .todo {
   border-color: #3B3B3B;
 }
-body.dark #todoTable .todo .checkbox a {
+body.dark #todoTable .todo .cell.checkbox a {
   color: #CCCDCF;
+  font-size: 1.25em;
 }
-body.dark #todoTable .todo .checkbox a:hover {
-  color: white;
+body.dark #todoTable .todo .cell.checkbox a:focus-visible {
+  color: white !important;
+}
+body.dark #todoTable .todo .cell.checkbox a:hover {
+  color: white !important;
 }
 body.dark #todoTable .todo .cell.text {
   color: #CCCDCF;
+}
+body.dark #todoTable .todo .cell.text:focus-visible {
+  background: #2d2d2d !important;
 }
 body.dark #todoTable .todo .cell.itemDueDate {
   color: white;
@@ -197,11 +219,6 @@ body.dark #todoTable .todo .cell .is-white {
 }
 body.dark #modalForm i {
   color: #CCCDCF !important;
-}
-body.dark #modalForm button {
-  border-color: #3B3B3B !important;
-  border-right: 1px solid #212224 !important;
-  background: transparent !important;
 }
 body.dark #modalForm .field input,
 body.dark #modalForm .field input::placeholder,
@@ -249,6 +266,9 @@ body.dark #drawerContainer .drawer h4.is-4 {
 body.dark #drawerContainer .drawer h4.is-4 i {
   color: #CCCDCF !important;
 }
+body.dark #drawerContainer .drawer button span.tag {
+  color: #5a5a5a;
+}
 body.dark #drawerContainer .drawer #sortByContainer li {
   background: #2d2d2d;
   color: white;
@@ -276,57 +296,54 @@ body.dark #todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
 body.dark #todoTableWrapper::-webkit-scrollbar-thumb {
   background: #3B3B3B;
 }
-body.dark #filterContext .card {
+body.dark #filterContext,
+body.dark #todoContext {
+  box-shadow: 0 0 1em #212224 !important;
+}
+body.dark #filterContext a,
+body.dark #todoContext a {
+  color: #f5f5f5;
+}
+body.dark #filterContext a:hover,
+body.dark #todoContext a:hover {
+  color: #CCCDCF;
+  background: #2d2d2d !important;
+}
+body.dark #filterContext .card,
+body.dark #todoContext .card {
   background: #3B3B3B;
 }
-body.dark #filterContext .card #filterContextSave {
-  background-color: transparent !important;
-  border-right: 1px solid #212224 !important;
+body.dark #filterContext .card #filterContextDelete,
+body.dark #todoContext .card #filterContextDelete {
+  color: #ff3860 !important;
 }
-body.dark #filterContext .card-footer {
-  border-top: 1px solid #212224 !important;
-}
-body.dark #todoContext a {
-  color: #CCCDCF;
-}
-body.dark #todoContext .dropdown-content {
-  color: white;
-  background-color: #3B3B3B !important;
-}
-body.dark #todoContext .dropdown-content .dropdown-item:hover {
-  background: #2d2d2d;
-}
-body.dark .contexts .button {
+body.dark .contexts button {
   color: #c5ede3;
   background: #247561;
 }
-body.dark .contexts .button span.tag {
-  color: #184e41;
+body.dark .contexts button span.tag {
+  color: #184e41 !important;
   background: #c9eee5;
 }
-body.dark .contexts .button:focus-visible {
-  background: #309c81;
-}
-body.dark .contexts .button.is-dark {
-  background: #184e41;
+body.dark .contexts button.is-dark,
+body.dark .contexts button:focus-visible {
+  background: #184e41 !important;
   color: white;
 }
-body.dark .projects .button {
+body.dark .projects button {
   color: #f1d6f1;
   background: #822c82;
 }
-body.dark .projects .button span.tag {
-  color: #5c1f5c;
+body.dark .projects button span.tag {
+  color: #5c1f5c !important;
   background: #f2daf2;
 }
-body.dark .projects .button:focus-visible {
-  background: #a839a8;
-}
-body.dark .projects .button.is-dark {
-  background: #5c1f5c;
+body.dark .projects button.is-dark,
+body.dark .projects button:focus-visible {
+  background: #5c1f5c !important;
   color: white;
 }
-body.dark .priority .button {
+body.dark .priority button {
   opacity: 0.9;
 }
 body.dark .toggle .switch .slider {
@@ -341,24 +358,29 @@ body.dark .toggle .switch input:focus + .slider {
 body.dark .toggle .switch input:focus-visible {
   outline: 2px solid white !important;
 }
-body.dark .modal .modal-content .card {
+body.dark .card {
   background: #3B3B3B;
   color: #CCCDCF;
 }
-body.dark .modal .modal-content .card .card-header-title {
-  color: white;
-}
-body.dark .modal .modal-content .card .card-footer,
-body.dark .modal .modal-content .card .card-footer-item {
-  border-color: #2d2d2d;
-}
-body.dark .modal .modal-content .card .card-footer-item:hover {
+body.dark .card .card-footer-item:hover {
   color: #CCCDCF;
+}
+body.dark .card .card-footer-item:focus-visible {
+  color: #f5f5f5 !important;
+  background: #2d2d2d !important;
+}
+body.dark .card .card-footer {
+  border-color: #2d2d2d !important;
+}
+body.dark .card .card-footer-item {
+  border-color: #2d2d2d !important;
+  background: transparent;
+  color: #f5f5f5 !important;
 }
 body.dark .modal.content {
   color: #CCCDCF !important;
 }
-body.dark .modal.content .button,
+body.dark .modal.content button,
 body.dark .modal.content button,
 body.dark .modal.content select {
   background: #2d2d2d !important;
@@ -418,7 +440,7 @@ body.dark .message.fixed .message-body {
   color: #CCCDCF;
   background: #3B3B3B !important;
 }
-body.dark .message.fixed .message-body .button {
+body.dark .message.fixed .message-body button {
   background: #2d2d2d !important;
 }
 body.dark .dueDate #datePickerInput,
@@ -428,7 +450,7 @@ body.dark .dueDate #datePickerInput::placeholder {
 body.dark .datepicker {
   background: transparent;
 }
-body.dark .datepicker .button {
+body.dark .datepicker button {
   background: transparent !important;
 }
 body.dark .datepicker .datepicker-cell.today.focused:not(.selected),
@@ -443,13 +465,13 @@ body.dark .datepicker .datepicker-picker {
   background: #2d2d2d;
   color: white;
 }
-body.dark .datepicker .datepicker-picker .button,
-body.dark .datepicker .datepicker-picker .button:hover,
-body.dark .datepicker .datepicker-picker .datepicker-header .datepicker-controls .button:hover {
+body.dark .datepicker .datepicker-picker button,
+body.dark .datepicker .datepicker-picker button:hover,
+body.dark .datepicker .datepicker-picker .datepicker-header .datepicker-controls button:hover {
   background: none;
   color: inherit;
 }
-body.dark .datepicker .datepicker-picker .datepicker-footer .datepicker-controls .button {
+body.dark .datepicker .datepicker-picker .datepicker-footer .datepicker-controls button {
   color: inherit;
 }
 body.dark .datepicker .datepicker-picker .datepicker-cell.selected,
@@ -467,6 +489,9 @@ body.dark .contentContainer .title.is-1 {
 }
 body.dark .contentContainer .subtitle,
 body.dark .contentContainer .subtitle strong {
+  color: #CCCDCF;
+}
+body.dark .contentContainer .btnOnboarding:focus-visible {
   color: #CCCDCF;
 }
 
@@ -509,34 +534,60 @@ body::-webkit-scrollbar {
   filter: opacity(75%) grayscale(100%);
 }
 
-button,
-.button,
-.button:focus,
-.button:active,
-.button:active,
-.button:after,
-.button::before,
-.button:active:after {
+.card {
+  box-shadow: 0 0 1em #ccc;
+}
+
+.card-footer {
+  clear: both;
+}
+.card-footer .card-footer-item,
+.card-footer .card-footer-item:focus {
+  border-radius: 0;
+  border-right: 1px solid #ebebeb;
+}
+.card-footer .card-footer-item:first-child {
+  border-bottom-left-radius: 0.65em;
+}
+.card-footer .card-footer-item:last-child {
+  border-right: none;
+  border-bottom-right-radius: 0.65em;
+}
+.card-footer .card-footer-item:focus-visible {
+  color: #212224 !important;
+  background-color: #f5f5f5 !important;
+}
+
+button {
+  font-size: 1em;
   color: #3273dc;
-  border: none !important;
-  box-shadow: none !important;
+  background: white;
+  border: none;
+  border-radius: 0.65em;
+  outline: none;
+  box-shadow: 0;
+  padding: 0.55em 0.75em;
+  cursor: pointer;
 }
 
-.button:hover,
-button:hover {
-  color: #2d2d2d;
+button:hover,
+button:focus-visible {
+  color: #5a5a5a;
+  background: white;
+}
+button:hover i,
+button:focus-visible i {
+  color: inherit;
 }
 
-.button i {
+button i {
   color: #3273dc;
 }
 
-.button.is-greyed-out {
+button:disabled,
+button.is-greyed-out {
   cursor: not-allowed;
-}
-
-.button.is-link:hover {
-  color: #f5f5f5;
+  filter: grayscale(100%);
 }
 
 input,
@@ -565,7 +616,10 @@ textarea {
 .inputWrapper input[type=search],
 .inputWrapper input[type=text],
 .inputWrapper textarea {
-  padding: 2.2em 1em 1.3em 1.5em;
+  padding: 2em 1em 1.2em 1.5em;
+}
+.inputWrapper textarea {
+  padding-bottom: 0.75em;
 }
 .inputWrapper input::placeholder,
 .inputWrapper textarea::placeholder {
@@ -580,6 +634,13 @@ textarea {
   z-index: 70;
 }
 
+.is-focused .inputWrapper label,
+.is-focused .inputWrapper i.fa-search,
+.inputWrapper.is-focused label,
+.inputWrapper.is-focused i.fa-search {
+  color: #3273dc;
+}
+
 input[type=number] {
   text-align: center;
 }
@@ -589,14 +650,23 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
-input[type=range] {
-  padding: 0;
+input[type=range],
+input[type=range]:focus {
+  height: 0.7em;
+  padding: 0.1em;
   -webkit-appearance: none;
-  height: 0.25em;
-  background: #5a5a5a !important;
-  border-radius: 10px;
-  outline: none;
-  border-bottom: none !important;
+  border-radius: 0.65em;
+  background: #CCCDCF !important;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  cursor: ew-resize;
+  width: 0.75em;
+  height: 1.5em;
+  -webkit-appearance: none;
+  background: #5a5a5a;
+  border-radius: 0.65em;
+  box-shadow: 0 0 1em white;
 }
 
 table {
@@ -621,12 +691,23 @@ table.files tr td {
 }
 table.files tr td:first-child {
   width: 3em;
+  text-align: center;
 }
-table.files tr td:last-child {
+table.files tr td:last-child a {
+  padding: 0.5em;
+  color: #3273dc;
   cursor: pointer;
 }
-table.files tr td:last-child i {
-  color: #3273dc;
+table.files tr td:last-child a:focus-visible {
+  color: #5a5a5a;
+}
+table.files button {
+  color: white;
+  background: #3273dc;
+}
+table.files button:disabled {
+  color: #ccc;
+  background: #f5f5f5;
 }
 
 :focus,
@@ -640,17 +721,9 @@ select:focus {
   background-color: #f5f5f5 !important;
 }
 
-.card-footer-item:focus-visible {
-  color: #2d2d2d !important;
-  background: #f5f5f5 !important;
-}
-
-.cell.checkbox a:focus-visible i {
-  color: #212224;
-}
-
-a.cell.text:focus-visible {
-  background: #f5f5f5;
+button:focus-visible {
+  color: #f5f5f5 !important;
+  background: #5a5a5a !important;
 }
 
 .title,
@@ -663,54 +736,6 @@ code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
   background-color: #ebebeb !important;
   color: inherit !important;
-}
-
-nav {
-  width: auto;
-  height: 100%;
-  float: left;
-  position: relative;
-  background: #f5f5f5;
-}
-nav ul {
-  float: left;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-nav ul li a,
-nav ul li.logo {
-  width: 5em;
-  height: 5em;
-  display: block;
-  color: #5a5a5a;
-  cursor: pointer;
-  line-height: 5em;
-  text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-nav ul li a:focus {
-  background: #ebebeb;
-  outline-style: none;
-}
-nav ul li a:hover,
-nav ul li a.is-highlighted {
-  background: #ebebeb;
-}
-nav ul li a#navBtnFilter.is-hidden {
-  display: none;
-}
-nav ul li.logo {
-  background: #5a5a5a;
-  color: white;
-  font-family: FreeSansBold;
-  cursor: default;
-}
-nav ul:nth-child(2) {
-  height: auto;
-  position: absolute;
-  bottom: 0;
-  left: 0;
 }
 
 #noResultContainer {
@@ -737,9 +762,6 @@ nav ul:nth-child(2) {
 #errorContainer i {
   color: white !important;
 }
-#errorContainer .button {
-  color: white;
-}
 
 #datePickerInput {
   cursor: pointer;
@@ -758,7 +780,7 @@ nav ul:nth-child(2) {
 .contentContainer .fa-file-alt {
   font-size: 6em;
 }
-.contentContainer .title.is-1 {
+.contentContainer .title.is-3 {
   font-family: "FreeSansBold";
   margin: 0.5em 0;
 }
@@ -774,6 +796,9 @@ nav ul:nth-child(2) {
 .contentContainer .btnOnboarding i {
   font-size: 5em;
   margin: 0.25em 0;
+}
+.contentContainer .btnOnboarding:focus-visible {
+  color: #212224;
 }
 
 .contentContainer.is-active {
@@ -813,7 +838,7 @@ nav ul:nth-child(2) {
   margin-right: 0.2em;
   color: #3273dc;
 }
-#messages .button {
+#messages button {
   margin-top: 0.5em;
 }
 #messages .message-body p {
@@ -823,9 +848,50 @@ nav ul:nth-child(2) {
   background-color: #ff3860;
 }
 
+nav {
+  height: 100%;
+  position: relative;
+  background: #f5f5f5;
+}
+nav ul {
+  float: left;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+nav ul li a,
+nav ul li.logo {
+  width: 5em;
+  display: block;
+  height: 5em;
+  line-height: 5em;
+  color: #5a5a5a;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+nav ul li a:focus,
+nav ul li a:hover,
+nav ul li a.is-highlighted {
+  background: #ebebeb;
+}
+nav ul li.logo {
+  font-family: FreeSansBold;
+  color: white;
+  background: #5a5a5a;
+  cursor: default;
+}
+nav ul:nth-child(2) {
+  height: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
 #todoTableSearchContainer {
   display: none;
-  margin: 0.5em 2.5em;
+  margin: 0 1.5em;
+  margin-top: 0.5em;
   padding-bottom: 0.5em;
   background: white;
   position: sticky;
@@ -835,18 +901,20 @@ nav ul:nth-child(2) {
 #todoTableSearchContainer #todoTableSearchAddTodo {
   display: none;
   position: absolute;
-  top: 2.6em;
+  top: 2.4em;
   right: 5em;
-  color: white;
-  background: #3273dc;
+  color: #3273dc;
+  background: white;
   text-decoration: none;
 }
 #todoTableSearchContainer #todoTableSearchAddTodo.is-active {
   display: flex !important;
 }
+#todoTableSearchContainer #todoTableSearchAddTodo:hover,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
-  background-color: #184690;
+  color: white;
+  background: #3273dc;
 }
 #todoTableSearchContainer input[type=search] {
   padding-left: 3.5em;
@@ -860,7 +928,7 @@ nav ul:nth-child(2) {
   -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   cursor: pointer;
-  margin-top: -0.9em;
+  margin-top: -0.7em;
 }
 #todoTableSearchContainer label {
   left: 5.9em;
@@ -868,7 +936,7 @@ nav ul:nth-child(2) {
 #todoTableSearchContainer i.fa-search {
   font-size: 1.3em;
   position: absolute;
-  top: 0.9em;
+  top: 0.8em;
   left: 1.4em;
   z-index: 60;
   padding: 0.75em 0.75em 0.75em 0;
@@ -880,9 +948,8 @@ nav ul:nth-child(2) {
     padding-top: 0.5em;
   }
   .inputWrapper input[type=search],
-.inputWrapper input[type=text],
-.inputWrapper textarea {
-    padding: 1.5em;
+.inputWrapper input[type=text] {
+    padding: 1.5em 1em 1.5em 1.5em;
   }
   .inputWrapper input::placeholder,
 .inputWrapper textarea::placeholder {
@@ -892,6 +959,9 @@ nav ul:nth-child(2) {
     display: none;
   }
 
+  #modalForm textarea {
+    padding: 0.75em;
+  }
   #modalForm #modalFormInputResize {
     top: 1.65em;
   }
@@ -904,16 +974,13 @@ nav ul:nth-child(2) {
     padding: 0.25em 0.5em;
   }
 
-  #todoTableSearchContainer {
-    margin: 0.5em 1.5em 0 1.5em;
-  }
   #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
     margin-top: 0;
   }
   #todoTableSearchContainer i.fa-search {
     top: 0.65em;
   }
-  #todoTableSearchContainer .tag {
+  #todoTableSearchContainer #todoTableSearchAddTodo {
     top: 2.2em;
   }
 
@@ -957,18 +1024,18 @@ nav ul li.logo {
 #drawerContainer .drawer .is-4 {
     font-size: 1.1em;
   }
-  #autoCompleteContainer .priority .button,
-#drawerContainer .drawer .priority .button {
+  #autoCompleteContainer .priority button,
+#drawerContainer .drawer .priority button {
     font-size: 1em;
   }
-  #autoCompleteContainer .button,
-#drawerContainer .drawer .button {
+  #autoCompleteContainer button,
+#drawerContainer .drawer button {
     font-size: 0.9em;
     margin: 0 0.3em 0.3em 0 !important;
-    padding: 0.25em 0.6em;
+    padding: 0.5em 0.7em;
   }
-  #autoCompleteContainer .button .tag,
-#drawerContainer .drawer .button .tag {
+  #autoCompleteContainer button .tag,
+#drawerContainer .drawer button .tag {
     width: auto;
     height: auto;
     padding: 0 0.5em;
@@ -989,9 +1056,8 @@ body.compact .inputWrapper {
   padding-top: 0.5em;
 }
 body.compact .inputWrapper input[type=search],
-body.compact .inputWrapper input[type=text],
-body.compact .inputWrapper textarea {
-  padding: 1.5em;
+body.compact .inputWrapper input[type=text] {
+  padding: 1.5em 1em 1.5em 1.5em;
 }
 body.compact .inputWrapper input::placeholder,
 body.compact .inputWrapper textarea::placeholder {
@@ -999,6 +1065,9 @@ body.compact .inputWrapper textarea::placeholder {
 }
 body.compact .inputWrapper label {
   display: none;
+}
+body.compact #modalForm textarea {
+  padding: 0.75em;
 }
 body.compact #modalForm #modalFormInputResize {
   top: 1.65em;
@@ -1009,16 +1078,13 @@ body.compact table tr td {
 body.compact #sortByContainer li {
   padding: 0.25em 0.5em;
 }
-body.compact #todoTableSearchContainer {
-  margin: 0.5em 1.5em 0 1.5em;
-}
 body.compact #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
   margin-top: 0;
 }
 body.compact #todoTableSearchContainer i.fa-search {
   top: 0.65em;
 }
-body.compact #todoTableSearchContainer .tag {
+body.compact #todoTableSearchContainer #todoTableSearchAddTodo {
   top: 2.2em;
 }
 body.compact #todoTable {
@@ -1059,18 +1125,18 @@ body.compact #autoCompleteContainer .is-4,
 body.compact #drawerContainer .drawer .is-4 {
   font-size: 1.1em;
 }
-body.compact #autoCompleteContainer .priority .button,
-body.compact #drawerContainer .drawer .priority .button {
+body.compact #autoCompleteContainer .priority button,
+body.compact #drawerContainer .drawer .priority button {
   font-size: 1em;
 }
-body.compact #autoCompleteContainer .button,
-body.compact #drawerContainer .drawer .button {
+body.compact #autoCompleteContainer button,
+body.compact #drawerContainer .drawer button {
   font-size: 0.9em;
   margin: 0 0.3em 0.3em 0 !important;
-  padding: 0.25em 0.6em;
+  padding: 0.5em 0.7em;
 }
-body.compact #autoCompleteContainer .button .tag,
-body.compact #drawerContainer .drawer .button .tag {
+body.compact #autoCompleteContainer button .tag,
+body.compact #drawerContainer .drawer button .tag {
   width: auto;
   height: auto;
   padding: 0 0.5em;
@@ -1085,125 +1151,132 @@ body.compact #autoCompleteContainer h4 {
   margin-top: 0;
 }
 
-.contexts .button,
-.contexts .button:hover {
+.contexts button,
+.contexts button:hover {
   background: #c5ede3;
   color: #1e6251;
 }
-.contexts .button span.tag,
-.contexts .button:hover span.tag {
+.contexts button span.tag,
+.contexts button:hover span.tag {
   color: white;
   background: #247561;
 }
-.contexts .button:focus-visible,
-.contexts .button.is-dark:focus-visible {
-  background: #247561;
+.contexts button:focus-visible,
+.contexts button.is-dark:focus-visible {
+  background: #247561 !important;
   color: white;
 }
-.contexts .button.is-dark,
-.contexts .button.is-dark:hover,
-.contexts .button.is-dark.is-hovered {
+.contexts button.is-dark,
+.contexts button.is-dark:hover,
+.contexts button.is-dark.is-hovered {
   background: #184e41;
   color: white;
 }
 
-.projects .button,
-.projects .button:hover {
+.projects button,
+.projects button:hover {
   background: #f1d6f1;
   color: #6f266f;
 }
-.projects .button span.tag,
-.projects .button:hover span.tag {
+.projects button span.tag,
+.projects button:hover span.tag {
   color: white;
   background: #822c82;
 }
-.projects .button:focus-visible,
-.projects .button.is-dark:focus-visible {
-  background: #822c82;
+.projects button:focus-visible,
+.projects button.is-dark:focus-visible {
+  background: #822c82 !important;
   color: white;
 }
-.projects .button.is-dark,
-.projects .button.is-dark:hover,
-.projects .button.is-dark.is-hovered {
+.projects button.is-dark,
+.projects button.is-dark:hover,
+.projects button.is-dark.is-hovered {
   background: #5c1f5c;
   color: white;
 }
 
-.priority .button,
-.priority .button:hover {
+.priority button {
+  height: auto;
   font-size: 1.2em;
   font-family: FreeSansBold;
   background: #ccc;
-  color: #666666;
-  padding: 0.25em 0.7em;
-  height: auto;
+  color: #5a5a5a;
+  padding: 0.1em 0.5em !important;
 }
-.priority .button span.tag,
-.priority .button:hover span.tag {
+.priority button span.tag {
   color: inherit;
 }
-.priority .button:hover {
-  color: #666666;
-}
-.priority .button:hover span.tag {
-  color: inherit;
-}
-.priority .button.is-dark span.tag {
+.priority button.is-dark span.tag {
   background: #4d4d4d;
 }
-.priority .button.is-dark,
-.priority .button.is-dark:hover,
-.priority .button.is-dark.is-hovered {
+.priority button.is-dark,
+.priority button.is-dark:hover,
+.priority button.is-dark.is-hovered,
+.priority button:focus-visible {
   background: #737373;
   color: white;
 }
-.priority .button.A {
-  background: #ff3860;
-  color: #ffebef;
+.priority button.is-dark span.tag,
+.priority button.is-dark:hover span.tag,
+.priority button.is-dark.is-hovered span.tag,
+.priority button:focus-visible span.tag {
+  color: #2d2d2d !important;
 }
-.priority .button.A span.tag {
-  color: #ff3860;
+.priority button.A {
+  background: #ff3860;
+  color: #ffebef !important;
+}
+.priority button.A span.tag {
+  color: #ff3860 !important;
   background: #ffebef;
 }
-.priority .button.A.is-dark {
-  background: #d1002a;
+.priority button.A.is-dark,
+.priority button.A:focus-visible {
+  background: #d1002a !important;
 }
-.priority .button.A.is-dark span.tag {
-  color: #d1002a;
+.priority button.A.is-dark span.tag,
+.priority button.A:focus-visible span.tag {
+  color: #d1002a !important;
 }
-.priority .button.B {
-  color: white;
+.priority button.B {
+  color: white !important;
   background: #fa745e;
 }
-.priority .button.B span.tag {
-  color: #fa745e;
+.priority button.B span.tag {
+  color: #fa745e !important;
   background: #fff4f2;
 }
-.priority .button.B.is-dark {
-  background: #eb2707;
+.priority button.B.is-dark,
+.priority button.B:focus-visible {
+  background: #eb2707 !important;
 }
-.priority .button.B.is-dark span.tag {
-  color: #eb2707;
+.priority button.B.is-dark span.tag,
+.priority button.B:focus-visible span.tag {
+  color: #eb2707 !important;
 }
-.priority .button.C {
-  color: white;
+.priority button.C {
+  color: white !important;
   background: #ffdd57;
 }
-.priority .button.C span.tag {
-  color: #ffdd57;
+.priority button.C span.tag {
+  color: #ffdd57 !important;
   background: #fffcf0;
 }
-.priority .button.C.is-dark {
-  background: #f0c000;
+.priority button.C.is-dark,
+.priority button.C:focus-visible {
+  background: #f0c000 !important;
 }
-.priority .button.C.is-dark span.tag {
-  color: #f0c000;
+.priority button.C.is-dark span.tag,
+.priority button.C:focus-visible span.tag {
+  color: #f0c000 !important;
 }
 
 #filterContext {
   display: none;
   position: fixed;
   z-index: 60;
+  border-radius: 0.65em;
+  box-shadow: 0 0 1em #ccc;
 }
 #filterContext #filterContextDelete {
   color: #ff3860;
@@ -1279,7 +1352,7 @@ body.compact #autoCompleteContainer h4 {
   white-space: nowrap;
   background: white;
   text-align: left;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   border: none;
 }
 #drawerContainer .drawer #sortByContainer li i {
@@ -1290,29 +1363,38 @@ body.compact #autoCompleteContainer h4 {
 #drawerContainer .drawer #sortByContainer li.drag-sort-active {
   border-left: 0.2em solid #3273dc;
 }
-#drawerContainer .drawer .button {
+#drawerContainer .drawer button {
+  position: relative;
   margin: 0 0.5rem 0.5rem 0;
+  padding: 0.5em 0.75em;
 }
-#drawerContainer .drawer .button span.tag {
+#drawerContainer .drawer button span.tag {
   font-family: FreeSansBold;
   position: absolute;
   right: -0.75em;
   top: -0.75em;
   z-index: 35;
 }
-#drawerContainer .drawer .button.is-greyed-out .tag {
+#drawerContainer .drawer button.is-greyed-out .tag {
   display: none;
 }
 #drawerContainer .drawer h4.is-4 {
   font-size: 1.25em;
   font-family: FreeSansBold;
-  margin-bottom: 0.75em;
+  margin-bottom: 0em;
 }
 #drawerContainer .drawer h4.is-4.clickable {
   cursor: pointer;
+  display: inline;
 }
 #drawerContainer .drawer h4.is-4.clickable i {
   color: #3273dc;
+}
+#drawerContainer .drawer h4.is-4.clickable::after {
+  height: 1em;
+  display: block;
+  content: "\a";
+  white-space: pre;
 }
 #drawerContainer .drawer section {
   width: 100%;
@@ -1335,9 +1417,9 @@ body.compact #autoCompleteContainer h4 {
 #drawerContainer .drawer::-webkit-scrollbar-thumb:window-inactive,
 #drawerContainer .drawer::-webkit-scrollbar-thumb {
   background: #ccc;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
 }
-#drawerContainer #viewDrawer .button {
+#drawerContainer #viewDrawer button {
   margin: 0;
 }
 #drawerContainer #viewDrawer table tr th h3 {
@@ -1363,11 +1445,6 @@ body.compact #autoCompleteContainer h4 {
   width: 20em;
 }
 
-.modal .card-header-title {
-  font-family: "FreeSansBold";
-  padding: 1em 1.5em 0 1.5em;
-}
-
 .modal.is-active {
   display: flex !important;
 }
@@ -1376,12 +1453,10 @@ body.compact #autoCompleteContainer h4 {
   z-index: 60;
   margin: 0 !important;
 }
-.modal.content .title.is-4 {
-  font-size: 1.2em;
-  margin: 1em 0 0.5em 0;
-}
 .modal.content .title.is-3 {
-  font-size: 1.75em;
+  font-family: "FreeSansBold";
+  font-size: 1.7em;
+  font-weight: normal;
 }
 .modal.content p {
   display: block;
@@ -1411,7 +1486,7 @@ body.compact #autoCompleteContainer h4 {
   background: #ebebeb;
   padding: 0 2em 2em 2em;
   max-height: calc(100vh - 5em);
-  border-radius: 0.75em;
+  border-radius: 0.65em;
 }
 .modal.content .modal-background {
   z-index: 55;
@@ -1456,6 +1531,15 @@ body.compact #autoCompleteContainer h4 {
 .modal.content .modal-card-body table.shortcuts td .tag {
   font-size: 1em !important;
 }
+.modal.content .modal-card-body::-webkit-scrollbar {
+  background-color: transparent;
+  width: 0.8em;
+}
+.modal.content .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+.modal.content .modal-card-body::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 5px;
+}
 .modal.content .arrow {
   text-align: center;
   margin: 1em 0;
@@ -1480,7 +1564,7 @@ body.compact #autoCompleteContainer h4 {
 
 #modalForm #modalFormInput {
   z-index: 60;
-  padding-right: 2.5em;
+  padding-right: 3em;
 }
 #modalForm textarea {
   min-height: 5.5em;
@@ -1491,7 +1575,7 @@ body.compact #autoCompleteContainer h4 {
 #modalForm #modalFormInputResize {
   position: absolute;
   z-index: 60;
-  top: 1.85em;
+  top: 1.75em;
   right: 1.2em;
   cursor: pointer;
   pointer-events: all;
@@ -1499,9 +1583,6 @@ body.compact #autoCompleteContainer h4 {
 #modalForm #modalFormInputResize i {
   font-size: 1.2em;
   color: #3273dc;
-}
-#modalForm .card-header-title {
-  font-family: "FreeSansBold";
 }
 #modalForm .icon {
   color: #3273dc;
@@ -1515,28 +1596,14 @@ body.compact #autoCompleteContainer h4 {
   display: none;
   margin: 1em 0 0 0;
 }
-#modalForm #btnItemStatus {
-  display: none;
-  text-align: center;
-}
-#modalForm button {
-  font-size: 1em;
-  background: none;
-  border: none;
-  border-right: 1px solid #ebebeb !important;
-  cursor: pointer;
-}
-#modalForm .card-footer {
-  clear: both;
-}
 #modalForm #autoCompleteContainer {
   position: fixed;
   display: none;
   z-index: 50;
   padding: 3.5em 1.5em 0.75em 1.5em;
   border-radius: 0;
-  border-bottom-right-radius: 0.75em;
-  border-bottom-left-radius: 0.75em;
+  border-bottom-right-radius: 0.65em;
+  border-bottom-left-radius: 0.65em;
   background: #f5f5f5;
 }
 #modalForm #autoCompleteContainer section {
@@ -1544,7 +1611,7 @@ body.compact #autoCompleteContainer h4 {
   overflow-y: scroll;
   margin: 0;
 }
-#modalForm #autoCompleteContainer section .button {
+#modalForm #autoCompleteContainer section button {
   margin: 0 0.5rem 0.5rem 0;
 }
 #modalForm #autoCompleteContainer section::-webkit-scrollbar {
@@ -1613,10 +1680,21 @@ body.compact #autoCompleteContainer h4 {
   display: none;
   position: fixed;
   z-index: 60;
+  border-radius: 0.65em;
+  box-shadow: 0 0 1em #ccc;
 }
 #todoContext a {
+  font-size: 0.9em;
   color: #3273dc;
   padding: 0.75em 1.5em;
+}
+#todoContext a.dropdown-item:first-child {
+  border-top-left-radius: 0.65em;
+  border-top-right-radius: 0.65em;
+}
+#todoContext a.dropdown-item:last-child {
+  border-bottom-left-radius: 0.65em;
+  border-bottom-right-radius: 0.65em;
 }
 #todoContext .card-content {
   padding: 0;
@@ -1651,7 +1729,6 @@ body.compact #autoCompleteContainer h4 {
   float: left;
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
-  margin-top: 1em;
 }
 #todoTable .todo {
   position: relative;
@@ -1672,25 +1749,29 @@ body.compact #autoCompleteContainer h4 {
   background-color: #f5f5f5;
 }
 #todoTable .group {
+  font-family: FreeSansBold;
+  font-size: 1.2em;
   min-height: 1em;
   margin-top: 1.5em 0 0.5em 0;
   border: none;
-  font-family: FreeSansBold;
 }
-#todoTable .group .button {
-  cursor: default;
+#todoTable .group button {
+  font-family: inherit;
   height: auto;
   line-height: auto;
-  font-size: 1.2em;
-  padding: 0 0.4em;
+  padding: 0 0.5em;
+  cursor: default;
 }
-#todoTable .group.priority .button {
-  font-size: 1.2em;
-  padding: 0.25em 0.7em;
-}
-#todoTable .group.due .button {
+#todoTable .group .cell {
+  margin-top: 1em;
   padding: 0;
-  background: transparent;
+}
+#todoTable .group.priority button {
+  font-size: 1.1em;
+  padding: 0.15em 0.5em;
+}
+#todoTable .group.priority .cell {
+  margin-bottom: 0.5em;
 }
 #todoTable .todo {
   display: flex;
@@ -1705,11 +1786,8 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell {
   line-height: 1.7em;
   padding: 0.75em 0;
-  margin-right: 1em;
+  margin: 0 1em 0 0;
   height: auto;
-}
-#todoTable .cell .is-white {
-  background: none;
 }
 #todoTable .cell span.tag {
   margin: 0 0.25em 0 0;
@@ -1721,31 +1799,40 @@ body.compact #autoCompleteContainer h4 {
   background: #c5ede3;
 }
 #todoTable .cell.checkbox a {
-  flex: 0 0 1em;
   font-size: 1.25em;
+}
+#todoTable .cell.checkbox a:focus-visible {
+  color: #212224 !important;
 }
 #todoTable .cell.text {
   width: auto;
   flex: 1;
   color: #5a5a5a;
-  margin-right: 0;
 }
 #todoTable .cell.text .categories {
   margin-right: 0.5em;
 }
-#todoTable .cell.text .button {
+#todoTable .cell.text button {
   font-size: 1.1em;
   font-family: FreeSansBold;
   height: auto;
-  padding: 0 0.4em;
+  padding: 0.1em 0.4em;
 }
 #todoTable .cell.text .priority {
   background: transparent;
   color: #666666;
   margin-right: 0.5em;
 }
+#todoTable .cell.text .priority button {
+  font-size: 0.9em;
+  padding: 0.1em 0.4em !important;
+}
 #todoTable .cell.text .text {
   margin-right: 0.5em;
+}
+#todoTable .cell.text:focus-visible {
+  background: #f5f5f5;
+  border-radius: 0.65em;
 }
 #todoTable .cell.spacer {
   width: 0.5em;
@@ -1754,20 +1841,18 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell.priority {
   background: #ccc;
   flex: 0 0 0.5em;
+}
+#todoTable .cell.priority {
+  width: 0.5em;
   opacity: 0.5;
 }
-#todoTable .cell.priority.A,
-#todoTable .cell .priority.A {
-  color: #ffe6eb;
+#todoTable .cell.priority.A {
   background: #ff3860;
 }
-#todoTable .cell.priority.B,
-#todoTable .cell .priority.B {
-  color: #fadcd8;
+#todoTable .cell.priority.B {
   background: #fa745e;
 }
-#todoTable .cell.priority.C,
-#todoTable .cell .priority.C {
+#todoTable .cell.priority.C {
   background: #ffdd57;
 }
 #todoTable .cell .contexts {
@@ -1804,29 +1889,29 @@ body.compact #autoCompleteContainer h4 {
   font-family: FreeSansBold;
 }
 #todoTable .cell.isToday,
-#todoTable .cell.isToday .button {
+#todoTable .cell.isToday button {
   color: #ff3860;
 }
 #todoTable .cell.isToday .tags .is-dark,
-#todoTable .cell.isToday .button .tags .is-dark {
+#todoTable .cell.isToday button .tags .is-dark {
   background: #ff3860;
   font-family: FreeSansBold;
 }
 #todoTable .cell.isTomorrow,
-#todoTable .cell.isTomorrow .button {
+#todoTable .cell.isTomorrow button {
   color: #fa745e;
 }
 #todoTable .cell.isTomorrow .tags .is-dark,
-#todoTable .cell.isTomorrow .button .tags .is-dark {
+#todoTable .cell.isTomorrow button .tags .is-dark {
   background: #fa745e;
   font-family: FreeSansBold;
 }
 #todoTable .cell.isPast,
-#todoTable .cell.isPast .button {
+#todoTable .cell.isPast button {
   color: #ff3860;
 }
 #todoTable .cell.isPast .tags .is-dark,
-#todoTable .cell.isPast .button .tags .is-dark {
+#todoTable .cell.isPast button .tags .is-dark {
   background: #ff3860;
   font-family: FreeSansBold;
 }
@@ -1912,7 +1997,7 @@ body.compact #autoCompleteContainer h4 {
 .datepicker .datepicker-footer {
   background: none;
 }
-.datepicker .datepicker-footer .datepicker-controls .button {
+.datepicker .datepicker-footer .datepicker-controls button {
   font-size: 1em;
   background: none;
   border-color: transparent;
@@ -1938,7 +2023,7 @@ body.compact #autoCompleteContainer h4 {
 
 .datepicker-picker {
   display: inline-block;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   background-color: #fff;
 }
 
@@ -2002,28 +2087,28 @@ body.compact #autoCompleteContainer h4 {
   padding: 2px 2px 0;
 }
 
-.datepicker-header .datepicker-controls .button {
+.datepicker-header .datepicker-controls button {
   border-color: transparent;
   font-weight: 700;
 }
 
-.datepicker-header .datepicker-controls .button:hover {
+.datepicker-header .datepicker-controls button:hover {
   background-color: #f9f9f9;
 }
 
-.datepicker-header .datepicker-controls .button:focus:not(:active) {
+.datepicker-header .datepicker-controls button:focus:not(:active) {
   box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.25);
 }
 
-.datepicker-header .datepicker-controls .button:active {
+.datepicker-header .datepicker-controls button:active {
   background-color: #f2f2f2;
 }
 
-.datepicker-header .datepicker-controls .button[disabled] {
+.datepicker-header .datepicker-controls button[disabled] {
   box-shadow: none;
 }
 
-.datepicker-footer .datepicker-controls .button {
+.datepicker-footer .datepicker-controls button {
   margin: calc(.375rem - 1px) 0.375rem;
   border-radius: 2px;
   width: 100%;
@@ -2177,7 +2262,7 @@ body.compact #autoCompleteContainer h4 {
   -webkit-appearance: none;
   align-items: center;
   border: 1px solid transparent;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   box-shadow: none;
   display: inline-flex;
   font-size: 1rem;
@@ -4072,7 +4157,7 @@ div.icon-text {
 
 .notification {
   background-color: whitesmoke;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   position: relative;
   padding: 1.25rem 2.5rem 1.25rem 1.5rem;
 }
@@ -4571,7 +4656,7 @@ div.icon-text {
 .tag:not(body) {
   align-items: center;
   background-color: whitesmoke;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   color: #4a4a4a;
   display: inline-flex;
   font-size: 0.75rem;
@@ -4843,7 +4928,7 @@ a.tag:hover {
 .select select, .textarea, .input {
   background-color: white;
   border-color: #dbdbdb;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   color: #363636;
 }
 .select select::-moz-placeholder, .textarea::-moz-placeholder, .input::-moz-placeholder {
@@ -5455,7 +5540,7 @@ a.tag:hover {
   border-top-left-radius: 0;
 }
 .file.has-name.is-empty .file-cta {
-  border-radius: 0.75em;
+  border-radius: 0.65em;
 }
 .file.has-name.is-empty .file-name {
   display: none;
@@ -5488,10 +5573,10 @@ a.tag:hover {
   font-size: 35px;
 }
 .file.is-boxed.has-name .file-cta {
-  border-radius: 0.75em 0.75em 0 0;
+  border-radius: 0.65em 0.65em 0 0;
 }
 .file.is-boxed.has-name .file-name {
-  border-radius: 0 0 0.75em 0.75em;
+  border-radius: 0 0 0.65em 0.65em;
   border-width: 0 1px 1px;
 }
 .file.is-centered {
@@ -5508,10 +5593,10 @@ a.tag:hover {
   justify-content: flex-end;
 }
 .file.is-right .file-cta {
-  border-radius: 0 0.75em 0.75em 0;
+  border-radius: 0 0.65em 0.65em 0;
 }
 .file.is-right .file-name {
-  border-radius: 0.75em 0 0 0.75em;
+  border-radius: 0.65em 0 0 0.65em;
   border-width: 1px 0 1px 1px;
   order: -1;
 }
@@ -5552,7 +5637,7 @@ a.tag:hover {
 .file-cta,
 .file-name {
   border-color: #dbdbdb;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   font-size: 1em;
   padding-left: 1em;
   padding-right: 1em;
@@ -5950,7 +6035,7 @@ a.tag:hover {
 
 .card {
   background-color: white;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   color: #4a4a4a;
   max-width: 100%;
@@ -5958,12 +6043,12 @@ a.tag:hover {
 }
 
 .card-footer:first-child, .card-content:first-child, .card-header:first-child {
-  border-top-left-radius: 0.75em;
-  border-top-right-radius: 0.75em;
+  border-top-left-radius: 0.65em;
+  border-top-right-radius: 0.65em;
 }
 .card-footer:last-child, .card-content:last-child, .card-header:last-child {
-  border-bottom-left-radius: 0.75em;
-  border-bottom-right-radius: 0.75em;
+  border-bottom-left-radius: 0.65em;
+  border-bottom-right-radius: 0.65em;
 }
 
 .card-header {
@@ -5998,12 +6083,12 @@ a.tag:hover {
   position: relative;
 }
 .card-image:first-child img {
-  border-top-left-radius: 0.75em;
-  border-top-right-radius: 0.75em;
+  border-top-left-radius: 0.65em;
+  border-top-right-radius: 0.65em;
 }
 .card-image:last-child img {
-  border-bottom-left-radius: 0.75em;
-  border-bottom-right-radius: 0.75em;
+  border-bottom-left-radius: 0.65em;
+  border-bottom-right-radius: 0.65em;
 }
 
 .card-content {
@@ -6066,7 +6151,7 @@ a.tag:hover {
 
 .dropdown-content {
   background-color: white;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
@@ -6112,7 +6197,7 @@ button.dropdown-item.is-active {
   justify-content: space-between;
 }
 .level code {
-  border-radius: 0.75em;
+  border-radius: 0.65em;
 }
 .level img {
   display: inline-block;
@@ -6315,7 +6400,7 @@ button.dropdown-item.is-active {
 
 .message {
   background-color: whitesmoke;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   font-size: 1rem;
 }
 .message strong {
@@ -6444,7 +6529,7 @@ button.dropdown-item.is-active {
 .message-header {
   align-items: center;
   background-color: #4a4a4a;
-  border-radius: 0.75em 0.75em 0 0;
+  border-radius: 0.65em 0.65em 0 0;
   color: #fff;
   display: flex;
   font-weight: 700;
@@ -6466,7 +6551,7 @@ button.dropdown-item.is-active {
 
 .message-body {
   border-color: #dbdbdb;
-  border-radius: 0.75em;
+  border-radius: 0.65em;
   border-style: solid;
   border-width: 0 0 0 4px;
   color: #4a4a4a;
@@ -7406,7 +7491,7 @@ body.has-navbar-fixed-bottom-touch {
   }
   .navbar.is-spaced a.navbar-item,
 .navbar.is-spaced .navbar-link {
-    border-radius: 0.75em;
+    border-radius: 0.65em;
   }
   .navbar.is-transparent a.navbar-item:focus, .navbar.is-transparent a.navbar-item:hover, .navbar.is-transparent a.navbar-item.is-active,
 .navbar.is-transparent .navbar-link:focus,
@@ -8012,7 +8097,7 @@ label.panel-block:hover {
 }
 .tabs.is-boxed a {
   border: 1px solid transparent;
-  border-radius: 0.75em 0.75em 0 0;
+  border-radius: 0.65em 0.65em 0 0;
 }
 .tabs.is-boxed a:hover {
   background-color: whitesmoke;
@@ -8043,12 +8128,12 @@ label.panel-block:hover {
   margin-left: -1px;
 }
 .tabs.is-toggle li:first-child a {
-  border-top-left-radius: 0.75em;
-  border-bottom-left-radius: 0.75em;
+  border-top-left-radius: 0.65em;
+  border-bottom-left-radius: 0.65em;
 }
 .tabs.is-toggle li:last-child a {
-  border-top-right-radius: 0.75em;
-  border-bottom-right-radius: 0.75em;
+  border-top-right-radius: 0.65em;
+  border-bottom-right-radius: 0.65em;
 }
 .tabs.is-toggle li.is-active a {
   background-color: #3273dc;

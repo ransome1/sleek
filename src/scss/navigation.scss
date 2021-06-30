@@ -1,0 +1,43 @@
+//  ####################################
+//  NAVIGATION
+//  ####################################
+
+nav {
+  height: 100%;
+  position: relative;
+  background: $almost-white;
+  ul {
+    float: left;
+  	list-style-type: none;
+  	margin: 0;
+  	padding: 0;
+    li a,
+    li.logo {
+      width: 5em;
+      display: block;
+      height: 5em;
+      line-height: 5em;
+      color: $dark-grey;
+    	cursor: pointer;
+    	text-align: center;
+    	border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    li a:focus,
+    li a:hover,
+    li a.is-highlighted {
+      background: $light-grey;
+    }
+    li.logo {
+      font-family: FreeSansBold;
+      color: white;
+      background: $dark-grey;
+      cursor: default;
+    }
+  }
+  ul:nth-child(2) {
+    height: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+}

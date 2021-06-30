@@ -39,7 +39,7 @@
   "formInfoIncomplete": "Su entrada está incompleta, agregue al menos el texto de la tarea.",
   "formInfoNoInput": "Por favor, añada un todo en el campo de texto. Si no estás seguro de cómo hacerlo, echa un vistazo rápido a <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "formSelectDueDate": "Caducidad",
-  "formTodoInputPlaceholder": "(A) Usar el todo.txt Syntax @context +project",
+  "todoTxtSyntax": "Usar el todo.txt Syntax (A) @context +project due: rec: h:",
   "function": "Función",
   "help": "Ayuda",
   "helpTab3Title": "Contextos y proyectos",

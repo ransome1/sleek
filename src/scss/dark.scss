@@ -10,7 +10,6 @@ body.dark {
     color: white;
   }
   a:hover,
-  button:hover,
   strong {
     color: $lighter-grey!important;
   }
@@ -32,7 +31,13 @@ body.dark {
   select:focus {
     background-color: $darker-grey!important;
   }
-
+  .is-focused .inputWrapper,
+  .inputWrapper.is-focused {
+    label,
+    i.fa-search {
+      color: $almost-white;
+    }
+  }
   input::placeholder {
     color: $dark-grey!important;
   }
@@ -44,24 +49,25 @@ body.dark {
   input[type="range"] {
     background: $dark-grey!important;
   }
-  button {
-    color: white!important;
-    background: transparent!important;
-    i {
-      color: $lighter-grey!important;
-    }
+  input[type="range"]::-webkit-slider-thumb {
+    background: $almost-white;
+    box-shadow: 0 0 1em $almost-black;
   }
 
-  button.is-link,
-  .button.is-link:hover {
-    background-color: $darker-grey!important;
-    svg {
-      color: inherit!important;
+  button {
+    color: $almost-white;
+    background: $darker-grey;
+    i {
+      color: $lighter-grey;
     }
   }
-  .button[disabled],
-  fieldset[disabled] {
-    background-color: transparent;
+  button:focus-visible {
+    color: white;
+    background: $dark-grey;
+  }
+  button:disabled {
+    //background-color: transparent;
+    opacity: 0.5;
   }
   button.is-outlined:hover {
     background: $even-darker-grey!important;
@@ -86,10 +92,20 @@ body.dark {
   table.files {
     tr {
       td:last-child {
-        i {
+        a {
           color: white;
         }
+        a:focus-visible {
+          color: $almost-black!important;
+        }
       }
+    }
+    button {
+      color: $almost-white;
+      background: $almost-black;
+    }
+    button:disabled {
+      opacity: 0.5;
     }
   }
   nav {
@@ -134,15 +150,14 @@ body.dark {
       background-color: $almost-white;
     }
     #todoTableSearchAddTodo {
-      background: $almost-white;
+      background: $lighter-grey;
       color: $almost-black;
     }
+    #todoTableSearchAddTodo:hover,
     #todoTableSearchAddTodo:focus,
     #todoTableSearchAddTodo:focus-visible {
-      background: white;
-    }
-    i.fa-search {
-      color: $almost-white;
+      color: $almost-black!important;
+      background: $almost-white;
     }
     #btnToggleViewContainer {
       background: transparent!important;
@@ -150,8 +165,10 @@ body.dark {
   }
   #resultStats {
     .tag {
-      background-color: $even-darker-grey!important;
       color: $lighter-grey!important;
+      strong {
+        color: white!important;
+      }
     }
   }
   #todoTable {
@@ -160,26 +177,35 @@ body.dark {
     }
     .todo:hover .cell,
     .todo.due {
-      .button {
+      button {
         color: $almost-white;
       }
     }
     .group.due {
       color: $light-grey;
-      .button {
+      button {
         color: inherit;
       }
     }
     .todo {
       border-color: $even-darker-grey;
-      .checkbox a {
-        color: $lighter-grey;
-      }
-      .checkbox a:hover {
-        color: white;
+      .cell.checkbox {
+        a {
+          color: $lighter-grey;
+          font-size: 1.25em;
+        }
+        a:focus-visible {
+          color: white!important;
+        }
+        a:hover {
+          color: white!important;
+        }
       }
       .cell.text {
         color: $lighter-grey;
+      }
+      .cell.text:focus-visible {
+        background: $darker-grey!important;
       }
       .cell.itemDueDate {
         color: white;
@@ -221,11 +247,6 @@ body.dark {
   #modalForm {
     i {
       color: $lighter-grey!important;
-    }
-    button {
-      border-color: $even-darker-grey!important;
-      border-right: 1px solid $almost-black!important;
-      background: transparent!important;
     }
     .field {
       input,
@@ -278,6 +299,11 @@ body.dark {
           color: $lighter-grey!important;
         }
       }
+      button {
+        span.tag {
+          color: $dark-grey;
+        }
+      }
       #sortByContainer {
         li {
           background: $darker-grey;
@@ -312,66 +338,62 @@ body.dark {
   #todoTableWrapper::-webkit-scrollbar-thumb {
     background: $even-darker-grey;
   }
-  #filterContext {
+  #filterContext,
+  #todoContext {
+    box-shadow: 0 0 1em $almost-black!important;
+    a {
+      color: $almost-white;
+    }
+    a:hover {
+      color: $lighter-grey;
+      background: $darker-grey!important;
+    }
     .card {
       background: $even-darker-grey;
-      #filterContextSave {
-        background-color: transparent!important;
-        border-right: 1px solid $almost-black!important;
+      // #filterContextSave {
+      //   background-color: transparent!important;
+      //   border-right: 1px solid $almost-black!important;
+      // }
+      #filterContextDelete {
+        color: $has-text-danger!important;
       }
     }
     .card-footer {
-      border-top: 1px solid $almost-black!important;
-    }
-  }
-  #todoContext {
-    a {
-      color: $lighter-grey;
-    }
-    .dropdown-content {
-      color: white;
-      background-color: $even-darker-grey!important;
-      .dropdown-item:hover {
-        background: $darker-grey;
-      }
+
     }
   }
   .contexts {
-    .button {
+    button {
       color: $sleek-contexts-button;
       background: darken($sleek-contexts-button, 55%);
       span.tag {
-        color: darken($sleek-contexts-button, 65%);
+        color: darken($sleek-contexts-button, 65%)!important;
         background: lighten($sleek-contexts-button, 1%);
       }
     }
-    .button:focus-visible {
-      background: darken($sleek-contexts-button, 45%);
-    }
-    .button.is-dark  {
-      background: darken($sleek-contexts-button, 65%);
+    button.is-dark,
+    button:focus-visible {
+      background: darken($sleek-contexts-button, 65%)!important;
       color: white;
     }
   }
   .projects {
-    .button {
+    button {
       color: $sleek-projects-button;
       background: darken($sleek-projects-button, 55%);
       span.tag {
-        color: darken($sleek-projects-button, 65%);
+        color: darken($sleek-projects-button, 65%)!important;
         background: lighten($sleek-projects-button, 1%);
       }
     }
-    .button:focus-visible {
-      background: darken($sleek-projects-button, 45%);
-    }
-    .button.is-dark {
-      background: darken($sleek-projects-button, 65%);
+    button.is-dark,
+    button:focus-visible {
+      background: darken($sleek-projects-button, 65%)!important;
       color: white;
     }
   }
   .priority {
-    .button {
+    button {
       opacity: .9;
     }
   }
@@ -391,27 +413,30 @@ body.dark {
       }
     }
   }
-  .modal {
-    .modal-content {
-      .card {
-        background: $even-darker-grey;
-        color: $lighter-grey;
-        .card-header-title {
-          color: white;
-        }
-        .card-footer,
-        .card-footer-item {
-          border-color: $darker-grey;
-        }
-        .card-footer-item:hover {
-          color: $lighter-grey;
-        }
-      }
+
+  .card {
+    background: $even-darker-grey;
+    color: $lighter-grey;
+    .card-footer-item:hover {
+      color: $lighter-grey;
+    }
+    .card-footer-item:focus-visible {
+      color: $almost-white!important;
+      background: $darker-grey!important;
+    }
+    .card-footer {
+      border-color: $darker-grey!important;
+    }
+    .card-footer-item {
+      border-color: $darker-grey!important;
+      background: transparent;
+      color: $almost-white!important;
     }
   }
+
   .modal.content {
     color: $lighter-grey!important;
-    .button,
+    button,
     button,
     select {
       background: $darker-grey!important;
@@ -470,7 +495,7 @@ body.dark {
     .message-body {
       color: $lighter-grey;
       background: $even-darker-grey!important;
-      .button {
+      button {
         background: $darker-grey!important;
       }
     }
@@ -483,7 +508,7 @@ body.dark {
   }
   .datepicker {
     background: transparent;
-    .button {
+    button {
       background: transparent!important;
     }
     .datepicker-cell.today.focused:not(.selected),
@@ -497,13 +522,13 @@ body.dark {
     .datepicker-picker {
       background: $darker-grey;
       color: white;
-      .button,
-      .button:hover,
-      .datepicker-header .datepicker-controls .button:hover {
+      button,
+      button:hover,
+      .datepicker-header .datepicker-controls button:hover {
         background: none;
         color: inherit;
       }
-      .datepicker-footer .datepicker-controls .button {
+      .datepicker-footer .datepicker-controls button {
         color: inherit;
       }
       .datepicker-cell.selected,
@@ -524,6 +549,9 @@ body.dark {
     }
     .subtitle,
     .subtitle strong {
+      color: $lighter-grey;
+    }
+    .btnOnboarding:focus-visible {
       color: $lighter-grey;
     }
   }

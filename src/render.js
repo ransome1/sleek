@@ -11,13 +11,12 @@ const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadli
 const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const body = document.getElementById("body");
-//const btnArchiveTodos = document.getElementById("btnArchiveTodos");
 const btnCopyToClipboard = document.querySelectorAll(".btnCopyToClipboard");
 const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
 const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
 const btnFiltersResetFilters = document.getElementById("btnFiltersResetFilters");
 const btnMessageLogging = document.getElementById("btnMessageLogging");
-const btnModalCancel = document.querySelectorAll(".btnModalCancel");
+const cancel = document.querySelectorAll("[role='cancel']");
 const btnNoResultContainerResetFilters = document.getElementById("btnNoResultContainerResetFilters");
 const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
 const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
@@ -37,7 +36,6 @@ const modal = document.querySelectorAll('.modal');
 const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
 const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
-const modalChangeFileTitle = document.getElementById("modalChangeFileTitle");
 const modalForm = document.getElementById("modalForm");
 const modalFormAlert = document.getElementById("modalFormAlert");
 const modalFormInput = document.getElementById("modalFormInput");
@@ -362,8 +360,9 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
     }
-    btnModalCancel.forEach(function(el) {
-      el.onclick = function() {
+    cancel.forEach(function(el) {
+      el.onclick = function(event) {
+        event.preventDefault;
         el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
         resetModal().then(function(response) {
           console.info(response);
@@ -526,14 +525,6 @@ function registerKeyboardShortcuts() {
           handleError(error);
         });
       }
-      // submit form
-      if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
-        form.submitForm().then(response => {
-          console.log(response);
-        }).catch(error => {
-          handleError(error);
-        });
-      }
       // due date plus 1
       if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
         form.setDueDate(1);
@@ -675,7 +666,7 @@ function setTranslations() {
     messageShareTitle.innerHTML = translations.messageShareTitle;
     modalChangeFileCreate.innerHTML = translations.createFile;
     modalChangeFileOpen.innerHTML = translations.openFile;
-    modalChangeFileTitle.innerHTML = translations.selectFile;
+    //modalChangeFileTitle.innerHTML = translations.selectFile;
     noResultContainerHeadline.innerHTML = translations.noResults;
     noResultContainerSubtitle.innerHTML = translations.noResultContainerSubtitle;
     onboardingContainerBtnCreate.innerHTML = translations.createFile;
@@ -687,8 +678,8 @@ function setTranslations() {
     btnResetFilters.forEach(function(el) {
       el.getElementsByTagName('span')[0].innerHTML = translations.resetFilters;
     });
-    btnModalCancel.forEach(function(el) {
-      el.innerHTML = translations.cancel;
+    cancel.forEach(function(item) {
+      item.innerHTML = translations.cancel;
     });
     navBtnAddTodo.setAttribute("title", translations.addTodo);
     return Promise.resolve("Success: Translations set");
@@ -929,4 +920,4 @@ window.api.receive("refresh", async function(content) {
   });
 });
 
-export { resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation, reorderSortingLevel };
+export { resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation, reorderSortingLevel };

@@ -1,8 +1,11 @@
 "use strict";
 import { userData, handleError, translations, setUserData, startBuilding, getConfirmation } from "../render.js";
+import { createModalJail } from "../configs/modal.config.mjs";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
+import * as filterlang from "./filterlang.mjs";
+import { runQuery } from "./filterquery.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -17,6 +20,8 @@ let categories,
     filtersCounted,
     filtersCountedReduced,
     selectedFilters,
+    lastFilterQueryString = null,
+    lastFilterItems = null,
     container,
     headline;
 
@@ -115,25 +120,36 @@ function filterItems(items) {
         });
       });
     }
-    if (todoTableSearch.value && todoTableSearch.value.startsWith("?")) {
-      // if search starts with "?", parse it with filter query language grammar
+    if (todoTableSearch.value) { // assume that this is an advanced search expr
+      let queryString = todoTableSearch.value;
       try {
-        let query = filterlang.parse(todoTableSearch.value.slice(1));
+        let query = filterlang.parse(queryString);
         if (query.length > 0) {
           items = items.filter(function(item) {
             return runQuery(item, query);
           });
+          lastFilterQueryString = queryString;
+          lastFilterItems = items;
         }
       } catch(e) {
-        // if query is malformed, don't match anything, so user can tell that
-        // query is busted.
-        items = [];
+        // oops, that wasn't a syntactically correct search expression
+        if (lastFilterQueryString && queryString.startsWith(lastFilterQueryString)) {
+          // keep table more stable by using the previous valid query while
+          // user continues to type additional query syntax.
+          items = lastFilterItems;
+        } else {
+          // the query is not syntactically correct and isn't a longer version
+          // of the last working query, so let's assume that it is a
+          // plain-text query.
+          items = items.filter(function(item) {
+            return item.toString().toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
+          });
+        }
       }
     }
-    // apply filters or filter by search string
+    // apply filters
     items = items.filter(function(item) {
       if(!item.text) return false
-      if(todoTableSearch.value && !todoTableSearch.value.startsWith("?") && item.toString().toLowerCase().indexOf(todoTableSearch.value.toLowerCase()) === -1) return false;
       if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
@@ -366,12 +382,10 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
     for (let filter in filtersCounted) {
       // skip this loop if no filters are present
       if(!filter) continue;
-      let todoFiltersItem = document.createElement("a");
-      todoFiltersItem.setAttribute("class", "button");
+      let todoFiltersItem = document.createElement("button");
       if(category==="priority") todoFiltersItem.classList.add(filter);
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      todoFiltersItem.setAttribute("href", "#");
       if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 0) }
       todoFiltersItem.innerHTML = filter;
       if(autoCompletePrefix==undefined) {
@@ -381,6 +395,9 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         });
         // add context menu
         todoFiltersItem.addEventListener("contextmenu", event => {
+          // jail the modal
+          createModalJail(filterContext);
+
           filterContext.style.left = event.x + "px";
           filterContext.style.top = event.y + "px";
           filterContext.classList.add("is-active");
@@ -432,14 +449,17 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       // autocomplete container
       } else {
         // add filter to input
-        todoFiltersItem.addEventListener("click", () => {
-          if(autoCompleteValue) {
+        todoFiltersItem.addEventListener("click", (event) => {
+          if(autoCompletePrefix && autoCompleteValue) {
             // remove composed filter first, then add selected filter
             document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.replace(autoCompletePrefix + autoCompleteValue, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + " ");
-          } else {
+          } else if(autoCompletePrefix) {
             // add button data value to the exact caret position
             document.getElementById("modalFormInput").value = [document.getElementById("modalFormInput").value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), document.getElementById("modalFormInput").value.slice(caretPosition)].join('') + " ";
           }
+          // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
+          autoCompleteValue = null;
+          autoCompletePrefix = null;
           // hide the suggestion container after the filter has been selected
           autoCompleteContainer.blur();
           autoCompleteContainer.classList.remove("is-active");

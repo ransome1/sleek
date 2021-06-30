@@ -8,9 +8,8 @@
     position: relative;
     padding-top: 0.5em;
     input[type="search"],
-    input[type="text"],
-    textarea {
-      padding: 1.5em;
+    input[type="text"] {
+      padding: 1.5em 1em 1.5em 1.5em;
     }
     input::placeholder,
     textarea::placeholder {
@@ -21,8 +20,13 @@
     }
   }
 
-  #modalForm #modalFormInputResize {
-    top: 1.65em;
+  #modalForm {
+    textarea {
+      padding: 0.75em;
+    }
+    #modalFormInputResize {
+      top: 1.65em;
+    }
   }
 
   table tr td {
@@ -32,14 +36,13 @@
     padding: 0.25em 0.5em;
   }
   #todoTableSearchContainer {
-    margin: 0.5em 1.5em 0 1.5em;
     input[type="search"]::-webkit-search-cancel-button {
       margin-top: 0;
     }
     i.fa-search {
       top: 0.65em;
     }
-    .tag {
+    #todoTableSearchAddTodo {
       top: 2.2em;
     }
   }
@@ -84,14 +87,14 @@
       font-size: 1.1em;
     }
     .priority {
-      .button {
+      button {
         font-size: 1em;
       }
     }
-    .button {
+    button {
       font-size: 0.9em;
       margin: 0 0.3em 0.3em 0!important;
-      padding: 0.25em 0.6em;
+      padding: 0.5em 0.7em;
       .tag {
         width: auto;
         height: auto;
