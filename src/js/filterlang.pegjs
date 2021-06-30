@@ -52,8 +52,9 @@ comparison
     / left:dueComparison { return left; }
 
 priorityComparison
-    = priorityKeyword _ op:compareOp _ right:priorityLiteral  { return ["priority", right, op]; }
-    / priorityKeyword  { return ["priority"]; }
+    = priorityKeyword _ op:compareOp _ right:priorityLiteral  { return ["pri", right, op]; }
+    / priorityKeyword  { return ["pri"]; }
+    / "(" right:priorityLiteral ")"  { return ["pri", right, "=="]; }
 
 priorityLiteral
     = [A-Z]  { return text(); }
@@ -63,6 +64,7 @@ priorityKeyword
 
 dueComparison
     = "due" _ op:compareOp _ right:dateExpr  { return ["due"].concat(right, [op]); }
+    / "due:" right:dateStr  { return ["duestr", right]; }
     / "due"  { return ["due"]; }
 
 dateExpr
@@ -85,15 +87,27 @@ dateOp
 
 compareOp
     = "=="  { return text(); }
+    / "="   { return "==";   }
     / "!="  { return text(); }
     / ">="  { return text(); }
     / "<="  { return text(); }
     / ">"   { return text(); }
     / "<"   { return text(); }
 
+dateStr
+    = [0-9]+ ("-" [0-9]+ ("-" [0-9]+)?)? { return text(); }
+
 dateLiteral
     = year:number4 "-" month: number2 "-" day:number2  {
     	let d = new Date(year, month-1, day);
+        return d.getTime();
+    }
+    / year:number4 "-" month: number2  {
+    	let d = new Date(year, month-1, 1);
+        return d.getTime();
+    }
+    / year:number4  {
+    	let d = new Date(year, 0, 1);
         return d.getTime();
     }
     / "today" {
@@ -153,11 +167,14 @@ SourceCharacter
     = .
 
 name
-	= '"' nonblank+ '"'    { return text(); }
-	/ nonblank+  '"'       { return '"' + text(); }
-	/ nonblank+            { return text(); }
+	= '"' nonblank+ '"'         { return text(); }
+	/ nonblankparen+  '"'       { return '"' + text(); }
+	/ nonblankparen+            { return text(); }
 
 nonblank
+    = [^ \t\n\r"]
+
+nonblankparen
     = [^ \t\n\r"()]
 
 _ "whitespace"
