@@ -159,6 +159,12 @@ body.dark {
       color: $almost-black!important;
       background: $almost-white;
     }
+    #todoTableSearch.is-valid-query {
+      color: #10cf10!important;
+    }
+    #todoTableSearch.is-previous-query {
+      color: #cfa010!important;
+    }  
     #btnToggleViewContainer {
       background: transparent!important;
     }

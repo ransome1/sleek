@@ -43,6 +43,12 @@
     cursor: pointer;
     margin-top: -0.7em;
   }
+  #todoTableSearch.is-valid-query {
+    color: hsl(141, 90%, 35%);
+  }
+  #todoTableSearch.is-previous-query {
+    color: #cfa010;
+  }
   label {
     left: 5.9em;
   }
