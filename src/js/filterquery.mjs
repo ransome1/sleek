@@ -15,17 +15,31 @@ function runQuery(item, compiledQuery) {
   while (q.length > 0) {
     const opcode = q.shift();
     switch(opcode) {
-      case "priority":
+      case "pri":
         stack.push(item.priority);
         break;
       case "due":
-        let d = item.due;
-        if (d) {
+        if (item.due) {
           // normalize date to have time of midnight in local zone
           // we represent dates as millisec from epoch to simplify comparison
-          d = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+          let d = item.due;
+          stack.push(new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime());
+        } else {
+          stack.push(undefined);  // all comparisons will return false
         }
-        stack.push(d);
+        break;
+      case "duestr":
+        // match next value (a string) as prefix of ISO date string of due date
+        next = q.shift(); // the string to compare
+        if (item.due) {
+          // normalize date to have time of midnight in local zone
+          // we represent dates as millisec from epoch to simplify comparison
+          let d = item.due;
+          d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+          stack.push(d.toISOString().slice(0, 10).startsWith(next));
+        } else {
+          stack.push(false);  // no due date
+        }
         break;
       case "complete":
         stack.push(item.complete);
@@ -75,9 +89,10 @@ function runQuery(item, compiledQuery) {
         } else if (next.startsWith('"')) {
           stack.push(item.projects && item.projects.includes(next.slice(1,-1)));
         } else {
-          // match for next as a substring of the project name
+          // case-insensitive match for next as a substring of the project name
+          let pattern = next.toLowerCase();
           stack.push(item.projects && item.projects.findIndex(function(p) {
-            return p.indexOf(next) > -1;
+            return p.toLowerCase().indexOf(pattern) > -1;
           }) > -1);
         }
         break;
@@ -88,9 +103,10 @@ function runQuery(item, compiledQuery) {
         } else if (next.startsWith('"')) {
           stack.push(item.contexts && item.contexts.includes(next.slice(1,-1)));
         } else {
-          // match for next as a substring of the context name
+          // case-insensitive match for next as a substring of the context name
+          let pattern = next.toLowerCase();
           stack.push(item.contexts && item.contexts.findIndex(function(c) {
-            return c.indexOf(next) > -1;
+            return c.toLowerCase().indexOf(pattern) > -1;
           }) > -1);
         }
         break;

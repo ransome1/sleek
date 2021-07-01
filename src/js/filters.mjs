@@ -130,13 +130,17 @@ function filterItems(items) {
           });
           lastFilterQueryString = queryString;
           lastFilterItems = items;
+          todoTableSearch.classList.add("is-valid-query");
+          todoTableSearch.classList.remove("is-previous-query");
         }
       } catch(e) {
         // oops, that wasn't a syntactically correct search expression
+        todoTableSearch.classList.remove("is-valid-query");
         if (lastFilterQueryString && queryString.startsWith(lastFilterQueryString)) {
           // keep table more stable by using the previous valid query while
           // user continues to type additional query syntax.
           items = lastFilterItems;
+          todoTableSearch.classList.add("is-previous-query");
         } else {
           // the query is not syntactically correct and isn't a longer version
           // of the last working query, so let's assume that it is a
@@ -144,6 +148,7 @@ function filterItems(items) {
           items = items.filter(function(item) {
             return item.toString().toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
           });
+          todoTableSearch.classList.remove("is-previous-query");
         }
       }
     }

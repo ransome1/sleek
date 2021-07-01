@@ -97,6 +97,7 @@
     "build:linux": "yarn build:css && yarn build:pegjs && electron-builder -l --publish never",
     "build:appx": "yarn build:css && yarn build:pegjs && electron-builder -w appx --publish never",
     "build:appimage": "yarn build:css && yarn build:pegjs && electron-builder -l AppImage --publish never",
+    "build:css": "sass src/scss/style.scss:src/css/style.css",
     "build:pegjs": "peggy --format es --output src/js/filterlang.mjs src/js/filterlang.pegjs",
     "pack": "yarn build:css && yarn build:pegjs && electron-builder --dir",
     "lint": "eslint --ext .js, src --ext .mjs, src",
