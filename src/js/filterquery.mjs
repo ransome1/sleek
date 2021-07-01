@@ -30,12 +30,12 @@ function runQuery(item, compiledQuery) {
         break;
       case "duestr":
         // match next value (a string) as prefix of ISO date string of due date
+        next = q.shift(); // the string to compare
         if (item.due) {
           // normalize date to have time of midnight in local zone
           // we represent dates as millisec from epoch to simplify comparison
           let d = item.due;
           d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-          next = q.shift(); // the string to compare
           stack.push(d.toISOString().slice(0, 10).startsWith(next));
         } else {
           stack.push(false);  // no due date
