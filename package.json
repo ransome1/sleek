@@ -120,6 +120,7 @@
     "vanillajs-datepicker": "^1.1.4"
   },
   "devDependencies": {
+    "peggy": "^1.2.0",
     "electron": "12.0.10",
     "electron-builder": "^22.11.7",
     "eslint": "^7.25.0",
