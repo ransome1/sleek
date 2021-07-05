@@ -1,0 +1,119 @@
+//  ####################################
+//  BUTTON COLORING
+//  ####################################
+
+.contexts {
+  button,
+  button:hover {
+    background: $sleek-contexts-button;
+    color: darken($sleek-contexts-button, 60%);
+    span.tag {
+      color: white;
+      background: darken($sleek-contexts-button, 55%);
+    }
+  }
+  button:focus-visible,
+  button.is-dark:focus-visible {
+    background: darken($sleek-contexts-button, 55%)!important;
+    color: white;
+  }
+  button.is-dark,
+  button.is-dark:hover,
+  button.is-dark.is-hovered  {
+    background: darken($sleek-contexts-button, 65%);
+    color: white;
+  }
+}
+.projects {
+  button,
+  button:hover {
+    background: $sleek-projects-button;
+    color: darken($sleek-projects-button, 60%);
+    span.tag {
+      color: white;
+      background: darken($sleek-projects-button, 55%);
+    }
+  }
+  button:focus-visible,
+  button.is-dark:focus-visible {
+    background: darken($sleek-projects-button, 55%)!important;
+    color: white;
+  }
+  button.is-dark,
+  button.is-dark:hover,
+  button.is-dark.is-hovered {
+    background: darken($sleek-projects-button, 65%);
+    color: white;
+  }
+}
+.priority {
+  button {
+    height: auto;
+    font-size: 1.2em;
+    font-family: FreeSansBold;
+    background: $mid-grey;
+    //color: $dark-grey;
+    color: white;
+    padding: 0.1em 0.5em!important;
+    span.tag {
+      color: $dark-grey;
+    }
+  }
+  button.is-dark span.tag {
+    //background: darken($mid-grey, 50%);
+  }
+  button.is-dark,
+  button.is-dark:hover,
+  button.is-dark.is-hovered,
+  button:focus-visible {
+    background: darken($mid-grey, 20%);
+    span.tag {
+      //color: $darker-grey!important;
+    }
+  }
+  button.A {
+    background: $has-text-danger;
+    color: lighten($has-text-danger, 35%)!important;
+    span.tag {
+      color: $has-text-danger!important;
+      background: lighten($has-text-danger, 35%);
+    }
+  }
+  button.A.is-dark,
+  button.A:focus-visible {
+    background: darken($has-text-danger, 20%)!important;
+    span.tag {
+      color: darken($has-text-danger, 20%)!important;
+    }
+  }
+  button.B {
+    color: lighten($has-text-attention, 35%)!important;
+    background: $has-text-attention;
+    span.tag {
+      color: $has-text-attention!important;
+      background: lighten($has-text-attention, 30%);
+    }
+  }
+  button.B.is-dark,
+  button.B:focus-visible {
+    background: darken($has-text-attention, 20%)!important;
+    span.tag {
+      color: darken($has-text-attention, 20%)!important;
+    }
+  }
+  button.C {
+    color: lighten($has-text-warning, 35%)!important;
+    background: $has-text-warning;
+    span.tag {
+      color: $has-text-warning!important;
+      background: lighten($has-text-warning, 30%);
+    }
+  }
+  button.C.is-dark,
+  button.C:focus-visible {
+    background: darken($has-text-warning, 20%)!important;
+    span.tag {
+      color: darken($has-text-warning, 20%)!important;
+    }
+  }
+}

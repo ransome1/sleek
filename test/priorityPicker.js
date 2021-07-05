@@ -25,7 +25,7 @@ describe("Priority picker", function () {
 
   it("Todo is clicked and given priority is being pasted in priority picker input field", async () => {
     const modalForm = await app.client.$("#modalForm");
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[2];
     todo.click();
@@ -38,7 +38,7 @@ describe("Priority picker", function () {
 
   it("Todo is clicked, priority 'G' is selected and applied to todo input field", async () => {
     const modalForm = await app.client.$("#modalForm");
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[4];
     todo.click();

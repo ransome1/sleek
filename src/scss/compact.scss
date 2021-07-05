@@ -3,6 +3,36 @@
 //  ####################################
 
 @mixin compact() {
+
+  .inputWrapper {
+    position: relative;
+    padding-top: 0.5em;
+    input[type="search"],
+    input[type="text"] {
+      padding: 1.5em 1em 1.5em 1.5em;
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: $mid-grey;
+    }
+    label {
+      display: none;
+    }
+  }
+
+  #modalForm {
+    textarea {
+      padding: 0.75em;
+    }
+    #modalFormInputResize {
+      top: 1.65em;
+    }
+  }
+
+  .modal.content .modal-card {
+    padding: 1em;
+  }
+
   table tr td {
     padding: 0.25em 1.5em 0.25em 0 !important
   }
@@ -10,12 +40,17 @@
     padding: 0.25em 0.5em;
   }
   #todoTableSearchContainer {
-    padding: 1em;
-    .column {
-      padding: 0;
-      .icon.is-left {
-        top: 0;
-        left: 0;
+    input[type="search"]::-webkit-search-cancel-button {
+      margin-top: 0;
+    }
+    i.fa-search,
+    .todoTableSearchQuestionmark {
+      top: 0.65em;
+    }
+    #todoTableSearchAddTodo {
+      top: 2.2em;
+      i {
+        display: none;
       }
     }
   }
@@ -46,27 +81,28 @@
   }
   nav ul {
     width: 3.5em;
-    li {
+    li a,
+    li.logo {
       width: 3.5em;
       height: 3.5em;
       line-height: 3.5em;
     }
   }
   #autoCompleteContainer,
-  .drawer {
+  #drawerContainer .drawer {
     padding: 1.5em;
     .is-4 {
       font-size: 1.1em;
     }
     .priority {
-      .button {
+      button {
         font-size: 1em;
       }
     }
-    .button {
+    button {
       font-size: 0.9em;
       margin: 0 0.3em 0.3em 0!important;
-      padding: 0.25em 0.6em;
+      padding: 0.5em 0.7em;
       .tag {
         width: auto;
         height: auto;

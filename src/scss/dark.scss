@@ -2,21 +2,16 @@
 @import "variables.scss";
 body.dark {
   background-color: $almost-black;
-  color: $lighter-grey;
+  color: $almost-white;
   code, pre {
     background-color: $almost-black!important;
   }
-  a {
-    color: white;
-  }
-  button:focus-visible,
-  a:focus-visible {
-    outline: 2px solid $lighter-grey!important;
-  }
   a:hover,
-  button:hover,
+  a:focus-visible {
+    color: $has-text-link;
+  }
   strong {
-    color: $lighter-grey;
+    color: $almost-white;
   }
   input,
   select {
@@ -25,27 +20,23 @@ body.dark {
     color: white!important;
   }
   input[type="text"],
+  input[type="search"],
   textarea {
     background: $darker-grey!important;
     border: none;
     color: white;
   }
-
-  //TODO reactivate
-  // input[type="search"]::-webkit-search-cancel-button {
-  //   background-color: white;
-  //   -webkit-mask-image: url("../img/svg/times-circle.svg");
-  //   mask-image: url("../img/svg/times-circle.svg");
-  // }
-  input:active,
   input:focus,
-  input.is-focused,
-  select:focus,
-  textarea:active,
-  textarea:focus,
-  input[type="search"]:focus {
-    outline: none!important;
-    box-shadow: 0 0 0 2px $lighter-grey!important;
+  select:focus {
+    background-color: $darker-grey!important;
+  }
+  .is-focused .inputWrapper,
+  .inputWrapper.is-focused {
+    label,
+    i.fa-search,
+    .todoTableSearchQuestionmark i {
+      color: $almost-white!important;
+    }
   }
   input::placeholder {
     color: $dark-grey!important;
@@ -58,32 +49,18 @@ body.dark {
   input[type="range"] {
     background: $dark-grey!important;
   }
+  input[type="range"]::-webkit-slider-thumb {
+    background: $almost-white;
+  }
   button {
-    color: white!important;
-    background: transparent!important;
+    color: $almost-white;
+    background: $almost-black;
     i {
-      color: $lighter-grey!important;
+      color: $almost-white;
     }
-  }
-  button.is-link,
-  .button.is-link:hover {
-    background-color: $darker-grey!important;
-    svg {
-      color: inherit!important;
-    }
-  }
-  .button[disabled],
-  fieldset[disabled] {
-    background-color: transparent;
-  }
-  button.is-outlined:hover {
-    background: $even-darker-grey!important;
   }
   ::after {
-    border-color: white!important;
-  }
-  svg {
-    color: white;
+    border-color: $almost-white!important;
   }
   table {
     width: 100%;
@@ -99,10 +76,25 @@ body.dark {
   table.files {
     tr {
       td:last-child {
-        i {
-          color: white;
+        a,
+        a:hover {
+          color: $almost-white!important;
+        }
+        a:focus-visible {
+          color: $almost-black!important;
         }
       }
+    }
+    button {
+      color: $almost-white;
+      background: $almost-black;
+    }
+    button:focus-visible {
+      color: $almost-black!important;
+      background: $almost-white!important;
+    }
+    button:disabled {
+      opacity: 0.5;
     }
   }
   nav {
@@ -112,20 +104,21 @@ body.dark {
     }
     ul {
       li.logo {
+        color: $almost-white!important;
         background: none;
       }
-      li {
-        color: $lighter-grey;
+      li a {
+        color: $almost-white!important;
         border-bottom: 1px solid $even-darker-grey;
       }
-      li:hover,
-      li:focus {
-        color: $lighter-grey;
+      li a:hover,
+      li a:focus {
+        color: $lighter-grey!important;
         border-bottom: none;
         background-color: $even-darker-grey;
       }
-      li.is-highlighted {
-        color: $lighter-grey;
+      li a.is-highlighted {
+        color: $lighter-grey!important;
         border-bottom: none;
         background-color: $even-darker-grey;
       }
@@ -143,9 +136,21 @@ body.dark {
   }
   #todoTableSearchContainer {
     background-color: $almost-black;
-    .icon.is-left i,
-    .icon.is-right i {
-      color: $dark-grey;
+    input[type="search"]::-webkit-search-cancel-button {
+      background-color: $almost-white;
+    }
+    #todoTableSearchAddTodo {
+      background: $lighter-grey!important;
+      color: $almost-black!important;
+      i {
+        color: inherit;
+      }
+    }
+    #todoTableSearchAddTodo:hover,
+    #todoTableSearchAddTodo:focus,
+    #todoTableSearchAddTodo:focus-visible {
+      color: $almost-black!important;
+      background: white!important;
     }
     #btnToggleViewContainer {
       background: transparent!important;
@@ -153,8 +158,10 @@ body.dark {
   }
   #resultStats {
     .tag {
-      background-color: $even-darker-grey!important;
       color: $lighter-grey!important;
+      strong {
+        color: white!important;
+      }
     }
   }
   #todoTable {
@@ -163,26 +170,41 @@ body.dark {
     }
     .todo:hover .cell,
     .todo.due {
-      .button {
+      button {
         color: $almost-white;
       }
     }
     .group.due {
       color: $light-grey;
-      .button {
+      button {
         color: inherit;
       }
     }
     .todo {
       border-color: $even-darker-grey;
-      .checkbox a {
-        color: $lighter-grey;
+      .cell.checkbox {
+        a {
+          color: $has-text-link;
+          font-size: 1.25em;
+        }
+        a:focus-visible {
+          color: white!important;
+        }
+        a:hover {
+          color: white!important;
+        }
       }
-      .checkbox a:hover {
-        color: white;
+      .cell.checkbox,
+      .cell.archive {
+        a:focus-visible {
+          color: $lighter-grey!important;
+        }
       }
-      .cell.text {
-        color: $lighter-grey;
+      a.cell.text {
+        color: $almost-white!important;
+      }
+      a.cell.text:focus-visible {
+        background: $darker-grey!important;
       }
       .cell.itemDueDate {
         color: white;
@@ -225,24 +247,23 @@ body.dark {
     i {
       color: $lighter-grey!important;
     }
-    button {
-      color: white;
-      border-color: $even-darker-grey!important;
-      border-right: 1px solid $almost-black!important;
-      background: transparent!important;
-    }
-    button:hover {
-      color: $lighter-grey!important;
-    }
     .field {
       input,
-      input::placeholder,
-      select,
-      select::placeholder {
+      select {
         color: white!important;
       }
       select option {
         background: $even-darker-grey;
+      }
+    }
+    #autoCompleteContainer {
+      background: $darker-grey;
+      h4 {
+        color: white;
+      }
+      section::-webkit-scrollbar-thumb:window-inactive,
+      section::-webkit-scrollbar-thumb {
+        background: $dark-grey;
       }
     }
   }
@@ -251,9 +272,6 @@ body.dark {
     .radio {
       cursor: pointer;
       background: none!important;
-      color: white!important;
-    }
-    #recurrencePickerInput::placeholder {
       color: white!important;
     }
     .radio:hover {
@@ -266,12 +284,6 @@ body.dark {
       }
     }
   }
-  #autoCompleteContainer {
-    background: $even-darker-grey;
-    h4 {
-      color: $lighter-grey;
-    }
-  }
   #drawerContainer {
     .drawer {
       background: $even-darker-grey!important;
@@ -279,6 +291,23 @@ body.dark {
         color: white;
         i {
           color: $lighter-grey!important;
+        }
+      }
+      button {
+        span.tag {
+          color: $dark-grey;
+        }
+      }
+      #sortByContainer {
+        li {
+          background: $darker-grey;
+          color: white;
+          i {
+            color: $light-grey;
+          }
+        }
+        li.drag-sort-active {
+          border-left: 0.2em solid white;
         }
       }
     }
@@ -289,72 +318,66 @@ body.dark {
     #drawerClose {
       background: $even-darker-grey!important;
     }
-    svg {
-      color: $almost-white!important;
-    }
-    #btnFiltersResetFilters {
-      background: $almost-black!important;
-    }
   }
   #todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
   #todoTableWrapper::-webkit-scrollbar-thumb {
     background: $even-darker-grey;
   }
-  #filterContext {
+  #filterContext,
+  #todoContext {
+    box-shadow: 0 0 1em $darker-grey!important;
+    a {
+      color: $almost-white!important;
+    }
+    a:hover {
+      color: $lighter-grey!important;
+      background: $darker-grey!important;
+    }
     .card {
       background: $even-darker-grey;
-      #filterContextSave {
-        background-color: transparent!important;
-        border-right: 1px solid $almost-black!important;
-      }
-    }
-    .card-footer {
-      border-top: 1px solid $almost-black!important;
-    }
-  }
-  #todoContext {
-    a {
-      color: $lighter-grey;
-    }
-    .dropdown-content {
-      color: white;
-      background-color: $even-darker-grey!important;
-      .dropdown-item:hover {
-        background: $darker-grey;
+      #filterContextDelete {
+        color: $has-text-danger!important;
       }
     }
   }
   .contexts {
-    .button {
+    button {
       color: $sleek-contexts-button;
       background: darken($sleek-contexts-button, 55%);
       span.tag {
-        color: darken($sleek-contexts-button, 65%);
+        color: darken($sleek-contexts-button, 65%)!important;
         background: lighten($sleek-contexts-button, 1%);
       }
     }
-    .button.is-dark  {
-      background: darken($sleek-contexts-button, 65%);
+    button.is-dark,
+    button:focus-visible {
+      background: darken($sleek-contexts-button, 65%)!important;
       color: white;
     }
   }
   .projects {
-    .button {
+    button {
       color: $sleek-projects-button;
       background: darken($sleek-projects-button, 55%);
       span.tag {
-        color: darken($sleek-projects-button, 65%);
+        color: darken($sleek-projects-button, 65%)!important;
         background: lighten($sleek-projects-button, 1%);
       }
     }
-    .button.is-dark {
-      background: darken($sleek-projects-button, 65%);
+    button.is-dark,
+    button:focus-visible {
+      background: darken($sleek-projects-button, 65%)!important;
       color: white;
     }
   }
   .priority {
-    .button {
-      opacity: .9;
+    button:not(.A):not(.B):not(.C) {
+      color: white;
+      background: $mid-grey;
+    }
+    button.is-dark:not(.A):not(.B):not(.C) {
+      color: white;
+      background: darken($mid-grey, 10%)!important;
     }
   }
   .toggle {
@@ -373,24 +396,32 @@ body.dark {
       }
     }
   }
-  .modal {
-    .modal-content {
-      .card {
-        background: $even-darker-grey;
-        color: $lighter-grey;
-        .card-header-title {
-          color: white;
-        }
-        .card-footer,
-        .card-footer-item {
-          border-color: $darker-grey;
-        }
-      }
+
+  .card {
+    background: $even-darker-grey;
+    color: $lighter-grey;
+    .card-footer-item:hover {
+      color: $lighter-grey!important;
+    }
+    .card-footer-item:focus-visible {
+      color: $almost-white!important;
+      background: $darker-grey!important;
+    }
+    .card-footer {
+      border-color: $darker-grey!important;
+    }
+    .card-footer-item {
+      border-color: $darker-grey!important;
+      background: transparent;
+      color: $almost-white!important;
     }
   }
+
   .modal.content {
     color: $lighter-grey!important;
-    .button {
+    button,
+    button,
+    select {
       background: $darker-grey!important;
     }
     .select:not(.is-multiple):not(.is-loading)::after {
@@ -414,6 +445,10 @@ body.dark {
     table {
       background: $even-darker-grey;
       color: $lighter-grey!important;
+      .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+      .modal-card-body::-webkit-scrollbar-thumb {
+        background: $darker-grey;
+      }
     }
     .title,
     table th {
@@ -428,30 +463,12 @@ body.dark {
       border-color: transparent;
     }
     .tabs li a {
-      color: white;
-      border-color: $dark-grey;
-    }
-    .tabs li a:hover {
-      border-color: $lighter-grey;
+      color: white!important;
+      border-color: $dark-grey!important;
     }
     .tabs li.is-active a {
-      color: white;
-      border-color: $lighter-grey;
-    }
-  }
-  #sortByContainer {
-    li {
-      background: $darker-grey;
-      color: white;
-      i {
-        color: $light-grey;
-      }
-    }
-    li:hover {
-
-    }
-    li.drag-sort-active {
-      border-left: 0.2em solid white;
+      color: $has-text-link!important;
+      border-color: $has-text-link!important;
     }
   }
   .message.fixed {
@@ -462,7 +479,7 @@ body.dark {
     .message-body {
       color: $lighter-grey;
       background: $even-darker-grey!important;
-      .button {
+      button {
         background: $darker-grey!important;
       }
     }
@@ -470,14 +487,12 @@ body.dark {
   .dueDate {
     #datePickerInput,
     #datePickerInput::placeholder {
-      color: white!important;
-      background: transparent!important;
       cursor: pointer;
     }
   }
   .datepicker {
     background: transparent;
-    .button {
+    button {
       background: transparent!important;
     }
     .datepicker-cell.today.focused:not(.selected),
@@ -491,13 +506,13 @@ body.dark {
     .datepicker-picker {
       background: $darker-grey;
       color: white;
-      .button,
-      .button:hover,
-      .datepicker-header .datepicker-controls .button:hover {
+      button,
+      button:hover,
+      .datepicker-header .datepicker-controls button:hover {
         background: none;
         color: inherit;
       }
-      .datepicker-footer .datepicker-controls .button {
+      .datepicker-footer .datepicker-controls button {
         color: inherit;
       }
       .datepicker-cell.selected,
@@ -518,6 +533,9 @@ body.dark {
     }
     .subtitle,
     .subtitle strong {
+      color: $lighter-grey;
+    }
+    .btnOnboarding:focus-visible {
       color: $lighter-grey;
     }
   }

@@ -1,0 +1,65 @@
+//  ####################################
+//  TOGGLE
+//  ####################################
+
+.toggle {
+  margin: 0;
+  text-align: center;
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 3.5em;
+    height: 1.93em;
+    .itemText {
+      float: left;
+    }
+    input {
+     opacity: 1;
+     width: 3.5em;
+     height: 1.9375em;
+     background: none;
+    }
+    input:checked + .slider {
+     background-color: $dark-grey;
+    }
+    input:focus {
+      box-shadow: none!important;
+    }
+    input:focus-visible {
+      box-shadow: 0 0 0 2px $has-text-link!important;
+    }
+    input:checked + .slider:before {
+     -webkit-transform: translateX(1.5625em);
+     -ms-transform: translateX(1.5625em);
+     transform: translateX(1.5625em);
+    }
+    .slider {
+     position: absolute;
+     cursor: pointer;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: $mid-grey;
+     -webkit-transition: .4s;
+     transition: .4s;
+    }
+    .slider:before {
+     position: absolute;
+     content: "";
+     height: 1.5625em;
+     width: 1.5625em;
+     left: 0.1875em;
+     bottom: 0.1875em;
+     background-color: white;
+     -webkit-transition: .4s;
+     transition: .4s;
+    }
+    .slider.round {
+     border-radius: 1.875em;
+    }
+    .slider.round:before {
+     border-radius: 50%;
+    }
+  }
+}

@@ -215,7 +215,6 @@ function showContent(id) {
     return Promise.reject(error);
   }
 }
-
 function setFriendlyLanguageNames() {
   try {
     appData.languages.forEach((language) => {

@@ -39,7 +39,7 @@ describe("Todo creation", function () {
     const btnSave = await app.client.$("#btnSave");
     btnSave.click();
 
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[0];
     todo.click({ button: "right" });
@@ -50,11 +50,11 @@ describe("Todo creation", function () {
   })
 
   it("Create todo and use it as template to create a new one, then delete both", async () => {
+    const navBtnAddTodo = await app.client.$("#navBtnAddTodo");
     const todoContextUseAsTemplate = await app.client.$("#todoContextUseAsTemplate");
     const todoContextDelete = await app.client.$("#todoContextDelete");
-    const navBtnAddTodo = await app.client.$("#navBtnAddTodo");
-    const btnSave = await app.client.$("#btnSave");
     const todoContextEdit = await app.client.$("#todoContextEdit");
+    const btnSave = await app.client.$("#btnSave");
 
     await navBtnAddTodo.click();
 
@@ -63,7 +63,7 @@ describe("Todo creation", function () {
 
     await btnSave.click();
 
-    let todoTableContainer = await app.client.$("#todoTableContainer");
+    let todoTableContainer = await app.client.$("#todoTable");
     let todos = await todoTableContainer.$$(".todo");
     let todo = await todos[0];
     await todo.click({ button: "right" });
@@ -74,7 +74,7 @@ describe("Todo creation", function () {
     modalFormInput = await app.client.$("#modalFormInput");
     await btnSave.click();
 
-    todoTableContainer = await app.client.$("#todoTableContainer");
+    todoTableContainer = await app.client.$("#todoTable");
     todos = await todoTableContainer.$$(".todo");
     todo = await todos[1];
     await todo.click({ button: "right" });
@@ -108,27 +108,27 @@ describe("Todo creation", function () {
 
     navBtnAddTodo.click();
 
-    modalFormInput.setValue("test todo, to be archived");
+    await modalFormInput.setValue("test todo, to be archived");
 
     await btnSave.waitForClickable({ timeout: 10000 });
-    btnSave.click();
+    await btnSave.click();
 
-    const checkbox = await app.client.$("#todoTableContainer .todo .checkbox a");
+    const checkbox = await app.client.$("#todoTable .todo .checkbox a");
 
     checkbox.click();
 
-    await navBtnSettings.waitForClickable({ timeout: 10000 });
-    navBtnSettings.click();
+    let todoTableContainer = await app.client.$("#todoTable");
+    const todos = await todoTableContainer.$$(".todo");
 
-    await btnArchiveTodos.waitForClickable({ timeout: 10000 });
-    btnArchiveTodos.click();
+    const archive = await todos[0].$(".archive a");
+    archive.click();
 
     await modalPromptConfirm.waitForClickable({ timeout: 10000 });
     modalPromptConfirm.click();
 
-    const todoTableContainer = await app.client.$("#todoTableContainer");
-    const content = await todoTableContainer.getHTML();
-    if(content!=="<div id=\"todoTableContainer\"></div>") throw new Error("Still todos present")
+    todoTableContainer = await app.client.$("#todoTable");
+    const content = await todoTableContainer.getHTML(false);
+    if(content!=="") throw new Error("Still todos present")
 
   })
 

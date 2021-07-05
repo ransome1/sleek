@@ -24,7 +24,7 @@ describe("Recurrence picker", function () {
 
   it("Recurrence of 'Every 3 months' is set and added to recurrence input", async () => {
     const modalForm = await app.client.$("#modalForm");
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[3];
     todo.click();
@@ -43,7 +43,7 @@ describe("Recurrence picker", function () {
 
   it("Recurrence is set to every 2 week and added to todo input", async () => {
     const modalForm = await app.client.$("#modalForm");
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[3];
     todo.click();

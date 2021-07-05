@@ -7,7 +7,7 @@
   }
   .datepicker-footer {
     background: none;
-    .datepicker-controls .button  {
+    .datepicker-controls button  {
       font-size: 1em;
       background: none;
       border-color: transparent;
@@ -32,11 +32,11 @@
 
 .datepicker-picker {
   display: inline-block;
-  border-radius: 4px;
+  border-radius: $radius;
   background-color: #fff; }
 
 .datepicker-dropdown .datepicker-picker {
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1); }
+  box-shadow: 0 0 1em rgba(10, 10, 10, 0.1), 0 0 1em rgba(10, 10, 10, 0.1); }
 
 .datepicker-picker span {
   display: block;
@@ -85,23 +85,23 @@
 .datepicker-header .datepicker-controls {
   padding: 2px 2px 0; }
 
-.datepicker-header .datepicker-controls .button {
+.datepicker-header .datepicker-controls button {
   border-color: transparent;
   font-weight: 700; }
 
-.datepicker-header .datepicker-controls .button:hover {
+.datepicker-header .datepicker-controls button:hover {
   background-color: #f9f9f9; }
 
-.datepicker-header .datepicker-controls .button:focus:not(:active) {
+.datepicker-header .datepicker-controls button:focus:not(:active) {
   box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.25); }
 
-.datepicker-header .datepicker-controls .button:active {
+.datepicker-header .datepicker-controls button:active {
   background-color: #f2f2f2; }
 
-.datepicker-header .datepicker-controls .button[disabled] {
+.datepicker-header .datepicker-controls button[disabled] {
   box-shadow: none; }
 
-.datepicker-footer .datepicker-controls .button {
+.datepicker-footer .datepicker-controls button {
   margin: calc(.375rem - 1px) 0.375rem;
   border-radius: 2px;
   width: 100%;

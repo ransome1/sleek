@@ -7,12 +7,10 @@ const navBtnAddTodo = document.getElementById("navBtnAddTodo");
 const navBtnHelp = document.getElementById("navBtnHelp");
 const navBtnSettings = document.getElementById("navBtnSettings");
 const navBtnView = document.getElementById("navBtnView");
-const btnTheme = document.getElementById("btnTheme");
 
 navBtnHelp.firstElementChild.setAttribute("title", translations.help);
 navBtnSettings.firstElementChild.setAttribute("title", translations.settings);
 navBtnView.firstElementChild.setAttribute("title", translations.view);
-btnTheme.setAttribute("title", translations.toggleDarkMode);
 
 navBtnAddTodo.onclick = function () {
   show();

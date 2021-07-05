@@ -49,7 +49,7 @@ function configureMatomo() {
     if(typeof userData.showDueIsToday === "boolean")_paq.push(['setCustomDimension', 13, userData.showDueIsToday]);
     if(typeof userData.showDueIsFuture === "boolean")_paq.push(['setCustomDimension', 14, userData.showDueIsFuture]);
     if(typeof userData.showDueIsPast === "boolean")_paq.push(['setCustomDimension', 15, userData.showDueIsPast]);
-    if(userData.sortBy)_paq.push(['setCustomDimension', 16, userData.sortBy]);
+    if(userData.sortBy)_paq.push(['setCustomDimension', 16, userData.sortBy.join(", ")]);
     if(userData.zoom)_paq.push(['setCustomDimension', 17, userData.zoom]);
     if(appData.channel)_paq.push(['setCustomDimension', 18, appData.channel]);
     if(typeof userData.tray === "boolean")_paq.push(['setCustomDimension', 19, userData.tray]);

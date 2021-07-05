@@ -6,7 +6,7 @@ import { getHandleElement, startDragging } from "./drawer_handle.mjs";
 const drawerContainer = document.getElementById("drawerContainer");
 const navBtnFilter = document.getElementById("navBtnFilter");
 const navBtnView = document.getElementById("navBtnView");
-const drawers = document.querySelectorAll("nav ul li.drawerTrigger");
+const drawers = document.querySelectorAll("nav ul li a.drawerTrigger");
 
 if(userData.filterDrawer) {
   show(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {

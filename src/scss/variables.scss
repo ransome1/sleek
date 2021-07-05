@@ -2,11 +2,11 @@
 $has-text-grey-light: hsl(0, 0%, 71%);
 $has-text-link: hsl(217, 71%, 53%);
 
-$almost-white: #f5f5f5;
+$almost-white: #f0f0f0;
 $lighter-grey: #CCCDCF;
 $light-grey: #ebebeb;
 $mid-grey: #ccc;
-$dark-grey: #4a4a4a;
+$dark-grey: #5a5a5a;
 $darker-grey: #2d2d2d;
 $even-darker-grey: #3B3B3B;
 $almost-black: #212224;
@@ -22,5 +22,8 @@ $sleek-projects-button: #f1d6f1;
 $modal-background-background-color: rgba(0, 0, 0, 0.25);
 $modal-z: 50;
 $family-sans-serif: "FreeSans", Helvetica, "Arial Unicode MS", Arial, "Noto Sans", "DejaVu Sans", "Microsoft JhengHei", "微軟正黑體", "Microsoft YaHei", sans-serif;
+
+$radius: 0.65em;
+$card-radius: $radius;
 
 $modal-content-width: 900px;

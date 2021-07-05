@@ -1,0 +1,220 @@
+//  ####################################
+//  PROMPT
+//  ####################################
+
+#modalPrompt {
+  z-index: 60;
+  .modal-content {
+    width: 20em;
+  }
+}
+
+//  ####################################
+//  GENERAL MODAL
+//  ####################################
+
+.modal.is-active {
+  display: flex!important;
+}
+.modal.content {
+  z-index: 60;
+  margin: 0 !important;
+  .title.is-3 {
+    font-family: "FreeSansBold";
+    font-size: 1.7em;
+    font-weight: normal;
+  }
+  p {
+    display: block;
+    margin: 1em 0;
+  }
+  img {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+  }
+  ul {
+    margin-left: 0;
+    border: none;
+  }
+  select {
+    background: white!important;
+  }
+  .delete,
+  .modal-close {
+    background: $has-text-link !important;
+    color: $has-text-link !important;
+    z-index: 60;
+    position: absolute !important;
+  }
+  .modal-card {
+    z-index: 60;
+    background: $light-grey;
+    padding: 0 2em 2em 2em;
+    max-height: calc(100vh - 5em);
+    border-radius: $radius;
+  }
+  .modal-background {
+    z-index: 55;
+  }
+  .modal-card-body {
+    background: none;
+    display: none;
+    ul li a {
+      text-decoration: underline;
+    }
+    table.settings {
+      tr {
+        td {
+          padding-top: 1em!important;
+          .alert {
+            position: absolute;
+            top: 1em;
+            left: -.8em;
+          }
+        }
+        td:nth-child(odd) {
+          width: auto;
+          vertical-align: middle;
+        }
+        td:nth-child(even) {
+          width: auto;
+          text-align: center;
+          padding-right: 0 !important;
+        }
+      }
+    }
+    table.settings tr td:first-child {
+      padding-right: 3em;
+    }
+    table.settings tr td:last-child {
+      width: 25%;
+    }
+    table.shortcuts {
+      th:nth-child(2),
+      th:nth-child(3) {
+        width: 13em;
+      }
+      tr:last-child {
+        border: none;
+      }
+      td {
+        .tag {
+          font-size: 1em !important;
+        }
+      }
+    }
+  }
+  .modal-card-body::-webkit-scrollbar {
+    background-color: transparent;
+    width: .8em
+  }
+  .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+  .modal-card-body::-webkit-scrollbar-thumb {
+    background: $mid-grey;
+    border-radius: 5px;
+  }
+  .arrow {
+    text-align:center;
+    margin: 1em 0;
+  }
+  .card {
+    display: block; margin: 0 auto;
+  }
+  .tabs {
+    display: flex;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    li a {
+      color: $dark-grey!important;
+      border-color: $mid-grey!important;
+      border-width: 2px;
+      margin-bottom: 0;
+    }
+    li.is-active a {
+      color: $has-text-link!important;
+      border-color: $has-text-link!important;
+    }
+  }
+}
+
+
+#modalForm[open]:not(:focus-within) {
+  background-color: rgb(255, 255, 254);
+  transition: background-color 0.01s;
+}
+#modalForm {
+  #modalFormInput {
+    z-index: 60;
+    padding-right: 3em;
+  }
+  textarea {
+    min-height: 5.5em;
+    overflow: hidden;
+    resize: none;
+    padding-top: 1.5em;
+  }
+  #modalFormInputResize {
+    position: absolute;
+    z-index: 60;
+    top: 1.75em;
+    right: 1.2em;
+    cursor: pointer;
+    pointer-events: all;
+    i {
+      font-size: 1.2em;
+      color: $has-text-link;
+    }
+  }
+  .icon {
+    color: $has-text-link;
+  }
+  .field {
+    width: auto;
+    float: left;
+    margin: .5em .5em .5em 0;
+  }
+  .message {
+    display: none;
+    margin: 1em 0 0 0;
+  }
+  #autoCompleteContainer {
+    position: fixed;
+    display: none;
+    z-index: 50;
+    padding: 3.5em 1.5em 0.75em 1.5em;
+    border-radius: 0;
+    border-bottom-right-radius: $radius;
+    border-bottom-left-radius: $radius;
+    background: $almost-white;
+    section {
+      max-height: 25em;
+      overflow-y: scroll;
+      margin: 0;
+      button {
+        margin: 0 .5rem .5rem 0;
+      }
+      // button:focus-visible {
+      //   background: white!important;
+      // }
+    }
+    section::-webkit-scrollbar {
+      background-color: transparent;
+      width: .8em
+    }
+    section::-webkit-scrollbar-thumb:window-inactive,
+    section::-webkit-scrollbar-thumb {
+      background: $mid-grey;
+      border-radius: 5px;
+    }
+    h4 {
+      font-family: "FreeSansBold";
+      font-size: 1.25em;
+      margin: 0 0 0.75em 0;
+    }
+  }
+  #autoCompleteContainer.card {
+    height: auto;
+    overflow: auto;
+  }
+}

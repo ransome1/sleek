@@ -1,6 +1,6 @@
 export function createModalJail(modal) {
   // add all the elements inside modal which you want to make focusable
-  const focusableElements = 'a.button, [tabindex]:not([tabindex="-1"])';
+  const focusableElements = '[tabindex]:not([tabindex="-1"])';
   const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
   const focusableContent = modal.querySelectorAll(focusableElements);
   const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
