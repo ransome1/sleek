@@ -50,7 +50,7 @@
     width: 2.5em;
     height: 2.5em;
     display: none;
-    line-height: 2.5em;
+    line-height: 1.5em;
     text-align: center;
     font-size: 1.25em;
     position: absolute;
@@ -96,16 +96,23 @@
         border-left: 0.2em solid $has-text-link;
       }
     }
+    .priority {
+      button {
+        font-size: 1.4em;
+      }
+    }
     button {
       position: relative;
       margin: 0 .5rem .5rem 0;
       padding: 0.5em 0.75em;
       span.tag {
+        height: 1.6em;
         font-family: FreeSansBold;
         position: absolute;
         right: -.75em;
         top: -.75em;
         z-index: 35;
+        padding: 0 0.5em;
       }
     }
     button.is-greyed-out {

@@ -15,7 +15,8 @@ contextBridge.exposeInMainWorld(
         "copyToClipboard",
         "update-badge",
         "triggerFunction",
-        "restart"
+        "restart",
+        "setTheme"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -29,7 +30,8 @@ contextBridge.exposeInMainWorld(
         "userData",
         "appData",
         "refresh",
-        "triggerFunction"
+        "triggerFunction",
+        "setTheme"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.on(channel, (event, ...args) => func(...args));

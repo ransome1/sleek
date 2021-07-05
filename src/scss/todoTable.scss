@@ -142,14 +142,17 @@
     a {
       font-size: 1.25em;
     }
+  }
+  .cell.checkbox,
+  .cell.archive {
     a:focus-visible {
       color: $almost-black!important;
     }
   }
-  .cell.text {
+  a.cell.text {
     width: auto;
     flex: 1;
-    color: $dark-grey;
+    color: $dark-grey!important;
     .categories {
       margin-right: .5em;
     }

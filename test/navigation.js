@@ -35,20 +35,6 @@ describe("Navigation", function () {
     }, 1000);
   })
 
-  it("Theme is switched to dark and back to light", async () => {
-    let themeLink = await app.client.$("#themeLink");
-    const btnTheme = await app.client.$("#btnTheme");
-    await btnTheme.waitForClickable({ timeout: 10000 });
-    btnTheme.click();
-    let body = await app.client.$("body");
-    let bodyClassList = await body.getAttribute("class");
-    if(bodyClassList.search("dark")===-1) throw new Error("Could not switch to dark theme");
-    btnTheme.click();
-    body = await app.client.$("body");
-    bodyClassList = await body.getAttribute("class");
-    if(bodyClassList.search("dark")!==-1) throw new Error("Could not switch to light theme");
-  })
-
   it("Filter sidebar is being opened and closed", async () => {
     const navBtnFilter = await app.client.$("#navBtnFilter a");
     let filterDrawer = await app.client.$("#filterDrawer");

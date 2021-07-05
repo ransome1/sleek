@@ -24,7 +24,7 @@ describe("Add/Edit window", function () {
 
   it("Todo is clicked and value in input field is set accordingly", async () => {
     const modalForm = await app.client.$("#modalForm");
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[8];
     setTimeout(async () => {

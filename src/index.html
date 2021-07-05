@@ -28,7 +28,6 @@
             <li><a href="#" id="navBtnFilter" class="drawerTrigger" data-drawer="filterDrawer" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li><a href="#" id="navBtnView" class="drawerTrigger" data-drawer="viewDrawer"tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
             <li><a href="#" id="btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
-            <li><a href="#" id="btnTheme" tabindex="-1"><i class="fas fa-adjust"></i></a></li>
           </ul>
           <ul>
             <li><a href="#" id="navBtnSettings" tabindex="-1"><i class="fas fa-cog"></i></a></li>
@@ -178,7 +177,7 @@
                 </table>
               </div>
             </section>
-            <a href="#" id="drawerClose" tabindex="0"><i class="fas fa-chevron-left"></i></a>
+            <button id="drawerClose" tabindex="0"><i class="fas fa-chevron-left"></i></button>
             <div id="handle"></div>
           </div>
         </nav>
@@ -188,10 +187,11 @@
       <div id="todoTableWrapper" class="column content">
 
         <section id="todoTableSearchContainer" class="inputWrapper">
+          <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
           <i class="fas fa-search"></i>
           <label id="todoTableSearchLabel" for="todoTableSearch"></label>
           <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
-          <a href="#" id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;Add as new todo</a>
+          <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;Add as todo</button>
           <section id="resultStats">
             <span class="tag"></span>
           </section>

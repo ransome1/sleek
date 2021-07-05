@@ -102,7 +102,7 @@
     "pack": "yarn build:css && yarn build:pegjs && electron-builder --dir",
     "lint": "eslint --ext .js, src --ext .mjs, src",
     "test": "mocha --timeout 10000",
-    "test1": "mocha ./test/onboarding.js --timeout 10000",
+    "test1": "mocha ./test/createTodos.js --timeout 10000",
     "sass": "sass -w src/scss/style.scss:src/css/style.css",
     "start": "yarn sass & electron ."
   },

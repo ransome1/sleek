@@ -22,7 +22,6 @@ const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreate
 const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const btnSave = document.getElementById("btnSave");
-const btnTheme = document.getElementById("btnTheme");
 const errorContainer = document.getElementById("errorContainer");
 const errorContainerClose = document.getElementById("errorContainerClose");
 const errorMessage = document.getElementById("errorMessage");
@@ -325,21 +324,6 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Message", "Click on Settings"]);
     }
-    btnTheme.onclick = function() {
-			setTheme(true);
-      // trigger matomo event
-      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Menu", "Click on Theme"])
-    }
-    // btnArchiveTodos.onclick = function() {
-    //   // abort when onboarding is shown
-    //   if(onboarding) return false;
-    //   // abort when no completed todos are present
-    //   if(todos.items.complete.length===0) return false;
-    //   // handle user confirmation and pass callback function
-    //   getConfirmation(todos.archiveTodos, translations.archivingPrompt);
-    //   // trigger matomo event
-    //   if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Setting", "Click on Archive"])
-    // }
     btnFilesCreateTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "create");
       // trigger matomo event
@@ -635,6 +619,7 @@ function setTheme(switchTheme) {
         theme = "light";
         break;
       }
+      window.api.send("setTheme", theme);
       setUserData("theme", theme);
     }
     switch (theme) {

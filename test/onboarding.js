@@ -62,13 +62,6 @@ describe("Onboarding", function () {
 
   })
 
-  it("Theme button is clickable", async () => {
-
-    const btnTheme = await app.client.$("#btnTheme");
-    await btnTheme.waitForClickable({ timeout: 3000 });
-
-  })
-
   it("File button is clickable", async () => {
 
     const btnOpenTodoFile = await app.client.$("#btnOpenTodoFile");

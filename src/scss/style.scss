@@ -25,6 +25,12 @@ body {
 body::-webkit-scrollbar {
   display: none;
 }
+a,
+a:hover,
+a:active,
+a:focus {
+  color: $has-text-link!important;
+}
 
 //  ####################################
 //  GENERIC
@@ -44,7 +50,6 @@ body::-webkit-scrollbar {
 
 .card {
   box-shadow: 0 0 1em $mid-grey;
-  //box-shadow: none!important;
 }
 
 .card-footer {
@@ -62,7 +67,7 @@ body::-webkit-scrollbar {
     border-bottom-right-radius: $radius;
   }
   .card-footer-item:focus-visible {
-    color: $almost-black!important;
+    color: $dark-grey!important;
     background-color: $almost-white!important;
   }
 }
@@ -97,6 +102,7 @@ button:disabled,
 button.is-greyed-out {
   cursor: not-allowed;
   filter: grayscale(100%);
+  opacity: 0.6;
 }
 
 //  ####################################
@@ -141,14 +147,23 @@ textarea {
     position: absolute;
     top: 1.3em;
     left: 2.5em;
-    z-index: 70;
+    z-index: 65;
+  }
+  .todoTableSearchQuestionmark {
+    display: none;
   }
 }
 .is-focused .inputWrapper,
 .inputWrapper.is-focused {
   label,
-  i.fa-search {
+  i {
     color: $has-text-link;
+  }
+  .fa-search {
+    display: none;
+  }
+  .todoTableSearchQuestionmark {
+    display: block;
   }
 }
 
@@ -175,7 +190,6 @@ input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   background: $dark-grey;
   border-radius: $radius;
-  box-shadow: 0 0 1em white;
 }
 
 //  ####################################
@@ -209,6 +223,7 @@ table.files {
     }
     td:last-child {
       a {
+        font-size: 1.2em;
         padding: 0.5em;
         color: $has-text-link;
         cursor: pointer;
@@ -223,7 +238,7 @@ table.files {
     background: $has-text-link;
   }
   button:disabled {
-    color: $mid-grey;
+    color: $dark-grey;
     background: $almost-white;
   }
 }
