@@ -19,10 +19,6 @@
 .modal.content {
   z-index: 60;
   margin: 0 !important;
-  // .title.is-4 {
-  //   font-size: 1.2em;
-  //   margin:1em 0 0.5em 0;
-  // }
   .title.is-3 {
     font-family: "FreeSansBold";
     font-size: 1.7em;
@@ -128,9 +124,16 @@
   .tabs {
     display: flex;
     flex-shrink: 0;
+    margin-bottom: 0;
     li a {
+      color: $dark-grey!important;
+      border-color: $mid-grey!important;
       border-width: 2px;
       margin-bottom: 0;
+    }
+    li.is-active a {
+      color: $has-text-link!important;
+      border-color: $has-text-link!important;
     }
   }
 }

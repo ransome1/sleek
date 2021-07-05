@@ -1,17 +1,17 @@
 @charset "UTF-8";
 body.dark {
   background-color: #212224;
-  color: #CCCDCF;
+  color: #f0f0f0;
 }
 body.dark code, body.dark pre {
   background-color: #212224 !important;
 }
-body.dark a {
-  color: white;
-}
 body.dark a:hover,
+body.dark a:focus-visible {
+  color: #3273dc;
+}
 body.dark strong {
-  color: #CCCDCF !important;
+  color: #f0f0f0;
 }
 body.dark input,
 body.dark select {
@@ -32,9 +32,11 @@ body.dark select:focus {
 }
 body.dark .is-focused .inputWrapper label,
 body.dark .is-focused .inputWrapper i.fa-search,
+body.dark .is-focused .inputWrapper .todoTableSearchQuestionmark i,
 body.dark .inputWrapper.is-focused label,
-body.dark .inputWrapper.is-focused i.fa-search {
-  color: #f5f5f5;
+body.dark .inputWrapper.is-focused i.fa-search,
+body.dark .inputWrapper.is-focused .todoTableSearchQuestionmark i {
+  color: #f0f0f0 !important;
 }
 body.dark input::placeholder {
   color: #5a5a5a !important;
@@ -48,31 +50,17 @@ body.dark input[type=range] {
   background: #5a5a5a !important;
 }
 body.dark input[type=range]::-webkit-slider-thumb {
-  background: #f5f5f5;
-  box-shadow: 0 0 1em #212224;
+  background: #f0f0f0;
 }
 body.dark button {
-  color: #f5f5f5;
-  background: #2d2d2d;
+  color: #f0f0f0;
+  background: #212224;
 }
 body.dark button i {
-  color: #CCCDCF;
-}
-body.dark button:focus-visible {
-  color: white;
-  background: #5a5a5a;
-}
-body.dark button:disabled {
-  opacity: 0.5;
-}
-body.dark button.is-outlined:hover {
-  background: #3B3B3B !important;
+  color: #f0f0f0;
 }
 body.dark ::after {
-  border-color: white !important;
-}
-body.dark svg {
-  color: white;
+  border-color: #f0f0f0 !important;
 }
 body.dark table {
   width: 100%;
@@ -85,15 +73,20 @@ body.dark table tr td {
 body.dark table tr th {
   color: white !important;
 }
-body.dark table.files tr td:last-child a {
-  color: white;
+body.dark table.files tr td:last-child a,
+body.dark table.files tr td:last-child a:hover {
+  color: #f0f0f0 !important;
 }
 body.dark table.files tr td:last-child a:focus-visible {
   color: #212224 !important;
 }
 body.dark table.files button {
-  color: #f5f5f5;
+  color: #f0f0f0;
   background: #212224;
+}
+body.dark table.files button:focus-visible {
+  color: #212224 !important;
+  background: #f0f0f0 !important;
 }
 body.dark table.files button:disabled {
   opacity: 0.5;
@@ -105,20 +98,21 @@ body.dark nav svg {
   color: #CCCDCF;
 }
 body.dark nav ul li.logo {
+  color: #f0f0f0 !important;
   background: none;
 }
 body.dark nav ul li a {
-  color: #CCCDCF;
+  color: #f0f0f0 !important;
   border-bottom: 1px solid #3B3B3B;
 }
 body.dark nav ul li a:hover,
 body.dark nav ul li a:focus {
-  color: #CCCDCF;
+  color: #CCCDCF !important;
   border-bottom: none;
   background-color: #3B3B3B;
 }
 body.dark nav ul li a.is-highlighted {
-  color: #CCCDCF;
+  color: #CCCDCF !important;
   border-bottom: none;
   background-color: #3B3B3B;
 }
@@ -132,23 +126,20 @@ body.dark #todoTableSearchContainer {
   background-color: #212224;
 }
 body.dark #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
 }
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo {
-  background: #CCCDCF;
-  color: #212224;
+  background: #CCCDCF !important;
+  color: #212224 !important;
+}
+body.dark #todoTableSearchContainer #todoTableSearchAddTodo i {
+  color: inherit;
 }
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo:hover,
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo:focus,
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
   color: #212224 !important;
-  background: #f5f5f5;
-}
-body.dark #todoTableSearchContainer #todoTableSearch.is-valid-query {
-  color: #10cf10 !important;
-}
-body.dark #todoTableSearchContainer #todoTableSearch.is-previous-query {
-  color: #cfa010 !important;
+  background: white !important;
 }
 body.dark #todoTableSearchContainer #btnToggleViewContainer {
   background: transparent !important;
@@ -164,7 +155,7 @@ body.dark #todoTable .todo#previousItem.is-highlighted {
 }
 body.dark #todoTable .todo:hover .cell button,
 body.dark #todoTable .todo.due button {
-  color: #f5f5f5;
+  color: #f0f0f0;
 }
 body.dark #todoTable .group.due {
   color: #ebebeb;
@@ -176,7 +167,7 @@ body.dark #todoTable .todo {
   border-color: #3B3B3B;
 }
 body.dark #todoTable .todo .cell.checkbox a {
-  color: #CCCDCF;
+  color: #3273dc;
   font-size: 1.25em;
 }
 body.dark #todoTable .todo .cell.checkbox a:focus-visible {
@@ -185,10 +176,14 @@ body.dark #todoTable .todo .cell.checkbox a:focus-visible {
 body.dark #todoTable .todo .cell.checkbox a:hover {
   color: white !important;
 }
-body.dark #todoTable .todo .cell.text {
-  color: #CCCDCF;
+body.dark #todoTable .todo .cell.checkbox a:focus-visible,
+body.dark #todoTable .todo .cell.archive a:focus-visible {
+  color: #CCCDCF !important;
 }
-body.dark #todoTable .todo .cell.text:focus-visible {
+body.dark #todoTable .todo a.cell.text {
+  color: #f0f0f0 !important;
+}
+body.dark #todoTable .todo a.cell.text:focus-visible {
   background: #2d2d2d !important;
 }
 body.dark #todoTable .todo .cell.itemDueDate {
@@ -227,9 +222,7 @@ body.dark #modalForm i {
   color: #CCCDCF !important;
 }
 body.dark #modalForm .field input,
-body.dark #modalForm .field input::placeholder,
-body.dark #modalForm .field select,
-body.dark #modalForm .field select::placeholder {
+body.dark #modalForm .field select {
   color: white !important;
 }
 body.dark #modalForm .field select option {
@@ -249,9 +242,6 @@ body.dark #recurrencePicker #recurrencePickerInput,
 body.dark #recurrencePicker .radio {
   cursor: pointer;
   background: none !important;
-  color: white !important;
-}
-body.dark #recurrencePicker #recurrencePickerInput::placeholder {
   color: white !important;
 }
 body.dark #recurrencePicker .radio:hover {
@@ -292,27 +282,21 @@ body.dark #drawerContainer .drawer::-webkit-scrollbar-thumb {
 body.dark #drawerContainer #drawerClose {
   background: #3B3B3B !important;
 }
-body.dark #drawerContainer svg {
-  color: #f5f5f5 !important;
-}
-body.dark #drawerContainer #btnFiltersResetFilters {
-  background: #212224 !important;
-}
 body.dark #todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
 body.dark #todoTableWrapper::-webkit-scrollbar-thumb {
   background: #3B3B3B;
 }
 body.dark #filterContext,
 body.dark #todoContext {
-  box-shadow: 0 0 1em #212224 !important;
+  box-shadow: 0 0 1em #2d2d2d !important;
 }
 body.dark #filterContext a,
 body.dark #todoContext a {
-  color: #f5f5f5;
+  color: #f0f0f0 !important;
 }
 body.dark #filterContext a:hover,
 body.dark #todoContext a:hover {
-  color: #CCCDCF;
+  color: #CCCDCF !important;
   background: #2d2d2d !important;
 }
 body.dark #filterContext .card,
@@ -349,8 +333,13 @@ body.dark .projects button:focus-visible {
   background: #5c1f5c !important;
   color: white;
 }
-body.dark .priority button {
-  opacity: 0.9;
+body.dark .priority button:not(.A):not(.B):not(.C) {
+  color: white;
+  background: #ccc;
+}
+body.dark .priority button.is-dark:not(.A):not(.B):not(.C) {
+  color: white;
+  background: #b3b3b3 !important;
 }
 body.dark .toggle .switch .slider {
   background-color: #5a5a5a;
@@ -369,10 +358,10 @@ body.dark .card {
   color: #CCCDCF;
 }
 body.dark .card .card-footer-item:hover {
-  color: #CCCDCF;
+  color: #CCCDCF !important;
 }
 body.dark .card .card-footer-item:focus-visible {
-  color: #f5f5f5 !important;
+  color: #f0f0f0 !important;
   background: #2d2d2d !important;
 }
 body.dark .card .card-footer {
@@ -381,7 +370,7 @@ body.dark .card .card-footer {
 body.dark .card .card-footer-item {
   border-color: #2d2d2d !important;
   background: transparent;
-  color: #f5f5f5 !important;
+  color: #f0f0f0 !important;
 }
 body.dark .modal.content {
   color: #CCCDCF !important;
@@ -413,6 +402,12 @@ body.dark .modal.content table {
   background: #3B3B3B;
   color: #CCCDCF !important;
 }
+body.dark .modal.content .modal-card .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+body.dark .modal.content .modal-card .modal-card-body::-webkit-scrollbar-thumb,
+body.dark .modal.content table .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+body.dark .modal.content table .modal-card-body::-webkit-scrollbar-thumb {
+  background: #2d2d2d;
+}
 body.dark .modal.content .title,
 body.dark .modal.content table th {
   color: white;
@@ -426,15 +421,12 @@ body.dark .modal.content .tabs ul {
   border-color: transparent;
 }
 body.dark .modal.content .tabs li a {
-  color: white;
-  border-color: #5a5a5a;
-}
-body.dark .modal.content .tabs li a:hover {
-  border-color: #CCCDCF;
+  color: white !important;
+  border-color: #5a5a5a !important;
 }
 body.dark .modal.content .tabs li.is-active a {
-  color: white;
-  border-color: #CCCDCF;
+  color: #3273dc !important;
+  border-color: #3273dc !important;
 }
 body.dark .message.fixed {
   background: transparent !important;
@@ -528,6 +520,13 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+a,
+a:hover,
+a:active,
+a:focus {
+  color: #3273dc !important;
+}
+
 .is-active {
   display: block !important;
 }
@@ -560,8 +559,8 @@ body::-webkit-scrollbar {
   border-bottom-right-radius: 0.65em;
 }
 .card-footer .card-footer-item:focus-visible {
-  color: #212224 !important;
-  background-color: #f5f5f5 !important;
+  color: #5a5a5a !important;
+  background-color: #f0f0f0 !important;
 }
 
 button {
@@ -594,6 +593,7 @@ button:disabled,
 button.is-greyed-out {
   cursor: not-allowed;
   filter: grayscale(100%);
+  opacity: 0.6;
 }
 
 input,
@@ -612,7 +612,7 @@ input[type=text],
 input[type=search],
 textarea {
   border-radius: 1.5em;
-  background-color: #f5f5f5 !important;
+  background-color: #f0f0f0 !important;
 }
 
 .inputWrapper {
@@ -637,14 +637,25 @@ textarea {
   position: absolute;
   top: 1.3em;
   left: 2.5em;
-  z-index: 70;
+  z-index: 65;
+}
+.inputWrapper .todoTableSearchQuestionmark {
+  display: none;
 }
 
 .is-focused .inputWrapper label,
-.is-focused .inputWrapper i.fa-search,
+.is-focused .inputWrapper i,
 .inputWrapper.is-focused label,
-.inputWrapper.is-focused i.fa-search {
+.inputWrapper.is-focused i {
   color: #3273dc;
+}
+.is-focused .inputWrapper .fa-search,
+.inputWrapper.is-focused .fa-search {
+  display: none;
+}
+.is-focused .inputWrapper .todoTableSearchQuestionmark,
+.inputWrapper.is-focused .todoTableSearchQuestionmark {
+  display: block;
 }
 
 input[type=number] {
@@ -672,7 +683,6 @@ input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   background: #5a5a5a;
   border-radius: 0.65em;
-  box-shadow: 0 0 1em white;
 }
 
 table {
@@ -700,6 +710,7 @@ table.files tr td:first-child {
   text-align: center;
 }
 table.files tr td:last-child a {
+  font-size: 1.2em;
   padding: 0.5em;
   color: #3273dc;
   cursor: pointer;
@@ -712,8 +723,8 @@ table.files button {
   background: #3273dc;
 }
 table.files button:disabled {
-  color: #ccc;
-  background: #f5f5f5;
+  color: #5a5a5a;
+  background: #f0f0f0;
 }
 
 :focus,
@@ -724,11 +735,11 @@ table.files button:disabled {
 
 input:focus,
 select:focus {
-  background-color: #f5f5f5 !important;
+  background-color: #f0f0f0 !important;
 }
 
 button:focus-visible {
-  color: #f5f5f5 !important;
+  color: #f0f0f0 !important;
   background: #5a5a5a !important;
 }
 
@@ -857,7 +868,7 @@ code, pre {
 nav {
   height: 100%;
   position: relative;
-  background: #f5f5f5;
+  background: #f0f0f0;
 }
 nav ul {
   float: left;
@@ -871,7 +882,7 @@ nav ul li.logo {
   display: block;
   height: 5em;
   line-height: 5em;
-  color: #5a5a5a;
+  color: #5a5a5a !important;
   cursor: pointer;
   text-align: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -879,11 +890,12 @@ nav ul li.logo {
 nav ul li a:focus,
 nav ul li a:hover,
 nav ul li a.is-highlighted {
+  color: #5a5a5a !important;
   background: #ebebeb;
 }
 nav ul li.logo {
   font-family: FreeSansBold;
-  color: white;
+  color: white !important;
   background: #5a5a5a;
   cursor: default;
 }
@@ -897,7 +909,6 @@ nav ul:nth-child(2) {
 #todoTableSearchContainer {
   display: none;
   margin: 0 1.5em;
-  margin-top: 0.5em;
   padding-bottom: 0.5em;
   background: white;
   position: sticky;
@@ -919,8 +930,8 @@ nav ul:nth-child(2) {
 #todoTableSearchContainer #todoTableSearchAddTodo:hover,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
-  color: white;
-  background: #3273dc;
+  color: #212224 !important;
+  background: white !important;
 }
 #todoTableSearchContainer input[type=search] {
   padding-left: 3.5em;
@@ -936,21 +947,17 @@ nav ul:nth-child(2) {
   cursor: pointer;
   margin-top: -0.7em;
 }
-#todoTableSearchContainer #todoTableSearch.is-valid-query {
-  color: #09aa41;
-}
-#todoTableSearchContainer #todoTableSearch.is-previous-query {
-  color: #cfa010;
-}
 #todoTableSearchContainer label {
   left: 5.9em;
 }
-#todoTableSearchContainer i.fa-search {
+#todoTableSearchContainer i.fa-search,
+#todoTableSearchContainer .todoTableSearchQuestionmark {
   font-size: 1.3em;
+  line-height: 1;
   position: absolute;
   top: 0.8em;
   left: 1.4em;
-  z-index: 60;
+  z-index: 70;
   padding: 0.75em 0.75em 0.75em 0;
 }
 
@@ -978,6 +985,10 @@ nav ul:nth-child(2) {
     top: 1.65em;
   }
 
+  .modal.content .modal-card {
+    padding: 1em;
+  }
+
   table tr td {
     padding: 0.25em 1.5em 0.25em 0 !important;
   }
@@ -989,11 +1000,15 @@ nav ul:nth-child(2) {
   #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
     margin-top: 0;
   }
-  #todoTableSearchContainer i.fa-search {
+  #todoTableSearchContainer i.fa-search,
+#todoTableSearchContainer .todoTableSearchQuestionmark {
     top: 0.65em;
   }
   #todoTableSearchContainer #todoTableSearchAddTodo {
     top: 2.2em;
+  }
+  #todoTableSearchContainer #todoTableSearchAddTodo i {
+    display: none;
   }
 
   #todoTable {
@@ -1084,6 +1099,9 @@ body.compact #modalForm textarea {
 body.compact #modalForm #modalFormInputResize {
   top: 1.65em;
 }
+body.compact .modal.content .modal-card {
+  padding: 1em;
+}
 body.compact table tr td {
   padding: 0.25em 1.5em 0.25em 0 !important;
 }
@@ -1093,11 +1111,15 @@ body.compact #sortByContainer li {
 body.compact #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
   margin-top: 0;
 }
-body.compact #todoTableSearchContainer i.fa-search {
+body.compact #todoTableSearchContainer i.fa-search,
+body.compact #todoTableSearchContainer .todoTableSearchQuestionmark {
   top: 0.65em;
 }
 body.compact #todoTableSearchContainer #todoTableSearchAddTodo {
   top: 2.2em;
+}
+body.compact #todoTableSearchContainer #todoTableSearchAddTodo i {
+  display: none;
 }
 body.compact #todoTable {
   padding: 0 1.5em 1.5em 1.5em;
@@ -1212,27 +1234,17 @@ body.compact #autoCompleteContainer h4 {
   font-size: 1.2em;
   font-family: FreeSansBold;
   background: #ccc;
-  color: #5a5a5a;
+  color: white;
   padding: 0.1em 0.5em !important;
 }
 .priority button span.tag {
-  color: inherit;
-}
-.priority button.is-dark span.tag {
-  background: #4d4d4d;
+  color: #5a5a5a;
 }
 .priority button.is-dark,
 .priority button.is-dark:hover,
 .priority button.is-dark.is-hovered,
 .priority button:focus-visible {
-  background: #737373;
-  color: white;
-}
-.priority button.is-dark span.tag,
-.priority button.is-dark:hover span.tag,
-.priority button.is-dark.is-hovered span.tag,
-.priority button:focus-visible span.tag {
-  color: #2d2d2d !important;
+  background: #999999;
 }
 .priority button.A {
   background: #ff3860;
@@ -1328,7 +1340,7 @@ body.compact #autoCompleteContainer h4 {
   width: 2.5em;
   height: 2.5em;
   display: none;
-  line-height: 2.5em;
+  line-height: 1.5em;
   text-align: center;
   font-size: 1.25em;
   position: absolute;
@@ -1375,17 +1387,22 @@ body.compact #autoCompleteContainer h4 {
 #drawerContainer .drawer #sortByContainer li.drag-sort-active {
   border-left: 0.2em solid #3273dc;
 }
+#drawerContainer .drawer .priority button {
+  font-size: 1.4em;
+}
 #drawerContainer .drawer button {
   position: relative;
   margin: 0 0.5rem 0.5rem 0;
   padding: 0.5em 0.75em;
 }
 #drawerContainer .drawer button span.tag {
+  height: 1.6em;
   font-family: FreeSansBold;
   position: absolute;
   right: -0.75em;
   top: -0.75em;
   z-index: 35;
+  padding: 0 0.5em;
 }
 #drawerContainer .drawer button.is-greyed-out .tag {
   display: none;
@@ -1563,10 +1580,17 @@ body.compact #autoCompleteContainer h4 {
 .modal.content .tabs {
   display: flex;
   flex-shrink: 0;
+  margin-bottom: 0;
 }
 .modal.content .tabs li a {
+  color: #5a5a5a !important;
+  border-color: #ccc !important;
   border-width: 2px;
   margin-bottom: 0;
+}
+.modal.content .tabs li.is-active a {
+  color: #3273dc !important;
+  border-color: #3273dc !important;
 }
 
 #modalForm[open]:not(:focus-within) {
@@ -1616,7 +1640,7 @@ body.compact #autoCompleteContainer h4 {
   border-radius: 0;
   border-bottom-right-radius: 0.65em;
   border-bottom-left-radius: 0.65em;
-  background: #f5f5f5;
+  background: #f0f0f0;
 }
 #modalForm #autoCompleteContainer section {
   max-height: 25em;
@@ -1758,7 +1782,7 @@ body.compact #autoCompleteContainer h4 {
   transition: background-color 0.5s ease-out;
 }
 #todoTable .todo#previousItem.is-highlighted {
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
 }
 #todoTable .group {
   font-family: FreeSansBold;
@@ -1813,37 +1837,38 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell.checkbox a {
   font-size: 1.25em;
 }
-#todoTable .cell.checkbox a:focus-visible {
+#todoTable .cell.checkbox a:focus-visible,
+#todoTable .cell.archive a:focus-visible {
   color: #212224 !important;
 }
-#todoTable .cell.text {
+#todoTable a.cell.text {
   width: auto;
   flex: 1;
-  color: #5a5a5a;
+  color: #5a5a5a !important;
 }
-#todoTable .cell.text .categories {
+#todoTable a.cell.text .categories {
   margin-right: 0.5em;
 }
-#todoTable .cell.text button {
+#todoTable a.cell.text button {
   font-size: 1.1em;
   font-family: FreeSansBold;
   height: auto;
   padding: 0.1em 0.4em;
 }
-#todoTable .cell.text .priority {
+#todoTable a.cell.text .priority {
   background: transparent;
   color: #666666;
   margin-right: 0.5em;
 }
-#todoTable .cell.text .priority button {
+#todoTable a.cell.text .priority button {
   font-size: 0.9em;
   padding: 0.1em 0.4em !important;
 }
-#todoTable .cell.text .text {
+#todoTable a.cell.text .text {
   margin-right: 0.5em;
 }
 #todoTable .cell.text:focus-visible {
-  background: #f5f5f5;
+  background: #f0f0f0;
   border-radius: 0.65em;
 }
 #todoTable .cell.spacer {
@@ -2004,7 +2029,7 @@ body.compact #autoCompleteContainer h4 {
 }
 .datepicker .datepicker-cell.today.focused:not(.selected),
 .datepicker .datepicker-cell.today:not(.selected) {
-  background: #f5f5f5 !important;
+  background: #f0f0f0 !important;
 }
 .datepicker .datepicker-footer {
   background: none;

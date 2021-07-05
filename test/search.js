@@ -23,7 +23,7 @@ describe("Full-text search", function () {
   })
 
   it("'learn' finds a specific result", async () => {
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todoTableSearch = await app.client.$("#todoTableSearch");
     todoTableSearch.setValue("learn");
     await app.client.waitUntil(async () => {

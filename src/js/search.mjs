@@ -26,7 +26,9 @@ todoTableSearch.onfocus = function() {
   todoTableSearchContainer.classList.add("is-focused");
 }
 
-todoTableSearch.onblur = function() {
+todoTableSearch.onblur = function(event) {
+  // if question mark is clicked, do not blur
+  if(event.relatedTarget && event.relatedTarget.classList.contains("todoTableSearchQuestionmark")) return false;
   todoTableSearchContainer.classList.remove("is-focused");
 }
 

@@ -87,7 +87,7 @@ function configureTodoTableTemplate(append) {
     todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
     todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
     todoTableBodyCellTextTemplate.setAttribute("href", "#");
-    todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
+    //todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
     tableContainerCategoriesTemplate.setAttribute("class", "categories");
     todoTableBodyCellDueDateTemplate.setAttribute("class", "cell itemDueDate");
     todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell recurrence");

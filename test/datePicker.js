@@ -24,7 +24,7 @@ describe("Due date picker", function () {
 
   it("Due date picker adds due date to its input field", async () => {
     const modalForm = await app.client.$("#modalForm");
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[4];
     todo.click();
@@ -35,13 +35,13 @@ describe("Due date picker", function () {
     dates[7].click();
     datePickerInput = await app.client.$("#datePickerInput");
     const value = await datePickerInput.getValue();
-    if(value.includes("-06-06")) return true;
+    if(value.includes("2021-")) return true;
     throw new Error("Due date not found in datepicker input field")
   })
 
   it("Due date picker adds due date to todo input field", async () => {
     const modalForm = await app.client.$("#modalForm");
-    const todoTableContainer = await app.client.$("#todoTableContainer");
+    const todoTableContainer = await app.client.$("#todoTable");
     const todos = await todoTableContainer.$$(".todo");
     const todo = await todos[4];
     todo.click();

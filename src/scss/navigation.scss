@@ -17,7 +17,7 @@ nav {
       display: block;
       height: 5em;
       line-height: 5em;
-      color: $dark-grey;
+      color: $dark-grey!important;
     	cursor: pointer;
     	text-align: center;
     	border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -25,11 +25,12 @@ nav {
     li a:focus,
     li a:hover,
     li a.is-highlighted {
+      color: $dark-grey!important;
       background: $light-grey;
     }
     li.logo {
       font-family: FreeSansBold;
-      color: white;
+      color: white!important;
       background: $dark-grey;
       cursor: default;
     }

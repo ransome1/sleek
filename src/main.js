@@ -1,5 +1,5 @@
 let userData, defaultPath, _paq, fileWatcher, translations;
-const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow } = require("electron");
+const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow, nativeTheme } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
@@ -646,6 +646,9 @@ const createWindow = async function() {
           error.functionName = "fs.writeFileSync";
           mainWindow.webContents.send("triggerFunction", "handleError", [error]);
         }
+      })
+      .on("setTheme", (event, args) => {
+        nativeTheme.themeSource = args;
       })
       .on("openOrCreateFile", (event, args) => {
         openDialog(args);

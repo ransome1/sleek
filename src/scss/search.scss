@@ -5,7 +5,6 @@
 #todoTableSearchContainer {
   display: none;
   margin: 0 1.5em;
-  margin-top: 0.5em;
   padding-bottom: 0.5em;
   background: white;
   position: sticky;
@@ -26,8 +25,8 @@
   #todoTableSearchAddTodo:hover,
   #todoTableSearchAddTodo:focus,
   #todoTableSearchAddTodo:focus-visible {
-    color: white;
-    background: $has-text-link;
+    color: $almost-black!important;
+    background: white!important;
   }
   input[type="search"] {
     padding-left: 3.5em;
@@ -43,21 +42,17 @@
     cursor: pointer;
     margin-top: -0.7em;
   }
-  #todoTableSearch.is-valid-query {
-    color: hsl(141, 90%, 35%);
-  }
-  #todoTableSearch.is-previous-query {
-    color: #cfa010;
-  }
   label {
     left: 5.9em;
   }
-  i.fa-search {
+  i.fa-search,
+  .todoTableSearchQuestionmark {
     font-size: 1.3em;
+    line-height: 1;
     position: absolute;
     top: 0.8em;
     left: 1.4em;
-    z-index: 60;
+    z-index: 70;
     padding: 0.75em 0.75em 0.75em 0;
   }
 }

@@ -52,23 +52,23 @@
     font-size: 1.2em;
     font-family: FreeSansBold;
     background: $mid-grey;
-    color: $dark-grey;
+    //color: $dark-grey;
+    color: white;
     padding: 0.1em 0.5em!important;
     span.tag {
-      color: inherit;
+      color: $dark-grey;
     }
   }
   button.is-dark span.tag {
-    background: darken($mid-grey, 50%);
+    //background: darken($mid-grey, 50%);
   }
   button.is-dark,
   button.is-dark:hover,
   button.is-dark.is-hovered,
   button:focus-visible {
-    background: darken($mid-grey, 35%);
-    color: white;
+    background: darken($mid-grey, 20%);
     span.tag {
-      color: $darker-grey!important;
+      //color: $darker-grey!important;
     }
   }
   button.A {

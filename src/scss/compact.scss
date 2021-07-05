@@ -29,6 +29,10 @@
     }
   }
 
+  .modal.content .modal-card {
+    padding: 1em;
+  }
+
   table tr td {
     padding: 0.25em 1.5em 0.25em 0 !important
   }
@@ -39,11 +43,15 @@
     input[type="search"]::-webkit-search-cancel-button {
       margin-top: 0;
     }
-    i.fa-search {
+    i.fa-search,
+    .todoTableSearchQuestionmark {
       top: 0.65em;
     }
     #todoTableSearchAddTodo {
       top: 2.2em;
+      i {
+        display: none;
+      }
     }
   }
   #todoTable {
