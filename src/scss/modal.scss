@@ -54,9 +54,9 @@
     max-height: calc(100vh - 5em);
     border-radius: $radius;
   }
-  .modal-background {
-    z-index: 55;
-  }
+  // .modal-background {
+  //   z-index: 55;
+  // }
   .modal-card-body {
     background: none;
     display: none;

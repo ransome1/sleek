@@ -149,5 +149,6 @@
   "archivingCompletedTitle": "归档完成",
   "archivingCompletedBody": "已完成的待办事项成功移至 ",
   "restartPrompt": "对于这种变化，sleek 需要重新启动。 如果这没有发生，请手动重新启动应用程序。",
-  "deleteCategoryPrompt": "此过滤器将从所有任务中不可撤销地删除。."
+  "deleteCategoryPrompt": "此过滤器将从所有任务中不可撤销地删除。.",
+  "modalBackgroundAttention": "此窗口将关闭并清除其内容。"
 }

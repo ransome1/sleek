@@ -520,11 +520,14 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-a,
+a {
+  color: #3273dc;
+}
+
 a:hover,
 a:active,
 a:focus {
-  color: #3273dc !important;
+  color: #5a5a5a;
 }
 
 .is-active {
@@ -1053,7 +1056,11 @@ nav ul li.logo {
   }
   #autoCompleteContainer .priority button,
 #drawerContainer .drawer .priority button {
-    font-size: 1em;
+    font-size: 1.2em;
+  }
+  #autoCompleteContainer .priority button .tag,
+#drawerContainer .drawer .priority button .tag {
+    font-size: 0.65em;
   }
   #autoCompleteContainer button,
 #drawerContainer .drawer button {
@@ -1161,7 +1168,11 @@ body.compact #drawerContainer .drawer .is-4 {
 }
 body.compact #autoCompleteContainer .priority button,
 body.compact #drawerContainer .drawer .priority button {
-  font-size: 1em;
+  font-size: 1.2em;
+}
+body.compact #autoCompleteContainer .priority button .tag,
+body.compact #drawerContainer .drawer .priority button .tag {
+  font-size: 0.65em;
 }
 body.compact #autoCompleteContainer button,
 body.compact #drawerContainer .drawer button {
@@ -1516,9 +1527,6 @@ body.compact #autoCompleteContainer h4 {
   padding: 0 2em 2em 2em;
   max-height: calc(100vh - 5em);
   border-radius: 0.65em;
-}
-.modal.content .modal-background {
-  z-index: 55;
 }
 .modal.content .modal-card-body {
   background: none;

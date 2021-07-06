@@ -25,11 +25,13 @@ body {
 body::-webkit-scrollbar {
   display: none;
 }
-a,
+a {
+  color: $has-text-link;
+}
 a:hover,
 a:active,
 a:focus {
-  color: $has-text-link!important;
+  color: $dark-grey;
 }
 
 //  ####################################

@@ -149,5 +149,6 @@
   "archivingCompletedTitle": "Archiving completed",
   "archivingCompletedBody": "Completed todos successfully moved to ",
   "restartPrompt": "For this change sleek needs to restart itself. If this doesn't happen, please start the application again manually.",
-  "deleteCategoryPrompt": "This filter will be irrevocably removed from all todos."
+  "deleteCategoryPrompt": "This filter will be irrevocably removed from all todos.",
+  "modalBackgroundAttention": "This window will be closed and its contents cleared."
 }

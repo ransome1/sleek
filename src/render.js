@@ -570,6 +570,7 @@ function resetFilters() {
     return Promise.reject(error);
   }
 }
+// TODO refactor
 function resetModal(modal) {
   try {
     if(modal) {
@@ -593,7 +594,8 @@ function resetModal(modal) {
     // close
     modalForm.classList.remove("is-active");
     // remove the data item as we don't need it anymore
-    modalForm.removeAttribute("data-item");
+    //modalForm.removeAttribute("data-item");
+    modalForm.setAttribute("data-item", "");
     // clean up the modal
     modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
     // clear the content in the input field as it's not needed anymore

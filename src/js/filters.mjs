@@ -192,6 +192,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       categories = ["priority", "contexts", "projects"];
     }
     categories.forEach((category) => {
+      console.log(category);
       // array to collect all the available filters in the data
       let filters = new Array();
       let filterArray;

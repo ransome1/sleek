@@ -96,7 +96,10 @@
     }
     .priority {
       button {
-        font-size: 1em;
+        font-size: 1.2em;
+        .tag {
+          font-size: 0.65em;
+        }
       }
     }
     button {

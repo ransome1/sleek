@@ -1,5 +1,5 @@
 "use strict";
-import { userData, setUserData, handleError, startBuilding, translations, resetModal } from "../render.js";
+import { userData, setUserData, handleError, startBuilding, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 
 const html = document.getElementById("html");
@@ -10,16 +10,11 @@ const showDueIsPast = document.getElementById("showDueIsPast");
 const showDueIsToday = document.getElementById("showDueIsToday");
 const showHidden = document.getElementById("showHidden");
 const sortBy = document.getElementById("sortBy");
-const sortByContexts = document.getElementById("sortByContexts");
-const sortByDueDate = document.getElementById("sortByDueDate");
-const sortByPriority = document.getElementById("sortByPriority");
-const sortByProjects = document.getElementById("sortByProjects");
 const sortCompletedLast = document.getElementById("sortCompletedLast");
 const toggleTray = document.getElementById("toggleTray");
 const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
 const viewHeadlineTodoList = document.getElementById("viewHeadlineTodoList");
 const viewHeadlineFilterList = document.getElementById("viewHeadlineFilterList");
-const viewSelectSortBy = document.getElementById("viewSelectSortBy");
 const viewToggleCompactView = document.getElementById("viewToggleCompactView");
 const viewToggleDueIsFuture = document.getElementById("viewToggleDueIsFuture");
 const viewToggleDueIsPast = document.getElementById("viewToggleDueIsPast");
@@ -51,21 +46,17 @@ zoomRangePicker.innerHTML = translations.zoomRangePicker;
 viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 
-// build the sort by list
-for(let i=0; i < userData.sortBy.length; i++) {
-  let sortBy = userData.sortBy[i];
+// build the sortBy list
+userData.sortBy.forEach((sortBy) => {
   const sortByContainerElement = document.createElement("li");
   sortByContainerElement.setAttribute("data-id", sortBy);
-
   if(sortBy==="dueString") sortBy = "dueDate";
   sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-vertical\"></i>";
   sortByContainerElement.innerHTML += translations[sortBy];
   sortByContainer.appendChild(sortByContainerElement);
-  if(i === userData.sortBy.length) resolve();
-}
+});
 
 import { enableDragSort } from "../configs/dragndrop.mjs";
-
 enableDragSort("drag-sort-enable");
 
 zoomRangePicker.onchange = function() {

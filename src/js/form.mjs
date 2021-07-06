@@ -1,6 +1,6 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { resetModal, handleError, userData, setUserData, translations } from "../render.js";
+import { resetModal, handleError, userData, setUserData, translations, getConfirmation } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
@@ -51,38 +51,6 @@ btnSave.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Submit"]);
 }
-function keyUp() {
-  // do not show suggestion container if Escape has been pressed
-  if(event.key==="Escape") {
-    autoCompleteContainer.classList.remove("is-active");
-    return false;
-  }
-  modalFormInputEvent();
-}
-
-function keyDown() {
-  // regular submit
-  if(document.getElementById("modalFormInput").type !=="textarea" && event.key === "Enter") {
-    submitForm().then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Enter for Submit"]);
-  }
-
-  // submit form with Ctrl/CMD and Enter
-  if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
-    submitForm().then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Ctrl/CMD and Enter for Submit"]);
-  }
-}
 
 document.getElementById("modalFormInput").addEventListener("keyup", event => {
   keyUp();
@@ -119,18 +87,22 @@ priorityPicker.onfocus = function() {
 
 modalBackground.forEach(function(el) {
   el.onclick = function() {
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    el.parentElement.classList.remove("is-active");
-    autoCompleteContainer.classList.remove("is-active");
-    autoCompleteContainer.blur();
+    const modalObject = document.getElementById(el.parentElement.id);
+    // if modal is modalForm and input is equal the data item
+    if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== modalFormInput.value) {
+      getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
+    } else {
+      resetModal(modalObject).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    }
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
   }
 });
+
 modalClose.forEach(function(el) {
   el.onclick = function() {
     if(el.getAttribute("data-message")) {
@@ -147,6 +119,40 @@ modalClose.forEach(function(el) {
   }
 });
 
+// TODO add try catch
+function keyUp() {
+  // do not show suggestion container if Escape has been pressed
+  if(event.key==="Escape") {
+    autoCompleteContainer.classList.remove("is-active");
+    return false;
+  }
+  modalFormInputEvent();
+}
+
+// TODO add try and catch
+function keyDown() {
+  // regular submit
+  if(document.getElementById("modalFormInput").type !=="textarea" && event.key === "Enter") {
+    submitForm().then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Enter for Submit"]);
+  }
+
+  // submit form with Ctrl/CMD and Enter
+  if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
+    submitForm().then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Ctrl/CMD and Enter for Submit"]);
+  }
+}
 function getCaretPosition(inputId) {
   var content = inputId;
   if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
@@ -286,7 +292,8 @@ function show(todo, templated) {
     // switch to textarea if needed
     if(userData.useTextarea) toggleInputSize("input");
     // remove any previously set data-item attributes
-    modalForm.removeAttribute("data-item");
+    //modalForm.removeAttribute("data-item");
+    modalForm.setAttribute("data-item", "");
     // adjust size of recurrence picker input field
     datePickerInput.value = null;
     recurrencePickerInput.value = null;

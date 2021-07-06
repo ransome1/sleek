@@ -149,5 +149,6 @@
   "archivingCompletedTitle": "完了タスクをアーカイブへ保存中",
   "archivingCompletedBody": "完了タスク保存完了した, アーカイブファイル: ",
   "restartPrompt": "設定を適用するため, sleekを再起動する必要がある. もし再起動しなければ, 手動でアプリ再起動をお願いいたします.",
-  "deleteCategoryPrompt": "このフィルターは、すべてのタスクから取り消せないほど削除されます。."
+  "deleteCategoryPrompt": "このフィルターは、すべてのタスクから取り消せないほど削除されます。.",
+  "modalBackgroundAttention": "このウィンドウは閉じられ、その内容はクリアされます。"
 }
