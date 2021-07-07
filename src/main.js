@@ -173,33 +173,29 @@ const createWindow = async function() {
       // skip persisted files and go with ENV if set
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
-      // regular process
-      } else {
-        // use the loop to check if the new path is already in the user data
-        let fileFound = false;
-        if(userData.data.files) {
-          userData.data.files.forEach(function(element) {
-            // if path is found it is set active
-            if(element[1]===file) {
-              element[0] = 1
-              fileFound = true;
-              // if this entry is not equal to the new path it is set 0
-            } else {
-              element[0] = 0;
-            }
-          });
-        } else {
-          userData.data.files = new Array;
-        }
-        // only push new path if it is not already in the user data
-        if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file]);
-        userData.set("files", userData.data.files);
-        userData.data.file = file;
-        userData.set("file", file);
       }
-
-      console.log(file);
-
+      // use the loop to check if the new path is already in the user data
+      let fileFound = false;
+      if(userData.data.files) {
+        userData.data.files.forEach(function(element) {
+          // if path is found it is set active
+          if(element[1]===file) {
+            element[0] = 1
+            fileFound = true;
+            // if this entry is not equal to the new path it is set 0
+          } else {
+            element[0] = 0;
+          }
+        });
+      } else {
+        userData.data.files = new Array;
+      }
+      // only push new path if it is not already in the user data
+      if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file]);
+      userData.set("files", userData.data.files);
+      userData.data.file = file;
+      userData.set("file", file);
+      // TODO describe
       if(fileWatcher) fileWatcher.close();
       fileWatcher = chokidar.watch(file);
       fileWatcher

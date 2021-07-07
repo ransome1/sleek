@@ -170,7 +170,6 @@ function positionAutoCompleteContainer() {
   autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
 }
 function modalFormInputEvent(event) {
-  //if(event.key==="Enter") return false;
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
   let autoCompleteValue ="";
@@ -411,7 +410,7 @@ function submitForm() {
       // jump to index, remove 1 item there and add the value from the input at that position
       items.objects.splice(index, 1, todo);
     // Add todo
-    } else if(modalForm.getAttribute("data-item")==null && document.getElementById("modalFormInput").value!="") {
+    } else if(!modalForm.getAttribute("data-item") && document.getElementById("modalFormInput").value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
       let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
@@ -482,8 +481,6 @@ function toggleInputSize(type) {
   newInputElement.id = "modalFormInput";
   newInputElement.setAttribute("tabindex", 0);
   newInputElement.setAttribute("class", "input is-medium");
-  //newInputElement.value = document.getElementById("modalFormInput").value.replaceAll(String.fromCharCode(16)," ");
-  //newInputElement.setAttribute("placeholder", translations.formTodoInputPlaceholder);
   // replace old element with the new one
   document.getElementById("modalFormInput").replaceWith(newInputElement);
   // replace special char with line break before passing it to textarea

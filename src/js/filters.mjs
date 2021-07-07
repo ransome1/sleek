@@ -192,7 +192,10 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       categories = ["priority", "contexts", "projects"];
     }
     categories.forEach((category) => {
-      console.log(category);
+
+      // TODO build empty container shells here
+      //console.log(category);
+
       // array to collect all the available filters in the data
       let filters = new Array();
       let filterArray;
@@ -457,8 +460,14 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         // add filter to input
         todoFiltersItem.addEventListener("click", (event) => {
           if(autoCompletePrefix && autoCompleteValue) {
-            // remove composed filter first, then add selected filter
-            document.getElementById("modalFormInput").value = document.getElementById("modalFormInput").value.replace(autoCompletePrefix + autoCompleteValue, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter") + " ");
+            // remove composed filter first
+            let newValue = document.getElementById("modalFormInput").value.slice(0, caretPosition - autoCompleteValue.length) + document.getElementById("modalFormInput").value.slice(caretPosition);
+            // split string into single characters
+            newValue = newValue.split("");
+            //then add selected filter at index
+            newValue.splice(caretPosition - autoCompleteValue.length, 0, todoFiltersItem.getAttribute("data-filter"));
+            // join back from single characters to string
+            document.getElementById("modalFormInput").value = newValue.join("");
           } else if(autoCompletePrefix) {
             // add button data value to the exact caret position
             document.getElementById("modalFormInput").value = [document.getElementById("modalFormInput").value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), document.getElementById("modalFormInput").value.slice(caretPosition)].join('') + " ";
