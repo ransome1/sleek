@@ -143,18 +143,18 @@ function configureMainView() {
       // check if archive button should be enabled
       //setButtonState("btnArchiveTodos");
       // configure navigation
-      if(filters.filterCounter===0) {
-        // hide filter nav button
-        navBtnFilter.classList.add("is-hidden");
-        // close filter drawer
-        drawer.show(navBtnFilter, document.getElementById(navBtnFilter.getAttribute("data-drawer")), true).then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          handleError(error);
-        });
-      } else {
-        navBtnFilter.classList.remove("is-hidden");
-      }
+      // if(filters.filterCounter===0) {
+      //   // hide filter nav button
+      //   navBtnFilter.classList.add("is-hidden");
+      //   // close filter drawer
+      //   drawer.show(navBtnFilter, document.getElementById(navBtnFilter.getAttribute("data-drawer")), true).then(function(result) {
+      //     console.log(result);
+      //   }).catch(function(error) {
+      //     handleError(error);
+      //   });
+      // } else {
+      //   navBtnFilter.classList.remove("is-hidden");
+      // }
       // configure table view
       if(userData.file && todos.items.objects.length===0) {
         addTodoContainer.classList.add("is-active");

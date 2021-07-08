@@ -3,6 +3,7 @@ import { userData, handleError, translations, setUserData, startBuilding, getCon
 import { createModalJail } from "../configs/modal.config.mjs";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
+import { showContent } from "./content.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 import * as filterlang from "./filterlang.mjs";
 import { runQuery } from "./filterquery.mjs";
@@ -169,6 +170,83 @@ function filterItems(items) {
     return Promise.reject(error);
   }
 }
+
+function generateCategoryContainer(category, autoCompletePrefix, filterFragment) {
+  try {
+    let hideFilterCategories = userData.hideFilterCategories;
+    selectedFilters = new Array;
+    if(userData.selectedFilters && userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
+    // creates a div for the specific filter section
+    let todoFiltersContainer = document.createElement("section");
+    todoFiltersContainer.setAttribute("class", category);
+    // translate headline
+    if(category=="contexts") {
+      headline = translations.contexts;
+    } else if(category=="projects"){
+      headline = translations.projects;
+    } else if(category=="priority"){
+      headline = translations.priority;
+    }
+    // if filters are available and if container is not the autocomplete one
+    let todoFilterHeadline = document.createElement("h4");
+    // show suggestion box when prefix is present
+    if(autoCompletePrefix!==undefined) {
+      autoCompleteContainer.classList.add("is-active");
+      autoCompleteContainer.focus();
+      todoFilterHeadline.innerHTML = headline;
+    } else {
+      todoFilterHeadline.setAttribute("class", "is-4 clickable");
+      // setup greyed out state
+      if(hideFilterCategories.includes(category)) {
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + headline;
+        todoFilterHeadline.classList.add("is-greyed-out");
+      } else {
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
+        todoFilterHeadline.classList.remove("is-greyed-out");
+      }
+      // add click event
+      todoFilterHeadline.onclick = function() {
+        document.getElementById("todoTableWrapper").scrollTo(0,0);
+        if(hideFilterCategories.includes(category)) {
+          hideFilterCategories.splice(hideFilterCategories.indexOf(category),1)
+        } else {
+          hideFilterCategories.push(category);
+          hideFilterCategories = [...new Set(hideFilterCategories.join(",").split(","))];
+        }
+        setUserData("hideFilterCategories", hideFilterCategories)
+        startBuilding();
+      }
+    }
+    // add the headline before category container
+    todoFiltersContainer.appendChild(todoFilterHeadline);
+
+    // add filter fragment
+    if(filterFragment.childElementCount > 0) {
+      todoFiltersContainer.appendChild(filterFragment);
+    // if no filter fragment is available a empty filter container will be shown
+    } else {
+      let todoFilterHint = document.createElement("div");
+      todoFilterHint.setAttribute("class", "todoFilterHint");
+      todoFilterHint.innerHTML = "<i class=\"fas fa-question-circle\"></i> No " + category + " available. Learn how to add one.";
+      todoFilterHint.onclick = function() {
+        showContent("modalHelp");
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on Help"]);
+      }
+      todoFiltersContainer.appendChild(todoFilterHint);
+    }
+    // add filter fragment if it is available
+    if(filterFragment) {
+      todoFiltersContainer.appendChild(filterFragment);
+    }
+    // return the container
+    return Promise.resolve(todoFiltersContainer);
+  } catch (error) {
+    error.functionName = generateCategoryContainer.name;
+    return Promise.reject(error);
+  }
+}
+
 function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition) {
   try {
     // reset filter counter
@@ -191,11 +269,10 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // needs to be reset every run, because it can be overwritten by previous autocomplete
       categories = ["priority", "contexts", "projects"];
     }
-    categories.forEach((category) => {
 
-      // TODO build empty container shells here
-      //console.log(category);
+    let todoFiltersContainer;
 
+    categories.forEach(async (category) => {
       // array to collect all the available filters in the data
       let filters = new Array();
       let filterArray;
@@ -281,26 +358,29 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
         } else if(!filter[1] && !(filter[0] in filters)) {
           filters[filter[0]] = 0;
         }
-        if(filters!=null) {
+        if(filters!==null) {
           return filters;
         }
       }, {});
-      // build the filter buttons
-      if(filters[0]!="" && filters.length>0) {
-        // add category length to total filter count
-        generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
-          if(userData.hideFilterCategories.includes(category)) {
-            response.classList.add("is-greyed-out");
-          }
-          container.appendChild(response);
-        }).catch (error => {
-          handleError(error);
-        });
-      } else {
-        autoCompleteContainer.classList.remove("is-active");
-        autoCompleteContainer.blur();
-        console.log("Info: No " + category + " found in todo.txt data, so no filters will be generated");
-      }
+      // TODO can this be done above already?
+      // remove empty filter entries
+      filters = filters.filter(function(filter) {
+        //console.log(filter[0]);
+        if(filter[0]) return filter;
+      });
+      // build filter buttons and add them to a fragment
+      let filterFragment = await generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
+        return response;
+      }).catch (error => {
+        handleError(error);
+      });
+      // build and configure the category container and finally append the fragments
+      todoFiltersContainer = await generateCategoryContainer(category, autoCompletePrefix, filterFragment).then(response => {
+        return response;
+      }).catch (error => {
+        handleError(error);
+      });
+      container.appendChild(todoFiltersContainer);
     });
     return Promise.resolve("Success: Filter data generated");
   } catch (error) {
@@ -330,63 +410,8 @@ function selectFilter(filter, category) {
 }
 function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition) {
   try {
-    let hideFilterCategories = userData.hideFilterCategories;
-    selectedFilters = new Array;
-    if(userData.selectedFilters && userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
-    // creates a div for the specific filter section
-    let todoFiltersContainer = document.createElement("section");
-    todoFiltersContainer.setAttribute("class", category);
-    // translate headline
-    if(category=="contexts") {
-      headline = translations.contexts;
-    } else if(category=="projects"){
-      headline = translations.projects;
-    } else if(category=="priority"){
-      headline = translations.priority;
-    }
-    if(autoCompletePrefix===undefined && userData.showEmptyFilters) {
-      // create a sub headline element
-      let todoFilterHeadline = document.createElement("h4");
-      todoFilterHeadline.setAttribute("class", "is-4 clickable");
-      // setup greyed out state
-      if(hideFilterCategories.includes(category)) {
-        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + headline;
-        todoFilterHeadline.classList.add("is-greyed-out");
-      } else {
-        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
-        todoFilterHeadline.classList.remove("is-greyed-out");
-      }
-      // add click event
-      todoFilterHeadline.onclick = function() {
-        document.getElementById("todoTableWrapper").scrollTo(0,0);
-        if(hideFilterCategories.includes(category)) {
-          hideFilterCategories.splice(hideFilterCategories.indexOf(category),1)
-        } else {
-          hideFilterCategories.push(category);
-          hideFilterCategories = [...new Set(hideFilterCategories.join(",").split(","))];
-        }
-        setUserData("hideFilterCategories", hideFilterCategories)
-        startBuilding();
-      }
-      // add the headline before category container
-      todoFiltersContainer.appendChild(todoFilterHeadline);
-    } else {
-      let todoFilterHeadline = document.createElement("h4");
-      // show suggestion box when prefix is present
-      if(autoCompletePrefix!==undefined) {
-        autoCompleteContainer.classList.add("is-active");
-        autoCompleteContainer.focus();
-      }
-      todoFilterHeadline.setAttribute("tabindex", -1);
-      // create a sub headline element
-      todoFilterHeadline.setAttribute("class", "is-4");
-      // no need for tab index if the headline is in suggestion box
-      //if(autoCompletePrefix==undefined)
-      todoFilterHeadline.innerHTML = headline;
-      // add the headline before category container
-      todoFiltersContainer.appendChild(todoFilterHeadline);
-    }
-    // to figure out how many buttons with filters behind them have been build in the end
+    // create a fragment to collect the filters in
+    let filterFragment = document.createDocumentFragment();
     // build one button each
     for (let filter in filtersCounted) {
       // skip this loop if no filters are present
@@ -406,7 +431,6 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         todoFiltersItem.addEventListener("contextmenu", event => {
           // jail the modal
           createModalJail(filterContext);
-
           filterContext.style.left = event.x + "px";
           filterContext.style.top = event.y + "px";
           filterContext.classList.add("is-active");
@@ -485,9 +509,9 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         });
       }
       filterCounter++;
-      todoFiltersContainer.appendChild(todoFiltersItem);
+      filterFragment.appendChild(todoFiltersItem);
     }
-    return Promise.resolve(todoFiltersContainer);
+    return Promise.resolve(filterFragment);
   } catch (error) {
     error.functionName = generateFilterButtons.name;
     return Promise.reject(error);

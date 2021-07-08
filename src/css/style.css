@@ -1418,28 +1418,31 @@ body.compact #autoCompleteContainer h4 {
 #drawerContainer .drawer button.is-greyed-out .tag {
   display: none;
 }
-#drawerContainer .drawer h4.is-4 {
+#drawerContainer .drawer section {
+  width: 100%;
+  padding: 0;
+  margin: 0 0 1.5em 0;
+}
+#drawerContainer .drawer section h4.is-4 {
   font-size: 1.25em;
   font-family: FreeSansBold;
-  margin-bottom: 0em;
+  margin: 0 0 0.75em 0;
 }
-#drawerContainer .drawer h4.is-4.clickable {
+#drawerContainer .drawer section h4.is-4.clickable {
   cursor: pointer;
   display: inline;
 }
-#drawerContainer .drawer h4.is-4.clickable i {
+#drawerContainer .drawer section h4.is-4.clickable i {
   color: #3273dc;
 }
-#drawerContainer .drawer h4.is-4.clickable::after {
+#drawerContainer .drawer section h4.is-4.clickable::after {
   height: 1em;
   display: block;
   content: "\a";
   white-space: pre;
 }
-#drawerContainer .drawer section {
-  width: 100%;
-  padding: 0;
-  margin: 0 0 1.5em 0;
+#drawerContainer .drawer section .todoFilterHint {
+  cursor: pointer;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
