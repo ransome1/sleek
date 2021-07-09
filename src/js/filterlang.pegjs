@@ -50,6 +50,7 @@ NotOp
 comparison
     = left:priorityComparison { return left; }
     / left:dueComparison { return left; }
+    / left:thresholdComparison { return left; }
 
 priorityComparison
     = priorityKeyword _ op:compareOp _ right:priorityLiteral  { return ["pri", right, op]; }
@@ -66,6 +67,15 @@ dueComparison
     = "due" _ op:compareOp _ right:dateExpr  { return ["due"].concat(right, [op]); }
     / "due:" right:dateStr  { return ["duestr", right]; }
     / "due"  { return ["due"]; }
+
+thresholdComparison
+    = threshold _ op:compareOp _ right:dateExpr  { return ["threshold"].concat(right, [op]); }
+    / "t:" right:dateStr  { return ["tstr", right]; }
+    / threshold  { return ["threshold"]; }
+
+threshold
+    = "threshold"
+    / "t"
 
 dateExpr
     = left:dateLiteral _ op:dateOp _ count:number unit:[dbwmy]  {

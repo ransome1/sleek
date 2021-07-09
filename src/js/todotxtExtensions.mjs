@@ -42,4 +42,20 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
-export { RecExtension, SugarDueExtension };
+function ThresholdExtension() {
+	this.name = "t";
+}
+ThresholdExtension.prototype = new TodoTxtExtension();
+ThresholdExtension.prototype.parsingFunction = function (line) {
+	var thresholdDate = null;
+	var thresholdRegex = /t:([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\s*/;
+	var matchThreshold = thresholdRegex.exec(line);
+	if ( matchThreshold !== null ) {
+		var datePieces = matchThreshold[1].split('-');
+		thresholdDate = new Date( datePieces[0], datePieces[1] - 1, datePieces[2] );
+		return [thresholdDate, line.replace(thresholdRegex, ''), matchThreshold[1]];
+	}
+	return [null, null, null];
+};
+
+export { RecExtension, SugarDueExtension, ThresholdExtension };

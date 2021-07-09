@@ -6,7 +6,7 @@ import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
-import { SugarDueExtension, RecExtension } from "./todotxtExtensions.mjs";
+import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 
 const modalForm = document.getElementById("modalForm");
 const todoContext = document.getElementById("todoContext");
@@ -99,7 +99,7 @@ function configureTodoTableTemplate(append) {
 }
 function generateItems(content) {
   try {
-    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]) }
+    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
     items.objects = items.objects.filter(function(item) {
       if(!item.text) return false;
       return true;
@@ -429,7 +429,7 @@ function sortTodoData(group) {
 function setTodoComplete(todo) {
   try {
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
@@ -472,7 +472,7 @@ function setTodoDelete(todo) {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
     if(document.getElementById("modalFormInput").value) todo = document.getElementById("modalFormInput").value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension() ]);
+    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item
@@ -498,7 +498,7 @@ function setTodoDelete(todo) {
 }
 function addTodo(todo) {
   try {
-    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
     // abort if there is no text
     if(!todo.text) return Promise.resolve("Info: Text is missing, no todo is written");
     // we add the current date to the start date attribute of the todo.txt object
