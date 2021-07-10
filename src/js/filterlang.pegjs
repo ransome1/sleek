@@ -79,6 +79,10 @@ threshold
 
 dateExpr
     = left:dateLiteral _ op:dateOp _ count:number unit:[dbwmy]  {
+        if (count.length == 0) {
+            /* empty count string means default "1" value */
+            count = 1;
+        }
         if (op == "-") {
             count = count * -1;
         }
@@ -109,19 +113,19 @@ dateStr
 
 dateLiteral
     = year:number4 "-" month: number2 "-" day:number2  {
-    	let d = new Date(year, month-1, day);
-        return d.getTime();
+        let m = month > 0 ? (month <= 12 ? month-1 : 11) : 0;
+        let d = day > 0 ? (day <= 31 ? day : 31) : 1;  /* ignores lengths of months */
+        return new Date(year, m, d).getTime();
     }
     / year:number4 "-" month: number2  {
-    	let d = new Date(year, month-1, 1);
-        return d.getTime();
+        let m = month > 0 ? (month <= 12 ? month-1 : 11) : 0;
+        return new Date(year, m, 1).getTime();
     }
     / year:number4  {
-    	let d = new Date(year, 0, 1);
-        return d.getTime();
+        return new Date(year, 0, 1).getTime();
     }
     / "today" {
-    	let d = new Date();  // now, w current time of day
+        let d = new Date();  // now, w current time of day
         d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
         return d.getTime();
     }
@@ -140,10 +144,10 @@ number4
     = [0-9][0-9][0-9][0-9] { return text(); }
 
 number2
-    = [0-9][0-9] { return text(); }
+    = [0-9][0-9]? { return text(); }
 
 number
-    = [0-9]+ { return text(); }
+    = [0-9]* { return text(); }  /* used in date intervals only */
 
 StringLiteral "string"
     = '"' chars:DoubleStringCharacter* '"'? {
@@ -177,9 +181,9 @@ SourceCharacter
     = .
 
 name
-	= '"' nonblank+ '"'         { return text(); }
-	/ nonblankparen+  '"'       { return '"' + text(); }
-	/ nonblankparen+            { return text(); }
+    = '"' nonblank+ '"'         { return text(); }
+    / nonblankparen+  '"'       { return '"' + text(); }
+    / nonblankparen+            { return text(); }
 
 nonblank
     = [^ \t\n\r"]
@@ -188,4 +192,4 @@ nonblankparen
     = [^ \t\n\r"()]
 
 _ "whitespace"
-  = [ \t\n\r]*
+    = [ \t\n\r]*
