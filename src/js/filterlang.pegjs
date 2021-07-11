@@ -69,13 +69,9 @@ dueComparison
     / "due"  { return ["due"]; }
 
 thresholdComparison
-    = threshold _ op:compareOp _ right:dateExpr  { return ["threshold"].concat(right, [op]); }
+    = "t" _ op:compareOp _ right:dateExpr  { return ["threshold"].concat(right, [op]); }
     / "t:" right:dateStr  { return ["tstr", right]; }
-    / threshold  { return ["threshold"]; }
-
-threshold
-    = "threshold"
-    / "t"
+    / "t"  { return ["threshold"]; }
 
 dateExpr
     = left:dateLiteral _ op:dateOp _ count:number unit:[dbwmy]  {
