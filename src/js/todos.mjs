@@ -524,13 +524,13 @@ async function archiveTodos() {
     // cancel operation if there are no completed todos
     if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
     // if user archives within done.txt file, operating is canceled
-    if(userData.file.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
+    if(userData.file.includes("done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
     // define path to done.txt
     let doneFile = function() {
       if(appData.os==="windows") {
-        return userData.file.replace(userData.file.split("\\").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
+        return userData.file.replace(userData.file.split("\\").pop(), "done.txt");
       } else {
-        return userData.file.replace(userData.file.split("/").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
+        return userData.file.replace(userData.file.split("/").pop(), "done.txt");
       }
     }
     const getContentFromDoneFile = new Promise(function(resolve) {
