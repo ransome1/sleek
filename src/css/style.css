@@ -259,9 +259,6 @@ body.dark #drawerContainer .drawer {
 body.dark #drawerContainer .drawer h4.is-4 {
   color: white;
 }
-body.dark #drawerContainer .drawer h4.is-4 i {
-  color: #CCCDCF !important;
-}
 body.dark #drawerContainer .drawer button span.tag {
   color: #5a5a5a;
 }

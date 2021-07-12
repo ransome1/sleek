@@ -2,7 +2,7 @@
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import { resetModal, handleError, userData, setUserData, translations, getConfirmation } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
+import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput } from "./datePicker.mjs";
@@ -303,7 +303,7 @@ function show(todo, templated) {
     if(todo) {
       // replace invisible multiline ascii character with new line
       // we need to check if there already is a due date in the object
-      todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+      todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
       // set the priority
       setPriority(todo.priority);
       //
@@ -393,7 +393,7 @@ function submitForm() {
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
         modalFormAlert.innerHTML = translations.formInfoDuplicate;
@@ -413,7 +413,7 @@ function submitForm() {
     } else if(!modalForm.getAttribute("data-item") && document.getElementById("modalFormInput").value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
       // check and prevent duplicate todo

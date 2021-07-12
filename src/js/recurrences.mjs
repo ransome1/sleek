@@ -34,13 +34,48 @@ function generateRecurrence(todo) {
   try {
     // duplicate not reference
     let recurringTodo = Object.assign({}, todo);
+    recurringTodo.date = new Date;
+
+    // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
     recurringTodo.complete = false;
     recurringTodo.completed = null;
-    // if the item to be duplicated has been completed before the due date, the recurring item needs to be set incomplete again
-    recurringTodo.date = new Date;
-    // if todo has no due date, the recurrence time frame will be added to the date of completion
-    recurringTodo.due = getDueDate(todo.due, todo.rec);
-    recurringTodo.dueString = convertDate(recurringTodo.due);
+
+    // adjust due and threshold dates 
+    let recSplit = splitRecurrence(todo.rec);
+    if (recSplit.plus) {
+      // strict recurrence is based on previous date value
+      if (todo.t)
+        recurringTodo.t = addIntervalToDate(todo.t, recSplit.mul, recSplit.period);
+      if (todo.due)
+        recurringTodo.due = addIntervalToDate(todo.due, recSplit.mul, recSplit.period);
+    } else {
+      // non-strict recurrence is based on today's date
+      if (todo.t) {
+        let threshold_base = new Date();
+        if (todo.due) {
+          // preserve interval between threshold and due date
+          let interval = todo.due - todo.t;  // millisec
+          threshold_base = new Date(threshold_base.getTime() - interval);
+        }
+        recurringTodo.t = addIntervalToDate(threshold_base, recSplit.mul, recSplit.period);
+        console.log("t based on today plus rec: " + recurringTodo + " todo.t is " + recurringTodo.t);
+      }
+      if (todo.due)
+        recurringTodo.due = addIntervalToDate(new Date(), recSplit.mul, recSplit.period);
+    }
+    if (!todo.t && !todo.due) {
+      // This is an ambiguous case: there is a rec: tag but no dates to apply it to.
+      // Some would prefer to make this a no-op, but past versions of sleek have added
+      // a due date when there is only a recurrence, so we will continue to do that here.
+      recurringTodo.due = addIntervalToDate(new Date(), recSplit.mul, recSplit.period);
+    }
+    // the following strings are magic from jsTodoTxt and must be changed when dates are changed
+    // because TodoTxtItem.toString() relies on the fieldString values, not the field values themselves.
+    if (recurringTodo.t)
+      recurringTodo.tString = convertDate(recurringTodo.t);
+    if (recurringTodo.due)
+      recurringTodo.dueString = convertDate(recurringTodo.due);
+
     // get index of recurring todo
     const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringTodo.toString().replaceAll(String.fromCharCode(16)," "));
     // only add recurring todo if it is not already in the list
@@ -56,15 +91,6 @@ function generateRecurrence(todo) {
     error.functionName = generateRecurrence.name;
     return Promise.reject(error);
   }
-}
-function getDueDate(due, recurrence) {
-  let recSplit = splitRecurrence(recurrence);
-  if (!recSplit.plus || !due) {
-    // no plus in recurrence expression, so do the default "non-strict" recurrence.
-    // (Otherwise we will use the previous due date, for strict recurrence.)
-    due = new Date();  // use today's date as base for recurrence
-  }
-  return addIntervalToDate(due, recSplit.mul, recSplit.period);
 }
 
 // addIntervalToDate used to compute recurrences, but now also used to add

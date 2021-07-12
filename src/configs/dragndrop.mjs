@@ -3,7 +3,18 @@
  https://codepen.io/fitri/full/oWovYj/ */
 
 "use strict";
-import { reorderSortingLevel } from "../render.js";
+import { setUserData, startBuilding } from "../render.js";
+
+function reorderSortingLevel() {
+  let sortBy = new Array;
+  const children = sortByContainer.children;
+  for(let i=0; i<children.length; i++) {
+    if(!children[i].getAttribute("data-id")) continue;
+    sortBy.push(children[i].getAttribute("data-id"));
+  }
+  setUserData("sortBy", sortBy);
+  startBuilding();
+}
 
 function enableDragSort(listClass) {
   const sortableLists = document.getElementsByClassName(listClass);

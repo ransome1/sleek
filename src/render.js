@@ -107,16 +107,6 @@ async function getConfirmation() {
     modalPrompt.classList.remove("is-active");
   });
 }
-function reorderSortingLevel() {
-  let sortBy = new Array;
-  const children = sortByContainer.children;
-  for(let i=0; i<children.length; i++) {
-    if(!children[i].getAttribute("data-id")) continue;
-    sortBy.push(children[i].getAttribute("data-id"));
-  }
-  setUserData("sortBy", sortBy);
-  startBuilding();
-}
 function configureMainView() {
   try {
     // close filterContext if open
@@ -715,22 +705,7 @@ function showOnboarding(variable) {
     return Promise.reject(error);
   }
 }
-function showResultStats() {
-  try {
-    // we show some information on filters if any are set
-    if(todos.items.filtered.length!=todos.items.objects.length) {
-      resultStats.classList.add("is-active");
-      resultStats.firstElementChild.innerHTML = translations.visibleTodos + "&nbsp;<strong>" + todos.items.filtered.length + " </strong>&nbsp;" + translations.of + "&nbsp;<strong>" + todos.items.objects.length + "</strong>";
-      return Promise.resolve("Info: Result box is shown");
-    } else {
-      resultStats.classList.remove("is-active");
-      return Promise.resolve("Info: Result box is hidden");
-    }
-  } catch(error) {
-    error.functionName = showResultStats.name;
-    return Promise.reject(error);
-  }
-}
+
 function getBadgeCount() {
   let count = 0;
   todos.items.objects.forEach((item) => {
@@ -754,8 +729,6 @@ async function startBuilding(append) {
     await todos.generateTable(groups, append);
 
     configureMainView();
-
-    showResultStats();
 
     window.api.send("update-badge", getBadgeCount());
 
@@ -907,4 +880,4 @@ window.api.receive("refresh", async function(content) {
   });
 });
 
-export { resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation, reorderSortingLevel };
+export { resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };

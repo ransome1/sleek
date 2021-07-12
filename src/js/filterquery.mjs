@@ -41,6 +41,29 @@ function runQuery(item, compiledQuery) {
           stack.push(false);  // no due date
         }
         break;
+      case "threshold":
+        if (item.t) {
+          // normalize date to have time of midnight in local zone
+          // we represent dates as millisec from epoch to simplify comparison
+          let d = item.t;
+          stack.push(new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime());
+        } else {
+          stack.push(undefined);  // all comparisons will return false
+        }
+        break;
+      case "tstr":
+        // match next value (a string) as prefix of ISO date string of threshold date
+        next = q.shift(); // the string to compare
+        if (item.t) {
+          // normalize date to have time of midnight in local zone
+          // we represent dates as millisec from epoch to simplify comparison
+          let d = item.t;
+          d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+          stack.push(d.toISOString().slice(0, 10).startsWith(next));
+        } else {
+          stack.push(false);  // no threshold date
+        }
+        break;
       case "complete":
         stack.push(item.complete);
         break;
