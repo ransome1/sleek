@@ -242,7 +242,7 @@ function setFriendlyLanguageNames() {
         default:
         return;
       }
-      var option = document.createElement("option");
+      let option = document.createElement("option");
       option.text = friendlyLanguageName;
       option.value = language;
       if(language===userData.language) option.selected = true;

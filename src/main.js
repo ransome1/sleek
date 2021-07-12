@@ -173,7 +173,9 @@ const createWindow = async function() {
       // skip persisted files and go with ENV if set
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
-      }
+      } /*else if(process.argv.length > 1 && fs.existsSync(process.argv[1])) {
+        file = process.argv[1];
+      }*/
       // use the loop to check if the new path is already in the user data
       let fileFound = false;
       if(userData.data.files) {
