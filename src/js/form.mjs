@@ -176,15 +176,16 @@ function modalFormInputEvent(event) {
   let autoCompletePrefix = "";
   let caretPosition = getCaretPosition(document.getElementById("modalFormInput"));
   let autoCompleteCategory = "";
-  if((document.getElementById("modalFormInput").value.charAt(caretPosition-2) === " " || document.getElementById("modalFormInput").value.charAt(caretPosition-2) === "\n") && (document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "@" || document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "+")) {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(caretPosition, document.getElementById("modalFormInput").value.lastIndexOf(" ")).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(caretPosition-1);
-  } else if(document.getElementById("modalFormInput").value.charAt(caretPosition) === " ") {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+1);
-  } else if(document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "@" || document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "+") {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1);
+  let inputValue = document.getElementById("modalFormInput").value;
+  if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+")) {
+    autoCompleteValue = inputValue.substr(caretPosition, inputValue.lastIndexOf(" ")).split(" ").shift();
+    autoCompletePrefix = inputValue.charAt(caretPosition-1);
+  } else if(inputValue.charAt(caretPosition) === " ") {
+    autoCompleteValue = inputValue.substr(inputValue.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
+    autoCompletePrefix = inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition-1)+1);
+  } else if(inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "@" || inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "+") {
+    autoCompleteValue = inputValue.substr(inputValue.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
+    autoCompletePrefix = inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1);
   } else {
     autoCompleteContainer.classList.remove("is-active");
     autoCompleteContainer.blur();

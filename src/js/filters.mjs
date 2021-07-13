@@ -484,14 +484,18 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
         // add filter to input
         todoFiltersItem.addEventListener("click", (event) => {
           if(autoCompletePrefix && autoCompleteValue) {
-            // remove composed filter first
-            let newValue = document.getElementById("modalFormInput").value.slice(0, caretPosition - autoCompleteValue.length) + document.getElementById("modalFormInput").value.slice(caretPosition);
-            // split string into single characters
-            newValue = newValue.split("");
-            //then add selected filter at index
-            newValue.splice(caretPosition - autoCompleteValue.length, 0, todoFiltersItem.getAttribute("data-filter"));
-            // join back from single characters to string
-            document.getElementById("modalFormInput").value = newValue.join("");
+            // split string into elements
+            let inputElements = document.getElementById("modalFormInput").value.split(" ");
+            let i;
+            let x = 0;
+            for(i = 0; i < inputElements.length; i++) {
+              x += inputElements[i].length + 1;
+              // once caret position is found inside element the index is persisted
+              if(x > caretPosition) break;
+            }
+            // replace value at index with prefix and data attribute of filter
+            inputElements.splice(i, 1, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter"));
+            document.getElementById("modalFormInput").value = inputElements.join(" ");
           } else if(autoCompletePrefix) {
             // add button data value to the exact caret position
             document.getElementById("modalFormInput").value = [document.getElementById("modalFormInput").value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), document.getElementById("modalFormInput").value.slice(caretPosition)].join('') + " ";

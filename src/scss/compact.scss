@@ -79,13 +79,20 @@
       }
     }
   }
-  nav ul {
-    width: 3.5em;
-    li a,
-    li.logo {
+  nav {
+    ul {
       width: 3.5em;
-      height: 3.5em;
-      line-height: 3.5em;
+      li a,
+      li.logo {
+        width: 3.5em;
+        height: 3.5em;
+        line-height: 3.5em;
+      }
+    }
+    ul:nth-child(2) {
+      #versionNumber {
+        margin-left: 5em;
+      }
     }
   }
   #autoCompleteContainer,

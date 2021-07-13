@@ -879,6 +879,7 @@ nav ul {
 nav ul li a,
 nav ul li.logo {
   width: 5em;
+  position: relative;
   display: block;
   height: 5em;
   line-height: 5em;
@@ -904,6 +905,22 @@ nav ul:nth-child(2) {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+nav ul:nth-child(2) #versionNumber {
+  width: auto !important;
+  padding: 0.1em;
+  line-height: 1em;
+  display: none;
+  position: fixed;
+  bottom: 0.2em;
+  z-index: 80;
+  margin-left: 7em;
+  font-size: 0.8em;
+  color: #ccc;
+  background: white !important;
+}
+nav ul:nth-child(2):hover #versionNumber {
+  display: flex;
 }
 
 #todoTableSearchContainer {
@@ -958,7 +975,7 @@ nav ul:nth-child(2) {
   top: 0.8em;
   left: 1.4em;
   z-index: 70;
-  padding: 0.75em 0.75em 0.75em 0;
+  padding: 0.75em 0;
 }
 
 @media screen and (max-width: 992px), screen and (max-height: 650px) {
@@ -1041,6 +1058,9 @@ nav ul li.logo {
     width: 3.5em;
     height: 3.5em;
     line-height: 3.5em;
+  }
+  nav ul:nth-child(2) #versionNumber {
+    margin-left: 5em;
   }
 
   #autoCompleteContainer,
@@ -1154,6 +1174,9 @@ body.compact nav ul li.logo {
   width: 3.5em;
   height: 3.5em;
   line-height: 3.5em;
+}
+body.compact nav ul:nth-child(2) #versionNumber {
+  margin-left: 5em;
 }
 body.compact #autoCompleteContainer,
 body.compact #drawerContainer .drawer {

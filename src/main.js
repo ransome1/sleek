@@ -173,9 +173,18 @@ const createWindow = async function() {
       // skip persisted files and go with ENV if set
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
-      } /*else if(process.argv.length > 1 && fs.existsSync(process.argv[1])) {
-        file = process.argv[1];
-      }*/
+      }
+      let args;
+      if (process.defaultApp) {
+        // electron "unbundled" app -- have to skip "electron" and script name arg eg: "."
+        args = process.argv.slice(2);
+      } else {
+        // electron "bundled" app -- skip only the app name, eg: "sleek"
+        args = process.argv.slice(1);
+      }
+      if (args.length > 0 && fs.existsSync(args[0])) {
+        file = args[0];
+      }
       // use the loop to check if the new path is already in the user data
       let fileFound = false;
       if(userData.data.files) {
