@@ -123,6 +123,14 @@ body.dark {
         background-color: $even-darker-grey;
       }
     }
+    ul:nth-child(2) {
+      #versionNumber {
+        color: $lighter-grey!important;
+      }
+      #versionNumber:hover {
+        color: $lighter-grey!important;
+      }
+    }
   }
   #drawerContainer {
     .zoom {

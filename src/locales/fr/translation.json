@@ -150,5 +150,7 @@
   "archivingCompletedBody": "Les tâches terminées ont été déplacées avec succès vers ",
   "restartPrompt": "Pour ce changement, sleek doit redémarrer. Si cela ne se produit pas, veuillez redémarrer l'application manuellement.",
   "deleteCategoryPrompt": "Ce filtre sera irrévocablement supprimé de toutes les tâches.",
-  "modalBackgroundAttention": "Cette fenêtre sera fermée et son contenu effacé."
+  "modalBackgroundAttention": "Cette fenêtre sera fermée et son contenu effacé.",
+  "deferredTodos": "Date seuil dans le futur",
+  "noFiltersFound": "Aucun filtre trouvé"
 }

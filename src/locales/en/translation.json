@@ -11,7 +11,7 @@
   "clear": "Clear",
   "close": "Close",
   "compactView": "Compact view",
-  "completedTodos": "Completed todos",
+  "completedTodos": "Completed",
   "contexts": "Contexts",
   "copy": "Copy",
   "createFile": "Create todo.txt",
@@ -65,7 +65,7 @@
   "helpTabPrioritiesTitle": "Adding a priority",
   "helpTabRecurrencesBody1": "If you want a todo to repeat itself you need to specify a recurrence interval using the <strong>rec:</strong> (for example <strong>rec:d</strong> for a todo that recurs every day) attribute. The sleek user interface provides controls to set the rec: attribute for you, or you can edit it into the text of the todo yourself. Possible values are <strong>d</strong> (daily), <strong>b</strong> (each business day), <strong>w</strong> (weekly), <strong>m</strong> (monthly), <strong>y</strong> (anually). You can also specify a different interval, for example, <strong>rec:3m</strong> to repeat every 3rd month. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos\" target=\"_blank\">Learn more about recurrences in sleek</a>.",
   "helpTabRecurrencesTitle1": "Adding recurrences",
-  "hiddenTodos": "Hidden todos",
+  "hiddenTodos": "Hidden",
   "inProgress": "In progress",
   "language": "Language",
   "messageLoggingBody": "You can support this project by enabling an anonymized error and event logging. It will log errors that occur and features you use. You can enable this feature in settings.",
@@ -117,7 +117,7 @@
   "shortcuts": "Shortcuts",
   "sleekOnGithub": "sleek on Github",
   "sortBy": "Sort by",
-  "sortCompletedLast": "Completed todos at the end",
+  "sortCompletedLast": "Completed at the end",
   "submitIssuesOnGithub": "Submit issues on Github",
   "today": "Today",
   "todos": "Todos",
@@ -150,5 +150,7 @@
   "archivingCompletedBody": "Completed todos successfully moved to ",
   "restartPrompt": "For this change sleek needs to restart itself. If this doesn't happen, please start the application again manually.",
   "deleteCategoryPrompt": "This filter will be irrevocably removed from all todos.",
-  "modalBackgroundAttention": "This window will be closed and its contents cleared."
+  "modalBackgroundAttention": "This window will be closed and its contents cleared.",
+  "deferredTodos": "Threshold date in the future",
+  "noFiltersFound": "No filters found"
 }

@@ -149,5 +149,7 @@
   "archivingCompletedBody": "Todos completados movidos con éxito a ",
   "restartPrompt": "Para este cambio, sleek necesita reiniciarse. Si esto no sucede, vuelva a iniciar la aplicación manualmente.",
   "deleteCategoryPrompt": "Este filtro se eliminará irrevocablemente de todas las tareas.",
-  "modalBackgroundAttention": "Esta ventana se cerrará y se borrará su contenido."
+  "modalBackgroundAttention": "Esta ventana se cerrará y se borrará su contenido.",
+  "deferredTodos": "Fecha límite en el futuro",
+  "noFiltersFound": "No se encontraron filtros"
 }

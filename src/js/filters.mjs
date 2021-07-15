@@ -161,6 +161,9 @@ function filterItems(items) {
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
       if(!userData.showDueIsPast && item.due && isPast(item.due)) return false;
       if(!userData.showDueIsFuture && item.due && isFuture(item.due)) return false;
+      // filter deferred todos that are set in the future
+      if(!userData.deferredTodos && item.t && isFuture(item.t)) return false;
+      // remove todos with no text
       if(item.text==="") return false;
       return true;
     });
@@ -227,7 +230,7 @@ function generateCategoryContainer(category, autoCompletePrefix, filterFragment)
     } else {
       let todoFilterHint = document.createElement("div");
       todoFilterHint.setAttribute("class", "todoFilterHint");
-      todoFilterHint.innerHTML = "<i class=\"fas fa-question-circle\"></i> No " + category + " available. Learn how to add one.";
+      todoFilterHint.innerHTML = translations.noFiltersFound + " <a href=\"#\"><i class=\"fas fa-question-circle\"></i></a>";
       todoFilterHint.onclick = function() {
         showContent("modalHelp");
         // trigger matomo event

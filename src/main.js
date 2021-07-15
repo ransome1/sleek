@@ -284,6 +284,7 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
       if(!Array.isArray(userData.data.sortBy)) userData.set("sortBy", ["priority", "dueString", "contexts", "projects"]);
+      if(typeof userData.data.deferredTodos != "boolean") userData.data.deferredTodos = true;
       return Promise.resolve(userData);
     } catch(error) {
       error.functionName = getUserData.id;
@@ -353,6 +354,7 @@ const createWindow = async function() {
       preload: appData.path + "/preload.js"
     }
   });
+
   // for Windows a separate node module is needed
   if(appData.os === "windows") {
     const Badge = require("electron-windows-badge");

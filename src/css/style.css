@@ -116,6 +116,12 @@ body.dark nav ul li a.is-highlighted {
   border-bottom: none;
   background-color: #3B3B3B;
 }
+body.dark nav ul:nth-child(2) #versionNumber {
+  color: #CCCDCF !important;
+}
+body.dark nav ul:nth-child(2) #versionNumber:hover {
+  color: #CCCDCF !important;
+}
 body.dark #drawerContainer .zoom svg {
   color: white !important;
 }
@@ -906,21 +912,58 @@ nav ul:nth-child(2) {
   bottom: 0;
   left: 0;
 }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
 nav ul:nth-child(2) #versionNumber {
   width: auto !important;
   padding: 0.1em;
-  line-height: 1em;
   display: none;
+  line-height: 1em;
   position: fixed;
   bottom: 0.2em;
   z-index: 80;
   margin-left: 7em;
   font-size: 0.8em;
   color: #ccc;
-  background: white !important;
+  background: transparent !important;
+  opacity: 0;
+  animation: fadeOut 1s forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 nav ul:nth-child(2):hover #versionNumber {
   display: flex;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+  animation-delay: 0.5s;
 }
 
 #todoTableSearchContainer {
@@ -1516,10 +1559,11 @@ body.compact #autoCompleteContainer h4 {
   z-index: 60;
   margin: 0 !important;
 }
-.modal.content .title.is-3 {
+.modal.content h3 {
   font-family: "FreeSansBold";
   font-size: 1.7em;
   font-weight: normal;
+  margin-top: 0.5em;
 }
 .modal.content p {
   display: block;
@@ -1536,6 +1580,10 @@ body.compact #autoCompleteContainer h4 {
 }
 .modal.content select {
   background: white !important;
+}
+.modal.content code {
+  background: transparent;
+  padding: 0;
 }
 .modal.content .delete,
 .modal.content .modal-close {

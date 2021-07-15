@@ -14,7 +14,7 @@
 
 sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and simple but still offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
 
-Users can add contexts, projects, priorities, due dates or recurrences to their todos. These todo.txt attributes can then be used in full-text search, as filters or to group and sort the todo list.
+Users can add contexts, projects, priorities, due dates, recurrences or threshold dates to their todos. These todo.txt attributes can then be used in full-text search, as filters or to group and sort the todo list.
 
 sleek manages and watches multiple todo.txt files continuously for changes, which makes it easy to integrate sleek with other todo.txt apps. Also users can switch to dark mode and choose from multiple languages.
 
@@ -47,6 +47,10 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 
 <a href="https://flathub.org/apps/details/com.github.ransome1.sleek" target="blank"><img width='180' alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
 
+### Get sleek from Homebrew
+Install sleek from <a href="https://formulae.brew.sh/cask/sleek" target="blank">Homebrew</a>.
+`brew install --cask sleek`
+
 ### Get sleek from Arch User Repository
 Install sleek from <a href="https://aur.archlinux.org/packages/sleek/" target="blank">AUR</a>.
 1. Setup <a href="https://github.com/Jguer/yay#installation" target="blank">Yay</a>
@@ -74,7 +78,8 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - projects
   - due dates
   - start dates
-  - <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos">recurrences</a>
+  - <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)">recurrences</a>
+  - <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)">thresholds</a>
 * Todo-List can be grouped and sorted by priorities, due dates, contexts or projects
 * The sorting order can be defined on all 4 levels
 * Todos can be filtered by contexts, projects and priorities

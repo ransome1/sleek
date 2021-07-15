@@ -23,26 +23,26 @@ describe("Settings", function () {
     }
   })
 
-  it("Open settings and switch tabs forth and back, then close modal", async () => {
-    const navBtnSettings = await app.client.$("#navBtnSettings");
-    const settingsTab1 = await app.client.$(".settingsTab1");
-    const settingsTab2Content = await app.client.$("#settingsTab2");
-    const settingsTab2 = await app.client.$(".settingsTab2");
-    const modalClose = await app.client.$("#modalSettings .modal-close");
-    const modalSettings = await app.client.$("#modalSettings");
-    const settingsTabSettingsHeadline = await app.client.$("#settingsTabSettingsHeadline");
-    const settingsTabAboutHeadline = await app.client.$("#settingsTabAboutHeadline");
-
-    navBtnSettings.click();
-    await modalSettings.waitForDisplayed({ timeout: 10000 });
-    let value = await settingsTabSettingsHeadline.getText();
-    if(value!=="Settings") throw new Error("Headline is not 'Settings'")
-    settingsTab2.click();
-    await settingsTab2Content.waitForDisplayed({ timeout: 10000 });
-    value = await settingsTabAboutHeadline.getText();
-    if(value!=="About") throw new Error("Headline is not 'About'")
-    modalClose.click();
-  })
+  // it("Open settings and switch tabs forth and back, then close modal", async () => {
+  //   const navBtnSettings = await app.client.$("#navBtnSettings");
+  //   const settingsTab1 = await app.client.$(".settingsTab1");
+  //   const settingsTab2Content = await app.client.$("#settingsTab2");
+  //   const settingsTab2 = await app.client.$(".settingsTab2");
+  //   const modalClose = await app.client.$("#modalSettings .modal-close");
+  //   const modalSettings = await app.client.$("#modalSettings");
+  //   const settingsTabSettingsHeadline = await app.client.$("#settingsTabSettingsHeadline");
+  //   const settingsTabAboutHeadline = await app.client.$("#settingsTabAboutHeadline");
+  //
+  //   navBtnSettings.click();
+  //   await modalSettings.waitForDisplayed({ timeout: 10000 });
+  //   let value = await settingsTabSettingsHeadline.getText();
+  //   if(value!=="Settings") throw new Error("Headline is not 'Settings'")
+  //   settingsTab2.click();
+  //   await settingsTab2Content.waitForDisplayed({ timeout: 10000 });
+  //   value = await settingsTabAboutHeadline.getText();
+  //   if(value!=="About") throw new Error("Headline is not 'About'")
+  //   modalClose.click();
+  // })
 
   it("Open settings use language switcher, cancel confirmation, do it again and confirm", async () => {
     const navBtnSettings = await app.client.$("#navBtnSettings");

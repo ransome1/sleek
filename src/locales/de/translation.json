@@ -118,7 +118,7 @@
   "shortcuts": "Tastaturkürzel",
   "sleekOnGithub": "sleek auf Github",
   "sortBy": "Sortiere nach",
-  "sortCompletedLast": "Erledigte Todos nach unten",
+  "sortCompletedLast": "Erledigte nach unten",
   "submitIssuesOnGithub": "Fehler auf Github melden",
   "today": "Heute",
   "todos": "Aufgaben",
@@ -151,5 +151,7 @@
   "archivingCompletedBody": "Erledigte Todos erfolgreich verschoben nach ",
   "restartPrompt": "Für diese Änderung muss sich sleek selbst neustarten. Wenn das nicht passiert, starte das Programm bitte händisch neu.",
   "deleteCategoryPrompt": "Dieser Filter wird unwiderruflich aus allen Todos entfernt.",
-  "modalBackgroundAttention": "Dieses Fenster wird geschlossen, dabei gehen vorgenommene Änderungen verloren."
+  "modalBackgroundAttention": "Dieses Fenster wird geschlossen, dabei gehen vorgenommene Änderungen verloren.",
+  "deferredTodos": "Verzögertes Datum",
+  "noFiltersFound": "Keine Filter gefunden"
 }

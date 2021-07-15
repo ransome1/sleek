@@ -30,6 +30,7 @@ const showEmptyFilters = document.getElementById("showEmptyFilters");
 const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyFilters");
 const compactView = document.getElementById("compactView");
 const sortByContainer = document.getElementById("sortByContainer");
+const viewToggleDeferredTodos = document.getElementById("viewToggleDeferredTodos");
 
 sortBy.innerHTML = translations.sortBy;
 viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
@@ -45,6 +46,7 @@ viewToggleCompactView.innerHTML = translations.compactView;
 zoomRangePicker.innerHTML = translations.zoomRangePicker;
 viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
+viewToggleDeferredTodos.innerHTML = translations.deferredTodos;
 
 // build the sortBy list
 userData.sortBy.forEach((sortBy) => {
@@ -79,6 +81,9 @@ zoomUndo.onclick = function() {
   });
 };
 viewToggles.forEach(function(viewToggle) {
+  // set checked according to user data
+  viewToggle.checked = userData[viewToggle.id];
+  // setup up the click event
   viewToggle.onclick = function() {
     toggle(this.id).then(response => {
       console.log(response);
@@ -89,18 +94,6 @@ viewToggles.forEach(function(viewToggle) {
     });
   }
 });
-
-// set the toggles in view sidebar
-showCompleted.checked = userData.showCompleted;
-sortCompletedLast.checked = userData.sortCompletedLast;
-showHidden.checked = userData.showHidden;
-showDueIsToday.checked = userData.showDueIsToday;
-showDueIsFuture.checked = userData.showDueIsFuture;
-showDueIsPast.checked = userData.showDueIsPast;
-toggleTray.checked = userData.tray;
-compactView.checked = userData.compactView;
-showEmptyFilters.checked = userData.showEmptyFilters;
-
 function zoom(zoom) {
   try {
     html.style.zoom = zoom + "%";

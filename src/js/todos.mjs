@@ -206,6 +206,7 @@ async function generateTable(groups, append) {
       // add divider row only if it doesn't exist yet
       if(!append && !document.getElementById(userData.sortBy[0] + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
       for (let item in groups[group][1]) {
+        let todo = groups[group][1][item];
         //
         if(clusterCounter<clusterThreshold) {
           clusterCounter++;
@@ -215,7 +216,6 @@ async function generateTable(groups, append) {
           stopBuilding = true;
           break;
         }
-        let todo = groups[group][1][item];
         // if this todo is not a recurring one the rec value will be set to null
         if(!todo.rec) todo.rec = null;
         // incompleted todos with due date

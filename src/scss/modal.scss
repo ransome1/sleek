@@ -19,10 +19,11 @@
 .modal.content {
   z-index: 60;
   margin: 0 !important;
-  .title.is-3 {
+  h3 {
     font-family: "FreeSansBold";
     font-size: 1.7em;
     font-weight: normal;
+    margin-top: 0.5em;
   }
   p {
     display: block;
@@ -40,6 +41,10 @@
   select {
     background: white!important;
   }
+  code {
+    background: transparent;
+    padding: 0;
+  }
   .delete,
   .modal-close {
     background: $has-text-link !important;
@@ -54,9 +59,6 @@
     max-height: calc(100vh - 5em);
     border-radius: $radius;
   }
-  // .modal-background {
-  //   z-index: 55;
-  // }
   .modal-card-body {
     background: none;
     display: none;
