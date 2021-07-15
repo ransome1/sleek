@@ -21,7 +21,6 @@ const getPaneWidth = () => {
 };
 export const startDragging = (event) => {
   event.preventDefault();
-  //const host = getResizeableElement();
   const startingPaneWidth = getPaneWidth();
   const xOffset = event.pageX;
   const mouseDragHandler = (moveEvent) => {

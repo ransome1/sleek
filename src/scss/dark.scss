@@ -123,6 +123,14 @@ body.dark {
         background-color: $even-darker-grey;
       }
     }
+    ul:nth-child(2) {
+      #versionNumber {
+        color: $lighter-grey!important;
+      }
+      #versionNumber:hover {
+        color: $lighter-grey!important;
+      }
+    }
   }
   #drawerContainer {
     .zoom {
@@ -289,9 +297,6 @@ body.dark {
       background: $even-darker-grey!important;
       h4.is-4 {
         color: white;
-        i {
-          color: $lighter-grey!important;
-        }
       }
       button {
         span.tag {

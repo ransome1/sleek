@@ -31,7 +31,12 @@
           </ul>
           <ul>
             <li><a href="#" id="navBtnSettings" tabindex="-1"><i class="fas fa-cog"></i></a></li>
-            <li><a href="#" id="navBtnHelp" tabindex="-1"><i class="fas fa-question-circle"></i></a></li>
+            <li>
+              <a href="#" id="navBtnHelp" tabindex="-1">
+                <i class="fas fa-question-circle"></i>
+                <code id="versionNumber"></code>
+              </a>
+            </li>
           </ul>
           <div id="drawerContainer">
             <section id="filterDrawer" class="drawer dropdown" tabindex="0">
@@ -113,6 +118,17 @@
                       <span class="toggle">
                         <label class="switch" for="showDueIsPast">
                           <input type="checkbox" id="showDueIsPast" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span id="viewToggleDeferredTodos"></span> <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="deferredTodos">
+                          <input type="checkbox" id="deferredTodos" class="viewToggle" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -235,7 +251,7 @@
       </div>
     </div>
 
-    <section id="modalForm" class="modal">
+    <section id="modalForm" class="modal" data-item="">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
@@ -351,10 +367,10 @@
     <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">
-        <div class="tabs is-centered">
+        <div class="tabs is-centered" style="display: none;">
           <ul>
             <li class="settingsTab1 is-active"><a href="#" tabindex="0" id="settingsTabSettings"></a></li>
-            <li class="settingsTab2"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
+            <!--<li class="settingsTab2"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>-->
           </ul>
         </div>
         <section id="settingsTab1" class="modal-card-body"  data-track-content data-content-name="Settings" data-content-piece="Settings">
@@ -427,7 +443,7 @@
             </tr>
           </table>
         </section>
-        <section id="settingsTab2" class="modal-card-body" data-track-content data-content-name="Settings" data-content-piece="About">
+        <!--<section id="settingsTab2" class="modal-card-body" data-track-content data-content-name="Settings" data-content-piece="About">
           <h3 class="title is-3" id="settingsTabAboutHeadline"></h3>
           <table>
             <tr>
@@ -490,12 +506,12 @@
             </tr>
           </table>
           <p><code>v<span id="version"></span></code></p>
-        </section>
+        </section>-->
         <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
 
-    <div id="modalHelp" class="modal content" tabindex="0" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
+    <div id="modalHelp" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
@@ -505,9 +521,10 @@
             <li class="helpTab3"><a href="#" tabindex="0" id="helpTab3Title"></a></li>
             <li class="helpTab4"><a href="#" tabindex="0" id="helpTab4Title"></a></li>
             <li class="helpTab5"><a href="#" tabindex="0" id="helpTab5Title"></a></li>
+            <li class="helpTab6"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
           </ul>
         </div>
-        <section id="helpTab1" class="modal-card-body is-active">
+        <section id="helpTab1" class="modal-card-body is-active" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
           <h3 class="title is-3" id="helpTabKeyboardTitle"></h3>
           <table class="shortcuts">
               <tr>
@@ -642,6 +659,70 @@
               <img src="img/help/recurrences.gif">
             </div>
           </div>
+        </section>
+        <section id="helpTab6" class="modal-card-body" data-track-content data-content-name="Help" data-content-piece="About">
+          <h3 class="title is-3" id="settingsTabAboutHeadline"></h3>
+          <p><code>Current version: <span id="version"></span></code></p>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutContribute"></th>
+            </tr>
+            <tr>
+              <td><i class="fab fa-github"></i></td>
+              <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
+              <td><i class="fas fa-star"></i></td>
+              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
+              <td><i class="fab fa-windows"></i></td>
+              <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
+            </tr>
+            <tr>
+              <td><i class="fab fa-twitter"></i></td>
+              <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
+              <td><i class="fab fa-facebook"></i></td>
+              <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
+              <td><i class="fab fa-linkedin"></i></td>
+              <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutCopyrightLicense"></th>
+            </tr>
+            <tr>
+              <td colspan="100%" id="settingsTabAboutCopyrightLicenseBody"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutPrivacy"></th>
+            </tr>
+            <tr>
+              <td colspan="100%" id="settingsTabAboutPrivacyBody"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="100%" id="settingsTabAboutExternalLibraries"></th>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
+              <td><a href="https://github.com/electron-userland/electron-builder" target="_blank">Electron builder</a></td>
+              <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
+              <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/jgthms/bulma" target="_blank">Bulma CSS</a></td>
+              <td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome</a></td>
+              <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
+              <td><a href="https://github.com/markedjs/marked" target="_blank">Marked</a></td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
+              <td><a href="https://github.com/paulmillr/chokidar" target="_blank">chokidar</a></td>
+              <td><a href="https://github.com/viktor-shmigol/electron-windows-badge/" target="_blank">Electron Windows Badge</a></td>
+              <td><a href="https://github.com/andrewplummer/Sugar" target="_blank">Sugar</a></td>
+            </tr>
+          </table>
         </section>
         <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>

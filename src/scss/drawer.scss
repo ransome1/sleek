@@ -120,28 +120,31 @@
         display: none;
       }
     }
-    h4.is-4 {
-      font-size: 1.25em;
-      font-family: FreeSansBold;
-      margin-bottom: 0em;
-    }
-    h4.is-4.clickable {
-      cursor: pointer;
-      display: inline;
-      i {
-        color: $has-text-link;
-      }
-    }
-    h4.is-4.clickable::after {
-      height: 1em;
-      display: block;
-      content: '\A';
-      white-space: pre;
-    }
     section {
       width: 100%;
       padding: 0;
       margin: 0 0 1.5em 0;
+      h4.is-4 {
+        font-size: 1.25em;
+        font-family: FreeSansBold;
+        margin: 0 0 0.75em 0;
+      }
+      h4.is-4.clickable {
+        cursor: pointer;
+        display: inline;
+        i {
+          color: $has-text-link;
+        }
+      }
+      h4.is-4.clickable::after {
+        height: 1em;
+        display: block;
+        content: '\A';
+        white-space: pre;
+      }
+      .todoFilterHint {
+        cursor: pointer;
+      }
     }
     table tr td:nth-child(odd) {
       width: auto;

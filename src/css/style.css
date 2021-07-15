@@ -116,6 +116,12 @@ body.dark nav ul li a.is-highlighted {
   border-bottom: none;
   background-color: #3B3B3B;
 }
+body.dark nav ul:nth-child(2) #versionNumber {
+  color: #CCCDCF !important;
+}
+body.dark nav ul:nth-child(2) #versionNumber:hover {
+  color: #CCCDCF !important;
+}
 body.dark #drawerContainer .zoom svg {
   color: white !important;
 }
@@ -258,9 +264,6 @@ body.dark #drawerContainer .drawer {
 }
 body.dark #drawerContainer .drawer h4.is-4 {
   color: white;
-}
-body.dark #drawerContainer .drawer h4.is-4 i {
-  color: #CCCDCF !important;
 }
 body.dark #drawerContainer .drawer button span.tag {
   color: #5a5a5a;
@@ -520,11 +523,14 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-a,
+a {
+  color: #3273dc;
+}
+
 a:hover,
 a:active,
 a:focus {
-  color: #3273dc !important;
+  color: #5a5a5a;
 }
 
 .is-active {
@@ -879,6 +885,7 @@ nav ul {
 nav ul li a,
 nav ul li.logo {
   width: 5em;
+  position: relative;
   display: block;
   height: 5em;
   line-height: 5em;
@@ -904,6 +911,59 @@ nav ul:nth-child(2) {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+nav ul:nth-child(2) #versionNumber {
+  width: auto !important;
+  padding: 0.1em;
+  display: none;
+  line-height: 1em;
+  position: fixed;
+  bottom: 0.2em;
+  z-index: 80;
+  margin-left: 7em;
+  font-size: 0.8em;
+  color: #ccc;
+  background: transparent !important;
+  opacity: 0;
+  animation: fadeOut 1s forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+nav ul:nth-child(2):hover #versionNumber {
+  display: flex;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+  animation-delay: 0.5s;
 }
 
 #todoTableSearchContainer {
@@ -958,7 +1018,7 @@ nav ul:nth-child(2) {
   top: 0.8em;
   left: 1.4em;
   z-index: 70;
-  padding: 0.75em 0.75em 0.75em 0;
+  padding: 0.75em 0;
 }
 
 @media screen and (max-width: 992px), screen and (max-height: 650px) {
@@ -1042,6 +1102,9 @@ nav ul li.logo {
     height: 3.5em;
     line-height: 3.5em;
   }
+  nav ul:nth-child(2) #versionNumber {
+    margin-left: 5em;
+  }
 
   #autoCompleteContainer,
 #drawerContainer .drawer {
@@ -1053,7 +1116,11 @@ nav ul li.logo {
   }
   #autoCompleteContainer .priority button,
 #drawerContainer .drawer .priority button {
-    font-size: 1em;
+    font-size: 1.2em;
+  }
+  #autoCompleteContainer .priority button .tag,
+#drawerContainer .drawer .priority button .tag {
+    font-size: 0.65em;
   }
   #autoCompleteContainer button,
 #drawerContainer .drawer button {
@@ -1151,6 +1218,9 @@ body.compact nav ul li.logo {
   height: 3.5em;
   line-height: 3.5em;
 }
+body.compact nav ul:nth-child(2) #versionNumber {
+  margin-left: 5em;
+}
 body.compact #autoCompleteContainer,
 body.compact #drawerContainer .drawer {
   padding: 1.5em;
@@ -1161,7 +1231,11 @@ body.compact #drawerContainer .drawer .is-4 {
 }
 body.compact #autoCompleteContainer .priority button,
 body.compact #drawerContainer .drawer .priority button {
-  font-size: 1em;
+  font-size: 1.2em;
+}
+body.compact #autoCompleteContainer .priority button .tag,
+body.compact #drawerContainer .drawer .priority button .tag {
+  font-size: 0.65em;
 }
 body.compact #autoCompleteContainer button,
 body.compact #drawerContainer .drawer button {
@@ -1407,28 +1481,31 @@ body.compact #autoCompleteContainer h4 {
 #drawerContainer .drawer button.is-greyed-out .tag {
   display: none;
 }
-#drawerContainer .drawer h4.is-4 {
+#drawerContainer .drawer section {
+  width: 100%;
+  padding: 0;
+  margin: 0 0 1.5em 0;
+}
+#drawerContainer .drawer section h4.is-4 {
   font-size: 1.25em;
   font-family: FreeSansBold;
-  margin-bottom: 0em;
+  margin: 0 0 0.75em 0;
 }
-#drawerContainer .drawer h4.is-4.clickable {
+#drawerContainer .drawer section h4.is-4.clickable {
   cursor: pointer;
   display: inline;
 }
-#drawerContainer .drawer h4.is-4.clickable i {
+#drawerContainer .drawer section h4.is-4.clickable i {
   color: #3273dc;
 }
-#drawerContainer .drawer h4.is-4.clickable::after {
+#drawerContainer .drawer section h4.is-4.clickable::after {
   height: 1em;
   display: block;
   content: "\a";
   white-space: pre;
 }
-#drawerContainer .drawer section {
-  width: 100%;
-  padding: 0;
-  margin: 0 0 1.5em 0;
+#drawerContainer .drawer section .todoFilterHint {
+  cursor: pointer;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
@@ -1482,10 +1559,11 @@ body.compact #autoCompleteContainer h4 {
   z-index: 60;
   margin: 0 !important;
 }
-.modal.content .title.is-3 {
+.modal.content h3 {
   font-family: "FreeSansBold";
   font-size: 1.7em;
   font-weight: normal;
+  margin-top: 0.5em;
 }
 .modal.content p {
   display: block;
@@ -1503,6 +1581,10 @@ body.compact #autoCompleteContainer h4 {
 .modal.content select {
   background: white !important;
 }
+.modal.content code {
+  background: transparent;
+  padding: 0;
+}
 .modal.content .delete,
 .modal.content .modal-close {
   background: #3273dc !important;
@@ -1516,9 +1598,6 @@ body.compact #autoCompleteContainer h4 {
   padding: 0 2em 2em 2em;
   max-height: calc(100vh - 5em);
   border-radius: 0.65em;
-}
-.modal.content .modal-background {
-  z-index: 55;
 }
 .modal.content .modal-card-body {
   background: none;

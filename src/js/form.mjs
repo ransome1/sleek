@@ -1,8 +1,8 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { resetModal, handleError, userData, setUserData, translations } from "../render.js";
+import { resetModal, handleError, userData, setUserData, translations, getConfirmation } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { RecExtension, SugarDueExtension } from "./todotxtExtensions.mjs";
+import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput } from "./datePicker.mjs";
@@ -51,38 +51,6 @@ btnSave.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Submit"]);
 }
-function keyUp() {
-  // do not show suggestion container if Escape has been pressed
-  if(event.key==="Escape") {
-    autoCompleteContainer.classList.remove("is-active");
-    return false;
-  }
-  modalFormInputEvent();
-}
-
-function keyDown() {
-  // regular submit
-  if(document.getElementById("modalFormInput").type !=="textarea" && event.key === "Enter") {
-    submitForm().then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Enter for Submit"]);
-  }
-
-  // submit form with Ctrl/CMD and Enter
-  if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
-    submitForm().then(response => {
-      console.log(response);
-    }).catch(error => {
-      handleError(error);
-    });
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Ctrl/CMD and Enter for Submit"]);
-  }
-}
 
 document.getElementById("modalFormInput").addEventListener("keyup", event => {
   keyUp();
@@ -119,18 +87,22 @@ priorityPicker.onfocus = function() {
 
 modalBackground.forEach(function(el) {
   el.onclick = function() {
-    resetModal().then(function(result) {
-      console.log(result);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    el.parentElement.classList.remove("is-active");
-    autoCompleteContainer.classList.remove("is-active");
-    autoCompleteContainer.blur();
+    const modalObject = document.getElementById(el.parentElement.id);
+    // if modal is modalForm and input is equal the data item
+    if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== modalFormInput.value) {
+      getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
+    } else {
+      resetModal(modalObject).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    }
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
   }
 });
+
 modalClose.forEach(function(el) {
   el.onclick = function() {
     if(el.getAttribute("data-message")) {
@@ -147,6 +119,40 @@ modalClose.forEach(function(el) {
   }
 });
 
+// TODO add try catch
+function keyUp() {
+  // do not show suggestion container if Escape has been pressed
+  if(event.key==="Escape") {
+    autoCompleteContainer.classList.remove("is-active");
+    return false;
+  }
+  modalFormInputEvent();
+}
+
+// TODO add try and catch
+function keyDown() {
+  // regular submit
+  if(document.getElementById("modalFormInput").type !=="textarea" && event.key === "Enter") {
+    submitForm().then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Enter for Submit"]);
+  }
+
+  // submit form with Ctrl/CMD and Enter
+  if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
+    submitForm().then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Ctrl/CMD and Enter for Submit"]);
+  }
+}
 function getCaretPosition(inputId) {
   var content = inputId;
   if((content.selectionStart!=null)&&(content.selectionStart!=undefined)){
@@ -164,22 +170,22 @@ function positionAutoCompleteContainer() {
   autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
 }
 function modalFormInputEvent(event) {
-  //if(event.key==="Enter") return false;
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
   let autoCompleteValue ="";
   let autoCompletePrefix = "";
   let caretPosition = getCaretPosition(document.getElementById("modalFormInput"));
   let autoCompleteCategory = "";
-  if((document.getElementById("modalFormInput").value.charAt(caretPosition-2) === " " || document.getElementById("modalFormInput").value.charAt(caretPosition-2) === "\n") && (document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "@" || document.getElementById("modalFormInput").value.charAt(caretPosition-1) === "+")) {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(caretPosition, document.getElementById("modalFormInput").value.lastIndexOf(" ")).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(caretPosition-1);
-  } else if(document.getElementById("modalFormInput").value.charAt(caretPosition) === " ") {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition-1)+1);
-  } else if(document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "@" || document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1) === "+") {
-    autoCompleteValue = document.getElementById("modalFormInput").value.substr(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
-    autoCompletePrefix = document.getElementById("modalFormInput").value.charAt(document.getElementById("modalFormInput").value.lastIndexOf(" ", caretPosition)+1);
+  let inputValue = document.getElementById("modalFormInput").value;
+  if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+")) {
+    autoCompleteValue = inputValue.substr(caretPosition, inputValue.lastIndexOf(" ")).split(" ").shift();
+    autoCompletePrefix = inputValue.charAt(caretPosition-1);
+  } else if(inputValue.charAt(caretPosition) === " ") {
+    autoCompleteValue = inputValue.substr(inputValue.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
+    autoCompletePrefix = inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition-1)+1);
+  } else if(inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "@" || inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "+") {
+    autoCompleteValue = inputValue.substr(inputValue.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
+    autoCompletePrefix = inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1);
   } else {
     autoCompleteContainer.classList.remove("is-active");
     autoCompleteContainer.blur();
@@ -286,7 +292,8 @@ function show(todo, templated) {
     // switch to textarea if needed
     if(userData.useTextarea) toggleInputSize("input");
     // remove any previously set data-item attributes
-    modalForm.removeAttribute("data-item");
+    //modalForm.removeAttribute("data-item");
+    modalForm.setAttribute("data-item", "");
     // adjust size of recurrence picker input field
     datePickerInput.value = null;
     recurrencePickerInput.value = null;
@@ -297,7 +304,7 @@ function show(todo, templated) {
     if(todo) {
       // replace invisible multiline ascii character with new line
       // we need to check if there already is a due date in the object
-      todo = new TodoTxtItem(todo, [ new DueExtension(), new RecExtension() ]);
+      todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
       // set the priority
       setPriority(todo.priority);
       //
@@ -387,7 +394,7 @@ function submitForm() {
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
         modalFormAlert.innerHTML = translations.formInfoDuplicate;
@@ -404,10 +411,10 @@ function submitForm() {
       // jump to index, remove 1 item there and add the value from the input at that position
       items.objects.splice(index, 1, todo);
     // Add todo
-    } else if(modalForm.getAttribute("data-item")==null && document.getElementById("modalFormInput").value!="") {
+    } else if(!modalForm.getAttribute("data-item") && document.getElementById("modalFormInput").value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension() ]);
+      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
       // check and prevent duplicate todo
@@ -475,8 +482,6 @@ function toggleInputSize(type) {
   newInputElement.id = "modalFormInput";
   newInputElement.setAttribute("tabindex", 0);
   newInputElement.setAttribute("class", "input is-medium");
-  //newInputElement.value = document.getElementById("modalFormInput").value.replaceAll(String.fromCharCode(16)," ");
-  //newInputElement.setAttribute("placeholder", translations.formTodoInputPlaceholder);
   // replace old element with the new one
   document.getElementById("modalFormInput").replaceWith(newInputElement);
   // replace special char with line break before passing it to textarea

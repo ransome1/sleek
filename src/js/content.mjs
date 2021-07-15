@@ -50,11 +50,7 @@ const settingsTabAboutHeadline = document.getElementById("settingsTabAboutHeadli
 const settingsTabAboutPrivacy = document.getElementById("settingsTabAboutPrivacy");
 const settingsTabAboutPrivacyBody = document.getElementById("settingsTabAboutPrivacyBody");
 const settingsTabSettings = document.getElementById("settingsTabSettings");
-//const settingsTabSettingsArchive = document.getElementById("settingsTabSettingsArchive");
-//const settingsTabSettingsArchiveBody = document.getElementById("settingsTabSettingsArchiveBody");
-//const settingsTabSettingsArchiveButton = document.getElementById("settingsTabSettingsArchiveButton");
 const settingsTabSettingsDarkmode = document.getElementById("settingsTabSettingsDarkmode");
-//const settingsTabSettingsDarkmodeBody = document.getElementById("settingsTabSettingsDarkmodeBody");
 const settingsTabSettingsHeadline = document.getElementById("settingsTabSettingsHeadline");
 const settingsTabSettingsLanguage = document.getElementById("settingsTabSettingsLanguage");
 const settingsTabSettingsLanguageBody = document.getElementById("settingsTabSettingsLanguageBody");
@@ -117,9 +113,7 @@ settingsTabAboutExternalLibraries.innerHTML = translations.settingsTabAboutExter
 settingsTabAboutHeadline.innerHTML = translations.about;
 settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
 settingsTabAboutPrivacyBody.innerHTML = translations.settingsTabAboutPrivacyBody;
-settingsTabSettings.innerHTML = translations.settings;
-//settingsTabSettingsArchive.innerHTML = translations.settingsTabSettingsArchive;
-//settingsTabSettingsArchiveButton.innerHTML = translations.archive;
+//settingsTabSettings.innerHTML = translations.settings;
 settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
 settingsTabSettingsHeadline.innerHTML = translations.settings;
 settingsTabSettingsLanguage.innerHTML = translations.language;
@@ -248,7 +242,7 @@ function setFriendlyLanguageNames() {
         default:
         return;
       }
-      var option = document.createElement("option");
+      let option = document.createElement("option");
       option.text = friendlyLanguageName;
       option.value = language;
       if(language===userData.language) option.selected = true;

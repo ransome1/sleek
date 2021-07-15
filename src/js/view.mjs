@@ -1,5 +1,5 @@
 "use strict";
-import { userData, setUserData, handleError, startBuilding, translations, resetModal } from "../render.js";
+import { userData, setUserData, handleError, startBuilding, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 
 const html = document.getElementById("html");
@@ -10,16 +10,11 @@ const showDueIsPast = document.getElementById("showDueIsPast");
 const showDueIsToday = document.getElementById("showDueIsToday");
 const showHidden = document.getElementById("showHidden");
 const sortBy = document.getElementById("sortBy");
-const sortByContexts = document.getElementById("sortByContexts");
-const sortByDueDate = document.getElementById("sortByDueDate");
-const sortByPriority = document.getElementById("sortByPriority");
-const sortByProjects = document.getElementById("sortByProjects");
 const sortCompletedLast = document.getElementById("sortCompletedLast");
 const toggleTray = document.getElementById("toggleTray");
 const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
 const viewHeadlineTodoList = document.getElementById("viewHeadlineTodoList");
 const viewHeadlineFilterList = document.getElementById("viewHeadlineFilterList");
-const viewSelectSortBy = document.getElementById("viewSelectSortBy");
 const viewToggleCompactView = document.getElementById("viewToggleCompactView");
 const viewToggleDueIsFuture = document.getElementById("viewToggleDueIsFuture");
 const viewToggleDueIsPast = document.getElementById("viewToggleDueIsPast");
@@ -35,6 +30,7 @@ const showEmptyFilters = document.getElementById("showEmptyFilters");
 const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyFilters");
 const compactView = document.getElementById("compactView");
 const sortByContainer = document.getElementById("sortByContainer");
+const viewToggleDeferredTodos = document.getElementById("viewToggleDeferredTodos");
 
 sortBy.innerHTML = translations.sortBy;
 viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
@@ -50,22 +46,19 @@ viewToggleCompactView.innerHTML = translations.compactView;
 zoomRangePicker.innerHTML = translations.zoomRangePicker;
 viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
+viewToggleDeferredTodos.innerHTML = translations.deferredTodos;
 
-// build the sort by list
-for(let i=0; i < userData.sortBy.length; i++) {
-  let sortBy = userData.sortBy[i];
+// build the sortBy list
+userData.sortBy.forEach((sortBy) => {
   const sortByContainerElement = document.createElement("li");
   sortByContainerElement.setAttribute("data-id", sortBy);
-
   if(sortBy==="dueString") sortBy = "dueDate";
   sortByContainerElement.innerHTML = "<i class=\"fas fa-grip-vertical\"></i>";
   sortByContainerElement.innerHTML += translations[sortBy];
   sortByContainer.appendChild(sortByContainerElement);
-  if(i === userData.sortBy.length) resolve();
-}
+});
 
 import { enableDragSort } from "../configs/dragndrop.mjs";
-
 enableDragSort("drag-sort-enable");
 
 zoomRangePicker.onchange = function() {
@@ -88,6 +81,9 @@ zoomUndo.onclick = function() {
   });
 };
 viewToggles.forEach(function(viewToggle) {
+  // set checked according to user data
+  viewToggle.checked = userData[viewToggle.id];
+  // setup up the click event
   viewToggle.onclick = function() {
     toggle(this.id).then(response => {
       console.log(response);
@@ -98,18 +94,6 @@ viewToggles.forEach(function(viewToggle) {
     });
   }
 });
-
-// set the toggles in view sidebar
-showCompleted.checked = userData.showCompleted;
-sortCompletedLast.checked = userData.sortCompletedLast;
-showHidden.checked = userData.showHidden;
-showDueIsToday.checked = userData.showDueIsToday;
-showDueIsFuture.checked = userData.showDueIsFuture;
-showDueIsPast.checked = userData.showDueIsPast;
-toggleTray.checked = userData.tray;
-compactView.checked = userData.compactView;
-showEmptyFilters.checked = userData.showEmptyFilters;
-
 function zoom(zoom) {
   try {
     html.style.zoom = zoom + "%";
