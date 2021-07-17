@@ -212,7 +212,7 @@ const createWindow = async function() {
       fileWatcher
       .on("add", function() {
         getContent(file).then(content => {
-          mainWindow.webContents.send("refresh", content)
+          mainWindow.webContents.send("refresh", [content])
         }).catch(error => {
           console.log(error);
         });
@@ -230,7 +230,7 @@ const createWindow = async function() {
         // wait 10ms before rereading in case the file is being updated with a delay
         setTimeout(function() {
           getContent(file).then(content => {
-            mainWindow.webContents.send("refresh", content)
+            mainWindow.webContents.send("refresh", [content])
           }).catch(error => {
             console.log(error);
           });
@@ -410,6 +410,37 @@ const createWindow = async function() {
         label: translations.createFile,
         click: function () {
           openDialog("create");
+        }
+      },
+      { type: "separator" },
+      {
+        role: "print",
+        accelerator: "CmdOrCtrl+P",
+        label: "Print",
+        click: function() {
+          const options = {
+            silent: false,
+            printBackground: true,
+            color: true,
+            margin: {
+              marginType: "printableArea"
+            },
+            landscape: false,
+            pagesPerSheet: 1,
+            collate: false,
+            copies: 1,
+            header: "Header of the Page",
+            footer: "Footer of the Page"
+          }
+          getContent(userData.data.file).then(content => {
+            mainWindow.webContents.send("refresh", [content, false, true]);
+            mainWindow.webContents.print(options, (success, error) => {
+              if(!success) console.log(error);
+              console.log("Success: Print Initiated");
+            });
+          }).catch(error => {
+            console.log(error);
+          });
         }
       },
       { type: "separator" },
@@ -721,7 +752,7 @@ const createWindow = async function() {
   setInterval(() => {
     if(!mainWindow.isFocused()) {
       getContent(userData.data.file).then(content => {
-        mainWindow.webContents.send("refresh", content)
+        mainWindow.webContents.send("refresh", [content])
       }).catch(error => {
         console.error(error);
       });

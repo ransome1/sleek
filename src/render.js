@@ -388,7 +388,7 @@ function registerKeyboardShortcuts() {
     window.addEventListener("keyup", function(event) {
       // switch files
       const regex=/^[1-9]+$/;
-      if(event.key.match(regex)  && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+      if(event.key.match(regex) && userData.files.length > 1 && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         window.api.send("startFileWatcher", userData.files[event.key-1][1]);
       }
       // open settings
@@ -706,7 +706,7 @@ function getBadgeCount() {
   });
   return count;
 }
-async function startBuilding(append) {
+async function startBuilding(append, loadAll) {
   try {
 
     t0 = performance.now();
@@ -719,7 +719,7 @@ async function startBuilding(append) {
 
     userData = await getUserData();
 
-    await todos.generateTable(groups, append);
+    await todos.generateTable(groups, append, loadAll);
 
     configureMainView();
 
@@ -865,9 +865,9 @@ window.api.receive("triggerFunction", (name, args) => {
     return Promise.reject(error);
   }
 });
-window.api.receive("refresh", async function(content) {
-  todos.generateItems(content).then(function() {
-    startBuilding();
+window.api.receive("refresh", async (args) => {
+  todos.generateItems(args[0]).then(function() {
+    startBuilding(args[1], args[2]);
   }).catch(function(error) {
     handleError(error);
   });

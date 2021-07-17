@@ -59,13 +59,13 @@ let
   clusterCounter,
   clusterSize = Math.ceil(window.innerHeight/30), // 35 being the pixel height of one todo in compact mode
   clusterThreshold = 0,
-  stopBuilding = false,
+  //stopBuilding = false,
   visibleRows = 0;
 
 todoTableWrapper.addEventListener("scroll", function(event) {
   if(visibleRows>=items.filtered.length) return false;
   if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight) {
-    stopBuilding = false;
+    //stopBuilding = false;
     startBuilding(true);
   }
 });
@@ -96,14 +96,13 @@ function configureTodoTableTemplate(append) {
       todoTable.innerHTML = "";
       visibleRows = 0;
       clusterThreshold = 0;
-      stopBuilding = false;
+      //stopBuilding = false;
     }
     todoTableBodyRowTemplate.setAttribute("class", "todo");
     todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
     todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
     todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
     todoTableBodyCellTextTemplate.setAttribute("href", "#");
-    //todoTableBodyCellTextTemplate.setAttribute("title", translations.editTodo);
     tableContainerCategoriesTemplate.setAttribute("class", "categories");
     todoTableBodyCellDueDateTemplate.setAttribute("class", "cell itemDueDate");
     todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell recurrence");
@@ -167,7 +166,7 @@ function generateGroups(items) {
   });
   return Promise.resolve(items)
 }
-async function generateTable(groups, append) {
+async function generateTable(groups, append, loadAll) {
   try {
     // configure stats
     showResultStats();
@@ -176,10 +175,10 @@ async function generateTable(groups, append) {
     // reset cluster count for this run
     clusterCounter = 0;
     for (let group in groups) {
-      if(stopBuilding) {
-        stopBuilding = false;
-        break;
-      }
+      // if(stopBuilding) {
+      //   stopBuilding = false;
+      //   break;
+      // }
       // create a divider row
       let dividerRow;
       // completed todos
@@ -207,13 +206,13 @@ async function generateTable(groups, append) {
       if(!append && !document.getElementById(userData.sortBy[0] + groups[group][0]) && dividerRow) tableContainerContent.appendChild(dividerRow);
       for (let item in groups[group][1]) {
         let todo = groups[group][1][item];
-        //
-        if(clusterCounter<clusterThreshold) {
+        //TODO: Explain this, maybe refactor
+        if(!loadAll && clusterCounter<clusterThreshold) {
           clusterCounter++;
           continue;
-        } else if((visibleRows===clusterSize+clusterThreshold) || visibleRows===items.filtered.length ) {
+        } else if(!loadAll && (visibleRows===clusterSize+clusterThreshold) || visibleRows===items.filtered.length ) {
           clusterThreshold = visibleRows;
-          stopBuilding = true;
+          //stopBuilding = true;
           break;
         }
         // if this todo is not a recurring one the rec value will be set to null

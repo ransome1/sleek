@@ -1,0 +1,39 @@
+@page {
+  margin: 0cm !important;
+}
+
+html,
+body {
+  font-size: 9pt!important;
+  padding: 0!important;
+  margin: 0!important;
+  -webkit-print-color-adjust: exact !important;
+}
+nav ul,
+header,
+#btnFiltersResetFilters {
+  display: none!important;
+}
+
+.columns.is-mobile {
+  display: block!important;
+}
+
+.columns #todoTableWrapper {
+  overflow-x: visible!important;
+  overflow-y: visible!important;
+}
+
+#todoTable .cell:hover .tags, #todoTable .cell:focus .tags {
+  display: block!important;
+}
+
+nav #drawerContainer,
+nav #drawerContainer section#filterDrawer {
+  width: 100%!important;
+  --resizeable-width: 100%!important;
+  --max-width: 100%!important;
+  --min-width: 100%!important;
+  float: left;
+  display: block!important;
+}

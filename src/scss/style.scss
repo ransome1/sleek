@@ -427,4 +427,7 @@ code, pre {
 @import "todoTable.scss";
 @import "toggle.scss";
 @import "datepicker.scss";
+@media print {
+  @import "print.scss";
+}
 @import "../../node_modules/bulma/bulma.sass";
