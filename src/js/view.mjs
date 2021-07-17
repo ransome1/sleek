@@ -31,6 +31,7 @@ const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyF
 const compactView = document.getElementById("compactView");
 const sortByContainer = document.getElementById("sortByContainer");
 const viewToggleDeferredTodos = document.getElementById("viewToggleDeferredTodos");
+const viewToggleFileTabs = document.getElementById("viewToggleFileTabs");
 
 sortBy.innerHTML = translations.sortBy;
 viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
@@ -47,6 +48,7 @@ zoomRangePicker.innerHTML = translations.zoomRangePicker;
 viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 viewToggleDeferredTodos.innerHTML = translations.deferredTodos;
+viewToggleFileTabs.innerHTML = translations.fileTabs;
 
 // build the sortBy list
 userData.sortBy.forEach((sortBy) => {

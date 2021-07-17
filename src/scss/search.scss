@@ -3,18 +3,19 @@
 //  ####################################
 
 #todoTableSearchContainer {
+  width: 100%;
+  float: left;
+  position: relative;
   display: none;
-  margin: 0 1.5em;
-  padding-bottom: 0.5em;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.5em 1.5em;
   background: white;
-  position: sticky;
-  top: 0;
-  z-index: 45;
   #todoTableSearchAddTodo {
     display: none;
     position: absolute;
-    top: 2.4em;
-    right: 5em;
+    top: 2.35em;
+    right: 7em;
     color: $has-text-link;
     background: white;
     text-decoration: none;
@@ -29,7 +30,7 @@
     background: white!important;
   }
   input[type="search"] {
-    padding-left: 3.5em;
+    padding-left: 3.2em;
   }
   input[type="search"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -43,15 +44,16 @@
     margin-top: -0.7em;
   }
   label {
-    left: 5.9em;
+    top: 1.2em;
+    left: 7.5em;
   }
   i.fa-search,
   .todoTableSearchQuestionmark {
     font-size: 1.3em;
     line-height: 1;
     position: absolute;
-    top: 0.8em;
-    left: 1.4em;
+    top: 0.7em;
+    left: 2.5em;
     z-index: 70;
     padding: 0.75em 0;
   }

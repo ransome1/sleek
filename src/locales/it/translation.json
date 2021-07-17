@@ -151,5 +151,7 @@
   "deleteCategoryPrompt": "Questo filtro verrà irrevocabilmente rimosso da tutte le attività.",
   "modalBackgroundAttention": "Questa finestra verrà chiusa e il suo contenuto cancellato.",
   "deferredTodos": "Data limite nel futuro",
-  "noFiltersFound": "Nessun filtro trovato"
+  "noFiltersFound": "Nessun filtro trovato",
+  "fileRemovalPrompt": "Questo rimuoverà solo il file dall'elenco dei file, non verrà eliminato dall'unità.",
+  "fileTabs": "Schede di file"
 }

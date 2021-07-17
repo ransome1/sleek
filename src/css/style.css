@@ -285,6 +285,9 @@ body.dark #drawerContainer .drawer::-webkit-scrollbar-thumb {
 body.dark #drawerContainer #drawerClose {
   background: #3B3B3B !important;
 }
+body.dark #todoTableWrapper header {
+  background-color: #212224;
+}
 body.dark #todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
 body.dark #todoTableWrapper::-webkit-scrollbar-thumb {
   background: #3B3B3B;
@@ -309,6 +312,25 @@ body.dark #todoContext .card {
 body.dark #filterContext .card #filterContextDelete,
 body.dark #todoContext .card #filterContextDelete {
   color: #ff3860 !important;
+}
+body.dark #fileTabBar ul {
+  background-color: #2d2d2d;
+}
+body.dark #fileTabBar ul li {
+  color: #ccc;
+}
+body.dark #fileTabBar ul li i {
+  color: #2d2d2d;
+}
+body.dark #fileTabBar ul li:hover i {
+  color: #3273dc;
+}
+body.dark #fileTabBar ul li.is-highlighted {
+  background: #212224;
+  color: white;
+}
+body.dark #fileTabBar ul li.is-highlighted i {
+  color: #212224;
 }
 body.dark .contexts button {
   color: #c5ede3;
@@ -454,14 +476,6 @@ body.dark .datepicker {
 body.dark .datepicker button {
   background: transparent !important;
 }
-body.dark .datepicker .datepicker-cell.today.focused:not(.selected),
-body.dark .datepicker .datepicker-cell.today:not(.selected) {
-  background: #212224 !important;
-}
-body.dark .datepicker .datepicker-cell.today.focused:not(.selected),
-body.dark .datepicker .datepicker-cell.today:hover {
-  color: white !important;
-}
 body.dark .datepicker .datepicker-picker {
   background: #2d2d2d;
   color: white;
@@ -475,15 +489,24 @@ body.dark .datepicker .datepicker-picker .datepicker-header .datepicker-controls
 body.dark .datepicker .datepicker-picker .datepicker-footer .datepicker-controls button {
   color: inherit;
 }
-body.dark .datepicker .datepicker-picker .datepicker-cell.selected,
-body.dark .datepicker .datepicker-picker .datepicker-cell.selected:hover {
-  color: #2d2d2d;
-  background: white;
+body.dark .datepicker .datepicker-picker .datepicker-cell {
+  border-color: #2d2d2d;
+  background: #2d2d2d;
 }
-body.dark .datepicker .datepicker-picker .datepicker-cell.focused:not(.selected),
-body.dark .datepicker .datepicker-picker .datepicker-cell:hover {
-  color: #2d2d2d;
-  background: #CCCDCF;
+body.dark .datepicker .datepicker-picker .datepicker-cell.today,
+body.dark .datepicker .datepicker-picker .datepicker-cell.today.selected {
+  color: #2d2d2d !important;
+  background: #ccc !important;
+}
+body.dark .datepicker .datepicker-picker .datepicker-cell.selected,
+body.dark .datepicker .datepicker-picker .datepicker-cell.selected:hover,
+body.dark .datepicker .datepicker-picker .datepicker-cell.selected.focused {
+  color: white !important;
+  background: #3273dc !important;
+}
+body.dark .datepicker .datepicker-picker .datepicker-cell:hover,
+body.dark .datepicker .datepicker-picker .datepicker-cell.focused {
+  border-color: #3273dc;
 }
 body.dark .contentContainer .title.is-1 {
   color: white;
@@ -838,9 +861,17 @@ code, pre {
 .columns .column .is-right {
   float: right;
 }
-.columns .column.content {
+.columns #todoTableWrapper {
   overflow-y: auto;
   overflow-x: hidden;
+}
+.columns #todoTableWrapper header {
+  width: 100%;
+  float: left;
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  background: white;
 }
 
 #messages {
@@ -869,6 +900,71 @@ code, pre {
 }
 #messages .notification.is-danger {
   background-color: #ff3860;
+}
+
+#fileTabBar {
+  width: 100%;
+  height: 1.85em;
+  display: none;
+  overflow-y: hidden;
+}
+#fileTabBar ul {
+  width: 100%;
+  float: left;
+  font-size: 0.8em;
+  margin-bottom: 1em;
+  box-shadow: -0.3em -0.3em 0.5em rgba(0, 0, 0, 0.05) inset;
+  background: #ebebeb;
+  padding-left: 2.5em;
+}
+#fileTabBar ul li {
+  width: auto;
+  float: left;
+  color: #5a5a5a;
+  background: transparent;
+  padding: 0.35em 1em 0.35em 2.35em;
+  margin-top: 2px;
+  cursor: pointer;
+}
+#fileTabBar ul li i {
+  color: #ebebeb;
+  padding-left: 0.5em;
+}
+#fileTabBar ul li:hover i {
+  color: #3273dc;
+}
+#fileTabBar ul li.is-highlighted {
+  background: white;
+  border-top-left-radius: 0.65em;
+  border-top-right-radius: 0.65em;
+  color: #3273dc;
+  font-family: "FreeSansBold";
+}
+#fileTabBar ul li.is-highlighted i {
+  color: white;
+}
+
+#fileTabBar.is-active {
+  display: block;
+}
+
+.tabs {
+  display: flex;
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+.tabs ul {
+  border: none !important;
+}
+.tabs ul li a {
+  color: #5a5a5a !important;
+  border-color: #ccc !important;
+  border-width: 2px;
+  margin-bottom: 0;
+}
+.tabs ul li.is-active a {
+  color: #3273dc !important;
+  border-color: #3273dc !important;
 }
 
 nav {
@@ -967,19 +1063,20 @@ nav ul:nth-child(2):hover #versionNumber {
 }
 
 #todoTableSearchContainer {
+  width: 100%;
+  float: left;
+  position: relative;
   display: none;
-  margin: 0 1.5em;
-  padding-bottom: 0.5em;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.5em 1.5em;
   background: white;
-  position: sticky;
-  top: 0;
-  z-index: 45;
 }
 #todoTableSearchContainer #todoTableSearchAddTodo {
   display: none;
   position: absolute;
-  top: 2.4em;
-  right: 5em;
+  top: 2.35em;
+  right: 7em;
   color: #3273dc;
   background: white;
   text-decoration: none;
@@ -994,7 +1091,7 @@ nav ul:nth-child(2):hover #versionNumber {
   background: white !important;
 }
 #todoTableSearchContainer input[type=search] {
-  padding-left: 3.5em;
+  padding-left: 3.2em;
 }
 #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
   -webkit-appearance: none;
@@ -1008,15 +1105,16 @@ nav ul:nth-child(2):hover #versionNumber {
   margin-top: -0.7em;
 }
 #todoTableSearchContainer label {
-  left: 5.9em;
+  top: 1.2em;
+  left: 7.5em;
 }
 #todoTableSearchContainer i.fa-search,
 #todoTableSearchContainer .todoTableSearchQuestionmark {
   font-size: 1.3em;
   line-height: 1;
   position: absolute;
-  top: 0.8em;
-  left: 1.4em;
+  top: 0.7em;
+  left: 2.5em;
   z-index: 70;
   padding: 0.75em 0;
 }
@@ -1656,21 +1754,6 @@ body.compact #autoCompleteContainer h4 {
   display: block;
   margin: 0 auto;
 }
-.modal.content .tabs {
-  display: flex;
-  flex-shrink: 0;
-  margin-bottom: 0;
-}
-.modal.content .tabs li a {
-  color: #5a5a5a !important;
-  border-color: #ccc !important;
-  border-width: 2px;
-  margin-bottom: 0;
-}
-.modal.content .tabs li.is-active a {
-  color: #3273dc !important;
-  border-color: #3273dc !important;
-}
 
 #modalForm[open]:not(:focus-within) {
   background-color: #fffffe;
@@ -2106,9 +2189,17 @@ body.compact #autoCompleteContainer h4 {
   display: none;
   z-index: 60;
 }
+.datepicker .datepicker-cell {
+  border: 2px solid white;
+  background: white;
+}
 .datepicker .datepicker-cell.today.focused:not(.selected),
 .datepicker .datepicker-cell.today:not(.selected) {
-  background: #f0f0f0 !important;
+  background: #ebebeb;
+}
+.datepicker .datepicker-cell:hover,
+.datepicker .datepicker-cell.focused {
+  border: 2px solid #3273dc;
 }
 .datepicker .datepicker-footer {
   background: none;

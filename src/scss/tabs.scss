@@ -1,0 +1,65 @@
+#fileTabBar {
+  width: 100%;
+  height: 1.85em;
+  display: none;
+  overflow-y: hidden;
+  ul {
+    width: 100%;
+    float: left;
+    font-size: 0.8em;
+    margin-bottom: 1em;
+    box-shadow: -0.3em -0.3em 0.5em rgb(0 0 0 / 5%) inset;
+    background: $light-grey;
+    padding-left: 2.5em;
+    li {
+      width: auto;
+      float: left;
+      color: $dark-grey;
+      background: transparent;
+      padding: 0.35em 1em 0.35em 2.35em;
+      margin-top: 2px;
+      cursor: pointer;
+      i {
+        color: $light-grey;
+        padding-left: 0.5em;
+      }
+    }
+    li:hover {
+      i {
+        color: $has-text-link;
+      }
+    }
+    li.is-highlighted {
+      background: white;
+      border-top-left-radius: $radius;
+      border-top-right-radius: $radius;
+      color: $has-text-link;
+      font-family: "FreeSansBold";
+      i {
+        color: white;
+      }
+    }
+  }
+}
+#fileTabBar.is-active {
+  display: block;
+}
+
+.tabs {
+  display: flex;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  ul {
+    border: none!important;
+    li a {
+      color: $dark-grey!important;
+      border-color: $mid-grey!important;
+      border-width: 2px;
+      margin-bottom: 0;
+    }
+    li.is-active a {
+      color: $has-text-link!important;
+      border-color: $has-text-link!important;
+    }
+  }
+}

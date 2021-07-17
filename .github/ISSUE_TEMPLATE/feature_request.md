@@ -7,6 +7,9 @@ assignees: 'ransome1'
 
 ---
 
+*If your proposal is more a rough idea than a precise description of a feature, please consider starting a discussion instead: https://github.com/ransome1/sleek/discussions
+Please only continue the feature request if you have a precise idea of what you're asking for and if you can provide specific details, use cases or examples. 
+
 **Did you check if a similar feature request has already been reported?**
 Please do so first: https://github.com/ransome1/sleek/issues
 

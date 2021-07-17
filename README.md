@@ -77,7 +77,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - contexts
   - projects
   - due dates
-  - start dates
+  - creation dates
   - <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)">recurrences</a>
   - <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)">thresholds</a>
 * Todo-List can be grouped and sorted by priorities, due dates, contexts or projects

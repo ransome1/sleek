@@ -65,6 +65,7 @@ let
   appData,
   content,
   drawer,
+  files,
   filters,
   form,
   matomo,
@@ -109,6 +110,8 @@ async function getConfirmation() {
 }
 function configureMainView() {
   try {
+    // generate file tabs
+    files.generateFileTabs();
     // close filterContext if open
     if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");
     // set scaling factor if default font size has changed
@@ -130,21 +133,6 @@ function configureMainView() {
       }).catch(function(error) {
         handleError(error);
       });
-      // check if archive button should be enabled
-      //setButtonState("btnArchiveTodos");
-      // configure navigation
-      // if(filters.filterCounter===0) {
-      //   // hide filter nav button
-      //   navBtnFilter.classList.add("is-hidden");
-      //   // close filter drawer
-      //   drawer.show(navBtnFilter, document.getElementById(navBtnFilter.getAttribute("data-drawer")), true).then(function(result) {
-      //     console.log(result);
-      //   }).catch(function(error) {
-      //     handleError(error);
-      //   });
-      // } else {
-      //   navBtnFilter.classList.remove("is-hidden");
-      // }
       // configure table view
       if(userData.file && todos.items.objects.length===0) {
         addTodoContainer.classList.add("is-active");
@@ -398,6 +386,11 @@ function registerKeyboardShortcuts() {
       }
     }, true)
     window.addEventListener("keyup", function(event) {
+      // switch files
+      const regex=/^[1-9]+$/;
+      if(event.key.match(regex)  && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        window.api.send("startFileWatcher", userData.files[event.key-1][1]);
+      }
       // open settings
       if(event.key === "," && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         content.showContent("modalSettings").then(function(response) {
@@ -748,6 +741,7 @@ window.onload = async function () {
   todos = await import("./js/todos.mjs");
   filters = await import("./js/filters.mjs");
   drawer = await import("./js/drawer.mjs");
+  files = await import("./js/files.mjs");
   if(userData.file) {
     window.api.send("startFileWatcher", userData.file);
   // for users who upgrade from very old versions
@@ -789,7 +783,6 @@ window.onload = async function () {
   content = await import("./js/content.mjs");
   view = await import("./js/view.mjs");
   import("./js/navigation.mjs");
-  import("./js/files.mjs");
   import("./js/search.mjs");
   matomo = await import("./js/matomo.mjs");
   await matomo.configureMatomo().then(function(response) {

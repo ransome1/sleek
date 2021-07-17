@@ -152,5 +152,7 @@
   "deleteCategoryPrompt": "Este filtro será removido irrevogavelmente de todas as tarefas.",
   "modalBackgroundAttention": "Esta janela será fechada e seu conteúdo apagado.",
   "deferredTodos": "Data limite no futuro",
-  "noFiltersFound": "Nenhum filtro encontrado"
+  "noFiltersFound": "Nenhum filtro encontrado",
+  "fileRemovalPrompt": "Isso removerá apenas o arquivo da lista de arquivos, não será excluído da unidade.",
+  "fileTabs": "Guias de arquivo"
 }

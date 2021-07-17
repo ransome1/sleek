@@ -366,9 +366,17 @@ code, pre {
       float: right;
     }
   }
-  .column.content {
+  #todoTableWrapper {
     overflow-y: auto;
     overflow-x: hidden;
+    header {
+      width: 100%;
+      float: left;
+      position: sticky;
+      top: 0;
+      z-index: 45;
+      background: white;
+    }
   }
 }
 
@@ -408,6 +416,7 @@ code, pre {
 //  IMPORT MODULES
 //  ####################################
 
+@import "tabs.scss";
 @import "navigation.scss";
 @import "search.scss";
 @import "compact.scss";

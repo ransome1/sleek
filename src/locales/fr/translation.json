@@ -152,5 +152,7 @@
   "deleteCategoryPrompt": "Ce filtre sera irrévocablement supprimé de toutes les tâches.",
   "modalBackgroundAttention": "Cette fenêtre sera fermée et son contenu effacé.",
   "deferredTodos": "Date seuil dans le futur",
-  "noFiltersFound": "Aucun filtre trouvé"
+  "noFiltersFound": "Aucun filtre trouvé",
+  "fileRemovalPrompt": "Cela supprimera uniquement le fichier de votre liste de fichiers, il ne sera pas supprimé de votre lecteur.",
+  "fileTabs": "Onglets de fichier"
 }

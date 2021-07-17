@@ -285,6 +285,7 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
       if(!Array.isArray(userData.data.sortBy)) userData.set("sortBy", ["priority", "dueString", "contexts", "projects"]);
       if(typeof userData.data.deferredTodos != "boolean") userData.data.deferredTodos = true;
+      if(typeof userData.data.fileTabs != "boolean") userData.data.fileTabs = true;
       return Promise.resolve(userData);
     } catch(error) {
       error.functionName = getUserData.id;

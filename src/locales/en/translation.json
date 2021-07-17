@@ -152,5 +152,7 @@
   "deleteCategoryPrompt": "This filter will be irrevocably removed from all todos.",
   "modalBackgroundAttention": "This window will be closed and its contents cleared.",
   "deferredTodos": "Threshold date in the future",
-  "noFiltersFound": "No filters found"
+  "noFiltersFound": "No filters found",
+  "fileRemovalPrompt": "This will only remove the file from your file list, it will not be deleted from your drive.",
+  "fileTabs": "File tabs"
 }

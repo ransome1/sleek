@@ -1,9 +1,17 @@
 .datepicker {
   display: none;
   z-index: 60;
+  .datepicker-cell {
+    border: 2px solid white;
+    background: white;
+  }
   .datepicker-cell.today.focused:not(.selected),
   .datepicker-cell.today:not(.selected) {
-    background: $almost-white !important;
+    background: $light-grey;
+  }
+  .datepicker-cell:hover,
+  .datepicker-cell.focused {
+    border: 2px solid $has-text-link;
   }
   .datepicker-footer {
     background: none;

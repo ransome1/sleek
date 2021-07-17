@@ -184,6 +184,19 @@
                     </td>
                   </tr>
                   <tr>
+                    <td>
+                      <p id="viewToggleFileTabs"></p>
+                    </td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="fileTabs">
+                          <input type="checkbox" id="fileTabs" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
                     <td id="viewToggleZoom"></td>
                     <td class="zoom">
                       <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
@@ -200,19 +213,28 @@
 
       </div>
 
-      <div id="todoTableWrapper" class="column content">
+      <div id="todoTableWrapper" class="column">
 
-        <section id="todoTableSearchContainer" class="inputWrapper">
-          <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
-          <i class="fas fa-search"></i>
-          <label id="todoTableSearchLabel" for="todoTableSearch"></label>
-          <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
-          <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;Add as todo</button>
-          <section id="resultStats">
-            <span class="tag"></span>
+        <header>
+
+          <section id="fileTabBar">
+            <ul></ul>
           </section>
-        </section>
 
+          <section id="todoTableSearchContainer" class="inputWrapper">
+
+            <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
+            <i class="fas fa-search"></i>
+            <label id="todoTableSearchLabel" for="todoTableSearch"></label>
+            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
+            <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;Add as todo</button>
+            <section id="resultStats">
+              <span class="tag"></span>
+            </section>
+
+          </section>
+
+        </header>
 
         <section id="todoTable" tabindex="-1"></section>
 

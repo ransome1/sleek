@@ -123,23 +123,7 @@
   .card {
     display: block; margin: 0 auto;
   }
-  .tabs {
-    display: flex;
-    flex-shrink: 0;
-    margin-bottom: 0;
-    li a {
-      color: $dark-grey!important;
-      border-color: $mid-grey!important;
-      border-width: 2px;
-      margin-bottom: 0;
-    }
-    li.is-active a {
-      color: $has-text-link!important;
-      border-color: $has-text-link!important;
-    }
-  }
 }
-
 
 #modalForm[open]:not(:focus-within) {
   background-color: rgb(255, 255, 254);

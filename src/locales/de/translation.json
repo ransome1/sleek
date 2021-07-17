@@ -153,5 +153,7 @@
   "deleteCategoryPrompt": "Dieser Filter wird unwiderruflich aus allen Todos entfernt.",
   "modalBackgroundAttention": "Dieses Fenster wird geschlossen, dabei gehen vorgenommene Änderungen verloren.",
   "deferredTodos": "Verzögertes Datum",
-  "noFiltersFound": "Keine Filter gefunden"
+  "noFiltersFound": "Keine Filter gefunden",
+  "fileRemovalPrompt": "Die Datei wird lediglich aus dieser Liste entfernt, dabei aber nicht von der Festplatte gelöscht.",
+  "fileTabs": "Dateireiter"
 }

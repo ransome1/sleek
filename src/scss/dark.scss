@@ -324,6 +324,11 @@ body.dark {
       background: $even-darker-grey!important;
     }
   }
+  #todoTableWrapper {
+    header {
+      background-color: $almost-black;
+    }
+  }
   #todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
   #todoTableWrapper::-webkit-scrollbar-thumb {
     background: $even-darker-grey;
@@ -342,6 +347,29 @@ body.dark {
       background: $even-darker-grey;
       #filterContextDelete {
         color: $has-text-danger!important;
+      }
+    }
+  }
+  #fileTabBar {
+    ul {
+      background-color: $darker-grey;
+      li {
+        color: $mid-grey;
+        i {
+          color: $darker-grey;
+        }
+      }
+      li:hover {
+        i {
+          color: $has-text-link;
+        }
+      }
+      li.is-highlighted {
+        background: $almost-black;
+        color: white;
+        i {
+          color: $almost-black;
+        }
       }
     }
   }
@@ -500,14 +528,6 @@ body.dark {
     button {
       background: transparent!important;
     }
-    .datepicker-cell.today.focused:not(.selected),
-    .datepicker-cell.today:not(.selected) {
-      background: $almost-black!important;
-    }
-    .datepicker-cell.today.focused:not(.selected),
-    .datepicker-cell.today:hover {
-      color: white!important;
-    }
     .datepicker-picker {
       background: $darker-grey;
       color: white;
@@ -520,15 +540,24 @@ body.dark {
       .datepicker-footer .datepicker-controls button {
         color: inherit;
       }
-      .datepicker-cell.selected,
-      .datepicker-cell.selected:hover {
-        color: $darker-grey;
-        background: white;
+      .datepicker-cell {
+        border-color: $darker-grey;
+        background: $darker-grey;
       }
-      .datepicker-cell.focused:not(.selected),
-      .datepicker-cell:hover {
-        color: $darker-grey;
-        background: $lighter-grey;
+      .datepicker-cell.today,
+      .datepicker-cell.today.selected {
+        color: $darker-grey!important;
+        background: $mid-grey!important;
+      }
+      .datepicker-cell.selected,
+      .datepicker-cell.selected:hover,
+      .datepicker-cell.selected.focused, {
+        color: white!important;
+        background: $has-text-link!important;
+      }
+      .datepicker-cell:hover,
+      .datepicker-cell.focused {
+        border-color: $has-text-link;
       }
     }
   }
