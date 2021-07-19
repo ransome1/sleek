@@ -322,7 +322,8 @@ body.dark #fileTabBar ul li {
 body.dark #fileTabBar ul li i {
   color: #2d2d2d;
 }
-body.dark #fileTabBar ul li:hover i {
+body.dark #fileTabBar ul li:hover i,
+body.dark #fileTabBar ul li.is-highlighted:hover i {
   color: #3273dc;
 }
 body.dark #fileTabBar ul li.is-highlighted {
@@ -918,19 +919,29 @@ code, pre {
   padding-left: 2.5em;
 }
 #fileTabBar ul li {
-  width: auto;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 15em;
+  min-width: 8.5em;
   float: left;
   color: #5a5a5a;
   background: transparent;
-  padding: 0.35em 1em 0.35em 2.35em;
+  padding: 0.35em 2.35em;
   margin-top: 2px;
   cursor: pointer;
+  text-align: center;
 }
 #fileTabBar ul li i {
+  position: absolute;
+  top: 0.65em;
+  right: 0.5em;
   color: #ebebeb;
   padding-left: 0.5em;
 }
-#fileTabBar ul li:hover i {
+#fileTabBar ul li:hover i,
+#fileTabBar ul li.is-highlighted:hover i {
   color: #3273dc;
 }
 #fileTabBar ul li.is-highlighted {
@@ -2472,6 +2483,16 @@ body {
 
   nav ul,
 header,
+#drawerClose,
+#viewDrawer,
+#todoContext,
+#filterContext,
+#modalChangeFile,
+#modalPrompt,
+#messages,
+#modalForm,
+#modalHelp,
+#modalSettings,
 #btnFiltersResetFilters {
     display: none !important;
   }

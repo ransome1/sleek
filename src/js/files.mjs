@@ -1,5 +1,5 @@
 "use strict";
-import { resetFilters, resetModal, handleError, userData, setUserData, translations, getConfirmation } from "../render.js";
+import { resetFilters, resetModal, handleError, userData, setUserData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 
@@ -8,27 +8,29 @@ const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
 const fileTabBarList = document.querySelector("#fileTabBar ul");
 
-function removeFileFromList(filePath, files) {
+function removeFileFromList(isActive, index) {
   try {
-    // remove file from files array
-    files = files.filter(function(file) {
-      return file[1] != filePath;
-    });
-    // persist new files array
-    setUserData("files", files);
-    // reset everything and load again
+    if(isActive && index-1 === -1) {
+      userData.files[index+1][0] = 1;
+    } else if(isActive && index-1 >= 0) {
+      userData.files[index-1][0] = 1;
+    }
+    userData.files.splice(index, 1);
+    setUserData("files", userData.files);
     resetFilters().then(function(response) {
       console.info(response);
+      index = userData.files.findIndex(file => file[0] === 1);
+      window.api.send("startFileWatcher", userData.files[index][1]);
     }).catch(function(error) {
       handleError(error);
     });
-    return Promise.resolve("Success: File removed from list: " + filePath);
+    return Promise.resolve("Success: File removed from list");
   } catch (error) {
     return Promise.reject(error);
   }
 }
 
-function selectFileFromList(file) {
+function selectFileFromList(index) {
   try {
     resetFilters().then(function(response) {
       console.info(response);
@@ -36,78 +38,60 @@ function selectFileFromList(file) {
       handleError(error);
     });
     resetModal().then(response => {
-      window.api.send("startFileWatcher", file);
+      window.api.send("startFileWatcher", userData.files[index][1]);
       console.info(response);
     }).catch(error => {
       handleError(error);
     });
-    return Promise.resolve("Success: File selected from list: " + file);
+    return Promise.resolve("Success: File selected");
   } catch (error) {
     return Promise.reject(error);
   }
 }
 
-function generateFileTabs() {
-  let files = userData.files;
-  if(files.length>1 && userData.fileTabs) {
-    fileTabBar.classList.add("is-active");
-  } else {
-    fileTabBar.classList.remove("is-active");
-    return false;
-  }
-  fileTabBarList.innerHTML = null;
-  for (let file in files) {
-    const isActive = files[file][0];
-    const filePath = files[file][1];
-    const fileName = files[file][1].split("/").pop();
-    let listItem = document.createElement("li");
-    listItem.innerHTML = fileName;
-    listItem.innerHTML += "<i class=\"fas fa-minus-circle\"></i>";
-    if(isActive===1) {
-      listItem.classList.add("is-highlighted");
-    } else {
-      // only add remove button to not selected ones to reduce complexity
-      listItem.querySelector("i").onclick = function() {
-        getConfirmation(removeFileFromList, translations.fileRemovalPrompt, filePath, files);
-      }
-    }
-    listItem.onclick = function(event) {
-      // if click was on minus circle function is aborted
-      if(event.target.classList.contains("fas")) return false;
-      // just send the new file to filewatcher
-      selectFileFromList(filePath).then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on tab"]);
-    }
-    fileTabBarList.appendChild(listItem);
-  }
-}
-
-function showFiles() {
+function generateFileList() {
   try {
-    let files = userData.files;
-    modalChangeFile.classList.add("is-active");
-    modalChangeFile.focus();
+    if(userData.files.length>1 && userData.fileTabs) {
+      fileTabBar.classList.add("is-active");
+    } else {
+      fileTabBar.classList.remove("is-active");
+    }
+    fileTabBarList.innerHTML = null;
     modalChangeFileTable.innerHTML = null;
     modalChangeFileTable.classList.add("files");
-    for (let file in files) {
-      // skip if file doesn't exist
+    for (let i = 0; i < userData.files.length; i++) {
+      let isActive = userData.files[i][0];
+      let fileName = userData.files[i][1].split("/").pop();
+      let listItem = document.createElement("li");
+      listItem.innerHTML = fileName;
+      listItem.innerHTML += "<i class=\"fas fa-minus-circle\"></i>";
+      if(isActive===1) listItem.classList.add("is-highlighted");
+      listItem.querySelector("i").onclick = function() {
+        removeFileFromList(isActive, i);
+      }
+      if(!isActive) {
+        listItem.onclick = function(event) {
+          if(event.target.classList.contains("fas")) return false;
+          selectFileFromList(i).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on tab"]);
+        }
+      }
+      fileTabBarList.appendChild(listItem);
       let row = modalChangeFileTable.insertRow(-1);
       let cell1 = row.insertCell(0);
       let cell2 = row.insertCell(1);
       let cell3 = row.insertCell(2);
-      row.setAttribute("data-path", files[file][1]);
-      if(files[file][0]===1) {
+      if(userData.files[i][0]===1) {
         cell1.innerHTML = "<button disabled>" + translations.selected + "</button>";
       } else {
         cell1.innerHTML = "<button tabindex=\"0\">" + translations.select + "</button>";
         cell1.onclick = function() {
-          // just send the new file to filewatcher
-          selectFileFromList(this.parentElement.getAttribute("data-path")).then(function(response) {
+          selectFileFromList(i).then(function(response) {
             console.info(response);
           }).catch(function(error) {
             handleError(error);
@@ -115,21 +99,21 @@ function showFiles() {
           // trigger matomo event
           if(userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
         }
-        cell3.innerHTML = "<a href=\"#\" tabindex=\"0\"><i class=\"fas fa-minus-circle\"></i></a>";
-        cell3.title = translations.delete;
-        cell3.onclick = async function() {
-          await getConfirmation(removeFileFromList, translations.fileRemovalPrompt, this.parentElement.getAttribute("data-path"), files);
-          showFiles().then(response => {
-            console.info(response);
-          }).catch(error => {
-            handleError(error);
-          });
-        }
       }
-      cell2.innerHTML = files[file][1];
+      cell2.innerHTML = userData.files[i][1];
+      cell3.innerHTML = "<a href=\"#\" tabindex=\"0\"><i class=\"fas fa-minus-circle\"></i></a>";
+      cell3.title = translations.delete;
+      cell3.onclick = function() {
+        removeFileFromList(isActive, i);
+        generateFileList().then(response => {
+          modalChangeFile.classList.add("is-active");
+          modalChangeFile.focus();
+          console.info(response);
+        }).catch(error => {
+          handleError(error);
+        });
+      }
     }
-    // create the modal jail, so tabbing won't leave modal
-    createModalJail(modalChangeFile);
     return Promise.resolve("Success: File changer modal built and opened");
   } catch (error) {
     return Promise.reject(error);
@@ -138,8 +122,11 @@ function showFiles() {
 
 btnOpenTodoFile.onclick = function() {
   if(typeof userData.files === "object" && userData.files.length>0) {
-    showFiles().then(response => {
+    generateFileList().then(response => {
       console.info(response);
+      modalChangeFile.classList.add("is-active");
+      modalChangeFile.focus();
+      createModalJail(modalChangeFile);
     }).catch(error => {
       handleError(error);
     });
@@ -150,4 +137,4 @@ btnOpenTodoFile.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Files"]);
 }
 
-export { generateFileTabs };
+export { generateFileList, removeFileFromList };

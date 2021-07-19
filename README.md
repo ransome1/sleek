@@ -123,3 +123,4 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 - Matomo: https://github.com/matomo-org/matomo
 - chokidar: https://github.com/paulmillr/chokidar
 - Sugar: https://github.com/andrewplummer/Sugar
+- PEG.js: https://github.com/pegjs/pegjs

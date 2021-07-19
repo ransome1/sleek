@@ -12,19 +12,29 @@
     background: $light-grey;
     padding-left: 2.5em;
     li {
-      width: auto;
+      position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 15em;
+      min-width: 8.5em;
       float: left;
       color: $dark-grey;
       background: transparent;
-      padding: 0.35em 1em 0.35em 2.35em;
+      padding: 0.35em 2.35em;
       margin-top: 2px;
       cursor: pointer;
+      text-align: center;
       i {
+        position: absolute;
+        top: 0.65em;
+        right: 0.5em;
         color: $light-grey;
         padding-left: 0.5em;
       }
     }
-    li:hover {
+    li:hover,
+    li.is-highlighted:hover {
       i {
         color: $has-text-link;
       }

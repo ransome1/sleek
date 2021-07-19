@@ -386,8 +386,9 @@ const createWindow = async function() {
       },
       { type: "separator" },
       {
-        role: "close",
-        accelerator: "Command+W",
+        click: function () {
+          mainWindow.close();
+        },
         label: translations.close
       },
       {
@@ -445,7 +446,9 @@ const createWindow = async function() {
       },
       { type: "separator" },
       {
-        role: "close",
+        click: function () {
+          mainWindow.close();
+        },
         label: translations.close
       }
     ];
@@ -666,6 +669,9 @@ const createWindow = async function() {
   const configureWindowEvents = function() {
     try {
       ipcMain
+      .on("closeWindow", (event, args) => {
+        mainWindow.close();
+      })
       .on("userData", (event, args) => {
         if(args) userData.set(args[0], args[1]);
         mainWindow.webContents.send("userData", userData.data);

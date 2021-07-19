@@ -16,7 +16,8 @@ contextBridge.exposeInMainWorld(
         "update-badge",
         "triggerFunction",
         "restart",
-        "setTheme"
+        "setTheme",
+        "closeWindow"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);

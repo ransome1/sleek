@@ -359,7 +359,8 @@ body.dark {
           color: $darker-grey;
         }
       }
-      li:hover {
+      li:hover,
+      li.is-highlighted:hover {
         i {
           color: $has-text-link;
         }

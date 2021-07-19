@@ -154,5 +154,5 @@
   "deferredTodos": "将来のしきい値",
   "noFiltersFound": "フィルタが見つかりません",
   "fileRemovalPrompt": "これにより、ファイルリストからファイルが削除されるだけで、ドライブからは削除されません。",
-  "fileTabs": "ファイルタブ"
+  "fileTabs": "タブ"
 }

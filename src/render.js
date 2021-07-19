@@ -111,7 +111,7 @@ async function getConfirmation() {
 function configureMainView() {
   try {
     // generate file tabs
-    files.generateFileTabs();
+    files.generateFileList();
     // close filterContext if open
     if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");
     // set scaling factor if default font size has changed
@@ -384,12 +384,38 @@ function registerKeyboardShortcuts() {
       if((event.ctrlKey || event.metaKey) && event.key === "c" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         window.api.send("openOrCreateFile", "create");
       }
+      // close tab or window
+      if((event.ctrlKey || event.metaKey) && event.key === "w") {
+        if(userData.files.length > 1) {
+          let index = userData.files.findIndex(file => file[0] === 1);
+          files.removeFileFromList(1, index);
+        } else {
+          window.api.send("closeWindow");
+        }
+      }
     }, true)
     window.addEventListener("keyup", function(event) {
       // switch files
       const regex=/^[1-9]+$/;
       if(event.key.match(regex) && userData.files.length > 1 && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         window.api.send("startFileWatcher", userData.files[event.key-1][1]);
+      }
+      // cycle through tabs
+      if(event.ctrlKey && !event.shiftKey  && event.keyCode === 9) {
+        let index = userData.files.findIndex(file => file[0] === 1);
+        if(!userData.files[index+1]) {
+          window.api.send("startFileWatcher", userData.files[0][1]);
+        } else {
+          window.api.send("startFileWatcher", userData.files[index+1][1]);
+        }
+      }
+      if(event.ctrlKey && event.shiftKey && event.keyCode === 9) {
+        let index = userData.files.findIndex(file => file[0] === 1);
+        if(!userData.files[index-1]) {
+          window.api.send("startFileWatcher", userData.files[userData.files.length-1][1]);
+        } else {
+          window.api.send("startFileWatcher", userData.files[index-1][1]);
+        }
       }
       // open settings
       if(event.key === "," && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
