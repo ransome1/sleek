@@ -160,6 +160,7 @@ toggleTray.onclick = function(event) {
 }
 
 toggleNotifications.checked = userData.notifications;
+toggleTray.checked = userData.tray;
 
 function setTray(setting) {
   setUserData("tray", setting);

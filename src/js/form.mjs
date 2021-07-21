@@ -402,7 +402,7 @@ function submitForm() {
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.resolve("Info: Todo already exists in file, won't write duplicate");
       // check if todo text is empty
-      } else if(!todo.text) {
+      } else if(!todo.text && !todo.h) {
         modalFormAlert.innerHTML = translations.formInfoIncomplete;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
@@ -424,7 +424,7 @@ function submitForm() {
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.resolve("Info: Todo already exists in file, won't write duplicate");
       // check if todo text is empty
-      } else if(!todo.text) {
+      } else if(!todo.text && !todo.h) {
         modalFormAlert.innerHTML = translations.formInfoIncomplete;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');

@@ -116,7 +116,7 @@ function generateItems(content) {
   try {
     items = { objects: TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
     items.objects = items.objects.filter(function(item) {
-      if(!item.text) return false;
+      if(!item.text && !item.h) return false;
       return true;
     });
     items.complete = items.objects.filter(function(item) { return item.complete === true });
@@ -517,7 +517,7 @@ function addTodo(todo) {
   try {
     todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
     // abort if there is no text
-    if(!todo.text) return Promise.resolve("Info: Text is missing, no todo is written");
+    if(!todo.text && !todo.h) return Promise.resolve("Info: Text is missing, no todo is written");
     // we add the current date to the start date attribute of the todo.txt object
     todo.date = new Date();
     // get index of todo

@@ -2470,19 +2470,17 @@ body.compact #autoCompleteContainer h4 {
 }
 
 @media print {
-  @page {
-    margin: 0cm !important;
-  }
   html,
 body {
+    filter: grayscale(100%) !important;
+    color: black !important;
     font-size: 9pt !important;
-    padding: 0 !important;
-    margin: 0 !important;
     -webkit-print-color-adjust: exact !important;
   }
 
-  nav ul,
-header,
+  nav #drawerContainer,
+nav ul,
+header #fileTabBar,
 #drawerClose,
 #viewDrawer,
 #todoContext,
@@ -2506,18 +2504,21 @@ header,
     overflow-y: visible !important;
   }
 
-  #todoTable .cell:hover .tags, #todoTable .cell:focus .tags {
+  #todoTable .cell:hover .tags, #todoTable .cell:focus .tags,
+#todoTable .cell.itemDueDate .tags,
+#todoTable .cell.itemDueDate .fa-sort-down {
     display: block !important;
   }
 
-  nav #drawerContainer,
-nav #drawerContainer section#filterDrawer {
-    width: 100% !important;
-    --resizeable-width: 100%!important;
-    --max-width: 100%!important;
-    --min-width: 100%!important;
-    float: left;
-    display: block !important;
+  #todoTable .cell span.tag.contexts {
+    background: black;
+    color: white;
+    opacity: 0.7;
+  }
+
+  #todoTable .cell span.tag.projects {
+    background: #ebebeb;
+    color: black;
   }
 }
 /*! bulma.io v0.9.2 | MIT License | github.com/jgthms/bulma */
