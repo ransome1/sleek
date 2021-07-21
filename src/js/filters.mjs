@@ -155,16 +155,13 @@ function filterItems(items) {
     }
     // apply filters
     items = items.filter(function(item) {
-      if(!item.text) return false
+      if(!item.text && !item.h) return false;
       if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
       if(!userData.showDueIsPast && item.due && isPast(item.due)) return false;
       if(!userData.showDueIsFuture && item.due && isFuture(item.due)) return false;
-      // filter deferred todos that are set in the future
       if(!userData.deferredTodos && item.t && isFuture(item.t)) return false;
-      // remove todos with no text
-      if(item.text==="") return false;
       return true;
     });
     return Promise.resolve(items);

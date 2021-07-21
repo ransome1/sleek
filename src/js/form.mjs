@@ -211,22 +211,20 @@ function modalFormInputEvent(event) {
 }
 // TODO add try catch
 async function resizeInput(input) {
-  // resizing modalFormInput
   if(input.tagName==="TEXTAREA" && input.id==="modalFormInput") {
-    // reduce height after lines are being deleted
     input.style.height = "auto"
-    // wait until the textarea is rendered
     await input.scrollHeight;
     input.style.height = input.scrollHeight+"px";
     return false;
   } else if (input.type==="text" && input.id==="modalFormInput") {
     return false;
   }
-  // resizing all other input
+  let additionalLength = 6;
+  if(userData.language === "jp" || userData.language === "zh") additionalLength = 11;
   if(input.value) {
-    input.style.width = input.value.length + 6 + "ch";
+    input.style.width = input.value.length + additionalLength + "ch";
   } else if(!input.value && input.placeholder) {
-    input.style.width = input.placeholder.length + 6 + "ch";
+    input.style.width = input.placeholder.length + additionalLength + "ch";
   }
 }
 function setPriority(priority) {
@@ -402,7 +400,7 @@ function submitForm() {
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.resolve("Info: Todo already exists in file, won't write duplicate");
       // check if todo text is empty
-      } else if(!todo.text) {
+      } else if(!todo.text && !todo.h) {
         modalFormAlert.innerHTML = translations.formInfoIncomplete;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
@@ -424,7 +422,7 @@ function submitForm() {
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
         return Promise.resolve("Info: Todo already exists in file, won't write duplicate");
       // check if todo text is empty
-      } else if(!todo.text) {
+      } else if(!todo.text && !todo.h) {
         modalFormAlert.innerHTML = translations.formInfoIncomplete;
         modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
         modalFormAlert.parentElement.classList.add("is-active", 'is-warning');

@@ -354,12 +354,12 @@ function registerEvents() {
       }
     });
     btnFiltersResetFilters.onclick = function() {
-      resetFilters();
+      resetFilters(true);
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
     }
     btnNoResultContainerResetFilters.onclick = function() {
-      resetFilters();
+      resetFilters(true);
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "No Result Container", "Click on reset button"])
     }
@@ -397,8 +397,8 @@ function registerKeyboardShortcuts() {
     window.addEventListener("keyup", function(event) {
       // switch files
       const regex=/^[1-9]+$/;
-      if(event.key.match(regex) && userData.files.length > 1 && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        window.api.send("startFileWatcher", userData.files[event.key-1][1]);
+      if(event.key.match(regex) && userData.files.length > 1 && userData.files[event.key-1] && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        if(userData.files[event.key-1][1]) window.api.send("startFileWatcher", userData.files[event.key-1][1]);
       }
       // cycle through tabs
       if(event.ctrlKey && !event.shiftKey  && event.keyCode === 9) {
@@ -449,7 +449,7 @@ function registerKeyboardShortcuts() {
         // abort when onboarding is shown
         if(onboarding) return false;
 
-        resetFilters().then(function(response) {
+        resetFilters(true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
@@ -559,7 +559,7 @@ function registerKeyboardShortcuts() {
     return Promise.reject(error);
   }
 }
-function resetFilters() {
+function resetFilters(refresh) {
   try {
     // scroll back to top
     document.getElementById("todoTableWrapper").scrollTo(0,0);
@@ -572,7 +572,7 @@ function resetFilters() {
     // clear search input
     document.getElementById("todoTableSearch").value = null;
     // regenerate the data
-    startBuilding();
+    if(refresh) startBuilding();
     return Promise.resolve("Success: Filters resetted");
   } catch(error) {
     error.functionName = resetFilters.name;

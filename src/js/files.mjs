@@ -1,5 +1,5 @@
 "use strict";
-import { resetFilters, resetModal, handleError, userData, setUserData, translations } from "../render.js";
+import { resetFilters, resetModal, handleError, userData, appData, setUserData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 
@@ -17,7 +17,7 @@ function removeFileFromList(isActive, index) {
     }
     userData.files.splice(index, 1);
     setUserData("files", userData.files);
-    resetFilters().then(function(response) {
+    resetFilters(true).then(function(response) {
       console.info(response);
       index = userData.files.findIndex(file => file[0] === 1);
       window.api.send("startFileWatcher", userData.files[index][1]);
@@ -32,7 +32,7 @@ function removeFileFromList(isActive, index) {
 
 function selectFileFromList(index) {
   try {
-    resetFilters().then(function(response) {
+    resetFilters(false).then(function(response) {
       console.info(response);
     }).catch(function(error) {
       handleError(error);
@@ -62,12 +62,15 @@ function generateFileList() {
     for (let i = 0; i < userData.files.length; i++) {
       let isActive = userData.files[i][0];
       let fileName = userData.files[i][1].split("/").pop();
+      if(appData.os === "windows") fileName = userData.files[i][1].split("\\").pop();
       let listItem = document.createElement("li");
       listItem.innerHTML = fileName;
       listItem.innerHTML += "<i class=\"fas fa-minus-circle\"></i>";
       if(isActive===1) listItem.classList.add("is-highlighted");
       listItem.querySelector("i").onclick = function() {
         removeFileFromList(isActive, i);
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on remove icon"]);
       }
       if(!isActive) {
         listItem.onclick = function(event) {
@@ -97,7 +100,7 @@ function generateFileList() {
             handleError(error);
           });
           // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "File", "Click on select button"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "File-Chooser", "Click on select button"]);
         }
       }
       cell2.innerHTML = userData.files[i][1];
@@ -112,6 +115,8 @@ function generateFileList() {
         }).catch(error => {
           handleError(error);
         });
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "File-Chooser", "Click on remove button"]);
       }
     }
     return Promise.resolve("Success: File changer modal built and opened");

@@ -433,11 +433,19 @@ const createWindow = async function() {
             header: "Header of the Page",
             footer: "Footer of the Page"
           }
+          mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
           getContent(userData.data.file).then(content => {
             mainWindow.webContents.send("refresh", [content, false, true]);
             mainWindow.webContents.print(options, (success, error) => {
-              if(!success) console.log(error);
-              console.log("Success: Print Initiated");
+              if(!success) {
+                console.log(error);
+                // trigger matomo event
+                if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print error", error])
+              } else {
+                console.log("Success: Print initiated");
+                // trigger matomo event
+                if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print initiated"])
+              }
             });
           }).catch(error => {
             console.log(error);
@@ -754,9 +762,8 @@ const createWindow = async function() {
   // ########################################################################################################################
   // REFRESH WHEN IN BACKGROUND
   // ########################################################################################################################
-  // every 10 minutes sleek will reload data and send it to renderer if app is not focused
   setInterval(() => {
-    if(!mainWindow.isFocused()) {
+    if(userData.data.file && !mainWindow.isFocused()) {
       getContent(userData.data.file).then(content => {
         mainWindow.webContents.send("refresh", [content])
       }).catch(error => {

@@ -5,6 +5,7 @@
 + [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
 + [Get it from Snap Store](#get-sleek-from-snap-store)
 + [Get it from Flathub](#get-sleek-from-flathub)
++ [Get it from Homebrew](#get-sleek-from-homebrew)
 + [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
 + [Download it](#download-sleek)
 + [Build it from source code](#build-sleek-from-source-code)
@@ -25,9 +26,9 @@ Todos with due date or repeating todos will trigger notifications and completed 
 ![Alt text](assets/screenshots/linux/multiline_autocomplete_dark.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature on Linux")
 
 ### Support sleek
-* Star, fork and watch it on Github. Once sleek reaches **30 watchers, 30 forks and 75 stars**, we can distribute it to MacOS using the <a href="https://github.com/Homebrew/brew" target="blank">Homebrew Package Manager</a>
+* Star, fork and watch it on Github.
 * Review it on <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
-* Contribute <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements, features or simply suggest new features</a>
+* Contribute <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements or features</a>
 * Translate sleek into your own language and contribute your translations
 
 ### Get sleek from Microsoft Store
@@ -98,7 +99,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 * Filters are sorted alphanummerically
 * Hyperlinks are detected automatically and can be clicked using the icon
 * A file watcher rereads the todo.txt file if it has been changed
-* Multiple todo.txt files can be managed
+* Multiple todo.txt files can be managed and switched between using a tab bar or keyboard shortcuts
 * Multiple languages are either detected or can be set by hand to
   - English
   - German
