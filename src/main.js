@@ -123,7 +123,7 @@ const createWindow = async function() {
             userData.data.path = path.dirname(file);
             userData.set("path", userData.data.path);
             console.info("Success: Opened file: " + file);
-            startFileWatcher(file).then(response => {
+            startFileWatcher(file, 1).then(response => {
               console.info(response);
               mainWindow.webContents.send("triggerFunction", "resetModal")
             }).catch(error => {
@@ -153,7 +153,7 @@ const createWindow = async function() {
               userData.data.path = path.dirname(file.filePath);
               userData.set("path", userData.data.path);
               console.info("Success: New file created: " + file.filePath);
-              startFileWatcher(file.filePath).then(response => {
+              startFileWatcher(file.filePath, 1).then(response => {
                 console.info(response);
                 mainWindow.webContents.send("triggerFunction", "resetModal")
               }).catch(error => {
@@ -167,14 +167,13 @@ const createWindow = async function() {
         break;
     }
   }
-  const startFileWatcher = function(file) {
+  const startFileWatcher = function(file, isTabItem) {
     try {
       if(!fs.existsSync(file)) throw("Error: File not found on disk")
       // skip persisted files and go with ENV if set
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
       }
-      let args;
       if (process.defaultApp) {
         // electron "unbundled" app -- have to skip "electron" and script name arg eg: "."
         args = process.argv.slice(2);
@@ -192,6 +191,7 @@ const createWindow = async function() {
           // if path is found it is set active
           if(element[1]===file) {
             element[0] = 1
+            if(isTabItem) element[2] = 1;
             fileFound = true;
             // if this entry is not equal to the new path it is set 0
           } else {
@@ -202,10 +202,10 @@ const createWindow = async function() {
         userData.data.files = new Array;
       }
       // only push new path if it is not already in the user data
-      if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file]);
+      if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file, 1]);
       userData.set("files", userData.data.files);
-      userData.data.file = file;
-      userData.set("file", file);
+      //userData.data.file = file;
+      //userData.set("file", file);
       // TODO describe
       if(fileWatcher) fileWatcher.close();
       fileWatcher = chokidar.watch(file);
@@ -589,7 +589,7 @@ const createWindow = async function() {
           type: "radio",
           checked: false,
           click: function() {
-            startFileWatcher(file[1]);
+            startFileWatcher(file[1], 1);
             mainWindow.show();
             mainWindow.setSkipTaskbar(true);
           }
@@ -694,8 +694,15 @@ const createWindow = async function() {
       })
       .on("writeToFile", function(event, args) {
         try {
+          let file;
+          if(!args[1]) {
+            const index = userData.data.files.findIndex(file => file[0] ===1 );
+            file = userData.data.files[index][1];
+          } else {
+            file = args[1];
+          }
           // Write content to file
-          fs.writeFileSync(args[1], args[0], {encoding: "utf-8"});
+          if(file) fs.writeFileSync(file, args [0], {encoding: "utf-8"});
         } catch(error) {
           console.error(error);
           error.functionName = "fs.writeFileSync";
@@ -708,8 +715,8 @@ const createWindow = async function() {
       .on("openOrCreateFile", (event, args) => {
         openDialog(args);
       })
-      .on("startFileWatcher", (event, file) => {
-        startFileWatcher(file).then(response => {
+      .on("startFileWatcher", (event, data) => {
+        startFileWatcher(data[0], data[1]).then(response => {
           console.info(response);
         }).catch(error => {
           console.error(error);
@@ -763,8 +770,9 @@ const createWindow = async function() {
   // REFRESH WHEN IN BACKGROUND
   // ########################################################################################################################
   setInterval(() => {
-    if(userData.data.file && !mainWindow.isFocused()) {
-      getContent(userData.data.file).then(content => {
+    if(userData.data.files.length > 0 && !mainWindow.isFocused()) {
+      const index = userData.data.files.findIndex(file => file[0] ===1 );
+      getContent(userData.data.files[index][1]).then(content => {
         mainWindow.webContents.send("refresh", [content])
       }).catch(error => {
         console.error(error);

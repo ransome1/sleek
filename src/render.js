@@ -134,19 +134,19 @@ function configureMainView() {
         handleError(error);
       });
       // configure table view
-      if(userData.file && todos.items.objects.length===0) {
+      if(todos.items.objects.length===0) {
         addTodoContainer.classList.add("is-active");
         todoTableSearchContainer.classList.remove("is-active");
         todoTable.classList.remove("is-active");
         noResultContainer.classList.remove("is-active");
         return Promise.resolve("Info: File is empty");
-      } else if(userData.file && todos.items.filtered.length===0) {
+      } else if(todos.items.filtered.length===0) {
         addTodoContainer.classList.remove("is-active");
         todoTableSearchContainer.classList.add("is-active");
         noResultContainer.classList.add("is-active");
         return Promise.resolve("Info: No results");
         // TODO explain
-      } else if(userData.file && todos.items.filtered.length>0) {
+      } else if(todos.items.filtered.length>0) {
         todoTableSearchContainer.classList.add("is-active");
         addTodoContainer.classList.remove("is-active");
         noResultContainer.classList.remove("is-active");
@@ -318,7 +318,19 @@ function registerEvents() {
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
     }
     btnOnboardingOpenTodoFile.onclick = function() {
-      window.api.send("openOrCreateFile", "open");
+      //TODO: thhis is a duplicate
+      if(typeof userData.files === "object" && userData.files.length>0) {
+        files.generateFileList().then(response => {
+          console.info(response);
+          modalChangeFile.classList.add("is-active");
+          modalChangeFile.focus();
+          createModalJail(modalChangeFile);
+        }).catch(error => {
+          handleError(error);
+        });
+      } else {
+        window.api.send("openOrCreateFile", "open");
+      }
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
     }
@@ -386,11 +398,31 @@ function registerKeyboardShortcuts() {
       }
       // close tab or window
       if((event.ctrlKey || event.metaKey) && event.key === "w") {
-        if(userData.files.length > 1) {
+        const isTabFound = userData.files.findIndex(file => {
+          return file[2] === 1;
+        });
+        if(isTabFound >= 0) {
           let index = userData.files.findIndex(file => file[0] === 1);
-          files.removeFileFromList(1, index);
+          files.removeFileFromList(index, 1);
         } else {
           window.api.send("closeWindow");
+        }
+      }
+      // cycle through tabs
+      if(event.ctrlKey && !event.shiftKey  && event.keyCode === 9) {
+        let index = userData.files.findIndex(file => file[0] === 1);
+        if(!userData.files[index+1]) {
+          window.api.send("startFileWatcher", [userData.files[0][1], 1]);
+        } else {
+          window.api.send("startFileWatcher", [userData.files[index+1][1], 1]);
+        }
+      }
+      if(event.ctrlKey && event.shiftKey && event.keyCode === 9) {
+        let index = userData.files.findIndex(file => file[0] === 1);
+        if(!userData.files[index-1]) {
+          window.api.send("startFileWatcher", [userData.files[userData.files.length-1][1], 1]);
+        } else {
+          window.api.send("startFileWatcher", [userData.files[index-1][1], 1]);
         }
       }
     }, true)
@@ -398,24 +430,7 @@ function registerKeyboardShortcuts() {
       // switch files
       const regex=/^[1-9]+$/;
       if(event.key.match(regex) && userData.files.length > 1 && userData.files[event.key-1] && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        if(userData.files[event.key-1][1]) window.api.send("startFileWatcher", userData.files[event.key-1][1]);
-      }
-      // cycle through tabs
-      if(event.ctrlKey && !event.shiftKey  && event.keyCode === 9) {
-        let index = userData.files.findIndex(file => file[0] === 1);
-        if(!userData.files[index+1]) {
-          window.api.send("startFileWatcher", userData.files[0][1]);
-        } else {
-          window.api.send("startFileWatcher", userData.files[index+1][1]);
-        }
-      }
-      if(event.ctrlKey && event.shiftKey && event.keyCode === 9) {
-        let index = userData.files.findIndex(file => file[0] === 1);
-        if(!userData.files[index-1]) {
-          window.api.send("startFileWatcher", userData.files[userData.files.length-1][1]);
-        } else {
-          window.api.send("startFileWatcher", userData.files[index-1][1]);
-        }
+        if(userData.files[event.key-1][1]) window.api.send("startFileWatcher", [userData.files[event.key-1][1]]);
       }
       // open settings
       if(event.key === "," && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
@@ -435,9 +450,7 @@ function registerKeyboardShortcuts() {
       }
       // create new todo
       if(event.key==="n" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        // abort when onboarding is shown
         if(onboarding) return false;
-
         form.show().then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -446,9 +459,7 @@ function registerKeyboardShortcuts() {
       }
       // reset filters
       if(event.key==="0" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        // abort when onboarding is shown
         if(onboarding) return false;
-
         resetFilters(true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -457,10 +468,17 @@ function registerKeyboardShortcuts() {
       }
       // toggle completed todos
       if(event.key==="h" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        // abort when onboarding is shown
         if(onboarding) return false;
-
         view.toggle("showCompleted").then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+      // toggle deferred todos
+      if(event.key==="t" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        if(onboarding) return false;
+        view.toggle("deferredTodos").then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
@@ -497,7 +515,7 @@ function registerKeyboardShortcuts() {
       }
     }, true)
     // shortcuts for modal form
-    modalForm.addEventListener ("keyup", function(event) {
+    modalForm.addEventListener ("keydown", function(event) {
       // priority up
       if(!(event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
         form.setPriority("up");
@@ -768,11 +786,10 @@ window.onload = async function () {
   filters = await import("./js/filters.mjs");
   drawer = await import("./js/drawer.mjs");
   files = await import("./js/files.mjs");
-  if(userData.file) {
-    window.api.send("startFileWatcher", userData.file);
-  // for users who upgrade from very old versions
-  } else if(userData.pathToFile) {
-    window.api.send("startFileWatcher", userData.pathToFile);
+  //TODO: Refactoring
+  if(userData.files) {
+    const index = userData.files.findIndex(file => file[0] ===1 );
+    window.api.send("startFileWatcher", [userData.files[index][1], 0]);
   } else {
     showOnboarding(true).then(function(response) {
       console.info(response);
@@ -899,4 +916,4 @@ window.api.receive("refresh", async (args) => {
   });
 });
 
-export { resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };
+export { showOnboarding, resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };

@@ -1,5 +1,5 @@
 "use strict";
-import { resetFilters, resetModal, handleError, userData, appData, setUserData, translations } from "../render.js";
+import { resetFilters, resetModal, handleError, userData, appData, setUserData, translations, showOnboarding } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 
@@ -8,22 +8,39 @@ const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
 const fileTabBarList = document.querySelector("#fileTabBar ul");
 
-function removeFileFromList(isActive, index) {
+function removeFileFromList(index, isTabItem) {
   try {
-    if(isActive && index-1 === -1) {
-      userData.files[index+1][0] = 1;
-    } else if(isActive && index-1 >= 0) {
-      userData.files[index-1][0] = 1;
+    if(isTabItem) {
+      let newItemIndex;
+      userData.files[index][0] = 0;
+      userData.files[index][2] = 0;
+      newItemIndex = userData.files.findIndex(file => {
+        return file[2] === 1;
+      });
+      if(newItemIndex >= 0) {
+        userData.files[newItemIndex][0] = 1;
+        userData.files[newItemIndex][2] = 1;
+        resetFilters(true).then(function(response) {
+          console.log(response);
+          setUserData("files", userData.files);
+          window.api.send("startFileWatcher", [userData.files[newItemIndex][1], 1]);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      } else {
+        userData.files[index][0] = 0;
+        userData.files[index][2] = 0;
+        setUserData("files", userData.files);
+        if(userData.files.length>0) generateFileList();
+        showOnboarding(true);
+      }
+    } else {
+      if(userData.files[index][0]) {
+        showOnboarding(true);
+      }
+      userData.files.splice(index, 1);
+      setUserData("files", userData.files);
     }
-    userData.files.splice(index, 1);
-    setUserData("files", userData.files);
-    resetFilters(true).then(function(response) {
-      console.info(response);
-      index = userData.files.findIndex(file => file[0] === 1);
-      window.api.send("startFileWatcher", userData.files[index][1]);
-    }).catch(function(error) {
-      handleError(error);
-    });
     return Promise.resolve("Success: File removed from list");
   } catch (error) {
     return Promise.reject(error);
@@ -38,7 +55,7 @@ function selectFileFromList(index) {
       handleError(error);
     });
     resetModal().then(response => {
-      window.api.send("startFileWatcher", userData.files[index][1]);
+      window.api.send("startFileWatcher", [userData.files[index][1], 1]);
       console.info(response);
     }).catch(error => {
       handleError(error);
@@ -51,40 +68,43 @@ function selectFileFromList(index) {
 
 function generateFileList() {
   try {
-    if(userData.files.length>1 && userData.fileTabs) {
-      fileTabBar.classList.add("is-active");
-    } else {
-      fileTabBar.classList.remove("is-active");
-    }
+    fileTabBar.classList.remove("is-active");
     fileTabBarList.innerHTML = null;
     modalChangeFileTable.innerHTML = null;
     modalChangeFileTable.classList.add("files");
+    let j = 0;
     for (let i = 0; i < userData.files.length; i++) {
       let isActive = userData.files[i][0];
-      let fileName = userData.files[i][1].split("/").pop();
-      if(appData.os === "windows") fileName = userData.files[i][1].split("\\").pop();
-      let listItem = document.createElement("li");
-      listItem.innerHTML = fileName;
-      listItem.innerHTML += "<i class=\"fas fa-minus-circle\"></i>";
-      if(isActive===1) listItem.classList.add("is-highlighted");
-      listItem.querySelector("i").onclick = function() {
-        removeFileFromList(isActive, i);
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on remove icon"]);
-      }
-      if(!isActive) {
-        listItem.onclick = function(event) {
-          if(event.target.classList.contains("fas")) return false;
-          selectFileFromList(i).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
+      let isTabItem = userData.files[i][2];
+      if(isTabItem) {
+        j++;
+        let fileName = userData.files[i][1].split("/").pop();
+        if(j > 1 && userData.fileTabs) fileTabBar.classList.add("is-active");
+        if(appData.os === "windows") fileName = userData.files[i][1].split("\\").pop();
+        let listItem = document.createElement("li");
+        listItem.setAttribute("title", userData.files[i][1]);
+        listItem.innerHTML = fileName;
+        listItem.innerHTML += "<i class=\"fas fa-times\"></i>";
+        if(isActive===1) listItem.classList.add("is-highlighted");
+        listItem.querySelector("i").onclick = function() {
+          removeFileFromList(i, isTabItem);
           // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on tab"]);
+          if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on remove icon"]);
         }
+        if(!isActive) {
+          listItem.onclick = function(event) {
+            if(event.target.classList.contains("fas")) return false;
+            selectFileFromList(i).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
+            // trigger matomo event
+            if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on tab"]);
+          }
+        }
+        fileTabBarList.appendChild(listItem);
       }
-      fileTabBarList.appendChild(listItem);
       let row = modalChangeFileTable.insertRow(-1);
       let cell1 = row.insertCell(0);
       let cell2 = row.insertCell(1);
@@ -107,7 +127,7 @@ function generateFileList() {
       cell3.innerHTML = "<a href=\"#\" tabindex=\"0\"><i class=\"fas fa-minus-circle\"></i></a>";
       cell3.title = translations.delete;
       cell3.onclick = function() {
-        removeFileFromList(isActive, i);
+        removeFileFromList(i);
         generateFileList().then(response => {
           modalChangeFile.classList.add("is-active");
           modalChangeFile.focus();

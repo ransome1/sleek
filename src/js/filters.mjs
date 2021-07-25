@@ -155,7 +155,7 @@ function filterItems(items) {
     }
     // apply filters
     items = items.filter(function(item) {
-      if(!item.text && !item.h) return false;
+      //if(!item.text && !item.h) return false;
       if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;

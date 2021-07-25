@@ -115,10 +115,10 @@ function configureTodoTableTemplate(append) {
 function generateItems(content) {
   try {
     items = { objects: TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
-    items.objects = items.objects.filter(function(item) {
-      if(!item.text && !item.h) return false;
-      return true;
-    });
+    // items.objects = items.objects.filter(function(item) {
+    //   if(!item.text && !item.h) return false;
+    //   return true;
+    // });
     items.complete = items.objects.filter(function(item) { return item.complete === true });
     items.incomplete = items.objects.filter(function(item) { return item.complete === false });
     items.objects = items.objects.filter(function(item) { return item.toString() != "" });
@@ -538,16 +538,18 @@ function addTodo(todo) {
 }
 async function archiveTodos() {
   try {
+    const index = userData.files.findIndex(file => file[0]===1);
+    const file = userData.files[index][1];
     // cancel operation if there are no completed todos
     if(items.complete.length===0) return Promise.resolve("Info: No completed todos found, nothing will be archived")
     // if user archives within done.txt file, operating is canceled
-    if(userData.file.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
+    if(file.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
     // define path to done.txt
     let doneFile = function() {
       if(appData.os==="windows") {
-        return userData.file.replace(userData.file.split("\\").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
+        return file.replace(file.split("\\").pop(), file.substr(0, file.lastIndexOf(".")).split("\\").pop() + "_done.txt");
       } else {
-        return userData.file.replace(userData.file.split("/").pop(), userData.file.substr(0, userData.file.lastIndexOf(".")).split("/").pop() + "_done.txt");
+        return file.replace(file.split("/").pop(), file.substr(0, file.lastIndexOf(".")).split("/").pop() + "_done.txt");
       }
     }
     const getContentFromDoneFile = new Promise(function(resolve) {
@@ -573,7 +575,7 @@ async function archiveTodos() {
     //write completed items to done file
     window.api.send("writeToFile", [contentForDoneFile.join("\n").toString() + "\n", doneFile()]);
     // write incompleted items to todo file
-    window.api.send("writeToFile", [items.incomplete.join("\n").toString() + "\n", userData.file]);
+    window.api.send("writeToFile", [items.incomplete.join("\n").toString() + "\n", file]);
     // send notifcation on success
     generateNotification(null, null, translations.archivingCompletedTitle, translations.archivingCompletedBody + doneFile());
 

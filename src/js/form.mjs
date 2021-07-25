@@ -370,12 +370,12 @@ function show(todo, templated) {
 }
 function submitForm() {
   try {
-    if(userData.file === undefined) {
-      modalFormAlert.innerHTML = translations.formErrorWritingFile;
-      modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
-      modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
-      return Promise.resolve("Info: No todo.txt defined yet");
-    }
+    // if(userData.file === undefined) {
+    //   modalFormAlert.innerHTML = translations.formErrorWritingFile;
+    //   modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
+    //   modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
+    //   return Promise.resolve("Info: No todo.txt defined yet");
+    // }
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
     if(modalForm.getAttribute("data-item") === document.getElementById("modalFormInput").value) {
@@ -440,7 +440,7 @@ function submitForm() {
     }
     //write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
     // close and reset any modal
     resetModal().then(function(result) {
       console.log(result);
@@ -449,11 +449,11 @@ function submitForm() {
     });
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Submit"]);
-    return Promise.resolve("Success: Changes written to file: " + userData.file);
+    return Promise.resolve("Success: Changes written to file");
   // if the input field is empty, let users know
   } catch (error) {
     // if writing into file is denied throw alert
-    modalFormAlert.innerHTML = translations.formErrorWritingFile + userData.file;
+    modalFormAlert.innerHTML = translations.formErrorWritingFile;
     modalFormAlert.parentElement.classList.add("is-active", 'is-danger');
     error.functionName = submitForm.name;
     return Promise.reject(error);

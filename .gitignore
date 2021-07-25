@@ -18,8 +18,7 @@ flatpak/com.github.ransome1.sleek.yml
 assets/icons/bak
 squashfs-root/
 .eslintrc.json
+.stylelintrc.json
 package-lock.json
 .vs/
 .vscode/
-.stylelintrc.json
-src/css/
