@@ -777,6 +777,12 @@ async function startBuilding(append, loadAll) {
   }
 }
 
+function getActiveFile() {
+  const index = userData.files.findIndex(file => file[0] === 1);
+  const file = userData.files[index][1];
+  return file;
+}
+
 window.onload = async function () {
   a0 = performance.now();
   userData = await getUserData();
@@ -787,9 +793,8 @@ window.onload = async function () {
   drawer = await import("./js/drawer.mjs");
   files = await import("./js/files.mjs");
   //TODO: Refactoring
-  if(userData.files) {
-    const index = userData.files.findIndex(file => file[0] ===1 );
-    window.api.send("startFileWatcher", [userData.files[index][1], 0]);
+  if(userData.files && userData.files.length > 0) {
+    window.api.send("startFileWatcher", [getActiveFile(), 0]);
   } else {
     showOnboarding(true).then(function(response) {
       console.info(response);
@@ -916,4 +921,4 @@ window.api.receive("refresh", async (args) => {
   });
 });
 
-export { showOnboarding, resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };
+export { getActiveFile, showOnboarding, resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };

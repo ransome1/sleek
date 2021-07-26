@@ -1,6 +1,6 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation, resetModal } from "../render.js";
+import { getActiveFile, userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation, resetModal } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { categories } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
@@ -477,8 +477,8 @@ function setTodoComplete(todo) {
       if(todo.rec) generateRecurrence(todo)
     }
     //write the data to the file
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
-    return Promise.resolve("Success: Changes written to file: " + userData.file);
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    return Promise.resolve("Success: Changes written to file: " + getActiveFile());
   } catch(error) {
     error.functionName = setTodoComplete.name;
     return Promise.reject(error);
@@ -506,8 +506,8 @@ function setTodoDelete(todo) {
     }
     items.objects.splice(index, 1);
     //write the data to the file
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
-    return Promise.resolve("Success: Changes written to file: " + userData.file);
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    return Promise.resolve("Success: Changes written to file: " + getActiveFile());
   } catch(error) {
     error.functionName = setTodoDelete.name;
     return Promise.reject(error);
@@ -527,8 +527,8 @@ function addTodo(todo) {
       items.objects.push(todo);
       //write the data to the file
       // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
-      return Promise.resolve("Success: New todo added to file: " + userData.file);
+      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+      return Promise.resolve("Success: New todo added to file: " + getActiveFile());
     } else {
       return Promise.resolve("Info: Todo already in file, nothing will be written");
     }

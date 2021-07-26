@@ -1,5 +1,5 @@
 "use strict";
-import { userData } from "../render.js";
+import { userData, getActiveFile } from "../render.js";
 import { items } from "./todos.mjs";
 import { convertDate } from "./date.mjs";
 
@@ -40,7 +40,7 @@ function generateRecurrence(todo) {
     recurringTodo.complete = false;
     recurringTodo.completed = null;
 
-    // adjust due and threshold dates 
+    // adjust due and threshold dates
     let recSplit = splitRecurrence(todo.rec);
     if (recSplit.plus) {
       // strict recurrence is based on previous date value
@@ -81,9 +81,8 @@ function generateRecurrence(todo) {
     // only add recurring todo if it is not already in the list
     if(index===-1) {
       items.objects.push(recurringTodo);
-      //tableContainerDue.appendChild(generateTableRow(recurringTodo));
-      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
-      return Promise.resolve("Success: Recurring todo created and written into file: " + recurringTodo);
+      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+      return Promise.resolve("Success: Recurring todo created and written into file: " + getActiveFile());
     } else {
       return Promise.resolve("Info: Recurring todo already in file, won't write anything");
     }

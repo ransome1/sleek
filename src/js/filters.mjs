@@ -47,7 +47,7 @@ function saveFilter(newFilter, oldFilter, category) {
     setUserData("selectedFilters", []);
     //write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter renamed"]);
     return Promise.resolve("Success: Filter renamed");
@@ -71,7 +71,7 @@ function deleteFilter(filter, category) {
     setUserData("selectedFilters", []);
     //write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n", userData.file]);
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter deleted"]);
     return Promise.resolve("Success: Filter deleted");
