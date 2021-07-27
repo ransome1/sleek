@@ -434,22 +434,28 @@ const createWindow = async function() {
             footer: "Footer of the Page"
           }
           mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
-          getContent(userData.data.file).then(content => {
-            mainWindow.webContents.send("refresh", [content, false, true]);
-            mainWindow.webContents.print(options, (success, error) => {
-              if(!success) {
-                console.log(error);
-                // trigger matomo event
-                if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print error", error])
-              } else {
-                console.log("Success: Print initiated");
-                // trigger matomo event
-                if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print initiated"])
-              }
+          const index = userData.data.files.findIndex(file => file[0] === 1);
+          if(index!==-1) {
+            getContent(userData.data.files[index][1]).then(content => {
+              mainWindow.webContents.send("refresh", [content, false, true]);
+              mainWindow.webContents.print(options, (success, error) => {
+                if(!success) {
+                  console.log(error);
+                  // trigger matomo event
+                  if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print error", error])
+                } else {
+                  console.log("Success: Print initiated");
+                  // trigger matomo event
+                  if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print initiated"])
+                }
+              });
+            }).catch(error => {
+              console.log(error);
             });
-          }).catch(error => {
-            console.log(error);
-          });
+          } else {
+            console.log("Info: No todo file active, won't print");
+            return false;
+          }
         }
       },
       { type: "separator" },

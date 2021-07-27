@@ -58,6 +58,8 @@ const modalPrompt = document.getElementById("modalPrompt");
 const modalPromptContent = document.getElementById("modalPromptContent");
 const modalPromptConfirm = document.getElementById("modalPromptConfirm");
 const modalPromptCancel = document.getElementById("modalPromptCancel");
+const modalBackground = document.querySelectorAll('.modal-background');
+const modalClose = document.querySelectorAll('.close');
 
 let
   a0,
@@ -378,6 +380,39 @@ function registerEvents() {
     errorContainerClose.onclick = function() {
       this.parentElement.classList.remove("is-active")
     }
+    modalBackground.forEach(function(el) {
+      el.onclick = function() {
+        const modalObject = document.getElementById(el.parentElement.id);
+        if(modalObject.id==="modalPrompt") return false;
+        // if modal is modalForm and input is equal the data item
+        if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== modalFormInput.value) {
+          getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
+        } else {
+          resetModal(modalObject).then(function(result) {
+            console.log(result);
+          }).catch(function(error) {
+            handleError(error);
+          });
+        }
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+      }
+    });
+    modalClose.forEach(function(el) {
+      el.onclick = function() {
+        if(el.getAttribute("data-message")) {
+          // persist closed message, so it won't show again
+          if(!userData.dismissedMessages.includes(el.getAttribute("data-message"))) userData.dismissedMessages.push(el.getAttribute("data-message"))
+          setUserData("dismissedMessages", userData.dismissedMessages);
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
+        } else {
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
+        }
+        el.parentElement.parentElement.classList.remove("is-active");
+      }
+    });
     return Promise.resolve("Success: Events registered");
   } catch(error) {
     error.functionName = registerEvents.name;
@@ -779,8 +814,11 @@ async function startBuilding(append, loadAll) {
 
 function getActiveFile() {
   const index = userData.files.findIndex(file => file[0] === 1);
-  const file = userData.files[index][1];
-  return file;
+  if(index!==-1) {
+    const file = userData.files[index][1];
+    return file;
+  }
+  return false;
 }
 
 window.onload = async function () {
@@ -793,7 +831,7 @@ window.onload = async function () {
   drawer = await import("./js/drawer.mjs");
   files = await import("./js/files.mjs");
   //TODO: Refactoring
-  if(userData.files && userData.files.length > 0) {
+  if(userData.files && userData.files.length > 0 && getActiveFile()) {
     window.api.send("startFileWatcher", [getActiveFile(), 0]);
   } else {
     showOnboarding(true).then(function(response) {
