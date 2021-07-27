@@ -15,8 +15,7 @@ const modalFormAlert = document.getElementById("modalFormAlert");
 const modalForm = document.getElementById("modalForm");
 const modalFormInputLabel = document.getElementById("modalFormInputLabel");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
-const modalBackground = document.querySelectorAll('.modal-background');
-const modalClose = document.querySelectorAll('.close');
+
 const priorityPicker = document.getElementById("priorityPicker");
 const btnSave = document.getElementById("btnSave");
 const btnItemStatus = document.getElementById("btnItemStatus");
@@ -84,40 +83,6 @@ priorityPicker.onfocus = function() {
   // close suggestion box if focus comes to priority picker
   autoCompleteContainer.classList.remove("is-active");
 };
-
-modalBackground.forEach(function(el) {
-  el.onclick = function() {
-    const modalObject = document.getElementById(el.parentElement.id);
-    // if modal is modalForm and input is equal the data item
-    if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== modalFormInput.value) {
-      getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
-    } else {
-      resetModal(modalObject).then(function(result) {
-        console.log(result);
-      }).catch(function(error) {
-        handleError(error);
-      });
-    }
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
-  }
-});
-
-modalClose.forEach(function(el) {
-  el.onclick = function() {
-    if(el.getAttribute("data-message")) {
-      // persist closed message, so it won't show again
-      if(!userData.dismissedMessages.includes(el.getAttribute("data-message"))) userData.dismissedMessages.push(el.getAttribute("data-message"))
-      setUserData("dismissedMessages", userData.dismissedMessages);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
-    } else {
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
-    }
-    el.parentElement.parentElement.classList.remove("is-active");
-  }
-});
 
 // TODO add try catch
 function keyUp() {
