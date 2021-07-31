@@ -252,8 +252,6 @@ function setDueDate(days) {
 }
 function show(todo, templated) {
   try {
-    // switch to textarea if needed
-    if(userData.useTextarea) toggleInputSize("input");
     // remove any previously set data-item attributes
     //modalForm.removeAttribute("data-item");
     modalForm.setAttribute("data-item", "");
@@ -288,11 +286,13 @@ function show(todo, templated) {
         modalForm.setAttribute("data-item", todo.toString());
         // this is an existing todo task to be edited
         // replace special char with line breaks before passing it to textarea
-        if(userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16),"\r\n");
+        //if(userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16),"\r\n");
         // replace special char with space before passing it to regular input
-        if(!userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16)," ");
+        //if(!userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16)," ");
         //document.getElementById("modalFormInput").value = todo.toString();
         //modalTitle.innerHTML = translations.editTodo;
+        document.getElementById("modalFormInput").value = todo.toString();
+
         btnItemStatus.classList.remove("is-hidden");
       }
       // only show the complete button on open items
@@ -317,6 +317,8 @@ function show(todo, templated) {
       //modalTitle.innerHTML = translations.addTodo;
       btnItemStatus.classList.add("is-hidden");
     }
+    // switch to textarea if needed
+    if(userData.useTextarea) toggleInputSize("input");
     // adjust size of picker inputs
     resizeInput(datePickerInput);
     resizeInput(recurrencePickerInput);
@@ -427,15 +429,28 @@ function submitForm() {
 
 function toggleInputSize(type) {
   let newInputElement;
+  let value = "";
+
+
+  if(document.getElementById("modalFormInput").value!=="") {
+    value = document.getElementById("modalFormInput").value.replaceAll("\n", String.fromCharCode(16));
+  } /*else if(modalForm.getAttribute("data-item")!=="") {
+    value = modalForm.getAttribute("data-item").replaceAll("\n", String.fromCharCode(16));
+  }*/
+  //modalForm.setAttribute("data-item", document.getElementById("modalFormInput").value);
+
   switch (type) {
     case "input":
       newInputElement = document.createElement("textarea");
+      newInputElement.value = value.replaceAll(String.fromCharCode(16),"\r\n");
       modalFormInputResize.setAttribute("data-input-type", "textarea");
       modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
       setUserData("useTextarea", true);
       break;
     case "textarea":
       newInputElement = document.createElement("input");
+      //newInputElement.value = value.replaceAll(String.fromCharCode(16)," ");
+      newInputElement.value = value;
       newInputElement.type = "text";
       modalFormInputResize.setAttribute("data-input-type", "input");
       modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
@@ -445,18 +460,25 @@ function toggleInputSize(type) {
   newInputElement.id = "modalFormInput";
   newInputElement.setAttribute("tabindex", 0);
   newInputElement.setAttribute("class", "input is-medium");
+
+  // if(userData.useTextarea) {
+  //   value.replaceAll(String.fromCharCode(16),"\r\n");
+  // } else {
+  //   value.replaceAll(String.fromCharCode(16)," ");
+  // }
+
+  //newInputElement.value = value;
   // replace old element with the new one
   document.getElementById("modalFormInput").replaceWith(newInputElement);
   // replace special char with line break before passing it to textarea
-  if(userData.useTextarea && modalForm.getAttribute("data-item")) document.getElementById("modalFormInput").value = document.getElementById("modalForm").getAttribute("data-item").replaceAll(String.fromCharCode(16),"\r\n");
+  //if(userData.useTextarea && modalForm.getAttribute("data-item")) document.getElementById("modalFormInput").value = document.getElementById("modalForm").getAttribute("data-item").replaceAll(String.fromCharCode(16),"\r\n");
   // replace special char with space before passing it to regular input
-  if(!userData.useTextarea && modalForm.getAttribute("data-item")) document.getElementById("modalFormInput").value = document.getElementById("modalForm").getAttribute("data-item").replaceAll(String.fromCharCode(16)," ");
+  //if(!userData.useTextarea && modalForm.getAttribute("data-item")) document.getElementById("modalFormInput").value = document.getElementById("modalForm").getAttribute("data-item").replaceAll(String.fromCharCode(16)," ");
+
 
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
-  // document.getElementById("modalFormInput").addEventListener("keyup", () => {
-  //   modalFormInputEvent();
-  // });
+
   document.getElementById("modalFormInput").onfocus = function() {
     modalForm.classList.add("is-focused");
   }

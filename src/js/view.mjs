@@ -114,8 +114,10 @@ function toggle(toggleName, variable) {
     const toggle = document.getElementById(toggleName);
     if(userData[toggle.id]==false || variable) {
       userData[toggle.id] = true;
+      toggle.checked = true;
     } else {
       userData[toggle.id] = false;
+      toggle.checked = false;
     }
     if(toggle.id==="compactView" && userData[toggle.id]) {
       body.classList.add("compact");

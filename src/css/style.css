@@ -1615,6 +1615,7 @@ body.compact #autoCompleteContainer h4 {
 }
 #drawerContainer .drawer section .todoFilterHint {
   cursor: pointer;
+  opacity: 0.5;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
