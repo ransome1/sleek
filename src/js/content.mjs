@@ -240,6 +240,9 @@ function setFriendlyLanguageNames() {
         case "jp":
         friendlyLanguageName = "日本語"
         break;
+        case "tr":
+        friendlyLanguageName = "Turkish"
+        break;
         default:
         return;
       }
