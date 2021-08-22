@@ -109,6 +109,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - Simplified Chinese
   - Brazilian Portugese
   - Japanese
+  - Turkish
 * sleek can be minimized to tray
 * Existing todos can be used as templates for new ones
 
