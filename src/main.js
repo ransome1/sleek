@@ -167,7 +167,7 @@ const createWindow = async function() {
         break;
     }
   }
-  const startFileWatcher = function(file, isTabItem) {
+  const startFileWatcher = function(file, isTabItem, resetTab) {
     try {
       if(!fs.existsSync(file)) throw("Error: File not found on disk")
       // skip persisted files and go with ENV if set

@@ -785,7 +785,7 @@ function getBadgeCount() {
   });
   return count;
 }
-async function startBuilding(append, loadAll) {
+async function startBuilding(loadAll) {
   try {
 
     t0 = performance.now();
@@ -798,7 +798,7 @@ async function startBuilding(append, loadAll) {
 
     userData = await getUserData();
 
-    await todos.generateTable(groups, append, loadAll);
+    await todos.generateTable(groups, loadAll);
 
     configureMainView();
 

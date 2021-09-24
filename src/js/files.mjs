@@ -55,11 +55,11 @@ function selectFileFromList(index) {
       handleError(error);
     });
     resetModal().then(response => {
-      window.api.send("startFileWatcher", [userData.files[index][1], 1]);
       console.info(response);
     }).catch(error => {
       handleError(error);
     });
+    window.api.send("startFileWatcher", [userData.files[index][1], 1]);
     return Promise.resolve("Success: File selected");
   } catch (error) {
     return Promise.reject(error);
