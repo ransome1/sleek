@@ -385,7 +385,7 @@ function registerEvents() {
         const modalObject = document.getElementById(el.parentElement.id);
         if(modalObject.id==="modalPrompt") return false;
         // if modal is modalForm and input is equal the data item
-        if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== modalFormInput.value) {
+        if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== document.getElementById("modalFormInput").value) {
           getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
         } else {
           resetModal(modalObject).then(function(result) {

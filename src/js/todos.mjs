@@ -46,7 +46,7 @@ marked.use({ renderer });
 const tableContainerContent = document.createDocumentFragment();
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
-const todoTableBodyCellTextTemplate = document.createElement("a");
+const todoTableBodyCellTextTemplate = document.createElement("div");
 const tableContainerCategoriesTemplate = document.createElement("span");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
@@ -63,9 +63,8 @@ let
   todoRows;
 
 todoTableWrapper.addEventListener("scroll", function(event) {
-  if(clusterThreshold>=items.filtered.length) return false;
+  if(visibleRows>=items.filtered.length) return false;
   if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight) {
-    //clusterThreshold = clusterThreshold + clusterCounter;
     startBuilding(true);
   }
 });
@@ -95,7 +94,7 @@ function configureTodoTableTemplate() {
     todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
     todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
     todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
-    todoTableBodyCellTextTemplate.setAttribute("href", "#");
+    //todoTableBodyCellTextTemplate.setAttribute("href", "#");
     tableContainerCategoriesTemplate.setAttribute("class", "categories");
     todoTableBodyCellDueDateTemplate.setAttribute("class", "cell itemDueDate");
     todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell recurrence");
@@ -164,8 +163,6 @@ async function generateTable(groups, loadAll) {
     todoRows = new Array;
     // TODO Overthink due to performance reasons
     todoTable.textContent = "";
-
-
     // configure stats
     showResultStats();
     // prepare the templates for the table
@@ -468,6 +465,8 @@ function setTodoComplete(todo) {
       items.objects.splice(index, 1, todo);
       // if recurrence is set start generating the recurring todo
       if(todo.rec) generateRecurrence(todo)
+      // finally remove priority
+      todo.priority = null;
     }
     //write the data to the file
     window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
