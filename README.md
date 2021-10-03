@@ -103,7 +103,6 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 * Multiple languages are either detected or can be set by hand to
   - English
   - German
-  - Hungarian
   - Italian
   - Spanish
   - French
@@ -111,6 +110,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - Brazilian Portugese
   - Japanese
   - Turkish
+  - Hungarian
 * sleek can be minimized to tray
 * Existing todos can be used as templates for new ones
 

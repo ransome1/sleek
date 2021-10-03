@@ -5,7 +5,7 @@ import { _paq } from "./matomo.mjs";
 import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
-import { datePickerInput } from "./datePicker.mjs";
+import { datePickerInput, datePicker } from "./datePicker.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 import * as recurrencePicker from "./recurrencePicker.mjs";
 
@@ -232,7 +232,7 @@ function setPriority(priority) {
 }
 function setDueDate(days) {
   try {
-    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension() ]);
+    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
     if(days===0) {
       todo.due = undefined;
       todo.dueString = undefined;
@@ -243,6 +243,10 @@ function setDueDate(days) {
       todo.due = new Date(new Date().setDate(new Date().getDate() + days));
       todo.dueString = todo.due.toISOString().substr(0, 10);
     }
+
+    datePicker.setDate( todo.due );
+
+
     document.getElementById("modalFormInput").value = todo.toString();
     return Promise.resolve("Success: Due date changed to " + todo.dueString)
   } catch(error) {

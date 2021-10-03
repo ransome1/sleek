@@ -46,7 +46,7 @@ marked.use({ renderer });
 const tableContainerContent = document.createDocumentFragment();
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
-const todoTableBodyCellTextTemplate = document.createElement("div");
+const todoTableBodyCellTextTemplate = document.createElement("a");
 const tableContainerCategoriesTemplate = document.createElement("span");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
@@ -94,7 +94,7 @@ function configureTodoTableTemplate() {
     todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
     todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
     todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
-    //todoTableBodyCellTextTemplate.setAttribute("href", "#");
+    todoTableBodyCellTextTemplate.setAttribute("href", "#");
     tableContainerCategoriesTemplate.setAttribute("class", "categories");
     todoTableBodyCellDueDateTemplate.setAttribute("class", "cell itemDueDate");
     todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell recurrence");
@@ -107,10 +107,6 @@ function configureTodoTableTemplate() {
 function generateItems(content) {
   try {
     items = { objects: TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
-    // items.objects = items.objects.filter(function(item) {
-    //   if(!item.text && !item.h) return false;
-    //   return true;
-    // });
     items.complete = items.objects.filter(function(item) { return item.complete === true });
     items.incomplete = items.objects.filter(function(item) { return item.complete === false });
     items.objects = items.objects.filter(function(item) { return item.toString() != "" });

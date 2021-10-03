@@ -365,7 +365,6 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // TODO can this be done above already?
       // remove empty filter entries
       filters = filters.filter(function(filter) {
-        //console.log(filter[0]);
         if(filter[0]) return filter;
       });
       // build filter buttons and add them to a fragment

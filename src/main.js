@@ -5,6 +5,10 @@ const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
 // ########################################################################################################################
+// SETUP PROCESS
+// ########################################################################################################################
+process.traceProcessWarnings = true;
+// ########################################################################################################################
 // SETUP APPIMAGE AUTO UPDATER
 // ########################################################################################################################
 const { AppImageUpdater } = require("electron-updater");
@@ -167,7 +171,7 @@ const createWindow = async function() {
         break;
     }
   }
-  const startFileWatcher = function(file, isTabItem, resetTab) {
+  const startFileWatcher = async function(file, isTabItem, resetTab) {
     try {
       if(!fs.existsSync(file)) throw("Error: File not found on disk")
       // skip persisted files and go with ENV if set
@@ -204,10 +208,11 @@ const createWindow = async function() {
       // only push new path if it is not already in the user data
       if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file, 1]);
       userData.set("files", userData.data.files);
-      //userData.data.file = file;
-      //userData.set("file", file);
       // TODO describe
-      if(fileWatcher) fileWatcher.close();
+      if(fileWatcher) {
+        fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
+        await fileWatcher.unwatch();
+      }
       fileWatcher = chokidar.watch(file);
       fileWatcher
       .on("add", function() {
@@ -796,10 +801,10 @@ app
   if(appData.channel==="AppImage") autoUpdater.checkForUpdatesAndNotify();
 })
 .on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit()
+  if(process.platform !== "darwin") app.quit()
   mainWindow = null;
 })
 .on("activate", () => {
-  if (BrowserWindow.getAllWindows().length===0) createWindow()
+  if(BrowserWindow.getAllWindows().length===0) createWindow()
   app.show();
 });

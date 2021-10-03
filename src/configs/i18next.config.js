@@ -7,7 +7,7 @@ const i18nextOptions = {
   fallbackLng: "en",
   namespace: "translation",
   defaultNS: "translation",
-  supportedLngs: ["de", "en", "it", "es", "fr", "hu", "zh", "pt", "jp", "tr"],
+  supportedLngs: ["de", "en", "it", "es", "fr", "zh", "pt", "jp", "tr", "hu"],
   debug: false,
   preload: fs.readdirSync(path.join(__dirname, "../locales")).filter((fileName) => {
     const joinedPath = path.join(path.join(__dirname, "../locales"), fileName)
