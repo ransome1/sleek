@@ -781,7 +781,7 @@ const createWindow = async function() {
   // REFRESH WHEN IN BACKGROUND
   // ########################################################################################################################
   setInterval(() => {
-    if(userData.data.files.length > 0 && !mainWindow.isFocused()) {
+    if(userData.data.files && !mainWindow.isFocused()) {
       const index = userData.data.files.findIndex(file => file[0] ===1 );
       getContent(userData.data.files[index][1]).then(content => {
         mainWindow.webContents.send("refresh", [content])
@@ -789,7 +789,7 @@ const createWindow = async function() {
         console.error(error);
       });
     }
-  }, 600000);
+  }, 60000);
 }
 // ########################################################################################################################
 // APP EVENTS
