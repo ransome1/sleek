@@ -103,6 +103,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 * Multiple languages are either detected or can be set by hand to
   - English
   - German
+  - Hungarian
   - Italian
   - Spanish
   - French

@@ -231,6 +231,9 @@ function setFriendlyLanguageNames() {
         case "fr":
         friendlyLanguageName = "Français"
         break;
+        case "hu":
+        friendlyLanguageName = "Magyar"
+        break;
         case "zh":
         friendlyLanguageName = "简体中文"
         break;
