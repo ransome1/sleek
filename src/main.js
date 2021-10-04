@@ -713,7 +713,7 @@ const createWindow = async function() {
             file = args[1];
           }
           // Write content to file
-          if(file) fs.writeFileSync(file, args [0], {encoding: "utf-8"});
+          if(file) fs.writeFileSync(file, args[0], {encoding: "utf-8"});
         } catch(error) {
           console.error(error);
           error.functionName = "fs.writeFileSync";
@@ -789,7 +789,7 @@ const createWindow = async function() {
         console.error(error);
       });
     }
-  }, 60000);
+  }, 600000);
 }
 // ########################################################################################################################
 // APP EVENTS

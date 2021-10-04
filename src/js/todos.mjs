@@ -441,7 +441,7 @@ function setTodoComplete(todo) {
       todo.complete = false;
       todo.completed = null;
       // delete old item from array and add the new one at it's position
-      items.objects.splice(index, 1, todo);
+      //items.objects.splice(index, 1, todo);
     // Mark item as complete
     } else if(!todo.complete) {
       if(todo.due) {
@@ -457,13 +457,18 @@ function setTodoComplete(todo) {
       }
       todo.complete = true;
       todo.completed = new Date();
-      // delete old todo from array and add the new one at it's position
-      items.objects.splice(index, 1, todo);
       // if recurrence is set start generating the recurring todo
       if(todo.rec) generateRecurrence(todo)
-      // finally remove priority
-      todo.priority = null;
+      if(todo.priority) {
+        // and preserve prio
+        todo.text += " pri:" + todo.priority
+        // finally remove priority
+        todo.priority = null;
+      }
+
     }
+    // delete old todo from array and add the new one at it's position
+    items.objects.splice(index, 1, todo);
     //write the data to the file
     window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
     return Promise.resolve("Success: Changes written to file: " + getActiveFile());
