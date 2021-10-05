@@ -45,7 +45,7 @@
   "help": "帮助",
   "helpTab3Title": "情境和项目",
   "helpTab4Title": "日期",
-  "helpTab5Title": "复发",
+  "helpTab5Title": "重复",
   "helpTabContextsProjectsBody": "If you work on projects that consists of several tasks, you can assign these tasks by appending \"+\" followed by the project name. Contexts define the situation in which this todo is relevant to you. According to David Allen's concept of <a href=\"https://en.wikipedia.org/wiki/Getting_Things_Done\" target=\"_blank\">Getting Things Done</a>, the \"context\" could be i.e. at home, at work, out shopping, by the phone, at your computer, with a particular person. To add a context just append a \"@\" plus the context name. For more information on todo.txt <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">click here</a>.<br><br>Neither projects nor context allow the use of spaces, so write them in one word. You can append as many projects and contexts as you wish.",
   "helpTabContextsProjectsTitle": "Adding contexts and projects",
   "helpTabDatesBody1": "sleek will add the start date automatically equal to the todos' creation date. If you want to change it, you need to look for the first date in your todo right after the priority tag. Todos with due dates will be bumped up your list. The closer the due date comes the higher it will be sorted. Is the due date set to today or to a date in the past, it will be marked red and will stay on top of your list. To add a due date append \"due:\" and add the due date formatted as <strong>YYYY-MM-DD (e.g. due:2021-03-07)</strong>. Alternatively use the date picker, it will do the formatting for you.",
