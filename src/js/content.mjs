@@ -246,6 +246,9 @@ function setFriendlyLanguageNames() {
         case "hu":
         friendlyLanguageName = "Magyar"
         break;
+        case "cs":
+        friendlyLanguageName = "Čeština"
+        break;
         default:
         return;
       }
