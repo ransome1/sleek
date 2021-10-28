@@ -462,6 +462,11 @@ function registerKeyboardShortcuts() {
       }
     }, true)
     window.addEventListener("keyup", function(event) {
+      // escape in context menu
+      if(event.key === "Escape" && todoContext.classList.contains("is-active")) {
+        todoContext.classList.remove("is-active");
+        todoContext.removeAttribute("data-item");
+      }
       // switch files
       const regex=/^[1-9]+$/;
       if(event.key.match(regex) && userData.files.length > 1 && userData.files[event.key-1] && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
