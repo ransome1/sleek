@@ -218,13 +218,13 @@ async function generateTable(groups, loadAll) {
       visibleRows++;
       if(clusterCounter === clusterThreshold) {
         clusterThreshold = clusterThreshold + clusterCounter;
-        clusterCounter = 0;
         break;
       } else if(visibleRows < clusterThreshold) {
         continue;
       }
       tableContainerContent.appendChild(todoRows[row]);
     }
+    clusterCounter = 0;
     todoTable.appendChild(tableContainerContent);
     return Promise.resolve("Success: Todo table generated");
   } catch(error) {
