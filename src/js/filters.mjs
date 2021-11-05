@@ -367,6 +367,10 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       filters = filters.filter(function(filter) {
         if(filter[0]) return filter;
       });
+      // Cancel if autcomplete container and no filters available
+      if(filters.length === 0 && autoCompletePrefix) {
+        return;
+      }
       // build filter buttons and add them to a fragment
       let filterFragment = await generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
         return response;
