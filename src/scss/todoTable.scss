@@ -113,7 +113,6 @@
   }
   .todo {
     display: flex;
-    cursor: pointer;
   }
   .todo.completed {
     .cell {
@@ -128,14 +127,20 @@
     padding: .75em 0;
     margin: 0 1em 0 0;
     height: auto;
-    span.tag {
+    a.tag {
+      text-decoration: none;
       margin: 0 0.25em 0 0;
     }
-    span.tag.projects {
+    a.tag.projects {
       background: $sleek-projects-button;
     }
-    span.tag.contexts {
+    a.tag.contexts {
       background: $sleek-contexts-button;
+    }
+  }
+  .cell.categories {
+    .tag {
+      margin-left: .25em;
     }
   }
   .cell.checkbox {
@@ -152,10 +157,8 @@
   a.cell.text {
     width: auto;
     flex: 1;
+    cursor: pointer;
     color: $dark-grey!important;
-    .categories {
-      margin-right: .5em;
-    }
     button {
       font-size: 1.1em;
       font-family: FreeSansBold;
@@ -171,9 +174,9 @@
         padding: 0.1em 0.4em!important;
       }
     }
-    .text {
-      margin-right: .5em;
-    }
+    // .text {
+    //   margin-right: .5em;
+    // }
   }
   .cell.text:focus-visible {
     background: $almost-white;
@@ -210,12 +213,12 @@
     color: $dark-grey;
     position: relative;
     white-space: nowrap;
-    margin: 0 .25em 0 0;
+    margin-left: .25em;
     text-transform: lowercase;
     .fa-sort-down {
       position: absolute;
       right: 0.2em;
-      bottom: 2.1em;
+      top: -0.35em;
       display: none;
     }
     .tags {

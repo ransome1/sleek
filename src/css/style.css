@@ -1985,7 +1985,6 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .todo {
   display: flex;
-  cursor: pointer;
 }
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
@@ -1999,14 +1998,18 @@ body.compact #autoCompleteContainer h4 {
   margin: 0 1em 0 0;
   height: auto;
 }
-#todoTable .cell span.tag {
+#todoTable .cell a.tag {
+  text-decoration: none;
   margin: 0 0.25em 0 0;
 }
-#todoTable .cell span.tag.projects {
+#todoTable .cell a.tag.projects {
   background: #f1d6f1;
 }
-#todoTable .cell span.tag.contexts {
+#todoTable .cell a.tag.contexts {
   background: #c5ede3;
+}
+#todoTable .cell.categories .tag {
+  margin-left: 0.25em;
 }
 #todoTable .cell.checkbox a {
   font-size: 1.25em;
@@ -2018,10 +2021,8 @@ body.compact #autoCompleteContainer h4 {
 #todoTable a.cell.text {
   width: auto;
   flex: 1;
+  cursor: pointer;
   color: #5a5a5a !important;
-}
-#todoTable a.cell.text .categories {
-  margin-right: 0.5em;
 }
 #todoTable a.cell.text button {
   font-size: 1.1em;
@@ -2037,9 +2038,6 @@ body.compact #autoCompleteContainer h4 {
 #todoTable a.cell.text .priority button {
   font-size: 0.9em;
   padding: 0.1em 0.4em !important;
-}
-#todoTable a.cell.text .text {
-  margin-right: 0.5em;
 }
 #todoTable .cell.text:focus-visible {
   background: #f0f0f0;
@@ -2076,13 +2074,13 @@ body.compact #autoCompleteContainer h4 {
   color: #5a5a5a;
   position: relative;
   white-space: nowrap;
-  margin: 0 0.25em 0 0;
+  margin-left: 0.25em;
   text-transform: lowercase;
 }
 #todoTable .cell.itemDueDate .fa-sort-down {
   position: absolute;
   right: 0.2em;
-  bottom: 2.1em;
+  top: -0.35em;
   display: none;
 }
 #todoTable .cell.itemDueDate .tags {
@@ -2328,7 +2326,7 @@ body.compact #autoCompleteContainer h4 {
 }
 
 .datepicker-footer .datepicker-controls button {
-  margin: calc(.375rem - 1px) 0.375rem;
+  margin: calc(0.375rem - 1px) 0.375rem;
   border-radius: 2px;
   width: 100%;
   font-size: 0.75rem;

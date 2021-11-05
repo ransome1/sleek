@@ -2,7 +2,7 @@
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import { getActiveFile, userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation, resetModal } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { categories } from "./filters.mjs";
+import { categories, selectFilter } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
@@ -47,7 +47,7 @@ const tableContainerContent = document.createDocumentFragment();
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
 const todoTableBodyCellTextTemplate = document.createElement("a");
-const tableContainerCategoriesTemplate = document.createElement("span");
+const tableContainerCategoriesTemplate = document.createElement("div");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
 const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
@@ -95,7 +95,7 @@ function configureTodoTableTemplate() {
     todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
     todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
     todoTableBodyCellTextTemplate.setAttribute("href", "#");
-    tableContainerCategoriesTemplate.setAttribute("class", "categories");
+    tableContainerCategoriesTemplate.setAttribute("class", "cell categories");
     todoTableBodyCellDueDateTemplate.setAttribute("class", "cell itemDueDate");
     todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell recurrence");
     return Promise.resolve("Success: Table templates set up");
@@ -318,19 +318,25 @@ function generateTableRow(todo) {
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
     }
+    // add the text cell to the row
+    todoTableBodyRow.appendChild(todoTableBodyCellText);
     // cell for the categories
     categories.forEach(category => {
       if(todo[category] && category!="priority") {
         todo[category].forEach(element => {
-          let todoTableBodyCellCategory = document.createElement("span");
+          let todoTableBodyCellCategory = document.createElement("a");
           todoTableBodyCellCategory.setAttribute("class", "tag " + category);
+          todoTableBodyCellCategory.onclick = function() {
+            console.log(element);
+            selectFilter(element, category);
+          }
           todoTableBodyCellCategory.innerHTML = element;
           tableContainerCategories.appendChild(todoTableBodyCellCategory);
         });
       }
     });
     // only add the categories to text cell if it has child nodes
-    if(tableContainerCategories.hasChildNodes()) todoTableBodyCellText.appendChild(tableContainerCategories);
+    if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
     // check for and add a given due date
     if(todo.due) {
       var tag = convertDate(todo.due);
@@ -350,16 +356,15 @@ function generateTableRow(todo) {
         </div>
         <i class="fas fa-sort-down"></i>`;
       // append the due date to the text item
-      todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
+      todoTableBodyRow.appendChild(todoTableBodyCellDueDate);
     }
     // add recurrence icon
     if(todo.rec) {
       todoTableBodyCellRecurrence.innerHTML = "<i class=\"fas fa-redo\"></i>";
       // append the due date to the text item
-      todoTableBodyCellText.appendChild(todoTableBodyCellRecurrence);
+      todoTableBodyRow.appendChild(todoTableBodyCellRecurrence);
     }
-    // add the text cell to the row
-    todoTableBodyRow.appendChild(todoTableBodyCellText);
+
     todoTableBodyRow.addEventListener("contextmenu", event => {
       //todoContextUseAsTemplate.focus();
       todoContext.style.left = event.x + "px";
