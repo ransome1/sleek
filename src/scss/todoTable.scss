@@ -67,6 +67,7 @@
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
   .todo {
+    width: 100%;
     position: relative;
     display: flex;
     flex-flow: row wrap;
@@ -123,6 +124,7 @@
     }
   }
   .cell {
+    float: left;
     line-height: 1.7em;
     padding: .75em 0;
     margin: 0 1em 0 0;
@@ -166,6 +168,7 @@
       padding: 0.1em 0.4em;
     }
     .priority {
+      float: left;
       background: transparent;
       color: darken($mid-grey, 40%);
       margin-right: .5em;
@@ -174,9 +177,10 @@
         padding: 0.1em 0.4em!important;
       }
     }
-    // .text {
-    //   margin-right: .5em;
-    // }
+    .text {
+      float: left;
+      margin-right: .5em;
+    }
   }
   .cell.text:focus-visible {
     background: $almost-white;
@@ -209,21 +213,26 @@
   .cell .projects {
     background: $sleek-projects-button;
   }
+  .cell.recurrence {
+    padding: 0 .25em;
+    margin: 0;
+  }
   .cell.itemDueDate {
     color: $dark-grey;
     position: relative;
     white-space: nowrap;
-    margin-left: .25em;
+    padding: 0 .25em;
+    margin: 0;
     text-transform: lowercase;
     .fa-sort-down {
       position: absolute;
-      right: 0.2em;
-      top: -0.35em;
+      right: .45em;
+      top: -1.25em;
       display: none;
     }
     .tags {
       position: absolute;
-      top: -1.4em;
+      top: -2.3em;
       right: -1.5em;
       z-index: 40;
       display: none;

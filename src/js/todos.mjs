@@ -318,25 +318,6 @@ function generateTableRow(todo) {
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
     }
-    // add the text cell to the row
-    todoTableBodyRow.appendChild(todoTableBodyCellText);
-    // cell for the categories
-    categories.forEach(category => {
-      if(todo[category] && category!="priority") {
-        todo[category].forEach(element => {
-          let todoTableBodyCellCategory = document.createElement("a");
-          todoTableBodyCellCategory.setAttribute("class", "tag " + category);
-          todoTableBodyCellCategory.onclick = function() {
-            console.log(element);
-            selectFilter(element, category);
-          }
-          todoTableBodyCellCategory.innerHTML = element;
-          tableContainerCategories.appendChild(todoTableBodyCellCategory);
-        });
-      }
-    });
-    // only add the categories to text cell if it has child nodes
-    if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
     // check for and add a given due date
     if(todo.due) {
       var tag = convertDate(todo.due);
@@ -356,15 +337,34 @@ function generateTableRow(todo) {
         </div>
         <i class="fas fa-sort-down"></i>`;
       // append the due date to the text item
-      todoTableBodyRow.appendChild(todoTableBodyCellDueDate);
+      todoTableBodyCellText.appendChild(todoTableBodyCellDueDate);
     }
     // add recurrence icon
     if(todo.rec) {
       todoTableBodyCellRecurrence.innerHTML = "<i class=\"fas fa-redo\"></i>";
       // append the due date to the text item
-      todoTableBodyRow.appendChild(todoTableBodyCellRecurrence);
+      todoTableBodyCellText.appendChild(todoTableBodyCellRecurrence);
     }
 
+    // add the text cell to the row
+    todoTableBodyRow.appendChild(todoTableBodyCellText);
+    // cell for the categories
+    categories.forEach(category => {
+      if(todo[category] && category!="priority") {
+        todo[category].forEach(element => {
+          let todoTableBodyCellCategory = document.createElement("a");
+          todoTableBodyCellCategory.setAttribute("class", "tag " + category);
+          todoTableBodyCellCategory.onclick = function() {
+            console.log(element);
+            selectFilter(element, category);
+          }
+          todoTableBodyCellCategory.innerHTML = element;
+          tableContainerCategories.appendChild(todoTableBodyCellCategory);
+        });
+      }
+    });
+    // only add the categories to text cell if it has child nodes
+    if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
     todoTableBodyRow.addEventListener("contextmenu", event => {
       //todoContextUseAsTemplate.focus();
       todoContext.style.left = event.x + "px";
