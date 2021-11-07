@@ -565,9 +565,9 @@ function registerKeyboardShortcuts() {
         form.setPriority("down");
       }
       // clear priority
-      if(!(event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
-        form.setPriority(null);
-      }
+      // if(!(event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+      //   form.setPriority(null);
+      // }
       // set priority directly
       if(event.altKey && event.key.length===1 && event.key.match(/[A-Z]/i)) {
         form.setPriority(event.key.substr(0,1)).then(response => {
