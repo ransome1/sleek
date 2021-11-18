@@ -1,9 +1,9 @@
 # Privacy Policy for sleek
-This document contains types of information that is collected by sleek and how I as it's developer use it.
+This document contains the types of information that is collected by sleek and how I as its developer use it.
 
-I myself am very sensible about my own privacy and in these days of massive and needless collection of personal data, I want sleek to be different. I am not interested in who sleek's users are and will therefor not gather sensitive data.
+I myself am very sensible about my own privacy and in these days of massive and needless collection of personal data, I want sleek to be different. I am not interested in who sleek's users are and will therefore not gather any sensitive data.
 
-However I want to know how many users are actively using sleek and, in case a user explicitly agrees to it, how sleek is being used. The app communicates with a Matomo instance I host myself. The data is exclusively sent via a secure SSL-encrypted connection. sleek follows a standard procedure of logging. The information collected by Matomo include only masked internet protocol (IP) addresses, operating system, screen resolution, date and time stamp as well as the user's basic app settings. Also a non personalized random user id is being generated. Like this I can see how many unique sleek users are out there without collecting sensitive data.
+However, I want to know how many users are actively using sleek and, in case a user explicitly agrees to it, how sleek is being used. The app communicates with a Matomo instance I host myself. The data is exclusively sent via a secure SSL-encrypted connection. sleek follows a standard procedure of logging. The information collected by Matomo includes only masked internet protocol (IP) addresses, operating system, screen resolution, date and time stamp as well as the user's basic app settings. Also a non-personalized random user id is generated. This way, I can see how many unique sleek users are out there without collecting sensitive data.
 
 ## Default logging
 Once sleek is opened, it will announce to the Matomo instance that it has been started. This happens one time per app session and has the purpose of telling me how many users are using sleek and where these users are roughly located. With this information I can for instance decide which language should be added next and so forth.
