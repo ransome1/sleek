@@ -510,4 +510,4 @@ window.onresize = function() {
   }
 }
 
-export { show, resizeInput, setPriority, setDueDate, submitForm, toggleInputSize};
+export { show, resizeInput, setPriority, setDueDate, submitForm, toggleInputSize, getCaretPosition};

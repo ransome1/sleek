@@ -3,6 +3,7 @@ import { userData, handleError, translations, setUserData, startBuilding, getCon
 import { createModalJail } from "../configs/modal.config.mjs";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
+import { getCaretPosition } from "./form.mjs";
 import { showContent } from "./content.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 import * as filterlang from "./filterlang.mjs";
@@ -31,6 +32,14 @@ filterContextDelete.innerHTML = translations.delete;
 
 filterContextInput.addEventListener("keydown", (event) => {
   if(event.code==="Space") event.preventDefault();
+})
+
+autoCompleteContainer.addEventListener("keyup", (event) => {
+  // if there is only one filter shown it will be selected automatically
+  if(event.code==="Tab" && Object.keys(filtersCounted).length === 1) {
+    addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-prefix"));
+
+  }
 })
 
 function saveFilter(newFilter, oldFilter, category) {
@@ -82,6 +91,7 @@ function deleteFilter(filter, category) {
 }
 function filterItems(items) {
   try {
+    // TODO: this is a duplicate in todos.mjs
     // selected filters are empty, unless they were persisted
     if(userData.selectedFilters && userData.selectedFilters.length>0) {
       selectedFilters = JSON.parse(userData.selectedFilters);
@@ -372,7 +382,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
         return;
       }
       // build filter buttons and add them to a fragment
-      let filterFragment = await generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
+      let filterFragment = await generateFilterButtons(category, autoCompletePrefix).then(response => {
         return response;
       }).catch (error => {
         handleError(error);
@@ -411,8 +421,37 @@ function selectFilter(filter, category) {
   setUserData("selectedFilters", JSON.stringify(selectedFilters));
   startBuilding();
 }
-function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, caretPosition) {
+function addFilterToInput(filter, autoCompletePrefix) {
+  let modalFormInput = document.getElementById("modalFormInput");
+  let caretPosition = getCaretPosition(modalFormInput);
+  // split string into elements
+  let inputElements = modalFormInput.value.split(" ");
+  let i;
+  let x = 0;
+  for(i = 0; i < inputElements.length; i++) {
+    x += inputElements[i].length + 1;
+    // once caret position is found inside element the index is persisted
+    if(x > caretPosition) break;
+  }
+  inputElements.splice(i, 1, autoCompletePrefix + filter + " ");
+  modalFormInput.value = inputElements.join(" ");
+
+
+  // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
+  autoCompletePrefix = null;
+  // hide the suggestion container after the filter has been selected
+  autoCompleteContainer.blur();
+  autoCompleteContainer.classList.remove("is-active");
+  // put focus back into input so user can continue writing
+  modalFormInput.focus();
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
+
+
+}
+function generateFilterButtons(category, autoCompletePrefix) {
   try {
+    let caretPosition = getCaretPosition(document.getElementById("modalFormInput"));
     // create a fragment to collect the filters in
     let filterFragment = document.createDocumentFragment();
     // build one button each
@@ -423,6 +462,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       if(category==="priority") todoFiltersItem.classList.add(filter);
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
+      todoFiltersItem.setAttribute("data-prefix", autoCompletePrefix);
       if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 0) }
       todoFiltersItem.innerHTML = filter;
       if(autoCompletePrefix==undefined) {
@@ -486,33 +526,7 @@ function generateFilterButtons(category, autoCompleteValue, autoCompletePrefix, 
       } else {
         // add filter to input
         todoFiltersItem.addEventListener("click", (event) => {
-          if(autoCompletePrefix && autoCompleteValue) {
-            // split string into elements
-            let inputElements = document.getElementById("modalFormInput").value.split(" ");
-            let i;
-            let x = 0;
-            for(i = 0; i < inputElements.length; i++) {
-              x += inputElements[i].length + 1;
-              // once caret position is found inside element the index is persisted
-              if(x > caretPosition) break;
-            }
-            // replace value at index with prefix and data attribute of filter
-            inputElements.splice(i, 1, autoCompletePrefix + todoFiltersItem.getAttribute("data-filter"));
-            document.getElementById("modalFormInput").value = inputElements.join(" ");
-          } else if(autoCompletePrefix) {
-            // add button data value to the exact caret position
-            document.getElementById("modalFormInput").value = [document.getElementById("modalFormInput").value.slice(0, caretPosition), todoFiltersItem.getAttribute('data-filter'), document.getElementById("modalFormInput").value.slice(caretPosition)].join('') + " ";
-          }
-          // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
-          autoCompleteValue = null;
-          autoCompletePrefix = null;
-          // hide the suggestion container after the filter has been selected
-          autoCompleteContainer.blur();
-          autoCompleteContainer.classList.remove("is-active");
-          // put focus back into input so user can continue writing
-          document.getElementById("modalFormInput").focus();
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
+          addFilterToInput(todoFiltersItem.getAttribute("data-filter"), autoCompletePrefix);
         });
       }
       filterCounter++;

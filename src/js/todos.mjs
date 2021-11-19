@@ -350,15 +350,25 @@ function generateTableRow(todo) {
     todoTableBodyRow.appendChild(todoTableBodyCellText);
     // cell for the categories
     categories.forEach(category => {
+
+
       if(todo[category] && category!="priority") {
         todo[category].forEach(element => {
           let todoTableBodyCellCategory = document.createElement("a");
           todoTableBodyCellCategory.setAttribute("class", "tag " + category);
           todoTableBodyCellCategory.onclick = function() {
-            console.log(element);
             selectFilter(element, category);
           }
           todoTableBodyCellCategory.innerHTML = element;
+
+          // selected filters are empty, unless they were persisted
+          if(userData.selectedFilters && userData.selectedFilters.length>0) {
+            let selectedFilters = JSON.parse(userData.selectedFilters);
+            selectedFilters.forEach(function(item) {
+              if(JSON.stringify(item) === '["'+element+'","'+category+'"]') todoTableBodyCellCategory.classList.toggle("is-dark")
+            });
+          }
+
           tableContainerCategories.appendChild(todoTableBodyCellCategory);
         });
       }

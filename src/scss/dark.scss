@@ -236,13 +236,21 @@ body.dark {
         }
       }
       .cell {
-        span.contexts {
+        a.contexts {
           color: $sleek-contexts-button!important;
           background: darken($sleek-contexts-button, 60%)!important;
         }
-        span.projects {
+        a.contexts.is-dark {
+          background: darken($sleek-contexts-button, 70%)!important;
+          color: white;
+        }
+        a.projects {
           color: $sleek-projects-button!important;
           background: darken($sleek-projects-button, 60%)!important;
+        }
+        a.projects.is-dark {
+          background: darken($sleek-projects-button, 70%)!important;
+          color: white;
         }
         .is-white {
           color: $lighter-grey;
@@ -379,13 +387,13 @@ body.dark {
       color: $sleek-contexts-button;
       background: darken($sleek-contexts-button, 55%);
       span.tag {
-        color: darken($sleek-contexts-button, 65%)!important;
+        color: darken($sleek-contexts-button, 70%)!important;
         background: lighten($sleek-contexts-button, 1%);
       }
     }
     button.is-dark,
     button:focus-visible {
-      background: darken($sleek-contexts-button, 65%)!important;
+      background: darken($sleek-contexts-button, 70%)!important;
       color: white;
     }
   }
@@ -394,13 +402,13 @@ body.dark {
       color: $sleek-projects-button;
       background: darken($sleek-projects-button, 55%);
       span.tag {
-        color: darken($sleek-projects-button, 65%)!important;
+        color: darken($sleek-projects-button, 70%)!important;
         background: lighten($sleek-projects-button, 1%);
       }
     }
     button.is-dark,
     button:focus-visible {
-      background: darken($sleek-projects-button, 65%)!important;
+      background: darken($sleek-projects-button, 70%)!important;
       color: white;
     }
   }

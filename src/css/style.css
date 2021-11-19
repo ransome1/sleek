@@ -212,13 +212,21 @@ body.dark #todoTable .todo .cell.itemDueDate.isPast i {
 body.dark #todoTable .todo .cell.itemDueDate.isTomorrow i {
   color: #fa745e !important;
 }
-body.dark #todoTable .todo .cell span.contexts {
+body.dark #todoTable .todo .cell a.contexts {
   color: #c5ede3 !important;
   background: #1e6251 !important;
 }
-body.dark #todoTable .todo .cell span.projects {
+body.dark #todoTable .todo .cell a.contexts.is-dark {
+  background: #123b31 !important;
+  color: white;
+}
+body.dark #todoTable .todo .cell a.projects {
   color: #f1d6f1 !important;
   background: #6f266f !important;
+}
+body.dark #todoTable .todo .cell a.projects.is-dark {
+  background: #491949 !important;
+  color: white;
 }
 body.dark #todoTable .todo .cell .is-white {
   color: #CCCDCF;
@@ -338,12 +346,12 @@ body.dark .contexts button {
   background: #247561;
 }
 body.dark .contexts button span.tag {
-  color: #184e41 !important;
+  color: #123b31 !important;
   background: #c9eee5;
 }
 body.dark .contexts button.is-dark,
 body.dark .contexts button:focus-visible {
-  background: #184e41 !important;
+  background: #123b31 !important;
   color: white;
 }
 body.dark .projects button {
@@ -351,12 +359,12 @@ body.dark .projects button {
   background: #822c82;
 }
 body.dark .projects button span.tag {
-  color: #5c1f5c !important;
+  color: #491949 !important;
   background: #f2daf2;
 }
 body.dark .projects button.is-dark,
 body.dark .projects button:focus-visible {
-  background: #5c1f5c !important;
+  background: #491949 !important;
   color: white;
 }
 body.dark .priority button:not(.A):not(.B):not(.C) {
@@ -2002,13 +2010,19 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .cell a.tag {
   text-decoration: none;
-  margin: 0 0.25em 0 0;
+  margin: 0;
 }
 #todoTable .cell a.tag.projects {
   background: #f1d6f1;
 }
+#todoTable .cell a.tag.projects.is-dark {
+  background: #5c1f5c !important;
+}
 #todoTable .cell a.tag.contexts {
   background: #c5ede3;
+}
+#todoTable .cell a.tag.contexts.is-dark {
+  background: #184e41 !important;
 }
 #todoTable .cell.categories .tag {
   margin-left: 0.25em;
@@ -2022,7 +2036,6 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable a.cell.text {
   width: auto;
-  flex: 1;
   cursor: pointer;
   color: #5a5a5a !important;
 }

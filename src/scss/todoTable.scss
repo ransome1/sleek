@@ -131,13 +131,21 @@
     height: auto;
     a.tag {
       text-decoration: none;
-      margin: 0 0.25em 0 0;
+      margin: 0;
     }
     a.tag.projects {
       background: $sleek-projects-button;
     }
+    a.tag.projects.is-dark {
+      background: darken($sleek-projects-button, 65%)!important;
+
+    }
     a.tag.contexts {
       background: $sleek-contexts-button;
+    }
+    a.tag.contexts.is-dark {
+      background: darken($sleek-contexts-button, 65%)!important;
+
     }
   }
   .cell.categories {
@@ -158,7 +166,7 @@
   }
   a.cell.text {
     width: auto;
-    flex: 1;
+    //flex: 1;
     cursor: pointer;
     color: $dark-grey!important;
     button {
