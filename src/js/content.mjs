@@ -113,7 +113,6 @@ settingsTabAboutExternalLibraries.innerHTML = translations.settingsTabAboutExter
 settingsTabAboutHeadline.innerHTML = translations.about;
 settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
 settingsTabAboutPrivacyBody.innerHTML = translations.settingsTabAboutPrivacyBody;
-//settingsTabSettings.innerHTML = translations.settings;
 settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
 settingsTabSettingsHeadline.innerHTML = translations.settings;
 settingsTabSettingsLanguage.innerHTML = translations.language;
@@ -130,7 +129,6 @@ shareTwitter.innerHTML = translations.shareTwitter;
 reviewSourceforge.innerHTML = translations.reviewSourceforge;
 reviewWindowsStore.innerHTML = translations.reviewWindowsStore;
 submitIssuesOnGithub.innerHTML = translations.submitIssuesOnGithub;
-
 contentTabs.forEach(tab => tab.addEventListener("click", function() {
   contentTabs.forEach(function(tab) {
     tab.classList.remove("is-active");
@@ -140,7 +138,6 @@ contentTabs.forEach(tab => tab.addEventListener("click", function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Content", "Click on " + this.firstElementChild.innerHTML, this.classList[0]]);
 }));
-
 settingsLanguage.onchange = function() {
   getConfirmation(setLanguage, translations.restartPrompt, this.value);
 }
@@ -158,7 +155,6 @@ toggleTray.onclick = function(event) {
   event.preventDefault();
   getConfirmation(setTray, translations.restartPrompt, this.checked);
 }
-
 toggleNotifications.checked = userData.notifications;
 toggleTray.checked = userData.tray;
 

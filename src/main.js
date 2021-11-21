@@ -291,6 +291,8 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.sortBy)) userData.set("sortBy", ["priority", "dueString", "contexts", "projects"]);
       if(typeof userData.data.deferredTodos != "boolean") userData.data.deferredTodos = true;
       if(typeof userData.data.fileTabs != "boolean") userData.data.fileTabs = true;
+      //TODO remove this after 1.14 has been fully distributed
+      if(userData.data.sortBy.length === 4) userData.set("sortBy", ["priority", "dueString", "contexts", "projects", "date"]);
       return Promise.resolve(userData);
     } catch(error) {
       error.functionName = getUserData.id;

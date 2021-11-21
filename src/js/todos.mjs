@@ -171,10 +171,10 @@ async function generateTable(groups, loadAll) {
       if(userData.sortCompletedLast && groups[group][0]==="completed") {
         dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group " + userData.sortBy[0] + " " + groups[group][0] + "\"><div class=\"cell\"></div></div>")
       // for priority, context and project
-      } else if(groups[group][0]!="null" && userData.sortBy[0]!="dueString") {
+      } else if(groups[group][0]!="null" && userData.sortBy[0]!="dueString" && userData.sortBy[0]!="date") {
         dividerRow = document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group " + userData.sortBy[0] + " " + groups[group][0] + "\"><div class=\"cell\"><button tabindex=\"-1\" class=\"" + groups[group][0] + "\">" + groups[group][0].replace(/,/g, ', ') + "</button></div></div>")
       // if sorting is by due date
-      } else if(userData.sortBy[0]==="dueString" && groups[group][1][0].due) {
+      } else if(userData.sortBy[0]==="dueString" && groups[group][1][0].due && userData.sortBy[0]!="date") {
         if(isToday(groups[group][1][0].due)) {
           dividerRow= document.createRange().createContextualFragment("<div id=\"" + userData.sortBy[0] + groups[group][0] + "\" class=\"group due\"><div class=\"cell isToday\">" + translations.today + "</button></div></div>")
         } else if(isTomorrow(groups[group][1][0].due)) {
@@ -186,7 +186,8 @@ async function generateTable(groups, loadAll) {
         }
       // create an empty divider row
       } else {
-        dividerRow = document.createRange().createContextualFragment("<div class=\"group\"></div>")
+        dividerRow = null;
+        //dividerRow = document.createRange().createContextualFragment("<div class=\"group\"></div>")
       }
       if(!document.getElementById(userData.sortBy[0] + groups[group][0]) && dividerRow) todoRows.push(dividerRow);
       for (let item in groups[group][1]) {
@@ -419,6 +420,7 @@ function generateTableRow(todo) {
 }
 function sortTodoData(group) {
   try {
+    // start at 1 to skip sorting method used for 1st level grouping
     for(let i = 1; i < userData.sortBy.length; i++) {
       group.sort(function(a, b) {
         // only continue if the two items have the same filters from the previous iteration
@@ -427,11 +429,25 @@ function sortTodoData(group) {
         let
           item1 = a[userData.sortBy[i]],
           item2 = b[userData.sortBy[i]];
-        // when item1 is empty or bigger than item2 it will be sorted after item2
-        if(!item1 && item2 || item1 > item2) {
+
+        //TODO: Make it more generic
+        // when item1 is empty or bigger than item2, item 1 will be sorted after item2
+        // invert sorting for creation date
+        if(userData.sortBy[i] === "date" && (!item1 && item2 || item1 < item2)) {
+          return 1;
+        // when item2 is empty or bigger than item1, item 1 will be sorted before item2
+        // invert sorting for creation date
+        } else if(userData.sortBy[i] === "date" && (item1 && !item2 || item1 > item2)) {
+          return -1;
+        // when item1 is empty or bigger than item2, item 1 will be sorted after item2
+        } else if(!item1 && item2 || item1 > item2) {
+          // invert sorting for creation date
+          //if(userData.sortBy[i] === "date") return -1;
           return 1;
         // when item2 is empty or bigger than item1, item 1 will be sorted before item2
         } else if(item1 && !item2 || item1 < item2) {
+          // invert sorting for creation date
+          //if(userData.sortBy[i] === "date") return 1;
           return -1;
         }
         // no change to sorting

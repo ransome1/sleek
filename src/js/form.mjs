@@ -15,13 +15,11 @@ const modalFormAlert = document.getElementById("modalFormAlert");
 const modalForm = document.getElementById("modalForm");
 const modalFormInputLabel = document.getElementById("modalFormInputLabel");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
-
 const priorityPicker = document.getElementById("priorityPicker");
 const btnSave = document.getElementById("btnSave");
 const btnItemStatus = document.getElementById("btnItemStatus");
 
 modalFormInputLabel.innerHTML = translations.todoTxtSyntax;
-
 btnItemStatus.onclick = function() {
   setTodoComplete(modalForm.getAttribute("data-item")).then(response => {
     resetModal().then(function(result) {
@@ -50,15 +48,12 @@ btnSave.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Submit"]);
 }
-
 document.getElementById("modalFormInput").addEventListener("keyup", event => {
   keyUp();
 });
-
 document.getElementById("modalFormInput").addEventListener("keydown", event => {
   keyDown();
 });
-
 document.getElementById("modalFormInput").onfocus = function() {
   modalForm.classList.add("is-focused");
 }
@@ -93,7 +88,6 @@ function keyUp() {
   }
   modalFormInputEvent();
 }
-
 // TODO add try and catch
 function keyDown() {
   // regular submit
@@ -243,10 +237,7 @@ function setDueDate(days) {
       todo.due = new Date(new Date().setDate(new Date().getDate() + days));
       todo.dueString = todo.due.toISOString().substr(0, 10);
     }
-
     datePicker.setDate( todo.due );
-
-
     document.getElementById("modalFormInput").value = todo.toString();
     return Promise.resolve("Success: Due date changed to " + todo.dueString)
   } catch(error) {
@@ -257,7 +248,6 @@ function setDueDate(days) {
 function show(todo, templated) {
   try {
     // remove any previously set data-item attributes
-    //modalForm.removeAttribute("data-item");
     modalForm.setAttribute("data-item", "");
     // adjust size of recurrence picker input field
     datePickerInput.value = null;
@@ -289,14 +279,7 @@ function show(todo, templated) {
         // pass todo string to form data item
         modalForm.setAttribute("data-item", todo.toString());
         // this is an existing todo task to be edited
-        // replace special char with line breaks before passing it to textarea
-        //if(userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16),"\r\n");
-        // replace special char with space before passing it to regular input
-        //if(!userData.useTextarea) document.getElementById("modalFormInput").value = todo.toString().replaceAll(String.fromCharCode(16)," ");
-        //document.getElementById("modalFormInput").value = todo.toString();
-        //modalTitle.innerHTML = translations.editTodo;
         document.getElementById("modalFormInput").value = todo.toString();
-
         btnItemStatus.classList.remove("is-hidden");
       }
       // only show the complete button on open items
@@ -318,7 +301,6 @@ function show(todo, templated) {
         datePickerInput.value = todo.dueString;
       }
     } else {
-      //modalTitle.innerHTML = translations.addTodo;
       btnItemStatus.classList.add("is-hidden");
     }
     // switch to textarea if needed
@@ -326,7 +308,6 @@ function show(todo, templated) {
     // adjust size of picker inputs
     resizeInput(datePickerInput);
     resizeInput(recurrencePickerInput);
-    //resizeInput(document.getElementById("modalFormInput"));
     // create the modal jail, so tabbing won't leave modal
     createModalJail(modalForm);
     // show modal and set focus to input element
@@ -341,12 +322,6 @@ function show(todo, templated) {
 }
 function submitForm() {
   try {
-    // if(userData.file === undefined) {
-    //   modalFormAlert.innerHTML = translations.formErrorWritingFile;
-    //   modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
-    //   modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
-    //   return Promise.resolve("Info: No todo.txt defined yet");
-    // }
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
     if(modalForm.getAttribute("data-item") === document.getElementById("modalFormInput").value) {
@@ -430,19 +405,12 @@ function submitForm() {
     return Promise.reject(error);
   }
 }
-
 function toggleInputSize(type) {
   let newInputElement;
   let value = "";
-
-
   if(document.getElementById("modalFormInput").value!=="") {
     value = document.getElementById("modalFormInput").value.replaceAll("\n", String.fromCharCode(16));
-  } /*else if(modalForm.getAttribute("data-item")!=="") {
-    value = modalForm.getAttribute("data-item").replaceAll("\n", String.fromCharCode(16));
-  }*/
-  //modalForm.setAttribute("data-item", document.getElementById("modalFormInput").value);
-
+  }
   switch (type) {
     case "input":
       newInputElement = document.createElement("textarea");
@@ -453,7 +421,6 @@ function toggleInputSize(type) {
       break;
     case "textarea":
       newInputElement = document.createElement("input");
-      //newInputElement.value = value.replaceAll(String.fromCharCode(16)," ");
       newInputElement.value = value;
       newInputElement.type = "text";
       modalFormInputResize.setAttribute("data-input-type", "input");
@@ -464,25 +431,10 @@ function toggleInputSize(type) {
   newInputElement.id = "modalFormInput";
   newInputElement.setAttribute("tabindex", 0);
   newInputElement.setAttribute("class", "input is-medium");
-
-  // if(userData.useTextarea) {
-  //   value.replaceAll(String.fromCharCode(16),"\r\n");
-  // } else {
-  //   value.replaceAll(String.fromCharCode(16)," ");
-  // }
-
-  //newInputElement.value = value;
   // replace old element with the new one
   document.getElementById("modalFormInput").replaceWith(newInputElement);
-  // replace special char with line break before passing it to textarea
-  //if(userData.useTextarea && modalForm.getAttribute("data-item")) document.getElementById("modalFormInput").value = document.getElementById("modalForm").getAttribute("data-item").replaceAll(String.fromCharCode(16),"\r\n");
-  // replace special char with space before passing it to regular input
-  //if(!userData.useTextarea && modalForm.getAttribute("data-item")) document.getElementById("modalFormInput").value = document.getElementById("modalForm").getAttribute("data-item").replaceAll(String.fromCharCode(16)," ");
-
-
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
-
   document.getElementById("modalFormInput").onfocus = function() {
     modalForm.classList.add("is-focused");
   }

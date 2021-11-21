@@ -12,9 +12,7 @@ const versionNumber = document.getElementById("versionNumber");
 navBtnHelp.firstElementChild.setAttribute("title", translations.help);
 navBtnSettings.firstElementChild.setAttribute("title", translations.settings);
 navBtnView.firstElementChild.setAttribute("title", translations.view);
-
 versionNumber.innerHTML = appData.version;
-
 navBtnAddTodo.onclick = function () {
   show();
   // trigger matomo event
