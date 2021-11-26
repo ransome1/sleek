@@ -124,6 +124,8 @@ function generateGroups(items) {
       object["completed"] = [...object["completed"] || [], a];
     } else if(sortBy==="dueString" && !a.due) {
       object["noDueDate"] = [...object["noDueDate"] || [], a];
+    } else if(sortBy==="date" && a.date) {
+      object[a.dateString()] = [...object[a.dateString()] || [], a];  
     } else {
       object[a[sortBy]] = [...object[a[sortBy]] || [], a];
     }
@@ -135,8 +137,11 @@ function generateGroups(items) {
     if(a[0]==="null") return 1;
     // when b is null sort it after a
     if(b[0]==="null") return -1;
-    // sort alphabetically
-    if(a < b) return -1;
+    // invert sorting when sort is by creation date
+    if(sortBy === "date" && a[0] < b[0]) return 1;
+    if(sortBy === "date" && a[0] > b[0]) return -1;
+    // sort the rest alphabetically
+    if(a[0] < b[0]) return -1;
   });
   //
   if(userData.sortCompletedLast) {
