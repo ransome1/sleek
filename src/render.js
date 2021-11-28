@@ -460,14 +460,13 @@ function registerKeyboardShortcuts() {
           window.api.send("startFileWatcher", [userData.files[index-1][1], 1]);
         }
       }
-    }, true)
-    window.addEventListener("keyup", function(event) {
       // escape in context menu
       if(event.key === "Escape" && todoContext.classList.contains("is-active")) {
         todoContext.classList.remove("is-active");
         todoContext.removeAttribute("data-item");
       }
       // switch files
+      // TODO: restrict this on files in tab bar
       const regex=/^[1-9]+$/;
       if(event.key.match(regex) && userData.files.length > 1 && userData.files[event.key-1] && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         if(userData.files[event.key-1][1]) window.api.send("startFileWatcher", [userData.files[event.key-1][1]]);
@@ -488,10 +487,9 @@ function registerKeyboardShortcuts() {
           handleError(error);
         });
       }
-      // create new todo
-      if(event.key==="n" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        if(onboarding) return false;
-        form.show().then(function(response) {
+      // toggle dark mode
+      if(event.key==="d" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        setTheme(true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
@@ -533,14 +531,6 @@ function registerKeyboardShortcuts() {
         // handle user confirmation and pass callback function
         getConfirmation(todos.archiveTodos, translations.archivingPrompt);
       }
-      // toggle dark mode
-      if(event.key==="d" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        setTheme(true).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
-      }
       // show filter drawer
       if(event.key==="b" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         drawer.show(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
@@ -554,6 +544,17 @@ function registerKeyboardShortcuts() {
         location.reload(true);
       }
     }, true)
+    window.addEventListener("keyup", function(event) {
+      // create new todo
+      if(event.key==="n" && !modalForm.classList.contains("is-active") && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+        if(onboarding) return false;
+        form.show().then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+      }
+    }, true)
     // shortcuts for modal form
     modalForm.addEventListener ("keydown", function(event) {
       // priority up
@@ -564,12 +565,13 @@ function registerKeyboardShortcuts() {
       if(!(event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowDown") {
         form.setPriority("down");
       }
+      // TODO: Shortcut removed to to issues on MacOS
       // clear priority
       // if(!(event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
       //   form.setPriority(null);
       // }
       // set priority directly
-      if(event.altKey && event.key.length===1 && event.key.match(/[A-Z]/i)) {
+      if(event.altKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
         form.setPriority(event.key.substr(0,1)).then(response => {
           console.log(response);
         }).catch(error => {
