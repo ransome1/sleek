@@ -31,6 +31,9 @@ const messageLoggingButton = document.getElementById("messageLoggingButton");
 const messageLoggingTitle = document.getElementById("messageLoggingTitle");
 const messageShareBody = document.getElementById("messageShareBody");
 const messageShareTitle = document.getElementById("messageShareTitle");
+const messageGenericContainer = document.getElementById("messageGenericContainer");
+const messageGenericMessage = document.getElementById("messageGenericMessage");
+const messageGenericContainerClose = document.getElementById("messageGenericContainerClose");
 const modal = document.querySelectorAll('.modal');
 const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
@@ -230,6 +233,19 @@ function getTranslations() {
     return Promise.reject(error);
   }
 }
+function showGenericMessage(text) {
+  try {
+    if(text) {
+      messageGenericContainer.classList.add("is-active");
+      messageGenericMessage.innerHTML = text;
+      // trigger matomo event
+      if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Message", text])
+    }
+  } catch(error) {
+    error.functionName = handleError.name;
+    return Promise.reject(error);
+  }
+}
 function handleError(error) {
   try {
     if(error) {
@@ -380,6 +396,9 @@ function registerEvents() {
     errorContainerClose.onclick = function() {
       this.parentElement.classList.remove("is-active")
     }
+    messageGenericContainerClose.onclick = function() {
+      this.parentElement.classList.remove("is-active")
+    }
     modalBackground.forEach(function(el) {
       el.onclick = function() {
         const modalObject = document.getElementById(el.parentElement.id);
@@ -419,6 +438,53 @@ function registerEvents() {
     return Promise.reject(error);
   }
 }
+
+function pasteItemsToClipboard(items) {
+  try {
+    let itemsForClipboard;
+    itemsForClipboard = "Status\t";
+    itemsForClipboard += "Closed\t";
+    itemsForClipboard += "Created\t";
+    itemsForClipboard += "Priority\t";
+    itemsForClipboard += "Started\t";
+    itemsForClipboard += "Task\t";
+    itemsForClipboard += "Due\t";
+    itemsForClipboard += "Recurrence\t";
+    itemsForClipboard += "Contexts\t";
+    itemsForClipboard += "Projects\n";
+
+    for(let i = 0; i < items.length; i++) {
+      let clipboardItem = "";
+      items[i].complete ? clipboardItem += "Completed" : clipboardItem += "In progress";
+      clipboardItem += "\t";
+      (items[i].completed !== null) ? clipboardItem += items[i].completedString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].date !== null) ? clipboardItem += items[i].dateString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].priority !== null) ? clipboardItem += items[i].priority.toString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].tString !== undefined) ? clipboardItem += items[i].tString : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].text !== null) ? clipboardItem += items[i].text : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].dueString !== undefined) ? clipboardItem += items[i].dueString : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].rec !== null) ? clipboardItem += items[i].recString : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].contexts !== null) ? clipboardItem += items[i].contexts.toString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].projects !== null) ? clipboardItem += items[i].projects.toString() : clipboardItem += "-";
+      clipboardItem += "\n";
+      itemsForClipboard += clipboardItem;
+    }
+    window.api.send("copyToClipboard", [itemsForClipboard]);
+    showGenericMessage("Visible todos have been copied to clipboard");
+  } catch(error) {
+    error.functionName = pasteItemsToClipboard.name;
+    return Promise.reject(error);
+  }
+}
+
 function registerKeyboardShortcuts() {
   try {
     // CMD/metaKey only works on keydown
@@ -429,7 +495,11 @@ function registerKeyboardShortcuts() {
       }
       // create file
       if((event.ctrlKey || event.metaKey) && event.key === "c" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        window.api.send("openOrCreateFile", "create");
+        //window.api.send("openOrCreateFile", "create");
+
+        pasteItemsToClipboard(todos.items.filtered);
+
+
       }
       // close tab or window
       if((event.ctrlKey || event.metaKey) && event.key === "w") {
@@ -792,6 +862,7 @@ function getBadgeCount() {
   });
   return count;
 }
+
 async function startBuilding(loadAll) {
   try {
 

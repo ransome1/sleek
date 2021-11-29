@@ -298,7 +298,8 @@ code, pre {
   display: flex!important;
 }
 
-#errorContainer {
+#errorContainer,
+#messageGenericContainer {
   display: none;
   p {
     margin: .1em 0;

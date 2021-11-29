@@ -808,13 +808,16 @@ code, pre {
   display: flex !important;
 }
 
-#errorContainer {
+#errorContainer,
+#messageGenericContainer {
   display: none;
 }
-#errorContainer p {
+#errorContainer p,
+#messageGenericContainer p {
   margin: 0.1em 0;
 }
-#errorContainer i {
+#errorContainer i,
+#messageGenericContainer i {
   color: white !important;
 }
 
