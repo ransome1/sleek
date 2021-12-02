@@ -582,4 +582,8 @@ body.dark {
       color: $lighter-grey;
     }
   }
+  .notification {
+    background-color: $darker-grey!important;
+    color: $almost-white;
+  }
 }

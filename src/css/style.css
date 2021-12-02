@@ -527,6 +527,10 @@ body.dark .contentContainer .subtitle strong {
 body.dark .contentContainer .btnOnboarding:focus-visible {
   color: #CCCDCF;
 }
+body.dark .notification {
+  background-color: #2d2d2d !important;
+  color: #f0f0f0;
+}
 
 @font-face {
   font-family: "FreeSans";

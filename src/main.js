@@ -797,17 +797,30 @@ const createWindow = async function() {
 // ########################################################################################################################
 // APP EVENTS
 // ########################################################################################################################
-app
-.on("ready", () => {
-  if(appData.os==="windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
-  createWindow();
-  if(appData.channel==="AppImage") autoUpdater.checkForUpdatesAndNotify();
-})
-.on("window-all-closed", () => {
-  if(process.platform !== "darwin") app.quit()
-  mainWindow = null;
-})
-.on("activate", () => {
-  if(BrowserWindow.getAllWindows().length===0) createWindow()
-  app.show();
-});
+const gotTheLock = app.requestSingleInstanceLock()
+// prevent multiple instances based on https://stackoverflow.com/questions/35916158/how-to-prevent-multiple-instances-in-electron
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+  })
+  app
+    .on("ready", () => {
+      if (appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
+      createWindow();
+      if (appData.channel === "AppImage") autoUpdater.checkForUpdatesAndNotify();
+    })
+    .on("window-all-closed", () => {
+      if (process.platform !== "darwin") app.quit()
+      mainWindow = null;
+    })
+    .on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow()
+      app.show();
+    });
+}
