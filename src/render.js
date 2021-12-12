@@ -438,11 +438,9 @@ function registerEvents() {
     return Promise.reject(error);
   }
 }
-async function pasteItemsToClipboard(items) {
+
+function pasteItemsToClipboard(items) {
   try {
-
-    let groups = await todos.generateGroups(items);
-
     let itemsForClipboard;
     itemsForClipboard = "Status\t";
     itemsForClipboard += "Closed\t";
@@ -455,40 +453,29 @@ async function pasteItemsToClipboard(items) {
     itemsForClipboard += "Contexts\t";
     itemsForClipboard += "Projects\n";
 
-
-    for(let i = 0; i < groups.length; i++) {
-        let clipboardItem = "";
-        clipboardItem += "\n\n";
-        if(groups[i][0] !== "null") clipboardItem += groups[i][0];
-        clipboardItem += "\n";
-        clipboardItem += "-------------------------------------";
-        clipboardItem += "\n\n";
-        itemsForClipboard += clipboardItem;
-
-        for(let j = 0; j < groups[i][1].length; j++) {
-            clipboardItem = "";
-            groups[i][1][j].complete ? clipboardItem += "Completed" : clipboardItem += "In progress";
-            clipboardItem += "\t";
-            (groups[i][1][j].completed !== null) ? clipboardItem += groups[i][1][j].completedString() : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].date !== null) ? clipboardItem += groups[i][1][j].dateString() : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].priority !== null) ? clipboardItem += groups[i][1][j].priority.toString() : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].tString !== undefined) ? clipboardItem += groups[i][1][j].tString : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].text !== null) ? clipboardItem += groups[i][1][j].text : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].dueString !== undefined) ? clipboardItem += groups[i][1][j].dueString : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].rec !== null) ? clipboardItem += groups[i][1][j].recString : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].contexts !== null) ? clipboardItem += groups[i][1][j].contexts.toString() : clipboardItem += "-";
-            clipboardItem += "\t";
-            (groups[i][1][j].projects !== null) ? clipboardItem += groups[i][1][j].projects.toString() : clipboardItem += "-";
-            clipboardItem += "\n";
-            itemsForClipboard += clipboardItem;
-        }
+    for(let i = 0; i < items.length; i++) {
+      let clipboardItem = "";
+      items[i].complete ? clipboardItem += "Completed" : clipboardItem += "In progress";
+      clipboardItem += "\t";
+      (items[i].completed !== null) ? clipboardItem += items[i].completedString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].date !== null) ? clipboardItem += items[i].dateString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].priority !== null) ? clipboardItem += items[i].priority.toString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].tString !== undefined) ? clipboardItem += items[i].tString : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].text !== null) ? clipboardItem += items[i].text : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].dueString !== undefined) ? clipboardItem += items[i].dueString : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].rec !== null) ? clipboardItem += items[i].recString : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].contexts !== null) ? clipboardItem += items[i].contexts.toString() : clipboardItem += "-";
+      clipboardItem += "\t";
+      (items[i].projects !== null) ? clipboardItem += items[i].projects.toString() : clipboardItem += "-";
+      clipboardItem += "\n";
+      itemsForClipboard += clipboardItem;
     }
     window.api.send("copyToClipboard", [itemsForClipboard]);
     showGenericMessage("Visible todos have been copied to clipboard");
@@ -497,6 +484,7 @@ async function pasteItemsToClipboard(items) {
     return Promise.reject(error);
   }
 }
+
 function registerKeyboardShortcuts() {
   try {
     // CMD/metaKey only works on keydown
@@ -508,7 +496,10 @@ function registerKeyboardShortcuts() {
       // create file
       if((event.ctrlKey || event.metaKey) && event.key === "c" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
         //window.api.send("openOrCreateFile", "create");
+
         pasteItemsToClipboard(todos.items.filtered);
+
+
       }
       // close tab or window
       if((event.ctrlKey || event.metaKey) && event.key === "w") {
