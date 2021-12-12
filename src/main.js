@@ -757,7 +757,7 @@ const createWindow = async function() {
       .on("copyToClipboard", (event, args) => {
         // Copy text to clipboard
         console.log(args[0]);
-        clipboard.writeText(args[0], "selection")
+        clipboard.writeText(args[0])
       })
       .on("update-badge", (event, count) => {
         if(appData.os==="mac") app.setBadgeCount(count);
