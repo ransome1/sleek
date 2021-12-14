@@ -393,6 +393,41 @@ const createWindow = async function() {
       },
       { type: "separator" },
       {
+        role: "print",
+        accelerator: "CmdOrCtrl+P",
+        label: translations.printCurrentView,
+        click: function() {
+          const options = {
+            silent: false,
+            printBackground: true,
+            color: true,
+            margin: {
+              marginType: "printableArea"
+            },
+            landscape: false,
+            pagesPerSheet: 1,
+            collate: false,
+            copies: 1,
+            header: "Header of the Page",
+            footer: "Footer of the Page"
+          }
+          mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
+          const index = userData.data.files.findIndex(file => file[0] === 1);
+          if(index!==-1) {
+            getContent(userData.data.files[index][1]).then(content => {
+              mainWindow.webContents.send("refresh", [content, false, true]);
+              mainWindow.webContents.executeJavaScript('window.print()');
+            }).catch(error => {
+              console.log(error);
+            });
+          } else {
+            console.log("Info: No todo file active, won't print");
+            return false;
+          }
+        }
+      },
+      { type: "separator" },
+      {
         click: function () {
           mainWindow.close();
         },
@@ -424,7 +459,7 @@ const createWindow = async function() {
       {
         role: "print",
         accelerator: "CmdOrCtrl+P",
-        label: "Print",
+        label: translations.printCurrentView,
         click: function() {
           const options = {
             silent: false,
@@ -756,8 +791,7 @@ const createWindow = async function() {
       })
       .on("copyToClipboard", (event, args) => {
         // Copy text to clipboard
-        console.log(args[0]);
-        clipboard.writeText(args[0], "selection")
+        clipboard.writeText(args[0])
       })
       .on("update-badge", (event, count) => {
         if(appData.os==="mac") app.setBadgeCount(count);

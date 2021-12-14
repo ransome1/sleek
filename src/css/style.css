@@ -812,15 +812,12 @@ code, pre {
   display: flex !important;
 }
 
-#errorContainer,
 #messageGenericContainer {
   display: none;
 }
-#errorContainer p,
 #messageGenericContainer p {
   margin: 0.1em 0;
 }
-#errorContainer i,
 #messageGenericContainer i {
   color: white !important;
 }

@@ -22,8 +22,6 @@ const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreate
 const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 const btnSave = document.getElementById("btnSave");
-const errorContainer = document.getElementById("errorContainer");
-const errorContainerClose = document.getElementById("errorContainerClose");
 const errorMessage = document.getElementById("errorMessage");
 const filterContext = document.getElementById("filterContext");
 const messageLoggingBody = document.getElementById("messageLoggingBody");
@@ -250,10 +248,10 @@ function handleError(error) {
   try {
     if(error) {
       console.error(error.name +" in function " + error.functionName + ": " + error.message);
-      if(appData.environment==="development") {
-        errorContainer.classList.add("is-active");
-        errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
-      }
+      // if(appData.environment==="development") {
+      //   errorContainer.classList.add("is-active");
+      //   errorMessage.innerHTML = "<strong>" + error.name + "</strong> in function " + error.functionName + ": " + error.message;
+      // }
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "Error", error.functionName, error])
     }
@@ -393,9 +391,9 @@ function registerEvents() {
       // trigger matomo event
       if(userData.matomoEvents) matomo._paq.push(["trackEvent", "No Result Container", "Click on reset button"])
     }
-    errorContainerClose.onclick = function() {
-      this.parentElement.classList.remove("is-active")
-    }
+    // errorContainerClose.onclick = function() {
+    //   this.parentElement.classList.remove("is-active")
+    // }
     messageGenericContainerClose.onclick = function() {
       this.parentElement.classList.remove("is-active")
     }
@@ -438,9 +436,9 @@ function registerEvents() {
     return Promise.reject(error);
   }
 }
-
-function pasteItemsToClipboard(items) {
+async function pasteItemsToClipboard(items) {
   try {
+    let groups = await todos.generateGroups(items);
     let itemsForClipboard;
     itemsForClipboard = "Status\t";
     itemsForClipboard += "Closed\t";
@@ -452,33 +450,48 @@ function pasteItemsToClipboard(items) {
     itemsForClipboard += "Recurrence\t";
     itemsForClipboard += "Contexts\t";
     itemsForClipboard += "Projects\n";
-
-    for(let i = 0; i < items.length; i++) {
-      let clipboardItem = "";
-      items[i].complete ? clipboardItem += "Completed" : clipboardItem += "In progress";
-      clipboardItem += "\t";
-      (items[i].completed !== null) ? clipboardItem += items[i].completedString() : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].date !== null) ? clipboardItem += items[i].dateString() : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].priority !== null) ? clipboardItem += items[i].priority.toString() : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].tString !== undefined) ? clipboardItem += items[i].tString : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].text !== null) ? clipboardItem += items[i].text : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].dueString !== undefined) ? clipboardItem += items[i].dueString : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].rec !== null) ? clipboardItem += items[i].recString : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].contexts !== null) ? clipboardItem += items[i].contexts.toString() : clipboardItem += "-";
-      clipboardItem += "\t";
-      (items[i].projects !== null) ? clipboardItem += items[i].projects.toString() : clipboardItem += "-";
-      clipboardItem += "\n";
-      itemsForClipboard += clipboardItem;
+    for(let i = 0; i < groups.length; i++) {
+        let clipboardItem = "";
+        if(groups[i][0] !== "null") {
+          clipboardItem += "\n";
+          clipboardItem += "-------------------------------------";
+          clipboardItem += "\n";
+          clipboardItem += groups[i][0];
+          clipboardItem += "\n";
+          clipboardItem += "-------------------------------------";
+          clipboardItem += "\n";
+          
+        } else {
+          clipboardItem += "\n\n\n";
+        }
+        itemsForClipboard += clipboardItem; 
+        for(let j = 0; j < groups[i][1].length; j++) {
+            clipboardItem = "";
+            groups[i][1][j].complete ? clipboardItem += "Completed" : clipboardItem += "In progress";
+            clipboardItem += "\t";
+            (groups[i][1][j].completed !== null) ? clipboardItem += groups[i][1][j].completedString() : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].date !== null) ? clipboardItem += groups[i][1][j].dateString() : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].priority !== null) ? clipboardItem += groups[i][1][j].priority.toString() : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].tString !== undefined) ? clipboardItem += groups[i][1][j].tString : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].text !== null) ? clipboardItem += groups[i][1][j].text : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].dueString !== undefined) ? clipboardItem += groups[i][1][j].dueString : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].rec !== null) ? clipboardItem += groups[i][1][j].recString : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].contexts !== null) ? clipboardItem += groups[i][1][j].contexts.toString() : clipboardItem += "-";
+            clipboardItem += "\t";
+            (groups[i][1][j].projects !== null) ? clipboardItem += groups[i][1][j].projects.toString() : clipboardItem += "-";
+            clipboardItem += "\n";
+            itemsForClipboard += clipboardItem;
+        }
     }
     window.api.send("copyToClipboard", [itemsForClipboard]);
-    showGenericMessage("Visible todos have been copied to clipboard");
+    showGenericMessage(translations.visibleTodosCopiedToClipboard);
   } catch(error) {
     error.functionName = pasteItemsToClipboard.name;
     return Promise.reject(error);

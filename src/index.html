@@ -226,8 +226,8 @@
             <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
             <i class="fas fa-search"></i>
             <label id="todoTableSearchLabel" for="todoTableSearch"></label>
-            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
-            <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;Add as todo</button>
+            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
+            <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
             <section id="resultStats">
               <span class="tag"></span>
             </section>
@@ -465,70 +465,6 @@
             </tr>
           </table>
         </section>
-        <!--<section id="settingsTab2" class="modal-card-body" data-track-content data-content-name="Settings" data-content-piece="About">
-          <h3 class="title is-3" id="settingsTabAboutHeadline"></h3>
-          <table>
-            <tr>
-              <th colspan="100%" id="settingsTabAboutContribute"></th>
-            </tr>
-            <tr>
-              <td><i class="fab fa-github"></i></td>
-              <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
-              <td><i class="fas fa-star"></i></td>
-              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
-              <td><i class="fab fa-windows"></i></td>
-              <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
-            </tr>
-            <tr>
-              <td><i class="fab fa-twitter"></i></td>
-              <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
-              <td><i class="fab fa-facebook"></i></td>
-              <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
-              <td><i class="fab fa-linkedin"></i></td>
-              <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
-            </tr>
-          </table>
-          <table>
-            <tr>
-              <th colspan="100%" id="settingsTabAboutCopyrightLicense"></th>
-            </tr>
-            <tr>
-              <td colspan="100%" id="settingsTabAboutCopyrightLicenseBody"></td>
-            </tr>
-          </table>
-          <table>
-            <tr>
-              <th colspan="100%" id="settingsTabAboutPrivacy"></th>
-            </tr>
-            <tr>
-              <td colspan="100%" id="settingsTabAboutPrivacyBody"></td>
-            </tr>
-          </table>
-          <table>
-            <tr>
-              <th colspan="100%" id="settingsTabAboutExternalLibraries"></th>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
-              <td><a href="https://github.com/electron-userland/electron-builder" target="_blank">Electron builder</a></td>
-              <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
-              <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/jgthms/bulma" target="_blank">Bulma CSS</a></td>
-              <td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome</a></td>
-              <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
-              <td><a href="https://github.com/markedjs/marked" target="_blank">Marked</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
-              <td><a href="https://github.com/paulmillr/chokidar" target="_blank">chokidar</a></td>
-              <td><a href="https://github.com/viktor-shmigol/electron-windows-badge/" target="_blank">Electron Windows Badge</a></td>
-              <td><a href="https://github.com/andrewplummer/Sugar" target="_blank">Sugar</a></td>
-            </tr>
-          </table>
-          <p><code>v<span id="version"></span></code></p>
-        </section>-->
         <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
@@ -570,7 +506,7 @@
                 <td><span class="tag is-info is-large">H</span></td>
               </tr>
               <tr>
-                <td id="">Toggle deferred todos</td>
+                <td id="helpTabKeyboardTR18TD1"></td>
                 <td><span class="tag is-info is-large">T</span></td>
                 <td><span class="tag is-info is-large">T</span></td>
               </tr>
@@ -605,12 +541,12 @@
                 <td><span class="tag is-info is-large">.</span></td>
               </tr>
               <tr>
-                <td id="">Print the current view</td>
+                <td id="helpTabKeyboardTR19TD1"></td>
                 <td><span class="tag is-info is-large">P</span></td>
                 <td><span class="tag is-info is-large">P</span></td>
               </tr>
               <tr>
-                <td id="">Switch to specific file</td>
+                <td id="helpTabKeyboardTR20TD1"></td>
                 <td><span class="tag is-info is-large">1-9</span></td>
                 <td><span class="tag is-info is-large">1-9</span></td>
               </tr>
@@ -625,30 +561,25 @@
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">C</span></td>
               </tr>
               <tr>
-                <td id="">Show help</td>
+                <td id="helpTabKeyboardTR21TD1"></td>
                 <td><span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">?</span></td>
                 <td><span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">?</span></td>
               </tr>
               <tr>
-                <td id="">Switch to next file</td>
+                <td id="helpTabKeyboardTR22TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
               </tr>
               <tr>
-                <td id="">Switch to previous file</td>
+                <td id="helpTabKeyboardTR23TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
               </tr>
               <tr>
-                <td id="">Close tab or window (when there is only one tab)</td>
+                <td id="helpTabKeyboardTR24TD1"></td>
                 <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">W</span></td>
                 <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">W</span></td>
               </tr>
-
-
-
-
-
               <tr>
                 <th colspan="3"><h5 class="title is-5" style="margin-top: .75em;" id="helpTabKeyboardSubtitle"></h5></th>
               </tr>
@@ -878,14 +809,6 @@
             <a tabindex="-1" href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-linkedin"></i></a>
           </p>
         </div>
-      </article>
-
-      <article id="errorContainer" class="notification is-danger" data="error" style="position: relative">
-        <button id="errorContainerClose" class="delete" aria-label="delete" data-message="error"></button>
-        <p id="errorMessage"></p>
-        <p>
-          <a href="#" class="btnCopyToClipboard"><i class="fas fa-copy"></i>&nbsp;Copy to clipboard</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/ransome1/sleek/issues" target="blank"><i class="fab fa-github"></i>&nbsp;Report on Github</a>
-        </p>
       </article>
     </section>
 

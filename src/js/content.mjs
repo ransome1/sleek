@@ -3,6 +3,7 @@ import { modal, userData, appData, setUserData, translations, handleError, setTh
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "../configs/modal.config.mjs";
 
+const addAsTodo = document.getElementById("addAsTodo");
 const reviewSourceforge = document.getElementById("reviewSourceforge");
 const reviewWindowsStore = document.getElementById("reviewWindowsStore");
 const shareFacebook = document.getElementById("shareFacebook");
@@ -66,16 +67,31 @@ const helpTabKeyboardTR14TD1 = document.getElementById("helpTabKeyboardTR14TD1")
 const helpTabKeyboardTR15TD1 = document.getElementById("helpTabKeyboardTR15TD1");
 const helpTabKeyboardTR16TD1 = document.getElementById("helpTabKeyboardTR16TD1");
 const helpTabKeyboardTR17TD1 = document.getElementById("helpTabKeyboardTR17TD1");
+const helpTabKeyboardTR18TD1 = document.getElementById("helpTabKeyboardTR18TD1");
+const helpTabKeyboardTR19TD1 = document.getElementById("helpTabKeyboardTR19TD1");
+const helpTabKeyboardTR20TD1 = document.getElementById("helpTabKeyboardTR20TD1");
+const helpTabKeyboardTR21TD1 = document.getElementById("helpTabKeyboardTR21TD1");
+const helpTabKeyboardTR22TD1 = document.getElementById("helpTabKeyboardTR22TD1");
+const helpTabKeyboardTR23TD1 = document.getElementById("helpTabKeyboardTR23TD1");
+const helpTabKeyboardTR24TD1 = document.getElementById("helpTabKeyboardTR24TD1");
 const toggleDarkmode = document.getElementById("toggleDarkmode");
 const toggleNotifications = document.getElementById("toggleNotifications");
 const toggleTray = document.getElementById("toggleTray");
 
+addAsTodo.innerHTML = translations.addAsTodo;
 helpTabKeyboardSubtitle.innerHTML = translations.helpTabKeyboardSubtitle;
 helpTabKeyboardTR13TD1.innerHTML = translations.helpTabKeyboardTR13TD1;
 helpTabKeyboardTR14TD1.innerHTML = translations.helpTabKeyboardTR14TD1;
 helpTabKeyboardTR15TD1.innerHTML = translations.helpTabKeyboardTR15TD1;
 helpTabKeyboardTR16TD1.innerHTML = translations.helpTabKeyboardTR16TD1;
 helpTabKeyboardTR17TD1.innerHTML = translations.helpTabKeyboardTR17TD1;
+helpTabKeyboardTR18TD1.innerHTML = translations.toggleDeferredTodos;
+helpTabKeyboardTR19TD1.innerHTML = translations.printCurrentView;
+helpTabKeyboardTR20TD1.innerHTML = translations.switchToSpecificFile;
+helpTabKeyboardTR21TD1.innerHTML = translations.showHelp;
+helpTabKeyboardTR22TD1.innerHTML = translations.switchToNextFile;
+helpTabKeyboardTR23TD1.innerHTML = translations.switchToPreviousFile;
+helpTabKeyboardTR24TD1.innerHTML = translations.closeTabOrWindow;
 helpTab1Title.innerHTML = translations.shortcuts;
 helpTab2Title.innerHTML = translations.priorities;
 helpTab3Title.innerHTML = translations.helpTab3Title;
@@ -101,7 +117,7 @@ helpTabKeyboardTR6TD1.innerHTML = translations.settings;
 helpTabKeyboardTR7TD1.innerHTML = translations.helpTabKeyboardTR7TD1;
 helpTabKeyboardTR8TD1.innerHTML = translations.toggleFilter;
 helpTabKeyboardTR9TD1.innerHTML = translations.resetFilters;
-helpTabKeyboardTR11TD1.innerHTML = translations.createFile;
+helpTabKeyboardTR11TD1.innerHTML = translations.copyVisibleTodosToClipboard;
 helpTabKeyboardTR12TD1.innerHTML = translations.reload;
 helpTabPrioritiesBody.innerHTML = translations.helpTabPrioritiesBody;
 helpTabPrioritiesTitle.innerHTML = translations.helpTabPrioritiesTitle;
