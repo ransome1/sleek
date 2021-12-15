@@ -43,6 +43,8 @@ const datePicker = new Datepicker(datePickerInput, {
   language: userData.language,
   format: "yyyy-mm-dd",
   clearBtn: true,
+  calendarWeeks: true,
+  weekStart: 1,
   beforeShowDay: function(date) {
     let today = new Date();
     if (date.getDate() == today.getDate() &&

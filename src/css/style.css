@@ -451,16 +451,22 @@ body.dark .modal.content table th,
 body.dark .modal.content table td {
   border-color: #2d2d2d !important;
 }
+body.dark .modal.content .card {
+  background: #f0f0f0;
+}
 body.dark .modal.content .tabs ul {
   border-color: transparent;
 }
-body.dark .modal.content .tabs li a {
+body.dark .modal.content .tabs ul li a {
   color: white !important;
   border-color: #5a5a5a !important;
 }
-body.dark .modal.content .tabs li.is-active a {
+body.dark .modal.content .tabs ul li.is-active a {
   color: #3273dc !important;
   border-color: #3273dc !important;
+}
+body.dark .modal.content .tabs ul li a:focus-visible {
+  background: #5a5a5a !important;
 }
 body.dark .message.fixed {
   background: transparent !important;
@@ -984,10 +990,15 @@ code, pre {
   border-color: #ccc !important;
   border-width: 2px;
   margin-bottom: 0;
+  border-top-right-radius: 0.65em;
+  border-top-left-radius: 0.65em;
 }
 .tabs ul li.is-active a {
   color: #3273dc !important;
   border-color: #3273dc !important;
+}
+.tabs ul li a:focus-visible {
+  background: #ccc !important;
 }
 
 nav {

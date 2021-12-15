@@ -66,10 +66,15 @@
       border-color: $mid-grey!important;
       border-width: 2px;
       margin-bottom: 0;
+      border-top-right-radius: $radius;
+      border-top-left-radius: $radius;
     }
     li.is-active a {
       color: $has-text-link!important;
       border-color: $has-text-link!important;
+    }
+    li a:focus-visible {
+      background: $mid-grey!important;
     }
   }
 }

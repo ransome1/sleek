@@ -501,16 +501,24 @@ body.dark {
     table td {
       border-color: $darker-grey!important;
     }
-    .tabs ul {
-      border-color: transparent;
+    .card {
+      background: $almost-white;
     }
-    .tabs li a {
-      color: white!important;
-      border-color: $dark-grey!important;
-    }
-    .tabs li.is-active a {
-      color: $has-text-link!important;
-      border-color: $has-text-link!important;
+    .tabs {
+      ul {
+        border-color: transparent;
+      }
+      ul li a {
+        color: white!important;
+        border-color: $dark-grey!important;
+      }
+      ul li.is-active a {
+        color: $has-text-link!important;
+        border-color: $has-text-link!important;
+      }
+      ul li a:focus-visible {
+        background: $dark-grey!important;
+      }
     }
   }
   .message.fixed {
