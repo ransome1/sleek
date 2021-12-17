@@ -67,15 +67,7 @@
         }
       }
       .cell.itemDueDate {
-        .tags {
-          top: -1.9em;
-          right: -1.9em;
-        }
-        i.fa-sort-down {
-          right: .2em;
-          bottom: 1.7em;
-          color: inherit;
-        }
+        padding: 0 0.25em!important;
       }
     }
   }
