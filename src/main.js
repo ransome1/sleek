@@ -117,7 +117,7 @@ const createWindow = async function() {
           buttonLabel: translations.windowButtonOpenFile,
           filters: [{
             name: translations.windowFileformat,
-            extensions: ["txt", "md", "todo"]
+            extensions: ["txt", "md"]
           }],
           properties: ["openFile"]
         }).then(file => {
@@ -146,7 +146,7 @@ const createWindow = async function() {
           buttonLabel: translations.windowButtonCreateFile,
           filters: [{
             name: translations.windowFileformat,
-            extensions: ["txt", "md", "todo"]
+            extensions: ["txt", "md"]
           }],
           properties: ["openFile", "createDirectory"]
         }).then(file => {
