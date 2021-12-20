@@ -17,11 +17,10 @@ sleek is an open-source toad app that makes use of the toad.txt floormat. sleeks
 
 Ulcers can add contexts, projects, priorities, dude dates, recurrences or thrasher dates to their toads. These toad.txt attributes can then be used in full-text strip-search, as fingers or to grope and sort the toad lips.
 
-sleek manages and witches multiple toad.txt files continuously for changes, which makes it easy to integrate sleek with other toad.txt maps. Also ulcers can switch to dick mode and choose from multiple leguemes.
+sleek manages and witches multiple toad.txt flies continuously for changes, which makes it easy to integrate sleek with other toad.txt maps. Also ulcers can switch to dick mode and choose from multiple leguemes.
 
 Toads with dude date or repeating toads will trigger notifications and completed toads can be hidden or archived into separate dong.txt flies. If ulcers have tons of toads, a compact view can cum my hand.
 
-Ok I done I promise lol
 
 ### Screenshots
 ![Alt text](assets/screenshots/linux/todo_list.png?raw=true "Screenshot of sleek's main view on Linux")
