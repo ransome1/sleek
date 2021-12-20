@@ -7,6 +7,7 @@ import { generateRecurrence } from "./recurrences.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { show } from "./form.mjs";
 import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
+import { createModalJail } from "../configs/modal.config.mjs";
 
 const modalForm = document.getElementById("modalForm");
 const todoContext = document.getElementById("todoContext");
@@ -91,6 +92,7 @@ function showResultStats() {
 function configureTodoTableTemplate() {
   try {
     todoTableBodyRowTemplate.setAttribute("class", "todo");
+    todoTableBodyRowTemplate.setAttribute("tabindex", "-1");
     todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
     todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
     todoTableBodyCellTextTemplate.setAttribute("tabindex", 0);
@@ -131,19 +133,37 @@ function generateGroups(items) {
     }
     return object;
   }, {});
+
   // object is converted to a sorted array
   items = Object.entries(items).sort(function(a,b) {
+    
     // when a is null sort it after b
-    if(a[0]==="null") return 1;
+    if(a[0]==="null" || a[0]==="noDueDate") {
+      if(userData.invertSorting) return -1;
+      return 1;
+    }
     // when b is null sort it after a
-    if(b[0]==="null") return -1;
+    if(b[0]==="null" || b[0]==="noDueDate") {
+      if(userData.invertSorting) return 1;
+      return -1;
+    }
     // invert sorting when sort is by creation date
-    if(sortBy === "date" && a[0] < b[0]) return 1;
-    if(sortBy === "date" && a[0] > b[0]) return -1;
+    if(sortBy === "date" && a[0] < b[0]) {
+      return 1;
+    }
+    if(sortBy === "date" && a[0] > b[0]) {
+      return -1;
+    }
     // sort the rest alphabetically
-    if(a[0] < b[0]) return -1;
+    if(a[0] < b[0]) {
+      return -1;
+    }
   });
-  //
+
+
+  if(userData.invertSorting) items = items.reverse();
+
+  // sort completed todo to the end of the list
   if(userData.sortCompletedLast) {
     items.sort(function(a,b) {
       // when a is null sort it after b
@@ -153,10 +173,12 @@ function generateGroups(items) {
       return 0;
     });
   }
+
   // sort the items within the groups
   items.forEach((group) => {
     group[1] = sortTodoData(group[1]);
   });
+
   return Promise.resolve(items)
 }
 async function generateTable(groups, loadAll) {
@@ -192,7 +214,6 @@ async function generateTable(groups, loadAll) {
       // create an empty divider row
       } else {
         dividerRow = null;
-        //dividerRow = document.createRange().createContextualFragment("<div class=\"group\"></div>")
       }
       if(!document.getElementById(userData.sortBy[0] + groups[group][0]) && dividerRow) todoRows.push(dividerRow);
       for (let item in groups[group][1]) {
@@ -351,13 +372,10 @@ function generateTableRow(todo) {
       // append the due date to the text item
       todoTableBodyCellText.appendChild(todoTableBodyCellRecurrence);
     }
-
     // add the text cell to the row
     todoTableBodyRow.appendChild(todoTableBodyCellText);
     // cell for the categories
     categories.forEach(category => {
-
-
       if(todo[category] && category!="priority") {
         todo[category].forEach(element => {
           let todoTableBodyCellCategory = document.createElement("a");
@@ -382,44 +400,95 @@ function generateTableRow(todo) {
     // only add the categories to text cell if it has child nodes
     if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
     todoTableBodyRow.addEventListener("contextmenu", event => {
-      //todoContextUseAsTemplate.focus();
-      todoContext.style.left = event.x + "px";
-      todoContext.style.top = event.y + "px";
-      todoContext.classList.toggle("is-active");
-      todoContext.setAttribute("data-item", todo.toString())
-      // click on use as template option
-      todoContextUseAsTemplate.onclick = function() {
-        show(todoContext.getAttribute('data-item'), true);
-        todoContext.classList.toggle("is-active");
-        todoContext.removeAttribute("data-item");
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
-      }
-      todoContextEdit.onclick = function() {
-        show(todoContext.getAttribute('data-item'));
-        todoContext.classList.toggle("is-active");
-        todoContext.removeAttribute("data-item");
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Edit"]);
-      }
-      // click on delete
-      todoContextDelete.onclick = function() {
-        // passing the data-item attribute of the parent tag to complete function
-        setTodoDelete(todoContext.getAttribute('data-item')).then(response => {
-          console.log(response);
-          todoContext.classList.toggle("is-active");
-          todoContext.removeAttribute("data-item");
-        }).catch(error => {
-          handleError(error);
-        });
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
-      }
+      createTodoContext(todoTableBodyRow).then(response => {
+         console.log(response);
+      }).catch(error => {
+        handleError(error);
+      });
+      console.log(todoTableBodyRow);
+      todoTableBodyRow.focus();
     });
     // return the fully built row
     return todoTableBodyRow;
   } catch(error) {
     error.functionName = generateTableRow.name;
+    return Promise.reject(error);
+  }
+}
+function createTodoContext(todoTableRow) {
+  try {
+    const todo = todoTableRow.getAttribute("data-item");
+    todoContext.setAttribute("data-item", todo.toString())
+    // click on use as template option
+    todoContextUseAsTemplate.onclick = function() {
+      show(todoContext.getAttribute('data-item'), true);
+      //todoContext.classList.toggle("is-active");
+      todoContext.removeAttribute("data-item");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
+    }
+    todoContextUseAsTemplate.onkeypress = function(event) {
+      show(todoContext.getAttribute('data-item'), true);
+      //todoContext.classList.toggle("is-active");
+      todoContext.removeAttribute("data-item");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Enter on Use as template"]);
+    }
+    // click on use as edit option
+    todoContextEdit.onclick = function() {
+      show(todoContext.getAttribute("data-item"));
+      //todoContext.classList.toggle("is-active");
+      todoContext.removeAttribute("data-item");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Edit"]);
+    }
+    todoContextEdit.onkeypress = function() {
+      show(todoContext.getAttribute("data-item"));
+      //todoContext.classList.remove("is-active");
+      todoContext.removeAttribute("data-item");
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Enter on Edit"]);
+    }
+    // click on delete
+    todoContextDelete.onclick = function() {
+      // passing the data-item attribute of the parent tag to complete function
+      setTodoDelete(todoContext.getAttribute('data-item')).then(response => {
+        console.log(response);
+        todoContext.classList.remove("is-active");
+        todoContext.removeAttribute("data-item");
+      }).catch(error => {
+        handleError(error);
+      });
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
+    }
+    todoContextDelete.onkeypress = function() {
+      // passing the data-item attribute of the parent tag to complete function
+      setTodoDelete(todoContext.getAttribute('data-item')).then(response => {
+        console.log(response);
+        todoContext.classList.remove("is-active");
+        todoContext.removeAttribute("data-item");
+      }).catch(error => {
+        handleError(error);
+      });
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Enter on Delete"]);
+    }
+
+    todoContext.classList.add("is-active");
+
+    if(!event.x && !event.y) {
+      let box = todoTableRow.getBoundingClientRect();
+      todoContext.style.left = box.right - todoContext.offsetWidth + "px";
+      todoContext.style.top = box.top + "px";
+    } else {
+      todoContext.style.left = event.x + "px";
+      todoContext.style.top = event.y + "px";
+    }
+    createModalJail(todoContext);
+    return Promise.resolve("Success: Context opened");
+  } catch(error) {
+    error.functionName = createTodoContext.name;
     return Promise.reject(error);
   }
 }
@@ -451,14 +520,15 @@ function sortTodoData(group) {
           return 1;
         // when item2 is empty or bigger than item1, item 1 will be sorted before item2
         } else if(item1 && !item2 || item1 < item2) {
-          // invert sorting for creation date
-          //if(userData.sortBy[i] === "date") return 1;
           return -1;
         }
         // no change to sorting
         return;
       });
     }
+    // invert sorting if set
+    if(userData.invertSorting) group = group.reverse();
+
     return group;
   } catch(error) {
     error.functionName = sortTodoData.name;
@@ -676,4 +746,4 @@ function generateHash(string) {
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
 
-export { generateItems, generateGroups, generateTable, items, item, setTodoComplete, archiveTodos, addTodo };
+export { generateItems, generateGroups, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, show, createTodoContext };

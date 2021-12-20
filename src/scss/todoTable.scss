@@ -5,7 +5,7 @@
 #todoContext {
   display: none;
   position: fixed;
-  z-index: 60;
+  z-index: 40;
   border-radius: $radius;
   box-shadow: 0 0 1em $mid-grey;
   a {
@@ -20,6 +20,9 @@
   a.dropdown-item:last-child {
     border-bottom-left-radius: $radius;
     border-bottom-right-radius: $radius;
+  }
+  a.dropdown-item:focus {
+    background-color: $almost-white!important;
   }
   .card-content {
     padding: 0;
@@ -85,6 +88,13 @@
   .todo#previousItem.is-highlighted {
     background-color: $almost-white;
   }
+  .todo:focus {
+    background: $almost-white!important;
+    .cell.itemDueDate .tags,
+    .cell.itemDueDate .fa-sort-down {
+      display: block;
+    }
+  }
   .group {
     font-family: FreeSansBold;
     font-size: 1.2em;
@@ -111,9 +121,6 @@
     .cell {
       margin-bottom: 0.5em;
     }
-  }
-  .todo {
-    display: flex;
   }
   .todo.completed {
     .cell {
@@ -242,7 +249,7 @@
       position: absolute;
       top: -2.3em;
       right: -1.5em;
-      z-index: 40;
+      z-index: 100;
       display: none;
       .tag {
         margin: 0;

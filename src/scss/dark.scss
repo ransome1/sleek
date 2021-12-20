@@ -258,6 +258,9 @@ body.dark {
         }
       }
     }
+    .todo:focus {
+      background: $darker-grey!important;
+    }
   }
   #modalForm {
     i {
@@ -343,11 +346,12 @@ body.dark {
   }
   #filterContext,
   #todoContext {
-    box-shadow: 0 0 1em $darker-grey!important;
+    box-shadow: 0 0 1em $almost-black!important;
     a {
       color: $almost-white!important;
     }
-    a:hover {
+    a:hover,
+    a:focus {
       color: $lighter-grey!important;
       background: $darker-grey!important;
     }

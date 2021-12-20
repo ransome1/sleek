@@ -289,6 +289,13 @@ function jumpToItem(item) {
     return Promise.reject(error);
   }
 }
+function closeTodoContext() {
+  // hide the context menu
+  todoContext.classList.remove("is-active");
+  todoContext.removeAttribute("data-item");
+  // set focus on the last focused row
+  focusCurrentRow();
+}
 function registerEvents() {
   try {
     // ########################################################################################################################
@@ -305,8 +312,7 @@ function registerEvents() {
       // close todo context if click is outside of it
       if(todoContext.classList.contains("is-active")) {
         if(!todoContext.contains(event.target)) {
-          todoContext.classList.remove("is-active");
-          todoContext.removeAttribute("data-item");
+          closeTodoContext();
         }
       }
     }
@@ -498,21 +504,70 @@ async function pasteItemsToClipboard(items) {
   }
 }
 
+let currentRow = -1;
+function focusCurrentRow() {
+  if(currentRow === -1) return false;
+  let todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
+  todoTableRow.focus();
+  return false;
+}
 function registerKeyboardShortcuts() {
   try {
     // CMD/metaKey only works on keydown
     window.addEventListener("keydown", function(event) {
-      // open file
-      if((event.ctrlKey || event.metaKey) && event.key === "o" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        window.api.send("openOrCreateFile", "open");
+      // open focused element
+      if (event.keyCode === 13) {
+        // TODO: This is ugly
+        if(todoContext.classList.contains("is-active") || modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
+        let todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
+        todos.show(todoTableRow.getAttribute("data-item"));
+        return false;
       }
+      // move focus down in table list
+      if (event.keyCode === 40) {
+        if(todoContext.classList.contains("is-active") || modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
+        // stop if end of todos is reached
+        if(currentRow >= todoTable.querySelectorAll(".todo").length-1) return false;
+        currentRow++;
+        focusCurrentRow();
+        return false;
+      }
+      // move focus up in table list
+      if (event.keyCode === 38) {
+        if(todoContext.classList.contains("is-active") || modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
+        if(currentRow === 0) return false;
+        currentRow--;
+        focusCurrentRow();
+        return false;
+      }
+      // set todo complete
+      if (event.keyCode === 37) {
+        if(todoContext.classList.contains("is-active") || modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
+        const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow].getAttribute("data-item");
+        todos.setTodoComplete(todoTableRow).then(function(response) {
+          console.info(response);
+          focusCurrentRow();
+        }).catch(function(error) {
+          handleError(error);
+        });
+        return false;
+      }
+
+      // open context
+      if (event.keyCode === 39) {
+        if(todoContext.classList.contains("is-active") || modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
+        focusCurrentRow();
+        const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
+        todos.createTodoContext(todoTableRow);
+        return false;
+      }
+      // // open file
+      // if((event.ctrlKey || event.metaKey) && event.key === "o" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
+      //   window.api.send("openOrCreateFile", "open");
+      // }
       // create file
       if((event.ctrlKey || event.metaKey) && event.key === "c" && (document.activeElement.id!="todoTableSearch" && document.activeElement.id!="filterContextInput" && document.activeElement.id!="modalFormInput")) {
-        //window.api.send("openOrCreateFile", "create");
-
         pasteItemsToClipboard(todos.items.filtered);
-
-
       }
       // close tab or window
       if((event.ctrlKey || event.metaKey) && event.key === "w") {
@@ -545,8 +600,7 @@ function registerKeyboardShortcuts() {
       }
       // escape in context menu
       if(event.key === "Escape" && todoContext.classList.contains("is-active")) {
-        todoContext.classList.remove("is-active");
-        todoContext.removeAttribute("data-item");
+        closeTodoContext();
       }
       // switch files
       // TODO: restrict this on files in tab bar

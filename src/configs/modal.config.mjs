@@ -4,10 +4,30 @@ export function createModalJail(modal) {
   const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
   const focusableContent = modal.querySelectorAll(focusableElements);
   const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
+  let currentContextRow = 0;
 
   firstFocusableElement.focus();
 
   document.addEventListener("keydown", function(event) {
+    // move focus down using arrow key down
+    if(event.keyCode === 40) {
+      if(modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
+      // stop if end of todos is reached
+      if(currentContextRow >= focusableContent.length-1) return false;
+      currentContextRow++;
+      let row = focusableContent[currentContextRow];
+      row.focus();
+      return false;
+    }
+    // move focus up using arrow key up
+    if(event.keyCode === 38) {
+      if(modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
+      if(currentContextRow === 0) return false;
+      currentContextRow--;
+      let row = focusableContent[currentContextRow];
+      row.focus();
+      return false;
+    }
     let isTabPressed = event.key === "Tab" || event.keyCode === 9;
     if (!isTabPressed) {
       return;

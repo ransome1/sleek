@@ -232,6 +232,9 @@ body.dark #todoTable .todo .cell .is-white {
   color: #CCCDCF;
   background: none;
 }
+body.dark #todoTable .todo:focus {
+  background: #2d2d2d !important;
+}
 body.dark #modalForm i {
   color: #CCCDCF !important;
 }
@@ -302,14 +305,16 @@ body.dark #todoTableWrapper::-webkit-scrollbar-thumb {
 }
 body.dark #filterContext,
 body.dark #todoContext {
-  box-shadow: 0 0 1em #2d2d2d !important;
+  box-shadow: 0 0 1em #212224 !important;
 }
 body.dark #filterContext a,
 body.dark #todoContext a {
   color: #f0f0f0 !important;
 }
 body.dark #filterContext a:hover,
-body.dark #todoContext a:hover {
+body.dark #filterContext a:focus,
+body.dark #todoContext a:hover,
+body.dark #todoContext a:focus {
   color: #CCCDCF !important;
   background: #2d2d2d !important;
 }
@@ -1900,7 +1905,7 @@ body.compact #autoCompleteContainer h4 {
 #todoContext {
   display: none;
   position: fixed;
-  z-index: 60;
+  z-index: 40;
   border-radius: 0.65em;
   box-shadow: 0 0 1em #ccc;
 }
@@ -1916,6 +1921,9 @@ body.compact #autoCompleteContainer h4 {
 #todoContext a.dropdown-item:last-child {
   border-bottom-left-radius: 0.65em;
   border-bottom-right-radius: 0.65em;
+}
+#todoContext a.dropdown-item:focus {
+  background-color: #f0f0f0 !important;
 }
 #todoContext .card-content {
   padding: 0;
@@ -1970,6 +1978,13 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .todo#previousItem.is-highlighted {
   background-color: #f0f0f0;
 }
+#todoTable .todo:focus {
+  background: #f0f0f0 !important;
+}
+#todoTable .todo:focus .cell.itemDueDate .tags,
+#todoTable .todo:focus .cell.itemDueDate .fa-sort-down {
+  display: block;
+}
 #todoTable .group {
   font-family: FreeSansBold;
   font-size: 1.2em;
@@ -1994,9 +2009,6 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .group.priority .cell {
   margin-bottom: 0.5em;
-}
-#todoTable .todo {
-  display: flex;
 }
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
@@ -2115,7 +2127,7 @@ body.compact #autoCompleteContainer h4 {
   position: absolute;
   top: -2.3em;
   right: -1.5em;
-  z-index: 40;
+  z-index: 100;
   display: none;
 }
 #todoTable .cell.itemDueDate .tags .tag {

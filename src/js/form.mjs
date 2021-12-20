@@ -18,6 +18,7 @@ const modalFormInputResize = document.getElementById("modalFormInputResize");
 const priorityPicker = document.getElementById("priorityPicker");
 const btnSave = document.getElementById("btnSave");
 const btnItemStatus = document.getElementById("btnItemStatus");
+const todoContext = document.getElementById("todoContext");
 
 modalFormInputLabel.innerHTML = translations.todoTxtSyntax;
 btnItemStatus.onclick = function() {
@@ -254,7 +255,9 @@ function show(todo, templated) {
     recurrencePickerInput.value = null;
     document.getElementById("modalFormInput").value = null;
     modalFormAlert.innerHTML = null;
-    modalFormAlert.parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
+    modalFormAlert.parentElement.classList.remove("is-active", "is-warning", "is-danger");
+    // close context menu
+    todoContext.classList.remove("is-active");
     //
     if(todo) {
       // replace invisible multiline ascii character with new line
