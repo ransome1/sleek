@@ -1,6 +1,6 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { getActiveFile, userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation, resetModal } from "../render.js";
+import { getActiveFile, userData, appData, handleError, translations, setUserData, startBuilding, getConfirmation, resetModal, focusRow } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { categories, selectFilter } from "./filters.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
@@ -405,9 +405,14 @@ function generateTableRow(todo) {
       }).catch(error => {
         handleError(error);
       });
-      console.log(todoTableBodyRow);
-      todoTableBodyRow.focus();
+      const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
+      focusRow(index);
     });
+    // add focus on row
+    todoTableBodyRow.onfocus = function() {
+      const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
+      focusRow(index);
+    }
     // return the fully built row
     return todoTableBodyRow;
   } catch(error) {

@@ -113,6 +113,8 @@ async function getConfirmation() {
 }
 function configureMainView() {
   try {
+    //
+    focusRow();
     // generate file tabs
     files.generateFileList();
     // close filterContext if open
@@ -294,7 +296,7 @@ function closeTodoContext() {
   todoContext.classList.remove("is-active");
   todoContext.removeAttribute("data-item");
   // set focus on the last focused row
-  focusCurrentRow();
+  focusRow();
 }
 function registerEvents() {
   try {
@@ -505,10 +507,12 @@ async function pasteItemsToClipboard(items) {
 }
 
 let currentRow = -1;
-function focusCurrentRow() {
+function focusRow(row) {
+  if(row) currentRow = row;
+
   if(currentRow === -1) return false;
   let todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
-  todoTableRow.focus();
+  if(typeof todoTableRow === "object") todoTableRow.focus();
   return false;
 }
 function registerKeyboardShortcuts() {
@@ -529,7 +533,7 @@ function registerKeyboardShortcuts() {
         // stop if end of todos is reached
         if(currentRow >= todoTable.querySelectorAll(".todo").length-1) return false;
         currentRow++;
-        focusCurrentRow();
+        focusRow();
         return false;
       }
       // move focus up in table list
@@ -537,7 +541,13 @@ function registerKeyboardShortcuts() {
         if(todoContext.classList.contains("is-active") || modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
         if(currentRow === 0) return false;
         currentRow--;
-        focusCurrentRow();
+        focusRow();
+        return false;
+      }
+      // close context menu
+      if (event.keyCode === 37 && todoContext.classList.contains("is-active")) {
+        todoContext.classList.remove("is-active")
+        focusRow();
         return false;
       }
       // set todo complete
@@ -546,7 +556,6 @@ function registerKeyboardShortcuts() {
         const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow].getAttribute("data-item");
         todos.setTodoComplete(todoTableRow).then(function(response) {
           console.info(response);
-          focusCurrentRow();
         }).catch(function(error) {
           handleError(error);
         });
@@ -556,7 +565,7 @@ function registerKeyboardShortcuts() {
       // open context
       if (event.keyCode === 39) {
         if(todoContext.classList.contains("is-active") || modalForm.classList.contains("is-active") || document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput") return false;
-        focusCurrentRow();
+        focusRow();
         const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
         todos.createTodoContext(todoTableRow);
         return false;
@@ -1104,4 +1113,4 @@ window.api.receive("refresh", async (args) => {
   });
 });
 
-export { getActiveFile, showOnboarding, resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation };
+export { getActiveFile, showOnboarding, resetFilters, resetModal, setUserData, startBuilding, handleError, userData, appData, translations, modal, setTheme, getConfirmation, focusRow };
