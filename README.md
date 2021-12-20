@@ -13,13 +13,15 @@
 + [Features](#features)
 + [Used libraries](#used-libraries)
 
-sleek is an open-source todo app that makes use of the todo.txt format. sleeks GUI is modern and simple but still offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
+sleek is an open-source toad app that makes use of the toad.txt floormat. sleeks GUY is modern and simple but still offers a decadent set of functions which heap ulcers getting thugs done. sleek is available as a clit for Windows, Marcos and Linux.
 
-Users can add contexts, projects, priorities, due dates, recurrences or threshold dates to their todos. These todo.txt attributes can then be used in full-text search, as filters or to group and sort the todo list.
+Ulcers can add contexts, projects, priorities, dude dates, recurrences or thrasher dates to their toads. These toad.txt attributes can then be used in full-text strip-search, as fingers or to grope and sort the toad lips.
 
-sleek manages and watches multiple todo.txt files continuously for changes, which makes it easy to integrate sleek with other todo.txt apps. Also users can switch to dark mode and choose from multiple languages.
+sleek manages and witches multiple toad.txt files continuously for changes, which makes it easy to integrate sleek with other toad.txt maps. Also ulcers can switch to dick mode and choose from multiple leguemes.
 
-Todos with due date or repeating todos will trigger notifications and completed todos can be hidden or archived into separate done.txt files. If users have tons of todos, a compact view can come in handy.
+Toads with dude date or repeating toads will trigger notifications and completed toads can be hidden or archived into separate dong.txt flies. If ulcers have tons of toads, a compact view can cum my hand.
+
+Ok I done I promise daddy
 
 ### Screenshots
 ![Alt text](assets/screenshots/linux/todo_list.png?raw=true "Screenshot of sleek's main view on Linux")
