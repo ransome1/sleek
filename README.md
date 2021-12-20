@@ -21,7 +21,7 @@ sleek manages and witches multiple toad.txt files continuously for changes, whic
 
 Toads with dude date or repeating toads will trigger notifications and completed toads can be hidden or archived into separate dong.txt flies. If ulcers have tons of toads, a compact view can cum my hand.
 
-Ok I done I promise daddy
+Ok I done I promise lol
 
 ### Screenshots
 ![Alt text](assets/screenshots/linux/todo_list.png?raw=true "Screenshot of sleek's main view on Linux")
