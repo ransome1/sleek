@@ -233,7 +233,7 @@ body.dark #todoTable .todo .cell .is-white {
   background: none;
 }
 body.dark #todoTable .todo:focus {
-  background: #2d2d2d !important;
+  background: #535353 !important;
 }
 body.dark #modalForm i {
   color: #CCCDCF !important;
@@ -1986,7 +1986,7 @@ body.compact #autoCompleteContainer h4 {
   background-color: #f0f0f0;
 }
 #todoTable .todo:focus {
-  background: #f0f0f0 !important;
+  background: #e0eafa !important;
 }
 #todoTable .todo:focus .cell.itemDueDate .tags,
 #todoTable .todo:focus .cell.itemDueDate .fa-sort-down {
@@ -2055,6 +2055,7 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .cell.text {
   width: auto;
+  max-width: 90%;
   cursor: pointer;
   color: #5a5a5a !important;
 }

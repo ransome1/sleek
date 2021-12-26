@@ -310,6 +310,8 @@ const createWindow = async function() {
     // send it to UI
     const notification = new Notification(config);
     notification.show();
+    // stop here if there is no button in notification
+    if(typeof config.actions !== "object") return false;
     // click on button in notification
     notification.addListener("click", () => {
       // trigger matomo event

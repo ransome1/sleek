@@ -259,7 +259,7 @@ body.dark {
       }
     }
     .todo:focus {
-      background: $darker-grey!important;
+      background: lighten($darker-grey, 15%)!important;
     }
   }
   #modalForm {

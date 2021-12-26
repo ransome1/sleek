@@ -43,7 +43,7 @@ marked.setOptions({
 const renderer = {
   link(href, title, text) {
     // truncate the url
-    if(text.length > 40) text = text.slice(0, 40) + " [...] ";
+    //if(text.length > 40) text = text.slice(0, 40) + " [...] ";
     return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
   }
 };
@@ -261,7 +261,7 @@ async function generateTable(groups, loadAll) {
     todoTable.appendChild(tableContainerContent);
     return Promise.resolve("Success: Todo table generated");
   } catch(error) {
-    error.functionName = archiveTodos.name;
+    error.functionName = generateTable.name;
     return Promise.reject(error);
   }
 }

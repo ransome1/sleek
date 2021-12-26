@@ -89,7 +89,7 @@
     background-color: $almost-white;
   }
   .todo:focus {
-    background: $almost-white!important;
+    background: lighten($has-text-link, 40%)!important;
     .cell.itemDueDate .tags,
     .cell.itemDueDate .fa-sort-down {
       display: block;
@@ -174,7 +174,7 @@
   }*/
   .cell.text {
     width: auto;
-    //flex: 1;
+    max-width: 90%;
     cursor: pointer;
     color: $dark-grey!important;
     button {
