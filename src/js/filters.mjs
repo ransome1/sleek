@@ -1,13 +1,15 @@
 "use strict";
-import { userData, handleError, translations, setUserData, startBuilding, getConfirmation } from "../render.js";
-import { createModalJail } from "../configs/modal.config.mjs";
+import { userData, setUserData, translations, startBuilding } from "../render.js";
+import { createModalJail } from "./jail.mjs";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
 import { getCaretPosition } from "./form.mjs";
 import { showContent } from "./content.mjs";
+import { getConfirmation } from "./prompt.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 import * as filterlang from "./filterlang.mjs";
 import { runQuery } from "./filterquery.mjs";
+import { handleError } from "./helper.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -16,6 +18,7 @@ const filterContext = document.getElementById("filterContext");
 const filterContextInput = document.getElementById("filterContextInput");
 const filterContextSave = document.getElementById("filterContextSave");
 const filterContextDelete = document.getElementById("filterContextDelete");
+const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 
 let categories,
     filterCounter = 0,
@@ -29,6 +32,9 @@ let categories,
 
 filterContextSave.innerHTML = translations.save;
 filterContextDelete.innerHTML = translations.delete;
+btnResetFilters.forEach(function(button) {
+  button.getElementsByTagName('span')[0].innerHTML = translations.resetFilters;
+});
 
 filterContextInput.addEventListener("keydown", (event) => {
   if(event.code==="Space") event.preventDefault();
@@ -38,7 +44,6 @@ autoCompleteContainer.addEventListener("keyup", (event) => {
   // if there is only one filter shown it will be selected automatically
   if(event.code==="Tab" && Object.keys(filtersCounted).length === 1) {
     addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-prefix"));
-
   }
 })
 
@@ -229,7 +234,6 @@ function generateCategoryContainer(category, autoCompletePrefix, filterFragment)
     }
     // add the headline before category container
     todoFiltersContainer.appendChild(todoFilterHeadline);
-
     // add filter fragment
     if(filterFragment.childElementCount > 0) {
       todoFiltersContainer.appendChild(filterFragment);
@@ -257,7 +261,7 @@ function generateCategoryContainer(category, autoCompletePrefix, filterFragment)
   }
 }
 
-function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition) {
+function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix) {
   try {
     // reset filter counter
     filterCounter = 0;
@@ -394,7 +398,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
         handleError(error);
       });
       container.appendChild(todoFiltersContainer);
-    });
+    });  
     return Promise.resolve("Success: Filter data generated");
   } catch (error) {
     error.functionName = generateFilterData.name;
@@ -445,13 +449,10 @@ function addFilterToInput(filter, autoCompletePrefix) {
   // put focus back into input so user can continue writing
   modalFormInput.focus();
   // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", category]);
-
-
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", filter]);
 }
 function generateFilterButtons(category, autoCompletePrefix) {
   try {
-    let caretPosition = getCaretPosition(document.getElementById("modalFormInput"));
     // create a fragment to collect the filters in
     let filterFragment = document.createDocumentFragment();
     // build one button each
@@ -525,13 +526,13 @@ function generateFilterButtons(category, autoCompletePrefix) {
       // autocomplete container
       } else {
         // add filter to input
-        todoFiltersItem.addEventListener("click", (event) => {
+        todoFiltersItem.addEventListener("click", () => {
           addFilterToInput(todoFiltersItem.getAttribute("data-filter"), autoCompletePrefix);
         });
       }
       filterCounter++;
       filterFragment.appendChild(todoFiltersItem);
-    }
+    }  
     return Promise.resolve(filterFragment);
   } catch (error) {
     error.functionName = generateFilterButtons.name;
@@ -539,4 +540,25 @@ function generateFilterButtons(category, autoCompletePrefix) {
   }
 }
 
-export { filterItems, generateFilterData, selectFilter, categories, filterCounter };
+function resetFilters(refresh) {
+  try {
+    // scroll back to top
+    document.getElementById("todoTableWrapper").scrollTo(0,0);
+    // clear the persisted filers, by setting it to undefined the object entry will be removed fully
+    setUserData("selectedFilters", new Array);
+    //
+    setUserData("hideFilterCategories", new Array);
+    // empty old filter container
+    todoFilters.innerHTML = "";
+    // clear search input
+    document.getElementById("todoTableSearch").value = null;
+    // regenerate the data
+    if(refresh) startBuilding();
+    return Promise.resolve("Success: Filters resetted");
+  } catch(error) {
+    error.functionName = resetFilters.name;
+    return Promise.reject(error);
+  }
+}
+
+export { filterItems, generateFilterData, selectFilter, categories, filterCounter, resetFilters };

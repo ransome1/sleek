@@ -1,12 +1,21 @@
 "use strict";
-import { resetFilters, resetModal, handleError, userData, appData, setUserData, translations, showOnboarding } from "../render.js";
+import { appData, userData, setUserData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { createModalJail } from "../configs/modal.config.mjs";
+import { createModalJail } from "./jail.mjs";
+import { resetFilters } from "./filters.mjs";
+import { showOnboarding } from "./onboarding.mjs";
+import { resetModal, handleError } from "./helper.mjs";
 
 const btnOpenTodoFile = document.getElementById("btnOpenTodoFile");
-const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
 const fileTabBarList = document.querySelector("#fileTabBar ul");
+const fileTabBar = document.getElementById("fileTabBar");
+const modalChangeFile = document.getElementById("modalChangeFile");
+const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
+const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
+
+modalChangeFileCreate.innerHTML = translations.createFile;
+modalChangeFileOpen.innerHTML = translations.openFile;
 
 function removeFileFromList(index, isTabItem) {
   try {
@@ -144,7 +153,6 @@ function generateFileList() {
     return Promise.reject(error);
   }
 }
-
 btnOpenTodoFile.onclick = function() {
   if(typeof userData.files === "object" && userData.files.length>0) {
     generateFileList().then(response => {

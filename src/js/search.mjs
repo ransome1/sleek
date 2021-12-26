@@ -1,14 +1,29 @@
 "use strict";
-import { translations, startBuilding, handleError, userData } from "../render.js";
+import { translations, startBuilding, userData } from "../render.js";
 import { addTodo } from "./todos.mjs";
+import { handleError, debounce } from "./helper.mjs";
+import { _paq } from "./matomo.mjs";
+import { focusRow } from "./keyboard.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchAddTodo = document.getElementById("todoTableSearchAddTodo");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
+const todoTableSearchLabel = document.getElementById("todoTableSearchLabel");
 
 todoTableSearchLabel.innerHTML = translations.todoTxtSyntax;
 
-todoTableSearch.addEventListener("input", debounce(function() {
+todoTableSearch.addEventListener("keydown", function(event) {
+  if(event.key === "Tab") {
+    setTimeout (function () {
+      focusRow(0);
+      }, 10 
+    );
+  } else if(event.key === "Escape") {
+    this.blur();
+  }
+});
+
+todoTableSearch.addEventListener("input", debounce(function(event) {
   if(this.value) {
     todoTableSearchAddTodo.classList.add("is-active");
   } else {
@@ -33,9 +48,9 @@ todoTableSearch.onblur = function(event) {
 }
 
 // shortcuts for search input field
-todoTableSearch.addEventListener("keyup", function () {
-  if(event.key === "Escape") todoTableSearch.blur();
-});
+// todoTableSearch.addEventListener("keyup", function () {
+//   if(event.key === "Escape") todoTableSearch.blur();
+// });
 
 window.addEventListener("keyup", function () {
   // find todo
@@ -56,20 +71,3 @@ todoTableSearchAddTodo.onclick = function() {
   });
 }
 
-// https://davidwalsh.name/javascript-debounce-function
-function debounce(func, wait, immediate) {
-	let timeout;
-	return function() {
-		let
-      context = this,
-      args = arguments;
-		let later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		let callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
-}

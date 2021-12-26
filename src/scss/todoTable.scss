@@ -161,17 +161,18 @@
     }
   }
   .cell.checkbox {
-    a {
+    i {
       font-size: 1.25em;
+      color: $has-text-link;
     }
   }
-  .cell.checkbox,
+  /*.cell.checkbox,
   .cell.archive {
     a:focus-visible {
       color: $almost-black!important;
     }
-  }
-  a.cell.text {
+  }*/
+  .cell.text {
     width: auto;
     //flex: 1;
     cursor: pointer;
@@ -194,7 +195,6 @@
     }
     .text {
       float: left;
-      margin-right: .5em;
     }
   }
   .cell.text:focus-visible {
@@ -228,28 +228,24 @@
   .cell .projects {
     background: $sleek-projects-button;
   }
-  .cell.recurrence {
-    padding: 0 .25em;
-    margin: 0;
-  }
+  
   .cell.itemDueDate {
     color: $dark-grey;
     position: relative;
     white-space: nowrap;
-    padding: 0 .25em;
-    margin: 0;
     text-transform: lowercase;
+    cursor: pointer;
     .fa-sort-down {
       position: absolute;
-      right: .45em;
-      top: -1.25em;
+      right: 0.2em;
+      top: -0.5em;
       display: none;
     }
     .tags {
       position: absolute;
-      top: -2.3em;
+      top: -1.6em;
       right: -1.5em;
-      z-index: 100;
+      z-index: 50;
       display: none;
       .tag {
         margin: 0;

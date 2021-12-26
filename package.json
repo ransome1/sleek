@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.1.6-rc.1",
+  "version": "1.1.6-rc.2",
   "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
   "category": "ProjectManagement",
@@ -120,12 +120,14 @@
     "vanillajs-datepicker": "^1.1.4"
   },
   "devDependencies": {
-    "electron": "12.2.3",
+    "electron": "^16.0.5",
     "electron-builder": "^22.11.7",
+    "electron-chromedriver": "^16.0.0",
     "eslint": "^7.25.0",
     "mocha": "^9.0.0",
     "peggy": "^1.2.0",
     "sass": "^1.34.1",
+    "selenium-webdriver": "^4.1.0",
     "spectron": "14.0.0"
   }
 }

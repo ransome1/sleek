@@ -172,24 +172,24 @@ body.dark #todoTable .group.due button {
 body.dark #todoTable .todo {
   border-color: #3B3B3B;
 }
-body.dark #todoTable .todo .cell.checkbox a {
+body.dark #todoTable .todo .cell.checkbox i {
   color: #3273dc;
   font-size: 1.25em;
 }
 body.dark #todoTable .todo .cell.checkbox a:focus-visible {
   color: white !important;
 }
-body.dark #todoTable .todo .cell.checkbox a:hover {
+body.dark #todoTable .todo .cell.checkbox i:hover {
   color: white !important;
 }
 body.dark #todoTable .todo .cell.checkbox a:focus-visible,
 body.dark #todoTable .todo .cell.archive a:focus-visible {
   color: #CCCDCF !important;
 }
-body.dark #todoTable .todo a.cell.text {
+body.dark #todoTable .todo div.cell.text {
   color: #f0f0f0 !important;
 }
-body.dark #todoTable .todo a.cell.text:focus-visible {
+body.dark #todoTable .todo div.cell.text:focus-visible {
   background: #2d2d2d !important;
 }
 body.dark #todoTable .todo .cell.itemDueDate {
@@ -837,6 +837,14 @@ code, pre {
   cursor: pointer;
 }
 
+#rowDatePicker {
+  position: fixed;
+  top: auto;
+  left: auto;
+  opacity: 0;
+  visibility: hidden;
+}
+
 .contentContainer {
   width: 100%;
   text-align: center;
@@ -1220,10 +1228,6 @@ nav ul:nth-child(2):hover #versionNumber {
   #todoTable .todo .cell .text {
     margin: 0;
   }
-  #todoTable .todo .cell.itemDueDate {
-    padding: 0 0.25em !important;
-  }
-
   nav ul {
     width: 3.5em;
   }
@@ -1330,9 +1334,6 @@ body.compact #todoTable .todo .cell {
 }
 body.compact #todoTable .todo .cell .text {
   margin: 0;
-}
-body.compact #todoTable .todo .cell.itemDueDate {
-  padding: 0 0.25em !important;
 }
 body.compact nav ul {
   width: 3.5em;
@@ -1958,6 +1959,12 @@ body.compact #autoCompleteContainer h4 {
   float: left;
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
+  /*.cell.checkbox,
+  .cell.archive {
+    a:focus-visible {
+      color: $almost-black!important;
+    }
+  }*/
 }
 #todoTable .todo {
   width: 100%;
@@ -2042,37 +2049,33 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell.categories .tag {
   margin-left: 0.25em;
 }
-#todoTable .cell.checkbox a {
+#todoTable .cell.checkbox i {
   font-size: 1.25em;
+  color: #3273dc;
 }
-#todoTable .cell.checkbox a:focus-visible,
-#todoTable .cell.archive a:focus-visible {
-  color: #212224 !important;
-}
-#todoTable a.cell.text {
+#todoTable .cell.text {
   width: auto;
   cursor: pointer;
   color: #5a5a5a !important;
 }
-#todoTable a.cell.text button {
+#todoTable .cell.text button {
   font-size: 1.1em;
   font-family: FreeSansBold;
   height: auto;
   padding: 0.1em 0.4em;
 }
-#todoTable a.cell.text .priority {
+#todoTable .cell.text .priority {
   float: left;
   background: transparent;
   color: #666666;
   margin-right: 0.5em;
 }
-#todoTable a.cell.text .priority button {
+#todoTable .cell.text .priority button {
   font-size: 0.9em;
   padding: 0.1em 0.4em !important;
 }
-#todoTable a.cell.text .text {
+#todoTable .cell.text .text {
   float: left;
-  margin-right: 0.5em;
 }
 #todoTable .cell.text:focus-visible {
   background: #f0f0f0;
@@ -2105,29 +2108,24 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell .projects {
   background: #f1d6f1;
 }
-#todoTable .cell.recurrence {
-  padding: 0 0.25em;
-  margin: 0;
-}
 #todoTable .cell.itemDueDate {
   color: #5a5a5a;
   position: relative;
   white-space: nowrap;
-  padding: 0 0.25em;
-  margin: 0;
   text-transform: lowercase;
+  cursor: pointer;
 }
 #todoTable .cell.itemDueDate .fa-sort-down {
   position: absolute;
-  right: 0.45em;
-  top: -1.25em;
+  right: 0.2em;
+  top: -0.5em;
   display: none;
 }
 #todoTable .cell.itemDueDate .tags {
   position: absolute;
-  top: -2.3em;
+  top: -1.6em;
   right: -1.5em;
-  z-index: 100;
+  z-index: 50;
   display: none;
 }
 #todoTable .cell.itemDueDate .tags .tag {

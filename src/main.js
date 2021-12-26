@@ -171,21 +171,22 @@ const createWindow = async function() {
         break;
     }
   }
-  const startFileWatcher = async function(file, isTabItem, resetTab) {
+  const startFileWatcher = async function(file, isTabItem) {
     try {
       if(!fs.existsSync(file)) throw("Error: File not found on disk")
       // skip persisted files and go with ENV if set
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
       }
-      if (process.defaultApp) {
+      let args;
+      if(process.defaultApp) {
         // electron "unbundled" app -- have to skip "electron" and script name arg eg: "."
         args = process.argv.slice(2);
       } else {
         // electron "bundled" app -- skip only the app name, eg: "sleek"
         args = process.argv.slice(1);
       }
-      if (args.length > 0 && fs.existsSync(args[0])) {
+      if(args.length > 0 && fs.existsSync(args[0])) {
         file = args[0];
       }
       // use the loop to check if the new path is already in the user data
@@ -397,20 +398,6 @@ const createWindow = async function() {
         accelerator: "CmdOrCtrl+P",
         label: translations.printCurrentView,
         click: function() {
-          const options = {
-            silent: false,
-            printBackground: true,
-            color: true,
-            margin: {
-              marginType: "printableArea"
-            },
-            landscape: false,
-            pagesPerSheet: 1,
-            collate: false,
-            copies: 1,
-            header: "Header of the Page",
-            footer: "Footer of the Page"
-          }
           mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
           const index = userData.data.files.findIndex(file => file[0] === 1);
           if(index!==-1) {
@@ -725,11 +712,14 @@ const createWindow = async function() {
   const configureWindowEvents = function() {
     try {
       ipcMain
-      .on("closeWindow", (event, args) => {
+      .on("closeWindow", () => {
         mainWindow.close();
       })
       .on("userData", (event, args) => {
-        if(args) userData.set(args[0], args[1]);
+        if(args) {
+          userData.set(args[0], args[1]);
+          console.log("Success: " + args[0] + " persisted, value is: " + args[1]);
+        }
         mainWindow.webContents.send("userData", userData.data);
       })
       .on("appData", () => {
@@ -852,7 +842,7 @@ if (!gotTheLock) {
         app.quit();
     }
 } else {
-    app.on("second-instance", (event, commandLine, workingDirectory) => {
+    app.on("second-instance", () => {
         // Someone tried to run a second instance, we should focus our window.
         if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore()

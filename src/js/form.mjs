@@ -1,13 +1,15 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { resetModal, handleError, userData, setUserData, translations, getConfirmation } from "../render.js";
+import { userData, setUserData, translations } from "../render.js";
+import { handleError } from "./helper.mjs";
 import { _paq } from "./matomo.mjs";
 import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput, datePicker } from "./datePicker.mjs";
-import { createModalJail } from "../configs/modal.config.mjs";
+import { createModalJail } from "./jail.mjs";
 import * as recurrencePicker from "./recurrencePicker.mjs";
+import { resetModal } from "./helper.mjs";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const recurrencePickerInput = document.getElementById("recurrencePickerInput");
@@ -20,7 +22,9 @@ const btnSave = document.getElementById("btnSave");
 const btnItemStatus = document.getElementById("btnItemStatus");
 const todoContext = document.getElementById("todoContext");
 
+btnSave.innerHTML = translations.save;
 modalFormInputLabel.innerHTML = translations.todoTxtSyntax;
+
 btnItemStatus.onclick = function() {
   setTodoComplete(modalForm.getAttribute("data-item")).then(response => {
     resetModal().then(function(result) {
@@ -49,10 +53,10 @@ btnSave.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Submit"]);
 }
-document.getElementById("modalFormInput").addEventListener("keyup", event => {
+document.getElementById("modalFormInput").addEventListener("keyup", () => {
   keyUp();
 });
-document.getElementById("modalFormInput").addEventListener("keydown", event => {
+document.getElementById("modalFormInput").addEventListener("keydown", () => {
   keyDown();
 });
 document.getElementById("modalFormInput").onfocus = function() {
@@ -129,7 +133,7 @@ function positionAutoCompleteContainer() {
   autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight - 40 + "px";
   autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
 }
-function modalFormInputEvent(event) {
+function modalFormInputEvent() {
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
   let autoCompleteValue ="";

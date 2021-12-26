@@ -7,7 +7,7 @@ import { setUserData, startBuilding } from "../render.js";
 
 function reorderSortingLevel() {
   let sortBy = new Array;
-  const children = sortByContainer.children;
+  const children = document.getElementById("sortByContainer").children;
   for(let i=0; i<children.length; i++) {
     if(!children[i].getAttribute("data-id")) continue;
     sortBy.push(children[i].getAttribute("data-id"));
@@ -16,7 +16,7 @@ function reorderSortingLevel() {
   startBuilding();
 }
 
-function enableDragSort(listClass) {
+export function enableDragSort(listClass) {
   const sortableLists = document.getElementsByClassName(listClass);
   Array.prototype.map.call(sortableLists, (list) => {enableDragList(list)});
 }
@@ -50,7 +50,3 @@ function handleDrop(item) {
   item.target.classList.remove("drag-sort-active");
   reorderSortingLevel();
 }
-
-//(()=> {enableDragSort("drag-sort-enable")})();
-
-export { enableDragSort };

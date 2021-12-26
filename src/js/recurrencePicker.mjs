@@ -1,5 +1,6 @@
 "use strict";
-import { userData, translations, handleError } from "../render.js";
+import { userData, translations } from "../render.js";
+import { handleError } from "./helper.mjs";
 import { _paq } from "./matomo.mjs";
 import { resizeInput } from "./form.mjs";
 import { RecExtension } from "./todotxtExtensions.mjs";

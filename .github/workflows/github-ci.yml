@@ -104,6 +104,8 @@ jobs:
     needs: codeql
     steps:                                              # <-- must use actions/checkout@v2 before mirroring!
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - uses: pixta-dev/repository-mirroring-action@v1
       with:
         target_repo_url:

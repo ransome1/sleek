@@ -1,7 +1,9 @@
 "use strict";
-import { modal, userData, appData, setUserData, translations, handleError, setTheme, getConfirmation } from "../render.js";
+import { appData, userData, setUserData, translations } from "../render.js";
+import { getConfirmation } from "./prompt.mjs";
+import { setTheme, handleError } from "./helper.mjs";
 import { _paq } from "./matomo.mjs";
-import { createModalJail } from "../configs/modal.config.mjs";
+import { createModalJail } from "./jail.mjs";
 
 const addAsTodo = document.getElementById("addAsTodo");
 const reviewSourceforge = document.getElementById("reviewSourceforge");
@@ -41,6 +43,7 @@ const helpTabKeyboardTR11TD1 = document.getElementById("helpTabKeyboardTR11TD1")
 const helpTabKeyboardTR12TD1 = document.getElementById("helpTabKeyboardTR12TD1");
 const helpTabPrioritiesBody = document.getElementById("helpTabPrioritiesBody");
 const helpTabPrioritiesTitle = document.getElementById("helpTabPrioritiesTitle");
+const modal = document.querySelectorAll('.modal');
 const settingsLanguage = document.getElementById("settingsLanguage");
 const settingsTabAbout = document.getElementById("settingsTabAbout");
 const settingsTabAboutContribute = document.getElementById("settingsTabAboutContribute");
@@ -50,7 +53,6 @@ const settingsTabAboutExternalLibraries = document.getElementById("settingsTabAb
 const settingsTabAboutHeadline = document.getElementById("settingsTabAboutHeadline");
 const settingsTabAboutPrivacy = document.getElementById("settingsTabAboutPrivacy");
 const settingsTabAboutPrivacyBody = document.getElementById("settingsTabAboutPrivacyBody");
-const settingsTabSettings = document.getElementById("settingsTabSettings");
 const settingsTabSettingsDarkmode = document.getElementById("settingsTabSettingsDarkmode");
 const settingsTabSettingsHeadline = document.getElementById("settingsTabSettingsHeadline");
 const settingsTabSettingsLanguage = document.getElementById("settingsTabSettingsLanguage");

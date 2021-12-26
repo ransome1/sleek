@@ -1,7 +1,7 @@
 "use strict";
-import { userData, getActiveFile } from "../render.js";
 import { items } from "./todos.mjs";
 import { convertDate } from "./date.mjs";
+import { getActiveFile } from "./helper.mjs";
 
 function splitRecurrence(recurrence) {
   let mul = 1;

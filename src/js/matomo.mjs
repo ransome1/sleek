@@ -1,6 +1,7 @@
 "use strict";
-import { handleError, appData, userData, setUserData } from "../render.js";
+import { appData, userData, setUserData } from "../render.js";
 import { items } from "./todos.mjs";
+import { handleError } from "./helper.mjs";
 
 const toggleMatomoEvents = document.getElementById("toggleMatomoEvents");
 

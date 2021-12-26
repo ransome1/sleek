@@ -191,14 +191,14 @@ body.dark {
     .todo {
       border-color: $even-darker-grey;
       .cell.checkbox {
-        a {
+        i {
           color: $has-text-link;
           font-size: 1.25em;
         }
         a:focus-visible {
           color: white!important;
         }
-        a:hover {
+        i:hover {
           color: white!important;
         }
       }
@@ -208,10 +208,10 @@ body.dark {
           color: $lighter-grey!important;
         }
       }
-      a.cell.text {
+      div.cell.text {
         color: $almost-white!important;
       }
-      a.cell.text:focus-visible {
+      div.cell.text:focus-visible {
         background: $darker-grey!important;
       }
       .cell.itemDueDate {
