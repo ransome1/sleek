@@ -134,7 +134,7 @@ export function registerShortcuts() {
       // escape in context menu
       if(event.key === "Escape" && todoContext.classList.contains("is-active")) {
         closeTodoContext();
-        focusRow();
+        focusRow(currentRow);
         return false;
       }
       // switch files
@@ -293,12 +293,12 @@ export function registerShortcuts() {
         return false;
       }
     });
-    todoTable.addEventListener ("keyup", function() {
-      if(event.key === "Escape") {
-        focusRow(false);
-        return false;
-      }
-    });
+    // todoTable.addEventListener ("keyup", function() {
+    //   if(event.key === "Escape") {
+    //     focusRow(false);
+    //     return false;
+    //   }
+    // });
     // event for closing modal windows
     modal.forEach(function(element) {
       element.addEventListener("keydown", function(event) {

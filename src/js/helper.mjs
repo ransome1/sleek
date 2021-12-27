@@ -220,7 +220,6 @@ export function configureMainView() {
     // add version number to about tab in settings modal
     document.getElementById("version").innerHTML = appData.version;
     if(typeof items === "object") {
-
       // jump to previously added item
       if(document.getElementById("previousItem")) {
         //const index 
@@ -228,7 +227,6 @@ export function configureMainView() {
         //helper.jumpToItem(document.getElementById("previousItem"))
         focusRow();
       }
-      
       // remove onboarding
       showOnboarding(false).then(function(response) {
         console.info(response);
