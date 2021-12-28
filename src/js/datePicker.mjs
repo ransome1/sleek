@@ -15,100 +15,14 @@ import fr from "../../node_modules/vanillajs-datepicker/js/i18n/locales/fr.js";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const datePickerInput = document.getElementById("datePickerInput");
-const thresholdPickerInput = document.getElementById("thresholdPickerInput");
 const datePickerContainer = document.querySelector(".datepicker.datepicker-dropdown");
 
-/*datePickerInput.onfocus = function () {
+datePickerInput.onfocus = function () {
   datePicker.show();
   autoCompleteContainer.classList.remove("is-active");
   resizeInput(datePickerInput);
-};*/
-datePickerInput.onfocus = doOnFocus(datePickerInput);
-thresholdPickerInput.onfocus = doOnFocus(thresholdPickerInput);
-function doOnFocus(el) {
-  datePicker.show();
-  autoCompleteContainer.classList.remove("is-active");
-  resizeInput(el);
-}
-
-addPickerEventListener(datePickerInput, "due");
-addPickerEventListener(thresholdPickerInput, "threshold");
-function addPickerEventListener(el, type) {
-  el.addEventListener("changeDate", function (e) {
-    // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
-    if(document.getElementById("modalForm").classList.contains("is-active")) {
-      // generate the object on what is written into input, so we don't overwrite previous inputs of user
-      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
-      getDateString(el, type, todo);
-      // if suggestion box was open, it needs to be closed
-      autoCompleteContainer.classList.remove("is-active");
-      autoCompleteContainer.blur();
-      // if a due date is set, the recurrence picker will be shown);
-      document.getElementById("modalFormInput").value = todo.toString();
-      document.getElementById("modalFormInput").focus();
-      resizeInput(el);
-      datePicker.hide();
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
-    } else {
-      // get position of current todo in array
-      const index = items.objects.map(function(item) {return item.toString(); }).indexOf(currentTodo.toString());
-      // change the date
-      setDateString(el, type, currentTodo);
-      // finally pass new todo on for changing
-      editTodo(index, currentTodo);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Datepicker used to change a date"]);
-    }
-    document.querySelector(".datepicker.datepicker-dropdown").classList.remove("visible");
-  });
-}
-
-function getDateString(datePicker, type, todo) {
-  if (type === "due") {
-    if(datePicker.getDate()) {
-      todo.due = datePicker.getDate();
-      todo.dueString = formatDate(datePicker.getDate());
-    } else {
-      // in case delete button is pushed
-      todo.due = undefined;
-      todo.dueString = undefined;
-    }
-  } else if (type === "threshold") {
-    if(datePicker.getDate()) {
-      todo.threshold = datePicker.getDate();
-      todo.thresholdString = formatDate(datePicker.getDate());
-    } else {
-      // in case delete button is pushed
-      todo.threshold = undefined;
-      todo.thresholdString = undefined;
-    }
-  }
-}
-
-function setDateString(datePicker, type, currentTodo) {
-  if (type === "due") {
-    if(datePicker.getDate()) {
-      currentTodo.due = datePicker.getDate();
-      currentTodo.dueString = formatDate(datePicker.getDate());
-    } else {
-      // in case delete button is pushed
-      currentTodo.due = undefined;
-      currentTodo.dueString = undefined;
-    }
-  } else if (type === "threshold") {
-    if(datePicker.getDate()) {
-      currentTodo.threshold = datePicker.getDate();
-      currentTodo.thresholdString = formatDate(datePicker.getDate());
-    } else {
-      // in case delete button is pushed
-      currentTodo.threshold = undefined;
-      currentTodo.thresholdString = undefined;
-    }
-  }
-}
-
-/*datePickerInput.addEventListener("changeDate", function (e) {
+};
+datePickerInput.addEventListener("changeDate", function (e) {
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
   if(document.getElementById("modalForm").classList.contains("is-active")) {
     // generate the object on what is written into input, so we don't overwrite previous inputs of user
@@ -149,11 +63,10 @@ function setDateString(datePicker, type, currentTodo) {
     if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Datepicker used to change a date"]);
   }
   document.querySelector(".datepicker.datepicker-dropdown").classList.remove("visible");
-});*/
+});
 datePickerInput.placeholder = translations.formSelectDueDate;
-thresholdDatePickerInput.placeholder = translations.formSelectThreshold;
 Object.assign(Datepicker.locales, de, it, es, fr);
-/*const datePicker = new Datepicker(datePickerInput, {
+const datePicker = new Datepicker(datePickerInput, {
   autohide: true,
   language: userData.language,
   format: "yyyy-mm-dd",
@@ -168,27 +81,7 @@ Object.assign(Datepicker.locales, de, it, es, fr);
       return { classes: 'today'};
     }
   }
-});*/
-const datePicker = getNewDatePicker(datePickerInput);
-const thresholdDatePicker = getNewDatePicker(thresholdDatePickerInput);
-function getNewDatePicker(el) {
-  return new Datepicker(el, {
-    autohide: true,
-    language: userData.language,
-    format: "yyyy-mm-dd",
-    clearBtn: true,
-    calendarWeeks: true,
-    weekStart: 1,
-    beforeShowDay: function(date) {
-      let today = new Date();
-      if (date.getDate() == today.getDate() &&
-          date.getMonth() == today.getMonth() &&
-          date.getFullYear() == today.getFullYear()) {
-        return { classes: 'today'};
-      }
-    }
-  });
-}
+});
 // document.querySelector(".datepicker .clear-btn").onclick = function() {
 //   let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
 //   todo.due = undefined;
@@ -197,4 +90,4 @@ function getNewDatePicker(el) {
 //   resizeInput(datePickerInput);
 //   datePicker.hide();
 // }
-export { datePickerInput, datePicker, thresholdDatePickerInput, thresholdDatePicker };
+export { datePickerInput, datePicker };
