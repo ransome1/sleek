@@ -45,6 +45,7 @@
   "formInfoIncomplete": "Deine Eingabe ist nicht vollständig, gebe mindestens einen Text ein.",
   "formInfoNoInput": "Schreibe eine Aufgabe in das Textfeld und verwende dazu die todo.txt Syntax. Schau <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">hier</a> nach, welche Möglichkeiten es dabei gibt.",
   "formSelectDueDate": "Keine Fälligkeit",
+  "formSelectThreshold": "No threshold date",
   "todoTxtSyntax": "Benutze die todo.txt Syntax (A) @context +project due: rec: h:",
   "function": "Funktion",
   "help": "Hilfe",

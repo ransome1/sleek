@@ -45,6 +45,7 @@
   "formInfoIncomplete": "Your input is incomplete, please add at least the (todo text).",
   "formInfoNoInput": "Please add a todo into the text field. If you are unsure on how to do this, take a quick look at the <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "formSelectDueDate": "No due date",
+  "formSelectThreshold": "No threshold date",
   "todoTxtSyntax": "Use the todo.txt Syntax (A) @context +project due: rec: h: t:",
   "function": "Function",
   "help": "Help",

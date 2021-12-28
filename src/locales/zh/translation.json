@@ -45,6 +45,7 @@
   "formInfoIncomplete": "你的输入不完整, 请输入任务文本. ",
   "formInfoNoInput": "请在文本里添加todo文件, 如果你不清楚如何使用, 请参见<a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "formSelectDueDate": "无到期",
+  "formSelectThreshold": "No threshold date",
   "todoTxtSyntax": "使用 todo.txt 格式 (A) @context +project due: rec: h:",
   "function": "功能",
   "help": "帮助",

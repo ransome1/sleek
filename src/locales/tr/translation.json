@@ -45,6 +45,7 @@
   "formInfoIncomplete": "Eksik girdi, lütfen en azından yapılacak ekleyiniz.",
   "formInfoNoInput": "Lütfen metin alanına yapılacak ekleyiniz. Eğer nasıl yapılacağından emin değilseniz, <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt sözdizimine</a> göz atın.",
   "formSelectDueDate": "Bitiş tarihi yok",
+  "formSelectThreshold": "No threshold date",
   "todoTxtSyntax": "todo.txt sözdizimini kullanın (A) @bağlam +proje bitiş: rec: h:",
   "function": "Fonksiyon",
   "help": "Yardım",

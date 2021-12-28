@@ -45,6 +45,7 @@
   "formInfoIncomplete": "Zadané údaje nejsou kompletní. Přidejte prosím alespoň text úkolu.",
   "formInfoNoInput": "Přidejte prosím do textového pole úkol. Pokud si nejste jisti, jak to udělat, nahlédněte do <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">syntaxe todo.txt</a>.",
   "formSelectDueDate": "Bez data splnění",
+  "formSelectThreshold": "No threshold date",
   "todoTxtSyntax": "Použijte syntaxi todo.txt (A) @context +project due: rec: h:",
   "function": "Funkce",
   "help": "Nápověda",

@@ -45,6 +45,7 @@
   "formInfoIncomplete": "Su entrada está incompleta, agregue al menos el texto de la tarea.",
   "formInfoNoInput": "Por favor, añada una tarea en el campo de texto. Si no estás seguro de cómo hacerlo, echa un vistazo rápido a <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "formSelectDueDate": "Vencimiento",
+  "formSelectThreshold": "Fecha de inicio",
   "todoTxtSyntax": "Usa la sintaxis de todo.txt (A) @contexto +proyecto due: rec: h:",
   "function": "Función",
   "help": "Ayuda",

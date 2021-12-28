@@ -45,6 +45,7 @@
   "formInfoIncomplete": "入力は不完全である. 少なくともタスク名を記載してください. ",
   "formInfoNoInput": "テキストフィールドにタスクを追加してください. 詳細参照:  <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt syntax</a>.",
   "formSelectDueDate": "期限なし",
+  "formSelectThreshold": "No threshold date",
   "todoTxtSyntax": "todo.txtシンタックスを利用 (A) @コンテキスト +プロジェクト due: rec: h:",
   "function": "機能",
   "help": "ヘルプ",

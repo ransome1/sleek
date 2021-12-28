@@ -45,6 +45,7 @@
   "formInfoIncomplete": "A bevitel befejezetlen. Legalább a (tennivaló szövegét) adja meg.",
   "formInfoNoInput": "Adjon hozzá egy tennivalót a szövegmezőbe. Ha nem biztos abban, hogy ezt hogyan kell csinálni, akkor vessen egy pillantást a <a href=\"https://github.com/todotxt/todo.txt\" target=\"_blank\">todo.txt szintaxisára</a>.",
   "formSelectDueDate": "Nincs határidő",
+  "formSelectThreshold": "No threshold date",
   "todoTxtSyntax": "A todo.txt szintaxis használata: (A) @környezet +projekt due: rec: h: t:",
   "function": "Funkció",
   "help": "Súgó",
