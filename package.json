@@ -116,6 +116,7 @@
     "i18next-fs-backend": "^1.1.1",
     "jstodotxt": "^0.10.0",
     "marked": "^2.0.3",
+    "node-sass": "^7.0.1",
     "sugar": "^2.0.6",
     "vanillajs-datepicker": "^1.1.4"
   },

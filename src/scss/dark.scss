@@ -540,7 +540,9 @@ body.dark {
   }
   .dueDate {
     #datePickerInput,
-    #datePickerInput::placeholder {
+    #datePickerInput::placeholder,
+    #thresholdPickerInput,
+    #thresholdPickerInput::placeholder {
       cursor: pointer;
     }
   }
