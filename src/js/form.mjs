@@ -244,11 +244,33 @@ function setDueDate(days) {
       todo.dueString = todo.due.toISOString().substr(0, 10);
     }
     datePicker.setDate( todo.due );
-    datePickerThreshold.setDate( todo.threshold );
+    datePickerThreshold.setDate( todo.t );
     document.getElementById("modalFormInput").value = todo.toString();
     return Promise.resolve("Success: Due date changed to " + todo.dueString)
   } catch(error) {
     error.functionName = setDueDate.name;
+    return Promise.reject(error);
+  }
+}
+function setThreshold(days) {
+  try {
+    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+    if(days===0) {
+      todo.t = undefined;
+      todo.tString = undefined;
+    } else if(days && todo.t) {
+      todo.t = new Date(new Date(todo.tString).setDate(new Date(todo.tString).getDate() + days));
+      todo.tString = todo.t.toISOString().substr(0, 10);
+    } else if(days && !todo.t) {
+      todo.t = new Date(new Date().setDate(new Date().getDate() + days));
+      todo.tString = todo.t.toISOString().substr(0, 10);
+    }
+    datePicker.setDate( todo.t );
+    datePickerThreshold.setDate( todo.t );
+    document.getElementById("modalFormInput").value = todo.toString();
+    return Promise.resolve("Success: Threshold date changed to " + todo.tString)
+  } catch(error) {
+    error.functionName = setThreshold.name;
     return Promise.reject(error);
   }
 }
@@ -309,7 +331,9 @@ function show(todo, templated) {
       // if so we paste it into the input field
       if(todo.dueString) {
         datePickerInput.value = todo.dueString;
-        datePickerThresholdInput.value = todo.thresholdString;
+      }
+      if(todo.tString) {
+        datePickerThresholdInput.value = todo.tString;
       }
     } else {
       btnItemStatus.classList.add("is-hidden");
@@ -474,4 +498,4 @@ window.onresize = function() {
   }
 }
 
-export { show, resizeInput, setPriority, setDueDate, submitForm, toggleInputSize, getCaretPosition};
+export { show, resizeInput, setPriority, setDueDate, setThreshold, submitForm, toggleInputSize, getCaretPosition};

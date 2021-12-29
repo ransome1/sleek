@@ -28,12 +28,12 @@ datePickerThresholdInput.addEventListener("changeDate", function (e) {
     // generate the object on what is written into input, so we don't overwrite previous inputs of user
     let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
     if(datePickerThreshold.getDate()) {
-      todo.threshold = datePickerThreshold.getDate();
-      todo.thresholdString = formatDate(datePickerThreshold.getDate());
+      todo.t = datePickerThreshold.getDate();
+      todo.tString = formatDate(datePickerThreshold.getDate());
     } else {
       // in case delete button is pushed
-      todo.threshold = undefined;
-      todo.thresholdString = undefined;
+      todo.t = undefined;
+      todo.tString = undefined;
     }
     // if suggestion box was open, it needs to be closed
     autoCompleteContainer.classList.remove("is-active");
@@ -50,12 +50,12 @@ datePickerThresholdInput.addEventListener("changeDate", function (e) {
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(currentTodo.toString());
     // change the date
     if(datePickerThreshold.getDate()) {
-      currentTodo.threshold = datePickerThreshold.getDate();
-      currentTodo.thresholdString = formatDate(datePickerThreshold.getDate());
+      currentTodo.t = datePickerThreshold.getDate();
+      currentTodo.tString = formatDate(datePickerThreshold.getDate());
     } else {
       // in case delete button is pushed
-      currentTodo.threshold = undefined;
-      currentTodo.thresholdString = undefined;
+      currentTodo.t = undefined;
+      currentTodo.tString = undefined;
     }
     // finally pass new todo on for changing
     editTodo(index, currentTodo);

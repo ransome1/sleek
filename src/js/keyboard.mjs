@@ -1,6 +1,6 @@
 "use strict";
 import { isModalOpen, closeTodoContext, setTheme, pasteItemsToClipboard } from "./helper.mjs";
-import { show, setDueDate, setPriority } from "./form.mjs";
+import { show, setDueDate, setThreshold, setPriority } from "./form.mjs";
 import { toggle } from "./view.mjs";
 import { createTodoContext, setTodoComplete, archiveTodos, items } from "./todos.mjs";
 import { userData, translations } from "../render.js";
