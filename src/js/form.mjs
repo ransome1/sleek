@@ -244,6 +244,7 @@ function setDueDate(days) {
       todo.dueString = todo.due.toISOString().substr(0, 10);
     }
     datePicker.setDate( todo.due );
+    datePickerThreshold.setDate( todo.threshold );
     document.getElementById("modalFormInput").value = todo.toString();
     return Promise.resolve("Success: Due date changed to " + todo.dueString)
   } catch(error) {

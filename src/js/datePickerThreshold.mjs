@@ -5,13 +5,13 @@ import { resizeInput } from "./form.mjs";
 import { formatDate } from "./helper.mjs";
 import { items, currentTodo, editTodo } from "./todos.mjs";
 import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
-import "jstodotxt/jsTodoExtensions";
-import "jstodotxt";
-import Datepicker from "vanillajs-datepicker/js/Datepicker";
-import de from "vanillajs-datepicker/js/i18n/locales/de";
-import it from "vanillajs-datepicker/js/i18n/locales/it";
-import es from "vanillajs-datepicker/js/i18n/locales/es";
-import fr from "vanillajs-datepicker/js/i18n/locales/fr";
+import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import "../../node_modules/jstodotxt/jsTodoTxt.js";
+import Datepicker from "../../node_modules/vanillajs-datepicker/js/Datepicker.js";
+import de from "../../node_modules/vanillajs-datepicker/js/i18n/locales/de.js";
+import it from "../../node_modules/vanillajs-datepicker/js/i18n/locales/it.js";
+import es from "../../node_modules/vanillajs-datepicker/js/i18n/locales/es.js";
+import fr from "../../node_modules/vanillajs-datepicker/js/i18n/locales/fr.js";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const datePickerThresholdInput = document.getElementById("thresholdPickerInput");
@@ -64,7 +64,7 @@ datePickerThresholdInput.addEventListener("changeDate", function (e) {
   }
   document.querySelector(".datepicker.datepicker-dropdown").classList.remove("visible");
 });
-datePickerThresholdInput.placeholder = translations.formSelectDueDate;
+datePickerThresholdInput.placeholder = translations.formSelectThreshold;
 Object.assign(Datepicker.locales, de, it, es, fr);
 const datePickerThreshold = new Datepicker(datePickerThresholdInput, {
   autohide: true,
