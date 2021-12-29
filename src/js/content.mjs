@@ -240,7 +240,7 @@ function setFriendlyLanguageNames() {
         friendlyLanguageName = "Italiano"
         break;
         case "es":
-        friendlyLanguageName = "‎Español"
+        friendlyLanguageName = "Español"
         break;
         case "fr":
         friendlyLanguageName = "Français"
@@ -262,6 +262,9 @@ function setFriendlyLanguageNames() {
         break;
         case "cs":
         friendlyLanguageName = "Čeština"
+        break;
+        case "pl":
+        friendlyLanguageName = "Polskie"
         break;
         default:
         return;
