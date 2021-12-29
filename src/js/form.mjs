@@ -7,6 +7,7 @@ import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtEx
 import { generateFilterData } from "./filters.mjs";
 import { items, item, setTodoComplete } from "./todos.mjs";
 import { datePickerInput, datePicker } from "./datePicker.mjs";
+import { datePickerThresholdInput, datePickerThreshold } from "./datePickerThreshold.mjs";
 import { createModalJail } from "./jail.mjs";
 import * as recurrencePicker from "./recurrencePicker.mjs";
 import { resetModal } from "./helper.mjs";
@@ -256,6 +257,7 @@ function show(todo, templated) {
     modalForm.setAttribute("data-item", "");
     // adjust size of recurrence picker input field
     datePickerInput.value = null;
+    datePickerThresholdInput.value = null;
     recurrencePickerInput.value = null;
     document.getElementById("modalFormInput").value = null;
     modalFormAlert.innerHTML = null;
@@ -306,6 +308,7 @@ function show(todo, templated) {
       // if so we paste it into the input field
       if(todo.dueString) {
         datePickerInput.value = todo.dueString;
+        datePickerThresholdInput.value = todo.thresholdString;
       }
     } else {
       btnItemStatus.classList.add("is-hidden");
@@ -314,6 +317,7 @@ function show(todo, templated) {
     if(userData.useTextarea) toggleInputSize("input");
     // adjust size of picker inputs
     resizeInput(datePickerInput);
+    resizeInput(datePickerThresholdInput);
     resizeInput(recurrencePickerInput);
     // create the modal jail, so tabbing won't leave modal
     createModalJail(modalForm);

@@ -6,6 +6,7 @@ import { resetModal, closeTodoContext, handleError } from "./helper.mjs";
 import { showContent } from "./content.mjs";
 import { _paq } from "./matomo.mjs";
 import { datePicker } from "./datePicker.mjs";
+import { datePickerThreshold } from "./datePickerThreshold.mjs";
 
 const a = document.querySelectorAll("a");
 const body = document.getElementById("body");
