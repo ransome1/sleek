@@ -6,6 +6,7 @@ import { resetModal, closeTodoContext, handleError } from "./helper.mjs";
 import { showContent } from "./content.mjs";
 import { _paq } from "./matomo.mjs";
 import { datePicker } from "./datePicker.mjs";
+import { getConfirmation } from "./prompt.mjs";
 
 const a = document.querySelectorAll("a");
 const body = document.getElementById("body");
@@ -36,7 +37,9 @@ export function register() {
       // close datepicker if it's shown
       if(datePickerContainer.classList.contains("visible") && !datePickerContainer.contains(event.target)) {
         datePickerContainer.classList.remove("active");
-        datePickerContainer.classList.remove("visible");        
+        datePickerContainer.classList.remove("visible");
+        // hide the picker
+        datePicker.hide();
       }
       // close todo context if click is outside of it
       if(filterContext.classList.contains("is-active")) {
@@ -121,7 +124,7 @@ export function register() {
         if(modalObject.id==="modalPrompt") return false;
         // if modal is modalForm and input is equal the data item
         if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== document.getElementById("modalFormInput").value) {
-          prompt.getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
+          getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
         } else {
           resetModal(modalObject).then(function(result) {
             console.log(result);

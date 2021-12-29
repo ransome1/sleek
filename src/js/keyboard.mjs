@@ -24,6 +24,7 @@ export let
   currentRow = -1;
 
 export function focusRow(row) {
+  if(!row) currentRow = 0;
   if(row >= 0) currentRow = row;
   if(row === -1) return false;
   let todoTableRow = todoTable.querySelectorAll(".todo")[row];
@@ -145,7 +146,12 @@ export function registerShortcuts() {
         });
         // stop if no entry is found in array
         if(!filesInTabBar[event.key-1]) return false;
-        if(filesInTabBar[event.key-1][1]) window.api.send("startFileWatcher", [filesInTabBar[event.key-1][1]]);
+        if(filesInTabBar[event.key-1][1]) {
+          // throw false at this function and current row will be reset
+          focusRow(false);
+          //
+          window.api.send("startFileWatcher", [filesInTabBar[event.key-1][1]]);
+        }
         return false;
       }
       // open settings

@@ -165,13 +165,10 @@
       font-size: 1.25em;
       color: $has-text-link;
     }
-  }
-  /*.cell.checkbox,
-  .cell.archive {
-    a:focus-visible {
-      color: $almost-black!important;
+    i:hover {
+      color: $almost-black;
     }
-  }*/
+  }
   .cell.text {
     width: auto;
     max-width: 90%;

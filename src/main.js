@@ -174,6 +174,18 @@ const createWindow = async function() {
   const startFileWatcher = async function(file, isTabItem) {
     try {
       if(!fs.existsSync(file)) throw("Error: File not found on disk")
+
+
+      // userData.set("files", userData.data.files.filter(function(fileInArray) {
+      //     //console.log(fileInArray[1])
+      //     if(fs.existsSync(fileInArray[1])) return fileInArray;
+      //     //if(fs.existsSync(file[1])) console.log("gefuden");
+      //     //if(fs.existsSync(fileInArray[1])) return fileInArray;
+      //     //fs.existsSync(process.env.SLEEK_CUSTOM_FILE);
+      //   })
+      // );
+      
+
       // skip persisted files and go with ENV if set
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
@@ -283,9 +295,11 @@ const createWindow = async function() {
       if(typeof userData.data.showHidden != "boolean") userData.set("showHidden", false);
       if(typeof userData.data.showCompleted != "boolean") userData.set("showCompleted", true);
       if(typeof userData.data.sortCompletedLast != "boolean") userData.set("sortCompletedLast", false);
+      if(typeof userData.data.invertSorting != "boolean") userData.set("invertSorting", false);
       if(typeof userData.data.zoom != "string") userData.set("zoom", "100");
       if(typeof userData.data.tray != "boolean") userData.data.tray = false;
       if(typeof userData.data.showEmptyFilters != "boolean") userData.data.showEmptyFilters = true;
+      if(typeof userData.data.sortByFile != "boolean") userData.data.sortByFile = false;
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);

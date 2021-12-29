@@ -52,9 +52,31 @@
                     <th colspan="100%" id="viewHeadlineTodoList"></th>
                   </tr>
                   <tr>
-                    <td id="sortBy"></td>
+                    <td id="viewSortByFile"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="sortByFile">
+                          <input type="checkbox" id="sortByFile" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr id="viewSortByRow">
+                    <td id="viewSortBy"></td>
                     <td>
                       <ul id="sortByContainer" class="drag-sort-enable"></ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="viewInvertSorting"></td>
+                    <td>
+                      <span class="toggle">
+                        <label class="switch" for="invertSorting">
+                          <input type="checkbox" id="invertSorting" class="viewToggle" tabindex="0">
+                          <span class="slider round"></span>
+                        </label>
+                      </span>
                     </td>
                   </tr>
                   <tr>
@@ -150,57 +172,6 @@
                           <span class="slider round"></span>
                         </label>
                       </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th colspan="100%">
-                      <h3 id="viewHeadlineAppView" class="is-3"></h3>
-                    </th>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p id="settingsTabSettingsDarkmode"></p>
-                    </td>
-                    <td>
-                      <span class="toggle">
-                        <label class="switch">
-                          <input type="checkbox" id="toggleDarkmode" tabindex="0">
-                          <span class="slider round"></span>
-                        </label>
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p id="viewToggleCompactView"></p>
-                    </td>
-                    <td>
-                      <span class="toggle">
-                        <label class="switch" for="compactView">
-                          <input type="checkbox" id="compactView" class="viewToggle" tabindex="0">
-                          <span class="slider round"></span>
-                        </label>
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p id="viewToggleFileTabs"></p>
-                    </td>
-                    <td>
-                      <span class="toggle">
-                        <label class="switch" for="fileTabs">
-                          <input type="checkbox" id="fileTabs" class="viewToggle" tabindex="0">
-                          <span class="slider round"></span>
-                        </label>
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td id="viewToggleZoom"></td>
-                    <td class="zoom">
-                      <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
-                      <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
                     </td>
                   </tr>
                 </table>
@@ -385,14 +356,12 @@
         </div>
       </div>
     </section>
-
     <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">
         <div class="tabs is-centered" style="display: none;">
           <ul>
             <li class="settingsTab1 is-active"><a href="#" tabindex="0" id="settingsTabSettings"></a></li>
-            <!--<li class="settingsTab2"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>-->
           </ul>
         </div>
         <section id="settingsTab1" class="modal-card-body"  data-track-content data-content-name="Settings" data-content-piece="Settings">
@@ -464,11 +433,70 @@
               </td>
             </tr>
           </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsTabSettingsDarkmode"></th>
+            </tr>
+            <tr>
+              <td id="settingsTabSettingsDarkmodeBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch" for="toggleDarkmode">
+                    <input type="checkbox" id="toggleDarkmode"   tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsToggleCompactView"></th>
+            </tr>
+            <tr>
+              <td id="settingsToggleCompactViewBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch" for="compactView">
+                    <input type="checkbox" id="compactView" class="viewToggle" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsToggleFileTabs"></th>
+            </tr>
+            <tr>
+              <td id="settingsToggleFileTabsBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch" for="fileTabs">
+                    <input type="checkbox" id="fileTabs" class="viewToggle" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="settingsDragZoom"></th>
+            </tr>
+            <tr>
+              <td id="settingsDragZoomBody"></td>
+              <td class="zoom">
+                <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
+                <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
+              </td>
+            </tr>
+          </table>
         </section>
         <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
       </div>
     </div>
-
     <div id="modalHelp" class="modal content" tabindex="0">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -779,12 +807,10 @@
     </div>
 
     <section id="messages">
-
       <article id="messageGenericContainer" class="notification" data="generic">
         <button id="messageGenericContainerClose" class="delete" aria-label="delete" data-message="generic"></button>
         <p id="messageGenericMessage"></p>
       </article>
-
       <article class="message fixed" data="logging">
         <div class="message-header">
           <p><span id="messageLoggingTitle"></span></p>
@@ -795,7 +821,6 @@
           <p><button id="btnMessageLogging" tabindex="-1"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
         </div>
       </article>
-
       <article class="message fixed" data="share">
         <div class="message-header">
           <p><span id="messageShareTitle"></span></p>
@@ -811,13 +836,9 @@
         </div>
       </article>
     </section>
-
-    <input type="text" id="rowDatePicker">
-
     <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
     <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
     <script defer src="../node_modules/marked/marked.min.js"></script>
     <script defer src="render.js" type="module"></script>
-
   </body>
 </html>

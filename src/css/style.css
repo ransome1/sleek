@@ -233,7 +233,7 @@ body.dark #todoTable .todo .cell .is-white {
   background: none;
 }
 body.dark #todoTable .todo:focus {
-  background: #535353 !important;
+  background: #3a3a3a !important;
 }
 body.dark #modalForm i {
   color: #CCCDCF !important;
@@ -1959,12 +1959,6 @@ body.compact #autoCompleteContainer h4 {
   float: left;
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
-  /*.cell.checkbox,
-  .cell.archive {
-    a:focus-visible {
-      color: $almost-black!important;
-    }
-  }*/
 }
 #todoTable .todo {
   width: 100%;
@@ -2052,6 +2046,9 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell.checkbox i {
   font-size: 1.25em;
   color: #3273dc;
+}
+#todoTable .cell.checkbox i:hover {
+  color: #212224;
 }
 #todoTable .cell.text {
   width: auto;

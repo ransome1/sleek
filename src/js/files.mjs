@@ -5,6 +5,7 @@ import { createModalJail } from "./jail.mjs";
 import { resetFilters } from "./filters.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 import { resetModal, handleError } from "./helper.mjs";
+import { focusRow } from "./keyboard.mjs";
 
 const btnOpenTodoFile = document.getElementById("btnOpenTodoFile");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
@@ -68,6 +69,9 @@ function selectFileFromList(index) {
     }).catch(error => {
       handleError(error);
     });
+    // throw false at this function and current row will be reset
+    focusRow(false);
+    // load new file
     window.api.send("startFileWatcher", [userData.files[index][1], 1]);
     return Promise.resolve("Success: File selected");
   } catch (error) {

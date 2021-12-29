@@ -7,6 +7,7 @@ import { showGenericMessage } from "./messages.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 import { focusRow, currentRow } from "./keyboard.mjs";
 import { _paq } from "./matomo.mjs";
+import { datePicker } from "./datePicker.mjs";
 
 const body = document.getElementById("body");
 const todoContext = document.getElementById("todoContext");
@@ -168,8 +169,9 @@ export function getBadgeCount() {
 }
 export function resetModal(modal) {
   try {
+    // hide the picker
+    datePicker.hide();
     const modalForm = document.getElementById("modalForm");
-    
     if(modal) {
       // remove is-active from modal
       modal.classList.remove("is-active");
@@ -205,6 +207,12 @@ export function resetModal(modal) {
 }
 export function configureMainView() {
   try {
+    // hide sort by container if sorting is according to file
+    if(userData.sortByFile) {
+      document.getElementById("viewSortByRow").classList.add("is-hidden");
+    } else {
+      document.getElementById("viewSortByRow").classList.remove("is-hidden");
+    }
     // generate file tabs
     generateFileList();
     // close filterContext if open

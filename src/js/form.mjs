@@ -133,7 +133,7 @@ function positionAutoCompleteContainer() {
   autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight - 40 + "px";
   autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
 }
-function modalFormInputEvent() {
+async function modalFormInputEvent() {
   positionAutoCompleteContainer();
   resizeInput(document.getElementById("modalFormInput"));
   let autoCompleteValue ="";
@@ -163,7 +163,8 @@ function modalFormInputEvent() {
       autoCompleteCategory = "contexts";
     }
     // parsed data will be passed to generate filter data and build the filter buttons
-    generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
+    await generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix, caretPosition).then(response => {
+      // jail the auto complete container
       console.log(response);
     }).catch (error => {
       handleError(error);

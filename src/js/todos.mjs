@@ -1,16 +1,10 @@
-"use strict";
-import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { appData, userData, setUserData, translations, startBuilding } from "../render.js";
-import { _paq } from "./matomo.mjs";
-import { categories, selectFilter } from "./filters.mjs";
-import { generateRecurrence } from "./recurrences.mjs";
-import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
-import { show } from "./form.mjs";
-import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
-import { createModalJail } from "./jail.mjs";
-import { getConfirmation } from "./prompt.mjs";
-import { getActiveFile, generateHash, handleError, formatDate } from "./helper.mjs";
-import { focusRow } from "./keyboard.mjs";
+"use strict"; import "../../node_modules/jstodotxt/jsTodoExtensions.js"; import { appData, userData, setUserData,
+ translations, startBuilding } from "../render.js"; import { _paq } from "./matomo.mjs"; import{ categories,
+ selectFilter } from "./filters.mjs"; import{ generateRecurrence } from "./recurrences.mjs"; import { convertDate,
+ isToday, isTomorrow, isPast } from "./date.mjs"; import { show } from "./form.mjs"; import { SugarDueExtension,
+ RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs"; import{ createModalJail } from "./jail.mjs";
+ import { getConfirmation } from "./prompt.mjs"; import { getActiveFile, generateHash, handleError, formatDate }
+ from "./helper.mjs"; import { focusRow } from "./keyboard.mjs";
 
 import { datePicker } from "./datePicker.mjs";
 const todoContext = document.getElementById("todoContext");
@@ -109,9 +103,9 @@ function configureTodoTableTemplate() {
     return Promise.reject(error);
   }
 }
-function generateItems(content) {
+async function generateItems(content) {
   try {
-    items = { objects: TodoTxt.parse(content, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
+    items = await { objects: TodoTxt.parse(content, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
     items.complete = items.objects.filter(function(item) { return item.complete === true });
     items.incomplete = items.objects.filter(function(item) { return item.complete === false });
     items.objects = items.objects.filter(function(item) { return item.toString() != "" });
@@ -161,8 +155,6 @@ function generateGroups(items) {
       return -1;
     }
   });
-  // invert sorting
-  if(userData.invertSorting) items = items.reverse();
   // sort completed todo to the end of the list
   if(userData.sortCompletedLast) {
     items.sort(function(a,b) {
@@ -173,11 +165,13 @@ function generateGroups(items) {
       return 0;
     });
   }
-
   // sort the items within the groups
   items.forEach((group) => {
     group[1] = sortTodoData(group[1]);
   });
+
+  // invert sorting
+  if(userData.invertSorting) items = items.reverse();
 
   return Promise.resolve(items)
 }
@@ -190,40 +184,63 @@ async function generateTable(groups, loadAll) {
     showResultStats();
     // prepare the templates for the table
     await configureTodoTableTemplate();
-    // reset cluster count for this run
-    for (let group in groups) {
-      const headline = groups[group][0];
-      const firstItemInGroup = groups[group][1][0];
-      const sortBy = userData.sortBy[0];
-      let dividerRow;
-      // completed todos
-      if(userData.sortCompletedLast && headline==="completed") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group " + sortBy + " " + headline + "\"><div class=\"cell\"></div></div>")
-      // for priority, context and project
-      } else if(headline!="null" && sortBy!="dueString" && sortBy!="date") {
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group " + sortBy + " " + headline + "\"><div class=\"cell\"><button tabindex=\"-1\" class=\"" + headline + "\">" + headline.replace(/,/g, ', ') + "</button></div></div>")
-      // if sorting is by due date
-      } else if(sortBy==="dueString" && sortBy!="date" && firstItemInGroup.due) {
-        if(isToday(firstItemInGroup.due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell isToday\">" + translations.today + "</button></div></div>")
-        } else if(isTomorrow(firstItemInGroup.due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell isTomorrow\">" + translations.tomorrow + "</button></div></div>")
-        } else if(isPast(firstItemInGroup.due)) {
-          dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell isPast\">" + headline + "</button></div></div>")
+    if(!userData.sortByFile) {
+      // reset cluster count for this run
+      for (let group in groups) {
+        const headline = groups[group][0];
+        const firstItemInGroup = groups[group][1][0];
+        const sortBy = userData.sortBy[0];
+        let dividerRow;
+        // completed todos
+        if(userData.sortCompletedLast && headline==="completed") {
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group " + sortBy + " " + headline + "\"><div class=\"cell\"></div></div>")
+        // for priority, context and project
+        } else if(headline!="null" && sortBy!="dueString" && sortBy!="date") {
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group " + sortBy + " " + headline + "\"><div class=\"cell\"><button tabindex=\"-1\" class=\"" + headline + "\">" + headline.replace(/,/g, ', ') + "</button></div></div>")
+        // if sorting is by due date
+        } else if(sortBy==="dueString" && sortBy!="date" && firstItemInGroup.due) {
+          if(isToday(firstItemInGroup.due)) {
+            dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell isToday\">" + translations.today + "</button></div></div>")
+          } else if(isTomorrow(firstItemInGroup.due)) {
+            dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell isTomorrow\">" + translations.tomorrow + "</button></div></div>")
+          } else if(isPast(firstItemInGroup.due)) {
+            dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell isPast\">" + headline + "</button></div></div>")
+          } else {
+            dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell\">" + headline + "</button></div></div>")
+          }
+        // empty divider row
+        } else {
+          dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell\">&nbsp;</div></div>")
         }
-      // create an empty divider row
-      } else {
-        //dividerRow = null;
-        dividerRow = document.createRange().createContextualFragment("<div id=\"" + sortBy + headline + "\" class=\"group due\"><div class=\"cell\">&nbsp;</div></div>")
-      }
-      if(!document.getElementById(sortBy + headline) && dividerRow) todoRows.push(dividerRow);
-      for (let item in groups[group][1]) {
-        let todo = groups[group][1][item];
-        // if this todo is not a recurring one the rec value will be set to null
-        if(!todo.rec) todo.rec = null;
-        // incompleted todos with due date
-        if (todo.due && !todo.complete) {
+        if(!document.getElementById(sortBy + headline) && dividerRow) todoRows.push(dividerRow);
+        // loop through items in group
+        for (let item in groups[group][1]) {
+          const todo = groups[group][1][item];
+          // incompleted todos with due date
+          if (todo.due && !todo.complete) {
           // create notification
+            if(isToday(todo.due)) {
+              generateNotification(todo, 0).then(response => {
+                console.log(response);
+              }).catch(error => {
+                handleError(error);
+              });
+            } else if(isTomorrow(todo.due)) {
+              generateNotification(todo, 1).then(response => {
+                console.log(response);
+              }).catch(error => {
+                handleError(error);
+              });
+            }
+          }
+          todoRows.push(generateTableRow(todo));
+        }
+      }
+    } else {
+      // generate rows exactly as in file
+      items.filtered.forEach(function(todo) {
+        // create notification
+        if(todo.due && !todo.complete) {
           if(isToday(todo.due)) {
             generateNotification(todo, 0).then(response => {
               console.log(response);
@@ -239,9 +256,13 @@ async function generateTable(groups, loadAll) {
           }
         }
         todoRows.push(generateTableRow(todo));
-      }
+      });
+      // invert sorting
+      if(userData.invertSorting) todoRows = todoRows.reverse();
     }
+    // append rows to todo container
     for (let row in todoRows) {
+      // loadAll mostly used in print function
       if(loadAll) {
         tableContainerContent.appendChild(todoRows[row]);
         continue;
@@ -254,11 +275,13 @@ async function generateTable(groups, loadAll) {
       } else if(visibleRows < clusterThreshold) {
         continue;
       } else {
-        tableContainerContent.appendChild(todoRows[row]);
+        todoTable.appendChild(todoRows[row]);
       }
     }
+    // reset cluster counter
     clusterCounter = 0;
-    todoTable.appendChild(tableContainerContent);
+    // append container to table
+    //todoTable.appendChild(tableContainerContent);
     return Promise.resolve("Success: Todo table generated");
   } catch(error) {
     error.functionName = generateTable.name;
@@ -284,17 +307,17 @@ function generateTableRow(todo) {
       item.previous = null;
     }
     // start with the individual config of the items
-    if(todo.complete==true) {
+    if(todo.complete) {
       todoTableBodyRow.setAttribute("class", "todo completed");
     }
     todoTableBodyRow.setAttribute("data-item", todo.toString());
     // add the priority marker or a white spacer
-    if(todo.priority && sortBy==="priority") {
+    if(todo.priority && (sortBy === "priority" && !userData.sortByFile)) {
       todoTableBodyCellPriority.setAttribute("class", "cell priority " + todo.priority);
       todoTableBodyRow.appendChild(todoTableBodyCellPriority);
     }
     // add the checkbox
-    if(todo.complete===true) {
+    if(todo.complete) {
       todoTableBodyCellCheckbox.setAttribute("title", translations.inProgress);
       todoTableBodyCellCheckbox.innerHTML = "<i class=\"fas fa-check-circle\"></i>";
     } else {
@@ -335,7 +358,7 @@ function generateTableRow(todo) {
     }
     // creates cell for the text
     if(todo.text) {
-      if(todo.priority && sortBy!=="priority") todoTableBodyCellText.innerHTML = "<span class=\"priority\"><button class=\"" + todo.priority + "\">" + todo.priority + "</button></span>";
+      if(todo.priority && (sortBy!=="priority" || userData.sortByFile)) todoTableBodyCellText.innerHTML = "<span class=\"priority\"><button class=\"" + todo.priority + "\">" + todo.priority + "</button></span>";
       // parse text string through markdown parser
       todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parseInline(todo.text) + "</span>";
       // replace line feed character with a space
@@ -422,7 +445,7 @@ function generateTableRow(todo) {
     if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
     todoTableBodyRow.addEventListener("contextmenu", () => {
       createTodoContext(todoTableBodyRow).then(response => {
-         console.log(response);
+        console.log(response);
       }).catch(error => {
         handleError(error);
       });
@@ -430,10 +453,10 @@ function generateTableRow(todo) {
       focusRow(index);
     });
     // double click on row opens form
-    todoTableBodyRow.ondblclick = function() {
-      show(todo.toString());
-    }
-    todoTableBodyRow.onfocus = function() {
+    // todoTableBodyRow.ondblclick = function() {
+    //   show(todo.toString());
+    // }
+    todoTableBodyRow.onfocus = function(event) {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
       focusRow(index);
     }
@@ -441,20 +464,6 @@ function generateTableRow(todo) {
     return todoTableBodyRow;
   } catch(error) {
     error.functionName = generateTableRow.name;
-    return Promise.reject(error);
-  }
-}
-function editTodo(index, todo) {
-  try {
-    // get position of current todo in array
-    //const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo);
-    // put changed todo at old position
-    items.objects.splice(index, 1, todo);
-    // save to file
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
-    return Promise.resolve("Success: Todo edited");
-  } catch(error) {
-    error.functionName = editTodo.name;
     return Promise.reject(error);
   }
 }
@@ -580,7 +589,7 @@ function sortTodoData(group) {
       });
     }
     // invert sorting if set
-    if(userData.invertSorting) group = group.reverse();
+    if(userData.sort) group = group.reverse();
 
     return group;
   } catch(error) {
@@ -685,6 +694,18 @@ function addTodo(todo) {
       return Promise.resolve("Info: Todo already in file, nothing will be written");
     }
   } catch (error) {
+    return Promise.reject(error);
+  }
+}
+function editTodo(index, todo) {
+  try {
+    // put changed todo at old position
+    items.objects.splice(index, 1, todo);
+    // save to file
+    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    return Promise.resolve("Success: Todo edited");
+  } catch(error) {
+    error.functionName = editTodo.name;
     return Promise.reject(error);
   }
 }

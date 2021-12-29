@@ -4,6 +4,7 @@ let
   a0,
   appData, 
   helper,
+  groups,
   translations, 
   onboarding,
   filters,
@@ -68,8 +69,8 @@ async function startBuilding(loadAll) {
     const t0 = performance.now();
     todos.items.filtered = await filters.filterItems(todos.items.objects);
     await filters.generateFilterData();
-    const groups = await todos.generateGroups(todos.items.filtered);
     userData = await getUserData();
+    if(!userData.sortByFile) groups = await todos.generateGroups(todos.items.filtered);
     await todos.generateTable(groups, loadAll);
     await helper.configureMainView();
     window.api.send("update-badge", helper.getBadgeCount());

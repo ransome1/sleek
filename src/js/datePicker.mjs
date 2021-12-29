@@ -17,11 +17,6 @@ const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const datePickerInput = document.getElementById("datePickerInput");
 const datePickerContainer = document.querySelector(".datepicker.datepicker-dropdown");
 
-datePickerInput.onfocus = function () {
-  datePicker.show();
-  autoCompleteContainer.classList.remove("is-active");
-  resizeInput(datePickerInput);
-};
 datePickerInput.addEventListener("changeDate", function (e) {
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
   if(document.getElementById("modalForm").classList.contains("is-active")) {
@@ -59,6 +54,8 @@ datePickerInput.addEventListener("changeDate", function (e) {
     }
     // finally pass new todo on for changing
     editTodo(index, currentTodo);
+    // hide the picker
+    datePicker.hide();
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Datepicker used to change a date"]);
   }
@@ -82,6 +79,11 @@ const datePicker = new Datepicker(datePickerInput, {
     }
   }
 });
+datePickerInput.onfocus = function () {
+  datePicker.show();
+  autoCompleteContainer.classList.remove("is-active");
+  resizeInput(datePickerInput);
+};
 // document.querySelector(".datepicker .clear-btn").onclick = function() {
 //   let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
 //   todo.due = undefined;
