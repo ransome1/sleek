@@ -1,7 +1,7 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import { userData, setUserData, translations } from "../render.js";
-import { handleError } from "./helper.mjs";
+import { handleError, formatDate } from "./helper.mjs";
 import { _paq } from "./matomo.mjs";
 import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
@@ -244,7 +244,6 @@ function setDueDate(days) {
       todo.dueString = todo.due.toISOString().substr(0, 10);
     }
     datePicker.setDate( todo.due );
-    datePickerThreshold.setDate( todo.t );
     document.getElementById("modalFormInput").value = todo.toString();
     return Promise.resolve("Success: Due date changed to " + todo.dueString)
   } catch(error) {
@@ -265,7 +264,6 @@ function setThreshold(days) {
       todo.t = new Date(new Date().setDate(new Date().getDate() + days));
       todo.tString = todo.t.toISOString().substr(0, 10);
     }
-    datePicker.setDate( todo.t );
     datePickerThreshold.setDate( todo.t );
     document.getElementById("modalFormInput").value = todo.toString();
     return Promise.resolve("Success: Threshold date changed to " + todo.tString)
@@ -281,6 +279,12 @@ function show(todo, templated) {
     // adjust size of recurrence picker input field
     datePickerInput.value = null;
     datePickerThresholdInput.value = null;
+    // remove highlighted day
+    let selected = document.getElementsByClassName("datepicker-cell day selected focused");
+    [].forEach.call(selected, function (el) {
+      el.classList.remove("selected");
+      el.classList.remove("focused");
+    });
     recurrencePickerInput.value = null;
     document.getElementById("modalFormInput").value = null;
     modalFormAlert.innerHTML = null;
@@ -294,6 +298,9 @@ function show(todo, templated) {
       todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
       // set the priority
       setPriority(todo.priority);
+      // set date
+      datePicker.dates = [formatDate(todo.due)];
+      datePickerThreshold.dates = [formatDate(todo.t)];
       //
       if(templated === true) {
         // this is a new templated todo task

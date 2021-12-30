@@ -316,6 +316,9 @@ export function formatDate(date) {
   const padTo2Digits = function(num) {
     return num.toString().padStart(2, '0');
   }
+  if(!!!date) {
+    return undefined;
+  }
   return [
     date.getFullYear(),
     padTo2Digits(date.getMonth() + 1),
