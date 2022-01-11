@@ -1,5 +1,5 @@
 "use strict";
-import { appData, userData, setUserData, translations } from "../render.js";
+import { appData, userData, getUserData, setUserData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "./jail.mjs";
 import { resetFilters } from "./filters.mjs";
@@ -79,7 +79,7 @@ function selectFileFromList(index) {
   }
 }
 
-function generateFileList() {
+async function generateFileList() {
   try {
     fileTabBar.classList.remove("is-active");
     fileTabBarList.innerHTML = null;

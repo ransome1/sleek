@@ -24,3 +24,5 @@ package-lock.json
 .vs/
 .vscode/
 .yarnclean
+sleek.sublime-project
+sleek.sublime-workspace

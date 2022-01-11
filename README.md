@@ -88,7 +88,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
 * Autocomplete function suggests available contexts and projects
 * <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts following todotxt.net</a>
 * Tabindex available
-* <a href="https://github.com/ransome1/sleek/wiki/Hidden-todos">A todo can be hidden but its attributes will be available in the filter drawer and autocomplete function</a>
+* <a href="https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)">A todo can be hidden but its attributes will be available in the filter drawer and autocomplete function</a>
 * Due dates trigger alarms and appear as badges in sleeks icon
 * Dark and light mode can be toggled
 * A compact view is available

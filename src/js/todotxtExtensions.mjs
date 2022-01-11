@@ -1,3 +1,4 @@
+"use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 
 function RecExtension() {

@@ -1,5 +1,4 @@
 "use strict";
-
 let 
   a0,
   appData, 
@@ -10,12 +9,14 @@ let
   filters,
   userData,
   todos;
+
 function getUserData() {
   try {
     window.api.send("userData");
     return new Promise(function(resolve) {
       return window.api.receive("userData", function(data) {
-        resolve(data);
+        userData = data;
+        resolve("Success: User data received");
       });
     });
   } catch(error) {
@@ -43,7 +44,8 @@ function getAppData() {
     window.api.send("appData");
     return new Promise(function(resolve) {
       return window.api.receive("appData", (data) => {
-        resolve(data);
+        appData = data;
+        resolve("Success: App data received");
       });
     });
   } catch(error) {
@@ -69,7 +71,9 @@ async function startBuilding(loadAll) {
     const t0 = performance.now();
     todos.items.filtered = await filters.filterItems(todos.items.objects);
     await filters.generateFilterData();
-    userData = await getUserData();
+    
+    await getUserData();
+    
     if(!userData.sortByFile) groups = await todos.generateGroups(todos.items.filtered);
     await todos.generateTable(groups, loadAll);
     await helper.configureMainView();
@@ -82,8 +86,10 @@ async function startBuilding(loadAll) {
 }
 window.onload = async function () {
   a0 = performance.now();
-  userData = await getUserData();
-  appData = await getAppData();
+  
+  await getUserData();
+  await getAppData();
+  
   translations = await getTranslations();
   todos = await import("./js/todos.mjs");
   filters = await import("./js/filters.mjs");
@@ -135,6 +141,9 @@ window.api.receive("triggerFunction", async (name, args) => {
   try {
     if(!args) args = new Array;
     switch (name) {
+      case "startBuilding":
+        startBuilding();
+        break;
       case "showOnboarding":
         onboarding.showOnboarding(...args).then(function(response) {
           console.info(response);
@@ -195,6 +204,13 @@ window.api.receive("triggerFunction", async (name, args) => {
           helper.handleError(error);
         });
         break;
+      case "configureMainView":
+        helper.configureMainView().then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          helper.handleError(error);
+        });
+        break;
       case "setTheme":
         helper.setTheme(...args).then(function(response) {
           console.info(response);
@@ -215,4 +231,4 @@ window.api.receive("refresh", async (args) => {
     helper.handleError(error);
   });
 });
-export { setUserData, startBuilding, userData, appData, translations };
+export { getUserData, setUserData, startBuilding, userData, appData, translations };

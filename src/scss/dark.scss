@@ -6,9 +6,12 @@ body.dark {
   code, pre {
     background-color: $almost-black!important;
   }
+  a {
+    color: $has-text-link;
+  }
   a:hover,
   a:focus-visible {
-    color: $has-text-link;
+    color: $almost-white;
   }
   strong {
     color: $almost-white;
@@ -319,7 +322,7 @@ body.dark {
           background: $darker-grey;
           color: white;
           i {
-            color: $light-grey;
+            /*color: $light-grey;*/
           }
         }
         li.drag-sort-active {
@@ -432,7 +435,7 @@ body.dark {
         background-color: $dark-grey;
       }
       input:checked + .slider {
-        background-color: $darker-grey !important;
+        background-color: $has-text-link!important;
       }
       input:focus + .slider {
         box-shadow: none;

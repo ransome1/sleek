@@ -68,6 +68,7 @@ const datePicker = new Datepicker(datePickerInput, {
   language: userData.language,
   format: "yyyy-mm-dd",
   clearBtn: true,
+  container: "body",
   calendarWeeks: true,
   weekStart: 1,
   beforeShowDay: function(date) {
@@ -84,12 +85,5 @@ datePickerInput.onfocus = function () {
   autoCompleteContainer.classList.remove("is-active");
   resizeInput(datePickerInput);
 };
-// document.querySelector(".datepicker .clear-btn").onclick = function() {
-//   let todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
-//   todo.due = undefined;
-//   todo.dueString = undefined;
-//   document.getElementById("modalFormInput").value = todo.toString();
-//   resizeInput(datePickerInput);
-//   datePicker.hide();
-// }
+
 export { datePickerInput, datePicker };

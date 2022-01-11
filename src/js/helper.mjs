@@ -214,6 +214,7 @@ export function configureMainView() {
       document.getElementById("viewSortByRow").classList.remove("is-hidden");
     }
     // generate file tabs
+    // TODO: Only if there are files
     generateFileList();
     // close filterContext if open
     if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");

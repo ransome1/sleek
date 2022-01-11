@@ -1,5 +1,4 @@
 "use strict";
-
 export function createModalJail(modal) {
   // add all the elements inside modal which you want to make focusable
   let currentElement = 0;

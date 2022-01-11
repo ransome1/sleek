@@ -1,12 +1,18 @@
-"use strict"; import "../../node_modules/jstodotxt/jsTodoExtensions.js"; import { appData, userData, setUserData,
- translations, startBuilding } from "../render.js"; import { _paq } from "./matomo.mjs"; import{ categories,
- selectFilter } from "./filters.mjs"; import{ generateRecurrence } from "./recurrences.mjs"; import { convertDate,
- isToday, isTomorrow, isPast } from "./date.mjs"; import { show } from "./form.mjs"; import { SugarDueExtension,
- RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs"; import{ createModalJail } from "./jail.mjs";
- import { getConfirmation } from "./prompt.mjs"; import { getActiveFile, generateHash, handleError, formatDate }
- from "./helper.mjs"; import { focusRow } from "./keyboard.mjs";
-
+"use strict"; 
+import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import { appData, userData, setUserData, translations, startBuilding } from "../render.js";
+import { _paq } from "./matomo.mjs"; 
+import { categories, selectFilter } from "./filters.mjs";
+import { generateRecurrence } from "./recurrences.mjs";
+import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
+import { show } from "./form.mjs"; 
+import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
+import { createModalJail } from "./jail.mjs";
+import { getConfirmation } from "./prompt.mjs";
+import { getActiveFile, generateHash, handleError, formatDate } from "./helper.mjs";
+import { focusRow } from "./keyboard.mjs";
 import { datePicker } from "./datePicker.mjs";
+
 const todoContext = document.getElementById("todoContext");
 const todoContextDelete = document.getElementById("todoContextDelete");
 const todoContextEdit = document.getElementById("todoContextEdit");

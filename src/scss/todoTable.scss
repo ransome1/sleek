@@ -73,7 +73,6 @@
     width: 100%;
     position: relative;
     display: flex;
-    flex-flow: row wrap;
     border-bottom: solid 1px $light-grey;
   }
   .todo:last-child {
@@ -131,7 +130,6 @@
     }
   }
   .cell {
-    float: left;
     line-height: 1.7em;
     padding: .75em 0;
     margin: 0 1em 0 0;

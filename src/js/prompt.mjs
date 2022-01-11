@@ -1,3 +1,4 @@
+"use strict";
 import { translations } from "../render.js";
 import { createModalJail } from "./jail.mjs";
 import { handleError } from "./helper.mjs";

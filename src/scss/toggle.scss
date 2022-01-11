@@ -20,7 +20,7 @@
      background: none;
     }
     input:checked + .slider {
-     background-color: $dark-grey;
+     background-color: $has-text-link!important;
     }
     input:focus {
       box-shadow: none!important;

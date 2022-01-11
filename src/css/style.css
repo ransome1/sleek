@@ -6,9 +6,12 @@ body.dark {
 body.dark code, body.dark pre {
   background-color: #212224 !important;
 }
+body.dark a {
+  color: #3273dc;
+}
 body.dark a:hover,
 body.dark a:focus-visible {
-  color: #3273dc;
+  color: #f0f0f0;
 }
 body.dark strong {
   color: #f0f0f0;
@@ -284,7 +287,7 @@ body.dark #drawerContainer .drawer #sortByContainer li {
   color: white;
 }
 body.dark #drawerContainer .drawer #sortByContainer li i {
-  color: #ebebeb;
+  /*color: $light-grey;*/
 }
 body.dark #drawerContainer .drawer #sortByContainer li.drag-sort-active {
   border-left: 0.2em solid white;
@@ -384,7 +387,7 @@ body.dark .toggle .switch .slider {
   background-color: #5a5a5a;
 }
 body.dark .toggle .switch input:checked + .slider {
-  background-color: #2d2d2d !important;
+  background-color: #3273dc !important;
 }
 body.dark .toggle .switch input:focus + .slider {
   box-shadow: none;
@@ -837,14 +840,6 @@ code, pre {
   cursor: pointer;
 }
 
-#rowDatePicker {
-  position: fixed;
-  top: auto;
-  left: auto;
-  opacity: 0;
-  visibility: hidden;
-}
-
 .contentContainer {
   width: 100%;
   text-align: center;
@@ -1184,7 +1179,7 @@ nav ul:nth-child(2):hover #versionNumber {
   }
 
   #modalForm textarea {
-    padding: 0.75em;
+    padding: 0.75em !important;
   }
   #modalForm #modalFormInputResize {
     top: 1.65em;
@@ -1296,7 +1291,7 @@ body.compact .inputWrapper label {
   display: none;
 }
 body.compact #modalForm textarea {
-  padding: 0.75em;
+  padding: 0.75em !important;
 }
 body.compact #modalForm #modalFormInputResize {
   top: 1.65em;
@@ -1964,7 +1959,6 @@ body.compact #autoCompleteContainer h4 {
   width: 100%;
   position: relative;
   display: flex;
-  flex-flow: row wrap;
   border-bottom: solid 1px #ebebeb;
 }
 #todoTable .todo:last-child {
@@ -2018,7 +2012,6 @@ body.compact #autoCompleteContainer h4 {
   background: #3273dc;
 }
 #todoTable .cell {
-  float: left;
   line-height: 1.7em;
   padding: 0.75em 0;
   margin: 0 1em 0 0;
@@ -2189,7 +2182,7 @@ body.compact #autoCompleteContainer h4 {
   background: none;
 }
 .toggle .switch input:checked + .slider {
-  background-color: #5a5a5a;
+  background-color: #3273dc !important;
 }
 .toggle .switch input:focus {
   box-shadow: none !important;

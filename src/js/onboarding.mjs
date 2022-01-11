@@ -3,13 +3,11 @@ import { userData, translations } from "../render.js";
 import { createModalJail } from "./jail.mjs";
 import { generateFileList } from "./files.mjs";
 import { _paq } from "./matomo.mjs";
-import { handleError } from "./helper.mjs";
+import { handleError, configureMainView } from "./helper.mjs";
 
-//const addTodoContainer = document.getElementById("addTodoContainer");
 const addTodoContainerButton = document.getElementById("addTodoContainerButton");
 const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadline");
 const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
-//const btnAddTodoContainer = document.getElementById("btnAddTodoContainer");
 const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
 const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
 const onboardingContainer = document.getElementById("onboardingContainer");

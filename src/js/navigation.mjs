@@ -1,3 +1,4 @@
+"use strict";
 import { userData, appData, translations } from "../render.js";
 import { showContent } from "./content.mjs";
 import { show } from "./form.mjs";

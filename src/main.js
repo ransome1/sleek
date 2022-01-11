@@ -1,3 +1,4 @@
+"use strict";
 let userData, defaultPath, _paq, fileWatcher, translations;
 const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow, nativeTheme } = require("electron");
 const path = require("path");
@@ -171,21 +172,33 @@ const createWindow = async function() {
         break;
     }
   }
+
+  const refreshFiles = function() {
+    let fileRemoved = false;
+    // if a file is not found it will be removed from list and user will be informed
+    userData.data.files.forEach(function(file, index, object) {
+      if(!fs.existsSync(file[1])) {
+        console.log("Not found and removed from file list: " + file[1])
+        object.splice(index, 1);
+
+        fileRemoved = true;
+
+        // notify user about file not being found on disk
+        const notification = {
+          title: "File not found",
+          body: "The currently selected todo file was not found: " + file[1],
+          timeoutType: "never",
+          silent: false
+        }
+        showNotification(notification);
+      }
+    });
+    userData.set("files", userData.data.files);
+    if(fileRemoved) mainWindow.webContents.send("triggerFunction", "configureMainView");
+  }
+
   const startFileWatcher = async function(file, isTabItem) {
     try {
-      if(!fs.existsSync(file)) throw("Error: File not found on disk")
-
-
-      // userData.set("files", userData.data.files.filter(function(fileInArray) {
-      //     //console.log(fileInArray[1])
-      //     if(fs.existsSync(fileInArray[1])) return fileInArray;
-      //     //if(fs.existsSync(file[1])) console.log("gefuden");
-      //     //if(fs.existsSync(fileInArray[1])) return fileInArray;
-      //     //fs.existsSync(process.env.SLEEK_CUSTOM_FILE);
-      //   })
-      // );
-      
-
       // skip persisted files and go with ENV if set
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
@@ -201,6 +214,14 @@ const createWindow = async function() {
       if(args.length > 0 && fs.existsSync(args[0])) {
         file = args[0];
       }
+
+      // check if file exists, otherwise abort and call onbaording
+      if(!fs.existsSync(file)) {
+        await refreshFiles();
+        mainWindow.webContents.reloadIgnoringCache();
+        return Promise.reject("Info: File not found on disk");
+      }
+
       // use the loop to check if the new path is already in the user data
       let fileFound = false;
       if(userData.data.files) {
@@ -208,6 +229,7 @@ const createWindow = async function() {
           // if path is found it is set active
           if(element[1]===file) {
             element[0] = 1
+            // put active file into tabbar
             if(isTabItem) element[2] = 1;
             fileFound = true;
             // if this entry is not equal to the new path it is set 0
@@ -221,6 +243,7 @@ const createWindow = async function() {
       // only push new path if it is not already in the user data
       if((!fileFound || !userData.data.files) && file) userData.data.files.push([1, file, 1]);
       userData.set("files", userData.data.files);
+
       // TODO describe
       if(fileWatcher) {
         fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
@@ -235,15 +258,28 @@ const createWindow = async function() {
           console.log(error);
         });
       })
-      .on("unlink", function() {
+      .on("unlink", async function() {
+        // if file doesn't exist refresh file list and reload app
+        if(!fs.existsSync(file)) {
+          await refreshFiles();
+          mainWindow.webContents.reloadIgnoringCache();
+          console.log("unlink: File not found on disk: " + file);
+          return false;
+        }
         // Restart file watcher
-        startFileWatcher(userData.data.file).then(response => {
+        startFileWatcher().then(response => {
           console.info(response);
         }).catch(error => {
           console.error(error);
         });
       })
-      .on("change", function() {
+      .on("change", async function() {
+        if(!fs.existsSync(file)) {
+          await refreshFiles();
+          mainWindow.webContents.reloadIgnoringCache();
+          console.log("unlink: File not found on disk: " + file);
+          return false;
+        }
         console.log("Info: File " + file + " has changed");
         // wait 10ms before rereading in case the file is being updated with a delay
         setTimeout(function() {

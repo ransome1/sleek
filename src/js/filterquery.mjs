@@ -1,3 +1,4 @@
+"use strict";
 // This is a simple stack machine that executes a filter language query
 // compiled by filterlang.pegjs (which generates filterlang.mjs).
 // The compiled query consists of a list of postfix opcodes designed
