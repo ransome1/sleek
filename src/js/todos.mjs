@@ -71,10 +71,10 @@ let
   todoRows;
 
 todoTableWrapper.addEventListener("scroll", function(event) {
+  // abort if all todos are shown already
   if(visibleRows>=items.filtered.length) return false;
-  if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight) {
-    startBuilding();
-  }
+  // if the end of the page is reached start building
+  if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight) startBuilding();
 });
 
 function showResultStats() {
@@ -375,7 +375,7 @@ function generateTableRow(todo) {
     // click on the text
     todoTableBodyCellText.onclick = function() {
       // if the clicked item is not the external link icon, show(true) will be called
-      if(!event.target.classList.contains('fa-external-link-alt')) {
+      if(!event.target.classList.contains("fa-external-link-alt")) {
         show(this.parentElement.getAttribute("data-item"));
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
@@ -409,7 +409,8 @@ function generateTableRow(todo) {
         // position datepicker container to pointer position
         datePickerContainer.style.position = "fixed";
         datePickerContainer.style.top = event.y + "px";
-        datePickerContainer.style.left = event.x + "px";
+        datePickerContainer.style.left = event.x - (datePickerContainer.offsetWidth/2) + "px";
+
         // ugly but neccessary: if class is written too fast, we cannot work with it in body event
         setTimeout (function () {
           datePickerContainer.classList.add("visible");
@@ -458,13 +459,12 @@ function generateTableRow(todo) {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
       focusRow(index);
     });
-    // double click on row opens form
-    // todoTableBodyRow.ondblclick = function() {
-    //   show(todo.toString());
-    // }
-    todoTableBodyRow.onfocus = function(event) {
+    todoTableBodyRow.onclick = function(event) {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
       focusRow(index);
+    }
+    todoTableBodyRow.ondblclick = function(event) {
+      show(this.getAttribute("data-item"));
     }
     // return the fully built row
     return todoTableBodyRow;

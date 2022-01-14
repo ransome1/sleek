@@ -16,6 +16,10 @@
 .modal.is-active {
   display: flex!important;
 }
+.modal .modal-content {
+  margin: 0;
+  padding: 1em;
+}
 .modal.content {
   z-index: 60;
   margin: 0 !important;

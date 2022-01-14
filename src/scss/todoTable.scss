@@ -162,6 +162,7 @@
     i {
       font-size: 1.25em;
       color: $has-text-link;
+      margin: 0.2em 0 0 0;
     }
     i:hover {
       color: $almost-black;
@@ -179,7 +180,6 @@
       padding: 0.1em 0.4em;
     }
     .priority {
-      float: left;
       background: transparent;
       color: darken($mid-grey, 40%);
       margin-right: .5em;
@@ -187,9 +187,6 @@
         font-size: 0.9em;
         padding: 0.1em 0.4em!important;
       }
-    }
-    .text {
-      float: left;
     }
   }
   .cell.text:focus-visible {

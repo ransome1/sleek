@@ -210,8 +210,10 @@ export function configureMainView() {
     // hide sort by container if sorting is according to file
     if(userData.sortByFile) {
       document.getElementById("viewSortByRow").classList.add("is-hidden");
+      document.getElementById("sortCompletedLastRow").classList.add("is-hidden");
     } else {
       document.getElementById("viewSortByRow").classList.remove("is-hidden");
+      document.getElementById("sortCompletedLastRow").classList.remove("is-hidden");
     }
     // generate file tabs
     // TODO: Only if there are files

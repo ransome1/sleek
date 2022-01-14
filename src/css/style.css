@@ -1677,6 +1677,11 @@ body.compact #autoCompleteContainer h4 {
   display: flex !important;
 }
 
+.modal .modal-content {
+  margin: 0;
+  padding: 1em;
+}
+
 .modal.content {
   z-index: 60;
   margin: 0 !important;
@@ -2039,6 +2044,7 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell.checkbox i {
   font-size: 1.25em;
   color: #3273dc;
+  margin: 0.2em 0 0 0;
 }
 #todoTable .cell.checkbox i:hover {
   color: #212224;
@@ -2056,7 +2062,6 @@ body.compact #autoCompleteContainer h4 {
   padding: 0.1em 0.4em;
 }
 #todoTable .cell.text .priority {
-  float: left;
   background: transparent;
   color: #666666;
   margin-right: 0.5em;
@@ -2064,9 +2069,6 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell.text .priority button {
   font-size: 0.9em;
   padding: 0.1em 0.4em !important;
-}
-#todoTable .cell.text .text {
-  float: left;
 }
 #todoTable .cell.text:focus-visible {
   background: #f0f0f0;
