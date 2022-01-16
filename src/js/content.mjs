@@ -63,7 +63,16 @@ const settingsTabSettingsNotifications = document.getElementById("settingsTabSet
 const settingsTabSettingsNotificationsBody = document.getElementById("settingsTabSettingsNotificationsBody");
 const settingsTabSettingsTray = document.getElementById("settingsTabSettingsTray");
 const settingsTabSettingsTrayBody = document.getElementById("settingsTabSettingsTrayBody");
-const helpTabKeyboardSubtitle = document.getElementById("helpTabKeyboardSubtitle");
+
+const settingsTabSettingsDarkmodeBody = document.getElementById("settingsTabSettingsDarkmodeBody");
+const settingsToggleCompactViewBody = document.getElementById("settingsToggleCompactViewBody");
+const settingsToggleFileTabsBody = document.getElementById("settingsToggleFileTabsBody");
+const settingsDragZoomBody = document.getElementById("settingsDragZoomBody"); 
+
+
+const helpTabKeyboardSubtitle1 = document.getElementById("helpTabKeyboardSubtitle1");
+const helpTabKeyboardSubtitle2 = document.getElementById("helpTabKeyboardSubtitle2");
+
 const helpTabKeyboardTR13TD1 = document.getElementById("helpTabKeyboardTR13TD1");
 const helpTabKeyboardTR14TD1 = document.getElementById("helpTabKeyboardTR14TD1");
 const helpTabKeyboardTR15TD1 = document.getElementById("helpTabKeyboardTR15TD1");
@@ -76,12 +85,20 @@ const helpTabKeyboardTR21TD1 = document.getElementById("helpTabKeyboardTR21TD1")
 const helpTabKeyboardTR22TD1 = document.getElementById("helpTabKeyboardTR22TD1");
 const helpTabKeyboardTR23TD1 = document.getElementById("helpTabKeyboardTR23TD1");
 const helpTabKeyboardTR24TD1 = document.getElementById("helpTabKeyboardTR24TD1");
+
+
+const helpTabKeyboardTR25TD1 = document.getElementById("helpTabKeyboardTR25TD1");
+const helpTabKeyboardTR26TD1 = document.getElementById("helpTabKeyboardTR26TD1");
+const helpTabKeyboardTR27TD1 = document.getElementById("helpTabKeyboardTR27TD1");
+
+
 const toggleDarkmode = document.getElementById("toggleDarkmode");
 const toggleNotifications = document.getElementById("toggleNotifications");
 const toggleTray = document.getElementById("toggleTray");
 
 addAsTodo.innerHTML = translations.addAsTodo;
-helpTabKeyboardSubtitle.innerHTML = translations.helpTabKeyboardSubtitle;
+helpTabKeyboardSubtitle1.innerHTML = translations.helpTabKeyboardSubtitle1;
+helpTabKeyboardSubtitle2.innerHTML = translations.helpTabKeyboardSubtitle2;
 helpTabKeyboardTR13TD1.innerHTML = translations.helpTabKeyboardTR13TD1;
 helpTabKeyboardTR14TD1.innerHTML = translations.helpTabKeyboardTR14TD1;
 helpTabKeyboardTR15TD1.innerHTML = translations.helpTabKeyboardTR15TD1;
@@ -94,6 +111,11 @@ helpTabKeyboardTR21TD1.innerHTML = translations.showHelp;
 helpTabKeyboardTR22TD1.innerHTML = translations.switchToNextFile;
 helpTabKeyboardTR23TD1.innerHTML = translations.switchToPreviousFile;
 helpTabKeyboardTR24TD1.innerHTML = translations.closeTabOrWindow;
+
+helpTabKeyboardTR25TD1.innerHTML = translations.helpTabKeyboardTR25TD1;
+helpTabKeyboardTR26TD1.innerHTML = translations.helpTabKeyboardTR26TD1;
+helpTabKeyboardTR27TD1.innerHTML = translations.helpTabKeyboardTR27TD1;
+
 helpTab1Title.innerHTML = translations.shortcuts;
 helpTab2Title.innerHTML = translations.priorities;
 helpTab3Title.innerHTML = translations.helpTab3Title;
@@ -141,6 +163,13 @@ settingsTabSettingsNotifications.innerHTML = translations.notifications;
 settingsTabSettingsNotificationsBody.innerHTML = translations.settingsTabSettingsNotificationsBody;
 settingsTabSettingsTray.innerHTML = translations.settingsTabSettingsTray;
 settingsTabSettingsTrayBody.innerHTML = translations.settingsTabSettingsTrayBody;
+
+settingsTabSettingsDarkmodeBody.innerHTML = translations.settingsTabSettingsDarkmodeBody;
+settingsToggleCompactViewBody.innerHTML = translations.settingsToggleCompactViewBody;
+settingsToggleFileTabsBody.innerHTML = translations.settingsToggleFileTabsBody;
+settingsDragZoomBody.innerHTML = translations.settingsDragZoomBody;
+
+
 shareFacebook.innerHTML = translations.shareFacebook;
 shareLinkedin.innerHTML = translations.shareLinkedin;
 shareTwitter.innerHTML = translations.shareTwitter;
@@ -211,7 +240,8 @@ function showContent(id) {
       el.classList.remove("is-active");
     });
     let firstTab = section.querySelector(".tabs");
-    firstTab.firstElementChild.firstElementChild.classList.add("is-active");
+    
+    if(firstTab.firstElementChild) firstTab.firstElementChild.firstElementChild.classList.add("is-active");
     let firstSection = section.querySelector("section");
     firstSection.classList.add("is-active");
     section.classList.add("is-active");

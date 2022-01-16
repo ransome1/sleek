@@ -82,7 +82,9 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)">recurrences</a>
   - <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)">thresholds</a>
 * Todo-List can be grouped and sorted by priorities, due dates, creation dates, contexts or projects
-* The sorting order can be defined on all 4 levels
+* The sorting order can be defined on all available levels
+* Top level sorting can be inverted
+* Sorting can be according to the order in file
 * Todos can be filtered by contexts, projects and priorities
 * Todos can be looked up by full-text search
 * Autocomplete function suggests available contexts and projects
@@ -112,6 +114,7 @@ A prioritized backlog of new features and known issues can be found <a href="htt
   - Turkish
   - Hungarian
   - Czech
+  - Polish
 * sleek can be minimized to tray
 * Existing todos can be used as templates for new ones
 * Todo list can be copied to clipboard

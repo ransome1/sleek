@@ -127,6 +127,21 @@
 screen and (max-height: 650px) {
   @include compact;
 }
+
+@mixin mobile() {
+  .modal {
+    .modal-content {
+      padding: 0.5em!important;
+      .card-content {
+        padding: 0.5em!important;
+      }
+    }
+  }
+}
+@media screen and (max-width: 500px) {
+    @include mobile;
+}
+
 body.compact {
   @include compact;
 }

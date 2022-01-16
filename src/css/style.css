@@ -737,7 +737,7 @@ input[type=range]::-webkit-slider-thumb {
   width: 0.75em;
   height: 1.5em;
   -webkit-appearance: none;
-  background: #5a5a5a;
+  background: #3273dc;
   border-radius: 0.65em;
 }
 
@@ -1275,6 +1275,14 @@ nav ul li.logo {
     margin-top: 0;
   }
 }
+@media screen and (max-width: 500px) {
+  .modal .modal-content {
+    padding: 0.5em !important;
+  }
+  .modal .modal-content .card-content {
+    padding: 0.5em !important;
+  }
+}
 body.compact .inputWrapper {
   position: relative;
   padding-top: 0.5em;
@@ -1690,7 +1698,10 @@ body.compact #autoCompleteContainer h4 {
   font-family: "FreeSansBold";
   font-size: 1.7em;
   font-weight: normal;
-  margin-top: 0.5em;
+  margin-top: 0;
+}
+.modal.content h5 {
+  margin: 0.75em 0;
 }
 .modal.content p {
   display: block;
@@ -1729,6 +1740,7 @@ body.compact #autoCompleteContainer h4 {
 .modal.content .modal-card-body {
   background: none;
   display: none;
+  padding: 0 1em;
 }
 .modal.content .modal-card-body ul li a {
   text-decoration: underline;

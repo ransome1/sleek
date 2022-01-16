@@ -875,7 +875,7 @@ const createWindow = async function() {
 // ########################################################################################################################
 const gotTheLock = app.requestSingleInstanceLock()
 // prevent multiple instances based on https://stackoverflow.com/questions/35916158/how-to-prevent-multiple-instances-in-electron
-if (!gotTheLock) {
+if(!gotTheLock) {
     if(process.env.SLEEK_MULTIPLE_INSTANCES==="true") {
         app.on("ready", () => {
             if (appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
