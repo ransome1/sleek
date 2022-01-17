@@ -294,7 +294,7 @@ function setFriendlyLanguageNames() {
         friendlyLanguageName = "Čeština"
         break;
         case "pl":
-        friendlyLanguageName = "Polskie"
+        friendlyLanguageName = "Polski"
         break;
         default:
         return;
