@@ -75,6 +75,7 @@
   "helpTabRecurrencesTitle1": "Dodawanie zadań powtarzających się",
   "hiddenTodos": "Ukryte",
   "inProgress": "W trakcie",
+  "invertSorting": "Odwróć sortowanie",
   "language": "Język",
   "messageLoggingBody": "Możesz wesprzeć ten projekt, włączając anonimowe rejestrowanie błędów i zdarzeń. Będą rejestrowane występujące błędy i używane funkcje. Możesz włączyć tę funkcję w ustawieniach.",
   "messageShareBody": "Ten projekt docenia uczciwe recenzje na <br><i class=\"fas fa-star\"></i>&nbsp;<a href=\"https://sourceforge.net/projects/sleek/reviews\" target=\"_blank\">SourceForge</a>, zgłaszanie błędów na <i class=\"fab fa-github\"></i>&nbsp;<a href=\"https://github.com/ransome1/sleek/issues\" target=\"_blank\">Githubie</a> oraz rekomendacje na",
