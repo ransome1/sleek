@@ -1168,7 +1168,7 @@ nav ul:nth-child(2):hover #versionNumber {
   }
   .inputWrapper input[type=search],
 .inputWrapper input[type=text] {
-    padding: 1.5em 1em 1.5em 1.5em;
+    padding: 0.75em 1em 0.75em 1.5em;
   }
   .inputWrapper input::placeholder,
 .inputWrapper textarea::placeholder {
@@ -1186,7 +1186,7 @@ nav ul:nth-child(2):hover #versionNumber {
   }
 
   .modal.content .modal-card {
-    padding: 1em;
+    padding: 1em !important;
   }
 
   table tr td {
@@ -1202,10 +1202,10 @@ nav ul:nth-child(2):hover #versionNumber {
   }
   #todoTableSearchContainer i.fa-search,
 #todoTableSearchContainer .todoTableSearchQuestionmark {
-    top: 0.65em;
+    top: 0.37em;
   }
   #todoTableSearchContainer #todoTableSearchAddTodo {
-    top: 2.2em;
+    top: 1.7em;
   }
   #todoTableSearchContainer #todoTableSearchAddTodo i {
     display: none;
@@ -1289,7 +1289,7 @@ body.compact .inputWrapper {
 }
 body.compact .inputWrapper input[type=search],
 body.compact .inputWrapper input[type=text] {
-  padding: 1.5em 1em 1.5em 1.5em;
+  padding: 0.75em 1em 0.75em 1.5em;
 }
 body.compact .inputWrapper input::placeholder,
 body.compact .inputWrapper textarea::placeholder {
@@ -1305,7 +1305,7 @@ body.compact #modalForm #modalFormInputResize {
   top: 1.65em;
 }
 body.compact .modal.content .modal-card {
-  padding: 1em;
+  padding: 1em !important;
 }
 body.compact table tr td {
   padding: 0.25em 1.5em 0.25em 0 !important;
@@ -1318,10 +1318,10 @@ body.compact #todoTableSearchContainer input[type=search]::-webkit-search-cancel
 }
 body.compact #todoTableSearchContainer i.fa-search,
 body.compact #todoTableSearchContainer .todoTableSearchQuestionmark {
-  top: 0.65em;
+  top: 0.37em;
 }
 body.compact #todoTableSearchContainer #todoTableSearchAddTodo {
-  top: 2.2em;
+  top: 1.7em;
 }
 body.compact #todoTableSearchContainer #todoTableSearchAddTodo i {
   display: none;
@@ -1685,9 +1685,11 @@ body.compact #autoCompleteContainer h4 {
   display: flex !important;
 }
 
+.modal {
+  padding: 1em;
+}
 .modal .modal-content {
   margin: 0;
-  padding: 1em;
 }
 
 .modal.content {

@@ -218,13 +218,16 @@ window.api.receive("triggerFunction", async (name, args) => {
           helper.handleError(error);
         });
         break;
+      case "changeWindowTitle":
+        document.getElementById("title").innerHTML = args;
+        break;
     }
   } catch(error) {
     error.functionName = "triggerFunction";
     return Promise.reject(error);
   }
 });
-window.api.receive("refresh", async (args) => {
+window.api.receive("refresh", (args) => {
   todos.generateItems(args[0]).then(function() {
     startBuilding(args[1]);
   }).catch(function(error) {

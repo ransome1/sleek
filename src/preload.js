@@ -18,7 +18,8 @@ contextBridge.exposeInMainWorld(
         "triggerFunction",
         "restart",
         "setTheme",
-        "closeWindow"
+        "closeWindow",
+        "changeWindowTitle"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);

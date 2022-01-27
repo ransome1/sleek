@@ -16,6 +16,24 @@ import fr from "../../node_modules/vanillajs-datepicker/js/i18n/locales/fr.js";
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const datePickerInput = document.getElementById("datePickerInput");
 const datePickerContainer = document.querySelector(".datepicker.datepicker-dropdown");
+const datePickerOptions = {
+  autohide: true,
+  language: userData.language,
+  format: "yyyy-mm-dd",
+  clearBtn: true,
+  container: "body",
+  calendarWeeks: true,
+  weekStart: 1,
+  beforeShowDay: function(date) {
+    let today = new Date();
+    if (date.getDate() == today.getDate() &&
+        date.getMonth() == today.getMonth() &&
+        date.getFullYear() == today.getFullYear()) {
+      return { classes: 'today'};
+    }
+  }
+}
+let datePicker;
 
 datePickerInput.addEventListener("changeDate", function (e) {
   // we only update the object if there is a date selected. In case of a refresh it would throw an error otherwise
@@ -63,24 +81,10 @@ datePickerInput.addEventListener("changeDate", function (e) {
 });
 datePickerInput.placeholder = translations.formSelectDueDate;
 Object.assign(Datepicker.locales, de, it, es, fr);
-const datePicker = new Datepicker(datePickerInput, {
-  autohide: true,
-  language: userData.language,
-  format: "yyyy-mm-dd",
-  clearBtn: true,
-  container: "body",
-  calendarWeeks: true,
-  weekStart: 1,
-  beforeShowDay: function(date) {
-    let today = new Date();
-    if (date.getDate() == today.getDate() &&
-        date.getMonth() == today.getMonth() &&
-        date.getFullYear() == today.getFullYear()) {
-      return { classes: 'today'};
-    }
-  }
-});
+datePicker = new Datepicker(datePickerInput, datePickerOptions);
 datePickerInput.onfocus = function () {
+  datePicker.destroy()
+  datePicker = new Datepicker(datePickerInput, datePickerOptions);
   datePicker.show();
   autoCompleteContainer.classList.remove("is-active");
   resizeInput(datePickerInput);

@@ -172,7 +172,6 @@ const createWindow = async function() {
         break;
     }
   }
-
   const refreshFiles = function() {
     let fileRemoved = false;
     // if a file is not found it will be removed from list and user will be informed
@@ -196,7 +195,6 @@ const createWindow = async function() {
     userData.set("files", userData.data.files);
     if(fileRemoved) mainWindow.webContents.send("triggerFunction", "configureMainView");
   }
-
   const startFileWatcher = async function(file, isTabItem) {
     try {
       // skip persisted files and go with ENV if set
@@ -291,7 +289,9 @@ const createWindow = async function() {
         }, 10);
       });
       // change window title
-      mainWindow.title = path.basename(file) + " - sleek";
+      const title = path.basename(file) + " - sleek";
+      mainWindow.title = title;
+      mainWindow.webContents.send("triggerFunction", "changeWindowTitle", title);
       return Promise.resolve("Success: Filewatcher is watching: " + file);
     } catch (error) {
       // if something file related crashes, onboarding will be triggered
@@ -315,6 +315,8 @@ const createWindow = async function() {
         }
         userData.set("theme", getTheme());
       }
+      // feed custom file if env is set
+      if(process.env.SLEEK_CUSTOM_FILE) userData.set("files", [[1, process.env.SLEEK_CUSTOM_FILE, 1]]);
       if(typeof userData.data.width != "number") userData.set("width", 1100);
       if(typeof userData.data.height != "number") userData.set("height", 700);
       if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
@@ -897,8 +899,8 @@ if(!gotTheLock) {
     app.on("second-instance", () => {
         // Someone tried to run a second instance, we should focus our window.
         if (mainWindow) {
-        if (mainWindow.isMinimized()) mainWindow.restore()
-        mainWindow.focus()
+          if (mainWindow.isMinimized()) mainWindow.restore()
+          mainWindow.focus()
         }
     })
     app.on("ready", () => {
