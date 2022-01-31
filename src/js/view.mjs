@@ -108,13 +108,14 @@ function zoom(zoom) {
 function toggle(toggleName, variable) {
   try {
     const toggle = document.getElementById(toggleName);
-    if(userData[toggle.id]==false || variable) {
+    if(userData[toggle.id] === false || variable) {
       userData[toggle.id] = true;
       toggle.checked = true;
     } else {
       userData[toggle.id] = false;
       toggle.checked = false;
     }
+    // TODO: Make more generic
     if(toggle.id==="compactView" && userData[toggle.id]) {
       body.classList.add("compact");
     } else if(toggle.id==="compactView" && !userData[toggle.id]) {

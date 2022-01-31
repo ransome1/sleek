@@ -5,14 +5,12 @@ import { handleError } from "./helper.mjs";
 import { _paq } from "./matomo.mjs";
 import { RecExtension, SugarDueExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 import { generateFilterData } from "./filters.mjs";
-import { items, item, setTodoComplete } from "./todos.mjs";
-import { datePickerInput, datePicker } from "./datePicker.mjs";
+import { items, item, setTodoComplete, createTodoObject } from "./todos.mjs";
 import { createModalJail } from "./jail.mjs";
-import * as recurrencePicker from "./recurrencePicker.mjs";
 import { resetModal } from "./helper.mjs";
+import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
-const recurrencePickerInput = document.getElementById("recurrencePickerInput");
 const modalFormAlert = document.getElementById("modalFormAlert");
 const modalForm = document.getElementById("modalForm");
 const modalFormInputLabel = document.getElementById("modalFormInputLabel");
@@ -53,25 +51,23 @@ btnSave.onclick = function() {
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Submit"]);
 }
-document.getElementById("modalFormInput").addEventListener("keyup", () => {
-  keyUp();
-});
-document.getElementById("modalFormInput").addEventListener("keydown", () => {
+modalFormInput.addEventListener("keyup", modalFormInputEvent);
+modalFormInput.addEventListener("keydown", () => {
   keyDown();
 });
-document.getElementById("modalFormInput").onfocus = function() {
+modalFormInput.onfocus = function() {
   modalForm.classList.add("is-focused");
 }
-document.getElementById("modalFormInput").onblur = function() {
+modalFormInput.onblur = function() {
   modalForm.classList.remove("is-focused");
 }
 modalForm.addEventListener("submit", function(event) {
   event.preventDefault;
 });
-modalForm.addEventListener ("click", function() {
-  // close recurrence picker if click is outside of recurrence container
-  if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) document.getElementById("recurrencePickerContainer").classList.remove("is-active")
-});
+// modalForm.addEventListener ("click", function() {
+//   // close recurrence picker if click is outside of recurrence container
+//   if(!event.target.closest("#recurrencePickerContainer") && event.target!=recurrencePickerInput) document.getElementById("recurrencePickerContainer").classList.remove("is-active")
+// });
 priorityPicker.addEventListener("change", e => {
   setPriority(e.target.value).then(response => {
     console.log(response);
@@ -79,24 +75,14 @@ priorityPicker.addEventListener("change", e => {
     handleError(error);
   });
 });
-priorityPicker.onfocus = function() {
-  // close suggestion box if focus comes to priority picker
-  autoCompleteContainer.classList.remove("is-active");
-};
-
-// TODO add try catch
-function keyUp() {
-  // do not show suggestion container if Escape has been pressed
-  if(event.key==="Escape") {
-    autoCompleteContainer.classList.remove("is-active");
-    return false;
-  }
-  modalFormInputEvent();
-}
+// priorityPicker.onfocus = function() {
+//   // close suggestion box if focus comes to priority picker
+//   autoCompleteContainer.classList.remove("is-active");
+// };
 // TODO add try and catch
 function keyDown() {
   // regular submit
-  if(document.getElementById("modalFormInput").type !=="textarea" && event.key === "Enter") {
+  if(modalFormInput.type !=="textarea" && event.key === "Enter") {
     submitForm().then(response => {
       console.log(response);
     }).catch(error => {
@@ -128,19 +114,19 @@ function getCaretPosition(inputId) {
 }
 function positionAutoCompleteContainer() {
   // Adjust position of suggestion box to input field
-  let modalFormInputPosition = document.getElementById("modalFormInput").getBoundingClientRect();
-  autoCompleteContainer.style.width = document.getElementById("modalFormInput").offsetWidth + "px";
-  autoCompleteContainer.style.top = modalFormInputPosition.top + document.getElementById("modalFormInput").offsetHeight - 40 + "px";
+  let modalFormInputPosition = modalFormInput.getBoundingClientRect();
+  autoCompleteContainer.style.width = modalFormInput.offsetWidth + "px";
+  autoCompleteContainer.style.top = modalFormInputPosition.top + modalFormInput.offsetHeight - 40 + "px";
   autoCompleteContainer.style.left = modalFormInputPosition.left + "px";
 }
 async function modalFormInputEvent() {
   positionAutoCompleteContainer();
-  resizeInput(document.getElementById("modalFormInput"));
+  resizeInput(modalFormInput);
   let autoCompleteValue ="";
   let autoCompletePrefix = "";
-  let caretPosition = getCaretPosition(document.getElementById("modalFormInput"));
+  let caretPosition = getCaretPosition(modalFormInput);
   let autoCompleteCategory = "";
-  let inputValue = document.getElementById("modalFormInput").value;
+  let inputValue = modalFormInput.value;
   if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+")) {
     autoCompleteValue = inputValue.substr(caretPosition, inputValue.lastIndexOf(" ")).split(" ").shift();
     autoCompletePrefix = inputValue.charAt(caretPosition-1);
@@ -205,7 +191,7 @@ function setPriority(priority) {
         });
       }
     }
-    let todo = new TodoTxtItem(document.getElementById("modalFormInput").value);
+    let todo = createTodoObject(modalFormInput.value);
     if((priority==="down" || priority==="up") && !todo.priority) {
       todo.priority = "A";
     } else if(priority==="up" && todo.priority!="a") {
@@ -218,7 +204,7 @@ function setPriority(priority) {
       todo.priority = null;
     }
     if(todo.priority===null || todo.priority.match(/[a-z]/i)) {
-      document.getElementById("modalFormInput").value = todo.toString();
+      modalFormInput.value = todo.toString();
       setPriorityInput(todo.priority);
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Priority changed to: " + todo.priority]);
@@ -232,7 +218,7 @@ function setPriority(priority) {
 }
 function setDueDate(days) {
   try {
-    const todo = new TodoTxtItem(document.getElementById("modalFormInput").value, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+    const todo = new TodoTxtItem(modalFormInput.value, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
     if(days===0) {
       todo.due = undefined;
       todo.dueString = undefined;
@@ -243,22 +229,53 @@ function setDueDate(days) {
       todo.due = new Date(new Date().setDate(new Date().getDate() + days));
       todo.dueString = todo.due.toISOString().substr(0, 10);
     }
-    datePicker.setDate( todo.due );
-    document.getElementById("modalFormInput").value = todo.toString();
+    modalFormInput.value = todo.toString();
     return Promise.resolve("Success: Due date changed to " + todo.dueString)
   } catch(error) {
     error.functionName = setDueDate.name;
     return Promise.reject(error);
   }
 }
+
 function show(todo, templated) {
-  try {
+  try {  
+
+    const datePickerInput = document.getElementById("datePickerInput");
+    datePickerInput.placeholder = translations.formSelectDueDate;
+
+    // adjust size of datepicker input
+    resizeInput(datePickerInput);
+
+    // create and show a datepicker instance to an input, when its focused
+    datePickerInput.onfocus = async function() {
+      const datePicker = await import("./datePicker.mjs");
+      datePicker.createDatepickerInstance(this, false).then(response => {
+        console.log("Success: Date picker created")
+      }).catch(error => {
+        handleError(error);
+      });
+    }
+
+    // ******************************************************
+    // setup recurrence picker
+    // ******************************************************
+
+    const recurrencePickerInput = document.getElementById("recurrencePickerInput");
+    recurrencePickerInput.placeholder = translations.noRecurrence;
+
+    //
+    resizeInput(recurrencePickerInput);
+
+    recurrencePickerInput.onfocus = function() {
+      showRecurrences();
+    }
+
     // remove any previously set data-item attributes
     modalForm.setAttribute("data-item", "");
     // adjust size of recurrence picker input field
-    datePickerInput.value = null;
-    recurrencePickerInput.value = null;
-    document.getElementById("modalFormInput").value = null;
+    //datePickerInput.value = null;
+    
+    modalFormInput.value = null;
     modalFormAlert.innerHTML = null;
     modalFormAlert.parentElement.classList.remove("is-active", "is-warning", "is-danger");
     // close context menu
@@ -267,7 +284,7 @@ function show(todo, templated) {
     if(todo) {
       // replace invisible multiline ascii character with new line
       // we need to check if there already is a due date in the object
-      todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+      todo = createTodoObject(todo);
       // set the priority
       setPriority(todo.priority);
       //
@@ -276,18 +293,18 @@ function show(todo, templated) {
         // erase the original creation date and description
         todo.date = new Date();
         todo.text = "____________";
-        document.getElementById("modalFormInput").value = todo.toString();
+        modalFormInput.value = todo.toString();
         //modalTitle.innerHTML = translations.addTodo;
         // automatically select the placeholder description
-        let selectStart = document.getElementById("modalFormInput").value.indexOf(todo.text);
+        let selectStart = modalFormInput.value.indexOf(todo.text);
         let selectEnd = selectStart + todo.text.length;
-        document.getElementById("modalFormInput").setSelectionRange(selectStart, selectEnd);
+        modalFormInput.setSelectionRange(selectStart, selectEnd);
         btnItemStatus.classList.add("is-hidden");
       } else {
         // pass todo string to form data item
         modalForm.setAttribute("data-item", todo.toString());
         // this is an existing todo task to be edited
-        document.getElementById("modalFormInput").value = todo.toString();
+        modalFormInput.value = todo.toString();
         btnItemStatus.classList.remove("is-hidden");
       }
       // only show the complete button on open items
@@ -298,7 +315,7 @@ function show(todo, templated) {
       }
       // if there is a recurrence
       if(todo.rec) {
-        recurrencePicker.setInput(todo.rec).then(function(result) {
+        setInput(todo.rec).then(function(result) {
           console.log(result);
         }).catch(function(error) {
           handleError(error);
@@ -314,14 +331,15 @@ function show(todo, templated) {
     // switch to textarea if needed
     if(userData.useTextarea) toggleInputSize("input");
     // adjust size of picker inputs
-    resizeInput(datePickerInput);
-    resizeInput(recurrencePickerInput);
+    //resizeInput(datePickerInput);
+    
     // create the modal jail, so tabbing won't leave modal
     createModalJail(modalForm);
     // show modal and set focus to input element
     modalForm.classList.add("is-active");
     // put focus into the input field
-    document.getElementById("modalFormInput").focus();
+    // TODO: Seem to not work
+    modalFormInput.focus();
     return Promise.resolve("Info: Show/Edit todo window opened");
   } catch (error) {
     error.functionName = show.name;
@@ -332,7 +350,7 @@ function submitForm() {
   try {
     // check if there is an input in the text field, otherwise indicate it to the user
     // input value and data item are the same, nothing has changed, nothing will be written
-    if(modalForm.getAttribute("data-item") === document.getElementById("modalFormInput").value) {
+    if(modalForm.getAttribute("data-item") === modalFormInput.value) {
       // close and reset any modal
       resetModal().then(function(result) {
         console.log(result);
@@ -346,7 +364,8 @@ function submitForm() {
       const index = items.objects.map(function(item) {return item.toString(); }).indexOf(modalForm.getAttribute("data-item"));
       // create a todo.txt object
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+      const inputValue = modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
+      let todo = createTodoObject(inputValue);
       // check and prevent duplicate todo
       if(items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString())!=-1) {
         modalFormAlert.innerHTML = translations.formInfoDuplicate;
@@ -363,10 +382,11 @@ function submitForm() {
       // jump to index, remove 1 item there and add the value from the input at that position
       items.objects.splice(index, 1, todo);
     // Add todo
-    } else if(!modalForm.getAttribute("data-item") && document.getElementById("modalFormInput").value!="") {
+    } else if(!modalForm.getAttribute("data-item") && modalFormInput.value!="") {
       // in case there hasn't been a passed data item, we just push the input value as a new item into the array
       // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-      let todo = new TodoTxtItem(document.getElementById("modalFormInput").value.replaceAll(/[\r\n]+/g, String.fromCharCode(16)), [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+      const inputValue = modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
+      let todo = createTodoObject(inputValue);
       // we add the current date to the start date attribute of the todo.txt object
       todo.date = new Date();
       // check and prevent duplicate todo
@@ -386,7 +406,7 @@ function submitForm() {
       items.objects.push(todo);
       // mark the todo for anchor jump after next reload
       item.previous = todo.toString();
-    } else if(document.getElementById("modalFormInput").value=="") {
+    } else if(modalFormInput.value=="") {
       modalFormAlert.innerHTML = translations.formInfoNoInput;
       modalFormAlert.parentElement.classList.remove("is-active", 'is-danger');
       modalFormAlert.parentElement.classList.add("is-active", 'is-warning');
@@ -416,8 +436,8 @@ function submitForm() {
 function toggleInputSize(type) {
   let newInputElement;
   let value = "";
-  if(document.getElementById("modalFormInput").value!=="") {
-    value = document.getElementById("modalFormInput").value.replaceAll("\n", String.fromCharCode(16));
+  if(modalFormInput.value!=="") {
+    value = modalFormInput.value.replaceAll("\n", String.fromCharCode(16));
   }
   switch (type) {
     case "input":
@@ -440,22 +460,22 @@ function toggleInputSize(type) {
   newInputElement.setAttribute("tabindex", 0);
   newInputElement.setAttribute("class", "input is-medium");
   // replace old element with the new one
-  document.getElementById("modalFormInput").replaceWith(newInputElement);
+  modalFormInput.replaceWith(newInputElement);
   positionAutoCompleteContainer();
-  resizeInput(document.getElementById("modalFormInput"));
-  document.getElementById("modalFormInput").onfocus = function() {
+  resizeInput(modalFormInput);
+  modalFormInput.onfocus = function() {
     modalForm.classList.add("is-focused");
   }
-  document.getElementById("modalFormInput").onblur = function() {
+  modalFormInput.onblur = function() {
     modalForm.classList.remove("is-focused");
   }
-  document.getElementById("modalFormInput").focus();
+  modalFormInput.focus();
   createModalJail(modalForm);
 
-  document.getElementById("modalFormInput").addEventListener("keydown", () => {
+  modalFormInput.addEventListener("keydown", () => {
     keyDown();
   });
-  document.getElementById("modalFormInput").addEventListener("keyup", () => {
+  modalFormInput.addEventListener("keyup", () => {
     keyUp();
   });
 }

@@ -66,6 +66,7 @@ function getTranslations() {
     return Promise.reject(error);
   }
 }
+// TODO: Check of loadAll still works or not
 async function startBuilding(loadAll) {
   try {
     const t0 = performance.now();
@@ -97,10 +98,10 @@ window.onload = async function () {
   helper = await import("./js/helper.mjs");
   const events = await import("./js/events.mjs");
   const messages = await import("./js/messages.mjs");
-  onboarding = await import("./js/onboarding.mjs");
   if(userData.files && userData.files.length > 0 && helper.getActiveFile()) {
     window.api.send("startFileWatcher", [helper.getActiveFile(), 0]);
   } else {
+    const onboarding = await import("./js/onboarding.mjs");
     onboarding.showOnboarding(true).then(function(response) {
       console.info(response);
     }).catch(function(error) {
@@ -145,6 +146,7 @@ window.api.receive("triggerFunction", async (name, args) => {
         startBuilding();
         break;
       case "showOnboarding":
+        const onboarding = await import("./js/onboarding.mjs");
         onboarding.showOnboarding(...args).then(function(response) {
           console.info(response);
         }).catch(function(error) {

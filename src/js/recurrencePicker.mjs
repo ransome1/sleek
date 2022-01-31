@@ -93,7 +93,7 @@ export function setInput(recurrence) {
     return Promise.reject(error);
   }
 }
-function showRecurrences() {
+export function showRecurrences() {
   recurrencePickerContainer.classList.toggle("is-active");
   document.getElementById("recurrencePickerIncrease").focus();
   // get object from current input

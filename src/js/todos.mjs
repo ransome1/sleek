@@ -11,7 +11,6 @@ import { createModalJail } from "./jail.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { getActiveFile, generateHash, handleError, formatDate } from "./helper.mjs";
 import { focusRow } from "./keyboard.mjs";
-import { datePicker } from "./datePicker.mjs";
 
 const todoContext = document.getElementById("todoContext");
 const todoContextDelete = document.getElementById("todoContextDelete");
@@ -20,8 +19,6 @@ const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTempla
 const todoTableWrapper = document.getElementById("todoTableWrapper");
 const resultStats = document.getElementById("resultStats");
 const todoTable = document.getElementById("todoTable");
-const datePickerContainer = document.querySelector(".datepicker.datepicker-dropdown");
-export let currentTodo;
 
 todoContextUseAsTemplate.innerHTML = translations.useAsTemplate;
 todoContextEdit.innerHTML = translations.edit;
@@ -401,22 +398,29 @@ function generateTableRow(todo) {
           <span class="tag">` + translations.due + `</span><span class="tag is-dark">` + tag + `</span>
         </div>
         <i class="fas fa-sort-down"></i>`;
-      todoTableBodyCellDueDate.addEventListener("click", function(event) {
-        // make current todo available to datepicker module
-        currentTodo = todo;
-        datePicker.setDate(todo.due);
-        datePicker.show();
-        // position datepicker container to pointer position
-        datePickerContainer.style.position = "fixed";
-        datePickerContainer.style.top = event.y + "px";
-        datePickerContainer.style.left = event.x - (datePickerContainer.offsetWidth/2) + "px";
 
-        // ugly but neccessary: if class is written too fast, we cannot work with it in body event
-        setTimeout (function () {
-          datePickerContainer.classList.add("visible");
-          }, 10 
-        );
-      });
+      // ugly workaround so datepicker does not fallback to inline mode
+      const todoTableBodyCellDueDateHiddenInput = document.createElement("input");
+      todoTableBodyCellDueDateHiddenInput.type = "button"
+      todoTableBodyCellDueDateHiddenInput.setAttribute("tabindex", "-1");
+      todoTableBodyCellDueDateHiddenInput.classList.add("transparentInput")
+      todoTableBodyCellDueDateHiddenInput.onclick = async function(event) {
+        
+        // prevent body event listener to be triggered
+        event.stopPropagation();
+
+        // retrieve datepicker function
+        const datePicker = await import("./datePicker.mjs");
+
+        // create datepicker and attach it to hidden input
+        await datePicker.createDatepickerInstance(this, todo).then(response => {
+          console.log(response)
+        }).catch(error => {
+          handleError(error);
+        });
+
+      }
+      todoTableBodyCellDueDate.appendChild(todoTableBodyCellDueDateHiddenInput);
       // append the due date to the text item
       todoTableBodyRow.appendChild(todoTableBodyCellDueDate);
     }
@@ -436,7 +440,6 @@ function generateTableRow(todo) {
             selectFilter(element, category);
           }
           todoTableBodyCellCategory.innerHTML = element;
-
           // selected filters are empty, unless they were persisted
           if(userData.selectedFilters && userData.selectedFilters.length>0) {
             let selectedFilters = JSON.parse(userData.selectedFilters);
@@ -606,7 +609,7 @@ function sortTodoData(group) {
 function setTodoComplete(todo) {
   try {
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+    todo = createTodoObject(todo);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // mark item as in progress
@@ -614,8 +617,6 @@ function setTodoComplete(todo) {
       // if item was already completed we set complete to false and the date to null
       todo.complete = false;
       todo.completed = null;
-      // delete old item from array and add the new one at it's position
-      //items.objects.splice(index, 1, todo);
     // Mark item as complete
     } else if(!todo.complete) {
       if(todo.due) {
@@ -654,9 +655,9 @@ function setTodoComplete(todo) {
 function setTodoDelete(todo) {
   try {
     // in case edit form is open, text has changed and complete button is pressed, we do not fall back to the initial value of todo but instead choose input value
-    if(document.getElementById("modalFormInput").value) todo = document.getElementById("modalFormInput").value;
+    if(modalFormInput.value) todo = modalFormInput.value;
     // first convert the string to a todo.txt object
-    todo = new TodoTxtItem(todo, [ new DueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+    todo = createTodoObject(todo);
     // get index of todo
     const index = items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
     // Delete item
@@ -680,9 +681,17 @@ function setTodoDelete(todo) {
     return Promise.reject(error);
   }
 }
+function createTodoObject(string) {
+  try {
+    return new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+  } catch(error) {
+    error.functionName = editTodo.name;
+    return Promise.reject(error);
+  }
+}
 function addTodo(todo) {
   try {
-    todo = new TodoTxtItem(todo, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+    todo = createTodoObject(todo);
     // abort if there is no text
     if(!todo.text && !todo.h) return Promise.resolve("Info: Text is missing, no todo is written");
     // we add the current date to the start date attribute of the todo.txt object
@@ -822,4 +831,4 @@ function generateNotification(todo, offset, customTitle, customBody) {
   }
 }
 
-export { generateItems, generateGroups, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, editTodo, show, createTodoContext };
+export { generateItems, generateGroups, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, editTodo, show, createTodoContext, createTodoObject };

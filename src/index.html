@@ -197,8 +197,8 @@
             <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
             <i class="fas fa-search"></i>
             <label id="todoTableSearchLabel" for="todoTableSearch"></label>
-            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
-            <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
+            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="0" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
+            <button id="todoTableSearchAddTodo" class="tag" tabindex="0"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
             <section id="resultStats">
               <span class="tag"></span>
             </section>
@@ -308,7 +308,7 @@
                     <i class="fas fa-redo"></i>
                   </a>
                 </div>
-                <div id="recurrencePickerContainer" class="card">
+                <div id="recurrencePickerContainer" class="card" tabindex="-1">
                   <div class="content">
                     <div>
                       <span id="recurrencePickerEvery"></span>
@@ -320,29 +320,29 @@
                     </div>
                     <div class="options">
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="d" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="d">
                         <span id="recurrencePickerDay"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="b" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="b">
                         <span id="recurrencePickerBusinessDay"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="w" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="w">
                         <span id="recurrencePickerWeek"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="m" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="m">
                         <span id="recurrencePickerMonth"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="y" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="y">
                         <span id="recurrencePickerYear"></span>
                       </label>
                     </div>
                   </div>
                   <footer class="card-footer">
-                    <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"  tabindex="0"></a>
+                    <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"></a>
                   </footer>
                 </div>
               </div>
@@ -856,6 +856,7 @@
         </div>
       </article>
     </section>
+
     <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
     <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
     <script defer src="../node_modules/marked/marked.min.js"></script>

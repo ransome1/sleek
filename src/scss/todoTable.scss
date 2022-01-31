@@ -247,6 +247,18 @@
         font-family: FreeSansBold;
       }
     }
+    .transparentInput {
+      width: 100%;
+      height: 100%;
+      background: transparent!important;
+      border: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      color: transparent!important;
+      cursor: pointer;
+    }
   }
   .cell.isToday,
   .cell.isToday button {

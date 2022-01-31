@@ -5,29 +5,18 @@ import { isToday, isPast } from "./date.mjs";
 import { generateFileList } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
 import { showOnboarding } from "./onboarding.mjs";
-import { focusRow, currentRow } from "./keyboard.mjs";
+//import { focusRow, currentRow } from "./keyboard.mjs";
 import { _paq } from "./matomo.mjs";
-import { datePicker } from "./datePicker.mjs";
 
 const body = document.getElementById("body");
 const todoContext = document.getElementById("todoContext");
 const addTodoContainer = document.getElementById("addTodoContainer");
 
-export function isModalOpen() {
-  // check if any modal is open an return boolean
-  let isModalOpen = false;
-  document.querySelectorAll(".modal, div[role=menu]").forEach(function(modal) {
-    if(modal.classList.contains("is-active")) isModalOpen = true;
-  });
-  return isModalOpen;
-}
-export function closeTodoContext() {
-  // hide the context menu
-  todoContext.classList.remove("is-active");
-  todoContext.removeAttribute("data-item");
-  // set focus on the last focused row
-  focusRow(currentRow);
-}
+// export function closeTodoContext() {
+//   // hide the context menu
+//   todoContext.classList.remove("is-active");
+//   todoContext.removeAttribute("data-item");
+// }
 export function jumpToItem(item) {
   try {
     const isInViewport = function(item) {
@@ -169,8 +158,6 @@ export function getBadgeCount() {
 }
 export function resetModal(modal) {
   try {
-    // hide the picker
-    datePicker.hide();
     const modalForm = document.getElementById("modalForm");
     if(modal) {
       // remove is-active from modal
@@ -232,12 +219,13 @@ export function configureMainView() {
     document.getElementById("version").innerHTML = appData.version;
     if(typeof items === "object") {
       // jump to previously added item
-      if(document.getElementById("previousItem")) {
-        //const index 
-        document.getElementById("previousItem")
-        //helper.jumpToItem(document.getElementById("previousItem"))
-        focusRow();
-      }
+      // TODO: Repair jump to previous item function
+      // if(document.getElementById("previousItem")) {
+      //   //const index 
+      //   document.getElementById("previousItem")
+      //   //helper.jumpToItem(document.getElementById("previousItem"))
+      //   focusRow();
+      // }
       // remove onboarding
       showOnboarding(false).then(function(response) {
         console.info(response);

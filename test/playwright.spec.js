@@ -343,13 +343,13 @@ test.describe("Recurrence picker", () => {
 	
 });
 
-test.describe("Navigation", () => {
+test.describe("Navigation elements", () => {
 	test.beforeAll(async () => {
 		app = await electron.launch({ 
 			args: ["src/main.js"],
 			env: {
 				"NODE_ENV": "testing",
-				"SLEEK_CUSTOM_FILE": "todo.txt"
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
 			}
 		});
 		page = await app.firstWindow();
@@ -365,9 +365,155 @@ test.describe("Navigation", () => {
 		await expect(await page.title()).toBe("todo.txt - sleek");
 	})
 
-	test("Click add todo button", async () => {
-		await page.locator("#navBtnAddTodo a").click();
-		await page.locator("#modalForm").waitForVisible();
+	test("Click add todo button and check if input field is focused", async () => {
+		await page.locator("#navBtnAddTodo").click();
+		await page.waitForSelector("#modalForm");
+		await expect(page.locator("#modalFormInput")).toBeFocused();
+		await page.locator("#btnCancel").click();
 	})
+
+	test("Filter sidebar is being opened and closed", async () => {
+		await page.locator("#navBtnFilter").click();
+		await page.waitForSelector("#filterDrawer");
+		await page.locator("#navBtnFilter").click();
+		await expect(page.locator("#filterDrawer")).toBeHidden();
+	})
+
+	test("File changer modal is being opened", async () => {
+		await page.locator("#btnOpenTodoFile").click();
+		await expect(page.locator("#modalChangeFile")).toBeVisible();
+		await page.locator(":nth-match(#modalChangeFile .card-footer button, 3)").click();
+
+
+	})
+
+	test("Settings modal is being opened and closed using Escape key", async () => {
+		await page.locator("#navBtnSettings").click();
+		await expect(page.locator("#modalSettings")).toBeVisible();
+		await page.keyboard.press("Escape");
+		await expect(page.locator("#modalSettings")).toBeHidden();
+	})
+
+	test("Help modal is being opened using close button", async () => {
+		await page.locator("#navBtnHelp").click();
+		await expect(page.locator("#modalHelp")).toBeVisible();
+		await page.locator("#modalHelp [aria-label=\"close\"]").click();
+		await expect(page.locator("#modalHelp")).toBeHidden();
+	})
+
+	test("Hover on settings button will present version number", async () => {
+		await page.locator(":nth-match(nav ul, 2)").hover();
+		await expect(page.locator("#versionNumber")).toBeVisible();
+	})
+
+});
+
+test.describe("Filter drawer", () => {
+
+	test.beforeAll(async () => {
+		let rows;
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Filter sidebar is being opened and a context is being selected which reduces the table rows to 1 result. Filter is removed and filter drawer is being closed.", async () => {
+		await page.locator("#navBtnFilter").click();
+		await page.waitForSelector("#filterDrawer");
+		const filterButton = await page.locator(":nth-match(#filterDrawer #todoFilters .projects button, 2)");
+		await filterButton.click();
+		const rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(1);
+		await filterButton.click();
+		await page.locator("#navBtnFilter").click();		
+		await expect(page.locator("#filterDrawer")).toBeHidden();
+	})
+
+	test("Filter sidebar is being opened and a context and a project is being selected and filter reset button removes selection", async () => {
+		await page.locator("#navBtnFilter").click();
+		await page.waitForSelector("#filterDrawer");
+		const priorityButton = await page.locator(":nth-match(#filterDrawer #todoFilters button, 1)");
+		await priorityButton.click();
+		const contextButton = await page.locator(":nth-match(#filterDrawer #todoFilters button, 7)");
+		await contextButton.click();
+		const projectButton = await page.locator(":nth-match(#filterDrawer #todoFilters button, 11)");
+		await projectButton.click();
+		rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(1);
+		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
+		rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).not.toBe(1);
+		await expect(page.locator("#filterDrawer")).toBeVisible();
+	})
+
+	test("Project headline is being clicked, which reduces results to 14", async () => {
+		await page.locator("#filterDrawer #todoFilters .projects h4").click();
+		rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(14);
+		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
+		rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(18);
+		await expect(page.locator("#filterDrawer")).toBeVisible();
+	})
+
+	test("Click on drawer close button hides filter drawer", async () => {
+		await page.locator("#drawerClose").click();
+		await expect(page.locator("#filterDrawer")).toBeHidden();
+	})
+
+});
+
+test.describe("View drawer", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("View sidebar is being opened and closed", async () => {
+		await page.locator("#navBtnView").click();
+		await page.waitForSelector("#viewDrawer");
+		await page.locator("#navBtnView").click();
+		await expect(page.locator("#viewDrawer")).toBeHidden();
+	})
+
+	// test("Sort by file", async () => {
+	// 	await page.locator("#navBtnView").click();
+
+	// 	await page.waitForSelector("#viewDrawer");
+		
+	// 	//const sortByFile = await page.locator("#sortByFile");
+	// 	//await page.locator("#sortByFile").click();
+	// 	//await sortByFile.click();
+
+	// 	await page.waitForSelector("#sortByFile");
+	// 	await page.locator("#sortByFile").focus();
+
+	// 	await page.waitForTimeout(999999)
+		
+	// })
 
 });

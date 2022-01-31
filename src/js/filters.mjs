@@ -37,13 +37,15 @@ btnResetFilters.forEach(function(button) {
 });
 
 filterContextInput.addEventListener("keydown", (event) => {
-  if(event.code==="Space") event.preventDefault();
+  if(event.key === "Space") event.preventDefault();
 })
 
 autoCompleteContainer.addEventListener("keyup", (event) => {
+
   // if there is only one filter shown it will be selected automatically
-  if(event.code==="Tab" && Object.keys(filtersCounted).length === 1) {
+  if(event.key === "Tab" && Object.keys(filtersCounted).length === 1) {
     addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-prefix"));
+    return false;
   }
 })
 

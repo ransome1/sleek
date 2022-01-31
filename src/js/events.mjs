@@ -2,10 +2,9 @@
 import { setUserData, translations, userData } from "../render.js";
 import { resetFilters } from "./filters.mjs";
 import { show } from "./form.mjs";
-import { resetModal, closeTodoContext, handleError } from "./helper.mjs";
+import { resetModal, handleError } from "./helper.mjs";
 import { showContent } from "./content.mjs";
 import { _paq } from "./matomo.mjs";
-import { datePicker } from "./datePicker.mjs";
 import { getConfirmation } from "./prompt.mjs";
 
 const a = document.querySelectorAll("a");
@@ -21,9 +20,8 @@ const modalForm = document.getElementById("modalForm");
 const errorMessage = document.getElementById("errorMessage");
 const filterContext = document.getElementById("filterContext");
 const todoContext = document.getElementById("todoContext");
+const todoTable = document.getElementById("todoTable");
 const btnMessageLogging = document.getElementById("btnMessageLogging");
-const datePickerContainer = document.querySelector(".datepicker.datepicker-dropdown");
-
 const modalBackground = document.querySelectorAll('.modal-background');
 const modalClose = document.querySelectorAll('.close');
 const cancel = document.querySelectorAll("[role='cancel']");
@@ -33,14 +31,8 @@ cancel.forEach(function(item) {
 
 export function register() {
   try {
-    body.onclick = function(event) {
-      // close datepicker if it's shown
-      if(datePickerContainer.classList.contains("visible") && !datePickerContainer.contains(event.target)) {
-        datePickerContainer.classList.remove("active");
-        datePickerContainer.classList.remove("visible");
-        // hide the picker
-        datePicker.hide();
-      }
+    body.onclick = async function(event) {
+      
       // close todo context if click is outside of it
       if(filterContext.classList.contains("is-active")) {
         if(!filterContext.contains(event.target)) {
@@ -51,7 +43,7 @@ export function register() {
       // close todo context if click is outside of it
       if(todoContext.classList.contains("is-active")) {
         if(!todoContext.contains(event.target)) {
-          closeTodoContext();
+          todoContext.classList.remove("is-active");
         }
       }
     }
