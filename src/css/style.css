@@ -1937,7 +1937,8 @@ body.compact #autoCompleteContainer h4 {
   border-bottom-left-radius: 0.65em;
   border-bottom-right-radius: 0.65em;
 }
-#todoContext a.dropdown-item:focus {
+#todoContext a.dropdown-item:focus,
+#todoContext a.dropdown-item:hover {
   background-color: #f0f0f0 !important;
 }
 #todoContext .card-content {

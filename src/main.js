@@ -307,14 +307,14 @@ const createWindow = async function() {
         configName: "user-preferences",
         defaults: {}
       });
-      if(typeof userData.data.theme != "string") {
-        const getTheme = function() {
-          const { nativeTheme } = require("electron");
-          if(nativeTheme.shouldUseDarkColors) return "dark"
-          return "light";
-        }
-        userData.set("theme", getTheme());
-      }
+      // if(typeof userData.data.theme != "string") {
+      //   const getTheme = function() {
+      //     const { nativeTheme } = require("electron");
+      //     if(nativeTheme.shouldUseDarkColors) return "dark"
+      //     return "light";
+      //   }
+      //   userData.set("theme", getTheme());
+      // }
       // feed custom file if env is set
       if(process.env.SLEEK_CUSTOM_FILE) userData.set("files", [[1, process.env.SLEEK_CUSTOM_FILE, 1]]);
       if(typeof userData.data.width != "number") userData.set("width", 1100);
@@ -322,6 +322,7 @@ const createWindow = async function() {
       if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
       if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
       if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
+      if(typeof userData.data.darkmode != "boolean") userData.set("darkmode", false);
       if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
       if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
       if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
@@ -570,7 +571,7 @@ const createWindow = async function() {
         {
           label: translations.settings,
           click: function () {
-            mainWindow.webContents.send("triggerFunction", "showContent", ["modalSettings"]);
+            mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);
           }
         }
       ]},
@@ -620,9 +621,9 @@ const createWindow = async function() {
         },
         { type: "separator" },
         {
-          label: translations.toggleDarkMode,
+          label: translations.toggleTheme,
           click: function() {
-            mainWindow.webContents.send("triggerFunction", "setTheme", [true])
+            mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
           }
         },
         {
@@ -637,7 +638,7 @@ const createWindow = async function() {
         {
           label: translations.help,
           click: function () {
-            mainWindow.webContents.send("triggerFunction", "showContent", ["modalHelp"])
+            mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
           }
         },
         {
@@ -779,8 +780,9 @@ const createWindow = async function() {
       .on("appData", () => {
         mainWindow.webContents.send("appData", appData);
       })
-      .on("changeLanguage", (event, language) => {
-        userData.set("language", language);
+      .on("changeLanguage", async (event, language) => {
+        event.preventDefault();
+        await userData.set("language", language);
         app.relaunch();
         app.exit();
       })
@@ -801,8 +803,8 @@ const createWindow = async function() {
           mainWindow.webContents.send("triggerFunction", "handleError", [error]);
         }
       })
-      .on("setTheme", (event, args) => {
-        nativeTheme.themeSource = args;
+      .on("darkmode", (event, darkmode) => {
+        (darkmode) ? nativeTheme.themeSource = "dark" : nativeTheme.themeSource = "light";
       })
       .on("openOrCreateFile", (event, args) => {
         openDialog(args);

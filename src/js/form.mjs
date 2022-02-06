@@ -249,7 +249,7 @@ function show(todo, templated) {
     // create and show a datepicker instance to an input, when its focused
     datePickerInput.onfocus = async function() {
       const datePicker = await import("./datePicker.mjs");
-      datePicker.createDatepickerInstance(this, false).then(response => {
+      datePicker.createDatepickerInstance(this, true, "due").then(response => {
         console.log("Success: Date picker created")
       }).catch(error => {
         handleError(error);

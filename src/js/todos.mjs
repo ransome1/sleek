@@ -413,7 +413,7 @@ function generateTableRow(todo) {
         const datePicker = await import("./datePicker.mjs");
 
         // create datepicker and attach it to hidden input
-        await datePicker.createDatepickerInstance(this, todo).then(response => {
+        await datePicker.createDatepickerInstance(this, false, "due", todo).then(response => {
           console.log(response)
         }).catch(error => {
           handleError(error);

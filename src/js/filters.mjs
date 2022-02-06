@@ -4,7 +4,7 @@ import { createModalJail } from "./jail.mjs";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
 import { getCaretPosition } from "./form.mjs";
-import { showContent } from "./content.mjs";
+import { showModal } from "./content.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 import * as filterlang from "./filterlang.mjs";
@@ -245,7 +245,7 @@ function generateCategoryContainer(category, autoCompletePrefix, filterFragment)
       todoFilterHint.setAttribute("class", "todoFilterHint");
       todoFilterHint.innerHTML = translations.noFiltersFound + " <a href=\"#\"><i class=\"fas fa-question-circle\"></i></a>";
       todoFilterHint.onclick = function() {
-        showContent("modalHelp");
+        showModal("modalHelp");
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on Help"]);
       }

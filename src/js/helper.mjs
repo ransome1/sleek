@@ -5,18 +5,12 @@ import { isToday, isPast } from "./date.mjs";
 import { generateFileList } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
 import { showOnboarding } from "./onboarding.mjs";
-//import { focusRow, currentRow } from "./keyboard.mjs";
 import { _paq } from "./matomo.mjs";
 
 const body = document.getElementById("body");
 const todoContext = document.getElementById("todoContext");
 const addTodoContainer = document.getElementById("addTodoContainer");
 
-// export function closeTodoContext() {
-//   // hide the context menu
-//   todoContext.classList.remove("is-active");
-//   todoContext.removeAttribute("data-item");
-// }
 export function jumpToItem(item) {
   try {
     const isInViewport = function(item) {
@@ -43,40 +37,6 @@ export function jumpToItem(item) {
     }
   } catch(error) {
     error.functionName = jumpToItem.name;
-    return Promise.reject(error);
-  }
-}
-export function setTheme(switchTheme) {
-  try {
-    let theme = userData.theme;
-    if(switchTheme) {
-      switch (theme) {
-        case "dark":
-        theme = "light";
-        break;
-        case "light":
-        theme = "dark";
-        break;
-        default:
-        theme = "light";
-        break;
-      }
-      window.api.send("setTheme", theme);
-      setUserData("theme", theme);
-    }
-    switch (theme) {
-      case "light":
-      body.classList.remove("dark");
-      document.getElementById("toggleDarkmode").checked = false;
-      break;
-      case "dark":
-      body.classList.add("dark");
-      document.getElementById("toggleDarkmode").checked = true;
-      break;
-    }
-    return Promise.resolve("Success: Theme set to " + theme);
-  } catch(error) {
-    error.functionName = setTheme.name;
     return Promise.reject(error);
   }
 }
@@ -194,27 +154,40 @@ export function resetModal(modal) {
 }
 export function configureMainView() {
   try {
+
     // hide sort by container if sorting is according to file
+    const viewSortByRow = document.getElementById("viewSortByRow");
+    const sortCompletedLastRow = document.getElementById("sortCompletedLastRow");
+
     if(userData.sortByFile) {
-      document.getElementById("viewSortByRow").classList.add("is-hidden");
-      document.getElementById("sortCompletedLastRow").classList.add("is-hidden");
+      viewSortByRow.classList.add("is-hidden");
+      sortCompletedLastRow.classList.add("is-hidden");
     } else {
-      document.getElementById("viewSortByRow").classList.remove("is-hidden");
-      document.getElementById("sortCompletedLastRow").classList.remove("is-hidden");
+      viewSortByRow.classList.remove("is-hidden");
+      sortCompletedLastRow.classList.remove("is-hidden");
     }
-    // generate file tabs
-    // TODO: Only if there are files
-    generateFileList();
+
+    // setup compact view
+    (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
+
+    // setup darkmode
+
+    window.api.send("darkmode", userData.darkmode);
+    (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
+
+    // if files are available generate list and tabs
+    if(userData.files && userData.files.length > 0) generateFileList();
+
     // close filterContext if open
     if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");
+
     // set scaling factor if default font size has changed
     if(userData.zoom) {
       document.getElementById("html").style.zoom = userData.zoom + "%";
       document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
-      document.getElementById("zoomRangePicker").value = userData.zoom;
+      document.getElementById("zoom").value = userData.zoom;
     }
-    // check if compact view is suppose to be active
-    if(userData.compactView) document.getElementById("body").classList.add("compact");
+
     // add version number to about tab in settings modal
     document.getElementById("version").innerHTML = appData.version;
     if(typeof items === "object") {

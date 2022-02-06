@@ -3,7 +3,7 @@ import { setUserData, translations, userData } from "../render.js";
 import { resetFilters } from "./filters.mjs";
 import { show } from "./form.mjs";
 import { resetModal, handleError } from "./helper.mjs";
-import { showContent } from "./content.mjs";
+import { showModal } from "./content.mjs";
 import { _paq } from "./matomo.mjs";
 import { getConfirmation } from "./prompt.mjs";
 
@@ -29,7 +29,7 @@ cancel.forEach(function(item) {
 	item.innerHTML = translations.cancel;
 });
 
-export function register() {
+export function registerEvents() {
   try {
     body.onclick = async function(event) {
       
@@ -51,7 +51,7 @@ export function register() {
       if(el.target.href && el.target.href === "#") el.preventDefault();
     }));
     btnMessageLogging.onclick = function () {
-      showContent("modalSettings");
+      showModal("modalSettings");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
     }

@@ -1,16 +1,16 @@
 "use strict";
-import { setTheme, pasteItemsToClipboard } from "./helper.mjs";
+import { pasteItemsToClipboard } from "./helper.mjs";
 import { show, setDueDate, setPriority } from "./form.mjs";
-import { toggle } from "./view.mjs";
 import { createTodoContext, setTodoComplete, archiveTodos, items } from "./todos.mjs";
 import { userData, translations } from "../render.js";
 import { getConfirmation } from "./prompt.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { onboarding } from "./onboarding.mjs";
-import { showContent } from "./content.mjs";
+import { showModal } from "./content.mjs";
 import { resetFilters } from "./filters.mjs";
 import { resetModal, handleError } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
+import { triggerToggle } from "./toggles.mjs";
 
 const 
   autoCompleteContainer = document.getElementById("autoCompleteContainer"),
@@ -311,7 +311,7 @@ export async function registerShortcuts() {
         // ******************************************************
 
         if(event.key === "," && !isInputFocused()) {
-          showContent("modalSettings").then(function(response) {
+          showModal("modalSettings").then(function(response) {
             console.info(response);
           }).catch(function(error) {
             handleError(error);
@@ -324,7 +324,7 @@ export async function registerShortcuts() {
         // ******************************************************     
 
         if(event.key === "?" && !isInputFocused()) {
-          showContent("modalHelp").then(function(response) {
+          showModal("modalHelp").then(function(response) {
             console.info(response);
           }).catch(function(error) {
             handleError(error);
@@ -337,7 +337,7 @@ export async function registerShortcuts() {
         // ******************************************************
 
         if(event.key==="d" && !isInputFocused()) {
-          setTheme(true).then(function(response) {
+          triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
             console.info(response);
           }).catch(function(error) {
             handleError(error);
@@ -366,7 +366,9 @@ export async function registerShortcuts() {
         if(event.key==="h" && !isInputFocused()) {
           // abort when onboarding is shown
           if(onboarding) return false;
-          toggle("showCompleted").then(function(response) {
+
+          const showCompleted = document.getElementById("showCompleted");
+          triggerToggle(showCompleted, true).then(function(response) {
             console.info(response);
           }).catch(function(error) {
             handleError(error);
@@ -381,7 +383,7 @@ export async function registerShortcuts() {
         if(event.key==="t" && !isInputFocused()) {
           // abort when onboarding is shown
           if(onboarding) return false;
-          toggle("deferredTodos").then(function(response) {
+          triggerToggle("deferredTodos").then(function(response) {
             console.info(response);
           }).catch(function(error) {
             handleError(error);

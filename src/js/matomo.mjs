@@ -3,7 +3,7 @@ import { appData, userData, setUserData } from "../render.js";
 import { items } from "./todos.mjs";
 import { handleError } from "./helper.mjs";
 
-const toggleMatomoEvents = document.getElementById("toggleMatomoEvents");
+const matomoEvents = document.getElementById("matomoEvents");
 
 let _paq;
 
@@ -83,7 +83,7 @@ function configureMatomo() {
   }
 }
 
-toggleMatomoEvents.onclick = function() {
+matomoEvents.onclick = function() {
   setUserData('matomoEvents', this.checked);
   configureMatomo(this.checked).then(response => {
     console.info(response);
@@ -94,6 +94,6 @@ toggleMatomoEvents.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Setting", "Click on Logging", this.checked])
 }
 
-toggleMatomoEvents.checked = userData.matomoEvents;
+matomoEvents.checked = userData.matomoEvents;
 
 export { _paq, configureMatomo };

@@ -21,7 +21,8 @@
     border-bottom-left-radius: $radius;
     border-bottom-right-radius: $radius;
   }
-  a.dropdown-item:focus {
+  a.dropdown-item:focus,
+  a.dropdown-item:hover {
     background-color: $almost-white!important;
   }
   .card-content {

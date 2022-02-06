@@ -17,9 +17,9 @@ contextBridge.exposeInMainWorld(
         "update-badge",
         "triggerFunction",
         "restart",
-        "setTheme",
         "closeWindow",
-        "changeWindowTitle"
+        "changeWindowTitle",
+        "darkmode"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
@@ -33,8 +33,7 @@ contextBridge.exposeInMainWorld(
         "userData",
         "appData",
         "refresh",
-        "triggerFunction",
-        "setTheme"
+        "triggerFunction"
       ];
       if (validChannels.includes(channel)) {
         ipcRenderer.on(channel, (event, ...args) => func(...args));

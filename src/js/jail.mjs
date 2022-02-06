@@ -2,34 +2,44 @@
 
 export function createModalJail(modal) {
 
-  const 
-    focusableElements = "[tabindex]:not([tabindex=\"-1\"])",
-    focusableContent = modal.querySelectorAll(focusableElements),
-    firstFocusableElement = modal.querySelectorAll(focusableElements)[0],
-    lastFocusableElement = focusableContent[focusableContent.length - 1];
+  try {
 
-  // add focus on the first focusable element
-  firstFocusableElement.focus();
+    const 
+      focusableElements = "[tabindex]:not([tabindex=\"-1\"])",
+      focusableContent = modal.querySelectorAll(focusableElements),
+      firstFocusableElement = modal.querySelectorAll(focusableElements)[0],
+      lastFocusableElement = focusableContent[focusableContent.length - 1];
 
-  modal.addEventListener("keydown", function(event) {
+    // add focus on the first focusable element
+    firstFocusableElement.focus();
 
-    // continue only if tab is pressed
-    if(event.key !== "Tab") return false;
+    modal.addEventListener("keydown", function(event) {
 
-    // if tab key and shift are pressed
-    if(event.shiftKey) {
-      if(document.activeElement === firstFocusableElement) {
-        lastFocusableElement.focus();
-        event.preventDefault();
-        return false;
+      // continue only if tab is pressed
+      if(event.key !== "Tab") return false;
+
+      // if tab key and shift are pressed
+      if(event.shiftKey) {
+        if(document.activeElement === firstFocusableElement) {
+          lastFocusableElement.focus();
+          event.preventDefault();
+          return false;
+        }
+      // if tab key is pressed
+      } else {
+        if(document.activeElement === lastFocusableElement) {
+          firstFocusableElement.focus();
+          event.preventDefault();
+          return false;
+        }
       }
-    // if tab key is pressed
-    } else {
-      if(document.activeElement === lastFocusableElement) {
-        firstFocusableElement.focus();
-        event.preventDefault();
-        return false;
-      }
-    }
-  });
+    });
+
+    return Promise.resolve("Success: Created jail for " + modal.id);
+
+  } catch(error) {
+    error.functionName = showModal.name;
+    return Promise.reject(error);
+  }
+
 }

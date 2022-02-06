@@ -4,12 +4,14 @@ import { _paq } from "./matomo.mjs";
 import { getHandleElement, startDragging } from "./drawer_handle.mjs";
 import { handleError } from "./helper.mjs";
 import { createModalJail } from "./jail.mjs";
+import("./view.mjs");
 
 const drawerContainer = document.getElementById("drawerContainer");
-const navBtnFilter = document.getElementById("navBtnFilter");
-const navBtnView = document.getElementById("navBtnView");
+//const navBtnFilter = document.getElementById("navBtnFilter");
+//const navBtnView = document.getElementById("navBtnView");
 const drawers = document.querySelectorAll("nav ul li a.drawerTrigger");
 
+// close or open drawer on start if setting was persisted
 if(userData.filterDrawer) {
   showDrawer(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
     console.log(result);
@@ -52,27 +54,10 @@ document.getElementById("viewDrawer").addEventListener ("keydown", function () {
   }
 });
 getHandleElement.addEventListener("mousedown", startDragging);
-navBtnFilter.onclick = function() {
-  showDrawer(this, this.getAttribute("data-drawer")).then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    handleError(error);
-  });
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on filter"]);
-}
-navBtnView.onclick = function() {
-  showDrawer(this, this.getAttribute("data-drawer")).then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    handleError(error);
-  });
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on view"]);
-}
 
 export function showDrawer(button, drawer, close) {
   try {
+
     // close drawers and the container and persist it
     if(close) {
       drawers.forEach((item) => {

@@ -56,7 +56,7 @@
                     <td>
                       <span class="toggle">
                         <label class="switch" for="sortByFile">
-                          <input type="checkbox" id="sortByFile" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="sortByFile" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -73,84 +73,84 @@
                     <td>
                       <span class="toggle">
                         <label class="switch" for="invertSorting">
-                          <input type="checkbox" id="invertSorting" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="invertSorting" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleShowCompleted"></td>
+                    <td id="toggleShowCompleted"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showCompleted">
-                          <input type="checkbox" id="showCompleted" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showCompleted" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr id="sortCompletedLastRow">
-                    <td id="viewToggleSortCompletedLast"></td>
+                    <td id="toggleSortCompletedLast"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="sortCompletedLast">
-                          <input type="checkbox" id="sortCompletedLast" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="sortCompletedLast" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewBoxShowHidden"><span id="viewToggleShowHidden"></span></td>
+                    <td id="viewBoxShowHidden"><span id="toggleShowHidden"></span></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showHidden">
-                          <input type="checkbox" id="showHidden" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showHidden" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsToday"></td>
+                    <td id="toggleDueIsToday"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsToday">
-                          <input type="checkbox" id="showDueIsToday" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsToday" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsFuture"></td>
+                    <td id="toggleDueIsFuture"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsFuture">
-                          <input type="checkbox" id="showDueIsFuture" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsFuture" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsPast"></td>
+                    <td id="toggleDueIsPast"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsPast">
-                          <input type="checkbox" id="showDueIsPast" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsPast" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td><span id="viewToggleDeferredTodos"></span> <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
+                    <td><span id="toggleDeferredTodos"></span> <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="deferredTodos">
-                          <input type="checkbox" id="deferredTodos" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="deferredTodos" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -162,13 +162,11 @@
                     </th>
                   </tr>
                   <tr>
-                    <td>
-                      <p id="viewToggleShowEmptyFilters"></p>
-                    </td>
+                    <td id="toggleShowEmptyFilters"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showEmptyFilters">
-                          <input type="checkbox" id="showEmptyFilters" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showEmptyFilters" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -375,7 +373,7 @@
                 <div class="field">
                   <div class="control">
                     <div class="select">
-                      <select id="settingsLanguage">
+                      <select id="language">
                       </select>
                     </div>
                   </div>
@@ -391,8 +389,8 @@
               <td id="settingsTabSettingsNotificationsBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch">
-                    <input type="checkbox" id="toggleNotifications" tabindex="0">
+                  <label class="switch" for="notifications">
+                    <input type="checkbox" id="notifications" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -407,8 +405,8 @@
               <td id="settingsTabSettingsTrayBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleTray">
-                    <input type="checkbox" id="toggleTray" tabindex="0">
+                  <label class="switch" for="tray">
+                    <input type="checkbox" id="tray" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -423,8 +421,8 @@
               <td id="settingsTabSettingsLoggingBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleMatomoEvents">
-                    <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
+                  <label class="switch" for="matomoEvents">
+                    <input type="checkbox" id="matomoEvents" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -439,8 +437,8 @@
               <td id="settingsTabSettingsDarkmodeBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleDarkmode">
-                    <input type="checkbox" id="toggleDarkmode"   tabindex="0">
+                  <label class="switch" for="darkmode">
+                    <input type="checkbox" id="darkmode" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -449,14 +447,14 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsToggleCompactView"></th>
+              <th colspan="100%" id="compactViewHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsToggleCompactViewBody"></td>
+              <td id="compactViewBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="compactView">
-                    <input type="checkbox" id="compactView" class="viewToggle" tabindex="0">
+                    <input type="checkbox" id="compactView" class="toggle" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -465,14 +463,14 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsToggleFileTabs"></th>
+              <th colspan="100%" id="fileTabsHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsToggleFileTabsBody"></td>
+              <td id="fileTabsBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="fileTabs">
-                    <input type="checkbox" id="fileTabs" class="viewToggle" tabindex="0">
+                    <input type="checkbox" id="fileTabs" class="toggle" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -481,12 +479,12 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsDragZoom"></th>
+              <th colspan="100%" id="zoomHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsDragZoomBody"></td>
+              <td id="zoomBody"></td>
               <td class="zoom">
-                <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
+                <input type="range" id="zoom" name="vol" min="75" max="125"><br>
                 <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
               </td>
             </tr>
@@ -500,12 +498,12 @@
       <div class="modal-card">
         <div class="tabs is-centered">
           <ul>
-            <li class="helpTab1 is-active"><a href="#" tabindex="0" id="helpTab1Title"></a></li>
-            <li class="helpTab2"><a href="#" tabindex="0" id="helpTab2Title"></a></li>
-            <li class="helpTab3"><a href="#" tabindex="0" id="helpTab3Title"></a></li>
-            <li class="helpTab4"><a href="#" tabindex="0" id="helpTab4Title"></a></li>
-            <li class="helpTab5"><a href="#" tabindex="0" id="helpTab5Title"></a></li>
-            <li class="helpTab6"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
+            <li class="helpTab1 is-active" tabindex="0"><a href="#" id="helpTab1Title"></a></li>
+            <li class="helpTab2" tabindex="0"><a href="#" id="helpTab2Title" tabindex="-1"></a></li>
+            <li class="helpTab3" tabindex="0"><a href="#" id="helpTab3Title" tabindex="-1"></a></li>
+            <li class="helpTab4" tabindex="0"><a href="#" id="helpTab4Title" tabindex="-1"></a></li>
+            <li class="helpTab5" tabindex="0"><a href="#" id="helpTab5Title" tabindex="-1"></a></li>
+            <li class="helpTab6" tabindex="0"><a href="#" id="settingsTabAbout" tabindex="-1"></a></li>
           </ul>
         </div>
         <section id="helpTab1" class="modal-card-body is-active" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">

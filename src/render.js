@@ -29,11 +29,18 @@ function setUserData(key, value) {
     userData[key] = value;
     // don't persist any data in test
     if(appData.environment === "testing") {
-      console.log("Info: In testings no user data will be persisted");
-      return Promise.resolve();
+      //console.log("Info: In testings no user data will be persisted");
+      return Promise.resolve("Info: In testings no user data will be persisted");
     }
+
     window.api.send("userData", [key, value]);
-    return Promise.resolve("Success: Config (" + key + ") persisted");
+    return new Promise(function(resolve) {
+      return window.api.receive("userData", function(data) {
+        userData = data;
+        resolve("Success: User data received");
+      });
+    });
+    //return Promise.resolve("Success: Config (" + key + ") persisted");
   } catch(error) {
     error.functionName = setUserData.name;
     return Promise.reject(error);
@@ -88,9 +95,11 @@ async function startBuilding(loadAll) {
 window.onload = async function () {
   a0 = performance.now();
   
+  // retrieve user and app data
   await getUserData();
   await getAppData();
   
+  // import necessarry modules
   translations = await getTranslations();
   todos = await import("./js/todos.mjs");
   filters = await import("./js/filters.mjs");
@@ -98,6 +107,11 @@ window.onload = async function () {
   helper = await import("./js/helper.mjs");
   const events = await import("./js/events.mjs");
   const messages = await import("./js/messages.mjs");
+  import("./js/navigation.mjs");
+  import("./js/search.mjs");
+  import("./js/toggles.mjs");
+
+  // trigger initial functions
   if(userData.files && userData.files.length > 0 && helper.getActiveFile()) {
     window.api.send("startFileWatcher", [helper.getActiveFile(), 0]);
   } else {
@@ -107,18 +121,24 @@ window.onload = async function () {
     }).catch(function(error) {
       helper.handleError(error);
     });
+    // configure main view
+    helper.configureMainView().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
   }
-  helper.setTheme().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    helper.handleError(error);
-  });
+  // helper.toggleDarkmode(userData.darkmode).then(function(response) {
+  //   console.info(response);
+  // }).catch(function(error) {
+  //   helper.handleError(error);
+  // });
   messages.checkDismissedMessages().then(function(response) {
     console.info(response);
   }).catch(function(error) {
     helper.handleError(error);
   });
-  events.register().then(function(response) {
+  events.registerEvents().then(function(response) {
     console.info(response);
   }).catch(function(error) {
     helper.handleError(error);
@@ -128,14 +148,14 @@ window.onload = async function () {
   }).catch(function(error) {
     helper.handleError(error);
   });
-  import("./js/navigation.mjs");
-  import("./js/search.mjs");
+  // handle matomo tracking at last
   const matomo = await import("./js/matomo.mjs");
   matomo.configureMatomo().then(function(response) {
     console.info(response);
   }).catch(function(error) {
     helper.handleError(error);
   });
+
   console.info("App build:", performance.now() - a0, "ms");
 }
 window.api.receive("triggerFunction", async (name, args) => {
@@ -198,9 +218,9 @@ window.api.receive("triggerFunction", async (name, args) => {
           helper.handleError(error);
         });
         break;
-      case "showContent":
+      case "showModal":
         var content = await import("./js/content.mjs");
-        content.showContent(args[0]).then(function(response) {
+        content.showModal(args[0]).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           helper.handleError(error);
@@ -213,8 +233,8 @@ window.api.receive("triggerFunction", async (name, args) => {
           helper.handleError(error);
         });
         break;
-      case "setTheme":
-        helper.setTheme(...args).then(function(response) {
+      case "toggleDarkmode":
+        helper.toggleDarkmode().then(function(response) {
           console.info(response);
         }).catch(function(error) {
           helper.handleError(error);
