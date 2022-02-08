@@ -906,9 +906,12 @@ if(!gotTheLock) {
         }
     })
     app.on("ready", () => {
-        if (appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
-        createWindow();
-        if (appData.channel === "AppImage") autoUpdater.checkForUpdatesAndNotify();
+      // in development environment switch to specific userData folder
+      if(process.env.NODE_ENV === "development") app.setPath("userData", path.join(app.getPath("userData"), "..", "sleek_development"));
+
+      if (appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
+      createWindow();
+      if (appData.channel === "AppImage") autoUpdater.checkForUpdatesAndNotify();
     })
     .on("window-all-closed", () => {
         if (process.platform !== "darwin") app.quit()

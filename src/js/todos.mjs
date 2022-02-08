@@ -10,7 +10,7 @@ import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtEx
 import { createModalJail } from "./jail.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { getActiveFile, generateHash, handleError, formatDate } from "./helper.mjs";
-import { focusRow } from "./keyboard.mjs";
+import { focusRow, currentRow } from "./keyboard.mjs";
 
 const todoContext = document.getElementById("todoContext");
 const todoContextDelete = document.getElementById("todoContextDelete");
@@ -322,10 +322,10 @@ function generateTableRow(todo) {
     // add the checkbox
     if(todo.complete) {
       todoTableBodyCellCheckbox.setAttribute("title", translations.inProgress);
-      todoTableBodyCellCheckbox.innerHTML = "<i class=\"fas fa-check-circle\"></i>";
+      todoTableBodyCellCheckbox.innerHTML = "<i class=\"fas fa-check-square\"></i>";
     } else {
       todoTableBodyCellCheckbox.setAttribute("title", translations.done);
-      todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-circle\"></i>";
+      todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
     }
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
@@ -462,7 +462,7 @@ function generateTableRow(todo) {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
       focusRow(index);
     });
-    todoTableBodyRow.onclick = function(event) {
+    todoTableBodyRow.onfocus = function(event) {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
       focusRow(index);
     }

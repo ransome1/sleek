@@ -10,7 +10,6 @@ const messageShareBody = document.getElementById("messageShareBody");
 const messageShareTitle = document.getElementById("messageShareTitle");
 const messageGenericContainer = document.getElementById("messageGenericContainer");
 const messageGenericMessage = document.getElementById("messageGenericMessage");
-//const messageGenericContainerClose = document.getElementById("messageGenericContainerClose");
 
 messageLoggingBody.innerHTML = translations.messageLoggingBody;
 messageLoggingButton.innerHTML = translations.settings;
@@ -20,15 +19,10 @@ messageShareTitle.innerHTML = translations.messageShareTitle;
 
 export function checkDismissedMessages() {
   try {
-    const messages = document.querySelectorAll("#messages .message");
-    const dismissedMessages = userData.dismissedMessages;
-    if(!dismissedMessages) return Promise.resolve("Info: No already checked messages found, will skip this check");
-    messages.forEach((message) => {
-      if(dismissedMessages.includes(message.getAttribute("data"))) {
-        message.classList.remove("is-active");
-      } else {
-        message.classList.add("is-active");
-      }
+    const availableMessages = document.querySelectorAll("#messages .message");
+    if(!userData.dismissedMessages) return Promise.resolve("Info: No already checked messages found, will skip this check");
+    availableMessages.forEach((message) => {
+      (userData.dismissedMessages.includes(message.getAttribute("data"))) ? message.classList.remove("is-active") : message.classList.add("is-active");
     });
     return Promise.resolve("Info: Checked for already dismissed messages");
   } catch(error) {
@@ -36,6 +30,7 @@ export function checkDismissedMessages() {
     return Promise.reject(error);
   }
 }
+
 export function showGenericMessage(text) {
   try {
     if(text) {

@@ -31,7 +31,7 @@ export async function triggerToggle(inputField, toggle) {
           // trigger matomo event
           if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Tray changed to: " + setting]);
           window.api.send("restart");
-          return Promise.resolve("Info: Tray changed to: " + setting);
+          return Promise.resolve("Info: Tray toggle changed to: " + setting);
         }
         getConfirmation(setTray, translations.restartPrompt, inputField.checked);
         break;
@@ -44,18 +44,20 @@ export async function triggerToggle(inputField, toggle) {
     // toggles in view drawer need to trigger rebuilding the table
     if(inputField.classList.contains("view")) startBuilding();
 
-    return Promise.resolve("Success: " + inputField.id + " set to: " + inputField.checked);
+    return Promise.resolve("Success: " + inputField.id + " toggle set to: " + inputField.checked);
 
   } catch(error) {
-    error.functionName = inputField.name;
+    error.functionName = triggerToggle.name;
     return Promise.reject(error);
   }
 }
 
 // setup the toggles
 toggles.forEach(function(inputField) {
+
   // set checked according to user data
   inputField.checked = userData[inputField.id];
+  
   // setup up the click event
   inputField.onclick = function() {
     triggerToggle(inputField).then(response => {

@@ -29,7 +29,6 @@ function setUserData(key, value) {
     userData[key] = value;
     // don't persist any data in test
     if(appData.environment === "testing") {
-      //console.log("Info: In testings no user data will be persisted");
       return Promise.resolve("Info: In testings no user data will be persisted");
     }
 
@@ -37,10 +36,9 @@ function setUserData(key, value) {
     return new Promise(function(resolve) {
       return window.api.receive("userData", function(data) {
         userData = data;
-        resolve("Success: User data received");
+        resolve("Success: User data persisted for " + key + " with value: " + value);
       });
     });
-    //return Promise.resolve("Success: Config (" + key + ") persisted");
   } catch(error) {
     error.functionName = setUserData.name;
     return Promise.reject(error);
@@ -210,14 +208,14 @@ window.api.receive("triggerFunction", async (name, args) => {
           helper.handleError(error);
         });
         break;
-      case "toggle":
-        var view = await import("./js/view.mjs");
-        view.toggle(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
+      // case "toggle":
+      //   var view = await import("./js/view.mjs");
+      //   view.toggle(...args).then(function(response) {
+      //     console.info(response);
+      //   }).catch(function(error) {
+      //     helper.handleError(error);
+      //   });
+      //   break;
       case "showModal":
         var content = await import("./js/content.mjs");
         content.showModal(args[0]).then(function(response) {

@@ -3,50 +3,82 @@ import { translations } from "../render.js";
 import { createModalJail } from "./jail.mjs";
 import { handleError } from "./helper.mjs";
 
-const modalPromptConfirm = document.getElementById("modalPromptConfirm");
+const modalPrompt = document.getElementById("modalPrompt");
+const modalPromptContent = document.getElementById("modalPromptContent");
 const modalPromptCancel = document.getElementById("modalPromptCancel");
+const modalPromptConfirm = document.getElementById("modalPromptConfirm");
 
 modalPromptConfirm.innerHTML = translations.confirm;
 modalPromptCancel.innerHTML = translations.cancel;
 
+// will respond to either of the two clicks
 function getConfirmationResponse() {
-  return new Promise((resolve, reject) => {
-    modalPromptConfirm.onclick = function() {
-      resolve("Info: Prompt confirmed");
-    }
-    modalPromptCancel.onclick = function() {
-    	console.log()
-      reject("Info: Prompt canceled");
-    }
-  });
+	try {
+
+		return new Promise((resolve, reject) => {
+			modalPromptConfirm.onclick = function() {
+				resolve("Info: Prompt confirmed");
+			}
+			modalPromptCancel.onclick = function() {
+				reject("Info: Prompt canceled");
+			}
+		});
+
+	} catch(error) {
+		error.functionName = getConfirmationResponse.name;
+		return Promise.reject(error);
+  }
 }
+
+// async function thats shows the prompt window and waits for getConfirmationResponse to respond
 export async function getConfirmation() {
-	const modalPrompt = document.getElementById("modalPrompt");
-	const modalPromptContent = document.getElementById("modalPromptContent");
+	try {
 
-	
-	const fn = arguments[0];
-	const vars = Array.prototype.slice.call(arguments, 2);
-	modalPrompt.classList.add("is-active");
-	modalPromptContent.innerHTML = arguments[1];
-	
+		// only continue if there is anything to execute
+		if(arguments.length === 0) return Promise.resolve("Info: Not enough arguments have been passed");
 
-	createModalJail(modalPrompt);
-	//modalPromptConfirm.focus();
-	
-	// wait for user response
-	await getConfirmationResponse().then(function(response) {
-	
-	modalPrompt.classList.remove("is-active");
+		// the function that has been passed
+		const functionToExecute = arguments[0];
 
-	// if action is confirmed, start function
-	fn.apply(null, vars).then(function(response) {
-		console.info(response);
-	}).catch(function(error) {
-		handleError(error);
-	});
-	}).catch(function(error) {
-	console.info(error);
-	modalPrompt.classList.remove("is-active");
-	});
+		// the text for prompt window
+		const promptText = arguments[1];
+
+		// and its parameters
+		const args = Array.prototype.slice.call(arguments, 2);
+				
+		// show modal window
+		modalPrompt.classList.add("is-active");
+
+		// prompt text that has been passed (second argument)
+		modalPromptContent.innerHTML = promptText;
+		
+		// create the modal jail, so tabbing won't leave modal
+		createModalJail(modalPrompt).then(function(response) {
+			console.info(response);
+		}).catch(function(error) {
+			handleError(error);
+		});
+
+		// wait for user response
+		await getConfirmationResponse().then(function() {
+			// if prompt is confirmed, execute function
+			functionToExecute.apply(null, args).then(function(response) {
+				console.info(response);
+			}).catch(function(error) {
+				handleError(error);
+			});
+		// if prompt is canceled
+		}).catch(function(error) {
+			handleError(error);
+		});
+
+		// close prompt modal
+		modalPrompt.classList.remove("is-active");
+
+		return Promise.resolve("Success: " + functionToExecute + " has been executed");
+		
+	} catch(error) {
+		error.functionName = getConfirmation.name;
+		return Promise.reject(error);
+	}
 }

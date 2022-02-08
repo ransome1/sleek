@@ -5,7 +5,7 @@ import { createTodoContext, setTodoComplete, archiveTodos, items } from "./todos
 import { userData, translations } from "../render.js";
 import { getConfirmation } from "./prompt.mjs";
 import { showDrawer } from "./drawer.mjs";
-import { onboarding } from "./onboarding.mjs";
+// import { onboarding } from "./onboarding.mjs";
 import { showModal } from "./content.mjs";
 import { resetFilters } from "./filters.mjs";
 import { resetModal, handleError } from "./helper.mjs";
@@ -40,9 +40,10 @@ const isDrawerOpen = () => { return userData.filterDrawer || userData.viewDrawer
 export const isRowFocused = () => { return document.activeElement.classList.contains("todo"); }
 const isContextOpen = () => { return todoContext.classList.contains("is-active"); }
 export const isModalOpen = () => {
-  for(let i = 0; i < modalWindows.length; i++) {    
-    if(modalWindows[i].classList.contains("is-active")) return true; break;
+  for(let i = 0; i < modalWindows.length; i++) {
+    if(modalWindows[i].classList.contains("is-active")) return true;
   }
+  return false;
 }
 
 export async function registerShortcuts() {
@@ -55,8 +56,6 @@ export async function registerShortcuts() {
       // ******************************************************
       
       if(event.key === "Escape") {
-
-        // destroy row date picker
 
         // if a datepicker container is detected interrupt, datepicker destruction is handled in module
         if(document.querySelector(".datepicker")) return false;
@@ -71,9 +70,7 @@ export async function registerShortcuts() {
 
         // if recurrence container is detected interrupt, closing is handled in module
 
-        if(recurrencePickerContainer.classList.contains("is-active")) {
-          return false;
-        }
+        if(recurrencePickerContainer.classList.contains("is-active")) return false;
 
         // close todo context
 
@@ -83,20 +80,39 @@ export async function registerShortcuts() {
           return false;
         }
 
+        if(filterContext.classList.contains("is-active")) {
+          filterContext.classList.remove("is-active");
+          return false;
+        }
+
         if(modalPrompt.classList.contains("is-active")) {
           modalPrompt.classList.remove("is-active");
           return false;
         }
 
-        // close modal windows 
+        // close modal windows
 
-        modalWindows.forEach((modal) => {
-          if(modal.classList.contains("is-active")) {
-            modal.classList.remove("is-active");
-            resetModal();
-            return false;
-          }
-        });
+        if(isModalOpen()) {
+          modalWindows.forEach((modal) => {
+            if(modal.classList.contains("is-active")) {
+              modal.classList.remove("is-active");
+              resetModal();  
+            }
+          });
+          return false;
+        }
+
+        // close filter drawer
+
+        if(document.getElementById("filterDrawer").classList.contains("is-active") || document.getElementById("viewDrawer").classList.contains("is-active")) {
+          showDrawer().then(function(result) {
+            console.log(result);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          return false;
+        }
+        
       }
 
       // ******************************************************
@@ -210,7 +226,7 @@ export async function registerShortcuts() {
           // setup arrow right
           // ******************************************************
 
-          if(isRowFocused() && event.keyCode === 39) {          
+          if(isRowFocused() && event.keyCode === 39) {
             const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
             createTodoContext(todoTableRow);
             return false;
@@ -333,6 +349,15 @@ export async function registerShortcuts() {
         }
 
         // ******************************************************
+        // focus search field
+        // ******************************************************
+
+        if(event.key==="f" && !isInputFocused()) {
+          document.getElementById("todoTableSearch").focus();
+          return false;
+        }
+
+        // ******************************************************
         // toggle dark mode
         // ******************************************************
 
@@ -412,7 +437,8 @@ export async function registerShortcuts() {
         if(event.key==="b" && !isInputFocused()) {
           // abort when onboarding is shown
           if(onboarding) return false;
-          showDrawer(document.getElementById("navBtnFilter"), document.getElementById("navBtnFilter").getAttribute("data-drawer")).then(function(result) {
+          
+          showDrawer(document.getElementById("navBtnFilter")).then(function(result) {
             console.log(result);
           }).catch(function(error) {
             handleError(error);

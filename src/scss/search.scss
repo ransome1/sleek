@@ -26,8 +26,8 @@
   #todoTableSearchAddTodo:hover,
   #todoTableSearchAddTodo:focus,
   #todoTableSearchAddTodo:focus-visible {
-    color: $almost-black!important;
-    background: white!important;
+    color: $almost-white!important;
+    background: $has-text-link!important;
   }
   input[type="search"] {
     padding-left: 3.2em;

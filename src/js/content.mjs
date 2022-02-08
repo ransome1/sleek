@@ -171,8 +171,14 @@ zoomBody.innerHTML = translations.zoomBody;
 zoomHeadline.innerHTML = translations.zoomHeadline;
 
 language.onchange = function() {
+  // only continue if language code has been passed
   if(!this.value) return false;
-  getConfirmation(setLanguage, translations.restartPrompt, this.value);
+
+  getConfirmation(setLanguage, translations.restartPrompt, this.value).then(response => {
+    console.log(response);
+  }).catch(error => {
+    handleError(error);
+  });
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + languageCode]);
 }
@@ -208,7 +214,11 @@ function setZoom(value) {
     document.getElementById("zoomStatus").innerHTML = value + "%";
 
     // persist zoom setting
-    setUserData("zoom", value);
+    setUserData("zoom", value).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
 
     return Promise.resolve("Info: Zoom set to " + value + "%");
 

@@ -7,7 +7,6 @@ import { showOnboarding } from "./onboarding.mjs";
 import { resetModal, handleError } from "./helper.mjs";
 import { focusRow } from "./keyboard.mjs";
 
-const btnOpenTodoFile = document.getElementById("btnOpenTodoFile");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
 const fileTabBarList = document.querySelector("#fileTabBar ul");
 const fileTabBar = document.getElementById("fileTabBar");
@@ -79,8 +78,20 @@ function selectFileFromList(index) {
   }
 }
 
-async function generateFileList() {
+async function generateFileList(showFileModal) {
   try {
+
+    if(showFileModal) {
+      modalChangeFile.classList.add("is-active");
+      modalChangeFile.focus();
+
+      createModalJail(modalChangeFile).then(response => {
+        console.info(response);
+      }).catch(error => {
+        handleError(error);
+      });
+    }
+
     fileTabBar.classList.remove("is-active");
     fileTabBarList.innerHTML = null;
     modalChangeFileTable.innerHTML = null;
@@ -141,9 +152,9 @@ async function generateFileList() {
       cell3.title = translations.delete;
       cell3.onclick = function() {
         removeFileFromList(i);
-        generateFileList().then(response => {
-          modalChangeFile.classList.add("is-active");
-          modalChangeFile.focus();
+        generateFileList(true).then(response => {
+          // modalChangeFile.classList.add("is-active");
+          // modalChangeFile.focus();
           console.info(response);
         }).catch(error => {
           handleError(error);
@@ -157,21 +168,21 @@ async function generateFileList() {
     return Promise.reject(error);
   }
 }
-btnOpenTodoFile.onclick = function() {
-  if(typeof userData.files === "object" && userData.files.length>0) {
-    generateFileList().then(response => {
-      console.info(response);
-      modalChangeFile.classList.add("is-active");
-      modalChangeFile.focus();
-      createModalJail(modalChangeFile);
-    }).catch(error => {
-      handleError(error);
-    });
-  } else {
-    window.api.send("openOrCreateFile", "open");
-  }
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Files"]);
-}
+// btnOpenTodoFile.onclick = function() {
+//   if(typeof userData.files === "object" && userData.files.length > 0) {
+//     generateFileList(true).then(response => {
+//       console.info(response);
+//       // modalChangeFile.classList.add("is-active");
+//       // modalChangeFile.focus();
+//       // createModalJail(modalChangeFile);
+//     }).catch(error => {
+//       handleError(error);
+//     });
+//   } else {
+//     window.api.send("openOrCreateFile", "open");
+//   }
+//   // trigger matomo event
+//   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Files"]);
+// }
 
 export { generateFileList, removeFileFromList };

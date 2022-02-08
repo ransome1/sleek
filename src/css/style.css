@@ -138,8 +138,8 @@ body.dark #todoTableSearchContainer input[type=search]::-webkit-search-cancel-bu
   background-color: #f0f0f0;
 }
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo {
-  background: #CCCDCF !important;
-  color: #212224 !important;
+  background: #212224 !important;
+  color: #f0f0f0 !important;
 }
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo i {
   color: inherit;
@@ -1129,8 +1129,8 @@ nav ul:nth-child(2):hover #versionNumber {
 #todoTableSearchContainer #todoTableSearchAddTodo:hover,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
-  color: #212224 !important;
-  background: white !important;
+  color: #f0f0f0 !important;
+  background: #3273dc !important;
 }
 #todoTableSearchContainer input[type=search] {
   padding-left: 3.2em;

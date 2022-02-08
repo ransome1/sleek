@@ -176,7 +176,7 @@ export function configureMainView() {
     (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
 
     // if files are available generate list and tabs
-    if(userData.files && userData.files.length > 0) generateFileList();
+    if(userData.files && userData.files.length > 0) generateFileList(false);
 
     // close filterContext if open
     if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");
@@ -250,7 +250,11 @@ export function configureMainView() {
 }
 export function handleError(error) {
   try {
-    if(error) {
+    // if error is a string only
+    if(error && typeof error === "string") {
+      console.error(error);
+    // if error is an error object
+    } else {
       console.error(error.name +" in function " + error.functionName + ": " + error.message);
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
