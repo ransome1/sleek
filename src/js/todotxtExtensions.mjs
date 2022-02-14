@@ -81,23 +81,30 @@ ThresholdExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
+// function resolveRelativeDate(relativeDate, date=new Date()) {
+//     var unit = relativeDate.slice(-1);
+//     var increment = parseInt(relativeDate.slice(0, -1));
+
+//     if(unit === "d") {
+//         date.setDate(date.getDate() + increment);
+//     }
+//     else if(unit === "w") {
+//         date.setDate(date.getDate() + increment * 7);
+//     }
+//     else if(unit === "m") {
+//         date.setMonth(date.getMonth() + 1);
+//     }
+
+//     return date
+// }
+
+import { addIntervalToDate } from "./recurrences.mjs";
 function resolveRelativeDate(relativeDate) {
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
     var unit = relativeDate.slice(-1);
     var increment = parseInt(relativeDate.slice(0, -1));
-
-    var date = new Date();
-
-    if(unit === "d") {
-        date.setDate(date.getDate() + increment);
-    }
-    else if(unit === "w") {
-        date.setDate(date.getDate() + increment * 7);
-    }
-    else if(unit === "m") {
-        date.setMonth(date.getMonth() + 1);
-    }
-
-    return date
+    return addIntervalToDate(today, increment, unit);
 }
 
-export { RecExtension, SugarDueExtension, ThresholdExtension };
+export { RecExtension, SugarDueExtension, ThresholdExtension, resolveRelativeDate };
