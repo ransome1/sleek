@@ -4,14 +4,7 @@ import { _paq } from "./matomo.mjs";
 
 const html = document.getElementById("html");
 const body = document.getElementById("body");
-const showCompleted = document.getElementById("showCompleted");
-const showDueIsFuture = document.getElementById("showDueIsFuture");
-const showDueIsPast = document.getElementById("showDueIsPast");
-const showDueIsToday = document.getElementById("showDueIsToday");
-const showHidden = document.getElementById("showHidden");
 const sortBy = document.getElementById("sortBy");
-const sortCompletedLast = document.getElementById("sortCompletedLast");
-const toggleTray = document.getElementById("toggleTray");
 const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
 const viewHeadlineTodoList = document.getElementById("viewHeadlineTodoList");
 const viewHeadlineFilterList = document.getElementById("viewHeadlineFilterList");
@@ -26,9 +19,7 @@ const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompl
 const viewToggleZoom = document.getElementById("viewToggleZoom");
 const zoomRangePicker = document.getElementById("zoomRangePicker");
 const zoomUndo = document.getElementById("zoomUndo");
-const showEmptyFilters = document.getElementById("showEmptyFilters");
 const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyFilters");
-const compactView = document.getElementById("compactView");
 const sortByContainer = document.getElementById("sortByContainer");
 const viewToggleDeferredTodos = document.getElementById("viewToggleDeferredTodos");
 const viewToggleFileTabs = document.getElementById("viewToggleFileTabs");

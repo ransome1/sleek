@@ -3,13 +3,12 @@ import { userData, setUserData, translations, startBuilding } from "../render.js
 import { createModalJail } from "./jail.mjs";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
-import { getCaretPosition } from "./form.mjs";
 import { showModal } from "./content.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { isToday, isPast, isFuture } from "./date.mjs";
 import * as filterlang from "./filterlang.mjs";
 import { runQuery } from "./filterquery.mjs";
-import { handleError } from "./helper.mjs";
+import { handleError, getCaretPosition } from "./helper.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -445,8 +444,10 @@ function addFilterToInput(filter, autoCompletePrefix) {
 
   // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
   autoCompletePrefix = null;
-  // hide the suggestion container after the filter has been selected
+
+  // hide and clear the suggestion container after the filter has been selected
   autoCompleteContainer.blur();
+  autoCompleteContainer.innerHTML = "";
   autoCompleteContainer.classList.remove("is-active");
   // put focus back into input so user can continue writing
   modalFormInput.focus();
@@ -528,9 +529,9 @@ function generateFilterButtons(category, autoCompletePrefix) {
       // autocomplete container
       } else {
         // add filter to input
-        todoFiltersItem.addEventListener("click", () => {
-          addFilterToInput(todoFiltersItem.getAttribute("data-filter"), autoCompletePrefix);
-        });
+        todoFiltersItem.onclick = function() {
+          addFilterToInput(this.getAttribute("data-filter"), autoCompletePrefix);
+        }
       }
       filterCounter++;
       filterFragment.appendChild(todoFiltersItem);

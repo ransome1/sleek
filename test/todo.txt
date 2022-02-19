@@ -14,6 +14,6 @@ daily task revisions within Sleek Daily recurrence rec:d
 weekly task revisions within Sleek Weekly Recurrence rec:w
 (F) monthly task revisions within Sleek Monthly recurrence rec:m
 annual task revisions within Sleek annual recurrence  2021-03-22 rec:y
-This is a multi line taskcreated within Sleek due:2023-05-01 +todotxt @test
+This is a multi line taskcreated withinSleek due:2023-05-01 +todotxt @test
 2021-04-03 Todo with due date tomorrow due:2023-06-11
 2021-04-05 monthly task revisions within Sleek Monthly recurrence due:2023-05-05 rec:m

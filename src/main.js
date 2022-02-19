@@ -5,6 +5,14 @@ const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
+
+// ########################################################################################################################
+// HOT RELOAD
+// https://github.com/sindresorhus/electron-reloader
+// ########################################################################################################################
+try {
+  require("electron-reloader")(module);
+} catch {}
 // ########################################################################################################################
 // SETUP PROCESS
 // ########################################################################################################################
@@ -130,7 +138,7 @@ const createWindow = async function() {
             console.info("Success: Opened file: " + file);
             startFileWatcher(file, 1).then(response => {
               console.info(response);
-              mainWindow.webContents.send("triggerFunction", "resetModal")
+              //mainWindow.webContents.send("triggerFunction", "resetModal")
             }).catch(error => {
               console.error(error);
             });
@@ -160,7 +168,7 @@ const createWindow = async function() {
               console.info("Success: New file created: " + file.filePath);
               startFileWatcher(file.filePath, 1).then(response => {
                 console.info(response);
-                mainWindow.webContents.send("triggerFunction", "resetModal")
+                //mainWindow.webContents.send("triggerFunction", "resetModal")
               }).catch(error => {
                 console.error(error);
               });
@@ -201,6 +209,8 @@ const createWindow = async function() {
       if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) {
         file = process.env.SLEEK_CUSTOM_FILE;
       }
+
+      // TODO: Describe
       let args;
       if(process.defaultApp) {
         // electron "unbundled" app -- have to skip "electron" and script name arg eg: "."
@@ -307,14 +317,6 @@ const createWindow = async function() {
         configName: "user-preferences",
         defaults: {}
       });
-      // if(typeof userData.data.theme != "string") {
-      //   const getTheme = function() {
-      //     const { nativeTheme } = require("electron");
-      //     if(nativeTheme.shouldUseDarkColors) return "dark"
-      //     return "light";
-      //   }
-      //   userData.set("theme", getTheme());
-      // }
       // feed custom file if env is set
       if(process.env.SLEEK_CUSTOM_FILE) userData.set("files", [[1, process.env.SLEEK_CUSTOM_FILE, 1]]);
       if(typeof userData.data.width != "number") userData.set("width", 1100);
@@ -322,7 +324,7 @@ const createWindow = async function() {
       if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
       if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
       if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
-      if(typeof userData.data.darkmode != "boolean") userData.set("darkmode", false);
+      if(typeof userData.data.darkmode != "boolean") userData.set("darkmode", nativeTheme.shouldUseDarkColors);
       if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
       if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
       if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
@@ -345,6 +347,7 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.sortBy)) userData.set("sortBy", ["priority", "dueString", "contexts", "projects"]);
       if(typeof userData.data.deferredTodos != "boolean") userData.data.deferredTodos = true;
       if(typeof userData.data.fileTabs != "boolean") userData.data.fileTabs = true;
+      if(typeof userData.data.appendStartDate != "boolean") userData.data.appendStartDate = false;
       //TODO remove this after 1.14 has been fully distributed
       if(userData.data.sortBy.length === 4) userData.set("sortBy", ["priority", "dueString", "contexts", "projects", "date"]);
       return Promise.resolve(userData);

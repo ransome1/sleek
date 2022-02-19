@@ -13,6 +13,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}  
   njsscan:
+    needs: snyk
     name: njsscan
     runs-on: ubuntu-latest
     steps:

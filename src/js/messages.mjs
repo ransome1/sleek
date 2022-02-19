@@ -3,13 +3,13 @@ import { userData, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { handleError } from "./helper.mjs";
 
+const messageGenericContainer = document.getElementById("messageGenericContainer");
+const messageGenericMessage = document.getElementById("messageGenericMessage");
 const messageLoggingBody = document.getElementById("messageLoggingBody");
 const messageLoggingButton = document.getElementById("messageLoggingButton");
 const messageLoggingTitle = document.getElementById("messageLoggingTitle");
 const messageShareBody = document.getElementById("messageShareBody");
 const messageShareTitle = document.getElementById("messageShareTitle");
-const messageGenericContainer = document.getElementById("messageGenericContainer");
-const messageGenericMessage = document.getElementById("messageGenericMessage");
 
 messageLoggingBody.innerHTML = translations.messageLoggingBody;
 messageLoggingButton.innerHTML = translations.settings;

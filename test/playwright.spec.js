@@ -47,6 +47,15 @@ test.describe("Onboarding", () => {
 		await expect(page.locator("#navBtnView")).toBeHidden();
 	})
 
+	test("Messages can be closed", async () => {
+		await page.locator(":nth-match(#messages .message.is-active [role='cancel'], 1)").click();
+		let messageCount = await page.locator("#messages .message.is-active").count();
+		await expect(messageCount).toBe(1);
+		await page.locator(":nth-match(#messages .message.is-active [role='cancel'], 1)").click();
+		messageCount = await page.locator("#messages .message.is-active").count();
+		await expect(messageCount).toBe(0);
+	})
+
 });
 
 test.describe("Todo table", () => {
@@ -67,10 +76,6 @@ test.describe("Todo table", () => {
 	test.afterAll(() => {
 		app.close();
 	});
-
-	test("is title 'todo.txt - sleek'?", async () => {  
-		await expect(await page.title()).toBe("todo.txt - sleek");
-	})
 
 	test("Table shows 19 rows", async () => {
 		const rows = await page.locator("#todoTable .todo").count();
@@ -103,10 +108,6 @@ test.describe("Todo context", () => {
 	test.afterAll(() => {
 		app.close();
 	});
-
-	test("is title 'todo.txt - sleek'?", async () => {  
-		await expect(await page.title()).toBe("todo.txt - sleek");
-	})
 
 	test("Second row can be right clicked and shows context", async () => {
 		await page.waitForSelector("#todoTable");
@@ -182,10 +183,6 @@ test.describe("Creating todos", () => {
 	test.afterAll(() => {
 		app.close();
 	});
-
-	test("is title 'empty.txt - sleek'?", async () => {  
-		await expect(await page.title()).toBe("empty.txt - sleek");
-	})
 
 	test("Add a new todo and delete it", async () => {
 		await page.locator("#btnAddTodoContainer").click();
@@ -268,10 +265,6 @@ test.describe("Due date picker", () => {
 		app.close();
 	});
 
-	test("is title 'empty.txt - sleek'?", async () => {  
-		await expect(await page.title()).toBe("empty.txt - sleek");
-	})
-
 	test("Use due date picker and check if 'due:' is added to inputs' value", async () => {
 		await page.locator("#btnAddTodoContainer").click();
 		await page.locator("#modalFormInput").fill("This is a test todo that contains a due date");
@@ -288,7 +281,8 @@ test.describe("Due date picker", () => {
 
 		await page.locator("#datePickerInput").click();
 		await page.locator("div.datepicker .datepicker-footer .button.clear-btn").click();
-		await expect(page.locator("#modalFormInput")).toHaveValue("This is a test todo that contains a due date");
+		await expect(page.locator("#modalFormInput")).not.toHaveValue(/due:/);
+		await expect(page.locator("#datePickerInput")).toHaveValue("");
 
 	});
 	
@@ -313,10 +307,6 @@ test.describe("Recurrence picker", () => {
 		app.close();
 	});
 
-	test("is title 'empty.txt - sleek'?", async () => {  
-		await expect(await page.title()).toBe("empty.txt - sleek");
-	})
-
 	test("Use recurrence picker and check if 'rec:' is added to inputs' value", async () => {
 		await page.locator("#btnAddTodoContainer").click();
 		await page.locator("#modalFormInput").fill("This is a test todo that contains a recurrence");
@@ -340,7 +330,102 @@ test.describe("Recurrence picker", () => {
 		await expect(page.locator("#modalFormInput")).toHaveValue("This is a test todo that contains a recurrence");
 
 	});
+
+	test("Recurrence picker will be closed if an outside element is clicked", async () => {
+		await page.locator("#recurrencePickerInput").click();
+		await expect(page.locator("#recurrencePickerContainer")).toBeVisible();
+		await page.locator("#datePickerInput").click();
+		await expect(page.locator("#recurrencePickerContainer")).not.toBeVisible();
+	});
 	
+});
+
+test.describe("Priority picker", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Priority picker will select priority C and add it to the input field", async () => {
+		await page.locator("#navBtnAddTodo").click();
+		await page.fill("#modalFormInput", "This is a test todo");
+		await expect(await page.locator("#modalFormInput").inputValue()).toBe("This is a test todo");
+		await page.locator("#priorityPicker").click();
+		await page.selectOption("select#priorityPicker", "C");
+		await expect(await page.locator("#modalFormInput").inputValue()).toBe("(C) This is a test todo");
+	});
+
+	test("Priority picker will select priority - and add it will remove priority of the input field", async () => {
+		await page.locator("#priorityPicker").click();
+		await page.selectOption("select#priorityPicker", { index: 0 });
+		await expect(await page.locator("#modalFormInput").inputValue()).toBe("This is a test todo");
+		await page.locator("#btnCancel").click();
+	});
+
+	test("Priority picker input will be prefilled with priority B", async () => {
+		const row = page.locator(":nth-match(#todoTable .todo, 5)");
+		await row.click({
+			"button": "right",
+			"position": {
+				"x": 10,
+				"y": 10
+			}
+		});
+		await page.locator(":nth-match(#todoContext .dropdown-item, 2)").click();
+		const value = await page.inputValue("#modalFormInput");
+		await expect(value).toBe("(B) ->Submit TPS report this task has no priority");
+		const priority = await page.inputValue("#priorityPicker");
+		await expect(priority).toBe("B");
+	});	
+});
+
+test.describe("Input element switch", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Check if multi line items are displayed correctly", async () => {
+		const row = page.locator(":nth-match(#todoTable .todo, 7)");
+		await row.click({
+			"position": {
+				"x": 50,
+				"y": 10
+			}
+		});
+		await expect(await page.locator("#modalFormInput").inputValue()).toBe("This is a multi line taskcreated withinSleek due:2023-05-01 +todotxt @test");
+		await page.locator("#modalFormInputResize").click();
+		await expect(await page.locator("#modalFormInput").inputValue()).toBe(`This is a 
+multi line task
+created within
+Sleek due:2023-05-01 +todotxt @test`);
+	});
 });
 
 test.describe("Navigation elements", () => {
@@ -361,10 +446,6 @@ test.describe("Navigation elements", () => {
 		app.close();
 	});
 
-	test("is title 'sleek'?", async () => {  
-		await expect(await page.title()).toBe("todo.txt - sleek");
-	})
-
 	test("Click add todo button and check if input field is focused", async () => {
 		await page.locator("#navBtnAddTodo").click();
 		await page.waitForSelector("#modalForm");
@@ -380,11 +461,9 @@ test.describe("Navigation elements", () => {
 	})
 
 	test("File changer modal is being opened", async () => {
-		await page.locator("#btnOpenTodoFile").click();
+		await page.locator("#navBtnOpenTodoFile").click();
 		await expect(page.locator("#modalChangeFile")).toBeVisible();
 		await page.locator(":nth-match(#modalChangeFile .card-footer button, 3)").click();
-
-
 	})
 
 	test("Settings modal is being opened and closed using Escape key", async () => {
@@ -394,10 +473,10 @@ test.describe("Navigation elements", () => {
 		await expect(page.locator("#modalSettings")).toBeHidden();
 	})
 
-	test("Help modal is being opened using close button", async () => {
+	test("Help modal is being opened and closed using close button", async () => {
 		await page.locator("#navBtnHelp").click();
 		await expect(page.locator("#modalHelp")).toBeVisible();
-		await page.locator("#modalHelp [aria-label=\"close\"]").click();
+		await page.locator("#modalHelp .modal-close").click();
 		await expect(page.locator("#modalHelp")).toBeHidden();
 	})
 
@@ -474,6 +553,7 @@ test.describe("Filter drawer", () => {
 
 });
 
+// TODO:
 test.describe("View drawer", () => {
 
 	test.beforeAll(async () => {
@@ -515,5 +595,179 @@ test.describe("View drawer", () => {
 	// 	await page.waitForTimeout(999999)
 		
 	// })
+
+});
+
+test.describe("Jail", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/empty.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Add/Edit window is being opened and while tabbing, focus never leaves window", async () => {
+		await page.locator("#navBtnAddTodo").click();
+		await page.waitForSelector("#modalForm");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		// if jail is working, seven tabs should focus datepicker
+		await expect(page.locator("#datePickerInput")).toBeFocused();
+	})
+
+});
+
+test.describe("Keyboard shortcuts", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("A: Trigger archive function", async () => {
+		await page.keyboard.press("Escape");
+		await page.keyboard.press("a");
+		//const modalPrompt = await page.locator("#modalPrompt");
+		await expect(page.locator("#modalPrompt")).toBeVisible();
+	})
+
+	test("Meta/Ctrl + c: Copy list to clipboard", async () => {
+		await expect(page.locator("#messageGenericContainer")).not.toBeVisible();
+		// on Windows and Linux
+		await page.keyboard.press("Control+c");
+		// on macOS
+		await page.keyboard.press("Meta+c");
+		await expect(page.locator("#messageGenericContainer")).toBeVisible();
+	})
+
+});
+
+// TODO
+test.describe("Settings", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/empty.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Check if friendly language names are available and can be selected", async () => {
+		await page.locator("#navBtnSettings").click();
+		await expect(page.locator("#modalSettings")).toBeVisible();
+		await expect(page.locator("#language")).toBeVisible();
+
+		const languageCount = await page.locator("#language option").count();
+		await expect(languageCount).toBe(12);
+
+		const fifthLanguage = await page.locator(":nth-match(#language option, 5)").innerHTML();
+		await expect(fifthLanguage).toBe("Français");
+
+		await page.selectOption("#language", "pl");
+		await expect(page.locator("#modalPrompt")).toBeVisible();
+		await page.keyboard.press("Escape");
+	})
+
+	// TODO: Add undo test case -> maybe a problem because of the style in html tag
+	test("Set zoom to 81%", async () => {
+		const zoom = await page.locator("input#zoom");
+		await zoom.click({
+			position: {
+				x: 20,
+				y: 2
+			}
+		});
+		await expect(zoom).toHaveValue("81");
+	})
+
+	// test("Close settings modal by click on x button", async () => {
+	// 	const button = await page.locator("#modalSettings button[aria-label=close]");
+	// 	await button.click();
+	// 	await expect(page.locator("#modalSettings")).not.toBeVisible();
+	// })
+
+});
+
+test.describe("Search", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Add string to search input and expect 2 results", async () => {
+		await page.fill("#todoTableSearch", "@phone");
+		await page.waitForTimeout(500);
+		const rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(2);
+		await page.fill("#todoTableSearch", "");
+	})
+
+	test("Add advanced search string with two filter parameters and expect 1 result", async () => {
+		await page.fill("#todoTableSearch", "@phone AND +Garagesale");
+		await page.waitForTimeout(500);
+		const rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(1);
+
+		const dataItem = await page.locator(":nth-match(#todoTable .todo, 1)").getAttribute("data-item");
+		await expect(dataItem).toBe("(A) Thank Mom for the meatballs  x 2021-04-07 (B) Schedule Goodwill pickup   Eskimo pies  Really gotta call Mom this task has no priority (A)   (b) Get back to the boss this task has no priority due:2023-06-10 +GarageSale @phone @phone @GroceryStore @phone @someday");
+	})
+
+	test("Add advanced search string to exclude all todos that are completed and contain a project", async () => {
+		await page.fill("#todoTableSearch", "not complete and !+");
+		await page.waitForTimeout(500);
+		const rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(13);
+	})
 
 });

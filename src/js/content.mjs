@@ -5,6 +5,7 @@ import { createModalJail } from "./jail.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { handleError } from "./helper.mjs";
 
+const html = document.getElementById("html");
 const addAsTodo = document.getElementById("addAsTodo");
 const compactViewBody = document.getElementById("compactViewBody");
 const compactViewHeadline = document.getElementById("compactViewHeadline");
@@ -59,7 +60,6 @@ const helpTabRecurrencesTitle1 = document.getElementById("helpTabRecurrencesTitl
 const modalWindows = document.querySelectorAll(".modal");
 const reviewSourceforge = document.getElementById("reviewSourceforge");
 const reviewWindowsStore = document.getElementById("reviewWindowsStore");
-const settingsLanguage = document.getElementById("settingsLanguage");
 const settingsTabAbout = document.getElementById("settingsTabAbout");
 const settingsTabAboutContribute = document.getElementById("settingsTabAboutContribute");
 const settingsTabAboutCopyrightLicense = document.getElementById("settingsTabAboutCopyrightLicense");
@@ -83,13 +83,11 @@ const shareFacebook = document.getElementById("shareFacebook");
 const shareLinkedin = document.getElementById("shareLinkedin");
 const shareTwitter = document.getElementById("shareTwitter");
 const submitIssuesOnGithub = document.getElementById("submitIssuesOnGithub");
-const toggleNotifications = document.getElementById("toggleNotifications");
-const toggleTheme = document.getElementById("toggleTheme");
-const toggleTray = document.getElementById("tray");
 const zoom = document.getElementById("zoom");
 const zoomBody = document.getElementById("zoomBody");
 const zoomHeadline = document.getElementById("zoomHeadline");
 const zoomUndo = document.getElementById("zoomUndo");
+const language = document.getElementById("language");
 
 addAsTodo.innerHTML = translations.addAsTodo;
 compactViewBody.innerHTML = translations.compactViewBody;
@@ -180,7 +178,7 @@ language.onchange = function() {
     handleError(error);
   });
   // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + languageCode]);
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
 }
 zoom.onchange = function() {
   setZoom(this.value).then(response => {
@@ -230,7 +228,6 @@ function setZoom(value) {
 function setLanguage(languageCode) {
   window.api.send("changeLanguage", languageCode);
 }
-
 function setFriendlyLanguageNames() {
   try {
 
@@ -265,9 +262,7 @@ function setFriendlyLanguageNames() {
     return Promise.reject(error);
   }
 }
-
 export function showModal(modalId) {
-
   try {
 
     // in case a content window was open, it will be closed
@@ -326,9 +321,7 @@ export function showModal(modalId) {
     error.functionName = showModal.name;
     return Promise.reject(error);
   }
-
 }
-
 // generate friendly names for language dropdown
 setFriendlyLanguageNames().then(function(response) {
   console.info(response);

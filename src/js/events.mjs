@@ -1,8 +1,8 @@
 "use strict";
 import { setUserData, translations, userData } from "../render.js";
 import { resetFilters } from "./filters.mjs";
-import { show } from "./form.mjs";
-import { resetModal, handleError } from "./helper.mjs";
+import { show, resetForm } from "./form.mjs";
+import { handleError } from "./helper.mjs";
 import { showModal } from "./content.mjs";
 import { _paq } from "./matomo.mjs";
 import { getConfirmation } from "./prompt.mjs";
@@ -22,17 +22,13 @@ const filterContext = document.getElementById("filterContext");
 const todoContext = document.getElementById("todoContext");
 const todoTable = document.getElementById("todoTable");
 const btnMessageLogging = document.getElementById("btnMessageLogging");
-const modalBackground = document.querySelectorAll('.modal-background');
-const modalClose = document.querySelectorAll('.close');
+const modalBackgrounds = document.querySelectorAll(".modal-background");
+const modalClose = document.querySelectorAll(".close");
 const cancel = document.querySelectorAll("[role='cancel']");
-cancel.forEach(function(item) {
-	item.innerHTML = translations.cancel;
-});
 
 export function registerEvents() {
   try {
     body.onclick = async function(event) {
-      
       // close todo context if click is outside of it
       if(filterContext.classList.contains("is-active")) {
         if(!filterContext.contains(event.target)) {
@@ -46,32 +42,40 @@ export function registerEvents() {
           todoContext.classList.remove("is-active");
         }
       }
+      // TODO: describe
+      if(recurrencePickerContainer.classList.contains("is-active")) {
+
+
+
+        if(!recurrencePickerContainer.contains(event.target)) {
+          recurrencePickerContainer.classList.remove("is-active");
+        }
+      }
     }
+
     a.forEach(el => el.addEventListener("click", function(el) {
       if(el.target.href && el.target.href === "#") el.preventDefault();
     }));
+
     btnMessageLogging.onclick = function () {
       showModal("modalSettings");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Settings"]);
     }
+
     btnFilesCreateTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "create");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
     }
+
     btnFilesOpenTodoFile.onclick = function() {
       window.api.send("openOrCreateFile", "open");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
     }
+
     btnAddTodoContainer.onclick = function () {
-      // just in case the form will be cleared first
-      resetModal().then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
       show();
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
@@ -83,67 +87,50 @@ export function registerEvents() {
         if(userData.matomoEvents) _paq.push(["trackEvent", "Error-Container", "Click on Copy to clipboard"]);
       }
     });
+
     btnFiltersResetFilters.onclick = function() {
       resetFilters(true);
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
     }
+
     btnNoResultContainerResetFilters.onclick = function() {
       resetFilters(true);
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
     }
-	// event for all cancel buttons
-    cancel.forEach(function(el) {
-      el.onclick = function(event) {
-        event.preventDefault;
-        el.parentElement.parentElement.parentElement.parentElement.classList.remove("is-active");
-        resetModal().then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
-      }
-    });
-    messageGenericContainerClose.onclick = function() {
-      this.parentElement.classList.remove("is-active")
-    }
-    modalBackground.forEach(function(el) {
-      el.onclick = function() {
-        const modalObject = document.getElementById(el.parentElement.id);
-        if(modalObject.id==="modalPrompt") return false;
-        // if modal is modalForm and input is equal the data item
-        if(modalObject.id === "modalForm" && modalForm.getAttribute("data-item") !== document.getElementById("modalFormInput").value) {
-          getConfirmation(resetModal, translations.modalBackgroundAttention, modalObject);
-        } else {
-          resetModal(modalObject).then(function(result) {
-            console.log(result);
+
+    // event for all cancel buttons
+    cancel.forEach(function(element) {
+      element.onclick = function(event) {
+        event.preventDefault();
+
+        // in case this is a message, closing will be persisted
+        if(element.getAttribute("data-message") && !userData.dismissedMessages.includes(element.getAttribute("data-message"))) {
+          userData.dismissedMessages.push(element.getAttribute("data-message"));
+          setUserData("dismissedMessages", userData.dismissedMessages);
+        }
+
+        const modal = this.closest(".modal, .message");
+        modal.classList.remove("is-active");
+        if(modal.id === "modalForm") {
+          resetForm().then(function(response) {
+            console.info(response);
           }).catch(function(error) {
             handleError(error);
           });
         }
         // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Background"]);
+        if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Cancel"]);
       }
     });
-    modalClose.forEach(function(el) {
-      el.onclick = function() {
-        if(el.getAttribute("data-message")) {
-          // persist closed message, so it won't show again
-          if(!userData.dismissedMessages.includes(el.getAttribute("data-message"))) userData.dismissedMessages.push(el.getAttribute("data-message"))
-          setUserData("dismissedMessages", userData.dismissedMessages);
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Click on Close"]);
-        } else {
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Modal", "Click on Close"]);
-        }
-        el.parentElement.parentElement.classList.remove("is-active");
-      }
-    });
+
+    messageGenericContainerClose.onclick = function() {
+      this.parentElement.classList.remove("is-active")
+    }
+
     return Promise.resolve("Success: Events registered");
+
   } catch(error) {
     error.functionName = register.name;
     return Promise.reject(error);

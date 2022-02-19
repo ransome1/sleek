@@ -1,11 +1,11 @@
 "use strict";
 import { createTodoContext, setTodoComplete, archiveTodos, items } from "./todos.mjs";
 import { getConfirmation } from "./prompt.mjs";
-import { pasteItemsToClipboard } from "./helper.mjs";
+import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
 import { resetFilters } from "./filters.mjs";
-import { resetModal, handleError } from "./helper.mjs";
-import { show, setDueDate, setPriority } from "./form.mjs";
+import { handleError } from "./helper.mjs";
+import { show, setPriority, resetForm } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
 import { triggerToggle } from "./toggles.mjs";
@@ -51,6 +51,8 @@ export async function registerShortcuts() {
 
     window.addEventListener("keyup", async function(event) {
 
+      event.preventDefault;
+
       // ******************************************************
       // setup escape key
       // ******************************************************
@@ -64,13 +66,17 @@ export async function registerShortcuts() {
 
         if(autoCompleteContainer.classList.contains("is-active")) {
           autoCompleteContainer.classList.remove("is-active");
+          autoCompleteContainer.innerHTML = null;
           document.getElementById("modalFormInput").focus();
           return false;
         }
 
         // if recurrence container is detected interrupt, closing is handled in module
 
-        if(recurrencePickerContainer.classList.contains("is-active")) return false;
+        if(recurrencePickerContainer.classList.contains("is-active")) {
+          recurrencePickerContainer.classList.remove("is-active");
+          return false;
+        }
 
         // close todo context
 
@@ -93,10 +99,19 @@ export async function registerShortcuts() {
         // close modal windows
 
         if(isModalOpen()) {
+          
           modalWindows.forEach((modal) => {
             if(modal.classList.contains("is-active")) {
+              // hide modal
               modal.classList.remove("is-active");
-              resetModal();  
+              // in case modal is form it needs to be cleared
+              if(modal.id === "modalForm") {
+                resetForm().then(function(response) {
+                  console.info(response);
+                }).catch(function(error) {
+                  handleError(error);
+                });
+              }
             }
           });
           return false;
@@ -121,24 +136,21 @@ export async function registerShortcuts() {
 
       if(isModalOpen()) {
 
-        // priority up
+        // // set priority directly
+        // if(event.altKey && event.metaKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
 
-        if((!event.ctrlKey && !event.metaKey) && event.altKey && event.key === "ArrowUp") {
-          setPriority("up");
-          return false;
-        }
+        //   setPriority(event.key.substr(0,1)).then(response => {
+        //     console.log(response);
+        //   }).catch(error => {
+        //     handleError(error);
+        //   });
+        //   return false;
+        // }
 
-        // priority down
+        // due date plus 1
 
-        if((!event.ctrlKey && !event.metaKey) && event.altKey && event.key === "ArrowDown") {
-          setPriority("down");
-          return false;
-        }
-
-        // set priority directly
-
-        if(event.altKey && event.metaKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
-          setPriority(event.key.substr(0,1)).then(response => {
+        if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
+          setDueDate(1).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
@@ -146,24 +158,25 @@ export async function registerShortcuts() {
           return false;
         }
 
-        // due date plus 1
-
-        if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
-          setDueDate(1);
-          return false;
-        }
-
         // due date minus 1
 
         if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowDown") {
-          setDueDate(-1);
+          setDueDate(-1).then(response => {
+            console.log(response);
+          }).catch(error => {
+            handleError(error);
+          });
           return false;
         }
 
         // reset due date
 
         if((event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
-          setDueDate(0);
+          setDueDate(0).then(response => {
+            console.log(response);
+          }).catch(error => {
+            handleError(error);
+          });
           return false;
         }
 
@@ -444,46 +457,99 @@ export async function registerShortcuts() {
 
     window.addEventListener("keydown", async function(event) {
 
-        // ******************************************************
-        // open new file
-        // ******************************************************
+      event.preventDefault;
 
-        if((event.ctrlKey || event.metaKey) && event.key === "o") {
-          window.api.send("openOrCreateFile", "open");
-          return false;
-        }
+      // ******************************************************
+      // open new file
+      // ******************************************************
 
-        // ******************************************************
-        // copy file content to clipboard
-        // ******************************************************
+      if((event.ctrlKey || event.metaKey) && event.key === "o") {
+        window.api.send("openOrCreateFile", "open");
+        return false;
+      }
 
-        if((event.ctrlKey || event.metaKey) && event.key === "c" && !isInputFocused()) {
-          pasteItemsToClipboard(items.filtered);
-          return false;
-        }
+      // ******************************************************
+      // copy file content to clipboard
+      // ******************************************************
 
-        // ******************************************************
-        // close file tab or window
-        // ******************************************************
+      if((event.ctrlKey || event.metaKey && userData.files) && event.key === "c" && !isInputFocused()) {
+        pasteItemsToClipboard(items.filtered);
+        return false;
+      }
 
-        if((event.ctrlKey || event.metaKey) && event.key === "w") {
+      // ******************************************************
+      // close file tab or window
+      // ******************************************************
 
-          // get active file
-          const index = userData.files.findIndex(file => file[0] === 1);
+      if((event.ctrlKey || event.metaKey) && event.key === "w") {
 
-          // if all files are removed from tab bar, window will be closed
-          if(index < 1) window.api.send("closeWindow");
+        // get active file
+        const index = userData.files.findIndex(file => file[0] === 1);
 
-          // remove active file from tab bar
-          removeFileFromList(index, false).then(function(response) {
-            console.info(response);
+        // if all files are removed from tab bar, window will be closed
+        if(index < 1) window.api.send("closeWindow");
+
+        // remove active file from tab bar
+        removeFileFromList(index, false).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+
+        return false;
+      }
+
+      if(isModalOpen()) {
+
+        // priority up
+
+        if(event.ctrlKey && event.metaKey && event.key === "ArrowUp") {
+          setPriority(-1).then(function(result) {
+            console.log(result);
           }).catch(function(error) {
             handleError(error);
           });
-          
           return false;
-        }        
+        }
 
+        // priority down
+
+        if(event.ctrlKey && event.metaKey && event.key === "ArrowDown") {
+          setPriority(1).then(function(result) {
+            console.log(result);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          return false;
+        }          
+
+        // set priority directly
+        
+        if(event.ctrlKey && event.metaKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
+
+          setPriority(event.key.toUpperCase()).then(response => {
+            console.log(response);
+          }).catch(error => {
+            handleError(error);
+          });
+
+          return false;
+
+        }
+
+        // remove priority
+        
+        if(event.ctrlKey && event.metaKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+
+          setPriority(false).then(response => {
+            console.log(response);
+          }).catch(error => {
+            handleError(error);
+          });
+
+          return false;
+        }
+      }
     });
 
     return Promise.resolve("Success: Keyboard shortcuts registered");

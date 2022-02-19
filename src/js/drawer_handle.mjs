@@ -31,7 +31,7 @@ export const startDragging = (event) => {
       document.body.removeEventListener("pointermove", mouseDragHandler);
       return;
     }
-    const paneOriginAdjustment = ("left" === "right") ? 1 : -1;
+    const paneOriginAdjustment = -1;
     setPaneWidth((xOffset - moveEvent.pageX ) * paneOriginAdjustment + startingPaneWidth);
   };
   document.body.addEventListener("pointermove", mouseDragHandler);

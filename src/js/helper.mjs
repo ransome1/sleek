@@ -1,6 +1,6 @@
 "use strict";
 import { appData, userData, setUserData, translations } from "../render.js";
-import { generateGroups, items } from "./todos.mjs";
+import { generateGroups, items, createTodoObject } from "./todos.mjs";
 import { isToday, isPast } from "./date.mjs";
 import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
@@ -115,42 +115,6 @@ export function getBadgeCount() {
     if(!item.complete && item.due && (isToday(item.due) || isPast(item.due))) count++;
   });
   return count;
-}
-export function resetModal(modal) {
-  try {
-    const modalForm = document.getElementById("modalForm");
-    if(modal) {
-      // remove is-active from modal
-      modal.classList.remove("is-active");
-      // remove any previously set data-item attributes
-      modal.removeAttribute("data-item");
-    }
-    // reset priority setting
-    document.getElementById("priorityPicker").selectedIndex = 0;
-    // if recurrence picker was open it is now being closed
-    document.getElementById("recurrencePickerContainer").classList.remove("is-active");
-    // clear previous recurrence selection
-    document.getElementById("recurrencePickerInput").value = null;
-    // if file chooser was open it is now being closed
-    document.getElementById("modalChangeFile").classList.remove("is-active");
-    // hide suggestion box if it was open
-    document.getElementById("autoCompleteContainer").classList.remove("is-active");
-    // remove focus from suggestion container
-    document.getElementById("autoCompleteContainer").blur();
-    // close
-    modalForm.classList.remove("is-active");
-    // remove the data item as we don't need it anymore
-    //modalForm.removeAttribute("data-item");
-    modalForm.setAttribute("data-item", "");
-    // clean up the modal
-    document.getElementById("modalFormAlert").parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
-    // clear the content in the input field as it's not needed anymore
-    document.getElementById("modalFormInput").value = null;
-    return Promise.resolve("Info: Modal closed and cleaned up");
-  } catch (error) {
-    error.functionName = resetModal.name;
-    return Promise.reject(error);
-  }
 }
 export function configureMainView() {
   try {
@@ -309,4 +273,36 @@ export function formatDate(date) {
     padTo2Digits(date.getMonth() + 1),
     padTo2Digits(date.getDate()),
   ].join('-');
+}
+
+export function setDueDate(days) {
+  try {
+
+    const todo = createTodoObject(modalFormInput.value);
+
+    if(days === 0) {
+      todo.due = undefined;
+      todo.dueString = undefined;
+    } else if(days && todo.due) {
+      todo.due = new Date(new Date(todo.dueString).setDate(new Date(todo.dueString).getDate() + days));
+      todo.dueString = todo.due.toISOString().substr(0, 10);
+    // when no due date is available we fallback to todays date
+    } else if(days && !todo.due) {
+      todo.due = new Date(new Date().setDate(new Date().getDate() + days));
+      todo.dueString = todo.due.toISOString().substr(0, 10);
+    }
+
+    modalFormInput.value = todo.toString();
+
+    return Promise.resolve("Success: Due date changed to " + todo.dueString)
+
+  } catch(error) {
+    error.functionName = setDueDate.name;
+    return Promise.reject(error);
+  }
+}
+
+export function getCaretPosition(element) {
+  if((element.selectionStart !== null) && (element.selectionStart !== undefined)) return element.selectionStart;
+  return false;
 }

@@ -25,17 +25,23 @@ recurrencePickerDay.innerHTML = translations.day;
 recurrencePickerYear.innerHTML = translations.year;
 recurrencePickerNoRecurrence.innerHTML = translations.noRecurrence;
 recurrencePickerEvery.innerHTML = translations.every;
-
-recurrencePickerInput.onfocus = function(element) { showRecurrences(element) };
 recurrencePickerInput.placeholder = translations.noRecurrence;
-recurrencePickerContainer.addEventListener("keyup", function(event) {
-  if(event.key === "Escape") {
-    this.classList.remove("is-active");
-    document.getElementById("modalFormInput").focus();
-  }
-});
 
-//resizeInput(recurrencePickerInput);
+recurrencePickerInput.onfocus = function(element) {
+  // only like this compatible with body click event in event.mjs
+  setTimeout(function() {
+    showRecurrences(element);
+    //this.blur();
+  }, 100);
+};
+
+recurrencePickerInput.onchange = function() {
+  resizeInput(this).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    handleError(error);
+  });
+}
 
 export function setInput(recurrence) {
   try {
@@ -94,6 +100,9 @@ export function setInput(recurrence) {
   }
 }
 export function showRecurrences() {
+
+  recurrencePickerContainer.focus();
+
   recurrencePickerContainer.classList.toggle("is-active");
   document.getElementById("recurrencePickerIncrease").focus();
   // get object from current input

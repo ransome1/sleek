@@ -1182,7 +1182,12 @@ nav ul:nth-child(2):hover #versionNumber {
     padding: 0.75em !important;
   }
   #modalForm #modalFormInputResize {
-    top: 1.65em;
+    top: 1.4em !important;
+  }
+
+  .modal-content,
+.modal-card {
+    width: 100% !important;
   }
 
   .modal.content .modal-card {
@@ -1302,7 +1307,11 @@ body.compact #modalForm textarea {
   padding: 0.75em !important;
 }
 body.compact #modalForm #modalFormInputResize {
-  top: 1.65em;
+  top: 1.4em !important;
+}
+body.compact .modal-content,
+body.compact .modal-card {
+  width: 100% !important;
 }
 body.compact .modal.content .modal-card {
   padding: 1em !important;

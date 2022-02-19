@@ -25,8 +25,13 @@
       padding: 0.75em!important;
     }
     #modalFormInputResize {
-      top: 1.65em;
+      top: 1.4em!important;
     }
+  }
+
+  .modal-content,
+  .modal-card {
+    width: 100%!important;
   }
 
   .modal.content .modal-card {

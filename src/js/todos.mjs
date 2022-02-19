@@ -484,7 +484,7 @@ function createTodoContext(todoTableRow) {
     // click on use as template option
     todoContextUseAsTemplate.onclick = function() {
       show(todoContext.getAttribute('data-item'), true);
-      //todoContext.classList.toggle("is-active");
+      todoContext.classList.toggle("is-active");
       todoContext.removeAttribute("data-item");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
@@ -492,7 +492,7 @@ function createTodoContext(todoTableRow) {
     todoContextUseAsTemplate.onkeypress = function(event) {
       if(event.key !== "Enter") return false;
       show(todoContext.getAttribute('data-item'), true);
-      //todoContext.classList.toggle("is-active");
+      todoContext.classList.toggle("is-active");
       todoContext.removeAttribute("data-item");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Enter on Use as template"]);
@@ -500,7 +500,7 @@ function createTodoContext(todoTableRow) {
     // click on use as edit option
     todoContextEdit.onclick = function() {
       show(todoContext.getAttribute("data-item"));
-      //todoContext.classList.toggle("is-active");
+      todoContext.classList.toggle("is-active");
       todoContext.removeAttribute("data-item");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Edit"]);
@@ -508,7 +508,7 @@ function createTodoContext(todoTableRow) {
     todoContextEdit.onkeypress = function() {
       if(event.key !== "Enter") return false;
       show(todoContext.getAttribute("data-item"));
-      //todoContext.classList.remove("is-active");
+      todoContext.classList.remove("is-active");
       todoContext.removeAttribute("data-item");
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Enter on Edit"]);

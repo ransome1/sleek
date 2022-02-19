@@ -1,10 +1,9 @@
 "use strict";
 import { _paq } from "./matomo.mjs";
-import { appData, userData, getUserData, setUserData, translations } from "../render.js";
+import { appData, userData, setUserData, translations } from "../render.js";
 import { createModalJail } from "./jail.mjs";
 import { focusRow } from "./keyboard.mjs";
-import { resetFilters } from "./filters.mjs";
-import { resetModal, handleError } from "./helper.mjs";
+import { handleError } from "./helper.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 
 const fileTabBar = document.getElementById("fileTabBar");
@@ -12,10 +11,12 @@ const fileTabBarList = document.querySelector("#fileTabBar ul");
 const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
 const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
+const btnFilesCancel = document.getElementById("btnFilesCancel");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
 
 modalChangeFileCreate.innerHTML = translations.createFile;
 modalChangeFileOpen.innerHTML = translations.openFile;
+btnFilesCancel.innerHTML = translations.cancel;
 
 function removeFileFromList(index, removeFile) {
   try {
@@ -75,11 +76,6 @@ function removeFileFromList(index, removeFile) {
     if(newIndex === -1) {
       newIndex = 0;
     }
-
-    // add active flag from file
-    //userData.files[newIndex][0] = 1;
-    // add tab bar flag from file
-    //userData.files[newIndex][2] = 1;
 
     setUserData("files", userData.files).then(response => {
       console.info(response);

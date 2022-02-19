@@ -4,8 +4,7 @@ let
   appData, 
   helper,
   groups,
-  translations, 
-  onboarding,
+  translations,
   filters,
   userData,
   todos;
@@ -27,12 +26,13 @@ function getUserData() {
 function setUserData(key, value) {
   try {
     userData[key] = value;
-    // don't persist any data in test
+    // don't persist any data in testing environment
     if(appData.environment === "testing") {
       return Promise.resolve("Info: In testings no user data will be persisted");
     }
 
     window.api.send("userData", [key, value]);
+
     return new Promise(function(resolve) {
       return window.api.receive("userData", function(data) {
         userData = data;
@@ -126,11 +126,6 @@ window.onload = async function () {
       helper.handleError(error);
     });
   }
-  // helper.toggleDarkmode(userData.darkmode).then(function(response) {
-  //   console.info(response);
-  // }).catch(function(error) {
-  //   helper.handleError(error);
-  // });
   messages.checkDismissedMessages().then(function(response) {
     console.info(response);
   }).catch(function(error) {
@@ -179,13 +174,6 @@ window.api.receive("triggerFunction", async (name, args) => {
           helper.handleError(error);
         });
         break;
-      case "resetModal":
-        helper.resetModal(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
       case "archiveTodos":
         var prompt = await import("./js/prompt.mjs");
         prompt.getConfirmation(todos.archiveTodos, translations.archivingPrompt);
@@ -208,14 +196,6 @@ window.api.receive("triggerFunction", async (name, args) => {
           helper.handleError(error);
         });
         break;
-      // case "toggle":
-      //   var view = await import("./js/view.mjs");
-      //   view.toggle(...args).then(function(response) {
-      //     console.info(response);
-      //   }).catch(function(error) {
-      //     helper.handleError(error);
-      //   });
-      //   break;
       case "showModal":
         var content = await import("./js/content.mjs");
         content.showModal(args[0]).then(function(response) {

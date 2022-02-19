@@ -38,7 +38,7 @@ export function createModalJail(modal) {
     return Promise.resolve("Success: Created jail for " + modal.id);
 
   } catch(error) {
-    error.functionName = showModal.name;
+    error.functionName = createModalJail.name;
     return Promise.reject(error);
   }
 

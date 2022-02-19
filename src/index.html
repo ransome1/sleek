@@ -242,8 +242,8 @@
       </div>
     </div>
 
-    <section id="modalForm" class="modal" data-item="">
-      <div class="modal-background"></div>
+    <form id="modalForm" class="modal" data-item="">
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div class="card-content">
@@ -347,15 +347,15 @@
 
           </div>
           <footer class="card-footer">
-            <button id="btnSave" class="card-footer-item" tabindex="0"></button>
-            <button id="btnItemStatus" class="card-footer-item" tabindex="0"></button>
+            <button id="btnSave" type="submit" class="card-footer-item" tabindex="0"></button>
+            <button id="btnItemStatus" class="card-footer-item is-hidden" tabindex="0"></button>
             <button id="btnCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
       </div>
-    </section>
+    </form>
     <div id="modalSettings" class="modal content" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           &nbsp;
@@ -490,11 +490,11 @@
             </tr>
           </table>
         </section>
-        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
+        <button class="modal-close close is-large" role="cancel" tabindex="0"></button>
       </div>
     </div>
     <div id="modalHelp" class="modal content" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           <ul>
@@ -769,7 +769,7 @@
             </tr>
           </table>
         </section>
-        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
+        <button class="modal-close close is-large" role="cancel" tabindex="0"></button>
       </div>
     </div>
 
@@ -796,7 +796,7 @@
     </div>
 
     <div id="modalChangeFile" class="modal" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div class="card-content">
@@ -805,14 +805,14 @@
           <footer class="card-footer">
             <button id="btnFilesOpenTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></button>
             <button id="btnFilesCreateTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></button>
-            <button class="card-footer-item" role="cancel" tabindex="0"></button>
+            <button id="btnFilesCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
       </div>
     </div>
 
     <div id="modalPrompt" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div id="modalPromptContent" class="card-content"></div>
@@ -826,13 +826,13 @@
 
     <section id="messages">
       <article id="messageGenericContainer" class="notification" data="generic">
-        <button id="messageGenericContainerClose" class="delete" aria-label="delete" data-message="generic"></button>
+        <button id="messageGenericContainerClose" class="delete" role="cancel" data-message="generic"></button>
         <p id="messageGenericMessage"></p>
       </article>
       <article class="message fixed" data="logging">
         <div class="message-header">
           <p><span id="messageLoggingTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="logging" tabindex="-1"></button>
+          <button class="delete close" role="cancel" data-message="logging" tabindex="-1"></button>
         </div>
         <div class="message-body">
           <p><span id="messageLoggingBody"></span></p>
@@ -842,7 +842,7 @@
       <article class="message fixed" data="share">
         <div class="message-header">
           <p><span id="messageShareTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="share" tabindex="-1"></button>
+          <button class="delete close" role="cancel" data-message="share" tabindex="-1"></button>
         </div>
         <div class="message-body">
           <p><span id="messageShareBody"></span></p>

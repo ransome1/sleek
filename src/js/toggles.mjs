@@ -1,17 +1,29 @@
-import { startBuilding, userData, setUserData, translations } from "../render.js";
-import { handleError } from "./helper.mjs";
+import { _paq } from "./matomo.mjs";
 import { getConfirmation } from "./prompt.mjs";
+import { handleError } from "./helper.mjs";
+import { startBuilding, userData, setUserData, translations } from "../render.js";
 
+const body = document.getElementById("body");
+const fileTabBar = document.getElementById("fileTabBar");
 const toggles = document.querySelectorAll(".toggle input[type=checkbox]");
+const setTray = function(setting) { 
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Tray changed to: " + setting]);
+  
+  // restart app
+  window.api.send("restart");
 
-export async function triggerToggle(inputField, toggle) {
+  return Promise.resolve("Info: Tray toggle changed to: " + setting);
+}
+
+export function triggerToggle(inputField, toggle) {
   try {
 
     // if toggle is set the input fields value will be inverted
     if(toggle) inputField.checked = !inputField.checked;
 
     // persist setting retrieved from checkbox object
-    await setUserData(inputField.id, inputField.checked).then(function(response) {
+    setUserData(inputField.id, inputField.checked).then(function(response) {
       console.info(response);
     }).catch(function(error) {
       handleError(error);
@@ -27,12 +39,6 @@ export async function triggerToggle(inputField, toggle) {
         (userData[inputField.id]) ? body.classList.add("dark") : body.classList.remove("dark")
         break;
       case "tray":
-        const setTray = function(setting) { 
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Tray changed to: " + setting]);
-          window.api.send("restart");
-          return Promise.resolve("Info: Tray toggle changed to: " + setting);
-        }
         getConfirmation(setTray, translations.restartPrompt, inputField.checked);
         break;
       case "fileTabs":
