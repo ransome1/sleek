@@ -1,5 +1,6 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import { formatDate } from "./helper.mjs";
 
 function RecExtension() {
 	this.name = "rec";
@@ -66,7 +67,7 @@ ThresholdExtension.prototype.parsingFunction = function (line) {
 	if ( relativeDatMatch !== null) {
 		var thresholdDate = resolveRelativeDate(relativeDatMatch[1]);
 
-		return [thresholdDate, line.replace(relativeDateRegEx, ''), thresholdDate.toISOString().split('T')[0]];
+		return [thresholdDate, line.replace(relativeDateRegEx, ''), formatDate(thresholdDate)];
 	}
 	else {
 		var thresholdDate = null;
