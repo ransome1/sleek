@@ -1,0 +1,53 @@
+directories:
+  output: dist
+  buildResources: build
+files:
+  - filter:
+      - '!__tests__${/*}'
+      - '!System Volume Information${/*}'
+      - '!build${/*}'
+      - '!snap${/*}'
+      - '!flatpak${/*}'
+      - '!.git${/*}'
+      - '!.github${/*}'
+      - '!dist${/*}'
+      - '!**.pfx'
+      - '!**.bak'
+      - '!**.md'
+      - '!assets/screenshots${/*}'
+      - '!assets/icons/bak${/*}'
+      - '!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,__tests__,tests,powered-test,example,examples,*.d.ts}'
+      - '!**/node_modules/.bin'
+      - '!**/*.{o,hprof,orig,pyc,pyo,rbc}'
+      - '!**/._*'
+      - '!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.flowconfig,.yarn-metadata.json,.idea,appveyor.yml,.travis.yml,circle.yml,npm-debug.log,.nyc_output,yarn.lock,.yarn-integrity}'
+      - '!**/node_modules/search-index/si${/*}'
+appId: RobinAhle.sleektodomanager
+linux:
+  icon: assets/icons/icon.png
+  category: ProjectManagement
+  target:
+    - deb
+    - freebsd
+    - rpm
+    - AppImage
+    - pacman
+mac:
+  target: dmg
+  icon: assets/icons/sleek.icns
+  category: public.app-category.productivity
+nsis:
+  artifactName: '${productName}-${version}-Setup.${ext}'
+win:
+  target:
+    - portable
+    - nsis
+  icon: assets/icons/sleek.ico
+  publisherName: CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C
+appx:
+  displayName: 'sleek - Todo.txt app for Windows, free and open-source'
+  identityName: 17450RobinAhle.sleektodomanager
+  publisher: CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C
+  publisherDisplayName: Robin Ahle
+  applicationId: RobinAhle.sleektodomanager
+electronVersion: 12.0.5
