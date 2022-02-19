@@ -1,6 +1,7 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import { formatDate } from "./helper.mjs";
+import { addIntervalToDate } from "./recurrences.mjs";
 
 function RecExtension() {
 	this.name = "rec";
@@ -82,24 +83,6 @@ ThresholdExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
-// function resolveRelativeDate(relativeDate, date=new Date()) {
-//     var unit = relativeDate.slice(-1);
-//     var increment = parseInt(relativeDate.slice(0, -1));
-
-//     if(unit === "d") {
-//         date.setDate(date.getDate() + increment);
-//     }
-//     else if(unit === "w") {
-//         date.setDate(date.getDate() + increment * 7);
-//     }
-//     else if(unit === "m") {
-//         date.setMonth(date.getMonth() + 1);
-//     }
-
-//     return date
-// }
-
-import { addIntervalToDate } from "./recurrences.mjs";
 function resolveRelativeDate(relativeDate) {
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
