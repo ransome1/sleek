@@ -30,7 +30,7 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 	if ( relativeDatMatch !== null) {
 		var dueDate = resolveRelativeDate(relativeDatMatch[1]);
 
-		return [dueDate, line.replace(relativeDateRegEx, ''), dueDate.toISOString().split('T')[0]];
+		return [dueDate, line.replace(relativeDateRegEx, ''), formatDate(dueDate)];
 	}
 	else
 	{
