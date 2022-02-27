@@ -9,8 +9,7 @@ test.describe("Onboarding", () => {
 		app = await electron.launch({ 
 			args: ["src/main.js"],
 			env: {
-				"NODE_ENV": "testing",
-				"SLEEK_CUSTOM_FILE": undefined
+				"NODE_ENV": "testing"
 			}
 		});
 		page = await app.firstWindow();
@@ -28,7 +27,7 @@ test.describe("Onboarding", () => {
 
 	test("Are onboarding elements visible?", async () => {
 		// check if there are two messages shown in default setting
-		const messageCount = await page.locator("#messages .message").count();
+		const messageCount = await page.locator("#messages .message.is-active").count();
 		await expect(messageCount).toBe(2);
 		// check if all relevant onboarding elements are visible
 		await page.waitForSelector("#onboardingContainer");
@@ -45,6 +44,12 @@ test.describe("Onboarding", () => {
 		await expect(page.locator("#navBtnAddTodo")).toBeHidden();
 		await expect(page.locator("#navBtnFilter")).toBeHidden();
 		await expect(page.locator("#navBtnView")).toBeHidden();
+	})
+
+	test("Button in 1st message opens settings and Escape closes it", async () => {
+		await page.locator("#btnMessageLogging").click();
+		await expect(page.locator("#modalSettings")).toBeVisible();	
+		await page.keyboard.press("Escape");
 	})
 
 	test("Messages can be closed", async () => {
@@ -77,9 +82,9 @@ test.describe("Todo table", () => {
 		app.close();
 	});
 
-	test("Table shows 19 rows", async () => {
+	test("Table shows 18 rows", async () => {
 		const rows = await page.locator("#todoTable .todo").count();
-		await expect(rows).toBe(17);
+		await expect(rows).toBe(18);
 	});
 
 	test("Fourth row can be clicked and shows modal, which input field contains a specfic value", async () => {
@@ -87,7 +92,6 @@ test.describe("Todo table", () => {
 		const value = await page.inputValue("#modalFormInput");
 		await expect(value).toBe("(A) Thank Mom for the meatballs  x 2021-04-07 (B) Schedule Goodwill pickup   Eskimo pies  Really gotta call Mom this task has no priority (A)   (b) Get back to the boss this task has no priority due:2023-06-10 +GarageSale @phone @phone @GroceryStore @phone @someday");
 	});
-
 });
 
 test.describe("Todo context", () => {
@@ -507,13 +511,19 @@ test.describe("Filter drawer", () => {
 		app.close();
 	});
 
-	test("Filter sidebar is being opened and a context is being selected which reduces the table rows to 1 result. Filter is removed and filter drawer is being closed.", async () => {
+	test("Filter sidebar is being opened and a project is being selected which reduces the table rows to 1 result. Filter is removed and filter drawer is being closed.", async () => {
+		
 		await page.locator("#navBtnFilter").click();
+
 		await page.waitForSelector("#filterDrawer");
-		const filterButton = await page.locator(":nth-match(#filterDrawer #todoFilters .projects button, 2)");
+		
+		const filterButton = await page.locator(":nth-match(filterDrawer#filterDrawer section.projects button, 2)");
+		
 		await filterButton.click();
+		
 		const rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);
+		
 		await filterButton.click();
 		await page.locator("#navBtnFilter").click();		
 		await expect(page.locator("#filterDrawer")).toBeHidden();
@@ -553,7 +563,7 @@ test.describe("Filter drawer", () => {
 
 });
 
-// TODO:
+// TODO: Toggles don't work with Playwright
 test.describe("View drawer", () => {
 
 	test.beforeAll(async () => {
@@ -633,6 +643,7 @@ test.describe("Jail", () => {
 
 });
 
+// TODO
 test.describe("Keyboard shortcuts", () => {
 
 	test.beforeAll(async () => {
@@ -670,8 +681,8 @@ test.describe("Keyboard shortcuts", () => {
 
 });
 
-// TODO
-test.describe("Settings", () => {
+// TODO: Toggles don't work with Playwright
+test.describe("Settings modal", () => {
 
 	test.beforeAll(async () => {
 		app = await electron.launch({ 
@@ -706,8 +717,22 @@ test.describe("Settings", () => {
 		await page.keyboard.press("Escape");
 	})
 
+	test("Do the Toggles", async () => {
+		await page.locator("#navBtnSettings").click();
+		await expect(page.locator("#modalSettings")).toBeVisible();
+		await page.focus('input#notifications');
+		await page.waitForTimeout(50000);
+	})
+
+	test("Close settings modal by click on x button", async () => {
+		const button = await page.locator("#modalSettings button[role=cancel]");
+		await button.click();
+		await expect(page.locator("#modalSettings")).not.toBeVisible();
+	})
+
 	// TODO: Add undo test case -> maybe a problem because of the style in html tag
 	test("Set zoom to 81%", async () => {
+		await page.locator("#navBtnSettings").click();
 		const zoom = await page.locator("input#zoom");
 		await zoom.click({
 			position: {
@@ -718,11 +743,50 @@ test.describe("Settings", () => {
 		await expect(zoom).toHaveValue("81");
 	})
 
-	// test("Close settings modal by click on x button", async () => {
-	// 	const button = await page.locator("#modalSettings button[aria-label=close]");
-	// 	await button.click();
-	// 	await expect(page.locator("#modalSettings")).not.toBeVisible();
-	// })
+});
+
+test.describe("Help modal", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Check if tabs are clickable", async () => {
+		await page.locator("#navBtnHelp").click();
+		await expect(page.locator("#modalHelp")).toBeVisible();
+		
+		const tabs = await page.locator("#modalHelp .tabs ul li").count();
+		await expect(tabs).toBe(6);
+
+	})
+
+	test("4 times tabbing and pressing enter select the 4th card", async () => {
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Tab");
+		await page.keyboard.press("Enter");
+		const tab = page.locator(":nth-match(#modalHelp .tabs ul li, 4)");
+		await expect(tab).toHaveClass(/is-active/);
+	})
+
+	test("Escape closes window", async () => {
+		await page.keyboard.press("Escape");
+		await expect(page.locator("#modalHelp")).toBeHidden();
+
+	})
 
 });
 
@@ -770,4 +834,91 @@ test.describe("Search", () => {
 		await expect(rows).toBe(13);
 	})
 
+	test("Search query produces 0 results and reset button will restore all todos", async () => {
+		await page.locator("#todoTableSearch").fill("This will produce 0 results");
+		await page.waitForTimeout(1000);
+		let rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(0);
+		await page.locator("#btnNoResultContainerResetFilters").click();
+		await page.waitForTimeout(1000);
+		rows = await page.locator("#todoTable .todo").count();
+		await expect(rows).toBe(18);
+	});
+
 });
+
+test.describe("File chooser", () => {
+
+	test.beforeAll(async () => {
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+			}
+		});
+		page = await app.firstWindow();
+		// wait for 500ms to let the window built up fully
+		await page.waitForTimeout(500);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Click in navigation opens file chooser", async () => {
+		await page.locator("#navBtnOpenTodoFile").click();
+		await expect(page.locator("#modalChangeFile")).toBeVisible();
+	})
+
+	test("Select button is disabled and all other buttons are enabled", async () => {
+		await expect(await page.locator("#modalChangeFileTable tr td button")).toBeDisabled();
+		await expect(await page.locator("#modalChangeFileTable tr td i")).toBeEnabled();
+		await expect(await page.locator("#btnFilesOpenTodoFile")).toBeEnabled();
+		await expect(await page.locator("#btnFilesCreateTodoFile")).toBeEnabled();
+		await expect(await page.locator("#btnFilesCancel")).toBeEnabled();
+	})
+
+	test("Count one existing file in list", async () => {
+		const files = await page.locator("#modalChangeFileTable tr").count();
+		await expect(files).toBe(1);
+	})
+
+});
+
+// TODO
+// test.describe("Drawer handle", () => {
+
+// 	test.beforeAll(async () => {
+// 		app = await electron.launch({ 
+// 			args: ["src/main.js"],
+// 			env: {
+// 				"NODE_ENV": "testing",
+// 				"SLEEK_CUSTOM_FILE": "test/todo.txt"
+// 			}
+// 		});
+// 		page = await app.firstWindow();
+// 		// wait for 500ms to let the window built up fully
+// 		await page.waitForTimeout(500);
+// 	});
+
+// 	test.afterAll(() => {
+// 		app.close();
+// 	});
+
+// 	test("Click in navigation opens file chooser", async () => {
+// 		await page.locator("#navBtnFilter").click();
+// 		await expect(page.locator("#filterDrawer")).toBeVisible();
+
+// 		const handle = await page.locator("#handle");
+// 		await handle.dragTo("#todoTable", {
+// 			"targetPosition": {
+// 				"x": 1000,
+// 				"y": 1
+// 			}
+// 		});
+
+// 		await page.waitForTimeout(100000);
+// 	})
+
+// });

@@ -1,22 +1,44 @@
 "use strict";
 import { _paq } from "./matomo.mjs";
-import { appData, userData, setUserData, translations } from "../render.js";
+import { appData, userData, setUserData, translations, startFileWatcher } from "../render.js";
 import { createModalJail } from "./jail.mjs";
 import { focusRow } from "./keyboard.mjs";
 import { handleError } from "./helper.mjs";
+import { resetFilters } from "./filters.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 
+const btnFilesCancel = document.getElementById("btnFilesCancel");
+const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
+const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
+const btnNoResultContainerResetFilters = document.getElementById("btnNoResultContainerResetFilters");
 const fileTabBar = document.getElementById("fileTabBar");
 const fileTabBarList = document.querySelector("#fileTabBar ul");
 const modalChangeFile = document.getElementById("modalChangeFile");
 const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
 const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
-const btnFilesCancel = document.getElementById("btnFilesCancel");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
 
+btnFilesCancel.innerHTML = translations.cancel;
 modalChangeFileCreate.innerHTML = translations.createFile;
 modalChangeFileOpen.innerHTML = translations.openFile;
-btnFilesCancel.innerHTML = translations.cancel;
+
+btnNoResultContainerResetFilters.onclick = function() {
+  resetFilters(true);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
+}
+
+btnFilesCreateTodoFile.onclick = function() {
+  window.api.send("openOrCreateFile", "create");
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
+}
+
+btnFilesOpenTodoFile.onclick = function() {
+  window.api.send("openOrCreateFile", "open");
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
+}
 
 function removeFileFromList(index, removeFile) {
   try {
@@ -43,15 +65,12 @@ function removeFileFromList(index, removeFile) {
       });
 
       if(userData.files.length === 0) {
-
         showOnboarding(true).then(response => {
           console.info(response);
         }).catch(error => {
           handleError(error);
         });
-
         return Promise.resolve("Info: No files available, showing onboarding");
-
       }
       
     // ******************************************************
@@ -64,7 +83,6 @@ function removeFileFromList(index, removeFile) {
       userData.files[index][0] = 0;
       // remove tab bar flag from file
       userData.files[index][2] = 0;
-
     }
 
     // search for the first file that is suppose to be shown in tab bar
@@ -83,7 +101,17 @@ function removeFileFromList(index, removeFile) {
       handleError(error);
     });
 
-    window.api.send("startFileWatcher", [userData.files[newIndex][1], 1]);
+    generateFileList().then(response => {
+      console.info(response);
+    }).catch(error => {
+      handleError(error);
+    });
+
+    startFileWatcher(userData.files[newIndex][1], 1).then(response => {
+      console.info(response);
+    }).catch(error => {
+      handleError(error);
+    });
 
     return Promise.resolve("Success: File removed from tab");
 
@@ -102,7 +130,11 @@ function selectFileFromList(index) {
     focusRow(false);
     
     // load new file
-    window.api.send("startFileWatcher", [userData.files[index][1], 1]);
+    startFileWatcher(userData.files[index][1], 1).then(response => {
+      console.info(response);
+    }).catch(error => {
+      handleError(error);
+    });
     
     return Promise.resolve("Success: File selected");
   
@@ -111,7 +143,7 @@ function selectFileFromList(index) {
   }
 }
 
-function generateFileTabs() {
+async function generateFileTabs() {
   try {
 
     // empty tab bar on each run

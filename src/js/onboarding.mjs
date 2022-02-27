@@ -1,13 +1,15 @@
 "use strict";
 import { userData, translations } from "../render.js";
-import { createModalJail } from "./jail.mjs";
 import { generateFileList } from "./files.mjs";
+import { show } from "./form.mjs";
+import { showDrawer } from "./drawer.mjs";
 import { _paq } from "./matomo.mjs";
 import { handleError } from "./helper.mjs";
 
 const addTodoContainerButton = document.getElementById("addTodoContainerButton");
 const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadline");
 const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtitle");
+const btnAddTodoContainer = document.getElementById("btnAddTodoContainer");
 const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
 const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
 const navBtnAddTodo = document.getElementById("navBtnAddTodo");
@@ -22,6 +24,7 @@ const onboardingContainerSubtitle = document.getElementById("onboardingContainer
 const todoTable = document.getElementById("todoTable");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 const welcomeToSleek = document.getElementById("welcomeToSleek");
+const modalChangeFile = document.getElementById("modalChangeFile");
 
 addTodoContainerButton.innerHTML = translations.addTodo;
 addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
@@ -32,6 +35,16 @@ onboardingContainerBtnCreate.innerHTML = translations.createFile;
 onboardingContainerBtnOpen.innerHTML = translations.openFile;
 onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
 welcomeToSleek.innerHTML = translations.welcomeToSleek;
+
+btnAddTodoContainer.onclick = function () {
+  show().then(response => {
+    console.info(response);
+  }).catch(error => {
+    handleError(error);
+  });
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
+}
 
 btnOnboardingCreateTodoFile.onclick = function() {
 
@@ -75,8 +88,9 @@ export function showOnboarding() {
       todoTable.classList.remove("is-active");
       todoTableSearchContainer.classList.remove("is-active");
       modalChangeFile.classList.remove("is-active");
+      showDrawer(false);
 
-      return Promise.resolve("Info: Onboarding is shown");
+      return Promise.resolve("Success: Onboarding shown");
 
     // hide onboarding
     } else {
@@ -88,7 +102,7 @@ export function showOnboarding() {
       todoTable.classList.add("is-active");
       todoTableSearchContainer.classList.add("is-active");
 
-      return Promise.resolve("Info: Onboarding is hidden");
+      return Promise.resolve("Success: Onboarding hidden");
 
     }
 

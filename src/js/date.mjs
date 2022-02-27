@@ -1,4 +1,5 @@
 "use strict";
+// converts a date object into a todo.txt compatible string xxxx-xx-xx
 function convertDate(date) {
   let day = ("0" + (date.getDate())).slice(-2)
   let month = ("0" + (date.getMonth() + 1)).slice(-2);

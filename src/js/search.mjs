@@ -1,5 +1,5 @@
 "use strict";
-import { translations, startBuilding, userData } from "../render.js";
+import { buildTable, userData } from "../render.js";
 import { addTodo } from "./todos.mjs";
 import { handleError, debounce } from "./helper.mjs";
 import { _paq } from "./matomo.mjs";
@@ -7,16 +7,17 @@ import { _paq } from "./matomo.mjs";
 const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchAddTodo = document.getElementById("todoTableSearchAddTodo");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
-const todoTableSearchLabel = document.getElementById("todoTableSearchLabel");
-
-todoTableSearchLabel.innerHTML = translations.todoTxtSyntax;
 
 todoTableSearch.oninput = debounce(function() {
   // on focus show addTodo button
   todoTableSearchAddTodo.classList.add("is-active");
 
   // rebuild table
-  startBuilding();
+  buildTable().then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
 }, 250)
 
 todoTableSearch.onfocus = function() {
@@ -47,8 +48,8 @@ todoTableSearchAddTodo.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Search", "Click on Add as new todo"]);
 }
 
-todoTableSearchAddTodo.onblur = function() {
+todoTableSearchAddTodo.onblur = async function() {
   // hide addTodo as soon as it loses focus
-  this.classList.remove("is-active");
+  await this.classList.remove("is-active");
 }
 

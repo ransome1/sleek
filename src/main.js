@@ -5,14 +5,13 @@ const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
-
 // ########################################################################################################################
 // HOT RELOAD
 // https://github.com/sindresorhus/electron-reloader
 // ########################################################################################################################
-try {
-  require("electron-reloader")(module);
-} catch {}
+// try {
+//   require("electron-reloader")(module);
+// } catch {}
 // ########################################################################################################################
 // SETUP PROCESS
 // ########################################################################################################################
@@ -93,6 +92,7 @@ if(process.platform === "win32") trayIcon = path.join(appData.path, "../assets/i
 // ########################################################################################################################
 let mainWindow = null;
 const createWindow = async function() {
+
   const getContent = function(file) {
     try {
       if(!fs.existsSync(file)) {
@@ -138,7 +138,6 @@ const createWindow = async function() {
             console.info("Success: Opened file: " + file);
             startFileWatcher(file, 1).then(response => {
               console.info(response);
-              //mainWindow.webContents.send("triggerFunction", "resetModal")
             }).catch(error => {
               console.error(error);
             });
@@ -201,7 +200,7 @@ const createWindow = async function() {
       }
     });
     userData.set("files", userData.data.files);
-    if(fileRemoved) mainWindow.webContents.send("triggerFunction", "configureMainView");
+    if(fileRemoved) mainWindow.webContents.send("triggerFunction", "setupInterface");
   }
   const startFileWatcher = async function(file, isTabItem) {
     try {
@@ -225,9 +224,10 @@ const createWindow = async function() {
 
       // check if file exists, otherwise abort and call onbaording
       if(!fs.existsSync(file)) {
-        await refreshFiles();
-        mainWindow.webContents.reloadIgnoringCache();
-        return Promise.reject("Info: File not found on disk");
+        //await refreshFiles();
+        //mainWindow.webContents.reloadIgnoringCache();
+        mainWindow.webContents.send("triggerFunction", "showOnboarding", [true]);
+        return Promise.reject("Info: File not found on disk, starting onboarding");
       }
 
       // use the loop to check if the new path is already in the user data
@@ -261,7 +261,7 @@ const createWindow = async function() {
       fileWatcher
       .on("add", function() {
         getContent(file).then(content => {
-          mainWindow.webContents.send("refresh", [content])
+          mainWindow.webContents.send("buildTable", [content])
         }).catch(error => {
           console.log(error);
         });
@@ -292,7 +292,7 @@ const createWindow = async function() {
         // wait 10ms before rereading in case the file is being updated with a delay
         setTimeout(function() {
           getContent(file).then(content => {
-            mainWindow.webContents.send("refresh", [content])
+            mainWindow.webContents.send("buildTable", [content])
           }).catch(error => {
             console.log(error);
           });
@@ -301,7 +301,9 @@ const createWindow = async function() {
       // change window title
       const title = path.basename(file) + " - sleek";
       mainWindow.title = title;
-      mainWindow.webContents.send("triggerFunction", "changeWindowTitle", title);
+      mainWindow.webContents.on("did-finish-load",() => {
+        mainWindow.setTitle(title);
+      });
       return Promise.resolve("Success: Filewatcher is watching: " + file);
     } catch (error) {
       // if something file related crashes, onboarding will be triggered
@@ -313,12 +315,16 @@ const createWindow = async function() {
   }
   const getUserData = function() {
     try {
+
       userData = new Store({
         configName: "user-preferences",
         defaults: {}
       });
+
       // feed custom file if env is set
       if(process.env.SLEEK_CUSTOM_FILE) userData.set("files", [[1, process.env.SLEEK_CUSTOM_FILE, 1]]);
+
+      // set the default if those havn't been set already
       if(typeof userData.data.width != "number") userData.set("width", 1100);
       if(typeof userData.data.height != "number") userData.set("height", 700);
       if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
@@ -344,13 +350,21 @@ const createWindow = async function() {
       if(!Array.isArray(userData.data.dismissedNotifications)) userData.set("dismissedNotifications", []);
       if(!Array.isArray(userData.data.dismissedMessages)) userData.set("dismissedMessages", []);
       if(!Array.isArray(userData.data.hideFilterCategories)) userData.set("hideFilterCategories", []);
-      if(!Array.isArray(userData.data.sortBy)) userData.set("sortBy", ["priority", "dueString", "contexts", "projects"]);
+      if(!Array.isArray(userData.data.sortBy)) userData.set("sortBy", ["priority", "due", "contexts", "projects", "date"]);
       if(typeof userData.data.deferredTodos != "boolean") userData.data.deferredTodos = true;
       if(typeof userData.data.fileTabs != "boolean") userData.data.fileTabs = true;
       if(typeof userData.data.appendStartDate != "boolean") userData.data.appendStartDate = false;
+      if(typeof userData.data.language != "string") userData.data.language = app.getLocale().substr(0,2);
+      
+      //TODO remove this after 1.17 has been fully distributed
+      const indexOfDueString = userData.data.sortBy.indexOf("dueString");
+      if(indexOfDueString !== -1) userData.data.sortBy[indexOfDueString] = "due";
+      
       //TODO remove this after 1.14 has been fully distributed
-      if(userData.data.sortBy.length === 4) userData.set("sortBy", ["priority", "dueString", "contexts", "projects", "date"]);
+      if(userData.data.sortBy.length === 4) userData.set("sortBy", ["priority", "due", "contexts", "projects", "date"]);
+
       return Promise.resolve(userData);
+
     } catch(error) {
       error.functionName = getUserData.id;
       // trigger matomo event
@@ -385,12 +399,7 @@ const createWindow = async function() {
   const getTranslations = function(language) {
     try {
       const i18next = require("./configs/i18next.config");
-      if(!language && !userData.data.language) {
-        language = app.getLocale().substr(0,2);
-      }
       appData.languages = i18next.options.preload;
-      if(!appData.languages.includes(language)) language = "en";
-      userData.set("language", language);
       return Promise.resolve(i18next.getDataByLanguage(language).translation);
     } catch (error) {
       // trigger matomo event
@@ -455,16 +464,17 @@ const createWindow = async function() {
         role: "print",
         accelerator: "CmdOrCtrl+P",
         label: translations.printCurrentView,
-        click: function() {
+        click: async function() {
           mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
           const index = userData.data.files.findIndex(file => file[0] === 1);
           if(index!==-1) {
-            getContent(userData.data.files[index][1]).then(content => {
-              mainWindow.webContents.send("refresh", [content, false, true]);
-              mainWindow.webContents.executeJavaScript('window.print()');
-            }).catch(error => {
-              console.log(error);
-            });
+            
+            mainWindow.webContents.send("buildTable", [null, true]);
+
+            setTimeout(function() {
+              mainWindow.webContents.executeJavaScript("window.print()");
+            }, 500);
+
           } else {
             console.log("Info: No todo file active, won't print");
             return false;
@@ -523,22 +533,7 @@ const createWindow = async function() {
           mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
           const index = userData.data.files.findIndex(file => file[0] === 1);
           if(index!==-1) {
-            getContent(userData.data.files[index][1]).then(content => {
-              mainWindow.webContents.send("refresh", [content, false, true]);
-              mainWindow.webContents.print(options, (success, error) => {
-                if(!success) {
-                  console.log(error);
-                  // trigger matomo event
-                  if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print error", error])
-                } else {
-                  console.log("Success: Print initiated");
-                  // trigger matomo event
-                  if(userData.data.matomoEvents) _paq.push(["trackEvent", "Print", "Print initiated"])
-                }
-              });
-            }).catch(error => {
-              console.log(error);
-            });
+            mainWindow.webContents.send("buildTable", [null, true]);
           } else {
             console.log("Info: No todo file active, won't print");
             return false;
@@ -613,7 +608,7 @@ const createWindow = async function() {
         {
           label: translations.resetFilters,
           click: function() {
-            mainWindow.webContents.send("triggerFunction", "resetFilters")
+            mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
           }
         },
         {
@@ -814,7 +809,7 @@ const createWindow = async function() {
       })
       .on("startFileWatcher", (event, data) => {
         startFileWatcher(data[0], data[1]).then(response => {
-          console.info(response);
+          mainWindow.webContents.send("startFileWatcher", response);
         }).catch(error => {
           console.error(error);
         });
@@ -870,7 +865,7 @@ const createWindow = async function() {
       const index = userData.data.files.findIndex(file => file[0] === 1);
       if(index <= 0) return false;
       getContent(userData.data.files[index][1]).then(content => {
-        mainWindow.webContents.send("refresh", [content])
+        mainWindow.webContents.send("buildTable", [content])
       }).catch(error => {
         console.error(error);
       });
@@ -909,6 +904,12 @@ if(!gotTheLock) {
         }
     })
     app.on("ready", () => {
+
+      const i18next = require("./configs/i18next.config");
+      i18next.changeLanguage((app || remote.app).getLocale(), (error) => {
+        if(error) return console.log("Error: Language could not be changed to: " + (app || remote.app).getLocale(), error);
+      });
+
       // in development environment switch to specific userData folder
       if(process.env.NODE_ENV === "development") app.setPath("userData", path.join(app.getPath("userData"), "..", "sleek_development"));
 

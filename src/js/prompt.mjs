@@ -14,7 +14,6 @@ modalPromptCancel.innerHTML = translations.cancel;
 // will respond to either of the two clicks
 function getConfirmationResponse() {
 	try {
-
 		return new Promise((resolve, reject) => {
 			modalPromptConfirm.onclick = function() {
 				resolve("Info: Prompt confirmed");
@@ -23,7 +22,6 @@ function getConfirmationResponse() {
 				reject("Info: Prompt canceled");
 			}
 		});
-
 	} catch(error) {
 		error.functionName = getConfirmationResponse.name;
 		return Promise.reject(error);

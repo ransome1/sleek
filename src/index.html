@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title id="title">sleek</title>
+    <title>sleek</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css" rel="stylesheet">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/brands.css" rel="stylesheet">
@@ -190,13 +190,14 @@
             <ul></ul>
           </section>
 
-          <section id="todoTableSearchContainer" class="inputWrapper">
+          <section id="todoTableSearchContainer">
 
-            <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
             <i class="fas fa-search"></i>
-            <label id="todoTableSearchLabel" for="todoTableSearch"></label>
+            
             <input id="todoTableSearch" class="input is-medium" type="search" tabindex="0" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
+            
             <button id="todoTableSearchAddTodo" class="tag" tabindex="0"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
+            
             <section id="resultStats">
               <span class="tag"></span>
             </section>
@@ -248,7 +249,6 @@
         <div class="card">
           <div class="card-content">
               <div class="inputWrapper">
-                <label id="modalFormInputLabel" for="modalFormInput"></label>
                 <input id="modalFormInput" class="input is-medium" type="text" tabindex="0" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
                 <a href="#" id="modalFormInputResize" class="icon is-right" tabindex="-1" data-input-type="input"><i class="fas fa-expand-alt"></i></a>
               </div>
@@ -498,12 +498,12 @@
       <div class="modal-card">
         <div class="tabs is-centered">
           <ul>
-            <li class="helpTab1 is-active" tabindex="0"><a href="#" id="helpTab1Title"></a></li>
-            <li class="helpTab2" tabindex="0"><a href="#" id="helpTab2Title" tabindex="-1"></a></li>
-            <li class="helpTab3" tabindex="0"><a href="#" id="helpTab3Title" tabindex="-1"></a></li>
-            <li class="helpTab4" tabindex="0"><a href="#" id="helpTab4Title" tabindex="-1"></a></li>
-            <li class="helpTab5" tabindex="0"><a href="#" id="helpTab5Title" tabindex="-1"></a></li>
-            <li class="helpTab6" tabindex="0"><a href="#" id="settingsTabAbout" tabindex="-1"></a></li>
+            <li class="helpTab1 is-active"><a href="#" id="helpTab1Title" tabindex="0"></a></li>
+            <li class="helpTab2"><a href="#" id="helpTab2Title" tabindex="0"></a></li>
+            <li class="helpTab3"><a href="#" id="helpTab3Title" tabindex="0"></a></li>
+            <li class="helpTab4"><a href="#" id="helpTab4Title" tabindex="0"></a></li>
+            <li class="helpTab5"><a href="#" id="helpTab5Title" tabindex="0"></a></li>
+            <li class="helpTab6"><a href="#" id="settingsTabAbout" tabindex="0"></a></li>
           </ul>
         </div>
         <section id="helpTab1" class="modal-card-body is-active" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
@@ -825,7 +825,7 @@
     </div>
 
     <section id="messages">
-      <article id="messageGenericContainer" class="notification" data="generic">
+      <article id="messageGenericContainer" class="notification message" data="generic">
         <button id="messageGenericContainerClose" class="delete" role="cancel" data-message="generic"></button>
         <p id="messageGenericMessage"></p>
       </article>
@@ -854,10 +854,7 @@
         </div>
       </article>
     </section>
-
-    <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
     <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
-    <script defer src="../node_modules/marked/marked.min.js"></script>
     <script defer src="render.js" type="module"></script>
   </body>
 </html>

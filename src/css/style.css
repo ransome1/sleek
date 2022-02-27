@@ -660,8 +660,9 @@ textarea {
   outline: none !important;
 }
 
-input::placeholder {
-  color: #5a5a5a;
+input::placeholder,
+textarea::placeholder {
+  color: #ccc;
 }
 
 input[type=text],
@@ -669,49 +670,6 @@ input[type=search],
 textarea {
   border-radius: 1.5em;
   background-color: #f0f0f0 !important;
-}
-
-.inputWrapper {
-  position: relative;
-  padding-top: 0.5em;
-}
-.inputWrapper input[type=search],
-.inputWrapper input[type=text],
-.inputWrapper textarea {
-  padding: 2em 1em 1.2em 1.5em;
-}
-.inputWrapper textarea {
-  padding-bottom: 0.75em;
-}
-.inputWrapper input::placeholder,
-.inputWrapper textarea::placeholder {
-  color: #ccc;
-}
-.inputWrapper label {
-  cursor: pointer;
-  font-size: 0.75em;
-  position: absolute;
-  top: 1.3em;
-  left: 2.5em;
-  z-index: 65;
-}
-.inputWrapper .todoTableSearchQuestionmark {
-  display: none;
-}
-
-.is-focused .inputWrapper label,
-.is-focused .inputWrapper i,
-.inputWrapper.is-focused label,
-.inputWrapper.is-focused i {
-  color: #3273dc;
-}
-.is-focused .inputWrapper .fa-search,
-.inputWrapper.is-focused .fa-search {
-  display: none;
-}
-.is-focused .inputWrapper .todoTableSearchQuestionmark,
-.inputWrapper.is-focused .todoTableSearchQuestionmark {
-  display: block;
 }
 
 input[type=number] {
@@ -1104,6 +1062,10 @@ nav ul:nth-child(2):hover #versionNumber {
   animation-delay: 0.5s;
 }
 
+#todoTableSearchContainer.is-focused i.fa-search {
+  color: #3273dc;
+}
+
 #todoTableSearchContainer {
   width: 100%;
   float: left;
@@ -1117,7 +1079,7 @@ nav ul:nth-child(2):hover #versionNumber {
 #todoTableSearchContainer #todoTableSearchAddTodo {
   display: none;
   position: absolute;
-  top: 2.35em;
+  top: 1.8em;
   right: 7em;
   color: #3273dc;
   background: white;
@@ -1144,50 +1106,28 @@ nav ul:nth-child(2):hover #versionNumber {
   -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   cursor: pointer;
-  margin-top: -0.7em;
 }
 #todoTableSearchContainer label {
-  top: 1.2em;
-  left: 7.5em;
+  cursor: pointer;
+  font-size: 0.75em;
+  position: absolute;
+  top: 0.5em;
+  left: 2.5em;
+  z-index: 65;
 }
-#todoTableSearchContainer i.fa-search,
-#todoTableSearchContainer .todoTableSearchQuestionmark {
+#todoTableSearchContainer i.fa-search {
   font-size: 1.3em;
   line-height: 1;
   position: absolute;
-  top: 0.7em;
+  top: 0.4em;
   left: 2.5em;
   z-index: 70;
   padding: 0.75em 0;
 }
 
 @media screen and (max-width: 992px), screen and (max-height: 650px) {
-  .inputWrapper {
-    position: relative;
-    padding-top: 0.5em;
-  }
-  .inputWrapper input[type=search],
-.inputWrapper input[type=text] {
-    padding: 0.75em 1em 0.75em 1.5em;
-  }
-  .inputWrapper input::placeholder,
-.inputWrapper textarea::placeholder {
-    color: #ccc;
-  }
-  .inputWrapper label {
-    display: none;
-  }
-
   #modalForm textarea {
     padding: 0.75em !important;
-  }
-  #modalForm #modalFormInputResize {
-    top: 1.4em !important;
-  }
-
-  .modal-content,
-.modal-card {
-    width: 100% !important;
   }
 
   .modal.content .modal-card {
@@ -1202,20 +1142,6 @@ nav ul:nth-child(2):hover #versionNumber {
     padding: 0.25em 0.5em;
   }
 
-  #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
-    margin-top: 0;
-  }
-  #todoTableSearchContainer i.fa-search,
-#todoTableSearchContainer .todoTableSearchQuestionmark {
-    top: 0.37em;
-  }
-  #todoTableSearchContainer #todoTableSearchAddTodo {
-    top: 1.7em;
-  }
-  #todoTableSearchContainer #todoTableSearchAddTodo i {
-    display: none;
-  }
-
   #todoTable {
     padding: 0 1.5em 1.5em 1.5em;
   }
@@ -1228,6 +1154,7 @@ nav ul:nth-child(2):hover #versionNumber {
   #todoTable .todo .cell .text {
     margin: 0;
   }
+
   nav ul {
     width: 3.5em;
   }
@@ -1288,30 +1215,8 @@ nav ul li.logo {
     padding: 0.5em !important;
   }
 }
-body.compact .inputWrapper {
-  position: relative;
-  padding-top: 0.5em;
-}
-body.compact .inputWrapper input[type=search],
-body.compact .inputWrapper input[type=text] {
-  padding: 0.75em 1em 0.75em 1.5em;
-}
-body.compact .inputWrapper input::placeholder,
-body.compact .inputWrapper textarea::placeholder {
-  color: #ccc;
-}
-body.compact .inputWrapper label {
-  display: none;
-}
 body.compact #modalForm textarea {
   padding: 0.75em !important;
-}
-body.compact #modalForm #modalFormInputResize {
-  top: 1.4em !important;
-}
-body.compact .modal-content,
-body.compact .modal-card {
-  width: 100% !important;
 }
 body.compact .modal.content .modal-card {
   padding: 1em !important;
@@ -1321,19 +1226,6 @@ body.compact table tr td {
 }
 body.compact #sortByContainer li {
   padding: 0.25em 0.5em;
-}
-body.compact #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
-  margin-top: 0;
-}
-body.compact #todoTableSearchContainer i.fa-search,
-body.compact #todoTableSearchContainer .todoTableSearchQuestionmark {
-  top: 0.37em;
-}
-body.compact #todoTableSearchContainer #todoTableSearchAddTodo {
-  top: 1.7em;
-}
-body.compact #todoTableSearchContainer #todoTableSearchAddTodo i {
-  display: none;
 }
 body.compact #todoTable {
   padding: 0 1.5em 1.5em 1.5em;
@@ -1820,13 +1712,12 @@ body.compact #autoCompleteContainer h4 {
   min-height: 5.5em;
   overflow: hidden;
   resize: none;
-  padding-top: 1.5em;
 }
 #modalForm #modalFormInputResize {
   position: absolute;
   z-index: 60;
-  top: 1.75em;
-  right: 1.2em;
+  top: 2.3em;
+  right: 2.3em;
   cursor: pointer;
   pointer-events: all;
 }
@@ -2020,12 +1911,17 @@ body.compact #autoCompleteContainer h4 {
   font-family: inherit;
   height: auto;
   line-height: auto;
-  padding: 0 0.5em;
+  padding: 0;
   cursor: default;
+  color: #5a5a5a;
+  text-align: left;
 }
 #todoTable .group .cell {
   margin-top: 1em;
   padding: 0;
+}
+#todoTable .group.past button {
+  color: #ff3860;
 }
 #todoTable .group.priority button {
   font-size: 1.1em;
@@ -2033,6 +1929,10 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .group.priority .cell {
   margin-bottom: 0.5em;
+}
+#todoTable .group.projects button,
+#todoTable .group.contexts button {
+  padding: 0 0.5em;
 }
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
@@ -2164,30 +2064,30 @@ body.compact #autoCompleteContainer h4 {
   color: transparent !important;
   cursor: pointer;
 }
-#todoTable .cell.isToday,
-#todoTable .cell.isToday button {
+#todoTable button.today,
+#todoTable .cell.today {
   color: #ff3860;
 }
-#todoTable .cell.isToday .tags .is-dark,
-#todoTable .cell.isToday button .tags .is-dark {
+#todoTable button.today .tags .is-dark,
+#todoTable .cell.today .tags .is-dark {
   background: #ff3860;
   font-family: FreeSansBold;
 }
-#todoTable .cell.isTomorrow,
-#todoTable .cell.isTomorrow button {
-  color: #fa745e;
+#todoTable button.tomorrow,
+#todoTable .cell.tomorrow {
+  color: #fa745e !important;
 }
-#todoTable .cell.isTomorrow .tags .is-dark,
-#todoTable .cell.isTomorrow button .tags .is-dark {
+#todoTable button.tomorrow .tags .is-dark,
+#todoTable .cell.tomorrow .tags .is-dark {
   background: #fa745e;
   font-family: FreeSansBold;
 }
-#todoTable .cell.isPast,
-#todoTable .cell.isPast button {
+#todoTable button.past,
+#todoTable .cell.past {
   color: #ff3860;
 }
-#todoTable .cell.isPast .tags .is-dark,
-#todoTable .cell.isPast button .tags .is-dark {
+#todoTable button.past .tags .is-dark,
+#todoTable .cell.past .tags .is-dark {
   background: #ff3860;
   font-family: FreeSansBold;
 }

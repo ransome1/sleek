@@ -3,7 +3,7 @@ import { _paq } from "./matomo.mjs";
 import { createModalJail } from "./jail.mjs";
 import { generateFilterData } from "./filters.mjs";
 import { handleError } from "./helper.mjs";
-import { items, item, setTodoComplete, createTodoObject } from "./todos.mjs";
+import { items, item, setTodoComplete, generateTodoTxtObject } from "./todos.mjs";
 import { getCaretPosition } from "./helper.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { userData, setUserData, translations } from "../render.js";
@@ -15,7 +15,6 @@ const datePickerInput = document.getElementById("datePickerInput");
 const modalForm = document.getElementById("modalForm");
 const modalFormAlert = document.getElementById("modalFormAlert");
 const modalFormInput = document.getElementById("modalFormInput");
-const modalFormInputLabel = document.getElementById("modalFormInputLabel");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
 const priorityPicker = document.getElementById("priorityPicker");
 const todoContext = document.getElementById("todoContext");
@@ -23,12 +22,12 @@ const todoContext = document.getElementById("todoContext");
 btnSave.innerHTML = translations.save;
 btnCancel.innerHTML = translations.cancel;
 datePickerInput.placeholder = translations.formSelectDueDate;
-modalFormInputLabel.innerHTML = translations.todoTxtSyntax;
 
 btnItemStatus.onclick = function() {
   try {
     // pass data item to function, not the actual value
-    setTodoComplete(modalForm.getAttribute("data-item")).then(response => {
+    const todo = generateTodoTxtObject(modalForm.getAttribute("data-item"));
+    setTodoComplete(todo).then(response => {
       console.log(response);
     }).catch(error => {
       handleError(error);
@@ -87,7 +86,7 @@ modalForm.onsubmit = function() {
     const inputValue = modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
 
     // create todo object from input value
-    let todo = createTodoObject(inputValue);
+    let todo = generateTodoTxtObject(inputValue);
 
     // we add the current date to the start date attribute of the todo.txt object
     if(userData.appendStartDate) todo.date = new Date();
@@ -123,7 +122,7 @@ modalForm.onsubmit = function() {
     (index === -1 && !dataItem) ? items.objects.push(todo) : items.objects.splice(index, 1, todo);
 
     // mark the todo for anchor jump after next reload
-    item.previous = todo.toString();
+    item.previous = todo;
 
     // send file to main process to save it
     window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
@@ -333,7 +332,7 @@ async function setPriority(priority) {
   try {
     const modalFormInput = document.getElementById("modalFormInput");
     let index = 0;
-    let todo = await createTodoObject(modalFormInput.value);
+    let todo = await generateTodoTxtObject(modalFormInput.value);
     // get index if priority was already found in object
     if(todo.priority) index = todo.priority.toLowerCase().charCodeAt(0)-96;
 
@@ -377,6 +376,7 @@ function resetForm() {
   try {
 
     const modalFormInput = document.getElementById("modalFormInput");
+    
     // clear the content in the input field as it's not needed anymore
     modalFormInput.value = null;
 
@@ -424,7 +424,7 @@ async function show(todo, templated) {
     //
     if(todo) {
       // we need to check if there already is a due date in the object
-      todo = createTodoObject(todo);
+      todo = generateTodoTxtObject(todo);
 
       // set the priority
       if(todo.priority) priorityPicker.value = todo.priority;
@@ -519,6 +519,7 @@ async function replaceInput(type) {
       case "input":
         newInputElement = document.createElement("textarea");
         newInputElement.value = value.replaceAll(String.fromCharCode(16),"\r\n");
+        newInputElement.placeholder = translations.todoTxtSyntax;
         modalFormInputResize.setAttribute("data-input-type", "textarea");
         modalFormInputResize.innerHTML = "<i class=\"fas fa-compress-alt\"></i>";
         setUserData("useTextarea", true);
@@ -527,6 +528,7 @@ async function replaceInput(type) {
         newInputElement = document.createElement("input");
         newInputElement.value = value;
         newInputElement.type = "text";
+        newInputElement.placeholder = translations.todoTxtSyntax;
         modalFormInputResize.setAttribute("data-input-type", "input");
         modalFormInputResize.innerHTML = "<i class=\"fas fa-expand-alt\"></i>";
         setUserData("useTextarea", false);

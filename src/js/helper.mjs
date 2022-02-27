@@ -1,6 +1,6 @@
 "use strict";
 import { appData, userData, setUserData, translations } from "../render.js";
-import { generateGroups, items, createTodoObject } from "./todos.mjs";
+import { generateGroupedObjects, items, generateTodoTxtObject } from "./todos.mjs";
 import { isToday, isPast } from "./date.mjs";
 import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
@@ -42,7 +42,7 @@ export function jumpToItem(item) {
 }
 export async function pasteItemsToClipboard(items) {
   try {
-    let groups = await generateGroups(items);
+    let groups = await generateGroupedObjects(items);
     let itemsForClipboard;
     itemsForClipboard = "Status\t";
     itemsForClipboard += "Closed\t";
@@ -116,13 +116,39 @@ export function getBadgeCount() {
   });
   return count;
 }
-export function configureMainView() {
+// one time interface setup when app is started
+export function initialSetupInterface() {
   try {
 
+    // setup compact view
+    (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
+
+    // setup darkmode
+    window.api.send("darkmode", userData.darkmode);
+    (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
+
+    // set scaling factor if default font size has changed
+    //if(userData.zoom) {
+      document.getElementById("html").style.zoom = userData.zoom + "%";
+      document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
+      document.getElementById("zoom").value = userData.zoom;
+    //}
+    // add version number to about tab in settings modal
+    document.getElementById("version").innerHTML = appData.version;
+
+    return Promise.resolve("Success: Initial interface setup completed");
+
+  } catch(error) {
+    error.functionName = initialSetupInterface.name;
+    return Promise.reject(error);
+  }
+}
+export function setupInterface() {
+  try {
+    // this happens in view drawer
     // hide sort by container if sorting is according to file
     const viewSortByRow = document.getElementById("viewSortByRow");
     const sortCompletedLastRow = document.getElementById("sortCompletedLastRow");
-
     if(userData.sortByFile) {
       viewSortByRow.classList.add("is-hidden");
       sortCompletedLastRow.classList.add("is-hidden");
@@ -131,96 +157,51 @@ export function configureMainView() {
       sortCompletedLastRow.classList.remove("is-hidden");
     }
 
-    // setup compact view
-    (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
+    // send badge count to main process
+    window.api.send("update-badge", getBadgeCount());
 
-    // setup darkmode
+    // close file chooser if it's open
+    if(modalChangeFile.classList.contains("is-active")) modalChangeFile.classList.remove("is-active");
 
-    window.api.send("darkmode", userData.darkmode);
-    (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
-
-    // if files are available generate list and tabs
+    // if files are available, (re)generate tabs
     if(userData.files && userData.files.length > 0) {
-      // generateFileList(false).then(function(response) {
-      //   console.info(response);
-      // }).catch(function(error) {
-      //   handleError(error);
-      // });
-      
       generateFileTabs().then(function(response) {
         console.info(response);
       }).catch(function(error) {
         handleError(error);
       });
-    }
-
-    // close filterContext if open
-    if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");
-
-    // set scaling factor if default font size has changed
-    if(userData.zoom) {
-      document.getElementById("html").style.zoom = userData.zoom + "%";
-      document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
-      document.getElementById("zoom").value = userData.zoom;
-    }
-
-    // add version number to about tab in settings modal
-    document.getElementById("version").innerHTML = appData.version;
-    if(typeof items === "object") {
-      // jump to previously added item
-      // TODO: Repair jump to previous item function
-      // if(document.getElementById("previousItem")) {
-      //   //const index 
-      //   document.getElementById("previousItem")
-      //   //helper.jumpToItem(document.getElementById("previousItem"))
-      //   focusRow();
-      // }
-      // remove onboarding
-      showOnboarding(false).then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
+    }  
       
-      // configure table view
-      const todoTable = document.getElementById("todoTable");
-      const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
-      const noResultContainer = document.getElementById("noResultContainer");
+    // configure table view
+    const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
+    const noResultContainer = document.getElementById("noResultContainer");
+    const todoTable = document.getElementById("todoTable");
 
-      if(items.objects.length===0) {
-        addTodoContainer.classList.add("is-active");
-        todoTableSearchContainer.classList.remove("is-active");
-        todoTable.classList.remove("is-active");
-        noResultContainer.classList.remove("is-active");
-        return Promise.resolve("Info: File is empty");
-      } else if(items.filtered.length===0) {
-        addTodoContainer.classList.remove("is-active");
-        todoTableSearchContainer.classList.add("is-active");
-        noResultContainer.classList.add("is-active");
-        return Promise.resolve("Info: No results");
-        // TODO explain
-      } else if(items.filtered.length>0) {
-        todoTableSearchContainer.classList.add("is-active");
-        addTodoContainer.classList.remove("is-active");
-        noResultContainer.classList.remove("is-active");
-        todoTable.classList.add("is-active");
-        return Promise.resolve("Info: File has content and results are shown");
-      }
-    } else {
-      showOnboarding(true).then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
-      return Promise.resolve("Info: No file defined");
+    if(items.objects.length === 0) {
+      addTodoContainer.classList.add("is-active");
+      todoTableSearchContainer.classList.remove("is-active");
+      noResultContainer.classList.remove("is-active");
+      todoTable.classList.remove("is-active");
+      return Promise.resolve("Info: File is empty");
+
+    } else if(items.filtered.length === 0) {
+      addTodoContainer.classList.remove("is-active");
+      todoTableSearchContainer.classList.add("is-active");
+      noResultContainer.classList.add("is-active");
+      todoTable.classList.remove("is-active");
+      return Promise.resolve("Info: No results");
+
+      // TODO explain
+    } else if(items.filtered.length > 0) {
+      todoTableSearchContainer.classList.add("is-active");
+      addTodoContainer.classList.remove("is-active");
+      noResultContainer.classList.remove("is-active");
+      todoTable.classList.add("is-active");
+      return Promise.resolve("Info: File has content and results are shown");
     }
+
   } catch(error) {
-    showOnboarding(true).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    error.functionName = configureMainView.name;
+    error.functionName = setupInterface.name;
     return Promise.reject(error);
   }
 }
@@ -231,10 +212,13 @@ export function handleError(error) {
       console.error(error);
     // if error is an error object
     } else {
-      console.error(error.name +" in function " + error.functionName + ": " + error.message);
+      console.error(error.name + " in function " + error.functionName + ": " + error.message);
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
     }
+    
+    showGenericMessage(error);
+
   } catch(error) {
     error.functionName = handleError.name;
     return Promise.reject(error);
@@ -244,7 +228,6 @@ export function generateHash(string) {
   return string.split('').reduce((prevHash, currVal) =>
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
-
 // https://davidwalsh.name/javascript-debounce-function
 export function debounce(func, wait, immediate) {
   let timeout;
@@ -265,9 +248,11 @@ export function debounce(func, wait, immediate) {
 
 // https://bobbyhadz.com/blog/javascript-format-date-yyyy-mm-dd
 export function formatDate(date) {
+
   const padTo2Digits = function(num) {
     return num.toString().padStart(2, '0');
   }
+
   return [
     date.getFullYear(),
     padTo2Digits(date.getMonth() + 1),
@@ -278,7 +263,7 @@ export function formatDate(date) {
 export function setDueDate(days) {
   try {
 
-    const todo = createTodoObject(modalFormInput.value);
+    const todo = generateTodoTxtObject(modalFormInput.value);
 
     if(days === 0) {
       todo.due = undefined;
@@ -301,7 +286,6 @@ export function setDueDate(days) {
     return Promise.reject(error);
   }
 }
-
 export function getCaretPosition(element) {
   if((element.selectionStart !== null) && (element.selectionStart !== undefined)) return element.selectionStart;
   return false;

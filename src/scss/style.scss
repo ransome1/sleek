@@ -118,8 +118,9 @@ textarea {
   box-shadow: none!important;
   outline: none!important;
 }
-input::placeholder {
-  color: $dark-grey;
+input::placeholder,
+textarea::placeholder {
+  color: $mid-grey;
 }
 input[type="text"],
 input[type="search"],
@@ -127,48 +128,6 @@ textarea {
   border-radius: 1.5em;
   background-color: $almost-white!important;
 }
-
-.inputWrapper {
-  position: relative;
-  padding-top: 0.5em;
-  input[type="search"],
-  input[type="text"],
-  textarea {
-    padding: 2em 1em 1.2em 1.5em;
-  }
-  textarea {
-    padding-bottom: 0.75em
-  }
-  input::placeholder,
-  textarea::placeholder {
-    color: $mid-grey;
-  }
-  label {
-    cursor: pointer;
-    font-size: 0.75em;
-    position: absolute;
-    top: 1.3em;
-    left: 2.5em;
-    z-index: 65;
-  }
-  .todoTableSearchQuestionmark {
-    display: none;
-  }
-}
-.is-focused .inputWrapper,
-.inputWrapper.is-focused {
-  label,
-  i {
-    color: $has-text-link;
-  }
-  .fa-search {
-    display: none;
-  }
-  .todoTableSearchQuestionmark {
-    display: block;
-  }
-}
-
 input[type="number"] {
   text-align: center;
 }

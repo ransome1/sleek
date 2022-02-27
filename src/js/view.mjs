@@ -1,5 +1,5 @@
 "use strict";
-import { userData, setUserData, handleError, startBuilding, translations } from "../render.js";
+import { userData, setUserData, handleError, buildTable, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
 
 const html = document.getElementById("html");
@@ -115,7 +115,11 @@ function toggle(toggleName, variable) {
     } else if(toggle.id==="compactView" && !userData[toggle.id]) {
       body.classList.remove("compact");
     } else {
-      startBuilding();
+      buildTable().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        handleError(error);
+      });
     }
     setUserData(toggle.id, userData[toggle.id]);
     return Promise.resolve("Success: " + toggle.id + " set to: " + userData[toggle.id]);

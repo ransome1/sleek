@@ -4,36 +4,11 @@
 
 @mixin compact() {
 
-  .inputWrapper {
-    position: relative;
-    padding-top: 0.5em;
-    input[type="search"],
-    input[type="text"] {
-      padding: 0.75em 1em 0.75em 1.5em;
-    }
-    input::placeholder,
-    textarea::placeholder {
-      color: $mid-grey;
-    }
-    label {
-      display: none;
-    }
-  }
-
   #modalForm {
     textarea {
       padding: 0.75em!important;
     }
-    #modalFormInputResize {
-      top: 1.4em!important;
-    }
   }
-
-  .modal-content,
-  .modal-card {
-    width: 100%!important;
-  }
-
   .modal.content .modal-card {
     padding: 1em!important;
   }
@@ -43,21 +18,6 @@
   }
   #sortByContainer li {
     padding: 0.25em 0.5em;
-  }
-  #todoTableSearchContainer {
-    input[type="search"]::-webkit-search-cancel-button {
-      margin-top: 0;
-    }
-    i.fa-search,
-    .todoTableSearchQuestionmark {
-      top: 0.37em;
-    }
-    #todoTableSearchAddTodo {
-      top: 1.70em;
-      i {
-        display: none;
-      }
-    }
   }
   #todoTable {
     padding: 0 1.5em 1.5em 1.5em;
@@ -70,10 +30,6 @@
         .text {
           margin: 0;
         }
-      }
-      .cell.recurrence,
-      .cell.itemDueDate {
-        //padding: 0 0.25em!important;
       }
     }
   }

@@ -246,7 +246,6 @@ function setFriendlyLanguageNames() {
       cs: "Čeština",
       pl: "Polski"
     }
-
     appData.languages.forEach((languageCode) => {
       let option = document.createElement("option");
       option.text = friendlyLanguageName[languageCode];

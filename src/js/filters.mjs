@@ -1,5 +1,5 @@
 "use strict";
-import { userData, setUserData, translations, startBuilding } from "../render.js";
+import { userData, setUserData, translations, buildTable } from "../render.js";
 import { createModalJail } from "./jail.mjs";
 import { _paq } from "./matomo.mjs";
 import { items } from "./todos.mjs";
@@ -95,8 +95,11 @@ function deleteFilter(filter, category) {
     return Promise.reject(error);
   }
 }
-function filterItems(items) {
+function filterItems() {
   try {
+
+    let todoObjects = items.objects;
+
     // TODO: this is a duplicate in todos.mjs
     // selected filters are empty, unless they were persisted
     if(userData.selectedFilters && userData.selectedFilters.length>0) {
@@ -110,17 +113,17 @@ function filterItems(items) {
       // we iterate through the filters in the order they got selected
       selectedFilters.forEach(filter => {
         if(filter[1]=="projects") {
-          items = items.filter(function(item) {
+          todoObjects = todoObjects.filter(function(item) {
             if(item.projects) return item.projects.includes(filter[0]);
           });
         } else if(filter[1]=="contexts") {
-          items = items.filter(function(item) {
+          todoObjects = todoObjects.filter(function(item) {
             if(item.contexts) {
               return item.contexts.includes(filter[0]);
             }
           });
         } else if(filter[1]=="priority") {
-          items = items.filter(function(item) {
+          todoObjects = todoObjects.filter(function(item) {
             if(item.priority) {
               return item.priority.includes(filter[0]);
             }
@@ -132,7 +135,7 @@ function filterItems(items) {
     if(userData.hideFilterCategories.length > 0) {
       // we iterate through the filters in the order they got selected
       userData.hideFilterCategories.forEach(filter => {
-        items = items.filter(function(item) {
+        todoObjects = todoObjects.filter(function(item) {
           if(!item[filter]) return item;
         });
       });
@@ -142,11 +145,11 @@ function filterItems(items) {
       try {
         let query = filterlang.parse(queryString);
         if (query.length > 0) {
-          items = items.filter(function(item) {
+          todoObjects = todoObjects.filter(function(item) {
             return runQuery(item, query);
           });
           lastFilterQueryString = queryString;
-          lastFilterItems = items;
+          lastFilterItems = todoObjects;
           todoTableSearch.classList.add("is-valid-query");
           todoTableSearch.classList.remove("is-previous-query");
         }
@@ -156,13 +159,13 @@ function filterItems(items) {
         if (lastFilterQueryString && queryString.startsWith(lastFilterQueryString)) {
           // keep table more stable by using the previous valid query while
           // user continues to type additional query syntax.
-          items = lastFilterItems;
+          todoObjects = lastFilterItems;
           todoTableSearch.classList.add("is-previous-query");
         } else {
           // the query is not syntactically correct and isn't a longer version
           // of the last working query, so let's assume that it is a
           // plain-text query.
-          items = items.filter(function(item) {
+          todoObjects = todoObjects.filter(function(item) {
             return item.toString().toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
           });
           todoTableSearch.classList.remove("is-previous-query");
@@ -170,7 +173,7 @@ function filterItems(items) {
       }
     }
     // apply filters
-    items = items.filter(function(item) {
+    todoObjects = todoObjects.filter(function(item) {
       //if(!item.text && !item.h) return false;
       if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
@@ -180,7 +183,11 @@ function filterItems(items) {
       if(!userData.deferredTodos && item.t && isFuture(item.t)) return false;
       return true;
     });
-    return Promise.resolve(items);
+
+    items.filtered = todoObjects;
+
+    return Promise.resolve("Success: todo.txt objects filtered");
+
   } catch(error) {
     error.functionName = filterItems.name;
     return Promise.reject(error);
@@ -230,7 +237,11 @@ function generateCategoryContainer(category, autoCompletePrefix, filterFragment)
           hideFilterCategories = [...new Set(hideFilterCategories.join(",").split(","))];
         }
         setUserData("hideFilterCategories", hideFilterCategories)
-        startBuilding();
+        buildTable().then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
       }
     }
     // add the headline before category container
@@ -284,6 +295,8 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // needs to be reset every run, because it can be overwritten by previous autocomplete
       categories = ["priority", "contexts", "projects"];
     }
+
+    // TODO: Cancel if no items are found
 
     let todoFiltersContainer;
 
@@ -407,24 +420,36 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
   }
 }
 function selectFilter(filter, category) {
-  // if no filters are selected, add a first one
-  if(selectedFilters.length > 0) {
-    // get the index of the item that matches the data values the button click provided
-    let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([filter, category]));
-    if(index != -1) {
-      // remove the item at the index where it matched
-      selectedFilters.splice(index, 1);
+  try {
+    // if no filters are selected, add a first one
+    if(selectedFilters.length > 0) {
+      // get the index of the item that matches the data values the button click provided
+      let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([filter, category]));
+      if(index != -1) {
+        // remove the item at the index where it matched
+        selectedFilters.splice(index, 1);
+      } else {
+        // if the item is not already in the array, push it into
+        selectedFilters.push([filter, category]);
+      }
     } else {
-      // if the item is not already in the array, push it into
+      // this is the first push
       selectedFilters.push([filter, category]);
     }
-  } else {
-    // this is the first push
-    selectedFilters.push([filter, category]);
+    // convert the collected filters to JSON and save it to store.js
+    setUserData("selectedFilters", JSON.stringify(selectedFilters));
+    
+    buildTable().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+      return Promise.resolve("Success: Filter " + filter + " selected");
+
+  } catch (error) {
+    error.functionName = generateFilterData.name;
+    return Promise.reject(error);
   }
-  // convert the collected filters to JSON and save it to store.js
-  setUserData("selectedFilters", JSON.stringify(selectedFilters));
-  startBuilding();
 }
 function addFilterToInput(filter, autoCompletePrefix) {
   let modalFormInput = document.getElementById("modalFormInput");
@@ -556,7 +581,13 @@ function resetFilters(refresh) {
     // clear search input
     document.getElementById("todoTableSearch").value = null;
     // regenerate the data
-    if(refresh) startBuilding();
+    if(refresh) {
+      buildTable().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    }
     return Promise.resolve("Success: Filters resetted");
   } catch(error) {
     error.functionName = resetFilters.name;

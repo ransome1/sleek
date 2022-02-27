@@ -1,10 +1,11 @@
 import { _paq } from "./matomo.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { handleError } from "./helper.mjs";
-import { startBuilding, userData, setUserData, translations } from "../render.js";
+import { generateFileTabs } from "./files.mjs";
+import { configureMatomo } from "./matomo.mjs";
+import { buildTable, userData, setUserData, translations } from "../render.js";
 
 const body = document.getElementById("body");
-const fileTabBar = document.getElementById("fileTabBar");
 const toggles = document.querySelectorAll(".toggle input[type=checkbox]");
 const setTray = function(setting) { 
   // trigger matomo event
@@ -31,24 +32,42 @@ export function triggerToggle(inputField, toggle) {
 
     // handle specific functions triggered after option is toggled
     switch(inputField.id) {
+      case "matomoEvents":
+        configureMatomo(inputField.checked).then(response => {
+          console.info(response);
+        }).catch(error => {
+          handleError(error);
+        });
+        break;
       case "compactView":
         (userData[inputField.id]) ? body.classList.add("compact") : body.classList.remove("compact")
         break;
       case "darkmode":
         window.api.send("darkmode", userData.darkmode);
+        // TODO: move completely to main process
         (userData[inputField.id]) ? body.classList.add("dark") : body.classList.remove("dark")
         break;
       case "tray":
         getConfirmation(setTray, translations.restartPrompt, inputField.checked);
         break;
       case "fileTabs":
-        // show or hide tab bar
-        (userData.fileTabs) ? fileTabBar.classList.add("is-active") : fileTabBar.classList.remove("is-active")
+        // reload file tab bar  
+        generateFileTabs().then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
         break;
     }
 
     // toggles in view drawer need to trigger rebuilding the table
-    if(inputField.classList.contains("view")) startBuilding();
+    if(inputField.classList.contains("view")) {
+      buildTable().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    }
 
     return Promise.resolve("Success: " + inputField.id + " toggle set to: " + inputField.checked);
 

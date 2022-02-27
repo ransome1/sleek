@@ -4,8 +4,10 @@ import { _paq } from "./matomo.mjs";
 import { handleError } from "./helper.mjs";
 import { createModalJail } from "./jail.mjs";
 import { enableDragSort } from "../configs/dragndrop.mjs";
+import { resetFilters } from "./filters.mjs";
 import("./drawer_handle.mjs");
 
+const btnFiltersResetFilters = document.getElementById("btnFiltersResetFilters");
 const compactViewHeadline = document.getElementById("compactViewHeadline");
 const drawerClose = document.getElementById("drawerClose");
 const sortByContainer = document.getElementById("sortByContainer");
@@ -100,6 +102,12 @@ export function showDrawer(button) {
     error.functionName = showDrawer.name;
     return Promise.reject(error);
   }
+}
+
+btnFiltersResetFilters.onclick = function() {
+  resetFilters(true);
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on reset button"])
 }
 
 drawerClose.onclick = function() {

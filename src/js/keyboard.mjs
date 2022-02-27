@@ -9,7 +9,7 @@ import { show, setPriority, resetForm } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
 import { triggerToggle } from "./toggles.mjs";
-import { userData, translations } from "../render.js";
+import { userData, translations, startFileWatcher } from "../render.js";
 
 const 
   autoCompleteContainer = document.getElementById("autoCompleteContainer"),
@@ -51,13 +51,14 @@ export async function registerShortcuts() {
 
     window.addEventListener("keyup", async function(event) {
 
-      event.preventDefault;
-
       // ******************************************************
       // setup escape key
       // ******************************************************
       
       if(event.key === "Escape") {
+
+        // if search is focused, lose focus on escape
+        if(document.activeElement.id==="todoTableSearch") todoTableSearch.blur();
 
         // if a datepicker container is detected interrupt, datepicker destruction is handled in module
         if(document.querySelector(".datepicker")) return false;
@@ -263,9 +264,17 @@ export async function registerShortcuts() {
         if(event.ctrlKey && !event.shiftKey && event.keyCode === 9) {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index+1]) {
-            window.api.send("startFileWatcher", [userData.files[0][1], 1]);
+            startFileWatcher(userData.files[0][1], 1).then(response => {
+              console.info(response);
+            }).catch(error => {
+              handleError(error);
+            });
           } else {
-            window.api.send("startFileWatcher", [userData.files[index+1][1], 1]);
+            startFileWatcher(userData.files[index+1][1], 1).then(response => {
+              console.info(response);
+            }).catch(error => {
+              handleError(error);
+            });
           }
           return false;
         }
@@ -273,9 +282,17 @@ export async function registerShortcuts() {
         if(event.ctrlKey && event.shiftKey && event.keyCode === 9) {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index-1]) {
-            window.api.send("startFileWatcher", [userData.files[userData.files.length-1][1], 1]);
+            startFileWatcher(userData.files[userData.files.length-1][1], 1).then(response => {
+              console.info(response);
+            }).catch(error => {
+              handleError(error);
+            });
           } else {
-            window.api.send("startFileWatcher", [userData.files[index-1][1], 1]);
+            startFileWatcher(userData.files[index-1][1], 1).then(response => {
+              console.info(response);
+            }).catch(error => {
+              handleError(error);
+            });
           }
           return false;
         }

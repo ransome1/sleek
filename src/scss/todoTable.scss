@@ -105,13 +105,18 @@
       font-family: inherit;
       height: auto;
       line-height: auto;
-      padding: 0 .5em;
+      padding: 0;
       cursor: default;
+      color: $dark-grey;
+      text-align: left;
     }
     .cell {
       margin-top: 1em;
       padding: 0;
     }
+  }
+  .group.past button {
+    color: $has-text-danger;
   }
   .group.priority {
     button {
@@ -120,6 +125,12 @@
     }
     .cell {
       margin-bottom: 0.5em;
+    }
+  }
+  .group.projects,
+  .group.contexts {
+    button {
+      padding: 0 0.5em;
     }
   }
   .todo.completed {
@@ -261,24 +272,24 @@
       cursor: pointer;
     }
   }
-  .cell.isToday,
-  .cell.isToday button {
+  button.today,
+  .cell.today {
     color: $has-text-danger;
     .tags .is-dark {
       background: $has-text-danger;
       font-family: FreeSansBold;
     }
   }
-  .cell.isTomorrow,
-  .cell.isTomorrow button {
-    color: $has-text-attention;
+  button.tomorrow,
+  .cell.tomorrow {
+    color: $has-text-attention !important;
     .tags .is-dark {
       background: $has-text-attention;
       font-family: FreeSansBold;
     }
   }
-  .cell.isPast,
-  .cell.isPast button {
+  button.past,
+  .cell.past {
     color: $has-text-danger;
     .tags .is-dark {
       background: $has-text-danger;

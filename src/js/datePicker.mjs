@@ -10,7 +10,7 @@ import { userData } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { resizeInput } from "./form.mjs";
 import { formatDate } from "./helper.mjs";
-import { createTodoObject, items, editTodo } from "./todos.mjs";
+import { generateTodoTxtObject, items, editTodo } from "./todos.mjs";
 import Datepicker from "../../node_modules/vanillajs-datepicker/js/Datepicker.js";
 import de from "../../node_modules/vanillajs-datepicker/js/i18n/locales/de.js";
 import it from "../../node_modules/vanillajs-datepicker/js/i18n/locales/it.js";
@@ -51,7 +51,7 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
     if(!todo) {
       modalFormInput = document.getElementById("modalFormInput");
       // generate the object of input value, so we don't overwrite previous inputs of user
-      todo = createTodoObject(modalFormInput.value);
+      todo = generateTodoTxtObject(modalFormInput.value);
     }
 
     if(todo[extension]) datePicker.setDate(todo[extension]);

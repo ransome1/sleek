@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld(
         "changeWindowTitle",
         "darkmode"
       ];
-      if (validChannels.includes(channel)) {
+      if(validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
       }
     },
@@ -32,10 +32,11 @@ contextBridge.exposeInMainWorld(
         "getContent",
         "userData",
         "appData",
-        "refresh",
+        "startFileWatcher",
+        "buildTable",
         "triggerFunction"
       ];
-      if (validChannels.includes(channel)) {
+      if(validChannels.includes(channel)) {
         ipcRenderer.on(channel, (event, ...args) => func(...args));
       }
     }
