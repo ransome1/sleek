@@ -213,6 +213,7 @@ export async function registerShortcuts() {
           // move focus up in table list
 
           if(event.key === "ArrowUp") {
+
             if(currentRow === 0) {
               focusRow(currentRow);
               return false;
@@ -312,7 +313,11 @@ export async function registerShortcuts() {
             // throw false at this function and current row will be reset
             focusRow(false);
             //
-            window.api.send("startFileWatcher", [filesInTabBar[event.key-1][1]]);
+            startFileWatcher(filesInTabBar[event.key-1][1]).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
           }
           return false;
         }
@@ -490,7 +495,7 @@ export async function registerShortcuts() {
       // ******************************************************
 
       if((event.ctrlKey || event.metaKey && userData.files) && event.key === "c" && !isInputFocused()) {
-        pasteItemsToClipboard(items.filtered);
+        pasteItemsToClipboard();
         return false;
       }
 

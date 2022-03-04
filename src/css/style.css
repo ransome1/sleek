@@ -1962,6 +1962,9 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell a.tag.contexts.is-dark {
   background: #184e41 !important;
 }
+#todoTable .cell.categories {
+  white-space: nowrap;
+}
 #todoTable .cell.categories .tag {
   margin-left: 0.25em;
 }
@@ -1975,7 +1978,7 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .cell.text {
   width: auto;
-  max-width: 90%;
+  /*max-width: 90%;*/
   cursor: pointer;
   color: #5a5a5a !important;
 }

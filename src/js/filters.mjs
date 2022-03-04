@@ -444,7 +444,8 @@ function selectFilter(filter, category) {
     }).catch(function(error) {
       handleError(error);
     });
-      return Promise.resolve("Success: Filter " + filter + " selected");
+    
+    return Promise.resolve("Success: Filter " + filter + " selected");
 
   } catch (error) {
     error.functionName = generateFilterData.name;
@@ -568,26 +569,37 @@ function generateFilterButtons(category, autoCompletePrefix) {
   }
 }
 
-function resetFilters(refresh) {
+async function resetFilters(refresh) {
   try {
     // scroll back to top
-    document.getElementById("todoTableWrapper").scrollTo(0,0);
-    // clear the persisted filers, by setting it to undefined the object entry will be removed fully
-    setUserData("selectedFilters", new Array);
+    //document.getElementById("todoTableWrapper").scrollTo(0,0);    
+
+    // clear the persisted filters, by setting it to undefined the object entry will be removed fully
+    if(userData.selectedFilters.length > 0) await setUserData("selectedFilters", new Array).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
     //
-    setUserData("hideFilterCategories", new Array);
+    if(userData.hideFilterCategories.length > 0) await setUserData("hideFilterCategories", new Array).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
     // empty old filter container
-    todoFilters.innerHTML = "";
+    //todoFilters.innerHTML = "";
+
     // clear search input
     document.getElementById("todoTableSearch").value = null;
+
     // regenerate the data
-    if(refresh) {
-      buildTable().then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
-    }
+    if(refresh) await buildTable().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
     return Promise.resolve("Success: Filters resetted");
   } catch(error) {
     error.functionName = resetFilters.name;

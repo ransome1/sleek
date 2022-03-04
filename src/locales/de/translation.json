@@ -140,6 +140,7 @@
   "showHelp": "Hilfe anzeigen",
   "today": "Heute",
   "todos": "Aufgaben",
+  "todoCopiedToClipboard": "Aufgabe in die Zwischenablage gespeichert",
   "toggleCompletedTodos": "Erledigte Aufgaben ein- und ausblenden",
   "toggleTheme": "Nachtmodus ein- und ausschalten",
   "toggleFilter": "Filter anzeigen",

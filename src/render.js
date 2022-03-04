@@ -86,8 +86,6 @@ async function buildTable(fileContent, loadAll) {
     // refresh user data on each build
     userData = await getUserData();
 
-    //fileContent = undefined;
-
     // pass new todo file content on to function that will produce todo.txt objects
     // function will put it into items object
     // only generate items if new content is passed

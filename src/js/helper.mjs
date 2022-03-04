@@ -1,7 +1,7 @@
 "use strict";
 import { appData, userData, setUserData, translations } from "../render.js";
 import { generateGroupedObjects, items, generateTodoTxtObject } from "./todos.mjs";
-import { isToday, isPast } from "./date.mjs";
+import { isToday, isPast, isTomorrow } from "./date.mjs";
 import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
 import { showOnboarding } from "./onboarding.mjs";
@@ -40,9 +40,27 @@ export function jumpToItem(item) {
     return Promise.reject(error);
   }
 }
-export async function pasteItemsToClipboard(items) {
+
+export async function pasteItemToClipboard(item) {
   try {
-    let groups = await generateGroupedObjects(items);
+
+    window.api.send("copyToClipboard", [item.text]);
+    showGenericMessage(translations.todoCopiedToClipboard, 3);
+
+    return Promise.resolve("Success: Todo text pasted to clipboard: " + item.text);
+
+  } catch(error) {
+    error.functionName = pasteItemToClipboard.name;
+    return Promise.reject(error);
+  }
+}
+
+export async function pasteItemsToClipboard() {
+  try {
+
+    const todos = await import("./todos.mjs");
+    const groups = todos.items.grouped;
+
     let itemsForClipboard;
     itemsForClipboard = "Status\t";
     itemsForClipboard += "Closed\t";
@@ -95,7 +113,7 @@ export async function pasteItemsToClipboard(items) {
         }
     }
     window.api.send("copyToClipboard", [itemsForClipboard]);
-    showGenericMessage(translations.visibleTodosCopiedToClipboard);
+    showGenericMessage(translations.visibleTodosCopiedToClipboard, 3);
   } catch(error) {
     error.functionName = pasteItemsToClipboard.name;
     return Promise.reject(error);
@@ -108,6 +126,14 @@ export function getActiveFile() {
     return file;
   }
   return false;
+}
+export function getDoneFile() {
+  const activeFile = getActiveFile();
+  if(appData.os==="windows") {
+    return activeFile.replace(activeFile.split("\\").pop(), activeFile.substr(0, activeFile.lastIndexOf(".")).split("\\").pop() + "_done.txt");
+  } else {
+    return activeFile.replace(activeFile.split("/").pop(), activeFile.substr(0, activeFile.lastIndexOf(".")).split("/").pop() + "_done.txt");
+  }
 }
 export function getBadgeCount() {
   let count = 0;
@@ -216,8 +242,6 @@ export function handleError(error) {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
     }
-    
-    showGenericMessage(error);
 
   } catch(error) {
     error.functionName = handleError.name;
@@ -260,10 +284,14 @@ export function formatDate(date) {
   ].join('-');
 }
 
-export function setDueDate(days) {
+export async function setDueDate(days) {
   try {
 
-    const todo = generateTodoTxtObject(modalFormInput.value);
+    const todo = await generateTodoTxtObject(modalFormInput.value).then(response => {
+      return response;
+    }).catch(error => {
+      handleError(error);
+    });
 
     if(days === 0) {
       todo.due = undefined;
@@ -289,4 +317,90 @@ export function setDueDate(days) {
 export function getCaretPosition(element) {
   if((element.selectionStart !== null) && (element.selectionStart !== undefined)) return element.selectionStart;
   return false;
+}
+export function generateTodoNotification(todo) {
+  try {
+
+    // abort if user didn't permit notifications within sleek
+    if(!userData.notifications) return Promise.resolve("Info: Notification surpressed (turned off in sleek's settings)");
+
+    // check for necessary permissions
+    return navigator.permissions.query({name: "notifications"}).then(function(result) {
+    
+      // abort if user didn't permit notifications
+      if(result.state !== "granted") return Promise.resolve("Info: Notification surpressed (not permitted by OS)");
+
+      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
+      const hash = generateHash(todo.toString()) + isToday(todo.due) + isTomorrow(todo.due);
+
+      let title;
+      if(isToday(todo.due)) title = translations.dueToday;
+      if(isTomorrow(todo.due)) title = translations.dueTomorrow;
+      
+      // if notification already has been triggered once it will be discarded
+      if(userData.dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+
+      // set options for notifcation
+      const notification = {
+        title: title,
+        body: todo.text,
+        string: todo.toString(),
+        timeoutType: "never",
+        silent: false,
+        actions: [{
+          type: "button",
+          text: "Show"
+        }]
+      }
+      // once shown, it will be persisted as hash to it won't be shown a second time
+      userData.dismissedNotifications.push(hash);
+
+      setUserData("dismissedNotifications", userData.dismissedNotifications);
+
+      window.api.send("showNotification", notification);
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo notification", "Shown"]);
+
+      return Promise.resolve("Info: Todo notification successfully sent");
+
+    });
+
+  } catch(error) {
+    error.functionName = generateNotification.name;
+    return Promise.reject(error);
+  }
+}
+export function generateGenericNotification(title, body) {
+  try {
+    
+    // abort if user didn't permit notifications within sleek
+    if(!userData.notifications) return Promise.resolve("Info: Notification surpressed (turned off in sleek's settings)");
+
+    // check for necessary permissions
+    return navigator.permissions.query({name: "notifications"}).then(function(result) {
+    
+      // abort if user didn't permit notifications
+      if(result.state !== "granted") return Promise.resolve("Info: Notification surpressed (not permitted by OS)");
+    
+      const notification = {
+        title: title,
+        body: body,
+        timeoutType: "default",
+        silent: true
+      }
+
+      // send notification object to main process for execution
+      window.api.send("showNotification", notification);
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Generic notification", "Shown"]);
+
+      return Promise.resolve("Info: Generic notification successfully sent");
+
+    });
+  } catch(error) {
+    error.functionName = generateNotification.name;
+    return Promise.reject(error);
+  }
 }

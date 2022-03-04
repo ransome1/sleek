@@ -13,18 +13,44 @@ export function createModalJail(modal) {
       focusableElements = "[tabindex=\"0\"]:not([tabindex=\"-1\"])",
       focusableContent = modal.querySelectorAll(focusableElements),
       firstFocusableElement = modal.querySelectorAll(focusableElements)[0],
-      lastFocusableElement = focusableContent[focusableContent.length - 1];
+      lastFocusableElement = focusableContent[focusableContent.length - 1],
+      excludeModalFromArrowKeys = ["modalForm"];
 
     // add focus on the first focusable element
     firstFocusableElement.focus();
 
     modal.onkeydown = function(event) {
 
+      // if arrow down key is pressed
+      // we don't want this behaviour in modalForm
+      if(event.key === "ArrowDown" && excludeModalFromArrowKeys.indexOf(modal.id) === -1) { 
+        const focusedElementIndex = Array.prototype.indexOf.call(focusableContent, document.activeElement);
+        // stop when the last element is reached and focus the first one
+        if((focusedElementIndex + 1) === focusableContent.length) {
+          firstFocusableElement.focus();
+          return false;
+        }
+        focusableContent[focusedElementIndex + 1].focus();
+        return false;
+      }
+
+      // if arrow up key is pressed
+      // we don't want this behaviour in modalForm
+      if(event.key === "ArrowUp" && excludeModalFromArrowKeys.indexOf(modal.id) === -1) {
+        const focusedElementIndex = Array.prototype.indexOf.call(focusableContent, document.activeElement);
+        // stop if the first element is reached and focus the last one
+        if(focusedElementIndex === 0) {
+          lastFocusableElement.focus();
+          return false;
+        }
+        focusableContent[focusedElementIndex - 1].focus();
+        return false;
+      }
+
       // if tab key and shift are pressed
       if(event.key === "Tab" && event.shiftKey) {
         if(document.activeElement === firstFocusableElement) {
           lastFocusableElement.focus();
-          //event.preventDefault();
           return false;
         }
 
@@ -32,7 +58,6 @@ export function createModalJail(modal) {
       } else if(event.key === "Tab") {
         if(document.activeElement === lastFocusableElement) {
           firstFocusableElement.focus();
-          //event.preventDefault();
           return false;
         }
       }

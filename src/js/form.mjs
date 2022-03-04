@@ -23,10 +23,15 @@ btnSave.innerHTML = translations.save;
 btnCancel.innerHTML = translations.cancel;
 datePickerInput.placeholder = translations.formSelectDueDate;
 
-btnItemStatus.onclick = function() {
+btnItemStatus.onclick = async function() {
   try {
     // pass data item to function, not the actual value
-    const todo = generateTodoTxtObject(modalForm.getAttribute("data-item"));
+    const todo = await generateTodoTxtObject(modalForm.getAttribute("data-item")).then(response => {
+      return response;
+    }).catch(error => {
+      handleError(error);
+    });
+
     setTodoComplete(todo).then(response => {
       console.log(response);
     }).catch(error => {
@@ -73,8 +78,10 @@ modalFormInputResize.onclick = function() {
   }
 }
 
-modalForm.onsubmit = function() {
+modalForm.onsubmit = async function(event) {
   try {
+
+    event.preventDefault();
 
     const modalFormInput = document.getElementById("modalFormInput");
 
@@ -86,7 +93,11 @@ modalForm.onsubmit = function() {
     const inputValue = modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
 
     // create todo object from input value
-    let todo = generateTodoTxtObject(inputValue);
+    let todo = await generateTodoTxtObject(inputValue).then(response => {
+      return response;
+    }).catch(error => {
+      handleError(error);
+    });
 
     // we add the current date to the start date attribute of the todo.txt object
     if(userData.appendStartDate) todo.date = new Date();
@@ -332,7 +343,13 @@ async function setPriority(priority) {
   try {
     const modalFormInput = document.getElementById("modalFormInput");
     let index = 0;
-    let todo = await generateTodoTxtObject(modalFormInput.value);
+    
+    let todo = await generateTodoTxtObject(modalFormInput.value).then(response => {
+      return response;
+    }).catch(error => {
+      handleError(error);
+    });
+
     // get index if priority was already found in object
     if(todo.priority) index = todo.priority.toLowerCase().charCodeAt(0)-96;
 
@@ -401,6 +418,9 @@ function resetForm() {
     // clear previous recurrence selection
     recurrencePickerInput.value = null;
 
+    // hide autocomplete container
+    autoCompleteContainer.classList.remove("is-active");
+
     // clean up the alert box
     modalFormAlert.parentElement.classList.remove("is-active", "is-warning", "is-danger");
     modalFormAlert.innerHTML = null;
@@ -424,7 +444,11 @@ async function show(todo, templated) {
     //
     if(todo) {
       // we need to check if there already is a due date in the object
-      todo = generateTodoTxtObject(todo);
+      todo = await generateTodoTxtObject(todo).then(response => {
+        return response;
+      }).catch(error => {
+        handleError(error);
+      });
 
       // set the priority
       if(todo.priority) priorityPicker.value = todo.priority;

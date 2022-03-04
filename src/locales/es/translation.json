@@ -137,6 +137,7 @@
   "showHelp": "Mostrar ayuda",
   "today": "Hoy",
   "todos": "Tareas",
+  "todoCopiedToClipboard": "Tarea guardada en el portapapeles",
   "toggleCompletedTodos": "Activar las tareas completadas",
   "toggleTheme": "Activar el modo oscuro",
   "toggleFilter": "Activar la sección de filtros",

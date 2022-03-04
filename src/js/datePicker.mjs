@@ -20,6 +20,7 @@ Object.assign(Datepicker.locales, de, it, es, fr);
 
 let 
   modalFormInput,
+  datePicker,
   datePickerOptions = {
       autohide: true,
       language: userData.language,
@@ -38,11 +39,14 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
 
   try {
 
+    // if there is an active datepicker, it will be destroyed
+    if(datePicker) datePicker.destroy();
+
     // ******************************************************
     // create datepicker instance
     // ******************************************************
 
-    const datePicker = await new Datepicker(attachToElement, datePickerOptions);
+    datePicker = await new Datepicker(attachToElement, datePickerOptions);
 
     // ******************************************************
     // prepare todo object if none has been passed
@@ -51,7 +55,11 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
     if(!todo) {
       modalFormInput = document.getElementById("modalFormInput");
       // generate the object of input value, so we don't overwrite previous inputs of user
-      todo = generateTodoTxtObject(modalFormInput.value);
+      todo = await generateTodoTxtObject(modalFormInput.value).then(response => {
+        return response;
+      }).catch(error => {
+        handleError(error);
+      });
     }
 
     if(todo[extension]) datePicker.setDate(todo[extension]);
@@ -86,7 +94,11 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
         const index = items.objects.map(function(item) { return item; }).indexOf(todo);
 
         // finally pass new todo on for changing
-        editTodo(index, todo);
+        editTodo(index, todo).then(response => {
+          console.log(response)
+        }).catch(error => {
+          console.log(error);
+        });
 
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Datepicker used to change a date"]);

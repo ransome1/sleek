@@ -139,6 +139,7 @@
   "showHelp": "Show help",
   "today": "Today",
   "todos": "Todos",
+  "todoCopiedToClipboard": "Todo saved to clipboard",
   "toggleCompletedTodos": "Show/hide completed todos",
   "toggleTheme": "Toggle dark mode",
   "toggleFilter": "Show filters",

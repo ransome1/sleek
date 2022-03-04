@@ -137,6 +137,7 @@
   "showHelp": "Yardımı göster",
   "today": "Bugün",
   "todos": "Yapılacaklar",
+  "todoCopiedToClipboard": "Görev panoya kaydedildi",
   "toggleCompletedTodos": "Tamamlanmış yapılacakları göster/gizle",
   "toggleTheme": "Karanlık modu etkinleştir",
   "toggleFilter": "Filtreleri göster",

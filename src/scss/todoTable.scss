@@ -166,6 +166,7 @@
     }
   }
   .cell.categories {
+    white-space: nowrap;
     .tag {
       margin-left: .25em;
     }
@@ -182,7 +183,7 @@
   }
   .cell.text {
     width: auto;
-    max-width: 90%;
+    /*max-width: 90%;*/
     cursor: pointer;
     color: $dark-grey!important;
     button {

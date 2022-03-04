@@ -137,6 +137,7 @@
   "showHelp": "显示帮助",
   "today": "今天",
   "todos": "任务",
+  "todoCopiedToClipboard": "任务保存到剪贴板",
   "toggleCompletedTodos": "显示/隐藏已完成任务",
   "toggleTheme": "浅色/深色模式",
   "toggleFilter": "显示过滤器",

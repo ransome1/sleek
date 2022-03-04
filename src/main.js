@@ -1,17 +1,18 @@
 "use strict";
-let userData, defaultPath, _paq, fileWatcher, translations;
+let userData, defaultPath, _paq, fileWatcher, translations, dismissedNotifications;
 const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow, nativeTheme } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
+const dismissedNotificationsStorage = require("./configs/store.config.js");
 // ########################################################################################################################
 // HOT RELOAD
 // https://github.com/sindresorhus/electron-reloader
 // ########################################################################################################################
-// try {
-//   require("electron-reloader")(module);
-// } catch {}
+try {
+  require("electron-reloader")(module);
+} catch {}
 // ########################################################################################################################
 // SETUP PROCESS
 // ########################################################################################################################
@@ -318,6 +319,11 @@ const createWindow = async function() {
 
       userData = new Store({
         configName: "user-preferences",
+        defaults: {}
+      });
+
+      dismissedNotifications = new dismissedNotificationsStorage({
+        configName: "dismissed-notifications",
         defaults: {}
       });
 

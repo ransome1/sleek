@@ -44,14 +44,26 @@ export function checkDismissedMessages() {
   }
 }
 
-export function showGenericMessage(text) {
+export function showGenericMessage(text, autoClose) {
   try {
-    if(text) {
-      messageGenericContainer.classList.add("is-active");
-      messageGenericMessage.innerHTML = text;
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Message", text])
+    
+    if(!text) return Promise.reject("Error: No text passed, can't copy anything to clipboard");
+      
+    messageGenericContainer.classList.add("is-active");
+    messageGenericMessage.innerHTML = text;
+
+    // if number, hide the container after 3 seconds
+    if(typeof autoClose === "number") {
+      setTimeout(function() {
+        messageGenericContainer.classList.remove("is-active");
+      }, autoClose * 1000);
     }
+
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Success: Text copied to clipboard"])
+
+    return Promise.resolve("Success: Todo text copied to clipboard");
+
   } catch(error) {
     error.functionName = handleError.name;
     return Promise.reject(error);

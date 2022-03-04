@@ -137,6 +137,7 @@
   "showHelp": "Afficher l'aide",
   "today": "Aujourd'hui",
   "todos": "Tâches",
+  "todoCopiedToClipboard": "Tâche enregistrée dans le Presse-papiers",
   "toggleCompletedTodos": "Afficher/masquer les tâches complétées",
   "toggleTheme": "Changer le thème",
   "toggleFilter": "Afficher les filtres",

@@ -137,6 +137,7 @@
   "showHelp": "Zobrazit nápovědu",
   "today": "Dnes",
   "todos": "Úkoly",
+  "todoCopiedToClipboard": "Úkol uložený do schránky",
   "toggleCompletedTodos": "Zobrazit/skrýt dokončené úkoly",
   "toggleTheme": "Přepnout tmavý režim",
   "toggleFilter": "Zobrazit filtry",

@@ -137,6 +137,7 @@
   "showHelp": "ヘルプを表示",
   "today": "今日",
   "todos": "タスク",
+  "todoCopiedToClipboard": "クリップボードに保存されたタスク",
   "toggleCompletedTodos": "完了タスクを表示/隠す",
   "toggleTheme": "ダークモードON/OFF",
   "toggleFilter": "フィルターを表示",

@@ -38,11 +38,27 @@ class Store {
   }
 }
 
+class dismissedNotifications {
+  constructor(opts) {
+    let userDataPath = userDataPath = (electron.app || electron.remote.app).getPath("userData");   
+    this.path = path.join(userDataPath, opts.configName + ".json");
+    this.data = parseDataFile(this.path, opts.defaults);
+  }
+  
+  get(key) {
+    return this.data[key];
+  }
+  
+  set(key, val) {
+    this.data[key] = val;
+  }
+}
+
 function parseDataFile(filePath, defaults) {
   // We"ll try/catch it in case the file doesn"t exist yet, which will be the case on the first application run.
   // `fs.readFileSync` will return a JSON string which we then parse into a Javascript object
   try {
-    console.log("User preferences located at: " + filePath);
+    console.log("Persisted data located at: " + filePath);
     return JSON.parse(fs.readFileSync(filePath));
   } catch(error) {
     // if there was some kind of error, return the passed in defaults instead.
