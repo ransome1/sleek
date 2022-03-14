@@ -1209,10 +1209,15 @@ nav ul li.logo {
 }
 @media screen and (max-width: 500px) {
   .modal .modal-content {
+    width: 95% !important;
     padding: 0.5em !important;
   }
   .modal .modal-content .card-content {
     padding: 0.5em !important;
+  }
+  .modal .modal-content .card-content #modalFormInputResize {
+    top: 1.35em !important;
+    right: 1.8em !important;
   }
 }
 body.compact #modalForm textarea {
@@ -1586,10 +1591,8 @@ body.compact #autoCompleteContainer h4 {
   display: flex !important;
 }
 
-.modal {
-  padding: 1em;
-}
 .modal .modal-content {
+  width: 85%;
   margin: 0;
 }
 
@@ -1961,9 +1964,6 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .cell a.tag.contexts.is-dark {
   background: #184e41 !important;
-}
-#todoTable .cell.categories {
-  white-space: nowrap;
 }
 #todoTable .cell.categories .tag {
   margin-left: 0.25em;

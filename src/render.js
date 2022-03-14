@@ -1,8 +1,15 @@
 "use strict";
 let 
-  helper,
-  translations,
   appData,
+  events,
+  filters,
+  helper,
+  keyboard,
+  matomo,
+  messages,
+  onboarding,
+  todos,
+  translations,
   userData;
 
 function getUserData() {
@@ -18,9 +25,9 @@ function getUserData() {
     return Promise.reject(error);
   }
 }
-function startFileWatcher(file, isTabItem) {
+function startFileWatcher(file) {
   try {
-    window.api.send("startFileWatcher", [file, isTabItem]);
+    window.api.send("startFileWatcher", file);
     return new Promise(function(resolve) {
       return window.api.receive("startFileWatcher", function(response) {
         resolve(response);
@@ -34,10 +41,6 @@ function startFileWatcher(file, isTabItem) {
 function setUserData(key, value) {
   try {
     userData[key] = value;
-    // don't persist any data in testing environment
-    if(appData.environment === "testing") {
-      return Promise.resolve("Info: In testings no user data will be persisted");
-    }
 
     window.api.send("userData", [key, value]);
 
@@ -84,14 +87,14 @@ async function buildTable(fileContent, loadAll) {
     const t0 = performance.now();
 
     // refresh user data on each build
-    userData = await getUserData();
+    userData = await getUserData().then(function(response) {
+      return response;
+    }).catch(function(error) {
+      helper.handleError(error);
+    })
 
-    // pass new todo file content on to function that will produce todo.txt objects
-    // function will put it into items object
-    // only generate items if new content is passed
-    const todos = await import("./js/todos.mjs");
-    if(fileContent) await todos.generateTodoTxtObjects(fileContent).then(function() {
-      console.log("Success: Passed on file content to create todo.txt objects")
+    await todos.generateTodoTxtObjects(fileContent).then(function(response) {
+      console.log(response)
     }).catch(function(error) {
       helper.handleError(error);
     })
@@ -99,11 +102,8 @@ async function buildTable(fileContent, loadAll) {
     //in case something is wrong with the items object, build process is interrupted
     if(typeof todos.items !== "object") throw(new Error("Info: No todo.txt data found, starting onboarding"))
 
-    // import filter module only when needed
-    const filters = await import("./js/filters.mjs");
-
     // apply persisted filters and update object key "filtered"
-    await filters.filterItems().then(function(response) {
+    filters.filterItems().then(function(response) {
       console.log(response)
     }).catch(function(error) {
       helper.handleError(error);
@@ -124,7 +124,7 @@ async function buildTable(fileContent, loadAll) {
     });
     
     // Group filtered todo.txt objects and add them to items object
-    await todos.generateGroupedObjects().then(function(response) {
+    todos.generateGroupedObjects().then(function(response) {
       console.log(response);
     }).catch(function(error) {
       helper.handleError(error);
@@ -135,18 +135,16 @@ async function buildTable(fileContent, loadAll) {
       return Promise.resolve("Success: Table build in " + (performance.now() - t0) + "ms");
     }).catch(function(error) {
       helper.handleError(error);
-    });  
+    });
 
   } catch(error) {
     
-    const onboarding = await import("./js/onboarding.mjs");
     onboarding.showOnboarding(true).then(function(response) {
       console.log(response);
     }).catch(function(error) {
       helper.handleError(error);
     });
 
-    const messages = await import("./js/messages.mjs");
     messages.showGenericMessage(error);
 
     error.functionName = buildTable.name;
@@ -161,15 +159,18 @@ window.onload = async function() {
 
     userData = await getUserData();
     appData = await getAppData();
-    translations = await getTranslations();  
+    translations = await getTranslations();
+    onboarding = await import("./js/onboarding.mjs");
     helper = await import("./js/helper.mjs");
+    todos = await import("./js/todos.mjs");
+    filters = await import("./js/filters.mjs");
     await import("./js/ipc.mjs");
     import("./js/navigation.mjs");
     import("./js/search.mjs");
 
     // if active file is available, ask main process to start a file watcher
-    if(typeof userData.files === "object") {
-      startFileWatcher(helper.getActiveFile(), 0).then(function(response) {
+    if(typeof userData.files === "object" && helper.getActiveFile()) {
+      startFileWatcher(helper.getActiveFile()).then(function(response) {
         console.info(response);
       }).catch(function(error) {
         helper.handleError(error);
@@ -177,7 +178,6 @@ window.onload = async function() {
 
     // or start onboarding
     } else {
-      const onboarding = await import("./js/onboarding.mjs");      
       onboarding.showOnboarding(true).then(function(response) {
         console.info(response);
       }).catch(function(error) {
@@ -191,14 +191,14 @@ window.onload = async function() {
       helper.handleError(error);
     });
 
-    const messages = await import("./js/messages.mjs");
+    messages = await import("./js/messages.mjs");
     messages.checkDismissedMessages().then(function(response) {
       console.info(response);
     }).catch(function(error) {
       helper.handleError(error);
     });
 
-    const events = await import("./js/events.mjs");
+    events = await import("./js/events.mjs");
     events.registerEvents().then(function(response) {
       console.info(response);
     }).catch(function(error) {
@@ -206,7 +206,7 @@ window.onload = async function() {
     });
 
     // load keyboard shortcuts
-    const keyboard = await import("./js/keyboard.mjs");
+    keyboard = await import("./js/keyboard.mjs");
     keyboard.registerShortcuts().then(function(response) {
       console.info(response);
     }).catch(function(error) {
@@ -214,7 +214,7 @@ window.onload = async function() {
     });
 
     // handle matomo tracking at last
-    const matomo = await import("./js/matomo.mjs");
+    matomo = await import("./js/matomo.mjs");
     matomo.configureMatomo().then(function(response) {
       console.info(response);
     }).catch(function(error) {

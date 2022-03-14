@@ -91,9 +91,7 @@ function removeFileFromList(index, removeFile) {
     });
 
     // if no tab bar file is found, the first file in array will be chosen
-    if(newIndex === -1) {
-      newIndex = 0;
-    }
+    if(newIndex === -1) newIndex = 0
 
     setUserData("files", userData.files).then(response => {
       console.info(response);
@@ -101,13 +99,13 @@ function removeFileFromList(index, removeFile) {
       handleError(error);
     });
 
-    generateFileList().then(response => {
+    generateFileList(false).then(response => {
       console.info(response);
     }).catch(error => {
       handleError(error);
     });
 
-    startFileWatcher(userData.files[newIndex][1], 1).then(response => {
+    startFileWatcher(userData.files[newIndex][1]).then(response => {
       console.info(response);
     }).catch(error => {
       handleError(error);
@@ -130,7 +128,7 @@ function selectFileFromList(index) {
     focusRow(false);
     
     // load new file
-    startFileWatcher(userData.files[index][1], 1).then(response => {
+    startFileWatcher(userData.files[index][1]).then(response => {
       console.info(response);
     }).catch(error => {
       handleError(error);
@@ -152,22 +150,20 @@ async function generateFileTabs() {
     // hide tab bar on each run
     fileTabBar.classList.remove("is-active");
 
-    const filesForTabBar = userData.files.filter(file => {
-      return file[2] === 1;
-    });
-
     // cancel function in case no tab bar needs to be built
-    if(!userData.fileTabs || filesForTabBar.length <= 1) return Promise.resolve("Info: No tab bar is being built");
+    if(!userData.fileTabs || userData.files.length <= 1) return Promise.resolve("Info: No tab bar is being built");
 
-    // show tab bar if there is more than 1 file
-    fileTabBar.classList.add("is-active");
-    for (let i = 0; i < filesForTabBar.length; i++) {
+    for(let i = 0; i < userData.files.length; i++) {
 
-      const isActive = filesForTabBar[i][0];
+      // don't build tab
+      if(userData.files[i][2] === 0) continue;
+
+      const isActive = userData.files[i][0];
       const listItem = document.createElement("li");
+
       // extract filename only
       let fileName;
-      (appData.os === "windows") ? fileName = filesForTabBar[i][1].split("\\").pop() : fileName = filesForTabBar[i][1].split("/").pop();
+      (appData.os === "windows") ? fileName = userData.files[i][1].split("\\").pop() : fileName = userData.files[i][1].split("/").pop();
 
       // add file name only to the tab
       listItem.innerHTML = fileName;
@@ -189,26 +185,26 @@ async function generateFileTabs() {
       listItem.appendChild(closeIcon);
 
       // add "highlighting" style
-      if(isActive) {
-       listItem.classList.add("is-highlighted");
-      } else {
+      if(isActive) listItem.classList.add("is-highlighted")
+
       // add onclick for file selection
-        listItem.onclick = function(event) {
-          if(event.target.classList.contains("fas")) return false;
-          selectFileFromList(i).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on tab"]);
-        }
+      listItem.onclick = function(event) {
+        if(event.target.classList.contains("fas")) return false;
+        selectFileFromList(i).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+        // trigger matomo event
+        if(userData.matomoEvents) _paq.push(["trackEvent", "File-Tab", "Click on tab"]);
       }
 
       // apeend item to tab bar
-      fileTabBarList.appendChild(listItem);
-      
+      fileTabBarList.appendChild(listItem);  
     }
+
+    // if tab bar has more than 1 tab, it is shown
+    if(fileTabBarList.children.length > 1) fileTabBar.classList.add("is-active")
     
     return Promise.resolve("Success: File tabs have been built");
 
@@ -217,7 +213,7 @@ async function generateFileTabs() {
   }
 }
 
-async function generateFileList() {
+async function generateFileList(show) {
   try {
 
     // cancel if there are no files
@@ -227,7 +223,7 @@ async function generateFileList() {
     modalChangeFileTable.innerHTML = null;
 
     // present the modal
-    modalChangeFile.classList.add("is-active");
+    if(show !== false) modalChangeFile.classList.add("is-active");
 
     // create a jail for the modal
     createModalJail(modalChangeFile).then(response => {

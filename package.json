@@ -106,8 +106,8 @@
     "lint": "eslint --ext .js, src --ext .mjs, src",
     "sass": "sass -w src/scss/style.scss:src/css/style.css",
     "start": "yarn sass & electron .",
-    "test": "cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn playwright test",
-    "test1": "cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn playwright test -g 'Filter drawer'"
+    "test": "cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn playwright test --config=test/playwright.config.js",
+    "test1": "cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn playwright test -g 'Input element switch' --config=test/playwright.config.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
@@ -118,7 +118,7 @@
     "i18next": "^21.6.6",
     "i18next-fs-backend": "^1.1.1",
     "jstodotxt": "^0.10.0",
-    "marked": "^4.0.10",
+    "marked": "^4.0.12",
     "sugar": "^2.0.6",
     "vanillajs-datepicker": "^1.1.4"
   },

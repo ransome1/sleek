@@ -9,8 +9,10 @@
       padding: 0.75em!important;
     }
   }
-  .modal.content .modal-card {
-    padding: 1em!important;
+  .modal.content {
+    .modal-card {
+      padding: 1em!important;
+    }
   }
 
   table tr td {
@@ -92,15 +94,20 @@ screen and (max-height: 650px) {
 @mixin mobile() {
   .modal {
     .modal-content {
+      width: 95%!important;
       padding: 0.5em!important;
       .card-content {
         padding: 0.5em!important;
+        #modalFormInputResize {
+          top: 1.35em!important;
+          right: 1.8em!important;
+        }
       }
     }
   }
 }
 @media screen and (max-width: 500px) {
-    @include mobile;
+  @include mobile;
 }
 
 body.compact {

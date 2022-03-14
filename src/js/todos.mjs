@@ -1,7 +1,6 @@
 "use strict"; 
 import "../../node_modules/sugar/dist/sugar.min.js";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import "../../node_modules/marked/marked.min.js";
 
 import { _paq } from "./matomo.mjs"; 
 import { userData, translations, buildTable } from "../render.js";
@@ -51,24 +50,6 @@ todoTableBodyCellTextTemplate.setAttribute("href", "#");
 todoTableBodyRowTemplate.setAttribute("class", "todo");
 todoTableBodyRowTemplate.setAttribute("tabindex", "0");
 
-marked.setOptions({
-  pedantic: false,
-  gfm: true,
-  breaks: false,
-  sanitize: false,
-  sanitizer: false,
-  smartLists: false,
-  smartypants: false,
-  xhtml: false,
-  baseUrl: "https://"
-});
-const renderer = {
-  link(href, title, text) {
-    return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
-  }
-};
-marked.use({ renderer });
-
 todoTableWrapper.onscroll = function(event) {
   // abort if all todos are shown already
   if(todoTable.children.length === items.filtered.length) return false;
@@ -86,12 +67,13 @@ todoTableWrapper.onscroll = function(event) {
   }
 }
 
-async function generateTodoTxtObjects(content) {
+async function generateTodoTxtObjects(fileContent) {
   try {
-    items = await { objects: TodoTxt.parse(content, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
+    // create todo.txt objects
+    items = await { objects: TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
+    // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
-    items.complete = items.objects.filter(function(item) { return item.complete === true });
-    items.incomplete = items.objects.filter(function(item) { return item.complete === false });
+
     return Promise.resolve("Success: Todo object created");
 
   } catch(error) {
@@ -618,41 +600,30 @@ function createTodoContext(todoTableRow) {
     return Promise.reject(error);
   }
 }
-// TODO: Understand and describe
 function sortTodosInGroup(group) {
   try {
     // start at 1 to skip sorting method used for 1st level grouping
     for(let i = 1; i < userData.sortBy.length; i++) {
+      
       group.sort(function(a, b) {
         
-        // only continue if the two items have the same filters from the previous iteration
-        if(i > 1 && JSON.stringify(a[userData.sortBy[i-2]]) !== JSON.stringify(b[userData.sortBy[i-2]]) ) return;
-        if(i > 1 &&  JSON.stringify(a[userData.sortBy[i-1]]) !== JSON.stringify(b[userData.sortBy[i-1]]) ) return;
+        // only continue if the two items have the same filters from all previous iterations
+        if(JSON.stringify(a[userData.sortBy[i-4]]) !== JSON.stringify(b[userData.sortBy[i-4]])) return
+        if(JSON.stringify(a[userData.sortBy[i-3]]) !== JSON.stringify(b[userData.sortBy[i-3]])) return
+        if(JSON.stringify(a[userData.sortBy[i-2]]) !== JSON.stringify(b[userData.sortBy[i-2]])) return
+        if(JSON.stringify(a[userData.sortBy[i-1]]) !== JSON.stringify(b[userData.sortBy[i-1]])) return
 
         const
           item1 = a[userData.sortBy[i]],
           item2 = b[userData.sortBy[i]];
 
-        //TODO: Make it more generic
-        // when item1 is empty or bigger than item2, item 1 will be sorted after item2
-        // invert sorting for creation date
-        if(userData.sortBy[i] === "date" && (!item1 && item2 || item1 < item2)) {
-          return 1;
-        // when item2 is empty or bigger than item1, item 1 will be sorted before item2
-        // invert sorting for creation date
-        } else if(userData.sortBy[i] === "date" && (item1 && !item2 || item1 > item2)) {
-          return -1;
-        // when item1 is empty or bigger than item2, item 1 will be sorted after item2
-        } else if(!item1 && item2 || item1 > item2) {
-          // invert sorting for creation date
-          //if(userData.sortBy[i] === "date") return -1;
-          return 1;
-        // when item2 is empty or bigger than item1, item 1 will be sorted before item2
-        } else if(item1 && !item2 || item1 < item2) {
-          return -1;
-        }
-        // no change to sorting
-        return;
+        // if first item is empty it will be sorted after second item
+        if(!item1) return 1;
+        // if second item is empty it will be sorted before first item
+        if(!item2) return -1;
+  
+        return item1.toString().localeCompare(item2.toString())
+        
       });
     }
 
@@ -771,6 +742,9 @@ async function archiveTodos() {
     const activeFile = getActiveFile();
     const doneFile = getDoneFile();
 
+    let completeTodos = await items.objects.filter(function(item) { return item.complete === true });
+    let incompleteTodos = await items.objects.filter(function(item) { return item.complete === false });
+
     // if user archives within done.txt file, operating is canceled
     if(activeFile.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
     
@@ -781,27 +755,25 @@ async function archiveTodos() {
       });
     });
 
-    let contentForDoneFile = items.complete;
-
     if(contentFromDoneFile) {
       // create array from done file
       contentFromDoneFile = contentFromDoneFile.split("\n");
 
       //combine the two arrays
-      contentForDoneFile = contentFromDoneFile.concat(items.complete.toString().split(","));
+      completeTodos = contentFromDoneFile.concat(completeTodos.toString().split(","));
 
       // use Set function to remove the duplicates: https://www.javascripttutorial.net/array/javascript-remove-duplicates-from-array/
-      contentForDoneFile = [...new Set(contentForDoneFile)];
+      completeTodos = [...new Set(completeTodos)];
 
       // remove empty entries
-      contentForDoneFile = contentForDoneFile.filter(function(element) { return element });
+      completeTodos = completeTodos.filter(function(element) { return element });
     }
 
     //write completed items to done file
-    window.api.send("writeToFile", [contentForDoneFile.join("\n").toString() + "\n", doneFile]);
+    window.api.send("writeToFile", [completeTodos.join("\n").toString() + "\n", doneFile]);
 
     // write incompleted items to todo file
-    window.api.send("writeToFile", [items.incomplete.join("\n").toString() + "\n", activeFile]);
+    window.api.send("writeToFile", [incompleteTodos.join("\n").toString() + "\n", activeFile]);
 
     // send notifcation on success
     generateGenericNotification(translations.archivingCompletedTitle, translations.archivingCompletedBody + doneFile).then(function(response) {

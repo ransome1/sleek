@@ -227,6 +227,7 @@ export async function registerShortcuts() {
           // setup x key
           // ******************************************************
 
+          // TODO: not working any more
           if (isRowFocused() && event.key === "x") {
             const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow].getAttribute("data-item");
             setTodoComplete(todoTableRow).then(function(response) {
@@ -265,13 +266,13 @@ export async function registerShortcuts() {
         if(event.ctrlKey && !event.shiftKey && event.keyCode === 9) {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index+1]) {
-            startFileWatcher(userData.files[0][1], 1).then(response => {
+            startFileWatcher(userData.files[0][1]).then(response => {
               console.info(response);
             }).catch(error => {
               handleError(error);
             });
           } else {
-            startFileWatcher(userData.files[index+1][1], 1).then(response => {
+            startFileWatcher(userData.files[index+1][1]).then(response => {
               console.info(response);
             }).catch(error => {
               handleError(error);
@@ -283,13 +284,13 @@ export async function registerShortcuts() {
         if(event.ctrlKey && event.shiftKey && event.keyCode === 9) {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index-1]) {
-            startFileWatcher(userData.files[userData.files.length-1][1], 1).then(response => {
+            startFileWatcher(userData.files[userData.files.length-1][1]).then(response => {
               console.info(response);
             }).catch(error => {
               handleError(error);
             });
           } else {
-            startFileWatcher(userData.files[index-1][1], 1).then(response => {
+            startFileWatcher(userData.files[index-1][1]).then(response => {
               console.info(response);
             }).catch(error => {
               handleError(error);
@@ -358,19 +359,6 @@ export async function registerShortcuts() {
         }
 
         // ******************************************************
-        // toggle dark mode
-        // ******************************************************
-
-        if(event.key==="d" && !isInputFocused()) {
-          triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
-          return false;
-        }
-
-        // ******************************************************
         // reset filters
         // ******************************************************
 
@@ -382,51 +370,6 @@ export async function registerShortcuts() {
           }).catch(function(error) {
             handleError(error);
           });
-          return false;
-        }
-        // ******************************************************
-        // toggle completed todos
-        // ******************************************************
-        
-        if(event.key==="h" && !isInputFocused()) {
-          // abort when onboarding is shown
-          if(isOnboardingOpen()) return false;
-
-          const showCompleted = document.getElementById("showCompleted");
-          triggerToggle(showCompleted, true).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
-          return false;
-        }
-        
-        // ******************************************************
-        // toggle deferred todos
-        // ******************************************************
-
-        if(event.key==="t" && !isInputFocused()) {
-          // abort when onboarding is shown
-          if(isOnboardingOpen()) return false;
-          triggerToggle("deferredTodos").then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
-          return false;
-        }
-
-        // ******************************************************
-        // archive todos
-        // ******************************************************
-
-        if(event.key==="a" && !isInputFocused()) {
-          // abort when onboarding is shown
-          if(isOnboardingOpen()) return false;
-          // abort when no completed todos are present
-          if(items.complete.length===0) return false;
-          // handle user confirmation and pass callback function
-          getConfirmation(archiveTodos, translations.archivingPrompt);
           return false;
         }
 
@@ -445,22 +388,12 @@ export async function registerShortcuts() {
           });
           return false;
         }
-        
-        // ******************************************************
-        // reload window
-        // ******************************************************
-
-        if((event.key === "." || event.key === "F5") && !isInputFocused()) {
-          location.reload(true);
-          return false;
-        }        
 
         // ******************************************************
         // open form
         // ******************************************************
 
         if(event.key==="n" && !isInputFocused() && !isOnboardingOpen()) {
-          //if(isOnboardingOpen()) return false;
           show().then(function(response) {
             console.info(response);
           }).catch(function(error) {
@@ -505,18 +438,21 @@ export async function registerShortcuts() {
 
       if((event.ctrlKey || event.metaKey) && event.key === "w") {
 
-        // get active file
+        // get active tab
         const index = userData.files.findIndex(file => file[0] === 1);
 
-        // if all files are removed from tab bar, window will be closed
-        if(index < 1) window.api.send("closeWindow");
-
         // remove active file from tab bar
-        removeFileFromList(index, false).then(function(response) {
+        await removeFileFromList(index, false).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
         });
+
+        // if no visible tab is left, window is being closed
+        const visibleTabs = userData.files.findIndex(file => file[2] === 1);        
+
+        // if all files are removed from tab bar, window will be closed
+        if(visibleTabs === -1) window.api.send("closeWindow");
 
         return false;
       }
@@ -571,6 +507,65 @@ export async function registerShortcuts() {
 
           return false;
         }
+
+      } else {
+
+        // reload window
+        
+        if((event.key === "." || event.key === "F5") && !isInputFocused()) {
+          location.reload(true);
+          return false;
+        }
+
+        // toggle completed todos
+        
+        if(event.key==="h" && !isInputFocused()) {
+          // abort when onboarding is shown
+          if(isOnboardingOpen()) return false;
+
+          const showCompleted = document.getElementById("showCompleted");
+          triggerToggle(showCompleted, true).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          return false;
+        }
+        
+        // toggle deferred todos
+
+        if(event.key==="t" && !isInputFocused()) {
+          // abort when onboarding is shown
+          if(isOnboardingOpen()) return false;
+          triggerToggle(document.getElementById("deferredTodos"), true).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          return false;
+        }
+
+        // toggle dark mode
+
+        if(event.key==="d" && !isInputFocused()) {
+          triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          return false;
+        }
+
+        // archive todos
+
+        if(event.key==="a" && !isInputFocused()) {
+          // abort when onboarding is shown
+          if(isOnboardingOpen()) return false;
+          // handle user confirmation and pass callback function
+          getConfirmation(archiveTodos, translations.archivingPrompt);
+          return false;
+        }
+
       }
     });
 

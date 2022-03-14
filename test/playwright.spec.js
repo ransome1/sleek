@@ -1,5 +1,6 @@
 const { _electron: electron } = require("playwright");
 const { test, expect } = require("@playwright/test");
+const waitForAppToLoad = 2000;
 let 
 	app, 
 	page;
@@ -13,8 +14,8 @@ test.describe("Onboarding", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -74,8 +75,8 @@ test.describe("Todo table", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -88,9 +89,10 @@ test.describe("Todo table", () => {
 	});
 
 	test("Fourth row can be clicked and shows modal, which input field contains a specfic value", async () => {
-		await page.locator(":nth-match(#todoTable .todo, 3)").click();
+		await page.locator(":nth-match(#todoTable .todo, 3) > .text").click();
 		const value = await page.inputValue("#modalFormInput");
-		await expect(value).toBe("(A) Thank Mom for the meatballs  x 2021-04-07 (B) Schedule Goodwill pickup   Eskimo pies  Really gotta call Mom this task has no priority (A)   (b) Get back to the boss this task has no priority due:2023-06-10 +GarageSale @phone @phone @GroceryStore @phone @someday");
+		await expect(value).toBe("(A) 2021-02-28 A task list with all possible task types comments due:2023-03-30 +todotxt @test");
+
 	});
 });
 
@@ -105,8 +107,8 @@ test.describe("Todo context", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -151,8 +153,9 @@ test.describe("Todo context", () => {
 		await page.locator("#btnCancel").click();
 	});
 
-	test("Click on 'Edit' shows desired input value", async () => {
-		const row = page.locator(":nth-match(#todoTable .todo, 5)");
+	// TODO: does not actually check clpboard
+	test("Click on 'Copy' will copy todo text to clipboard", async () => {
+		const row = page.locator(":nth-match(#todoTable .todo, 2) > .text");
 		await row.click({
 			"button": "right",
 			"position": {
@@ -161,10 +164,7 @@ test.describe("Todo context", () => {
 			}
 		});
 		await page.locator(":nth-match(#todoContext .dropdown-item, 2)").click();
-		const value = await page.inputValue("#modalFormInput");
-		await expect(value).toBe("(B) ->Submit TPS report this task has no priority");
-		// close modal
-		await page.locator("#btnCancel").click();
+		await expect(page.locator("#messageGenericContainer")).toBeVisible();
 	});
 
 });
@@ -180,8 +180,8 @@ test.describe("Creating todos", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -194,7 +194,6 @@ test.describe("Creating todos", () => {
 		await page.locator("#btnSave").click();
 		const countedRows = await page.locator("#todoTable").count();
 		await expect(countedRows).toBe(1);
-
 		const row = await page.locator(":nth-match(#todoTable .todo, 1)");
 		await row.click({
 			"button": "right",
@@ -211,7 +210,7 @@ test.describe("Creating todos", () => {
 		await page.locator("#btnAddTodoContainer").click();
 		await page.locator("#modalFormInput").fill("This is a test todo that needs to be archived");
 		await page.locator("#btnSave").click();
-		const row = page.locator(":nth-match(#todoTable .todo, 1)");
+		const row = await page.locator(":nth-match(#todoTable .todo, 1)");
 		const checkbox = await row.locator(".checkbox");
 		await checkbox.click();
 		const archiveButton = await row.locator(".archive");
@@ -225,7 +224,7 @@ test.describe("Creating todos", () => {
 		await page.locator("#modalFormInput").fill("This is a test todo that will be used as a template +testing @testing");
 		await page.locator("#btnSave").click();
 
-		const row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		const row = await page.locator(":nth-match(#todoTable .todo, 1) > .text");
 		await row.click({
 			"button": "right",
 			"position": {
@@ -261,8 +260,8 @@ test.describe("Due date picker", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -303,8 +302,8 @@ test.describe("Recurrence picker", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -355,8 +354,8 @@ test.describe("Priority picker", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -380,15 +379,8 @@ test.describe("Priority picker", () => {
 	});
 
 	test("Priority picker input will be prefilled with priority B", async () => {
-		const row = page.locator(":nth-match(#todoTable .todo, 5)");
-		await row.click({
-			"button": "right",
-			"position": {
-				"x": 10,
-				"y": 10
-			}
-		});
-		await page.locator(":nth-match(#todoContext .dropdown-item, 2)").click();
+		const row = page.locator(":nth-match(#todoTable .todo, 5) > .text");
+		await row.click();
 		const value = await page.inputValue("#modalFormInput");
 		await expect(value).toBe("(B) ->Submit TPS report this task has no priority");
 		const priority = await page.inputValue("#priorityPicker");
@@ -407,8 +399,8 @@ test.describe("Input element switch", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -416,7 +408,7 @@ test.describe("Input element switch", () => {
 	});
 
 	test("Check if multi line items are displayed correctly", async () => {
-		const row = page.locator(":nth-match(#todoTable .todo, 7)");
+		const row = page.locator(":nth-match(#todoTable .todo, 8) > .text");
 		await row.click({
 			"position": {
 				"x": 50,
@@ -442,8 +434,8 @@ test.describe("Navigation elements", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -503,8 +495,8 @@ test.describe("Filter drawer", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -517,16 +509,18 @@ test.describe("Filter drawer", () => {
 
 		await page.waitForSelector("#filterDrawer");
 		
-		const filterButton = await page.locator(":nth-match(filterDrawer#filterDrawer section.projects button, 2)");
+		const filterButton = await page.locator(":nth-match(#filterDrawer section.projects button, 2)");
 		
 		await filterButton.click();
-		
+
 		const rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);
+
+		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
 		
-		await filterButton.click();
 		await page.locator("#navBtnFilter").click();		
 		await expect(page.locator("#filterDrawer")).toBeHidden();
+
 	})
 
 	test("Filter sidebar is being opened and a context and a project is being selected and filter reset button removes selection", async () => {
@@ -575,8 +569,8 @@ test.describe("View drawer", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -619,8 +613,8 @@ test.describe("Jail", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -655,8 +649,8 @@ test.describe("Keyboard shortcuts", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -693,8 +687,8 @@ test.describe("Settings modal", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -717,12 +711,12 @@ test.describe("Settings modal", () => {
 		await page.keyboard.press("Escape");
 	})
 
-	test("Do the Toggles", async () => {
-		await page.locator("#navBtnSettings").click();
-		await expect(page.locator("#modalSettings")).toBeVisible();
-		await page.focus('input#notifications');
-		await page.waitForTimeout(50000);
-	})
+	// test("Do the Toggles", async () => {
+	// 	await page.locator("#navBtnSettings").click();
+	// 	await expect(page.locator("#modalSettings")).toBeVisible();
+	// 	await page.focus('input#notifications');
+	// 	await page.waitForTimeout(50000);
+	// })
 
 	test("Close settings modal by click on x button", async () => {
 		const button = await page.locator("#modalSettings button[role=cancel]");
@@ -755,8 +749,8 @@ test.describe("Help modal", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -773,7 +767,6 @@ test.describe("Help modal", () => {
 	})
 
 	test("4 times tabbing and pressing enter select the 4th card", async () => {
-		await page.keyboard.press("Tab");
 		await page.keyboard.press("Tab");
 		await page.keyboard.press("Tab");
 		await page.keyboard.press("Tab");
@@ -801,8 +794,8 @@ test.describe("Search", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -811,7 +804,7 @@ test.describe("Search", () => {
 
 	test("Add string to search input and expect 2 results", async () => {
 		await page.fill("#todoTableSearch", "@phone");
-		await page.waitForTimeout(500);
+		await page.waitForTimeout(waitForAppToLoad);
 		const rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(2);
 		await page.fill("#todoTableSearch", "");
@@ -819,7 +812,7 @@ test.describe("Search", () => {
 
 	test("Add advanced search string with two filter parameters and expect 1 result", async () => {
 		await page.fill("#todoTableSearch", "@phone AND +Garagesale");
-		await page.waitForTimeout(500);
+		await page.waitForTimeout(waitForAppToLoad);
 		const rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);
 
@@ -829,18 +822,18 @@ test.describe("Search", () => {
 
 	test("Add advanced search string to exclude all todos that are completed and contain a project", async () => {
 		await page.fill("#todoTableSearch", "not complete and !+");
-		await page.waitForTimeout(500);
+		await page.waitForTimeout(waitForAppToLoad);
 		const rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(13);
 	})
 
 	test("Search query produces 0 results and reset button will restore all todos", async () => {
 		await page.locator("#todoTableSearch").fill("This will produce 0 results");
-		await page.waitForTimeout(1000);
+		await page.waitForTimeout(waitForAppToLoad);
 		let rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(0);
 		await page.locator("#btnNoResultContainerResetFilters").click();
-		await page.waitForTimeout(1000);
+		await page.waitForTimeout(waitForAppToLoad);
 		rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(18);
 	});
@@ -858,8 +851,8 @@ test.describe("File chooser", () => {
 			}
 		});
 		page = await app.firstWindow();
-		// wait for 500ms to let the window built up fully
-		await page.waitForTimeout(500);
+		
+		await page.waitForTimeout(waitForAppToLoad);
 	});
 
 	test.afterAll(() => {
@@ -898,8 +891,8 @@ test.describe("File chooser", () => {
 // 			}
 // 		});
 // 		page = await app.firstWindow();
-// 		// wait for 500ms to let the window built up fully
-// 		await page.waitForTimeout(500);
+// 		
+// 		await page.waitForTimeout(waitForAppToLoad);
 // 	});
 
 // 	test.afterAll(() => {

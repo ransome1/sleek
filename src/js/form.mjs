@@ -80,7 +80,6 @@ modalFormInputResize.onclick = function() {
 
 modalForm.onsubmit = async function(event) {
   try {
-
     event.preventDefault();
 
     const modalFormInput = document.getElementById("modalFormInput");

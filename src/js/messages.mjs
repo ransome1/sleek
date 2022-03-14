@@ -5,7 +5,9 @@ import { showModal } from "./content.mjs";
 import { userData, translations } from "../render.js";
 
 const btnMessageLogging = document.getElementById("btnMessageLogging");
+const messages = document.getElementById("messages");
 const messageGenericContainer = document.getElementById("messageGenericContainer");
+const messageGenericTitle = document.getElementById("messageGenericTitle");
 const messageGenericMessage = document.getElementById("messageGenericMessage");
 const messageLoggingBody = document.getElementById("messageLoggingBody");
 const messageLoggingButton = document.getElementById("messageLoggingButton");
@@ -48,7 +50,7 @@ export function showGenericMessage(text, autoClose) {
   try {
     
     if(!text) return Promise.reject("Error: No text passed, can't copy anything to clipboard");
-      
+    
     messageGenericContainer.classList.add("is-active");
     messageGenericMessage.innerHTML = text;
 
@@ -69,3 +71,58 @@ export function showGenericMessage(text, autoClose) {
     return Promise.reject(error);
   }
 }
+
+// function showMessage(id, title, body, autoClose) {
+//   try {
+
+//     messages.innerHTML += `
+//       <article class="message fixed is-active" data="${id}">
+//         <div class="message-header">
+//           <p>${title}</p>
+//           <button class="delete close" role="cancel" data-message="${id}" tabindex="-1"></button>
+//         </div>
+//         <div class="message-body">
+//           <p>${body}</p>
+//         </div>
+//       </article>`;
+
+//     // trigger matomo event
+//     if(userData.matomoEvents) _paq.push(["trackEvent", "Message", "Success: Text copied to clipboard"])
+
+//     //return Promise.resolve("Success: Todo text copied to clipboard");
+
+//   } catch(error) {
+//     error.functionName = showMessage.name;
+//     return Promise.reject(error);
+//   }
+// }
+
+// export function fetchMessages() {
+//   try {
+
+//     const fetchPromise = fetch("https://www.robbfolio.de/dev/fetch.json", {
+//       method: "POST",
+//       cache: "no-cache",
+//       headers: {
+//         "Content-Type": "application/json"
+//       }
+//     });
+
+//     fetchPromise
+//       .then(response => {
+//         if(!response.ok) throw new Error(`HTTP error: ${response.status}`)
+//         return response.json();
+//       })
+//       .then(json => {
+//         if(typeof json !== "object") throw new Error("Error: Data is not an JSON object")
+//         let l = json.messages.length;
+//         for(let i = 0; i < l; i++) showMessage(json.messages[i].id, json.messages[i].title, json.messages[i].body, 10)
+//       });
+
+//   } catch(error) {
+//     error.functionName = checkDismissedMessages.name;
+//     return Promise.reject(error);
+//   }
+// }
+
+// fetchMessages();

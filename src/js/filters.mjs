@@ -32,149 +32,163 @@ let categories,
 filterContextSave.innerHTML = translations.save;
 filterContextDelete.innerHTML = translations.delete;
 btnResetFilters.forEach(function(button) {
-  button.getElementsByTagName('span')[0].innerHTML = translations.resetFilters;
+  button.getElementsByTagName("span")[0].innerHTML = translations.resetFilters;
 });
 
-filterContextInput.addEventListener("keydown", (event) => {
-  if(event.key === "Space") event.preventDefault();
-})
+filterContextInput.onkeydown = function(event) {
+  if(event.key === " ") return false
+}
 
-autoCompleteContainer.addEventListener("keyup", (event) => {
-
+autoCompleteContainer.onkeyup = function(event) {
   // if there is only one filter shown it will be selected automatically
   if(event.key === "Tab" && Object.keys(filtersCounted).length === 1) {
     addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-prefix"));
     return false;
   }
-})
+}
 
 function saveFilter(newFilter, oldFilter, category) {
   try {
-    items.objects.forEach((item) => {
-      if(category!=="priority" && item[category]) {
-        const index = item[category].findIndex((el) => el === oldFilter);
-        item[category][index] = newFilter;
-      } else if(category==="priority" && item[category]===oldFilter) {
-        item[category] = newFilter.toUpperCase();
+    const l = items.objects.length;
+    for(let i = 0; i < l; i++) {
+      if(category !== "priority" && items.objects[i][category]) {
+        const index = items.objects[i][category].findIndex((el) => el === oldFilter);
+        items.objects[i][category][index] = newFilter;
+      // priorities will be converted uppercase
+      } else if(category === "priority" && items.objects[i][category] === oldFilter) {
+        items.objects[i][category] = newFilter.toUpperCase();
       }
-    });
+    }
+
     // persisted filters will be removed
-    setUserData("selectedFilters", []);
-    //write the data to the file
+    setUserData("selectedFilters", []).then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+    
+    // write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
     window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter renamed"]);
-    return Promise.resolve("Success: Filter renamed");
+
+    return Promise.resolve("Success: Filter " + oldFilter + " renamed to " + newFilter);
+
   } catch(error) {
     error.functionName = saveFilter.name;
     return Promise.reject(error);
   }
 }
+
 function deleteFilter(filter, category) {
   try {
-    items.objects.forEach((item) => {
-      if(category!=="priority" && item[category]) {
-        const index = item[category].indexOf(filter);
-        if(index!==-1) item[category].splice(index, 1);
-        if(item[category].length===0) item[category] = null;
-      } else if(category==="priority" && item[category]===filter) {
-        item[category] = null;
+    const l = items.objects.length;
+    for(let i = 0; i < l; i++) {
+    
+      if(category !== "priority" && items.objects[i][category]) {
+        const index = items.objects[i][category].indexOf(filter);
+
+        if(index !== -1) items.objects[i][category].splice(index, 1);
+
+        if(items.objects[i][category].length===0) items.objects[i][category] = null;
+
+      } else if(category==="priority" && items.objects[i][category]===filter) {
+        items.objects[i][category] = null;
       }
-    });
+
+    }
+
     // persisted filters will be removed
-    setUserData("selectedFilters", []);
+    setUserData("selectedFilters", []).then(response => {
+      console.log(response);
+    }).catch(error => {
+      handleError(error);
+    });
+
     //write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
     window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter deleted"]);
+
     return Promise.resolve("Success: Filter deleted");
+
   } catch(error) {
     error.functionName = deleteFilter.name;
     return Promise.reject(error);
   }
 }
+
 function filterItems() {
   try {
 
-    let todoObjects = items.objects;
+    items.filtered = items.objects;
+    selectedFilters = userData.selectedFilters;
 
-    // TODO: this is a duplicate in todos.mjs
-    // selected filters are empty, unless they were persisted
-    if(userData.selectedFilters && userData.selectedFilters.length>0) {
-      selectedFilters = JSON.parse(userData.selectedFilters);
-    } else {
-      selectedFilters = new Array;
-      userData.selectedFilters = selectedFilters;
-    }
     // apply persisted contexts and projects
-    if(selectedFilters.length > 0) {
+    if(userData.selectedFilters.length > 0) {
+      
+      selectedFilters = JSON.parse(userData.selectedFilters);
+    
       // we iterate through the filters in the order they got selected
       selectedFilters.forEach(filter => {
-        if(filter[1]=="projects") {
-          todoObjects = todoObjects.filter(function(item) {
-            if(item.projects) return item.projects.includes(filter[0]);
-          });
-        } else if(filter[1]=="contexts") {
-          todoObjects = todoObjects.filter(function(item) {
-            if(item.contexts) {
-              return item.contexts.includes(filter[0]);
-            }
-          });
-        } else if(filter[1]=="priority") {
-          todoObjects = todoObjects.filter(function(item) {
-            if(item.priority) {
-              return item.priority.includes(filter[0]);
-            }
-          });
-        }
+        // reduce filtered items to items that include the filter
+        items.filtered = items.filtered.filter(function(item) {
+          if(item[filter[1]]) return item[filter[1]].includes(filter[0]);
+        });
       });
+
     }
+
     // apply persisted excluded categories filter
     if(userData.hideFilterCategories.length > 0) {
       // we iterate through the filters in the order they got selected
       userData.hideFilterCategories.forEach(filter => {
-        todoObjects = todoObjects.filter(function(item) {
+        items.filtered = items.filtered.filter(function(item) {
           if(!item[filter]) return item;
         });
       });
     }
-    if (todoTableSearch.value) { // assume that this is an advanced search expr
+
+    // TODO: understand
+    if(todoTableSearch.value) { // assume that this is an advanced search expr
       let queryString = todoTableSearch.value;
       try {
         let query = filterlang.parse(queryString);
         if (query.length > 0) {
-          todoObjects = todoObjects.filter(function(item) {
+          items.filtered = items.filtered.filter(function(item) {
             return runQuery(item, query);
           });
           lastFilterQueryString = queryString;
-          lastFilterItems = todoObjects;
+          lastFilterItems = items.filtered;
           todoTableSearch.classList.add("is-valid-query");
           todoTableSearch.classList.remove("is-previous-query");
         }
-      } catch(e) {
+      } catch(error) {
         // oops, that wasn't a syntactically correct search expression
         todoTableSearch.classList.remove("is-valid-query");
         if (lastFilterQueryString && queryString.startsWith(lastFilterQueryString)) {
           // keep table more stable by using the previous valid query while
           // user continues to type additional query syntax.
-          todoObjects = lastFilterItems;
+          items.filtered = lastFilterItems;
           todoTableSearch.classList.add("is-previous-query");
         } else {
           // the query is not syntactically correct and isn't a longer version
           // of the last working query, so let's assume that it is a
           // plain-text query.
-          todoObjects = todoObjects.filter(function(item) {
+          items.filtered = items.filtered.filter(function(item) {
             return item.toString().toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
           });
           todoTableSearch.classList.remove("is-previous-query");
         }
       }
     }
+
     // apply filters
-    todoObjects = todoObjects.filter(function(item) {
-      //if(!item.text && !item.h) return false;
+    items.filtered = items.filtered.filter(function(item) {
       if(!userData.showHidden && item.h) return false;
       if(!userData.showCompleted && item.complete) return false;
       if(!userData.showDueIsToday && item.due && isToday(item.due)) return false;
@@ -184,8 +198,6 @@ function filterItems() {
       return true;
     });
 
-    items.filtered = todoObjects;
-
     return Promise.resolve("Success: todo.txt objects filtered");
 
   } catch(error) {
@@ -193,6 +205,12 @@ function filterItems() {
     return Promise.reject(error);
   }
 }
+
+
+
+
+
+
 
 function generateCategoryContainer(category, autoCompletePrefix, filterFragment) {
   try {
@@ -212,8 +230,9 @@ function generateCategoryContainer(category, autoCompletePrefix, filterFragment)
     }
     // if filters are available and if container is not the autocomplete one
     let todoFilterHeadline = document.createElement("h4");
+
     // show suggestion box when prefix is present
-    if(autoCompletePrefix!==undefined) {
+    if(autoCompletePrefix !== undefined) {
       autoCompleteContainer.classList.add("is-active");
       autoCompleteContainer.focus();
       todoFilterHeadline.innerHTML = headline;
@@ -421,6 +440,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
 }
 function selectFilter(filter, category) {
   try {
+
     // if no filters are selected, add a first one
     if(selectedFilters.length > 0) {
       // get the index of the item that matches the data values the button click provided
@@ -436,8 +456,13 @@ function selectFilter(filter, category) {
       // this is the first push
       selectedFilters.push([filter, category]);
     }
+
     // convert the collected filters to JSON and save it to store.js
-    setUserData("selectedFilters", JSON.stringify(selectedFilters));
+    setUserData("selectedFilters", JSON.stringify(selectedFilters)).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
     
     buildTable().then(function(response) {
       console.info(response);
@@ -509,20 +534,20 @@ function generateFilterButtons(category, autoCompletePrefix) {
           filterContext.classList.add("is-active");
           filterContextInput.value = filter;
           filterContextInput.focus();
-          filterContextInput.onkeyup = function(event) {
-            if(event.key === "Escape") filterContext.classList.remove("is-active");
-            if(event.key === "Enter") {
-              if(filterContextInput.value!==filter && filterContextInput.value) {
-                saveFilter(filterContextInput.value, filter, category).then(function(response) {
-                  console.info(response);
-                }).catch(function(error) {
-                  handleError(error);
-                });
-              } else {
-                filterContext.classList.remove("is-active");
-              }
-            }
-          }
+          // filterContextInput.onkeyup = function(event) {
+          //   if(event.key === "Escape") filterContext.classList.remove("is-active");
+          //   if(event.key === "Enter") {
+          //     if(filterContextInput.value!==filter && filterContextInput.value) {
+          //       saveFilter(filterContextInput.value, filter, category).then(function(response) {
+          //         console.info(response);
+          //       }).catch(function(error) {
+          //         handleError(error);
+          //       });
+          //     } else {
+          //       filterContext.classList.remove("is-active");
+          //     }
+          //   }
+          // }
           filterContextSave.onclick = function() {
             if(filterContextInput.value!==filter && filterContextInput.value) {
               saveFilter(filterContextInput.value, filter, category).then(function(response) {
@@ -530,9 +555,8 @@ function generateFilterButtons(category, autoCompletePrefix) {
               }).catch(function(error) {
                 handleError(error);
               });
-            } else {
-              filterContext.classList.remove("is-active");
             }
+            filterContext.classList.remove("is-active");
           }
           filterContextDelete.onclick = function() {
             getConfirmation(deleteFilter, translations.deleteCategoryPrompt, filter, category);
@@ -541,12 +565,16 @@ function generateFilterButtons(category, autoCompletePrefix) {
         if(filtersCountedReduced[filter]) {
           todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCountedReduced[filter] + "</span>";
           // create the event listener for filter selection by user
-          todoFiltersItem.addEventListener("click", () => {
+          todoFiltersItem.onclick = function() {
             document.getElementById("todoTableWrapper").scrollTo(0,0);
-            selectFilter(todoFiltersItem.getAttribute('data-filter'), todoFiltersItem.getAttribute('data-category'))
+            selectFilter(this.getAttribute("data-filter"), this.getAttribute("data-category")).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
             // trigger matomo event
             if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
-          });
+          }
         } else {
           todoFiltersItem.disabled = true;
           todoFiltersItem.classList.add("is-greyed-out");

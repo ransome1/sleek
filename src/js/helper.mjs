@@ -6,10 +6,29 @@ import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 import { _paq } from "./matomo.mjs";
+import "../../node_modules/marked/marked.min.js";
 
 const body = document.getElementById("body");
 const todoContext = document.getElementById("todoContext");
 const addTodoContainer = document.getElementById("addTodoContainer");
+
+marked.setOptions({
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+  sanitize: false,
+  sanitizer: false,
+  smartLists: false,
+  smartypants: false,
+  xhtml: false,
+  baseUrl: "https://"
+});
+const renderer = {
+  link(href, title, text) {
+    return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+  }
+};
+marked.use({ renderer });
 
 export function jumpToItem(item) {
   try {
@@ -112,8 +131,15 @@ export async function pasteItemsToClipboard() {
             itemsForClipboard += clipboardItem;
         }
     }
+    
     window.api.send("copyToClipboard", [itemsForClipboard]);
-    showGenericMessage(translations.visibleTodosCopiedToClipboard, 3);
+
+    showGenericMessage(translations.visibleTodosCopiedToClipboard, 3).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
   } catch(error) {
     error.functionName = pasteItemsToClipboard.name;
     return Promise.reject(error);
@@ -196,13 +222,17 @@ export function setupInterface() {
       }).catch(function(error) {
         handleError(error);
       });
-    }  
+    }
+
+    // hide onboarding if there is an active file
+    if(getActiveFile()) showOnboarding(false)
       
     // configure table view
     const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
     const noResultContainer = document.getElementById("noResultContainer");
     const todoTable = document.getElementById("todoTable");
 
+    // empty todo file view
     if(items.objects.length === 0) {
       addTodoContainer.classList.add("is-active");
       todoTableSearchContainer.classList.remove("is-active");
@@ -210,6 +240,7 @@ export function setupInterface() {
       todoTable.classList.remove("is-active");
       return Promise.resolve("Info: File is empty");
 
+    // no result view
     } else if(items.filtered.length === 0) {
       addTodoContainer.classList.remove("is-active");
       todoTableSearchContainer.classList.add("is-active");
@@ -217,7 +248,7 @@ export function setupInterface() {
       todoTable.classList.remove("is-active");
       return Promise.resolve("Info: No results");
 
-      // TODO explain
+    // default view
     } else if(items.filtered.length > 0) {
       todoTableSearchContainer.classList.add("is-active");
       addTodoContainer.classList.remove("is-active");
@@ -233,15 +264,10 @@ export function setupInterface() {
 }
 export function handleError(error) {
   try {
-    // if error is a string only
-    if(error && typeof error === "string") {
-      console.error(error);
-    // if error is an error object
-    } else {
-      console.error(error.name + " in function " + error.functionName + ": " + error.message);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
-    }
+    console.error(error);
+    
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
 
   } catch(error) {
     error.functionName = handleError.name;
