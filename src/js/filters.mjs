@@ -132,7 +132,6 @@ function filterItems() {
     if(userData.selectedFilters.length > 0) {
       
       selectedFilters = JSON.parse(userData.selectedFilters);
-    
       // we iterate through the filters in the order they got selected
       selectedFilters.forEach(filter => {
         // reduce filtered items to items that include the filter
@@ -140,7 +139,6 @@ function filterItems() {
           if(item[filter[1]]) return item[filter[1]].includes(filter[0]);
         });
       });
-
     }
 
     // apply persisted excluded categories filter

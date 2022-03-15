@@ -370,8 +370,6 @@ function getUserData() {
 
   } catch(error) {
     error.functionName = getUserData.id;
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "getUserData()", error])
     return Promise.reject("Error in getUserData(): " + error);
   }
 }
@@ -387,8 +385,6 @@ function showNotification(config) {
   if(typeof config.actions !== "object") return false;
   // click on button in notification
   notification.addListener("click", () => {
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Notification", "Click on notification"]);
     // bring mainWindow to foreground
     mainWindow.focus();
     // if another modal was open it needs to be closed first and then open the modal and fill it
@@ -405,22 +401,28 @@ function getTranslations() {
     appData.languages = i18next.options.preload;
     return Promise.resolve(i18next.getDataByLanguage(userData.data.language).translation);
   } catch (error) {
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "getTranslations()", error])
     return Promise.reject("Error in getTranslations(): " + error);
   }
 }
 function configureWindowEvents() {
   try {
      mainWindow
-      .on("resize", function() {
-        if(mainWindow.isMaximized()) {
-          userData.set("maximizeWindow", true);
-        } else if(mainWindow.isNormal()) {
-          userData.set("maximizeWindow", false);
-          userData.set("width", this.getBounds().width);
-          userData.set("height", this.getBounds().height);
-        }
+      // .on("resize", function() {
+      //   if(mainWindow.isMaximized()) {
+      //     userData.set("maximizeWindow", true);
+      //   } else if(mainWindow.isNormal()) {
+      //     userData.set("maximizeWindow", false);
+      //     userData.set("width", this.getBounds().width);
+      //     userData.set("height", this.getBounds().height);
+      //   }
+      // })
+      .on("maximize", function() {
+        userData.set("maximizeWindow", true);
+      })
+      .on("unmaximize", function() {
+        userData.set("maximizeWindow", false);
+        userData.set("width", this.getBounds().width);
+        userData.set("height", this.getBounds().height);
       })
       .on("move", function() {
         userData.set("horizontal", this.getBounds().x);
@@ -512,7 +514,7 @@ function configureWindowEvents() {
         clipboard.writeText(args[0])
       })
       .on("update-badge", (event, count) => {
-        if(appData.os==="mac") app.setBadgeCount(count);
+        if(appData.os === "mac") app.setBadgeCount(count);
       })
       .on("restart", () => {
         app.relaunch();
@@ -523,8 +525,6 @@ function configureWindowEvents() {
     return Promise.resolve("Success: Window events setup");
 
   } catch(error) {
-    // trigger matomo event
-    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", "configureWindowEvents()", error])
     return Promise.reject("Error in configureWindowEvents(): " + error);
   }
 }
@@ -860,27 +860,27 @@ if(!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIPLE_INSTANCES !== 
 
 } else {
 
-  app.on("ready", () => {
-    
-    if(appData.os === "windows") {
-      const Badge = require("electron-windows-badge");
-      const badgeOptions = {
-        font: "10px arial"
-      }
-      new Badge(mainWindow, badgeOptions);
-      
-      // identifier for windows store
-      app.setAppUserModelId("RobinAhle.sleektodomanager")
-    } 
+  app.on("ready", async () => {
 
     // TODO: check if this still works
-    if(appData.channel === "AppImage" && userData.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
+    if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
     
-    if(BrowserWindow.getAllWindows().length === 0) createWindow().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      console.error(error);
-    });
+    if(BrowserWindow.getAllWindows().length === 0) {
+      await createWindow().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        console.error(error);
+      });
+
+      if(appData.os === "windows") {
+        const Badge = await require("electron-windows-badge");
+        new Badge(mainWindow, {
+          font: "10px arial"
+        }); 
+        // identifier for windows store
+        app.setAppUserModelId("RobinAhle.sleektodomanager")
+      }
+    }
       
   })
   .on("second-instance", () => {
