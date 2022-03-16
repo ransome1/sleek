@@ -403,15 +403,10 @@ function getTranslations() {
 function configureWindowEvents() {
   try {
      mainWindow
-      // .on("resize", function() {
-      //   if(mainWindow.isMaximized()) {
-      //     userData.set("maximizeWindow", true);
-      //   } else if(mainWindow.isNormal()) {
-      //     userData.set("maximizeWindow", false);
-      //     userData.set("width", this.getBounds().width);
-      //     userData.set("height", this.getBounds().height);
-      //   }
-      // })
+      .on("resize", function() {
+        userData.set("width", this.getBounds().width);
+        userData.set("height", this.getBounds().height);
+      })
       .on("maximize", function() {
         userData.set("maximizeWindow", true);
       })
