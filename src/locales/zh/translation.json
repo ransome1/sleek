@@ -170,7 +170,9 @@
   "deleteCategoryPrompt": "此过滤器将从所有任务中不可撤销地删除。.",
   "modalBackgroundAttention": "此窗口将关闭并清除其内容。",
   "deferredTodos": "未来的阈值日期",
-  "noFiltersFound": "未找到过滤器",
   "fileRemovalPrompt": "这只会从您的文件列表中删除该文件，而不会从您的驱动器中删除它。",
-  "fileTabsHeadline": "标签"
+  "fileTabsHeadline": "标签",
+  "hint_priority": "待办事项以 <code>(A...Z)</code> 为优先级",
+  "hint_contexts": "@ 符号将 <code>@contexts</code> 添加到 todos",
+  "hint_projects": "<code>+projects</code> 使用 + 符号添加"
 }

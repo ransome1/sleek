@@ -170,7 +170,9 @@
   "deleteCategoryPrompt": "Bu filtre geri alınamaz bir şekilde tüm yapılacaklardan kaldırılacaktır.",
   "modalBackgroundAttention": "Bu pencere kapatılacak ve içeriği temizlenecek.",
   "deferredTodos": "Gelecek eşik değeri",
-  "noFiltersFound": "Filtre bulunamadı",
   "fileRemovalPrompt": "Bu yalnızca dosyayı listenizden silecek, dosya sürücünüzden silinmeyecek.",
-  "fileTabsHeadline": "Sekmeler"
+  "fileTabsHeadline": "Sekmeler",
+  "hint_priority": "Yapılacak işler <code>(A...Z)</code> ile önceliklendirilir",
+  "hint_contexts": "@ sembolü, todos'a <code>@contexts</code> ekler",
+  "hint_projects": "<code>+projeler</code>, + sembolü kullanılarak eklenir"
 }

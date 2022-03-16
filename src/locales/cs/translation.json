@@ -170,7 +170,9 @@
   "deleteCategoryPrompt": "Tento filtr bude nenávratně odebrán ze všech úkolů.",
   "modalBackgroundAttention": "Toto okno bude uzavřeno a všechen obsah smazán.",
   "deferredTodos": "Prahová hodnota v budoucnosti",
-  "noFiltersFound": "Nebyly nalezeny žádné filtry",
   "fileRemovalPrompt": "Toto pouze odebere soubor z vašeho seznamu souborů. Neodebere jej z vašeho disku.",
-  "fileTabsHeadline": "Záložky"
+  "fileTabsHeadline": "Záložky",
+  "hint_priority": "Úkoly mají prioritu <code>(A...Z)</code>",
+  "hint_contexts": "Symbol @ přidává k úkolům <code>@kontexty</code>",
+  "hint_projects": "<code>+projekty</code> se přidávají pomocí symbolu +"
 }

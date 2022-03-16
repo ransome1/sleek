@@ -170,7 +170,9 @@
   "deleteCategoryPrompt": "Ez a szűrő visszavonhatatlanul el lesz távolítva az összes tennivalóból.",
   "modalBackgroundAttention": "Ez az ablak be lesz zárva, és a tartalma törlődik.",
   "deferredTodos": "Küszöbszintdátum a jövőben",
-  "noFiltersFound": "Nem találhatók szűrők",
   "fileRemovalPrompt": "Ez csak a fájllistából távolítja el a fájlt, nem lesz törölve a meghajtóról.",
-  "fileTabsHeadline": "Lapok"
+  "fileTabsHeadline": "Lapok",
+  "hint_priority": "A feladatok prioritása <code>(A...Z)</code>",
+  "hint_contexts": "A @ szimbólum <code>@contexts</code>-t ad a feladatokhoz",
+  "hint_projects": "A <code>+projektek</code> a + szimbólum használatával kerülnek hozzáadásra"
 }

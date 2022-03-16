@@ -11,6 +11,7 @@ import { runQuery } from "./filterquery.mjs";
 import { handleError, getCaretPosition } from "./helper.mjs";
 
 const todoTableSearch = document.getElementById("todoTableSearch");
+const todoTableWrapper = document.getElementById("todoTableWrapper");
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const todoFilters = document.getElementById("todoFilters");
 const filterContext = document.getElementById("filterContext");
@@ -20,14 +21,11 @@ const filterContextDelete = document.getElementById("filterContextDelete");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 
 let categories,
-    filterCounter = 0,
     filtersCounted,
-    filtersCountedReduced,
     selectedFilters,
     lastFilterQueryString = null,
     lastFilterItems = null,
-    container,
-    headline;
+    container;
 
 filterContextSave.innerHTML = translations.save;
 filterContextDelete.innerHTML = translations.delete;
@@ -35,15 +33,14 @@ btnResetFilters.forEach(function(button) {
   button.getElementsByTagName("span")[0].innerHTML = translations.resetFilters;
 });
 
-filterContextInput.onkeydown = function(event) {
-  if(event.key === " ") return false
-}
-
 autoCompleteContainer.onkeyup = function(event) {
   // if there is only one filter shown it will be selected automatically
   if(event.key === "Tab" && Object.keys(filtersCounted).length === 1) {
-    addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-prefix"));
-    return false;
+    addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-prefix")).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
   }
 }
 
@@ -200,57 +197,172 @@ function applySearchInput(queryString) {
   }
 
   return Promise.resolve("Success: Plain-text search query applied");
-
 }
 
-
-
-
-
-function generateCategoryContainer(category, autoCompletePrefix, filterFragment) {
+function selectFilter(filter, category) {
   try {
-    let hideFilterCategories = userData.hideFilterCategories;
-    selectedFilters = new Array;
-    if(userData.selectedFilters && userData.selectedFilters.length>0) selectedFilters = JSON.parse(userData.selectedFilters);
-    // creates a div for the specific filter section
-    let todoFiltersContainer = document.createElement("section");
-    todoFiltersContainer.setAttribute("class", category);
-    // translate headline
-    if(category=="contexts") {
-      headline = translations.contexts;
-    } else if(category=="projects"){
-      headline = translations.projects;
-    } else if(category=="priority"){
-      headline = translations.priority;
+
+    // get the index of the item that matches the data values the button click provided
+    const index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([filter, category]));
+
+    // remove the item at the index where it matched
+    if(index !== -1) {
+      selectedFilters.splice(index, 1);
+    // if the item is not already in the array, push it into
+    } else {
+      selectedFilters.push([filter, category]);
     }
-    // if filters are available and if container is not the autocomplete one
-    let todoFilterHeadline = document.createElement("h4");
+
+    // convert the collected filters to JSON and save it to store.js
+    setUserData("selectedFilters", JSON.stringify(selectedFilters)).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
+    // each filter selection will reload the table    
+    buildTable().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+    
+    return Promise.resolve("Success: Filter \"" + filter + "\" (de)selected");
+
+  } catch (error) {
+    error.functionName = selectFilter.name;
+    return Promise.reject(error);
+  }
+}
+
+function resetFilters(refresh) {
+  try {
+
+    // clear the persisted filters. By setting it to undefined the object entry will be removed fully
+    if(userData.selectedFilters.length > 0) setUserData("selectedFilters", new Array).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+    //
+    if(userData.hideFilterCategories.length > 0) setUserData("hideFilterCategories", new Array).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
+    // regenerate the data
+    if(refresh) buildTable().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
+    // clear search input
+    todoTableSearch.value = null;
+
+    // scroll back to top
+    todoTableWrapper.scrollTo(0,0);
+
+    return Promise.resolve("Success: Filters resetted");
+
+  } catch(error) {
+    error.functionName = resetFilters.name;
+    return Promise.reject(error);
+  }
+}
+
+function addFilterToInput(filter, autoCompletePrefix) {
+  try {
+    const modalFormInput = document.getElementById("modalFormInput");
+    const caretPosition = getCaretPosition(modalFormInput);
+
+    // split string into elements
+    const inputElements = modalFormInput.value.split(" ");
+    let i;
+    let x = 0;
+    for(i = 0; i < inputElements.length; i++) {
+      x += inputElements[i].length + 1;
+      // once caret position is met inside element the index is persisted
+      if(x > caretPosition) break;
+    }
+
+    inputElements.splice(i, 1, autoCompletePrefix + filter + " ");
+    modalFormInput.value = inputElements.join(" ");
+
+    // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
+    autoCompletePrefix = null;
+
+    // put focus back into input so user can continue writing
+    modalFormInput.focus();
+
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", filter]);
+
+    return Promise.resolve("Success: Filter \"" + filter + "\" added to input");
+
+  } catch (error) {
+    error.functionName = addFilterToInput.name;
+    return Promise.reject(error);
+  }
+}
+
+function generateCategoryContainer(category, autoCompletePrefix, buttons) {
+  try {
+  
+    selectedFilters = (userData.selectedFilters && userData.selectedFilters.length > 0) ? JSON.parse(userData.selectedFilters) : new Array
+
+    // creates a div for the specific filter section
+    const todoFiltersContainer = document.createElement("section");
+    todoFiltersContainer.setAttribute("class", category);
+
+    const todoFilterHeadline = document.createElement("h4");
 
     // show suggestion box when prefix is present
     if(autoCompletePrefix !== undefined) {
+
       autoCompleteContainer.classList.add("is-active");
       autoCompleteContainer.focus();
-      todoFilterHeadline.innerHTML = headline;
+      todoFilterHeadline.innerHTML = translations[category];
+
+    // filter box in drawer
     } else {
+
+      let hideFilterCategories = userData.hideFilterCategories;
+
       todoFilterHeadline.setAttribute("class", "is-4 clickable");
+      
       // setup greyed out state
       if(hideFilterCategories.includes(category)) {
-        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + headline;
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye\" tabindex=\"-1\"></i>&nbsp;" + translations[category];
         todoFilterHeadline.classList.add("is-greyed-out");
       } else {
-        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + headline;
+        todoFilterHeadline.innerHTML = "<i class=\"far fa-eye-slash\" tabindex=\"-1\"></i>&nbsp;" + translations[category];
         todoFilterHeadline.classList.remove("is-greyed-out");
       }
+
       // add click event
       todoFilterHeadline.onclick = function() {
-        document.getElementById("todoTableWrapper").scrollTo(0,0);
+
+        // scroll up to top
+        todoTableWrapper.scrollTo(0,0);
+
+        // if filter is already persisted it will be removed on click
         if(hideFilterCategories.includes(category)) {
-          hideFilterCategories.splice(hideFilterCategories.indexOf(category),1)
+          hideFilterCategories.splice(hideFilterCategories.indexOf(category), 1)
+
+        // otherwise it's added
         } else {
           hideFilterCategories.push(category);
           hideFilterCategories = [...new Set(hideFilterCategories.join(",").split(","))];
         }
-        setUserData("hideFilterCategories", hideFilterCategories)
+
+        setUserData("hideFilterCategories", hideFilterCategories).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+        
         buildTable().then(function(response) {
           console.info(response);
         }).catch(function(error) {
@@ -258,39 +370,176 @@ function generateCategoryContainer(category, autoCompletePrefix, filterFragment)
         });
       }
     }
-    // add the headline before category container
+
+    // add the headline before content 
     todoFiltersContainer.appendChild(todoFilterHeadline);
-    // add filter fragment
-    if(filterFragment.childElementCount > 0) {
-      todoFiltersContainer.appendChild(filterFragment);
-    // if no filter fragment is available a empty filter container will be shown
-    } else {
-      let todoFilterHint = document.createElement("div");
+
+    // add filter fragment -> most likely autocomplete container
+    if(buttons.childElementCount === 0) {
+
+      const todoFilterHint = document.createElement("div");
       todoFilterHint.setAttribute("class", "todoFilterHint");
-      todoFilterHint.innerHTML = translations.noFiltersFound + " <a href=\"#\"><i class=\"fas fa-question-circle\"></i></a>";
+
+      todoFilterHint.innerHTML = translations["hint_" + category];
       todoFilterHint.onclick = function() {
-        showModal("modalHelp");
+
+        showModal("modalHelp").then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on Help"]);
       }
       todoFiltersContainer.appendChild(todoFilterHint);
     }
+
     // add filter fragment if it is available
-    if(filterFragment) {
-      todoFiltersContainer.appendChild(filterFragment);
-    }
+    todoFiltersContainer.appendChild(buttons)
+
     // return the container
     return Promise.resolve(todoFiltersContainer);
+
   } catch (error) {
     error.functionName = generateCategoryContainer.name;
     return Promise.reject(error);
   }
 }
 
+function generateFilterButtons(category, autoCompletePrefix) {
+  try {
+    // create a fragment to collect the filters in
+    const buttons = document.createDocumentFragment();
+
+    // convert object to array
+    const filters = Object.entries(filtersCounted);
+    
+    const l = filters.length;
+
+    // build one button each
+    for(let i = 0; i < l; i++) {
+
+      const filter = filters[i][0];
+
+      // skip this loop if no filters are present
+      if(!filter) continue;
+
+      const todoFiltersItem = document.createElement("button");
+
+      // can cause problem if applied on contexts or projects
+      if(category==="priority") todoFiltersItem.classList.add(filter);
+
+      // add attributes
+      todoFiltersItem.setAttribute("data-filter", filter);
+      todoFiltersItem.setAttribute("data-category", category);
+      todoFiltersItem.setAttribute("data-prefix", autoCompletePrefix);
+      todoFiltersItem.setAttribute("tabindex", 0)    
+      todoFiltersItem.innerHTML = filter;
+
+      // configuration for filter drawer buttons
+      if(!autoCompletePrefix) {
+
+        // set highlighting if filter/category combination is on selected filters array
+        selectedFilters.forEach(function(item) {
+          if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
+        });
+
+        todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
+
+        // add context menu
+        todoFiltersItem.oncontextmenu = function(event) {
+          
+          // jail the modal
+          createModalJail(filterContext).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+
+          filterContextInput.value = filter;
+          filterContextInput.setAttribute("data-item", category);
+          filterContextInput.focus();
+          filterContextInput.onkeydown = function(event) {
+            // prevent spaces in filters
+            if(event.key === " ") return false
+          }
+
+          filterContext.style.left = event.x + "px";
+          filterContext.style.top = event.y + "px";
+          filterContext.classList.add("is-active");
+          filterContext.onsubmit = function(event) {
+            // prevent page reload
+            event.preventDefault();
+
+            saveFilter(filterContextInput.value, filter, category).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
+
+            // close context
+            this.classList.remove("is-active");
+          }
+
+          filterContextDelete.onclick = function(event) {
+            // prevent page reload
+            event.preventDefault();
+
+            getConfirmation(deleteFilter, translations.deleteCategoryPrompt, filter, category).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
+          }
+        }
+
+        // create the event listener for filter selection by user
+        todoFiltersItem.onclick = function() {
+        
+          // scroll up in todo list when filter is selected  
+          todoTableWrapper.scrollTo(0, 0);
+
+          selectFilter(this.getAttribute("data-filter"), this.getAttribute("data-category")).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+
+          // trigger matomo event
+          if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
+        }
+
+      // configuration for autocomplete buttons
+      // add filter to input
+      } else {
+        todoFiltersItem.onclick = function() {
+          addFilterToInput(this.getAttribute("data-filter"), autoCompletePrefix).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+        }
+      }
+
+      buttons.appendChild(todoFiltersItem);
+
+    }
+
+    return Promise.resolve(buttons);
+
+  } catch (error) {
+    error.functionName = generateFilterButtons.name;
+    return Promise.reject(error);
+  }
+}
+
+
+
+
+
 function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix) {
   try {
-    // reset filter counter
-    filterCounter = 0;
     // select the container (filter drawer or autocomplete) in which filters will be shown
     if(autoCompleteCategory) {
       container = autoCompleteContainer;
@@ -387,22 +636,22 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
           }
         }
       });
-      filtersCountedReduced = filtersReduced.reduce(function(filters, filter) {
-        // if filter is already in object and should be counted
-        if (filter[1] && (filter[0] in filters)) {
-          filters[filter[0]]++;
-          // new filter in object and should be counted
-        } else if(filter[1]) {
-          filters[filter[0]] = 1;
-          // do not count if filter is suppose to be hidden
-          // only overwrite value with 0 if the filter doesn't already exist in object
-        } else if(!filter[1] && !(filter[0] in filters)) {
-          filters[filter[0]] = 0;
-        }
-        if(filters!==null) {
-          return filters;
-        }
-      }, {});
+      // filtersCountedReduced = filtersReduced.reduce(function(filters, filter) {
+      //   // if filter is already in object and should be counted
+      //   if (filter[1] && (filter[0] in filters)) {
+      //     filters[filter[0]]++;
+      //     // new filter in object and should be counted
+      //   } else if(filter[1]) {
+      //     filters[filter[0]] = 1;
+      //     // do not count if filter is suppose to be hidden
+      //     // only overwrite value with 0 if the filter doesn't already exist in object
+      //   } else if(!filter[1] && !(filter[0] in filters)) {
+      //     filters[filter[0]] = 0;
+      //   }
+      //   if(filters!==null) {
+      //     return filters;
+      //   }
+      // }, {});
       // TODO can this be done above already?
       // remove empty filter entries
       filters = filters.filter(function(filter) {
@@ -413,13 +662,13 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
         return;
       }
       // build filter buttons and add them to a fragment
-      let filterFragment = await generateFilterButtons(category, autoCompletePrefix).then(response => {
+      let buttons = await generateFilterButtons(category, autoCompletePrefix).then(response => {
         return response;
       }).catch (error => {
         handleError(error);
       });
       // build and configure the category container and finally append the fragments
-      todoFiltersContainer = await generateCategoryContainer(category, autoCompletePrefix, filterFragment).then(response => {
+      todoFiltersContainer = await generateCategoryContainer(category, autoCompletePrefix, buttons).then(response => {
         return response;
       }).catch (error => {
         handleError(error);
@@ -432,201 +681,5 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
     return Promise.reject(error);
   }
 }
-function selectFilter(filter, category) {
-  try {
 
-    // if no filters are selected, add a first one
-    if(selectedFilters.length > 0) {
-      // get the index of the item that matches the data values the button click provided
-      let index = selectedFilters.findIndex(item => JSON.stringify(item) === JSON.stringify([filter, category]));
-      if(index != -1) {
-        // remove the item at the index where it matched
-        selectedFilters.splice(index, 1);
-      } else {
-        // if the item is not already in the array, push it into
-        selectedFilters.push([filter, category]);
-      }
-    } else {
-      // this is the first push
-      selectedFilters.push([filter, category]);
-    }
-
-    // convert the collected filters to JSON and save it to store.js
-    setUserData("selectedFilters", JSON.stringify(selectedFilters)).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    
-    buildTable().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    
-    return Promise.resolve("Success: Filter " + filter + " selected");
-
-  } catch (error) {
-    error.functionName = generateFilterData.name;
-    return Promise.reject(error);
-  }
-}
-function addFilterToInput(filter, autoCompletePrefix) {
-  let modalFormInput = document.getElementById("modalFormInput");
-  let caretPosition = getCaretPosition(modalFormInput);
-  // split string into elements
-  let inputElements = modalFormInput.value.split(" ");
-  let i;
-  let x = 0;
-  for(i = 0; i < inputElements.length; i++) {
-    x += inputElements[i].length + 1;
-    // once caret position is found inside element the index is persisted
-    if(x > caretPosition) break;
-  }
-  inputElements.splice(i, 1, autoCompletePrefix + filter + " ");
-  modalFormInput.value = inputElements.join(" ");
-
-
-  // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
-  autoCompletePrefix = null;
-
-  // hide and clear the suggestion container after the filter has been selected
-  autoCompleteContainer.blur();
-  autoCompleteContainer.innerHTML = "";
-  autoCompleteContainer.classList.remove("is-active");
-  // put focus back into input so user can continue writing
-  modalFormInput.focus();
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Suggestion-box", "Click on filter tag", filter]);
-}
-function generateFilterButtons(category, autoCompletePrefix) {
-  try {
-    // create a fragment to collect the filters in
-    let filterFragment = document.createDocumentFragment();
-    // build one button each
-    for (let filter in filtersCounted) {
-      // skip this loop if no filters are present
-      if(!filter) continue;
-      let todoFiltersItem = document.createElement("button");
-      if(category==="priority") todoFiltersItem.classList.add(filter);
-      todoFiltersItem.setAttribute("data-filter", filter);
-      todoFiltersItem.setAttribute("data-category", category);
-      todoFiltersItem.setAttribute("data-prefix", autoCompletePrefix);
-      if(autoCompletePrefix===undefined) { todoFiltersItem.setAttribute("tabindex", 0) } else { todoFiltersItem.setAttribute("tabindex", 0) }
-      todoFiltersItem.innerHTML = filter;
-      if(autoCompletePrefix==undefined) {
-        // set highlighting if filter/category combination is on selected filters array
-        selectedFilters.forEach(function(item) {
-          if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
-        });
-        // add context menu
-        todoFiltersItem.addEventListener("contextmenu", event => {
-          // jail the modal
-          createModalJail(filterContext);
-          filterContext.style.left = event.x + "px";
-          filterContext.style.top = event.y + "px";
-          filterContext.classList.add("is-active");
-          filterContextInput.value = filter;
-          filterContextInput.focus();
-          // filterContextInput.onkeyup = function(event) {
-          //   if(event.key === "Escape") filterContext.classList.remove("is-active");
-          //   if(event.key === "Enter") {
-          //     if(filterContextInput.value!==filter && filterContextInput.value) {
-          //       saveFilter(filterContextInput.value, filter, category).then(function(response) {
-          //         console.info(response);
-          //       }).catch(function(error) {
-          //         handleError(error);
-          //       });
-          //     } else {
-          //       filterContext.classList.remove("is-active");
-          //     }
-          //   }
-          // }
-          filterContextSave.onclick = function() {
-            if(filterContextInput.value!==filter && filterContextInput.value) {
-              saveFilter(filterContextInput.value, filter, category).then(function(response) {
-                console.info(response);
-              }).catch(function(error) {
-                handleError(error);
-              });
-            }
-            filterContext.classList.remove("is-active");
-          }
-          filterContextDelete.onclick = function() {
-            getConfirmation(deleteFilter, translations.deleteCategoryPrompt, filter, category);
-          }
-        });
-        if(filtersCountedReduced[filter]) {
-          todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCountedReduced[filter] + "</span>";
-          // create the event listener for filter selection by user
-          todoFiltersItem.onclick = function() {
-            document.getElementById("todoTableWrapper").scrollTo(0,0);
-            selectFilter(this.getAttribute("data-filter"), this.getAttribute("data-category")).then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              handleError(error);
-            });
-            // trigger matomo event
-            if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
-          }
-        } else {
-          todoFiltersItem.disabled = true;
-          todoFiltersItem.classList.add("is-greyed-out");
-          todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">0</span>";
-        }
-      // autocomplete container
-      } else {
-        // add filter to input
-        todoFiltersItem.onclick = function() {
-          addFilterToInput(this.getAttribute("data-filter"), autoCompletePrefix);
-        }
-      }
-      filterCounter++;
-      filterFragment.appendChild(todoFiltersItem);
-    }  
-    return Promise.resolve(filterFragment);
-  } catch (error) {
-    error.functionName = generateFilterButtons.name;
-    return Promise.reject(error);
-  }
-}
-
-async function resetFilters(refresh) {
-  try {
-    // scroll back to top
-    //document.getElementById("todoTableWrapper").scrollTo(0,0);    
-
-    // clear the persisted filters, by setting it to undefined the object entry will be removed fully
-    if(userData.selectedFilters.length > 0) await setUserData("selectedFilters", new Array).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    //
-    if(userData.hideFilterCategories.length > 0) await setUserData("hideFilterCategories", new Array).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-
-    // empty old filter container
-    //todoFilters.innerHTML = "";
-
-    // clear search input
-    todoTableSearch.value = null;
-
-    // regenerate the data
-    if(refresh) await buildTable().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-
-    return Promise.resolve("Success: Filters resetted");
-  } catch(error) {
-    error.functionName = resetFilters.name;
-    return Promise.reject(error);
-  }
-}
-
-export { applyFilters, applySearchInput, generateFilterData, selectFilter, categories, filterCounter, resetFilters };
+export { applyFilters, applySearchInput, generateFilterData, selectFilter, categories, resetFilters };

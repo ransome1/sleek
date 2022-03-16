@@ -170,7 +170,9 @@
   "deleteCategoryPrompt": "このフィルターは、すべてのタスクから取り消せないほど削除されます。.",
   "modalBackgroundAttention": "このウィンドウは閉じられ、その内容はクリアされます。",
   "deferredTodos": "将来のしきい値",
-  "noFiltersFound": "フィルタが見つかりません",
   "fileRemovalPrompt": "これにより、ファイルリストからファイルが削除されるだけで、ドライブからは削除されません。",
-  "fileTabsHeadline": "タブ"
+  "fileTabsHeadline": "タブ",
+  "hint_priority": "Todoは<code>（A...Z）</code>で優先されます",
+  "hint_contexts": "@記号は、todosに<code> @contexts</code>を追加します",
+  "hint_projects": "<code> + projects </code>は、+記号を使用して追加されます"
 }

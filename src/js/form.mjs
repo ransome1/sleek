@@ -255,6 +255,11 @@ function addInputEvents(element) {
 
     element.onfocus = function() {
       modalForm.classList.add("is-focused");
+      
+      // hide autocomplete container 
+      autoCompleteContainer.blur();
+      autoCompleteContainer.innerHTML = "";
+      autoCompleteContainer.classList.remove("is-active");
     }
 
     element.onblur = function() {

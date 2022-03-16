@@ -16,12 +16,9 @@ class Store {
       userDataPath = path.dirname(process.execPath);
       //if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
     
-    } else if(process.env.NODE_ENV==="testing" && process.env.CUSTOM_PREFERENCES_FOLDER) {
-      userDataPath = path.join(electron.app.getAppPath(), "test", process.env.CUSTOM_PREFERENCES_FOLDER)
-    
-    // in development environment switch to specific userData folder
-    } else if(process.env.NODE_ENV === "development") {
-      userDataPath = path.join((electron.app || electron.remote.app).getPath("userData"), "..", "sleek_development");
+    // in development or testing environment switch to specific userData folder
+    } else if(process.env.NODE_ENV === "development" || process.env.NODE_ENV === "testing") {
+      userDataPath = path.join((electron.app || electron.remote.app).getPath("userData"), "..", "sleek_" + process.env.NODE_ENV);
 
     } else {
       userDataPath = (electron.app || electron.remote.app).getPath("userData");

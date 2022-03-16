@@ -173,7 +173,9 @@
   "deleteCategoryPrompt": "Ten filtr zostanie nieodwołalnie usunięty ze wszystkich zadań.",
   "modalBackgroundAttention": "To okno zostanie zamknięte, a jego zawartość wyczyszczona.",
   "deferredTodos": "Próg widoczności w przyszłości",
-  "noFiltersFound": "Nie znaleziono filtrów",
   "fileRemovalPrompt": "Spowoduje to tylko usunięcie pliku z listy plików, nie zostanie on usunięty z dysku.",
-  "fileTabsHeadline": "Karty"
+  "fileTabsHeadline": "Karty",
+  "hint_priority": "Zadania są traktowane priorytetowo za pomocą <code>(A...Z)</code>",
+  "hint_contexts": "Symbol @ dodaje <code>@contexts</code> do listy zadań",
+  "hint_projects": "<code>+projekty</code> są dodawane za pomocą symbolu +"
 }

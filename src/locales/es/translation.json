@@ -170,7 +170,9 @@
   "deleteCategoryPrompt": "Este filtro se eliminará irrevocablemente de todas las tareas.",
   "modalBackgroundAttention": "Esta ventana se cerrará y se borrará su contenido.",
   "deferredTodos": "Fecha límite en el futuro",
-  "noFiltersFound": "No se encontraron filtros",
   "fileRemovalPrompt": "Esto solo eliminará el archivo de su lista de archivos, no se eliminará de su unidad.",
-  "fileTabsHeadline": "Pestañas"
+  "fileTabsHeadline": "Pestañas",
+  "hint_priority": "Todas tienen prioridad con <code> (A ... Z) </code>",
+  "hint_contexts": "El símbolo @ agrega <code>@contexts</code> a todos",
+  "hint_projects": "<code>+proyectos</code> se agregan usando el símbolo +"
 }

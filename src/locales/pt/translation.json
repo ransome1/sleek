@@ -172,5 +172,8 @@
   "deferredTodos": "Data limite no futuro",
   "noFiltersFound": "Nenhum filtro encontrado",
   "fileRemovalPrompt": "Isso removerá apenas o arquivo da lista de arquivos, não será excluído da unidade.",
-  "fileTabsHeadline": "Abas"
+  "fileTabsHeadline": "Abas",
+  "hint_priority": "Todos são priorizados com <code>(A...Z)</code>",
+  "hint_contexts": "O símbolo @ adiciona <code>@contexts</code> a todos",
+  "hint_projects": "<code>+projetos</code> são adicionados usando o símbolo +"
 }

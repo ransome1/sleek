@@ -169,7 +169,9 @@
   "deleteCategoryPrompt": "Questo filtro verrà irrevocabilmente rimosso da tutte le attività.",
   "modalBackgroundAttention": "Questa finestra verrà chiusa e il suo contenuto cancellato.",
   "deferredTodos": "Data limite nel futuro",
-  "noFiltersFound": "Nessun filtro trovato",
   "fileRemovalPrompt": "Questo rimuoverà solo il file dall'elenco dei file, non verrà eliminato dall'unità.",
-  "fileTabsHeadline": "Schede"
+  "fileTabsHeadline": "Schede",
+  "hint_priority": "Le cose da fare hanno la priorità con <code>(A...Z)</code>",
+  "hint_contexts": "Il simbolo @ aggiunge <code>@contexts</code> alle cose da fare",
+  "hint_projects": "<code>+progetti</code> vengono aggiunti usando il simbolo +"
 }

@@ -1540,8 +1540,13 @@ body.compact #autoCompleteContainer h4 {
   white-space: pre;
 }
 #drawerContainer .drawer section .todoFilterHint {
-  cursor: pointer;
-  opacity: 0.5;
+  cursor: help;
+  opacity: 0.4;
+}
+#drawerContainer .drawer section .todoFilterHint code {
+  color: white !important;
+  background: #2d2d2d !important;
+  border-radius: 0.65em;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
