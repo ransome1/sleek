@@ -69,13 +69,13 @@ todoTableWrapper.onscroll = function(event) {
 
 async function generateTodoTxtObjects(fileContent) {
   try {
+    // stop it, when there is no new content from file
+    if(!fileContent) return Promise.resolve("Info: No new content, won't change todo object")
     // create todo.txt objects
     items = await { objects: TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
-
-    return Promise.resolve("Success: Todo object created");
-
+    return Promise.resolve("Success: New todo object created");
   } catch(error) {
     error.functionName = generateTodoTxtObjects.name;
     return Promise.reject(error);

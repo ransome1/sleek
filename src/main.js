@@ -4,10 +4,9 @@ const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow, native
 const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
-const i18next = require("./configs/i18next.config");
 const Store = require("./configs/store.config.js");
 const autoUpdater = require("./configs/autoUpdater.config.js");
-const dismissedNotificationsStorage = require("./configs/store.config.js");
+//const dismissedNotificationsStorage = require("./configs/store.config.js");
 const os = {
   darwin: "mac",
   win32: "windows",
@@ -26,13 +25,10 @@ let
     configName: "user-preferences",
     defaults: {}
   }), 
-  defaultPath, 
-  _paq, 
   fileWatcher, 
   translations, 
   mainWindow,
-  tray = null,
-  dismissedNotifications;
+  tray = null;
 
 // ########################################################################################################################
 // HOT RELOAD
@@ -219,8 +215,8 @@ async function startFileWatcher(file) {
     // TODO: Check windows start
     // electron "unbundled" app -- have to skip "electron" and script name arg eg: "."
     // electron "bundled" app -- skip only the app name, eg: "sleek"
-    let args;
-    (process.defaultApp) ? args = process.argv.slice(2) : args = process.argv.slice(1);
+    //let args;
+    //(process.defaultApp) ? args = process.argv.slice(2) : args = process.argv.slice(1);
 
      // set the current file to not active
     const indexOfActiveFile = userData.data.files.findIndex(file => file[0] === 1);
@@ -487,14 +483,14 @@ function configureWindowEvents() {
           console.error(error);
         });
       })
-      .on("getContent", async (event, file) => {
-        const content = await getContent(file).then(content => {
+      .on("getContent", (event, file) => {
+        getContent(file).then(content => {
           mainWindow.webContents.send("getContent", content);
         }).catch(error => {
           console.error(error);
         });
       })
-      .on("translations", (event) => {
+      .on("translations", () => {
         getTranslations().then(function(translations) {
           mainWindow.webContents.send("translations", translations)
         });

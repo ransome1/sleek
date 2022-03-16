@@ -122,7 +122,7 @@ function deleteFilter(filter, category) {
   }
 }
 
-function filterItems() {
+function applyFilters() {
   try {
 
     items.filtered = items.objects;
@@ -151,40 +151,6 @@ function filterItems() {
       });
     }
 
-    // TODO: understand
-    if(todoTableSearch.value) { // assume that this is an advanced search expr
-      let queryString = todoTableSearch.value;
-      try {
-        let query = filterlang.parse(queryString);
-        if (query.length > 0) {
-          items.filtered = items.filtered.filter(function(item) {
-            return runQuery(item, query);
-          });
-          lastFilterQueryString = queryString;
-          lastFilterItems = items.filtered;
-          todoTableSearch.classList.add("is-valid-query");
-          todoTableSearch.classList.remove("is-previous-query");
-        }
-      } catch(error) {
-        // oops, that wasn't a syntactically correct search expression
-        todoTableSearch.classList.remove("is-valid-query");
-        if (lastFilterQueryString && queryString.startsWith(lastFilterQueryString)) {
-          // keep table more stable by using the previous valid query while
-          // user continues to type additional query syntax.
-          items.filtered = lastFilterItems;
-          todoTableSearch.classList.add("is-previous-query");
-        } else {
-          // the query is not syntactically correct and isn't a longer version
-          // of the last working query, so let's assume that it is a
-          // plain-text query.
-          items.filtered = items.filtered.filter(function(item) {
-            return item.toString().toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
-          });
-          todoTableSearch.classList.remove("is-previous-query");
-        }
-      }
-    }
-
     // apply filters
     items.filtered = items.filtered.filter(function(item) {
       if(!userData.showHidden && item.h) return false;
@@ -193,18 +159,49 @@ function filterItems() {
       if(!userData.showDueIsPast && item.due && isPast(item.due)) return false;
       if(!userData.showDueIsFuture && item.due && isFuture(item.due)) return false;
       if(!userData.deferredTodos && item.t && isFuture(item.t)) return false;
-      return true;
+      return item;
     });
 
     return Promise.resolve("Success: todo.txt objects filtered");
 
   } catch(error) {
-    error.functionName = filterItems.name;
+    error.functionName = applyFilters.name;
     return Promise.reject(error);
   }
 }
 
+function applySearchInput(queryString) {
+  try {
 
+    const query = filterlang.parse(queryString);
+    
+    items.filtered = items.filtered.filter(function(item) {
+      return runQuery(item, query);
+    });
+    lastFilterQueryString = queryString;
+    lastFilterItems = items.filtered;
+
+    return Promise.resolve("Success: Advanced search query applied");
+
+  } catch(error) {
+    // oops, that wasn't a syntactically correct search expression
+    if (lastFilterQueryString && queryString.startsWith(lastFilterQueryString)) {
+      // keep table more stable by using the previous valid query while
+      // user continues to type additional query syntax.
+      items.filtered = lastFilterItems;
+    } else {
+      // the query is not syntactically correct and isn't a longer version
+      // of the last working query, so let's assume that it is a
+      // plain-text query.
+      items.filtered = items.filtered.filter(function(item) {
+        return item.toString().toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
+      });
+    }
+  }
+
+  return Promise.resolve("Success: Plain-text search query applied");
+
+}
 
 
 
@@ -345,9 +342,8 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
         }
       });
       // search within filters according to autoCompleteValue
-      if(autoCompletePrefix) {
-        filters = filters.filter(function(el) { return el.toString().toLowerCase().includes(autoCompleteValue.toLowerCase()); });
-      }
+      if(autoCompletePrefix) filters = filters.filter(function(filter) { return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase()); });
+      
       // remove duplicates, create the count object and avoid counting filters of hidden todos
       filtersCounted = filters.reduce(function(filters, filter) {
         // if filter is already in object and should be counted
@@ -617,7 +613,7 @@ async function resetFilters(refresh) {
     //todoFilters.innerHTML = "";
 
     // clear search input
-    document.getElementById("todoTableSearch").value = null;
+    todoTableSearch.value = null;
 
     // regenerate the data
     if(refresh) await buildTable().then(function(response) {
@@ -633,4 +629,4 @@ async function resetFilters(refresh) {
   }
 }
 
-export { filterItems, generateFilterData, selectFilter, categories, filterCounter, resetFilters };
+export { applyFilters, applySearchInput, generateFilterData, selectFilter, categories, filterCounter, resetFilters };

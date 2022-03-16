@@ -264,7 +264,14 @@ export function setupInterface() {
 }
 export function handleError(error) {
   try {
+
     console.error(error);
+
+    // showGenericMessage(error).then(function(response) {
+    //   console.log(response)
+    // }).catch(function(error) {
+    //   handleError(error);
+    // });
     
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])

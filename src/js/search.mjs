@@ -10,7 +10,7 @@ const todoTableSearchContainer = document.getElementById("todoTableSearchContain
 
 todoTableSearch.oninput = debounce(function() {
   // on focus show addTodo button
-  todoTableSearchAddTodo.classList.add("is-active");
+  //todoTableSearchAddTodo.classList.add("is-active");
 
   // rebuild table
   buildTable().then(function(response) {
@@ -23,9 +23,15 @@ todoTableSearch.oninput = debounce(function() {
 todoTableSearch.onfocus = function() {
   // add blue highlighting to search bar
   todoTableSearchContainer.classList.add("is-focused");
+
+  todoTableSearchAddTodo.classList.add("is-active")
+
 }
 
 todoTableSearch.onblur = function(event) {
+  // this represents the tabbing to add button and will prevent the removal of is-active class
+  if(event.relatedTarget && event.relatedTarget.id !== "todoTableSearchAddTodo") todoTableSearchAddTodo.classList.remove("is-active")
+
   // if input loses focus addTodo will be hidden
   todoTableSearchContainer.classList.remove("is-focused");
 

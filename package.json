@@ -2,8 +2,8 @@
   "name": "sleek",
   "productName": "sleek",
   "version": "1.1.7-rc.2",
-  "description": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
-  "synopsis": "Todo app based on todo.txt for Linux, Windows and MacOS, free and open-source",
+  "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
+  "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "category": "ProjectManagement",
   "keywords": [
     "todo.txt",
@@ -75,7 +75,7 @@
       "artifactName": "${productName}-${version}-win.${ext}"
     },
     "appx": {
-      "displayName": "sleek - Todo.txt app for Windows, free and open-source",
+      "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
       "identityName": "17450RobinAhle.sleektodomanager",
       "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
       "publisherDisplayName": "Robin Ahle",

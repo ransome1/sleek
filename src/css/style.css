@@ -204,15 +204,15 @@ body.dark #todoTable .todo .cell.itemDueDate i {
 body.dark #todoTable .todo .cell.itemDueDate i.fa-sort-down {
   color: #5a5a5a;
 }
-body.dark #todoTable .todo .cell.itemDueDate.isToday,
-body.dark #todoTable .todo .cell.itemDueDate.isPast {
+body.dark #todoTable .todo .cell.itemDueDate.today,
+body.dark #todoTable .todo .cell.itemDueDate.past {
   color: #ff3860;
 }
-body.dark #todoTable .todo .cell.itemDueDate.isToday i,
-body.dark #todoTable .todo .cell.itemDueDate.isPast i {
+body.dark #todoTable .todo .cell.itemDueDate.today i,
+body.dark #todoTable .todo .cell.itemDueDate.past i {
   color: inherit;
 }
-body.dark #todoTable .todo .cell.itemDueDate.isTomorrow i {
+body.dark #todoTable .todo .cell.itemDueDate.tomorrow i {
   color: #fa745e !important;
 }
 body.dark #todoTable .todo .cell a.contexts {
@@ -1709,7 +1709,7 @@ body.compact #autoCompleteContainer h4 {
 
 #modalForm #modalFormInput {
   z-index: 60;
-  padding-right: 3em;
+  padding-right: 2em !important;
 }
 #modalForm textarea {
   min-height: 5.5em;

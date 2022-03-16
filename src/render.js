@@ -82,7 +82,7 @@ function getTranslations() {
   }
 }
 async function buildTable(fileContent, loadAll) {
-  try {
+  //try {
     // start timer for table
     const t0 = performance.now();
 
@@ -103,11 +103,19 @@ async function buildTable(fileContent, loadAll) {
     if(typeof todos.items !== "object") throw(new Error("Info: No todo.txt data found, starting onboarding"))
 
     // apply persisted filters and update object key "filtered"
-    filters.filterItems().then(function(response) {
+    filters.applyFilters().then(function(response) {
       console.log(response)
     }).catch(function(error) {
       helper.handleError(error);
     });
+
+    // if there is a queryString, we pass it on for additional filtering
+    const queryString = document.getElementById("todoTableSearch").value;
+    if(queryString.length > 0) filters.applySearchInput(queryString).then(function(response) {
+      console.log(response)
+    }).catch(function(error) {
+      helper.handleError(error);
+    })
     
     // once we have the filtered objects, we can adjust the gui
     helper.setupInterface().then(function(response) {
@@ -137,19 +145,20 @@ async function buildTable(fileContent, loadAll) {
       helper.handleError(error);
     });
 
-  } catch(error) {
-    
-    onboarding.showOnboarding(true).then(function(response) {
-      console.log(response);
-    }).catch(function(error) {
-      helper.handleError(error);
-    });
+  // if anything fails onboarding is shown and error presented to user
+  // } catch(error) {
 
-    messages.showGenericMessage(error);
+  //   onboarding.showOnboarding(true).then(function(response) {
+  //     console.log(response);
+  //   }).catch(function(error) {
+  //     helper.handleError(error);
+  //   });
 
-    error.functionName = buildTable.name;
-    return Promise.reject(error);
-  }
+  //   messages.showGenericMessage(error);
+
+  //   error.functionName = buildTable.name;
+  //   return Promise.reject(error);
+  // }
 }
 
 window.onload = async function() {

@@ -226,14 +226,14 @@ body.dark {
           color: $dark-grey;
         }
       }
-      .cell.itemDueDate.isToday,
-      .cell.itemDueDate.isPast {
+      .cell.itemDueDate.today,
+      .cell.itemDueDate.past {
         color: $has-text-danger;
         i {
           color: inherit;
         }
       }
-      .cell.itemDueDate.isTomorrow {
+      .cell.itemDueDate.tomorrow {
         i {
           color: $has-text-attention!important;
         }
