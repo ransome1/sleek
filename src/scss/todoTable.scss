@@ -133,6 +133,32 @@
       padding: 0 0.5em;
     }
   }
+
+
+
+  .group.contexts button,
+  button.contexts {
+    background: $sleek-contexts-button;
+    color: darken($sleek-contexts-button, 60%);
+  }
+  button.contexts.is-dark {
+    background: darken($sleek-contexts-button, 70%);
+    color: white;
+  }
+  .group.projects button,
+  button.projects {
+    background: $sleek-projects-button;
+    color: darken($sleek-projects-button, 60%);
+  }
+  button.projects.is-dark {
+    background: darken($sleek-projects-button, 70%);
+    color: white;
+  }
+
+
+
+
+
   .todo.completed {
     .cell {
       filter: opacity(50%) grayscale(100%);
@@ -149,20 +175,6 @@
     a.tag {
       text-decoration: none;
       margin: 0;
-    }
-    a.tag.projects {
-      background: $sleek-projects-button;
-    }
-    a.tag.projects.is-dark {
-      background: darken($sleek-projects-button, 65%)!important;
-
-    }
-    a.tag.contexts {
-      background: $sleek-contexts-button;
-    }
-    a.tag.contexts.is-dark {
-      background: darken($sleek-contexts-button, 65%)!important;
-
     }
   }
   .cell.categories {
@@ -182,7 +194,6 @@
   }
   .cell.text {
     width: auto;
-    /*max-width: 90%;*/
     cursor: pointer;
     color: $dark-grey!important;
     button {
@@ -274,7 +285,7 @@
   }
   button.today,
   .cell.today {
-    color: $has-text-danger;
+    color: $has-text-danger!important;
     .tags .is-dark {
       background: $has-text-danger;
       font-family: FreeSansBold;

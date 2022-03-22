@@ -15,6 +15,7 @@ import { show } from "./form.mjs";
 import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
+const items = { objects: {} }
 const resultStats = document.getElementById("resultStats");
 const tableContainerCategoriesTemplate = document.createElement("div");
 const todoContext = document.getElementById("todoContext");
@@ -32,7 +33,6 @@ const todoTableBodyCellTextTemplate = document.createElement("div");
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
 let
-  items,
   clusterCounter = 0,
   clusterSize = Math.ceil(window.innerHeight/32), // 32 being the pixel height of one todo in compact mode
   clusterThreshold = clusterSize;
@@ -69,13 +69,15 @@ todoTableWrapper.onscroll = function(event) {
 
 async function generateTodoTxtObjects(fileContent) {
   try {
-    // stop it, when there is no new content from file
-    if(!fileContent) return Promise.resolve("Info: No new content, won't change todo object")
+
     // create todo.txt objects
-    items = await { objects: TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]) }
+    if(fileContent) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ])
+
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
+
     return Promise.resolve("Success: New todo object created");
+
   } catch(error) {
     error.functionName = generateTodoTxtObjects.name;
     return Promise.reject(error);
@@ -444,7 +446,7 @@ function generateTableRow(todo) {
       if(todo[category] && category !== "priority") {
 
         todo[category].forEach(element => {
-          let todoTableBodyCellCategory = document.createElement("a");
+          let todoTableBodyCellCategory = document.createElement("button");
           todoTableBodyCellCategory.classList.add("tag", category)
           todoTableBodyCellCategory.onclick = function() {
             selectFilter(element, category).then(response => {

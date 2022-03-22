@@ -22,6 +22,7 @@ const btnResetFilters = document.querySelectorAll(".btnResetFilters");
 
 let categories,
     filtersCounted,
+    filtersReducedCounted,
     selectedFilters,
     lastFilterQueryString = null,
     lastFilterItems = null,
@@ -322,7 +323,6 @@ function generateCategoryContainer(category, autoCompletePrefix, buttons) {
     if(autoCompletePrefix !== undefined) {
 
       autoCompleteContainer.classList.add("is-active");
-      autoCompleteContainer.focus();
       todoFilterHeadline.innerHTML = translations[category];
 
     // filter box in drawer
@@ -425,15 +425,15 @@ function generateFilterButtons(category, autoCompletePrefix) {
       // skip this loop if no filters are present
       if(!filter) continue;
 
-      const todoFiltersItem = document.createElement("button");
+      const todoFiltersItem = document.createElement("a");
 
       // can cause problem if applied on contexts or projects
-      if(category==="priority") todoFiltersItem.classList.add(filter);
+      if(category === "priority") todoFiltersItem.classList.add(filter);
 
       // add attributes
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      todoFiltersItem.setAttribute("data-prefix", autoCompletePrefix);
+      todoFiltersItem.classList.add("button");
       todoFiltersItem.setAttribute("tabindex", 0)    
       todoFiltersItem.innerHTML = filter;
 
@@ -445,75 +445,81 @@ function generateFilterButtons(category, autoCompletePrefix) {
           if(JSON.stringify(item) === '["'+filter+'","'+category+'"]') todoFiltersItem.classList.toggle("is-dark")
         });
 
-        todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersCounted[filter] + "</span>";
+        if(filtersReducedCounted[filter]) {
+          todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">" + filtersReducedCounted[filter] + "</span>";
 
-        // add context menu
-        todoFiltersItem.oncontextmenu = function(event) {
+          // add context menu
+          todoFiltersItem.oncontextmenu = function(event) {
+            
+            // jail the modal
+            createModalJail(filterContext).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
+
+            filterContextInput.value = filter;
+            filterContextInput.setAttribute("data-item", category);
+            filterContextInput.focus();
+            filterContextInput.onkeydown = function(event) {
+              // prevent spaces in filters
+              if(event.key === " ") return false
+            }
+
+            filterContext.style.left = event.x + "px";
+            filterContext.style.top = event.y + "px";
+            filterContext.classList.add("is-active");
+            filterContext.onsubmit = function(event) {
+              // prevent page reload
+              event.preventDefault();
+
+              saveFilter(filterContextInput.value, filter, category).then(function(response) {
+                console.info(response);
+              }).catch(function(error) {
+                handleError(error);
+              });
+
+              // close context
+              this.classList.remove("is-active");
+            }
+
+            filterContextDelete.onclick = function(event) {
+              // prevent page reload
+              event.preventDefault();
+
+              getConfirmation(deleteFilter, translations.deleteCategoryPrompt, filter, category).then(function(response) {
+                console.info(response);
+              }).catch(function(error) {
+                handleError(error);
+              });
+            }
+          }
+
+          // create the event listener for filter selection by user
+          todoFiltersItem.onclick = function() {
           
-          // jail the modal
-          createModalJail(filterContext).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
+            // scroll up in todo list when filter is selected  
+            todoTableWrapper.scrollTo(0, 0);
 
-          filterContextInput.value = filter;
-          filterContextInput.setAttribute("data-item", category);
-          filterContextInput.focus();
-          filterContextInput.onkeydown = function(event) {
-            // prevent spaces in filters
-            if(event.key === " ") return false
-          }
-
-          filterContext.style.left = event.x + "px";
-          filterContext.style.top = event.y + "px";
-          filterContext.classList.add("is-active");
-          filterContext.onsubmit = function(event) {
-            // prevent page reload
-            event.preventDefault();
-
-            saveFilter(filterContextInput.value, filter, category).then(function(response) {
+            selectFilter(this.getAttribute("data-filter"), this.getAttribute("data-category")).then(function(response) {
               console.info(response);
             }).catch(function(error) {
               handleError(error);
             });
 
-            // close context
-            this.classList.remove("is-active");
+            // trigger matomo event
+            if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
           }
-
-          filterContextDelete.onclick = function(event) {
-            // prevent page reload
-            event.preventDefault();
-
-            getConfirmation(deleteFilter, translations.deleteCategoryPrompt, filter, category).then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              handleError(error);
-            });
-          }
-        }
-
-        // create the event listener for filter selection by user
-        todoFiltersItem.onclick = function() {
-        
-          // scroll up in todo list when filter is selected  
-          todoTableWrapper.scrollTo(0, 0);
-
-          selectFilter(this.getAttribute("data-filter"), this.getAttribute("data-category")).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
-
-          // trigger matomo event
-          if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Click on filter tag", category]);
+        } else {
+          todoFiltersItem.disabled = true;
+          todoFiltersItem.classList.add("is-greyed-out");
+          todoFiltersItem.innerHTML += " <span class=\"tag is-rounded\">0</span>";
         }
 
       // configuration for autocomplete buttons
       // add filter to input
       } else {
-        todoFiltersItem.onclick = function() {
+        todoFiltersItem.onclick = function(event) {
           addFilterToInput(this.getAttribute("data-filter"), autoCompletePrefix).then(function(response) {
             console.info(response);
           }).catch(function(error) {
@@ -535,15 +541,12 @@ function generateFilterButtons(category, autoCompletePrefix) {
 }
 
 
-
-
-
 function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix) {
   try {
+
     // select the container (filter drawer or autocomplete) in which filters will be shown
     if(autoCompleteCategory) {
       container = autoCompleteContainer;
-      container.innerHTML = "";
       // empty default categories
       categories = [];
       // fill only with selected autocomplete category
@@ -552,47 +555,41 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       items.filtered = items.objects;
     // in filter drawer, filters are adaptive to the shown items
     } else {
-      // empty filter container first
       container = todoFilters;
-      container.innerHTML = "";
       // needs to be reset every run, because it can be overwritten by previous autocomplete
       categories = ["priority", "contexts", "projects"];
     }
 
-    // TODO: Cancel if no items are found
-
-    let todoFiltersContainer;
+    // clean up container on each run
+    container.innerHTML = "";
 
     categories.forEach(async (category) => {
+
       // array to collect all the available filters in the data
       let filters = new Array();
-      let filterArray;
-      // run the array and collect all possible filters, duplicates included
-      if(userData.showEmptyFilters) {
-        filterArray = items.objects;
-      } else {
-        filterArray = items.filtered;
-      }
-      filterArray.forEach((item) => {
+      const todoForLoop = (userData.showEmptyFilters) ? items.objects : items.filtered
+      todoForLoop.forEach((todo) => {
         // check if the object has values in either the project or contexts field
-        if(item[category]) {
+        if(todo[category]) {
           // push all filters found so far into an array
-          for (let filter in item[category]) {
+          for (let filter in todo[category]) {
+
             // if user has not opted for showComplete we skip the filter of this particular item
-            if(userData.showCompleted==false && item.complete==true) {
+            if(userData.showCompleted==false && todo.complete==true) {
               continue;
             // if task is hidden the filter will be marked
-            } else if(item.h) {
-              filters.push([item[category][filter],0]);
+            } else if(todo.h) {
+              filters.push([todo[category][filter],0]);
             } else {
-              filters.push([item[category][filter],1]);
+              filters.push([todo[category][filter],1]);
             }
           }
         }
-      });
+      });    
+
       // search within filters according to autoCompleteValue
-      if(autoCompletePrefix) filters = filters.filter(function(filter) { return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase()); });
-      
+      if(autoCompletePrefix) filters = filters.filter(function(filter) { return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase()); })
+
       // remove duplicates, create the count object and avoid counting filters of hidden todos
       filtersCounted = filters.reduce(function(filters, filter) {
         // if filter is already in object and should be counted
@@ -610,72 +607,81 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
           return filters;
         }
       }, {});
+
       // sort filter alphanummerically (https://stackoverflow.com/a/54427214)
       filtersCounted = Object.fromEntries(
         Object.entries(filtersCounted).sort(new Intl.Collator('en',{numeric:true, sensitivity:'accent'}).compare)
       );
-      // remove duplicates from available filters
-      // https://wsvincent.com/javascript-remove-duplicates-array/
-      filters = [...new Set(filters.join(",").split(","))];
+
       // count reduced filter when persisted filters are present
-      let filtersReduced = new Array();
-      items.filtered.forEach((item) => {
-        // check if the object has values in either the project or contexts field
-        if(item[category]) {
-          // push all filters found so far into an array
-          for (let filter in item[category]) {
-            // if user has not opted for showComplete we skip the filter of this particular item
-            if(userData.showCompleted==false && item.complete==true) {
-              continue;
-              // if task is hidden the filter will be marked
-            } else if(item.h) {
-              filtersReduced.push([item[category][filter],0]);
-            } else {
-              filtersReduced.push([item[category][filter],1]);
-            }
+      let filtersReduced = [];
+      
+      const l = items.filtered.length;
+      for(let i = 0; i < l; i++) {
+        const item = items.filtered[i];
+        if(!item[category]) continue;
+        // push all filters found so far into an array
+        for(let filter in item[category]) {
+          // if user has not opted for showComplete we skip the filter of this particular item
+          if(userData.showCompleted==false && item.complete==true) {
+            continue;
+            // if task is hidden the filter will be marked
+          } else if(item.h) {
+            filtersReduced.push([item[category][filter],0]);
+          } else {
+            filtersReduced.push([item[category][filter],1]);
           }
         }
-      });
-      // filtersCountedReduced = filtersReduced.reduce(function(filters, filter) {
-      //   // if filter is already in object and should be counted
-      //   if (filter[1] && (filter[0] in filters)) {
-      //     filters[filter[0]]++;
-      //     // new filter in object and should be counted
-      //   } else if(filter[1]) {
-      //     filters[filter[0]] = 1;
-      //     // do not count if filter is suppose to be hidden
-      //     // only overwrite value with 0 if the filter doesn't already exist in object
-      //   } else if(!filter[1] && !(filter[0] in filters)) {
-      //     filters[filter[0]] = 0;
-      //   }
-      //   if(filters!==null) {
-      //     return filters;
-      //   }
-      // }, {});
+      }
+
+      filtersReducedCounted = filtersReduced.reduce(function(filters, filter) {
+        // if filter is already in object and should be counted
+        if (filter[1] && (filter[0] in filters)) {
+          filters[filter[0]]++;
+          // new filter in object and should be counted
+        } else if(filter[1]) {
+          filters[filter[0]] = 1;
+          // do not count if filter is suppose to be hidden
+          // only overwrite value with 0 if the filter doesn't already exist in object
+        } else if(!filter[1] && !(filter[0] in filters)) {
+          filters[filter[0]] = 0;
+        }
+        if(filters!==null) {
+          return filters;
+        }
+      }, {});
+
       // TODO can this be done above already?
       // remove empty filter entries
-      filters = filters.filter(function(filter) {
-        if(filter[0]) return filter;
-      });
+      // filters = filters.filter(function(filter) {
+      //   if(filter[0]) return filter;
+      // });
+
       // Cancel if autcomplete container and no filters available
-      if(filters.length === 0 && autoCompletePrefix) {
-        return;
-      }
+      // if(filters.length === 0 && autoCompletePrefix) {
+      //   return;
+      // }
+      
       // build filter buttons and add them to a fragment
       let buttons = await generateFilterButtons(category, autoCompletePrefix).then(response => {
         return response;
       }).catch (error => {
         handleError(error);
       });
+
       // build and configure the category container and finally append the fragments
-      todoFiltersContainer = await generateCategoryContainer(category, autoCompletePrefix, buttons).then(response => {
+      const todoFiltersContainer = await generateCategoryContainer(category, autoCompletePrefix, buttons).then(response => {
         return response;
       }).catch (error => {
         handleError(error);
       });
+
       container.appendChild(todoFiltersContainer);
-    });  
+
+    });
+
     return Promise.resolve("Success: Filter data generated");
+
   } catch (error) {
     error.functionName = generateFilterData.name;
     return Promise.reject(error);

@@ -6,6 +6,7 @@ const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
 const autoUpdater = require("./configs/autoUpdater.config.js");
+const Badge = require("electron-windows-badge");
 //const dismissedNotificationsStorage = require("./configs/store.config.js");
 const os = {
   darwin: "mac",
@@ -99,6 +100,7 @@ function openFileChooser(args) {
 
       return dialog.showOpenDialog({
         title: translations.selectFile,
+        securityScopedBookmarks: true,
         defaultPath: defaultPath,
         buttonLabel: translations.windowButtonOpenFile,
         filters: [{
@@ -106,21 +108,22 @@ function openFileChooser(args) {
           extensions: ["txt", "md", "todo"]
         }],
         properties: ["openFile"]
-      }).then(file => {
+      }).then(({ canceled, filePaths, bookmarks }) => {
 
-        if(file.canceled) return false;
+        if(canceled || filePaths.length === 0) return false;
 
         if(fileWatcher) fileWatcher.close()
         
-        file = file.filePaths[0].toString();
-    
-        startFileWatcher(file).then(response => {
+        startFileWatcher(filePaths[0].toString()).then(response => {
           console.info(response);
         }).catch(error => {
           console.error(error);
         });
 
-        return Promise.resolve("Success: File chooser opened file: " + file);
+        // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+        if(bookmarks) userData.set("securityBookmark", bookmarks[0]);
+
+        return Promise.resolve("Success: File chooser opened file: " + filePaths[0]);
 
       }).catch(error => {
         console.error(error)
@@ -130,6 +133,7 @@ function openFileChooser(args) {
 
       return dialog.showSaveDialog({
         title: translations.windowTitleCreateFile,
+        securityScopedBookmarks: true,
         defaultPath: defaultPath + "/todo.txt",
         buttonLabel: translations.windowButtonCreateFile,
         filters: [{
@@ -137,22 +141,25 @@ function openFileChooser(args) {
           extensions: ["txt", "md", "todo"]
         }],
         properties: ["openFile", "createDirectory"]
-      }).then(file => {
+      }).then(({ canceled, filePath, bookmark }) => {
 
-        if(file.canceled) return false;
+        if(canceled || !filePath) return false;
 
         // close filewatcher, otherwise the change of file will trigger a duplicate refresh
         if(fileWatcher) fileWatcher.close()
 
-        fs.writeFile(file.filePath, "", function() {
-          startFileWatcher(file.filePath).then(response => {
+        fs.writeFile(filePath, "", function() {
+          startFileWatcher(filePath).then(response => {
             console.info(response);
           }).catch(error => {
             console.error(error);
           });        
         });
 
-        return Promise.resolve("Success: File chooser created file: " + file.filePath);
+        // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+        if(bookmark) userData.set("securityBookmark", bookmark);
+
+        return Promise.resolve("Success: File chooser created file: " + filePath);
 
       }).catch(error => {
         console.error(error);
@@ -194,6 +201,9 @@ function refreshFiles() {
 
 async function startFileWatcher(file) {
   try {
+
+    // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+    if(userData.data.securityBookmark) app.startAccessingSecurityScopedResource(userData.data.securityBookmark)
 
     // TODO: consider doing this in store.config.js
     // skip persisted files and go with ENV if set
@@ -845,32 +855,31 @@ async function createWindow() {
 // ########################################################################################################################
 
 // prevent multiple instances based on https://stackoverflow.com/questions/35916158/how-to-prevent-multiple-instances-in-electron
-if(!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIPLE_INSTANCES !== "true") {
+if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIPLE_INSTANCES !== "true")) {
 
   app.quit();
 
 } else {
 
-  app.on("ready", async () => {
+  app.on("ready", () => {
 
     // TODO: check if this still works
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
+
+    if(appData.os === "windows") {
+      new Badge(mainWindow, {
+        font: "10px arial"
+      }); 
+      // identifier for windows store
+      app.setAppUserModelId("RobinAhle.sleektodomanager")
+    }
     
     if(BrowserWindow.getAllWindows().length === 0) {
-      await createWindow().then(function(response) {
+      createWindow().then(function(response) {
         console.info(response);
       }).catch(function(error) {
         console.error(error);
       });
-
-      if(appData.os === "windows") {
-        const Badge = await require("electron-windows-badge");
-        new Badge(mainWindow, {
-          font: "10px arial"
-        }); 
-        // identifier for windows store
-        app.setAppUserModelId("RobinAhle.sleektodomanager")
-      }
     }
       
   })

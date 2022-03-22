@@ -19,6 +19,7 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
+    "buildVersion": "3",
     "files": [
       "!flatpak-node${/*}",
       "!snap${/*}",
@@ -39,7 +40,6 @@
       "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.flowconfig,.yarn-metadata.json,.idea,appveyor.yml,.travis.yml,circle.yml,npm-debug.log,.nyc_output,yarn.lock,.yarn-integrity}",
       "!**/node_modules/search-index/si${/*}"
     ],
-    "appId": "RobinAhle.sleektodomanager",
     "linux": {
       "icon": "assets/icons/sleek.png",
       "category": "ProjectManagement",
@@ -51,19 +51,41 @@
       ]
     },
     "mac": {
-      "target": {
-        "target": "default",
-        "arch": "universal"
-      },
-      "icon": "assets/icons/sleek.icns",
+      "appId": "com.todotxt.sleek",
+      "target": [
+        {
+          "target": "default",
+          "arch": "universal"
+        }
+      ],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "icon": "build/icon.icns",
       "category": "public.app-category.productivity",
       "artifactName": "${productName}-${version}-mac.${ext}"
     },
     "dmg": {
-      "backgroundColor": "#f1d6f1"
+      "sign": false
     },
-    "nsis": {
-      "artifactName": "${productName}-${version}-win-Setup.${ext}"
+    "mas": {
+      "asar": true,
+      "asarUnpack": [
+        "node_modules/fsevents"
+      ],
+      "provisioningProfile": "build/distribution.provisionprofile",
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.plist",
+      "entitlementsLoginHelper": "build/entitlements.mas.loginhelper.plist"
+    },
+    "masDev": {
+      "asar": true,
+      "asarUnpack": [
+        "node_modules/fsevents"
+      ],
+      "provisioningProfile": "build/development.provisionprofile",
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "entitlementsLoginHelper": "build/entitlements.mas.loginhelper.plist"
     },
     "win": {
       "target": [
@@ -74,13 +96,17 @@
       "icon": "assets/icons/sleek.ico",
       "artifactName": "${productName}-${version}-win.${ext}"
     },
+    "nsis": {
+      "artifactName": "${productName}-${version}-win-Setup.${ext}"
+    },
     "appx": {
       "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
       "identityName": "17450RobinAhle.sleektodomanager",
       "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
       "publisherDisplayName": "Robin Ahle",
       "applicationId": "RobinAhle.sleektodomanager"
-    }
+    },
+    "afterSign": "build/notarize.js"
   },
   "appImage": {
     "artifactName": "${productName}-${version}-${arch}.${ext}"
@@ -97,6 +123,8 @@
   "scripts": {
     "build:windows": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -w --publish never",
     "build:macos": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -m --publish never",
+    "build:mas": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder --mac=mas --publish never",
+    "build:mas-dev": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder --mac=mas-dev --publish never",
     "build:linux": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -l --publish never",
     "build:appx": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -w appx --publish never",
     "build:appimage": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -l AppImage --publish never",
@@ -113,6 +141,7 @@
     "@fortawesome/fontawesome-free": "^5.15.3",
     "bulma": "^0.9.2",
     "chokidar": "^3.5.1",
+    "electron-notarize": "^1.1.1",
     "electron-updater": "^4.3.9",
     "electron-windows-badge": "^1.1.0",
     "i18next": "^21.6.6",
@@ -126,7 +155,7 @@
     "@playwright/test": "^1.17.2",
     "cross-env": "^7.0.3",
     "electron": "^16.0.5",
-    "electron-builder": "^22.11.7",
+    "electron-builder": "^22.14.13",
     "electron-reloader": "^1.2.2",
     "eslint": "^8.6.0",
     "peggy": "^1.2.0",

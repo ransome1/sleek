@@ -191,6 +191,30 @@ body.dark {
         color: inherit;
       }
     }
+
+    .group.contexts button,
+    button.contexts {
+      color: $sleek-contexts-button!important;
+      background: darken($sleek-contexts-button, 60%)!important;
+    }
+    button.contexts.is-dark {
+      background: darken($sleek-contexts-button, 70%)!important;
+      color: white;
+    }
+    .group.projects button,
+    button.projects {
+      color: $sleek-projects-button!important;
+      background: darken($sleek-projects-button, 60%)!important;
+    }
+    button.projects.is-dark {
+      background: darken($sleek-projects-button, 70%)!important;
+      color: white;
+    }
+    .is-white {
+      color: $lighter-grey;
+      background: none;
+    }
+
     .todo {
       border-color: $even-darker-grey;
       .cell.checkbox {
@@ -237,29 +261,7 @@ body.dark {
         i {
           color: $has-text-attention!important;
         }
-      }
-      .cell {
-        a.contexts {
-          color: $sleek-contexts-button!important;
-          background: darken($sleek-contexts-button, 60%)!important;
-        }
-        a.contexts.is-dark {
-          background: darken($sleek-contexts-button, 70%)!important;
-          color: white;
-        }
-        a.projects {
-          color: $sleek-projects-button!important;
-          background: darken($sleek-projects-button, 60%)!important;
-        }
-        a.projects.is-dark {
-          background: darken($sleek-projects-button, 70%)!important;
-          color: white;
-        }
-        .is-white {
-          color: $lighter-grey;
-          background: none;
-        }
-      }
+      }    
     }
     .todo:focus {
       background: lighten($darker-grey, 5%)!important;

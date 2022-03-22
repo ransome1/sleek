@@ -172,6 +172,28 @@ body.dark #todoTable .group.due {
 body.dark #todoTable .group.due button {
   color: inherit;
 }
+body.dark #todoTable .group.contexts button,
+body.dark #todoTable button.contexts {
+  color: #c5ede3 !important;
+  background: #1e6251 !important;
+}
+body.dark #todoTable button.contexts.is-dark {
+  background: #123b31 !important;
+  color: white;
+}
+body.dark #todoTable .group.projects button,
+body.dark #todoTable button.projects {
+  color: #f1d6f1 !important;
+  background: #6f266f !important;
+}
+body.dark #todoTable button.projects.is-dark {
+  background: #491949 !important;
+  color: white;
+}
+body.dark #todoTable .is-white {
+  color: #CCCDCF;
+  background: none;
+}
 body.dark #todoTable .todo {
   border-color: #3B3B3B;
 }
@@ -214,26 +236,6 @@ body.dark #todoTable .todo .cell.itemDueDate.past i {
 }
 body.dark #todoTable .todo .cell.itemDueDate.tomorrow i {
   color: #fa745e !important;
-}
-body.dark #todoTable .todo .cell a.contexts {
-  color: #c5ede3 !important;
-  background: #1e6251 !important;
-}
-body.dark #todoTable .todo .cell a.contexts.is-dark {
-  background: #123b31 !important;
-  color: white;
-}
-body.dark #todoTable .todo .cell a.projects {
-  color: #f1d6f1 !important;
-  background: #6f266f !important;
-}
-body.dark #todoTable .todo .cell a.projects.is-dark {
-  background: #491949 !important;
-  color: white;
-}
-body.dark #todoTable .todo .cell .is-white {
-  color: #CCCDCF;
-  background: none;
 }
 body.dark #todoTable .todo:focus {
   background: #3a3a3a !important;
@@ -1294,51 +1296,65 @@ body.compact #autoCompleteContainer h4 {
   margin-top: 0;
 }
 
-.contexts button,
-.contexts button:hover {
+a.button {
+  font-size: 1em;
+  border: none;
+  border-radius: 0.65em;
+  outline: none !important;
+  box-shadow: 0;
+  padding: 0.55em 0.75em;
+  cursor: pointer;
+}
+
+#autoCompleteContainer a.button {
+  margin-right: 0.25em;
+}
+
+.contexts a,
+.contexts a:hover {
   background: #c5ede3;
   color: #1e6251;
 }
-.contexts button span.tag,
-.contexts button:hover span.tag {
+.contexts a span.tag,
+.contexts a:hover span.tag {
   color: white;
   background: #247561;
 }
-.contexts button:focus-visible,
-.contexts button.is-dark:focus-visible {
+.contexts a:focus-visible,
+.contexts a.is-dark:focus-visible {
   background: #247561 !important;
   color: white;
 }
-.contexts button.is-dark,
-.contexts button.is-dark:hover,
-.contexts button.is-dark.is-hovered {
+.contexts a.is-dark,
+.contexts a.is-dark:hover,
+.contexts a.is-dark.is-hovered {
   background: #184e41;
   color: white;
 }
 
-.projects button,
-.projects button:hover {
+.projects a,
+.projects a:hover {
   background: #f1d6f1;
   color: #6f266f;
 }
-.projects button span.tag,
-.projects button:hover span.tag {
+.projects a span.tag,
+.projects a:hover span.tag {
   color: white;
   background: #822c82;
 }
-.projects button:focus-visible,
-.projects button.is-dark:focus-visible {
+.projects a:focus-visible,
+.projects a.is-dark:focus-visible {
   background: #822c82 !important;
   color: white;
 }
-.projects button.is-dark,
-.projects button.is-dark:hover,
-.projects button.is-dark.is-hovered {
+.projects a.is-dark,
+.projects a.is-dark:hover,
+.projects a.is-dark.is-hovered {
   background: #5c1f5c;
   color: white;
 }
 
-.priority button {
+.priority a {
   height: auto;
   font-size: 1.2em;
   font-family: FreeSansBold;
@@ -1346,61 +1362,61 @@ body.compact #autoCompleteContainer h4 {
   color: white;
   padding: 0.1em 0.5em !important;
 }
-.priority button span.tag {
+.priority a span.tag {
   color: #5a5a5a;
 }
-.priority button.is-dark,
-.priority button.is-dark:hover,
-.priority button.is-dark.is-hovered,
-.priority button:focus-visible {
+.priority a.is-dark,
+.priority a.is-dark:hover,
+.priority a.is-dark.is-hovered,
+.priority a:focus-visible {
   background: #999999;
 }
-.priority button.A {
+.priority a.A {
   background: #ff3860;
   color: #ffebef !important;
 }
-.priority button.A span.tag {
+.priority a.A span.tag {
   color: #ff3860 !important;
   background: #ffebef;
 }
-.priority button.A.is-dark,
-.priority button.A:focus-visible {
+.priority a.A.is-dark,
+.priority a.A:focus-visible {
   background: #d1002a !important;
 }
-.priority button.A.is-dark span.tag,
-.priority button.A:focus-visible span.tag {
+.priority a.A.is-dark span.tag,
+.priority a.A:focus-visible span.tag {
   color: #d1002a !important;
 }
-.priority button.B {
+.priority a.B {
   color: white !important;
   background: #fa745e;
 }
-.priority button.B span.tag {
+.priority a.B span.tag {
   color: #fa745e !important;
   background: #fff4f2;
 }
-.priority button.B.is-dark,
-.priority button.B:focus-visible {
+.priority a.B.is-dark,
+.priority a.B:focus-visible {
   background: #eb2707 !important;
 }
-.priority button.B.is-dark span.tag,
-.priority button.B:focus-visible span.tag {
+.priority a.B.is-dark span.tag,
+.priority a.B:focus-visible span.tag {
   color: #eb2707 !important;
 }
-.priority button.C {
+.priority a.C {
   color: white !important;
   background: #ffdd57;
 }
-.priority button.C span.tag {
+.priority a.C span.tag {
   color: #ffdd57 !important;
   background: #fffcf0;
 }
-.priority button.C.is-dark,
-.priority button.C:focus-visible {
+.priority a.C.is-dark,
+.priority a.C:focus-visible {
   background: #f0c000 !important;
 }
-.priority button.C.is-dark span.tag,
-.priority button.C:focus-visible span.tag {
+.priority a.C.is-dark span.tag,
+.priority a.C:focus-visible span.tag {
   color: #f0c000 !important;
 }
 
@@ -1496,15 +1512,15 @@ body.compact #autoCompleteContainer h4 {
 #drawerContainer .drawer #sortByContainer li.drag-sort-active {
   border-left: 0.2em solid #3273dc;
 }
-#drawerContainer .drawer .priority button {
+#drawerContainer .drawer .priority a {
   font-size: 1.4em;
 }
-#drawerContainer .drawer button {
+#drawerContainer .drawer a {
   position: relative;
   margin: 0 0.5rem 0.5rem 0;
   padding: 0.5em 0.75em;
 }
-#drawerContainer .drawer button span.tag {
+#drawerContainer .drawer a span.tag {
   height: 1.6em;
   font-family: FreeSansBold;
   position: absolute;
@@ -1513,7 +1529,7 @@ body.compact #autoCompleteContainer h4 {
   z-index: 35;
   padding: 0 0.5em;
 }
-#drawerContainer .drawer button.is-greyed-out .tag {
+#drawerContainer .drawer a.is-greyed-out .tag {
   display: none;
 }
 #drawerContainer .drawer section {
@@ -1596,8 +1612,10 @@ body.compact #autoCompleteContainer h4 {
   display: flex !important;
 }
 
-.modal .modal-content {
+.modal .modal-content,
+.modal .modal-card {
   width: 85%;
+  max-width: 900px;
   margin: 0;
 }
 
@@ -1942,6 +1960,24 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .group.contexts button {
   padding: 0 0.5em;
 }
+#todoTable .group.contexts button,
+#todoTable button.contexts {
+  background: #c5ede3;
+  color: #1e6251;
+}
+#todoTable button.contexts.is-dark {
+  background: #123b31;
+  color: white;
+}
+#todoTable .group.projects button,
+#todoTable button.projects {
+  background: #f1d6f1;
+  color: #6f266f;
+}
+#todoTable button.projects.is-dark {
+  background: #491949;
+  color: white;
+}
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
 }
@@ -1958,18 +1994,6 @@ body.compact #autoCompleteContainer h4 {
   text-decoration: none;
   margin: 0;
 }
-#todoTable .cell a.tag.projects {
-  background: #f1d6f1;
-}
-#todoTable .cell a.tag.projects.is-dark {
-  background: #5c1f5c !important;
-}
-#todoTable .cell a.tag.contexts {
-  background: #c5ede3;
-}
-#todoTable .cell a.tag.contexts.is-dark {
-  background: #184e41 !important;
-}
 #todoTable .cell.categories .tag {
   margin-left: 0.25em;
 }
@@ -1983,7 +2007,6 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .cell.text {
   width: auto;
-  /*max-width: 90%;*/
   cursor: pointer;
   color: #5a5a5a !important;
 }
@@ -2074,7 +2097,7 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable button.today,
 #todoTable .cell.today {
-  color: #ff3860;
+  color: #ff3860 !important;
 }
 #todoTable button.today .tags .is-dark,
 #todoTable .cell.today .tags .is-dark {

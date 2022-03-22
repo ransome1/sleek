@@ -80,6 +80,7 @@ modalFormInputResize.onclick = function() {
 
 modalForm.onsubmit = async function(event) {
   try {
+    
     event.preventDefault();
 
     const modalFormInput = document.getElementById("modalFormInput");
@@ -226,9 +227,9 @@ function addInputEvents(element) {
 
       // TODO: can/should this be done in filters.mjs?
       // map prefix to category
-      if(autoCompletePrefix==="+") {
+      if(autoCompletePrefix === "+") {
         autoCompleteCategory = "projects";
-      } else if(autoCompletePrefix=="@") {
+      } else if(autoCompletePrefix === "@") {
         autoCompleteCategory = "contexts";
       } else {
         // interrupt in case no filter is being asked for

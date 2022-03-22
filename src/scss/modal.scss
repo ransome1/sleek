@@ -17,8 +17,10 @@
   display: flex!important;
 }
 .modal {
-  .modal-content {
+  .modal-content,
+  .modal-card {
     width: 85%;
+    max-width: 900px;
     margin: 0;
   }
 }

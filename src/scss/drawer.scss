@@ -97,11 +97,11 @@
       }
     }
     .priority {
-      button {
+      a {
         font-size: 1.4em;
       }
     }
-    button {
+    a {
       position: relative;
       margin: 0 .5rem .5rem 0;
       padding: 0.5em 0.75em;
@@ -115,7 +115,7 @@
         padding: 0 0.5em;
       }
     }
-    button.is-greyed-out {
+    a.is-greyed-out {
       .tag {
         display: none;
       }
