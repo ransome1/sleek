@@ -32,6 +32,7 @@ a:hover,
 a:active,
 a:focus {
   color: $dark-grey;
+  box-shadow: none!important;
 }
 
 //  ####################################
@@ -48,6 +49,11 @@ a:focus {
 
 .is-greyed-out {
   filter: opacity(75%) grayscale(100%);
+}
+
+a.button.is-greyed-out {
+  cursor: not-allowed;
+  pointer-events: all;
 }
 
 .card {
@@ -383,6 +389,7 @@ code, pre {
 @import "modal.scss";
 @import "recurrencePicker.scss";
 @import "todoTable.scss";
+@import "todoContext.scss";
 @import "toggle.scss";
 @import "datepicker.scss";
 @media print {

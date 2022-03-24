@@ -25,6 +25,15 @@
     padding: 0 1.5em 1.5em 1.5em;
     .group:first-child {
       margin-top: 0;
+      
+    }
+    .group {
+      a {
+        font-size: 0.8em!important;
+      }
+      .cell {
+        margin-bottom: 0;
+      }
     }
     .todo {
       .cell {
@@ -57,15 +66,13 @@
     .is-4 {
       font-size: 1.1em;
     }
-    .priority {
-      button {
-        font-size: 1.2em;
-        .tag {
-          font-size: 0.65em;
-        }
+    a.button.priority {
+      font-size: 1.2em;
+      .tag {
+        font-size: 0.65em;
       }
     }
-    button {
+    a.button {
       font-size: 0.9em;
       margin: 0 0.3em 0.3em 0!important;
       padding: 0.5em 0.7em;

@@ -108,7 +108,7 @@ body.dark {
     ul {
       li.logo {
         color: $almost-white!important;
-        background: none;
+        border:  none!important;
       }
       li a {
         color: $almost-white!important;
@@ -135,6 +135,35 @@ body.dark {
       }
     }
   }
+
+
+  a.contexts {
+    color: $sleek-contexts-button!important;
+    background: darken($sleek-contexts-button, 60%)!important;
+    span.tag {
+      color: darken($sleek-contexts-button, 70%)!important;
+      background: lighten($sleek-contexts-button, 1%)!important;
+    }
+  }
+  a.contexts.is-dark,
+  a.contexts:focus-visible {
+    background: darken($sleek-contexts-button, 70%)!important;
+    color: white!important;
+  }
+  a.projects {
+    color: $sleek-projects-button!important;
+    background: darken($sleek-projects-button, 60%)!important;
+    span.tag {
+      color: darken($sleek-projects-button, 70%)!important;
+      background: lighten($sleek-projects-button, 1%)!important;
+    }
+  }
+  a.projects.is-dark,
+  a.projects:focus-visible {
+    background: darken($sleek-projects-button, 70%)!important;
+    color: white!important;
+  }
+
   #drawerContainer {
     .zoom {
       svg {
@@ -185,31 +214,13 @@ body.dark {
         color: $almost-white;
       }
     }
-    .group.due {
+    .group a.button {
       color: $light-grey;
-      button {
+      a.button {
         color: inherit;
       }
     }
 
-    .group.contexts button,
-    button.contexts {
-      color: $sleek-contexts-button!important;
-      background: darken($sleek-contexts-button, 60%)!important;
-    }
-    button.contexts.is-dark {
-      background: darken($sleek-contexts-button, 70%)!important;
-      color: white;
-    }
-    .group.projects button,
-    button.projects {
-      color: $sleek-projects-button!important;
-      background: darken($sleek-projects-button, 60%)!important;
-    }
-    button.projects.is-dark {
-      background: darken($sleek-projects-button, 70%)!important;
-      color: white;
-    }
     .is-white {
       color: $lighter-grey;
       background: none;
@@ -389,46 +400,6 @@ body.dark {
           color: $almost-black;
         }
       }
-    }
-  }
-  .contexts {
-    button {
-      color: $sleek-contexts-button;
-      background: darken($sleek-contexts-button, 55%);
-      span.tag {
-        color: darken($sleek-contexts-button, 70%)!important;
-        background: lighten($sleek-contexts-button, 1%);
-      }
-    }
-    button.is-dark,
-    button:focus-visible {
-      background: darken($sleek-contexts-button, 70%)!important;
-      color: white;
-    }
-  }
-  .projects {
-    button {
-      color: $sleek-projects-button;
-      background: darken($sleek-projects-button, 55%);
-      span.tag {
-        color: darken($sleek-projects-button, 70%)!important;
-        background: lighten($sleek-projects-button, 1%);
-      }
-    }
-    button.is-dark,
-    button:focus-visible {
-      background: darken($sleek-projects-button, 70%)!important;
-      color: white;
-    }
-  }
-  .priority {
-    button:not(.A):not(.B):not(.C) {
-      color: white;
-      background: $mid-grey;
-    }
-    button.is-dark:not(.A):not(.B):not(.C) {
-      color: white;
-      background: darken($mid-grey, 10%)!important;
     }
   }
   .toggle {

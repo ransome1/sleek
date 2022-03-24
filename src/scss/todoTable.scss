@@ -1,36 +1,4 @@
 //  ####################################
-//  TODO TABLE CONTEXT MENU
-//  ####################################
-
-#todoContext {
-  display: none;
-  position: fixed;
-  z-index: 40;
-  border-radius: $radius;
-  box-shadow: 0 0 1em $mid-grey;
-  a {
-    font-size: 0.9em;
-    color: $has-text-link;
-    padding: 0.75em 1.5em;
-  }
-  a.dropdown-item:first-child {
-    border-top-left-radius: $radius;
-    border-top-right-radius: $radius;
-  }
-  a.dropdown-item:last-child {
-    border-bottom-left-radius: $radius;
-    border-bottom-right-radius: $radius;
-  }
-  a.dropdown-item:focus,
-  a.dropdown-item:hover {
-    background-color: $almost-white!important;
-  }
-  .card-content {
-    padding: 0;
-  }
-}
-
-//  ####################################
 //  TABLE WRAPPER
 //  ####################################
 
@@ -79,7 +47,7 @@
   .todo:last-child {
     border: none;
   }
-  .todo#previousItem {
+  /*.todo#previousItem {
     -webkit-transition: background-color 0.5s ease-out;
     -moz-transition: background-color 0.5s ease-out;
     -o-transition: background-color 0.5s ease-out;
@@ -87,7 +55,7 @@
   }
   .todo#previousItem.is-highlighted {
     background-color: $almost-white;
-  }
+  }*/
   .todo:focus {
     background: lighten($has-text-link, 40%)!important;
     .cell.itemDueDate .tags,
@@ -95,70 +63,6 @@
       display: block;
     }
   }
-  .group {
-    font-family: FreeSansBold;
-    font-size: 1.2em;
-    min-height: 1em;
-    margin-top: 1.5em 0 0.5em 0;
-    border: none;
-    button {
-      font-family: inherit;
-      height: auto;
-      line-height: auto;
-      padding: 0;
-      cursor: default;
-      color: $dark-grey;
-      text-align: left;
-    }
-    .cell {
-      margin-top: 1em;
-      padding: 0;
-    }
-  }
-  .group.past button {
-    color: $has-text-danger;
-  }
-  .group.priority {
-    button {
-      font-size: 1.1em;
-      padding: 0.15em 0.5em;
-    }
-    .cell {
-      margin-bottom: 0.5em;
-    }
-  }
-  .group.projects,
-  .group.contexts {
-    button {
-      padding: 0 0.5em;
-    }
-  }
-
-
-
-  .group.contexts button,
-  button.contexts {
-    background: $sleek-contexts-button;
-    color: darken($sleek-contexts-button, 60%);
-  }
-  button.contexts.is-dark {
-    background: darken($sleek-contexts-button, 70%);
-    color: white;
-  }
-  .group.projects button,
-  button.projects {
-    background: $sleek-projects-button;
-    color: darken($sleek-projects-button, 60%);
-  }
-  button.projects.is-dark {
-    background: darken($sleek-projects-button, 70%);
-    color: white;
-  }
-
-
-
-
-
   .todo.completed {
     .cell {
       filter: opacity(50%) grayscale(100%);
@@ -167,6 +71,11 @@
       background: $has-text-link;
     }
   }
+
+  /********************/
+  /*** SINGLE CELLS ***/
+  /********************/
+
   .cell {
     line-height: 1.7em;
     padding: .75em 0;
@@ -177,12 +86,20 @@
       margin: 0;
     }
   }
+  .cell.priority {
+    width: 0.35em;
+    background: $mid-grey;
+    color: darken($mid-grey, 40%);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
   .cell.categories {
     .tag {
       margin-left: .25em;
     }
   }
   .cell.checkbox {
+    flex-shrink: 0;
     i {
       font-size: 1.25em;
       color: $has-text-link;
@@ -196,54 +113,23 @@
     width: auto;
     cursor: pointer;
     color: $dark-grey!important;
-    button {
+    a {
       font-size: 1.1em;
       font-family: FreeSansBold;
       height: auto;
       padding: 0.1em 0.4em;
     }
-    .priority {
-      background: transparent;
-      color: darken($mid-grey, 40%);
-      margin-right: .5em;
-      button {
-        font-size: 0.9em;
-        padding: 0.1em 0.4em!important;
-      }
+    a.button.priority {
+      font-size: 0.9em;
+      margin-right: 0.5em;
+      padding: 0;
+      color:  $dark-grey;
     }
   }
   .cell.text:focus-visible {
     background: $almost-white;
     border-radius: $radius;
   }
-  .cell.spacer {
-    width: .5em;
-    background: transparent;
-  }
-  .cell.priority {
-    background: $mid-grey;
-    flex: 0 0 .5em;
-  }
-  .cell.priority {
-    width: 0.5em;
-    opacity: 0.5;
-  }
-  .cell.priority.A {
-    background: $has-text-danger;
-  }
-  .cell.priority.B {
-    background: $has-text-attention;
-  }
-  .cell.priority.C {
-    background: $has-text-warning;
-  }
-  .cell .contexts {
-    background: $sleek-contexts-button;
-  }
-  .cell .projects {
-    background: $sleek-projects-button;
-  }
-  
   .cell.itemDueDate {
     color: $dark-grey;
     position: relative;
@@ -283,30 +169,7 @@
       cursor: pointer;
     }
   }
-  button.today,
-  .cell.today {
-    color: $has-text-danger!important;
-    .tags .is-dark {
-      background: $has-text-danger;
-      font-family: FreeSansBold;
-    }
-  }
-  button.tomorrow,
-  .cell.tomorrow {
-    color: $has-text-attention !important;
-    .tags .is-dark {
-      background: $has-text-attention;
-      font-family: FreeSansBold;
-    }
-  }
-  button.past,
-  .cell.past {
-    color: $has-text-danger;
-    .tags .is-dark {
-      background: $has-text-danger;
-      font-family: FreeSansBold;
-    }
-  }
+
   .cell:hover,
   .cell:focus {
     .tags {
@@ -314,6 +177,119 @@
     }
     i.fa-sort-down {
       display: block;
+    }
+  }
+  
+  /********************/
+  /*** COLORING ***/
+  /********************/
+
+  a.button.today,
+  .cell.today {
+    color: $has-text-danger!important;
+    .tags .is-dark {
+      background: $has-text-danger;
+      font-family: FreeSansBold;
+    }
+  }
+  a.button.tomorrow,
+  .cell.tomorrow {
+    color: $has-text-attention !important;
+    .tags .is-dark {
+      background: $has-text-attention;
+      font-family: FreeSansBold;
+    }
+  }
+  a.button.past,
+  .cell.past {
+    color: $has-text-danger!important;
+    .tags .is-dark {
+      background: $has-text-danger;
+      font-family: FreeSansBold;
+    }
+  }
+/*  .group.contexts a.button,
+  a.tag.contexts {
+    background: $sleek-contexts-button;
+    color: darken($sleek-contexts-button, 60%);
+  }
+  a.tag.contexts.is-dark {
+    background: darken($sleek-contexts-button, 70%);
+    color: white;
+  }
+  .group.projects a.button,
+  a.tag.projects {
+    background: $sleek-projects-button;
+    color: darken($sleek-projects-button, 60%);
+  }
+  a.tag.projects.is-dark {
+    background: darken($sleek-projects-button, 70%);
+    color: white;
+  }*/
+/*  .cell .priority a.A,
+  .group.priority .A,
+  .cell.priority.A {
+    background: $has-text-danger;
+  }
+  .cell .priority a.B,
+  .group.priority a.B,
+  .cell.priority.B {
+    background: $has-text-attention;
+  }
+  .cell .priority a.C,
+  .group.priority a.C,
+  .cell.priority.C {
+    background: $has-text-warning;
+  }*/
+  /*.cell .contexts {
+    background: $sleek-contexts-button;
+  }
+  .cell .projects {
+    background: $sleek-projects-button;
+  }*/
+
+  /********************/
+  /*** GROUP HEADER ***/
+  /********************/
+
+  .group {
+    font-family: FreeSansBold;
+    font-size: 1.2em;
+    min-height: 1em;
+    margin-top: 1.5em 0 0.5em 0;
+    border: none;
+    a.button {
+      font-family: inherit;
+      height: auto;
+      line-height: auto;
+      padding: 0;
+      cursor: default;
+      color: $dark-grey;
+      text-align: left;
+      background: none;
+    }
+    .cell {
+      margin-top: 1em;
+      padding: 0;
+    }
+  }
+  .group.past a.button {
+    color: $has-text-danger;
+  }
+  .group.priority {
+    a {
+      font-size: 1.1em;
+      padding: 0.15em 0.5em;
+      background:  $mid-grey;
+    }
+    .cell {
+      margin-bottom: 0.5em;
+    }
+  }
+  .group.projects,
+  .group.contexts {
+    a.button {
+      padding: 0 0.5em;
     }
   }
 }

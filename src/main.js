@@ -21,7 +21,8 @@ const appData = {
   os: os[process.platform],
   channel: getChannel()
 }
-let 
+let
+  stopAccessingSecurityScopedResource,
   userData = new Store({
     configName: "user-preferences",
     defaults: {}
@@ -70,6 +71,13 @@ function getChannel() {
 
 function getContent(file) {
   try {
+
+    // only for MAS (Sandboxed)
+    // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+    const activeFile = getActiveFile();
+    if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+
+
     if(!fs.existsSync(file)) {
       // TODO: understand what's happening here
       return Promise.resolve(fs.writeFile(file, "", function(error) {
@@ -79,7 +87,10 @@ function getContent(file) {
         return "";
       }));
     }
-    return Promise.resolve(fs.readFileSync(file, {encoding: "utf-8"}, function(err,data) { return data; }));
+    return Promise.resolve(fs.readFileSync(file, {encoding: "utf-8"}, function(err,data) { 
+      if(process.mas) stopAccessingSecurityScopedResource()
+      return data;
+    }));
   } catch (error) {
     return Promise.reject("Error in getContent(): " + error);
   }
@@ -111,17 +122,18 @@ function openFileChooser(args) {
       }).then(({ canceled, filePaths, bookmarks }) => {
 
         if(canceled || filePaths.length === 0) return false;
+        
+        const bookmark = bookmarks ? bookmarks[0] : undefined
+
+        console.log(bookmark)
 
         if(fileWatcher) fileWatcher.close()
         
-        startFileWatcher(filePaths[0].toString()).then(response => {
+        startFileWatcher(filePaths[0].toString(), bookmark).then(response => {
           console.info(response);
         }).catch(error => {
           console.error(error);
         });
-
-        // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
-        if(bookmarks) userData.set("securityBookmark", bookmarks[0]);
 
         return Promise.resolve("Success: File chooser opened file: " + filePaths[0]);
 
@@ -145,19 +157,19 @@ function openFileChooser(args) {
 
         if(canceled || !filePath) return false;
 
+        // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+        //if(process.mas && bookmark) userData.set("securityBookmark", bookmark);
+
         // close filewatcher, otherwise the change of file will trigger a duplicate refresh
         if(fileWatcher) fileWatcher.close()
 
         fs.writeFile(filePath, "", function() {
-          startFileWatcher(filePath).then(response => {
+          startFileWatcher(filePath, bookmark).then(response => {
             console.info(response);
           }).catch(error => {
             console.error(error);
           });        
         });
-
-        // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
-        if(bookmark) userData.set("securityBookmark", bookmark);
 
         return Promise.resolve("Success: File chooser created file: " + filePath);
 
@@ -173,6 +185,12 @@ function openFileChooser(args) {
 
 function refreshFiles() {
   try {
+
+    // only for MAS (Sandboxed)
+    // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+    const activeFile = getActiveFile();
+    if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+
     // if a file is not found it will be removed from list and user will be informed
     userData.data.files.forEach(function(file, index, object) {
       if(!fs.existsSync(file[1])) {
@@ -188,6 +206,9 @@ function refreshFiles() {
         }
         showNotification(notification);
       }
+
+      if(process.mas) stopAccessingSecurityScopedResource()
+
     });
 
     userData.set("files", userData.data.files);
@@ -199,11 +220,18 @@ function refreshFiles() {
   }
 }
 
-async function startFileWatcher(file) {
-  try {
 
-    // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
-    if(userData.data.securityBookmark) app.startAccessingSecurityScopedResource(userData.data.securityBookmark)
+function getActiveFile() {
+  const index = userData.data.files.findIndex(file => file[0] === 1);
+  if(index !==-1 ) {
+    const file = userData.data.files[index];
+    return file;
+  }
+  return false;
+}
+
+async function startFileWatcher(file, bookmark) {
+  try {
 
     // TODO: consider doing this in store.config.js
     // skip persisted files and go with ENV if set
@@ -216,12 +244,6 @@ async function startFileWatcher(file) {
       console.error(error);
     });
 
-    // check if file exists, otherwise abort and call onbaording
-    if(!fs.existsSync(file)) {
-      mainWindow.webContents.send("triggerFunction", "showOnboarding", [true]);
-      return Promise.reject("Info: File not found on disk, starting onboarding");
-    }
-
     // TODO: Check windows start
     // electron "unbundled" app -- have to skip "electron" and script name arg eg: "."
     // electron "bundled" app -- skip only the app name, eg: "sleek"
@@ -229,6 +251,7 @@ async function startFileWatcher(file) {
     //(process.defaultApp) ? args = process.argv.slice(2) : args = process.argv.slice(1);
 
      // set the current file to not active
+     // TODO: use getActiveFile()
     const indexOfActiveFile = userData.data.files.findIndex(file => file[0] === 1);
     if(indexOfActiveFile !== -1) userData.data.files[indexOfActiveFile][0] = 0;
 
@@ -238,7 +261,7 @@ async function startFileWatcher(file) {
     // this is a new file so it is pushed to array
     // or this is an existing file so it is just set active
     if(index === -1) {
-      userData.data.files.push([1, file, 1]);
+      (process.mas && bookmark) ? userData.data.files.push([1, file, 1, bookmark]) : userData.data.files.push([1, file, 1])
     } else {
       userData.data.files[index][0] = 1;
       userData.data.files[index][2] = 1;
@@ -251,6 +274,17 @@ async function startFileWatcher(file) {
     if(fileWatcher) {
       fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
       await fileWatcher.unwatch();
+    }
+
+    // only for MAS (Sandboxed)
+    // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+    const activeFile = getActiveFile();
+    if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+
+    // check if file exists, otherwise abort and call onbaording
+    if(!fs.existsSync(file)) {
+      mainWindow.webContents.send("triggerFunction", "showOnboarding", [true]);
+      return Promise.reject("Info: File not found on disk, starting onboarding");
     }
 
     // create a new filewatcher
@@ -307,6 +341,8 @@ async function startFileWatcher(file) {
     mainWindow.webContents.on("did-finish-load",() => {
       mainWindow.setTitle(title);
     });
+
+    if(process.mas) stopAccessingSecurityScopedResource()
     
     return Promise.resolve("Success: Filewatcher is watching: " + file);
 
@@ -467,7 +503,14 @@ function configureWindowEvents() {
           file = userData.data.files[index][1];
         }
 
+        // only for MAS (Sandboxed)
+        // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
+        const activeFile = getActiveFile();
+        if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+
         if(file) fs.writeFileSync(file, content, {encoding: "utf-8"});
+
+        if(process.mas) stopAccessingSecurityScopedResource()
 
       })
       .on("darkmode", (event, darkmode) => {

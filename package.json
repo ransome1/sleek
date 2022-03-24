@@ -19,7 +19,7 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "buildVersion": "3",
+    "buildVersion": "7",
     "files": [
       "!flatpak-node${/*}",
       "!snap${/*}",
@@ -65,7 +65,12 @@
       "artifactName": "${productName}-${version}-mac.${ext}"
     },
     "dmg": {
-      "sign": false
+      "sign": false,
+      "background": "build/background.tiff",
+      "window": {
+        "width": 720,
+        "height": 380
+      }
     },
     "mas": {
       "asar": true,
@@ -155,7 +160,7 @@
     "@playwright/test": "^1.17.2",
     "cross-env": "^7.0.3",
     "electron": "^16.0.5",
-    "electron-builder": "^22.14.13",
+    "electron-builder": "23.0.2",
     "electron-reloader": "^1.2.2",
     "eslint": "^8.6.0",
     "peggy": "^1.2.0",

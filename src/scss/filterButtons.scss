@@ -13,121 +13,113 @@ a.button {
 }
 
 #autoCompleteContainer a.button {
-  margin-right: 0.25em;
+  margin: 0 0.5em 0.5em 0;
 }
 
-.contexts {
-  a,
-  a:hover {
-    background: $sleek-contexts-button;
-    color: darken($sleek-contexts-button, 60%);
-    span.tag {
-      color: white;
-      background: darken($sleek-contexts-button, 55%);
-    }
-  }
-  a:focus-visible,
-  a.is-dark:focus-visible {
+a.contexts,
+a.contexts:hover {
+  background: $sleek-contexts-button!important;
+  color: darken($sleek-contexts-button, 60%)!important;
+  span.tag {
+    color: white;
     background: darken($sleek-contexts-button, 55%)!important;
-    color: white;
-  }
-  a.is-dark,
-  a.is-dark:hover,
-  a.is-dark.is-hovered  {
-    background: darken($sleek-contexts-button, 65%);
-    color: white;
   }
 }
-.projects {
-  a,
-  a:hover {
-    background: $sleek-projects-button;
-    color: darken($sleek-projects-button, 60%);
-    span.tag {
-      color: white;
-      background: darken($sleek-projects-button, 55%);
-    }
-  }
-  a:focus-visible,
-  a.is-dark:focus-visible {
-    background: darken($sleek-projects-button, 55%)!important;
+a.contexts:focus-visible,
+a.contexts.is-dark:focus-visible {
+  background: darken($sleek-contexts-button, 55%)!important;
+  color: white!important;
+}
+a.contexts.is-dark,
+a.contexts.is-dark:hover,
+a.contexts.is-dark.is-hovered  {
+  background: darken($sleek-contexts-button, 65%)!important;
+  color: white!important;
+}
+
+a.projects,
+a.projects:hover {
+  background: $sleek-projects-button!important;
+  color: darken($sleek-projects-button, 60%)!important;
+  span.tag {
     color: white;
-  }
-  a.is-dark,
-  a.is-dark:hover,
-  a.is-dark.is-hovered {
-    background: darken($sleek-projects-button, 65%);
-    color: white;
+    background: darken($sleek-projects-button, 55%);
   }
 }
-.priority {
-  a {
-    height: auto;
-    font-size: 1.2em;
-    font-family: FreeSansBold;
-    background: $mid-grey;
-    //color: $dark-grey;
-    color: white;
-    padding: 0.1em 0.5em!important;
-    span.tag {
-      color: $dark-grey;
-    }
+a.projects:focus-visible,
+a.projects.is-dark:focus-visible {
+  background: darken($sleek-projects-button, 55%)!important;
+  color: white;
+}
+a.projects.is-dark,
+a.projects.is-dark:hover,
+a.projects.is-dark.is-hovered {
+  background: darken($sleek-projects-button, 65%)!important;
+  color: white!important;
+}
+
+a.priority {
+  height: auto;
+  font-size: 1.2em;
+  font-family: FreeSansBold;
+  background: $mid-grey;
+  color: white!important;
+  padding: 0.1em 0.5em!important;
+  span.tag {
+    color: $dark-grey;
   }
-  a.is-dark span.tag {
-    //background: darken($mid-grey, 50%);
+}
+a.priority.is-dark,
+a.priority.is-dark:hover,
+a.priority.is-dark.is-hovered,
+a.priority:focus-visible {
+  background: darken($mid-grey, 20%);
+}
+a.priority.A,
+.cell.priority.A {
+  background: $has-text-danger!important;
+  color: lighten($has-text-danger, 35%)!important;
+  span.tag {
+    color: $has-text-danger!important;
+    background: lighten($has-text-danger, 35%);
   }
-  a.is-dark,
-  a.is-dark:hover,
-  a.is-dark.is-hovered,
-  a:focus-visible {
-    background: darken($mid-grey, 20%);
-    span.tag {
-      //color: $darker-grey!important;
-    }
+}
+a.priority.A.is-dark,
+a.priority.A:focus-visible {
+  background: darken($has-text-danger, 20%)!important;
+  span.tag {
+    color: darken($has-text-danger, 20%)!important;
   }
-  a.A {
-    background: $has-text-danger;
-    color: lighten($has-text-danger, 35%)!important;
-    span.tag {
-      color: $has-text-danger!important;
-      background: lighten($has-text-danger, 35%);
-    }
+}
+a.priority.B,
+.cell.priority.B {
+  color: lighten($has-text-attention, 35%)!important;
+  background: $has-text-attention!important;
+  span.tag {
+    color: $has-text-attention!important;
+    background: lighten($has-text-attention, 30%);
   }
-  a.A.is-dark,
-  a.A:focus-visible {
-    background: darken($has-text-danger, 20%)!important;
-    span.tag {
-      color: darken($has-text-danger, 20%)!important;
-    }
+}
+a.priority.B.is-dark,
+a.priority.B:focus-visible {
+  background: darken($has-text-attention, 20%)!important;
+  span.tag {
+    color: darken($has-text-attention, 20%)!important;
   }
-  a.B {
-    color: lighten($has-text-attention, 35%)!important;
-    background: $has-text-attention;
-    span.tag {
-      color: $has-text-attention!important;
-      background: lighten($has-text-attention, 30%);
-    }
+}
+a.priority.C,
+.cell.priority.C {
+  color: lighten($has-text-warning, 35%)!important;
+  background: $has-text-warning!important;
+  span.tag {
+    color: $has-text-warning!important;
+    background: lighten($has-text-warning, 30%);
   }
-  a.B.is-dark,
-  a.B:focus-visible {
-    background: darken($has-text-attention, 20%)!important;
-    span.tag {
-      color: darken($has-text-attention, 20%)!important;
-    }
-  }
-  a.C {
-    color: lighten($has-text-warning, 35%)!important;
-    background: $has-text-warning;
-    span.tag {
-      color: $has-text-warning!important;
-      background: lighten($has-text-warning, 30%);
-    }
-  }
-  a.C.is-dark,
-  a.C:focus-visible {
-    background: darken($has-text-warning, 20%)!important;
-    span.tag {
-      color: darken($has-text-warning, 20%)!important;
-    }
+}
+a.priority.C.is-dark,
+a.priority.C:focus-visible {
+  background: darken($has-text-warning, 20%)!important;
+  span.tag {
+    color: darken($has-text-warning, 20%)!important;
   }
 }

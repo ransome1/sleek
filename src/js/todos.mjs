@@ -71,7 +71,7 @@ async function generateTodoTxtObjects(fileContent) {
   try {
 
     // create todo.txt objects
-    if(fileContent) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ])
+    items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ])
 
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
@@ -138,7 +138,7 @@ function generateTable(loadAll) {
       }
 
       // builds the groups button
-      if(groupHeadline) groupHeadline = "<button tabindex=\"-1\" class=" + groupFormattingClass + ">" + groupHeadline + "</button>";
+      if(groupHeadline) groupHeadline = `<a href="#" tabindex="-1" class="button ${groupFormattingClass} ${sortBy}">${groupHeadline}</a>`;
 
       // append group headline to table
       todoTable.appendChild(
@@ -362,7 +362,7 @@ function generateTableRow(todo) {
     if(todo.text) {
 
       // adds priority to the text cell
-      if(todo.priority && (sortBy !== "priority" || userData.sortByFile)) todoTableBodyCellText.innerHTML = "<span class=\"priority\"><button class=\"" + todo.priority + "\">" + todo.priority + "</button></span>";
+      if(todo.priority && (sortBy !== "priority" || userData.sortByFile)) todoTableBodyCellText.innerHTML = `<a class="priority button ${todo.priority}">${todo.priority}</a>`;
 
       // parse text string through markdown parser
       todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parseInline(todo.text) + "</span>";
@@ -446,7 +446,7 @@ function generateTableRow(todo) {
       if(todo[category] && category !== "priority") {
 
         todo[category].forEach(element => {
-          let todoTableBodyCellCategory = document.createElement("button");
+          let todoTableBodyCellCategory = document.createElement("a");
           todoTableBodyCellCategory.classList.add("tag", category)
           todoTableBodyCellCategory.onclick = function() {
             selectFilter(element, category).then(response => {

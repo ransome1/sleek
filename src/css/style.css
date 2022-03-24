@@ -102,7 +102,7 @@ body.dark nav svg {
 }
 body.dark nav ul li.logo {
   color: #f0f0f0 !important;
-  background: none;
+  border: none !important;
 }
 body.dark nav ul li a {
   color: #f0f0f0 !important;
@@ -124,6 +124,32 @@ body.dark nav ul:nth-child(2) #versionNumber {
 }
 body.dark nav ul:nth-child(2) #versionNumber:hover {
   color: #CCCDCF !important;
+}
+body.dark a.contexts {
+  color: #c5ede3 !important;
+  background: #1e6251 !important;
+}
+body.dark a.contexts span.tag {
+  color: #123b31 !important;
+  background: #c9eee5 !important;
+}
+body.dark a.contexts.is-dark,
+body.dark a.contexts:focus-visible {
+  background: #123b31 !important;
+  color: white !important;
+}
+body.dark a.projects {
+  color: #f1d6f1 !important;
+  background: #6f266f !important;
+}
+body.dark a.projects span.tag {
+  color: #491949 !important;
+  background: #f2daf2 !important;
+}
+body.dark a.projects.is-dark,
+body.dark a.projects:focus-visible {
+  background: #491949 !important;
+  color: white !important;
 }
 body.dark #drawerContainer .zoom svg {
   color: white !important;
@@ -166,29 +192,11 @@ body.dark #todoTable .todo:hover .cell button,
 body.dark #todoTable .todo.due button {
   color: #f0f0f0;
 }
-body.dark #todoTable .group.due {
+body.dark #todoTable .group a.button {
   color: #ebebeb;
 }
-body.dark #todoTable .group.due button {
+body.dark #todoTable .group a.button a.button {
   color: inherit;
-}
-body.dark #todoTable .group.contexts button,
-body.dark #todoTable button.contexts {
-  color: #c5ede3 !important;
-  background: #1e6251 !important;
-}
-body.dark #todoTable button.contexts.is-dark {
-  background: #123b31 !important;
-  color: white;
-}
-body.dark #todoTable .group.projects button,
-body.dark #todoTable button.projects {
-  color: #f1d6f1 !important;
-  background: #6f266f !important;
-}
-body.dark #todoTable button.projects.is-dark {
-  background: #491949 !important;
-  color: white;
 }
 body.dark #todoTable .is-white {
   color: #CCCDCF;
@@ -350,40 +358,6 @@ body.dark #fileTabBar ul li.is-highlighted {
 }
 body.dark #fileTabBar ul li.is-highlighted i {
   color: #212224;
-}
-body.dark .contexts button {
-  color: #c5ede3;
-  background: #247561;
-}
-body.dark .contexts button span.tag {
-  color: #123b31 !important;
-  background: #c9eee5;
-}
-body.dark .contexts button.is-dark,
-body.dark .contexts button:focus-visible {
-  background: #123b31 !important;
-  color: white;
-}
-body.dark .projects button {
-  color: #f1d6f1;
-  background: #822c82;
-}
-body.dark .projects button span.tag {
-  color: #491949 !important;
-  background: #f2daf2;
-}
-body.dark .projects button.is-dark,
-body.dark .projects button:focus-visible {
-  background: #491949 !important;
-  color: white;
-}
-body.dark .priority button:not(.A):not(.B):not(.C) {
-  color: white;
-  background: #ccc;
-}
-body.dark .priority button.is-dark:not(.A):not(.B):not(.C) {
-  color: white;
-  background: #b3b3b3 !important;
 }
 body.dark .toggle .switch .slider {
   background-color: #5a5a5a;
@@ -583,6 +557,7 @@ a:hover,
 a:active,
 a:focus {
   color: #5a5a5a;
+  box-shadow: none !important;
 }
 
 .is-active {
@@ -595,6 +570,11 @@ a:focus {
 
 .is-greyed-out {
   filter: opacity(75%) grayscale(100%);
+}
+
+a.button.is-greyed-out {
+  cursor: not-allowed;
+  pointer-events: all;
 }
 
 .card {
@@ -1003,6 +983,7 @@ nav ul li.logo {
   color: white !important;
   background: #5a5a5a;
   cursor: default;
+  background: linear-gradient(0.33turn, #1b5551, #813e93);
 }
 nav ul:nth-child(2) {
   height: auto;
@@ -1150,6 +1131,12 @@ nav ul:nth-child(2):hover #versionNumber {
   #todoTable .group:first-child {
     margin-top: 0;
   }
+  #todoTable .group a {
+    font-size: 0.8em !important;
+  }
+  #todoTable .group .cell {
+    margin-bottom: 0;
+  }
   #todoTable .todo .cell {
     padding: 0.25em 0;
   }
@@ -1178,22 +1165,22 @@ nav ul li.logo {
 #drawerContainer .drawer .is-4 {
     font-size: 1.1em;
   }
-  #autoCompleteContainer .priority button,
-#drawerContainer .drawer .priority button {
+  #autoCompleteContainer a.button.priority,
+#drawerContainer .drawer a.button.priority {
     font-size: 1.2em;
   }
-  #autoCompleteContainer .priority button .tag,
-#drawerContainer .drawer .priority button .tag {
+  #autoCompleteContainer a.button.priority .tag,
+#drawerContainer .drawer a.button.priority .tag {
     font-size: 0.65em;
   }
-  #autoCompleteContainer button,
-#drawerContainer .drawer button {
+  #autoCompleteContainer a.button,
+#drawerContainer .drawer a.button {
     font-size: 0.9em;
     margin: 0 0.3em 0.3em 0 !important;
     padding: 0.5em 0.7em;
   }
-  #autoCompleteContainer button .tag,
-#drawerContainer .drawer button .tag {
+  #autoCompleteContainer a.button .tag,
+#drawerContainer .drawer a.button .tag {
     width: auto;
     height: auto;
     padding: 0 0.5em;
@@ -1240,6 +1227,12 @@ body.compact #todoTable {
 body.compact #todoTable .group:first-child {
   margin-top: 0;
 }
+body.compact #todoTable .group a {
+  font-size: 0.8em !important;
+}
+body.compact #todoTable .group .cell {
+  margin-bottom: 0;
+}
 body.compact #todoTable .todo .cell {
   padding: 0.25em 0;
 }
@@ -1266,22 +1259,22 @@ body.compact #autoCompleteContainer .is-4,
 body.compact #drawerContainer .drawer .is-4 {
   font-size: 1.1em;
 }
-body.compact #autoCompleteContainer .priority button,
-body.compact #drawerContainer .drawer .priority button {
+body.compact #autoCompleteContainer a.button.priority,
+body.compact #drawerContainer .drawer a.button.priority {
   font-size: 1.2em;
 }
-body.compact #autoCompleteContainer .priority button .tag,
-body.compact #drawerContainer .drawer .priority button .tag {
+body.compact #autoCompleteContainer a.button.priority .tag,
+body.compact #drawerContainer .drawer a.button.priority .tag {
   font-size: 0.65em;
 }
-body.compact #autoCompleteContainer button,
-body.compact #drawerContainer .drawer button {
+body.compact #autoCompleteContainer a.button,
+body.compact #drawerContainer .drawer a.button {
   font-size: 0.9em;
   margin: 0 0.3em 0.3em 0 !important;
   padding: 0.5em 0.7em;
 }
-body.compact #autoCompleteContainer button .tag,
-body.compact #drawerContainer .drawer button .tag {
+body.compact #autoCompleteContainer a.button .tag,
+body.compact #drawerContainer .drawer a.button .tag {
   width: auto;
   height: auto;
   padding: 0 0.5em;
@@ -1307,116 +1300,133 @@ a.button {
 }
 
 #autoCompleteContainer a.button {
-  margin-right: 0.25em;
+  margin: 0 0.5em 0.5em 0;
 }
 
-.contexts a,
-.contexts a:hover {
-  background: #c5ede3;
-  color: #1e6251;
+a.contexts,
+a.contexts:hover {
+  background: #c5ede3 !important;
+  color: #1e6251 !important;
 }
-.contexts a span.tag,
-.contexts a:hover span.tag {
+a.contexts span.tag,
+a.contexts:hover span.tag {
   color: white;
-  background: #247561;
-}
-.contexts a:focus-visible,
-.contexts a.is-dark:focus-visible {
   background: #247561 !important;
-  color: white;
-}
-.contexts a.is-dark,
-.contexts a.is-dark:hover,
-.contexts a.is-dark.is-hovered {
-  background: #184e41;
-  color: white;
 }
 
-.projects a,
-.projects a:hover {
-  background: #f1d6f1;
-  color: #6f266f;
+a.contexts:focus-visible,
+a.contexts.is-dark:focus-visible {
+  background: #247561 !important;
+  color: white !important;
 }
-.projects a span.tag,
-.projects a:hover span.tag {
+
+a.contexts.is-dark,
+a.contexts.is-dark:hover,
+a.contexts.is-dark.is-hovered {
+  background: #184e41 !important;
+  color: white !important;
+}
+
+a.projects,
+a.projects:hover {
+  background: #f1d6f1 !important;
+  color: #6f266f !important;
+}
+a.projects span.tag,
+a.projects:hover span.tag {
   color: white;
   background: #822c82;
 }
-.projects a:focus-visible,
-.projects a.is-dark:focus-visible {
+
+a.projects:focus-visible,
+a.projects.is-dark:focus-visible {
   background: #822c82 !important;
   color: white;
 }
-.projects a.is-dark,
-.projects a.is-dark:hover,
-.projects a.is-dark.is-hovered {
-  background: #5c1f5c;
-  color: white;
+
+a.projects.is-dark,
+a.projects.is-dark:hover,
+a.projects.is-dark.is-hovered {
+  background: #5c1f5c !important;
+  color: white !important;
 }
 
-.priority a {
+a.priority {
   height: auto;
   font-size: 1.2em;
   font-family: FreeSansBold;
   background: #ccc;
-  color: white;
+  color: white !important;
   padding: 0.1em 0.5em !important;
 }
-.priority a span.tag {
+a.priority span.tag {
   color: #5a5a5a;
 }
-.priority a.is-dark,
-.priority a.is-dark:hover,
-.priority a.is-dark.is-hovered,
-.priority a:focus-visible {
+
+a.priority.is-dark,
+a.priority.is-dark:hover,
+a.priority.is-dark.is-hovered,
+a.priority:focus-visible {
   background: #999999;
 }
-.priority a.A {
-  background: #ff3860;
+
+a.priority.A,
+.cell.priority.A {
+  background: #ff3860 !important;
   color: #ffebef !important;
 }
-.priority a.A span.tag {
+a.priority.A span.tag,
+.cell.priority.A span.tag {
   color: #ff3860 !important;
   background: #ffebef;
 }
-.priority a.A.is-dark,
-.priority a.A:focus-visible {
+
+a.priority.A.is-dark,
+a.priority.A:focus-visible {
   background: #d1002a !important;
 }
-.priority a.A.is-dark span.tag,
-.priority a.A:focus-visible span.tag {
+a.priority.A.is-dark span.tag,
+a.priority.A:focus-visible span.tag {
   color: #d1002a !important;
 }
-.priority a.B {
+
+a.priority.B,
+.cell.priority.B {
   color: white !important;
-  background: #fa745e;
+  background: #fa745e !important;
 }
-.priority a.B span.tag {
+a.priority.B span.tag,
+.cell.priority.B span.tag {
   color: #fa745e !important;
   background: #fff4f2;
 }
-.priority a.B.is-dark,
-.priority a.B:focus-visible {
+
+a.priority.B.is-dark,
+a.priority.B:focus-visible {
   background: #eb2707 !important;
 }
-.priority a.B.is-dark span.tag,
-.priority a.B:focus-visible span.tag {
+a.priority.B.is-dark span.tag,
+a.priority.B:focus-visible span.tag {
   color: #eb2707 !important;
 }
-.priority a.C {
+
+a.priority.C,
+.cell.priority.C {
   color: white !important;
-  background: #ffdd57;
+  background: #ffdd57 !important;
 }
-.priority a.C span.tag {
+a.priority.C span.tag,
+.cell.priority.C span.tag {
   color: #ffdd57 !important;
   background: #fffcf0;
 }
-.priority a.C.is-dark,
-.priority a.C:focus-visible {
+
+a.priority.C.is-dark,
+a.priority.C:focus-visible {
   background: #f0c000 !important;
 }
-.priority a.C.is-dark span.tag,
-.priority a.C:focus-visible span.tag {
+a.priority.C.is-dark span.tag,
+a.priority.C:focus-visible span.tag {
   color: #f0c000 !important;
 }
 
@@ -1843,34 +1853,6 @@ a.button {
   margin: 0.25em 0;
 }
 
-#todoContext {
-  display: none;
-  position: fixed;
-  z-index: 40;
-  border-radius: 0.65em;
-  box-shadow: 0 0 1em #ccc;
-}
-#todoContext a {
-  font-size: 0.9em;
-  color: #3273dc;
-  padding: 0.75em 1.5em;
-}
-#todoContext a.dropdown-item:first-child {
-  border-top-left-radius: 0.65em;
-  border-top-right-radius: 0.65em;
-}
-#todoContext a.dropdown-item:last-child {
-  border-bottom-left-radius: 0.65em;
-  border-bottom-right-radius: 0.65em;
-}
-#todoContext a.dropdown-item:focus,
-#todoContext a.dropdown-item:hover {
-  background-color: #f0f0f0 !important;
-}
-#todoContext .card-content {
-  padding: 0;
-}
-
 #todoTableWrapper::-webkit-scrollbar {
   background-color: transparent;
   width: 0.8em;
@@ -1900,6 +1882,63 @@ a.button {
   float: left;
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
+  /*.todo#previousItem {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+  .todo#previousItem.is-highlighted {
+    background-color: $almost-white;
+  }*/
+  /********************/
+  /*** SINGLE CELLS ***/
+  /********************/
+  /********************/
+  /*** COLORING ***/
+  /********************/
+  /*  .group.contexts a.button,
+    a.tag.contexts {
+      background: $sleek-contexts-button;
+      color: darken($sleek-contexts-button, 60%);
+    }
+    a.tag.contexts.is-dark {
+      background: darken($sleek-contexts-button, 70%);
+      color: white;
+    }
+    .group.projects a.button,
+    a.tag.projects {
+      background: $sleek-projects-button;
+      color: darken($sleek-projects-button, 60%);
+    }
+    a.tag.projects.is-dark {
+      background: darken($sleek-projects-button, 70%);
+      color: white;
+    }*/
+  /*  .cell .priority a.A,
+    .group.priority .A,
+    .cell.priority.A {
+      background: $has-text-danger;
+    }
+    .cell .priority a.B,
+    .group.priority a.B,
+    .cell.priority.B {
+      background: $has-text-attention;
+    }
+    .cell .priority a.C,
+    .group.priority a.C,
+    .cell.priority.C {
+      background: $has-text-warning;
+    }*/
+  /*.cell .contexts {
+    background: $sleek-contexts-button;
+  }
+  .cell .projects {
+    background: $sleek-projects-button;
+  }*/
+  /********************/
+  /*** GROUP HEADER ***/
+  /********************/
 }
 #todoTable .todo {
   width: 100%;
@@ -1910,73 +1949,12 @@ a.button {
 #todoTable .todo:last-child {
   border: none;
 }
-#todoTable .todo#previousItem {
-  -webkit-transition: background-color 0.5s ease-out;
-  -moz-transition: background-color 0.5s ease-out;
-  -o-transition: background-color 0.5s ease-out;
-  transition: background-color 0.5s ease-out;
-}
-#todoTable .todo#previousItem.is-highlighted {
-  background-color: #f0f0f0;
-}
 #todoTable .todo:focus {
   background: #e0eafa !important;
 }
 #todoTable .todo:focus .cell.itemDueDate .tags,
 #todoTable .todo:focus .cell.itemDueDate .fa-sort-down {
   display: block;
-}
-#todoTable .group {
-  font-family: FreeSansBold;
-  font-size: 1.2em;
-  min-height: 1em;
-  margin-top: 1.5em 0 0.5em 0;
-  border: none;
-}
-#todoTable .group button {
-  font-family: inherit;
-  height: auto;
-  line-height: auto;
-  padding: 0;
-  cursor: default;
-  color: #5a5a5a;
-  text-align: left;
-}
-#todoTable .group .cell {
-  margin-top: 1em;
-  padding: 0;
-}
-#todoTable .group.past button {
-  color: #ff3860;
-}
-#todoTable .group.priority button {
-  font-size: 1.1em;
-  padding: 0.15em 0.5em;
-}
-#todoTable .group.priority .cell {
-  margin-bottom: 0.5em;
-}
-#todoTable .group.projects button,
-#todoTable .group.contexts button {
-  padding: 0 0.5em;
-}
-#todoTable .group.contexts button,
-#todoTable button.contexts {
-  background: #c5ede3;
-  color: #1e6251;
-}
-#todoTable button.contexts.is-dark {
-  background: #123b31;
-  color: white;
-}
-#todoTable .group.projects button,
-#todoTable button.projects {
-  background: #f1d6f1;
-  color: #6f266f;
-}
-#todoTable button.projects.is-dark {
-  background: #491949;
-  color: white;
 }
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
@@ -1994,8 +1972,18 @@ a.button {
   text-decoration: none;
   margin: 0;
 }
+#todoTable .cell.priority {
+  width: 0.35em;
+  background: #ccc;
+  color: #666666;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
 #todoTable .cell.categories .tag {
   margin-left: 0.25em;
+}
+#todoTable .cell.checkbox {
+  flex-shrink: 0;
 }
 #todoTable .cell.checkbox i {
   font-size: 1.25em;
@@ -2010,51 +1998,21 @@ a.button {
   cursor: pointer;
   color: #5a5a5a !important;
 }
-#todoTable .cell.text button {
+#todoTable .cell.text a {
   font-size: 1.1em;
   font-family: FreeSansBold;
   height: auto;
   padding: 0.1em 0.4em;
 }
-#todoTable .cell.text .priority {
-  background: transparent;
-  color: #666666;
-  margin-right: 0.5em;
-}
-#todoTable .cell.text .priority button {
+#todoTable .cell.text a.button.priority {
   font-size: 0.9em;
-  padding: 0.1em 0.4em !important;
+  margin-right: 0.5em;
+  padding: 0;
+  color: #5a5a5a;
 }
 #todoTable .cell.text:focus-visible {
   background: #f0f0f0;
   border-radius: 0.65em;
-}
-#todoTable .cell.spacer {
-  width: 0.5em;
-  background: transparent;
-}
-#todoTable .cell.priority {
-  background: #ccc;
-  flex: 0 0 0.5em;
-}
-#todoTable .cell.priority {
-  width: 0.5em;
-  opacity: 0.5;
-}
-#todoTable .cell.priority.A {
-  background: #ff3860;
-}
-#todoTable .cell.priority.B {
-  background: #fa745e;
-}
-#todoTable .cell.priority.C {
-  background: #ffdd57;
-}
-#todoTable .cell .contexts {
-  background: #c5ede3;
-}
-#todoTable .cell .projects {
-  background: #f1d6f1;
 }
 #todoTable .cell.itemDueDate {
   color: #5a5a5a;
@@ -2095,33 +2053,6 @@ a.button {
   color: transparent !important;
   cursor: pointer;
 }
-#todoTable button.today,
-#todoTable .cell.today {
-  color: #ff3860 !important;
-}
-#todoTable button.today .tags .is-dark,
-#todoTable .cell.today .tags .is-dark {
-  background: #ff3860;
-  font-family: FreeSansBold;
-}
-#todoTable button.tomorrow,
-#todoTable .cell.tomorrow {
-  color: #fa745e !important;
-}
-#todoTable button.tomorrow .tags .is-dark,
-#todoTable .cell.tomorrow .tags .is-dark {
-  background: #fa745e;
-  font-family: FreeSansBold;
-}
-#todoTable button.past,
-#todoTable .cell.past {
-  color: #ff3860;
-}
-#todoTable button.past .tags .is-dark,
-#todoTable .cell.past .tags .is-dark {
-  background: #ff3860;
-  font-family: FreeSansBold;
-}
 #todoTable .cell:hover .tags,
 #todoTable .cell:focus .tags {
   display: block;
@@ -2129,6 +2060,97 @@ a.button {
 #todoTable .cell:hover i.fa-sort-down,
 #todoTable .cell:focus i.fa-sort-down {
   display: block;
+}
+#todoTable a.button.today,
+#todoTable .cell.today {
+  color: #ff3860 !important;
+}
+#todoTable a.button.today .tags .is-dark,
+#todoTable .cell.today .tags .is-dark {
+  background: #ff3860;
+  font-family: FreeSansBold;
+}
+#todoTable a.button.tomorrow,
+#todoTable .cell.tomorrow {
+  color: #fa745e !important;
+}
+#todoTable a.button.tomorrow .tags .is-dark,
+#todoTable .cell.tomorrow .tags .is-dark {
+  background: #fa745e;
+  font-family: FreeSansBold;
+}
+#todoTable a.button.past,
+#todoTable .cell.past {
+  color: #ff3860 !important;
+}
+#todoTable a.button.past .tags .is-dark,
+#todoTable .cell.past .tags .is-dark {
+  background: #ff3860;
+  font-family: FreeSansBold;
+}
+#todoTable .group {
+  font-family: FreeSansBold;
+  font-size: 1.2em;
+  min-height: 1em;
+  margin-top: 1.5em 0 0.5em 0;
+  border: none;
+}
+#todoTable .group a.button {
+  font-family: inherit;
+  height: auto;
+  line-height: auto;
+  padding: 0;
+  cursor: default;
+  color: #5a5a5a;
+  text-align: left;
+  background: none;
+}
+#todoTable .group .cell {
+  margin-top: 1em;
+  padding: 0;
+}
+#todoTable .group.past a.button {
+  color: #ff3860;
+}
+#todoTable .group.priority a {
+  font-size: 1.1em;
+  padding: 0.15em 0.5em;
+  background: #ccc;
+}
+#todoTable .group.priority .cell {
+  margin-bottom: 0.5em;
+}
+#todoTable .group.projects a.button,
+#todoTable .group.contexts a.button {
+  padding: 0 0.5em;
+}
+
+#todoContext {
+  display: none;
+  position: fixed;
+  z-index: 40;
+  border-radius: 0.65em;
+  box-shadow: 0 0 1em #ccc;
+}
+#todoContext a {
+  font-size: 0.9em;
+  color: #3273dc;
+  padding: 0.75em 1.5em;
+}
+#todoContext a.dropdown-item:first-child {
+  border-top-left-radius: 0.65em;
+  border-top-right-radius: 0.65em;
+}
+#todoContext a.dropdown-item:last-child {
+  border-bottom-left-radius: 0.65em;
+  border-bottom-right-radius: 0.65em;
+}
+#todoContext a.dropdown-item:focus,
+#todoContext a.dropdown-item:hover {
+  background-color: #f0f0f0 !important;
+}
+#todoContext .card-content {
+  padding: 0;
 }
 
 .toggle {
