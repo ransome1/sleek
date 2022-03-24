@@ -18,11 +18,12 @@ const i18nextOptions = {
     loadPath: path.join(__dirname, "../locales/{{lng}}/{{ns}}.json"),
     addPath: path.join(__dirname, "../locales/{{lng}}/{{ns}}.missing.json")
   },
-  saveMissing: true
+  saveMissing: true,
+  saveMissingTo: 'current'
 };
+
 i18next
 .use(i18nextBackend)
 .init(i18nextOptions);
-i18next.changeLanguage();
 
 module.exports = i18next;

@@ -102,7 +102,7 @@ body.dark nav svg {
 }
 body.dark nav ul li.logo {
   color: #f0f0f0 !important;
-  background: none;
+  border: none !important;
 }
 body.dark nav ul li a {
   color: #f0f0f0 !important;
@@ -125,6 +125,32 @@ body.dark nav ul:nth-child(2) #versionNumber {
 body.dark nav ul:nth-child(2) #versionNumber:hover {
   color: #CCCDCF !important;
 }
+body.dark a.contexts {
+  color: #c5ede3 !important;
+  background: #1e6251 !important;
+}
+body.dark a.contexts span.tag {
+  color: #123b31 !important;
+  background: #c9eee5 !important;
+}
+body.dark a.contexts.is-dark,
+body.dark a.contexts:focus-visible {
+  background: #123b31 !important;
+  color: white !important;
+}
+body.dark a.projects {
+  color: #f1d6f1 !important;
+  background: #6f266f !important;
+}
+body.dark a.projects span.tag {
+  color: #491949 !important;
+  background: #f2daf2 !important;
+}
+body.dark a.projects.is-dark,
+body.dark a.projects:focus-visible {
+  background: #491949 !important;
+  color: white !important;
+}
 body.dark #drawerContainer .zoom svg {
   color: white !important;
 }
@@ -138,8 +164,8 @@ body.dark #todoTableSearchContainer input[type=search]::-webkit-search-cancel-bu
   background-color: #f0f0f0;
 }
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo {
-  background: #CCCDCF !important;
-  color: #212224 !important;
+  background: #212224 !important;
+  color: #f0f0f0 !important;
 }
 body.dark #todoTableSearchContainer #todoTableSearchAddTodo i {
   color: inherit;
@@ -166,11 +192,15 @@ body.dark #todoTable .todo:hover .cell button,
 body.dark #todoTable .todo.due button {
   color: #f0f0f0;
 }
-body.dark #todoTable .group.due {
+body.dark #todoTable .group a.button {
   color: #ebebeb;
 }
-body.dark #todoTable .group.due button {
+body.dark #todoTable .group a.button a.button {
   color: inherit;
+}
+body.dark #todoTable .is-white {
+  color: #CCCDCF;
+  background: none;
 }
 body.dark #todoTable .todo {
   border-color: #3B3B3B;
@@ -204,36 +234,16 @@ body.dark #todoTable .todo .cell.itemDueDate i {
 body.dark #todoTable .todo .cell.itemDueDate i.fa-sort-down {
   color: #5a5a5a;
 }
-body.dark #todoTable .todo .cell.itemDueDate.isToday,
-body.dark #todoTable .todo .cell.itemDueDate.isPast {
+body.dark #todoTable .todo .cell.itemDueDate.today,
+body.dark #todoTable .todo .cell.itemDueDate.past {
   color: #ff3860;
 }
-body.dark #todoTable .todo .cell.itemDueDate.isToday i,
-body.dark #todoTable .todo .cell.itemDueDate.isPast i {
+body.dark #todoTable .todo .cell.itemDueDate.today i,
+body.dark #todoTable .todo .cell.itemDueDate.past i {
   color: inherit;
 }
-body.dark #todoTable .todo .cell.itemDueDate.isTomorrow i {
+body.dark #todoTable .todo .cell.itemDueDate.tomorrow i {
   color: #fa745e !important;
-}
-body.dark #todoTable .todo .cell a.contexts {
-  color: #c5ede3 !important;
-  background: #1e6251 !important;
-}
-body.dark #todoTable .todo .cell a.contexts.is-dark {
-  background: #123b31 !important;
-  color: white;
-}
-body.dark #todoTable .todo .cell a.projects {
-  color: #f1d6f1 !important;
-  background: #6f266f !important;
-}
-body.dark #todoTable .todo .cell a.projects.is-dark {
-  background: #491949 !important;
-  color: white;
-}
-body.dark #todoTable .todo .cell .is-white {
-  color: #CCCDCF;
-  background: none;
 }
 body.dark #todoTable .todo:focus {
   background: #3a3a3a !important;
@@ -348,40 +358,6 @@ body.dark #fileTabBar ul li.is-highlighted {
 }
 body.dark #fileTabBar ul li.is-highlighted i {
   color: #212224;
-}
-body.dark .contexts button {
-  color: #c5ede3;
-  background: #247561;
-}
-body.dark .contexts button span.tag {
-  color: #123b31 !important;
-  background: #c9eee5;
-}
-body.dark .contexts button.is-dark,
-body.dark .contexts button:focus-visible {
-  background: #123b31 !important;
-  color: white;
-}
-body.dark .projects button {
-  color: #f1d6f1;
-  background: #822c82;
-}
-body.dark .projects button span.tag {
-  color: #491949 !important;
-  background: #f2daf2;
-}
-body.dark .projects button.is-dark,
-body.dark .projects button:focus-visible {
-  background: #491949 !important;
-  color: white;
-}
-body.dark .priority button:not(.A):not(.B):not(.C) {
-  color: white;
-  background: #ccc;
-}
-body.dark .priority button.is-dark:not(.A):not(.B):not(.C) {
-  color: white;
-  background: #b3b3b3 !important;
 }
 body.dark .toggle .switch .slider {
   background-color: #5a5a5a;
@@ -581,6 +557,7 @@ a:hover,
 a:active,
 a:focus {
   color: #5a5a5a;
+  box-shadow: none !important;
 }
 
 .is-active {
@@ -593,6 +570,11 @@ a:focus {
 
 .is-greyed-out {
   filter: opacity(75%) grayscale(100%);
+}
+
+a.button.is-greyed-out {
+  cursor: not-allowed;
+  pointer-events: all;
 }
 
 .card {
@@ -660,8 +642,9 @@ textarea {
   outline: none !important;
 }
 
-input::placeholder {
-  color: #5a5a5a;
+input::placeholder,
+textarea::placeholder {
+  color: #ccc;
 }
 
 input[type=text],
@@ -669,49 +652,6 @@ input[type=search],
 textarea {
   border-radius: 1.5em;
   background-color: #f0f0f0 !important;
-}
-
-.inputWrapper {
-  position: relative;
-  padding-top: 0.5em;
-}
-.inputWrapper input[type=search],
-.inputWrapper input[type=text],
-.inputWrapper textarea {
-  padding: 2em 1em 1.2em 1.5em;
-}
-.inputWrapper textarea {
-  padding-bottom: 0.75em;
-}
-.inputWrapper input::placeholder,
-.inputWrapper textarea::placeholder {
-  color: #ccc;
-}
-.inputWrapper label {
-  cursor: pointer;
-  font-size: 0.75em;
-  position: absolute;
-  top: 1.3em;
-  left: 2.5em;
-  z-index: 65;
-}
-.inputWrapper .todoTableSearchQuestionmark {
-  display: none;
-}
-
-.is-focused .inputWrapper label,
-.is-focused .inputWrapper i,
-.inputWrapper.is-focused label,
-.inputWrapper.is-focused i {
-  color: #3273dc;
-}
-.is-focused .inputWrapper .fa-search,
-.inputWrapper.is-focused .fa-search {
-  display: none;
-}
-.is-focused .inputWrapper .todoTableSearchQuestionmark,
-.inputWrapper.is-focused .todoTableSearchQuestionmark {
-  display: block;
 }
 
 input[type=number] {
@@ -1043,6 +983,7 @@ nav ul li.logo {
   color: white !important;
   background: #5a5a5a;
   cursor: default;
+  background: linear-gradient(0.33turn, #1b5551, #813e93);
 }
 nav ul:nth-child(2) {
   height: auto;
@@ -1104,6 +1045,10 @@ nav ul:nth-child(2):hover #versionNumber {
   animation-delay: 0.5s;
 }
 
+#todoTableSearchContainer.is-focused i.fa-search {
+  color: #3273dc;
+}
+
 #todoTableSearchContainer {
   width: 100%;
   float: left;
@@ -1117,7 +1062,7 @@ nav ul:nth-child(2):hover #versionNumber {
 #todoTableSearchContainer #todoTableSearchAddTodo {
   display: none;
   position: absolute;
-  top: 2.35em;
+  top: 1.8em;
   right: 7em;
   color: #3273dc;
   background: white;
@@ -1129,8 +1074,8 @@ nav ul:nth-child(2):hover #versionNumber {
 #todoTableSearchContainer #todoTableSearchAddTodo:hover,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus,
 #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
-  color: #212224 !important;
-  background: white !important;
+  color: #f0f0f0 !important;
+  background: #3273dc !important;
 }
 #todoTableSearchContainer input[type=search] {
   padding-left: 3.2em;
@@ -1144,45 +1089,28 @@ nav ul:nth-child(2):hover #versionNumber {
   -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
   cursor: pointer;
-  margin-top: -0.7em;
 }
 #todoTableSearchContainer label {
-  top: 1.2em;
-  left: 7.5em;
+  cursor: pointer;
+  font-size: 0.75em;
+  position: absolute;
+  top: 0.5em;
+  left: 2.5em;
+  z-index: 65;
 }
-#todoTableSearchContainer i.fa-search,
-#todoTableSearchContainer .todoTableSearchQuestionmark {
+#todoTableSearchContainer i.fa-search {
   font-size: 1.3em;
   line-height: 1;
   position: absolute;
-  top: 0.7em;
+  top: 0.4em;
   left: 2.5em;
   z-index: 70;
   padding: 0.75em 0;
 }
 
 @media screen and (max-width: 992px), screen and (max-height: 650px) {
-  .inputWrapper {
-    position: relative;
-    padding-top: 0.5em;
-  }
-  .inputWrapper input[type=search],
-.inputWrapper input[type=text] {
-    padding: 0.75em 1em 0.75em 1.5em;
-  }
-  .inputWrapper input::placeholder,
-.inputWrapper textarea::placeholder {
-    color: #ccc;
-  }
-  .inputWrapper label {
-    display: none;
-  }
-
   #modalForm textarea {
     padding: 0.75em !important;
-  }
-  #modalForm #modalFormInputResize {
-    top: 1.65em;
   }
 
   .modal.content .modal-card {
@@ -1197,25 +1125,17 @@ nav ul:nth-child(2):hover #versionNumber {
     padding: 0.25em 0.5em;
   }
 
-  #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
-    margin-top: 0;
-  }
-  #todoTableSearchContainer i.fa-search,
-#todoTableSearchContainer .todoTableSearchQuestionmark {
-    top: 0.37em;
-  }
-  #todoTableSearchContainer #todoTableSearchAddTodo {
-    top: 1.7em;
-  }
-  #todoTableSearchContainer #todoTableSearchAddTodo i {
-    display: none;
-  }
-
   #todoTable {
     padding: 0 1.5em 1.5em 1.5em;
   }
   #todoTable .group:first-child {
     margin-top: 0;
+  }
+  #todoTable .group a {
+    font-size: 0.8em !important;
+  }
+  #todoTable .group .cell {
+    margin-bottom: 0;
   }
   #todoTable .todo .cell {
     padding: 0.25em 0;
@@ -1223,6 +1143,7 @@ nav ul:nth-child(2):hover #versionNumber {
   #todoTable .todo .cell .text {
     margin: 0;
   }
+
   nav ul {
     width: 3.5em;
   }
@@ -1244,22 +1165,22 @@ nav ul li.logo {
 #drawerContainer .drawer .is-4 {
     font-size: 1.1em;
   }
-  #autoCompleteContainer .priority button,
-#drawerContainer .drawer .priority button {
+  #autoCompleteContainer a.button.priority,
+#drawerContainer .drawer a.button.priority {
     font-size: 1.2em;
   }
-  #autoCompleteContainer .priority button .tag,
-#drawerContainer .drawer .priority button .tag {
+  #autoCompleteContainer a.button.priority .tag,
+#drawerContainer .drawer a.button.priority .tag {
     font-size: 0.65em;
   }
-  #autoCompleteContainer button,
-#drawerContainer .drawer button {
+  #autoCompleteContainer a.button,
+#drawerContainer .drawer a.button {
     font-size: 0.9em;
     margin: 0 0.3em 0.3em 0 !important;
     padding: 0.5em 0.7em;
   }
-  #autoCompleteContainer button .tag,
-#drawerContainer .drawer button .tag {
+  #autoCompleteContainer a.button .tag,
+#drawerContainer .drawer a.button .tag {
     width: auto;
     height: auto;
     padding: 0 0.5em;
@@ -1277,32 +1198,19 @@ nav ul li.logo {
 }
 @media screen and (max-width: 500px) {
   .modal .modal-content {
+    width: 95% !important;
     padding: 0.5em !important;
   }
   .modal .modal-content .card-content {
     padding: 0.5em !important;
   }
-}
-body.compact .inputWrapper {
-  position: relative;
-  padding-top: 0.5em;
-}
-body.compact .inputWrapper input[type=search],
-body.compact .inputWrapper input[type=text] {
-  padding: 0.75em 1em 0.75em 1.5em;
-}
-body.compact .inputWrapper input::placeholder,
-body.compact .inputWrapper textarea::placeholder {
-  color: #ccc;
-}
-body.compact .inputWrapper label {
-  display: none;
+  .modal .modal-content .card-content #modalFormInputResize {
+    top: 1.35em !important;
+    right: 1.8em !important;
+  }
 }
 body.compact #modalForm textarea {
   padding: 0.75em !important;
-}
-body.compact #modalForm #modalFormInputResize {
-  top: 1.65em;
 }
 body.compact .modal.content .modal-card {
   padding: 1em !important;
@@ -1313,24 +1221,17 @@ body.compact table tr td {
 body.compact #sortByContainer li {
   padding: 0.25em 0.5em;
 }
-body.compact #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
-  margin-top: 0;
-}
-body.compact #todoTableSearchContainer i.fa-search,
-body.compact #todoTableSearchContainer .todoTableSearchQuestionmark {
-  top: 0.37em;
-}
-body.compact #todoTableSearchContainer #todoTableSearchAddTodo {
-  top: 1.7em;
-}
-body.compact #todoTableSearchContainer #todoTableSearchAddTodo i {
-  display: none;
-}
 body.compact #todoTable {
   padding: 0 1.5em 1.5em 1.5em;
 }
 body.compact #todoTable .group:first-child {
   margin-top: 0;
+}
+body.compact #todoTable .group a {
+  font-size: 0.8em !important;
+}
+body.compact #todoTable .group .cell {
+  margin-bottom: 0;
 }
 body.compact #todoTable .todo .cell {
   padding: 0.25em 0;
@@ -1358,22 +1259,22 @@ body.compact #autoCompleteContainer .is-4,
 body.compact #drawerContainer .drawer .is-4 {
   font-size: 1.1em;
 }
-body.compact #autoCompleteContainer .priority button,
-body.compact #drawerContainer .drawer .priority button {
+body.compact #autoCompleteContainer a.button.priority,
+body.compact #drawerContainer .drawer a.button.priority {
   font-size: 1.2em;
 }
-body.compact #autoCompleteContainer .priority button .tag,
-body.compact #drawerContainer .drawer .priority button .tag {
+body.compact #autoCompleteContainer a.button.priority .tag,
+body.compact #drawerContainer .drawer a.button.priority .tag {
   font-size: 0.65em;
 }
-body.compact #autoCompleteContainer button,
-body.compact #drawerContainer .drawer button {
+body.compact #autoCompleteContainer a.button,
+body.compact #drawerContainer .drawer a.button {
   font-size: 0.9em;
   margin: 0 0.3em 0.3em 0 !important;
   padding: 0.5em 0.7em;
 }
-body.compact #autoCompleteContainer button .tag,
-body.compact #drawerContainer .drawer button .tag {
+body.compact #autoCompleteContainer a.button .tag,
+body.compact #drawerContainer .drawer a.button .tag {
   width: auto;
   height: auto;
   padding: 0 0.5em;
@@ -1388,113 +1289,144 @@ body.compact #autoCompleteContainer h4 {
   margin-top: 0;
 }
 
-.contexts button,
-.contexts button:hover {
-  background: #c5ede3;
-  color: #1e6251;
-}
-.contexts button span.tag,
-.contexts button:hover span.tag {
-  color: white;
-  background: #247561;
-}
-.contexts button:focus-visible,
-.contexts button.is-dark:focus-visible {
-  background: #247561 !important;
-  color: white;
-}
-.contexts button.is-dark,
-.contexts button.is-dark:hover,
-.contexts button.is-dark.is-hovered {
-  background: #184e41;
-  color: white;
+a.button {
+  font-size: 1em;
+  border: none;
+  border-radius: 0.65em;
+  outline: none !important;
+  box-shadow: 0;
+  padding: 0.55em 0.75em;
+  cursor: pointer;
 }
 
-.projects button,
-.projects button:hover {
-  background: #f1d6f1;
-  color: #6f266f;
+#autoCompleteContainer a.button {
+  margin: 0 0.5em 0.5em 0;
 }
-.projects button span.tag,
-.projects button:hover span.tag {
+
+a.contexts,
+a.contexts:hover {
+  background: #c5ede3 !important;
+  color: #1e6251 !important;
+}
+a.contexts span.tag,
+a.contexts:hover span.tag {
+  color: white;
+  background: #247561 !important;
+}
+
+a.contexts:focus-visible,
+a.contexts.is-dark:focus-visible {
+  background: #247561 !important;
+  color: white !important;
+}
+
+a.contexts.is-dark,
+a.contexts.is-dark:hover,
+a.contexts.is-dark.is-hovered {
+  background: #184e41 !important;
+  color: white !important;
+}
+
+a.projects,
+a.projects:hover {
+  background: #f1d6f1 !important;
+  color: #6f266f !important;
+}
+a.projects span.tag,
+a.projects:hover span.tag {
   color: white;
   background: #822c82;
 }
-.projects button:focus-visible,
-.projects button.is-dark:focus-visible {
+
+a.projects:focus-visible,
+a.projects.is-dark:focus-visible {
   background: #822c82 !important;
   color: white;
 }
-.projects button.is-dark,
-.projects button.is-dark:hover,
-.projects button.is-dark.is-hovered {
-  background: #5c1f5c;
-  color: white;
+
+a.projects.is-dark,
+a.projects.is-dark:hover,
+a.projects.is-dark.is-hovered {
+  background: #5c1f5c !important;
+  color: white !important;
 }
 
-.priority button {
+a.priority {
   height: auto;
   font-size: 1.2em;
   font-family: FreeSansBold;
   background: #ccc;
-  color: white;
+  color: white !important;
   padding: 0.1em 0.5em !important;
 }
-.priority button span.tag {
+a.priority span.tag {
   color: #5a5a5a;
 }
-.priority button.is-dark,
-.priority button.is-dark:hover,
-.priority button.is-dark.is-hovered,
-.priority button:focus-visible {
+
+a.priority.is-dark,
+a.priority.is-dark:hover,
+a.priority.is-dark.is-hovered,
+a.priority:focus-visible {
   background: #999999;
 }
-.priority button.A {
-  background: #ff3860;
+
+a.priority.A,
+.cell.priority.A {
+  background: #ff3860 !important;
   color: #ffebef !important;
 }
-.priority button.A span.tag {
+a.priority.A span.tag,
+.cell.priority.A span.tag {
   color: #ff3860 !important;
   background: #ffebef;
 }
-.priority button.A.is-dark,
-.priority button.A:focus-visible {
+
+a.priority.A.is-dark,
+a.priority.A:focus-visible {
   background: #d1002a !important;
 }
-.priority button.A.is-dark span.tag,
-.priority button.A:focus-visible span.tag {
+a.priority.A.is-dark span.tag,
+a.priority.A:focus-visible span.tag {
   color: #d1002a !important;
 }
-.priority button.B {
+
+a.priority.B,
+.cell.priority.B {
   color: white !important;
-  background: #fa745e;
+  background: #fa745e !important;
 }
-.priority button.B span.tag {
+a.priority.B span.tag,
+.cell.priority.B span.tag {
   color: #fa745e !important;
   background: #fff4f2;
 }
-.priority button.B.is-dark,
-.priority button.B:focus-visible {
+
+a.priority.B.is-dark,
+a.priority.B:focus-visible {
   background: #eb2707 !important;
 }
-.priority button.B.is-dark span.tag,
-.priority button.B:focus-visible span.tag {
+a.priority.B.is-dark span.tag,
+a.priority.B:focus-visible span.tag {
   color: #eb2707 !important;
 }
-.priority button.C {
+
+a.priority.C,
+.cell.priority.C {
   color: white !important;
-  background: #ffdd57;
+  background: #ffdd57 !important;
 }
-.priority button.C span.tag {
+a.priority.C span.tag,
+.cell.priority.C span.tag {
   color: #ffdd57 !important;
   background: #fffcf0;
 }
-.priority button.C.is-dark,
-.priority button.C:focus-visible {
+
+a.priority.C.is-dark,
+a.priority.C:focus-visible {
   background: #f0c000 !important;
 }
-.priority button.C.is-dark span.tag,
-.priority button.C:focus-visible span.tag {
+a.priority.C.is-dark span.tag,
+a.priority.C:focus-visible span.tag {
   color: #f0c000 !important;
 }
 
@@ -1590,15 +1522,15 @@ body.compact #autoCompleteContainer h4 {
 #drawerContainer .drawer #sortByContainer li.drag-sort-active {
   border-left: 0.2em solid #3273dc;
 }
-#drawerContainer .drawer .priority button {
+#drawerContainer .drawer .priority a {
   font-size: 1.4em;
 }
-#drawerContainer .drawer button {
+#drawerContainer .drawer a {
   position: relative;
   margin: 0 0.5rem 0.5rem 0;
   padding: 0.5em 0.75em;
 }
-#drawerContainer .drawer button span.tag {
+#drawerContainer .drawer a span.tag {
   height: 1.6em;
   font-family: FreeSansBold;
   position: absolute;
@@ -1607,7 +1539,7 @@ body.compact #autoCompleteContainer h4 {
   z-index: 35;
   padding: 0 0.5em;
 }
-#drawerContainer .drawer button.is-greyed-out .tag {
+#drawerContainer .drawer a.is-greyed-out .tag {
   display: none;
 }
 #drawerContainer .drawer section {
@@ -1634,8 +1566,13 @@ body.compact #autoCompleteContainer h4 {
   white-space: pre;
 }
 #drawerContainer .drawer section .todoFilterHint {
-  cursor: pointer;
-  opacity: 0.5;
+  cursor: help;
+  opacity: 0.4;
+}
+#drawerContainer .drawer section .todoFilterHint code {
+  color: white !important;
+  background: #2d2d2d !important;
+  border-radius: 0.65em;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
@@ -1685,10 +1622,10 @@ body.compact #autoCompleteContainer h4 {
   display: flex !important;
 }
 
-.modal {
-  padding: 1em;
-}
-.modal .modal-content {
+.modal .modal-content,
+.modal .modal-card {
+  width: 85%;
+  max-width: 900px;
   margin: 0;
 }
 
@@ -1805,19 +1742,18 @@ body.compact #autoCompleteContainer h4 {
 
 #modalForm #modalFormInput {
   z-index: 60;
-  padding-right: 3em;
+  padding-right: 2em !important;
 }
 #modalForm textarea {
   min-height: 5.5em;
   overflow: hidden;
   resize: none;
-  padding-top: 1.5em;
 }
 #modalForm #modalFormInputResize {
   position: absolute;
   z-index: 60;
-  top: 1.75em;
-  right: 1.2em;
+  top: 2.3em;
+  right: 2.3em;
   cursor: pointer;
   pointer-events: all;
 }
@@ -1917,33 +1853,6 @@ body.compact #autoCompleteContainer h4 {
   margin: 0.25em 0;
 }
 
-#todoContext {
-  display: none;
-  position: fixed;
-  z-index: 40;
-  border-radius: 0.65em;
-  box-shadow: 0 0 1em #ccc;
-}
-#todoContext a {
-  font-size: 0.9em;
-  color: #3273dc;
-  padding: 0.75em 1.5em;
-}
-#todoContext a.dropdown-item:first-child {
-  border-top-left-radius: 0.65em;
-  border-top-right-radius: 0.65em;
-}
-#todoContext a.dropdown-item:last-child {
-  border-bottom-left-radius: 0.65em;
-  border-bottom-right-radius: 0.65em;
-}
-#todoContext a.dropdown-item:focus {
-  background-color: #f0f0f0 !important;
-}
-#todoContext .card-content {
-  padding: 0;
-}
-
 #todoTableWrapper::-webkit-scrollbar {
   background-color: transparent;
   width: 0.8em;
@@ -1973,6 +1882,63 @@ body.compact #autoCompleteContainer h4 {
   float: left;
   display: none;
   padding: 0 2.5em 1.5em 2.5em;
+  /*.todo#previousItem {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+  .todo#previousItem.is-highlighted {
+    background-color: $almost-white;
+  }*/
+  /********************/
+  /*** SINGLE CELLS ***/
+  /********************/
+  /********************/
+  /*** COLORING ***/
+  /********************/
+  /*  .group.contexts a.button,
+    a.tag.contexts {
+      background: $sleek-contexts-button;
+      color: darken($sleek-contexts-button, 60%);
+    }
+    a.tag.contexts.is-dark {
+      background: darken($sleek-contexts-button, 70%);
+      color: white;
+    }
+    .group.projects a.button,
+    a.tag.projects {
+      background: $sleek-projects-button;
+      color: darken($sleek-projects-button, 60%);
+    }
+    a.tag.projects.is-dark {
+      background: darken($sleek-projects-button, 70%);
+      color: white;
+    }*/
+  /*  .cell .priority a.A,
+    .group.priority .A,
+    .cell.priority.A {
+      background: $has-text-danger;
+    }
+    .cell .priority a.B,
+    .group.priority a.B,
+    .cell.priority.B {
+      background: $has-text-attention;
+    }
+    .cell .priority a.C,
+    .group.priority a.C,
+    .cell.priority.C {
+      background: $has-text-warning;
+    }*/
+  /*.cell .contexts {
+    background: $sleek-contexts-button;
+  }
+  .cell .projects {
+    background: $sleek-projects-button;
+  }*/
+  /********************/
+  /*** GROUP HEADER ***/
+  /********************/
 }
 #todoTable .todo {
   width: 100%;
@@ -1983,46 +1949,12 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .todo:last-child {
   border: none;
 }
-#todoTable .todo#previousItem {
-  -webkit-transition: background-color 0.5s ease-out;
-  -moz-transition: background-color 0.5s ease-out;
-  -o-transition: background-color 0.5s ease-out;
-  transition: background-color 0.5s ease-out;
-}
-#todoTable .todo#previousItem.is-highlighted {
-  background-color: #f0f0f0;
-}
 #todoTable .todo:focus {
   background: #e0eafa !important;
 }
 #todoTable .todo:focus .cell.itemDueDate .tags,
 #todoTable .todo:focus .cell.itemDueDate .fa-sort-down {
   display: block;
-}
-#todoTable .group {
-  font-family: FreeSansBold;
-  font-size: 1.2em;
-  min-height: 1em;
-  margin-top: 1.5em 0 0.5em 0;
-  border: none;
-}
-#todoTable .group button {
-  font-family: inherit;
-  height: auto;
-  line-height: auto;
-  padding: 0 0.5em;
-  cursor: default;
-}
-#todoTable .group .cell {
-  margin-top: 1em;
-  padding: 0;
-}
-#todoTable .group.priority button {
-  font-size: 1.1em;
-  padding: 0.15em 0.5em;
-}
-#todoTable .group.priority .cell {
-  margin-bottom: 0.5em;
 }
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
@@ -2040,20 +1972,18 @@ body.compact #autoCompleteContainer h4 {
   text-decoration: none;
   margin: 0;
 }
-#todoTable .cell a.tag.projects {
-  background: #f1d6f1;
-}
-#todoTable .cell a.tag.projects.is-dark {
-  background: #5c1f5c !important;
-}
-#todoTable .cell a.tag.contexts {
-  background: #c5ede3;
-}
-#todoTable .cell a.tag.contexts.is-dark {
-  background: #184e41 !important;
+#todoTable .cell.priority {
+  width: 0.35em;
+  background: #ccc;
+  color: #666666;
+  opacity: 0.5;
+  flex-shrink: 0;
 }
 #todoTable .cell.categories .tag {
   margin-left: 0.25em;
+}
+#todoTable .cell.checkbox {
+  flex-shrink: 0;
 }
 #todoTable .cell.checkbox i {
   font-size: 1.25em;
@@ -2065,55 +1995,24 @@ body.compact #autoCompleteContainer h4 {
 }
 #todoTable .cell.text {
   width: auto;
-  max-width: 90%;
   cursor: pointer;
   color: #5a5a5a !important;
 }
-#todoTable .cell.text button {
+#todoTable .cell.text a {
   font-size: 1.1em;
   font-family: FreeSansBold;
   height: auto;
   padding: 0.1em 0.4em;
 }
-#todoTable .cell.text .priority {
-  background: transparent;
-  color: #666666;
-  margin-right: 0.5em;
-}
-#todoTable .cell.text .priority button {
+#todoTable .cell.text a.button.priority {
   font-size: 0.9em;
-  padding: 0.1em 0.4em !important;
+  margin-right: 0.5em;
+  padding: 0;
+  color: #5a5a5a;
 }
 #todoTable .cell.text:focus-visible {
   background: #f0f0f0;
   border-radius: 0.65em;
-}
-#todoTable .cell.spacer {
-  width: 0.5em;
-  background: transparent;
-}
-#todoTable .cell.priority {
-  background: #ccc;
-  flex: 0 0 0.5em;
-}
-#todoTable .cell.priority {
-  width: 0.5em;
-  opacity: 0.5;
-}
-#todoTable .cell.priority.A {
-  background: #ff3860;
-}
-#todoTable .cell.priority.B {
-  background: #fa745e;
-}
-#todoTable .cell.priority.C {
-  background: #ffdd57;
-}
-#todoTable .cell .contexts {
-  background: #c5ede3;
-}
-#todoTable .cell .projects {
-  background: #f1d6f1;
 }
 #todoTable .cell.itemDueDate {
   color: #5a5a5a;
@@ -2142,32 +2041,17 @@ body.compact #autoCompleteContainer h4 {
   background: #5a5a5a;
   font-family: FreeSansBold;
 }
-#todoTable .cell.isToday,
-#todoTable .cell.isToday button {
-  color: #ff3860;
-}
-#todoTable .cell.isToday .tags .is-dark,
-#todoTable .cell.isToday button .tags .is-dark {
-  background: #ff3860;
-  font-family: FreeSansBold;
-}
-#todoTable .cell.isTomorrow,
-#todoTable .cell.isTomorrow button {
-  color: #fa745e;
-}
-#todoTable .cell.isTomorrow .tags .is-dark,
-#todoTable .cell.isTomorrow button .tags .is-dark {
-  background: #fa745e;
-  font-family: FreeSansBold;
-}
-#todoTable .cell.isPast,
-#todoTable .cell.isPast button {
-  color: #ff3860;
-}
-#todoTable .cell.isPast .tags .is-dark,
-#todoTable .cell.isPast button .tags .is-dark {
-  background: #ff3860;
-  font-family: FreeSansBold;
+#todoTable .cell.itemDueDate .transparentInput {
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  color: transparent !important;
+  cursor: pointer;
 }
 #todoTable .cell:hover .tags,
 #todoTable .cell:focus .tags {
@@ -2176,6 +2060,97 @@ body.compact #autoCompleteContainer h4 {
 #todoTable .cell:hover i.fa-sort-down,
 #todoTable .cell:focus i.fa-sort-down {
   display: block;
+}
+#todoTable a.button.today,
+#todoTable .cell.today {
+  color: #ff3860 !important;
+}
+#todoTable a.button.today .tags .is-dark,
+#todoTable .cell.today .tags .is-dark {
+  background: #ff3860;
+  font-family: FreeSansBold;
+}
+#todoTable a.button.tomorrow,
+#todoTable .cell.tomorrow {
+  color: #fa745e !important;
+}
+#todoTable a.button.tomorrow .tags .is-dark,
+#todoTable .cell.tomorrow .tags .is-dark {
+  background: #fa745e;
+  font-family: FreeSansBold;
+}
+#todoTable a.button.past,
+#todoTable .cell.past {
+  color: #ff3860 !important;
+}
+#todoTable a.button.past .tags .is-dark,
+#todoTable .cell.past .tags .is-dark {
+  background: #ff3860;
+  font-family: FreeSansBold;
+}
+#todoTable .group {
+  font-family: FreeSansBold;
+  font-size: 1.2em;
+  min-height: 1em;
+  margin-top: 1.5em 0 0.5em 0;
+  border: none;
+}
+#todoTable .group a.button {
+  font-family: inherit;
+  height: auto;
+  line-height: auto;
+  padding: 0;
+  cursor: default;
+  color: #5a5a5a;
+  text-align: left;
+  background: none;
+}
+#todoTable .group .cell {
+  margin-top: 1em;
+  padding: 0;
+}
+#todoTable .group.past a.button {
+  color: #ff3860;
+}
+#todoTable .group.priority a {
+  font-size: 1.1em;
+  padding: 0.15em 0.5em;
+  background: #ccc;
+}
+#todoTable .group.priority .cell {
+  margin-bottom: 0.5em;
+}
+#todoTable .group.projects a.button,
+#todoTable .group.contexts a.button {
+  padding: 0 0.5em;
+}
+
+#todoContext {
+  display: none;
+  position: fixed;
+  z-index: 40;
+  border-radius: 0.65em;
+  box-shadow: 0 0 1em #ccc;
+}
+#todoContext a {
+  font-size: 0.9em;
+  color: #3273dc;
+  padding: 0.75em 1.5em;
+}
+#todoContext a.dropdown-item:first-child {
+  border-top-left-radius: 0.65em;
+  border-top-right-radius: 0.65em;
+}
+#todoContext a.dropdown-item:last-child {
+  border-bottom-left-radius: 0.65em;
+  border-bottom-right-radius: 0.65em;
+}
+#todoContext a.dropdown-item:focus,
+#todoContext a.dropdown-item:hover {
+  background-color: #f0f0f0 !important;
+}
+#todoContext .card-content {
+  padding: 0;
 }
 
 .toggle {
@@ -2241,7 +2216,6 @@ body.compact #autoCompleteContainer h4 {
 }
 
 .datepicker {
-  display: none;
   z-index: 60;
 }
 .datepicker .datepicker-cell {
@@ -2266,6 +2240,10 @@ body.compact #autoCompleteContainer h4 {
   color: #3273dc;
 }
 
+.datepicker.datepicker-inline {
+  position: fixed;
+}
+
 .datepicker.active {
   display: block;
 }
@@ -2287,12 +2265,8 @@ body.compact #autoCompleteContainer h4 {
   display: inline-block;
   border-radius: 0.65em;
   background-color: #fff;
-}
-
-.datepicker-dropdown .datepicker-picker {
   box-shadow: 0 0 1em rgba(10, 10, 10, 0.1), 0 0 1em rgba(10, 10, 10, 0.1);
 }
-
 .datepicker-picker span {
   display: block;
   flex: 1;

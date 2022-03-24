@@ -17,11 +17,11 @@ contextBridge.exposeInMainWorld(
         "update-badge",
         "triggerFunction",
         "restart",
-        "setTheme",
         "closeWindow",
-        "changeWindowTitle"
+        "changeWindowTitle",
+        "darkmode"
       ];
-      if (validChannels.includes(channel)) {
+      if(validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
       }
     },
@@ -32,11 +32,11 @@ contextBridge.exposeInMainWorld(
         "getContent",
         "userData",
         "appData",
-        "refresh",
-        "triggerFunction",
-        "setTheme"
+        "startFileWatcher",
+        "buildTable",
+        "triggerFunction"
       ];
-      if (validChannels.includes(channel)) {
+      if(validChannels.includes(channel)) {
         ipcRenderer.on(channel, (event, ...args) => func(...args));
       }
     }

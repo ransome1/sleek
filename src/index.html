@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title id="title">sleek</title>
+    <title>sleek</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css" rel="stylesheet">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/brands.css" rel="stylesheet">
@@ -27,7 +27,7 @@
             <li><a href="#" id="navBtnAddTodo" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li><a href="#" id="navBtnFilter" class="drawerTrigger" data-drawer="filterDrawer" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li><a href="#" id="navBtnView" class="drawerTrigger" data-drawer="viewDrawer"tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
-            <li><a href="#" id="btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
+            <li><a href="#" id="navBtnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
           </ul>
           <ul>
             <li><a href="#" id="navBtnSettings" tabindex="-1"><i class="fas fa-cog"></i></a></li>
@@ -56,7 +56,7 @@
                     <td>
                       <span class="toggle">
                         <label class="switch" for="sortByFile">
-                          <input type="checkbox" id="sortByFile" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="sortByFile" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -73,84 +73,84 @@
                     <td>
                       <span class="toggle">
                         <label class="switch" for="invertSorting">
-                          <input type="checkbox" id="invertSorting" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="invertSorting" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleShowCompleted"></td>
+                    <td id="toggleShowCompleted"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showCompleted">
-                          <input type="checkbox" id="showCompleted" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showCompleted" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr id="sortCompletedLastRow">
-                    <td id="viewToggleSortCompletedLast"></td>
+                    <td id="toggleSortCompletedLast"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="sortCompletedLast">
-                          <input type="checkbox" id="sortCompletedLast" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="sortCompletedLast" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewBoxShowHidden"><span id="viewToggleShowHidden"></span></td>
+                    <td id="viewBoxShowHidden"><span id="toggleShowHidden"></span></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showHidden">
-                          <input type="checkbox" id="showHidden" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showHidden" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsToday"></td>
+                    <td id="toggleDueIsToday"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsToday">
-                          <input type="checkbox" id="showDueIsToday" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsToday" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsFuture"></td>
+                    <td id="toggleDueIsFuture"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsFuture">
-                          <input type="checkbox" id="showDueIsFuture" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsFuture" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsPast"></td>
+                    <td id="toggleDueIsPast"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsPast">
-                          <input type="checkbox" id="showDueIsPast" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsPast" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td><span id="viewToggleDeferredTodos"></span> <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
+                    <td><span id="toggleDeferredTodos"></span> <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="deferredTodos">
-                          <input type="checkbox" id="deferredTodos" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="deferredTodos" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -162,13 +162,11 @@
                     </th>
                   </tr>
                   <tr>
-                    <td>
-                      <p id="viewToggleShowEmptyFilters"></p>
-                    </td>
+                    <td id="toggleShowEmptyFilters"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showEmptyFilters">
-                          <input type="checkbox" id="showEmptyFilters" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showEmptyFilters" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -192,13 +190,14 @@
             <ul></ul>
           </section>
 
-          <section id="todoTableSearchContainer" class="inputWrapper">
+          <section id="todoTableSearchContainer">
 
-            <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
             <i class="fas fa-search"></i>
-            <label id="todoTableSearchLabel" for="todoTableSearch"></label>
-            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
-            <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
+            
+            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="0" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
+            
+            <button id="todoTableSearchAddTodo" class="tag" tabindex="0"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
+            
             <section id="resultStats">
               <span class="tag"></span>
             </section>
@@ -244,13 +243,12 @@
       </div>
     </div>
 
-    <section id="modalForm" class="modal" data-item="">
-      <div class="modal-background"></div>
+    <form id="modalForm" class="modal" data-item="">
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div class="card-content">
               <div class="inputWrapper">
-                <label id="modalFormInputLabel" for="modalFormInput"></label>
                 <input id="modalFormInput" class="input is-medium" type="text" tabindex="0" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
                 <a href="#" id="modalFormInputResize" class="icon is-right" tabindex="-1" data-input-type="input"><i class="fas fa-expand-alt"></i></a>
               </div>
@@ -308,7 +306,7 @@
                     <i class="fas fa-redo"></i>
                   </a>
                 </div>
-                <div id="recurrencePickerContainer" class="card">
+                <div id="recurrencePickerContainer" class="card" tabindex="-1">
                   <div class="content">
                     <div>
                       <span id="recurrencePickerEvery"></span>
@@ -320,44 +318,44 @@
                     </div>
                     <div class="options">
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="d" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="d">
                         <span id="recurrencePickerDay"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="b" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="b">
                         <span id="recurrencePickerBusinessDay"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="w" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="w">
                         <span id="recurrencePickerWeek"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="m" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="m">
                         <span id="recurrencePickerMonth"></span>
                       </label>
                       <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="y" tabindex="0">
+                        <input type="radio" class="selection" name="recurrence" value="y">
                         <span id="recurrencePickerYear"></span>
                       </label>
                     </div>
                   </div>
                   <footer class="card-footer">
-                    <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"  tabindex="0"></a>
+                    <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"></a>
                   </footer>
                 </div>
               </div>
 
           </div>
           <footer class="card-footer">
-            <button id="btnSave" class="card-footer-item" tabindex="0"></button>
-            <button id="btnItemStatus" class="card-footer-item" tabindex="0"></button>
+            <button id="btnSave" type="submit" class="card-footer-item" tabindex="0"></button>
+            <button id="btnItemStatus" class="card-footer-item is-hidden" tabindex="0"></button>
             <button id="btnCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
       </div>
-    </section>
+    </form>
     <div id="modalSettings" class="modal content" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           &nbsp;
@@ -375,7 +373,7 @@
                 <div class="field">
                   <div class="control">
                     <div class="select">
-                      <select id="settingsLanguage">
+                      <select id="language">
                       </select>
                     </div>
                   </div>
@@ -391,8 +389,8 @@
               <td id="settingsTabSettingsNotificationsBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch">
-                    <input type="checkbox" id="toggleNotifications" tabindex="0">
+                  <label class="switch" for="notifications">
+                    <input type="checkbox" id="notifications" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -407,8 +405,8 @@
               <td id="settingsTabSettingsTrayBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleTray">
-                    <input type="checkbox" id="toggleTray" tabindex="0">
+                  <label class="switch" for="tray">
+                    <input type="checkbox" id="tray" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -423,8 +421,8 @@
               <td id="settingsTabSettingsLoggingBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleMatomoEvents">
-                    <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
+                  <label class="switch" for="matomoEvents">
+                    <input type="checkbox" id="matomoEvents" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -439,8 +437,8 @@
               <td id="settingsTabSettingsDarkmodeBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleDarkmode">
-                    <input type="checkbox" id="toggleDarkmode"   tabindex="0">
+                  <label class="switch" for="darkmode">
+                    <input type="checkbox" id="darkmode" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -449,14 +447,14 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsToggleCompactView"></th>
+              <th colspan="100%" id="compactViewHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsToggleCompactViewBody"></td>
+              <td id="compactViewBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="compactView">
-                    <input type="checkbox" id="compactView" class="viewToggle" tabindex="0">
+                    <input type="checkbox" id="compactView" class="toggle" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -465,14 +463,14 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsToggleFileTabs"></th>
+              <th colspan="100%" id="fileTabsHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsToggleFileTabsBody"></td>
+              <td id="fileTabsBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="fileTabs">
-                    <input type="checkbox" id="fileTabs" class="viewToggle" tabindex="0">
+                    <input type="checkbox" id="fileTabs" class="toggle" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -481,31 +479,31 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsDragZoom"></th>
+              <th colspan="100%" id="zoomHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsDragZoomBody"></td>
+              <td id="zoomBody"></td>
               <td class="zoom">
-                <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
+                <input type="range" id="zoom" name="vol" min="75" max="125"><br>
                 <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
               </td>
             </tr>
           </table>
         </section>
-        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
+        <button class="modal-close close is-large" role="cancel" tabindex="0"></button>
       </div>
     </div>
     <div id="modalHelp" class="modal content" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           <ul>
-            <li class="helpTab1 is-active"><a href="#" tabindex="0" id="helpTab1Title"></a></li>
-            <li class="helpTab2"><a href="#" tabindex="0" id="helpTab2Title"></a></li>
-            <li class="helpTab3"><a href="#" tabindex="0" id="helpTab3Title"></a></li>
-            <li class="helpTab4"><a href="#" tabindex="0" id="helpTab4Title"></a></li>
-            <li class="helpTab5"><a href="#" tabindex="0" id="helpTab5Title"></a></li>
-            <li class="helpTab6"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
+            <li class="helpTab1 is-active"><a href="#" id="helpTab1Title" tabindex="0"></a></li>
+            <li class="helpTab2"><a href="#" id="helpTab2Title" tabindex="0"></a></li>
+            <li class="helpTab3"><a href="#" id="helpTab3Title" tabindex="0"></a></li>
+            <li class="helpTab4"><a href="#" id="helpTab4Title" tabindex="0"></a></li>
+            <li class="helpTab5"><a href="#" id="helpTab5Title" tabindex="0"></a></li>
+            <li class="helpTab6"><a href="#" id="settingsTabAbout" tabindex="0"></a></li>
           </ul>
         </div>
         <section id="helpTab1" class="modal-card-body is-active" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
@@ -771,7 +769,7 @@
             </tr>
           </table>
         </section>
-        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
+        <button class="modal-close close is-large" role="cancel" tabindex="0"></button>
       </div>
     </div>
 
@@ -779,42 +777,42 @@
       <div class="card">
         <div class="card-content">
           <a id="todoContextUseAsTemplate" class="dropdown-item" tabindex="0"></a>
-          <a id="todoContextEdit" href="#" class="dropdown-item" tabindex="0"></a>
+          <a id="todoContextCopy" href="#" class="dropdown-item" tabindex="0"></a>
           <a id="todoContextDelete" class="dropdown-item" tabindex="0"></a>
         </div>
       </div>
     </div>
 
-    <div id="filterContext">
+    <form id="filterContext">
       <div class="card">
         <div class="card-content">
           <input id="filterContextInput" class="input" type="text" tabindex="0">
         </div>
         <footer class="card-footer">
-          <button id="filterContextSave" class="card-footer-item" tabindex="0"></button>
+          <button id="filterContextSave" type="submit" class="card-footer-item" tabindex="0"></button>
           <button id="filterContextDelete" class="card-footer-item" tabindex="0"></button
         </footer>
       </div>
-    </div>
+    </form>
 
     <div id="modalChangeFile" class="modal" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div class="card-content">
-            <table id="modalChangeFileTable"></table>
+            <table id="modalChangeFileTable" class="files"></table>
           </div>
           <footer class="card-footer">
             <button id="btnFilesOpenTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></button>
             <button id="btnFilesCreateTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></button>
-            <button class="card-footer-item" role="cancel" tabindex="0"></button>
+            <button id="btnFilesCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
       </div>
     </div>
 
     <div id="modalPrompt" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div id="modalPromptContent" class="card-content"></div>
@@ -827,14 +825,14 @@
     </div>
 
     <section id="messages">
-      <article id="messageGenericContainer" class="notification" data="generic">
-        <button id="messageGenericContainerClose" class="delete" aria-label="delete" data-message="generic"></button>
+      <article id="messageGenericContainer" class="notification message" data="generic">
+        <button id="messageGenericContainerClose" class="delete" role="cancel" data-message="generic"></button>
         <p id="messageGenericMessage"></p>
       </article>
       <article class="message fixed" data="logging">
         <div class="message-header">
           <p><span id="messageLoggingTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="logging" tabindex="-1"></button>
+          <button class="delete close" role="cancel" data-message="logging" tabindex="-1"></button>
         </div>
         <div class="message-body">
           <p><span id="messageLoggingBody"></span></p>
@@ -844,7 +842,7 @@
       <article class="message fixed" data="share">
         <div class="message-header">
           <p><span id="messageShareTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="share" tabindex="-1"></button>
+          <button class="delete close" role="cancel" data-message="share" tabindex="-1"></button>
         </div>
         <div class="message-body">
           <p><span id="messageShareBody"></span></p>
@@ -856,9 +854,7 @@
         </div>
       </article>
     </section>
-    <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
     <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
-    <script defer src="../node_modules/marked/marked.min.js"></script>
     <script defer src="render.js" type="module"></script>
   </body>
 </html>

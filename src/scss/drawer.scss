@@ -97,11 +97,11 @@
       }
     }
     .priority {
-      button {
+      a {
         font-size: 1.4em;
       }
     }
-    button {
+    a {
       position: relative;
       margin: 0 .5rem .5rem 0;
       padding: 0.5em 0.75em;
@@ -115,7 +115,7 @@
         padding: 0 0.5em;
       }
     }
-    button.is-greyed-out {
+    a.is-greyed-out {
       .tag {
         display: none;
       }
@@ -143,8 +143,13 @@
         white-space: pre;
       }
       .todoFilterHint {
-        cursor: pointer;
-        opacity: 0.5;
+        cursor: help;
+        opacity: 0.4;
+        code {
+          color: white!important;
+          background: $darker-grey!important;
+          border-radius: $radius;
+        }
       }
     }
     table tr td:nth-child(odd) {

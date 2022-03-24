@@ -31,10 +31,12 @@ export const startDragging = (event) => {
       document.body.removeEventListener("pointermove", mouseDragHandler);
       return;
     }
-    const paneOriginAdjustment = "left" === "right" ? 1 : -1;
+    const paneOriginAdjustment = -1;
     setPaneWidth((xOffset - moveEvent.pageX ) * paneOriginAdjustment + startingPaneWidth);
   };
   document.body.addEventListener("pointermove", mouseDragHandler);
 };
 getResizeableElement().style.setProperty("--max-width", `${maxPaneSize}px`);
 getResizeableElement().style.setProperty("--min-width", `${minPaneSize}px`);
+
+getHandleElement.addEventListener("mousedown", startDragging);

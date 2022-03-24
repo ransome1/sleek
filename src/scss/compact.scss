@@ -4,33 +4,15 @@
 
 @mixin compact() {
 
-  .inputWrapper {
-    position: relative;
-    padding-top: 0.5em;
-    input[type="search"],
-    input[type="text"] {
-      padding: 0.75em 1em 0.75em 1.5em;
-    }
-    input::placeholder,
-    textarea::placeholder {
-      color: $mid-grey;
-    }
-    label {
-      display: none;
-    }
-  }
-
   #modalForm {
     textarea {
       padding: 0.75em!important;
     }
-    #modalFormInputResize {
-      top: 1.65em;
-    }
   }
-
-  .modal.content .modal-card {
-    padding: 1em!important;
+  .modal.content {
+    .modal-card {
+      padding: 1em!important;
+    }
   }
 
   table tr td {
@@ -39,25 +21,19 @@
   #sortByContainer li {
     padding: 0.25em 0.5em;
   }
-  #todoTableSearchContainer {
-    input[type="search"]::-webkit-search-cancel-button {
-      margin-top: 0;
-    }
-    i.fa-search,
-    .todoTableSearchQuestionmark {
-      top: 0.37em;
-    }
-    #todoTableSearchAddTodo {
-      top: 1.70em;
-      i {
-        display: none;
-      }
-    }
-  }
   #todoTable {
     padding: 0 1.5em 1.5em 1.5em;
     .group:first-child {
       margin-top: 0;
+      
+    }
+    .group {
+      a {
+        font-size: 0.8em!important;
+      }
+      .cell {
+        margin-bottom: 0;
+      }
     }
     .todo {
       .cell {
@@ -65,10 +41,6 @@
         .text {
           margin: 0;
         }
-      }
-      .cell.recurrence,
-      .cell.itemDueDate {
-        //padding: 0 0.25em!important;
       }
     }
   }
@@ -94,15 +66,13 @@
     .is-4 {
       font-size: 1.1em;
     }
-    .priority {
-      button {
-        font-size: 1.2em;
-        .tag {
-          font-size: 0.65em;
-        }
+    a.button.priority {
+      font-size: 1.2em;
+      .tag {
+        font-size: 0.65em;
       }
     }
-    button {
+    a.button {
       font-size: 0.9em;
       margin: 0 0.3em 0.3em 0!important;
       padding: 0.5em 0.7em;
@@ -131,15 +101,20 @@ screen and (max-height: 650px) {
 @mixin mobile() {
   .modal {
     .modal-content {
+      width: 95%!important;
       padding: 0.5em!important;
       .card-content {
         padding: 0.5em!important;
+        #modalFormInputResize {
+          top: 1.35em!important;
+          right: 1.8em!important;
+        }
       }
     }
   }
 }
 @media screen and (max-width: 500px) {
-    @include mobile;
+  @include mobile;
 }
 
 body.compact {

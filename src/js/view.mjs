@@ -1,15 +1,14 @@
 "use strict";
-import { userData, setUserData, startBuilding, translations } from "../render.js";
+import { userData, setUserData, handleError, buildTable, translations } from "../render.js";
 import { _paq } from "./matomo.mjs";
-import { handleError } from "./helper.mjs";
 
 const html = document.getElementById("html");
 const body = document.getElementById("body");
 const sortBy = document.getElementById("sortBy");
-//const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
+const viewHeadlineAppView = document.getElementById("viewHeadlineAppView");
 const viewHeadlineTodoList = document.getElementById("viewHeadlineTodoList");
 const viewHeadlineFilterList = document.getElementById("viewHeadlineFilterList");
-const settingsToggleCompactView = document.getElementById("settingsToggleCompactView");
+const viewToggleCompactView = document.getElementById("viewToggleCompactView");
 const viewToggleDueIsFuture = document.getElementById("viewToggleDueIsFuture");
 const viewToggleDueIsPast = document.getElementById("viewToggleDueIsPast");
 const viewToggleDueIsToday = document.getElementById("viewToggleDueIsToday");
@@ -17,18 +16,16 @@ const viewToggles = document.querySelectorAll('.viewToggle');
 const viewToggleShowCompleted = document.getElementById("viewToggleShowCompleted");
 const viewToggleShowHidden = document.getElementById("viewToggleShowHidden");
 const viewToggleSortCompletedLast = document.getElementById("viewToggleSortCompletedLast");
-const settingsDragZoom = document.getElementById("settingsDragZoom");
+const viewToggleZoom = document.getElementById("viewToggleZoom");
 const zoomRangePicker = document.getElementById("zoomRangePicker");
 const zoomUndo = document.getElementById("zoomUndo");
 const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyFilters");
 const sortByContainer = document.getElementById("sortByContainer");
 const viewToggleDeferredTodos = document.getElementById("viewToggleDeferredTodos");
-const settingsToggleFileTabs = document.getElementById("settingsToggleFileTabs");
-const viewInvertSorting = document.getElementById("viewInvertSorting");
-const viewSortByFile = document.getElementById("viewSortByFile");
+const viewToggleFileTabs = document.getElementById("viewToggleFileTabs");
 
-viewSortBy.innerHTML = translations.sortBy;
-//viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
+sortBy.innerHTML = translations.sortBy;
+viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;
 viewHeadlineTodoList.innerHTML = translations.viewHeadlineTodoList;
 viewHeadlineFilterList.innerHTML = translations.viewHeadlineFilterList;
 viewToggleDueIsFuture.innerHTML = translations.dueFuture;
@@ -37,14 +34,12 @@ viewToggleDueIsToday.innerHTML = translations.dueToday;
 viewToggleShowCompleted.innerHTML = translations.completedTodos;
 viewToggleShowHidden.innerHTML = translations.hiddenTodos;
 viewToggleSortCompletedLast.innerHTML = translations.sortCompletedLast;
-settingsToggleCompactView.innerHTML = translations.compactView;
+viewToggleCompactView.innerHTML = translations.compactView;
 zoomRangePicker.innerHTML = translations.zoomRangePicker;
-settingsDragZoom.innerHTML = translations.settingsDragZoom;
+viewToggleZoom.innerHTML = translations.viewToggleZoom;
 viewToggleShowEmptyFilters.innerHTML = translations.viewToggleShowEmptyFilters;
 viewToggleDeferredTodos.innerHTML = translations.deferredTodos;
-settingsToggleFileTabs.innerHTML = translations.fileTabs;
-viewInvertSorting.innerHTML = translations.invertSorting;
-viewSortByFile.innerHTML = translations.sortByFile;
+viewToggleFileTabs.innerHTML = translations.fileTabs;
 
 // build the sortBy list
 userData.sortBy.forEach((sortBy) => {
@@ -120,7 +115,11 @@ function toggle(toggleName, variable) {
     } else if(toggle.id==="compactView" && !userData[toggle.id]) {
       body.classList.remove("compact");
     } else {
-      startBuilding();
+      buildTable().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        handleError(error);
+      });
     }
     setUserData(toggle.id, userData[toggle.id]);
     return Promise.resolve("Success: " + toggle.id + " set to: " + userData[toggle.id]);

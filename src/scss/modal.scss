@@ -17,8 +17,10 @@
   display: flex!important;
 }
 .modal {
-padding: 1em;
-  .modal-content {
+  .modal-content,
+  .modal-card {
+    width: 85%;
+    max-width: 900px;
     margin: 0;
   }
 }
@@ -142,19 +144,18 @@ padding: 1em;
 #modalForm {
   #modalFormInput {
     z-index: 60;
-    padding-right: 3em;
+    padding-right: 2em!important;
   }
   textarea {
     min-height: 5.5em;
     overflow: hidden;
     resize: none;
-    padding-top: 1.5em;
   }
   #modalFormInputResize {
     position: absolute;
     z-index: 60;
-    top: 1.75em;
-    right: 1.2em;
+    top: 2.3em;
+    right: 2.3em;
     cursor: pointer;
     pointer-events: all;
     i {
