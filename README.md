@@ -22,9 +22,9 @@ sleek manages and watches multiple todo.txt files continuously for changes, whic
 Todos with due date or repeating todos will trigger notifications and completed todos can be hidden or archived into separate done.txt files. If users have tons of todos, a compact view can come in handy.
 
 ### Screenshots
-![Alt text](assets/screenshots/mac/10_drawer.png?raw=true "Screenshot of sleek's todo list view")
-![Alt text](assets/screenshots/mac/71_multiline_dark.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature")
-![Alt text](assets/screenshots/mac/90_sort_by_projects.png?raw=true "Screenshot of sleek's todo list sorted by projects with due date picker shown")
+![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's todo list view")
+![Alt text](assets/screenshots/mac/drawer.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature")
+![Alt text](assets/screenshots/mac/search.png?raw=true "Screenshot of sleek's todo list sorted by projects with due date picker shown")
 
 ### sleeks state of development
 A prioritized backlog of new features and known issues as well as an overview on what is being worked on at the moment can be found <a href="https://github.com/ransome1/sleek/projects/2">here</a>.
