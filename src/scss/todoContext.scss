@@ -23,5 +23,20 @@
   }
   .card-content {
     padding: 0;
+    .horizontal {
+      display: flex;
+      text-align: center;
+      a.dropdown-item {
+        border-radius: 0;
+      }
+      a.dropdown-item:first-child {
+        border-top-left-radius: $radius;
+        border-top-right-radius: 0;
+      }
+      a.dropdown-item:last-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: $radius;
+      }
+    }
   }
 }
