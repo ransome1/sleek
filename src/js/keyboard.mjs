@@ -58,7 +58,16 @@ export async function registerShortcuts() {
       if(event.key === "Escape") {
 
         // if search is focused, lose focus on escape
-        if(document.activeElement.id==="todoTableSearch") todoTableSearch.blur();
+        if(document.activeElement.id==="todoTableSearch") {
+          todoTableSearch.blur();
+          return false;
+        }
+        // if 'add as todo' is focused, return to search
+        if(document.activeElement.id==="todoTableSearchAddTodo") {
+          document.getElementById("todoTableSearch").focus();
+          return false;
+        }
+
 
         // if a datepicker container is detected interrupt, datepicker destruction is handled in module
         if(document.querySelector(".datepicker")) return false;
