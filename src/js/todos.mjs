@@ -22,6 +22,8 @@ const todoContext = document.getElementById("todoContext");
 const todoContextDelete = document.getElementById("todoContextDelete");
 const todoContextCopy = document.getElementById("todoContextCopy");
 const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
+const todoContextPriorityIncrease = document.getElementById("todoContextPriorityIncrease");
+const todoContextPriorityDecrease = document.getElementById("todoContextPriorityDecrease");
 const todoTable = document.getElementById("todoTable");
 const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
@@ -547,9 +549,69 @@ function createTodoContext(todoTableRow) {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
     }
+    const changePriority = async function(direction) {
+      // get index of todo
+      const index = await items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
+
+      // retrieve todo object
+      const todo = items.objects[index]
+
+      // abort if todo has no priority set
+      if (!todo.priority) return false;
+
+      const currentPriority = todo.priority
+      if (direction < 0) {
+        if (currentPriority !== "Z") {
+          todo.priority = String.fromCharCode(currentPriority.charCodeAt(0) + 1);
+        } else {
+          return false;
+        }
+      } else if (direction > 0) {
+        if (currentPriority !== "A") {
+          todo.priority = String.fromCharCode(currentPriority.charCodeAt(0) - 1);
+        } else {
+          return false;
+        }
+      }
+
+      //write the data to the file
+      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+
+      todoContext.classList.toggle("is-active");
+      todoContext.removeAttribute("data-item");
+    }
 
     todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
+    todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
+
+    // get index of todo
+    const index = items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
+
+    // show/hide priority change buttons
+    if (items.objects[index].priority) {
+      todoContextPriorityIncrease.classList.remove("is-hidden")
+      todoContextPriorityDecrease.classList.remove("is-hidden")
+    } else {
+      todoContextPriorityIncrease.classList.add("is-hidden")
+      todoContextPriorityDecrease.classList.add("is-hidden")
+    }
     
+    // click on increse priority option
+    todoContextPriorityIncrease.onclick = function() {
+      changePriority(1);
+    }
+    todoContextPriorityIncrease.onkeypress = function(event) {
+      if(event.key !== "Enter") return false;
+      changePriority(1);
+    }
+    // click on decrease priority option
+    todoContextPriorityDecrease.onclick = function() {
+      changePriority(-1);
+    }
+    todoContextPriorityDecrease.onkeypress = function(event) {
+      if(event.key !== "Enter") return false;
+      changePriority(-1);
+    }
     // click on use as template option
     todoContextUseAsTemplate.onclick = function() {
       useAsTemplate();
