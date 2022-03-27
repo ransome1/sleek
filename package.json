@@ -32,9 +32,10 @@
       "!**.md",
       "!**.gitignore",
       "!yarn.lock",
-      "!assets/screenshots${/*}",
+      "!test",
+      "!assets",
+      "!FUNDING.yml",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,__tests__,tests,powered-test,example,examples,*.d.ts}",
-      "!**/node_modules/.bin",
       "!**/*.{o,hprof,orig,pyc,pyo,rbc}",
       "!**/._*",
       "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.flowconfig,.yarn-metadata.json,.idea,appveyor.yml,.travis.yml,circle.yml,npm-debug.log,.nyc_output,yarn.lock,.yarn-integrity}",
@@ -58,6 +59,8 @@
           "arch": "universal"
         }
       ],
+      "gatekeeperAssess": false,
+      "hardenedRuntime": true,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "icon": "build/icon.icns",
@@ -73,24 +76,23 @@
       }
     },
     "mas": {
-      "asar": true,
       "asarUnpack": [
         "node_modules/fsevents"
       ],
+      "hardenedRuntime": false,
       "provisioningProfile": "build/distribution.provisionprofile",
-      "entitlements": "build/entitlements.mas.plist",
-      "entitlementsInherit": "build/entitlements.mas.plist",
-      "entitlementsLoginHelper": "build/entitlements.mas.loginhelper.plist"
-    },
-    "masDev": {
-      "asar": true,
-      "asarUnpack": [
-        "node_modules/fsevents"
-      ],
-      "provisioningProfile": "build/development.provisionprofile",
       "entitlements": "build/entitlements.mas.plist",
       "entitlementsInherit": "build/entitlements.mas.inherit.plist",
       "entitlementsLoginHelper": "build/entitlements.mas.loginhelper.plist"
+    },
+    "masDev": {
+      "asarUnpack": [
+        "node_modules/fsevents"
+      ],
+      "hardenedRuntime": false,
+      "provisioningProfile": "build/development.provisionprofile",
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist"
     },
     "win": {
       "target": [

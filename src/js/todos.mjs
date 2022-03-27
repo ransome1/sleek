@@ -605,10 +605,10 @@ function createTodoContext(todoTableRow) {
 function sortTodosInGroup(group) {
   try {
     // start at 1 to skip sorting method used for 1st level grouping
-    for(let i = 1; i < userData.sortBy.length; i++) {
-      
+    const l = userData.sortBy.length;
+    for(let i = 1; i < l; i++) {
       group.sort(function(a, b) {
-        
+
         // only continue if the two items have the same filters from all previous iterations
         if(JSON.stringify(a[userData.sortBy[i-4]]) !== JSON.stringify(b[userData.sortBy[i-4]])) return
         if(JSON.stringify(a[userData.sortBy[i-3]]) !== JSON.stringify(b[userData.sortBy[i-3]])) return
@@ -620,11 +620,11 @@ function sortTodosInGroup(group) {
           item2 = b[userData.sortBy[i]];
 
         // if first item is empty it will be sorted after second item
-        if(!item1) return 1;
+        if(!item1 || (item1 > item2)) return 1;
         // if second item is empty it will be sorted before first item
-        if(!item2) return -1;
+        if(!item2 || (item1 < item2)) return -1;
   
-        return item1.toString().localeCompare(item2.toString())
+        //return item1.toString().localeCompare(item2.toString())
         
       });
     }

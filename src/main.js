@@ -682,6 +682,12 @@ async function createWindow() {
 
     mainWindow.loadFile(path.join(appData.path, "index.html"));
 
+    if(appData.os === "windows") {
+      new Badge(mainWindow, {
+        font: "10px arial"
+      });
+    }
+
     // ########################################################################################################################
     // MAIN MENU
     // ########################################################################################################################
@@ -910,9 +916,6 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
 
     if(appData.os === "windows") {
-      new Badge(mainWindow, {
-        font: "10px arial"
-      }); 
       // identifier for windows store
       app.setAppUserModelId("RobinAhle.sleektodomanager")
     }
