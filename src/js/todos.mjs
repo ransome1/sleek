@@ -498,10 +498,16 @@ function generateTableRow(todo) {
     return Promise.reject(error);
   }
 }
-function createTodoContext(todoTableRow) {
+async function createTodoContext(todoTableRow) {
   try {
+
+    // get index of todo
+    let index = await items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
+    // retrieve todo object
+    const todo = items.objects[index]
+
     const useAsTemplate = function() {
-      show(todoContext.getAttribute("data-item"), true).then(response => {
+      show(todo.toString(), true).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);
@@ -514,14 +520,7 @@ function createTodoContext(todoTableRow) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
     }
     const copyTodo = async function() {
-      
-      const todoObject = await generateTodoTxtObject(todoTableRow.getAttribute("data-item")).then(response => {
-        return response;
-      }).catch(error => {
-        handleError(error);
-      });
-
-      pasteItemToClipboard(todoObject).then(response => {
+      pasteItemToClipboard(todo).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);
@@ -534,9 +533,6 @@ function createTodoContext(todoTableRow) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
     }
     const deleteTodo = async function() {
-      // get index of todo
-      const index = await items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
-
       // remove item at index  
       items.objects.splice(index, 1);
       
@@ -549,68 +545,54 @@ function createTodoContext(todoTableRow) {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
     }
-    const changePriority = async function(direction) {
-      // get index of todo
-      const index = await items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
+    const changePriority = function(direction) {
 
-      // retrieve todo object
-      const todo = items.objects[index]
+      let nextIndex = 97;
 
-      // abort if todo has no priority set
-      if (!todo.priority) return false;
-
-      const currentPriority = todo.priority
-      if (direction < 0) {
-        if (currentPriority !== "Z") {
-          todo.priority = String.fromCharCode(currentPriority.charCodeAt(0) + 1);
-        } else {
-          return false;
-        }
-      } else if (direction > 0) {
-        if (currentPriority !== "A") {
-          todo.priority = String.fromCharCode(currentPriority.charCodeAt(0) - 1);
-        } else {
-          return false;
-        }
+      // in case a todo has no priority and the 1st grouping method is priority
+      if(!items.objects[index].priority && userData.sortBy[0] === "priority") {
+        const index = items.grouped.length - 2;
+        // this receives the lowest available priority group
+        (index >= 0) ? nextIndex = items.grouped[index][0].toLowerCase().charCodeAt(0) : nextIndex = 97
+      // change priority based on current priority
+      } else if(items.objects[index].priority) {
+        const currentPriority = items.objects[index].priority.toLowerCase().charCodeAt(0)
+        nextIndex = currentPriority + direction;
       }
+
+      if(nextIndex <= 96 || nextIndex >= 123) return false
+
+      items.objects[index].priority = String.fromCharCode(nextIndex).toUpperCase();
 
       //write the data to the file
       window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
 
-      todoContext.classList.toggle("is-active");
+      todoContext.classList.remove("is-active");
       todoContext.removeAttribute("data-item");
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority changer"]);
+
     }
 
     todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
     todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
-
-    // get index of todo
-    const index = items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
-
-    // show/hide priority change buttons
-    if (items.objects[index].priority) {
-      todoContextPriorityIncrease.classList.remove("is-hidden")
-      todoContextPriorityDecrease.classList.remove("is-hidden")
-    } else {
-      todoContextPriorityIncrease.classList.add("is-hidden")
-      todoContextPriorityDecrease.classList.add("is-hidden")
-    }
-    
+  
     // click on increse priority option
     todoContextPriorityIncrease.onclick = function() {
-      changePriority(1);
+      changePriority(-1);
     }
     todoContextPriorityIncrease.onkeypress = function(event) {
       if(event.key !== "Enter") return false;
-      changePriority(1);
+      changePriority(-1);
     }
     // click on decrease priority option
     todoContextPriorityDecrease.onclick = function() {
-      changePriority(-1);
+      changePriority(1);
     }
     todoContextPriorityDecrease.onkeypress = function(event) {
       if(event.key !== "Enter") return false;
-      changePriority(-1);
+      changePriority(1);
     }
     // click on use as template option
     todoContextUseAsTemplate.onclick = function() {
@@ -685,8 +667,6 @@ function sortTodosInGroup(group) {
         if(!item1 || (item1 > item2)) return 1;
         // if second item is empty it will be sorted before first item
         if(!item2 || (item1 < item2)) return -1;
-  
-        //return item1.toString().localeCompare(item2.toString())
         
       });
     }

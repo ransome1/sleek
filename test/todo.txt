@@ -1,6 +1,6 @@
 (A) Thank Mom for the meatballs  x 2021-04-07 (B) Schedule Goodwill pickup   Eskimo pies  Really gotta call Mom this task has no priority (A)   (b) Get back to the boss this task has no priority due:2023-06-10 +GarageSale @phone @phone @GroceryStore @phone @someday
 (B) ->Submit TPS report this task has no priority
-(A) Call Mom 2011-03-02 this task has no creation date  Call Mom multiple projects and contexts     Email SoAndSo at soandso@example.com this task has no context due:2023-04-09 +Family +PeaceLoveAndHappiness @iphone @phone
+(B) Call Mom 2011-03-02 this task has no creation date  Call Mom multiple projects and contexts     Email SoAndSo at soandso@example.com this task has no context due:2023-04-09 +Family +PeaceLoveAndHappiness @iphone @phone
 Learn how to add 2+2
 x 2011-03-03 Call Mom this task is complete
 xylophone lesson this task is incomplete

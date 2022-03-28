@@ -377,6 +377,12 @@ body.dark {
         color: $has-text-danger!important;
       }
     }
+    .horizontal {
+      label {
+        color: $light-grey;
+      }
+      border-bottom: 1px solid $darker-grey;
+    }
   }
   #fileTabBar {
     ul {
