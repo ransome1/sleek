@@ -89,6 +89,7 @@
   "of": "z",
   "onboardingContainerBtnOpen": "Vyberte existující todo.txt",
   "onboardingContainerSubtitle": "Začněte buď vybráním <strong>existujícího</strong> souboru todo.txt, nebo si vytvořte <strong>nový</strong>.",
+  "open": "Otevřený",
   "openFile": "Otevřít todo.txt",
   "paste": "Vložit",
   "priorities": "Priority",

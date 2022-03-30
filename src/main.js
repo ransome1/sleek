@@ -26,7 +26,7 @@ let
   userData = new Store({
     configName: "user-preferences",
     defaults: {}
-  }), 
+  }),
   fileWatcher, 
   translations, 
   mainWindow,
@@ -68,7 +68,6 @@ function getChannel() {
     return "Misc";
   }
 }
-
 function getContent(file) {
   try {
 
@@ -95,7 +94,6 @@ function getContent(file) {
     return Promise.reject("Error in getContent(): " + error);
   }
 }
-
 function openFileChooser(args) {
   try {
     let 
@@ -124,8 +122,6 @@ function openFileChooser(args) {
         if(canceled || filePaths.length === 0) return false;
         
         const bookmark = bookmarks ? bookmarks[0] : undefined
-
-        console.log(bookmark)
 
         if(fileWatcher) fileWatcher.close()
         
@@ -182,7 +178,6 @@ function openFileChooser(args) {
     return Promise.reject("Error in openFileChooser(): " + error);
   }
 }
-
 function refreshFiles() {
   try {
 
@@ -219,8 +214,6 @@ function refreshFiles() {
     return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
-
-
 function getActiveFile() {
   const index = userData.data.files.findIndex(file => file[0] === 1);
   if(index !==-1 ) {
@@ -229,7 +222,6 @@ function getActiveFile() {
   }
   return false;
 }
-
 async function startFileWatcher(file, bookmark) {
   try {
 
@@ -352,7 +344,6 @@ async function startFileWatcher(file, bookmark) {
     return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
-
 function getUserData() {
   try {
 
@@ -653,6 +644,7 @@ function setupTray() {
 
 async function createWindow() {
   try {
+
     userData = await getUserData();
 
     translations = await getTranslations();
@@ -691,166 +683,179 @@ async function createWindow() {
     // ########################################################################################################################
     // MAIN MENU
     // ########################################################################################################################
-    Menu.setApplicationMenu(Menu.buildFromTemplate(
-      [
-        {
-          label: translations.file,
-          submenu: [
-            {
-              label: translations.openFile,
-              click: function () {
-                openFileChooser("open").then(response => {
-                  console.log(response);
-                }).catch(error => {
-                  console.error(error);
-                });
-              }
-            },
-            {
-              label: translations.createFile,
-              click: function () {
-                openFileChooser("create").then(response => {
-                  console.log(response);
-                }).catch(error => {
-                  console.error(error);
-                });
-              }
-            },
-            { type: "separator" },
-            { role: "hide" },
-            { type: "separator" },
-            {
-              label: translations.settings,
-              click: function () {
-                mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);
-              }
-            },
-            { type: "separator" },
-            {
-              click: function() {
-                mainWindow.close();
-              },
-              label: translations.close
-            },
-            {
-              role: "quit",
-              accelerator: "Cmd+Q",
-              click: function() {
-                app.quit();
-              }
-            }
-          ]
-        },
-        {
-          label: translations.edit,
-          submenu: [
-            { role: "undo", accelerator: "CmdOrCtrl+Z" },
-            { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
-            { type: "separator" },
-            { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
-            { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
-            { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
-            { role: "selectAll", accelerator: "CmdOrCtrl+A" }
-          ]},
-        {
-          label: translations.todos,
-          submenu: [
-            {
-              label: translations.addTodo,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "showForm")
-              }
-            },
-            {
-              label: translations.find,
-              click: function() {
-                mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
-              }
-            },
-            {
-              label: translations.archive,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "archiveTodos")
-              }
-            }
-          ]
-        },
-        {
-          label: translations.view,
-          submenu: [
-            {
-              label: translations.toggleFilter,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
-              }
-            },
-            {
-              label: translations.resetFilters,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
-              }
-            },
-            {
-              label: translations.toggleCompletedTodos,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
-              }
-            },
-            { type: "separator" },
-            {
-              role: "print",
-              accelerator: "CmdOrCtrl+P",
-              label: translations.printCurrentView,
-              click: function() {
+    
+    const menuTemplateApp = {
+      label: "sleek",
+      submenu: 
+      [{
+        label: translations.open,
+        click: function () {
+          if(mainWindow) {
+            if(!mainWindow.isVisible()) mainWindow.show();
+            return false;
+          }
 
-                // remove dark mode styling
-                mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
-      
-                const index = userData.data.files.findIndex(file => file[0] === 1);
-                
-                if(index === -1) return false
-                
-                mainWindow.webContents.send("buildTable", [null, true]);
+          if(BrowserWindow.getAllWindows().length === 0) 
+            createWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+        }
+      },
+      { role: "hide" },
+      { type: "separator" },
+      {
+        label: translations.settings,
+        click: function () {
+          mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);
+        }
+      },
+      { type: "separator" },
+      (appData.os !== "mac") ? { role: "close", accelerator: "CmdOrCtrl+W" } : { role: "close", accelerator: "CmdOrCtrl+W" }, { role: "quit", accelerator: "CmdOrCtrl+Q" } ]
+    }
 
-                setTimeout(function() {
-                  mainWindow.webContents.executeJavaScript("window.print()");
-                }, 500);
-                
-              }
-            },
-            {
-              label: translations.toggleTheme,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
-              }
-            },
-            {
-              role: "reload",
-              label: translations.reload
-            }
-          ]
+    const menuTemplateFile = {
+      label: translations.file,
+      submenu: 
+      [{
+        label: translations.openFile,
+        click: function () {
+          openFileChooser("open").then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.error(error);
+          });
+        }
+      },
+      {
+        label: translations.createFile,
+        click: function () {
+          openFileChooser("create").then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.error(error);
+          });
+        }
+      }]
+    }
+
+    const menuTemplateEdit = {
+      label: translations.edit,
+      submenu: [
+        { role: "undo", accelerator: "CmdOrCtrl+Z" },
+        { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
+        { type: "separator" },
+        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { role: "selectAll", accelerator: "CmdOrCtrl+A" }
+      ]
+    }
+
+    const menuTemplateTodos = {
+      label: translations.todos,
+      submenu: [
+        {
+          label: translations.addTodo,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "showForm")
+          }
         },
         {
-          label: translations.about,
-          submenu: [
-            {
-              label: translations.help,
-              click: function () {
-                mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
-              }
-            },
-            {
-              label: translations.sleekOnGithub,
-              click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
-            },
-            {
-              role: "toggleDevTools",
-              label: translations.devTools
-            }
-          ]
+          label: translations.find,
+          click: function() {
+            mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
+          }
+        },
+        {
+          label: translations.archive,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "archiveTodos")
+          }
         }
       ]
-    ));
+    }
+
+    const menuTemplateView = {
+      label: translations.view,
+      submenu: [
+        {
+          label: translations.toggleFilter,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
+          }
+        },
+        {
+          label: translations.resetFilters,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
+          }
+        },
+        {
+          label: translations.toggleCompletedTodos,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
+          }
+        },
+        { type: "separator" },
+        {
+          role: "print",
+          accelerator: "CmdOrCtrl+P",
+          label: translations.printCurrentView,
+          click: function() {
+
+            // remove dark mode styling
+            mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
+
+            const index = userData.data.files.findIndex(file => file[0] === 1);
+            
+            if(index === -1) return false
+            
+            mainWindow.webContents.send("buildTable", [null, true]);
+
+            setTimeout(function() {
+              mainWindow.webContents.executeJavaScript("window.print()");
+            }, 500);
+            
+          }
+        },
+        {
+          label: translations.toggleTheme,
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
+          }
+        },
+        {
+          role: "reload",
+          label: translations.reload
+        }
+      ]
+    }
+
+    const menuTemplateAbout = {
+      label: translations.about,
+      submenu: [
+        {
+          label: translations.help,
+          click: function () {
+            mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
+          }
+        },
+        {
+          label: translations.sleekOnGithub,
+          click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
+        },
+        {
+          role: "toggleDevTools",
+          label: translations.devTools
+        }
+      ]
+    }
+
+    const menuTemplate = (getActiveFile()) ? [menuTemplateApp, menuTemplateFile, menuTemplateEdit, menuTemplateTodos, menuTemplateView, menuTemplateAbout] : [menuTemplateApp, menuTemplateFile]
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
     // ########################################################################################################################
     // TRAY ICON
@@ -861,7 +866,7 @@ async function createWindow() {
     // INITIAL WINDOW CONFIGURATION
     // ########################################################################################################################
     if(userData.data.maximizeWindow) mainWindow.maximize()
-    if(appData.environment==="development") mainWindow.webContents.openDevTools()
+    if(appData.environment === "development") mainWindow.webContents.openDevTools()
 
     // ########################################################################################################################
     // EVENTS
@@ -912,7 +917,6 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
 
   app.on("ready", () => {
 
-    // TODO: check if this still works
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
 
     if(appData.os === "windows") {
@@ -934,25 +938,21 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
     if(!mainWindow) return false
     if(mainWindow.isMinimized()) mainWindow.restore()
     mainWindow.show()
-    
   })
   .on("window-all-closed", () => {
     if(appData.os !== "mac") app.quit()
     mainWindow = null
   })
   .on("activate", () => {
-
     if(mainWindow) {
       if(!mainWindow.isVisible()) mainWindow.show();
       return false;
     }
-
     if(BrowserWindow.getAllWindows().length === 0) 
       createWindow().then(function(response) {
         console.info(response);
       }).catch(function(error) {
         console.error(error);
       })
-    
   });
 }

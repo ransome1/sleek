@@ -89,6 +89,7 @@
   "of": "/",
   "onboardingContainerBtnOpen": "Meglévő todo.txt kiválasztása",
   "onboardingContainerSubtitle": "Kezdjen a <strong>meglévő</strong> todo.txt fájl kiválasztásával vagy egy <strong>új</strong> létrehozásával.",
+  "open": "Nyitott",
   "openFile": "A todo.txt megnyitása",
   "paste": "Beillesztés",
   "priorities": "Tulajdonságok",

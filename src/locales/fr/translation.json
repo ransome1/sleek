@@ -89,6 +89,7 @@
   "of": "de",
   "onboardingContainerBtnOpen": "Choisir un fichier todo.txt existant",
   "onboardingContainerSubtitle": "Commencez par choisir un fichier todo.txt <strong>existant</strong>, ou créez-en un <strong>nouveau</strong>.",
+  "open": "Ouvrir",
   "openFile": "Ouvrir un fichier",
   "paste": "Coller",
   "priorities": "Priorités",

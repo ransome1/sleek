@@ -89,6 +89,7 @@
   "of": "de",
   "onboardingContainerBtnOpen": "Elija un todo.txt existente",
   "onboardingContainerSubtitle": "Comienza eligiendo un archivo <strong>existente</strong> todo.txt o creando un nuevo archivo <strong>nuevo</strong>",
+  "open": "Abrir",
   "openFile": "Abrir todo.txt",
   "paste": "Pegar",
   "priorities": "Prioridades",

@@ -241,8 +241,9 @@ strong {
 }
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
-  background-color: $light-grey !important;
-  color: inherit !important;
+  background: $mid-grey!important;
+  color: $dark-grey!important;
+  border-radius: $radius;
 }
 
 //  ####################################

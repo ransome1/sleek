@@ -1,5 +1,11 @@
 "use strict";
 
+import { translations } from "../render.js";
+import { handleError } from "./helper.mjs";
+import { showDrawer } from "./drawer.mjs";
+import { resetFilters } from "./filters.mjs";
+import { triggerToggle } from "./toggles.mjs";
+
 window.api.receive("triggerFunction", async (name, args) => {
   try {
 
@@ -13,7 +19,7 @@ window.api.receive("triggerFunction", async (name, args) => {
         onboarding.showOnboarding(...args).then(function(response) {
           console.info(response);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
       case "showForm":
@@ -21,29 +27,29 @@ window.api.receive("triggerFunction", async (name, args) => {
         form.show(...args).then(function(response) {
           console.info(response);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
       case "archiveTodos":
-        var prompt = await import("../js/prompt.mjs");
-        prompt.getConfirmation(todos.archiveTodos, await getTranslation("archivingPrompt"));
+        const prompt = await import("../js/prompt.mjs");
+        const todos = await import("../js/todos.mjs");
+        prompt.getConfirmation(todos.archiveTodos, translations.archivingPrompt);
         break;
       case "showDrawer":
-        var drawer = await import("../js/drawer.mjs");
-        drawer.show(...args).then(function(response) {
-          console.info(response);
+        showDrawer(document.getElementById("navBtnFilter")).then(function(result) {
+          console.log(result);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
       case "handleError":
-        helper.handleError(...args);
+        handleError(...args);
         break;
       case "resetFilters":
-        filters.resetFilters(...args).then(function(response) {
+        resetFilters(true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
       case "showModal":
@@ -51,29 +57,28 @@ window.api.receive("triggerFunction", async (name, args) => {
         content.showModal(args[0]).then(function(response) {
           console.info(response);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
       case "setupInterface":
         helper.setupInterface().then(function(response) {
           console.info(response);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
       case "toggleDarkmode":
-        helper.toggleDarkmode().then(function(response) {
+        triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
       case "toggle":
-        const toggles = await import("../js/toggles.mjs");
-        toggles.triggerToggle(document.getElementById(...args), true).then(function(response) {
+        triggerToggle(document.getElementById(...args), true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
-          helper.handleError(error);
+          handleError(error);
         });
         break;
     }
@@ -90,6 +95,6 @@ window.api.receive("buildTable", async (args) => {
 	render.buildTable(...args).then(function(response) {
 		console.info(response);
 	}).catch(function(error) {
-		helper.handleError(error);
+		handleError(error);
 	});
 });

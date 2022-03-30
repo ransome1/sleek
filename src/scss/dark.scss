@@ -4,6 +4,7 @@ body.dark {
   background-color: $almost-black;
   color: $almost-white;
   code, pre {
+    color: $lighter-grey!important;
     background-color: $almost-black!important;
   }
   a {

@@ -89,6 +89,7 @@
   "of": "of",
   "onboardingContainerBtnOpen": "选择现有todo.txt",
   "onboardingContainerSubtitle": "首先选择 <strong>现有</strong> todo.txt 文件, 或者创建<strong>新文件</strong>. ",
+  "open": "打开",
   "openFile": "打开todo.txt",
   "paste": "粘贴",
   "priorities": "优先度",

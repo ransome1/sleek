@@ -4,6 +4,7 @@ body.dark {
   color: #f0f0f0;
 }
 body.dark code, body.dark pre {
+  color: #CCCDCF !important;
   background-color: #212224 !important;
 }
 body.dark a {
@@ -755,8 +756,9 @@ strong {
 
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
-  background-color: #ebebeb !important;
-  color: inherit !important;
+  background: #ccc !important;
+  color: #5a5a5a !important;
+  border-radius: 0.65em;
 }
 
 #noResultContainer {
@@ -1322,8 +1324,8 @@ a.contexts:hover span.tag {
   background: #247561 !important;
 }
 
-a.contexts:focus-visible,
-a.contexts.is-dark:focus-visible {
+a.button.contexts:focus-visible,
+a.button.contexts.is-dark:focus-visible {
   background: #247561 !important;
   color: white !important;
 }
@@ -1346,10 +1348,10 @@ a.projects:hover span.tag {
   background: #822c82;
 }
 
-a.projects:focus-visible,
-a.projects.is-dark:focus-visible {
+a.button.projects:focus-visible,
+a.button.projects.is-dark:focus-visible {
   background: #822c82 !important;
-  color: white;
+  color: white !important;
 }
 
 a.projects.is-dark,
@@ -1575,12 +1577,6 @@ a.priority.C:focus-visible span.tag {
 }
 #drawerContainer .drawer section .todoFilterHint {
   cursor: help;
-  opacity: 0.4;
-}
-#drawerContainer .drawer section .todoFilterHint code {
-  color: white !important;
-  background: #2d2d2d !important;
-  border-radius: 0.65em;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;

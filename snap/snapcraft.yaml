@@ -35,6 +35,7 @@ apps:
     - home
     - browser-support
     - network
+    - removable-media
 parts:
   sleek:
     plugin: nil
