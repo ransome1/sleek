@@ -4,6 +4,7 @@ body.dark {
   background-color: $almost-black;
   color: $almost-white;
   code, pre {
+    color: $lighter-grey!important;
     background-color: $almost-black!important;
   }
   a {
@@ -376,6 +377,12 @@ body.dark {
       #filterContextDelete {
         color: $has-text-danger!important;
       }
+    }
+    .horizontal {
+      label {
+        color: $light-grey;
+      }
+      border-bottom: 1px solid $darker-grey;
     }
   }
   #fileTabBar {

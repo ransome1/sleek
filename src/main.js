@@ -26,7 +26,7 @@ let
   userData = new Store({
     configName: "user-preferences",
     defaults: {}
-  }), 
+  }),
   fileWatcher, 
   translations, 
   mainWindow,
@@ -37,7 +37,7 @@ let
 // https://github.com/sindresorhus/electron-reloader
 // ########################################################################################################################
 try {
-  require("electron-reloader")(module);
+  if(appData.environment === "development") require("electron-reloader")(module)
 } catch {}
 
 // ########################################################################################################################
@@ -55,7 +55,7 @@ function getChannel() {
   } else if(process.windowsStore) {
     return "Windows Store";
   } else if(process.mas) {
-    return "Apple App Store";
+    return "Mac App Store";
   } else if(process.env.SNAP) {
     return "Snap Store";
   } else if(process.env.FLATPAK_ID) {
@@ -68,7 +68,6 @@ function getChannel() {
     return "Misc";
   }
 }
-
 function getContent(file) {
   try {
 
@@ -77,13 +76,10 @@ function getContent(file) {
     const activeFile = getActiveFile();
     if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
 
-
     if(!fs.existsSync(file)) {
       // TODO: understand what's happening here
       return Promise.resolve(fs.writeFile(file, "", function(error) {
-        if(error) {
-          return Promise.reject("Error: Could not create file");
-        }
+        if(error) return Promise.reject("Error: Could not create file")
         return "";
       }));
     }
@@ -95,7 +91,6 @@ function getContent(file) {
     return Promise.reject("Error in getContent(): " + error);
   }
 }
-
 function openFileChooser(args) {
   try {
     let 
@@ -124,8 +119,6 @@ function openFileChooser(args) {
         if(canceled || filePaths.length === 0) return false;
         
         const bookmark = bookmarks ? bookmarks[0] : undefined
-
-        console.log(bookmark)
 
         if(fileWatcher) fileWatcher.close()
         
@@ -182,7 +175,6 @@ function openFileChooser(args) {
     return Promise.reject("Error in openFileChooser(): " + error);
   }
 }
-
 function refreshFiles() {
   try {
 
@@ -219,8 +211,6 @@ function refreshFiles() {
     return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
-
-
 function getActiveFile() {
   const index = userData.data.files.findIndex(file => file[0] === 1);
   if(index !==-1 ) {
@@ -229,7 +219,6 @@ function getActiveFile() {
   }
   return false;
 }
-
 async function startFileWatcher(file, bookmark) {
   try {
 
@@ -270,12 +259,6 @@ async function startFileWatcher(file, bookmark) {
     // persist the new file
     userData.set("files", userData.data.files);
 
-    // an active filewatcher will be destroyed first
-    if(fileWatcher) {
-      fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
-      await fileWatcher.unwatch();
-    }
-
     // only for MAS (Sandboxed)
     // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
     const activeFile = getActiveFile();
@@ -287,12 +270,18 @@ async function startFileWatcher(file, bookmark) {
       return Promise.reject("Info: File not found on disk, starting onboarding");
     }
 
+    // an active filewatcher will be destroyed first
+    if(fileWatcher) {
+      await fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
+      await fileWatcher.unwatch();
+      fileWatcher = null;
+    }
+
     // create a new filewatcher
     fileWatcher = chokidar.watch(file);
 
     fileWatcher
       .on("add", async function() {
-
         const content = await getContent(file).then(content => {
           return content;
         }).catch(error => {
@@ -338,9 +327,9 @@ async function startFileWatcher(file, bookmark) {
     // change window title
     const title = path.basename(file) + " - sleek";
     mainWindow.title = title;
-    mainWindow.webContents.on("did-finish-load",() => {
-      mainWindow.setTitle(title);
-    });
+    // mainWindow.webContents.on("did-finish-load",() => {
+    //   mainWindow.setTitle(title);
+    // });
 
     if(process.mas) stopAccessingSecurityScopedResource()
     
@@ -352,7 +341,6 @@ async function startFileWatcher(file, bookmark) {
     return Promise.reject("Error in startFileWatcher(): " + error);
   }
 }
-
 function getUserData() {
   try {
 
@@ -474,19 +462,21 @@ function configureWindowEvents() {
         require("electron").shell.openExternal(url);
       });
 
+    ipcMain.handle("userData", (event, args) => {
+      if(args) {
+        userData.set(args[0], args[1]);
+        console.log("Success: " + args[0] + " persisted, value is: " + args[1]);
+      }
+      return userData.data;
+    });
+  
+    ipcMain.handle("appData", (event, args) => {
+      return appData;
+    });
+
     ipcMain
       .on("closeWindow", () => {
         mainWindow.close()
-      })
-      .on("userData", (event, args) => {
-        if(args) {
-          userData.set(args[0], args[1]);
-          console.log("Success: " + args[0] + " persisted, value is: " + args[1]);
-        }
-        mainWindow.webContents.send("userData", userData.data);
-      })
-      .on("appData", () => {
-        mainWindow.webContents.send("appData", appData);
       })
       .on("changeLanguage", async (event, language) => {
         event.preventDefault();
@@ -497,12 +487,10 @@ function configureWindowEvents() {
       .on("writeToFile", function(event, args) {
         const content = args[0];
         let file = args[1];
-        
         if(!file) {
           const index = userData.data.files.findIndex(file => file[0] ===1 );
           file = userData.data.files[index][1];
         }
-
         // only for MAS (Sandboxed)
         // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
         const activeFile = getActiveFile();
@@ -524,7 +512,6 @@ function configureWindowEvents() {
         });
       })
       .on("startFileWatcher", (event, file) => {
-        console.log(file)
         startFileWatcher(file).then(response => {
           mainWindow.webContents.send("startFileWatcher", response);
         }).catch(error => {
@@ -542,13 +529,6 @@ function configureWindowEvents() {
         getTranslations().then(function(translations) {
           mainWindow.webContents.send("translations", translations)
         });
-        // if(translations) {
-        //   mainWindow.webContents.send("translations", translations);
-        // } else {
-        //   getTranslations(language).then(function(translations) {
-        //     mainWindow.webContents.send("translations", translations)
-        //   });
-        // }
       })
       .on("showNotification", (event, config) => {
         showNotification(config);
@@ -635,11 +615,8 @@ function setupTray() {
   ]
   let menu;
   (trayFiles.length > 0) ? menu = Menu.buildFromTemplate(trayFiles.concat(contextMenu)) : menu = Menu.buildFromTemplate(contextMenu)
-
   tray.setContextMenu(menu)
-  //tray.setTitle("sleek");
-  tray.setToolTip("sleek");
-  
+  tray.setToolTip("sleek")
   tray.on("click", function() {
     // don't do this on MacOS
     if(appData.os === "mac") return false;
@@ -651,8 +628,32 @@ function setupTray() {
 // CREATE THE WINDOW
 // #######################################################################################################################
 
+function reopenMainWindow() {
+  try {
+
+    if(mainWindow) {
+      if(!mainWindow.isVisible()) mainWindow.show();
+      return Promise.resolve("Success: Main window has been reopened");
+    }
+
+    if(BrowserWindow.getAllWindows().length === 0) {
+      createWindow().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        console.error(error);
+      })
+    }
+
+    return Promise.resolve("Success: Main window has been recreated");
+    
+  } catch(error) {
+    return Promise.reject("Error in reopenMainWindow(): " + error);
+  }
+}
+
 async function createWindow() {
   try {
+
     userData = await getUserData();
 
     translations = await getTranslations();
@@ -682,169 +683,306 @@ async function createWindow() {
 
     mainWindow.loadFile(path.join(appData.path, "index.html"));
 
+    if(appData.os === "windows") {
+      new Badge(mainWindow, {
+        font: "10px arial"
+      });
+    }
+
     // ########################################################################################################################
     // MAIN MENU
     // ########################################################################################################################
-    Menu.setApplicationMenu(Menu.buildFromTemplate(
-      [
-        {
-          label: translations.file,
-          submenu: [
-            {
-              label: translations.openFile,
-              click: function () {
-                openFileChooser("open").then(response => {
-                  console.log(response);
-                }).catch(error => {
-                  console.error(error);
-                });
-              }
-            },
-            {
-              label: translations.createFile,
-              click: function () {
-                openFileChooser("create").then(response => {
-                  console.log(response);
-                }).catch(error => {
-                  console.error(error);
-                });
-              }
-            },
-            { type: "separator" },
-            { role: "hide" },
-            { type: "separator" },
-            {
-              label: translations.settings,
-              click: function () {
-                mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);
-              }
-            },
-            { type: "separator" },
-            {
-              click: function() {
-                mainWindow.close();
-              },
-              label: translations.close
-            },
-            {
-              role: "quit",
-              accelerator: "Cmd+Q",
-              click: function() {
-                app.quit();
-              }
-            }
-          ]
-        },
-        {
-          label: translations.edit,
-          submenu: [
-            { role: "undo", accelerator: "CmdOrCtrl+Z" },
-            { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
-            { type: "separator" },
-            { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
-            { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
-            { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
-            { role: "selectAll", accelerator: "CmdOrCtrl+A" }
-          ]},
-        {
-          label: translations.todos,
-          submenu: [
-            {
-              label: translations.addTodo,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "showForm")
-              }
-            },
-            {
-              label: translations.find,
-              click: function() {
-                mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
-              }
-            },
-            {
-              label: translations.archive,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "archiveTodos")
-              }
-            }
-          ]
-        },
-        {
-          label: translations.view,
-          submenu: [
-            {
-              label: translations.toggleFilter,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
-              }
-            },
-            {
-              label: translations.resetFilters,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
-              }
-            },
-            {
-              label: translations.toggleCompletedTodos,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
-              }
-            },
-            { type: "separator" },
-            {
-              role: "print",
-              accelerator: "CmdOrCtrl+P",
-              label: translations.printCurrentView,
-              click: function() {
+    
+    const menuTemplateApp = {
+      label: "sleek",
+      submenu: 
+      [{
+        label: translations.open,
+        click: async function() {
 
-                // remove dark mode styling
-                mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
-      
-                const index = userData.data.files.findIndex(file => file[0] === 1);
-                
-                if(index === -1) return false
-                
-                mainWindow.webContents.send("buildTable", [null, true]);
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
+        }
+      },
+      { role: "hide" },
+      { type: "separator" },
+      {
+        label: translations.settings,
+        click: async function() {
 
-                setTimeout(function() {
-                  mainWindow.webContents.executeJavaScript("window.print()");
-                }, 500);
-                
-              }
-            },
-            {
-              label: translations.toggleTheme,
-              click: function() {
-                mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
-              }
-            },
-            {
-              role: "reload",
-              label: translations.reload
-            }
-          ]
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
+
+          setTimeout(function() {
+            mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);              
+          }, 200);
+          
+        }
+      },
+      { type: "separator" },
+      (appData.os !== "mac") ? { role: "close", accelerator: "CmdOrCtrl+W" } : { role: "close", accelerator: "CmdOrCtrl+W" }, { 
+        role: "quit",
+        accelerator: "CmdOrCtrl+Q",
+        click: function() {
+          app.quit();
+        }
+      }]
+    }
+
+
+    const menuTemplateFile = {
+      label: translations.file,
+      submenu: 
+      [{
+        label: translations.openFile,
+        click: async function() {
+          
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
+
+          openFileChooser("open").then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.error(error);
+          });
+        }
+      },
+      {
+        label: translations.createFile,
+        click: async function() {
+          
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
+
+          openFileChooser("create").then(response => {
+            console.log(response);
+          }).catch(error => {
+            console.error(error);
+          });
+        }
+      }]
+    }
+
+    const menuTemplateEdit = {
+      label: translations.edit,
+      submenu: [
+        { role: "undo", accelerator: "CmdOrCtrl+Z" },
+        { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
+        { type: "separator" },
+        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { role: "selectAll", accelerator: "CmdOrCtrl+A" }
+      ]
+    }
+
+    const menuTemplateTodos = {
+      label: translations.todos,
+      submenu: [
+        {
+          label: translations.addTodo,
+          click: async function() {
+            
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "showForm")
+            }, 200);
+            
+          }
         },
         {
-          label: translations.about,
-          submenu: [
-            {
-              label: translations.help,
-              click: function () {
-                mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
-              }
-            },
-            {
-              label: translations.sleekOnGithub,
-              click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
-            },
-            {
-              role: "toggleDevTools",
-              label: translations.devTools
+          label: translations.find,
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
+            }, 200);
+            
+          }
+        },        
+        { 
+          label: translations.archive,
+          click: async function() {
+
+            if(process.mas) {
+              mainWindow.webContents.send("triggerFunction", "showGenericMessage", ["This feature is being worked on at this moment and will be released soon", 3])  
+              return false;
             }
-          ]
+            
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "archiveTodos")
+            }, 200);
+        
+          }
         }
       ]
-    ));
+    }
+
+    const menuTemplateView = {
+      label: translations.view,
+      submenu: [
+        {
+          label: translations.toggleFilter,
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
+            }, 200);
+
+          }
+        },
+        {
+          label: translations.resetFilters,
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
+            }, 200);
+      
+          }
+        },
+        {
+          label: translations.toggleCompletedTodos,
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
+            }, 200);
+
+          }
+        },
+        { type: "separator" },
+        {
+          role: "print",
+          accelerator: "CmdOrCtrl+P",
+          label: translations.printCurrentView,
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
+            }, 200);            
+
+            const index = userData.data.files.findIndex(file => file[0] === 1);
+            
+            if(index === -1) return false
+            
+            mainWindow.webContents.send("buildTable", [null, true]);
+
+            setTimeout(function() {
+              mainWindow.webContents.executeJavaScript("window.print()");
+            }, 500);
+            
+          }
+        },
+        {
+          label: translations.toggleTheme,
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
+            }, 200);
+
+          }
+        },
+        {
+          role: "reload",
+          label: translations.reload
+        }
+      ]
+    }
+
+    const menuTemplateAbout = {
+      label: translations.about,
+      submenu: [
+        {
+          label: translations.help,
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
+            }, 200);
+
+          }
+        },
+        {
+          label: translations.sleekOnGithub,
+          click: () => {require("electron").shell.openExternal("https://github.com/ransome1/sleek")}
+        },
+        {
+          role: "toggleDevTools",
+          label: translations.devTools
+        }
+      ]
+    }
+
+    const menuTemplate = (getActiveFile()) ? [menuTemplateApp, menuTemplateFile, menuTemplateEdit, menuTemplateTodos, menuTemplateView, menuTemplateAbout] : [menuTemplateApp, menuTemplateFile]
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
     // ########################################################################################################################
     // TRAY ICON
@@ -855,7 +993,7 @@ async function createWindow() {
     // INITIAL WINDOW CONFIGURATION
     // ########################################################################################################################
     if(userData.data.maximizeWindow) mainWindow.maximize()
-    if(appData.environment==="development") mainWindow.webContents.openDevTools()
+    if(appData.environment === "development") mainWindow.webContents.openDevTools()
 
     // ########################################################################################################################
     // EVENTS
@@ -906,13 +1044,9 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
 
   app.on("ready", () => {
 
-    // TODO: check if this still works
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
 
     if(appData.os === "windows") {
-      new Badge(mainWindow, {
-        font: "10px arial"
-      }); 
       // identifier for windows store
       app.setAppUserModelId("RobinAhle.sleektodomanager")
     }
@@ -931,25 +1065,17 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
     if(!mainWindow) return false
     if(mainWindow.isMinimized()) mainWindow.restore()
     mainWindow.show()
-    
   })
-  .on("window-all-closed", () => {
+  .on("window-all-closed", async () => {
+    // an active filewatcher will be destroyed first
     if(appData.os !== "mac") app.quit()
-    mainWindow = null
+    mainWindow = null;
   })
-  .on("activate", () => {
-
-    if(mainWindow) {
-      if(!mainWindow.isVisible()) mainWindow.show();
-      return false;
-    }
-
-    if(BrowserWindow.getAllWindows().length === 0) 
-      createWindow().then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        console.error(error);
-      })
-    
+  .on("activate", async () => {
+    reopenMainWindow().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      console.error(error);
+    })
   });
 }

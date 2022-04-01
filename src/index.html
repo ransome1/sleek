@@ -776,9 +776,14 @@
     <div id="todoContext" role="menu" tabindex="0">
       <div class="card">
         <div class="card-content">
-          <a id="todoContextUseAsTemplate" class="dropdown-item" tabindex="0"></a>
-          <a id="todoContextCopy" href="#" class="dropdown-item" tabindex="0"></a>
-          <a id="todoContextDelete" class="dropdown-item" tabindex="0"></a>
+          <div class="horizontal">
+            <label>Priority</label>
+            <a href="#" id="todoContextPriorityIncrease" class="dropdown-item" tabindex="0"><i class="fas fa-plus"></i></a>
+            <a href="#" id="todoContextPriorityDecrease" class="dropdown-item" tabindex="0"><i class="fas fa-minus"></i></a>
+          </div>
+          <a href="#" id="todoContextUseAsTemplate" class="dropdown-item" tabindex="0"></a>
+          <a href="#" id="todoContextCopy" class="dropdown-item" tabindex="0"></a>
+          <a href="#" id="todoContextDelete" class="dropdown-item" tabindex="0"></a>
         </div>
       </div>
     </div>

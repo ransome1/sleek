@@ -19,6 +19,7 @@ export function createModalJail(modal) {
     // add focus on the first focusable element
     firstFocusableElement.focus();
 
+
     modal.onkeydown = function(event) {
 
       // if arrow down key is pressed

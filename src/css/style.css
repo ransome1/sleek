@@ -4,6 +4,7 @@ body.dark {
   color: #f0f0f0;
 }
 body.dark code, body.dark pre {
+  color: #CCCDCF !important;
   background-color: #212224 !important;
 }
 body.dark a {
@@ -338,6 +339,14 @@ body.dark #todoContext .card {
 body.dark #filterContext .card #filterContextDelete,
 body.dark #todoContext .card #filterContextDelete {
   color: #ff3860 !important;
+}
+body.dark #filterContext .horizontal,
+body.dark #todoContext .horizontal {
+  border-bottom: 1px solid #2d2d2d;
+}
+body.dark #filterContext .horizontal label,
+body.dark #todoContext .horizontal label {
+  color: #ebebeb;
 }
 body.dark #fileTabBar ul {
   background-color: #2d2d2d;
@@ -747,8 +756,9 @@ strong {
 
 code, pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
-  background-color: #ebebeb !important;
-  color: inherit !important;
+  background: #ccc !important;
+  color: #5a5a5a !important;
+  border-radius: 0.65em;
 }
 
 #noResultContainer {
@@ -1314,8 +1324,8 @@ a.contexts:hover span.tag {
   background: #247561 !important;
 }
 
-a.contexts:focus-visible,
-a.contexts.is-dark:focus-visible {
+a.button.contexts:focus-visible,
+a.button.contexts.is-dark:focus-visible {
   background: #247561 !important;
   color: white !important;
 }
@@ -1338,10 +1348,10 @@ a.projects:hover span.tag {
   background: #822c82;
 }
 
-a.projects:focus-visible,
-a.projects.is-dark:focus-visible {
+a.button.projects:focus-visible,
+a.button.projects.is-dark:focus-visible {
   background: #822c82 !important;
-  color: white;
+  color: white !important;
 }
 
 a.projects.is-dark,
@@ -1567,12 +1577,6 @@ a.priority.C:focus-visible span.tag {
 }
 #drawerContainer .drawer section .todoFilterHint {
   cursor: help;
-  opacity: 0.4;
-}
-#drawerContainer .drawer section .todoFilterHint code {
-  color: white !important;
-  background: #2d2d2d !important;
-  border-radius: 0.65em;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;
@@ -1660,7 +1664,7 @@ a.priority.C:focus-visible span.tag {
 }
 .modal.content code {
   background: transparent;
-  padding: 0;
+  padding: 0.25em 0.5em;
 }
 .modal.content .delete,
 .modal.content .modal-close {
@@ -2132,25 +2136,37 @@ a.priority.C:focus-visible span.tag {
   border-radius: 0.65em;
   box-shadow: 0 0 1em #ccc;
 }
-#todoContext a {
+#todoContext a, #todoContext label {
   font-size: 0.9em;
   color: #3273dc;
   padding: 0.75em 1.5em;
 }
-#todoContext a.dropdown-item:first-child {
+#todoContext .dropdown-item:first-child {
   border-top-left-radius: 0.65em;
   border-top-right-radius: 0.65em;
 }
-#todoContext a.dropdown-item:last-child {
+#todoContext .dropdown-item:last-child {
   border-bottom-left-radius: 0.65em;
   border-bottom-right-radius: 0.65em;
 }
-#todoContext a.dropdown-item:focus,
-#todoContext a.dropdown-item:hover {
+#todoContext .dropdown-item:focus,
+#todoContext .dropdown-item:hover {
   background-color: #f0f0f0 !important;
 }
 #todoContext .card-content {
   padding: 0;
+}
+#todoContext .card-content .horizontal {
+  display: flex;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+#todoContext .card-content .horizontal label {
+  color: #5a5a5a;
+}
+#todoContext .card-content .horizontal .dropdown-item {
+  border-radius: 0;
+  border: none;
 }
 
 .toggle {

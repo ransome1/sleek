@@ -1,6 +1,6 @@
 const { _electron: electron } = require("playwright");
 const { test, expect } = require("@playwright/test");
-const waitForAppToLoad = 2000;
+const waitForAppToLoad = 1000;
 let 
 	app, 
 	page;
@@ -89,9 +89,9 @@ test.describe("Todo table", () => {
 	});
 
 	test("Fourth row can be clicked and shows modal, which input field contains a specfic value", async () => {
-		await page.locator(":nth-match(#todoTable .todo, 3) > .text").click();
+		await page.locator(":nth-match(#todoTable .todo, 4) > .text").click();
 		const value = await page.inputValue("#modalFormInput");
-		await expect(value).toBe("(A) 2021-02-28 A task list with all possible task types comments due:2023-03-30 +todotxt @test");
+		await expect(value).toBe("(B) Call Mom 2011-03-02 this task has no creation date  Call Mom multiple projects and contexts     Email SoAndSo at soandso@example.com this task has no context due:2023-04-09 +Family +PeaceLoveAndHappiness @iphone @phone");
 
 	});
 });
@@ -131,21 +131,21 @@ test.describe("Todo context", () => {
 		await expect(todoContext).toBeVisible();
 	});
 
-	test("Number of buttons is 3", async () => {
+	test("Number of buttons is 5", async () => {
 		// count items in context
 		const rows = await page.locator("#todoContext .dropdown-item").count();
-		await expect(rows).toBe(3);
+		await expect(rows).toBe(5);
 	});
 
 	test("Context container has the correct 'data-item' attribute", async () => {
 		// check if data item has desired value
 		const todoContext = await page.locator("#todoContext");
 		const dataItem = await todoContext.getAttribute("data-item");
-		await expect(dataItem).toBe("(A) Call Mom 2011-03-02 this task has no creation date  Call Mom multiple projects and contexts     Email SoAndSo at soandso@example.com this task has no context due:2023-04-09 +Family +PeaceLoveAndHappiness @iphone @phone");
+		await expect(dataItem).toBe("(A) Thank Mom for the meatballs  x 2021-04-07 (B) Schedule Goodwill pickup   Eskimo pies  Really gotta call Mom this task has no priority (A)   (b) Get back to the boss this task has no priority due:2023-06-10 +GarageSale @phone @phone @GroceryStore @phone @someday");
 	});
 
 	test("Click on 'Use as template' shows desired input value", async () => {
-		await page.locator(":nth-match(#todoContext .dropdown-item, 1)").click();
+		await page.locator(":nth-match(#todoContext .dropdown-item, 3)").click();
 		//const value = await page.inputValue("#modalFormInput");
 		await expect(page.locator("#modalFormInput")).toHaveValue(/____________/);
 		
@@ -163,7 +163,7 @@ test.describe("Todo context", () => {
 				"y": 10
 			}
 		});
-		await page.locator(":nth-match(#todoContext .dropdown-item, 2)").click();
+		await page.locator(":nth-match(#todoContext .dropdown-item, 4)").click();
 		await expect(page.locator("#messageGenericContainer")).toBeVisible();
 	});
 
@@ -202,7 +202,7 @@ test.describe("Creating todos", () => {
 				"y": 10
 			}
 		});
-		await page.locator(":nth-match(#todoContext .dropdown-item, 3)").click();
+		await page.locator(":nth-match(#todoContext .dropdown-item, 5)").click();
 		await page.waitForSelector("#btnAddTodoContainer");
 	});
 
@@ -222,7 +222,7 @@ test.describe("Creating todos", () => {
 	test("Add new todo and use it as a template to create another one", async () => {
 		await page.locator("#btnAddTodoContainer").click();
 		await page.locator("#modalFormInput").fill("This is a test todo that will be used as a template +testing @testing");
-		await page.locator("#btnSave").click();
+		await page.keyboard.press("Enter");
 
 		const row = await page.locator(":nth-match(#todoTable .todo, 1) > .text");
 		await row.click({
@@ -232,7 +232,7 @@ test.describe("Creating todos", () => {
 				"y": 10
 			}
 		});
-		await page.locator(":nth-match(#todoContext .dropdown-item, 1)").click();
+		await page.locator(":nth-match(#todoContext .dropdown-item, 3)").click();
 		await expect(page.locator("#modalFormInput")).toHaveValue(/____________/);
 		// close modal
 		await page.locator("#btnCancel").click();
@@ -243,7 +243,7 @@ test.describe("Creating todos", () => {
 				"y": 10
 			}
 		});
-		await page.locator(":nth-match(#todoContext .dropdown-item, 3)").click();
+		await page.locator(":nth-match(#todoContext .dropdown-item, 5)").click();
 		await page.waitForSelector("#btnAddTodoContainer");
 	});
 
@@ -408,13 +408,14 @@ test.describe("Input element switch", () => {
 	});
 
 	test("Check if multi line items are displayed correctly", async () => {
-		const row = page.locator(":nth-match(#todoTable .todo, 8) > .text");
+		const row = page.locator(":nth-match(#todoTable .todo, 7) > .text");
 		await row.click({
 			"position": {
 				"x": 50,
 				"y": 10
 			}
 		});
+
 		await expect(await page.locator("#modalFormInput").inputValue()).toBe("This is a multi line taskcreated withinSleek due:2023-05-01 +todotxt @test");
 		await page.locator("#modalFormInputResize").click();
 		await expect(await page.locator("#modalFormInput").inputValue()).toBe(`This is a 
@@ -509,7 +510,7 @@ test.describe("Filter drawer", () => {
 
 		await page.waitForSelector("#filterDrawer");
 		
-		const filterButton = await page.locator(":nth-match(#filterDrawer section.projects button, 2)");
+		const filterButton = await page.locator(":nth-match(#filterDrawer section.projects a.button, 2)");
 		
 		await filterButton.click();
 
@@ -526,11 +527,11 @@ test.describe("Filter drawer", () => {
 	test("Filter sidebar is being opened and a context and a project is being selected and filter reset button removes selection", async () => {
 		await page.locator("#navBtnFilter").click();
 		await page.waitForSelector("#filterDrawer");
-		const priorityButton = await page.locator(":nth-match(#filterDrawer #todoFilters button, 1)");
+		const priorityButton = await page.locator(":nth-match(#filterDrawer #todoFilters a.button, 1)");
 		await priorityButton.click();
-		const contextButton = await page.locator(":nth-match(#filterDrawer #todoFilters button, 7)");
+		const contextButton = await page.locator(":nth-match(#filterDrawer #todoFilters a.button, 7)");
 		await contextButton.click();
-		const projectButton = await page.locator(":nth-match(#filterDrawer #todoFilters button, 11)");
+		const projectButton = await page.locator(":nth-match(#filterDrawer #todoFilters a.button, 11)");
 		await projectButton.click();
 		rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);

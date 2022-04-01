@@ -144,12 +144,6 @@
       }
       .todoFilterHint {
         cursor: help;
-        opacity: 0.4;
-        code {
-          color: white!important;
-          background: $darker-grey!important;
-          border-radius: $radius;
-        }
       }
     }
     table tr td:nth-child(odd) {

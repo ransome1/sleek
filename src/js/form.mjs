@@ -461,7 +461,7 @@ async function show(todo, templated) {
       // this is a new templated todo task
       if(templated) {  
         // erase the original creation date and description
-        todo.date = new Date();
+        if(userData.appendStartDate) todo.date = new Date();
         todo.text = "____________";
         modalFormInput.value = todo.toString();
         

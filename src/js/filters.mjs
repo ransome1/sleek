@@ -435,6 +435,7 @@ function generateFilterButtons(category, autoCompletePrefix) {
       todoFiltersItem.setAttribute("data-category", category);
       todoFiltersItem.classList.add("button", category);
       todoFiltersItem.setAttribute("tabindex", 0)    
+      todoFiltersItem.setAttribute("href", "#")    
       todoFiltersItem.innerHTML = filter;
 
       // configuration for filter drawer buttons

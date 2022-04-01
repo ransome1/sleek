@@ -9,7 +9,7 @@ import { show, setPriority, resetForm } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
 import { triggerToggle } from "./toggles.mjs";
-import { userData, translations, startFileWatcher } from "../render.js";
+import { appData, userData, translations, startFileWatcher } from "../render.js";
 
 const 
   autoCompleteContainer = document.getElementById("autoCompleteContainer"),
@@ -58,7 +58,16 @@ export async function registerShortcuts() {
       if(event.key === "Escape") {
 
         // if search is focused, lose focus on escape
-        if(document.activeElement.id==="todoTableSearch") todoTableSearch.blur();
+        if(document.activeElement.id==="todoTableSearch") {
+          todoTableSearch.blur();
+          return false;
+        }
+        // if 'add as todo' is focused, return to search
+        if(document.activeElement.id==="todoTableSearchAddTodo") {
+          document.getElementById("todoTableSearch").focus();
+          return false;
+        }
+
 
         // if a datepicker container is detected interrupt, datepicker destruction is handled in module
         if(document.querySelector(".datepicker")) return false;
@@ -561,6 +570,10 @@ export async function registerShortcuts() {
         if(event.key==="a" && !isInputFocused()) {
           // abort when onboarding is shown
           if(isOnboardingOpen()) return false;
+          
+          // TODO: add archiving on MAS build
+          if(appData.channel === "Mac App Store") return false;
+
           // handle user confirmation and pass callback function
           getConfirmation(archiveTodos, translations.archivingPrompt);
           return false;

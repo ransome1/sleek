@@ -12,19 +12,6 @@ let
   translations,
   userData;
 
-function getUserData() {
-  try {
-    window.api.send("userData");
-    return new Promise(function(resolve) {
-      return window.api.receive("userData", function(userData) {
-        resolve(userData);
-      });
-    });
-  } catch(error) {
-    error.functionName = getUserData.name;
-    return Promise.reject(error);
-  }
-}
 function startFileWatcher(file) {
   try {
     window.api.send("startFileWatcher", file);
@@ -38,33 +25,13 @@ function startFileWatcher(file) {
     return Promise.reject(error);
   }
 }
-function setUserData(key, value) {
+async function setUserData(key, value) {
   try {
     userData[key] = value;
-
-    window.api.send("userData", [key, value]);
-
-    return new Promise(function(resolve) {
-      return window.api.receive("userData", function(data) {
-        userData = data;
-        resolve("Success: User data persisted for " + key + " with value: " + value);
-      });
-    });
+    userData = await window.api.invoke("userData", [key, value]);
+    return Promise.resolve("Success: User data persisted for " + key + " with value: " + value);
   } catch(error) {
     error.functionName = setUserData.name;
-    return Promise.reject(error);
-  }
-}
-function getAppData() {
-  try {
-    window.api.send("appData");
-    return new Promise(function(resolve) {
-      return window.api.receive("appData", (appData) => {
-        resolve(appData);
-      });
-    });
-  } catch(error) {
-    error.functionName = getAppData.name;
     return Promise.reject(error);
   }
 }
@@ -82,16 +49,12 @@ function getTranslations() {
   }
 }
 async function buildTable(fileContent, loadAll) {
-  //try {
+
     // start timer for table
     const t0 = performance.now();
 
     // refresh user data on each build
-    userData = await getUserData().then(function(response) {
-      return response;
-    }).catch(function(error) {
-      helper.handleError(error);
-    })
+    userData = await window.api.invoke("userData");
 
     await todos.generateTodoTxtObjects(fileContent).then(function(response) {
       console.log(response)
@@ -145,20 +108,6 @@ async function buildTable(fileContent, loadAll) {
       helper.handleError(error);
     });
 
-  // if anything fails onboarding is shown and error presented to user
-  // } catch(error) {
-
-  //   onboarding.showOnboarding(true).then(function(response) {
-  //     console.log(response);
-  //   }).catch(function(error) {
-  //     helper.handleError(error);
-  //   });
-
-  //   messages.showGenericMessage(error);
-
-  //   error.functionName = buildTable.name;
-  //   return Promise.reject(error);
-  // }
 }
 
 window.onload = async function() {
@@ -166,8 +115,9 @@ window.onload = async function() {
     // start timer for app
     const a0 = performance.now();
 
-    userData = await getUserData();
-    appData = await getAppData();
+    userData = await window.api.invoke("userData");
+    appData = await window.api.invoke("appData");
+    
     translations = await getTranslations();
     onboarding = await import("./js/onboarding.mjs");
     helper = await import("./js/helper.mjs");
@@ -239,4 +189,4 @@ window.onload = async function() {
   }    
 }
 
-export { getUserData, setUserData, buildTable, userData, appData, translations, startFileWatcher };
+export { setUserData, buildTable, userData, appData, translations, startFileWatcher };

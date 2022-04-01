@@ -1,5 +1,5 @@
 # sleek
-## sleek is a free and open-source (FOSS) todo manager that makes use of the todo.txt format. Available for Linux, Windows and MacOS
+## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
 + [Support sleek](#support-sleek)
 + [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
@@ -13,13 +13,11 @@
 + [Features](#features)
 + [Used libraries](#used-libraries)
 
-sleek is a free and open-source (FOSS) todo manager that makes use of the todo.txt format. sleeks GUI is modern and simple but still offers a decent set of functions which help users getting things done. sleek is available as a client for Windows, MacOS and Linux.
+sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
 
-Users can add contexts, projects, priorities, due dates, recurrences or threshold dates to their todos. These todo.txt attributes can then be used in full-text search, as filters or to group and sort the todo list.
+All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
-sleek manages and watches multiple todo.txt files continuously for changes, which makes it easy to integrate sleek with other todo.txt apps. Also users can switch to dark mode and choose from multiple languages.
-
-Todos with due date or repeating todos will trigger notifications and completed todos can be hidden or archived into separate done.txt files. If users have tons of todos, a compact view can come in handy.
+sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below.
 
 ### Screenshots
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's todo list view")
@@ -73,35 +71,32 @@ You can download sleek for Windows, MacOS and Linux from
 4. Build sleek `yarn build:windows` or `yarn build:linux` or `yarn build:macos`
 
 ### Features
-* sleek can use existing todo.txt files or create new ones
-* Todos can be enriched and searched for by
+* Uses existing todo.txt files or creates new ones
+* Add and search for todos by
   - priorities
   - contexts
   - projects
   - due dates
   - creation dates
-  - <a href="https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)">recurrences</a>
-  - <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)">threshold dates</a>
-* Todo list can be sorted by priorities, due dates, creation dates, contexts and projects or simply by file order
-* Todos can be filtered by contexts, projects and priorities
-* Todos can be looked up by a full-text search that is compatible with the todo.txt syntax
-* Autocomplete function suggests available contexts and projects
-* Dates and priorities can be selected by built-in picker elements
-* <a href="https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts">Keyboard shortcuts following todotxt.net</a>
+  - recurrences (repeating todos)
+  - threshold dates
+* Sort and group todos by priority, due and creation date, context and project or as they occur in the text file
+* Filter todos by context, project and priority
+* Find todos using full-text search compatible with todo.txt syntax
+* Inline autocomplete available
+* Dates and priorities can be selected by built-in picker elements 
+* Navigable via keyboard shortcuts
 * Tabindex available
-* <a href="https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)">A todo can be hidden but its attributes will be available in the filter drawer and autocomplete function</a>
-* Due dates trigger alarms and appear as badges in sleeks icon
-* Dark and light mode can be toggled
-* A compact view is available
-* Completed todos can be bulk archived to a separate done.txt file
-* Completed todos can be shown or hidden
+* Options for due date reminders and notification badges
+* Easily toggle between dark and light mode
+* Compact view and zoom available
+* Completed todos can be shown, hidden and archived
 * Multi line todos can be created
-* Filters can be renamed or deleted by right clicking on them
-* Filters are sorted alphanummerically
-* Hyperlinks are detected automatically and can be clicked using the icon
-* A file watcher rereads the todo.txt file if it has been changed
-* Multiple todo.txt files can be managed and switched between using a tab bar or keyboard shortcuts
-* Multiple languages are either detected or can be set by hand to
+* Filters are sorted alphanummerically and can be renamed or deleted
+* Hyperlinks detected automatically
+* File watcher scans todo.txt files for changes
+* Simultaneously manage multiple todo.txt files
+* Language options
   - English
   - German
   - Italian
@@ -114,9 +109,8 @@ You can download sleek for Windows, MacOS and Linux from
   - Hungarian
   - Czech
   - Polish
-* sleek can be minimized to tray
-* Existing todos can be used as templates for new ones
-* Todo list can be copied to clipboard
+
+A more detailed documentation can be found in <a href="https://github.com/ransome1/sleek/wiki/">sleeks wiki</a>.
 
 ### Used libraries
 - Electron: https://github.com/electron/electron

@@ -90,6 +90,7 @@
   "of": "z",
   "onboardingContainerBtnOpen": "Wybierz istniejący plik todo.txt",
   "onboardingContainerSubtitle": "Rozpocznij od wybrania <strong>już istniejącego</strong> pliku todo.txt lub od utworzenia <strong>nowego</strong>.",
+  "open": "Otwierać",
   "openFile": "Otwórz plik todo.txt",
   "paste": "Wklej",
   "priorities": "Priorytety",

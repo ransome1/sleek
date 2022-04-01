@@ -3,7 +3,7 @@ import "../../node_modules/sugar/dist/sugar.min.js";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 
 import { _paq } from "./matomo.mjs"; 
-import { userData, translations, buildTable } from "../render.js";
+import { userData, appData, translations, buildTable } from "../render.js";
 import { categories, selectFilter } from "./filters.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { createModalJail } from "./jail.mjs";
@@ -22,6 +22,8 @@ const todoContext = document.getElementById("todoContext");
 const todoContextDelete = document.getElementById("todoContextDelete");
 const todoContextCopy = document.getElementById("todoContextCopy");
 const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
+const todoContextPriorityIncrease = document.getElementById("todoContextPriorityIncrease");
+const todoContextPriorityDecrease = document.getElementById("todoContextPriorityDecrease");
 const todoTable = document.getElementById("todoTable");
 const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
@@ -334,7 +336,7 @@ function generateTableRow(todo) {
     }
 
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
-    todoTableBodyRow.appendChild(todoTableBodyCellArchive);
+    if(appData.channel !== "Mac App Store") todoTableBodyRow.appendChild(todoTableBodyCellArchive);
 
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
@@ -496,10 +498,16 @@ function generateTableRow(todo) {
     return Promise.reject(error);
   }
 }
-function createTodoContext(todoTableRow) {
+async function createTodoContext(todoTableRow) {
   try {
+
+    // get index of todo
+    let index = await items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
+    // retrieve todo object
+    const todo = items.objects[index]
+
     const useAsTemplate = function() {
-      show(todoContext.getAttribute("data-item"), true).then(response => {
+      show(todo.toString(), true).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);
@@ -512,14 +520,7 @@ function createTodoContext(todoTableRow) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
     }
     const copyTodo = async function() {
-      
-      const todoObject = await generateTodoTxtObject(todoTableRow.getAttribute("data-item")).then(response => {
-        return response;
-      }).catch(error => {
-        handleError(error);
-      });
-
-      pasteItemToClipboard(todoObject).then(response => {
+      pasteItemToClipboard(todo).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);
@@ -532,9 +533,6 @@ function createTodoContext(todoTableRow) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
     }
     const deleteTodo = async function() {
-      // get index of todo
-      const index = await items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
-
       // remove item at index  
       items.objects.splice(index, 1);
       
@@ -547,9 +545,55 @@ function createTodoContext(todoTableRow) {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
     }
+    const changePriority = function(direction) {
+
+      let nextIndex = 97;
+
+      // in case a todo has no priority and the 1st grouping method is priority
+      if(!items.objects[index].priority && userData.sortBy[0] === "priority") {
+        const index = items.grouped.length - 2;
+        // this receives the lowest available priority group
+        (index >= 0) ? nextIndex = items.grouped[index][0].toLowerCase().charCodeAt(0) : nextIndex = 97
+      // change priority based on current priority
+      } else if(items.objects[index].priority) {
+        const currentPriority = items.objects[index].priority.toLowerCase().charCodeAt(0)
+        nextIndex = currentPriority + direction;
+      }
+
+      if(nextIndex <= 96 || nextIndex >= 123) return false
+
+      items.objects[index].priority = String.fromCharCode(nextIndex).toUpperCase();
+
+      //write the data to the file
+      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+
+      todoContext.classList.remove("is-active");
+      todoContext.removeAttribute("data-item");
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority changer"]);
+
+    }
 
     todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
-    
+    todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
+  
+    // click on increse priority option
+    todoContextPriorityIncrease.onclick = function() {
+      changePriority(-1);
+    }
+    todoContextPriorityIncrease.onkeypress = function(event) {
+      if(event.key !== "Enter") return false;
+      changePriority(-1);
+    }
+    // click on decrease priority option
+    todoContextPriorityDecrease.onclick = function() {
+      changePriority(1);
+    }
+    todoContextPriorityDecrease.onkeypress = function(event) {
+      if(event.key !== "Enter") return false;
+      changePriority(1);
+    }
     // click on use as template option
     todoContextUseAsTemplate.onclick = function() {
       useAsTemplate();
@@ -605,10 +649,10 @@ function createTodoContext(todoTableRow) {
 function sortTodosInGroup(group) {
   try {
     // start at 1 to skip sorting method used for 1st level grouping
-    for(let i = 1; i < userData.sortBy.length; i++) {
-      
+    const l = userData.sortBy.length;
+    for(let i = 1; i < l; i++) {
       group.sort(function(a, b) {
-        
+
         // only continue if the two items have the same filters from all previous iterations
         if(JSON.stringify(a[userData.sortBy[i-4]]) !== JSON.stringify(b[userData.sortBy[i-4]])) return
         if(JSON.stringify(a[userData.sortBy[i-3]]) !== JSON.stringify(b[userData.sortBy[i-3]])) return
@@ -620,11 +664,9 @@ function sortTodosInGroup(group) {
           item2 = b[userData.sortBy[i]];
 
         // if first item is empty it will be sorted after second item
-        if(!item1) return 1;
+        if(!item1 || (item1 > item2)) return 1;
         // if second item is empty it will be sorted before first item
-        if(!item2) return -1;
-  
-        return item1.toString().localeCompare(item2.toString())
+        if(!item2 || (item1 < item2)) return -1;
         
       });
     }

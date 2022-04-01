@@ -23,9 +23,7 @@ todoTableSearch.oninput = debounce(function() {
 todoTableSearch.onfocus = function() {
   // add blue highlighting to search bar
   todoTableSearchContainer.classList.add("is-focused");
-
-  todoTableSearchAddTodo.classList.add("is-active")
-
+  todoTableSearchAddTodo.classList.add("is-active");
 }
 
 todoTableSearch.onblur = function(event) {
