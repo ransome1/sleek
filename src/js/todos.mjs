@@ -3,7 +3,7 @@ import "../../node_modules/sugar/dist/sugar.min.js";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 
 import { _paq } from "./matomo.mjs"; 
-import { userData, translations, buildTable } from "../render.js";
+import { userData, appData, translations, buildTable } from "../render.js";
 import { categories, selectFilter } from "./filters.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { createModalJail } from "./jail.mjs";
@@ -336,7 +336,7 @@ function generateTableRow(todo) {
     }
 
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
-    todoTableBodyRow.appendChild(todoTableBodyCellArchive);
+    if(appData.channel !== "Mac App Store") todoTableBodyRow.appendChild(todoTableBodyCellArchive);
 
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {

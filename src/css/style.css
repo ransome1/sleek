@@ -1664,7 +1664,7 @@ a.priority.C:focus-visible span.tag {
 }
 .modal.content code {
   background: transparent;
-  padding: 0;
+  padding: 0.25em 0.5em;
 }
 .modal.content .delete,
 .modal.content .modal-close {

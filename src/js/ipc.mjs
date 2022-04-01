@@ -1,15 +1,25 @@
 "use strict";
 
-import { translations } from "../render.js";
-import { handleError } from "./helper.mjs";
+import { buildTable, translations } from "../render.js";
+import { setupInterface, handleError } from "./helper.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { resetFilters } from "./filters.mjs";
 import { triggerToggle } from "./toggles.mjs";
 
+//const helper = await import("./helper.mjs");
+//const render = await import("../render.js");
+
+// receives todo.txt data from main process as string and passes it to build function
+window.api.receive("buildTable", async (args) => {
+  buildTable(...args).then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
+});
+
 window.api.receive("triggerFunction", async (name, args) => {
   try {
-
-    const helper = await import("./helper.mjs");
 
     if(!args) args = new Array;
 
@@ -25,6 +35,14 @@ window.api.receive("triggerFunction", async (name, args) => {
       case "showForm":
         var form = await import("../js/form.mjs");
         form.show(...args).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          handleError(error);
+        });
+        break;
+      case "showGenericMessage":
+        const messages = await import("../js/messages.mjs");
+        messages.showGenericMessage(...args).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
@@ -61,7 +79,7 @@ window.api.receive("triggerFunction", async (name, args) => {
         });
         break;
       case "setupInterface":
-        helper.setupInterface().then(function(response) {
+        setupInterface().then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
@@ -86,15 +104,4 @@ window.api.receive("triggerFunction", async (name, args) => {
     error.functionName = "triggerFunction";
     return Promise.reject(error);
   }
-});
-
-// receives todo.txt data from main process as string and passes it to build function
-window.api.receive("buildTable", async (args) => {
-  const helper = await import("./helper.mjs");
-	const render = await import("../render.js");
-	render.buildTable(...args).then(function(response) {
-		console.info(response);
-	}).catch(function(error) {
-		handleError(error);
-	});
 });

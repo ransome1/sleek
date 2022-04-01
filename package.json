@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.1.8-rc.2",
+  "version": "1.1.7",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "category": "ProjectManagement",
@@ -12,14 +12,14 @@
     "tasks"
   ],
   "author": "Robin Ahle <mail@robbfolio.de>",
-  "copyright": "Copyright © 2021 ${author}",
+  "copyright": "Copyright © 2022 ${author}",
   "license": "MIT",
   "repository": "https://github.com/ransome1/sleek/",
   "icon": "assets/icons/sleek.png",
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "buildVersion": "12",
+    "buildVersion": "14",
     "files": [
       "!flatpak-node${/*}",
       "!snap${/*}",
@@ -77,6 +77,9 @@
       }
     },
     "mas": {
+      "asarUnpack": [
+        "node_modules/fsevents"
+      ],
       "hardenedRuntime": false,
       "provisioningProfile": "build/distribution.provisionprofile",
       "entitlements": "build/entitlements.mas.plist",
@@ -117,7 +120,6 @@
   },
   "scripts": {
     "build:mas": "yarn build:css && yarn build:pegjs && electron-builder -m mas --universal --publish never && bash build/resignPkg.sh",
-    "build:dmg": "yarn build:css && yarn build:pegjs && electron-builder -m dmg --universal --publish never",
     "build:appx": "yarn build:css && yarn build:pegjs && electron-builder -w appx --publish never",
     "build:css": "sass src/scss/style.scss:src/css/style.css",
     "build:pegjs": "peggy --format es --output src/js/filterlang.mjs src/js/filterlang.pegjs",

@@ -37,7 +37,7 @@ let
 // https://github.com/sindresorhus/electron-reloader
 // ########################################################################################################################
 try {
-  require("electron-reloader")(module);
+  if(appData.environment === "development") require("electron-reloader")(module)
 } catch {}
 
 // ########################################################################################################################
@@ -55,7 +55,7 @@ function getChannel() {
   } else if(process.windowsStore) {
     return "Windows Store";
   } else if(process.mas) {
-    return "Apple App Store";
+    return "Mac App Store";
   } else if(process.env.SNAP) {
     return "Snap Store";
   } else if(process.env.FLATPAK_ID) {
@@ -76,13 +76,10 @@ function getContent(file) {
     const activeFile = getActiveFile();
     if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
 
-
     if(!fs.existsSync(file)) {
       // TODO: understand what's happening here
       return Promise.resolve(fs.writeFile(file, "", function(error) {
-        if(error) {
-          return Promise.reject("Error: Could not create file");
-        }
+        if(error) return Promise.reject("Error: Could not create file")
         return "";
       }));
     }
@@ -262,12 +259,6 @@ async function startFileWatcher(file, bookmark) {
     // persist the new file
     userData.set("files", userData.data.files);
 
-    // an active filewatcher will be destroyed first
-    if(fileWatcher) {
-      fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
-      await fileWatcher.unwatch();
-    }
-
     // only for MAS (Sandboxed)
     // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
     const activeFile = getActiveFile();
@@ -279,12 +270,18 @@ async function startFileWatcher(file, bookmark) {
       return Promise.reject("Info: File not found on disk, starting onboarding");
     }
 
+    // an active filewatcher will be destroyed first
+    if(fileWatcher) {
+      await fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
+      await fileWatcher.unwatch();
+      fileWatcher = null;
+    }
+
     // create a new filewatcher
     fileWatcher = chokidar.watch(file);
 
     fileWatcher
       .on("add", async function() {
-
         const content = await getContent(file).then(content => {
           return content;
         }).catch(error => {
@@ -330,9 +327,9 @@ async function startFileWatcher(file, bookmark) {
     // change window title
     const title = path.basename(file) + " - sleek";
     mainWindow.title = title;
-    mainWindow.webContents.on("did-finish-load",() => {
-      mainWindow.setTitle(title);
-    });
+    // mainWindow.webContents.on("did-finish-load",() => {
+    //   mainWindow.setTitle(title);
+    // });
 
     if(process.mas) stopAccessingSecurityScopedResource()
     
@@ -465,19 +462,21 @@ function configureWindowEvents() {
         require("electron").shell.openExternal(url);
       });
 
+    ipcMain.handle("userData", (event, args) => {
+      if(args) {
+        userData.set(args[0], args[1]);
+        console.log("Success: " + args[0] + " persisted, value is: " + args[1]);
+      }
+      return userData.data;
+    });
+  
+    ipcMain.handle("appData", (event, args) => {
+      return appData;
+    });
+
     ipcMain
       .on("closeWindow", () => {
         mainWindow.close()
-      })
-      .on("userData", (event, args) => {
-        if(args) {
-          userData.set(args[0], args[1]);
-          console.log("Success: " + args[0] + " persisted, value is: " + args[1]);
-        }
-        mainWindow.webContents.send("userData", userData.data);
-      })
-      .on("appData", () => {
-        mainWindow.webContents.send("appData", appData);
       })
       .on("changeLanguage", async (event, language) => {
         event.preventDefault();
@@ -488,12 +487,10 @@ function configureWindowEvents() {
       .on("writeToFile", function(event, args) {
         const content = args[0];
         let file = args[1];
-        
         if(!file) {
           const index = userData.data.files.findIndex(file => file[0] ===1 );
           file = userData.data.files[index][1];
         }
-
         // only for MAS (Sandboxed)
         // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
         const activeFile = getActiveFile();
@@ -515,7 +512,6 @@ function configureWindowEvents() {
         });
       })
       .on("startFileWatcher", (event, file) => {
-        console.log(file)
         startFileWatcher(file).then(response => {
           mainWindow.webContents.send("startFileWatcher", response);
         }).catch(error => {
@@ -533,13 +529,6 @@ function configureWindowEvents() {
         getTranslations().then(function(translations) {
           mainWindow.webContents.send("translations", translations)
         });
-        // if(translations) {
-        //   mainWindow.webContents.send("translations", translations);
-        // } else {
-        //   getTranslations(language).then(function(translations) {
-        //     mainWindow.webContents.send("translations", translations)
-        //   });
-        // }
       })
       .on("showNotification", (event, config) => {
         showNotification(config);
@@ -626,11 +615,8 @@ function setupTray() {
   ]
   let menu;
   (trayFiles.length > 0) ? menu = Menu.buildFromTemplate(trayFiles.concat(contextMenu)) : menu = Menu.buildFromTemplate(contextMenu)
-
   tray.setContextMenu(menu)
-  //tray.setTitle("sleek");
-  tray.setToolTip("sleek");
-  
+  tray.setToolTip("sleek")
   tray.on("click", function() {
     // don't do this on MacOS
     if(appData.os === "mac") return false;
@@ -641,6 +627,29 @@ function setupTray() {
 // ########################################################################################################################
 // CREATE THE WINDOW
 // #######################################################################################################################
+
+function reopenMainWindow() {
+  try {
+
+    if(mainWindow) {
+      if(!mainWindow.isVisible()) mainWindow.show();
+      return Promise.resolve("Success: Main window has been reopened");
+    }
+
+    if(BrowserWindow.getAllWindows().length === 0) {
+      createWindow().then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        console.error(error);
+      })
+    }
+
+    return Promise.resolve("Success: Main window has been recreated");
+    
+  } catch(error) {
+    return Promise.reject("Error in reopenMainWindow(): " + error);
+  }
+}
 
 async function createWindow() {
   try {
@@ -689,38 +698,57 @@ async function createWindow() {
       submenu: 
       [{
         label: translations.open,
-        click: function () {
-          if(mainWindow) {
-            if(!mainWindow.isVisible()) mainWindow.show();
-            return false;
-          }
+        click: async function() {
 
-          if(BrowserWindow.getAllWindows().length === 0) 
-            createWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
         }
       },
       { role: "hide" },
       { type: "separator" },
       {
         label: translations.settings,
-        click: function () {
-          mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);
+        click: async function() {
+
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
+
+          setTimeout(function() {
+            mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);              
+          }, 200);
+          
         }
       },
       { type: "separator" },
-      (appData.os !== "mac") ? { role: "close", accelerator: "CmdOrCtrl+W" } : { role: "close", accelerator: "CmdOrCtrl+W" }, { role: "quit", accelerator: "CmdOrCtrl+Q" } ]
+      (appData.os !== "mac") ? { role: "close", accelerator: "CmdOrCtrl+W" } : { role: "close", accelerator: "CmdOrCtrl+W" }, { 
+        role: "quit",
+        accelerator: "CmdOrCtrl+Q",
+        click: function() {
+          app.quit();
+        }
+      }]
     }
+
 
     const menuTemplateFile = {
       label: translations.file,
       submenu: 
       [{
         label: translations.openFile,
-        click: function () {
+        click: async function() {
+          
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
+
           openFileChooser("open").then(response => {
             console.log(response);
           }).catch(error => {
@@ -730,7 +758,14 @@ async function createWindow() {
       },
       {
         label: translations.createFile,
-        click: function () {
+        click: async function() {
+          
+          await reopenMainWindow().then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            console.error(error);
+          })
+
           openFileChooser("create").then(response => {
             console.log(response);
           }).catch(error => {
@@ -758,20 +793,55 @@ async function createWindow() {
       submenu: [
         {
           label: translations.addTodo,
-          click: function() {
-            mainWindow.webContents.send("triggerFunction", "showForm")
+          click: async function() {
+            
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "showForm")
+            }, 200);
+            
           }
         },
         {
           label: translations.find,
-          click: function() {
-            mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
+            }, 200);
+            
           }
-        },
-        {
+        },        
+        { 
           label: translations.archive,
-          click: function() {
-            mainWindow.webContents.send("triggerFunction", "archiveTodos")
+          click: async function() {
+
+            if(process.mas) {
+              mainWindow.webContents.send("triggerFunction", "showGenericMessage", ["This feature is being worked on at this moment and will be released soon", 3])  
+              return false;
+            }
+            
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "archiveTodos")
+            }, 200);
+        
           }
         }
       ]
@@ -782,20 +852,50 @@ async function createWindow() {
       submenu: [
         {
           label: translations.toggleFilter,
-          click: function() {
-            mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
+            }, 200);
+
           }
         },
         {
           label: translations.resetFilters,
-          click: function() {
-            mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
+            }, 200);
+      
           }
         },
         {
           label: translations.toggleCompletedTodos,
-          click: function() {
-            mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
+            }, 200);
+
           }
         },
         { type: "separator" },
@@ -803,10 +903,17 @@ async function createWindow() {
           role: "print",
           accelerator: "CmdOrCtrl+P",
           label: translations.printCurrentView,
-          click: function() {
+          click: async function() {
 
-            // remove dark mode styling
-            mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
+            }, 200);            
 
             const index = userData.data.files.findIndex(file => file[0] === 1);
             
@@ -822,8 +929,18 @@ async function createWindow() {
         },
         {
           label: translations.toggleTheme,
-          click: function() {
-            mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
+            }, 200);
+
           }
         },
         {
@@ -838,8 +955,18 @@ async function createWindow() {
       submenu: [
         {
           label: translations.help,
-          click: function () {
-            mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
+          click: async function() {
+
+            await reopenMainWindow().then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              console.error(error);
+            })
+
+            setTimeout(function() {
+              mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
+            }, 200);
+
           }
         },
         {
@@ -939,20 +1066,16 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
     if(mainWindow.isMinimized()) mainWindow.restore()
     mainWindow.show()
   })
-  .on("window-all-closed", () => {
+  .on("window-all-closed", async () => {
+    // an active filewatcher will be destroyed first
     if(appData.os !== "mac") app.quit()
-    mainWindow = null
+    mainWindow = null;
   })
-  .on("activate", () => {
-    if(mainWindow) {
-      if(!mainWindow.isVisible()) mainWindow.show();
-      return false;
-    }
-    if(BrowserWindow.getAllWindows().length === 0) 
-      createWindow().then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        console.error(error);
-      })
+  .on("activate", async () => {
+    reopenMainWindow().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      console.error(error);
+    })
   });
 }
