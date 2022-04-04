@@ -433,6 +433,7 @@ function generateFilterButtons(category, autoCompletePrefix) {
       // add attributes
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
+      todoFiltersItem.setAttribute("data-prefix", autoCompletePrefix);
       todoFiltersItem.classList.add("button", category);
       todoFiltersItem.setAttribute("tabindex", 0)    
       todoFiltersItem.setAttribute("href", "#")    

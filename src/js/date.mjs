@@ -1,10 +1,21 @@
 "use strict";
 // converts a date object into a todo.txt compatible string xxxx-xx-xx
+// https://bobbyhadz.com/blog/javascript-format-date-yyyy-mm-dd
 function convertDate(date) {
-  let day = ("0" + (date.getDate())).slice(-2)
-  let month = ("0" + (date.getMonth() + 1)).slice(-2);
-  let year = date.getFullYear();
-  return year + "-" + month + "-" + day;
+
+  if(typeof date === "string") {
+    const datePieces = (date.split("-"));
+    return new Date( datePieces[0], datePieces[1] - 1, datePieces[2] );
+  }
+
+  const padTo2Digits = function(num) {
+    return num.toString().padStart(2, '0');
+  }
+  return [
+    date.getFullYear(),
+    padTo2Digits(date.getMonth() + 1),
+    padTo2Digits(date.getDate()),
+  ].join('-');
 }
 function isToday(date) {
   const today = new Date()

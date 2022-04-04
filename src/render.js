@@ -116,19 +116,23 @@ window.onload = async function() {
     const a0 = performance.now();
 
     userData = await window.api.invoke("userData");
+
     appData = await window.api.invoke("appData");
+
+    translations = await window.api.invoke("translations");
+
+    await import("./js/ipc.mjs");
     
-    translations = await getTranslations();
     onboarding = await import("./js/onboarding.mjs");
     helper = await import("./js/helper.mjs");
     todos = await import("./js/todos.mjs");
     filters = await import("./js/filters.mjs");
-    await import("./js/ipc.mjs");
+    
     import("./js/navigation.mjs");
     import("./js/search.mjs");
 
     // if active file is available, ask main process to start a file watcher
-    if(typeof userData.files === "object" && helper.getActiveFile()) {
+    if(helper.getActiveFile()) {
       startFileWatcher(helper.getActiveFile()).then(function(response) {
         console.info(response);
       }).catch(function(error) {

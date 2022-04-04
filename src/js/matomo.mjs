@@ -27,7 +27,7 @@ function configureMatomo() {
     if(!navigator.onLine) return Promise.resolve("Info: App is offline, Matomo will not be loaded");
     
     // only continue if machine is no dvelopment machine
-    if(appData.environment) return Promise.resolve("Info: No tracking in development and testing environment");
+    if(appData.environment || userData.uid === "development") return Promise.resolve("Info: No tracking in development and testing environment");
 
     if(!userData.uid) {
       // generate random number/string combination as user id and persist it

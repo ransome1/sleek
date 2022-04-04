@@ -9,7 +9,7 @@ import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { createModalJail } from "./jail.mjs";
 import { focusRow } from "./keyboard.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
-import { getActiveFile, getDoneFile, handleError, formatDate, pasteItemToClipboard, generateGenericNotification, generateTodoNotification } from "./helper.mjs";
+import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
 import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
@@ -73,7 +73,7 @@ async function generateTodoTxtObjects(fileContent) {
   try {
 
     // create todo.txt objects
-    items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ])
+    if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ])
 
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
@@ -123,11 +123,10 @@ function generateTable(loadAll) {
       // this adds css classes for formatting
       let groupFormattingClass = groupHeadline;
 
-      // TODO: beautify this
       // in case a group headline is in fact a date
       // add color coding for today, tomorrow and past and translations for today and tomorrow headlines
       if(sortBy === "due" && !isNaN(Date.parse(groupHeadline))) {
-        const date = new Date(groupHeadline);
+        const date = convertDate(groupHeadline);
         if(isToday(date)) {
           groupHeadline = translations.today; 
           groupFormattingClass = "today";
@@ -216,7 +215,7 @@ function generateGroupedObjects() {
 
       // in case key is a date object it will be converted to todo.txt date string (xxxx-xx-xx)
       } else if(a[sortBy] instanceof Date) {
-        object[formatDate(a[sortBy])] = [...object[formatDate(a[sortBy])] || [], a];
+        object[convertDate(a[sortBy])] = [...object[convertDate(a[sortBy])] || [], a];
 
       // group for whatever sortBy has been defined: priority, context, project
       // or in case value for sortBy key is empty, group will be null
@@ -278,6 +277,7 @@ function generateGroupedObjects() {
 }
 function generateTableRow(todo) {
   try {
+
     // create nodes from templates
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
     let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);

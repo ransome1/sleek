@@ -137,7 +137,6 @@ body.dark {
     }
   }
 
-
   a.contexts {
     color: $sleek-contexts-button!important;
     background: darken($sleek-contexts-button, 60%)!important;
@@ -163,6 +162,11 @@ body.dark {
   a.projects:focus-visible {
     background: darken($sleek-projects-button, 70%)!important;
     color: white!important;
+  }
+  a.button.is-greyed-out {
+    background: $has-text-link!important;
+    color: white!important;
+    filter: opacity(50%) grayscale(100%);
   }
 
   #drawerContainer {
