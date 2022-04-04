@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "没有任务",
   "addTodoContainerSubtitle": "列表为空, 来创建一些任务吧",
   "archive": "存档",
+  "autoUpdateHeadline": "自动更新",
+  "autoUpdateBody": "新版本会自动下载并安装。 重新启动后，更新可用。",
   "bdaily": "每个工作日",
   "bday": "工作日",
   "bday_plural": "工作日",

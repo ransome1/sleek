@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "タスクがない",
   "addTodoContainerSubtitle": "リストは空であり, タスクを追加しましょう",
   "archive": "アーカイブ",
+  "autoUpdateHeadline": "自動的にアップデート",
+  "autoUpdateBody": "新しいバージョンが自動的にダウンロードされ、インストールされます。 再起動後、アップデートが利用可能になります。",
   "bdaily": "毎営業日",
   "bday": "営業日",
   "bday_plural": "営業日",

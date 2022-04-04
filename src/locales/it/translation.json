@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "Nessun todo",
   "addTodoContainerSubtitle": "Questa lista è vuota, aggiungiamo un nuovo todo.",
   "archive": "Archivio",
+  "autoUpdateHeadline": "Aggiornamenti automatici",
+  "autoUpdateBody": "Le nuove versioni vengono scaricate e installate automaticamente. Dopo un riavvio, l'aggiornamento è disponibile.",
   "bdaily": "Ogni giorno lavorativo",
   "bday": "Giorno lavorativo",
   "bday_plural": "Giorni lavorativi",

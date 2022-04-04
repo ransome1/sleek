@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "Nincsenek tennivalók",
   "addTodoContainerSubtitle": "Ez a lista üres, adjon hozzá néhány tennivalót.",
   "archive": "Archiválás",
+  "autoUpdateHeadline": "Automatikus frissítések",
+  "autoUpdateBody": "Az új verziók letöltése és telepítése automatikusan megtörténik. Újraindítás után elérhető a frissítés.",
   "bdaily": "Minden munkanap",
   "bday": "munkanap",
   "bday_plural": "munkanap",

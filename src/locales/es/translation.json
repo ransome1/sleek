@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "No hay tareas",
   "addTodoContainerSubtitle": "Esta lista está vacía, añade una nueva tarea.",
   "archive": "Archivar",
+  "autoUpdateHeadline": "Actualizaciones automáticas",
+  "autoUpdateBody": "Las nuevas versiones se descargan e instalan automáticamente. Después de un reinicio, la actualización está disponible.",
   "bdaily": "Cada día laboral",
   "bday": "día laboral",
   "bday_plural": "días laborales",

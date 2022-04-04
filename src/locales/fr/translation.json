@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "Pas de tâche",
   "addTodoContainerSubtitle": "La liste est vide, ajoutez quelques tâches.",
   "archive": "Archiver",
+  "autoUpdateHeadline": "Mises à jour automatiques",
+  "autoUpdateBody": "Les nouvelles versions sont automatiquement téléchargées et installées. Après un redémarrage, la mise à jour est disponible.",
   "bdaily": "Tous les jours ouvrables",
   "bday": "jour ouvrable",
   "bday_plural": "jours ouvrables",

@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "Yapılacak yok",
   "addTodoContainerSubtitle": "Bu liste boş, hadi bir kaç yeni yapılacak ekleyelim.",
   "archive": "Arşiv",
+  "autoUpdateHeadline": "Otomatik güncellemeler",
+  "autoUpdateBody": "Yeni sürümler otomatik olarak indirilir ve kurulur. Yeniden başlatmanın ardından güncelleme kullanılabilir.",
   "bdaily": "Her iş günü",
   "bday": "iş günü",
   "bday_plural": "iş günleri",

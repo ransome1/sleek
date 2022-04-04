@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "No todos",
   "addTodoContainerSubtitle": "This list is empty, let's add some todos.",
   "archive": "Archive",
+  "autoUpdateHeadline": "Automatic updates",
+  "autoUpdateBody": "New versions are automatically downloaded and installed. After a restart, the update is available.",
   "bdaily": "Each business day",
   "bday": "business day",
   "bday_plural": "business days",

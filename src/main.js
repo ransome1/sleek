@@ -1,13 +1,11 @@
 "use strict";
-
 const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow, nativeTheme, dialog } = require("electron");
+const i18next = require("./configs/i18next.config");
 const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
-const autoUpdater = require("./configs/autoUpdater.config.js");
-const Badge = require("electron-windows-badge");
-const i18next = require("./configs/i18next.config");
+const { autoUpdaterAppImage, autoUpdaterMac } = require("./configs/autoUpdater.config.js");
 //const dismissedNotificationsStorage = require("./configs/store.config.js");
 const os = {
   darwin: "mac",
@@ -39,7 +37,6 @@ let
   menuTemplateTodos,
   menuTemplateView,
   menuTemplateAbout;
-      
 
 // ########################################################################################################################
 // HOT RELOAD
@@ -382,7 +379,7 @@ function getUserData() {
     if(typeof userData.data.fileTabs != "boolean") userData.data.fileTabs = true;
     if(typeof userData.data.appendStartDate != "boolean") userData.data.appendStartDate = false;
     if(typeof userData.data.language != "string") userData.data.language = app.getLocale().substr(0,2);
-    if(typeof userData.data.autoUpdate != "boolean") userData.data.autoUpdate = true;
+    if(typeof userData.data.autoUpdate != "boolean") userData.data.autoUpdate = false;
     
     //TODO remove this after 1.1.7 has been fully distributed
     const indexOfDueString = userData.data.sortBy.indexOf("dueString");
@@ -649,6 +646,7 @@ async function createWindow() {
 
     // create badge for Windows build
     if(appData.os === "windows") {
+      const Badge = await require("electron-windows-badge");
       new Badge(mainWindow, {
         font: "10px arial"
       });
@@ -721,20 +719,17 @@ async function createWindow() {
         }
       }]
     }
-    // menuTemplateEdit = {
-    //   label: translations.edit,
-    //   submenu: [
-    //     { role: "undo", accelerator: "CmdOrCtrl+Z" },
-    //     { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
-    //     { type: "separator" },
-    //     { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
-    //     { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
-    //     { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
-    //     { role: "selectAll", accelerator: "CmdOrCtrl+A" }
-    //   ]
-    // }
-    menuTemplateEdit = { 
-      role: "editMenu"
+    menuTemplateEdit = {
+      label: translations.edit,
+      submenu: [
+        { role: "undo", accelerator: "CmdOrCtrl+Z" },
+        { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
+        { type: "separator" },
+        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { role: "selectAll", accelerator: "CmdOrCtrl+A" }
+      ]
     }
     menuTemplateTodos = {
       label: translations.todos,
@@ -881,7 +876,10 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
   app.on("ready", () => {
 
     // setup autoupdater for AppImage build
-    if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
+    if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdaterAppImage.checkForUpdatesAndNotify()
+
+    // setup autoupdater for Mac builds
+    if(appData.os === "mac" && appData.channel !== "Mac App Store" && userData.data.autoUpdate) autoUpdaterMac.checkForUpdatesAndNotify()
 
     // identifier for windows store
     if(appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")

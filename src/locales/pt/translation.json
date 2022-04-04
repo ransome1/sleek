@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "Sem todos",
   "addTodoContainerSubtitle": "Esta lista está vazia, vamos adicionar alguns todos.",
   "archive": "Arquivo",
+  "autoUpdateHeadline": "Atualizações automáticas",
+  "autoUpdateBody": "Novas versões são baixadas e instaladas automaticamente. Após uma reinicialização, a atualização está disponível.",
   "bdaily": "Cada dia útil ",
   "bday": "dia útil",
   "bday_plural": "dias úteis",

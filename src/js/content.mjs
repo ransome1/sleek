@@ -89,6 +89,9 @@ const zoomHeadline = document.getElementById("zoomHeadline");
 const zoomUndo = document.getElementById("zoomUndo");
 const language = document.getElementById("language");
 
+const autoUpdateHeadline = document.getElementById("autoUpdateHeadline");
+const autoUpdateBody = document.getElementById("autoUpdateBody");
+
 addAsTodo.innerHTML = translations.addAsTodo;
 compactViewBody.innerHTML = translations.compactViewBody;
 compactViewHeadline.innerHTML = translations.compactView;
@@ -167,6 +170,8 @@ shareTwitter.innerHTML = translations.shareTwitter;
 submitIssuesOnGithub.innerHTML = translations.submitIssuesOnGithub;
 zoomBody.innerHTML = translations.zoomBody;
 zoomHeadline.innerHTML = translations.zoomHeadline;
+autoUpdateHeadline.innerHTML = translations.autoUpdateHeadline;
+autoUpdateBody.innerHTML = translations.autoUpdateBody;
 
 language.onchange = function() {
   // only continue if language code has been passed

@@ -5,6 +5,8 @@
   "addTodoContainerHeadline": "Keine Aufgaben",
   "addTodoContainerSubtitle": "Diese Liste ist leer, füge eine Aufgabe hinzu",
   "archive": "Archivieren",
+  "autoUpdateHeadline": "Automatische Updates",
+  "autoUpdateBody": "Neue Versionen werden automatisch heruntergeladen und installiert. Nach einem Neustart ist das Update verfügbar.",
   "bdaily": "jedem Geschäftstag",
   "bday": "Geschäftstag",
   "bday_plural": "Geschäftstage",
