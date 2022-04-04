@@ -7,6 +7,7 @@ const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
 const autoUpdater = require("./configs/autoUpdater.config.js");
 const Badge = require("electron-windows-badge");
+const i18next = require("./configs/i18next.config");
 //const dismissedNotificationsStorage = require("./configs/store.config.js");
 const os = {
   darwin: "mac",
@@ -19,7 +20,8 @@ const appData = {
   path: __dirname,
   appPath: app.getAppPath(),
   os: os[process.platform],
-  channel: getChannel()
+  channel: getChannel(),
+  languages: i18next.options.preload
 }
 let
   stopAccessingSecurityScopedResource,
@@ -30,7 +32,14 @@ let
   fileWatcher, 
   translations, 
   mainWindow,
-  tray = null;
+  tray = null,
+  menuTemplateApp,
+  menuTemplateFile,
+  menuTemplateEdit,
+  menuTemplateTodos,
+  menuTemplateView,
+  menuTemplateAbout;
+      
 
 // ########################################################################################################################
 // HOT RELOAD
@@ -213,11 +222,8 @@ function refreshFiles() {
 }
 function getActiveFile() {
   const index = userData.data.files.findIndex(file => file[0] === 1);
-  if(index !==-1 ) {
-    const file = userData.data.files[index];
-    return file;
-  }
-  return false;
+  if(index === -1) return false
+  return userData.data.files[index];
 }
 async function startFileWatcher(file, bookmark) {
   try {
@@ -278,7 +284,7 @@ async function startFileWatcher(file, bookmark) {
     }
 
     // create a new filewatcher
-    fileWatcher = chokidar.watch(file);
+    fileWatcher = await chokidar.watch(file);
 
     fileWatcher
       .on("add", async function() {
@@ -287,50 +293,40 @@ async function startFileWatcher(file, bookmark) {
         }).catch(error => {
           console.log(error);
         });
-
         mainWindow.webContents.send("buildTable", [content])
-
         console.log("Info: File " + file + " has been added");
-
       })
 
       .on("unlink", async function() {
-
         startFileWatcher().then(response => {
           console.info(response);
         }).catch(error => {
           console.error(error);
         });
-
         console.log("Info: File " + file + " has been unlinked");
-
       })
 
       .on("change", async function() {
-
         // wait 10ms before rereading in case the file is being updated with a delay
         setTimeout(async function() {
-
           const content = await getContent(file).then(content => {
             return content;
           }).catch(error => {
             console.log(error);
           });
-
           mainWindow.webContents.send("buildTable", [content])
-
           console.log("Info: File " + file + " has changed");
-
         }, 10);
       })
 
     // change window title
     const title = path.basename(file) + " - sleek";
     mainWindow.title = title;
-    // mainWindow.webContents.on("did-finish-load",() => {
-    //   mainWindow.setTitle(title);
-    // });
+    mainWindow.webContents.once("did-finish-load",() => {
+      mainWindow.setTitle(title);
+    });
 
+    // remove access to secure ressource
     if(process.mas) stopAccessingSecurityScopedResource()
     
     return Promise.resolve("Success: Filewatcher is watching: " + file);
@@ -425,15 +421,6 @@ function showNotification(config) {
     once: true
   });
 }
-function getTranslations() {
-  try {
-    const i18next = require("./configs/i18next.config");
-    appData.languages = i18next.options.preload;
-    return Promise.resolve(i18next.getDataByLanguage(userData.data.language).translation);
-  } catch (error) {
-    return Promise.reject("Error in getTranslations(): " + error);
-  }
-}
 function configureWindowEvents() {
   try {
      mainWindow
@@ -470,8 +457,13 @@ function configureWindowEvents() {
       return userData.data;
     });
   
-    ipcMain.handle("appData", (event, args) => {
+    ipcMain.handle("appData", () => {
       return appData;
+    });
+
+    ipcMain.handle("translations", async () => {
+      translations = await i18next.getDataByLanguage(userData.data.language).translation
+      return translations
     });
 
     ipcMain
@@ -523,11 +515,6 @@ function configureWindowEvents() {
           mainWindow.webContents.send("getContent", content);
         }).catch(error => {
           console.error(error);
-        });
-      })
-      .on("translations", () => {
-        getTranslations().then(function(translations) {
-          mainWindow.webContents.send("translations", translations)
         });
       })
       .on("showNotification", (event, config) => {
@@ -628,38 +615,11 @@ function setupTray() {
 // CREATE THE WINDOW
 // #######################################################################################################################
 
-function reopenMainWindow() {
-  try {
-
-    if(mainWindow) {
-      if(!mainWindow.isVisible()) mainWindow.show();
-      return Promise.resolve("Success: Main window has been reopened");
-    }
-
-    if(BrowserWindow.getAllWindows().length === 0) {
-      createWindow().then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        console.error(error);
-      })
-    }
-
-    return Promise.resolve("Success: Main window has been recreated");
-    
-  } catch(error) {
-    return Promise.reject("Error in reopenMainWindow(): " + error);
-  }
-}
-
 async function createWindow() {
   try {
-
+    // load the user data from preferences file
     userData = await getUserData();
 
-    translations = await getTranslations();
-    if(!translations) throw("Error: Translations could not be loaded");
-    console.log("Success: Translations loaded for: " + userData.data.language);
-    
     mainWindow = new BrowserWindow({
       width: userData.data.width,
       height: userData.data.height,
@@ -680,27 +640,32 @@ async function createWindow() {
         preload: appData.path + "/preload.js"
       }
     });
-
     mainWindow.loadFile(path.join(appData.path, "index.html"));
 
+    // load the translations
+    translations = await i18next.getDataByLanguage(userData.data.language).translation
+    if(!translations) throw("Error: Translations could not be loaded")
+    console.log("Success: Translations loaded for: " + userData.data.language)
+
+    // create badge for Windows build
     if(appData.os === "windows") {
       new Badge(mainWindow, {
         font: "10px arial"
       });
     }
 
-    // ########################################################################################################################
-    // MAIN MENU
-    // ########################################################################################################################
-    
-    const menuTemplateApp = {
+    // create menu
+    menuTemplateApp = {
       label: "sleek",
       submenu: 
       [{
         label: translations.open,
-        click: async function() {
-
-          await reopenMainWindow().then(function(response) {
+        click: function() {
+          if(mainWindow) {
+            if(!mainWindow.isVisible()) mainWindow.show();
+            return Promise.resolve("Success: Main window has been reopened");
+          }
+          createWindow().then(function(response) {
             console.info(response);
           }).catch(function(error) {
             console.error(error);
@@ -710,45 +675,34 @@ async function createWindow() {
       { role: "hide" },
       { type: "separator" },
       {
+        id: "settings",
         label: translations.settings,
         click: async function() {
-
-          await reopenMainWindow().then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            console.error(error);
-          })
-
-          setTimeout(function() {
-            mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);              
-          }, 200);
-          
+          mainWindow.webContents.send("triggerFunction", "showModal", ["modalSettings"]);                      
         }
       },
       { type: "separator" },
-      (appData.os !== "mac") ? { role: "close", accelerator: "CmdOrCtrl+W" } : { role: "close", accelerator: "CmdOrCtrl+W" }, { 
-        role: "quit",
+      { 
+        label: translations.close,
+        click: function() {
+          mainWindow.close();
+        }
+      },
+      {
+        id: "quit",
+        label: "Quit",
         accelerator: "CmdOrCtrl+Q",
         click: function() {
           app.quit();
         }
       }]
     }
-
-
-    const menuTemplateFile = {
+    menuTemplateFile = {
       label: translations.file,
       submenu: 
       [{
         label: translations.openFile,
-        click: async function() {
-          
-          await reopenMainWindow().then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            console.error(error);
-          })
-
+        click: function() {
           openFileChooser("open").then(response => {
             console.log(response);
           }).catch(error => {
@@ -758,14 +712,7 @@ async function createWindow() {
       },
       {
         label: translations.createFile,
-        click: async function() {
-          
-          await reopenMainWindow().then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            console.error(error);
-          })
-
+        click: function() {
           openFileChooser("create").then(response => {
             console.log(response);
           }).catch(error => {
@@ -774,128 +721,67 @@ async function createWindow() {
         }
       }]
     }
-
-    const menuTemplateEdit = {
-      label: translations.edit,
-      submenu: [
-        { role: "undo", accelerator: "CmdOrCtrl+Z" },
-        { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
-        { type: "separator" },
-        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
-        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
-        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
-        { role: "selectAll", accelerator: "CmdOrCtrl+A" }
-      ]
+    // menuTemplateEdit = {
+    //   label: translations.edit,
+    //   submenu: [
+    //     { role: "undo", accelerator: "CmdOrCtrl+Z" },
+    //     { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
+    //     { type: "separator" },
+    //     { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+    //     { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+    //     { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+    //     { role: "selectAll", accelerator: "CmdOrCtrl+A" }
+    //   ]
+    // }
+    menuTemplateEdit = { 
+      role: "editMenu"
     }
-
-    const menuTemplateTodos = {
+    menuTemplateTodos = {
       label: translations.todos,
       submenu: [
         {
           label: translations.addTodo,
-          click: async function() {
-            
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.send("triggerFunction", "showForm")
-            }, 200);
-            
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "showForm")            
           }
         },
         {
           label: translations.find,
-          click: async function() {
-
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
-            }, 200);
-            
+          click: function() {
+            mainWindow.webContents.executeJavaScript("todoTableSearch.focus()");
           }
         },        
         { 
           label: translations.archive,
-          click: async function() {
-
+          click: function() {
             if(process.mas) {
               mainWindow.webContents.send("triggerFunction", "showGenericMessage", ["This feature is being worked on at this moment and will be released soon", 3])  
               return false;
             }
-            
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.send("triggerFunction", "archiveTodos")
-            }, 200);
-        
+            mainWindow.webContents.send("triggerFunction", "archiveTodos")        
           }
         }
       ]
     }
-
-    const menuTemplateView = {
+    menuTemplateView = {
       label: translations.view,
       submenu: [
         {
           label: translations.toggleFilter,
-          click: async function() {
-
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
-            }, 200);
-
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "showDrawer", ["toggle", "navBtnFilter", "filterDrawer"])
           }
         },
         {
           label: translations.resetFilters,
-          click: async function() {
-
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.send("triggerFunction", "resetFilters", [true])
-            }, 200);
-      
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "resetFilters", [true])      
           }
         },
         {
           label: translations.toggleCompletedTodos,
-          click: async function() {
-
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
-            }, 200);
-
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "toggle", ["showCompleted"])
           }
         },
         { type: "separator" },
@@ -903,44 +789,19 @@ async function createWindow() {
           role: "print",
           accelerator: "CmdOrCtrl+P",
           label: translations.printCurrentView,
-          click: async function() {
-
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
-            }, 200);            
-
-            const index = userData.data.files.findIndex(file => file[0] === 1);
-            
-            if(index === -1) return false
-            
+          click: function() {
+            if(!getActiveFile()) return false
+            mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");               
             mainWindow.webContents.send("buildTable", [null, true]);
-
             setTimeout(function() {
               mainWindow.webContents.executeJavaScript("window.print()");
             }, 500);
-            
           }
         },
         {
           label: translations.toggleTheme,
-          click: async function() {
-
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
-            }, 200);
-
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
           }
         },
         {
@@ -949,24 +810,13 @@ async function createWindow() {
         }
       ]
     }
-
-    const menuTemplateAbout = {
+    menuTemplateAbout = {
       label: translations.about,
       submenu: [
         {
           label: translations.help,
-          click: async function() {
-
-            await reopenMainWindow().then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              console.error(error);
-            })
-
-            setTimeout(function() {
-              mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
-            }, 200);
-
+          click: function() {
+            mainWindow.webContents.send("triggerFunction", "showModal", ["modalHelp"])
           }
         },
         {
@@ -979,48 +829,34 @@ async function createWindow() {
         }
       ]
     }
-
     const menuTemplate = (getActiveFile()) ? [menuTemplateApp, menuTemplateFile, menuTemplateEdit, menuTemplateTodos, menuTemplateView, menuTemplateAbout] : [menuTemplateApp, menuTemplateFile]
-
     Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+    // hide quit menu item on all platforms but macos
+    if(appData.os !== "mac") Menu.getApplicationMenu().getMenuItemById("quit").visible = false;
 
-    // ########################################################################################################################
-    // TRAY ICON
-    // ########################################################################################################################
+    // setup tray icon
     if(userData.data.tray) setupTray();
 
-    // ########################################################################################################################
-    // INITIAL WINDOW CONFIGURATION
-    // ########################################################################################################################
+    // setup window
     if(userData.data.maximizeWindow) mainWindow.maximize()
     if(appData.environment === "development") mainWindow.webContents.openDevTools()
 
-    // ########################################################################################################################
-    // EVENTS
-    // ########################################################################################################################
+    // load window events
     configureWindowEvents().then(response => {
       console.info(response);
     }).catch(error => {
       console.error(error);
     });
 
-    // ########################################################################################################################
-    // REFRESH WHEN IN BACKGROUND
-    // ########################################################################################################################
+    // setup reload intervall (reload every 10 minutes)
     setInterval(async () => {
-
-      const index = userData.data.files.findIndex(file => file[0] === 1);
-
-      if(index === -1 || mainWindow.isFocused()) return false;
-  
-      const content = await getContent(userData.data.files[index][1]).then(content => {
+      if(!getActiveFile() && mainWindow.isFocused()) return false;  
+      const content = await getContent(getActiveFile()[1]).then(content => {
         return content;
       }).catch(error => {
         console.error(error);
       });
-
       mainWindow.webContents.send("buildTable", [content]);
-
     }, 600000);
 
     return Promise.resolve("Success: Renderer window created");
@@ -1044,21 +880,18 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
 
   app.on("ready", () => {
 
+    // setup autoupdater for AppImage build
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
 
-    if(appData.os === "windows") {
-      // identifier for windows store
-      app.setAppUserModelId("RobinAhle.sleektodomanager")
-    }
+    // identifier for windows store
+    if(appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
     
-    if(BrowserWindow.getAllWindows().length === 0) {
-      createWindow().then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        console.error(error);
-      });
-    }
-      
+    createWindow().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      console.error(error);
+    })
+
   })
   .on("second-instance", () => {
     // Someone tried to run a second instance, we should focus our window.
@@ -1067,12 +900,20 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
     mainWindow.show()
   })
   .on("window-all-closed", async () => {
-    // an active filewatcher will be destroyed first
     if(appData.os !== "mac") app.quit()
     mainWindow = null;
+    // reduce menu to bare minimum
+    Menu.setApplicationMenu(Menu.buildFromTemplate([menuTemplateApp]))
+    // disable settings because it would provoke errors
+    Menu.getApplicationMenu().getMenuItemById("settings").enabled = false;
+
   })
   .on("activate", async () => {
-    reopenMainWindow().then(function(response) {
+    if(mainWindow) {
+      if(!mainWindow.isVisible()) mainWindow.show();
+      return Promise.resolve("Success: Main window has been reopened");
+    }
+    createWindow().then(function(response) {
       console.info(response);
     }).catch(function(error) {
       console.error(error);

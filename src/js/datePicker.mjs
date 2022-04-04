@@ -9,7 +9,7 @@
 import { userData } from "../render.js";
 import { _paq } from "./matomo.mjs";
 import { resizeInput } from "./form.mjs";
-import { formatDate } from "./helper.mjs";
+import { convertDate } from "./date.mjs";
 import { generateTodoTxtObject, items, editTodo } from "./todos.mjs";
 import Datepicker from "../../node_modules/vanillajs-datepicker/js/Datepicker.js";
 import de from "../../node_modules/vanillajs-datepicker/js/i18n/locales/de.js";
@@ -77,7 +77,7 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
       // fill in due date
       if(date) {
         todo[extension] = date;
-        todo[extension + "String"] = formatDate(date);
+        todo[extension + "String"] = convertDate(date);
       // reset due date in object
       } else {
         todo[extension] = undefined;

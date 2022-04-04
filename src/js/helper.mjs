@@ -59,7 +59,6 @@ export function jumpToItem(item) {
     return Promise.reject(error);
   }
 }
-
 export async function pasteItemToClipboard(item) {
   try {
 
@@ -73,7 +72,6 @@ export async function pasteItemToClipboard(item) {
     return Promise.reject(error);
   }
 }
-
 export async function pasteItemsToClipboard() {
   try {
 
@@ -180,11 +178,10 @@ export function initialSetupInterface() {
     (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
 
     // set scaling factor if default font size has changed
-    //if(userData.zoom) {
-      document.getElementById("html").style.zoom = userData.zoom + "%";
-      document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
-      document.getElementById("zoom").value = userData.zoom;
-    //}
+    document.getElementById("html").style.zoom = userData.zoom + "%";
+    document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
+    document.getElementById("zoom").value = userData.zoom;
+    
     // add version number to about tab in settings modal
     document.getElementById("version").innerHTML = appData.version;
 
@@ -302,21 +299,6 @@ export function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 }
-
-// https://bobbyhadz.com/blog/javascript-format-date-yyyy-mm-dd
-export function formatDate(date) {
-
-  const padTo2Digits = function(num) {
-    return num.toString().padStart(2, '0');
-  }
-
-  return [
-    date.getFullYear(),
-    padTo2Digits(date.getMonth() + 1),
-    padTo2Digits(date.getDate()),
-  ].join('-');
-}
-
 export async function setDueDate(days) {
   try {
 

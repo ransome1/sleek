@@ -152,6 +152,11 @@ body.dark a.projects:focus-visible {
   background: #491949 !important;
   color: white !important;
 }
+body.dark a.button.is-greyed-out {
+  background: #3273dc !important;
+  color: white !important;
+  filter: opacity(50%) grayscale(100%);
+}
 body.dark #drawerContainer .zoom svg {
   color: white !important;
 }

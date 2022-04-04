@@ -10,7 +10,7 @@ import { triggerToggle } from "./toggles.mjs";
 //const render = await import("../render.js");
 
 // receives todo.txt data from main process as string and passes it to build function
-window.api.receive("buildTable", async (args) => {
+window.api.receive("buildTable", (args) => {
   buildTable(...args).then(function(response) {
     console.info(response);
   }).catch(function(error) {

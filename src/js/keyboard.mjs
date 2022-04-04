@@ -437,6 +437,7 @@ export async function registerShortcuts() {
       // ******************************************************
 
       if((event.ctrlKey || event.metaKey && userData.files) && event.key === "c" && !isInputFocused()) {
+        if(!getActiveFile()) return false;
         pasteItemsToClipboard();
         return false;
       }
@@ -447,21 +448,22 @@ export async function registerShortcuts() {
 
       if((event.ctrlKey || event.metaKey) && event.key === "w") {
 
+        // if only 1 tab element is visible, if won't be removed and instead the browser window is being closed
+        const visibleTabs = userData.files.filter(file => file[2] === 1);
+        if(visibleTabs.length === 1) { 
+          window.api.send("closeWindow");
+          return false;
+        }
+
         // get active tab
         const index = userData.files.findIndex(file => file[0] === 1);
 
         // remove active file from tab bar
-        await removeFileFromList(index, false).then(function(response) {
+        removeFileFromList(index, false).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);
         });
-
-        // if no visible tab is left, window is being closed
-        const visibleTabs = userData.files.findIndex(file => file[2] === 1);        
-
-        // if all files are removed from tab bar, window will be closed
-        if(visibleTabs === -1) window.api.send("closeWindow");
 
         return false;
       }
