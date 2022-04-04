@@ -173,10 +173,6 @@ export function initialSetupInterface() {
     // setup compact view
     (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
 
-    // setup darkmode
-    window.api.send("darkmode", userData.darkmode);
-    (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
-
     // show or hide specific settings
     if(appData.channel === "AppImage" || appData.os === "mac" && appData.channel !== "Mac App Store") document.getElementById("autoUpdate").classList.remove("is-hidden")
 

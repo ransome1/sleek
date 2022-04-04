@@ -20,3 +20,4 @@ x 2022-03-28 This is a test todo that needs to be archived
 x 2022-03-30 This is a test todo that needs to be archived
 x 2022-03-31 This is a test todo that needs to be archived
 x 2022-04-01 This is a test todo that needs to be archived
+x 2022-04-04 This is a test todo that needs to be archived

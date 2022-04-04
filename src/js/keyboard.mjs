@@ -4,7 +4,7 @@ import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
 import { resetFilters } from "./filters.mjs";
-import { handleError } from "./helper.mjs";
+import { handleError, getActiveFile } from "./helper.mjs";
 import { show, setPriority, resetForm } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
@@ -556,14 +556,10 @@ export async function registerShortcuts() {
           return false;
         }
 
-        // toggle dark mode
+        // toggle appearance
 
         if(event.key==="d" && !isInputFocused()) {
-          triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
+          window.api.send("setTheme")
           return false;
         }
 

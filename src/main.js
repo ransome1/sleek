@@ -352,7 +352,6 @@ function getUserData() {
     if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
     if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
     if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
-    if(typeof userData.data.darkmode != "boolean") userData.set("darkmode", nativeTheme.shouldUseDarkColors);
     if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
     if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
     if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
@@ -380,11 +379,15 @@ function getUserData() {
     if(typeof userData.data.appendStartDate != "boolean") userData.data.appendStartDate = false;
     if(typeof userData.data.language != "string") userData.data.language = app.getLocale().substr(0,2);
     if(typeof userData.data.autoUpdate != "boolean") userData.data.autoUpdate = false;
+    if(typeof userData.data.theme != "string") userData.set("theme", "system");
     
     //TODO remove this after 1.1.7 has been fully distributed
     const indexOfDueString = userData.data.sortBy.indexOf("dueString");
     if(indexOfDueString !== -1) userData.data.sortBy[indexOfDueString] = "due";
     if(userData.data.path) delete userData.data["path"];
+
+    //TODO remove this after 1.1.8 has been fully distributed
+    if(userData.data.darkmode) delete userData.data["darkmode"];
     
     //TODO remove this after 1.1.4 has been fully distributed
     if(userData.data.sortBy.length === 4) userData.set("sortBy", ["priority", "due", "contexts", "projects", "date"]);
@@ -420,31 +423,36 @@ function showNotification(config) {
 }
 function configureWindowEvents() {
   try {
-     mainWindow
-      .on("resize", function() {
-        userData.set("width", this.getBounds().width);
-        userData.set("height", this.getBounds().height);
-      })
-      .on("maximize", function() {
-        userData.set("maximizeWindow", true);
-      })
-      .on("unmaximize", function() {
-        userData.set("maximizeWindow", false);
-        userData.set("width", this.getBounds().width);
-        userData.set("height", this.getBounds().height);
-      })
-      .on("move", function() {
-        userData.set("horizontal", this.getBounds().x);
-        userData.set("vertical", this.getBounds().y);
-      })
-      .on("show", function(event) {
-        event.preventDefault();
-        (userData.data.maximizeWindow) ? mainWindow.maximize() : mainWindow.unmaximize()
-      })
-      .webContents.on("new-window", function(event, url) {
-        event.preventDefault();
-        require("electron").shell.openExternal(url);
-      });
+    nativeTheme.on("updated", () => {
+      userData.set("theme", nativeTheme.themeSource);
+      (nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark"); document.getElementById("theme").value="${nativeTheme.themeSource}"`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark"); document.getElementById("theme").value="${nativeTheme.themeSource}"`)
+    })
+
+    mainWindow
+    .on("resize", function() {
+      userData.set("width", this.getBounds().width);
+      userData.set("height", this.getBounds().height);
+    })
+    .on("maximize", function() {
+      userData.set("maximizeWindow", true);
+    })
+    .on("unmaximize", function() {
+      userData.set("maximizeWindow", false);
+      userData.set("width", this.getBounds().width);
+      userData.set("height", this.getBounds().height);
+    })
+    .on("move", function() {
+      userData.set("horizontal", this.getBounds().x);
+      userData.set("vertical", this.getBounds().y);
+    })
+    .on("show", function(event) {
+      event.preventDefault();
+      (userData.data.maximizeWindow) ? mainWindow.maximize() : mainWindow.unmaximize()
+    })
+    .webContents.on("new-window", function(event, url) {
+      event.preventDefault();
+      require("electron").shell.openExternal(url);
+    });
 
     ipcMain.handle("userData", (event, args) => {
       if(args) {
@@ -464,6 +472,10 @@ function configureWindowEvents() {
     });
 
     ipcMain
+      .on("setTheme", (event, theme) => {
+        if(!theme) theme = (nativeTheme.shouldUseDarkColors) ? "light" : "dark"
+        nativeTheme.themeSource = theme;
+      })
       .on("closeWindow", () => {
         mainWindow.close()
       })
@@ -489,9 +501,6 @@ function configureWindowEvents() {
 
         if(process.mas) stopAccessingSecurityScopedResource()
 
-      })
-      .on("darkmode", (event, darkmode) => {
-        (darkmode) ? nativeTheme.themeSource = "dark" : nativeTheme.themeSource = "light";
       })
       .on("openOrCreateFile", (event, args) => {
         openFileChooser(args).then(response => {
@@ -638,6 +647,9 @@ async function createWindow() {
       }
     });
     mainWindow.loadFile(path.join(appData.path, "index.html"));
+
+    // apply theme setting
+    nativeTheme.themeSource = userData.data.theme;
 
     // load the translations
     translations = await i18next.getDataByLanguage(userData.data.language).translation
@@ -786,7 +798,7 @@ async function createWindow() {
           label: translations.printCurrentView,
           click: function() {
             if(!getActiveFile()) return false
-            mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");               
+            mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
             mainWindow.webContents.send("buildTable", [null, true]);
             setTimeout(function() {
               mainWindow.webContents.executeJavaScript("window.print()");
@@ -796,7 +808,7 @@ async function createWindow() {
         {
           label: translations.toggleTheme,
           click: function() {
-            mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
+            nativeTheme.themeSource = (nativeTheme.shouldUseDarkColors) ? "light" : "dark"
           }
         },
         {

@@ -85,13 +85,6 @@ window.api.receive("triggerFunction", async (name, args) => {
           handleError(error);
         });
         break;
-      case "toggleDarkmode":
-        triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
-        break;
       case "toggle":
         triggerToggle(document.getElementById(...args), true).then(function(response) {
           console.info(response);

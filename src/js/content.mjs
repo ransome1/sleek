@@ -5,8 +5,9 @@ import { createModalJail } from "./jail.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { handleError } from "./helper.mjs";
 
-const html = document.getElementById("html");
 const addAsTodo = document.getElementById("addAsTodo");
+const autoUpdateBody = document.getElementById("autoUpdateBody");
+const autoUpdateHeadline = document.getElementById("autoUpdateHeadline");
 const compactViewBody = document.getElementById("compactViewBody");
 const compactViewHeadline = document.getElementById("compactViewHeadline");
 const fileTabsBody = document.getElementById("fileTabsBody");
@@ -57,6 +58,8 @@ const helpTabPrioritiesBody = document.getElementById("helpTabPrioritiesBody");
 const helpTabPrioritiesTitle = document.getElementById("helpTabPrioritiesTitle");
 const helpTabRecurrencesBody1 = document.getElementById("helpTabRecurrencesBody1");
 const helpTabRecurrencesTitle1 = document.getElementById("helpTabRecurrencesTitle1");
+const html = document.getElementById("html");
+const language = document.getElementById("language");
 const modalWindows = document.querySelectorAll(".modal");
 const reviewSourceforge = document.getElementById("reviewSourceforge");
 const reviewWindowsStore = document.getElementById("reviewWindowsStore");
@@ -68,8 +71,8 @@ const settingsTabAboutExternalLibraries = document.getElementById("settingsTabAb
 const settingsTabAboutHeadline = document.getElementById("settingsTabAboutHeadline");
 const settingsTabAboutPrivacy = document.getElementById("settingsTabAboutPrivacy");
 const settingsTabAboutPrivacyBody = document.getElementById("settingsTabAboutPrivacyBody");
-const settingsTabSettingsDarkmode = document.getElementById("settingsTabSettingsDarkmode");
-const settingsTabSettingsDarkmodeBody = document.getElementById("settingsTabSettingsDarkmodeBody");
+const themeHeadline = document.getElementById("themeHeadline");
+const themeBody = document.getElementById("themeBody");
 const settingsTabSettingsHeadline = document.getElementById("settingsTabSettingsHeadline");
 const settingsTabSettingsLanguage = document.getElementById("settingsTabSettingsLanguage");
 const settingsTabSettingsLanguageBody = document.getElementById("settingsTabSettingsLanguageBody");
@@ -87,12 +90,10 @@ const zoom = document.getElementById("zoom");
 const zoomBody = document.getElementById("zoomBody");
 const zoomHeadline = document.getElementById("zoomHeadline");
 const zoomUndo = document.getElementById("zoomUndo");
-const language = document.getElementById("language");
-
-const autoUpdateHeadline = document.getElementById("autoUpdateHeadline");
-const autoUpdateBody = document.getElementById("autoUpdateBody");
 
 addAsTodo.innerHTML = translations.addAsTodo;
+autoUpdateBody.innerHTML = translations.autoUpdateBody;
+autoUpdateHeadline.innerHTML = translations.autoUpdateHeadline;
 compactViewBody.innerHTML = translations.compactViewBody;
 compactViewHeadline.innerHTML = translations.compactView;
 fileTabsBody.innerHTML = translations.fileTabsBody;
@@ -153,8 +154,8 @@ settingsTabAboutExternalLibraries.innerHTML = translations.settingsTabAboutExter
 settingsTabAboutHeadline.innerHTML = translations.about;
 settingsTabAboutPrivacy.innerHTML = translations.settingsTabAboutPrivacy;
 settingsTabAboutPrivacyBody.innerHTML = translations.settingsTabAboutPrivacyBody;
-settingsTabSettingsDarkmode.innerHTML = translations.darkmode;
-settingsTabSettingsDarkmodeBody.innerHTML = translations.settingsTabSettingsDarkmodeBody;
+themeHeadline.innerHTML = translations.themeHeadline;
+themeBody.innerHTML = translations.themeBody;
 settingsTabSettingsHeadline.innerHTML = translations.settings;
 settingsTabSettingsLanguage.innerHTML = translations.language;
 settingsTabSettingsLanguageBody.innerHTML = translations.settingsTabSettingsLanguageBody;
@@ -170,8 +171,6 @@ shareTwitter.innerHTML = translations.shareTwitter;
 submitIssuesOnGithub.innerHTML = translations.submitIssuesOnGithub;
 zoomBody.innerHTML = translations.zoomBody;
 zoomHeadline.innerHTML = translations.zoomHeadline;
-autoUpdateHeadline.innerHTML = translations.autoUpdateHeadline;
-autoUpdateBody.innerHTML = translations.autoUpdateBody;
 
 language.onchange = function() {
   // only continue if language code has been passed
@@ -184,6 +183,15 @@ language.onchange = function() {
   });
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Language changed to: " + this.value]);
+}
+theme.onchange = function() {
+  // only continue if language code has been passed
+  if(!this.value) return false;
+  
+  window.api.send("setTheme", this.value)
+
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Settings", "Theme changed to: " + this.value]);
 }
 zoom.onchange = function() {
   setZoom(this.value).then(response => {
@@ -206,7 +214,6 @@ zoomUndo.onclick = function() {
 
 function setZoom(value) {
   try {
-    
     // manipulate dom
     html.style.zoom = value + "%";
 

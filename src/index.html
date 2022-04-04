@@ -431,17 +431,23 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsTabSettingsDarkmode"></th>
+              <th colspan="100%" id="themeHeadline">
+              </th>
             </tr>
             <tr>
-              <td id="settingsTabSettingsDarkmodeBody"></td>
+              <td id="themeBody"></td>
               <td>
-                <span class="toggle">
-                  <label class="switch" for="darkmode">
-                    <input type="checkbox" id="darkmode" tabindex="0">
-                    <span class="slider round"></span>
-                  </label>
-                </span>
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="theme">
+                        <option value="system" selected>Auto</option>
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </td>
             </tr>
           </table>
