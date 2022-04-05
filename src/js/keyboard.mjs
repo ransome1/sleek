@@ -149,7 +149,7 @@ export async function registerShortcuts() {
       if(isModalOpen()) {
 
         // // set priority directly
-        // if(event.altKey && event.metaKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
+        // if(event.altKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
 
         //   setPriority(event.key.substr(0,1)).then(response => {
         //     console.log(response);
@@ -474,7 +474,7 @@ export async function registerShortcuts() {
 
         // priority up
 
-        if(event.ctrlKey && event.metaKey && event.key === "ArrowUp") {
+        if(event.altKey && event.metaKey && event.key === "ArrowUp") {
           setPriority(-1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -485,7 +485,7 @@ export async function registerShortcuts() {
 
         // priority down
 
-        if(event.ctrlKey && event.metaKey && event.key === "ArrowDown") {
+        if(event.altKey && event.metaKey && event.key === "ArrowDown") {
           setPriority(1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -496,9 +496,11 @@ export async function registerShortcuts() {
 
         // set priority directly
         
-        if(event.ctrlKey && event.metaKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
+        if(event.altKey && event.metaKey && event.key.length === 1) {
 
-          setPriority(event.key.toUpperCase()).then(response => {
+          if(!event.code.includes("Key")) return false
+
+          setPriority(event.code.substr(3).toUpperCase()).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
@@ -510,7 +512,7 @@ export async function registerShortcuts() {
 
         // remove priority
         
-        if(event.ctrlKey && event.metaKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        if(event.altKey && event.metaKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
 
           setPriority(false).then(response => {
             console.log(response);

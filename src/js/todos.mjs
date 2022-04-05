@@ -708,6 +708,8 @@ function sortTodosInGroup(group) {
 async function setTodoComplete(todo) {
   try {
 
+    if(typeof todo === "string") todo = await generateTodoTxtObject(todo)
+
     // get index of todo
     const index = await items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
 

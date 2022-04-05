@@ -422,10 +422,9 @@ function showNotification(config) {
 }
 function configureWindowEvents() {
   try {
-    nativeTheme.on("updated", () => {
-      userData.set("theme", nativeTheme.themeSource);
-      (nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark"); document.getElementById("theme").value="${nativeTheme.themeSource}"`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark"); document.getElementById("theme").value="${nativeTheme.themeSource}"`)
-    })
+    // nativeTheme.on("updated", () => {
+    //   (nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark");`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark");`)
+    // })
 
     mainWindow
     .on("resize", function() {
@@ -448,9 +447,15 @@ function configureWindowEvents() {
       event.preventDefault();
       (userData.data.maximizeWindow) ? mainWindow.maximize() : mainWindow.unmaximize()
     })
-    .webContents.on("new-window", function(event, url) {
+
+    .webContents
+    .on("new-window", function(event, url) {
       event.preventDefault();
       require("electron").shell.openExternal(url);
+    })
+    .on("did-finish-load", function() {
+      nativeTheme.themeSource = userData.data.theme;
+      //(nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark");`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark");`)
     });
 
     ipcMain.handle("userData", (event, args) => {
@@ -474,6 +479,7 @@ function configureWindowEvents() {
       .on("setTheme", (event, theme) => {
         if(!theme) theme = (nativeTheme.shouldUseDarkColors) ? "light" : "dark"
         nativeTheme.themeSource = theme;
+        userData.set("theme", nativeTheme.themeSource);
       })
       .on("closeWindow", () => {
         mainWindow.close()
@@ -646,9 +652,6 @@ async function createWindow() {
       }
     });
     mainWindow.loadFile(path.join(appData.path, "index.html"));
-
-    // apply theme setting
-    nativeTheme.themeSource = userData.data.theme;
 
     // load the translations
     translations = await i18next.getDataByLanguage(userData.data.language).translation
@@ -835,7 +838,7 @@ async function createWindow() {
         }
       ]
     }
-    const menuTemplate = (getActiveFile()) ? [menuTemplateApp, menuTemplateFile, menuTemplateEdit, menuTemplateTodos, menuTemplateView, menuTemplateAbout] : [menuTemplateApp, menuTemplateFile]
+    const menuTemplate = (getActiveFile()) ? [menuTemplateApp, menuTemplateFile, menuTemplateEdit, menuTemplateTodos, menuTemplateView, menuTemplateAbout] : [menuTemplateApp, menuTemplateFile, menuTemplateEdit]
     Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
     // hide quit menu item on all platforms but macos
     if(appData.os !== "mac") Menu.getApplicationMenu().getMenuItemById("quit").visible = false;

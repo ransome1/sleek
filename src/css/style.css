@@ -1,543 +1,546 @@
 @charset "UTF-8";
-body.dark {
-  background-color: #212224;
-  color: #f0f0f0;
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #212224;
+    color: #f0f0f0;
+  }
+  body code, body pre {
+    color: #CCCDCF !important;
+    background-color: #212224 !important;
+  }
+  body a {
+    color: #3273dc;
+  }
+  body a:hover,
+body a:focus-visible {
+    color: #f0f0f0;
+  }
+  body strong {
+    color: #f0f0f0;
+  }
+  body input,
+body select {
+    border: none !important;
+    background: transparent !important;
+    color: white !important;
+  }
+  body input[type=text],
+body input[type=search],
+body textarea {
+    background: #2d2d2d !important;
+    border: none;
+    color: white;
+  }
+  body input:focus,
+body select:focus {
+    background-color: #2d2d2d !important;
+  }
+  body .is-focused .inputWrapper label,
+body .is-focused .inputWrapper i.fa-search,
+body .is-focused .inputWrapper .todoTableSearchQuestionmark i,
+body .inputWrapper.is-focused label,
+body .inputWrapper.is-focused i.fa-search,
+body .inputWrapper.is-focused .todoTableSearchQuestionmark i {
+    color: #f0f0f0 !important;
+  }
+  body input::placeholder {
+    color: #5a5a5a !important;
+  }
+  body input[type=checkbox]:focus,
+body input[type=checkbox]:active {
+    outline: none;
+    box-shadow: none !important;
+  }
+  body input[type=range] {
+    background: #5a5a5a !important;
+  }
+  body input[type=range]::-webkit-slider-thumb {
+    background: #f0f0f0;
+  }
+  body button {
+    color: #f0f0f0;
+    background: #212224;
+  }
+  body ::after {
+    border-color: #f0f0f0 !important;
+  }
+  body table {
+    width: 100%;
+    background-color: transparent !important;
+    color: #CCCDCF !important;
+  }
+  body table tr td {
+    border-color: #212224 !important;
+  }
+  body table tr th {
+    color: white !important;
+  }
+  body table.files tr td:last-child a,
+body table.files tr td:last-child a:hover {
+    color: #f0f0f0 !important;
+  }
+  body table.files tr td:last-child a:focus-visible {
+    color: #212224 !important;
+  }
+  body table.files button {
+    color: #f0f0f0;
+    background: #212224;
+  }
+  body table.files button:focus-visible {
+    color: #212224 !important;
+    background: #f0f0f0 !important;
+  }
+  body table.files button:disabled {
+    opacity: 0.5;
+  }
+  body nav {
+    background-color: #2d2d2d;
+  }
+  body nav svg {
+    color: #CCCDCF;
+  }
+  body nav ul li.logo {
+    color: #f0f0f0 !important;
+    border: none !important;
+  }
+  body nav ul li a {
+    color: #f0f0f0 !important;
+    border-bottom: 1px solid #3B3B3B;
+  }
+  body nav ul li a:hover,
+body nav ul li a:focus {
+    color: #CCCDCF !important;
+    border-bottom: none;
+    background-color: #3B3B3B;
+  }
+  body nav ul li a.is-highlighted {
+    color: #CCCDCF !important;
+    border-bottom: none;
+    background-color: #3B3B3B;
+  }
+  body nav ul:nth-child(2) #versionNumber {
+    color: #CCCDCF !important;
+  }
+  body nav ul:nth-child(2) #versionNumber:hover {
+    color: #CCCDCF !important;
+  }
+  body a.contexts {
+    color: #c5ede3 !important;
+    background: #1e6251 !important;
+  }
+  body a.contexts span.tag {
+    color: #123b31 !important;
+    background: #c9eee5 !important;
+  }
+  body a.contexts.is-dark,
+body a.contexts:focus-visible {
+    background: #123b31 !important;
+    color: white !important;
+  }
+  body a.projects {
+    color: #f1d6f1 !important;
+    background: #6f266f !important;
+  }
+  body a.projects span.tag {
+    color: #491949 !important;
+    background: #f2daf2 !important;
+  }
+  body a.projects.is-dark,
+body a.projects:focus-visible {
+    background: #491949 !important;
+    color: white !important;
+  }
+  body a.button.is-greyed-out {
+    background: #3273dc !important;
+    color: white !important;
+    filter: opacity(50%) grayscale(100%);
+  }
+  body #drawerContainer .zoom svg {
+    color: white !important;
+  }
+  body #drawerContainer .zoom #zoomStatus {
+    color: white !important;
+  }
+  body #todoTableSearchContainer {
+    background-color: #212224;
+  }
+  body #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
+    background-color: #f0f0f0;
+  }
+  body #todoTableSearchContainer #todoTableSearchAddTodo {
+    background: #212224 !important;
+    color: #f0f0f0 !important;
+  }
+  body #todoTableSearchContainer #todoTableSearchAddTodo i {
+    color: inherit;
+  }
+  body #todoTableSearchContainer #todoTableSearchAddTodo:hover,
+body #todoTableSearchContainer #todoTableSearchAddTodo:focus,
+body #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
+    color: #212224 !important;
+    background: white !important;
+  }
+  body #todoTableSearchContainer #btnToggleViewContainer {
+    background: transparent !important;
+  }
+  body #resultStats .tag {
+    color: #CCCDCF !important;
+  }
+  body #resultStats .tag strong {
+    color: white !important;
+  }
+  body #todoTable i {
+    color: #f0f0f0;
+  }
+  body #todoTable i.fa-sort-down {
+    color: #5a5a5a !important;
+  }
+  body #todoTable .todo#previousItem.is-highlighted {
+    background-color: #3B3B3B;
+  }
+  body #todoTable .todo:hover .cell button,
+body #todoTable .todo.due button {
+    color: #f0f0f0;
+  }
+  body #todoTable .group a.button {
+    color: #ebebeb;
+  }
+  body #todoTable .group a.button a.button {
+    color: inherit;
+  }
+  body #todoTable .is-white {
+    color: #CCCDCF;
+    background: none;
+  }
+  body #todoTable .todo {
+    border-color: #3B3B3B;
+  }
+  body #todoTable .todo .cell.checkbox i {
+    color: #3273dc;
+    font-size: 1.25em;
+  }
+  body #todoTable .todo .cell.checkbox a:focus-visible {
+    color: white !important;
+  }
+  body #todoTable .todo .cell.checkbox i:hover {
+    color: white !important;
+  }
+  body #todoTable .todo .cell.checkbox a:focus-visible,
+body #todoTable .todo .cell.archive a:focus-visible {
+    color: #CCCDCF !important;
+  }
+  body #todoTable .todo div.cell.text {
+    color: #f0f0f0 !important;
+  }
+  body #todoTable .todo div.cell.text:focus-visible {
+    background: #2d2d2d !important;
+  }
+  body #todoTable .todo .cell.itemDueDate {
+    color: white;
+  }
+  body #todoTable .todo .cell.itemDueDate i {
+    color: inherit;
+  }
+  body #todoTable .todo .cell.itemDueDate.today,
+body #todoTable .todo .cell.itemDueDate.past {
+    color: #ff3860;
+  }
+  body #todoTable .todo .cell.itemDueDate.today i,
+body #todoTable .todo .cell.itemDueDate.past i {
+    color: inherit !important;
+  }
+  body #todoTable .todo .cell.itemDueDate.tomorrow {
+    color: #fa745e;
+  }
+  body #todoTable .todo .cell.itemDueDate.tomorrow i {
+    color: inherit !important;
+  }
+  body #todoTable .todo:focus {
+    background: #3a3a3a !important;
+  }
+  body #modalForm i {
+    color: #CCCDCF !important;
+  }
+  body #modalForm .field input,
+body #modalForm .field select {
+    color: white !important;
+  }
+  body #modalForm .field select option {
+    background: #3B3B3B;
+  }
+  body #modalForm #autoCompleteContainer {
+    background: #2d2d2d;
+  }
+  body #modalForm #autoCompleteContainer h4 {
+    color: white;
+  }
+  body #modalForm #autoCompleteContainer section::-webkit-scrollbar-thumb:window-inactive,
+body #modalForm #autoCompleteContainer section::-webkit-scrollbar-thumb {
+    background: #5a5a5a;
+  }
+  body #recurrencePickerContainer {
+    background: #2d2d2d;
+  }
+  body #recurrencePickerContainer .radio {
+    cursor: pointer;
+    background: none !important;
+    color: white !important;
+  }
+  body #recurrencePickerContainer .radio:hover {
+    color: #CCCDCF !important;
+  }
+  body #recurrencePickerContainer .card-footer {
+    border-color: #212224 !important;
+  }
+  body #drawerContainer .drawer {
+    background: #3B3B3B !important;
+  }
+  body #drawerContainer .drawer h4.is-4 {
+    color: white;
+  }
+  body #drawerContainer .drawer button span.tag {
+    color: #5a5a5a;
+  }
+  body #drawerContainer .drawer #sortByContainer li {
+    background: #2d2d2d;
+    color: white;
+  }
+  body #drawerContainer .drawer #sortByContainer li i {
+    /*color: $light-grey;*/
+  }
+  body #drawerContainer .drawer #sortByContainer li.drag-sort-active {
+    border-left: 0.2em solid white;
+  }
+  body #drawerContainer .drawer::-webkit-scrollbar-thumb:window-inactive,
+body #drawerContainer .drawer::-webkit-scrollbar-thumb {
+    background: #5a5a5a;
+  }
+  body #drawerContainer #drawerClose {
+    background: #3B3B3B !important;
+  }
+  body #todoTableWrapper header {
+    background-color: #212224;
+  }
+  body #todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
+body #todoTableWrapper::-webkit-scrollbar-thumb {
+    background: #3B3B3B;
+  }
+  body #filterContext,
+body #todoContext {
+    box-shadow: 0 0 1em #212224 !important;
+  }
+  body #filterContext a,
+body #todoContext a {
+    color: #f0f0f0 !important;
+  }
+  body #filterContext a:hover,
+body #filterContext a:focus,
+body #todoContext a:hover,
+body #todoContext a:focus {
+    color: #CCCDCF !important;
+    background: #2d2d2d !important;
+  }
+  body #filterContext .card,
+body #todoContext .card {
+    background: #3B3B3B;
+  }
+  body #filterContext .card #filterContextDelete,
+body #todoContext .card #filterContextDelete {
+    color: #ff3860 !important;
+  }
+  body #filterContext .horizontal,
+body #todoContext .horizontal {
+    border-bottom: 1px solid #2d2d2d;
+  }
+  body #filterContext .horizontal label,
+body #todoContext .horizontal label {
+    color: #ebebeb;
+  }
+  body #fileTabBar ul {
+    background-color: #2d2d2d;
+  }
+  body #fileTabBar ul li {
+    color: #ccc;
+  }
+  body #fileTabBar ul li i {
+    color: #2d2d2d;
+  }
+  body #fileTabBar ul li:hover i,
+body #fileTabBar ul li.is-highlighted:hover i {
+    color: #3273dc;
+  }
+  body #fileTabBar ul li.is-highlighted {
+    background: #212224;
+    color: white;
+  }
+  body #fileTabBar ul li.is-highlighted i {
+    color: #212224;
+  }
+  body .toggle .switch .slider {
+    background-color: #5a5a5a;
+  }
+  body .toggle .switch input:checked + .slider {
+    background-color: #3273dc !important;
+  }
+  body .toggle .switch input:focus + .slider {
+    box-shadow: none;
+  }
+  body .toggle .switch input:focus-visible {
+    outline: 2px solid white !important;
+  }
+  body .card {
+    background: #3B3B3B;
+    color: #CCCDCF;
+  }
+  body .card .card-footer-item:hover {
+    color: #CCCDCF !important;
+  }
+  body .card .card-footer-item:focus-visible {
+    color: #f0f0f0 !important;
+    background: #2d2d2d !important;
+  }
+  body .card .card-footer {
+    border-color: #2d2d2d !important;
+  }
+  body .card .card-footer-item {
+    border-color: #2d2d2d !important;
+    background: transparent;
+    color: #f0f0f0 !important;
+  }
+  body .modal.content {
+    color: #CCCDCF !important;
+  }
+  body .modal.content button,
+body .modal.content button,
+body .modal.content select {
+    background: #2d2d2d !important;
+  }
+  body .modal.content .select:not(.is-multiple):not(.is-loading)::after {
+    border-color: white !important;
+  }
+  body .modal.content .delete,
+body .modal.content .modal-close,
+body .modal.content .tag.is-info {
+    background: white !important;
+    color: #3B3B3B !important;
+  }
+  body .modal.content .tag:not(body).is-dark {
+    background: #212224 !important;
+  }
+  body .modal.content .modal-close::before,
+body .modal.content .modal-close::after {
+    color: #3B3B3B !important;
+    background: #3B3B3B !important;
+  }
+  body .modal.content .modal-card,
+body .modal.content table {
+    background: #3B3B3B;
+    color: #CCCDCF !important;
+  }
+  body .modal.content .modal-card .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+body .modal.content .modal-card .modal-card-body::-webkit-scrollbar-thumb,
+body .modal.content table .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
+body .modal.content table .modal-card-body::-webkit-scrollbar-thumb {
+    background: #2d2d2d;
+  }
+  body .modal.content .title,
+body .modal.content table th {
+    color: white;
+  }
+  body .modal.content table tr,
+body .modal.content table th,
+body .modal.content table td {
+    border-color: #2d2d2d !important;
+  }
+  body .modal.content .card {
+    background: #f0f0f0;
+  }
+  body .modal.content .tabs ul {
+    border-color: transparent;
+  }
+  body .modal.content .tabs ul li a {
+    color: white !important;
+    border-color: #5a5a5a !important;
+  }
+  body .modal.content .tabs ul li.is-active a {
+    color: #3273dc !important;
+    border-color: #3273dc !important;
+  }
+  body .modal.content .tabs ul li a:focus-visible {
+    background: #5a5a5a !important;
+  }
+  body .message.fixed {
+    background: transparent !important;
+  }
+  body .message.fixed i {
+    color: white !important;
+  }
+  body .message.fixed .message-body {
+    color: #CCCDCF;
+    background: #3B3B3B !important;
+  }
+  body .message.fixed .message-body button {
+    background: #2d2d2d !important;
+  }
+  body .dueDate #datePickerInput,
+body .dueDate #datePickerInput::placeholder {
+    cursor: pointer;
+  }
+  body .datepicker {
+    background: transparent;
+  }
+  body .datepicker button {
+    background: transparent !important;
+  }
+  body .datepicker .datepicker-picker {
+    background: #2d2d2d;
+    color: white;
+  }
+  body .datepicker .datepicker-picker button,
+body .datepicker .datepicker-picker button:hover,
+body .datepicker .datepicker-picker .datepicker-header .datepicker-controls button:hover {
+    background: none;
+    color: inherit;
+  }
+  body .datepicker .datepicker-picker .datepicker-footer .datepicker-controls button {
+    color: inherit;
+  }
+  body .datepicker .datepicker-picker .datepicker-cell {
+    border-color: #2d2d2d;
+    background: #2d2d2d;
+  }
+  body .datepicker .datepicker-picker .datepicker-cell.today,
+body .datepicker .datepicker-picker .datepicker-cell.today.selected {
+    color: #2d2d2d !important;
+    background: #ccc !important;
+  }
+  body .datepicker .datepicker-picker .datepicker-cell.selected,
+body .datepicker .datepicker-picker .datepicker-cell.selected:hover,
+body .datepicker .datepicker-picker .datepicker-cell.selected.focused {
+    color: white !important;
+    background: #3273dc !important;
+  }
+  body .datepicker .datepicker-picker .datepicker-cell:hover,
+body .datepicker .datepicker-picker .datepicker-cell.focused {
+    border-color: #3273dc;
+  }
+  body .contentContainer .title.is-1 {
+    color: #f0f0f0;
+  }
+  body .contentContainer .subtitle,
+body .contentContainer .subtitle strong {
+    color: #f0f0f0;
+  }
+  body .contentContainer .btnOnboarding:focus-visible i, body .contentContainer .btnOnboarding:focus-visible span,
+body .contentContainer .btnOnboarding:hover i,
+body .contentContainer .btnOnboarding:hover span {
+    color: #f0f0f0;
+  }
+  body .notification {
+    background-color: #2d2d2d !important;
+    color: #f0f0f0;
+  }
 }
-body.dark code, body.dark pre {
-  color: #CCCDCF !important;
-  background-color: #212224 !important;
-}
-body.dark a {
-  color: #3273dc;
-}
-body.dark a:hover,
-body.dark a:focus-visible {
-  color: #f0f0f0;
-}
-body.dark i {
-  color: #f0f0f0;
-}
-body.dark i.fa-sort-down {
-  color: #5a5a5a !important;
-}
-body.dark strong {
-  color: #f0f0f0;
-}
-body.dark input,
-body.dark select {
-  border: none !important;
-  background: transparent !important;
-  color: white !important;
-}
-body.dark input[type=text],
-body.dark input[type=search],
-body.dark textarea {
-  background: #2d2d2d !important;
-  border: none;
-  color: white;
-}
-body.dark input:focus,
-body.dark select:focus {
-  background-color: #2d2d2d !important;
-}
-body.dark .is-focused .inputWrapper label,
-body.dark .is-focused .inputWrapper i.fa-search,
-body.dark .is-focused .inputWrapper .todoTableSearchQuestionmark i,
-body.dark .inputWrapper.is-focused label,
-body.dark .inputWrapper.is-focused i.fa-search,
-body.dark .inputWrapper.is-focused .todoTableSearchQuestionmark i {
-  color: #f0f0f0 !important;
-}
-body.dark input::placeholder {
-  color: #5a5a5a !important;
-}
-body.dark input[type=checkbox]:focus,
-body.dark input[type=checkbox]:active {
-  outline: none;
-  box-shadow: none !important;
-}
-body.dark input[type=range] {
-  background: #5a5a5a !important;
-}
-body.dark input[type=range]::-webkit-slider-thumb {
-  background: #f0f0f0;
-}
-body.dark button {
-  color: #f0f0f0;
-  background: #212224;
-}
-body.dark ::after {
-  border-color: #f0f0f0 !important;
-}
-body.dark table {
-  width: 100%;
-  background-color: transparent !important;
-  color: #CCCDCF !important;
-}
-body.dark table tr td {
-  border-color: #212224 !important;
-}
-body.dark table tr th {
-  color: white !important;
-}
-body.dark table.files tr td:last-child a,
-body.dark table.files tr td:last-child a:hover {
-  color: #f0f0f0 !important;
-}
-body.dark table.files tr td:last-child a:focus-visible {
-  color: #212224 !important;
-}
-body.dark table.files button {
-  color: #f0f0f0;
-  background: #212224;
-}
-body.dark table.files button:focus-visible {
-  color: #212224 !important;
-  background: #f0f0f0 !important;
-}
-body.dark table.files button:disabled {
-  opacity: 0.5;
-}
-body.dark nav {
-  background-color: #2d2d2d;
-}
-body.dark nav svg {
-  color: #CCCDCF;
-}
-body.dark nav ul li.logo {
-  color: #f0f0f0 !important;
-  border: none !important;
-}
-body.dark nav ul li a {
-  color: #f0f0f0 !important;
-  border-bottom: 1px solid #3B3B3B;
-}
-body.dark nav ul li a:hover,
-body.dark nav ul li a:focus {
-  color: #CCCDCF !important;
-  border-bottom: none;
-  background-color: #3B3B3B;
-}
-body.dark nav ul li a.is-highlighted {
-  color: #CCCDCF !important;
-  border-bottom: none;
-  background-color: #3B3B3B;
-}
-body.dark nav ul:nth-child(2) #versionNumber {
-  color: #CCCDCF !important;
-}
-body.dark nav ul:nth-child(2) #versionNumber:hover {
-  color: #CCCDCF !important;
-}
-body.dark a.contexts {
-  color: #c5ede3 !important;
-  background: #1e6251 !important;
-}
-body.dark a.contexts span.tag {
-  color: #123b31 !important;
-  background: #c9eee5 !important;
-}
-body.dark a.contexts.is-dark,
-body.dark a.contexts:focus-visible {
-  background: #123b31 !important;
-  color: white !important;
-}
-body.dark a.projects {
-  color: #f1d6f1 !important;
-  background: #6f266f !important;
-}
-body.dark a.projects span.tag {
-  color: #491949 !important;
-  background: #f2daf2 !important;
-}
-body.dark a.projects.is-dark,
-body.dark a.projects:focus-visible {
-  background: #491949 !important;
-  color: white !important;
-}
-body.dark a.button.is-greyed-out {
-  background: #3273dc !important;
-  color: white !important;
-  filter: opacity(50%) grayscale(100%);
-}
-body.dark #drawerContainer .zoom svg {
-  color: white !important;
-}
-body.dark #drawerContainer .zoom #zoomStatus {
-  color: white !important;
-}
-body.dark #todoTableSearchContainer {
-  background-color: #212224;
-}
-body.dark #todoTableSearchContainer input[type=search]::-webkit-search-cancel-button {
-  background-color: #f0f0f0;
-}
-body.dark #todoTableSearchContainer #todoTableSearchAddTodo {
-  background: #212224 !important;
-  color: #f0f0f0 !important;
-}
-body.dark #todoTableSearchContainer #todoTableSearchAddTodo i {
-  color: inherit;
-}
-body.dark #todoTableSearchContainer #todoTableSearchAddTodo:hover,
-body.dark #todoTableSearchContainer #todoTableSearchAddTodo:focus,
-body.dark #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
-  color: #212224 !important;
-  background: white !important;
-}
-body.dark #todoTableSearchContainer #btnToggleViewContainer {
-  background: transparent !important;
-}
-body.dark #resultStats .tag {
-  color: #CCCDCF !important;
-}
-body.dark #resultStats .tag strong {
-  color: white !important;
-}
-body.dark #todoTable .todo#previousItem.is-highlighted {
-  background-color: #3B3B3B;
-}
-body.dark #todoTable .todo:hover .cell button,
-body.dark #todoTable .todo.due button {
-  color: #f0f0f0;
-}
-body.dark #todoTable .group a.button {
-  color: #ebebeb;
-}
-body.dark #todoTable .group a.button a.button {
-  color: inherit;
-}
-body.dark #todoTable .is-white {
-  color: #CCCDCF;
-  background: none;
-}
-body.dark #todoTable .todo {
-  border-color: #3B3B3B;
-}
-body.dark #todoTable .todo .cell.checkbox i {
-  color: #3273dc;
-  font-size: 1.25em;
-}
-body.dark #todoTable .todo .cell.checkbox a:focus-visible {
-  color: white !important;
-}
-body.dark #todoTable .todo .cell.checkbox i:hover {
-  color: white !important;
-}
-body.dark #todoTable .todo .cell.checkbox a:focus-visible,
-body.dark #todoTable .todo .cell.archive a:focus-visible {
-  color: #CCCDCF !important;
-}
-body.dark #todoTable .todo div.cell.text {
-  color: #f0f0f0 !important;
-}
-body.dark #todoTable .todo div.cell.text:focus-visible {
-  background: #2d2d2d !important;
-}
-body.dark #todoTable .todo .cell.itemDueDate {
-  color: white;
-}
-body.dark #todoTable .todo .cell.itemDueDate i {
-  color: inherit;
-}
-body.dark #todoTable .todo .cell.itemDueDate.today,
-body.dark #todoTable .todo .cell.itemDueDate.past {
-  color: #ff3860;
-}
-body.dark #todoTable .todo .cell.itemDueDate.today i,
-body.dark #todoTable .todo .cell.itemDueDate.past i {
-  color: inherit !important;
-}
-body.dark #todoTable .todo .cell.itemDueDate.tomorrow {
-  color: #fa745e;
-}
-body.dark #todoTable .todo .cell.itemDueDate.tomorrow i {
-  color: inherit !important;
-}
-body.dark #todoTable .todo:focus {
-  background: #3a3a3a !important;
-}
-body.dark #modalForm i {
-  color: #CCCDCF !important;
-}
-body.dark #modalForm .field input,
-body.dark #modalForm .field select {
-  color: white !important;
-}
-body.dark #modalForm .field select option {
-  background: #3B3B3B;
-}
-body.dark #modalForm #autoCompleteContainer {
-  background: #2d2d2d;
-}
-body.dark #modalForm #autoCompleteContainer h4 {
-  color: white;
-}
-body.dark #modalForm #autoCompleteContainer section::-webkit-scrollbar-thumb:window-inactive,
-body.dark #modalForm #autoCompleteContainer section::-webkit-scrollbar-thumb {
-  background: #5a5a5a;
-}
-body.dark #recurrencePickerContainer {
-  background: #2d2d2d;
-}
-body.dark #recurrencePickerContainer .radio {
-  cursor: pointer;
-  background: none !important;
-  color: white !important;
-}
-body.dark #recurrencePickerContainer .radio:hover {
-  color: #CCCDCF !important;
-}
-body.dark #recurrencePickerContainer .card-footer {
-  border-color: #212224 !important;
-}
-body.dark #drawerContainer .drawer {
-  background: #3B3B3B !important;
-}
-body.dark #drawerContainer .drawer h4.is-4 {
-  color: white;
-}
-body.dark #drawerContainer .drawer button span.tag {
-  color: #5a5a5a;
-}
-body.dark #drawerContainer .drawer #sortByContainer li {
-  background: #2d2d2d;
-  color: white;
-}
-body.dark #drawerContainer .drawer #sortByContainer li i {
-  /*color: $light-grey;*/
-}
-body.dark #drawerContainer .drawer #sortByContainer li.drag-sort-active {
-  border-left: 0.2em solid white;
-}
-body.dark #drawerContainer .drawer::-webkit-scrollbar-thumb:window-inactive,
-body.dark #drawerContainer .drawer::-webkit-scrollbar-thumb {
-  background: #5a5a5a;
-}
-body.dark #drawerContainer #drawerClose {
-  background: #3B3B3B !important;
-}
-body.dark #todoTableWrapper header {
-  background-color: #212224;
-}
-body.dark #todoTableWrapper::-webkit-scrollbar-thumb:window-inactive,
-body.dark #todoTableWrapper::-webkit-scrollbar-thumb {
-  background: #3B3B3B;
-}
-body.dark #filterContext,
-body.dark #todoContext {
-  box-shadow: 0 0 1em #212224 !important;
-}
-body.dark #filterContext a,
-body.dark #todoContext a {
-  color: #f0f0f0 !important;
-}
-body.dark #filterContext a:hover,
-body.dark #filterContext a:focus,
-body.dark #todoContext a:hover,
-body.dark #todoContext a:focus {
-  color: #CCCDCF !important;
-  background: #2d2d2d !important;
-}
-body.dark #filterContext .card,
-body.dark #todoContext .card {
-  background: #3B3B3B;
-}
-body.dark #filterContext .card #filterContextDelete,
-body.dark #todoContext .card #filterContextDelete {
-  color: #ff3860 !important;
-}
-body.dark #filterContext .horizontal,
-body.dark #todoContext .horizontal {
-  border-bottom: 1px solid #2d2d2d;
-}
-body.dark #filterContext .horizontal label,
-body.dark #todoContext .horizontal label {
-  color: #ebebeb;
-}
-body.dark #fileTabBar ul {
-  background-color: #2d2d2d;
-}
-body.dark #fileTabBar ul li {
-  color: #ccc;
-}
-body.dark #fileTabBar ul li i {
-  color: #2d2d2d;
-}
-body.dark #fileTabBar ul li:hover i,
-body.dark #fileTabBar ul li.is-highlighted:hover i {
-  color: #3273dc;
-}
-body.dark #fileTabBar ul li.is-highlighted {
-  background: #212224;
-  color: white;
-}
-body.dark #fileTabBar ul li.is-highlighted i {
-  color: #212224;
-}
-body.dark .toggle .switch .slider {
-  background-color: #5a5a5a;
-}
-body.dark .toggle .switch input:checked + .slider {
-  background-color: #3273dc !important;
-}
-body.dark .toggle .switch input:focus + .slider {
-  box-shadow: none;
-}
-body.dark .toggle .switch input:focus-visible {
-  outline: 2px solid white !important;
-}
-body.dark .card {
-  background: #3B3B3B;
-  color: #CCCDCF;
-}
-body.dark .card .card-footer-item:hover {
-  color: #CCCDCF !important;
-}
-body.dark .card .card-footer-item:focus-visible {
-  color: #f0f0f0 !important;
-  background: #2d2d2d !important;
-}
-body.dark .card .card-footer {
-  border-color: #2d2d2d !important;
-}
-body.dark .card .card-footer-item {
-  border-color: #2d2d2d !important;
-  background: transparent;
-  color: #f0f0f0 !important;
-}
-body.dark .modal.content {
-  color: #CCCDCF !important;
-}
-body.dark .modal.content button,
-body.dark .modal.content button,
-body.dark .modal.content select {
-  background: #2d2d2d !important;
-}
-body.dark .modal.content .select:not(.is-multiple):not(.is-loading)::after {
-  border-color: white !important;
-}
-body.dark .modal.content .delete,
-body.dark .modal.content .modal-close,
-body.dark .modal.content .tag.is-info {
-  background: white !important;
-  color: #3B3B3B !important;
-}
-body.dark .modal.content .tag:not(body).is-dark {
-  background: #212224 !important;
-}
-body.dark .modal.content .modal-close::before,
-body.dark .modal.content .modal-close::after {
-  color: #3B3B3B !important;
-  background: #3B3B3B !important;
-}
-body.dark .modal.content .modal-card,
-body.dark .modal.content table {
-  background: #3B3B3B;
-  color: #CCCDCF !important;
-}
-body.dark .modal.content .modal-card .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
-body.dark .modal.content .modal-card .modal-card-body::-webkit-scrollbar-thumb,
-body.dark .modal.content table .modal-card-body::-webkit-scrollbar-thumb:window-inactive,
-body.dark .modal.content table .modal-card-body::-webkit-scrollbar-thumb {
-  background: #2d2d2d;
-}
-body.dark .modal.content .title,
-body.dark .modal.content table th {
-  color: white;
-}
-body.dark .modal.content table tr,
-body.dark .modal.content table th,
-body.dark .modal.content table td {
-  border-color: #2d2d2d !important;
-}
-body.dark .modal.content .card {
-  background: #f0f0f0;
-}
-body.dark .modal.content .tabs ul {
-  border-color: transparent;
-}
-body.dark .modal.content .tabs ul li a {
-  color: white !important;
-  border-color: #5a5a5a !important;
-}
-body.dark .modal.content .tabs ul li.is-active a {
-  color: #3273dc !important;
-  border-color: #3273dc !important;
-}
-body.dark .modal.content .tabs ul li a:focus-visible {
-  background: #5a5a5a !important;
-}
-body.dark .message.fixed {
-  background: transparent !important;
-}
-body.dark .message.fixed i {
-  color: white !important;
-}
-body.dark .message.fixed .message-body {
-  color: #CCCDCF;
-  background: #3B3B3B !important;
-}
-body.dark .message.fixed .message-body button {
-  background: #2d2d2d !important;
-}
-body.dark .dueDate #datePickerInput,
-body.dark .dueDate #datePickerInput::placeholder {
-  cursor: pointer;
-}
-body.dark .datepicker {
-  background: transparent;
-}
-body.dark .datepicker button {
-  background: transparent !important;
-}
-body.dark .datepicker .datepicker-picker {
-  background: #2d2d2d;
-  color: white;
-}
-body.dark .datepicker .datepicker-picker button,
-body.dark .datepicker .datepicker-picker button:hover,
-body.dark .datepicker .datepicker-picker .datepicker-header .datepicker-controls button:hover {
-  background: none;
-  color: inherit;
-}
-body.dark .datepicker .datepicker-picker .datepicker-footer .datepicker-controls button {
-  color: inherit;
-}
-body.dark .datepicker .datepicker-picker .datepicker-cell {
-  border-color: #2d2d2d;
-  background: #2d2d2d;
-}
-body.dark .datepicker .datepicker-picker .datepicker-cell.today,
-body.dark .datepicker .datepicker-picker .datepicker-cell.today.selected {
-  color: #2d2d2d !important;
-  background: #ccc !important;
-}
-body.dark .datepicker .datepicker-picker .datepicker-cell.selected,
-body.dark .datepicker .datepicker-picker .datepicker-cell.selected:hover,
-body.dark .datepicker .datepicker-picker .datepicker-cell.selected.focused {
-  color: white !important;
-  background: #3273dc !important;
-}
-body.dark .datepicker .datepicker-picker .datepicker-cell:hover,
-body.dark .datepicker .datepicker-picker .datepicker-cell.focused {
-  border-color: #3273dc;
-}
-body.dark .contentContainer .title.is-1 {
-  color: white;
-}
-body.dark .contentContainer .subtitle,
-body.dark .contentContainer .subtitle strong {
-  color: #CCCDCF;
-}
-body.dark .contentContainer .btnOnboarding:focus-visible {
-  color: #CCCDCF;
-}
-body.dark .notification {
-  background-color: #2d2d2d !important;
-  color: #f0f0f0;
-}
-
 @font-face {
   font-family: "FreeSans";
   src: url("../fonts/FreeSans.otf") format("opentype");

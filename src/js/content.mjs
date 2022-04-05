@@ -276,6 +276,10 @@ function setFriendlyLanguageNames() {
 export function showModal(modalId) {
   try {
 
+    // TODO: make this more generic
+    // set the theme selection field
+    document.getElementById("theme").value = userData.theme;
+
     // in case a content window was open, it will be closed
     modalWindows.forEach(function(modalWindow) { modalWindow.classList.remove("is-active") });
 

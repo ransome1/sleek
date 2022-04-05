@@ -30,6 +30,7 @@ const renderer = {
 };
 marked.use({ renderer });
 
+// TODO: check if this still works
 export function jumpToItem(item) {
   try {
     const isInViewport = function(item) {
