@@ -14,6 +14,12 @@ body.dark {
   a:focus-visible {
     color: $almost-white;
   }
+  i {
+    color: $almost-white;
+  }
+  i.fa-sort-down {
+    color: $dark-grey!important;
+  }
   strong {
     color: $almost-white;
   }
@@ -59,9 +65,6 @@ body.dark {
   button {
     color: $almost-white;
     background: $almost-black;
-    i {
-      color: $almost-white;
-    }
   }
   ::after {
     border-color: $almost-white!important;
@@ -262,20 +265,18 @@ body.dark {
         i {
           color: inherit;
         }
-        i.fa-sort-down {
-          color: $dark-grey;
-        }
       }
       .cell.itemDueDate.today,
       .cell.itemDueDate.past {
         color: $has-text-danger;
         i {
-          color: inherit;
+          color: inherit!important;
         }
       }
       .cell.itemDueDate.tomorrow {
+        color: $has-text-attention;
         i {
-          color: $has-text-attention!important;
+          color: inherit!important;
         }
       }    
     }
@@ -307,8 +308,8 @@ body.dark {
       }
     }
   }
-  #recurrencePicker {
-    #recurrencePickerInput,
+  #recurrencePickerContainer {
+    background: $darker-grey;
     .radio {
       cursor: pointer;
       background: none!important;
@@ -317,11 +318,8 @@ body.dark {
     .radio:hover {
       color: $lighter-grey!important;
     }
-    #recurrencePickerContainer {
-      background: $darker-grey;
-      .card-footer {
-        border-color: $almost-black;
-      }
+    .card-footer {
+      border-color: $almost-black!important;
     }
   }
   #drawerContainer {

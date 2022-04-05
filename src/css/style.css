@@ -14,6 +14,12 @@ body.dark a:hover,
 body.dark a:focus-visible {
   color: #f0f0f0;
 }
+body.dark i {
+  color: #f0f0f0;
+}
+body.dark i.fa-sort-down {
+  color: #5a5a5a !important;
+}
 body.dark strong {
   color: #f0f0f0;
 }
@@ -59,9 +65,6 @@ body.dark input[type=range]::-webkit-slider-thumb {
 body.dark button {
   color: #f0f0f0;
   background: #212224;
-}
-body.dark button i {
-  color: #f0f0f0;
 }
 body.dark ::after {
   border-color: #f0f0f0 !important;
@@ -237,19 +240,19 @@ body.dark #todoTable .todo .cell.itemDueDate {
 body.dark #todoTable .todo .cell.itemDueDate i {
   color: inherit;
 }
-body.dark #todoTable .todo .cell.itemDueDate i.fa-sort-down {
-  color: #5a5a5a;
-}
 body.dark #todoTable .todo .cell.itemDueDate.today,
 body.dark #todoTable .todo .cell.itemDueDate.past {
   color: #ff3860;
 }
 body.dark #todoTable .todo .cell.itemDueDate.today i,
 body.dark #todoTable .todo .cell.itemDueDate.past i {
-  color: inherit;
+  color: inherit !important;
+}
+body.dark #todoTable .todo .cell.itemDueDate.tomorrow {
+  color: #fa745e;
 }
 body.dark #todoTable .todo .cell.itemDueDate.tomorrow i {
-  color: #fa745e !important;
+  color: inherit !important;
 }
 body.dark #todoTable .todo:focus {
   background: #3a3a3a !important;
@@ -274,20 +277,19 @@ body.dark #modalForm #autoCompleteContainer section::-webkit-scrollbar-thumb:win
 body.dark #modalForm #autoCompleteContainer section::-webkit-scrollbar-thumb {
   background: #5a5a5a;
 }
-body.dark #recurrencePicker #recurrencePickerInput,
-body.dark #recurrencePicker .radio {
+body.dark #recurrencePickerContainer {
+  background: #2d2d2d;
+}
+body.dark #recurrencePickerContainer .radio {
   cursor: pointer;
   background: none !important;
   color: white !important;
 }
-body.dark #recurrencePicker .radio:hover {
+body.dark #recurrencePickerContainer .radio:hover {
   color: #CCCDCF !important;
 }
-body.dark #recurrencePicker #recurrencePickerContainer {
-  background: #2d2d2d;
-}
-body.dark #recurrencePicker #recurrencePickerContainer .card-footer {
-  border-color: #212224;
+body.dark #recurrencePickerContainer .card-footer {
+  border-color: #212224 !important;
 }
 body.dark #drawerContainer .drawer {
   background: #3B3B3B !important;
@@ -1101,8 +1103,8 @@ nav ul:nth-child(2):hover #versionNumber {
   width: 1.2em;
   display: inline-block;
   background-color: #3273dc;
-  -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
-  mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+  -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/circle-xmark.svg");
+  mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/circle-xmark.svg");
   cursor: pointer;
 }
 #todoTableSearchContainer label {
@@ -1744,6 +1746,10 @@ a.priority.C:focus-visible span.tag {
   margin: 0 auto;
 }
 
+#modalChangeFile table tr td:last-child {
+  width: 1em;
+}
+
 #modalForm[open]:not(:focus-within) {
   background-color: #fffffe;
   transition: background-color 0.01s;
@@ -1825,36 +1831,35 @@ a.priority.C:focus-visible span.tag {
 #recurrencePicker #recurrencePickerInput {
   cursor: pointer;
 }
-#recurrencePicker .card {
+
+#recurrencePickerContainer {
   width: auto;
   display: none;
   position: fixed;
+  z-index: 100;
 }
-#recurrencePicker .card .content {
+#recurrencePickerContainer .content {
   margin: 0;
   padding: 1em;
   display: flex;
   align-items: center;
 }
-#recurrencePicker .card .content div {
+#recurrencePickerContainer .content div {
   width: auto;
   float: left;
   text-align: center;
   padding: 0 0.5em;
 }
-#recurrencePicker .card .content div.options {
+#recurrencePickerContainer .content div.options {
   text-align: left;
 }
-#recurrencePicker .card .content #recurrencePickerDecrease,
-#recurrencePicker .card .content #recurrencePickerIncrease,
-#recurrencePicker .card .content #recurrencePickerSpinner {
+#recurrencePickerContainer .content #recurrencePickerDecrease,
+#recurrencePickerContainer .content #recurrencePickerIncrease,
+#recurrencePickerContainer .content #recurrencePickerSpinner {
   font-size: 1.25em;
   padding: 0.5em;
 }
-#recurrencePicker .card .content #recurrencePickerSpinner {
-  width: 2em;
-}
-#recurrencePicker .card label {
+#recurrencePickerContainer label {
   font-size: 1em;
   color: #2d2d2d;
   display: block;
@@ -1961,10 +1966,6 @@ a.priority.C:focus-visible span.tag {
 #todoTable .todo:focus {
   background: #e0eafa !important;
 }
-#todoTable .todo:focus .cell.itemDueDate .tags,
-#todoTable .todo:focus .cell.itemDueDate .fa-sort-down {
-  display: block;
-}
 #todoTable .todo.completed .cell {
   filter: opacity(50%) grayscale(100%);
 }
@@ -2019,38 +2020,34 @@ a.priority.C:focus-visible span.tag {
   padding: 0;
   color: #5a5a5a;
 }
-#todoTable .cell.text:focus-visible {
-  background: #f0f0f0;
-  border-radius: 0.65em;
-}
-#todoTable .cell.itemDueDate {
+#todoTable .cell.hint {
   color: #5a5a5a;
   position: relative;
   white-space: nowrap;
   text-transform: lowercase;
   cursor: pointer;
 }
-#todoTable .cell.itemDueDate .fa-sort-down {
+#todoTable .cell.hint .fa-sort-down {
   position: absolute;
   right: 0.2em;
   top: -0.5em;
   display: none;
 }
-#todoTable .cell.itemDueDate .tags {
+#todoTable .cell.hint .tags {
   position: absolute;
   top: -1.6em;
   right: -1.5em;
   z-index: 50;
   display: none;
 }
-#todoTable .cell.itemDueDate .tags .tag {
+#todoTable .cell.hint .tags .tag {
   margin: 0;
 }
-#todoTable .cell.itemDueDate .tags .is-dark {
+#todoTable .cell.hint .tags .is-dark {
   background: #5a5a5a;
   font-family: FreeSansBold;
 }
-#todoTable .cell.itemDueDate .transparentInput {
+#todoTable .cell.hint .transparentInput {
   width: 100%;
   height: 100%;
   background: transparent !important;

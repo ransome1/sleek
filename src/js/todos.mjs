@@ -8,7 +8,7 @@ import { categories, selectFilter } from "./filters.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { createModalJail } from "./jail.mjs";
 import { focusRow } from "./keyboard.mjs";
-import { generateRecurrence } from "./recurrences.mjs";
+import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
@@ -28,6 +28,7 @@ const todoTable = document.getElementById("todoTable");
 const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
+const todoTableBodyCellTDateTemplate = document.createElement("span");
 const todoTableBodyCellHiddenTemplate = document.createElement("span");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
 const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
@@ -45,8 +46,9 @@ todoContextUseAsTemplate.innerHTML = translations.useAsTemplate;
 
 tableContainerCategoriesTemplate.setAttribute("class", "cell categories");
 todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
-todoTableBodyCellDueDateTemplate.setAttribute("class", "cell itemDueDate");
-todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell recurrence");
+todoTableBodyCellDueDateTemplate.setAttribute("class", "cell hint itemDueDate");
+todoTableBodyCellTDateTemplate.setAttribute("class", "cell");
+todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell hint");
 todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
 todoTableBodyCellTextTemplate.setAttribute("href", "#");
 todoTableBodyRowTemplate.setAttribute("class", "todo");
@@ -285,6 +287,7 @@ function generateTableRow(todo) {
     let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
+    let todoTableBodyCellTDate = todoTableBodyCellTDateTemplate.cloneNode(true);
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
     let todoTableBodyCellHidden = todoTableBodyCellHiddenTemplate.cloneNode(true);
@@ -404,9 +407,9 @@ function generateTableRow(todo) {
       }
 
       todoTableBodyCellDueDate.innerHTML = `
-        <i class="far fa-clock"></i>
+        <i class="fa-solid fa-clock"></i>
         <div class="tags has-addons">
-          <span class="tag">${translations.due}</span><span class="tag is-dark">${dateFieldContent}</span>
+          <span class="tag">due:</span><span class="tag is-dark">${dateFieldContent}</span>
         </div>
         <i class="fas fa-sort-down"></i>`;
 
@@ -435,10 +438,33 @@ function generateTableRow(todo) {
       todoTableBodyRow.appendChild(todoTableBodyCellDueDate);
     }
 
+    // add threshold date icon
+    if(todo.t) {
+      todoTableBodyCellTDate.innerHTML = `<i class="fa-regular fa-clock"></i>`
+      todoTableBodyRow.appendChild(todoTableBodyCellTDate);
+    }
+
     // TODO: Add recurrence picker function
     // add recurrence icon
     if(todo.rec) {
-      todoTableBodyCellRecurrence.innerHTML = "<i class=\"fas fa-redo\"></i>";
+
+      const recLabel = (setInput(todo.rec)) ? setInput(todo.rec) : todo.rec
+
+      todoTableBodyCellRecurrence.innerHTML = `
+        <i class="fa-solid fa-repeat"></i>
+        <div class="tags has-addons">
+          <span class="tag">rec:</span><span class="tag is-dark">${recLabel}</span>
+        </div>
+        <i class="fas fa-sort-down"></i>`;
+      todoTableBodyCellRecurrence.onclick = function(event) {
+    
+        // prevent body event listener to be triggered
+        event.stopPropagation();
+
+        // create datepicker and attach it to hidden input
+        showRecurrences(event.target, todo);
+
+      }
       todoTableBodyRow.appendChild(todoTableBodyCellRecurrence);
     }
 

@@ -58,8 +58,10 @@ export async function registerShortcuts() {
       if(event.key === "Escape") {
 
         // if search is focused, lose focus on escape
+        // hide add todo button
         if(document.activeElement.id==="todoTableSearch") {
           todoTableSearch.blur();
+          document.getElementById("todoTableSearchAddTodo").classList.remove("is-active");
           return false;
         }
         // if 'add as todo' is focused, return to search

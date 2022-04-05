@@ -44,8 +44,8 @@
     width: 1.2em;
     display: inline-block;
     background-color: $has-text-link;
-    -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
-    mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+    -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/circle-xmark.svg");
+    mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/circle-xmark.svg");
     cursor: pointer;
   }
   label {

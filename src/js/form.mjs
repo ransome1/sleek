@@ -121,7 +121,7 @@ modalForm.onsubmit = async function(event) {
       return false;
   
     // check if todo text is empty
-    } else if(!todo.text && !todo.h) {
+    } else if(!todo.text) {
       modalFormAlert.innerHTML = translations.formInfoIncomplete;
       modalFormAlert.parentElement.classList.add("is-active", "is-warning");
       console.log("Info: Todo is incomplete");

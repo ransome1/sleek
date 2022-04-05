@@ -20,5 +20,5 @@ If you have interface design experience you can propose design changes. As sleek
 ### Translate sleek into your language
 Plenty of languages are already available, but if yours is missing, you can translate the app to it.
 
-## Write test cases
+### Write test cases
 Test cases are written for the Playwright end to end testing environment: https://playwright.dev/docs/api/class-playwright. Creating cases it pretty much straight forward and you can take a look on how it has been done so far: https://github.com/ransome1/sleek/blob/master/test/playwright.spec.js

@@ -102,7 +102,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewBoxShowHidden"><span id="toggleShowHidden"></span></td>
+                    <td id="viewBoxShowHidden"><span id="toggleShowHidden"></span><a href="https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showHidden">
@@ -146,7 +146,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><span id="toggleDeferredTodos"></span> <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
+                    <td><span id="toggleDeferredTodos"></span><a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="deferredTodos">
@@ -295,7 +295,7 @@
                 <div class="control has-icons-left">
                   <input id="datePickerInput" class="input" tabindex="0" readonly>
                   <a href="#" class="icon is-left" tabindex="-1">
-                    <i class="far fa-clock is-left"></i>
+                    <i class="fa-solid fa-clock is-left"></i>
                   </a>
                 </div>
               </div>
@@ -303,46 +303,10 @@
                 <div class="control has-icons-left">
                   <input id="recurrencePickerInput" class="input" readonly tabindex="-1">
                   <a href="#" class="icon is-left" tabindex="-1">
-                    <i class="fas fa-redo"></i>
+                    <i class="fa-solid fa-repeat"></i>
                   </a>
                 </div>
-                <div id="recurrencePickerContainer" class="card" tabindex="-1">
-                  <div class="content">
-                    <div>
-                      <span id="recurrencePickerEvery"></span>
-                    </div>
-                    <div id="recurrencePickerMul">
-                      <a href="#" id="recurrencePickerIncrease"><i class="fas fa-plus-circle"></i></a><br>
-                      <input id="recurrencePickerSpinner" type="number" min="1" max="99"><br>
-                      <a href="#" id="recurrencePickerDecrease"><i class="fas fa-minus-circle"></i></a>
-                    </div>
-                    <div class="options">
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="d">
-                        <span id="recurrencePickerDay"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="b">
-                        <span id="recurrencePickerBusinessDay"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="w">
-                        <span id="recurrencePickerWeek"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="m">
-                        <span id="recurrencePickerMonth"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="y">
-                        <span id="recurrencePickerYear"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <footer class="card-footer">
-                    <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"></a>
-                  </footer>
-                </div>
+
               </div>
 
           </div>
@@ -354,6 +318,47 @@
         </div>
       </div>
     </form>
+
+
+    <div id="recurrencePickerContainer" class="card" tabindex="-1">
+      <div class="content">
+        <div>
+          <span id="recurrencePickerEvery"></span>
+        </div>
+        <div id="recurrencePickerMul">
+          <a href="#" id="recurrencePickerIncrease"><i class="fas fa-plus-circle"></i></a><br>
+          <input id="recurrencePickerSpinner" type="number" min="1" max="99"><br>
+          <a href="#" id="recurrencePickerDecrease"><i class="fas fa-minus-circle"></i></a>
+        </div>
+        <div class="options">
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="d">
+            <span id="recurrencePickerDay"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="b">
+            <span id="recurrencePickerBusinessDay"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="w">
+            <span id="recurrencePickerWeek"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="m">
+            <span id="recurrencePickerMonth"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="y">
+            <span id="recurrencePickerYear"></span>
+          </label>
+        </div>
+      </div>
+      <footer class="card-footer">
+        <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"></a>
+      </footer>
+    </div>
+
+
     <div id="modalSettings" class="modal content" tabindex="0">
       <div class="modal-background" role="cancel"></div>
       <div class="modal-card">
@@ -524,7 +529,7 @@
             <li class="helpTab2"><a href="#" id="helpTab2Title" tabindex="0"></a></li>
             <li class="helpTab3"><a href="#" id="helpTab3Title" tabindex="0"></a></li>
             <li class="helpTab4"><a href="#" id="helpTab4Title" tabindex="0"></a></li>
-            <li class="helpTab5"><a href="#" id="helpTab5Title" tabindex="0"></a></li>
+            <li class="helpTab5"><a href="#" id="recurrences" tabindex="0"></a></li>
             <li class="helpTab6"><a href="#" id="settingsTabAbout" tabindex="0"></a></li>
           </ul>
         </div>
@@ -731,16 +736,16 @@
             <tr>
               <td><i class="fab fa-github"></i></td>
               <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
-              <td><i class="fas fa-star"></i></td>
-              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
+              <td><i class="fab fa-apple"></i></td>
+              <td><a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="_blank" id="reviewMacAppStore"></a></td>
               <td><i class="fab fa-windows"></i></td>
               <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
             </tr>
             <tr>
+              <td><i class="fas fa-star"></i></td>
+              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
               <td><i class="fab fa-twitter"></i></td>
               <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
-              <td><i class="fab fa-facebook"></i></td>
-              <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
               <td><i class="fab fa-linkedin"></i></td>
               <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
             </tr>
@@ -766,28 +771,7 @@
               <th colspan="100%" id="settingsTabAboutExternalLibraries"></th>
             </tr>
             <tr>
-              <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
-              <td><a href="https://github.com/electron-userland/electron-builder" target="_blank">Electron builder</a></td>
-              <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
-              <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/jgthms/bulma" target="_blank">Bulma CSS</a></td>
-              <td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome</a></td>
-              <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
-              <td><a href="https://github.com/markedjs/marked" target="_blank">Marked</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
-              <td><a href="https://github.com/paulmillr/chokidar" target="_blank">chokidar</a></td>
-              <td><a href="https://github.com/viktor-shmigol/electron-windows-badge/" target="_blank">Electron Windows Badge</a></td>
-              <td><a href="https://github.com/andrewplummer/Sugar" target="_blank">Sugar</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/pegjs/pegjs" target="_blank">PEG.js</a></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><a href="https://github.com/ransome1/sleek#used-libraries" target="_blank">https://github.com/ransome1/sleek#used-libraries</a></td>
             </tr>
           </table>
         </section>
