@@ -55,14 +55,18 @@ body input[type=checkbox]:active {
     background: #5a5a5a !important;
   }
   body input[type=range]::-webkit-slider-thumb {
-    background: #f0f0f0;
+    background: #f0f0f0 !important;
   }
   body button {
-    color: #f0f0f0;
-    background: #212224;
+    color: #f0f0f0 !important;
+    background-color: transparent !important;
   }
   body ::after {
     border-color: #f0f0f0 !important;
+  }
+  body button:focus-visible {
+    color: #f0f0f0 !important;
+    background: #2d2d2d !important;
   }
   body table {
     width: 100%;
@@ -83,12 +87,12 @@ body table.files tr td:last-child a:hover {
     color: #212224 !important;
   }
   body table.files button {
-    color: #f0f0f0;
-    background: #212224;
+    color: #f0f0f0 !important;
+    background: #3273dc !important;
   }
   body table.files button:focus-visible {
-    color: #212224 !important;
-    background: #f0f0f0 !important;
+    color: #f0f0f0 !important;
+    background: #3273dc !important;
   }
   body table.files button:disabled {
     opacity: 0.5;
@@ -124,28 +128,34 @@ body nav ul li a:focus {
   body nav ul:nth-child(2) #versionNumber:hover {
     color: #CCCDCF !important;
   }
-  body a.contexts {
+  body a.contexts,
+body a.contexts:hover {
     color: #c5ede3 !important;
     background: #1e6251 !important;
   }
-  body a.contexts span.tag {
+  body a.contexts span.tag,
+body a.contexts:hover span.tag {
     color: #123b31 !important;
     background: #c9eee5 !important;
   }
   body a.contexts.is-dark,
+body a.contexts.is-dark:hover,
 body a.contexts:focus-visible {
     background: #123b31 !important;
     color: white !important;
   }
-  body a.projects {
+  body a.projects,
+body a.projects:hover {
     color: #f1d6f1 !important;
     background: #6f266f !important;
   }
-  body a.projects span.tag {
+  body a.projects span.tag,
+body a.projects:hover span.tag {
     color: #491949 !important;
     background: #f2daf2 !important;
   }
   body a.projects.is-dark,
+body a.projects.is-dark:hover,
 body a.projects:focus-visible {
     background: #491949 !important;
     color: white !important;
@@ -329,15 +339,17 @@ body #todoTableWrapper::-webkit-scrollbar-thumb {
 body #todoContext {
     box-shadow: 0 0 1em #212224 !important;
   }
-  body #filterContext a,
-body #todoContext a {
+  body #filterContext .dropdown-item,
+body #todoContext .dropdown-item {
     color: #f0f0f0 !important;
   }
-  body #filterContext a:hover,
-body #filterContext a:focus,
-body #todoContext a:hover,
-body #todoContext a:focus {
-    color: #CCCDCF !important;
+  body #filterContext .dropdown-item:hover,
+body #filterContext .dropdown-item:focus,
+body #filterContext .dropdown-item:focus-visible,
+body #todoContext .dropdown-item:hover,
+body #todoContext .dropdown-item:focus,
+body #todoContext .dropdown-item:focus-visible {
+    color: #f0f0f0 !important;
     background: #2d2d2d !important;
   }
   body #filterContext .card,
@@ -348,12 +360,12 @@ body #todoContext .card {
 body #todoContext .card #filterContextDelete {
     color: #ff3860 !important;
   }
-  body #filterContext .horizontal,
-body #todoContext .horizontal {
+  body #filterContext .card-content .horizontal,
+body #todoContext .card-content .horizontal {
     border-bottom: 1px solid #2d2d2d;
   }
-  body #filterContext .horizontal label,
-body #todoContext .horizontal label {
+  body #filterContext .card-content .horizontal label,
+body #todoContext .card-content .horizontal label {
     color: #ebebeb;
   }
   body #fileTabBar ul {

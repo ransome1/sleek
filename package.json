@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.1.8-rc.5",
+  "version": "1.1.8",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "category": "ProjectManagement",
@@ -19,7 +19,7 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "buildVersion": "14",
+    "buildVersion": "1",
     "files": [
       "!flatpak-node${/*}",
       "!snap${/*}",
@@ -125,6 +125,7 @@
     "build:appx": "yarn build:css && yarn build:pegjs && electron-builder -w appx --publish never",
     "build:css": "sass src/scss/style.scss:src/css/style.css",
     "build:pegjs": "peggy --format es --output src/js/filterlang.mjs src/js/filterlang.pegjs",
+    "pack": "yarn build:css && yarn build:pegjs && electron-builder --dir",
     "lint": "eslint --ext .js, src --ext .mjs, src",
     "sass": "sass -w src/scss/style.scss:src/css/style.css",
     "start": "yarn sass & electron .",

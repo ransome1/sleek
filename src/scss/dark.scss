@@ -55,14 +55,18 @@
       background: $dark-grey!important;
     }
     input[type="range"]::-webkit-slider-thumb {
-      background: $almost-white;
+      background: $almost-white!important;
     }
     button {
-      color: $almost-white;
-      background: $almost-black;
+        color: $almost-white!important;
+        background-color: transparent!important;
     }
     ::after {
       border-color: $almost-white!important;
+    }
+    button:focus-visible {
+        color: $almost-white!important;
+        background: $darker-grey!important;
     }
     table {
       width: 100%;
@@ -88,12 +92,12 @@
         }
       }
       button {
-        color: $almost-white;
-        background: $almost-black;
+        color: $almost-white!important;
+        background: $has-text-link!important;
       }
       button:focus-visible {
-        color: $almost-black!important;
-        background: $almost-white!important;
+        color: $almost-white!important;
+        background: $has-text-link!important;
       }
       button:disabled {
         opacity: 0.5;
@@ -135,7 +139,8 @@
       }
     }
 
-    a.contexts {
+    a.contexts,
+    a.contexts:hover {
       color: $sleek-contexts-button!important;
       background: darken($sleek-contexts-button, 60%)!important;
       span.tag {
@@ -144,11 +149,13 @@
       }
     }
     a.contexts.is-dark,
+    a.contexts.is-dark:hover,
     a.contexts:focus-visible {
       background: darken($sleek-contexts-button, 70%)!important;
       color: white!important;
     }
-    a.projects {
+    a.projects,
+    a.projects:hover {
       color: $sleek-projects-button!important;
       background: darken($sleek-projects-button, 60%)!important;
       span.tag {
@@ -157,6 +164,7 @@
       }
     }
     a.projects.is-dark,
+    a.projects.is-dark:hover,
     a.projects:focus-visible {
       background: darken($sleek-projects-button, 70%)!important;
       color: white!important;
@@ -367,12 +375,13 @@
     #filterContext,
     #todoContext {
       box-shadow: 0 0 1em $almost-black!important;
-      a {
+      .dropdown-item {
         color: $almost-white!important;
       }
-      a:hover,
-      a:focus {
-        color: $lighter-grey!important;
+      .dropdown-item:hover,
+      .dropdown-item:focus,
+      .dropdown-item:focus-visible {
+        color: $almost-white!important;
         background: $darker-grey!important;
       }
       .card {
@@ -381,7 +390,7 @@
           color: $has-text-danger!important;
         }
       }
-      .horizontal {
+      .card-content .horizontal {
         label {
           color: $light-grey;
         }
