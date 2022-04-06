@@ -9,9 +9,6 @@ const todoTableSearchAddTodo = document.getElementById("todoTableSearchAddTodo")
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 
 todoTableSearch.oninput = debounce(function() {
-  // on focus show addTodo button
-  //todoTableSearchAddTodo.classList.add("is-active");
-
   // rebuild table
   buildTable().then(function(response) {
     console.info(response);
@@ -26,16 +23,17 @@ todoTableSearch.onfocus = function() {
   todoTableSearchAddTodo.classList.add("is-active");
 }
 
-todoTableSearch.onblur = function(event) {
-  // this represents the tabbing to add button and will prevent the removal of is-active class
-  if(event.relatedTarget && event.relatedTarget.id !== "todoTableSearchAddTodo") todoTableSearchAddTodo.classList.remove("is-active")
+todoTableSearch.addEventListener("blur", function(event) {
 
-  // if input loses focus addTodo will be hidden
+  // this represents the tabbing to add button and will prevent the removal of is-active class
+  (event.relatedTarget && event.relatedTarget.id === "todoTableSearchAddTodo") ? todoTableSearchAddTodo.classList.add("is-active") : todoTableSearchAddTodo.classList.remove("is-active")
+
+  // if input loses focus magnifier will change appearance
   todoTableSearchContainer.classList.remove("is-focused");
 
   // if question mark is clicked, do not blur
   if(event.relatedTarget && event.relatedTarget.classList.contains("todoTableSearchQuestionmark")) return false;
-}
+}); 
 
 todoTableSearchAddTodo.onclick = function() {
   addTodo(todoTableSearch.value).then(response => {

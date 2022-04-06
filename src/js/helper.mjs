@@ -30,6 +30,7 @@ const renderer = {
 };
 marked.use({ renderer });
 
+// TODO: check if this still works
 export function jumpToItem(item) {
   try {
     const isInViewport = function(item) {
@@ -173,9 +174,8 @@ export function initialSetupInterface() {
     // setup compact view
     (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
 
-    // setup darkmode
-    window.api.send("darkmode", userData.darkmode);
-    (userData.darkmode) ? body.classList.add("dark") : body.classList.remove("dark");
+    // show or hide specific settings
+    if(appData.channel === "AppImage" || appData.os === "mac" && appData.channel !== "Mac App Store") document.getElementById("autoUpdate").classList.remove("is-hidden")
 
     // set scaling factor if default font size has changed
     document.getElementById("html").style.zoom = userData.zoom + "%";

@@ -137,6 +137,12 @@
   }
 }
 
+#modalChangeFile {
+  table tr td:last-child {
+    width: 1em;
+  }
+}
+
 #modalForm[open]:not(:focus-within) {
   background-color: rgb(255, 255, 254);
   transition: background-color 0.01s;

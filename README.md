@@ -2,6 +2,7 @@
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
 + [Support sleek](#support-sleek)
++ [Get it from Mac App Store](#get-sleek-from-apple-mac-app-store)
 + [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
 + [Get it from Snap Store](#get-sleek-from-snap-store)
 + [Get it from Flathub](#get-sleek-from-flathub)
@@ -22,33 +23,33 @@ sleek is available for Windows, MacOS and Linux, and in several languages. For a
 ### Screenshots
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's todo list view")
 ![Alt text](assets/screenshots/mac/drawer.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature")
-![Alt text](assets/screenshots/mac/search.png?raw=true "Screenshot of sleek's todo list sorted by projects with due date picker shown")
 
 ### sleeks state of development
 A prioritized backlog of new features and known issues as well as an overview on what is being worked on at the moment can be found <a href="https://github.com/ransome1/sleek/projects/2">here</a>.
 
 ### Support sleek
 * Star, fork and watch it on Github.
-* Review it on <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
-* Contribute <a href="https://github.com/ransome1/sleek/issues">bug reports, code improvements or features</a>
-* Translate sleek into your own language and contribute your translations
+* Review it on <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank">Mac App Store</a>, <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
+* <a href="https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md">Contribute to sleek</a>
+
+
+### Get sleek from Apple Mac App Store
+<a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank"><img src='assets/store_badges/Download_on_the_Mac_App_Store.png' alt='Get sleek from Apple Mac App Store' width='180'/></a>
 
 ### Get sleek from Microsoft Store
-You can install sleek from Microsofts Windows Store
-
 <a href="//www.microsoft.com/store/apps/9NWM2WXF60KR?cid=storebadge&ocid=badge" target="blank"><img src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png' alt='English badge' width='180'/></a>
 
 ### Get sleek from Snap Store
-You can install sleek from Canonicals Snap Store using: `sudo snap install sleek`
-
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/sleek)
 
+Install sleek from <a href="https://snapcraft.io/sleek" target="blank">Snap Store</a> using: `sudo snap install sleek`
+
 ### Get sleek from Flathub
+<a href="https://flathub.org/apps/details/com.github.ransome1.sleek" target="blank"><img width='180' alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
+
 Install sleek from <a href="https://flathub.org/apps/details/com.github.ransome1.sleek" target="blank">Flathub</a> using: `flatpak install flathub com.github.ransome1.sleek`
 
 Run it using: `flatpak run com.github.ransome1.sleek`
-
-<a href="https://flathub.org/apps/details/com.github.ransome1.sleek" target="blank"><img width='180' alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
 
 ### Get sleek from Homebrew
 Install sleek from <a href="https://formulae.brew.sh/cask/sleek" target="blank">Homebrew</a>.
@@ -115,12 +116,16 @@ A more detailed documentation can be found in <a href="https://github.com/ransom
 ### Used libraries
 - Electron: https://github.com/electron/electron
 - Electron builder: https://github.com/electron-userland/electron-builder
+- Electron Notarize: https://github.com/electron/electron-notarize
+- Electron Windows Badge: https://github.com/viktor-shmigol/electron-windows-badge
+- electron-reloader: https://github.com/sindresorhus/electron-reloader
 - Bulma CSS: https://github.com/jgthms/bulma
 - Font Awesome: https://github.com/FortAwesome/Font-Awesome
 - jsTodoTxt: https://github.com/jmhobbs/jsTodoTxt
 - Marked: https://github.com/markedjs/marked
 - vanillajs-datepicker: https://github.com/mymth/vanillajs-datepicker
 - i18next: https://github.com/i18next/i18next
+- i18next-fs-backend: https://github.com/i18next/i18next-fs-backend
 - Matomo: https://github.com/matomo-org/matomo
 - chokidar: https://github.com/paulmillr/chokidar
 - Sugar: https://github.com/andrewplummer/Sugar
@@ -128,5 +133,3 @@ A more detailed documentation can be found in <a href="https://github.com/ransom
 - Playwright: https://github.com/microsoft/playwright 
 - Sass: https://github.com/sass/sass
 - eslint: https://github.com/eslint/eslint
-- electron-reloader: https://github.com/sindresorhus/electron-reloader
-- cross-env: https://github.com/kentcdodds/cross-env

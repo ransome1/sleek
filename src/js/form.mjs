@@ -121,7 +121,7 @@ modalForm.onsubmit = async function(event) {
       return false;
   
     // check if todo text is empty
-    } else if(!todo.text && !todo.h) {
+    } else if(!todo.text) {
       modalFormAlert.innerHTML = translations.formInfoIncomplete;
       modalFormAlert.parentElement.classList.add("is-active", "is-warning");
       console.log("Info: Todo is incomplete");
@@ -490,13 +490,7 @@ async function show(todo, templated) {
       }
 
       // if there is a recurrence
-      if(todo.rec) {
-        setInput(todo.rec).then(function(result) {
-          console.log(result);
-        }).catch(function(error) {
-          handleError(error);
-        });
-      }
+      if(todo.rec) setInput(todo.rec)
       // if so we paste it into the input field
       if(todo.dueString) datePickerInput.value = todo.dueString;
     }

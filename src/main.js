@@ -1,13 +1,11 @@
 "use strict";
-
 const { Tray, app, Notification, clipboard, Menu, ipcMain, BrowserWindow, nativeTheme, dialog } = require("electron");
+const i18next = require("./configs/i18next.config");
 const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
 const Store = require("./configs/store.config.js");
-const autoUpdater = require("./configs/autoUpdater.config.js");
-const Badge = require("electron-windows-badge");
-const i18next = require("./configs/i18next.config");
+const { autoUpdaterAppImage, autoUpdaterMac } = require("./configs/autoUpdater.config.js");
 //const dismissedNotificationsStorage = require("./configs/store.config.js");
 const os = {
   darwin: "mac",
@@ -39,7 +37,6 @@ let
   menuTemplateTodos,
   menuTemplateView,
   menuTemplateAbout;
-      
 
 // ########################################################################################################################
 // HOT RELOAD
@@ -57,7 +54,6 @@ process.traceProcessWarnings = true;
 // ########################################################################################################################
 // SETUP APPDATA
 // ########################################################################################################################
-// TODO: beautify this
 function getChannel() {
   if(process.env.APPIMAGE) {
     return "AppImage";
@@ -355,7 +351,6 @@ function getUserData() {
     if(typeof userData.data.horizontal != "number") userData.set("horizontal", 160);
     if(typeof userData.data.vertical != "number") userData.set("vertical", 240);
     if(typeof userData.data.maximizeWindow != "boolean") userData.set("maximizeWindow", false);
-    if(typeof userData.data.darkmode != "boolean") userData.set("darkmode", nativeTheme.shouldUseDarkColors);
     if(typeof userData.data.notifications != "boolean") userData.set("notifications", true);
     if(typeof userData.data.useTextarea != "boolean") userData.set("useTextarea", false);
     if(typeof userData.data.compactView != "boolean") userData.set("compactView", false);
@@ -382,12 +377,16 @@ function getUserData() {
     if(typeof userData.data.fileTabs != "boolean") userData.data.fileTabs = true;
     if(typeof userData.data.appendStartDate != "boolean") userData.data.appendStartDate = false;
     if(typeof userData.data.language != "string") userData.data.language = app.getLocale().substr(0,2);
-    if(typeof userData.data.autoUpdate != "boolean") userData.data.autoUpdate = true;
+    if(typeof userData.data.autoUpdate != "boolean") userData.data.autoUpdate = false;
+    if(typeof userData.data.theme != "string") userData.set("theme", "system");
     
     //TODO remove this after 1.1.7 has been fully distributed
     const indexOfDueString = userData.data.sortBy.indexOf("dueString");
     if(indexOfDueString !== -1) userData.data.sortBy[indexOfDueString] = "due";
     if(userData.data.path) delete userData.data["path"];
+
+    //TODO remove this after 1.1.8 has been fully distributed
+    if(userData.data.darkmode) delete userData.data["darkmode"];
     
     //TODO remove this after 1.1.4 has been fully distributed
     if(userData.data.sortBy.length === 4) userData.set("sortBy", ["priority", "due", "contexts", "projects", "date"]);
@@ -423,31 +422,41 @@ function showNotification(config) {
 }
 function configureWindowEvents() {
   try {
-     mainWindow
-      .on("resize", function() {
-        userData.set("width", this.getBounds().width);
-        userData.set("height", this.getBounds().height);
-      })
-      .on("maximize", function() {
-        userData.set("maximizeWindow", true);
-      })
-      .on("unmaximize", function() {
-        userData.set("maximizeWindow", false);
-        userData.set("width", this.getBounds().width);
-        userData.set("height", this.getBounds().height);
-      })
-      .on("move", function() {
-        userData.set("horizontal", this.getBounds().x);
-        userData.set("vertical", this.getBounds().y);
-      })
-      .on("show", function(event) {
-        event.preventDefault();
-        (userData.data.maximizeWindow) ? mainWindow.maximize() : mainWindow.unmaximize()
-      })
-      .webContents.on("new-window", function(event, url) {
-        event.preventDefault();
-        require("electron").shell.openExternal(url);
-      });
+    // nativeTheme.on("updated", () => {
+    //   (nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark");`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark");`)
+    // })
+
+    mainWindow
+    .on("resize", function() {
+      userData.set("width", this.getBounds().width);
+      userData.set("height", this.getBounds().height);
+    })
+    .on("maximize", function() {
+      userData.set("maximizeWindow", true);
+    })
+    .on("unmaximize", function() {
+      userData.set("maximizeWindow", false);
+      userData.set("width", this.getBounds().width);
+      userData.set("height", this.getBounds().height);
+    })
+    .on("move", function() {
+      userData.set("horizontal", this.getBounds().x);
+      userData.set("vertical", this.getBounds().y);
+    })
+    .on("show", function(event) {
+      event.preventDefault();
+      (userData.data.maximizeWindow) ? mainWindow.maximize() : mainWindow.unmaximize()
+    })
+
+    .webContents
+    .on("new-window", function(event, url) {
+      event.preventDefault();
+      require("electron").shell.openExternal(url);
+    })
+    .on("did-finish-load", function() {
+      nativeTheme.themeSource = userData.data.theme;
+      //(nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark");`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark");`)
+    });
 
     ipcMain.handle("userData", (event, args) => {
       if(args) {
@@ -467,6 +476,11 @@ function configureWindowEvents() {
     });
 
     ipcMain
+      .on("setTheme", (event, theme) => {
+        if(!theme) theme = (nativeTheme.shouldUseDarkColors) ? "light" : "dark"
+        nativeTheme.themeSource = theme;
+        userData.set("theme", nativeTheme.themeSource);
+      })
       .on("closeWindow", () => {
         mainWindow.close()
       })
@@ -492,9 +506,6 @@ function configureWindowEvents() {
 
         if(process.mas) stopAccessingSecurityScopedResource()
 
-      })
-      .on("darkmode", (event, darkmode) => {
-        (darkmode) ? nativeTheme.themeSource = "dark" : nativeTheme.themeSource = "light";
       })
       .on("openOrCreateFile", (event, args) => {
         openFileChooser(args).then(response => {
@@ -649,6 +660,7 @@ async function createWindow() {
 
     // create badge for Windows build
     if(appData.os === "windows") {
+      const Badge = await require("electron-windows-badge");
       new Badge(mainWindow, {
         font: "10px arial"
       });
@@ -721,20 +733,17 @@ async function createWindow() {
         }
       }]
     }
-    // menuTemplateEdit = {
-    //   label: translations.edit,
-    //   submenu: [
-    //     { role: "undo", accelerator: "CmdOrCtrl+Z" },
-    //     { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
-    //     { type: "separator" },
-    //     { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
-    //     { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
-    //     { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
-    //     { role: "selectAll", accelerator: "CmdOrCtrl+A" }
-    //   ]
-    // }
-    menuTemplateEdit = { 
-      role: "editMenu"
+    menuTemplateEdit = {
+      label: translations.edit,
+      submenu: [
+        { role: "undo", accelerator: "CmdOrCtrl+Z" },
+        { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
+        { type: "separator" },
+        { label: translations.cut, accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: translations.copy, accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: translations.paste, accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { role: "selectAll", accelerator: "CmdOrCtrl+A" }
+      ]
     }
     menuTemplateTodos = {
       label: translations.todos,
@@ -791,7 +800,7 @@ async function createWindow() {
           label: translations.printCurrentView,
           click: function() {
             if(!getActiveFile()) return false
-            mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");               
+            mainWindow.webContents.executeJavaScript("body.classList.remove(\"dark\");");
             mainWindow.webContents.send("buildTable", [null, true]);
             setTimeout(function() {
               mainWindow.webContents.executeJavaScript("window.print()");
@@ -801,7 +810,7 @@ async function createWindow() {
         {
           label: translations.toggleTheme,
           click: function() {
-            mainWindow.webContents.send("triggerFunction", "toggleDarkmode")
+            nativeTheme.themeSource = (nativeTheme.shouldUseDarkColors) ? "light" : "dark"
           }
         },
         {
@@ -829,7 +838,7 @@ async function createWindow() {
         }
       ]
     }
-    const menuTemplate = (getActiveFile()) ? [menuTemplateApp, menuTemplateFile, menuTemplateEdit, menuTemplateTodos, menuTemplateView, menuTemplateAbout] : [menuTemplateApp, menuTemplateFile]
+    const menuTemplate = (getActiveFile()) ? [menuTemplateApp, menuTemplateFile, menuTemplateEdit, menuTemplateTodos, menuTemplateView, menuTemplateAbout] : [menuTemplateApp, menuTemplateFile, menuTemplateEdit]
     Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
     // hide quit menu item on all platforms but macos
     if(appData.os !== "mac") Menu.getApplicationMenu().getMenuItemById("quit").visible = false;
@@ -881,7 +890,10 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
   app.on("ready", () => {
 
     // setup autoupdater for AppImage build
-    if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdater.checkForUpdatesAndNotify()
+    if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdaterAppImage.checkForUpdatesAndNotify()
+
+    // setup autoupdater for Mac builds
+    if(appData.os === "mac" && appData.channel !== "Mac App Store" && userData.data.autoUpdate) autoUpdaterMac.checkForUpdatesAndNotify()
 
     // identifier for windows store
     if(appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")

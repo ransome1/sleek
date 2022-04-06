@@ -17,7 +17,7 @@ const validChannels = [
   "restart",
   "closeWindow",
   "changeWindowTitle",
-  "darkmode"
+  "setTheme"
 ];
 contextBridge.exposeInMainWorld(
   "api", {

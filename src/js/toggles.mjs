@@ -42,11 +42,6 @@ export function triggerToggle(inputField, toggle) {
       case "compactView":
         (userData[inputField.id]) ? body.classList.add("compact") : body.classList.remove("compact")
         break;
-      case "darkmode":
-        window.api.send("darkmode", userData.darkmode);
-        // TODO: move completely to main process
-        (userData[inputField.id]) ? body.classList.add("dark") : body.classList.remove("dark")
-        break;
       case "tray":
         getConfirmation(setTray, translations.restartPrompt, inputField.checked);
         break;

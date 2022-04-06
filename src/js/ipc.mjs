@@ -6,9 +6,6 @@ import { showDrawer } from "./drawer.mjs";
 import { resetFilters } from "./filters.mjs";
 import { triggerToggle } from "./toggles.mjs";
 
-//const helper = await import("./helper.mjs");
-//const render = await import("../render.js");
-
 // receives todo.txt data from main process as string and passes it to build function
 window.api.receive("buildTable", (args) => {
   buildTable(...args).then(function(response) {
@@ -80,13 +77,6 @@ window.api.receive("triggerFunction", async (name, args) => {
         break;
       case "setupInterface":
         setupInterface().then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          handleError(error);
-        });
-        break;
-      case "toggleDarkmode":
-        triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
           console.info(response);
         }).catch(function(error) {
           handleError(error);

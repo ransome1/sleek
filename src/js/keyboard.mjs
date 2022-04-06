@@ -4,7 +4,7 @@ import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
 import { resetFilters } from "./filters.mjs";
-import { handleError } from "./helper.mjs";
+import { handleError, getActiveFile } from "./helper.mjs";
 import { show, setPriority, resetForm } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
@@ -58,8 +58,10 @@ export async function registerShortcuts() {
       if(event.key === "Escape") {
 
         // if search is focused, lose focus on escape
+        // hide add todo button
         if(document.activeElement.id==="todoTableSearch") {
           todoTableSearch.blur();
+          document.getElementById("todoTableSearchAddTodo").classList.remove("is-active");
           return false;
         }
         // if 'add as todo' is focused, return to search
@@ -147,7 +149,7 @@ export async function registerShortcuts() {
       if(isModalOpen()) {
 
         // // set priority directly
-        // if(event.altKey && event.metaKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
+        // if(event.altKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
 
         //   setPriority(event.key.substr(0,1)).then(response => {
         //     console.log(response);
@@ -472,7 +474,7 @@ export async function registerShortcuts() {
 
         // priority up
 
-        if(event.ctrlKey && event.metaKey && event.key === "ArrowUp") {
+        if(event.altKey && event.metaKey && event.key === "ArrowUp") {
           setPriority(-1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -483,7 +485,7 @@ export async function registerShortcuts() {
 
         // priority down
 
-        if(event.ctrlKey && event.metaKey && event.key === "ArrowDown") {
+        if(event.altKey && event.metaKey && event.key === "ArrowDown") {
           setPriority(1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -494,9 +496,11 @@ export async function registerShortcuts() {
 
         // set priority directly
         
-        if(event.ctrlKey && event.metaKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
+        if(event.altKey && event.metaKey && event.key.length === 1) {
 
-          setPriority(event.key.toUpperCase()).then(response => {
+          if(!event.code.includes("Key")) return false
+
+          setPriority(event.code.substr(3).toUpperCase()).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
@@ -508,7 +512,7 @@ export async function registerShortcuts() {
 
         // remove priority
         
-        if(event.ctrlKey && event.metaKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        if(event.altKey && event.metaKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
 
           setPriority(false).then(response => {
             console.log(response);
@@ -556,14 +560,10 @@ export async function registerShortcuts() {
           return false;
         }
 
-        // toggle dark mode
+        // toggle appearance
 
         if(event.key==="d" && !isInputFocused()) {
-          triggerToggle(document.getElementById("darkmode"), true).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
+          window.api.send("setTheme")
           return false;
         }
 
