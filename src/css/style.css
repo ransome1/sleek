@@ -9,14 +9,14 @@
     background-color: #212224 !important;
   }
   body a {
-    color: #3273dc;
+    color: #3273dc !important;
   }
   body a:hover,
 body a:focus-visible {
-    color: #f0f0f0;
+    color: #f0f0f0 !important;
   }
   body strong {
-    color: #f0f0f0;
+    color: white !important;
   }
   body input,
 body select {
@@ -29,7 +29,7 @@ body input[type=search],
 body textarea {
     background: #2d2d2d !important;
     border: none;
-    color: white;
+    color: white !important;
   }
   body input:focus,
 body select:focus {
@@ -44,6 +44,11 @@ body .inputWrapper.is-focused .todoTableSearchQuestionmark i {
     color: #f0f0f0 !important;
   }
   body input::placeholder {
+    color: #f0f0f0 !important;
+  }
+  body input[type=text]::placeholder,
+body input[type=search]::placeholder,
+body textarea::placeholder {
     color: #5a5a5a !important;
   }
   body input[type=checkbox]:focus,
@@ -62,7 +67,7 @@ body input[type=checkbox]:active {
     background-color: transparent !important;
   }
   body ::after {
-    border-color: #f0f0f0 !important;
+    border-color: #3273dc !important;
   }
   body button:focus-visible {
     color: #f0f0f0 !important;
@@ -78,13 +83,6 @@ body input[type=checkbox]:active {
   }
   body table tr th {
     color: white !important;
-  }
-  body table.files tr td:last-child a,
-body table.files tr td:last-child a:hover {
-    color: #f0f0f0 !important;
-  }
-  body table.files tr td:last-child a:focus-visible {
-    color: #212224 !important;
   }
   body table.files button {
     color: #f0f0f0 !important;
@@ -171,6 +169,9 @@ body a.projects:focus-visible {
   body #drawerContainer .zoom #zoomStatus {
     color: white !important;
   }
+  body #drawerContainer .todoFilterHint {
+    color: #CCCDCF;
+  }
   body #todoTableSearchContainer {
     background-color: #212224;
   }
@@ -195,12 +196,6 @@ body #todoTableSearchContainer #todoTableSearchAddTodo:focus-visible {
   }
   body #resultStats .tag {
     color: #CCCDCF !important;
-  }
-  body #resultStats .tag strong {
-    color: white !important;
-  }
-  body #todoTable i {
-    color: #f0f0f0;
   }
   body #todoTable i.fa-sort-down {
     color: #5a5a5a !important;
@@ -239,37 +234,34 @@ body #todoTable .todo.due button {
 body #todoTable .todo .cell.archive a:focus-visible {
     color: #CCCDCF !important;
   }
-  body #todoTable .todo div.cell.text {
+  body #todoTable .todo .cell.text {
     color: #f0f0f0 !important;
   }
-  body #todoTable .todo div.cell.text:focus-visible {
+  body #todoTable .todo .cell.text:focus-visible {
     background: #2d2d2d !important;
   }
-  body #todoTable .todo .cell.itemDueDate {
-    color: white;
-  }
-  body #todoTable .todo .cell.itemDueDate i {
-    color: inherit;
-  }
-  body #todoTable .todo .cell.itemDueDate.today,
-body #todoTable .todo .cell.itemDueDate.past {
-    color: #ff3860;
-  }
-  body #todoTable .todo .cell.itemDueDate.today i,
-body #todoTable .todo .cell.itemDueDate.past i {
+  body #todoTable .todo .cell.hint.itemDueDate i {
     color: inherit !important;
   }
-  body #todoTable .todo .cell.itemDueDate.tomorrow {
+  body #todoTable .todo .cell.hint.itemDueDate.today,
+body #todoTable .todo .cell.hint.itemDueDate.past {
+    color: #ff3860 !important;
+  }
+  body #todoTable .todo .cell.hint.itemDueDate.today i,
+body #todoTable .todo .cell.hint.itemDueDate.past i {
+    color: inherit !important;
+  }
+  body #todoTable .todo .cell.hint.itemDueDate.tomorrow {
     color: #fa745e;
   }
-  body #todoTable .todo .cell.itemDueDate.tomorrow i {
+  body #todoTable .todo .cell.hint.itemDueDate.tomorrow i {
     color: inherit !important;
+  }
+  body #todoTable .todo .cell.hint i:not(.fa-sort-down) {
+    color: #CCCDCF !important;
   }
   body #todoTable .todo:focus {
     background: #3a3a3a !important;
-  }
-  body #modalForm i {
-    color: #CCCDCF !important;
   }
   body #modalForm .field input,
 body #modalForm .field select {
@@ -427,9 +419,6 @@ body .modal.content button,
 body .modal.content select {
     background: #2d2d2d !important;
   }
-  body .modal.content .select:not(.is-multiple):not(.is-loading)::after {
-    border-color: white !important;
-  }
   body .modal.content .delete,
 body .modal.content .modal-close,
 body .modal.content .tag.is-info {
@@ -483,9 +472,6 @@ body .modal.content table td {
   }
   body .message.fixed {
     background: transparent !important;
-  }
-  body .message.fixed i {
-    color: white !important;
   }
   body .message.fixed .message-body {
     color: #CCCDCF;
@@ -700,7 +686,6 @@ input[type=range]:focus {
   padding: 0.1em;
   -webkit-appearance: none;
   border-radius: 0.65em;
-  background: #CCCDCF !important;
 }
 
 input[type=range]::-webkit-slider-thumb {
@@ -890,6 +875,16 @@ code, pre {
   font-size: 2.25em;
   margin-right: 0.2em;
   color: #3273dc;
+}
+#messages .message.review table tr td {
+  text-align: center;
+}
+#messages .message.review table tr td a {
+  display: block;
+}
+#messages .message.review table tr td a i {
+  font-size: 2em;
+  color: #3273dc !important;
 }
 #messages button {
   margin-top: 0.5em;
@@ -1599,6 +1594,9 @@ a.priority.C:focus-visible span.tag {
 }
 #drawerContainer .drawer section .todoFilterHint {
   cursor: help;
+}
+#drawerContainer .drawer table tr td {
+  white-space: nowrap;
 }
 #drawerContainer .drawer table tr td:nth-child(odd) {
   width: auto;

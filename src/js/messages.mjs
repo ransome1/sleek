@@ -12,14 +12,10 @@ const messageGenericMessage = document.getElementById("messageGenericMessage");
 const messageLoggingBody = document.getElementById("messageLoggingBody");
 const messageLoggingButton = document.getElementById("messageLoggingButton");
 const messageLoggingTitle = document.getElementById("messageLoggingTitle");
-const messageShareBody = document.getElementById("messageShareBody");
-const messageShareTitle = document.getElementById("messageShareTitle");
 
 messageLoggingBody.innerHTML = translations.messageLoggingBody;
 messageLoggingButton.innerHTML = translations.settings;
 messageLoggingTitle.innerHTML = translations.errorEventLogging;
-messageShareBody.innerHTML = translations.messageShareBody;
-messageShareTitle.innerHTML = translations.messageShareTitle;
 
 btnMessageLogging.onclick = function () {
   showModal("modalSettings").then(function(response) {

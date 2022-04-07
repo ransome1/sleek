@@ -26,29 +26,21 @@ datePickerInput.placeholder = translations.formSelectDueDate;
 btnItemStatus.onclick = async function() {
   try {
     // pass data item to function, not the actual value
-    const todo = await generateTodoTxtObject(modalForm.getAttribute("data-item")).then(response => {
-      return response;
-    }).catch(error => {
-      handleError(error);
-    });
-
-    setTodoComplete(todo).then(response => {
+    setTodoComplete(modalForm.getAttribute("data-item")).then(response => {
       console.log(response);
     }).catch(error => {
       handleError(error);
     });
 
-    // clear and close form
-    resetForm().then(function(result) {
-      console.log(result);
+    // close and clean up the modal
+    resetForm().then(function(response) {
+      console.log(response);
     }).catch(function(error) {
       handleError(error);
     });
 
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Click on Done/In progress"]);
-
-    return false;
 
   } catch(error) {
     error.functionName = "btnItemStatus.onclick";
@@ -90,14 +82,10 @@ modalForm.onsubmit = async function(event) {
 
     // in case there hasn't been a passed data item, we just push the input value as a new item into the array
     // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-    const inputValue = modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
+    const inputValue = await modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
 
     // create todo object from input value
-    let todo = await generateTodoTxtObject(inputValue).then(response => {
-      return response;
-    }).catch(error => {
-      handleError(error);
-    });
+    let todo = await generateTodoTxtObject(inputValue);
 
     // we add the current date to the start date attribute of the todo.txt object
     if(userData.appendStartDate) todo.date = new Date();

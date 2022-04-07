@@ -146,6 +146,9 @@
         cursor: help;
       }
     }
+    table tr td {
+      white-space: nowrap;
+    }
     table tr td:nth-child(odd) {
       width: auto;
       vertical-align: middle;
