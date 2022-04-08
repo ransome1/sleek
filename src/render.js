@@ -12,19 +12,6 @@ let
   translations,
   userData;
 
-function startFileWatcher(file) {
-  try {
-    window.api.send("startFileWatcher", file);
-    return new Promise(function(resolve) {
-      return window.api.receive("startFileWatcher", function(response) {
-        resolve(response);
-      });
-    });
-  } catch(error) {
-    error.functionName = startFileWatcher.name;
-    return Promise.reject(error);
-  }
-}
 async function setUserData(key, value) {
   try {
     userData[key] = value;
@@ -32,19 +19,6 @@ async function setUserData(key, value) {
     return Promise.resolve("Success: User data persisted for " + key + " with value: " + value);
   } catch(error) {
     error.functionName = setUserData.name;
-    return Promise.reject(error);
-  }
-}
-function getTranslations() {
-  try {
-    window.api.send("translations");
-    return new Promise(function(resolve) {
-      return window.api.receive("translations", function(data) {
-        resolve(data);
-      });
-    });
-  } catch(error) {
-    error.functionName = getTranslations.name;
     return Promise.reject(error);
   }
 }
@@ -133,12 +107,8 @@ window.onload = async function() {
 
     // if active file is available, ask main process to start a file watcher
     if(helper.getActiveFile()) {
-      startFileWatcher(helper.getActiveFile()).then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        helper.handleError(error);
-      });
-
+      const activeFile = helper.getActiveFile();
+      window.api.send("startFileWatcher", activeFile);
     // or start onboarding
     } else {
       onboarding.showOnboarding(true).then(function(response) {
@@ -193,4 +163,4 @@ window.onload = async function() {
   }    
 }
 
-export { setUserData, buildTable, userData, appData, translations, startFileWatcher };
+export { setUserData, buildTable, userData, appData, translations };

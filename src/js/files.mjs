@@ -1,6 +1,6 @@
 "use strict";
 import { _paq } from "./matomo.mjs";
-import { appData, userData, setUserData, translations, startFileWatcher } from "../render.js";
+import { appData, userData, setUserData, translations } from "../render.js";
 import { createModalJail } from "./jail.mjs";
 import { focusRow } from "./keyboard.mjs";
 import { handleError } from "./helper.mjs";
@@ -105,11 +105,7 @@ function removeFileFromList(index, removeFile) {
       handleError(error);
     });
 
-    startFileWatcher(userData.files[newIndex][1]).then(response => {
-      console.info(response);
-    }).catch(error => {
-      handleError(error);
-    });
+    window.api.send("startFileWatcher", userData.files[newIndex][1]);
 
     return Promise.resolve("Success: File removed from tab");
 
@@ -128,11 +124,7 @@ function selectFileFromList(index) {
     focusRow(false);
     
     // load new file
-    startFileWatcher(userData.files[index][1]).then(response => {
-      console.info(response);
-    }).catch(error => {
-      handleError(error);
-    });
+    window.api.send("startFileWatcher", userData.files[index][1]);
     
     return Promise.resolve("Success: File selected");
   

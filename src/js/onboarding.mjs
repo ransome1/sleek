@@ -1,10 +1,10 @@
 "use strict";
 import { userData, translations } from "../render.js";
-import { generateFileList } from "./files.mjs";
+import { generateFileList, generateFileTabs } from "./files.mjs";
 import { show } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { _paq } from "./matomo.mjs";
-import { handleError } from "./helper.mjs";
+import { handleError, setupInterface } from "./helper.mjs";
 
 const addTodoContainerButton = document.getElementById("addTodoContainerButton");
 const addTodoContainerHeadline = document.getElementById("addTodoContainerHeadline");
@@ -12,6 +12,7 @@ const addTodoContainerSubtitle = document.getElementById("addTodoContainerSubtit
 const btnAddTodoContainer = document.getElementById("btnAddTodoContainer");
 const btnOnboardingCreateTodoFile = document.getElementById("btnOnboardingCreateTodoFile");
 const btnOnboardingOpenTodoFile = document.getElementById("btnOnboardingOpenTodoFile");
+const fileTabBar = document.getElementById("fileTabBar");
 const navBtnAddTodo = document.getElementById("navBtnAddTodo");
 const navBtnFilter = document.getElementById("navBtnFilter");
 const navBtnView = document.getElementById("navBtnView");
@@ -78,9 +79,10 @@ btnOnboardingOpenTodoFile.onclick = function() {
 export function showOnboarding() {
   try {
 
-    // show onboarding
+    // show standard onboarding
     if(arguments[0]) {
 
+      fileTabBar.classList.remove("is-active");
       navBtnAddTodo.classList.add("is-hidden");
       navBtnFilter.classList.add("is-hidden");
       navBtnView.classList.add("is-hidden");

@@ -57,7 +57,8 @@
       outline: none;
       box-shadow: none!important;
     }
-    input[type="range"] {
+    input[type="range"],
+    input[type="range"]:focus {
       background: $dark-grey!important;
     }
     input[type="range"]::-webkit-slider-thumb {

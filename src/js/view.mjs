@@ -23,7 +23,6 @@ const viewToggleShowEmptyFilters = document.getElementById("viewToggleShowEmptyF
 const sortByContainer = document.getElementById("sortByContainer");
 const viewToggleDeferredTodos = document.getElementById("viewToggleDeferredTodos");
 const viewToggleFileTabs = document.getElementById("viewToggleFileTabs");
-const theme = document.getElementById("theme");
 
 sortBy.innerHTML = translations.sortBy;
 viewHeadlineAppView.innerHTML = translations.viewHeadlineAppView;

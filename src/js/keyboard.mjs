@@ -9,7 +9,7 @@ import { show, setPriority, resetForm } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
 import { triggerToggle } from "./toggles.mjs";
-import { appData, userData, translations, startFileWatcher } from "../render.js";
+import { appData, userData, translations } from "../render.js";
 
 const 
   autoCompleteContainer = document.getElementById("autoCompleteContainer"),
@@ -277,17 +277,9 @@ export async function registerShortcuts() {
         if(event.ctrlKey && !event.shiftKey && event.keyCode === 9) {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index+1]) {
-            startFileWatcher(userData.files[0][1]).then(response => {
-              console.info(response);
-            }).catch(error => {
-              handleError(error);
-            });
+            window.api.send("startFileWatcher", userData.files[0][1]);
           } else {
-            startFileWatcher(userData.files[index+1][1]).then(response => {
-              console.info(response);
-            }).catch(error => {
-              handleError(error);
-            });
+            window.api.send("startFileWatcher", userData.files[index+1][1]);
           }
           return false;
         }
@@ -295,17 +287,9 @@ export async function registerShortcuts() {
         if(event.ctrlKey && event.shiftKey && event.keyCode === 9) {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index-1]) {
-            startFileWatcher(userData.files[userData.files.length-1][1]).then(response => {
-              console.info(response);
-            }).catch(error => {
-              handleError(error);
-            });
+            window.api.send("startFileWatcher", userData.files[userData.files.length-1][1]);
           } else {
-            startFileWatcher(userData.files[index-1][1]).then(response => {
-              console.info(response);
-            }).catch(error => {
-              handleError(error);
-            });
+            window.api.send("startFileWatcher", userData.files[index-1][1]);
           }
           return false;
         }
@@ -325,11 +309,7 @@ export async function registerShortcuts() {
             // throw false at this function and current row will be reset
             focusRow(false);
             //
-            startFileWatcher(filesInTabBar[event.key-1][1]).then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              handleError(error);
-            });
+            window.api.send("startFileWatcher", filesInTabBar[event.key-1][1]);
           }
           return false;
         }

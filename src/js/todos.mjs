@@ -820,13 +820,8 @@ async function archiveTodos() {
 
     // if user archives within done.txt file, operating is canceled
     if(activeFile.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
-    
-    let contentFromDoneFile = await new Promise(function(resolve) {
-      window.api.send("getContent", doneFile);
-      return window.api.receive("getContent", (content) => {
-        resolve(content);
-      });
-    });
+  
+    let contentFromDoneFile = await window.api.invoke("getContent", doneFile);
 
     if(contentFromDoneFile) {
       // create array from done file

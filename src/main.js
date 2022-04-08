@@ -81,17 +81,11 @@ function getContent(file) {
     const activeFile = getActiveFile();
     if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
 
-    if(!fs.existsSync(file)) {
-      // TODO: understand what's happening here
-      return Promise.resolve(fs.writeFile(file, "", function(error) {
-        if(error) return Promise.reject("Error: Could not create file")
-        return "";
-      }));
-    }
-    return Promise.resolve(fs.readFileSync(file, {encoding: "utf-8"}, function(err,data) { 
+    return Promise.resolve(fs.readFileSync(file, {encoding: "utf-8"}, function(error, data) { 
       if(process.mas) stopAccessingSecurityScopedResource()
       return data;
     }));
+
   } catch (error) {
     return Promise.reject("Error in getContent(): " + error);
   }
@@ -119,13 +113,12 @@ function openFileChooser(args) {
           extensions: ["txt", "md", "todo"]
         }],
         properties: ["openFile"]
+
       }).then(({ canceled, filePaths, bookmarks }) => {
 
         if(canceled || filePaths.length === 0) return false;
         
         const bookmark = bookmarks ? bookmarks[0] : undefined
-
-        if(fileWatcher) fileWatcher.close()
         
         startFileWatcher(filePaths[0].toString(), bookmark).then(response => {
           console.info(response);
@@ -151,6 +144,7 @@ function openFileChooser(args) {
           extensions: ["txt", "md", "todo"]
         }],
         properties: ["openFile", "createDirectory"]
+
       }).then(({ canceled, filePath, bookmark }) => {
 
         if(canceled || !filePath) return false;
@@ -159,7 +153,7 @@ function openFileChooser(args) {
         //if(process.mas && bookmark) userData.set("securityBookmark", bookmark);
 
         // close filewatcher, otherwise the change of file will trigger a duplicate refresh
-        if(fileWatcher) fileWatcher.close()
+        //if(fileWatcher) fileWatcher.close()
 
         fs.writeFile(filePath, "", function() {
           startFileWatcher(filePath, bookmark).then(response => {
@@ -180,152 +174,112 @@ function openFileChooser(args) {
     return Promise.reject("Error in openFileChooser(): " + error);
   }
 }
-function refreshFiles() {
-  try {
-
-    // only for MAS (Sandboxed)
-    // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
-    const activeFile = getActiveFile();
-    if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
-
-    // if a file is not found it will be removed from list and user will be informed
-    userData.data.files.forEach(function(file, index, object) {
-      if(!fs.existsSync(file[1])) {
-        console.log("Info: Not found and removed from file list: " + file[1])
-        object.splice(index, 1);
-
-        // notify user about file not being found on disk
-        const notification = {
-          title: "File not found",
-          body: "The currently selected todo file was not found: " + file[1],
-          timeoutType: "never",
-          silent: false
-        }
-        showNotification(notification);
-      }
-
-      if(process.mas) stopAccessingSecurityScopedResource()
-
-    });
-
-    userData.set("files", userData.data.files);
-
-    return Promise.resolve("Success: Files refreshed");
-
-  } catch (error) {
-    return Promise.reject("Error in startFileWatcher(): " + error);
-  }
-}
 function getActiveFile() {
   const index = userData.data.files.findIndex(file => file[0] === 1);
   if(index === -1) return false
   return userData.data.files[index];
 }
-async function startFileWatcher(file, bookmark) {
+async function startFileWatcher(pathToFile, bookmark) {
   try {
 
     // TODO: consider doing this in store.config.js
     // skip persisted files and go with ENV if set
-    if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) file = process.env.SLEEK_CUSTOM_FILE
+    if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) pathToFile = process.env.SLEEK_CUSTOM_FILE
 
-    // check if any saved files are not existing anymore and remove them from config
-    await refreshFiles().then(response => {
-      console.info(response);
-    }).catch(error => {
-      console.error(error);
-    });
-
-    // TODO: Check windows start
-    // electron "unbundled" app -- have to skip "electron" and script name arg eg: "."
-    // electron "bundled" app -- skip only the app name, eg: "sleek"
-    //let args;
-    //(process.defaultApp) ? args = process.argv.slice(2) : args = process.argv.slice(1);
+    // if requested file is not found on disk, this function will be aborted
+    if(!fs.existsSync(pathToFile)) {
+      showNotification({
+        title: "File not found on disk",
+        body: "The requested file cannot be found on disk: " + pathToFile,
+        timeoutType: "never",
+        silent: false
+      });
+      return Promise.reject("Error: The requested file cannot be found on disk: " + pathToFile);
+    }
 
      // set the current file to not active
-     // TODO: use getActiveFile()
     const indexOfActiveFile = userData.data.files.findIndex(file => file[0] === 1);
     if(indexOfActiveFile !== -1) userData.data.files[indexOfActiveFile][0] = 0;
 
     // if file is in array, get the index
-    const index = userData.data.files.findIndex(element => element[1] === file);
+    const index = userData.data.files.findIndex(element => element[1] === pathToFile);
 
     // this is a new file so it is pushed to array
-    // or this is an existing file so it is just set active
     if(index === -1) {
-      (process.mas && bookmark) ? userData.data.files.push([1, file, 1, bookmark]) : userData.data.files.push([1, file, 1])
+      (process.mas && bookmark) ? userData.data.files.push([1, pathToFile, 1, bookmark]) : userData.data.files.push([1, pathToFile, 1])
+    // or this is an existing file so it is just set active
     } else {
       userData.data.files[index][0] = 1;
       userData.data.files[index][2] = 1;
     }
 
-    // persist the new file
-    userData.set("files", userData.data.files);
+    // get activ file and its attributes
+    const file = getActiveFile();
 
     // only for MAS (Sandboxed)
     // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
-    const activeFile = getActiveFile();
-    if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+    if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(file[3])
 
-    // check if file exists, otherwise abort and call onbaording
-    if(!fs.existsSync(file)) {
-      mainWindow.webContents.send("triggerFunction", "showOnboarding", [true]);
-      return Promise.reject("Info: File not found on disk, starting onboarding");
-    }
-
-    // an active filewatcher will be destroyed first
-    if(fileWatcher) {
-      await fileWatcher.close().then(() => console.log("Info: Filewatcher instance closed"));
-      await fileWatcher.unwatch();
-      fileWatcher = null;
-    }
-
-    // create a new filewatcher
-    fileWatcher = await chokidar.watch(file);
-
+    if(fileWatcher) await fileWatcher.close().then(() => console.log("Info: Filewatcher closed"));
+    fileWatcher = await chokidar.watch(file[1])
     fileWatcher
-      .on("add", async function() {
-        const content = await getContent(file).then(content => {
-          return content;
-        }).catch(error => {
-          console.log(error);
-        });
-        mainWindow.webContents.send("buildTable", [content])
-        console.log("Info: File " + file + " has been added");
-      })
+    .on("add", async function(fileToLink) {
+  
+      const content = await getContent(fileToLink);
+      mainWindow.webContents.send("buildTable", [content])
 
-      .on("unlink", async function() {
-        startFileWatcher().then(response => {
-          console.info(response);
-        }).catch(error => {
-          console.error(error);
-        });
-        console.log("Info: File " + file + " has been unlinked");
-      })
-
-      .on("change", async function() {
-        // wait 10ms before rereading in case the file is being updated with a delay
-        setTimeout(async function() {
-          const content = await getContent(file).then(content => {
-            return content;
-          }).catch(error => {
-            console.log(error);
-          });
-          mainWindow.webContents.send("buildTable", [content])
-          console.log("Info: File " + file + " has changed");
-        }, 10);
-      })
-
-    // change window title
-    const title = path.basename(file) + " - sleek";
-    mainWindow.title = title;
-    mainWindow.webContents.once("did-finish-load",() => {
+      // change window title
+      const title = path.basename(fileToLink) + " - sleek";
       mainWindow.setTitle(title);
-    });
+      
+      console.log("Info: File " + fileToLink + " has been added");
+
+    })
+
+    .on("unlink", function(unlinkedFile) {
+      
+      showNotification({
+        title: "File not found on disk",
+        body: "Currently watched file not found on disk: " + unlinkedFile,
+        timeoutType: "never",
+        silent: false
+      });
+
+      // set unlinked file inactive
+      const index = userData.data.files.findIndex(element => element[1] === unlinkedFile);
+      if(index !== -1) {
+        userData.data.files[index][0] = 0;
+        userData.data.files[index][2] = 0;
+      }
+
+      userData.set("files", userData.data.files);
+
+      mainWindow.webContents.send("triggerFunction", "showOnboarding", [true]);
+      
+      console.log("Info: File " + unlinkedFile + " has been unlinked");
+
+    })
+
+    .on("error", function(error) {
+      console.error("Error: " + error);
+    })
+
+    .on("change", async function(linkedFile) {
+
+      const content = await getContent(linkedFile);
+      mainWindow.webContents.send("buildTable", [content])
+
+      console.log("Info: File " + linkedFile + " has changed");
+
+    })
 
     // remove access to secure ressource
     if(process.mas) stopAccessingSecurityScopedResource()
+
+    // persist
+    userData.set("files", userData.data.files);
     
-    return Promise.resolve("Success: Filewatcher is watching: " + file);
+    return Promise.resolve("Success: Filewatcher is watching: " + file[1]);
 
   } catch (error) {
     // if some file related crash occurs, onboarding will be triggered
@@ -422,10 +376,6 @@ function showNotification(config) {
 }
 function configureWindowEvents() {
   try {
-    // nativeTheme.on("updated", () => {
-    //   (nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark");`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark");`)
-    // })
-
     mainWindow
     .on("resize", function() {
       userData.set("width", this.getBounds().width);
@@ -455,7 +405,6 @@ function configureWindowEvents() {
     })
     .on("did-finish-load", function() {
       nativeTheme.themeSource = userData.data.theme;
-      //(nativeTheme.shouldUseDarkColors) ? mainWindow.webContents.executeJavaScript(`body.classList.add("dark");`) : mainWindow.webContents.executeJavaScript(`body.classList.remove("dark");`)
     });
 
     ipcMain.handle("userData", (event, args) => {
@@ -475,34 +424,42 @@ function configureWindowEvents() {
       return translations
     });
 
+    ipcMain.handle("getContent", async (event, file) => {
+      const content = await getContent(file);
+      return content;
+    })
+
+    ipcMain
+      .once("closeWindow", () => {
+        mainWindow.close()
+      })
+      .once("restart", () => {
+        app.relaunch();
+        app.exit();
+        app.quit();
+      })
+      .once("changeLanguage", async (event, language) => {
+        event.preventDefault();
+        await userData.set("language", language);
+        app.relaunch();
+        app.exit();
+      });
+
     ipcMain
       .on("setTheme", (event, theme) => {
         if(!theme) theme = (nativeTheme.shouldUseDarkColors) ? "light" : "dark"
         nativeTheme.themeSource = theme;
         userData.set("theme", nativeTheme.themeSource);
       })
-      .on("closeWindow", () => {
-        mainWindow.close()
-      })
-      .on("changeLanguage", async (event, language) => {
-        event.preventDefault();
-        await userData.set("language", language);
-        app.relaunch();
-        app.exit();
-      })
       .on("writeToFile", function(event, args) {
         const content = args[0];
         let file = args[1];
-        if(!file) {
-          const index = userData.data.files.findIndex(file => file[0] ===1 );
-          file = userData.data.files[index][1];
-        }
+        if(!file) file = getActiveFile()[1]
         // only for MAS (Sandboxed)
         // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
-        const activeFile = getActiveFile();
-        if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+        if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(getActiveFile()[3])
 
-        if(file) fs.writeFileSync(file, content, {encoding: "utf-8"});
+        fs.writeFileSync(file, content, {encoding: "utf-8"});
 
         if(process.mas) stopAccessingSecurityScopedResource()
 
@@ -516,14 +473,7 @@ function configureWindowEvents() {
       })
       .on("startFileWatcher", (event, file) => {
         startFileWatcher(file).then(response => {
-          mainWindow.webContents.send("startFileWatcher", response);
-        }).catch(error => {
-          console.error(error);
-        });
-      })
-      .on("getContent", (event, file) => {
-        getContent(file).then(content => {
-          mainWindow.webContents.send("getContent", content);
+          console.log(response)
         }).catch(error => {
           console.error(error);
         });
@@ -537,11 +487,6 @@ function configureWindowEvents() {
       })
       .on("update-badge", (event, count) => {
         if(appData.os === "mac") app.setBadgeCount(count);
-      })
-      .on("restart", () => {
-        app.relaunch();
-        app.exit();
-        app.quit();
       });
 
     return Promise.resolve("Success: Window events setup");
@@ -570,6 +515,7 @@ function setupTray() {
 
   let trayFiles = new Array;
   
+  // build file selection
   if(userData.data.files && userData.data.files.length > 1) {
     userData.data.files.forEach((file) => {
       const menuItem = {
@@ -589,7 +535,7 @@ function setupTray() {
       { type: "separator" },
     );
   }
-  let contextMenu = [
+  const contextMenu = [
     {
       label: translations.windowButtonOpenFile,
       click: function() {
@@ -611,13 +557,12 @@ function setupTray() {
       }
     }
   ]
-  let menu;
-  (trayFiles.length > 0) ? menu = Menu.buildFromTemplate(trayFiles.concat(contextMenu)) : menu = Menu.buildFromTemplate(contextMenu)
+  let menu = (trayFiles.length > 0) ? Menu.buildFromTemplate(trayFiles.concat(contextMenu)) : Menu.buildFromTemplate(contextMenu)
   tray.setContextMenu(menu)
   tray.setToolTip("sleek")
   tray.on("click", function() {
     // don't do this on MacOS
-    if(appData.os === "mac") return false;
+    //if(appData.os === "mac") return false;
     mainWindow.show();
   });
 }
@@ -859,13 +804,13 @@ async function createWindow() {
 
     // setup reload intervall (reload every 10 minutes)
     setInterval(async () => {
+      
       if(!getActiveFile() && mainWindow.isFocused()) return false;  
-      const content = await getContent(getActiveFile()[1]).then(content => {
-        return content;
-      }).catch(error => {
-        console.error(error);
-      });
+      
+      const content = await getContent(getActiveFile()[1]);
+
       mainWindow.webContents.send("buildTable", [content]);
+
     }, 600000);
 
     return Promise.resolve("Success: Renderer window created");
@@ -889,6 +834,9 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
 
   app.on("ready", () => {
 
+    // in tray mode, dock icon is hidden
+    if(userData.data.tray) app.dock.hide()
+
     // setup autoupdater for AppImage build
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdaterAppImage.checkForUpdatesAndNotify()
 
@@ -897,7 +845,7 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
 
     // identifier for windows store
     if(appData.os === "windows") app.setAppUserModelId("RobinAhle.sleektodomanager")
-    
+
     createWindow().then(function(response) {
       console.info(response);
     }).catch(function(error) {
@@ -911,16 +859,18 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
     if(mainWindow.isMinimized()) mainWindow.restore()
     mainWindow.show()
   })
-  .on("window-all-closed", async () => {
+  .on("window-all-closed", () => {
     if(appData.os !== "mac") app.quit()
     mainWindow = null;
+    // remove filewatcher
+    if(fileWatcher) fileWatcher.unwatch();
     // reduce menu to bare minimum
     Menu.setApplicationMenu(Menu.buildFromTemplate([menuTemplateApp]))
     // disable settings because it would provoke errors
     Menu.getApplicationMenu().getMenuItemById("settings").enabled = false;
 
   })
-  .on("activate", async () => {
+  .on("activate", () => {
     if(mainWindow) {
       if(!mainWindow.isVisible()) mainWindow.show();
       return Promise.resolve("Success: Main window has been reopened");
