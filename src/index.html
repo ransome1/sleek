@@ -312,8 +312,8 @@
           </div>
           <footer class="card-footer">
             <button id="btnSave" type="submit" class="card-footer-item" tabindex="0"></button>
-            <button id="btnItemStatus" class="card-footer-item is-hidden" tabindex="0"></button>
-            <button id="btnCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
+            <a href="#" id="btnItemStatus" class="card-footer-item is-hidden" tabindex="0"></a>
+            <a href="#" id="btnCancel" class="card-footer-item" role="cancel" tabindex="0"></a>
           </footer>
         </div>
       </div>
@@ -488,7 +488,7 @@
               </td>
             </tr>
           </table>
-          <table id="autoUpdate" class="settings is-hidden">
+          <table id="autoUpdateRow" class="settings is-hidden">
             <tr>
               <th colspan="100%" id="autoUpdateHeadline"></th>
             </tr>
@@ -850,18 +850,19 @@
           <p><button id="btnMessageLogging" tabindex="-1"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
         </div>
       </article>
-      <article class="message fixed" data="share">
+      <article class="message fixed review" data="support">
         <div class="message-header">
-          <p><span id="messageShareTitle"></span></p>
-          <button class="delete close" role="cancel" data-message="share" tabindex="-1"></button>
+          <p>sleek <i class="fas fa-heart"></i> you</p>
+          <button class="delete" role="cancel" data-message="support"></button>
         </div>
         <div class="message-body">
-          <p><span id="messageShareBody"></span></p>
-          <p class="brands">
-            <a tabindex="-1" href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a tabindex="-1" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-facebook-square"></i></a>
-            <a tabindex="-1" href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-linkedin"></i></a>
-          </p>
+          <p>Please submit bug reports on <i class="fab fa-github"></i>&nbsp;<a href="https://github.com/ransome1/sleek/issues\" target="_blank">Github</a> and support this little project by writing a review on:
+          <table>
+            <tr>
+              <td><a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="_blank"><i class="fa-brands fa-apple"></i><br>Mac App Store</a></td>
+              <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank"><i class="fa-brands fa-windows"></i><br>Microsoft Store</a></td>
+            </tr>
+          </table>
         </div>
       </article>
     </section>

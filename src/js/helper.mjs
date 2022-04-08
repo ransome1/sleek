@@ -175,7 +175,7 @@ export function initialSetupInterface() {
     (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
 
     // show or hide specific settings
-    if(appData.channel === "AppImage" || appData.os === "mac" && appData.channel !== "Mac App Store") document.getElementById("autoUpdate").classList.remove("is-hidden")
+    if(appData.channel === "AppImage" || appData.os === "mac" && appData.channel !== "Mac App Store") document.getElementById("autoUpdateRow").classList.remove("is-hidden")
 
     // set scaling factor if default font size has changed
     document.getElementById("html").style.zoom = userData.zoom + "%";

@@ -9,14 +9,14 @@
       background-color: $almost-black!important;
     }
     a {
-      color: $has-text-link;
+      color: $has-text-link!important;
     }
     a:hover,
     a:focus-visible {
-      color: $almost-white;
+      color: $almost-white!important;
     }
     strong {
-      color: $almost-white;
+      color: white!important;
     }
     input,
     select {
@@ -24,12 +24,13 @@
       background: transparent!important;
       color: white!important;
     }
+
     input[type="text"],
     input[type="search"],
     textarea {
       background: $darker-grey!important;
       border: none;
-      color: white;
+      color: white!important;
     }
     input:focus,
     select:focus {
@@ -44,6 +45,11 @@
       }
     }
     input::placeholder {
+      color: $almost-white!important;
+    }
+    input[type="text"]::placeholder,
+    input[type="search"]::placeholder,
+    textarea::placeholder {
       color: $dark-grey!important;
     }
     input[type="checkbox"]:focus,
@@ -55,14 +61,18 @@
       background: $dark-grey!important;
     }
     input[type="range"]::-webkit-slider-thumb {
-      background: $almost-white;
+      background: $almost-white!important;
     }
     button {
-      color: $almost-white;
-      background: $almost-black;
+      color: $almost-white!important;
+      background-color: transparent!important;
     }
     ::after {
-      border-color: $almost-white!important;
+      border-color: $has-text-link!important;
+    }
+    button:focus-visible {
+      color: $almost-white!important;
+      background: $darker-grey!important;
     }
     table {
       width: 100%;
@@ -76,24 +86,14 @@
       color: white!important;
     }
     table.files {
-      tr {
-        td:last-child {
-          a,
-          a:hover {
-            color: $almost-white!important;
-          }
-          a:focus-visible {
-            color: $almost-black!important;
-          }
-        }
-      }
+
       button {
-        color: $almost-white;
-        background: $almost-black;
+        color: $almost-white!important;
+        background: $has-text-link!important;
       }
       button:focus-visible {
-        color: $almost-black!important;
-        background: $almost-white!important;
+        color: $almost-white!important;
+        background: $has-text-link!important;
       }
       button:disabled {
         opacity: 0.5;
@@ -135,7 +135,8 @@
       }
     }
 
-    a.contexts {
+    a.contexts,
+    a.contexts:hover {
       color: $sleek-contexts-button!important;
       background: darken($sleek-contexts-button, 60%)!important;
       span.tag {
@@ -144,11 +145,13 @@
       }
     }
     a.contexts.is-dark,
+    a.contexts.is-dark:hover,
     a.contexts:focus-visible {
       background: darken($sleek-contexts-button, 70%)!important;
       color: white!important;
     }
-    a.projects {
+    a.projects,
+    a.projects:hover {
       color: $sleek-projects-button!important;
       background: darken($sleek-projects-button, 60%)!important;
       span.tag {
@@ -157,6 +160,7 @@
       }
     }
     a.projects.is-dark,
+    a.projects.is-dark:hover,
     a.projects:focus-visible {
       background: darken($sleek-projects-button, 70%)!important;
       color: white!important;
@@ -175,6 +179,9 @@
         #zoomStatus {
           color: white!important;
         }
+      }
+      .todoFilterHint {
+        color: $lighter-grey;
       }
     }
     #todoTableSearchContainer {
@@ -202,15 +209,9 @@
     #resultStats {
       .tag {
         color: $lighter-grey!important;
-        strong {
-          color: white!important;
-        }
       }
     }
     #todoTable {
-      i {
-        color: $almost-white;
-      }
       i.fa-sort-down {
         color: $dark-grey!important;
       }
@@ -255,40 +256,41 @@
             color: $lighter-grey!important;
           }
         }
-        div.cell.text {
+        .cell.text {
           color: $almost-white!important;
         }
-        div.cell.text:focus-visible {
+        .cell.text:focus-visible {
           background: $darker-grey!important;
         }
-        .cell.itemDueDate {
-          color: white;
-          i {
-            color: inherit;
-          }
-        }
-        .cell.itemDueDate.today,
-        .cell.itemDueDate.past {
-          color: $has-text-danger;
+        .cell.hint.itemDueDate {
           i {
             color: inherit!important;
           }
         }
-        .cell.itemDueDate.tomorrow {
+        .cell.hint.itemDueDate.today,
+        .cell.hint.itemDueDate.past {
+          color: $has-text-danger!important;
+          i {
+            color: inherit!important;
+          }
+        }
+        .cell.hint.itemDueDate.tomorrow {
           color: $has-text-attention;
           i {
             color: inherit!important;
           }
-        }    
+        }
+        .cell.hint {
+          i:not(.fa-sort-down) {
+            color: $lighter-grey!important;
+          }
+        } 
       }
       .todo:focus {
         background: lighten($darker-grey, 5%)!important;
       }
     }
     #modalForm {
-      i {
-        color: $lighter-grey!important;
-      }
       .field {
         input,
         select {
@@ -367,12 +369,13 @@
     #filterContext,
     #todoContext {
       box-shadow: 0 0 1em $almost-black!important;
-      a {
+      .dropdown-item {
         color: $almost-white!important;
       }
-      a:hover,
-      a:focus {
-        color: $lighter-grey!important;
+      .dropdown-item:hover,
+      .dropdown-item:focus,
+      .dropdown-item:focus-visible {
+        color: $almost-white!important;
         background: $darker-grey!important;
       }
       .card {
@@ -381,7 +384,7 @@
           color: $has-text-danger!important;
         }
       }
-      .horizontal {
+      .card-content .horizontal {
         label {
           color: $light-grey;
         }
@@ -456,9 +459,7 @@
       select {
         background: $darker-grey!important;
       }
-      .select:not(.is-multiple):not(.is-loading)::after {
-        border-color: white!important;
-      }
+      
       .delete,
       .modal-close,
       .tag.is-info {
@@ -513,9 +514,6 @@
     }
     .message.fixed {
       background: transparent!important;
-      i {
-        color: white!important;
-      }
       .message-body {
         color: $lighter-grey;
         background: $even-darker-grey!important;
