@@ -1,119 +1,138 @@
 //  ####################################
-//  BUTTON COLORING
+//  a COLORING
 //  ####################################
 
-.contexts {
-  button,
-  button:hover {
-    background: $sleek-contexts-button;
-    color: darken($sleek-contexts-button, 60%);
-    span.tag {
-      color: white;
-      background: darken($sleek-contexts-button, 55%);
-    }
-  }
-  button:focus-visible,
-  button.is-dark:focus-visible {
-    background: darken($sleek-contexts-button, 55%)!important;
+a.button {
+  font-size: 1em;
+  border: none;
+  border-radius: $radius;
+  outline: none;
+  box-shadow: 0;
+  padding: 0.55em 0.75em;
+  cursor: pointer;
+}
+
+.cell a.button {
+  font-size: 0.8em;
+  padding: 0.1em 0.5em;
+  margin: 0 0.2em 0.2em 0;
+}
+
+.group .cell a.button {
+  font-size: 1em;
+}
+
+#autoCompleteContainer a.button {
+  margin: 0 0.5em 0.5em 0;
+}
+
+a.button.contexts,
+a.button.contexts:hover {
+  background: $sleek-contexts-button;
+  color: darken($sleek-contexts-button, 60%);
+  span.tag {
     color: white;
-  }
-  button.is-dark,
-  button.is-dark:hover,
-  button.is-dark.is-hovered  {
-    background: darken($sleek-contexts-button, 65%);
-    color: white;
+    background: darken($sleek-contexts-button, 55%);
   }
 }
-.projects {
-  button,
-  button:hover {
-    background: $sleek-projects-button;
-    color: darken($sleek-projects-button, 60%);
-    span.tag {
-      color: white;
-      background: darken($sleek-projects-button, 55%);
-    }
-  }
-  button:focus-visible,
-  button.is-dark:focus-visible {
-    background: darken($sleek-projects-button, 55%)!important;
+a.button.contexts:focus-visible,
+a.button.contexts.is-dark:focus-visible {
+  background: darken($sleek-contexts-button, 55%);
+  color: white;
+}
+a.button.contexts.is-dark,
+a.button.contexts.is-dark:hover,
+a.button.contexts.is-dark.is-hovered  {
+  background: darken($sleek-contexts-button, 65%);
+  color: white;
+}
+
+a.button.projects,
+a.button.projects:hover {
+  background: $sleek-projects-button;
+  color: darken($sleek-projects-button, 60%);
+  span.tag {
     color: white;
-  }
-  button.is-dark,
-  button.is-dark:hover,
-  button.is-dark.is-hovered {
-    background: darken($sleek-projects-button, 65%);
-    color: white;
+    background: darken($sleek-projects-button, 55%);
   }
 }
-.priority {
-  button {
-    height: auto;
-    font-size: 1.2em;
-    font-family: FreeSansBold;
-    background: $mid-grey;
-    //color: $dark-grey;
-    color: white;
-    padding: 0.1em 0.5em!important;
-    span.tag {
-      color: $dark-grey;
-    }
+a.button.projects:focus-visible,
+a.button.projects.is-dark:focus-visible {
+  background: darken($sleek-projects-button, 55%);
+  color: white;
+}
+a.button.projects.is-dark,
+a.button.projects.is-dark:hover,
+a.button.projects.is-dark.is-hovered {
+  background: darken($sleek-projects-button, 65%);
+  color: white;
+}
+
+a.button.priority,
+a.button.priority:focus,
+a.button.priority:focus-visible,
+a.button.priority:hover {
+  height: auto;
+  font-size: 1.2em;
+  font-family: FreeSansBold;
+  background: $mid-grey;
+  color: white;
+  padding: 0.1em 0.5em;
+  span.tag {
+    color: $dark-grey;
   }
-  button.is-dark span.tag {
-    //background: darken($mid-grey, 50%);
+}
+a.button.priority.is-dark,
+a.button.priority.is-dark:hover,
+a.button.priority.is-dark.is-hovered,
+a.button.priority:focus-visible {
+  background: darken($mid-grey, 20%);
+}
+a.button.priority.A,
+#todoTable .cell.priority.A {
+  background: $has-text-danger;
+  color: lighten($has-text-danger, 35%);
+  span.tag {
+    color: $has-text-danger;
+    background: lighten($has-text-danger, 35%);
   }
-  button.is-dark,
-  button.is-dark:hover,
-  button.is-dark.is-hovered,
-  button:focus-visible {
-    background: darken($mid-grey, 20%);
-    span.tag {
-      //color: $darker-grey!important;
-    }
+}
+a.button.priority.A.is-dark,
+a.button.priority.A:focus-visible {
+  background: darken($has-text-danger, 20%);
+  span.tag {
+    color: darken($has-text-danger, 20%);
   }
-  button.A {
-    background: $has-text-danger;
-    color: lighten($has-text-danger, 35%)!important;
-    span.tag {
-      color: $has-text-danger!important;
-      background: lighten($has-text-danger, 35%);
-    }
+}
+a.button.priority.B,
+#todoTable .cell.priority.B {
+  color: lighten($has-text-attention, 35%);
+  background: $has-text-attention;
+  span.tag {
+    color: $has-text-attention;
+    background: lighten($has-text-attention, 30%);
   }
-  button.A.is-dark,
-  button.A:focus-visible {
-    background: darken($has-text-danger, 20%)!important;
-    span.tag {
-      color: darken($has-text-danger, 20%)!important;
-    }
+}
+a.button.priority.B.is-dark,
+a.button.priority.B:focus-visible {
+  background: darken($has-text-attention, 20%);
+  span.tag {
+    color: darken($has-text-attention, 20%);
   }
-  button.B {
-    color: lighten($has-text-attention, 35%)!important;
-    background: $has-text-attention;
-    span.tag {
-      color: $has-text-attention!important;
-      background: lighten($has-text-attention, 30%);
-    }
+}
+a.button.priority.C,
+#todoTable .cell.priority.C {
+  color: lighten($has-text-warning, 35%);
+  background: $has-text-warning;
+  span.tag {
+    color: $has-text-warning;
+    background: lighten($has-text-warning, 30%);
   }
-  button.B.is-dark,
-  button.B:focus-visible {
-    background: darken($has-text-attention, 20%)!important;
-    span.tag {
-      color: darken($has-text-attention, 20%)!important;
-    }
-  }
-  button.C {
-    color: lighten($has-text-warning, 35%)!important;
-    background: $has-text-warning;
-    span.tag {
-      color: $has-text-warning!important;
-      background: lighten($has-text-warning, 30%);
-    }
-  }
-  button.C.is-dark,
-  button.C:focus-visible {
-    background: darken($has-text-warning, 20%)!important;
-    span.tag {
-      color: darken($has-text-warning, 20%)!important;
-    }
+}
+a.button.priority.C.is-dark,
+a.button.priority.C:focus-visible {
+  background: darken($has-text-warning, 20%);
+  span.tag {
+    color: darken($has-text-warning, 20%);
   }
 }

@@ -2,6 +2,16 @@
 //  SEARCH
 //  ####################################
 
+#todoTableSearchContainer.is-focused {
+  i.fa-search {
+    color: $has-text-link;
+  }
+}
+
+#todoTableSearchContainer.is-active {
+  display: block;
+}
+
 #todoTableSearchContainer {
   width: 100%;
   float: left;
@@ -14,20 +24,20 @@
   #todoTableSearchAddTodo {
     display: none;
     position: absolute;
-    top: 2.35em;
+    top: 1.8em;
     right: 7em;
     color: $has-text-link;
     background: white;
     text-decoration: none;
   }
   #todoTableSearchAddTodo.is-active {
-    display: flex!important;
+    display: flex;
   }
   #todoTableSearchAddTodo:hover,
   #todoTableSearchAddTodo:focus,
   #todoTableSearchAddTodo:focus-visible {
-    color: $almost-black!important;
-    background: white!important;
+    color: $almost-white;
+    background: $has-text-link;
   }
   input[type="search"] {
     padding-left: 3.2em;
@@ -38,21 +48,23 @@
     width: 1.2em;
     display: inline-block;
     background-color: $has-text-link;
-    -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
-    mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/times-circle.svg");
+    -webkit-mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/circle-xmark.svg");
+    mask-image: url("../../node_modules/@fortawesome/fontawesome-free/svgs/solid/circle-xmark.svg");
     cursor: pointer;
-    margin-top: -0.7em;
   }
   label {
-    top: 1.2em;
-    left: 7.5em;
+    cursor: pointer;
+    font-size: 0.75em;
+    position: absolute;
+    top: 0.5em;
+    left: 2.5em;
+    z-index: 65;
   }
-  i.fa-search,
-  .todoTableSearchQuestionmark {
+  i.fa-search {
     font-size: 1.3em;
     line-height: 1;
     position: absolute;
-    top: 0.7em;
+    top: 0.4em;
     left: 2.5em;
     z-index: 70;
     padding: 0.75em 0;

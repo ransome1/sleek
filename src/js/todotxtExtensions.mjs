@@ -1,6 +1,6 @@
 "use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-import { formatDate } from "./helper.mjs";
+import { convertDate } from "./date.mjs";
 import { addIntervalToDate } from "./recurrences.mjs";
 
 function RecExtension() {
@@ -30,7 +30,7 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 	if ( relativeDatMatch !== null) {
 		var dueDate = resolveRelativeDate(relativeDatMatch[1]);
 
-		return [dueDate, line.replace(relativeDateRegEx, ''), formatDate(dueDate)];
+		return [dueDate, line.replace(relativeDateRegEx, ''), convertDate(dueDate)];
 	}
 	else
 	{
@@ -56,6 +56,24 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
+function PriExtension() {
+	this.name = "pri";
+}
+PriExtension.prototype = new TodoTxtExtension();
+PriExtension.prototype.parsingFunction = function (line) {
+
+	var pri = null;
+	var priRegex = /pri:([A-Z])/i;
+	var matchPri = priRegex.exec(line);
+
+	if ( matchPri !== null ) {
+		pri = matchPri[1];
+		return [pri, line.replace(priRegex, ''), matchPri[1]];
+	}
+
+	return [null, null, null];
+};
+
 function ThresholdExtension() {
 	this.name = "t";
 }
@@ -68,7 +86,7 @@ ThresholdExtension.prototype.parsingFunction = function (line) {
 	if ( relativeDatMatch !== null) {
 		var thresholdDate = resolveRelativeDate(relativeDatMatch[1]);
 
-		return [thresholdDate, line.replace(relativeDateRegEx, ''), formatDate(thresholdDate)];
+		return [thresholdDate, line.replace(relativeDateRegEx, ''), convertDate(thresholdDate)];
 	}
 	else {
 		var thresholdDate = null;
@@ -91,4 +109,4 @@ function resolveRelativeDate(relativeDate) {
     return addIntervalToDate(today, increment, unit);
 }
 
-export { RecExtension, SugarDueExtension, ThresholdExtension, resolveRelativeDate };
+export { RecExtension, SugarDueExtension, ThresholdExtension, resolveRelativeDate, PriExtension };

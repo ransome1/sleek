@@ -60,21 +60,21 @@
   flex-shrink: 0;
   margin-bottom: 0;
   ul {
-    border: none!important;
+    border: none;
     li a {
-      color: $dark-grey!important;
-      border-color: $mid-grey!important;
+      color: $dark-grey;
+      border-color: $mid-grey;
       border-width: 2px;
       margin-bottom: 0;
       border-top-right-radius: $radius;
       border-top-left-radius: $radius;
     }
     li.is-active a {
-      color: $has-text-link!important;
-      border-color: $has-text-link!important;
+      color: $has-text-link;
+      border-color: $has-text-link;
     }
     li a:focus-visible {
-      background: $mid-grey!important;
+      background: $mid-grey;
     }
   }
 }

@@ -1,6 +1,8 @@
-/** @type {import('@playwright/test').PlaywrightTestConfig} */
 const config = {
-  //slow: true,
+  use: {
+    headless: true,
+    timeout: 5000
+  },
 };
 
 module.exports = config;

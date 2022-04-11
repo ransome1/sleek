@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.robbfolio.de">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title id="title">sleek</title>
+    <title>sleek</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css" rel="stylesheet">
     <link href="../node_modules/@fortawesome/fontawesome-free/css/brands.css" rel="stylesheet">
@@ -27,7 +27,7 @@
             <li><a href="#" id="navBtnAddTodo" tabindex="0"><i class="fas fa-plus"></i></a></li>
             <li><a href="#" id="navBtnFilter" class="drawerTrigger" data-drawer="filterDrawer" tabindex="0"><i class="fas fa-filter"></i></a></li>
             <li><a href="#" id="navBtnView" class="drawerTrigger" data-drawer="viewDrawer"tabindex="0"><i class="fas fa-sliders-h"></i></a></li>
-            <li><a href="#" id="btnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
+            <li><a href="#" id="navBtnOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i></a></li>
           </ul>
           <ul>
             <li><a href="#" id="navBtnSettings" tabindex="-1"><i class="fas fa-cog"></i></a></li>
@@ -56,7 +56,7 @@
                     <td>
                       <span class="toggle">
                         <label class="switch" for="sortByFile">
-                          <input type="checkbox" id="sortByFile" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="sortByFile" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -73,84 +73,84 @@
                     <td>
                       <span class="toggle">
                         <label class="switch" for="invertSorting">
-                          <input type="checkbox" id="invertSorting" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="invertSorting" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleShowCompleted"></td>
+                    <td id="toggleShowCompleted"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showCompleted">
-                          <input type="checkbox" id="showCompleted" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showCompleted" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr id="sortCompletedLastRow">
-                    <td id="viewToggleSortCompletedLast"></td>
+                    <td id="toggleSortCompletedLast"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="sortCompletedLast">
-                          <input type="checkbox" id="sortCompletedLast" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="sortCompletedLast" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewBoxShowHidden"><span id="viewToggleShowHidden"></span></td>
+                    <td id="viewBoxShowHidden"><span id="toggleShowHidden"></span><a href="https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showHidden">
-                          <input type="checkbox" id="showHidden" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showHidden" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsToday"></td>
+                    <td id="toggleDueIsToday"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsToday">
-                          <input type="checkbox" id="showDueIsToday" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsToday" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsFuture"></td>
+                    <td id="toggleDueIsFuture"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsFuture">
-                          <input type="checkbox" id="showDueIsFuture" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsFuture" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td id="viewToggleDueIsPast"></td>
+                    <td id="toggleDueIsPast"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showDueIsPast">
-                          <input type="checkbox" id="showDueIsPast" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showDueIsPast" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td><span id="viewToggleDeferredTodos"></span> <a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
+                    <td><span id="toggleDeferredTodos"></span><a href="https://github.com/ransome1/sleek/wiki/Deferred-todos-(t:)" target="_blank"><i class="fas fa-question-circle"></i></a></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="deferredTodos">
-                          <input type="checkbox" id="deferredTodos" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="deferredTodos" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -162,13 +162,11 @@
                     </th>
                   </tr>
                   <tr>
-                    <td>
-                      <p id="viewToggleShowEmptyFilters"></p>
-                    </td>
+                    <td id="toggleShowEmptyFilters"></td>
                     <td>
                       <span class="toggle">
                         <label class="switch" for="showEmptyFilters">
-                          <input type="checkbox" id="showEmptyFilters" class="viewToggle" tabindex="0">
+                          <input type="checkbox" id="showEmptyFilters" class="view" tabindex="0">
                           <span class="slider round"></span>
                         </label>
                       </span>
@@ -192,13 +190,14 @@
             <ul></ul>
           </section>
 
-          <section id="todoTableSearchContainer" class="inputWrapper">
+          <section id="todoTableSearchContainer">
 
-            <a href="https://github.com/ransome1/sleek/wiki/FIlter-Expressions-for-Advanced-Search" target="_blank" class="todoTableSearchQuestionmark"><i class="fas fa-question-circle"></i></a>
             <i class="fas fa-search"></i>
-            <label id="todoTableSearchLabel" for="todoTableSearch"></label>
-            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="1" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
-            <button id="todoTableSearchAddTodo" class="tag" tabindex="5"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
+            
+            <input id="todoTableSearch" class="input is-medium" type="search" tabindex="0" placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12">
+            
+            <button id="todoTableSearchAddTodo" class="tag" tabindex="0"><i class="fas fa-plus"></i>&nbsp;<span id="addAsTodo"></span></button>
+            
             <section id="resultStats">
               <span class="tag"></span>
             </section>
@@ -244,13 +243,12 @@
       </div>
     </div>
 
-    <section id="modalForm" class="modal" data-item="">
-      <div class="modal-background"></div>
+    <form id="modalForm" class="modal" data-item="">
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div class="card-content">
               <div class="inputWrapper">
-                <label id="modalFormInputLabel" for="modalFormInput"></label>
                 <input id="modalFormInput" class="input is-medium" type="text" tabindex="0" placeholder="(A) Todo text +project @context due:2020-12-12 rec:d">
                 <a href="#" id="modalFormInputResize" class="icon is-right" tabindex="-1" data-input-type="input"><i class="fas fa-expand-alt"></i></a>
               </div>
@@ -297,7 +295,7 @@
                 <div class="control has-icons-left">
                   <input id="datePickerInput" class="input" tabindex="0" readonly>
                   <a href="#" class="icon is-left" tabindex="-1">
-                    <i class="far fa-clock is-left"></i>
+                    <i class="fa-solid fa-clock is-left"></i>
                   </a>
                 </div>
               </div>
@@ -305,59 +303,64 @@
                 <div class="control has-icons-left">
                   <input id="recurrencePickerInput" class="input" readonly tabindex="-1">
                   <a href="#" class="icon is-left" tabindex="-1">
-                    <i class="fas fa-redo"></i>
+                    <i class="fa-solid fa-repeat"></i>
                   </a>
                 </div>
-                <div id="recurrencePickerContainer" class="card">
-                  <div class="content">
-                    <div>
-                      <span id="recurrencePickerEvery"></span>
-                    </div>
-                    <div id="recurrencePickerMul">
-                      <a href="#" id="recurrencePickerIncrease"><i class="fas fa-plus-circle"></i></a><br>
-                      <input id="recurrencePickerSpinner" type="number" min="1" max="99"><br>
-                      <a href="#" id="recurrencePickerDecrease"><i class="fas fa-minus-circle"></i></a>
-                    </div>
-                    <div class="options">
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="d" tabindex="0">
-                        <span id="recurrencePickerDay"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="b" tabindex="0">
-                        <span id="recurrencePickerBusinessDay"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="w" tabindex="0">
-                        <span id="recurrencePickerWeek"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="m" tabindex="0">
-                        <span id="recurrencePickerMonth"></span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" class="selection" name="recurrence" value="y" tabindex="0">
-                        <span id="recurrencePickerYear"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <footer class="card-footer">
-                    <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"  tabindex="0"></a>
-                  </footer>
-                </div>
+
               </div>
 
           </div>
           <footer class="card-footer">
-            <button id="btnSave" class="card-footer-item" tabindex="0"></button>
-            <button id="btnItemStatus" class="card-footer-item" tabindex="0"></button>
-            <button id="btnCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
+            <button id="btnSave" type="submit" class="card-footer-item" tabindex="0"></button>
+            <a href="#" id="btnItemStatus" class="card-footer-item is-hidden" tabindex="0"></a>
+            <a href="#" id="btnCancel" class="card-footer-item" role="cancel" tabindex="0"></a>
           </footer>
         </div>
       </div>
-    </section>
+    </form>
+
+
+    <div id="recurrencePickerContainer" class="card" tabindex="-1">
+      <div class="content">
+        <div>
+          <span id="recurrencePickerEvery"></span>
+        </div>
+        <div id="recurrencePickerMul">
+          <a href="#" id="recurrencePickerIncrease"><i class="fas fa-plus-circle"></i></a><br>
+          <input id="recurrencePickerSpinner" type="number" min="1" max="99"><br>
+          <a href="#" id="recurrencePickerDecrease"><i class="fas fa-minus-circle"></i></a>
+        </div>
+        <div class="options">
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="d">
+            <span id="recurrencePickerDay"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="b">
+            <span id="recurrencePickerBusinessDay"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="w">
+            <span id="recurrencePickerWeek"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="m">
+            <span id="recurrencePickerMonth"></span>
+          </label>
+          <label class="radio">
+            <input type="radio" class="selection" name="recurrence" value="y">
+            <span id="recurrencePickerYear"></span>
+          </label>
+        </div>
+      </div>
+      <footer class="card-footer">
+        <a href="#" class="card-footer-item selection" id="recurrencePickerNoRecurrence"></a>
+      </footer>
+    </div>
+
+
     <div id="modalSettings" class="modal content" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           &nbsp;
@@ -375,7 +378,7 @@
                 <div class="field">
                   <div class="control">
                     <div class="select">
-                      <select id="settingsLanguage">
+                      <select id="language">
                       </select>
                     </div>
                   </div>
@@ -391,8 +394,8 @@
               <td id="settingsTabSettingsNotificationsBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch">
-                    <input type="checkbox" id="toggleNotifications" tabindex="0">
+                  <label class="switch" for="notifications">
+                    <input type="checkbox" id="notifications" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -407,8 +410,8 @@
               <td id="settingsTabSettingsTrayBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleTray">
-                    <input type="checkbox" id="toggleTray" tabindex="0">
+                  <label class="switch" for="tray">
+                    <input type="checkbox" id="tray" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -423,8 +426,8 @@
               <td id="settingsTabSettingsLoggingBody"></td>
               <td>
                 <span class="toggle">
-                  <label class="switch" for="toggleMatomoEvents">
-                    <input type="checkbox" id="toggleMatomoEvents" tabindex="0">
+                  <label class="switch" for="matomoEvents">
+                    <input type="checkbox" id="matomoEvents" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -433,30 +436,36 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsTabSettingsDarkmode"></th>
+              <th colspan="100%" id="themeHeadline">
+              </th>
             </tr>
             <tr>
-              <td id="settingsTabSettingsDarkmodeBody"></td>
+              <td id="themeBody"></td>
               <td>
-                <span class="toggle">
-                  <label class="switch" for="toggleDarkmode">
-                    <input type="checkbox" id="toggleDarkmode"   tabindex="0">
-                    <span class="slider round"></span>
-                  </label>
-                </span>
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="theme">
+                        <option value="system" selected>Auto</option>
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </td>
             </tr>
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsToggleCompactView"></th>
+              <th colspan="100%" id="compactViewHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsToggleCompactViewBody"></td>
+              <td id="compactViewBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="compactView">
-                    <input type="checkbox" id="compactView" class="viewToggle" tabindex="0">
+                    <input type="checkbox" id="compactView" class="toggle" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -465,14 +474,30 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsToggleFileTabs"></th>
+              <th colspan="100%" id="fileTabsHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsToggleFileTabsBody"></td>
+              <td id="fileTabsBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="fileTabs">
-                    <input type="checkbox" id="fileTabs" class="viewToggle" tabindex="0">
+                    <input type="checkbox" id="fileTabs" class="toggle" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
+          <table id="autoUpdateRow" class="settings is-hidden">
+            <tr>
+              <th colspan="100%" id="autoUpdateHeadline"></th>
+            </tr>
+            <tr>
+              <td id="autoUpdateBody"></td>
+              <td>
+                <span class="toggle">
+                  <label class="switch" for="autoUpdate">
+                    <input type="checkbox" id="autoUpdate" class="toggle" tabindex="0">
                     <span class="slider round"></span>
                   </label>
                 </span>
@@ -481,31 +506,31 @@
           </table>
           <table class="settings">
             <tr>
-              <th colspan="100%" id="settingsDragZoom"></th>
+              <th colspan="100%" id="zoomHeadline"></th>
             </tr>
             <tr>
-              <td id="settingsDragZoomBody"></td>
+              <td id="zoomBody"></td>
               <td class="zoom">
-                <input type="range" id="zoomRangePicker" name="vol" min="75" max="125"><br>
+                <input type="range" id="zoom" name="vol" min="75" max="125"><br>
                 <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
               </td>
             </tr>
           </table>
         </section>
-        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
+        <button class="modal-close close is-large" role="cancel" tabindex="0"></button>
       </div>
     </div>
     <div id="modalHelp" class="modal content" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-card">
         <div class="tabs is-centered">
           <ul>
-            <li class="helpTab1 is-active"><a href="#" tabindex="0" id="helpTab1Title"></a></li>
-            <li class="helpTab2"><a href="#" tabindex="0" id="helpTab2Title"></a></li>
-            <li class="helpTab3"><a href="#" tabindex="0" id="helpTab3Title"></a></li>
-            <li class="helpTab4"><a href="#" tabindex="0" id="helpTab4Title"></a></li>
-            <li class="helpTab5"><a href="#" tabindex="0" id="helpTab5Title"></a></li>
-            <li class="helpTab6"><a href="#" tabindex="0" id="settingsTabAbout"></a></li>
+            <li class="helpTab1 is-active"><a href="#" id="helpTab1Title" tabindex="0"></a></li>
+            <li class="helpTab2"><a href="#" id="helpTab2Title" tabindex="0"></a></li>
+            <li class="helpTab3"><a href="#" id="helpTab3Title" tabindex="0"></a></li>
+            <li class="helpTab4"><a href="#" id="helpTab4Title" tabindex="0"></a></li>
+            <li class="helpTab5"><a href="#" id="recurrences" tabindex="0"></a></li>
+            <li class="helpTab6"><a href="#" id="settingsTabAbout" tabindex="0"></a></li>
           </ul>
         </div>
         <section id="helpTab1" class="modal-card-body is-active" data-track-content data-content-name="Help" data-content-piece="Keyboard shortcuts">
@@ -567,44 +592,44 @@
                 <td><span class="tag is-info is-large">.</span></td>
               </tr>
               <tr>
-                <td id="helpTabKeyboardTR19TD1"></td>
-                <td><span class="tag is-info is-large">P</span></td>
-                <td><span class="tag is-info is-large">P</span></td>
-              </tr>
-              <tr>
                 <td id="helpTabKeyboardTR20TD1"></td>
                 <td><span class="tag is-info is-large">1-9</span></td>
                 <td><span class="tag is-info is-large">1-9</span></td>
               </tr>
               <tr>
+                <td id="helpTabKeyboardTR19TD1"></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-info is-large">P</span></td>
+                <td><span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large">P</span></td>
+              </tr>
+              <tr>
                 <td id="helpTabKeyboardTR5TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">O</span></td>
-                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">O</span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-info is-large">O</span></td>
+                <td><span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large">O</span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR11TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">C</span></td>
-                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">C</span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-info is-large">C</span></td>
+                <td><span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large">C</span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR21TD1"></td>
-                <td><span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">?</span></td>
-                <td><span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">?</span></td>
+                <td><span class="tag is-dark is-large">Shift</span>&nbsp;<span class="tag is-info is-large">?</span></td>
+                <td><span class="tag is-dark is-large">Shift</span>&nbsp;<span class="tag is-info is-large">?</span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR22TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
-                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-info is-large">Tab</span></td>
+                <td><span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large">Tab</span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR23TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
-                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Shift</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Tab</span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-dark is-large">Shift</span>&nbsp;<span class="tag is-info is-large">Tab</span></td>
+                <td><span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-dark is-large">Shift</span>&nbsp;<span class="tag is-info is-large">Tab</span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR24TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">W</span></td>
-                <td><span class="tag is-dark is-large">cmd</span> <i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">W</span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-info is-large">W</span></td>
+                <td><span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large">W</span></td>
               </tr>
 
 
@@ -633,33 +658,33 @@
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR7TD1"></td>
-                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">A-Z</span></td>
-                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">A-Z</span></td>
+                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-dark is-large">Windows</span>&nbsp;<span class="tag is-info is-large">A-Z</span></td>
+                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large">A-Z</span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR13TD1"></td>
-                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
-                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
+                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-dark is-large">Windows</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
+                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR14TD1"></td>
-                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-left"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-right"></i></span></td>
-                <td></td>
+                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-dark is-large">Windows</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-left"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-right"></i></span></td>
+                <td><span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-dark is-large">command</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-left"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-right"></i></span></td>
               </tr>
               <tr>
                 <td id ="helpTabKeyboardTR15TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
-                <td><span class="tag is-dark is-large">cmd</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
-              </tr>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-up"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-down"></i></span></td>
+              </tr> 
               <tr>
                 <td id ="helpTabKeyboardTR16TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-left"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-right"></i></span></td>
-                <td><span class="tag is-dark is-large">cmd</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-left"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-right"></i></span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-left"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-right"></i></span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-dark is-large">Alt</span>&nbsp;<span class="tag is-info is-large"><i class="fas fa-arrow-left"></i>&nbsp;/&nbsp;<i class="fas fa-arrow-right"></i></span></td>
               </tr>
               <tr>
                 <td id="helpTabKeyboardTR10TD1"></td>
-                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Enter</span></td>
-                <td><span class="tag is-dark is-large">cmd</span>&nbsp;<i class="fas fa-plus"></i>&nbsp;<span class="tag is-info is-large">Enter</span></td>
+                <td><span class="tag is-dark is-large">Ctrl</span>&nbsp;<span class="tag is-info is-large">Enter</span></td>
+                <td><span class="tag is-dark is-large">Command</span>&nbsp;<span class="tag is-info is-large">Enter</span></td>
               </tr>
             </table>
         </section>
@@ -711,16 +736,16 @@
             <tr>
               <td><i class="fab fa-github"></i></td>
               <td><a href="https://github.com/ransome1/sleek/issues" target="_blank" id="submitIssuesOnGithub"></a></td>
-              <td><i class="fas fa-star"></i></td>
-              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
+              <td><i class="fab fa-apple"></i></td>
+              <td><a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="_blank" id="reviewMacAppStore"></a></td>
               <td><i class="fab fa-windows"></i></td>
               <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank" id="reviewWindowsStore"></a></td>
             </tr>
             <tr>
+              <td><i class="fas fa-star"></i></td>
+              <td><a href="https://sourceforge.net/projects/sleek/reviews" target="_blank" id="reviewSourceforge"></a></td>
               <td><i class="fab fa-twitter"></i></td>
               <td><a href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank" id="shareTwitter"></a></td>
-              <td><i class="fab fa-facebook"></i></td>
-              <td><a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank" id="shareFacebook"></a></td>
               <td><i class="fab fa-linkedin"></i></td>
               <td><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank" id="shareLinkedin"></a></td>
             </tr>
@@ -746,75 +771,59 @@
               <th colspan="100%" id="settingsTabAboutExternalLibraries"></th>
             </tr>
             <tr>
-              <td><a href="https://github.com/electron/electron" target="_blank">Electron</a></td>
-              <td><a href="https://github.com/electron-userland/electron-builder" target="_blank">Electron builder</a></td>
-              <td><a href="https://github.com/i18next/i18next" target="_blank">i18next</a></td>
-              <td><a href="https://github.com/mymth/vanillajs-datepicker" target="_blank">vanillajs-datepicker</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/jgthms/bulma" target="_blank">Bulma CSS</a></td>
-              <td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome</a></td>
-              <td><a href="https://github.com/jmhobbs/jsTodoTxt" target="_blank">jsTodoTxt</a></td>
-              <td><a href="https://github.com/markedjs/marked" target="_blank">Marked</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/matomo-org/matomo" target="_blank">Matomo</a></td>
-              <td><a href="https://github.com/paulmillr/chokidar" target="_blank">chokidar</a></td>
-              <td><a href="https://github.com/viktor-shmigol/electron-windows-badge/" target="_blank">Electron Windows Badge</a></td>
-              <td><a href="https://github.com/andrewplummer/Sugar" target="_blank">Sugar</a></td>
-            </tr>
-            <tr>
-              <td><a href="https://github.com/pegjs/pegjs" target="_blank">PEG.js</a></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><a href="https://github.com/ransome1/sleek#used-libraries" target="_blank">https://github.com/ransome1/sleek#used-libraries</a></td>
             </tr>
           </table>
         </section>
-        <button class="modal-close close is-large" aria-label="close" tabindex="0"></button>
+        <button class="modal-close close is-large" role="cancel" tabindex="0"></button>
       </div>
     </div>
 
     <div id="todoContext" role="menu" tabindex="0">
       <div class="card">
         <div class="card-content">
-          <a id="todoContextUseAsTemplate" class="dropdown-item" tabindex="0"></a>
-          <a id="todoContextEdit" href="#" class="dropdown-item" tabindex="0"></a>
-          <a id="todoContextDelete" class="dropdown-item" tabindex="0"></a>
+          <div class="horizontal">
+            <label>Priority</label>
+            <a href="#" id="todoContextPriorityIncrease" class="dropdown-item" tabindex="0"><i class="fas fa-plus"></i></a>
+            <a href="#" id="todoContextPriorityDecrease" class="dropdown-item" tabindex="0"><i class="fas fa-minus"></i></a>
+          </div>
+          <a href="#" id="todoContextUseAsTemplate" class="dropdown-item" tabindex="0"></a>
+          <a href="#" id="todoContextCopy" class="dropdown-item" tabindex="0"></a>
+          <a href="#" id="todoContextDelete" class="dropdown-item" tabindex="0"></a>
         </div>
       </div>
     </div>
 
-    <div id="filterContext">
+    <form id="filterContext">
       <div class="card">
         <div class="card-content">
           <input id="filterContextInput" class="input" type="text" tabindex="0">
         </div>
         <footer class="card-footer">
-          <button id="filterContextSave" class="card-footer-item" tabindex="0"></button>
+          <button id="filterContextSave" type="submit" class="card-footer-item" tabindex="0"></button>
           <button id="filterContextDelete" class="card-footer-item" tabindex="0"></button
         </footer>
       </div>
-    </div>
+    </form>
 
     <div id="modalChangeFile" class="modal" tabindex="0">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div class="card-content">
-            <table id="modalChangeFileTable"></table>
+            <table id="modalChangeFileTable" class="files"></table>
           </div>
           <footer class="card-footer">
             <button id="btnFilesOpenTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></button>
             <button id="btnFilesCreateTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></button>
-            <button class="card-footer-item" role="cancel" tabindex="0"></button>
+            <button id="btnFilesCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
       </div>
     </div>
 
     <div id="modalPrompt" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" role="cancel"></div>
       <div class="modal-content">
         <div class="card">
           <div id="modalPromptContent" class="card-content"></div>
@@ -827,38 +836,37 @@
     </div>
 
     <section id="messages">
-      <article id="messageGenericContainer" class="notification" data="generic">
-        <button id="messageGenericContainerClose" class="delete" aria-label="delete" data-message="generic"></button>
+      <article id="messageGenericContainer" class="notification message" data="generic">
+        <button id="messageGenericContainerClose" class="delete" role="cancel" data-message="generic"></button>
         <p id="messageGenericMessage"></p>
       </article>
       <article class="message fixed" data="logging">
         <div class="message-header">
           <p><span id="messageLoggingTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="logging" tabindex="-1"></button>
+          <button class="delete close" role="cancel" data-message="logging" tabindex="-1"></button>
         </div>
         <div class="message-body">
           <p><span id="messageLoggingBody"></span></p>
           <p><button id="btnMessageLogging" tabindex="-1"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
         </div>
       </article>
-      <article class="message fixed" data="share">
+      <article class="message fixed review" data="support">
         <div class="message-header">
-          <p><span id="messageShareTitle"></span></p>
-          <button class="delete close" aria-label="delete" data-message="share" tabindex="-1"></button>
+          <p>sleek <i class="fas fa-heart"></i> you</p>
+          <button class="delete" role="cancel" data-message="support"></button>
         </div>
         <div class="message-body">
-          <p><span id="messageShareBody"></span></p>
-          <p class="brands">
-            <a tabindex="-1" href="https://twitter.com/intent/tweet?text=Check%20out%20sleek,%20a%20todo%20app%20based%20on%20todo.txt,%20free%20and%20open-source.%20Available%20for%20Linux,%20Windows%20and%20MacOS.%20https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a tabindex="-1" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-facebook-square"></i></a>
-            <a tabindex="-1" href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/ransome1/sleek" target="_blank"><i class="fab fa-linkedin"></i></a>
-          </p>
+          <p>Please submit bug reports on <i class="fab fa-github"></i>&nbsp;<a href="https://github.com/ransome1/sleek/issues\" target="_blank">Github</a> and support this little project by writing a review on:
+          <table>
+            <tr>
+              <td><a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="_blank"><i class="fa-brands fa-apple"></i><br>Mac App Store</a></td>
+              <td><a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="_blank"><i class="fa-brands fa-windows"></i><br>Microsoft Store</a></td>
+            </tr>
+          </table>
         </div>
       </article>
     </section>
-    <script defer src="../node_modules/sugar/dist/sugar.min.js"></script>
     <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
-    <script defer src="../node_modules/marked/marked.min.js"></script>
     <script defer src="render.js" type="module"></script>
   </body>
 </html>

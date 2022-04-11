@@ -32,22 +32,30 @@ a:hover,
 a:active,
 a:focus {
   color: $dark-grey;
+  box-shadow: none;
+}
+
+:focus,
+:focus-visible {
+  box-shadow: none;
+  outline: none;
 }
 
 //  ####################################
 //  GENERIC
 //  ####################################
 
-.is-active {
-  display: block!important;
-}
-
 .is-hidden {
-  display: none;
+  display: none!important;
 }
 
 .is-greyed-out {
   filter: opacity(75%) grayscale(100%);
+}
+
+.button.is-greyed-out {
+  cursor: not-allowed;
+  pointer-events: all;
 }
 
 .card {
@@ -59,7 +67,11 @@ a:focus {
   .card-footer-item,
   .card-footer-item:focus {
     border-radius: 0;
-    border-right: 1px solid $light-grey;
+    background-color: transparent;
+    color: $has-text-link;
+  }
+  .card-footer-item:hover {
+    color: $dark-grey;
   }
   .card-footer-item:first-child {
     border-bottom-left-radius: $radius;
@@ -69,8 +81,8 @@ a:focus {
     border-bottom-right-radius: $radius;
   }
   .card-footer-item:focus-visible {
-    color: $dark-grey!important;
-    background-color: $almost-white!important;
+    color: $dark-grey;
+    background-color: $almost-white;
   }
 }
 
@@ -80,118 +92,30 @@ a:focus {
 
 button {
   font-size: 1em;
-  color: $has-text-link;
-  background: white;
+  color: white;
+  background-color: $has-text-link;
   border: none;
   border-radius: $radius;
   outline: none;
   box-shadow: 0;
   padding: 0.55em 0.75em;
   cursor: pointer;
-}
-button:hover,
-button:focus-visible {
-  color: $dark-grey;
-  background: white;
   i {
     color: inherit;
   }
 }
-button i {
-  color: $has-text-link;
+button:focus-visible {
+  color: white;
+  background-color: $dark-grey;
+  i {
+    color: inherit;
+  }
 }
 button:disabled,
 button.is-greyed-out {
   cursor: not-allowed;
   filter: grayscale(100%);
-  opacity: 0.6;
-}
-
-//  ####################################
-//  INPUT
-//  ####################################
-
-input,
-select,
-textarea {
-  border: none!important;
-  box-shadow: none!important;
-  outline: none!important;
-}
-input::placeholder {
-  color: $dark-grey;
-}
-input[type="text"],
-input[type="search"],
-textarea {
-  border-radius: 1.5em;
-  background-color: $almost-white!important;
-}
-
-.inputWrapper {
-  position: relative;
-  padding-top: 0.5em;
-  input[type="search"],
-  input[type="text"],
-  textarea {
-    padding: 2em 1em 1.2em 1.5em;
-  }
-  textarea {
-    padding-bottom: 0.75em
-  }
-  input::placeholder,
-  textarea::placeholder {
-    color: $mid-grey;
-  }
-  label {
-    cursor: pointer;
-    font-size: 0.75em;
-    position: absolute;
-    top: 1.3em;
-    left: 2.5em;
-    z-index: 65;
-  }
-  .todoTableSearchQuestionmark {
-    display: none;
-  }
-}
-.is-focused .inputWrapper,
-.inputWrapper.is-focused {
-  label,
-  i {
-    color: $has-text-link;
-  }
-  .fa-search {
-    display: none;
-  }
-  .todoTableSearchQuestionmark {
-    display: block;
-  }
-}
-
-input[type="number"] {
-  text-align: center;
-}
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-}
-input[type="range"],
-input[type="range"]:focus {
-  height: 0.7em;
-  padding: 0.1em;
-  -webkit-appearance: none;
-  border-radius: $radius;
-  background: $lighter-grey!important;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  cursor: ew-resize;
-  width: 0.75em;
-  height: 1.5em;
-  -webkit-appearance: none;
-  background: $has-text-link;
-  border-radius: $radius;
+  opacity: 0.4;
 }
 
 //  ####################################
@@ -201,15 +125,15 @@ input[type="range"]::-webkit-slider-thumb {
 table {
   width: 100%;
   border-collapse: separate;
-  tr {
+  tbody tr {
     th {
-      padding: .1em 0 !important;
+      padding: .1em 0 ;
       font-size: 1.2em;
       font-family: "FreeSansBold";
     }
     td {
       border: none;
-      padding: .5em 2em .5em 0 !important;
+      padding: .5em 2em .5em 0 ;
     }
   }
 }
@@ -218,6 +142,9 @@ table.files {
   tr {
     td {
       vertical-align: middle;
+      button:disabled, button.is-greyed-out {
+        opacity: 0.2;
+      }
     }
     td:first-child {
       width: 3em;
@@ -231,38 +158,10 @@ table.files {
         cursor: pointer;
       }
       a:focus-visible {
-        color: $dark-grey;
+        color: $darker-grey;
       }
     }
   }
-  button {
-    color: white;
-    background: $has-text-link;
-  }
-  button:disabled {
-    color: $dark-grey;
-    background: $almost-white;
-  }
-}
-
-//  ####################################
-//  FOCUS OUTLINES
-//  ####################################
-
-:focus,
-:focus-visible {
-  box-shadow: none;
-  outline: none;
-}
-
-input:focus,
-select:focus {
-  background-color: $almost-white!important;
-}
-
-button:focus-visible {
-  color: $almost-white!important;
-  background: $dark-grey!important;
 }
 
 //  ####################################
@@ -272,13 +171,14 @@ button:focus-visible {
 .title,
 strong {
   font-family: "FreeSansBold";
-  font-weight: normal !important;
+  font-weight: normal ;
 }
-code, pre {
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
-  background-color: $light-grey !important;
-  color: inherit !important;
-}
+/*code, pre {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  background: $mid-grey;
+  color: $dark-grey;
+  border-radius: $radius;
+}*/
 
 //  ####################################
 //TODO
@@ -295,7 +195,7 @@ code, pre {
   }
 }
 .contentContainer.is-active {
-  display: flex!important;
+  display: flex;
 }
 #messageGenericContainer {
   display: none;
@@ -303,7 +203,7 @@ code, pre {
     margin: .1em 0;
   }
   i {
-    color: white!important;
+    color: white;
   }
 }
 
@@ -344,9 +244,6 @@ code, pre {
     font-size: 5em;
     margin: .25em 0;
   }
-  .btnOnboarding:focus-visible {
-    color: $almost-black;
-  }
 }
 .contentContainer.is-active {
   display: flex;
@@ -358,7 +255,7 @@ code, pre {
 
 .columns {
   height: 100%;
-  margin: 0 !important;
+  margin: 0 ;
   .column {
     position: relative;
     .is-right {
@@ -370,6 +267,7 @@ code, pre {
     overflow-x: hidden;
     header {
       width: 100%;
+      min-width: 30em;
       float: left;
       position: sticky;
       top: 0;
@@ -380,53 +278,23 @@ code, pre {
 }
 
 //  ####################################
-//  MESSAGES
-//  ####################################
-
-#messages {
-  width: 25em;
-  position: fixed;
-  right: 2em;
-  bottom: 1em;
-  z-index: 45!important;
-  i {
-    color: $has-text-link;
-  }
-  .message {
-    display: none;
-    .message-body .brands i {
-      font-size: 2.25em;
-      margin-right: .2em;
-      color: $has-text-link;
-    }
-  }
-  button {
-    margin-top: .5em;
-  }
-  .message-body p {
-    margin-bottom: .5em;
-  }
-  .notification.is-danger {
-    background-color: $has-text-danger;
-  }
-}
-
-//  ####################################
 //  IMPORT MODULES
 //  ####################################
-
+@import "../../node_modules/bulma/bulma.sass";
 @import "tabs.scss";
 @import "navigation.scss";
 @import "search.scss";
 @import "compact.scss";
 @import "filterButtons.scss";
 @import "drawer.scss";
+@import "input.scss";
 @import "modal.scss";
+@import "messages.scss";
 @import "recurrencePicker.scss";
 @import "todoTable.scss";
+@import "todoContext.scss";
 @import "toggle.scss";
 @import "datepicker.scss";
 @media print {
   @import "print.scss";
 }
-@import "../../node_modules/bulma/bulma.sass";

@@ -1,0 +1,47 @@
+.button:focus:not(:active), .button.is-focused:not(:active),
+.button:active, .button.is-active,
+input[type="number"],
+.button:focus, .button.is-focused,
+.select select, .textarea, .input,
+.select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  border-radius: $radius;
+  background-color: $almost-white;
+}
+
+.field ::placeholder {
+  color: $darker-grey;
+}
+input[type="number"] {
+  text-align: center;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+input[type="range"],
+input[type="range"]:focus {
+  height: 0.7em;
+  padding: 0.1em;
+  -webkit-appearance: none;
+  border-radius: $radius;
+  background: $mid-grey;
+}
+input[type="range"]::-webkit-slider-thumb {
+  cursor: ew-resize;
+  width: 0.75em;
+  height: 1.5em;
+  -webkit-appearance: none;
+  background: $has-text-link;
+  border-radius: $radius;
+}
+input.is-medium.textarea,
+input.is-medium.input {
+  font-size: 1.25em;
+}
+.select:not(.is-multiple):not(.is-loading)::after,
+.select:not(.is-multiple):not(.is-loading):hover::after {
+  border-color: $has-text-link;
+}

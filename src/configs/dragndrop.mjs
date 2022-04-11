@@ -3,7 +3,8 @@
  https://codepen.io/fitri/full/oWovYj/ */
 
 "use strict";
-import { setUserData, startBuilding } from "../render.js";
+import { setUserData, buildTable } from "../render.js";
+import { handleError } from "../js/helper.mjs";
 
 function reorderSortingLevel() {
   let sortBy = new Array;
@@ -13,7 +14,11 @@ function reorderSortingLevel() {
     sortBy.push(children[i].getAttribute("data-id"));
   }
   setUserData("sortBy", sortBy);
-  startBuilding();
+  buildTable().then(function(response) {
+    console.info(response);
+  }).catch(function(error) {
+    handleError(error);
+  });
 }
 
 export function enableDragSort(listClass) {

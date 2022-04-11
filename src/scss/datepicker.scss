@@ -1,5 +1,5 @@
 .datepicker {
-  display: none;
+  
   z-index: 60;
   .datepicker-cell {
     border: 2px solid white;
@@ -24,8 +24,13 @@
   }
 }
 
+.datepicker.datepicker-inline {
+  position: fixed;
+}
+
 .datepicker.active {
-  display: block; }
+  display: block; 
+}
 
 .datepicker-dropdown {
   position: absolute;
@@ -41,23 +46,21 @@
 .datepicker-picker {
   display: inline-block;
   border-radius: $radius;
-  background-color: #fff; }
-
-.datepicker-dropdown .datepicker-picker {
-  box-shadow: 0 0 1em rgba(10, 10, 10, 0.1), 0 0 1em rgba(10, 10, 10, 0.1); }
-
-.datepicker-picker span {
-  display: block;
-  flex: 1;
-  border: 0;
-  border-radius: 4px;
-  cursor: default;
-  text-align: center;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  background-color: #fff; 
+  box-shadow: 0 0 1em rgba(10, 10, 10, 0.1), 0 0 1em rgba(10, 10, 10, 0.1);
+  span {
+    display: block;
+    flex: 1;
+    border: 0;
+    border-radius: 4px;
+    cursor: default;
+    text-align: center;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 }
 
 .datepicker-main {
