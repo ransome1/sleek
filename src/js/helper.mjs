@@ -4,6 +4,7 @@ import { generateGroupedObjects, items, generateTodoTxtObject } from "./todos.mj
 import { isToday, isPast, isTomorrow } from "./date.mjs";
 import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
+import { showDrawer } from "./drawer.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 import { _paq } from "./matomo.mjs";
 import "../../node_modules/marked/marked.min.js";
@@ -170,7 +171,6 @@ export function getBadgeCount() {
 // one time interface setup when app is started
 export function initialSetupInterface() {
   try {
-
     // setup compact view
     (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
 
@@ -185,6 +185,23 @@ export function initialSetupInterface() {
     // add version number to about tab in settings modal
     document.getElementById("version").innerHTML = appData.version;
 
+    // close or open drawer on start if setting was persisted
+    if(userData.filterDrawer) {
+      const navBtnFilter = document.getElementById("navBtnFilter");
+      showDrawer(navBtnFilter).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    } else if(userData.viewDrawer) {
+      const navBtnView = document.getElementById("navBtnView");
+      showDrawer(navBtnView).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    }
+
     return Promise.resolve("Success: Initial interface setup completed");
 
   } catch(error) {
@@ -194,6 +211,7 @@ export function initialSetupInterface() {
 }
 export function setupInterface() {
   try {
+
     // this happens in view drawer
     // hide sort by container if sorting is according to file
     const viewSortByRow = document.getElementById("viewSortByRow");

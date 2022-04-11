@@ -40,7 +40,7 @@ viewInvertSorting.innerHTML = translations.invertSorting;
 viewSortBy.innerHTML = translations.sortBy;
 viewSortByFile.innerHTML = translations.sortByFile;
 
-export function showDrawer(button) {
+export async function showDrawer(button) {
   try {
 
     const buttons = document.querySelectorAll("nav ul li a.drawerTrigger");
@@ -86,7 +86,7 @@ export function showDrawer(button) {
         handleError(error);
       });
 
-      createModalJail(drawer).then(function(response) {
+      createModalJail(drawer, false, true).then(function(response) {
         console.info(response);
       }).catch(function(error) {
         handleError(error);
@@ -118,23 +118,6 @@ drawerClose.onclick = function() {
   });
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Drawer", "Click on close button"])
-}
-
-// close or open drawer on start if setting was persisted
-if(userData.filterDrawer) {
-  const navBtnFilter = document.getElementById("navBtnFilter");
-  showDrawer(navBtnFilter).then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    handleError(error);
-  });
-} else if(userData.viewDrawer) {
-  const navBtnView = document.getElementById("navBtnView");
-  showDrawer(navBtnView).then(function(result) {
-    console.log(result);
-  }).catch(function(error) {
-    handleError(error);
-  });
 }
 
 // build the sortBy list

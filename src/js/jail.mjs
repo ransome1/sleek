@@ -4,7 +4,7 @@
 // limits tabbing to those elements until modal is closed
 // works also backwards using shift + tab
 // loops when finished
-export function createModalJail(modal) {
+export function createModalJail(modal, arrowUpDown, arrowRightLeft) {
   try {
 
     if(typeof modal !== "object") return Promise.resolve("Info: No modal passed, can't create jail");
@@ -19,12 +19,11 @@ export function createModalJail(modal) {
     // add focus on the first focusable element
     firstFocusableElement.focus();
 
-
     modal.onkeydown = function(event) {
 
       // if arrow down key is pressed
       // we don't want this behaviour in modalForm
-      if(event.key === "ArrowDown" && excludeModalFromArrowKeys.indexOf(modal.id) === -1) { 
+      if((arrowUpDown && event.key === "ArrowDown") || (arrowRightLeft && event.key === "ArrowRight") && excludeModalFromArrowKeys.indexOf(modal.id) === -1) { 
         const focusedElementIndex = Array.prototype.indexOf.call(focusableContent, document.activeElement);
         // stop when the last element is reached and focus the first one
         if((focusedElementIndex + 1) === focusableContent.length) {
@@ -37,7 +36,7 @@ export function createModalJail(modal) {
 
       // if arrow up key is pressed
       // we don't want this behaviour in modalForm
-      if(event.key === "ArrowUp" && excludeModalFromArrowKeys.indexOf(modal.id) === -1) {
+      if((arrowUpDown && event.key === "ArrowUp") || (arrowRightLeft && event.key === "ArrowLeft") && excludeModalFromArrowKeys.indexOf(modal.id) === -1) {
         const focusedElementIndex = Array.prototype.indexOf.call(focusableContent, document.activeElement);
         // stop if the first element is reached and focus the last one
         if(focusedElementIndex === 0) {

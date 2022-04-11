@@ -22,7 +22,7 @@
   }
   .dropdown-item:focus,
   .dropdown-item:hover {
-    background-color: $almost-white!important;
+    background-color: $almost-white;
   }
   .card-content {
     padding: 0;
@@ -40,4 +40,7 @@
       }
     }
   }
+}
+#todoContext.is-active {
+  display: block;
 }

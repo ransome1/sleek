@@ -20,13 +20,13 @@
      background: none;
     }
     input:checked + .slider {
-     background-color: $has-text-link!important;
+     background-color: $has-text-link;
     }
     input:focus {
-      box-shadow: none!important;
+      box-shadow: none;
     }
     input:focus-visible {
-      box-shadow: 0 0 0 2px $has-text-link!important;
+      box-shadow: 0 0 0 2px $has-text-link;
     }
     input:checked + .slider:before {
      -webkit-transform: translateX(1.5625em);

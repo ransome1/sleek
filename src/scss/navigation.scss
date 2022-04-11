@@ -18,7 +18,7 @@ nav {
       display: block;
       height: 5em;
       line-height: 5em;
-      color: $dark-grey!important;
+      color: $dark-grey;
     	cursor: pointer;
     	text-align: center;
     	border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -26,12 +26,12 @@ nav {
     li a:focus,
     li a:hover,
     li a.is-highlighted {
-      color: $dark-grey!important;
+      color: $dark-grey;
       background: $light-grey;
     }
     li.logo {
       font-family: FreeSansBold;
-      color: white!important;
+      color: white;
       background: $dark-grey;
       cursor: default;
       background: linear-gradient(0.33turn, #1b5551, #813e93);
@@ -51,7 +51,7 @@ nav {
       to {opacity: 0;}
     }
     #versionNumber {
-      width: auto!important;
+      width: auto;
       padding: 0.1em;
       display: none;
       line-height: 1em;
@@ -61,7 +61,7 @@ nav {
       margin-left: 7em;
       font-size: 0.8em;
       color: $mid-grey;
-      background: transparent!important;
+      background: transparent;
 
       opacity: 0;
       animation: fadeOut 1s forwards;

@@ -13,20 +13,19 @@
 //  GENERAL MODAL
 //  ####################################
 
-.modal.is-active {
-  display: flex!important;
-}
+/*.modal.is-active {
+  display: flex;
+}*/
 .modal {
   .modal-content,
   .modal-card {
     width: 85%;
     max-width: 900px;
-    margin: 0;
   }
 }
 .modal.content {
   z-index: 60;
-  margin: 0 !important;
+  margin: 0;
   h3 {
     font-family: "FreeSansBold";
     font-size: 1.7em;
@@ -50,18 +49,20 @@
     border: none;
   }
   select {
-    background: white!important;
+    background: white;
   }
-  code {
-    background: transparent;
-    padding: 0.25em 0.5em;
+  code, pre {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    background: $mid-grey;
+    color: $dark-grey;
+    border-radius: $radius;
   }
   .delete,
   .modal-close {
-    background: $has-text-link !important;
-    color: $has-text-link !important;
+    background: $has-text-link ;
+    color: $has-text-link ;
     z-index: 60;
-    position: absolute !important;
+    position: absolute ;
   }
   .modal-card {
     z-index: 60;
@@ -69,6 +70,9 @@
     padding: 0 2em 2em 2em;
     max-height: calc(100vh - 5em);
     border-radius: $radius;
+    .is-active {
+      display: block;
+    }
   }
   .modal-card-body {
     background: none;
@@ -77,10 +81,14 @@
     ul li a {
       text-decoration: underline;
     }
+    table tr th,
+    table tr td {
+      padding: 0;
+    }
     table.settings {
       tr {
         td {
-          padding-top: 1em!important;
+          padding-top: 1em;
           .alert {
             position: absolute;
             top: 1em;
@@ -94,7 +102,7 @@
         td:nth-child(even) {
           width: auto;
           text-align: center;
-          padding-right: 0 !important;
+          padding-right: 0;
         }
       }
     }
@@ -114,7 +122,7 @@
       }
       td {
         .tag {
-          font-size: 1em !important;
+          font-size: 1em;
         }
       }
     }
@@ -150,7 +158,7 @@
 #modalForm {
   #modalFormInput {
     z-index: 60;
-    padding-right: 2em!important;
+    padding-right: 2em;
   }
   textarea {
     min-height: 5.5em;
@@ -176,6 +184,14 @@
     width: auto;
     float: left;
     margin: .5em .5em .5em 0;
+    input,
+    select {
+      background-color: transparent;
+    }
+    input:focus-visible,
+    select:focus-visible {
+      background-color: $light-grey;
+    }
   }
   .message {
     display: none;
@@ -190,6 +206,12 @@
     border-bottom-right-radius: $radius;
     border-bottom-left-radius: $radius;
     background: $almost-white;
+    code, pre {
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      background: $mid-grey;
+      color: $dark-grey;
+      border-radius: $radius;
+    }
     section {
       max-height: 25em;
       overflow-y: scroll;
@@ -212,6 +234,9 @@
       font-size: 1.25em;
       margin: 0 0 0.75em 0;
     }
+  }
+  #autoCompleteContainer.is-active {
+    display: block;
   }
   #autoCompleteContainer.card {
     height: auto;

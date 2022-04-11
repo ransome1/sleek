@@ -453,13 +453,6 @@ function generateFilterButtons(category, autoCompletePrefix) {
           // add context menu
           todoFiltersItem.oncontextmenu = function(event) {
             
-            // jail the modal
-            createModalJail(filterContext).then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              handleError(error);
-            });
-
             filterContextInput.value = filter;
             filterContextInput.setAttribute("data-item", category);
             filterContextInput.focus();
@@ -495,6 +488,15 @@ function generateFilterButtons(category, autoCompletePrefix) {
                 handleError(error);
               });
             }
+
+            // jail the modal
+            createModalJail(filterContext).then(function(response) {
+              console.info(response);
+            }).catch(function(error) {
+              handleError(error);
+            });
+
+
           }
 
           // create the event listener for filter selection by user
@@ -665,7 +667,7 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       // }
       
       // build filter buttons and add them to a fragment
-      let buttons = await generateFilterButtons(category, autoCompletePrefix).then(response => {
+      const buttons = await generateFilterButtons(category, autoCompletePrefix).then(response => {
         return response;
       }).catch (error => {
         handleError(error);

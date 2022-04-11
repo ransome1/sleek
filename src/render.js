@@ -54,6 +54,13 @@ async function buildTable(fileContent, loadAll) {
       helper.handleError(error);
     })
     
+    // build the filters in drawer and autocomplete container
+    await filters.generateFilterData().then(function(response) {
+      console.log(response)
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
     // once we have the filtered objects, we can adjust the gui
     helper.setupInterface().then(function(response) {
       console.log(response)
@@ -61,13 +68,6 @@ async function buildTable(fileContent, loadAll) {
       helper.handleError(error);
     });
 
-    // build the filters in drawer and autocomplete container
-    filters.generateFilterData().then(function(response) {
-      console.log(response)
-    }).catch(function(error) {
-      helper.handleError(error);
-    });
-    
     // Group filtered todo.txt objects and add them to items object
     todos.generateGroupedObjects().then(function(response) {
       console.log(response);
@@ -118,12 +118,6 @@ window.onload = async function() {
       });
     }
 
-    helper.initialSetupInterface().then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      helper.handleError(error);
-    });
-
     messages = await import("./js/messages.mjs");
     messages.checkDismissedMessages().then(function(response) {
       console.info(response);
@@ -149,6 +143,12 @@ window.onload = async function() {
     // handle matomo tracking at last
     matomo = await import("./js/matomo.mjs");
     matomo.configureMatomo().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    helper.initialSetupInterface().then(function(response) {
       console.info(response);
     }).catch(function(error) {
       helper.handleError(error);

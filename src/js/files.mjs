@@ -216,14 +216,7 @@ async function generateFileList(show) {
 
     // present the modal
     if(show !== false) modalChangeFile.classList.add("is-active");
-
-    // create a jail for the modal
-    createModalJail(modalChangeFile).then(response => {
-      console.info(response);
-    }).catch(error => {
-      handleError(error);
-    });
-    
+  
     // loop through all saved files
     for (let i = 0; i < userData.files.length; i++) {
 
@@ -268,6 +261,13 @@ async function generateFileList(show) {
         if(userData.matomoEvents) _paq.push(["trackEvent", "File-Chooser", "Click on remove button"]);
       }
     }
+
+    // create a jail for the modal
+    createModalJail(modalChangeFile).then(response => {
+      console.info(response);
+    }).catch(error => {
+      handleError(error);
+    });
 
     return Promise.resolve("Success: File changer modal built and opened");
 

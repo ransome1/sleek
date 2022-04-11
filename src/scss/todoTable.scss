@@ -47,17 +47,8 @@
   .todo:last-child {
     border: none;
   }
-  /*.todo#previousItem {
-    -webkit-transition: background-color 0.5s ease-out;
-    -moz-transition: background-color 0.5s ease-out;
-    -o-transition: background-color 0.5s ease-out;
-    transition: background-color 0.5s ease-out;
-  }
-  .todo#previousItem.is-highlighted {
-    background-color: $almost-white;
-  }*/
   .todo:focus {
-    background: lighten($has-text-link, 40%)!important;
+    background: lighten($has-text-link, 40%);
   }
   .todo.completed {
     .cell {
@@ -90,9 +81,12 @@
     flex-shrink: 0;
   }
   .cell.categories {
-    .tag {
-      margin-left: .25em;
+    a.button {
+      height: 2em;
     }
+    /*.tag {
+      margin-left: .25em;
+    }*/
   }
   .cell.checkbox {
     flex-shrink: 0;
@@ -108,18 +102,22 @@
   .cell.text {
     width: auto;
     cursor: pointer;
-    color: $dark-grey!important;
+    color: $dark-grey;
     a {
       font-size: 1.1em;
       font-family: FreeSansBold;
       height: auto;
-      padding: 0.1em 0.4em;
+      padding: 0.15em 0.5em;
     }
     a.button.priority {
       font-size: 0.9em;
       margin-right: 0.5em;
-      padding: 0;
-      color:  $dark-grey;
+    }
+    code, pre {
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      background: $mid-grey;
+      color: $dark-grey;
+      border-radius: $radius;
     }
   }
   .cell.hint {
@@ -151,13 +149,13 @@
     .transparentInput {
       width: 100%;
       height: 100%;
-      background: transparent!important;
+      background: transparent;
       border: none;
       position: absolute;
       top: 0;
       left: 0;
       z-index: 30;
-      color: transparent!important;
+      color: transparent;
       cursor: pointer;
     }
   }
@@ -178,7 +176,7 @@
 
   a.button.today,
   .cell.today {
-    color: $has-text-danger!important;
+    color: $has-text-danger;
     .tags .is-dark {
       background: $has-text-danger;
       font-family: FreeSansBold;
@@ -186,7 +184,7 @@
   }
   a.button.tomorrow,
   .cell.tomorrow {
-    color: $has-text-attention !important;
+    color: $has-text-attention ;
     .tags .is-dark {
       background: $has-text-attention;
       font-family: FreeSansBold;
@@ -194,51 +192,12 @@
   }
   a.button.past,
   .cell.past {
-    color: $has-text-danger!important;
+    color: $has-text-danger;
     .tags .is-dark {
       background: $has-text-danger;
       font-family: FreeSansBold;
     }
   }
-/*  .group.contexts a.button,
-  a.tag.contexts {
-    background: $sleek-contexts-button;
-    color: darken($sleek-contexts-button, 60%);
-  }
-  a.tag.contexts.is-dark {
-    background: darken($sleek-contexts-button, 70%);
-    color: white;
-  }
-  .group.projects a.button,
-  a.tag.projects {
-    background: $sleek-projects-button;
-    color: darken($sleek-projects-button, 60%);
-  }
-  a.tag.projects.is-dark {
-    background: darken($sleek-projects-button, 70%);
-    color: white;
-  }*/
-/*  .cell .priority a.A,
-  .group.priority .A,
-  .cell.priority.A {
-    background: $has-text-danger;
-  }
-  .cell .priority a.B,
-  .group.priority a.B,
-  .cell.priority.B {
-    background: $has-text-attention;
-  }
-  .cell .priority a.C,
-  .group.priority a.C,
-  .cell.priority.C {
-    background: $has-text-warning;
-  }*/
-  /*.cell .contexts {
-    background: $sleek-contexts-button;
-  }
-  .cell .projects {
-    background: $sleek-projects-button;
-  }*/
 
   /********************/
   /*** GROUP HEADER ***/
@@ -256,9 +215,7 @@
       line-height: auto;
       padding: 0;
       cursor: default;
-      color: $dark-grey;
       text-align: left;
-      background: none;
     }
     .cell {
       margin-top: 1em;
@@ -272,7 +229,6 @@
     a {
       font-size: 1.1em;
       padding: 0.15em 0.5em;
-      background:  $mid-grey;
     }
     .cell {
       margin-bottom: 0.5em;
@@ -284,4 +240,7 @@
       padding: 0 0.5em;
     }
   }
+}
+#todoTable.is-active {
+  display: block;
 }

@@ -8,6 +8,10 @@
   }
 }
 
+#todoTableSearchContainer.is-active {
+  display: block;
+}
+
 #todoTableSearchContainer {
   width: 100%;
   float: left;
@@ -27,13 +31,13 @@
     text-decoration: none;
   }
   #todoTableSearchAddTodo.is-active {
-    display: flex!important;
+    display: flex;
   }
   #todoTableSearchAddTodo:hover,
   #todoTableSearchAddTodo:focus,
   #todoTableSearchAddTodo:focus-visible {
-    color: $almost-white!important;
-    background: $has-text-link!important;
+    color: $almost-white;
+    background: $has-text-link;
   }
   input[type="search"] {
     padding-left: 3.2em;

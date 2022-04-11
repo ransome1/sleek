@@ -43,6 +43,24 @@ SugarDueExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
+function PriExtension() {
+	this.name = "pri";
+}
+PriExtension.prototype = new TodoTxtExtension();
+PriExtension.prototype.parsingFunction = function (line) {
+
+	var pri = null;
+	var priRegex = /pri:([A-Z])/i;
+	var matchPri = priRegex.exec(line);
+
+	if ( matchPri !== null ) {
+		pri = matchPri[1];
+		return [pri, line.replace(priRegex, ''), matchPri[1]];
+	}
+
+	return [null, null, null];
+};
+
 function ThresholdExtension() {
 	this.name = "t";
 }
@@ -59,4 +77,4 @@ ThresholdExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
-export { RecExtension, SugarDueExtension, ThresholdExtension };
+export { RecExtension, SugarDueExtension, ThresholdExtension, PriExtension };

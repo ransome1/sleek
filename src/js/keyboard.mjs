@@ -204,7 +204,7 @@ export async function registerShortcuts() {
 
         // make sure no input or drawer is opened
 
-        if(!isInputFocused() && !isDrawerOpen() && !isContextOpen()) {
+        if(!isInputFocused() && !isContextOpen()) {
 
           // move focus down in table list
 

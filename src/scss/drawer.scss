@@ -1,7 +1,3 @@
-//  ####################################
-//  FILTER CONTEXT MENU
-//  ####################################
-
 #filterContext {
   display: none;
   position: fixed;
@@ -12,10 +8,9 @@
     color: $has-text-danger;
   }
 }
-
-//  ####################################
-//  DRAWER
-//  ####################################
+#filterContext.is-active {
+  display: block;
+}
 
 #drawerContainer {
   width: var(--resizeable-width);
@@ -25,6 +20,20 @@
   height: 100%;
   float: left;
   display: none;
+  button {
+    background-color: white;
+    color: $has-text-link;
+  }
+  button:focus-visible {
+    background-color: $has-text-link;
+    color: white;
+  }
+  code, pre {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    background: $mid-grey;
+    color: $dark-grey;
+    border-radius: $radius;
+  }
   /* HANDLE FOR DRAGGING */
   /* https://spin.atomicobject.com/2019/11/21/creating-a-resizable-html-element/ */
   #handle {
@@ -76,8 +85,8 @@
       list-style: none;
       li {
         width: 100%;
-        height: auto!important;
-        line-height: 1.5em!important;
+        height: auto;
+        line-height: 1.5em;
         margin: 0 0 2px 0;
         padding: 0.5em 1em;
         cursor: grab;
@@ -104,7 +113,7 @@
     a {
       position: relative;
       margin: 0 .5rem .5rem 0;
-      padding: 0.5em 0.75em;
+      padding: 0.15em 0.5em;
       span.tag {
         height: 1.6em;
         font-family: FreeSansBold;
@@ -146,9 +155,6 @@
         cursor: help;
       }
     }
-    table tr td {
-      white-space: nowrap;
-    }
     table tr td:nth-child(odd) {
       width: auto;
       vertical-align: middle;
@@ -156,7 +162,7 @@
     table tr td:nth-child(even) {
       width: auto;
       text-align: center;
-      padding-right: 0 !important;
+      padding-right: 0 ;
     }
   }
   .drawer::-webkit-scrollbar {
@@ -180,6 +186,10 @@
       }
     }
   }
+}
+#drawerContainer.is-active,
+#drawerContainer .is-active {
+  display: block;
 }
 #drawerContainer:hover {
   #drawerClose {

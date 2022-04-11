@@ -6,17 +6,17 @@
 
   #modalForm {
     textarea {
-      padding: 0.75em!important;
+      padding: 0.75em;
     }
   }
   .modal.content {
     .modal-card {
-      padding: 1em!important;
+      padding: 1em;
     }
   }
 
   table tr td {
-    padding: 0.25em 1.5em 0.25em 0 !important
+    padding: 0.25em 1.5em 0.25em 0 
   }
   #sortByContainer li {
     padding: 0.25em 0.5em;
@@ -28,9 +28,6 @@
       
     }
     .group {
-      a {
-        font-size: 0.8em!important;
-      }
       .cell {
         margin-bottom: 0;
       }
@@ -60,21 +57,14 @@
       }
     }
   }
+  #drawerContainer {
+    min-width: 325px;
+  }
   #autoCompleteContainer,
   #drawerContainer .drawer {
-    padding: 1.5em;
-    .is-4 {
-      font-size: 1.1em;
-    }
-    a.button.priority {
-      font-size: 1.2em;
-      .tag {
-        font-size: 0.65em;
-      }
-    }
+    padding: 1em;
     a.button {
-      font-size: 0.9em;
-      margin: 0 0.3em 0.3em 0!important;
+      margin: 0 0.3em 0.3em 0;
       padding: 0.5em 0.7em;
       .tag {
         width: auto;
@@ -82,8 +72,10 @@
         padding: 0 .5em;
         min-width: 1.5em;
         min-height: 1.5em;
-        font-size: .9em;
       }
+    }
+    .priority a.button {
+      padding: 0.2em 0.5em;
     }
   }
   #autoCompleteContainer {
@@ -95,25 +87,35 @@
 }
 @media screen and (max-width: 992px),
 screen and (max-height: 650px) {
+  body {
+    font-size: 0.9em;
+  }
   @include compact;
 }
 
 @mixin mobile() {
   .modal {
     .modal-content {
-      width: 95%!important;
-      padding: 0.5em!important;
+      width: 95%;
+      padding: 0.5em;
       .card-content {
-        padding: 0.5em!important;
+        padding: 0.5em;
         #modalFormInputResize {
-          top: 1.35em!important;
-          right: 1.8em!important;
+          top: 1.35em;
+          right: 1.8em;
         }
       }
     }
   }
+  #messages {
+    right: 1em;
+    margin: 0 0 0 1em;
+  }
 }
 @media screen and (max-width: 500px) {
+  body {
+    font-size: 0.8em;
+  }
   @include mobile;
 }
 

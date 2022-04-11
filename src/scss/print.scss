@@ -1,9 +1,9 @@
 html,
 body {
-  filter: grayscale(100%)!important;
-  color: black!important;
-  font-size: 9pt!important;
-  -webkit-print-color-adjust: exact !important;
+  filter: grayscale(100%);
+  color: black;
+  font-size: 9pt;
+  -webkit-print-color-adjust: exact ;
 }
 nav #drawerContainer,
 nav ul,
@@ -19,22 +19,22 @@ header #fileTabBar,
 #modalHelp,
 #modalSettings,
 #btnFiltersResetFilters {
-  display: none!important;
+  display: none;
 }
 
 .columns.is-mobile {
-  display: block!important;
+  display: block;
 }
 
 .columns #todoTableWrapper {
-  overflow-x: visible!important;
-  overflow-y: visible!important;
+  overflow-x: visible;
+  overflow-y: visible;
 }
 
 #todoTable .cell:hover .tags, #todoTable .cell:focus .tags,
 #todoTable .cell.itemDueDate .tags,
 #todoTable .cell.itemDueDate .fa-sort-down {
-  display: block!important;
+  display: block;
 }
 
 #todoTable .cell span.tag.contexts {
@@ -49,10 +49,10 @@ header #fileTabBar,
 
 // nav #drawerContainer,
 // nav #drawerContainer section#filterDrawer {
-//   width: 100%!important;
-//   --resizeable-width: 100%!important;
-//   --max-width: 100%!important;
-//   --min-width: 100%!important;
+//   width: 100%;
+//   --resizeable-width: 100%;
+//   --max-width: 100%;
+//   --min-width: 100%;
 //   float: left;
-//   display: block!important;
+//   display: block;
 // }

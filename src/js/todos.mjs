@@ -13,7 +13,7 @@ import { generateRecurrence } from "./recurrences.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
-import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
+import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
 const items = { objects: {} }
@@ -76,7 +76,7 @@ async function generateTodoTxtObjects(fileContent) {
   try {
 
     // create todo.txt objects
-    if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ])
+    if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ])
 
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
@@ -90,7 +90,7 @@ async function generateTodoTxtObjects(fileContent) {
 }
 function generateTodoTxtObject(string) {
   try {
-    const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+    const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ]);
     return Promise.resolve(todo);
   } catch(error) {
     error.functionName = editTodo.name;
@@ -476,7 +476,7 @@ function generateTableRow(todo) {
 
         todo[category].forEach(element => {
           let todoTableBodyCellCategory = document.createElement("a");
-          todoTableBodyCellCategory.classList.add("tag", category)
+          todoTableBodyCellCategory.classList.add("button", category)
           todoTableBodyCellCategory.onclick = function() {
             selectFilter(element, category).then(response => {
               console.log(response)
@@ -659,7 +659,7 @@ async function createTodoContext(todoTableRow) {
     
     // ugly but neccessary: if triggered to fast arrow right will do a first row change in jail 
     setTimeout(function() {
-      createModalJail(todoContext).then(response => {
+      createModalJail(todoContext, true).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);
@@ -720,6 +720,14 @@ async function setTodoComplete(todo) {
       todo.complete = false;
       todo.completed = null;
 
+      if(todo.pri) {
+        // restore old priority
+        todo.priority = todo.pri;
+        //todo.pri = null;
+        delete todo.pri;
+        delete todo.priString;
+      }
+
     // Mark item as complete
     } else if(!todo.complete) {
       todo.complete = true;
@@ -732,10 +740,10 @@ async function setTodoComplete(todo) {
       }).catch(function(error) {
         handleError(error);
       });
-      
+
       if(todo.priority) {
         // and preserve prio
-        todo.text += " pri:" + todo.priority
+        todo.text += " pri:" + todo.priority;
         // finally remove priority
         todo.priority = null;
       }
@@ -743,7 +751,7 @@ async function setTodoComplete(todo) {
     }
 
     // delete old todo from array and add the new one at it's position
-    items.objects.splice(index, 1, todo);
+    await items.objects.splice(index, 1, todo);
 
     //write the data to the file and advice to focus the row after reload
     window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);

@@ -76,6 +76,8 @@ function getChannel() {
 function getContent(file) {
   try {
 
+    if(!file) return false;
+
     // only for MAS (Sandboxed)
     // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
     const activeFile = getActiveFile();
@@ -804,14 +806,14 @@ async function createWindow() {
 
     // setup reload intervall (reload every 10 minutes)
     setInterval(async () => {
-      
-      if(!getActiveFile() && mainWindow.isFocused()) return false;  
+
+      if(mainWindow.isFocused()) return false;
+      if(!getActiveFile()) return false;
       
       const content = await getContent(getActiveFile()[1]);
-
       mainWindow.webContents.send("buildTable", [content]);
 
-    }, 600000);
+    }, 60000);
 
     return Promise.resolve("Success: Renderer window created");
 
