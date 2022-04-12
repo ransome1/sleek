@@ -1,35 +1,4 @@
 //  ####################################
-//  TODO TABLE CONTEXT MENU
-//  ####################################
-
-#todoContext {
-  display: none;
-  position: fixed;
-  z-index: 40;
-  border-radius: $radius;
-  box-shadow: 0 0 1em $mid-grey;
-  a {
-    font-size: 0.9em;
-    color: $has-text-link;
-    padding: 0.75em 1.5em;
-  }
-  a.dropdown-item:first-child {
-    border-top-left-radius: $radius;
-    border-top-right-radius: $radius;
-  }
-  a.dropdown-item:last-child {
-    border-bottom-left-radius: $radius;
-    border-bottom-right-radius: $radius;
-  }
-  a.dropdown-item:focus {
-    background-color: $almost-white!important;
-  }
-  .card-content {
-    padding: 0;
-  }
-}
-
-//  ####################################
 //  TABLE WRAPPER
 //  ####################################
 
@@ -73,54 +42,13 @@
     width: 100%;
     position: relative;
     display: flex;
-    flex-flow: row wrap;
     border-bottom: solid 1px $light-grey;
   }
   .todo:last-child {
     border: none;
   }
-  .todo#previousItem {
-    -webkit-transition: background-color 0.5s ease-out;
-    -moz-transition: background-color 0.5s ease-out;
-    -o-transition: background-color 0.5s ease-out;
-    transition: background-color 0.5s ease-out;
-  }
-  .todo#previousItem.is-highlighted {
-    background-color: $almost-white;
-  }
   .todo:focus {
-    background: lighten($has-text-link, 40%)!important;
-    .cell.itemDueDate .tags,
-    .cell.itemDueDate .fa-sort-down {
-      display: block;
-    }
-  }
-  .group {
-    font-family: FreeSansBold;
-    font-size: 1.2em;
-    min-height: 1em;
-    margin-top: 1.5em 0 0.5em 0;
-    border: none;
-    button {
-      font-family: inherit;
-      height: auto;
-      line-height: auto;
-      padding: 0 .5em;
-      cursor: default;
-    }
-    .cell {
-      margin-top: 1em;
-      padding: 0;
-    }
-  }
-  .group.priority {
-    button {
-      font-size: 1.1em;
-      padding: 0.15em 0.5em;
-    }
-    .cell {
-      margin-bottom: 0.5em;
-    }
+    background: lighten($has-text-link, 40%);
   }
   .todo.completed {
     .cell {
@@ -130,8 +58,12 @@
       background: $has-text-link;
     }
   }
+
+  /********************/
+  /*** SINGLE CELLS ***/
+  /********************/
+
   .cell {
-    float: left;
     line-height: 1.7em;
     padding: .75em 0;
     margin: 0 1em 0 0;
@@ -140,96 +72,55 @@
       text-decoration: none;
       margin: 0;
     }
-    a.tag.projects {
-      background: $sleek-projects-button;
-    }
-    a.tag.projects.is-dark {
-      background: darken($sleek-projects-button, 65%)!important;
-
-    }
-    a.tag.contexts {
-      background: $sleek-contexts-button;
-    }
-    a.tag.contexts.is-dark {
-      background: darken($sleek-contexts-button, 65%)!important;
-
-    }
+  }
+  .cell.priority {
+    width: 0.35em;
+    background: $mid-grey;
+    color: darken($mid-grey, 40%);
+    opacity: 0.5;
+    flex-shrink: 0;
   }
   .cell.categories {
-    .tag {
-      margin-left: .25em;
+    a.button {
+      height: 2em;
     }
+    /*.tag {
+      margin-left: .25em;
+    }*/
   }
   .cell.checkbox {
+    flex-shrink: 0;
     i {
       font-size: 1.25em;
       color: $has-text-link;
+      margin: 0.2em 0 0 0;
+    }
+    i:hover {
+      color: $almost-black;
     }
   }
-  /*.cell.checkbox,
-  .cell.archive {
-    a:focus-visible {
-      color: $almost-black!important;
-    }
-  }*/
   .cell.text {
     width: auto;
-    max-width: 90%;
     cursor: pointer;
-    color: $dark-grey!important;
-    button {
+    color: $dark-grey;
+    a {
       font-size: 1.1em;
       font-family: FreeSansBold;
       height: auto;
-      padding: 0.1em 0.4em;
+      padding: 0.15em 0.5em;
     }
-    .priority {
-      float: left;
-      background: transparent;
-      color: darken($mid-grey, 40%);
-      margin-right: .5em;
-      button {
-        font-size: 0.9em;
-        padding: 0.1em 0.4em!important;
-      }
+    a.button.priority {
+      font-size: 0.9em;
+      margin-right: 0.5em;
     }
-    .text {
-      float: left;
+    code, pre {
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      background: $mid-grey;
+      color: $dark-grey;
+      border-radius: $radius;
     }
   }
-  .cell.text:focus-visible {
-    background: $almost-white;
-    border-radius: $radius;
-  }
-  .cell.spacer {
-    width: .5em;
-    background: transparent;
-  }
-  .cell.priority {
-    background: $mid-grey;
-    flex: 0 0 .5em;
-  }
-  .cell.priority {
-    width: 0.5em;
-    opacity: 0.5;
-  }
-  .cell.priority.A {
-    background: $has-text-danger;
-  }
-  .cell.priority.B {
-    background: $has-text-attention;
-  }
-  .cell.priority.C {
-    background: $has-text-warning;
-  }
-  .cell .contexts {
-    background: $sleek-contexts-button;
-  }
-  .cell .projects {
-    background: $sleek-projects-button;
-  }
-  
-  .cell.itemDueDate {
+  .cell.hint {
     color: $dark-grey;
     position: relative;
     white-space: nowrap;
@@ -256,30 +147,7 @@
       }
     }
   }
-  .cell.isToday,
-  .cell.isToday button {
-    color: $has-text-danger;
-    .tags .is-dark {
-      background: $has-text-danger;
-      font-family: FreeSansBold;
-    }
-  }
-  .cell.isTomorrow,
-  .cell.isTomorrow button {
-    color: $has-text-attention;
-    .tags .is-dark {
-      background: $has-text-attention;
-      font-family: FreeSansBold;
-    }
-  }
-  .cell.isPast,
-  .cell.isPast button {
-    color: $has-text-danger;
-    .tags .is-dark {
-      background: $has-text-danger;
-      font-family: FreeSansBold;
-    }
-  }
+
   .cell:hover,
   .cell:focus {
     .tags {
@@ -289,4 +157,78 @@
       display: block;
     }
   }
+  
+  /********************/
+  /*** COLORING ***/
+  /********************/
+
+  a.button.today,
+  .cell.today {
+    color: $has-text-danger;
+    .tags .is-dark {
+      background: $has-text-danger;
+      font-family: FreeSansBold;
+    }
+  }
+  a.button.tomorrow,
+  .cell.tomorrow {
+    color: $has-text-attention ;
+    .tags .is-dark {
+      background: $has-text-attention;
+      font-family: FreeSansBold;
+    }
+  }
+  a.button.past,
+  .cell.past {
+    color: $has-text-danger;
+    .tags .is-dark {
+      background: $has-text-danger;
+      font-family: FreeSansBold;
+    }
+  }
+
+  /********************/
+  /*** GROUP HEADER ***/
+  /********************/
+
+  .group {
+    font-family: FreeSansBold;
+    font-size: 1.2em;
+    min-height: 1em;
+    margin-top: 1.5em 0 0.5em 0;
+    border: none;
+    a.button {
+      font-family: inherit;
+      height: auto;
+      line-height: auto;
+      padding: 0;
+      cursor: default;
+      text-align: left;
+    }
+    .cell {
+      margin-top: 1em;
+      padding: 0;
+    }
+  }
+  .group.past a.button {
+    color: $has-text-danger;
+  }
+  .group.priority {
+    a {
+      font-size: 1.1em;
+      padding: 0.15em 0.5em;
+    }
+    .cell {
+      margin-bottom: 0.5em;
+    }
+  }
+  .group.projects,
+  .group.contexts {
+    a.button {
+      padding: 0 0.5em;
+    }
+  }
+}
+#todoTable.is-active {
+  display: block;
 }

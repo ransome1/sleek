@@ -13,17 +13,27 @@
 //  GENERAL MODAL
 //  ####################################
 
-.modal.is-active {
-  display: flex!important;
+/*.modal.is-active {
+  display: flex;
+}*/
+.modal {
+  .modal-content,
+  .modal-card {
+    width: 85%;
+    max-width: 900px;
+  }
 }
 .modal.content {
   z-index: 60;
-  margin: 0 !important;
+  margin: 0;
   h3 {
     font-family: "FreeSansBold";
     font-size: 1.7em;
     font-weight: normal;
-    margin-top: 0.5em;
+    margin-top: 0;
+  }
+  h5 {
+    margin: 0.75em 0;
   }
   p {
     display: block;
@@ -39,18 +49,20 @@
     border: none;
   }
   select {
-    background: white!important;
+    background: white;
   }
-  code {
-    background: transparent;
-    padding: 0;
+  code, pre {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    background: $mid-grey;
+    color: $dark-grey;
+    border-radius: $radius;
   }
   .delete,
   .modal-close {
-    background: $has-text-link !important;
-    color: $has-text-link !important;
+    background: $has-text-link ;
+    color: $has-text-link ;
     z-index: 60;
-    position: absolute !important;
+    position: absolute ;
   }
   .modal-card {
     z-index: 60;
@@ -58,17 +70,25 @@
     padding: 0 2em 2em 2em;
     max-height: calc(100vh - 5em);
     border-radius: $radius;
+    .is-active {
+      display: block;
+    }
   }
   .modal-card-body {
     background: none;
     display: none;
+    padding: 0 1em;
     ul li a {
       text-decoration: underline;
+    }
+    table tr th,
+    table tr td {
+      padding: 0;
     }
     table.settings {
       tr {
         td {
-          padding-top: 1em!important;
+          padding-top: 1em;
           .alert {
             position: absolute;
             top: 1em;
@@ -82,7 +102,7 @@
         td:nth-child(even) {
           width: auto;
           text-align: center;
-          padding-right: 0 !important;
+          padding-right: 0;
         }
       }
     }
@@ -102,7 +122,7 @@
       }
       td {
         .tag {
-          font-size: 1em !important;
+          font-size: 1em;
         }
       }
     }
@@ -125,6 +145,12 @@
   }
 }
 
+#modalChangeFile {
+  table tr td:last-child {
+    width: 1em;
+  }
+}
+
 #modalForm[open]:not(:focus-within) {
   background-color: rgb(255, 255, 254);
   transition: background-color 0.01s;
@@ -132,19 +158,18 @@
 #modalForm {
   #modalFormInput {
     z-index: 60;
-    padding-right: 3em;
+    padding-right: 2em;
   }
   textarea {
     min-height: 5.5em;
     overflow: hidden;
     resize: none;
-    padding-top: 1.5em;
   }
   #modalFormInputResize {
     position: absolute;
     z-index: 60;
-    top: 1.75em;
-    right: 1.2em;
+    top: 2.3em;
+    right: 2.3em;
     cursor: pointer;
     pointer-events: all;
     i {
@@ -152,13 +177,30 @@
       color: $has-text-link;
     }
   }
-  .icon {
+  i {
     color: $has-text-link;
   }
   .field {
     width: auto;
+    height: 2.5em;
+    line-height: 2.5em;
     float: left;
     margin: .5em .5em .5em 0;
+    input,
+    select {
+      background-color: transparent;
+    }
+    /*input:focus-visible,
+    select:focus-visible {
+      background-color: $light-grey;
+    }*/
+    #datePickerResult {
+      color: $darker-grey;
+    }
+    .prefix {
+      color: $has-text-link;
+      font-family: "FreeSansBold";
+    }
   }
   .message {
     display: none;
@@ -173,6 +215,12 @@
     border-bottom-right-radius: $radius;
     border-bottom-left-radius: $radius;
     background: $almost-white;
+    code, pre {
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      background: $mid-grey;
+      color: $dark-grey;
+      border-radius: $radius;
+    }
     section {
       max-height: 25em;
       overflow-y: scroll;
@@ -195,6 +243,9 @@
       font-size: 1.25em;
       margin: 0 0 0.75em 0;
     }
+  }
+  #autoCompleteContainer.is-active {
+    display: block;
   }
   #autoCompleteContainer.card {
     height: auto;

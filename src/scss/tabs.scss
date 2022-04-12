@@ -60,21 +60,24 @@
   flex-shrink: 0;
   margin-bottom: 0;
   ul {
-    border: none!important;
-    li a {
-      color: $dark-grey!important;
-      border-color: $mid-grey!important;
-      border-width: 2px;
-      margin-bottom: 0;
-      border-top-right-radius: $radius;
-      border-top-left-radius: $radius;
+    border: none;
+    li {
+      a {
+        border-width: 2px;
+        margin-bottom: 0;
+        border-top-right-radius: $radius;
+        border-top-left-radius: $radius;
+      }
+      a:hover {
+        border-color: $dark-grey;
+      }
+      a:focus-visible {
+        border-color: $dark-grey;
+      }
     }
     li.is-active a {
-      color: $has-text-link!important;
-      border-color: $has-text-link!important;
-    }
-    li a:focus-visible {
-      background: $mid-grey!important;
+      color: $has-text-link;
+      border-color: $has-text-link;
     }
   }
 }

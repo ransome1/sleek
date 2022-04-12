@@ -1,217 +1,166 @@
 "use strict";
-
 let 
-  a0,
-  appData, 
-  helper,
-  translations, 
-  onboarding,
+  appData,
+  events,
   filters,
-  userData,
-  todos;
-function getUserData() {
-  try {
-    window.api.send("userData");
-    return new Promise(function(resolve) {
-      return window.api.receive("userData", function(data) {
-        resolve(data);
-      });
-    });
-  } catch(error) {
-    error.functionName = getUserData.name;
-    return Promise.reject(error);
-  }
-}
-function setUserData(key, value) {
+  helper,
+  keyboard,
+  matomo,
+  messages,
+  onboarding,
+  todos,
+  translations,
+  userData;
+
+async function setUserData(key, value) {
   try {
     userData[key] = value;
-    // don't persist any data in test
-    if(appData.environment === "testing") {
-      console.log("Info: In testings no user data will be persisted");
-      return Promise.resolve();
-    }
-    window.api.send("userData", [key, value]);
-    return Promise.resolve("Success: Config (" + key + ") persisted");
+    userData = await window.api.invoke("userData", [key, value]);
+    return Promise.resolve("Success: User data persisted for " + key + " with value: " + value);
   } catch(error) {
     error.functionName = setUserData.name;
     return Promise.reject(error);
   }
 }
-function getAppData() {
-  try {
-    window.api.send("appData");
-    return new Promise(function(resolve) {
-      return window.api.receive("appData", (data) => {
-        resolve(data);
-      });
-    });
-  } catch(error) {
-    error.functionName = getAppData.name;
-    return Promise.reject(error);
-  }
-}
-function getTranslations() {
-  try {
-    window.api.send("translations");
-    return new Promise(function(resolve) {
-      return window.api.receive("translations", function(data) {
-        resolve(data);
-      });
-    });
-  } catch(error) {
-    error.functionName = getUserData.name;
-    return Promise.reject(error);
-  }
-}
-async function startBuilding(loadAll) {
-  try {
+async function buildTable(fileContent, loadAll) {
+
+    // start timer for table
     const t0 = performance.now();
-    todos.items.filtered = await filters.filterItems(todos.items.objects);
-    await filters.generateFilterData();
-    const groups = await todos.generateGroups(todos.items.filtered);
-    userData = await getUserData();
-    await todos.generateTable(groups, loadAll);
-    await helper.configureMainView();
-    window.api.send("update-badge", helper.getBadgeCount());
-    console.info("Table build:", performance.now() - t0, "ms");
-  } catch(error) {
-    error.functionName = startBuilding.name;
-    return Promise.reject(error);
-  }
+
+    // refresh user data on each build
+    userData = await window.api.invoke("userData");
+
+    await todos.generateTodoTxtObjects(fileContent).then(function(response) {
+      console.log(response)
+    }).catch(function(error) {
+      helper.handleError(error);
+    })
+
+    //in case something is wrong with the items object, build process is interrupted
+    if(typeof todos.items !== "object") throw(new Error("Info: No todo.txt data found, starting onboarding"))
+
+    // apply persisted filters and update object key "filtered"
+    filters.applyFilters().then(function(response) {
+      console.log(response)
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    // if there is a queryString, we pass it on for additional filtering
+    const queryString = document.getElementById("todoTableSearch").value;
+    if(queryString.length > 0) filters.applySearchInput(queryString).then(function(response) {
+      console.log(response)
+    }).catch(function(error) {
+      helper.handleError(error);
+    })
+    
+    // build the filters in drawer and autocomplete container
+    await filters.generateFilterData().then(function(response) {
+      console.log(response)
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    // once we have the filtered objects, we can adjust the gui
+    helper.setupInterface().then(function(response) {
+      console.log(response)
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    // Group filtered todo.txt objects and add them to items object
+    todos.generateGroupedObjects().then(function(response) {
+      console.log(response);
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    // finally build the table based on filtered (and grouped) data 
+    return todos.generateTable(loadAll).then(function() {
+      return Promise.resolve("Success: Table build in " + (performance.now() - t0) + "ms");
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
 }
-window.onload = async function () {
-  a0 = performance.now();
-  userData = await getUserData();
-  appData = await getAppData();
-  translations = await getTranslations();
-  todos = await import("./js/todos.mjs");
-  filters = await import("./js/filters.mjs");
-  const keyboard = await import("./js/keyboard.mjs");
-  helper = await import("./js/helper.mjs");
-  const events = await import("./js/events.mjs");
-  const messages = await import("./js/messages.mjs");
-  onboarding = await import("./js/onboarding.mjs");
-  if(userData.files && userData.files.length > 0 && helper.getActiveFile()) {
-    window.api.send("startFileWatcher", [helper.getActiveFile(), 0]);
-  } else {
-    onboarding.showOnboarding(true).then(function(response) {
+
+window.onload = async function() {
+  try {
+    // start timer for app
+    const a0 = performance.now();
+
+    userData = await window.api.invoke("userData");
+
+    appData = await window.api.invoke("appData");
+
+    translations = await window.api.invoke("translations");
+
+    await import("./js/ipc.mjs");
+    
+    onboarding = await import("./js/onboarding.mjs");
+    helper = await import("./js/helper.mjs");
+    todos = await import("./js/todos.mjs");
+    filters = await import("./js/filters.mjs");
+    
+    import("./js/navigation.mjs");
+    import("./js/search.mjs");
+
+    // if active file is available, ask main process to start a file watcher
+    if(helper.getActiveFile()) {
+      const activeFile = helper.getActiveFile();
+      window.api.send("startFileWatcher", activeFile);
+    // or start onboarding
+    } else {
+      onboarding.showOnboarding(true).then(function(response) {
+        console.info(response);
+      }).catch(function(error) {
+        helper.handleError(error);
+      });
+    }
+
+    messages = await import("./js/messages.mjs");
+    messages.checkDismissedMessages().then(function(response) {
       console.info(response);
     }).catch(function(error) {
       helper.handleError(error);
     });
-  }
-  helper.setTheme().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    helper.handleError(error);
-  });
-  messages.checkDismissedMessages().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    helper.handleError(error);
-  });
-  events.register().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    helper.handleError(error);
-  });
-  keyboard.registerShortcuts().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    helper.handleError(error);
-  });
-  import("./js/navigation.mjs");
-  import("./js/search.mjs");
-  const matomo = await import("./js/matomo.mjs");
-  matomo.configureMatomo().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    helper.handleError(error);
-  });
-  console.info("App build:", performance.now() - a0, "ms");
-}
-window.api.receive("triggerFunction", async (name, args) => {
-  try {
-    if(!args) args = new Array;
-    switch (name) {
-      case "showOnboarding":
-        onboarding.showOnboarding(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-      case "showForm":
-        var form = await import("./js/form.mjs");
-        form.show(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-      case "resetModal":
-        helper.resetModal(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-      case "archiveTodos":
-        var prompt = await import("./js/prompt.mjs");
-        prompt.getConfirmation(todos.archiveTodos, translations.archivingPrompt);
-        break;
-      case "showDrawer":
-        var drawer = await import("./js/drawer.mjs");
-        drawer.show(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-      case "handleError":
-        helper.handleError(...args);
-        break;
-      case "resetFilters":
-        filters.resetFilters(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-      case "toggle":
-        var view = await import("./js/view.mjs");
-        view.toggle(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-      case "showContent":
-        var content = await import("./js/content.mjs");
-        content.showContent(args[0]).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-      case "setTheme":
-        helper.setTheme(...args).then(function(response) {
-          console.info(response);
-        }).catch(function(error) {
-          helper.handleError(error);
-        });
-        break;
-    }
+
+    events = await import("./js/events.mjs");
+    events.registerEvents().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    // load keyboard shortcuts
+    keyboard = await import("./js/keyboard.mjs");
+    keyboard.registerShortcuts().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    // handle matomo tracking at last
+    matomo = await import("./js/matomo.mjs");
+    matomo.configureMatomo().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    helper.initialSetupInterface().then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      helper.handleError(error);
+    });
+
+    // stop timer for app
+    console.info("App built in", performance.now() - a0, "ms");
+
   } catch(error) {
-    error.functionName = "triggerFunction";
+    error.functionName = window.onload;
     return Promise.reject(error);
-  }
-});
-window.api.receive("refresh", async (args) => {
-  todos.generateItems(args[0]).then(function() {
-    startBuilding(args[1]);
-  }).catch(function(error) {
-    helper.handleError(error);
-  });
-});
-export { setUserData, startBuilding, userData, appData, translations };
+  }    
+}
+
+export { setUserData, buildTable, userData, appData, translations };

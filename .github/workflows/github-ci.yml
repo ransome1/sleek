@@ -1,4 +1,4 @@
-name: Code scan, build & release
+name: Build & release
 on:
   push:
     tags:
@@ -19,6 +19,11 @@ jobs:
           node-version: 14
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLEID: ${{ secrets.APPLEID }}
+          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
         with:
           max_attempts: 3
           github_token: ${{ secrets.github_token }}
@@ -37,9 +42,6 @@ jobs:
         with:
           node-version: 14
       - name: Run Electron Builder
-        env:
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           max_attempts: 3
@@ -64,51 +66,3 @@ jobs:
           max_attempts: 3
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-  njsscan:
-    name: njsscan
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-    - name: nodejsscan scan
-      id: njsscan
-      uses: ajinabraham/njsscan-action@master
-      with:
-        args: '. --sarif --output results.sarif || true'
-    - name: Upload njsscan report
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: results.sarif
-  codeql:
-    needs: njsscan
-    name: CodeQL
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript' ]
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: ${{ matrix.language }}
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
-  mirror:
-    name: Mirror code to opencode.net
-    runs-on: ubuntu-latest
-    needs: codeql
-    steps:                                              # <-- must use actions/checkout@v2 before mirroring!
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - uses: pixta-dev/repository-mirroring-action@v1
-      with:
-        target_repo_url:
-          git@www.opencode.net:ransome/sleek.git
-        ssh_private_key:                                # <-- use 'secrets' to pass credential information.
-          ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}

@@ -1,4 +1,7 @@
+"use strict";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
+import { convertDate } from "./date.mjs";
+import { addIntervalToDate } from "./recurrences.mjs";
 
 function RecExtension() {
 	this.name = "rec";
@@ -21,24 +24,53 @@ function SugarDueExtension() {
 SugarDueExtension.prototype = new TodoTxtExtension();
 SugarDueExtension.prototype.parsingFunction = function (line) {
 
-	var dueDate = null;
-	var indexDueKeyword = line.indexOf("due:");
+	var relativeDateRegEx = /due:(\d+[dwm])/;
+	var relativeDatMatch = relativeDateRegEx.exec(line)
 
-	// Find keyword due
-	if (indexDueKeyword >= 0) {
-		var stringAfterDue = line.substr(indexDueKeyword + 4)
-		var words = stringAfterDue.split(" ");
-		var match = null;
+	if ( relativeDatMatch !== null) {
+		var dueDate = resolveRelativeDate(relativeDatMatch[1]);
 
-		// Try to parse a valid date until the end of the text
-		for (var i = Math.max(5, words.length); i > 0; i--) {
-			match = words.slice(0, i).join(" ");
-			dueDate = Sugar.Date.create(match, {future: true});
-			if (Sugar.Date.isValid(dueDate)) {
-				return [dueDate, line.replace("due:" + match, ''), Sugar.Date.format(dueDate, '%Y-%m-%d')];
+		return [dueDate, line.replace(relativeDateRegEx, ''), convertDate(dueDate)];
+	}
+	else
+	{
+		var dueDate = null;
+		var indexDueKeyword = line.indexOf("due:");
+	
+		// Find keyword due
+		if (indexDueKeyword >= 0) {
+			var stringAfterDue = line.substr(indexDueKeyword + 4)
+			var words = stringAfterDue.split(" ");
+			var match = null;
+	
+			// Try to parse a valid date until the end of the text
+			for (var i = Math.max(5, words.length); i > 0; i--) {
+				match = words.slice(0, i).join(" ");
+				dueDate = Sugar.Date.create(match, {future: true});
+				if (Sugar.Date.isValid(dueDate)) {
+					return [dueDate, line.replace("due:" + match, ''), Sugar.Date.format(dueDate, '%Y-%m-%d')];
+				}
 			}
 		}
 	}
+	return [null, null, null];
+};
+
+function PriExtension() {
+	this.name = "pri";
+}
+PriExtension.prototype = new TodoTxtExtension();
+PriExtension.prototype.parsingFunction = function (line) {
+
+	var pri = null;
+	var priRegex = /pri:([A-Z])/i;
+	var matchPri = priRegex.exec(line);
+
+	if ( matchPri !== null ) {
+		pri = matchPri[1];
+		return [pri, line.replace(priRegex, ''), matchPri[1]];
+	}
+
 	return [null, null, null];
 };
 
@@ -47,15 +79,34 @@ function ThresholdExtension() {
 }
 ThresholdExtension.prototype = new TodoTxtExtension();
 ThresholdExtension.prototype.parsingFunction = function (line) {
-	var thresholdDate = null;
-	var thresholdRegex = /t:([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\s*/;
-	var matchThreshold = thresholdRegex.exec(line);
-	if ( matchThreshold !== null ) {
-		var datePieces = matchThreshold[1].split('-');
-		thresholdDate = new Date( datePieces[0], datePieces[1] - 1, datePieces[2] );
-		return [thresholdDate, line.replace(thresholdRegex, ''), matchThreshold[1]];
+
+	var relativeDateRegEx = /t:(\d+[dwm])/;
+	var relativeDatMatch = relativeDateRegEx.exec(line)
+
+	if ( relativeDatMatch !== null) {
+		var thresholdDate = resolveRelativeDate(relativeDatMatch[1]);
+
+		return [thresholdDate, line.replace(relativeDateRegEx, ''), convertDate(thresholdDate)];
+	}
+	else {
+		var thresholdDate = null;
+		var thresholdRegex = /t:([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\s*/;
+		var matchThreshold = thresholdRegex.exec(line);
+		if ( matchThreshold !== null ) {
+			var datePieces = matchThreshold[1].split('-');
+			thresholdDate = new Date( datePieces[0], datePieces[1] - 1, datePieces[2] );
+			return [thresholdDate, line.replace(thresholdRegex, ''), matchThreshold[1]];
+		}
 	}
 	return [null, null, null];
 };
 
-export { RecExtension, SugarDueExtension, ThresholdExtension };
+function resolveRelativeDate(relativeDate) {
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    var unit = relativeDate.slice(-1);
+    var increment = parseInt(relativeDate.slice(0, -1));
+    return addIntervalToDate(today, increment, unit);
+}
+
+export { RecExtension, SugarDueExtension, ThresholdExtension, PriExtension };

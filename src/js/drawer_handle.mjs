@@ -6,7 +6,7 @@ import { userData, setUserData } from "../render.js";
 // ########################################################################################################################
 export const getHandleElement = document.getElementById("handle");
 const getResizeableElement = () => { return document.getElementById("drawerContainer"); };
-const minPaneSize = 400;
+const minPaneSize = 450;
 const maxPaneSize = document.body.clientWidth * .75
 const setPaneWidth = (width) => {
   getResizeableElement().style.setProperty("--resizeable-width", `${width}px`);
@@ -31,10 +31,12 @@ export const startDragging = (event) => {
       document.body.removeEventListener("pointermove", mouseDragHandler);
       return;
     }
-    const paneOriginAdjustment = "left" === "right" ? 1 : -1;
+    const paneOriginAdjustment = -1;
     setPaneWidth((xOffset - moveEvent.pageX ) * paneOriginAdjustment + startingPaneWidth);
   };
   document.body.addEventListener("pointermove", mouseDragHandler);
 };
 getResizeableElement().style.setProperty("--max-width", `${maxPaneSize}px`);
 getResizeableElement().style.setProperty("--min-width", `${minPaneSize}px`);
+
+getHandleElement.addEventListener("mousedown", startDragging);

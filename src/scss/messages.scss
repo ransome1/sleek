@@ -1,0 +1,41 @@
+#messages {
+  max-width: 25em;
+  min-width: 15em;
+  position: fixed;
+  right: 2em;
+  bottom: 1em;
+  margin: 0 0 0 2em;
+  z-index: 45;
+  .message {
+    display: none;
+    .message-body .brands i {
+      font-size: 2.25em;
+      margin-right: .2em;
+      color: $has-text-link;
+    }
+  }
+  .message.is-active {
+    display: block;
+  }
+  .message.review {
+    table tr td {
+      text-align: center;
+      a {
+        display: block;
+        i {
+          font-size: 2em;
+          color: $has-text-link;
+        }
+      }
+    }
+  }
+  button {
+    margin-top: .5em;
+  }
+  .message-body p {
+    margin-bottom: .5em;
+  }
+  .notification.is-danger {
+    background-color: $has-text-danger;
+  }
+}

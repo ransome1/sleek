@@ -1,53 +1,72 @@
 "use strict";
 
-export function createModalJail(modal) {
-  // add all the elements inside modal which you want to make focusable
-  let currentElement = 0;
-  const focusableElements = '[tabindex]:not([tabindex="-1"])';
-  const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
-  const focusableContent = modal.querySelectorAll(focusableElements);
-  const lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
+// counts all tabable elements
+// limits tabbing to those elements until modal is closed
+// works also backwards using shift + tab
+// loops when finished
+export function createModalJail(modal, arrowUpDown, arrowRightLeft) {
+  try {
 
-  firstFocusableElement.focus();
+    if(typeof modal !== "object") return Promise.resolve("Info: No modal passed, can't create jail");
 
-  document.addEventListener("keydown", function(event) {
-    const isInputFocused = document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput";
-    // interrupt with any other key is pressed
-    if (!isInputFocused) {
-      // setup navigation with arrow keys
-      // move focus down using arrow key down
-      if(event.keyCode === 40 || event.keyCode === 39) {
-        // stop if end of todos is reached
-        if(currentElement >= focusableContent.length-1) return false;
-        currentElement++;
-        let row = focusableContent[currentElement];
-        row.focus();
+    const 
+      focusableElements = "[tabindex=\"0\"]:not([tabindex=\"-1\"])",
+      focusableContent = modal.querySelectorAll(focusableElements),
+      firstFocusableElement = modal.querySelectorAll(focusableElements)[0],
+      lastFocusableElement = focusableContent[focusableContent.length - 1],
+      excludeModalFromArrowKeys = ["modalForm"];
+
+    // add focus on the first focusable element
+    firstFocusableElement.focus();
+
+    modal.onkeydown = function(event) {
+
+      // if arrow down key is pressed
+      // we don't want this behaviour in modalForm
+      if((arrowUpDown && event.key === "ArrowDown") || (arrowRightLeft && event.key === "ArrowRight") && excludeModalFromArrowKeys.indexOf(modal.id) === -1) { 
+        const focusedElementIndex = Array.prototype.indexOf.call(focusableContent, document.activeElement);
+        // stop when the last element is reached and focus the first one
+        if((focusedElementIndex + 1) === focusableContent.length) {
+          firstFocusableElement.focus();
+          return false;
+        }
+        focusableContent[focusedElementIndex + 1].focus();
         return false;
       }
-      // move focus up using arrow key up
-      if(event.keyCode === 38 || event.keyCode === 37) {
-        if(currentElement === 0) return false;
-        currentElement--;
-        let row = focusableContent[currentElement];
-        row.focus();
+
+      // if arrow up key is pressed
+      // we don't want this behaviour in modalForm
+      if((arrowUpDown && event.key === "ArrowUp") || (arrowRightLeft && event.key === "ArrowLeft") && excludeModalFromArrowKeys.indexOf(modal.id) === -1) {
+        const focusedElementIndex = Array.prototype.indexOf.call(focusableContent, document.activeElement);
+        // stop if the first element is reached and focus the last one
+        if(focusedElementIndex === 0) {
+          lastFocusableElement.focus();
+          return false;
+        }
+        focusableContent[focusedElementIndex - 1].focus();
         return false;
       }
-    }
-    let isTabPressed = event.key === "Tab" || event.keyCode === 9;
-    if (!isTabPressed) {
-      return false;
-    }
-    // set the first tab
-    if (event.shiftKey) { // if shift key pressed for shift + tab combination
-      if (document.activeElement === firstFocusableElement) {
-        lastFocusableElement.focus(); // add focus for the last focusable element
-        event.preventDefault();
+
+      // if tab key and shift are pressed
+      if(event.key === "Tab" && event.shiftKey) {
+        if(document.activeElement === firstFocusableElement) {
+          lastFocusableElement.focus();
+          return false;
+        }
+
+      // if tab key is pressed
+      } else if(event.key === "Tab") {
+        if(document.activeElement === lastFocusableElement) {
+          firstFocusableElement.focus();
+          return false;
+        }
       }
-    } else { // if tab key is pressed
-      if (document.activeElement === lastFocusableElement) { // if focused has reached to last focusable element then focus first focusable element after pressing tab
-        firstFocusableElement.focus(); // add focus for the first focusable element
-        event.preventDefault();
-      }
     }
-  });
+
+    return Promise.resolve("Success: Created jail for " + modal.id);
+
+  } catch(error) {
+    error.functionName = createModalJail.name;
+    return Promise.reject(error);
+  }
 }

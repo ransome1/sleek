@@ -1,32 +1,37 @@
 "use strict";
 import { appData, userData, setUserData, translations } from "../render.js";
-import { generateGroups, items } from "./todos.mjs";
-import { isToday, isPast } from "./date.mjs";
-import { generateFileList } from "./files.mjs";
+import { generateGroupedObjects, items, generateTodoTxtObject } from "./todos.mjs";
+import { isToday, isPast, isTomorrow } from "./date.mjs";
+import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
+import { showDrawer } from "./drawer.mjs";
 import { showOnboarding } from "./onboarding.mjs";
-import { focusRow, currentRow } from "./keyboard.mjs";
 import { _paq } from "./matomo.mjs";
+import "../../node_modules/marked/marked.min.js";
 
 const body = document.getElementById("body");
 const todoContext = document.getElementById("todoContext");
 const addTodoContainer = document.getElementById("addTodoContainer");
 
-export function isModalOpen() {
-  // check if any modal is open an return boolean
-  let isModalOpen = false;
-  document.querySelectorAll(".modal, div[role=menu]").forEach(function(modal) {
-    if(modal.classList.contains("is-active")) isModalOpen = true;
-  });
-  return isModalOpen;
-}
-export function closeTodoContext() {
-  // hide the context menu
-  todoContext.classList.remove("is-active");
-  todoContext.removeAttribute("data-item");
-  // set focus on the last focused row
-  focusRow(currentRow);
-}
+marked.setOptions({
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+  sanitize: false,
+  sanitizer: false,
+  smartLists: false,
+  smartypants: false,
+  xhtml: false,
+  baseUrl: "https://"
+});
+const renderer = {
+  link(href, title, text) {
+    return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+  }
+};
+marked.use({ renderer });
+
+// TODO: check if this still works
 export function jumpToItem(item) {
   try {
     const isInViewport = function(item) {
@@ -56,43 +61,25 @@ export function jumpToItem(item) {
     return Promise.reject(error);
   }
 }
-export function setTheme(switchTheme) {
+export async function pasteItemToClipboard(item) {
   try {
-    let theme = userData.theme;
-    if(switchTheme) {
-      switch (theme) {
-        case "dark":
-        theme = "light";
-        break;
-        case "light":
-        theme = "dark";
-        break;
-        default:
-        theme = "light";
-        break;
-      }
-      window.api.send("setTheme", theme);
-      setUserData("theme", theme);
-    }
-    switch (theme) {
-      case "light":
-      body.classList.remove("dark");
-      document.getElementById("toggleDarkmode").checked = false;
-      break;
-      case "dark":
-      body.classList.add("dark");
-      document.getElementById("toggleDarkmode").checked = true;
-      break;
-    }
-    return Promise.resolve("Success: Theme set to " + theme);
+
+    window.api.send("copyToClipboard", [item.text]);
+    showGenericMessage(translations.todoCopiedToClipboard, 3);
+
+    return Promise.resolve("Success: Todo text pasted to clipboard: " + item.text);
+
   } catch(error) {
-    error.functionName = setTheme.name;
+    error.functionName = pasteItemToClipboard.name;
     return Promise.reject(error);
   }
 }
-export async function pasteItemsToClipboard(items) {
+export async function pasteItemsToClipboard() {
   try {
-    let groups = await generateGroups(items);
+
+    const todos = await import("./todos.mjs");
+    const groups = todos.items.grouped;
+
     let itemsForClipboard;
     itemsForClipboard = "Status\t";
     itemsForClipboard += "Closed\t";
@@ -144,8 +131,15 @@ export async function pasteItemsToClipboard(items) {
             itemsForClipboard += clipboardItem;
         }
     }
+    
     window.api.send("copyToClipboard", [itemsForClipboard]);
-    showGenericMessage(translations.visibleTodosCopiedToClipboard);
+
+    showGenericMessage(translations.visibleTodosCopiedToClipboard, 3).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
   } catch(error) {
     error.functionName = pasteItemsToClipboard.name;
     return Promise.reject(error);
@@ -159,6 +153,14 @@ export function getActiveFile() {
   }
   return false;
 }
+export function getDoneFile() {
+  const activeFile = getActiveFile();
+  if(appData.os==="windows") {
+    return activeFile.replace(activeFile.split("\\").pop(), activeFile.substr(0, activeFile.lastIndexOf(".")).split("\\").pop() + "_done.txt");
+  } else {
+    return activeFile.replace(activeFile.split("/").pop(), activeFile.substr(0, activeFile.lastIndexOf(".")).split("/").pop() + "_done.txt");
+  }
+}
 export function getBadgeCount() {
   let count = 0;
   items.objects.forEach((item) => {
@@ -166,123 +168,129 @@ export function getBadgeCount() {
   });
   return count;
 }
-export function resetModal(modal) {
+// one time interface setup when app is started
+export function initialSetupInterface() {
   try {
-    const modalForm = document.getElementById("modalForm");
+    // setup compact view
+    (userData.compactView) ? body.classList.add("compact") : body.classList.remove("compact");
+
+    // show or hide specific settings
+    if(appData.channel === "AppImage" || appData.os === "mac" && appData.channel !== "Mac App Store") document.getElementById("autoUpdateRow").classList.remove("is-hidden")
+
+    // set scaling factor if default font size has changed
+    document.getElementById("html").style.zoom = userData.zoom + "%";
+    document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
+    document.getElementById("zoom").value = userData.zoom;
     
-    if(modal) {
-      // remove is-active from modal
-      modal.classList.remove("is-active");
-      // remove any previously set data-item attributes
-      modal.removeAttribute("data-item");
+    // add version number to about tab in settings modal
+    document.getElementById("version").innerHTML = appData.version;
+
+    // close or open drawer on start if setting was persisted
+    if(userData.filterDrawer) {
+      const navBtnFilter = document.getElementById("navBtnFilter");
+      showDrawer(navBtnFilter).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
+    } else if(userData.viewDrawer) {
+      const navBtnView = document.getElementById("navBtnView");
+      showDrawer(navBtnView).then(function(result) {
+        console.log(result);
+      }).catch(function(error) {
+        handleError(error);
+      });
     }
-    // reset priority setting
-    document.getElementById("priorityPicker").selectedIndex = 0;
-    // if recurrence picker was open it is now being closed
-    document.getElementById("recurrencePickerContainer").classList.remove("is-active");
-    // clear previous recurrence selection
-    document.getElementById("recurrencePickerInput").value = null;
-    // if file chooser was open it is now being closed
-    document.getElementById("modalChangeFile").classList.remove("is-active");
-    // hide suggestion box if it was open
-    document.getElementById("autoCompleteContainer").classList.remove("is-active");
-    // remove focus from suggestion container
-    document.getElementById("autoCompleteContainer").blur();
-    // close
-    modalForm.classList.remove("is-active");
-    // remove the data item as we don't need it anymore
-    //modalForm.removeAttribute("data-item");
-    modalForm.setAttribute("data-item", "");
-    // clean up the modal
-    document.getElementById("modalFormAlert").parentElement.classList.remove("is-active", 'is-warning', 'is-danger');
-    // clear the content in the input field as it's not needed anymore
-    document.getElementById("modalFormInput").value = null;
-    return Promise.resolve("Info: Modal closed and cleaned up");
-  } catch (error) {
-    error.functionName = resetModal.name;
+
+    return Promise.resolve("Success: Initial interface setup completed");
+
+  } catch(error) {
+    error.functionName = initialSetupInterface.name;
     return Promise.reject(error);
   }
 }
-export function configureMainView() {
+export function setupInterface() {
   try {
-    // generate file tabs
-    generateFileList();
-    // close filterContext if open
-    if(document.getElementById("filterContext").classList.contains("is-active")) document.getElementById("filterContext").classList.remove("is-active");
-    // set scaling factor if default font size has changed
-    if(userData.zoom) {
-      document.getElementById("html").style.zoom = userData.zoom + "%";
-      document.getElementById("zoomStatus").innerHTML = userData.zoom + "%";
-      document.getElementById("zoomRangePicker").value = userData.zoom;
-    }
-    // check if compact view is suppose to be active
-    if(userData.compactView) document.getElementById("body").classList.add("compact");
-    // add version number to about tab in settings modal
-    document.getElementById("version").innerHTML = appData.version;
-    if(typeof items === "object") {
-      // jump to previously added item
-      if(document.getElementById("previousItem")) {
-        //const index 
-        document.getElementById("previousItem")
-        //helper.jumpToItem(document.getElementById("previousItem"))
-        focusRow();
-      }
-      // remove onboarding
-      showOnboarding(false).then(function(response) {
-        console.info(response);
-      }).catch(function(error) {
-        handleError(error);
-      });
-      
-      // configure table view
-      const todoTable = document.getElementById("todoTable");
-      const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
-      const noResultContainer = document.getElementById("noResultContainer");
 
-      if(items.objects.length===0) {
-        addTodoContainer.classList.add("is-active");
-        todoTableSearchContainer.classList.remove("is-active");
-        todoTable.classList.remove("is-active");
-        noResultContainer.classList.remove("is-active");
-        return Promise.resolve("Info: File is empty");
-      } else if(items.filtered.length===0) {
-        addTodoContainer.classList.remove("is-active");
-        todoTableSearchContainer.classList.add("is-active");
-        noResultContainer.classList.add("is-active");
-        return Promise.resolve("Info: No results");
-        // TODO explain
-      } else if(items.filtered.length>0) {
-        todoTableSearchContainer.classList.add("is-active");
-        addTodoContainer.classList.remove("is-active");
-        noResultContainer.classList.remove("is-active");
-        todoTable.classList.add("is-active");
-        return Promise.resolve("Info: File has content and results are shown");
-      }
+    // this happens in view drawer
+    // hide sort by container if sorting is according to file
+    const viewSortByRow = document.getElementById("viewSortByRow");
+    const sortCompletedLastRow = document.getElementById("sortCompletedLastRow");
+    if(userData.sortByFile) {
+      viewSortByRow.classList.add("is-hidden");
+      sortCompletedLastRow.classList.add("is-hidden");
     } else {
-      showOnboarding(true).then(function(response) {
+      viewSortByRow.classList.remove("is-hidden");
+      sortCompletedLastRow.classList.remove("is-hidden");
+    }
+
+    // send badge count to main process
+    window.api.send("update-badge", getBadgeCount());
+
+    // close file chooser if it's open
+    if(modalChangeFile.classList.contains("is-active")) modalChangeFile.classList.remove("is-active");
+
+    // if files are available, (re)generate tabs
+    if(userData.files && userData.files.length > 0) {
+      generateFileTabs().then(function(response) {
         console.info(response);
       }).catch(function(error) {
         handleError(error);
       });
-      return Promise.resolve("Info: No file defined");
     }
+
+    // hide onboarding if there is an active file
+    if(getActiveFile()) showOnboarding(false)
+      
+    // configure table view
+    const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
+    const noResultContainer = document.getElementById("noResultContainer");
+    const todoTable = document.getElementById("todoTable");
+
+    // empty todo file view
+    if(items.objects.length === 0) {
+      addTodoContainer.classList.add("is-active");
+      todoTableSearchContainer.classList.remove("is-active");
+      noResultContainer.classList.remove("is-active");
+      todoTable.classList.remove("is-active");
+      return Promise.resolve("Info: File is empty");
+
+    // no result view
+    } else if(items.filtered.length === 0) {
+      addTodoContainer.classList.remove("is-active");
+      todoTableSearchContainer.classList.add("is-active");
+      noResultContainer.classList.add("is-active");
+      todoTable.classList.remove("is-active");
+      return Promise.resolve("Info: No results");
+
+    // default view
+    } else if(items.filtered.length > 0) {
+      todoTableSearchContainer.classList.add("is-active");
+      addTodoContainer.classList.remove("is-active");
+      noResultContainer.classList.remove("is-active");
+      todoTable.classList.add("is-active");
+      return Promise.resolve("Info: File has content and results are shown");
+    }
+
   } catch(error) {
-    showOnboarding(true).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
-    error.functionName = configureMainView.name;
+    error.functionName = setupInterface.name;
     return Promise.reject(error);
   }
 }
 export function handleError(error) {
   try {
-    if(error) {
-      console.error(error.name +" in function " + error.functionName + ": " + error.message);
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
-    }
+
+    console.error(error);
+
+    // showGenericMessage(error).then(function(response) {
+    //   console.log(response)
+    // }).catch(function(error) {
+    //   handleError(error);
+    // });
+    
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Error", error.functionName, error])
+
   } catch(error) {
     error.functionName = handleError.name;
     return Promise.reject(error);
@@ -292,7 +300,6 @@ export function generateHash(string) {
   return string.split('').reduce((prevHash, currVal) =>
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
-
 // https://davidwalsh.name/javascript-debounce-function
 export function debounce(func, wait, immediate) {
   let timeout;
@@ -310,18 +317,123 @@ export function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 }
+export async function setDueDate(days) {
+  try {
 
-// https://bobbyhadz.com/blog/javascript-format-date-yyyy-mm-dd
-export function formatDate(date) {
-  const padTo2Digits = function(num) {
-    return num.toString().padStart(2, '0');
+    const todo = await generateTodoTxtObject(modalFormInput.value).then(response => {
+      return response;
+    }).catch(error => {
+      handleError(error);
+    });
+
+    if(days === 0) {
+      todo.due = undefined;
+      todo.dueString = undefined;
+    } else if(days && todo.due) {
+      todo.due = new Date(new Date(todo.dueString).setDate(new Date(todo.dueString).getDate() + days));
+      todo.dueString = todo.due.toISOString().substr(0, 10);
+    // when no due date is available we fallback to todays date
+    } else if(days && !todo.due) {
+      todo.due = new Date(new Date().setDate(new Date().getDate() + days));
+      todo.dueString = todo.due.toISOString().substr(0, 10);
+    }
+
+    modalFormInput.value = todo.toString();
+
+    return Promise.resolve("Success: Due date changed to " + todo.dueString)
+
+  } catch(error) {
+    error.functionName = setDueDate.name;
+    return Promise.reject(error);
   }
-  if(!!!date) {
-    return undefined;
+}
+export function getCaretPosition(element) {
+  if((element.selectionStart !== null) && (element.selectionStart !== undefined)) return element.selectionStart;
+  return false;
+}
+export function generateTodoNotification(todo) {
+  try {
+
+    // abort if user didn't permit notifications within sleek
+    if(!userData.notifications) return Promise.resolve("Info: Notification surpressed (turned off in sleek's settings)");
+
+    // check for necessary permissions
+    return navigator.permissions.query({name: "notifications"}).then(function(result) {
+    
+      // abort if user didn't permit notifications
+      if(result.state !== "granted") return Promise.resolve("Info: Notification surpressed (not permitted by OS)");
+
+      // add the offset so a notification shown today with "due tomorrow", will be shown again tomorrow but with "due today"
+      const hash = generateHash(todo.toString()) + isToday(todo.due) + isTomorrow(todo.due);
+
+      let title;
+      if(isToday(todo.due)) title = translations.dueToday;
+      if(isTomorrow(todo.due)) title = translations.dueTomorrow;
+      
+      // if notification already has been triggered once it will be discarded
+      if(userData.dismissedNotifications.includes(hash)) return Promise.resolve("Info: Notification skipped (has already been sent)");
+
+      // set options for notifcation
+      const notification = {
+        title: title,
+        body: todo.text,
+        string: todo.toString(),
+        timeoutType: "never",
+        silent: false,
+        actions: [{
+          type: "button",
+          text: "Show"
+        }]
+      }
+      // once shown, it will be persisted as hash to it won't be shown a second time
+      userData.dismissedNotifications.push(hash);
+
+      setUserData("dismissedNotifications", userData.dismissedNotifications);
+
+      window.api.send("showNotification", notification);
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo notification", "Shown"]);
+
+      return Promise.resolve("Info: Todo notification successfully sent");
+
+    });
+
+  } catch(error) {
+    error.functionName = generateNotification.name;
+    return Promise.reject(error);
   }
-  return [
-    date.getFullYear(),
-    padTo2Digits(date.getMonth() + 1),
-    padTo2Digits(date.getDate()),
-  ].join('-');
+}
+export function generateGenericNotification(title, body) {
+  try {
+    
+    // abort if user didn't permit notifications within sleek
+    if(!userData.notifications) return Promise.resolve("Info: Notification surpressed (turned off in sleek's settings)");
+
+    // check for necessary permissions
+    return navigator.permissions.query({name: "notifications"}).then(function(result) {
+    
+      // abort if user didn't permit notifications
+      if(result.state !== "granted") return Promise.resolve("Info: Notification surpressed (not permitted by OS)");
+    
+      const notification = {
+        title: title,
+        body: body,
+        timeoutType: "default",
+        silent: true
+      }
+
+      // send notification object to main process for execution
+      window.api.send("showNotification", notification);
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Generic notification", "Shown"]);
+
+      return Promise.resolve("Info: Generic notification successfully sent");
+
+    });
+  } catch(error) {
+    error.functionName = generateNotification.name;
+    return Promise.reject(error);
+  }
 }
