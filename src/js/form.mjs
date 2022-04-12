@@ -383,7 +383,6 @@ async function setPriority(priority) {
     return Promise.reject(error);
   }
 }
-
 function resetForm() {
   try {
 
