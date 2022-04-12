@@ -177,20 +177,29 @@
       color: $has-text-link;
     }
   }
-  .icon {
+  i {
     color: $has-text-link;
   }
   .field {
     width: auto;
+    height: 2.5em;
+    line-height: 2.5em;
     float: left;
     margin: .5em .5em .5em 0;
     input,
     select {
       background-color: transparent;
     }
-    input:focus-visible,
+    /*input:focus-visible,
     select:focus-visible {
       background-color: $light-grey;
+    }*/
+    #datePickerResult {
+      color: $darker-grey;
+    }
+    .prefix {
+      color: $has-text-link;
+      font-family: "FreeSansBold";
     }
   }
   .message {

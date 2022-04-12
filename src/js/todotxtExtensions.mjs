@@ -109,4 +109,4 @@ function resolveRelativeDate(relativeDate) {
     return addIntervalToDate(today, increment, unit);
 }
 
-export { RecExtension, SugarDueExtension, ThresholdExtension, resolveRelativeDate, PriExtension };
+export { RecExtension, SugarDueExtension, ThresholdExtension, PriExtension };

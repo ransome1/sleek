@@ -61,20 +61,23 @@
   margin-bottom: 0;
   ul {
     border: none;
-    li a {
-      color: $dark-grey;
-      border-color: $mid-grey;
-      border-width: 2px;
-      margin-bottom: 0;
-      border-top-right-radius: $radius;
-      border-top-left-radius: $radius;
+    li {
+      a {
+        border-width: 2px;
+        margin-bottom: 0;
+        border-top-right-radius: $radius;
+        border-top-left-radius: $radius;
+      }
+      a:hover {
+        border-color: $dark-grey;
+      }
+      a:focus-visible {
+        border-color: $dark-grey;
+      }
     }
     li.is-active a {
       color: $has-text-link;
       border-color: $has-text-link;
-    }
-    li a:focus-visible {
-      background: $mid-grey;
     }
   }
 }

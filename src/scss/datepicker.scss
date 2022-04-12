@@ -1,5 +1,4 @@
-.datepicker {
-  
+.datepicker {  
   z-index: 60;
   .datepicker-cell {
     border: 2px solid white;
@@ -60,6 +59,9 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+  .tabs {
+    margin: 0;
   }
 }
 
@@ -219,7 +221,7 @@
   line-height: 4.5rem; }
 
 .datepicker-input.in-edit {
-  border-color: #2366d1; }
+  border-color: transparent; }
 
 .datepicker-input.in-edit:active, .datepicker-input.in-edit:focus {
-  box-shadow: 0 0 0.25em 0.25em rgba(35, 102, 209, 0.2); }
+  box-shadow: none; }

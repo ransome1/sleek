@@ -254,6 +254,7 @@
     #modalForm {
       .field {
         input,
+        #datePickerResult,
         select,
         input::placeholder {
           color: white;
@@ -261,9 +262,21 @@
         select option {
           background: $even-darker-grey;
         }
-        input:focus-visible, 
+        /*input:focus-visible, 
         select:focus-visible {
           background-color: $darker-grey;
+        }*/
+        .transparentInput {
+          width: 100%!important;
+          height: 100%;
+          background: transparent;
+          border: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 30;
+          color: transparent;
+          cursor: pointer;
         }
       }
       #autoCompleteContainer {
@@ -456,22 +469,6 @@
       .card {
         background: $almost-white;
       }
-      .tabs {
-        ul {
-          border-color: transparent;
-        }
-        ul li a {
-          color: white;
-          border-color: $dark-grey;
-        }
-        ul li.is-active a {
-          color: $has-text-link;
-          border-color: $has-text-link;
-        }
-        ul li a:focus-visible {
-          background: $dark-grey;
-        }
-      }
     }
     .message.fixed {
       background: transparent;
@@ -545,6 +542,25 @@
     .notification {
       background-color: $darker-grey;
       color: $almost-white;
+    }
+    .tabs {
+      ul {
+        border-color: transparent;
+        li {
+          a {
+            color: white;
+            border-color: $dark-grey;
+          }
+          a:hover {
+            color: white;
+            border-color: $dark-grey;
+          }
+        }
+        li.is-active a {
+          color: $has-text-link;
+          border-color: $has-text-link;
+        }
+      }
     }
   }
 }

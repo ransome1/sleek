@@ -6,6 +6,7 @@ import { handleError } from "./helper.mjs";
 import { items, item, setTodoComplete, generateTodoTxtObject } from "./todos.mjs";
 import { getCaretPosition } from "./helper.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
+import { fillDatePickerInput } from "./datePicker.mjs";
 import { userData, setUserData, translations } from "../render.js";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
@@ -21,7 +22,8 @@ const todoContext = document.getElementById("todoContext");
 
 btnSave.innerHTML = translations.save;
 btnCancel.innerHTML = translations.cancel;
-datePickerInput.placeholder = translations.formSelectDueDate;
+//datePickerInput.placeholder = translations.formSelectDueDate;
+datePickerResult.innerHTML = translations.formSelectDueDate;
 
 btnItemStatus.onclick = async function() {
   try {
@@ -403,7 +405,7 @@ function resetForm() {
     priorityPicker.querySelectorAll("option")[0].selected = "selected";
 
     // empty datepicker input element
-    datePickerInput.value = null;
+    //datePickerInput.value = null;
 
     // if recurrence picker was open it is now being closed
     recurrencePickerContainer.classList.remove("is-active");
@@ -433,6 +435,8 @@ async function show(todo, templated) {
 
     // hide "complete" button
     btnItemStatus.classList.add("is-hidden");
+
+    datePickerResult.innerHTML = translations.formSelectDueDate;
 
     //
     if(todo) {
@@ -479,8 +483,9 @@ async function show(todo, templated) {
 
       // if there is a recurrence
       if(todo.rec) setInput(todo.rec)
+
       // if so we paste it into the input field
-      if(todo.dueString) datePickerInput.value = todo.dueString;
+      if(todo.due || todo.t) fillDatePickerInput(todo)
     }
     
     // resize all necessary input elements

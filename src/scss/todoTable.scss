@@ -146,18 +146,6 @@
         font-family: FreeSansBold;
       }
     }
-    .transparentInput {
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      border: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 30;
-      color: transparent;
-      cursor: pointer;
-    }
   }
 
   .cell:hover,

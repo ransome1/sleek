@@ -394,25 +394,31 @@ function generateTableRow(todo) {
     }
     
     // check for and add a given due date
-    if(todo.due) {
-      let dateFieldContent = convertDate(todo.due);
+    if(todo.due || todo.t) {
       
-      if(isToday(todo.due)) {
-        todoTableBodyCellDueDate.classList.add("today");
-        dateFieldContent = translations.today;
-      } else if(isTomorrow(todo.due)) {
-        todoTableBodyCellDueDate.classList.add("tomorrow");
-        dateFieldContent = translations.tomorrow;
-      } else if(isPast(todo.due)) {
-        todoTableBodyCellDueDate.classList.add("past");
-      }
+      todoTableBodyCellDueDate.innerHTML = `<i class="fa-solid fa-clock"></i>`;
 
-      todoTableBodyCellDueDate.innerHTML = `
-        <i class="fa-solid fa-clock"></i>
+      let dateFieldContent;
+      if(todo.due) {
+        dateFieldContent = convertDate(todo.due);
+        todoTableBodyCellDueDate.innerHTML += `
         <div class="tags has-addons">
           <span class="tag">due:</span><span class="tag is-dark">${dateFieldContent}</span>
         </div>
         <i class="fas fa-sort-down"></i>`;
+      }
+      
+      if(todo.due && isToday(todo.due)) {
+        todoTableBodyCellDueDate.classList.add("today");
+        dateFieldContent = translations.today;
+      } else if(todo.due && isTomorrow(todo.due)) {
+        todoTableBodyCellDueDate.classList.add("tomorrow");
+        dateFieldContent = translations.tomorrow;
+      } else if(todo.due && isPast(todo.due)) {
+        todoTableBodyCellDueDate.classList.add("past");
+      }
+
+
 
       // ugly workaround so datepicker does not fallback to inline mode
       const todoTableBodyCellDueDateHiddenInput = document.createElement("input");
@@ -440,10 +446,10 @@ function generateTableRow(todo) {
     }
 
     // add threshold date icon
-    if(todo.t) {
-      todoTableBodyCellTDate.innerHTML = `<i class="fa-regular fa-clock"></i>`
-      todoTableBodyRow.appendChild(todoTableBodyCellTDate);
-    }
+    // if(todo.t) {
+    //   todoTableBodyCellTDate.innerHTML = `<i class="fa-regular fa-clock"></i>`
+    //   todoTableBodyRow.appendChild(todoTableBodyCellTDate);
+    // }
 
     // TODO: Add recurrence picker function
     // add recurrence icon

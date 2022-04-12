@@ -6,9 +6,6 @@
   bottom: 1em;
   margin: 0 0 0 2em;
   z-index: 45;
-  i {
-    color: $has-text-link;
-  }
   .message {
     display: none;
     .message-body .brands i {
@@ -16,6 +13,9 @@
       margin-right: .2em;
       color: $has-text-link;
     }
+  }
+  .message.is-active {
+    display: block;
   }
   .message.review {
     table tr td {

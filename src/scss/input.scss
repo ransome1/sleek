@@ -3,7 +3,8 @@
 input[type="number"],
 .button:focus, .button.is-focused,
 .select select, .textarea, .input,
-.select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input {
+.select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input,
+.transparentInput {
   border: none;
   box-shadow: none;
   outline: none;
@@ -44,4 +45,16 @@ input.is-medium.input {
 .select:not(.is-multiple):not(.is-loading)::after,
 .select:not(.is-multiple):not(.is-loading):hover::after {
   border-color: $has-text-link;
+}
+.transparentInput {
+  width: 100%!important;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  color: transparent;
+  cursor: pointer;
 }
