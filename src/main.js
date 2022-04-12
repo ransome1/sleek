@@ -499,73 +499,70 @@ function configureWindowEvents() {
 }
 function setupTray() {
   mainWindow
-    .on("minimize",function(event){
-      event.preventDefault();
-      mainWindow.hide();
-    })
     .on("close", function (event) {
-      if(!app.isQuiting){
-        event.preventDefault();
-        mainWindow.hide();
-      }
-      return false;
+      event.preventDefault();
+      if(app.isQuiting) return false;
+      mainWindow.hide();
+      app.dock.hide();
     })
-    .setSkipTaskbar(true);
+    .on("show", function () {
+      app.dock.show();
+    })
 
   const trayIcon = (appData.os === "windows") ? path.join(appData.path, "../assets/icons/tray/tray.ico") : path.join(appData.path, "../assets/icons/tray/tray.png");
   tray = new Tray(trayIcon);
 
-  let trayFiles = new Array;
   
-  // build file selection
-  if(userData.data.files && userData.data.files.length > 1) {
-    userData.data.files.forEach((file) => {
-      const menuItem = {
-        label: file[1],
-        type: "radio",
-        checked: false,
+  
+  tray.on("click", function() {
+
+    let trayFiles = new Array;
+  
+    // build file selection
+    if(userData.data.files && userData.data.files.length > 1) {
+      userData.data.files.forEach((file) => {
+        const menuItem = {
+          label: file[1],
+          type: "radio",
+          checked: false,
+          click: function() {
+            startFileWatcher(file[1]);
+            mainWindow.show();
+            mainWindow.setSkipTaskbar(true);
+          }
+        }
+        if(file[0]) menuItem.checked = true;
+        trayFiles.push(menuItem)
+      });
+      trayFiles.push({ type: "separator" });
+    }
+
+    const contextMenu = [
+      {
+        label: translations.windowButtonOpenFile,
         click: function() {
-          startFileWatcher(file[1]);
           mainWindow.show();
-          mainWindow.setSkipTaskbar(true);
+        }
+      },
+      {
+        label: translations.addTodo,
+        click: function() {
+          mainWindow.show();
+          mainWindow.webContents.send("triggerFunction", "showForm")
+        }
+      },
+      { type: "separator" },
+      {
+        label: translations.close,
+        click: function() {
+          app.exit();
         }
       }
-      if(file[0]) menuItem.checked = true;
-      trayFiles.push(menuItem)
-    });
-    trayFiles.push(
-      { type: "separator" },
-    );
-  }
-  const contextMenu = [
-    {
-      label: translations.windowButtonOpenFile,
-      click: function() {
-        mainWindow.show();
-      }
-    },
-    {
-      label: translations.addTodo,
-      click: function() {
-        mainWindow.show();
-        mainWindow.webContents.send("triggerFunction", "showForm")
-      }
-    },
-    { type: "separator" },
-    {
-      label: translations.close,
-      click: function() {
-        app.exit();
-      }
-    }
-  ]
-  let menu = (trayFiles.length > 0) ? Menu.buildFromTemplate(trayFiles.concat(contextMenu)) : Menu.buildFromTemplate(contextMenu)
-  tray.setContextMenu(menu)
-  tray.setToolTip("sleek")
-  tray.on("click", function() {
-    // don't do this on MacOS
-    //if(appData.os === "mac") return false;
-    mainWindow.show();
+    ]
+    let menu = (trayFiles.length > 0) ? Menu.buildFromTemplate(trayFiles.concat(contextMenu)) : Menu.buildFromTemplate(contextMenu)
+    this.setContextMenu(menu)
+    this.setToolTip("sleek")
+    mainWindow.show()
   });
 }
 
@@ -652,7 +649,7 @@ async function createWindow() {
         label: "Quit",
         accelerator: "CmdOrCtrl+Q",
         click: function() {
-          app.quit();
+          app.exit();
         }
       }]
     }
@@ -837,7 +834,7 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
   app.on("ready", () => {
 
     // in tray mode, dock icon is hidden
-    if(userData.data.tray) app.dock.hide()
+    //if(userData.data.tray) app.dock.hide()
 
     // setup autoupdater for AppImage build
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdaterAppImage.checkForUpdatesAndNotify()

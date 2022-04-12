@@ -18,7 +18,7 @@
       color: white;
     }
 
-    a:hover, a:active, a:focus {
+    a, a:hover, a:active, a:focus {
       color: $has-text-link;
     }
 
@@ -26,7 +26,7 @@
       background-color: transparent;
     }
 
-    .button:focus:not(:active), .button.is-focused:not(:active), .button:active, .button.is-active, input[type=number], .button:focus, .button.is-focused, .select select, .textarea, .input, .select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input {
+    button, .button:focus:not(:active), .button.is-focused:not(:active), .button:active, .button.is-active, input[type=number], .button:focus, .button.is-focused, .select select, .textarea, .input, .select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input {
       background: $darker-grey;
       border: none;
       color: white;
@@ -50,8 +50,8 @@
       background: $almost-white;
     }
     button:focus-visible {
-      color: $almost-white;
-      background: $darker-grey;
+      color: white;
+      background: $has-text-link;
     }
     table {
       width: 100%;

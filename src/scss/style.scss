@@ -92,8 +92,8 @@ a:focus {
 
 button {
   font-size: 1em;
-  color: white;
-  background-color: $has-text-link;
+  color: $has-text-link;
+  background-color: white;
   border: none;
   border-radius: $radius;
   outline: none;
@@ -106,7 +106,7 @@ button {
 }
 button:focus-visible {
   color: white;
-  background-color: $dark-grey;
+  background-color: $has-text-link;
   i {
     color: inherit;
   }

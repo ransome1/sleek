@@ -17,13 +17,13 @@ body select {
     background: transparent;
     color: white;
   }
-  body a:hover, body a:active, body a:focus {
+  body a, body a:hover, body a:active, body a:focus {
     color: #3273dc;
   }
   body .button {
     background-color: transparent;
   }
-  body .button:focus:not(:active), body .button.is-focused:not(:active), body .button:active, body .button.is-active, body input[type=number], body .button:focus, body .button.is-focused, body .select select, body .textarea, body .input, body .select select:focus, body .textarea:focus, body .input:focus, body .select select.is-focused, body .is-focused.textarea, body .is-focused.input, body .select select:active, body .textarea:active, body .input:active, body .select select.is-active, body .is-active.textarea, body .is-active.input {
+  body button, body .button:focus:not(:active), body .button.is-focused:not(:active), body .button:active, body .button.is-active, body input[type=number], body .button:focus, body .button.is-focused, body .select select, body .textarea, body .input, body .select select:focus, body .textarea:focus, body .input:focus, body .select select.is-focused, body .is-focused.textarea, body .is-focused.input, body .select select:active, body .textarea:active, body .input:active, body .select select.is-active, body .is-active.textarea, body .is-active.input {
     background: #2d2d2d;
     border: none;
     color: white;
@@ -46,8 +46,8 @@ body input[type=range]:focus {
     background: #f0f0f0;
   }
   body button:focus-visible {
-    color: #f0f0f0;
-    background: #2d2d2d;
+    color: white;
+    background: #3273dc;
   }
   body table {
     width: 100%;
@@ -601,8 +601,8 @@ a:focus {
 
 button {
   font-size: 1em;
-  color: white;
-  background-color: #3273dc;
+  color: #3273dc;
+  background-color: white;
   border: none;
   border-radius: 0.65em;
   outline: none;
@@ -616,7 +616,7 @@ button i {
 
 button:focus-visible {
   color: white;
-  background-color: #5a5a5a;
+  background-color: #3273dc;
 }
 button:focus-visible i {
   color: inherit;
@@ -703,7 +703,7 @@ strong {
   color: white;
 }
 
-#datePickerInput {
+#datePickerInput, #thresholdPickerInput {
   cursor: pointer;
 }
 
@@ -11929,6 +11929,10 @@ input.is-medium.input {
   width: 85%;
   max-width: 900px;
 }
+.modal button {
+  color: white;
+  background-color: #3273dc;
+}
 
 .modal.content {
   z-index: 60;
@@ -11990,12 +11994,8 @@ input.is-medium.input {
 .modal.content .modal-card-body ul li a {
   text-decoration: underline;
 }
-.modal.content .modal-card-body table tr th,
-.modal.content .modal-card-body table tr td {
-  padding: 0;
-}
-.modal.content .modal-card-body table.settings tr td {
-  padding-top: 1em;
+.modal.content .modal-card-body table.settings tr th, .modal.content .modal-card-body table.settings tr td {
+  padding: 0.25em 0;
 }
 .modal.content .modal-card-body table.settings tr td .alert {
   position: absolute;
@@ -12084,10 +12084,6 @@ input.is-medium.input {
   line-height: 2.5em;
   float: left;
   margin: 0.5em 0.5em 0.5em 0;
-  /*input:focus-visible,
-  select:focus-visible {
-    background-color: $light-grey;
-  }*/
 }
 #modalForm .field input,
 #modalForm .field select {
@@ -12103,6 +12099,9 @@ input.is-medium.input {
 #modalForm .message {
   display: none;
   margin: 1em 0 0 0;
+}
+#modalForm .message.is-active {
+  display: block;
 }
 #modalForm #autoCompleteContainer {
   position: fixed;
@@ -12124,9 +12123,6 @@ input.is-medium.input {
   max-height: 25em;
   overflow-y: scroll;
   margin: 0;
-}
-#modalForm #autoCompleteContainer section button {
-  margin: 0 0.5rem 0.5rem 0;
 }
 #modalForm #autoCompleteContainer section::-webkit-scrollbar {
   background-color: transparent;

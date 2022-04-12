@@ -22,6 +22,10 @@
     width: 85%;
     max-width: 900px;
   }
+  button {
+    color: white;
+    background-color: $has-text-link;
+  }
 }
 .modal.content {
   z-index: 60;
@@ -81,14 +85,12 @@
     ul li a {
       text-decoration: underline;
     }
-    table tr th,
-    table tr td {
-      padding: 0;
-    }
     table.settings {
       tr {
+        th, td {
+          padding: 0.25em 0;
+        }
         td {
-          padding-top: 1em;
           .alert {
             position: absolute;
             top: 1em;
@@ -190,10 +192,6 @@
     select {
       background-color: transparent;
     }
-    /*input:focus-visible,
-    select:focus-visible {
-      background-color: $light-grey;
-    }*/
     #datePickerResult {
       color: $darker-grey;
     }
@@ -205,6 +203,9 @@
   .message {
     display: none;
     margin: 1em 0 0 0;
+  }
+  .message.is-active {
+    display: block;
   }
   #autoCompleteContainer {
     position: fixed;
@@ -225,9 +226,6 @@
       max-height: 25em;
       overflow-y: scroll;
       margin: 0;
-      button {
-        margin: 0 .5rem .5rem 0;
-      }
     }
     section::-webkit-scrollbar {
       background-color: transparent;
