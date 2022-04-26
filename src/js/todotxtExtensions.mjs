@@ -59,4 +59,18 @@ ThresholdExtension.prototype.parsingFunction = function (line) {
 	return [null, null, null];
 };
 
-export { RecExtension, SugarDueExtension, ThresholdExtension };
+function UUIDExtension() {
+	this.name = "uuid";
+}
+UUIDExtension.prototype = new TodoTxtExtension();
+UUIDExtension.prototype.parsingFunction = function (line) {
+	var uuidRegex = /uuid:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\s*/;
+	var matchUUID = uuidRegex.exec(line);
+	if ( matchUUID !== null ) {
+		var uuid = matchUUID[1];
+		return [uuid, line.replace(uuidRegex, ''), matchUUID[1]];
+	}
+	return [null, null, null];
+};
+
+export { RecExtension, SugarDueExtension, ThresholdExtension, UUIDExtension };

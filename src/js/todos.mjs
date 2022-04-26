@@ -12,8 +12,8 @@ import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
-import { show } from "./form.mjs"; 
-import { SugarDueExtension, RecExtension, ThresholdExtension } from "./todotxtExtensions.mjs";
+import { show } from "./form.mjs";
+import { SugarDueExtension, RecExtension, ThresholdExtension, UUIDExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
 const items = { objects: {} }
@@ -76,7 +76,7 @@ async function generateTodoTxtObjects(fileContent) {
   try {
 
     // create todo.txt objects
-    if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ])
+    if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new UUIDExtension() ])
 
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
@@ -90,7 +90,7 @@ async function generateTodoTxtObjects(fileContent) {
 }
 function generateTodoTxtObject(string) {
   try {
-    const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension() ]);
+    const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new UUIDExtension() ]);
     return Promise.resolve(todo);
   } catch(error) {
     error.functionName = editTodo.name;
