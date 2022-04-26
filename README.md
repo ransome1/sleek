@@ -85,7 +85,7 @@ You can download sleek for Windows, MacOS and Linux from
 * Filter todos by context, project and priority
 * Find todos using full-text search compatible with todo.txt syntax
 * Inline autocomplete available
-* Dates and priorities can be selected by built-in picker elements 
+* Dates and priorities can be selected by built-in picker elements
 * Navigable via keyboard shortcuts
 * Tabindex available
 * Options for due date reminders and notification badges
@@ -97,6 +97,7 @@ You can download sleek for Windows, MacOS and Linux from
 * Hyperlinks detected automatically
 * File watcher scans todo.txt files for changes
 * Simultaneously manage multiple todo.txt files
+* UUID tags are hidden and can be viewed with an info symbol (compatibility with Simpletasks UUID feature) 
 * Language options
   - English
   - German
@@ -130,6 +131,6 @@ A more detailed documentation can be found in <a href="https://github.com/ransom
 - chokidar: https://github.com/paulmillr/chokidar
 - Sugar: https://github.com/andrewplummer/Sugar
 - PEG.js: https://github.com/pegjs/pegjs
-- Playwright: https://github.com/microsoft/playwright 
+- Playwright: https://github.com/microsoft/playwright
 - Sass: https://github.com/sass/sass
 - eslint: https://github.com/eslint/eslint
