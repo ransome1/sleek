@@ -1,8 +1,8 @@
-"use strict"; 
+"use strict";
 import "../../node_modules/sugar/dist/sugar.min.js";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 
-import { _paq } from "./matomo.mjs"; 
+import { _paq } from "./matomo.mjs";
 import { userData, appData, translations, buildTable } from "../render.js";
 import { categories, selectFilter } from "./filters.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
@@ -63,7 +63,7 @@ todoTableWrapper.onscroll = function(event) {
   if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight) {
     // each time user hits view bottom, the clusterThreshold is being enhanced by clusterSize
     clusterThreshold = clusterThreshold + clusterSize;
-    
+
     buildTable().then(function(response) {
       console.info(response);
     }).catch(function(error) {
@@ -101,7 +101,7 @@ function generateTable(loadAll) {
   try {
 
     const sortBy = userData.sortBy[0];
-    
+
     // TODO: rather append next batch of todos instead of erasing the table each time
     // cleans the table
     todoTable.textContent = "";
@@ -131,7 +131,7 @@ function generateTable(loadAll) {
       if(sortBy === "due" && !isNaN(Date.parse(groupHeadline))) {
         const date = convertDate(groupHeadline);
         if(isToday(date)) {
-          groupHeadline = translations.today; 
+          groupHeadline = translations.today;
           groupFormattingClass = "today";
         } else if(isTomorrow(date)) {
           groupHeadline = translations.tomorrow;
@@ -168,7 +168,7 @@ function generateTable(loadAll) {
 
         // incompleted todos with due date for today or tomorrow will trigger notifications
         if(todo.due && (isToday(todo.due) || isTomorrow(todo.due)) && !todo.complete) {
-          
+
           generateTodoNotification(todo).then(response => {
             console.log(response);
           }).catch(error => {
@@ -184,7 +184,7 @@ function generateTable(loadAll) {
 
     // reset cluster counter
     clusterCounter = 0;
-    
+
     return Promise.resolve("Success: Table has been built");
 
   } catch(error) {
@@ -292,7 +292,7 @@ function generateTableRow(todo) {
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
     let todoTableBodyCellHidden = todoTableBodyCellHiddenTemplate.cloneNode(true);
-    
+
     const sortBy = userData.sortBy[0];
 
     // if new item was saved, row is being marked
@@ -326,17 +326,17 @@ function generateTableRow(todo) {
 
         // ask for confirmation before triggering archiving
         getConfirmation(archiveTodos, translations.archivingPrompt);
-        
+
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Archive button"]);
       }
 
       // append the due date to the text item
-      
+
     } else {
       todoTableBodyCellCheckbox.setAttribute("title", translations.done);
       todoTableBodyCellCheckbox.innerHTML = "<i class=\"far fa-square\"></i>";
-      
+
     }
 
     todoTableBodyRow.appendChild(todoTableBodyCellCheckbox);
@@ -344,7 +344,7 @@ function generateTableRow(todo) {
 
     // add a listener on the checkbox to call the completeItem function
     todoTableBodyCellCheckbox.onclick = function() {
-      
+
       // passing the todo object to complete function
       setTodoComplete(todo).then(response => {
          console.log(response);
@@ -355,7 +355,7 @@ function generateTableRow(todo) {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Checkbox"]);
     }
-    
+
     // add hidden icon
     if(todo.h) {
       todoTableBodyRow.setAttribute("class", "todo is-greyed-out");
@@ -392,11 +392,11 @@ function generateTableRow(todo) {
         if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Click on Todo item"]);
       }
     }
-    
+
     // check for and add a given due date
     if(todo.due) {
       let dateFieldContent = convertDate(todo.due);
-      
+
       if(isToday(todo.due)) {
         todoTableBodyCellDueDate.classList.add("today");
         dateFieldContent = translations.today;
@@ -420,7 +420,7 @@ function generateTableRow(todo) {
       todoTableBodyCellDueDateHiddenInput.setAttribute("tabindex", "-1");
       todoTableBodyCellDueDateHiddenInput.classList.add("transparentInput")
       todoTableBodyCellDueDateHiddenInput.onclick = async function(event) {
-        
+
         // prevent body event listener to be triggered
         event.stopPropagation();
 
@@ -458,7 +458,7 @@ function generateTableRow(todo) {
         </div>
         <i class="fas fa-sort-down"></i>`;
       todoTableBodyCellRecurrence.onclick = function(event) {
-    
+
         // prevent body event listener to be triggered
         event.stopPropagation();
 
@@ -497,7 +497,7 @@ function generateTableRow(todo) {
         });
       }
     });
-    
+
     todoTableBodyRow.oncontextmenu = function() {
       createTodoContext(todoTableBodyRow).then(response => {
         console.log(response);
@@ -513,7 +513,7 @@ function generateTableRow(todo) {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
       focusRow(index);
     }
-    
+
     // only add the categories to text cell if it has child nodes
     if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
 
@@ -560,15 +560,15 @@ async function createTodoContext(todoTableRow) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
     }
     const deleteTodo = async function() {
-      // remove item at index  
+      // remove item at index
       items.objects.splice(index, 1);
-      
+
       //write the data to the file
-      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);      
-      
+      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+
       todoContext.classList.remove("is-active");
       todoContext.removeAttribute("data-item");
-      
+
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
     }
@@ -604,7 +604,7 @@ async function createTodoContext(todoTableRow) {
 
     todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
     todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
-  
+
     // click on increse priority option
     todoContextPriorityIncrease.onclick = function() {
       changePriority(-1);
@@ -656,8 +656,8 @@ async function createTodoContext(todoTableRow) {
       todoContext.style.left = event.x + "px";
       todoContext.style.top = event.y + "px";
     }
-    
-    // ugly but neccessary: if triggered to fast arrow right will do a first row change in jail 
+
+    // ugly but neccessary: if triggered to fast arrow right will do a first row change in jail
     setTimeout(function() {
       createModalJail(todoContext).then(response => {
         console.log(response);
@@ -694,7 +694,7 @@ function sortTodosInGroup(group) {
         if(!item1 || (item1 > item2)) return 1;
         // if second item is empty it will be sorted before first item
         if(!item2 || (item1 < item2)) return -1;
-        
+
       });
     }
 
@@ -732,7 +732,7 @@ async function setTodoComplete(todo) {
       }).catch(function(error) {
         handleError(error);
       });
-      
+
       if(todo.priority) {
         // and preserve prio
         todo.text += " pri:" + todo.priority
@@ -773,7 +773,7 @@ async function addTodo(todo) {
 
     // get index of todo
     const index = items.objects.map(function(item) { return item.toString(); }).indexOf(todo.toString());
-    
+
     if(index === -1) {
       // we build the array
       items.objects.push(todo);
@@ -820,7 +820,7 @@ async function archiveTodos() {
 
     // if user archives within done.txt file, operating is canceled
     if(activeFile.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
-    
+
     let contentFromDoneFile = await new Promise(function(resolve) {
       window.api.send("getContent", doneFile);
       return window.api.receive("getContent", (content) => {
