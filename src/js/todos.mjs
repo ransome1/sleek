@@ -451,7 +451,7 @@ function generateTableRow(todo) {
     // add UUID icon
     if(todo.uuid) {
      todoTableBodyCellUUID.innerHTML = `
-        <i class="fa-solid fa-circle-info"></i>
+        <i class="fa-solid fa-receipt"></i>
         <div class="tags has-addons">
           <span class="tag">uuid:</span><span class="tag is-dark uuid">${todo.uuid}</span>
         </div>
