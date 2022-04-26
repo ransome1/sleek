@@ -30,6 +30,7 @@ const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
 const todoTableBodyCellTDateTemplate = document.createElement("span");
+const todoTableBodyCellUUIDTemplate = document.createElement("span");
 const todoTableBodyCellHiddenTemplate = document.createElement("span");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
 const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
@@ -49,6 +50,7 @@ tableContainerCategoriesTemplate.setAttribute("class", "cell categories");
 todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
 todoTableBodyCellDueDateTemplate.setAttribute("class", "cell hint itemDueDate");
 todoTableBodyCellTDateTemplate.setAttribute("class", "cell hint");
+todoTableBodyCellUUIDTemplate.setAttribute("class", "cell hint");
 todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell hint");
 todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
 todoTableBodyCellTextTemplate.setAttribute("href", "#");
@@ -289,6 +291,7 @@ function generateTableRow(todo) {
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
     let todoTableBodyCellTDate = todoTableBodyCellTDateTemplate.cloneNode(true);
+    let todoTableBodyCellUUID = todoTableBodyCellUUIDTemplate.cloneNode(true);
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
     let todoTableBodyCellHidden = todoTableBodyCellHiddenTemplate.cloneNode(true);
@@ -443,6 +446,18 @@ function generateTableRow(todo) {
     if(todo.t) {
       todoTableBodyCellTDate.innerHTML = `<i class="fa-regular fa-clock"></i>`
       todoTableBodyRow.appendChild(todoTableBodyCellTDate);
+    }
+
+    // add UUID icon
+    if(todo.uuid) {
+     todoTableBodyCellUUID.innerHTML = `
+        <i class="fa-solid fa-circle-info"></i>
+        <div class="tags has-addons">
+          <span class="tag">uuid:</span><span class="tag is-dark uuid">${todo.uuid}</span>
+        </div>
+        <i class="fas fa-sort-down"></i>
+      `
+     todoTableBodyRow.appendChild(todoTableBodyCellUUID);
     }
 
     // TODO: Add recurrence picker function
