@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.2.0-rc.3",
+  "version": "1.2.0",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "category": "ProjectManagement",
@@ -120,6 +120,8 @@
     "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "scripts": {
+    "build:windows": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -w --publish never",
+    "build:linux": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -l --publish never",
     "build:mas": "yarn build:css && yarn build:pegjs && electron-builder -m mas --universal --publish never && bash build/resignPkg.sh",
     "build:macos": "yarn build:css && yarn build:pegjs && electron-builder -m zip --universal --publish never && bash build/resignPkg.sh",
     "build:appx": "yarn build:css && yarn build:pegjs && electron-builder -w appx --publish never",

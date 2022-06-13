@@ -1,4 +1,8 @@
 # sleek
+
+## Help wanted
+Thanks using and supporting this tiny project. Amazing feature requests, major and minor issues are piling up, but due private reasons my time working on sleek is unfortunatelly reduced to a minimum at the moment. This will change in fall again but until then and also beyond that this open source project needs coding support. If you have proper knowledge of HTML, CSS, JavaScript or the Electron framework please check the issue list, fork sleek and feel free to start working on sleek.
+
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
 + [Support sleek](#support-sleek)

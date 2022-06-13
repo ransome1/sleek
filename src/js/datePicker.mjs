@@ -28,7 +28,7 @@ let
   modalFormInput,
   datePicker,
   datePickerOptions = {
-    autohide: true,
+    autohide: false,
     language: userData.language,
     format: "yyyy-mm-dd",
     clearBtn: true,
@@ -43,12 +43,13 @@ let
 
 function fillDatePickerInput(todo) {
   modalFormInput = document.getElementById("modalFormInput");
-
+  // empty it
   datePickerResult.innerHTML = "";
   dateTypes.forEach(function(type) {
     if(!todo[type]) return false;
     datePickerResult.innerHTML += `<span class="prefix">${type}:</span>${todo[type + "String"]}&nbsp;`;
   });
+  // if it's still empty fill it with placeholder text
   if(datePickerResult.innerHTML === "") datePickerResult.innerHTML = translations.formSelectDueDate;
 
   // if a due date is set, the recurrence picker will be shown);
@@ -63,119 +64,8 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
 
   try {
 
-    // if there is an active datepicker, it will be destroyed
-    if(datePicker) datePicker.destroy();
-
-    // ******************************************************
-    // create datepicker instance
-    // ******************************************************
-
-    datePicker = await new Datepicker(attachToElement, datePickerOptions);
-
-    // ******************************************************
-    // prepare todo object if none has been passed
-    // ******************************************************
-
-    if(!todo) {
-      // generate the object of input value, so we don't overwrite previous inputs of user
-      todo = await generateTodoTxtObject(document.getElementById("modalFormInput").value).then(response => {
-        return response;
-      }).catch(error => {
-        handleError(error);
-      });
-    }
-
-    if(todo[extension]) datePicker.setDate(todo[extension])
-
-    datePicker.show();
-
-    // close datepicker when container loses focus
-    attachToElement.onblur = function() { datePicker.destroy(); }
-
-    // destroy datepicker on Escape
-    attachToElement.onkeyup = function(event) { if(event.key === "Escape") datePicker.destroy(); }
-
-    // insert due and threshold buttons
-    const header = document.createRange().createContextualFragment(`
-    <div class="dateSwitcher tabs is-centered">
-      <ul>
-        <li class="is-active">
-          <a href="#">Due</a>
-        </li>
-        <li>
-          <a href="#">Threshold</a>
-        </li>
-      </ul>
-    </div>`);
-    const datepickerContainer = document.querySelector(".datepicker .datepicker-picker");
-    const firstChild = document.querySelector(".datepicker .datepicker-picker .datepicker-header");
-    const clearButton = datepickerContainer.querySelector(".clear-btn");
-    datepickerContainer.insertBefore(header, firstChild);
-
-    const tabs = datepickerContainer.querySelectorAll("li");
-    const dueButton = tabs[0];
-    const thresholdButton = tabs[1];
-
-    clearButton.onclick = function(event) {
-      event.stopPropagation();
-      delete todo[extension];
-      delete todo[extension + "String"];
-
-      if(!addDateToElement) {
-        // get position of current todo in array
-        const index = items.objects.map(function(item) { return item; }).indexOf(todo);
-
-        // finally pass new todo on for changing
-        editTodo(index, todo).then(response => {
-          console.log(response)
-        }).catch(error => {
-          console.log(error);
-        });
-
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table", "Datepicker used to change a date"]);
-
-      } else {
-
-        fillDatePickerInput(todo);
-
-        // resize the due date input field after date was added
-        resizeInput(datePickerInput);
-
-        // trigger matomo event
-        if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
-      }
-
-    }
-
-    dueButton.addEventListener("click", function() {
-      (todo.due) ? datePicker.setDate(todo.due) : datePicker.setDate({ clear: true })
-      this.classList.add("is-active");
-      tabs[1].classList.remove("is-active");
-      extension = "due";
-    });
-
-    thresholdButton.addEventListener("click", function() {
-      (todo.t) ? datePicker.setDate(todo.t) : datePicker.setDate({ clear: true })
-      this.classList.add("is-active");
-      tabs[0].classList.remove("is-active");
-      extension = "t";
-    });
-
-    datePicker.picker.main.addEventListener("click", function(event) {
-
-      // ******************************************************
-      // add due date to todo object or remove a given one if no date is passed
-      // ******************************************************
-
-      const date = datePicker.getDate();
-
-      // fill in due date
-      if(date) {
-        todo[extension] = date;
-        todo[extension + "String"] = convertDate(date);
-      }
-
+    const applyDate = function() {
+      
       // ******************************************************
       // if a todo is passed, it will be edited
       // ******************************************************
@@ -209,7 +99,99 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
       }
+    }
 
+    // if there is an active datepicker, it will be destroyed
+    if(datePicker) datePicker.destroy();
+
+    // ******************************************************
+    // create datepicker instance
+    // ******************************************************
+
+    datePicker = await new Datepicker(attachToElement, datePickerOptions);
+
+    // ******************************************************
+    // prepare todo object if none has been passed
+    // ******************************************************
+
+    if(!todo) {
+      // generate the object of input value, so we don't overwrite previous inputs of user
+      todo = await generateTodoTxtObject(document.getElementById("modalFormInput").value).then(response => {
+        return response;
+      }).catch(error => {
+        handleError(error);
+      });
+    }
+
+    datePicker.show();
+
+    // close datepicker when container loses focus
+    attachToElement.onblur = function() { datePicker.destroy(); }
+
+    // destroy datepicker on Escape
+    attachToElement.onkeyup = function(event) { if(event.key === "Escape") datePicker.destroy(); }
+
+    // insert due and threshold buttons
+    const header = document.createRange().createContextualFragment(`
+    <div class="dateSwitcher tabs is-centered">
+      <ul>
+        <li class="is-active">
+          <a href="#">Due</a>
+        </li>
+        <li>
+          <a href="#">Threshold</a>
+        </li>
+      </ul>
+    </div>`);
+    const datepickerContainer = document.querySelector(".datepicker .datepicker-picker");
+    const firstChild = document.querySelector(".datepicker .datepicker-picker .datepicker-header");
+    datepickerContainer.insertBefore(header, firstChild);
+    const tabs = datepickerContainer.querySelectorAll("li");
+    const dueButton = tabs[0];
+    const thresholdButton = tabs[1];
+
+    // add header
+    datepickerContainer.insertBefore(header, firstChild);
+
+    dueButton.addEventListener("click", function(event) {
+      event.stopPropagation();
+      //(todo.due) ? datePicker.setDate(todo.due) : datePicker.setDate({ clear: true })
+      this.classList.add("is-active");
+      tabs[1].classList.remove("is-active");
+      extension = "due";
+    });
+
+    thresholdButton.addEventListener("click", function(event) {
+      event.stopPropagation();
+      //(todo.t) ? datePicker.setDate(todo.t) : datePicker.setDate({ clear: true })
+      this.classList.add("is-active");
+      tabs[0].classList.remove("is-active");
+      extension = "t";
+    });
+
+    // intercept the clear button event
+    const clearButton = datepickerContainer.querySelector(".clear-btn");
+    clearButton.onclick = function(event) {
+      event.stopImmediatePropagation();
+      delete todo[extension];
+      delete todo[extension + "String"];
+      applyDate(todo, addDateToElement);
+    }
+
+    attachToElement.addEventListener("changeDate", function(event) {
+
+      // ******************************************************
+      // add due date to todo object or remove a given one if no date is passed
+      // ******************************************************
+
+      const date = datePicker.getDate();
+
+      // fill in due date
+      if(date) {
+        todo[extension] = date;
+        todo[extension + "String"] = convertDate(date);
+      }
+      applyDate(todo, addDateToElement);
     });
 
     return Promise.resolve("Success: " + extension + " datepicker intance created");
