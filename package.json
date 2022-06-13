@@ -19,7 +19,7 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "buildVersion": "16",
+    "buildVersion": "17",
     "files": [
       "!flatpak-node${/*}",
       "!snap${/*}",
