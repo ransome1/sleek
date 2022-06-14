@@ -2,7 +2,7 @@
 import { _paq } from "./matomo.mjs";
 import { handleError } from "./helper.mjs";
 import { showModal } from "./content.mjs";
-import { userData, translations } from "../render.js";
+import { userData, appData, translations } from "../render.js";
 
 const btnMessageLogging = document.getElementById("btnMessageLogging");
 const messages = document.getElementById("messages");
@@ -12,6 +12,10 @@ const messageGenericMessage = document.getElementById("messageGenericMessage");
 const messageLoggingBody = document.getElementById("messageLoggingBody");
 const messageLoggingButton = document.getElementById("messageLoggingButton");
 const messageLoggingTitle = document.getElementById("messageLoggingTitle");
+const messageSupport = document.getElementById("messageSupport");
+
+// Apple doesn't like other stores to be mentioned so it is being surpressed on the Mac App Store build
+if(appData.channel === "Mac App Store") messageSupport.classList.add("is-hidden");
 
 messageLoggingBody.innerHTML = translations.messageLoggingBody;
 messageLoggingButton.innerHTML = translations.settings;
