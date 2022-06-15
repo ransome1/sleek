@@ -335,6 +335,7 @@ function getUserData() {
     if(typeof userData.data.language != "string") userData.data.language = app.getLocale().substr(0,2);
     if(typeof userData.data.autoUpdate != "boolean") userData.data.autoUpdate = false;
     if(typeof userData.data.theme != "string") userData.set("theme", "system");
+    if(typeof userData.data.getPageTitles != "boolean") userData.data.getPageTitles = true;
     
     //TODO remove this after 1.1.7 has been fully distributed
     const indexOfDueString = userData.data.sortBy.indexOf("dueString");

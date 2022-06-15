@@ -37,6 +37,7 @@ const todoTableBodyCellTextTemplate = document.createElement("div");
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
 let
+  linkId,
   clusterCounter = 0,
   clusterSize = Math.ceil(window.innerHeight/32), // 32 being the pixel height of one todo in compact mode
   clusterThreshold = clusterSize;
@@ -70,6 +71,18 @@ todoTableWrapper.onscroll = function(event) {
       handleError(error);
     });
   }
+}
+
+// receives a page title and if found replaces the link with it
+function getAndsetPageTitle(linkId, href) {
+  const pageBody = fetch(href);
+  pageBody.then(response => response.text()).then(async data => {
+    const regExp = new RegExp("<title[^>]*>(.*?)</title>");
+    const pageTitle = regExp.exec(data);
+    const linkElement = await document.getElementById("linkId" + linkId);
+    if(!linkElement || !pageTitle) return false;
+    linkElement.innerHTML = pageTitle[1];
+  })
 }
 
 async function generateTodoTxtObjects(fileContent) {
@@ -370,8 +383,20 @@ function generateTableRow(todo) {
       // adds priority to the text cell
       if(todo.priority && (sortBy !== "priority" || userData.sortByFile)) todoTableBodyCellText.innerHTML = `<a class="priority button ${todo.priority}">${todo.priority}</a>`;
 
+      const renderer = {
+        link(href, title, text) {
+
+          const linkId = Math.random().toString(36).slice(2);
+          if(userData.getPageTitles) getAndsetPageTitle(linkId, text);
+
+          return `<span id="linkId${linkId}" class="linkText">${text}</span> <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+        }
+      };
+
+      marked.use({ renderer });
+
       // parse text string through markdown parser
-      todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parseInline(todo.text) + "</span>";
+      todoTableBodyCellText.innerHTML +=  "<span class=\"text\">" + marked.parse(todo.text) + "</span>";
 
       // replace line feed character with a space
       todoTableBodyCellText.innerHTML = todoTableBodyCellText.innerHTML.replaceAll(String.fromCharCode(16)," ");
