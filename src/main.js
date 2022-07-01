@@ -453,15 +453,45 @@ function configureWindowEvents() {
         nativeTheme.themeSource = theme;
         userData.set("theme", nativeTheme.themeSource);
       })
-      .on("writeToFile", function(event, args) {
+      .on("replaceFileContent", async function(event, args) {
+
         const content = args[0];
-        let file = args[1];
-        if(!file) file = getActiveFile()[1]
+        const file = args[1];
+
+        if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(getActiveFile()[3])
+
+        fs.writeFileSync(file, content, {encoding: "utf-8"});
+
+        if(process.mas) stopAccessingSecurityScopedResource()
+      })
+      .on("writeToFile", async function(event, args) {
+        
+        const index = args[1];
+
+        console.log(index)
+
+        const data = args[0];
+        const file = (args[2]) ? args[2] : await getActiveFile()[1];
+        const fileContent = await getContent(file);
+        let fileAsArray = fileContent.split("\n");
+
+        // adding a new line or replacing an existing one
+        (index === -1 && data) ? fileAsArray.push(data) : fileAsArray.splice(index, 1, data);
+
+        // delete element in array
+        if(index >= 0 && !data) fileAsArray.splice(index, 1);
+
+        //if(index === undefined && data) contentToWrite = data;
+
+        // building string to write in file
+        // when file is defined, but no index, it will be an archiving operation
+        const contentToWrite = fileAsArray.join("\n");
+
         // only for MAS (Sandboxed)
         // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
         if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(getActiveFile()[3])
 
-        fs.writeFileSync(file, content, {encoding: "utf-8"});
+        fs.writeFileSync(file, contentToWrite, {encoding: "utf-8"});
 
         if(process.mas) stopAccessingSecurityScopedResource()
 

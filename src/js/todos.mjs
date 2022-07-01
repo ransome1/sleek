@@ -566,11 +566,9 @@ async function createTodoContext(todoTableRow) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
     }
     const deleteTodo = async function() {
-      // remove item at index  
-      items.objects.splice(index, 1);
       
-      //write the data to the file
-      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);      
+      //send index to main process in order to delete line
+      window.api.send("writeToFile", [undefined, index, undefined]);      
       
       todoContext.classList.remove("is-active");
       todoContext.removeAttribute("data-item");
@@ -580,25 +578,27 @@ async function createTodoContext(todoTableRow) {
     }
     const changePriority = function(direction) {
 
+      const todo = items.objects[index];
+
       let nextIndex = 97;
 
       // in case a todo has no priority and the 1st grouping method is priority
-      if(!items.objects[index].priority && userData.sortBy[0] === "priority") {
+      if(!todo.priority && userData.sortBy[0] === "priority") {
         const index = items.grouped.length - 2;
         // this receives the lowest available priority group
         (index >= 0) ? nextIndex = items.grouped[index][0].toLowerCase().charCodeAt(0) : nextIndex = 97
       // change priority based on current priority
-      } else if(items.objects[index].priority) {
-        const currentPriority = items.objects[index].priority.toLowerCase().charCodeAt(0)
+      } else if(todo.priority) {
+        const currentPriority = todo.priority.toLowerCase().charCodeAt(0)
         nextIndex = currentPriority + direction;
       }
 
       if(nextIndex <= 96 || nextIndex >= 123) return false
 
-      items.objects[index].priority = String.fromCharCode(nextIndex).toUpperCase();
+      todo.priority = String.fromCharCode(nextIndex).toUpperCase();
 
       //write the data to the file
-      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+      window.api.send("writeToFile", [todo.toString(), index]);
 
       todoContext.classList.remove("is-active");
       todoContext.removeAttribute("data-item");
@@ -756,11 +756,8 @@ async function setTodoComplete(todo) {
 
     }
 
-    // delete old todo from array and add the new one at it's position
-    await items.objects.splice(index, 1, todo);
-
     //write the data to the file and advice to focus the row after reload
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    window.api.send("writeToFile", [todo.toString(), index]);
 
     return Promise.resolve("Success: Changes written to file: " + getActiveFile());
 
@@ -789,11 +786,8 @@ async function addTodo(todo) {
     const index = items.objects.map(function(item) { return item.toString(); }).indexOf(todo.toString());
     
     if(index === -1) {
-      // we build the array
-      items.objects.push(todo);
       //write the data to the file
-      // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+      window.api.send("writeToFile", [todo.toString(), index]);
 
       return Promise.resolve("Success: New todo added to file: " + getActiveFile());
 
@@ -806,11 +800,8 @@ async function addTodo(todo) {
 }
 function editTodo(index, todo) {
   try {
-    // put changed todo at old position
-    items.objects.splice(index, 1, todo);
-
     // save to file
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    window.api.send("writeToFile", [todo.toString(), index]);
 
     return Promise.resolve("Success: Todo edited");
 
@@ -852,10 +843,10 @@ async function archiveTodos() {
     }
 
     //write completed items to done file
-    window.api.send("writeToFile", [completeTodos.join("\n").toString() + "\n", doneFile]);
+    window.api.send("replaceFileContent", [completeTodos.join("\n").toString(), doneFile]);
 
     // write incompleted items to todo file
-    window.api.send("writeToFile", [incompleteTodos.join("\n").toString() + "\n", activeFile]);
+    window.api.send("replaceFileContent", [incompleteTodos.join("\n").toString(), activeFile]);
 
     // send notifcation on success
     generateGenericNotification(translations.archivingCompletedTitle, translations.archivingCompletedBody + doneFile).then(function(response) {

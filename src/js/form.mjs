@@ -126,7 +126,8 @@ modalForm.onsubmit = async function(event) {
     item.previous = todo;
 
     // send file to main process to save it
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    //window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    window.api.send("writeToFile", [todo.toString(), index]);
 
     // close and clean up the modal
     resetForm().then(function(response) {

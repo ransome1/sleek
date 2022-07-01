@@ -6,6 +6,7 @@ const validChannels = [
   "getContent",
   "translations",
   "showNotification",
+  "replaceFileContent",
   "writeToFile",
   "startFileWatcher",
   "buildTable",

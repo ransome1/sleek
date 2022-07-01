@@ -8,9 +8,9 @@
   integrity sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==
 
 "@babel/runtime@^7.17.2":
-  version "7.18.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.3.tgz#c7b654b57f6f63cf7f8b418ac9ca04408c4579f4"
-  integrity sha512-38Y8f7YUhce/K7RMwTp7m0uCumpv9hZkitCbBClqQIow1qSbCvGkcegKOXpEWCQLfWmevgRiWokZ1GkpfhbZug==
+  version "7.18.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.6.tgz#6a1ef59f838debd670421f8c7f2cbb8da9751580"
+  integrity sha512-t9wi7/AW6XtKahAe20Yw0/mMljKq0B1r2fPdvaAdV/KPDZewFXdaaa6K7lxmZBZ8FBNpCiAT6iHPmd6QO9bKfQ==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -101,6 +101,14 @@
     fs-extra "^9.0.0"
     lodash "^4.17.15"
     tmp-promise "^3.0.2"
+
+"@playwright/test@^1.23.1":
+  version "1.23.1"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.23.1.tgz#209cceb81c579d1cd2835f15c2bb3a8345103d60"
+  integrity sha512-dKplLPSYPZgnsBk1xxOophhpx3ZVg8DveoNJgLPe096lDCfmaIIreLsYF+4hqzy3PG61IP+aEnG5VAOjC3bhbA==
+  dependencies:
+    "@types/node" "*"
+    playwright-core "1.23.1"
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
@@ -905,9 +913,9 @@ electron-windows-badge@^1.1.0:
   integrity sha512-hWFbUk9u3fQHcKzTAcjZAN7XH9bL9oH9g20RRDU/DVDNqdMI03GzlBZfR/R8R1krYu9AT4biLqSCAxnt9LMAfA==
 
 electron@^17.2.0:
-  version "17.4.8"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-17.4.8.tgz#a7940d125c120d51aa0c737c10d17851dada295d"
-  integrity sha512-JUHTFcBCXols+REajy9YQNypcgRGu35u/8oDmLIvjvrfIL4/Z3YAiq8HN4mhclWfuSmznrLeZ8uMktZWmvPOAg==
+  version "17.4.9"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-17.4.9.tgz#d323dac4151e24f7345250414c3bc540c6576811"
+  integrity sha512-DuoCyjTo29TNAaI2eEurN78zvzKQBBZGKjmsy0qEyUaJmgAFzPHDGwVsX9BqativzkboNvXEKXnseHe5CbLiyg==
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"
@@ -1129,9 +1137,9 @@ flat-cache@^3.0.4:
     rimraf "^3.0.2"
 
 flatted@^3.1.0:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.5.tgz#76c8584f4fc843db64702a6bd04ab7a8bd666da3"
-  integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.6.tgz#022e9218c637f9f3fc9c35ab9c9193f05add60b2"
+  integrity sha512-0sQoMh9s0BYsm+12Huy/rkKxVu4R1+r96YX5cG44rHV0pQ6iC3Q+mkoMFaGWObMFYQxCVT+ssG1ksneA2MI9KQ==
 
 form-data@^4.0.0:
   version "4.0.0"
@@ -1378,9 +1386,9 @@ i18next-fs-backend@^1.1.1:
   integrity sha512-/MfAGMP0jHonV966uFf9PkWWuDjPYLIcsipnSO3NxpNtAgRUKLTwvm85fEmsF6hGeu0zbZiCQ3W74jwO6K9uXA==
 
 i18next@^21.6.6:
-  version "21.8.10"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.8.10.tgz#12f164cc0f5f7904f0d4e0cfdf5950b93793d171"
-  integrity sha512-7xRb6y4QlSqZRZ3uA5BIEsLuZpmxpzHLizQyKjDDThOcvdfgICOX7aFoBnh4BSWcLtJamTqSweaOuK22A2xqkA==
+  version "21.8.11"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.8.11.tgz#197aac04be51b7083999a2cb63deb831cf1ba4c8"
+  integrity sha512-+s8N6kQShwNK+Ua/+VsS/Sji24NUJJLBk9QIucygj1f97f4hPNDWmLP9fQCI4d5+XLfXJ3JctX4g+zJla967Vw==
   dependencies:
     "@babel/runtime" "^7.17.2"
 
@@ -1893,6 +1901,18 @@ pify@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-3.0.0.tgz#e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
   integrity sha512-C3FsVNH1udSEX48gGX1xfvwTWfsYWj5U+8/uK15BGzIGrKoUpghX8hWZwa/OFnakBiiVNmBvemTJR5mcy7iPcg==
+
+playwright-core@1.23.1:
+  version "1.23.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.23.1.tgz#af02bd7568af1017e477433b1b003ba84e1eb312"
+  integrity sha512-9CXsE0gawph4KXl6oUaa0ehHRySZjHvly4TybcBXDvzK3N3o6L/eZ8Q6iVWUiMn0LLS5bRFxo1qEtOETlYJxjw==
+
+playwright@^1.23.1:
+  version "1.23.1"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.23.1.tgz#b029885e995aa1f9626aac851410c5ef615718f4"
+  integrity sha512-+lgiy1JZMNPwpBp5tsUdjTGxuJ+lXZbtSKmMDc0/f1oVsNDXXA+r7zeC9Kzd+4jSHteoJJocargxVx2Mn1o2kw==
+  dependencies:
+    playwright-core "1.23.1"
 
 plist@^3.0.1, plist@^3.0.4:
   version "3.0.5"
