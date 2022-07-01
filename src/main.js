@@ -468,9 +468,6 @@ function configureWindowEvents() {
       .on("writeToFile", async function(event, args) {
         
         const index = args[1];
-
-        console.log(index)
-
         const data = args[0];
         const file = (args[2]) ? args[2] : await getActiveFile()[1];
         const fileContent = await getContent(file);
