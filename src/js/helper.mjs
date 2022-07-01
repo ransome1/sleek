@@ -24,12 +24,26 @@ marked.setOptions({
   xhtml: false,
   baseUrl: "https://"
 });
-const renderer = {
-  link(href, title, text) {
-    return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
-  }
-};
-marked.use({ renderer });
+
+// const renderer = {
+//   link(href, title, text) {
+//     return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+//   }
+// };
+
+// // Override function
+// const walkTokens = (token) => {
+//   if(token.type !== "link") return false;
+//   console.log(token.text)
+//   //return `${token.text} <a href="${token.href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+//   // link(href, text) {
+//   //   console.log(href)
+//   //   //temp(href);
+//   //   return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+//   // }
+// };
+
+// marked.use({ renderer, walkTokens });
 
 // TODO: check if this still works
 export function jumpToItem(item) {

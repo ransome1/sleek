@@ -12294,12 +12294,15 @@ input.is-medium.input {
   width: auto;
   cursor: pointer;
   color: #5a5a5a;
+  /*a {
+    font-size: 1.1em;
+    font-family: FreeSansBold;
+    height: auto;
+    padding: 0.15em 0.5em;
+  }*/
 }
-#todoTable .cell.text a {
-  font-size: 1.1em;
-  font-family: FreeSansBold;
-  height: auto;
-  padding: 0.15em 0.5em;
+#todoTable .cell.text span.linkText {
+  color: hsl(217deg, 71%, 53%);
 }
 #todoTable .cell.text a.button.priority {
   font-size: 0.9em;

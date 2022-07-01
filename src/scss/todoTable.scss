@@ -103,11 +103,14 @@
     width: auto;
     cursor: pointer;
     color: $dark-grey;
-    a {
+    /*a {
       font-size: 1.1em;
       font-family: FreeSansBold;
       height: auto;
       padding: 0.15em 0.5em;
+    }*/
+    span.linkText {
+      color: $has-text-link;
     }
     a.button.priority {
       font-size: 0.9em;

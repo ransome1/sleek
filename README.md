@@ -1,7 +1,7 @@
 # sleek
 
 ## Help wanted
-Amazing feature requests, major and minor bug reports are piling up, and great discussions are ongoing. I want to thank you for supporting this project. but I also need to admit that I'm overwhelmed by the sheer amount of work. Please understand that sleek is FOSS and I'm not aiming to earn money with it, so my time on the project is limited. If you are skilled in HTML, CSS, JavaScript, the Electron framework, writing Playwright test cases, improving UX/UI or if you're able to maintain sleek for one of the distribution channels, please check in with me <a href="https://github.com/ransome1/sleek/discussions/388">here</a> or check the <a href="https://github.com/ransome1/sleek/issues">issue list</a> and start working on bugs and feature requests.
+Amazing feature requests, major and minor bug reports are piling up, and great discussions are ongoing. I want to thank you for supporting this project. But I also need to admit that I'm overwhelmed by the sheer amount of work. Please understand that sleek is FOSS and I'm not aiming to earn money with it, so my time on the project is limited. If you are skilled in HTML, CSS, JavaScript, the Electron framework, writing Playwright test cases, improving UX/UI or if you're able to maintain sleek for one of the distribution channels, please check in with me <a href="https://github.com/ransome1/sleek/discussions/388">here</a> or check the <a href="https://github.com/ransome1/sleek/issues">issue list</a> and start working on bugs and feature requests.
 
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)

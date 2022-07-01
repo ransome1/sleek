@@ -503,6 +503,22 @@
               </td>
             </tr>
           </table>
+          <table id="getPageTitlesRow" class="settings">
+            <tr>
+              <th colspan="100%" id="getPageTitlesHeadline">Replace links with website titles</th>
+            </tr>
+            <tr>
+              <td id="getPageTitlesBody">Description text</td>
+              <td>
+                <span class="toggle">
+                  <label class="switch" for="getPageTitles">
+                    <input type="checkbox" id="getPageTitles" class="toggle" tabindex="0">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </td>
+            </tr>
+          </table>
           <table class="settings">
             <tr>
               <th colspan="100%" id="zoomHeadline"></th>
@@ -849,7 +865,7 @@
           <p><button id="btnMessageLogging" tabindex="-1"><i class="fas fa-cog"></i>&nbsp;<span id="messageLoggingButton"></span></button></p>
         </div>
       </article>
-      <article class="message fixed review" data="support">
+      <article class="message fixed review" data="support" id="messageSupport">
         <div class="message-header">
           <p>sleek <i class="fas fa-heart"></i> you</p>
           <button class="delete" role="cancel" data-message="support"></button>
