@@ -423,8 +423,15 @@ function configureWindowEvents() {
     });
 
     ipcMain.handle("translations", async () => {
-      translations = await i18next.getDataByLanguage(userData.data.language).translation
-      return translations
+      translations = await i18next.getDataByLanguage(userData.data.language)
+
+      if(!translations) {
+        await i18next.changeLanguage(i18next.options.fallbackLng[0], function() {
+          return translations = i18next.getDataByLanguage(i18next.language)
+        })
+      }
+
+      return translations.translation
     });
 
     ipcMain.handle("getContent", async (event, file) => {
