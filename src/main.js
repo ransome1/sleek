@@ -423,15 +423,7 @@ function configureWindowEvents() {
     });
 
     ipcMain.handle("translations", async () => {
-      translations = await i18next.getDataByLanguage(userData.data.language)
-
-      if(!translations) {
-        await i18next.changeLanguage(i18next.options.fallbackLng[0], function() {
-          return translations = i18next.getDataByLanguage(i18next.language)
-        })
-      }
-
-      return translations.translation
+      return translations
     });
 
     ipcMain.handle("getContent", async (event, file) => {
@@ -632,7 +624,10 @@ async function createWindow() {
     });
     mainWindow.loadFile(path.join(appData.path, "index.html"));
 
+    
     // load the translations
+    // make sure language is supported, otherwise load translations from fallback language
+    if(!i18next.options.supportedLngs.includes(userData.data.language)) await userData.set("language", i18next.options.fallbackLng[0])
     translations = await i18next.getDataByLanguage(userData.data.language).translation
     if(!translations) throw("Error: Translations could not be loaded")
     console.log("Success: Translations loaded for: " + userData.data.language)
