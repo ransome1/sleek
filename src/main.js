@@ -423,15 +423,7 @@ function configureWindowEvents() {
     });
 
     ipcMain.handle("translations", async () => {
-      translations = await i18next.getDataByLanguage(userData.data.language)
-
-      if(!translations) {
-        await i18next.changeLanguage(i18next.options.fallbackLng[0], function() {
-          return translations = i18next.getDataByLanguage(i18next.language)
-        })
-      }
-
-      return translations.translation
+      return translations
     });
 
     ipcMain.handle("getContent", async (event, file) => {
@@ -461,15 +453,42 @@ function configureWindowEvents() {
         nativeTheme.themeSource = theme;
         userData.set("theme", nativeTheme.themeSource);
       })
-      .on("writeToFile", function(event, args) {
+      .on("replaceFileContent", async function(event, args) {
+
         const content = args[0];
-        let file = args[1];
-        if(!file) file = getActiveFile()[1]
+        const file = args[1];
+
+        if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(getActiveFile()[3])
+
+        fs.writeFileSync(file, content, {encoding: "utf-8"});
+
+        if(process.mas) stopAccessingSecurityScopedResource()
+      })
+      .on("writeToFile", async function(event, args) {
+        
+        const index = args[1];
+        const data = args[0];
+        const file = (args[2]) ? args[2] : await getActiveFile()[1];
+        const fileContent = await getContent(file);
+        let fileAsArray = fileContent.split("\n");
+
+        // adding a new line or replacing an existing one
+        (index === -1 && data) ? fileAsArray.push(data) : fileAsArray.splice(index, 1, data);
+
+        // delete element in array
+        if(index >= 0 && !data) fileAsArray.splice(index, 1);
+
+        //if(index === undefined && data) contentToWrite = data;
+
+        // building string to write in file
+        // when file is defined, but no index, it will be an archiving operation
+        const contentToWrite = fileAsArray.join("\n");
+
         // only for MAS (Sandboxed)
         // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
         if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(getActiveFile()[3])
 
-        fs.writeFileSync(file, content, {encoding: "utf-8"});
+        fs.writeFileSync(file, contentToWrite, {encoding: "utf-8"});
 
         if(process.mas) stopAccessingSecurityScopedResource()
 
@@ -605,7 +624,10 @@ async function createWindow() {
     });
     mainWindow.loadFile(path.join(appData.path, "index.html"));
 
+    
     // load the translations
+    // make sure language is supported, otherwise load translations from fallback language
+    if(!i18next.options.supportedLngs.includes(userData.data.language)) await userData.set("language", i18next.options.fallbackLng[0])
     translations = await i18next.getDataByLanguage(userData.data.language).translation
     if(!translations) throw("Error: Translations could not be loaded")
     console.log("Success: Translations loaded for: " + userData.data.language)
