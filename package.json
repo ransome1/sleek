@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.2.2-rc.2",
+  "version": "1.2.2-rc.3",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "category": "ProjectManagement",
@@ -132,27 +132,27 @@
     "sass": "sass -w src/scss/style.scss:src/css/style.css",
     "start": "yarn sass & electron .",
     "test": "yarn playwright test --config=test/playwright.config.js",
-    "test1": "yarn playwright test -g 'Add a new todo and delete it' --config=test/playwright.config.js"
+    "test1": "yarn playwright test -g 'Check if multi line items are displayed correctly' --config=test/playwright.config.js"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.1.1",
-    "@playwright/test": "^1.23.1",
-    "bulma": "^0.9.2",
-    "chokidar": "^3.5.1",
     "electron-notarize": "^1.1.1",
     "electron-updater": "^4.6.5",
     "electron-windows-badge": "^1.1.0",
+    "@fortawesome/fontawesome-free": "^6.1.1",
+    "bulma": "^0.9.2",
+    "chokidar": "^3.5.1",
     "i18next": "^21.6.6",
     "i18next-fs-backend": "^1.1.1",
     "jstodotxt": "^0.10.0",
     "marked": "^4.0.12",
-    "peggy": "^1.2.0",
-    "playwright": "^1.23.1",
-    "sass": "^1.34.1",
     "sugar": "^2.0.6",
-    "vanillajs-datepicker": "^1.1.4"
+    "vanillajs-datepicker": "^1.1.4",
+    "sass": "^1.34.1",
+    "peggy": "^1.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.17.2",
+    "playwright": "^1.18.0",
     "electron": "^17.2.0",
     "electron-builder": "23.0.2",
     "electron-reloader": "^1.2.2",
