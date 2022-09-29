@@ -75,7 +75,7 @@ modalFormInputResize.onclick = function() {
 modalForm.onsubmit = async function(event) {
   try {
     
-    event.preventDefault();
+    event.preventDefault();  
 
     const modalFormInput = document.getElementById("modalFormInput");
 
@@ -96,10 +96,10 @@ modalForm.onsubmit = async function(event) {
     let index;
     // get the index for EDITING
     if(dataItem) {
-      index = items.objects.map(function(item) { return item.toString(); }).indexOf(dataItem);  
+      index = items.objects.map(function(object) { return object.raw; }).indexOf(dataItem);
     // get the index for checking for duplicates
     } else {
-      index = items.objects.map(function(item) { return item.toString(); }).indexOf(todo.toString());
+      index = items.objects.map(function(object) { return object.raw; }).indexOf(todo.raw);
     }
 
     // handle warnings in case of false user input
@@ -120,14 +120,15 @@ modalForm.onsubmit = async function(event) {
 
     // adding: append a new item to array
     // edit: use index to replace the existing item
-    (index === -1 && !dataItem) ? items.objects.push(todo) : items.objects.splice(index, 1, todo);
+    //(index === -1 && !dataItem) ? items.objects.push(todo) : items.objects.splice(index, 1, todo);
 
     // mark the todo for anchor jump after next reload
     item.previous = todo;
 
     // send file to main process to save it
     //window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
-    window.api.send("writeToFile", [todo.toString(), index]);
+    //window.api.send("writeToFile", [todo.toString(), index]);
+    window.api.send("writeToFile", [inputValue, index]);
 
     // close and clean up the modal
     resetForm().then(function(response) {
@@ -471,7 +472,8 @@ async function show(todo, templated) {
         // only show the complete button on open items
         (todo.complete) ? btnItemStatus.innerHTML = translations.inProgress : btnItemStatus.innerHTML = translations.done;
 
-        const value = todo.toString();
+        //const value = todo.toString();
+        const value = todo.raw;
 
         // pass todo string to form data item
         modalForm.setAttribute("data-item", value);
@@ -485,7 +487,7 @@ async function show(todo, templated) {
       if(todo.rec) setInput(todo.rec)
 
       // if so we paste it into the input field
-      if(todo.due || todo.t) fillDatePickerInput(todo)
+      //if(todo.due || todo.t) fillDatePickerInput(todo)
     }
     
     // resize all necessary input elements

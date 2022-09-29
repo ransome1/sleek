@@ -89,7 +89,23 @@ async function generateTodoTxtObjects(fileContent) {
   try {
 
     // create todo.txt objects
-    if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ])
+    //if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ])
+
+
+    if(fileContent !== undefined) {
+      items.objects = new Array;
+
+      const todoArray = fileContent.split(/\r?\n/);
+
+      // create todo.txt objects
+      let l = todoArray.length;
+      for(let i = 0; i < l; i++) {
+        const todoObject = await generateTodoTxtObject(todoArray[i]);
+        //todoObject.raw = todoArray[i];
+        // push objects into array
+        items.objects.push(todoObject);
+      }
+    }
 
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
@@ -104,6 +120,7 @@ async function generateTodoTxtObjects(fileContent) {
 function generateTodoTxtObject(string) {
   try {
     const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ]);
+    todo.raw = string;
     return Promise.resolve(todo);
   } catch(error) {
     error.functionName = editTodo.name;
@@ -319,7 +336,8 @@ function generateTableRow(todo) {
     if(todo.complete) todoTableBodyRow.setAttribute("class", "todo completed")
 
     // add todo string to data-item attribute
-    todoTableBodyRow.setAttribute("data-item", todo.toString());
+    //todoTableBodyRow.setAttribute("data-item", todo.toString());
+    todoTableBodyRow.setAttribute("data-item", todo.raw);
 
     // add the priority marker or a white spacer
     if(todo.priority && (sortBy === "priority" && !userData.sortByFile)) {
@@ -560,7 +578,7 @@ async function createTodoContext(todoTableRow) {
   try {
 
     // get index of todo
-    let index = await items.objects.map(function(object) {return object.toString(); }).indexOf(todoTableRow.getAttribute("data-item"));
+    let index = await items.objects.map(function(object) {return object.raw; }).indexOf(todoTableRow.getAttribute("data-item"));
     // retrieve todo object
     const todo = items.objects[index]
 
@@ -578,6 +596,7 @@ async function createTodoContext(todoTableRow) {
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
     }
     const copyTodo = async function() {
+
       pasteItemToClipboard(todo).then(response => {
         console.log(response);
       }).catch(error => {
@@ -811,8 +830,9 @@ async function addTodo(todo) {
     const index = items.objects.map(function(item) { return item.toString(); }).indexOf(todo.toString());
     
     if(index === -1) {
+
       //write the data to the file
-      window.api.send("writeToFile", [todo.toString(), index]);
+      window.api.send("writeToFile", [todo.raw, index]);
 
       return Promise.resolve("Success: New todo added to file: " + getActiveFile());
 
@@ -866,6 +886,10 @@ async function archiveTodos() {
       // remove empty entries
       completeTodos = completeTodos.filter(function(element) { return element });
     }
+
+    console.log(incompleteTodos);
+
+    return false;
 
     //write completed items to done file
     window.api.send("replaceFileContent", [completeTodos.join("\n").toString(), doneFile]);

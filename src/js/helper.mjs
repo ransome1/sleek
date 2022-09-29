@@ -78,7 +78,7 @@ export function jumpToItem(item) {
 export async function pasteItemToClipboard(item) {
   try {
 
-    window.api.send("copyToClipboard", [item.text]);
+    window.api.send("copyToClipboard", [item.raw]);
     showGenericMessage(translations.todoCopiedToClipboard, 3);
 
     return Promise.resolve("Success: Todo text pasted to clipboard: " + item.text);

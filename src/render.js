@@ -2,6 +2,7 @@
 let 
   appData,
   events,
+  fileContent,
   filters,
   helper,
   keyboard,
@@ -22,7 +23,9 @@ async function setUserData(key, value) {
     return Promise.reject(error);
   }
 }
-async function buildTable(fileContent, loadAll) {
+async function buildTable(raw, loadAll) {
+
+    fileContent = raw;
 
     // start timer for table
     const t0 = performance.now();
@@ -163,4 +166,4 @@ window.onload = async function() {
   }    
 }
 
-export { setUserData, buildTable, userData, appData, translations };
+export { setUserData, fileContent, buildTable, userData, appData, translations };
