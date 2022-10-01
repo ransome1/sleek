@@ -85,6 +85,7 @@ function getContent(file) {
 
     return Promise.resolve(fs.readFileSync(file, {encoding: "utf-8"}, function(error, data) { 
       if(process.mas) stopAccessingSecurityScopedResource()
+
       return data;
     }));
 
@@ -482,7 +483,11 @@ function configureWindowEvents() {
 
         // building string to write in file
         // when file is defined, but no index, it will be an archiving operation
-        const contentToWrite = fileAsArray.join("\n");
+
+        // remove empty elements from array
+        const fileAsArrayCleanedUp = fileAsArray.filter(function (obj) { return !["", null, undefined].includes(obj) })
+
+        const contentToWrite = fileAsArrayCleanedUp.join("\n");
 
         // only for MAS (Sandboxed)
         // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669

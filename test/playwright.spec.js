@@ -202,7 +202,8 @@ test.describe("Creating todos", () => {
 				"y": 10
 			}
 		});
-		await page.locator(":nth-match(#todoContext .dropdown-item, 5)").click();
+		const deleteButton = await page.locator(":nth-match(#todoContext .dropdown-item, 5)");
+		await deleteButton.click();
 		await page.waitForSelector("#btnAddTodoContainer");
 	});
 

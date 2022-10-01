@@ -88,10 +88,6 @@ function getAndsetPageTitle(linkId, href) {
 async function generateTodoTxtObjects(fileContent) {
   try {
 
-    // create todo.txt objects
-    //if(fileContent !== undefined) items.objects = await TodoTxt.parse(fileContent, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ])
-
-
     if(fileContent !== undefined) {
       items.objects = new Array;
 
@@ -101,7 +97,6 @@ async function generateTodoTxtObjects(fileContent) {
       let l = todoArray.length;
       for(let i = 0; i < l; i++) {
         const todoObject = await generateTodoTxtObject(todoArray[i]);
-        //todoObject.raw = todoArray[i];
         // push objects into array
         items.objects.push(todoObject);
       }
@@ -336,7 +331,6 @@ function generateTableRow(todo) {
     if(todo.complete) todoTableBodyRow.setAttribute("class", "todo completed")
 
     // add todo string to data-item attribute
-    //todoTableBodyRow.setAttribute("data-item", todo.toString());
     todoTableBodyRow.setAttribute("data-item", todo.raw);
 
     // add the priority marker or a white spacer
@@ -762,7 +756,7 @@ async function setTodoComplete(todo) {
     if(typeof todo === "string") todo = await generateTodoTxtObject(todo)
 
     // get index of todo
-    const index = await items.objects.map(function(item) {return item.toString(); }).indexOf(todo.toString());
+    const index = await items.objects.map(function(item) {return item.raw; }).indexOf(todo.raw);
 
     // mark item as in progress
     if(todo.complete) {
@@ -886,10 +880,6 @@ async function archiveTodos() {
       // remove empty entries
       completeTodos = completeTodos.filter(function(element) { return element });
     }
-
-    console.log(incompleteTodos);
-
-    return false;
 
     //write completed items to done file
     window.api.send("replaceFileContent", [completeTodos.join("\n").toString(), doneFile]);

@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.2.2-rc.4",
+  "version": "1.2.2",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "category": "ProjectManagement",
@@ -19,7 +19,7 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "buildVersion": "19",
+    "buildVersion": "20",
     "files": [
       "!flatpak-node${/*}",
       "!snap${/*}",

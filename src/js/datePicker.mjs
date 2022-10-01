@@ -52,8 +52,8 @@ function fillDatePickerInput(todo) {
   // if it's still empty fill it with placeholder text
   if(datePickerResult.innerHTML === "") datePickerResult.innerHTML = translations.formSelectDueDate;
 
-  // if a due date is set, the recurrence picker will be shown);
-  modalFormInput.value = todo.toString();
+  // write date into input element
+  //modalFormInput.value = todo.toString();
 
   // put focus on input field
   modalFormInput.focus();
@@ -90,6 +90,8 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
       // ******************************************************
 
       } else {
+
+        modalFormInput.value = todo.toString();
 
         fillDatePickerInput(todo);
 

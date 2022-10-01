@@ -22,7 +22,6 @@ const todoContext = document.getElementById("todoContext");
 
 btnSave.innerHTML = translations.save;
 btnCancel.innerHTML = translations.cancel;
-//datePickerInput.placeholder = translations.formSelectDueDate;
 datePickerResult.innerHTML = translations.formSelectDueDate;
 
 btnItemStatus.onclick = async function() {
@@ -487,7 +486,7 @@ async function show(todo, templated) {
       if(todo.rec) setInput(todo.rec)
 
       // if so we paste it into the input field
-      //if(todo.due || todo.t) fillDatePickerInput(todo)
+      if(todo.due || todo.t) fillDatePickerInput(todo)
     }
     
     // resize all necessary input elements
