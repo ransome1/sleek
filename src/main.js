@@ -76,16 +76,18 @@ function getChannel() {
 function getContent(file) {
   try {
 
-    if(!file) return false;
+    // only continue if file has been passed and if it exists
+    if(!file || (file && !fs.existsSync(file))) return false
 
     // only for MAS (Sandboxed)
     // https://gist.github.com/ngehlert/74d5a26990811eed59c635e49134d669
-    const activeFile = getActiveFile();
-    if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+    if(process.mas) {
+      const activeFile = getActiveFile();
+      stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(activeFile[3])
+    }
 
     return Promise.resolve(fs.readFileSync(file, {encoding: "utf-8"}, function(error, data) { 
       if(process.mas) stopAccessingSecurityScopedResource()
-
       return data;
     }));
 
