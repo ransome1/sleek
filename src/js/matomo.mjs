@@ -62,6 +62,9 @@ function configureMatomo() {
     if(typeof userData.showEmptyFilters === "boolean")_paq.push(["setCustomDimension", 20, userData.showEmptyFilters]);
     if(items && typeof items.objects === "object") _paq.push(["setCustomDimension", 21, todoRange(items.objects.length)]);
     if(typeof userData.deferredTodos === "boolean")_paq.push(["setCustomDimension", 22, userData.deferredTodos]);
+    if(typeof userData.getPageTitles === "boolean")_paq.push(["setCustomDimension", 23, userData.getPageTitles]);
+    if(typeof userData.caseSensitive === "boolean")_paq.push(["setCustomDimension", 24, userData.caseSensitive]);
+
     _paq.push(["requireConsent"]);
     _paq.push(["setConsentGiven"]);
     _paq.push(["trackPageView"]);

@@ -74,7 +74,7 @@ todoTableWrapper.onscroll = function(event) {
 }
 
 // receives a page title and if found replaces the link with it
-function getAndsetPageTitle(linkId, href) {
+function getAndSetPageTitle(linkId, href) {
   const pageBody = fetch(href);
   pageBody.then(response => response.text()).then(async data => {
     const regExp = new RegExp("<title[^>]*>(.*?)</title>");
@@ -399,7 +399,7 @@ function generateTableRow(todo) {
         link(href, title, text) {
 
           const linkId = Math.random().toString(36).slice(2);
-          if(userData.getPageTitles) getAndsetPageTitle(linkId, text);
+          if(userData.getPageTitles) getAndSetPageTitle(linkId, text);
 
           return `<span id="linkId${linkId}" class="linkText">${text}</span> <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
         }
