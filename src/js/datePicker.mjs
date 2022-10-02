@@ -91,7 +91,7 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
 
       } else {
 
-        modalFormInput.value = todo.toString();
+        document.getElementById("modalFormInput").value = todo.toString();
 
         fillDatePickerInput(todo);
 
@@ -101,6 +101,7 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Datepicker used to add date to input"]);
       }
+
     }
 
     // if there is an active datepicker, it will be destroyed
