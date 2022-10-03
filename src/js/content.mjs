@@ -256,7 +256,8 @@ function setFriendlyLanguageNames() {
       tr: "Türkçe",
       hu: "Magyar",
       cs: "Čeština",
-      pl: "Polski"
+      pl: "Polski",
+      ru: "Russian"
     }
     appData.languages.forEach((languageCode) => {
       let option = document.createElement("option");

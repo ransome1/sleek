@@ -1,6 +1,6 @@
 name: sleek
 base: core18
-version: "1.2.3"
+version: "1.2.4"
 summary: todo.txt manager for Linux, free and open-source (FOSS)
 description: |
   sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.

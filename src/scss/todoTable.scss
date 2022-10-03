@@ -103,6 +103,10 @@
     width: auto;
     cursor: pointer;
     color: $dark-grey;
+    display: flex;
+    .priority {
+      align-self: flex-start;
+    }
     /*a {
       font-size: 1.1em;
       font-family: FreeSansBold;

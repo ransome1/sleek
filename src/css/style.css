@@ -12294,12 +12294,16 @@ input.is-medium.input {
   width: auto;
   cursor: pointer;
   color: #5a5a5a;
+  display: flex;
   /*a {
     font-size: 1.1em;
     font-family: FreeSansBold;
     height: auto;
     padding: 0.15em 0.5em;
   }*/
+}
+#todoTable .cell.text .priority {
+  align-self: flex-start;
 }
 #todoTable .cell.text span.linkText {
   color: hsl(217deg, 71%, 53%);
@@ -12417,7 +12421,7 @@ input.is-medium.input {
 #todoContext {
   display: none;
   position: fixed;
-  z-index: 40;
+  z-index: 50;
   border-radius: 0.65em;
   box-shadow: 0 0 1em #ccc;
 }

@@ -42,7 +42,7 @@ let
   };
 
 function fillDatePickerInput(todo) {
-  modalFormInput = document.getElementById("modalFormInput");
+  //modalFormInput = document.getElementById("modalFormInput");
   // empty it
   datePickerResult.innerHTML = "";
   dateTypes.forEach(function(type) {
@@ -56,7 +56,7 @@ function fillDatePickerInput(todo) {
   //modalFormInput.value = todo.toString();
 
   // put focus on input field
-  modalFormInput.focus();
+  document.getElementById("modalFormInput").focus();
 
 }
 
@@ -104,15 +104,6 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
 
     }
 
-    // if there is an active datepicker, it will be destroyed
-    if(datePicker) datePicker.destroy();
-
-    // ******************************************************
-    // create datepicker instance
-    // ******************************************************
-
-    datePicker = await new Datepicker(attachToElement, datePickerOptions);
-
     // ******************************************************
     // prepare todo object if none has been passed
     // ******************************************************
@@ -126,7 +117,16 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
       });
     }
 
-    datePicker.show();
+    // if there is an active datepicker, it will be destroyed
+    if(datePicker) datePicker.destroy();
+
+    // ******************************************************
+    // create datepicker instance
+    // ******************************************************
+
+    //(todo.due) ? datePickerOptions.defaultViewDate = todo.due : datePickerOptions.defaultViewDate = undefined
+
+    datePicker = await new Datepicker(attachToElement, datePickerOptions);
 
     // close datepicker when container loses focus
     attachToElement.onblur = function() { datePicker.destroy(); }
@@ -182,7 +182,6 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
     }
 
     attachToElement.addEventListener("changeDate", function(event) {
-
       // ******************************************************
       // add due date to todo object or remove a given one if no date is passed
       // ******************************************************
@@ -196,6 +195,8 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
       }
       applyDate(todo, addDateToElement);
     });
+
+    datePicker.show();
 
     return Promise.resolve("Success: " + extension + " datepicker intance created");
 

@@ -10,7 +10,7 @@ import { createModalJail } from "./jail.mjs";
 import { focusRow } from "./keyboard.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
-import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification } from "./helper.mjs";
+import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification, isInViewport } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
 import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension } from "./todotxtExtensions.mjs";
@@ -699,6 +699,12 @@ async function createTodoContext(todoTableRow) {
     } else {
       todoContext.style.left = event.x + "px";
       todoContext.style.top = event.y + "px";
+    }
+
+    if(!isInViewport(todoContext)) {
+      console.log(todoContext.clientHeight)
+      todoContext.style.top = event.y - todoContext.clientHeight + "px";
+      todoContext.style.left = event.x - todoContext.clientWidth + "px";
     }
     
     // ugly but neccessary: if triggered to fast arrow right will do a first row change in jail 
