@@ -85,13 +85,13 @@ function getAndSetPageTitle(linkId, href) {
   })
 }
 
-async function generateTodoTxtObjects(fileContent) {
+async function generateTodoTxtObjects(raw) {
   try {
 
-    if(fileContent !== undefined) {
+    if(raw !== undefined) {
       items.objects = new Array;
 
-      const todoArray = fileContent.split(/\r?\n/);
+      const todoArray = raw.split(/\r?\n/);
 
       // create todo.txt objects
       let l = todoArray.length;

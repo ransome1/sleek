@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "編集",
   "helpTabKeyboardTR26TD1": "完了としてマーク",
   "helpTabKeyboardTR27TD1": "オープンコンテキスト",
-  "helpTabPrioritiesBody": "重要タスクをリストの見やすい場所に置きましょう. タスク先頭 \"(A)\" を記載することだけでできる. (A) 以外AからZが利用でいるが, AからCは特定色が設定されている. ほか優先度はグレー色となり. キーボードで優先度を設定する際に新規･編集ウインドウでAlt+A〜Zを使ってください. ",
+  "helpTabPrioritiesBody": "重要タスクをリストの見やすい場所に置きましょう. タスク先頭 \"(A)\" を記載することだけでできる. (A) 以外AからZが利用でいるが, AからCは特定色が設定されている.",
   "helpTabPrioritiesTitle": "優先度を追加",
   "helpTabRecurrencesBody1": "タスクを繰り返しに設定するには, <strong>rec:</strong> タグを使う(例えば, <strong>rec:d</strong> で毎日繰り返しするタスクを作成. sleek UIでは rec: 属性を作成することができる. テキストで編集することも可能. 設定可能の値は<strong>d</strong> (毎日), <strong>b</strong> (毎営業日), <strong>w</strong> (毎週), <strong>m</strong> (毎月), <strong>y</strong> (毎年). ほかの設定値は <strong>rec:3m</strong> 3ヶ月一度設定することが可能. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">詳細</a>.",
   "helpTabRecurrencesTitle1": "繰り返しを追加",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "タブ",
   "hint_priority": "Todoは<code>（A...Z）</code>で優先されます",
   "hint_contexts": "@記号は、todosに<code> @contexts</code>を追加します",
-  "hint_projects": "<code> + projects </code>は、+記号を使用して追加されます"
+  "hint_projects": "<code> + projects </code>は、+記号を使用して追加されます",
+  "getPageTitlesHeadline": "リンクを置き換える",
+  "getPageTitlesBody": "リンクが検出され、対応する Web サイトのタイトルに置き換えられます。",
+  "caseSensitiveHeadline": "大文字と小文字を区別する検索",
+  "caseSensitiveBody": "検索クエリは大文字と小文字を区別して解釈されます。"
 }

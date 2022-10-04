@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Edit",
   "helpTabKeyboardTR26TD1": "Mark as complete",
   "helpTabKeyboardTR27TD1": "Open context",
-  "helpTabPrioritiesBody": "Important todos need to have an important spot on your list. Simply append a \"(A)\" at the beginning of the todo to achieve this. You're not bound to (A) as everything from A to Z is possible. But only A to C will have a colored bar next to the todo. All other priorities have a neutral grey colored bar attached. To assign a priority using a keyboard shortcut, press Alt + A to Z while the add/edit window is open",
+  "helpTabPrioritiesBody": "Important todos need to have an important spot on your list. Simply append a \"(A)\" at the beginning of the todo to achieve this. You're not bound to (A) as everything from A to Z is possible. But only A to C will have a colored bar next to the todo. All other priorities have a neutral grey colored bar attached.",
   "helpTabPrioritiesTitle": "Adding a priority",
   "helpTabRecurrencesBody1": "If you want a todo to repeat itself you need to specify a recurrence interval using the <strong>rec:</strong> (for example <strong>rec:d</strong> for a todo that recurs every day) attribute. The sleek user interface provides controls to set the rec: attribute for you, or you can edit it into the text of the todo yourself. Possible values are <strong>d</strong> (daily), <strong>b</strong> (each business day), <strong>w</strong> (weekly), <strong>m</strong> (monthly), <strong>y</strong> (anually). You can also specify a different interval, for example, <strong>rec:3m</strong> to repeat every 3rd month. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Learn more about recurrences in sleek</a>.",
   "helpTabRecurrencesTitle1": "Adding recurrences",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "Tabs",
   "hint_priority": "Todos are prioritized with <code>(A...Z)</code>",
   "hint_contexts": "The @ symbol adds <code>@contexts</code> to todos",
-  "hint_projects": "<code>+projects</code> are added using the + symbol"
+  "hint_projects": "<code>+projects</code> are added using the + symbol",
+  "getPageTitlesHeadline": "Replace links",
+  "getPageTitlesBody": "Links will be detected and replaced with the corresponding website titles.",
+  "caseSensitiveHeadline": "Case sensitive search",
+  "caseSensitiveBody": "Search queries will be interpreted case sensitive."
 }

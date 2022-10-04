@@ -338,7 +338,7 @@ function getUserData() {
     if(typeof userData.data.language != "string") userData.data.language = app.getLocale().substr(0,2);
     if(typeof userData.data.autoUpdate != "boolean") userData.data.autoUpdate = false;
     if(typeof userData.data.theme != "string") userData.set("theme", "system");
-    if(typeof userData.data.getPageTitles != "boolean") userData.data.getPageTitles = true;
+    if(typeof userData.data.getPageTitles != "boolean") userData.data.getPageTitles = false;
     if(typeof userData.data.caseSensitive != "boolean") userData.data.caseSensitive = false;
     
     //TODO remove this after 1.1.7 has been fully distributed
@@ -538,10 +538,10 @@ function setupTray() {
       event.preventDefault();
       if(app.isQuiting) return false;
       mainWindow.hide();
-      app.dock.hide();
+      if(appData.os === "mac") app.dock.hide();
     })
     .on("show", function () {
-      app.dock.show();
+      if(appData.os === "mac") app.dock.show();
     })
 
   const trayIcon = (appData.os === "windows") ? path.join(appData.path, "../assets/icons/tray/tray.ico") : path.join(appData.path, "../assets/icons/tray/tray.png");
@@ -870,9 +870,6 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
 } else {
 
   app.on("ready", () => {
-
-    // in tray mode, dock icon is hidden
-    //if(userData.data.tray) app.dock.hide()
 
     // setup autoupdater for AppImage build
     if(appData.channel === "AppImage" && userData.data.autoUpdate) autoUpdaterAppImage.checkForUpdatesAndNotify()

@@ -70,13 +70,7 @@ function runQuery(item, compiledQuery) {
         break;
       case "string":
         next = q.shift();  // the string value to match
-
-        if(!userData.caseSensitive) {
-          next = next.toLowerCase();
-          item.raw = item.raw.toLowerCase();
-        }
-
-        stack.push(item.raw.indexOf(next) !== -1);
+        stack.push(item.toString().toLowerCase().indexOf(next.toLowerCase()) !== -1);
         break;
       case "regex":
         next = q.shift();  // the regex to match
@@ -120,15 +114,9 @@ function runQuery(item, compiledQuery) {
           stack.push(item.projects && item.projects.includes(next.slice(1,-1)));
         } else {
           // case-insensitive match for next as a substring of the project name
-          let pattern = next;
+          let pattern = next.toLowerCase();
           stack.push(item.projects && item.projects.findIndex(function(p) {
-            
-            if(!userData.caseSensitive) {
-              pattern = pattern.toLowerCase();
-              p = p.toLowerCase();
-            }
-
-            return p.indexOf(pattern) > -1;
+            return p.toLowerCase().indexOf(pattern) > -1;
           }) > -1);
         }
         break;
@@ -140,14 +128,9 @@ function runQuery(item, compiledQuery) {
           stack.push(item.contexts && item.contexts.includes(next.slice(1,-1)));
         } else {
           // case-insensitive match for next as a substring of the context name
-          let pattern = next;
+          let pattern = next.toLowerCase();
           stack.push(item.contexts && item.contexts.findIndex(function(c) {
-            if(!userData.caseSensitive) {
-              pattern = pattern.toLowerCase();
-              c = c.toLowerCase();
-            }
-
-            return c.indexOf(pattern) > -1;
+            return c.toLowerCase().indexOf(pattern) > -1;
           }) > -1);
         }
         break;

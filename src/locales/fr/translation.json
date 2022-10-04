@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Éditer",
   "helpTabKeyboardTR26TD1": "Marquer comme complet",
   "helpTabKeyboardTR27TD1": "Contexte ouvert",
-  "helpTabPrioritiesBody": "Les tâches importantes doivent être mises en avant dans votre liste. Vous pouvez pour cela ajouter \"(A)\" au début de votre tâche. Vous pouvez remplacer A par n’importe quelle lettre, mais seuls A, B et C seront mis en avant par un fond coloré. Les autres priorités auront un fond gris plus neutre. Pour ajouter une priorité par raccourci clavier, combinez Alt + A à Z lorsque la fenêtre d’ajouter/édition est ouverte.",
+  "helpTabPrioritiesBody": "Les tâches importantes doivent être mises en avant dans votre liste. Vous pouvez pour cela ajouter \"(A)\" au début de votre tâche. Vous pouvez remplacer A par n’importe quelle lettre, mais seuls A, B et C seront mis en avant par un fond coloré. Les autres priorités auront un fond gris plus neutre.",
   "helpTabPrioritiesTitle": "Ajouter une priorité",
   "helpTabRecurrencesBody1": "Si vous souhaitez qu’une tâche se répète, vous devez définir l’intervalle de répétition en utilisant <strong>rec:</strong> (par exemple <strong>rec:d</strong> pour une tâche quotidienne). L’interface utilisateur de sleek comporte des options permettant de définir l’attribut rec: à votre place, mais vous pouvez aussi l’ajouter vous-même dans la zone de texte de la tâche. Les valeurs disponibles sont <strong>d</strong> (quotidien), <strong>b</strong> (tous les jours ouvrables), <strong>w</strong> (hebdomadaire), <strong>m</strong> (mensuel), <strong>y</strong> (annuel). Vous pouvez définir un intervalle différent, comme <strong>rec:3m</strong> pour que la tâche se répète tous les trois mois. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">En savoir plus sur la répétition dans sleek</a>.",
   "helpTabRecurrencesTitle1": "Définir la répétition",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "Onglets",
   "hint_priority": "Les tâches sont priorisées avec <code>(A...Z)</code>",
   "hint_contexts": "Le symbole @ ajoute <code>@contexts</code> aux tâches",
-  "hint_projects": "Les <code>+projets</code> sont ajoutés à l'aide du symbole +"
+  "hint_projects": "Les <code>+projets</code> sont ajoutés à l'aide du symbole +",
+  "getPageTitlesHeadline": "Remplacer les liens",
+  "getPageTitlesBody": "Les liens seront détectés et remplacés par les titres de sites Web correspondants.",
+  "caseSensitiveHeadline": "Recherche sensible à la casse",
+  "caseSensitiveBody": "Les requêtes de recherche seront interprétées en respectant la casse."
 }

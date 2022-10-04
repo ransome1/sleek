@@ -2,7 +2,6 @@
 let 
   appData,
   events,
-  fileContent,
   filters,
   helper,
   keyboard,
@@ -25,15 +24,13 @@ async function setUserData(key, value) {
 }
 async function buildTable(raw, loadAll) {
 
-    fileContent = raw;
-
     // start timer for table
     const t0 = performance.now();
 
     // refresh user data on each build
     userData = await window.api.invoke("userData");
 
-    await todos.generateTodoTxtObjects(fileContent).then(function(response) {
+    await todos.generateTodoTxtObjects(raw).then(function(response) {
       console.log(response)
     }).catch(function(error) {
       helper.handleError(error);
@@ -166,4 +163,4 @@ window.onload = async function() {
   }    
 }
 
-export { setUserData, fileContent, buildTable, userData, appData, translations };
+export { setUserData, buildTable, userData, appData, translations };

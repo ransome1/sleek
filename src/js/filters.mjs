@@ -170,9 +170,8 @@ function applyFilters() {
 
 function applySearchInput(queryString) {
   try {
+    let query = filterlang.parse(queryString);
 
-    const query = filterlang.parse(queryString);
-    
     items.filtered = items.filtered.filter(function(item) {
       return runQuery(item, query);
     });
@@ -192,10 +191,10 @@ function applySearchInput(queryString) {
       // of the last working query, so let's assume that it is a
       // plain-text query.
 
-      items.filtered = items.filtered.filter(function(item) {
+      items.filtered = items.filtered.filter(function(item) {        
         if(!userData.caseSensitive) {
           queryString = queryString.toLowerCase();
-          item.raw = item.raw.toLowerCase();
+          item.raw = item.raw.toLowerCase()
         }
         return item.raw.indexOf(queryString) !== -1;
       });

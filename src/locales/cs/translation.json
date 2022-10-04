@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Upravit",
   "helpTabKeyboardTR26TD1": "Označit jako dokončené",
   "helpTabKeyboardTR27TD1": "Otevřený kontext",
-  "helpTabPrioritiesBody": "Důležité úkoly musí mít důležité místo na vašem seznamu. Jednoduše přidejte \"(A)\" na začátek vašeho úkolu. Nemusíte používat pouze (A), můžete použít všechna písmena od A po Z. Avšak pouze písmena od A po C budou mít barevnou lištu vedle daného úkolu. Všechny ostatní priority budou mít šedou, neutrální lištu. Pokud chcete přiřadit prioritu pomocí klávesové zkratky, stiskněte Alt + A až Z, jakmile je okno s přidáváním/upravováním otevřené",
+  "helpTabPrioritiesBody": "Důležité úkoly musí mít důležité místo na vašem seznamu. Jednoduše přidejte \"(A)\" na začátek vašeho úkolu. Nemusíte používat pouze (A), můžete použít všechna písmena od A po Z. Avšak pouze písmena od A po C budou mít barevnou lištu vedle daného úkolu. Všechny ostatní priority budou mít šedou, neutrální lištu.",
   "helpTabPrioritiesTitle": "Přidávání priority",
   "helpTabRecurrencesBody1": "Pokud chcete nastavit, aby se úkol opakoval, musíte nastavit interval jeho opakování pomocí atributu <strong>rec:</strong> (například <strong>rec:d</strong>, aby se úkol opakoval každý den). Uživatelské nastavení aplikace sleek obsahuje funkce, se kterými můžete atribut rec: nastavit, nebo jej můžete přímo upravit v textu samotného úkolu. Možné hodnoty jsou <strong>d</strong> (každý den), <strong>b</strong> (každý pracovní den), <strong>w</strong> (každý týden), <strong>m</strong> (každý měsíc), <strong>y</strong> (každý rok). Taktéž můžete nastavit jiný interval, například <strong>rec:3m</strong>, aby se úkol opakoval každý 3. měsíc. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Zjistěte více o opakování v aplikaci sleek</a>.",
   "helpTabRecurrencesTitle1": "Přidávání opakování",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "Záložky",
   "hint_priority": "Úkoly mají prioritu <code>(A...Z)</code>",
   "hint_contexts": "Symbol @ přidává k úkolům <code>@kontexty</code>",
-  "hint_projects": "<code>+projekty</code> se přidávají pomocí symbolu +"
+  "hint_projects": "<code>+projekty</code> se přidávají pomocí symbolu +",
+  "getPageTitlesHeadline": "Nahradit odkazy",
+  "getPageTitlesBody": "Adresy URL budou detekovány a nahrazeny odpovídajícími názvy webových stránek.",
+  "caseSensitiveHeadline": "Vyhledávání rozlišující malá a velká písmena",
+  "caseSensitiveBody": "Ve vyhledávacích dotazech se budou rozlišovat malá a velká písmena."
 }

@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Bearbeiten",
   "helpTabKeyboardTR26TD1": "Als erledigt markieren",
   "helpTabKeyboardTR27TD1": "Kontextmenü öffnen",
-  "helpTabPrioritiesBody": "Wichtige Aufgaben müssen entsprechend in der Liste hervorgehoben werden. Dazu wird bspw. ein \"(A)\" an den Beginn der Aufgabe geschrieben. (A) ist lediglich ein Beispiel und beschreibt die höchste Priorität. Alles von A bis Z ist möglich, doch nur A bis C werden farblich hervorgehoben. Alle anderen Prioritäten sind mit einem neutralen grauen Balken versehen. Neben einem Steuerungselement, können mit der Tastenkombination Alt + A bis Z Prioritäten hinzugefügt werden. Dazu muss das Hinzufügen/Bearbeiten-Fenster geöffnet sein.",
+  "helpTabPrioritiesBody": "Wichtige Aufgaben müssen entsprechend in der Liste hervorgehoben werden. Dazu wird bspw. ein \"(A)\" an den Beginn der Aufgabe geschrieben. (A) ist lediglich ein Beispiel und beschreibt die höchste Priorität. Alles von A bis Z ist möglich, doch nur A bis C werden farblich hervorgehoben. Alle anderen Prioritäten sind mit einem neutralen grauen Balken versehen.",
   "helpTabPrioritiesTitle": "Priorität hinzufügen",
   "helpTabRecurrencesBody1": "Soll sich eine Aufgabe wiederholen, muss ein Wiederholungsintervall mit dem Attribut <strong>rec:</strong> angeben (zum Beispiel <strong>rec:d</strong> für eine täglich wiederkehrende Aufgabe) werden. sleeks Benutzeroberfläche bietet ein Steuerelement zum Festlegen des rec:-Attributs. Alternativ kann das rec: Attribut in den Text geschrieben werden. Mögliche Werte sind <strong>d</strong> (täglich), <strong>b</strong> (jeder Werktag), <strong>w</strong> (wöchentlich), <strong>m</strong> ( monatlich), <strong>j</strong> (jährlich). Sie können auch ein anderes Intervall angeben, zum Beispiel <strong>rec:3m</strong>, durch das sich die Aufgabe alle 3 Monate wiederholt. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Mehr über sich wiederholende Aufgaben in sleek</a>.",
   "helpTabRecurrencesTitle1": "Wiederholungen hinzufügen",
@@ -182,5 +182,9 @@
   "fileTabsHeadline": "Reiter",
   "hint_priority": "Mit <code>(A...Z)</code> werden Todos priorisiert",
   "hint_contexts": "Das @ Symbol fügt <code>@kontexte</code> zu den Todos hinzu",
-  "hint_projects": "<code>+projekte</code> werden mithilfe des + Symbols hinzugefügt"
+  "hint_projects": "<code>+projekte</code> werden mithilfe des + Symbols hinzugefügt",
+  "getPageTitlesHeadline": "Links ersetzen",
+  "getPageTitlesBody": "Links werden erkannt und durch die entsprechenden Website-Titel ersetzt.",
+  "caseSensitiveHeadline": "Suche beachtet Groß-/Kleinschreibung",
+  "caseSensitiveBody": "Bei Suchanfragen wird die Groß-/Kleinschreibung beachtet."
 }

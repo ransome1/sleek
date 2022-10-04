@@ -71,7 +71,7 @@
   "helpTabKeyboardTR25TD1": "Edytować",
   "helpTabKeyboardTR26TD1": "Oznacz jako zakończone",
   "helpTabKeyboardTR27TD1": "Otwórz kontekst",
-  "helpTabPrioritiesBody": "Ważne zadania muszą mieć ważne miejsce na twojej liście. Aby to osiągnąć, wystarczy dodać \"(A)\" na początku zadania. Nie jesteś ograniczony do (A), ponieważ możesz korzystać z wszystkich liter od A do Z. Ale tylko od A do C będą miały kolorowy pasek obok zadania. Wszystkie inne priorytety mają dołączony pasek w neutralnym szarym kolorze. Aby przypisać priorytet za pomocą skrótu klawiaturowego, naciśnij Alt + A do Z, gdy okno dodawania/edycji zadania jest otwarte.",
+  "helpTabPrioritiesBody": "Ważne zadania muszą mieć ważne miejsce na twojej liście. Aby to osiągnąć, wystarczy dodać \"(A)\" na początku zadania. Nie jesteś ograniczony do (A), ponieważ możesz korzystać z wszystkich liter od A do Z. Ale tylko od A do C będą miały kolorowy pasek obok zadania. Wszystkie inne priorytety mają dołączony pasek w neutralnym szarym kolorze.",
   "helpTabPrioritiesTitle": "Dodawanie priorytetu",
   "helpTabRecurrencesBody1": "Jeśli chcesz, aby zadanie automatycznie się powtarzało, musisz określić interwał powtarzania za pomocą atrybutu <strong>rec:</strong> (na przykład <strong>rec:d</strong> dla zadania, które powtarza się codziennie). W interfejsie użytkownika sleek istnieje przycisk do wygodnego ustawienia atrybutu rec:, ale możesz też samodzielnie edytować go w tekście zadania. Możliwe wartości to <strong>d</strong> (codziennie), <strong>b</strong> (w każdy dzień roboczy), <strong>w</strong> (co tydzień), <strong>m</strong> (co miesiąc), <strong>y</strong> (co rok). Możesz również określić inny interwał, np. <strong>rec:3m</strong>, by zadanie powtarzało się co 3 miesiące. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Dowiedz się więcej na temat powtarzających się zadań w sleeku</a>.",
   "helpTabRecurrencesTitle1": "Dodawanie zadań powtarzających się",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "Karty",
   "hint_priority": "Zadania są traktowane priorytetowo za pomocą <code>(A...Z)</code>",
   "hint_contexts": "Symbol @ dodaje <code>@contexts</code> do listy zadań",
-  "hint_projects": "<code>+projekty</code> są dodawane za pomocą symbolu +"
+  "hint_projects": "<code>+projekty</code> są dodawane za pomocą symbolu +",
+  "getPageTitlesHeadline": "Zastąp linki",
+  "getPageTitlesBody": "Linki zostaną wykryte i zastąpione odpowiednimi tytułami stron internetowych.",
+  "caseSensitiveHeadline": "Wyszukiwanie z uwzględnieniem wielkości liter",
+  "caseSensitiveBody": "Wyszukiwane hasła będą interpretowane z uwzględnieniem wielkości liter."
 }

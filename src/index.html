@@ -503,12 +503,24 @@
               </td>
             </tr>
           </table>
-          <table id="getPageTitlesRow" class="settings">
+          <table class="settings">
             <tr>
-              <th colspan="100%" id="getPageTitlesHeadline">Replace links with website titles</th>
+              <th colspan="100%" id="zoomHeadline"></th>
             </tr>
             <tr>
-              <td id="getPageTitlesBody">[PLACEHOLDER for description text]</td>
+              <td id="zoomBody"></td>
+              <td class="zoom">
+                <input type="range" id="zoom" name="vol" min="75" max="125"><br>
+                <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
+              </td>
+            </tr>
+          </table>
+          <table class="settings">
+            <tr>
+              <th colspan="100%" id="getPageTitlesHeadline"></th>
+            </tr>
+            <tr>
+              <td id="getPageTitlesBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="getPageTitles">
@@ -519,12 +531,12 @@
               </td>
             </tr>
           </table>
-          <table id="caseSensitiveRow" class="settings">
+          <table class="settings">
             <tr>
-              <th colspan="100%" id="caseSensitiveHeadline">Searching and filtering case sensitive</th>
+              <th colspan="100%" id="caseSensitiveHeadline"></th>
             </tr>
             <tr>
-              <td id="caseSensitiveBody">[PLACEHOLDER for description text]</td>
+              <td id="caseSensitiveBody"></td>
               <td>
                 <span class="toggle">
                   <label class="switch" for="caseSensitive">
@@ -532,18 +544,6 @@
                     <span class="slider round"></span>
                   </label>
                 </span>
-              </td>
-            </tr>
-          </table>
-          <table class="settings">
-            <tr>
-              <th colspan="100%" id="zoomHeadline"></th>
-            </tr>
-            <tr>
-              <td id="zoomBody"></td>
-              <td class="zoom">
-                <input type="range" id="zoom" name="vol" min="75" max="125"><br>
-                <span id="zoomStatus"></span><span id="zoomUndo"><i class="fas fa-undo"></i></span>
               </td>
             </tr>
           </table>
