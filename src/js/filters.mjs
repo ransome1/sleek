@@ -596,13 +596,12 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       });    
 
       // search within filters according to autoCompleteValue
-      // if(autoCompletePrefix) filters = filters.filter(function(filter) { 
-      //   // (!userData.caseSensitive)
-      //   //   autoCompleteValue = queryString.toLowerCase();
-      //   //   filter.raw = item.raw.toLowerCase();
-
-      //   return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase());
-      // })
+      if(autoCompletePrefix) filters = filters.filter(function(filter) { 
+        // (!userData.caseSensitive)
+        //   autoCompleteValue = queryString.toLowerCase();
+        //   filter.raw = item.raw.toLowerCase();
+        return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase());
+      })
 
       // remove duplicates, create the count object and avoid counting filters of hidden todos
       filtersCounted = filters.reduce(function(filters, filter) {
