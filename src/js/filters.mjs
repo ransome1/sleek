@@ -67,8 +67,8 @@ function saveFilter(newFilter, oldFilter, category) {
     
     // write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
-    
+    window.api.send("replaceFileContent", [items.objects.join("\n").toString() + "\n"]);
+
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter renamed"]);
 
@@ -107,7 +107,7 @@ function deleteFilter(filter, category) {
 
     //write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
-    window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+    window.api.send("replaceFileContent", [items.objects.join("\n").toString() + "\n"]);
 
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Filter-Drawer", "Filter deleted"]);
@@ -596,13 +596,12 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
       });    
 
       // search within filters according to autoCompleteValue
-      // if(autoCompletePrefix) filters = filters.filter(function(filter) { 
-      //   // (!userData.caseSensitive)
-      //   //   autoCompleteValue = queryString.toLowerCase();
-      //   //   filter.raw = item.raw.toLowerCase();
-
-      //   return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase());
-      // })
+      if(autoCompletePrefix) filters = filters.filter(function(filter) { 
+        // (!userData.caseSensitive)
+        //   autoCompleteValue = queryString.toLowerCase();
+        //   filter.raw = item.raw.toLowerCase();
+        return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase());
+      })
 
       // remove duplicates, create the count object and avoid counting filters of hidden todos
       filtersCounted = filters.reduce(function(filters, filter) {

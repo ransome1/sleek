@@ -460,7 +460,7 @@ function configureWindowEvents() {
       .on("replaceFileContent", async function(event, args) {
 
         const content = args[0];
-        const file = args[1];
+        const file = (args[1]) ? args[1] : await getActiveFile()[1];
 
         if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(getActiveFile()[3])
 
@@ -482,7 +482,7 @@ function configureWindowEvents() {
         // delete element in array
         if(index >= 0 && !data) fileAsArray.splice(index, 1);
 
-        //if(index === undefined && data) contentToWrite = data;
+        if(index === undefined && data) contentToWrite = data;
 
         // building string to write in file
         // when file is defined, but no index, it will be an archiving operation
