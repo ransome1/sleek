@@ -1,7 +1,7 @@
 // ******************************************************
 // creates a new datepicker instance and attaches it to an element
-// either fills in the modal form input or saves new date to an existant todo if it was passed
-// destroyes datepicker instance when datepicker container looses focus
+// either fills in the modal form input or saves new date to an existing todo if it was passed
+// destroys datepicker instance when datepicker container looses focus
 // ******************************************************
 
 "use strict";

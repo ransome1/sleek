@@ -14,17 +14,12 @@ import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generate
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
 import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension } from "./todotxtExtensions.mjs";
+import { createTodoContext } from "./contextmenu.mjs";
 
 const item = { previous: "" }
 const items = { objects: {} }
 const resultStats = document.getElementById("resultStats");
 const tableContainerCategoriesTemplate = document.createElement("div");
-const todoContext = document.getElementById("todoContext");
-const todoContextDelete = document.getElementById("todoContextDelete");
-const todoContextCopy = document.getElementById("todoContextCopy");
-const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
-const todoContextPriorityIncrease = document.getElementById("todoContextPriorityIncrease");
-const todoContextPriorityDecrease = document.getElementById("todoContextPriorityDecrease");
 const todoTable = document.getElementById("todoTable");
 const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
@@ -41,10 +36,6 @@ let
   clusterCounter = 0,
   clusterSize = Math.ceil(window.innerHeight/32), // 32 being the pixel height of one todo in compact mode
   clusterThreshold = clusterSize;
-
-todoContextDelete.innerHTML = translations.delete;
-todoContextCopy.innerHTML = translations.copy;
-todoContextUseAsTemplate.innerHTML = translations.useAsTemplate;
 
 tableContainerCategoriesTemplate.setAttribute("class", "cell categories");
 todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
@@ -568,155 +559,7 @@ function generateTableRow(todo) {
     return Promise.reject(error);
   }
 }
-async function createTodoContext(todoTableRow) {
-  try {
 
-    // get index of todo
-    let index = await items.objects.map(function(object) {return object.raw; }).indexOf(todoTableRow.getAttribute("data-item"));
-    // retrieve todo object
-    const todo = items.objects[index]
-
-    const useAsTemplate = function() {
-      show(todo.toString(), true).then(response => {
-        console.log(response);
-      }).catch(error => {
-        handleError(error);
-      });
-
-      todoContext.classList.toggle("is-active");
-      todoContext.removeAttribute("data-item");
-
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
-    }
-    const copyTodo = async function() {
-
-      pasteItemToClipboard(todo).then(response => {
-        console.log(response);
-      }).catch(error => {
-        handleError(error);
-      });
-
-      todoContext.classList.toggle("is-active");
-      todoContext.removeAttribute("data-item");
-
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
-    }
-    const deleteTodo = async function() {
-      
-      //send index to main process in order to delete line
-      window.api.send("writeToFile", [undefined, index, undefined]);      
-      
-      todoContext.classList.remove("is-active");
-      todoContext.removeAttribute("data-item");
-      
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
-    }
-    const changePriority = function(direction) {
-
-      const todo = items.objects[index];
-
-      let nextIndex = 97;
-
-      // in case a todo has no priority and the 1st grouping method is priority
-      if(!todo.priority && userData.sortBy[0] === "priority") {
-        const index = items.grouped.length - 2;
-        // this receives the lowest available priority group
-        (index >= 0) ? nextIndex = items.grouped[index][0].toLowerCase().charCodeAt(0) : nextIndex = 97
-      // change priority based on current priority
-      } else if(todo.priority) {
-        const currentPriority = todo.priority.toLowerCase().charCodeAt(0)
-        nextIndex = currentPriority + direction;
-      }
-
-      if(nextIndex <= 96 || nextIndex >= 123) return false
-
-      todo.priority = String.fromCharCode(nextIndex).toUpperCase();
-
-      //write the data to the file
-      window.api.send("writeToFile", [todo.toString(), index]);
-
-      todoContext.classList.remove("is-active");
-      todoContext.removeAttribute("data-item");
-
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority changer"]);
-
-    }
-
-    todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
-    todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
-  
-    // click on increse priority option
-    todoContextPriorityIncrease.onclick = function() {
-      changePriority(-1);
-    }
-    todoContextPriorityIncrease.onkeypress = function(event) {
-      if(event.key !== "Enter") return false;
-      changePriority(-1);
-    }
-    // click on decrease priority option
-    todoContextPriorityDecrease.onclick = function() {
-      changePriority(1);
-    }
-    todoContextPriorityDecrease.onkeypress = function(event) {
-      if(event.key !== "Enter") return false;
-      changePriority(1);
-    }
-    // click on use as template option
-    todoContextUseAsTemplate.onclick = function() {
-      useAsTemplate();
-    }
-    todoContextUseAsTemplate.onkeypress = function(event) {
-      if(event.key !== "Enter") return false;
-      useAsTemplate();
-    }
-    // click on copy
-    todoContextCopy.onclick = function() {
-      copyTodo();
-    }
-    todoContextCopy.onkeypress = function(event) {
-      if(event.key !== "Enter") return false;
-      copyTodo();
-    }
-    // click on delete
-    todoContextDelete.onclick = function() {
-      deleteTodo();
-    }
-    todoContextDelete.onkeypress = function(event) {
-      if(event.key !== "Enter") return false;
-      deleteTodo();
-    }
-
-    todoContext.classList.add("is-active");
-
-    if(!event.x && !event.y) {
-      const box = todoTableRow.getBoundingClientRect();
-      todoContext.style.left = box.right - todoContext.offsetWidth + "px";
-      todoContext.style.top = box.top + "px";
-    } else {
-      todoContext.style.left = event.x + "px";
-      todoContext.style.top = event.y + "px";
-    }
-    
-    // ugly but neccessary: if triggered to fast arrow right will do a first row change in jail 
-    setTimeout(function() {
-      createModalJail(todoContext, true).then(response => {
-        console.log(response);
-      }).catch(error => {
-        handleError(error);
-      });
-    }, 10);
-
-    return Promise.resolve("Success: Context opened");
-
-  } catch(error) {
-    error.functionName = createTodoContext.name;
-    return Promise.reject(error);
-  }
-}
 function sortTodosInGroup(group) {
   try {
     // start at 1 to skip sorting method used for 1st level grouping
@@ -902,4 +745,4 @@ async function archiveTodos() {
   }
 }
 
-export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, editTodo, show, createTodoContext, generateTodoTxtObject };
+export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, editTodo, show, generateTodoTxtObject };

@@ -1,5 +1,6 @@
 "use strict";
-import { createTodoContext, setTodoComplete, archiveTodos, items } from "./todos.mjs";
+import { setTodoComplete, archiveTodos, items } from "./todos.mjs";
+import { createTodoContext } from "./contextmenu.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
