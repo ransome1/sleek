@@ -172,6 +172,7 @@ test.describe("Todo context", () => {
 test.describe("Creating todos", () => {
 
 	test.beforeAll(async () => {
+		// TODO: if empty.txt has text in it, delete that text
 		app = await electron.launch({ 
 			args: ["src/main.js"],
 			env: {
@@ -188,7 +189,7 @@ test.describe("Creating todos", () => {
 		app.close();
 	});
 
-	test("Add a new todo and delete it", async () => {
+	test("Add a new todo and delete it (IMPORTANT: test/empty.txt must be empty!)", async () => {
 		await page.locator("#btnAddTodoContainer").click();
 		await page.locator("#modalFormInput").fill("This is a test todo that needs to be cleaned up");
 		await page.locator("#btnSave").click();
@@ -207,7 +208,8 @@ test.describe("Creating todos", () => {
 		await page.waitForSelector("#btnAddTodoContainer");
 	});
 
-	test("Add new todo, mark it complete and archive it", async () => {
+	test("Add new todo, mark it complete and archive it (Sometimes fails randomly, please delete text in test/empty.txt)", async () => {
+		// inconsistent, sometimes fails and leaves empty.txt with text in it
 		await page.locator("#btnAddTodoContainer").click();
 		await page.locator("#modalFormInput").fill("This is a test todo that needs to be archived");
 		await page.locator("#btnSave").click();
@@ -487,8 +489,8 @@ test.describe("Navigation elements", () => {
 
 test.describe("Filter drawer", () => {
 
+	let rows;
 	test.beforeAll(async () => {
-		let rows;
 		app = await electron.launch({ 
 			args: ["src/main.js"],
 			env: {
@@ -536,7 +538,8 @@ test.describe("Filter drawer", () => {
 		await projectButton.click();
 		rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);
-		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
+		const filterResetButton = await page.locator("#btnFiltersResetFilters");
+		await filterResetButton.click();
 		rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).not.toBe(1);
 		await expect(page.locator("#filterDrawer")).toBeVisible();
@@ -546,7 +549,8 @@ test.describe("Filter drawer", () => {
 		await page.locator("#filterDrawer #todoFilters .projects h4").click();
 		rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(14);
-		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
+		const filterResetButton = await page.locator("#btnFiltersResetFilters");
+		await filterResetButton.click();
 		rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(18);
 		await expect(page.locator("#filterDrawer")).toBeVisible();
@@ -813,7 +817,7 @@ test.describe("Search", () => {
 	})
 
 	test("Add advanced search string with two filter parameters and expect 1 result", async () => {
-		await page.fill("#todoTableSearch", "@phone AND +Garagesale");
+		await page.fill("#todoTableSearch", "@phone AND +GarageSale");
 		await page.waitForTimeout(waitForAppToLoad);
 		const rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);
