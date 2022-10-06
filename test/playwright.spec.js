@@ -340,6 +340,44 @@ test.describe("Recurrence picker", () => {
 		await expect(page.locator("#recurrencePickerContainer")).toBeVisible();
 		await page.locator("#datePickerInput").click();
 		await expect(page.locator("#recurrencePickerContainer")).not.toBeVisible();
+		await page.keyboard.press("Escape");
+		await page.keyboard.press("Escape");
+	});
+
+	test("Create recurring todo, mark it complete and check result", async () => {
+		await page.locator("#btnAddTodoContainer").click();
+		await page.locator("#modalFormInput").fill("This is a test todo that contains a recurrence due:2028-02-01 rec:+2d");
+		await page.locator("#btnSave").click();
+		let row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		const checkbox = await row.locator(".checkbox");
+		await checkbox.click();
+
+		await page.locator(":nth-match(#todoTable .todo, 2) > .text").click();
+		
+		await expect(page.locator("#modalFormInput")).toHaveValue(/due:2028-02-03 rec:\+2d/);
+
+		await page.locator("#btnCancel").click();
+
+		await row.click({
+			"button": "right",
+			"position": {
+				"x": 10,
+				"y": 10
+			}
+		});
+		let deleteButton = await page.locator(":nth-match(#todoContext .dropdown-item, 5)");
+		await deleteButton.click();
+
+		row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		await row.click({
+			"button": "right",
+			"position": {
+				"x": 10,
+				"y": 10
+			}
+		});
+		await deleteButton.click();
+		
 	});
 	
 });
@@ -534,7 +572,7 @@ test.describe("Filter drawer", () => {
 		await contextButton.click();
 		const projectButton = await page.locator(":nth-match(#filterDrawer #todoFilters a.button, 11)");
 		await projectButton.click();
-		rows = await page.locator("#todoTable .todo").count();
+		let rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);
 		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
 		rows = await page.locator("#todoTable .todo").count();
@@ -544,7 +582,7 @@ test.describe("Filter drawer", () => {
 
 	test("Project headline is being clicked, which reduces results to 14", async () => {
 		await page.locator("#filterDrawer #todoFilters .projects h4").click();
-		rows = await page.locator("#todoTable .todo").count();
+		let rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(14);
 		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
 		rows = await page.locator("#todoTable .todo").count();
@@ -703,7 +741,7 @@ test.describe("Settings modal", () => {
 		await expect(page.locator("#language")).toBeVisible();
 
 		const languageCount = await page.locator("#language option").count();
-		await expect(languageCount).toBe(12);
+		await expect(languageCount).toBe(13);
 
 		const fifthLanguage = await page.locator(":nth-match(#language option, 5)").innerHTML();
 		await expect(fifthLanguage).toBe("Français");
