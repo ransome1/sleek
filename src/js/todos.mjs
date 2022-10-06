@@ -532,8 +532,8 @@ function generateTableRow(todo) {
       }
     });
     
-    todoTableBodyRow.oncontextmenu = function() {
-      createTodoContext(todoTableBodyRow).then(response => {
+    todoTableBodyRow.oncontextmenu = function(event) {
+      createTodoContext(event, todoTableBodyRow).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);

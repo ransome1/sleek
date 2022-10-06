@@ -16,7 +16,7 @@ todoContextDelete.innerHTML = translations.delete;
 todoContextCopy.innerHTML = translations.copy;
 todoContextUseAsTemplate.innerHTML = translations.useAsTemplate;
 
-async function createTodoContext(todoTableRow) {
+async function createTodoContext(event, todoTableRow) {
     try {
         // get index of to do
         let index = await items.objects.map(function(object) {return object.raw; }).indexOf(todoTableRow.getAttribute("data-item"));
@@ -28,7 +28,7 @@ async function createTodoContext(todoTableRow) {
 
         setEvents(index, todo);
         todoContext.classList.add("is-active");
-        setPosition(todoTableRow);
+        setPosition(event);
 
         // ugly but necessary: if triggered to fast arrow right will do a first row change in jail
         setTimeout(function() {
@@ -155,16 +155,27 @@ function setEvents(index, todo) {
     }
 }
 
-function setPosition(todoTableRow) {
+function setPosition(event) {
     // set location of context menu
 
-    if (!event.x && !event.y) {
-        const box = todoTableRow.getBoundingClientRect();
-        todoContext.style.left = box.right - todoContext.offsetWidth + "px";
-        todoContext.style.top = box.top + "px";
+    const box = todoContext.getBoundingClientRect()
+
+    /*if (window.innerWidth < box.width) {
+        todoContext.style.left = "0px"; // not necessary, the window doesn't get this small
+    } else */
+    if (event.pageX + box.width > window.innerWidth) {
+        todoContext.style.left = (event.pageX - box.width) + "px";
     } else {
-        todoContext.style.left = event.x + "px";
-        todoContext.style.top = event.y + "px";
+        todoContext.style.left = event.pageX + "px";
+    }
+
+    /* if (window.innerHeight < box.height) {
+        todoContext.style.top = "0px"; // not necessary, the window doesn't get this small
+    } else  */
+    if (event.pageY + box.height > window.innerHeight) {
+        todoContext.style.top = (event.pageY - box.height) + "px";
+    } else {
+        todoContext.style.top = event.pageY + "px";
     }
 }
 
