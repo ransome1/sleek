@@ -194,7 +194,7 @@ function applySearchInput(queryString) {
       items.filtered = items.filtered.filter(function(item) {        
         if(!userData.caseSensitive) {
           queryString = queryString.toLowerCase();
-          item.raw = item.raw.toLowerCase()
+          item.raw = item.raw;
         }
         return item.raw.indexOf(queryString) !== -1;
       });

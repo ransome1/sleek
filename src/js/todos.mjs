@@ -397,7 +397,6 @@ function generateTableRow(todo) {
 
       const renderer = {
         link(href, title, text) {
-
           const linkId = Math.random().toString(36).slice(2);
           if(userData.getPageTitles) getAndSetPageTitle(linkId, text);
 
