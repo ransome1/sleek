@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Editar",
   "helpTabKeyboardTR26TD1": "Marcar como concluído",
   "helpTabKeyboardTR27TD1": "Abrir contexto",
-  "helpTabPrioritiesBody": "Todos importantes precisam ter um lugar importante em sua lista. Basta anexar um \"(A)\" no início do todo para fazer isso. Você não está vinculado a (A), pois tudo de A a Z é possível. Mas apenas A a C terá uma barra colorida ao lado do todo. Todas as outras prioridades têm uma barra de cor cinza neutra anexada. Para atribuir uma prioridade usando um atalho de teclado, pressione Alt + A a Z enquanto a janela adicionar/editar estiver aberta",
+  "helpTabPrioritiesBody": "Todos importantes precisam ter um lugar importante em sua lista. Basta anexar um \"(A)\" no início do todo para fazer isso. Você não está vinculado a (A), pois tudo de A a Z é possível. Mas apenas A a C terá uma barra colorida ao lado do todo. Todas as outras prioridades têm uma barra de cor cinza neutra anexada.",
   "helpTabPrioritiesTitle": "Adicionando uma prioridade",
   "helpTabRecurrencesBody1": "Se você quiser que uma tarefa se repita, você precisa especificar um intervalo de recorrência usando o atributo <strong>rec:</strong> (por exemplo <strong>rec: d</strong> para uma tarefa que ocorre todos os dias). A interface de usuário elegante fornece controles para definir o atributo rec: para você, ou você mesmo pode editá-lo no texto da tarefa. Os valores possíveis são <strong>d</strong> (diário), <strong>b</strong> (cada dia útil), <strong>w</strong> (semanal), <strong>m</strong> ( mensalmente), <strong>y</strong> (anualmente). Você também pode especificar um intervalo diferente, por exemplo, <strong>rec: 3m</strong> para repetir a cada três meses. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Saiba mais sobre recorrências no elegante</a>.",
   "helpTabRecurrencesTitle1": "Adicionando recorrências",
@@ -182,5 +182,9 @@
   "fileTabsHeadline": "Abas",
   "hint_priority": "Todos são priorizados com <code>(A...Z)</code>",
   "hint_contexts": "O símbolo @ adiciona <code>@contexts</code> a todos",
-  "hint_projects": "<code>+projetos</code> são adicionados usando o símbolo +"
+  "hint_projects": "<code>+projetos</code> são adicionados usando o símbolo +",
+  "getPageTitlesHeadline": "Substituir links",
+  "getPageTitlesBody": "Os links serão detectados e substituídos pelos títulos dos sites correspondentes.",
+  "caseSensitiveHeadline": "Pesquisa sensível a maiúsculas e minúsculas",
+  "caseSensitiveBody": "As consultas de pesquisa serão interpretadas com distinção entre maiúsculas e minúsculas."
 }

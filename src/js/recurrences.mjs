@@ -80,8 +80,7 @@ function generateRecurrence(todo) {
     const index = items.objects.map(function(item) {return item.toString().replaceAll(String.fromCharCode(16)," "); }).indexOf(recurringTodo.toString().replaceAll(String.fromCharCode(16)," "));
     // only add recurring todo if it is not already in the list
     if(index===-1) {
-      items.objects.push(recurringTodo);
-      window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
+      window.api.send("writeToFile", [recurringTodo.toString(), index]);
       return Promise.resolve("Success: Recurring todo created and written into file: " + getActiveFile());
     } else {
       return Promise.resolve("Info: Recurring todo already in file, won't write anything");

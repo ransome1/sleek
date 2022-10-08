@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Editar",
   "helpTabKeyboardTR26TD1": "Marcar como completa",
   "helpTabKeyboardTR27TD1": "Contexto abierto",
-  "helpTabPrioritiesBody": "Tareas importantes necesitan tener un espacio importante en tu lista. Simplemente agrega una \"(A)\" al principio de la tarea para conseguir esto. No estás limitado a (A) ya que todo desde la A a la Z es posible. Sin embargo, solo del la A a la C tendrán una barra de color junto a la tarea. Todas las otras prioridades tendrán adjunto un color gris neutro. Para asignar una prioridad usando el teclado, presiona Alt + A hasta la Z mientras la ventana para añadir/editar está abierta.",
+  "helpTabPrioritiesBody": "Tareas importantes necesitan tener un espacio importante en tu lista. Simplemente agrega una \"(A)\" al principio de la tarea para conseguir esto. No estás limitado a (A) ya que todo desde la A a la Z es posible. Sin embargo, solo del la A a la C tendrán una barra de color junto a la tarea. Todas las otras prioridades tendrán adjunto un color gris neutro.",
   "helpTabPrioritiesTitle": "Añadiendo una prioridad",
   "helpTabRecurrencesBody1": "Si quieres que una tarea se repita necesitas especificar un intervalo de recurrencia usando el atributo <strong>rec:</strong> (por ejemplo <strong>rec:d</strong> para una tarea que se repite cada día). La interfaz de usuario de sleek provee controles para fijar el atributo rec: por ti, o puedes editarlo en el texto de la tarea tú mismo. Los posibles valores son <strong>d</strong> (diario), <strong>b</strong> (cada día laboral), <strong>w</strong> (semanal), <strong>m</strong> (mensual), <strong>y</strong> (anual). También puedes especificar un intervalo diferente, por ejemplo, <strong>rec:3m</strong> para repetir cada 3er mes. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Aprende más sobre recurrencias en sleek</a>.",
   "helpTabRecurrencesTitle1": "Añadiendo recurrencias",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "Pestañas",
   "hint_priority": "Todas tienen prioridad con <code> (A ... Z) </code>",
   "hint_contexts": "El símbolo @ agrega <code>@contexts</code> a todos",
-  "hint_projects": "<code>+proyectos</code> se agregan usando el símbolo +"
+  "hint_projects": "<code>+proyectos</code> se agregan usando el símbolo +",
+  "getPageTitlesHeadline": "Reemplazar enlaces",
+  "getPageTitlesBody": "Los enlaces serán detectados y reemplazados con los títulos de sitios web correspondientes.",
+  "caseSensitiveHeadline": "Búsqueda sensible a mayúsculas y minúsculas",
+  "caseSensitiveBody": "Las consultas de búsqueda se interpretarán con distinción entre mayúsculas y minúsculas."
 }

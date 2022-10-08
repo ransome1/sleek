@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Modificare",
   "helpTabKeyboardTR26TD1": "Contrassegna come completo",
   "helpTabKeyboardTR27TD1": "Contesto aperto",
-  "helpTabPrioritiesBody": "Le cose importanti devono avere un posto importante nella tua lista. Basta aggiungere un \"(A)\" all'inizio del todo per raggiungere questo obiettivo. Non sei vincolato a (A) poiché tutto dalla A alla Z è possibile. Ma solo da A a C avrà una barra colorata accanto alla cosa da fare. Tutte le altre priorità hanno una barra di colore grigio neutro attaccata. Per assegnare una priorità utilizzando una scorciatoia da tastiera, premi Alt + dalla A alla Z mentre la finestra di aggiunta/modifica è aperta",
+  "helpTabPrioritiesBody": "Le cose importanti devono avere un posto importante nella tua lista. Basta aggiungere un \"(A)\" all'inizio del todo per raggiungere questo obiettivo. Non sei vincolato a (A) poiché tutto dalla A alla Z è possibile. Ma solo da A a C avrà una barra colorata accanto alla cosa da fare. Tutte le altre priorità hanno una barra di colore grigio neutro attaccata.",
   "helpTabPrioritiesTitle": "Aggiunta di una priorità",
   "helpTabRecurrencesBody1": "Se vuoi che una cosa da fare si ripeta, devi specificare un intervallo di ricorrenza utilizzando l'attributo <strong>rec:</strong> (ad esempio <strong>rec:d</strong> per una cosa da fare che ricorre ogni giorno). L'interfaccia utente sleek fornisce controlli per impostare l'attributo rec: per te, oppure puoi modificarlo tu stesso nel testo del todo. I valori possibili sono <strong>d</strong> (giornaliero), <strong>b</strong> (ogni giorno lavorativo), <strong>w</strong> (settimanale), <strong>m</strong> ( mensile), <strong>a</strong> (annualmente). Puoi anche specificare un intervallo diverso, ad esempio <strong>rec:3m</strong> da ripetere ogni 3° mese. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Ulteriori informazioni sulle ricorrenze in sleek</a> .",
   "helpTabRecurrencesTitle1": "Aggiunta di ricorrenze",
@@ -180,5 +180,9 @@
   "fileTabsHeadline": "Schede",
   "hint_priority": "Le cose da fare hanno la priorità con <code>(A...Z)</code>",
   "hint_contexts": "Il simbolo @ aggiunge <code>@contexts</code> alle cose da fare",
-  "hint_projects": "<code>+progetti</code> vengono aggiunti usando il simbolo +"
+  "hint_projects": "<code>+progetti</code> vengono aggiunti usando il simbolo +",
+  "getPageTitlesHeadline": "Sostituisci i link",
+  "getPageTitlesBody": "I collegamenti verranno rilevati e sostituiti con i titoli dei siti Web corrispondenti.",
+  "caseSensitiveHeadline": "Ricerca con distinzione tra maiuscole e minuscole",
+  "caseSensitiveBody": "Le query di ricerca verranno interpretate con distinzione tra maiuscole e minuscole."
 }

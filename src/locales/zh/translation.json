@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "编辑",
   "helpTabKeyboardTR26TD1": "标记为完成",
   "helpTabKeyboardTR27TD1": "打开上下文",
-  "helpTabPrioritiesBody": "Important todos need to have an important spot on your list. Simply append a \"(A)\" at the beginning of the todo to achieve this. You're not bound to (A) as everything from A to Z is possible. But only A to C will have a colored bar next to the todo. All other priorities have a neutral grey colored bar attached. To assign a priority using a keyboard shortcut, press Alt + A to Z while the add/edit window is open",
+  "helpTabPrioritiesBody": "Important todos need to have an important spot on your list. Simply append a \"(A)\" at the beginning of the todo to achieve this. You're not bound to (A) as everything from A to Z is possible. But only A to C will have a colored bar next to the todo. All other priorities have a neutral grey colored bar attached.",
   "helpTabPrioritiesTitle": "Adding a priority",
   "helpTabRecurrencesBody1": "If you want a todo to repeat itself you need to specify a recurrence interval using the <strong>rec:</strong> (for example <strong>rec:d</strong> for a todo that recurs every day) attribute. The sleek user interface provides controls to set the rec: attribute for you, or you can edit it into the text of the todo yourself. Possible values are <strong>d</strong> (daily), <strong>b</strong> (each business day), <strong>w</strong> (weekly), <strong>m</strong> (monthly), <strong>y</strong> (anually). You can also specify a different interval, for example, <strong>rec:3m</strong> to repeat every 3rd month. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Learn more about recurrences in sleek</a>.",
   "helpTabRecurrencesTitle1": "Adding recurrences",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "标签",
   "hint_priority": "待办事项以 <code>(A...Z)</code> 为优先级",
   "hint_contexts": "@ 符号将 <code>@contexts</code> 添加到 todos",
-  "hint_projects": "<code>+projects</code> 使用 + 符号添加"
+  "hint_projects": "<code>+projects</code> 使用 + 符号添加",
+  "getPageTitlesHeadline": "替换链接",
+  "getPageTitlesBody": "链接将被检测并替换为相应的网站标题。",
+  "caseSensitiveHeadline": "区分大小写的搜索",
+  "caseSensitiveBody": "搜索查询将被解释为区分大小写。"
 }

@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Düzenlemek",
   "helpTabKeyboardTR26TD1": "Tamamlandı olarak işaretle",
   "helpTabKeyboardTR27TD1": "Açık bağlam",
-  "helpTabPrioritiesBody": "Önemli yapılacaklarınız listenizde önemli bir yerde olmalı. Basitçe yapılacağınızın başına \"(A)\" ekleyerek bunu sağlayabilirsiniz. Yalnızca (A) kullanmak zorunda değilsiniz A'dan Z'ye tüm harfleri kullanabilirsiniz. Ama yalnızca A'dan C'ye yapılacakların yanında renkli bir barı olacak. Kalan tüm önceliklere nötr gri bir bar eşlik edecek. Klavye kısayolu ile öncelik atamak için ekleme/düzenleme penceresi açıkken Alt + A-Z tuşlarına basabilirsiniz.",
+  "helpTabPrioritiesBody": "Önemli yapılacaklarınız listenizde önemli bir yerde olmalı. Basitçe yapılacağınızın başına \"(A)\" ekleyerek bunu sağlayabilirsiniz. Yalnızca (A) kullanmak zorunda değilsiniz A'dan Z'ye tüm harfleri kullanabilirsiniz. Ama yalnızca A'dan C'ye yapılacakların yanında renkli bir barı olacak. Kalan tüm önceliklere nötr gri bir bar eşlik edecek.",
   "helpTabPrioritiesTitle": "Öncelik ekleme",
   "helpTabRecurrencesBody1": "Eğer bir yapılacağın tekrar etmesini istiyorsanız <strong>rec:</strong> kullanarak bir sıklık belirtmeniz gerekir (örneğin: <strong>rec:d</strong> her gün tekrar eder). sleek arayüzü tekrarlama özeelliği eklemek için gerekli kontrolleri sağlar, ya da dilerseniz kendiniz yapılacağı düzenleyebilirsiniz.  Kullanabileceğiniz değerler: <strong>d</strong> (günlük), <strong>b</strong> (her iş günü), <strong>w</strong> (haftalık), <strong>m</strong> (aylık), <strong>y</strong> (yıllık). Eğer isterseniz özel bir sıklık da belirleyebilirsiniz, örneğin: 3 ayda bir tekrarlaması için <strong>rec:3m</strong> kullanabilirsiniz. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">sleek'te tekrarlayan olaylarla ilgili ayrıntılı bilgi için tıklayınız</a>.",
   "helpTabRecurrencesTitle1": "Tekrarlı Olay Ekleme",
@@ -180,5 +180,9 @@
   "fileTabsHeadline": "Sekmeler",
   "hint_priority": "Yapılacak işler <code>(A...Z)</code> ile önceliklendirilir",
   "hint_contexts": "@ sembolü, todos'a <code>@contexts</code> ekler",
-  "hint_projects": "<code>+projeler</code>, + sembolü kullanılarak eklenir"
+  "hint_projects": "<code>+projeler</code>, + sembolü kullanılarak eklenir",
+  "getPageTitlesHeadline": "Bağlantıları değiştir",
+  "getPageTitlesBody": "Bağlantılar algılanacak ve ilgili web sitesi başlıklarıyla değiştirilecektir.",
+  "caseSensitiveHeadline": "Büyük/küçük harfe duyarlı arama",
+  "caseSensitiveBody": "Arama sorguları büyük/küçük harfe duyarlı olarak yorumlanacaktır."
 }

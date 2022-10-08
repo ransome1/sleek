@@ -10,7 +10,7 @@ import { createModalJail } from "./jail.mjs";
 import { focusRow } from "./keyboard.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
-import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification } from "./helper.mjs";
+import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification, isInViewport } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
 import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension } from "./todotxtExtensions.mjs";
@@ -76,13 +76,13 @@ function getAndSetPageTitle(linkId, href) {
   })
 }
 
-async function generateTodoTxtObjects(fileContent) {
+async function generateTodoTxtObjects(raw) {
   try {
 
-    if(fileContent !== undefined) {
+    if(raw !== undefined) {
       items.objects = new Array;
 
-      const todoArray = fileContent.split(/\r?\n/);
+      const todoArray = raw.split(/\r?\n/);
 
       // create todo.txt objects
       let l = todoArray.length;
@@ -388,7 +388,6 @@ function generateTableRow(todo) {
 
       const renderer = {
         link(href, title, text) {
-
           const linkId = Math.random().toString(36).slice(2);
           if(userData.getPageTitles) getAndSetPageTitle(linkId, text);
 

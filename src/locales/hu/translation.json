@@ -72,7 +72,7 @@
   "helpTabKeyboardTR25TD1": "Szerkesztés",
   "helpTabKeyboardTR26TD1": "Megjelölés készként",
   "helpTabKeyboardTR27TD1": "Nyitott kontextus",
-  "helpTabPrioritiesBody": "A fontos tennivalóknak fontos helyet kell kapniuk a listáján. Ennek eléréséhez egyszerűen tegyen egy „(A)”-t a tennivaló elejére. Nincs kötve az (A)-hoz, mivel A-tól Z-ig minden lehetséges. De csak A-tól C-ig lesz színes sáv a tennivaló mellett. Az összes többi prioritáshoz egy semleges szürke színű sáv kapcsolódik. Egy gyorsbillentyű használatával történő prioritás-hozzárendeléséhez nyomja meg az Alt + A-tól Z-ig tartó billentyűkombinációt, miközben a hozzáadás vagy a szerkesztés ablak nyitva van.",
+  "helpTabPrioritiesBody": "A fontos tennivalóknak fontos helyet kell kapniuk a listáján. Ennek eléréséhez egyszerűen tegyen egy „(A)”-t a tennivaló elejére. Nincs kötve az (A)-hoz, mivel A-tól Z-ig minden lehetséges. De csak A-tól C-ig lesz színes sáv a tennivaló mellett. Az összes többi prioritáshoz egy semleges szürke színű sáv kapcsolódik.",
   "helpTabPrioritiesTitle": "Prioritás hozzáadása",
   "helpTabRecurrencesBody1": "Ha azt szeretné, hogy egy tennivaló ismétlődjön, akkor meg kell adnia egy ismétlődési időközt a <strong>rec:</strong> attribútum használatával (például <strong>rec:d</strong> egy minden nap ismétlődő tennivalónál). A sleek felhasználói felülete vezérlőelemeket biztosít a rec: attribútum beállításához, vagy önmagának is szerkesztheti azt a todo szövegében. A lehetséges értékek a következők: <strong>d</strong> (naponta), <strong>b</strong> (minden munkanapon), <strong>w</strong> (hetente), <strong>m</strong> (havonta), <strong>y</strong> (évente). Más időközt is megadhat, például <strong>rec:3m</strong> a minden 3. hónapban történő ismétlődéshez. <a href=\"https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)\" target=\"_blank\">Tudjon meg többet a sleekben lévő ismétlődésekről</a>.",
   "helpTabRecurrencesTitle1": "Ismétlődések hozzáadása",
@@ -181,5 +181,9 @@
   "fileTabsHeadline": "Lapok",
   "hint_priority": "A feladatok prioritása <code>(A...Z)</code>",
   "hint_contexts": "A @ szimbólum <code>@contexts</code>-t ad a feladatokhoz",
-  "hint_projects": "A <code>+projektek</code> a + szimbólum használatával kerülnek hozzáadásra"
+  "hint_projects": "A <code>+projektek</code> a + szimbólum használatával kerülnek hozzáadásra",
+  "getPageTitlesHeadline": "Cserélje ki a hivatkozásokat",
+  "getPageTitlesBody": "A linkeket a rendszer észleli, és a megfelelő webhelycímekkel helyettesíti.",
+  "caseSensitiveHeadline": "Keresés a kis- és nagybetűk között",
+  "caseSensitiveBody": "A keresési lekérdezéseket a rendszer megkülönbözteti a kis- és nagybetűktől."
 }

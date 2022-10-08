@@ -114,6 +114,7 @@ You can download sleek for Windows, MacOS and Linux from
   - Hungarian
   - Czech
   - Polish
+  - Russian
 
 A more detailed documentation can be found in <a href="https://github.com/ransome1/sleek/wiki/">sleeks wiki</a>.
 

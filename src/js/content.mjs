@@ -82,6 +82,10 @@ const settingsTabSettingsNotifications = document.getElementById("settingsTabSet
 const settingsTabSettingsNotificationsBody = document.getElementById("settingsTabSettingsNotificationsBody");
 const settingsTabSettingsTray = document.getElementById("settingsTabSettingsTray");
 const settingsTabSettingsTrayBody = document.getElementById("settingsTabSettingsTrayBody");
+const caseSensitiveHeadline = document.getElementById("caseSensitiveHeadline");
+const caseSensitiveBody = document.getElementById("caseSensitiveBody");
+const getPageTitlesHeadline = document.getElementById("getPageTitlesHeadline");
+const getPageTitlesBody = document.getElementById("getPageTitlesBody");
 const reviewAppMacStore = document.getElementById("reviewWindowsStore");
 const shareLinkedin = document.getElementById("shareLinkedin");
 const shareTwitter = document.getElementById("shareTwitter");
@@ -166,6 +170,10 @@ settingsTabSettingsNotifications.innerHTML = translations.notifications;
 settingsTabSettingsNotificationsBody.innerHTML = translations.settingsTabSettingsNotificationsBody;
 settingsTabSettingsTray.innerHTML = translations.settingsTabSettingsTray;
 settingsTabSettingsTrayBody.innerHTML = translations.settingsTabSettingsTrayBody;
+getPageTitlesHeadline.innerHTML = translations.getPageTitlesHeadline;
+getPageTitlesBody.innerHTML = translations.getPageTitlesBody;
+caseSensitiveHeadline.innerHTML = translations.caseSensitiveHeadline;
+caseSensitiveBody.innerHTML = translations.caseSensitiveBody;
 shareLinkedin.innerHTML = translations.shareLinkedin;
 shareTwitter.innerHTML = translations.shareTwitter;
 submitIssuesOnGithub.innerHTML = translations.submitIssuesOnGithub;
@@ -256,7 +264,8 @@ function setFriendlyLanguageNames() {
       tr: "Türkçe",
       hu: "Magyar",
       cs: "Čeština",
-      pl: "Polski"
+      pl: "Polski",
+      ru: "Русский"
     }
     appData.languages.forEach((languageCode) => {
       let option = document.createElement("option");

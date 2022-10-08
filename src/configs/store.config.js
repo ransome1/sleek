@@ -10,11 +10,9 @@ class Store {
     
     if(process.env.PORTABLE_EXECUTABLE_FILE) {
       userDataPath = path.join(path.dirname(process.env.PORTABLE_EXECUTABLE_FILE), "config", "sleek");
-      //if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
     
     } else if(!process.env.PORTABLE_EXECUTABLE_FILE && !process.windowsStore && process.platform==="win32") {
       userDataPath = path.dirname(process.execPath);
-      //if(!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, {recursive: true});
     
     // in development or testing environment switch to specific userData folder
     } else if(process.env.NODE_ENV === "development" || process.env.NODE_ENV === "testing") {
@@ -46,22 +44,6 @@ class Store {
     if(process.env.NODE_ENV !== "testing") fs.writeFileSync(this.path, JSON.stringify(this.data));
   }
 }
-
-// class dismissedNotifications {
-//   constructor(opts) {
-//     let userDataPath = userDataPath = (electron.app || electron.remote.app).getPath("userData");   
-//     this.path = path.join(userDataPath, opts.configName + ".json");
-//     this.data = parseDataFile(this.path, opts.defaults);
-//   }
-  
-//   get(key) {
-//     return this.data[key];
-//   }
-  
-//   set(key, val) {
-//     this.data[key] = val;
-//   }
-// }
 
 function parseDataFile(filePath, defaults) {
   // We"ll try/catch it in case the file doesn"t exist yet, which will be the case on the first application run.
