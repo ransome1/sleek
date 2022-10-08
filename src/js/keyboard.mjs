@@ -1,6 +1,5 @@
 "use strict";
 import { setTodoComplete, archiveTodos, items } from "./todos.mjs";
-import { createTodoContext } from "./contextmenu.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
@@ -17,10 +16,10 @@ const
   modalForm = document.getElementById("modalForm"),
   modalWindows = document.querySelectorAll(".modal"),
   todoContext = document.getElementById("todoContext"),
-  todoTable = document.getElementById("todoTable");
+  todoTable = document.getElementById("todoTable"),
+  todoTableSearch = document.getElementById("todoTableSearch");
   
-export let 
-  currentRow = -1;
+export let currentRow = 0;
 
 export function focusRow(row) {
   if(!row) currentRow = 0;
@@ -28,7 +27,44 @@ export function focusRow(row) {
   if(row === -1) return false;
   let todoTableRow = todoTable.querySelectorAll(".todo")[row];
   if(typeof todoTableRow === "object") todoTableRow.focus();
+  else todoTableSearch.focus(); // e.g. when you press enter while the last to-do is selected
   return false;
+}
+
+function handleFocusRow(key) {
+  let focusSearchBox = false;
+  let newRow = currentRow;
+
+  if (document.activeElement.id==="todoTableSearch") {
+    if (key === "ArrowDown") {
+      newRow = 0;
+    } else if (key === "ArrowUp") {
+      newRow = todoTable.querySelectorAll(".todo").length - 1;
+    }
+  } else if (!isRowFocused()) {
+    // if no row currently selected, start at previously selected row
+    focusRow(currentRow)
+  } else if (key === "ArrowDown") {
+    const lastRow = todoTable.querySelectorAll(".todo").length - 1;
+    if (currentRow >= lastRow) {
+      focusSearchBox = true;
+      newRow = 0;
+    } else {
+      newRow = currentRow + 1;
+    }
+  } else if (key === "ArrowUp") {
+    if (currentRow <= 0) {
+      focusSearchBox = true;
+    } else {
+      newRow = currentRow - 1;
+    }
+  }
+
+  if (focusSearchBox) {
+    todoTableSearch.focus()
+  } else {
+    focusRow(newRow);
+  }
 }
 
 // ******************************************************
@@ -49,7 +85,6 @@ const isContextOpen = () => { return todoContext.classList.contains("is-active")
 
 export async function registerShortcuts() {
   try {
-
     window.addEventListener("keyup", async function(event) {
 
         // ******************************************************
@@ -200,82 +235,10 @@ export async function registerShortcuts() {
       } else {
 
         // ******************************************************
-        // setup arrow up and down keys
-        // ******************************************************
-
-        // make sure no input or drawer is opened
-
-        if(!isInputFocused() && !isContextOpen()) {
-
-          // move focus down in table list
-
-          if(event.key === "ArrowDown") {
-
-            // stop if end of todos is reached
-
-            if(currentRow >= todoTable.querySelectorAll(".todo").length - 1) {
-              focusRow(todoTable.querySelectorAll(".todo").length - 1);
-              return false;
-            }
-            currentRow++;
-            focusRow(currentRow);
-            return false;
-          }
-
-          // move focus up in table list
-
-          if(event.key === "ArrowUp") {
-
-            if(currentRow === 0) {
-              focusRow(currentRow);
-              return false;
-            }
-            currentRow--;
-            focusRow(currentRow);
-            return false;
-          }
-
-          // ******************************************************
-          // setup x key
-          // ******************************************************
-
-          // TODO: not working any more
-          if (isRowFocused() && event.key === "x") {
-            const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow].getAttribute("data-item");
-            setTodoComplete(todoTableRow).then(function(response) {
-              console.info(response);
-            }).catch(function(error) {
-              handleError(error);
-            });
-            return false;
-          }
-          
-          // ******************************************************
-          // setup arrow right
-          // ******************************************************
-
-          if(isRowFocused() && event.keyCode === 39) {
-            const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
-            createTodoContext(todoTableRow);
-            return false;
-          }
-          
-          // ******************************************************
-          // setup enter key
-          // ******************************************************
-
-          if(isRowFocused() && event.key === "Enter") {
-            let todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
-            show(todoTableRow.getAttribute("data-item"));
-            return false;
-          }
-        }
-
-        // ******************************************************
         // tab through tabs
         // ******************************************************
 
-        if(event.ctrlKey && !event.shiftKey && event.keyCode === 9) {
+        if(event.ctrlKey && !event.shiftKey && event.key === "Tab") {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index+1]) {
             window.api.send("startFileWatcher", userData.files[0][1]);
@@ -285,7 +248,7 @@ export async function registerShortcuts() {
           return false;
         }
 
-        if(event.ctrlKey && event.shiftKey && event.keyCode === 9) {
+        if(event.ctrlKey && event.shiftKey && event.key === "Tab") {
           let index = userData.files.findIndex(file => file[0] === 1);
           if(!userData.files[index-1]) {
             window.api.send("startFileWatcher", userData.files[userData.files.length-1][1]);
@@ -404,7 +367,59 @@ export async function registerShortcuts() {
 
     window.addEventListener("keydown", async function(event) {
 
-      event.preventDefault;
+      // disable scrolling so that you can select and edit todos with these keys
+      if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(event.key)) {
+        event.preventDefault();
+      }
+
+      // ******************************************************
+      // setup keys for selecting and interacting with to-do items
+      // ******************************************************
+
+      if((!isInputFocused() || document.activeElement.id==="todoTableSearch") && !isContextOpen()) {
+
+        // move focus up/down in table list
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+          handleFocusRow(event.key);
+          return false;
+        }
+
+        // x or enter: mark as complete
+        if (isRowFocused() && (event.key === "x" || event.key === "Enter")) {
+          const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow].getAttribute("data-item");
+          await setTodoComplete(todoTableRow).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+
+          // idk what it is, but something deselects the row after this keydown event handler.
+          // so this "await new Promise" and "focusRow" is necessary.
+          await new Promise(r => setTimeout(r, 100));
+          focusRow(currentRow)
+          return false;
+        }
+
+        // left arrow: skip to top
+        if(isRowFocused() && event.key === "ArrowLeft") {
+          focusRow(0);
+          return false;
+        }
+
+        // right arrow: skip to bottom
+        if(isRowFocused() && event.key === "ArrowRight") {
+          focusRow(todoTable.querySelectorAll(".todo").length - 1);
+          return false;
+        }
+
+        // space: open editor modal
+        // TODO: reselect selected todo after ESC is used to close modal
+        if(isRowFocused() && event.key === " ") {
+          let todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
+          await show(todoTableRow.getAttribute("data-item"), undefined, true);
+          return false;
+        }
+      }
 
       // ******************************************************
       // open new file

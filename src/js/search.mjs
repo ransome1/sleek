@@ -8,20 +8,22 @@ const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchAddTodo = document.getElementById("todoTableSearchAddTodo");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 
-todoTableSearch.oninput = (event) => {
-  if (event.key === "Enter") { // hacky way to make it add to-do on enter
-    todoTableSearchAddTodo.click()
-  } else {
-    debounce(function () {
+todoTableSearch.oninput = debounce(function () {
       // rebuild table
       buildTable().then(function (response) {
         console.info(response);
       }).catch(function (error) {
         handleError(error);
       });
-    }, 250)() // extra parentheses bc debounce returns a function
+    }, 250)
+
+todoTableSearch.onkeyup = (event) => {
+  if (event.key === "Enter") {
+    addTodoFromSearchBox()
   }
 }
+
+todoTableSearchAddTodo.onclick = addTodoFromSearchBox
 
 todoTableSearch.onfocus = function() {
   // add blue highlighting to search bar
@@ -39,9 +41,9 @@ todoTableSearch.addEventListener("blur", function(event) {
 
   // if question mark is clicked, do not blur
   if(event.relatedTarget && event.relatedTarget.classList.contains("todoTableSearchQuestionmark")) return false;
-}); 
+});
 
-todoTableSearchAddTodo.onclick = function() {
+function addTodoFromSearchBox() {
   addTodo(todoTableSearch.value).then(response => {
     console.log(response);
   }).catch(error => {
@@ -60,4 +62,3 @@ todoTableSearchAddTodo.onblur = async function() {
   // hide addTodo as soon as it loses focus
   await this.classList.remove("is-active");
 }
-

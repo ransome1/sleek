@@ -121,37 +121,37 @@ function setEvents(index, todo) {
 
     // click on increase priority option
     todoContextPriorityIncrease.onclick = () => changePriority(index, -1);
-    todoContextPriorityIncrease.onkeypress = function (event) {
-        if (event.key !== "Enter") return false;
-        changePriority(index, -1);
+    todoContextPriorityIncrease.onkeydown = function (event) {
+        if (event.key === "Enter")
+            changePriority(index, -1);
     }
 
     // click on decrease priority option
     todoContextPriorityDecrease.onclick = () => changePriority(index, 1);
-    todoContextPriorityDecrease.onkeypress = function (event) {
-        if (event.key !== "Enter") return false;
-        changePriority(index, 1);
+    todoContextPriorityDecrease.onkeydown = function (event) {
+        if (event.key === "Enter")
+            changePriority(index, 1);
     }
 
     // click on use as template option
     todoContextUseAsTemplate.onclick = () => useAsTemplate(todo);
-    todoContextUseAsTemplate.onkeypress = function (event) {
-        if (event.key !== "Enter") return false;
-        useAsTemplate(todo);
+    todoContextUseAsTemplate.onkeydown = function (event) {
+        if (event.key === "Enter")
+            useAsTemplate(todo);
     }
 
     // click on copy
     todoContextCopy.onclick = () => copyTodo(todo);
-    todoContextCopy.onkeypress = function (event) {
-        if (event.key !== "Enter") return false;
-        copyTodo(todo);
+    todoContextCopy.onkeydown = function (event) {
+        if (event.key === "Enter")
+            copyTodo(todo);
     }
 
     // click on delete
     todoContextDelete.onclick = () => deleteTodo(index);
-    todoContextDelete.onkeypress = function (event) {
-        if (event.key !== "Enter") return false;
-        deleteTodo(index);
+    todoContextDelete.onkeydown = function (event) {
+        if (event.key === "Enter")
+            deleteTodo(index);
     }
 }
 

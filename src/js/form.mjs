@@ -8,6 +8,7 @@ import { getCaretPosition } from "./helper.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { fillDatePickerInput } from "./datePicker.mjs";
 import { userData, setUserData, translations } from "../render.js";
+import { currentRow, focusRow } from "./keyboard.mjs";
 
 const autoCompleteContainer = document.getElementById("autoCompleteContainer");
 const btnItemStatus = document.getElementById("btnItemStatus");
@@ -398,6 +399,11 @@ function resetForm() {
     // remove any previously set data-item attributes
     modalForm.removeAttribute("data-item");
 
+    if (modalForm.dataset.escRefocusTodo === "true") {
+      focusRow(currentRow);
+      modalForm.dataset.escRefocusTodo = "false";
+    }
+
     // hide "complete" button
     btnItemStatus.classList.remove("is-active");
 
@@ -428,7 +434,7 @@ function resetForm() {
   }
 }
 
-async function show(todo, templated) {
+async function show(todo, templated, escRefocus) {
   try {
 
     const modalFormInput = document.getElementById("modalFormInput");
@@ -502,6 +508,10 @@ async function show(todo, templated) {
     }).catch(function(error) {
       handleError(error);
     });
+
+    if (escRefocus) {
+      modalForm.dataset.escRefocusTodo = "true";
+    }
 
     // show modal and set focus to input element
     modalForm.classList.add("is-active");
