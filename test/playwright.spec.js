@@ -153,7 +153,7 @@ test.describe("Todo context", () => {
 		await page.locator("#btnCancel").click();
 	});
 
-	// TODO: does not actually check clpboard
+	// TODO: does not actually check clipboard
 	test("Click on 'Copy' will copy todo text to clipboard", async () => {
 		const row = page.locator(":nth-match(#todoTable .todo, 2) > .text");
 		await row.click({
@@ -165,6 +165,50 @@ test.describe("Todo context", () => {
 		});
 		await page.locator(":nth-match(#todoContext .dropdown-item, 4)").click();
 		await expect(page.locator("#messageGenericContainer")).toBeVisible();
+	});
+
+	test("Context menus in top-left of screen open to the bottom-right of cursor", async () => {
+		const clickOffset = 10
+
+		// right click first to-do near top left
+		const row = await page.locator(":nth-match(#todoTable .todo, 1) > .text");
+		row.click({ button: "right", position: { x: clickOffset, y: clickOffset } })
+
+		// get context menu
+		const context = await page.locator("#todoContext")
+		await expect(context).toBeVisible()
+
+		// check that context menu's left and top are the same as the click location
+		const cbox = await context.boundingBox()
+		const rbox = await row.boundingBox()
+		await expect(Math.floor(cbox.x)).toEqual(Math.floor(rbox.x) + clickOffset)
+		await expect(Math.floor(cbox.y)).toEqual(Math.floor(rbox.y) + clickOffset)
+	});
+
+	test("Context menus in bottom-right of screen open to the top-left of cursor", async () => {
+		const clickOffset = 10
+
+		// right click last to-do near bottom right
+		const row = await page.locator("#todoTable .todo").last();
+		await expect(row).toBeVisible()
+		let rbox = await row.boundingBox()
+		await row.click({
+			button: "right",
+			position: {
+				x: rbox.width - clickOffset,
+				y: rbox.height - clickOffset
+			}
+		})
+
+		// get context menu
+		const context = await page.locator("#todoContext")
+		await expect(context).toBeVisible()
+		const cbox = await context.boundingBox()
+		rbox = await row.boundingBox() // needs y-value update since we scrolled down when clicking it
+
+		// check that context menu's bottom and right are the same as the click location
+		await expect(Math.floor(cbox.x + cbox.width)).toEqual(Math.floor(rbox.x + rbox.width) - clickOffset)
+		await expect(Math.floor(cbox.y + cbox.height)).toEqual(Math.floor(rbox.y + rbox.height) - clickOffset)
 	});
 
 });
