@@ -8,14 +8,20 @@ const todoTableSearch = document.getElementById("todoTableSearch");
 const todoTableSearchAddTodo = document.getElementById("todoTableSearchAddTodo");
 const todoTableSearchContainer = document.getElementById("todoTableSearchContainer");
 
-todoTableSearch.oninput = debounce(function() {
-  // rebuild table
-  buildTable().then(function(response) {
-    console.info(response);
-  }).catch(function(error) {
-    handleError(error);
-  });
-}, 250)
+todoTableSearch.oninput = (event) => {
+  if (event.key === "Enter") { // hacky way to make it add to-do on enter
+    todoTableSearchAddTodo.click()
+  } else {
+    debounce(function () {
+      // rebuild table
+      buildTable().then(function (response) {
+        console.info(response);
+      }).catch(function (error) {
+        handleError(error);
+      });
+    }, 250)() // extra parentheses bc debounce returns a function
+  }
+}
 
 todoTableSearch.onfocus = function() {
   // add blue highlighting to search bar

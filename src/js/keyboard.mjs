@@ -52,102 +52,102 @@ export async function registerShortcuts() {
 
     window.addEventListener("keyup", async function(event) {
 
-      // ******************************************************
-      // setup escape key
-      // ******************************************************
-      
-      if(event.key === "Escape") {
+        // ******************************************************
+        // setup escape key
+        // ******************************************************
 
-        // if search is focused, lose focus on escape
-        // hide add todo button
-        if(document.activeElement.id==="todoTableSearch") {
-          todoTableSearch.blur();
-          document.getElementById("todoTableSearchAddTodo").classList.remove("is-active");
-          return false;
+        if(event.key === "Escape") {
+
+          // if search is focused, lose focus on escape
+          // hide add todo button
+          if(document.activeElement.id==="todoTableSearch") {
+            todoTableSearch.blur();
+            document.getElementById("todoTableSearchAddTodo").classList.remove("is-active");
+            return false;
+          }
+          // if 'add as todo' is focused, return to search
+          if(document.activeElement.id==="todoTableSearchAddTodo") {
+            document.getElementById("todoTableSearch").focus();
+            return false;
+          }
+
+
+          // if a datepicker container is detected interrupt, datepicker destruction is handled in module
+          if(document.querySelector(".datepicker")) return false;
+
+          // close autocomplete container
+
+          if(autoCompleteContainer.classList.contains("is-active")) {
+            autoCompleteContainer.classList.remove("is-active");
+            autoCompleteContainer.innerHTML = null;
+            document.getElementById("modalFormInput").focus();
+            return false;
+          }
+
+          // if recurrence container is detected interrupt, closing is handled in module
+
+          if(recurrencePickerContainer.classList.contains("is-active")) {
+            recurrencePickerContainer.classList.remove("is-active");
+            return false;
+          }
+
+          // close todo context
+
+          if(todoContext.classList.contains("is-active")) {
+            todoContext.classList.remove("is-active");
+            focusRow(currentRow);
+            return false;
+          }
+
+          if(filterContext.classList.contains("is-active")) {
+            filterContext.classList.remove("is-active");
+            return false;
+          }
+
+          if(modalPrompt.classList.contains("is-active")) {
+            modalPrompt.classList.remove("is-active");
+            return false;
+          }
+
+          // close modal windows
+
+          if(isModalOpen()) {
+
+            modalWindows.forEach((modal) => {
+              if(modal.classList.contains("is-active")) {
+                // hide modal
+                modal.classList.remove("is-active");
+                // in case modal is form it needs to be cleared
+                if(modal.id === "modalForm") {
+                  resetForm().then(function(response) {
+                    console.info(response);
+                  }).catch(function(error) {
+                    handleError(error);
+                  });
+                }
+              }
+            });
+            return false;
+          }
+
+          // close filter drawer
+
+          if(document.getElementById("filterDrawer").classList.contains("is-active") || document.getElementById("viewDrawer").classList.contains("is-active")) {
+            showDrawer().then(function(result) {
+              console.log(result);
+            }).catch(function(error) {
+              handleError(error);
+            });
+            return false;
+          }
+
         }
-        // if 'add as todo' is focused, return to search
-        if(document.activeElement.id==="todoTableSearchAddTodo") {
-          document.getElementById("todoTableSearch").focus();
-          return false;
-        }
 
-
-        // if a datepicker container is detected interrupt, datepicker destruction is handled in module
-        if(document.querySelector(".datepicker")) return false;
-
-        // close autocomplete container
-
-        if(autoCompleteContainer.classList.contains("is-active")) {
-          autoCompleteContainer.classList.remove("is-active");
-          autoCompleteContainer.innerHTML = null;
-          document.getElementById("modalFormInput").focus();
-          return false;
-        }
-
-        // if recurrence container is detected interrupt, closing is handled in module
-
-        if(recurrencePickerContainer.classList.contains("is-active")) {
-          recurrencePickerContainer.classList.remove("is-active");
-          return false;
-        }
-
-        // close todo context
-
-        if(todoContext.classList.contains("is-active")) {
-          todoContext.classList.remove("is-active");
-          focusRow(currentRow);
-          return false;
-        }
-
-        if(filterContext.classList.contains("is-active")) {
-          filterContext.classList.remove("is-active");
-          return false;
-        }
-
-        if(modalPrompt.classList.contains("is-active")) {
-          modalPrompt.classList.remove("is-active");
-          return false;
-        }
-
-        // close modal windows
+        // ******************************************************
+        // if modal is open
+        // ******************************************************
 
         if(isModalOpen()) {
-          
-          modalWindows.forEach((modal) => {
-            if(modal.classList.contains("is-active")) {
-              // hide modal
-              modal.classList.remove("is-active");
-              // in case modal is form it needs to be cleared
-              if(modal.id === "modalForm") {
-                resetForm().then(function(response) {
-                  console.info(response);
-                }).catch(function(error) {
-                  handleError(error);
-                });
-              }
-            }
-          });
-          return false;
-        }
-
-        // close filter drawer
-
-        if(document.getElementById("filterDrawer").classList.contains("is-active") || document.getElementById("viewDrawer").classList.contains("is-active")) {
-          showDrawer().then(function(result) {
-            console.log(result);
-          }).catch(function(error) {
-            handleError(error);
-          });
-          return false;
-        }
-        
-      }
-
-      // ******************************************************
-      // if modal is open
-      // ******************************************************
-
-      if(isModalOpen()) {
 
         // // set priority directly
         // if(event.altKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
