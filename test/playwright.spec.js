@@ -571,7 +571,6 @@ test.describe("Navigation elements", () => {
 
 test.describe("Filter drawer", () => {
 
-	let rows;
 	test.beforeAll(async () => {
 		app = await electron.launch({ 
 			args: ["src/main.js"],
@@ -602,7 +601,7 @@ test.describe("Filter drawer", () => {
 		const rows = await page.locator("#todoTable .todo").count();
 		await expect(rows).toBe(1);
 
-		const filterResetButton = await page.locator("#btnFiltersResetFilters").click();
+		await page.locator("#btnFiltersResetFilters").click();
 		
 		await page.locator("#navBtnFilter").click();		
 		await expect(page.locator("#filterDrawer")).toBeHidden();

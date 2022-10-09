@@ -11309,7 +11309,7 @@ nav ul:nth-child(2):hover #versionNumber {
     padding: 0.25em 0.5em;
   }
   #todoTable {
-    padding: 0 1.5em 1.5em 1.5em;
+    padding: 0 1.5em 80vh 1.5em;
   }
   #todoTable .group:first-child {
     margin-top: 0;
@@ -11399,7 +11399,7 @@ body.compact #sortByContainer li {
   padding: 0.25em 0.5em;
 }
 body.compact #todoTable {
-  padding: 0 1.5em 1.5em 1.5em;
+  padding: 0 1.5em 80vh 1.5em;
 }
 body.compact #todoTable .group:first-child {
   margin-top: 0;

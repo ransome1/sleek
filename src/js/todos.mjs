@@ -530,21 +530,18 @@ function generateTableRow(todo) {
         });
       }
     });
-    
+
     todoTableBodyRow.oncontextmenu = function(event) {
       createTodoContext(event, todoTableBodyRow).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);
       });
-
-      const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
-      focusRow(index);
     }
 
     todoTableBodyRow.onfocus = function() {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
-      focusRow(index);
+      focusRow(index, true);
     }
     
     // only add the categories to text cell if it has child nodes

@@ -20,17 +20,19 @@ const
   
 export let currentRow = 0;
 
-export function focusRow(row) {
+export function focusRow(row, dontFocus) {
   if(!row) currentRow = 0;
   if(row >= 0) currentRow = row;
   if(row === -1) return false;
   let todoTableRow = todoTable.querySelectorAll(".todo")[row];
   if(typeof todoTableRow === "object") {
-    todoTableRow.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
-    todoTableRow.onkeydown = todoTableRowEventHandler
-    todoTableRow.focus();
+    todoTableRow.onkeydown = todoTableRowEventHandler;
+    if (!dontFocus) {
+      todoTableRow.focus({preventScroll: true});
+      todoTableRow.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
+    }
   }
-  else todoTableSearch.focus(); // e.g. when you press enter while the last to-do is selected
+  else { todoTableSearch.focus(); } // e.g. when you press enter while the last to-do is selected
   return false;
 }
 
@@ -98,7 +100,7 @@ function handleFocusRow(key) {
     }
   } else if (!isRowFocused()) {
     // if no row currently selected, start at previously selected row
-    focusRow(currentRow)
+    newRow = currentRow;
   } else if (key === "ArrowDown") {
     const lastRow = todoTable.querySelectorAll(".todo").length - 1;
     if (currentRow >= lastRow) {
@@ -411,7 +413,7 @@ export async function registerShortcuts() {
     window.addEventListener("keydown", async function(event) {
 
       // disable scrolling so that you can select and edit todos with these keys
-      if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(event.key)) {
+      if(["Space","ArrowUp","ArrowDown"].includes(event.key)) {
         event.preventDefault();
       }
 
