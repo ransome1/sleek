@@ -1,5 +1,5 @@
 "use strict";
-import { setTodoComplete, archiveTodos, items } from "./todos.mjs";
+import {setTodoComplete, archiveTodos, items, deleteTodo} from "./todos.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
@@ -13,7 +13,6 @@ import { appData, userData, translations } from "../render.js";
 
 const 
   autoCompleteContainer = document.getElementById("autoCompleteContainer"),
-  modalForm = document.getElementById("modalForm"),
   modalWindows = document.querySelectorAll(".modal"),
   todoContext = document.getElementById("todoContext"),
   todoTable = document.getElementById("todoTable"),
@@ -26,9 +25,65 @@ export function focusRow(row) {
   if(row >= 0) currentRow = row;
   if(row === -1) return false;
   let todoTableRow = todoTable.querySelectorAll(".todo")[row];
-  if(typeof todoTableRow === "object") todoTableRow.focus();
+  if(typeof todoTableRow === "object") {
+    todoTableRow.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
+    todoTableRow.onkeydown = todoTableRowEventHandler
+    todoTableRow.focus();
+  }
   else todoTableSearch.focus(); // e.g. when you press enter while the last to-do is selected
   return false;
+}
+
+async function todoTableRowEventHandler(event) {
+  // intended to be used for todoTableRow.onkeydown
+  const todoRows = todoTable.querySelectorAll(".todo");
+
+  // x or enter: mark as complete
+  if (isRowFocused() && (event.key === "x" || event.key === "Enter")) {
+    const todoTableRow = todoRows[currentRow].getAttribute("data-item");
+    await setTodoComplete(todoTableRow).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
+
+    // idk what it is, but something deselects the row after this keydown event handler.
+    // i think it's related to window.api.send(...) in setTodoComplete
+    // so this "await new Promise" and "focusRow" is necessary.
+    await new Promise(r => setTimeout(r, 100));
+    focusRow(currentRow)
+    return false;
+  }
+
+  // left arrow: skip to top
+  if(isRowFocused() && event.key === "ArrowLeft") {
+    focusRow(0);
+    return false;
+  }
+
+  // right arrow: skip to bottom
+  if(isRowFocused() && event.key === "ArrowRight") {
+    focusRow(todoRows.length - 1);
+    return false;
+  }
+
+  // space: open editor modal
+  if(isRowFocused() && event.key === " ") {
+    event.preventDefault(); // prevents a space from being typed into the modal
+    await show(todoRows[currentRow].getAttribute("data-item"), undefined, true);
+    return false;
+  }
+
+  if(isRowFocused() && event.key === "Delete") {
+    let todoTableRow = todoRows[currentRow];
+    const index = await items.objects.map((obj) => obj.raw).indexOf(todoTableRow.getAttribute("data-item"));
+    await deleteTodo(index);
+
+    // deleteTodo has a call to window.api.send, so this promise is needed
+    await new Promise(r => setTimeout(r, 100));
+    focusRow(currentRow)
+    return false;
+  }
 }
 
 function handleFocusRow(key) {
@@ -368,42 +423,6 @@ export async function registerShortcuts() {
         // move focus up/down in table list
         if (event.key === "ArrowUp" || event.key === "ArrowDown") {
           handleFocusRow(event.key);
-          return false;
-        }
-
-        // x or enter: mark as complete
-        if (isRowFocused() && (event.key === "x" || event.key === "Enter")) {
-          const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow].getAttribute("data-item");
-          await setTodoComplete(todoTableRow).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
-
-          // idk what it is, but something deselects the row after this keydown event handler.
-          // so this "await new Promise" and "focusRow" is necessary.
-          await new Promise(r => setTimeout(r, 100));
-          focusRow(currentRow)
-          return false;
-        }
-
-        // left arrow: skip to top
-        if(isRowFocused() && event.key === "ArrowLeft") {
-          focusRow(0);
-          return false;
-        }
-
-        // right arrow: skip to bottom
-        if(isRowFocused() && event.key === "ArrowRight") {
-          focusRow(todoTable.querySelectorAll(".todo").length - 1);
-          return false;
-        }
-
-        // space: open editor modal
-        // TODO: reselect selected todo after ESC is used to close modal
-        if(isRowFocused() && event.key === " ") {
-          let todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
-          await show(todoTableRow.getAttribute("data-item"), undefined, true);
           return false;
         }
       }

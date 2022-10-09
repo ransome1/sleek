@@ -679,6 +679,13 @@ async function addTodo(todo) {
     return Promise.reject(error);
   }
 }
+
+async function deleteTodo(index) {
+  // index should be position in file, not position on screen
+  //send index to main process in order to delete line
+  window.api.send("writeToFile", [undefined, index, undefined]);
+}
+
 function editTodo(index, todo) {
   try {
     // save to file
@@ -744,4 +751,4 @@ async function archiveTodos() {
   }
 }
 
-export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, editTodo, show, generateTodoTxtObject };
+export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, deleteTodo, editTodo, show, generateTodoTxtObject };

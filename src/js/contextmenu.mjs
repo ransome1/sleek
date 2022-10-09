@@ -3,7 +3,7 @@ import {handleError, pasteItemToClipboard} from "./helper.mjs";
 import {translations, userData} from "../render.js";
 import {_paq} from "./matomo.mjs";
 import {createModalJail} from "./jail.mjs";
-import {items} from "./todos.mjs";
+import {deleteTodo, items} from "./todos.mjs";
 
 const todoContext = document.getElementById("todoContext");
 const todoContextPriorityIncrease = document.getElementById("todoContextPriorityIncrease");
@@ -105,10 +105,8 @@ async function copyTodo(todo) {
     if (userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
 }
 
-async function deleteTodo(index) {
-    //send index to main process in order to delete line
-    window.api.send("writeToFile", [undefined, index, undefined]);
-
+async function contextDeleteTodo(index) {
+    await deleteTodo(index);
     todoContext.classList.remove("is-active");
     todoContext.removeAttribute("data-item");
 
@@ -148,10 +146,10 @@ function setEvents(index, todo) {
     }
 
     // click on delete
-    todoContextDelete.onclick = () => deleteTodo(index);
+    todoContextDelete.onclick = () => contextDeleteTodo(index);
     todoContextDelete.onkeydown = function (event) {
         if (event.key === "Enter")
-            deleteTodo(index);
+            contextDeleteTodo(index);
     }
 }
 

@@ -399,11 +399,6 @@ function resetForm() {
     // remove any previously set data-item attributes
     modalForm.removeAttribute("data-item");
 
-    if (modalForm.dataset.escRefocusTodo === "true") {
-      focusRow(currentRow);
-      modalForm.dataset.escRefocusTodo = "false";
-    }
-
     // hide "complete" button
     btnItemStatus.classList.remove("is-active");
 
@@ -425,6 +420,14 @@ function resetForm() {
     // clean up the alert box
     modalFormAlert.parentElement.classList.remove("is-active", "is-warning", "is-danger");
     modalFormAlert.innerHTML = null;
+
+    if (modalForm.dataset.escRefocusTodo === "true") {
+      // idk what it is, but something deselects the row after this.
+      // i think it's related to window.api.send(...), e.g. in modalForm.onsubmit
+      // so this "await new Promise" and "focusRow" is necessary.
+      modalForm.dataset.escRefocusTodo = "false";
+      new Promise(r => setTimeout(r, 100)).then(() => focusRow(currentRow));
+    }
   
     return Promise.resolve("Success: Form closed and cleaned up");
 
