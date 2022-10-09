@@ -260,8 +260,8 @@ function addInputEvents(element) {
     }
 
     element.onkeydown = function(event) {
-      // submit form with Ctrl/CMD and Enter
-      if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) {
+      // submit form with Enter without Ctrl/CMD
+      if(event.key==="Enter") { //} && (event.ctrlKey || event.metaKey)) {
          btnSave.click();
         // trigger matomo event
         if(userData.matomoEvents) _paq.push(["trackEvent", "Form", "Pressed Ctrl/CMD and Enter for Submit"]);

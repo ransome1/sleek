@@ -85,6 +85,7 @@ const isContextOpen = () => { return todoContext.classList.contains("is-active")
 
 export async function registerShortcuts() {
   try {
+
     window.addEventListener("keyup", async function(event) {
 
         // ******************************************************
@@ -184,20 +185,8 @@ export async function registerShortcuts() {
 
         if(isModalOpen()) {
 
-        // // set priority directly
-        // if(event.altKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
-
-        //   setPriority(event.key.substr(0,1)).then(response => {
-        //     console.log(response);
-        //   }).catch(error => {
-        //     handleError(error);
-        //   });
-        //   return false;
-        // }
-
         // due date plus 1
-
-        if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
+        if((event.ctrlKey || event.metaKey) && event.key === "ArrowUp") {
           setDueDate(1).then(response => {
             console.log(response);
           }).catch(error => {
@@ -207,8 +196,7 @@ export async function registerShortcuts() {
         }
 
         // due date minus 1
-
-        if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowDown") {
+        if((event.ctrlKey || event.metaKey) && event.key === "ArrowDown") {
           setDueDate(-1).then(response => {
             console.log(response);
           }).catch(error => {
@@ -219,7 +207,7 @@ export async function registerShortcuts() {
 
         // reset due date
 
-        if((event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        if((event.ctrlKey || event.metaKey) && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
           setDueDate(0).then(response => {
             console.log(response);
           }).catch(error => {
@@ -295,7 +283,7 @@ export async function registerShortcuts() {
         // open help
         // ******************************************************     
 
-        if(event.key === "?" && !isInputFocused()) {
+        if((event.key === "?" || event.key === "/") && !isInputFocused()) {
           showModal("modalHelp").then(function(response) {
             console.info(response);
           }).catch(function(error) {
@@ -345,7 +333,7 @@ export async function registerShortcuts() {
         }
 
         // ******************************************************
-        // open form
+        // open modal to create new to-do
         // ******************************************************
 
         if(event.key==="n" && !isInputFocused() && !isOnboardingOpen()) {
@@ -377,7 +365,6 @@ export async function registerShortcuts() {
       // ******************************************************
 
       if((!isInputFocused() || document.activeElement.id==="todoTableSearch") && !isContextOpen()) {
-
         // move focus up/down in table list
         if (event.key === "ArrowUp" || event.key === "ArrowDown") {
           handleFocusRow(event.key);
@@ -470,7 +457,7 @@ export async function registerShortcuts() {
 
         // priority up
 
-        if(event.altKey && event.metaKey && event.key === "ArrowUp") {
+        if(event.altKey && event.key === "ArrowUp") {
           setPriority(-1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -481,7 +468,7 @@ export async function registerShortcuts() {
 
         // priority down
 
-        if(event.altKey && event.metaKey && event.key === "ArrowDown") {
+        if(event.altKey && event.key === "ArrowDown") {
           setPriority(1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -492,23 +479,22 @@ export async function registerShortcuts() {
 
         // set priority directly
         
-        if(event.altKey && event.metaKey && event.key.length === 1) {
+        if(event.altKey && event.key.length === 1) {
 
-          if(!event.code.includes("Key")) return false
+          if(!"abcdefghijklmnopqrstuvwyxz".includes(event.key)) return false
 
-          setPriority(event.code.substr(3).toUpperCase()).then(response => {
+          setPriority(event.key.toUpperCase()).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
           });
 
           return false;
-
         }
 
         // remove priority
         
-        if(event.altKey && event.metaKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        if(event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
 
           setPriority(false).then(response => {
             console.log(response);
