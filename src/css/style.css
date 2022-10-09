@@ -12225,7 +12225,7 @@ input.is-medium.input {
   min-width: 30em;
   float: left;
   display: none;
-  padding: 0 2.5em 1.5em 2.5em;
+  padding: 0 2.5em 80vh 2.5em;
   /********************/
   /*** SINGLE CELLS ***/
   /********************/
