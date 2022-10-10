@@ -2,7 +2,7 @@
 import { _paq } from "./matomo.mjs";
 import { createModalJail } from "./jail.mjs";
 import { generateFilterData } from "./filters.mjs";
-import { handleError } from "./helper.mjs";
+import {handleError, setDueDate, setPriority} from "./helper.mjs";
 import { items, item, setTodoComplete, generateTodoTxtObject } from "./todos.mjs";
 import { getCaretPosition } from "./helper.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
@@ -19,7 +19,6 @@ const modalFormAlert = document.getElementById("modalFormAlert");
 const modalFormInput = document.getElementById("modalFormInput");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
 const priorityPicker = document.getElementById("priorityPicker");
-const todoContext = document.getElementById("todoContext");
 
 btnSave.innerHTML = translations.save;
 btnCancel.innerHTML = translations.cancel;
@@ -150,7 +149,7 @@ modalForm.onsubmit = async function(event) {
 
 priorityPicker.onchange = function() {
   try {
-    setPriority(this.value).then(response => {
+    setModalPriority(this.value).then(response => {
       console.log(response);
     }).catch(error => {
       handleError(error);
@@ -336,10 +335,20 @@ async function resizeInput() {
   }
 }
 
-async function setPriority(priority) {
+async function setModalDueDate(days) {
+  const todo = await generateTodoTxtObject(modalFormInput.value).then(response => {
+    return response;
+  }).catch(error => {
+    handleError(error);
+  });
+
+  await setDueDate(todo, days);
+  modalFormInput.value = todo.toString();
+}
+
+async function setModalPriority(priority) {
   try {
     const modalFormInput = document.getElementById("modalFormInput");
-    let index = 0;
     
     let todo = await generateTodoTxtObject(modalFormInput.value).then(response => {
       return response;
@@ -347,31 +356,11 @@ async function setPriority(priority) {
       handleError(error);
     });
 
-    // get index if priority was already found in object
-    if(todo.priority) index = todo.priority.toLowerCase().charCodeAt(0)-96;
-
-    // in this case priority will be added or substracted by 1
-    if(typeof priority === "number") {
-
-      // add the passed value to index
-      index += priority;
-
-      // in case desired option is out of alphabet we stop
-      if(index <= 0 || index >= 27) return Promise.resolve("Info: Priority unchanged");
-
-      priorityPicker.selectedIndex = index;
-      todo.priority = priorityPicker.value;
-
-    // in this case only select value according to whatever had been passed
-    } else if(typeof priority === "string" && priority !== "") {
-      priorityPicker.value = priority;
-      todo.priority = priorityPicker.value;
-
-    // if argument is undefined or if string is empty priority will be removed
-    } else {
+    const newPriority = setPriority(todo, priority);
+    if (newPriority)
+      priorityPicker.value = newPriority;
+    else
       priorityPicker.selectedIndex = 0;
-      todo.priority = null;
-    }
 
     // write back to input
     modalFormInput.value = todo.toString();
@@ -381,7 +370,7 @@ async function setPriority(priority) {
     return Promise.resolve("Info: Priority changed to: " + todo.priority);
 
   } catch(error) {
-    error.functionName = setPriority.name;
+    error.functionName = setModalPriority.name;
     return Promise.reject(error);
   }
 }
@@ -639,4 +628,4 @@ if(userData.useTextarea) {
   });
 }
 
-export { show, resizeInput, setPriority, resetForm};
+export { show, resizeInput, setModalPriority, setModalDueDate, resetForm};

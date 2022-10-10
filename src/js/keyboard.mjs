@@ -1,11 +1,11 @@
 "use strict";
-import {setTodoComplete, archiveTodos, items, deleteTodo} from "./todos.mjs";
+import {setTodoComplete, archiveTodos, items, deleteTodo, generateTodoTxtObject} from "./todos.mjs";
 import { getConfirmation } from "./prompt.mjs";
-import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
+import {pasteItemsToClipboard, setDueDate, setPriority} from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
 import { resetFilters } from "./filters.mjs";
 import { handleError, getActiveFile } from "./helper.mjs";
-import { show, setPriority, resetForm } from "./form.mjs";
+import {show, setModalPriority, resetForm, setModalDueDate} from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
 import { triggerToggle } from "./toggles.mjs";
@@ -39,52 +39,94 @@ export function focusRow(row, dontFocus) {
 async function todoTableRowEventHandler(event) {
   // intended to be used for todoTableRow.onkeydown
   const todoRows = todoTable.querySelectorAll(".todo");
+  const todoItem = todoRows[currentRow];
 
-  // x or enter: mark as complete
-  if (isRowFocused() && (event.key === "x" || event.key === "Enter")) {
-    const todoTableRow = todoRows[currentRow].getAttribute("data-item");
-    await setTodoComplete(todoTableRow).then(function(response) {
-      console.info(response);
-    }).catch(function(error) {
-      handleError(error);
-    });
+  async function setterWrapper(setter, arg) {
+    // uses a setter function to set and update a to-do property
+    const todoText = todoItem.getAttribute("data-item");
+    const index = items.objects.map(function(object) { return object.raw; }).indexOf(todoText);
+    const textObject = await generateTodoTxtObject(todoText);
+    setter(textObject, arg);
 
-    // idk what it is, but something deselects the row after this keydown event handler.
-    // i think it's related to window.api.send(...) in setTodoComplete
-    // so this "await new Promise" and "focusRow" is necessary.
+    window.api.send("writeToFile", [textObject.toString(), index]);
+
+    // wait for window.api.send to deselect the to-do:
     await new Promise(r => setTimeout(r, 100));
-    focusRow(currentRow)
-    return false;
+    focusRow(currentRow);
   }
 
-  // left arrow: skip to top
-  if(isRowFocused() && event.key === "ArrowLeft") {
-    focusRow(0);
-    return false;
+  if (event.ctrlKey || event.metaKey) {
+    const setDate = (days) => setterWrapper(setDueDate, days);
+
+    // due date plus 1
+    if(event.key === "ArrowUp") {
+      await setDate(1);
+    }
+    // due date minus 1
+    else if(event.key === "ArrowDown") {
+      await setDate(-1);
+    }
+    // reset due date
+    else if(event.key === "ArrowRight" || event.key === "ArrowLeft") {
+      await setDate(0);
+    }
   }
+  else if (event.altKey) {
+    const setPri = (priority) => setterWrapper(setPriority, priority);
 
-  // right arrow: skip to bottom
-  if(isRowFocused() && event.key === "ArrowRight") {
-    focusRow(todoRows.length - 1);
-    return false;
+    // alt + up: increase priority
+    if(event.key === "ArrowUp") {
+      await setPri(1);
+    }
+    // alt + down: decrease priority
+    else if(event.key === "ArrowDown") {
+      await setPri(-1);
+    }
+    // alt + right/left: remove priority
+    else if(event.key === "ArrowRight" || event.key === "ArrowLeft") {
+      // i could make this right to raise to max, left to remove
+      await setPri(false);
+    }
+    // alt + any letter: set priority directly
+    // if you change this shortcut, please update the if statement
+    // in window.addEventListener("keydown", ...)
+    else if("abcdefghijklmnopqrstuvwyxz".includes(event.key.toLowerCase())) {
+      event.preventDefault(); // prevent default alt+letter shortcuts from triggering
+      await setPri(event.key);
+    }
   }
+  else {
+    // x or enter: mark as complete
+    if (event.key === "x" || event.key === "Enter") {
+      const todoTableRow = todoItem.getAttribute("data-item");
+      await setTodoComplete(todoTableRow).then(function (response) {
+        console.info(response);
+      }).catch(function (error) {
+        handleError(error);
+      });
 
-  // space: open editor modal
-  if(isRowFocused() && event.key === " ") {
-    event.preventDefault(); // prevents a space from being typed into the modal
-    await show(todoRows[currentRow].getAttribute("data-item"), undefined, true);
-    return false;
-  }
+      // idk what it is, but something deselects the row after this keydown event handler.
+      // i think it's related to window.api.send(...) in setTodoComplete
+      // so this "await new Promise" and "focusRow" is necessary.
+      await new Promise(r => setTimeout(r, 100));
+      focusRow(currentRow)
+    }
 
-  if(isRowFocused() && event.key === "Delete") {
-    let todoTableRow = todoRows[currentRow];
-    const index = await items.objects.map((obj) => obj.raw).indexOf(todoTableRow.getAttribute("data-item"));
-    await deleteTodo(index);
+    // space: open editor modal
+    else if (event.key === " ") {
+      event.preventDefault(); // prevents a space from being typed into the modal
+      await show(todoItem.getAttribute("data-item"), undefined, true);
+    }
 
-    // deleteTodo has a call to window.api.send, so this promise is needed
-    await new Promise(r => setTimeout(r, 100));
-    focusRow(currentRow)
-    return false;
+    // delete: delete selected to-do
+    else if (event.key === "Delete") {
+      const index = await items.objects.map((obj) => obj.raw).indexOf(todoItem.getAttribute("data-item"));
+      await deleteTodo(index);
+
+      // deleteTodo has a call to window.api.send, so this promise is needed
+      await new Promise(r => setTimeout(r, 100));
+      focusRow(currentRow)
+    }
   }
 }
 
@@ -101,19 +143,30 @@ function handleFocusRow(key) {
   } else if (!isRowFocused()) {
     // if no row currently selected, start at previously selected row
     newRow = currentRow;
-  } else if (key === "ArrowDown") {
-    const lastRow = todoTable.querySelectorAll(".todo").length - 1;
-    if (currentRow >= lastRow) {
-      focusSearchBox = true;
-      newRow = 0;
-    } else {
-      newRow = currentRow + 1;
-    }
-  } else if (key === "ArrowUp") {
-    if (currentRow <= 0) {
-      focusSearchBox = true;
-    } else {
-      newRow = currentRow - 1;
+  } else {
+    switch(key) {
+      case "ArrowUp":
+        if (currentRow <= 0) {
+          focusSearchBox = true;
+        } else {
+          newRow = currentRow - 1;
+        }
+        break;
+      case "ArrowDown":
+        const lastRow = todoTable.querySelectorAll(".todo").length - 1;
+        if (currentRow >= lastRow) {
+          focusSearchBox = true;
+          newRow = 0;
+        } else {
+          newRow = currentRow + 1;
+        }
+        break;
+      case "ArrowLeft":
+        newRow = 0;
+        break;
+      case "ArrowRight":
+        newRow = todoTable.querySelectorAll(".todo").length - 1;
+        break;
     }
   }
 
@@ -244,7 +297,7 @@ export async function registerShortcuts() {
 
         // due date plus 1
         if((event.ctrlKey || event.metaKey) && event.key === "ArrowUp") {
-          setDueDate(1).then(response => {
+          setModalDueDate(1).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
@@ -254,7 +307,7 @@ export async function registerShortcuts() {
 
         // due date minus 1
         if((event.ctrlKey || event.metaKey) && event.key === "ArrowDown") {
-          setDueDate(-1).then(response => {
+          setModalDueDate(-1).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
@@ -265,7 +318,7 @@ export async function registerShortcuts() {
         // reset due date
 
         if((event.ctrlKey || event.metaKey) && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
-          setDueDate(0).then(response => {
+          setModalDueDate(0).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
@@ -417,13 +470,23 @@ export async function registerShortcuts() {
         event.preventDefault();
       }
 
+      // hacky fix, prevents multiple things from happening when
+      // alt+letters shortcut in todoTableRowEventHandler is used
+      if (event.altKey && isRowFocused() && /^[a-zA-Z]$/.test(event.key))
+        return false;
+
       // ******************************************************
-      // setup keys for selecting and interacting with to-do items
+      // setup arrow keys for selecting and to-do items
       // ******************************************************
 
       if((!isInputFocused() || document.activeElement.id==="todoTableSearch") && !isContextOpen()) {
         // move focus up/down in table list
-        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+          if ((event.ctrlKey || event.metaKey || event.altKey) && isRowFocused()) {
+            // hacky fix. ctrl/meta/alt + arrows are handled in todoTableRowEventHandler
+            return false;
+          }
+
           handleFocusRow(event.key);
           return false;
         }
@@ -479,7 +542,7 @@ export async function registerShortcuts() {
         // priority up
 
         if(event.altKey && event.key === "ArrowUp") {
-          setPriority(-1).then(function(result) {
+          setModalPriority(1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
             handleError(error);
@@ -490,7 +553,7 @@ export async function registerShortcuts() {
         // priority down
 
         if(event.altKey && event.key === "ArrowDown") {
-          setPriority(1).then(function(result) {
+          setModalPriority(-1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
             handleError(error);
@@ -504,7 +567,7 @@ export async function registerShortcuts() {
 
           if(!"abcdefghijklmnopqrstuvwyxz".includes(event.key)) return false
 
-          setPriority(event.key.toUpperCase()).then(response => {
+          setModalPriority(event.key.toUpperCase()).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);
@@ -517,7 +580,7 @@ export async function registerShortcuts() {
         
         if(event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
 
-          setPriority(false).then(response => {
+          setModalPriority(false).then(response => {
             console.log(response);
           }).catch(error => {
             handleError(error);

@@ -1,6 +1,6 @@
 "use strict";
 import { appData, userData, setUserData, translations } from "../render.js";
-import { generateGroupedObjects, items, generateTodoTxtObject } from "./todos.mjs";
+import { items } from "./todos.mjs";
 import { isToday, isPast, isTomorrow } from "./date.mjs";
 import { generateFileTabs } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
@@ -10,7 +10,6 @@ import { _paq } from "./matomo.mjs";
 import "../../node_modules/marked/marked.min.js";
 
 const body = document.getElementById("body");
-const todoContext = document.getElementById("todoContext");
 const addTodoContainer = document.getElementById("addTodoContainer");
 
 marked.setOptions({
@@ -163,8 +162,7 @@ export async function pasteItemsToClipboard() {
 export function getActiveFile() {
   const index = userData.files.findIndex(file => file[0] === 1);
   if(index!==-1) {
-    const file = userData.files[index][1];
-    return file;
+    return userData.files[index][1];
   }
   return false;
 }
@@ -332,36 +330,64 @@ export function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 }
-export async function setDueDate(days) {
-  try {
 
-    const todo = await generateTodoTxtObject(modalFormInput.value).then(response => {
-      return response;
-    }).catch(error => {
-      handleError(error);
-    });
+export async function setDueDate(todoTxt, days) {
+  /*
+  - todoTxt: a todoTxtObject to be changed
+  - days: number of days to be added to todoTxt's due date. can be negative. if 0, removes the due date.
+  - return value: always true
+   */
 
     if(days === 0) {
-      todo.due = undefined;
-      todo.dueString = undefined;
-    } else if(days && todo.due) {
-      todo.due = new Date(new Date(todo.dueString).setDate(new Date(todo.dueString).getDate() + days));
-      todo.dueString = todo.due.toISOString().substr(0, 10);
-    // when no due date is available we fallback to todays date
-    } else if(days && !todo.due) {
-      todo.due = new Date(new Date().setDate(new Date().getDate() + days));
-      todo.dueString = todo.due.toISOString().substr(0, 10);
+      todoTxt.due = undefined;
+      todoTxt.dueString = undefined;
+    } else if(days && todoTxt.due) {
+      todoTxt.due = new Date(new Date(todoTxt.dueString).setDate(new Date(todoTxt.dueString).getDate() + days));
+      todoTxt.dueString = todoTxt.due.toISOString().slice(0, 10);
+    } else if(days && !todoTxt.due) {
+      // when no due date is available we default to today's date
+      todoTxt.due = new Date(new Date().setDate(new Date().getDate() + days));
+      todoTxt.dueString = todoTxt.due.toISOString().substr(0, 10);
     }
 
-    modalFormInput.value = todo.toString();
-
-    return Promise.resolve("Success: Due date changed to " + todo.dueString)
-
-  } catch(error) {
-    error.functionName = setDueDate.name;
-    return Promise.reject(error);
-  }
+    return true;
 }
+export function setPriority(todoTxt, priority) {
+  /*
+  - todoTxt: a todoTxt object<br/>
+  - priority: if a number, is added to todoTxt's current priority. e.g. -1 will
+    change priority from B to C. if a letter, sets priority to that letter.
+  - return value: the priority if there is one, else false
+   */
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  // for numerical inputs, add/subtract from current priority
+  if (typeof priority === "number") {
+    let index = priority < 0 ? 0 : 25;
+    if (todoTxt.priority) {
+      index = todoTxt.priority.toLowerCase().charCodeAt(0) - 97;
+      index -= priority; // subtract instead of add so that -1 moves priority down. pri B->C is index 2->3
+    }
+
+    if (index >= 0 && index <= 25)
+      todoTxt.priority = alphabet.slice(index, index + 1);
+    else
+      todoTxt.priority = null;
+  }
+
+  // in this case only select value according to whatever had been passed
+  else if (typeof priority === "string" && alphabet.includes(priority.toUpperCase())) {
+    todoTxt.priority = priority.toUpperCase();
+  }
+
+  // if argument is undefined or if string is empty priority will be removed
+  else {
+    todoTxt.priority = null;
+  }
+
+  return todoTxt.priority ?? false;
+}
+
 export function getCaretPosition(element) {
   if((element.selectionStart !== null) && (element.selectionStart !== undefined)) return element.selectionStart;
   return false;
