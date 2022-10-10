@@ -34,7 +34,7 @@ const todoTableWrapper = document.getElementById("todoTableWrapper");
 let
   linkId,
   clusterCounter = 0,
-  clusterSize = Math.ceil(window.innerHeight/32), // 32 being the pixel height of one todo in compact mode
+  clusterSize = Math.ceil(window.innerHeight/32), // 32 being the pixel height of one to-do in compact mode
   clusterThreshold = clusterSize;
 
 tableContainerCategoriesTemplate.setAttribute("class", "cell categories");
@@ -49,10 +49,12 @@ todoTableBodyRowTemplate.setAttribute("tabindex", "0");
 
 todoTableWrapper.onscroll = function(event) {
   // abort if all todos are shown already
+  // TODO: this doesn't seem to work. framerate noticeably drops when scrolling near end of page.
   if(todoTable.children.length === items.filtered.length) return false;
 
-  // if the end of the page is reached start building
-  if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= event.target.clientHeight) {
+  // if the top of the screen is <= 1.25 view areas of height from the bottom of the page
+  // if you set this too high, you'll get a bug where the selected to-do is deselected when arrow-key scrolling
+  if(Math.floor(event.target.scrollHeight - event.target.scrollTop) <= (1.25 * event.target.clientHeight)) {
     // each time user hits view bottom, the clusterThreshold is being enhanced by clusterSize
     clusterThreshold = clusterThreshold + clusterSize;
     
