@@ -90,7 +90,8 @@ async function todoTableRowEventHandler(event) {
     // alt + any letter: set priority directly
     // if you change this shortcut, please update the if statement
     // in window.addEventListener("keydown", ...)
-    else if("abcdefghijklmnopqrstuvwyxz".includes(event.key.toLowerCase())) {
+    // regex: string is exactly one alphabet character
+    else if(/^[a-zA-Z]$/.test(event.key)) {
       event.preventDefault(); // prevent default alt+letter shortcuts from triggering
       await setPri(event.key);
     }
@@ -472,6 +473,7 @@ export async function registerShortcuts() {
 
       // hacky fix, prevents multiple things from happening when
       // alt+letters shortcut in todoTableRowEventHandler is used
+      // regex: string is exactly one alphabet character
       if (event.altKey && isRowFocused() && /^[a-zA-Z]$/.test(event.key))
         return false;
 

@@ -357,10 +357,7 @@ async function setModalPriority(priority) {
     });
 
     const newPriority = setPriority(todo, priority);
-    if (newPriority)
-      priorityPicker.value = newPriority;
-    else
-      priorityPicker.selectedIndex = 0;
+    priorityPicker.value = newPriority;
 
     // write back to input
     modalFormInput.value = todo.toString();

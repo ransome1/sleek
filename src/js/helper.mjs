@@ -346,7 +346,8 @@ export async function setDueDate(todoTxt, days) {
       todoTxt.dueString = todoTxt.due.toISOString().slice(0, 10);
     } else if(days && !todoTxt.due) {
       // when no due date is available we default to today's date
-      todoTxt.due = new Date(new Date().setDate(new Date().getDate() + days));
+      const offset = (days < 0 ? days + 1 : days); // set to today when pressing ctrl+down, i.e. when days=-1
+      todoTxt.due = new Date(new Date().setDate(new Date().getDate() + offset));
       todoTxt.dueString = todoTxt.due.toISOString().substr(0, 10);
     }
 
@@ -357,7 +358,7 @@ export function setPriority(todoTxt, priority) {
   - todoTxt: a todoTxt object<br/>
   - priority: if a number, is added to todoTxt's current priority. e.g. -1 will
     change priority from B to C. if a letter, sets priority to that letter.
-  - return value: the priority if there is one, else false
+  - return value: the new priority of the to-do
    */
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -375,8 +376,8 @@ export function setPriority(todoTxt, priority) {
       todoTxt.priority = null;
   }
 
-  // in this case only select value according to whatever had been passed
-  else if (typeof priority === "string" && alphabet.includes(priority.toUpperCase())) {
+  // regex: string is exactly one alphabet character
+  else if (typeof priority === "string" && /^[a-zA-Z]$/.test(priority)) {
     todoTxt.priority = priority.toUpperCase();
   }
 
@@ -385,7 +386,7 @@ export function setPriority(todoTxt, priority) {
     todoTxt.priority = null;
   }
 
-  return todoTxt.priority ?? false;
+  return todoTxt.priority;
 }
 
 export function getCaretPosition(element) {
