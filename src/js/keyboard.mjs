@@ -20,15 +20,15 @@ const
   
 export let currentRow = 0;
 
-export function focusRow(row, dontFocus) {
+export function focusRow(row, scrollIntoView) {
   if(!row) currentRow = 0;
   if(row >= 0) currentRow = row;
   if(row === -1) return false;
   let todoTableRow = todoTable.querySelectorAll(".todo")[row];
   if(typeof todoTableRow === "object") {
     todoTableRow.onkeydown = todoTableRowEventHandler;
-    if (!dontFocus) {
-      todoTableRow.focus({preventScroll: true});
+    todoTableRow.focus({preventScroll: true});
+    if (scrollIntoView) {
       todoTableRow.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
     }
   }
@@ -174,7 +174,7 @@ function handleFocusRow(key) {
   if (focusSearchBox) {
     todoTableSearch.focus()
   } else {
-    focusRow(newRow);
+    focusRow(newRow, newRow !== currentRow);
   }
 }
 

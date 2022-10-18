@@ -412,7 +412,7 @@ function resetForm() {
       // i think it's related to window.api.send(...), e.g. in modalForm.onsubmit
       // so this "await new Promise" and "focusRow" is necessary.
       modalForm.dataset.escRefocusTodo = "false";
-      new Promise(r => setTimeout(r, 100)).then(() => focusRow(currentRow));
+      new Promise(r => setTimeout(r, 100)).then(() => focusRow(currentRow, true));
     }
   
     return Promise.resolve("Success: Form closed and cleaned up");

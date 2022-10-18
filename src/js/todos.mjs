@@ -543,7 +543,7 @@ function generateTableRow(todo) {
 
     todoTableBodyRow.onfocus = function() {
       const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
-      focusRow(index, true);
+      focusRow(index);
     }
     
     // only add the categories to text cell if it has child nodes
