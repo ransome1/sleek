@@ -47,6 +47,7 @@ autoCompleteContainer.onkeyup = function(event) {
 
 function saveFilter(newFilter, oldFilter, category) {
   try {
+
     const l = items.objects.length;
     for(let i = 0; i < l; i++) {
       if(category !== "priority" && items.objects[i][category]) {
@@ -64,6 +65,11 @@ function saveFilter(newFilter, oldFilter, category) {
     }).catch(error => {
       handleError(error);
     });
+
+    console.log(items.objects)
+    console.log(items.objects.toString())
+
+    return false;
     
     // write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
@@ -192,11 +198,7 @@ function applySearchInput(queryString) {
       // plain-text query.
 
       items.filtered = items.filtered.filter(function(item) {        
-        if(!userData.caseSensitive) {
-          queryString = queryString.toLowerCase();
-          item.raw = item.raw;
-        }
-        return item.raw.indexOf(queryString) !== -1;
+        return item.raw.toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
       });
     }
   }
@@ -278,12 +280,12 @@ function resetFilters(refresh) {
 }
 
 function addFilterToInput(filter, autoCompletePrefix) {
-  try {
+  try {  
     const modalFormInput = document.getElementById("modalFormInput");
     const caretPosition = getCaretPosition(modalFormInput);
 
     // split string into elements
-    const inputElements = modalFormInput.value.split(" ");
+    const inputElements = modalFormInput.value.split(/[^\r\n]+/);
     let i;
     let x = 0;
     for(i = 0; i < inputElements.length; i++) {
@@ -293,6 +295,7 @@ function addFilterToInput(filter, autoCompletePrefix) {
     }
 
     inputElements.splice(i, 1, autoCompletePrefix + filter + " ");
+
     modalFormInput.value = inputElements.join(" ");
 
     // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
@@ -413,6 +416,7 @@ function generateCategoryContainer(category, autoCompletePrefix, buttons) {
 
 function generateFilterButtons(category, autoCompletePrefix) {
   try {
+
     // create a fragment to collect the filters in
     const buttons = document.createDocumentFragment();
 
@@ -547,7 +551,6 @@ function generateFilterButtons(category, autoCompletePrefix) {
     return Promise.reject(error);
   }
 }
-
 
 function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix) {
   try {

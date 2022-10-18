@@ -99,6 +99,7 @@
   "priorities": "优先度",
   "priority": "优先度",
   "projects": "项目",
+  "customTags": "Tags",
   "printCurrentView": "打印当前视图",
   "reload": "重载",
   "resetFilters": "重置过滤和搜索",

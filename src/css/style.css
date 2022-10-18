@@ -11528,6 +11528,30 @@ a.button.projects.is-dark.is-hovered {
   color: white;
 }
 
+a.button.customTags,
+a.button.customTags:hover {
+  background: #ccc;
+  color: #595959;
+}
+a.button.customTags span.tag,
+a.button.customTags:hover span.tag {
+  color: white;
+  background: #404040;
+}
+
+a.button.customTags:focus-visible,
+a.button.customTags.is-dark:focus-visible {
+  background: #4d4d4d;
+  color: white;
+}
+
+a.button.customTags.is-dark,
+a.button.customTags.is-dark:hover,
+a.button.customTags.is-dark.is-hovered {
+  background: #333333;
+  color: white;
+}
+
 a.button.priority,
 a.button.priority:focus,
 a.button.priority:focus-visible,

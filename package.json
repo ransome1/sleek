@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "category": "ProjectManagement",
@@ -19,7 +19,7 @@
   "main": "src/main.js",
   "buildResources": "src",
   "build": {
-    "buildVersion": "21",
+    "buildVersion": "23",
     "files": [
       "!flatpak-node${/*}",
       "!snap${/*}",
@@ -132,7 +132,7 @@
     "sass": "sass -w src/scss/style.scss:src/css/style.css",
     "start": "yarn sass & electron .",
     "test": "yarn playwright test --config=test/playwright.config.js",
-    "test1": "yarn playwright test -g 'Add a new todo and delete it' --config=test/playwright.config.js"
+    "test1": "yarn playwright test -g 'Recurrence picker' --config=test/playwright.config.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
