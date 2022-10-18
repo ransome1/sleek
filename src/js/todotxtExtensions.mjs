@@ -3,6 +3,35 @@ import "../../node_modules/jstodotxt/jsTodoExtensions.js";
 import { convertDate } from "./date.mjs";
 import { addIntervalToDate } from "./recurrences.mjs";
 
+function TagExtension() {
+	this.name = "customTags";
+}
+TagExtension.prototype = new TodoTxtExtension();
+TagExtension.prototype.parsingFunction = function(line) {
+
+	//var tagRegex = /(#\w+)/g;
+	var tagRegex = /(^|\s+)#(\S+)/g;
+	//var tagRegexReplace = /(^|\s+)#\S+/g;
+	var matchTag = line.match(tagRegex);
+	//var matchTagReplace = line.match(tagRegexReplace);
+	if(matchTag !== null) {
+		var customTags = [];
+		for(var i = 0; i < matchTag.length; i++) { customTags.push( matchTag[i].trim().substr( 1 ) ); }
+
+
+
+		const customTagsToString = "#" + customTags.join(" #");
+
+		let textOnly = line.replace(tagRegex, '')
+
+		console.log(customTagsToString)
+
+		
+		return [customTags, line.replace(tagRegex, ""), customTagsToString];
+	}
+	return [null, null, null];
+};
+
 function RecExtension() {
 	this.name = "rec";
 }
@@ -109,4 +138,4 @@ function resolveRelativeDate(relativeDate) {
     return addIntervalToDate(today, increment, unit);
 }
 
-export { RecExtension, SugarDueExtension, ThresholdExtension, PriExtension };
+export { RecExtension, SugarDueExtension, ThresholdExtension, PriExtension, TagExtension };

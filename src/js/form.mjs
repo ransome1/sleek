@@ -202,12 +202,14 @@ function addInputEvents(element) {
       let autoCompleteValue ="";
       
       // TODO: describe
-      if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+")) {
+      //if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+" || inputValue.charAt(caretPosition-1) === "#")) {
+        if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+")) {
         autoCompleteValue = inputValue.substr(caretPosition, inputValue.lastIndexOf(" ")).split(" ").shift();
         autoCompletePrefix = inputValue.charAt(caretPosition-1);
       } else if(inputValue.charAt(caretPosition) === " ") {
         autoCompleteValue = inputValue.substr(inputValue.lastIndexOf(" ", caretPosition-1)+2).split(" ").shift();
         autoCompletePrefix = inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition-1)+1);
+      //} else if(inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "@" || inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "+" || inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "#") {
       } else if(inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "@" || inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1) === "+") {
         autoCompleteValue = inputValue.substr(inputValue.lastIndexOf(" ", caretPosition)+2).split(" ").shift();
         autoCompletePrefix = inputValue.charAt(inputValue.lastIndexOf(" ", caretPosition)+1);
@@ -222,6 +224,8 @@ function addInputEvents(element) {
         autoCompleteCategory = "projects";
       } else if(autoCompletePrefix === "@") {
         autoCompleteCategory = "contexts";
+      // } else if(autoCompletePrefix === "#") {
+      //   autoCompleteCategory = "customTags";
       } else {
         // interrupt in case no filter is being asked for
         return false;

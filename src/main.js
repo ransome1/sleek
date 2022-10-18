@@ -899,7 +899,7 @@ if(!process.mas && (!app.requestSingleInstanceLock() && process.env.SLEEK_MULTIP
     // remove filewatcher
     if(fileWatcher) fileWatcher.unwatch();
     // reduce menu to bare minimum
-    Menu.setApplicationMenu(Menu.buildFromTemplate([menuTemplateApp]))
+    if(menuTemplateApp) Menu.setApplicationMenu(Menu.buildFromTemplate([menuTemplateApp]))
     // disable settings because it would provoke errors
     Menu.getApplicationMenu().getMenuItemById("settings").enabled = false;
 

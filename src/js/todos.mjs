@@ -13,7 +13,7 @@ import { generateRecurrence } from "./recurrences.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification, isInViewport } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
-import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension } from "./todotxtExtensions.mjs";
+import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension, TagExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
 const items = { objects: {} }
@@ -305,7 +305,6 @@ function generateGroupedObjects() {
 }
 function generateTableRow(todo) {
   try {
-
     // create nodes from templates
     let todoTableBodyRow = todoTableBodyRowTemplate.cloneNode(true);
     let todoTableBodyCellCheckbox = todoTableBodyCellCheckboxTemplate.cloneNode(true);
@@ -567,6 +566,18 @@ function generateTableRow(todo) {
     return Promise.reject(error);
   }
 }
+
+const deleteTodo = async function(index) {
+  //send index to main process in order to delete line
+  window.api.send("writeToFile", [undefined, index, undefined]);      
+  
+  todoContext.classList.remove("is-active");
+  todoContext.removeAttribute("data-item");
+  
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
+}
+
 async function createTodoContext(todoTableRow) {
   try {
 
@@ -602,17 +613,17 @@ async function createTodoContext(todoTableRow) {
       // trigger matomo event
       if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
     }
-    const deleteTodo = async function() {
+    // const deleteTodo = async function() {
       
-      //send index to main process in order to delete line
-      window.api.send("writeToFile", [undefined, index, undefined]);      
+    //   //send index to main process in order to delete line
+    //   window.api.send("writeToFile", [undefined, index, undefined]);      
       
-      todoContext.classList.remove("is-active");
-      todoContext.removeAttribute("data-item");
+    //   todoContext.classList.remove("is-active");
+    //   todoContext.removeAttribute("data-item");
       
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
-    }
+    //   // trigger matomo event
+    //   if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
+    // }
     const changePriority = function(direction) {
 
       const todo = items.objects[index];
@@ -907,4 +918,4 @@ async function archiveTodos() {
   }
 }
 
-export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, archiveTodos, addTodo, editTodo, show, createTodoContext, generateTodoTxtObject };
+export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, deleteTodo, archiveTodos, addTodo, editTodo, show, createTodoContext, generateTodoTxtObject };

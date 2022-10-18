@@ -68,6 +68,27 @@ a.button.projects.is-dark.is-hovered {
   color: white;
 }
 
+a.button.customTags,
+a.button.customTags:hover {
+  background: $sleek-customTags-button;
+  color: darken($sleek-customTags-button, 45%);
+  span.tag {
+    color: white;
+    background: darken($sleek-customTags-button, 55%);
+  }
+}
+a.button.customTags:focus-visible,
+a.button.customTags.is-dark:focus-visible {
+  background: darken($sleek-customTags-button, 50%);
+  color: white;
+}
+a.button.customTags.is-dark,
+a.button.customTags.is-dark:hover,
+a.button.customTags.is-dark.is-hovered {
+  background: darken($sleek-customTags-button, 60%);
+  color: white;
+}
+
 a.button.priority,
 a.button.priority:focus,
 a.button.priority:focus-visible,

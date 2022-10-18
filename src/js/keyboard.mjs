@@ -1,5 +1,5 @@
 "use strict";
-import { createTodoContext, setTodoComplete, archiveTodos, items } from "./todos.mjs";
+import { createTodoContext, setTodoComplete, deleteTodo, archiveTodos, items } from "./todos.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
@@ -205,6 +205,10 @@ export async function registerShortcuts() {
         // make sure no input or drawer is opened
 
         if(!isInputFocused() && !isContextOpen()) {
+
+          // if(event.key === "Delete" || event.key === "Backspace") {
+          //   deleteTodo(currentRow);
+          // }
 
           // move focus down in table list
 

@@ -99,6 +99,7 @@
   "priorities": "Priorities",
   "priority": "Priority",
   "projects": "Projects",
+  "customTags": "Tags",
   "printCurrentView": "Print current view",
   "reload": "Reload",
   "resetFilters": "Reset filters and search",
