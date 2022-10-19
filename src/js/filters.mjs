@@ -66,11 +66,6 @@ function saveFilter(newFilter, oldFilter, category) {
       handleError(error);
     });
 
-    console.log(items.objects)
-    console.log(items.objects.toString())
-
-    return false;
-    
     // write the data to the file
     // a newline character is added to prevent other todo.txt apps to append new todos to the last line
     window.api.send("replaceFileContent", [items.objects.join("\n").toString() + "\n"]);
@@ -285,7 +280,9 @@ function addFilterToInput(filter, autoCompletePrefix) {
     const caretPosition = getCaretPosition(modalFormInput);
 
     // split string into elements
-    const inputElements = modalFormInput.value.split(/[^\r\n]+/);
+    //const inputElements = modalFormInput.value.split(/[^\r\n]+/);
+    const inputElements = modalFormInput.value.split(" ");
+
     let i;
     let x = 0;
     for(i = 0; i < inputElements.length; i++) {
@@ -295,7 +292,7 @@ function addFilterToInput(filter, autoCompletePrefix) {
     }
 
     inputElements.splice(i, 1, autoCompletePrefix + filter + " ");
-
+  
     modalFormInput.value = inputElements.join(" ");
 
     // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
