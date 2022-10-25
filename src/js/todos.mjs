@@ -693,11 +693,11 @@ async function createTodoContext(todoTableRow) {
     }
     // click on delete
     todoContextDelete.onclick = function() {
-      deleteTodo();
+      deleteTodo(index);
     }
     todoContextDelete.onkeypress = function(event) {
       if(event.key !== "Enter") return false;
-      deleteTodo();
+      deleteTodo(index);
     }
 
     todoContext.classList.add("is-active");
