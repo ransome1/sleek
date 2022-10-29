@@ -195,7 +195,7 @@ language.onchange = function() {
 theme.onchange = function() {
   // only continue if language code has been passed
   if(!this.value) return false;
-  
+
   window.api.send("setTheme", this.value)
 
   // trigger matomo event
@@ -259,7 +259,8 @@ function setFriendlyLanguageNames() {
       es: "Español",
       fr: "Français",
       zh: "简体中文",
-      pt: "Português do Brasil",
+      ptpt: "Português de Portugal",
+      ptbr: "Português do Brasil",
       jp: "日本語",
       tr: "Türkçe",
       hu: "Magyar",
@@ -308,15 +309,15 @@ export function showModal(modalId) {
     if(tabs.length > 0) {
 
       tabs.forEach(function(tab, index) {
-              
+
         // put highlight on first tab
         (index === 0) ? tab.classList.add("is-active") : tab.classList.remove("is-active")
 
         tab.onclick = function() {
-          
+
           // hide all cards
           cards.forEach(function(card) { card.classList.remove("is-active") });
-          
+
           // hide all tabs
           tabs.forEach(function(tab) { tab.classList.remove("is-active") });
 
