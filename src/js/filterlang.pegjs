@@ -64,14 +64,14 @@ priorityKeyword
     = "pri" ("o" ("r" ("i" ("t" "y"?)?)?)?)?
 
 dueComparison
-    = "due" _ op:compareOp _ right:dateExpr  { return ["due"].concat(right, [op]); }
-    / "due:" right:dateStr  { return ["duestr", right]; }
-    / "due"  { return ["due"]; }
+    = "due:" _ op:compareOp _ right:dateExpr  { return ["due"].concat(right, [op]); }
+    / "due:" right:dateStr  { return ["duestr", right]; }  // this does string prefix match
+    / "due:"  { return ["due"]; }  // this tests for the presence of any due date
 
 thresholdComparison
-    = "t" _ op:compareOp _ right:dateExpr  { return ["threshold"].concat(right, [op]); }
-    / "t:" right:dateStr  { return ["tstr", right]; }
-    / "t"  { return ["threshold"]; }
+    = "t:" _ op:compareOp _ right:dateExpr  { return ["threshold"].concat(right, [op]); }
+    / "t:" right:dateStr  { return ["tstr", right]; }  // this does string prefix match
+    / "t:"  { return ["threshold"]; }  // this tests for the presence of any due date
 
 dateExpr
     = left:dateLiteral _ op:dateOp _ count:number unit:[dbwmy]  {
