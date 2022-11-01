@@ -275,6 +275,23 @@ export async function registerShortcuts() {
         }
 
         // ******************************************************
+        // toggle completed todos
+        // ******************************************************
+        
+        if(event.key==="h" && !isInputFocused()) {
+          // abort when onboarding is shown
+          if(isOnboardingOpen()) return false;
+
+          const showCompleted = document.getElementById("showCompleted");
+          triggerToggle(showCompleted, true).then(function(response) {
+            console.info(response);
+          }).catch(function(error) {
+            handleError(error);
+          });
+          return false;
+        }
+
+        // ******************************************************
         // tab through tabs
         // ******************************************************
 
@@ -414,7 +431,7 @@ export async function registerShortcuts() {
       // ******************************************************
 
       if((event.ctrlKey || event.metaKey) && event.key === "o") {
-        window.api.send("openOrCreateFile", "open");
+        window.api.send("openOrCreateFile", ["open"]);
         return false;
       }
 
@@ -516,20 +533,20 @@ export async function registerShortcuts() {
           return false;
         }
 
-        // toggle completed todos
+        // // toggle completed todos
         
-        if(event.key==="h" && !isInputFocused()) {
-          // abort when onboarding is shown
-          if(isOnboardingOpen()) return false;
+        // if(event.key==="h" && !isInputFocused()) {
+        //   // abort when onboarding is shown
+        //   if(isOnboardingOpen()) return false;
 
-          const showCompleted = document.getElementById("showCompleted");
-          triggerToggle(showCompleted, true).then(function(response) {
-            console.info(response);
-          }).catch(function(error) {
-            handleError(error);
-          });
-          return false;
-        }
+        //   const showCompleted = document.getElementById("showCompleted");
+        //   triggerToggle(showCompleted, true).then(function(response) {
+        //     console.info(response);
+        //   }).catch(function(error) {
+        //     handleError(error);
+        //   });
+        //   return false;
+        // }
         
         // toggle deferred todos
 

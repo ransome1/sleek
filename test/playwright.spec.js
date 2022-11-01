@@ -597,6 +597,97 @@ test.describe("Filter drawer", () => {
 
 });
 
+test.describe("Filter drawer 2", () => {
+
+	test.beforeAll(async () => {
+		let rows;
+		app = await electron.launch({ 
+			args: ["src/main.js"],
+			env: {
+				"NODE_ENV": "testing",
+				"SLEEK_CUSTOM_FILE": "test/empty.txt"
+			}
+		});
+		page = await app.firstWindow();
+		
+		await page.waitForTimeout(waitForAppToLoad);
+	});
+
+	test.afterAll(() => {
+		app.close();
+	});
+
+	test("Filter sidebar is being opened and a project is being selected which reduces the table rows to 1 result. Filter is removed and filter drawer is being closed.", async () => {
+		await page.locator("#btnAddTodoContainer").click();
+		await page.locator("#modalFormInput").fill("This is a test todo with (A) priority, a @context and a +project");
+		await page.keyboard.press("Enter");
+		const countedRows = await page.locator("#todoTable").count();
+		await expect(countedRows).toBe(1);
+	});
+
+	test("Rename the context", async () => {
+		await page.locator("#navBtnFilter").click();
+		await page.waitForSelector("#filterDrawer");
+		const filterButton = await page.locator(":nth-match(#filterDrawer section.contexts a.button, 1)");
+		await filterButton.click({
+			"button": "right",
+			"position": {
+				"x": 10,
+				"y": 10
+			}
+		});0 
+		await page.locator("#filterContextInput").fill("differentcontext");
+		await page.keyboard.press("Enter");
+		await page.waitForTimeout(200);
+		const row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		row.click();
+		const value = await page.locator("#modalFormInput");
+		await expect(value).toHaveValue("This is a test todo with (A) priority, a  and a +project @differentcontext");
+		await page.keyboard.press("Escape");
+	});
+
+	test("Delete the project", async () => {
+		await page.locator("#navBtnFilter").click();
+		await page.waitForSelector("#filterDrawer");
+		const filterButton = await page.locator(":nth-match(#filterDrawer section.projects a.button, 1)");
+		await filterButton.click({
+			"button": "right",
+			"position": {
+				"x": 10,
+				"y": 10
+			}
+		});0 
+		await page.locator("#filterContextDelete").click();
+
+
+
+
+
+		await page.keyboard.press("Enter");
+		await page.waitForTimeout(200);
+		const row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		row.click();
+		const value = await page.locator("#modalFormInput");
+		await expect(value).toHaveValue("This is a test todo with (A) priority, a  and a +project @differentcontext");
+		await page.keyboard.press("Escape");
+	});
+
+	test("Delete the todo", async () => {
+		const row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		await row.click({
+			"button": "right",
+			"position": {
+				"x": 10,
+				"y": 10
+			}
+		});
+		const deleteButton = await page.locator(":nth-match(#todoContext .dropdown-item, 5)");
+		await deleteButton.click();
+		await page.waitForSelector("#btnAddTodoContainer");
+	});
+
+});
+
 // TODO: Toggles don't work with Playwright
 test.describe("View drawer", () => {
 

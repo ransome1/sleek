@@ -644,7 +644,7 @@ table tbody tr td {
 }
 
 table.files {
-  margin: 0;
+  margin: 0 0 1em 0;
 }
 table.files tr td {
   vertical-align: middle;
@@ -682,13 +682,6 @@ strong {
   height: 80%;
 }
 
-.contentContainer {
-  height: 100%;
-}
-.contentContainer p {
-  padding: 0 10%;
-}
-
 .contentContainer.is-active {
   display: flex;
 }
@@ -709,6 +702,7 @@ strong {
 
 .contentContainer {
   width: 100%;
+  height: 100%;
   text-align: center;
   display: none;
   flex-direction: column;
@@ -727,21 +721,26 @@ strong {
 .contentContainer .subtitle {
   margin: 0.5em 0;
 }
-.contentContainer .btnOnboarding {
-  font-size: 1em;
-  margin: 0 1em;
-  padding: 0.25em;
-  text-decoration: none;
-}
-.contentContainer .btnOnboarding i {
-  font-size: 5em;
-  margin: 0.25em 0;
+.contentContainer .modalFileDrop {
+  width: 75%;
+  height: auto;
+  margin: 0 auto;
 }
 
 .contentContainer.is-active {
   display: flex;
 }
 
+/*.btnOnboarding {
+  font-size: 1em;
+  margin: 0 1em;
+  padding: .25em;
+  text-decoration: none;
+}
+.btnOnboarding i {
+  font-size: 5em;
+  margin: .25em 0;
+}*/
 .columns {
   height: 100%;
   margin: 0;
@@ -764,6 +763,48 @@ strong {
   top: 0;
   z-index: 45;
   background: white;
+}
+
+.modalFileDrop {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #ccc;
+  border-radius: 0.65em;
+  padding: 2em;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 1em;
+  text-align: center;
+  color: #ccc;
+}
+.modalFileDrop a {
+  color: #ccc;
+}
+.modalFileDrop button {
+  background-color: hsl(217deg, 71%, 53%);
+  color: white;
+}
+.modalFileDrop .modalChangeFileAdd {
+  display: block;
+  margin: 1em 0;
+}
+.modalFileDrop .break {
+  flex-basis: 100%;
+  height: 0;
+}
+.modalFileDrop .btnFilesAddTodoFile i {
+  font-size: 5em;
+}
+
+.modalFileDrop.is-highlighted {
+  border-color: hsl(217deg, 71%, 53%);
+  color: hsl(217deg, 71%, 53%);
+}
+.modalFileDrop.is-highlighted a {
+  border-color: inherit;
+  color: inherit;
 }
 
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
@@ -11296,6 +11337,9 @@ nav ul:nth-child(2):hover #versionNumber {
   body {
     font-size: 0.9em;
   }
+  .contentContainer .modalFileDrop {
+    width: 90%;
+  }
   #modalForm textarea {
     padding: 0.75em;
   }
@@ -11385,6 +11429,9 @@ nav ul li.logo {
     right: 1em;
     margin: 0 0 0 1em;
   }
+}
+body.compact .contentContainer .modalFileDrop {
+  width: 90%;
 }
 body.compact #modalForm textarea {
   padding: 0.75em;
@@ -11492,7 +11539,8 @@ a.button.contexts:hover span.tag {
 }
 
 a.button.contexts:focus-visible,
-a.button.contexts.is-dark:focus-visible {
+a.button.contexts.is-dark:focus-visible,
+a.button.contexts:focus {
   background: #247561;
   color: white;
 }
@@ -11516,7 +11564,8 @@ a.button.projects:hover span.tag {
 }
 
 a.button.projects:focus-visible,
-a.button.projects.is-dark:focus-visible {
+a.button.projects.is-dark:focus-visible,
+a.button.projects:focus {
   background: #822c82;
   color: white;
 }
@@ -11667,7 +11716,8 @@ a.button.priority.C:focus-visible span.tag {
   background-color: white;
   color: hsl(217deg, 71%, 53%);
 }
-#drawerContainer button:focus-visible {
+#drawerContainer button:focus-visible,
+#drawerContainer button:focus {
   background-color: hsl(217deg, 71%, 53%);
   color: white;
 }

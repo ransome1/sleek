@@ -36,7 +36,8 @@ a.button.contexts:hover {
   }
 }
 a.button.contexts:focus-visible,
-a.button.contexts.is-dark:focus-visible {
+a.button.contexts.is-dark:focus-visible,
+a.button.contexts:focus {
   background: darken($sleek-contexts-button, 55%);
   color: white;
 }
@@ -57,7 +58,8 @@ a.button.projects:hover {
   }
 }
 a.button.projects:focus-visible,
-a.button.projects.is-dark:focus-visible {
+a.button.projects.is-dark:focus-visible,
+a.button.projects:focus {
   background: darken($sleek-projects-button, 55%);
   color: white;
 }

@@ -12,6 +12,7 @@ const os = {
   win32: "windows",
   linux: "linux"
 }
+const supportedFileExtensions = ["txt", "md", "todo"];
 const appData = {
   version: app.getVersion(),
   environment: process.env.NODE_ENV,
@@ -106,7 +107,7 @@ function openFileChooser(args) {
     // this makes the path to the currently active file as the default path for file chooser
     (index === -1) ? defaultPath = path.join(app.getPath("home")) : defaultPath = path.dirname(userData.data.files[index][1])
 
-    if(args === "open") {
+    if(args[0] === "open") {
 
       return dialog.showOpenDialog({
         title: translations.selectFile,
@@ -115,7 +116,7 @@ function openFileChooser(args) {
         buttonLabel: translations.windowButtonOpenFile,
         filters: [{
           name: translations.windowFileformat,
-          extensions: ["txt", "md", "todo"]
+          extensions: supportedFileExtensions
         }],
         properties: ["openFile"]
 
@@ -137,7 +138,21 @@ function openFileChooser(args) {
         console.error(error)
       });
 
-    } else if(args === "create") {
+    } else if(args[0] === "add") {
+
+      const fileExtension = args[1].split(".").pop();
+
+      if(!supportedFileExtensions.includes(fileExtension)) return Promise.resolve("Error: File extension is not supported");
+
+      startFileWatcher(args[1]).then(response => {
+        console.info(response);
+      }).catch(error => {
+        console.error(error);
+      });
+
+      return Promise.resolve("Success: File added to list: " + args[1]);
+
+    } else if(args[0] === "create") {
 
       return dialog.showSaveDialog({
         title: translations.windowTitleCreateFile,
@@ -146,7 +161,7 @@ function openFileChooser(args) {
         buttonLabel: translations.windowButtonCreateFile,
         filters: [{
           name: translations.windowFileformat,
-          extensions: ["txt", "md", "todo"]
+          extensions: supportedFileExtensions
         }],
         properties: ["openFile", "createDirectory"]
 

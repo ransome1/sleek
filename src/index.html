@@ -211,16 +211,24 @@
         <section id="onboardingContainer" class="contentContainer">
           <h1 id="welcomeToSleek" class="title is-1"></h1>
           <p id="onboardingContainerSubtitle" class="subtitle"></p>
-          <p class="file is-boxed is-centered">
-            <a href="#" id="btnOnboardingOpenTodoFile" class="btnOnboarding">
+          <!-- <p class="file is-boxed is-centered"> -->
+            <!-- <a href="#" id="btnOnboardingOpenTodoFile" class="btnOnboarding">
               <i class="fas fa-folder-open"></i>
               <span id="onboardingContainerBtnOpen" class="file-label"></span>
             </a>
             <a href="#" id="btnOnboardingCreateTodoFile" class="btnOnboarding">
               <i class="fas fa-plus-circle"></i>
               <span id="onboardingContainerBtnCreate" class="file-label"></span>
-            </a>
-          </p>
+            </a> -->
+
+          <div class="modalFileDrop">
+            <div class="btnFilesAddTodoFile" tabindex="0"><i class="fa-solid fa-file-arrow-down"></i><br><span class="modalChangeFileAdd">Drag and drop todo.txt file here or</span></div>
+            <div class="break"></div>
+            <button class="btnFilesOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span class="spanFilesOpenTodoFile"></span></button>
+            <button class="btnFilesCreateTodoFile" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span class="spanFilesCreateTodoFile"></span></button>
+          </div>
+
+          <!-- </p> -->
         </section>
 
         <section id="addTodoContainer" class="contentContainer">
@@ -843,10 +851,14 @@
         <div class="card">
           <div class="card-content">
             <table id="modalChangeFileTable" class="files"></table>
+            <div class="modalFileDrop">
+              <div class="btnFilesAddTodoFile" tabindex="0"><i class="fa-solid fa-file-arrow-down"></i><br><span class="modalChangeFileAdd">Drag and drop todo.txt file here or</span></div>
+              <div class="break"></div>
+              <button class="btnFilesOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span class="spanFilesOpenTodoFile"></span></button>
+              <button class="btnFilesCreateTodoFile" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span class="spanFilesCreateTodoFile"></span></button>
+            </div>
           </div>
           <footer class="card-footer">
-            <button id="btnFilesOpenTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span id="modalChangeFileOpen"></span></button>
-            <button id="btnFilesCreateTodoFile" class="card-footer-item" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span id="modalChangeFileCreate"></span></button>
             <button id="btnFilesCancel" class="card-footer-item" role="cancel" tabindex="0"></button>
           </footer>
         </div>
@@ -897,6 +909,7 @@
         </div>
       </article>
     </section>
+
     <script defer src="../node_modules/jstodotxt/jsTodoTxt.js"></script>
     <script defer src="render.js" type="module"></script>
   </body>

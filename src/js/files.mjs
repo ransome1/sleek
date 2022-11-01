@@ -8,19 +8,20 @@ import { resetFilters } from "./filters.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 
 const btnFilesCancel = document.getElementById("btnFilesCancel");
-const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
-const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
+// const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
+// const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
 const btnNoResultContainerResetFilters = document.getElementById("btnNoResultContainerResetFilters");
 const fileTabBar = document.getElementById("fileTabBar");
 const fileTabBarList = document.querySelector("#fileTabBar ul");
-const modalChangeFile = document.getElementById("modalChangeFile");
-const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
-const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
+//const modalChangeFile = document.getElementById("modalChangeFile");
+// const modalChangeFileCreate = document.getElementById("modalChangeFileCreate");
+// const modalChangeFileOpen = document.getElementById("modalChangeFileOpen");
 const modalChangeFileTable = document.getElementById("modalChangeFileTable");
+const modalFileDrop = document.querySelectorAll(".modalFileDrop");
 
 btnFilesCancel.innerHTML = translations.cancel;
-modalChangeFileCreate.innerHTML = translations.createFile;
-modalChangeFileOpen.innerHTML = translations.openFile;
+// modalChangeFileCreate.innerHTML = translations.createFile;
+// modalChangeFileOpen.innerHTML = translations.openFile;
 
 btnNoResultContainerResetFilters.onclick = function() {
   resetFilters(true);
@@ -28,17 +29,70 @@ btnNoResultContainerResetFilters.onclick = function() {
   if(userData.matomoEvents) _paq.push(["trackEvent", "No Result Container", "Click on reset button"])
 }
 
-btnFilesCreateTodoFile.onclick = function() {
-  window.api.send("openOrCreateFile", "create");
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
-}
+// btnFilesCreateTodoFile.onclick = function() {
+//   window.api.send("openOrCreateFile", ["create"]);
+//   // trigger matomo event
+//   if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
+// }
 
-btnFilesOpenTodoFile.onclick = function() {
-  window.api.send("openOrCreateFile", "open");
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
-}
+// btnFilesOpenTodoFile.onclick = function() {
+//   window.api.send("openOrCreateFile", ["open"]);
+//   // trigger matomo event
+//   if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
+// }
+
+modalFileDrop.forEach(function(modal) {
+
+  const spanFilesOpenTodoFile = modal.querySelector(".spanFilesOpenTodoFile");
+  const spanFilesCreateTodoFile = modal.querySelector(".spanFilesCreateTodoFile");
+  const btnFilesOpenTodoFile = modal.querySelector(".btnFilesOpenTodoFile");
+  const btnFilesCreateTodoFile = modal.querySelector(".btnFilesCreateTodoFile");
+
+  spanFilesOpenTodoFile.innerHTML = translations.openFile;
+  spanFilesCreateTodoFile.innerHTML = translations.createFile;
+  
+
+  
+
+  btnFilesCreateTodoFile.onclick = function() {
+    window.api.send("openOrCreateFile", ["create"]);
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Create file"]);
+  }
+
+  btnFilesOpenTodoFile.onclick = function() {
+    window.api.send("openOrCreateFile", ["open"]);
+    // trigger matomo event
+    if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
+  }
+
+  //let counter = 0;
+
+  modal.addEventListener("drop", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    for(const f of event.dataTransfer.files) {
+      window.api.send("openOrCreateFile", ["add", f.path]);
+      modal.classList.remove("is-highlighted");
+    }
+  });
+  modal.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    // if(counter === 0) {
+    //   counter++;
+    //   modal.classList.add("is-highlighted");
+    // }
+    modal.classList.add("is-highlighted");
+  });
+  modal.addEventListener("dragleave", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    //counter--;
+    //if(counter === 0) modal.classList.remove("is-highlighted");
+    modal.classList.remove("is-highlighted");
+  });
+})
 
 function removeFileFromList(index, removeFile) {
   try {

@@ -138,7 +138,7 @@ table {
   }
 }
 table.files {
-  margin: 0;
+  margin: 0 0 1em 0;
   tr {
     td {
       vertical-align: middle;
@@ -188,12 +188,6 @@ strong {
   height: 80%;
 }
 
-.contentContainer {
-  height: 100%;
-  p {
-    padding: 0 10%;
-  }
-}
 .contentContainer.is-active {
   display: flex;
 }
@@ -217,10 +211,11 @@ strong {
 
 .contentContainer {
   width: 100%;
+  height: 100%;
   text-align: center;
   display: none;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
   p {
     margin: .5em;
   }
@@ -234,20 +229,26 @@ strong {
   .subtitle {
     margin: .5em 0;
   }
-  .btnOnboarding {
-    font-size: 1em;
-    margin: 0 1em;
-    padding: .25em;
-    text-decoration: none;
-  }
-  .btnOnboarding i {
-    font-size: 5em;
-    margin: .25em 0;
+  .modalFileDrop {
+    width: 75%;
+    height: auto;
+    margin: 0 auto;
   }
 }
 .contentContainer.is-active {
   display: flex;
 }
+
+/*.btnOnboarding {
+  font-size: 1em;
+  margin: 0 1em;
+  padding: .25em;
+  text-decoration: none;
+}
+.btnOnboarding i {
+  font-size: 5em;
+  margin: .25em 0;
+}*/
 
 //  ####################################
 //  BASIC FRAME
@@ -274,6 +275,59 @@ strong {
       z-index: 45;
       background: white;
     }
+  }
+}
+
+//  ####################################
+//  BASIC FRAME
+//  ####################################
+
+.modalFileDrop {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed $mid-grey;
+  border-radius: $radius;
+  padding: 2em;
+  margin: 0;
+
+  display: flex;
+  justify-content: center; 
+  flex-wrap: wrap;
+  gap: 0 1em;
+
+  text-align: center;
+
+  color: $mid-grey;
+  a {
+    color: $mid-grey;
+  }
+
+  button {
+    background-color: $has-text-link;
+    color: white;
+  }
+
+  .modalChangeFileAdd {
+    display: block;
+    margin: 1em 0;
+  }
+
+  .break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .btnFilesAddTodoFile i {
+    font-size: 5em;
+  }
+
+}
+.modalFileDrop.is-highlighted {
+  border-color: $has-text-link;
+  color: $has-text-link;
+  a {
+    border-color: inherit;
+    color: inherit;
   }
 }
 

@@ -5,6 +5,7 @@ import { generateFilterData } from "./filters.mjs";
 import { handleError } from "./helper.mjs";
 import { items, item, setTodoComplete, generateTodoTxtObject } from "./todos.mjs";
 import { getCaretPosition } from "./helper.mjs";
+import { convertDate } from "./date.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { fillDatePickerInput } from "./datePicker.mjs";
 import { userData, setUserData, translations } from "../render.js";
@@ -83,13 +84,17 @@ modalForm.onsubmit = async function(event) {
 
     // in case there hasn't been a passed data item, we just push the input value as a new item into the array
     // replace new lines with spaces (https://stackoverflow.com/a/34936253)
-    const inputValue = await modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
+    let inputValue = await modalFormInput.value.replaceAll(/[\r\n]+/g, String.fromCharCode(16));
 
     // create todo object from input value
     let todo = await generateTodoTxtObject(inputValue);
 
     // we add the current date to the start date attribute of the todo.txt object
-    if(userData.appendStartDate) todo.date = new Date();
+    //if(userData.appendStartDate) todo.date = new Date();
+    if(userData.appendStartDate) {
+      const creationDate = convertDate(new Date()) + " ";
+      inputValue = creationDate.concat(inputValue);
+    }
 
     // check if todo already exists 
     let index;
@@ -122,7 +127,7 @@ modalForm.onsubmit = async function(event) {
     //(index === -1 && !dataItem) ? items.objects.push(todo) : items.objects.splice(index, 1, todo);
 
     // mark the todo for anchor jump after next reload
-    item.previous = todo;
+    //item.previous = todo;
 
     // send file to main process to save it
     //window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);

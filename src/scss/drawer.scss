@@ -24,7 +24,8 @@
     background-color: white;
     color: $has-text-link;
   }
-  button:focus-visible {
+  button:focus-visible,
+  button:focus {
     background-color: $has-text-link;
     color: white;
   }

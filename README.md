@@ -6,6 +6,7 @@ Amazing feature requests, major and minor bug reports are piling up, and great d
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
 + [Support sleek](#support-sleek)
++ [Sponsor sleek's development](#Sponsor-sleek's-development)
 + [Get it from Mac App Store](#get-sleek-from-apple-mac-app-store)
 + [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
 + [Get it from Snap Store](#get-sleek-from-snap-store)
@@ -36,6 +37,8 @@ A prioritized backlog of new features and known issues as well as an overview on
 * Review it on <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank">Mac App Store</a>, <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
 * <a href="https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md">Contribute to sleek</a>
 
+### Sponsor sleek's development
+Pushing sleek to Apple's and Micosoft's app stores creates anual costs. You can support me by covering these costs and <a href="https://github.com/sponsors/ransome1">sponsor me</a>.
 
 ### Get sleek from Apple Mac App Store
 <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank"><img src='assets/store_badges/Download_on_the_Mac_App_Store.png' alt='Get sleek from Apple Mac App Store' width='180'/></a>
@@ -74,6 +77,7 @@ You can download sleek for Windows, MacOS and Linux from
 2. Clone sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
 3. Install dependencies `yarn install --production`
 4. Build sleek `yarn build:windows` or `yarn build:linux` or `yarn build:macos`
+5. The binaries will be placed in the working directory, in a subfolder named `dist`
 
 ### Features
 * Uses existing todo.txt files or creates new ones

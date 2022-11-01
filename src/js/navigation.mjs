@@ -60,7 +60,7 @@ navBtnOpenTodoFile.onclick = function() {
       handleError(error);
     });
   } else {
-    window.api.send("openOrCreateFile", "open");
+    window.api.send("openOrCreateFile", ["open"]);
   }
   // trigger matomo event
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on Files"]);

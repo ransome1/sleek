@@ -32,8 +32,8 @@ addTodoContainerHeadline.innerHTML = translations.addTodoContainerHeadline;
 addTodoContainerSubtitle.innerHTML = translations.addTodoContainerSubtitle;
 noResultContainerHeadline.innerHTML = translations.noResults;
 noResultContainerSubtitle.innerHTML = translations.noResultContainerSubtitle;
-onboardingContainerBtnCreate.innerHTML = translations.createFile;
-onboardingContainerBtnOpen.innerHTML = translations.openFile;
+// onboardingContainerBtnCreate.innerHTML = translations.createFile;
+// onboardingContainerBtnOpen.innerHTML = translations.openFile;
 onboardingContainerSubtitle.innerHTML = translations.onboardingContainerSubtitle;
 welcomeToSleek.innerHTML = translations.welcomeToSleek;
 
@@ -47,34 +47,94 @@ btnAddTodoContainer.onclick = function () {
   if(userData.matomoEvents) _paq.push(["trackEvent", "Menu", "Click on add todo"]);
 }
 
-btnOnboardingCreateTodoFile.onclick = function() {
+// btnOnboardingCreateTodoFile.onclick = function() {
 
-  window.api.send("openOrCreateFile", "create");
+//   window.api.send("openOrCreateFile", ["create"]);
   
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
-}
+//   // trigger matomo event
+//   if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Create file"]);
+// }
 
-btnOnboardingOpenTodoFile.onclick = function() {
-  // if files are already available show file modal
-  if(typeof userData.files === "object" && userData.files.length > 0) {
+// btnOnboardingOpenTodoFile.onclick = function() {
+//   // if files are already available show file modal
+//   if(typeof userData.files === "object" && userData.files.length > 0) {
 
-    generateFileList().then(response => {
-      console.info(response);
-    }).catch(error => {
-      handleError(error);
-    });
+//     generateFileList().then(response => {
+//       console.info(response);
+//     }).catch(error => {
+//       handleError(error);
+//     });
     
-  // if NO files are available, file chooser will be opened
-  } else {
+//   // if NO files are available, file chooser will be opened
+//   } else {
 
-    window.api.send("openOrCreateFile", "open");
+//     window.api.send("openOrCreateFile", ["open"]);
 
-  }
+//   }
 
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
-}
+//   // trigger matomo event
+//   if(userData.matomoEvents) _paq.push(["trackEvent", "Onboarding", "Click on Open file"]);
+// }
+
+// document.getElementById("modalFileDrop").addEventListener("drop", (event) => {
+//   event.preventDefault();
+//   event.stopPropagation();
+//   console.log("Drop")
+//   for(const f of event.dataTransfer.files) {
+//     //window.api.send("openOrCreateFile", ["add", f.path]);
+//   }
+// });
+// document.getElementById("modalFileDrop").addEventListener("dragover", (event) => {
+//   event.preventDefault();
+//   event.stopPropagation();
+//   console.log("Over")
+//   //document.getElementById("modalFileDrop").classList.add("is-active");
+// });
+
+// document.addEventListener("dragenter", (event) => {
+//   event.preventDefault();
+//   event.stopPropagation();
+//   console.log("Enter")
+//   //if(document.getElementById("modalFileDrop").classList.contains("is-active")) document.getElementById("modalFileDrop").classList.add("is-active");
+//   document.getElementById("modalFileDrop").classList.add("is-active");
+// });
+
+// document.addEventListener("dragleave", (event) => {
+//   // event.preventDefault();
+//   // event.stopPropagation();
+//   //if(document.getElementById("modalFileDrop").classList.contains("is-active")) document.getElementById("modalFileDrop").classList.add("is-active");
+//   document.getElementById("modalFileDrop").classList.remove("is-active");
+// });
+
+// document.addEventListener("drop", (event) => {
+
+//   event.preventDefault();
+//   event.stopPropagation();
+//   console.log("dfdfdf")
+//   // for (const f of event.dataTransfer.files) {
+//   //   window.api.send("openOrCreateFile", ["add", f.path]);
+//   // }
+// });
+ 
+// document.addEventListener('dragover', (event) => {
+  
+
+//   console.log(document.getElementById("modalFileDrop").classList.contains("is-active"))
+
+//   if(document.getElementById("modalFileDrop").classList.contains("is-active")) document.getElementById("modalFileDrop").classList.add("is-active");
+// });
+
+// document.addEventListener("dragenter", (event) => {
+  
+//   console.log('File has entered the Drop Space');
+//   //document.getElementById("modalFileDrop").classList.add("is-active");
+// });
+ 
+// document.addEventListener('dragleave', (event) => {
+  
+//   console.log('File has left the Drop Space');
+//   document.getElementById("modalFileDrop").classList.remove("is-active");
+// });
 
 export function showOnboarding() {
   try {

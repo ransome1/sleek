@@ -4,6 +4,12 @@
 
 @mixin compact() {
 
+  .contentContainer {
+    .modalFileDrop {
+      width: 90%;
+    }
+  }
+
   #modalForm {
     textarea {
       padding: 0.75em;
