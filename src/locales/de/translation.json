@@ -36,6 +36,7 @@
   "duePast": "Überfällig",
   "dueToday": "Heute fällig",
   "dueTomorrow": "Morgen fällig",
+  "dragDropFile": "Ziehe eine todo.txt-Datei per Drag-and-Drop hierher oder",
   "edit": "Bearbeiten",
   "editTodo": "Aufgabe bearbeiten",
   "errorEventLogging": "Fehler- und Event-Logging",

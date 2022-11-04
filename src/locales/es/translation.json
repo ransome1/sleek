@@ -36,6 +36,7 @@
   "duePast": "Atrasadas",
   "dueToday": "Para hoy",
   "dueTomorrow": "Para mañana",
+  "dragDropFile": "Arrastre y suelte el archivo todo.txt aquí o",
   "edit": "Modificar",
   "editTodo": "Modificar tarea",
   "errorEventLogging": "Registro de errores y eventos",

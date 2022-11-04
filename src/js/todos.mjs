@@ -321,10 +321,10 @@ function generateTableRow(todo) {
 
     // if new item was saved, row is being marked
     // previous object is emptied
-    if(item.previous && todo.toString() === item.previous.toString()) {
-      todoTableBodyRow.setAttribute("id", "previousItem");
-      item.previous = null;
-    }
+    // if(item.previous && todo.toString() === item.previous.toString()) {
+    //   todoTableBodyRow.setAttribute("id", "previousItem");
+    //   item.previous = null;
+    // }
 
     // start with the individual config of the items
     if(todo.complete) todoTableBodyRow.setAttribute("class", "todo completed")

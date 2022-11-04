@@ -225,7 +225,7 @@ test.describe("Creating todos", () => {
 		await page.locator("#modalFormInput").fill("This is a test todo that will be used as a template +testing @testing");
 		await page.keyboard.press("Enter");
 
-		const row = await page.locator(":nth-match(#todoTable .todo, 1) > .text");
+		let row = await page.locator(":nth-match(#todoTable .todo, 1) > .text");
 		await row.click({
 			"button": "right",
 			"position": {
@@ -237,15 +237,29 @@ test.describe("Creating todos", () => {
 		await expect(page.locator("#modalFormInput")).toHaveValue(/____________/);
 		// close modal
 		await page.locator("#btnCancel").click();
-		await row.click({
-			"button": "right",
-			"position": {
-				"x": 10,
-				"y": 10
-			}
-		});
-		await page.locator(":nth-match(#todoContext .dropdown-item, 5)").click();
-		await page.waitForSelector("#btnAddTodoContainer");
+		// await row.click({
+		// 	"button": "right",
+		// 	"position": {
+		// 		"x": 10,
+		// 		"y": 10
+		// 	}
+		// });
+		// await page.locator(":nth-match(#todoContext .dropdown-item, 5)").click();
+		// await page.waitForSelector("#btnAddTodoContainer");
+	});
+
+	test("Use search to create a todo", async () => {
+		await page.fill("#todoTableSearch", "todo created by search input field");
+		await page.locator("#todoTableSearchAddTodo").click();
+		let row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		await row.focus();
+		await page.keyboard.press("Delete");
+		await page.waitForTimeout(200);
+		const dataItem = await page.locator(":nth-match(#todoTable .todo, 1)").getAttribute("data-item");
+		await expect(dataItem).toBe("todo created by search input field");
+		row = await page.locator(":nth-match(#todoTable .todo, 1)");
+		await row.focus();
+		await page.keyboard.press("Delete");
 	});
 
 });

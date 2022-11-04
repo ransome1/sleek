@@ -36,6 +36,7 @@
   "duePast": "Gecikmiş",
   "dueToday": "Bugün",
   "dueTomorrow": "Dün",
+  "dragDropFile": "todo.txt dosyasını buraya sürükleyip bırakın veya",
   "edit": "Düzenle",
   "editTodo": "Yapılacağı düzenle",
   "errorEventLogging": "Hata ve etkinlik günlüğü",

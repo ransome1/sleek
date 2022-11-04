@@ -36,6 +36,7 @@
   "duePast": "En retard",
   "dueToday": "Dû aujourd'hui",
   "dueTomorrow": "Dû demain",
+  "dragDropFile": "Faites glisser et déposez le fichier todo.txt ici ou",
   "edit": "Modifier",
   "editTodo": "Modifier la tâche",
   "errorEventLogging": "Enregistrement des erreurs et des événements",

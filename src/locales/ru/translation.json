@@ -36,6 +36,7 @@
   "duePast": "Просрочено",
   "dueToday": "На сегодня",
   "dueTomorrow": "На завтра",
+  "dragDropFile": "Перетащите файл todo.txt сюда или",
   "edit": "Редактировать",
   "editTodo": "Редактировать задачу",
   "errorEventLogging": "Вести лог ошибок и действий",

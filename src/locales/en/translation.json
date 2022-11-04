@@ -36,6 +36,7 @@
   "duePast": "Overdue",
   "dueToday": "Due today",
   "dueTomorrow": "Due tomorrow",
+  "dragDropFile": "Drag and drop todo.txt file here or",
   "edit": "Edit",
   "editTodo": "Edit todo",
   "errorEventLogging": "Error and event logging",

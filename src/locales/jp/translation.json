@@ -36,6 +36,7 @@
   "duePast": "期限切れ",
   "dueToday": "本日期限",
   "dueTomorrow": "明日期限",
+  "dragDropFile": "todo.txt ファイルをここにドラッグ アンド ドロップするか、",
   "edit": "編集",
   "editTodo": "タスクを編集",
   "errorEventLogging": "エラー･イベントログ",

@@ -36,6 +36,7 @@
   "duePast": "过期",
   "dueToday": "今天到期",
   "dueTomorrow": "明天到期",
+  "dragDropFile": "将 todo.txt 文件拖放到此处或",
   "edit": "编辑",
   "editTodo": "编辑任务",
   "errorEventLogging": "错误及事件记录",

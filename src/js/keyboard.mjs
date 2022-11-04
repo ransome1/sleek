@@ -206,9 +206,15 @@ export async function registerShortcuts() {
 
         if(!isInputFocused() && !isContextOpen()) {
 
-          // if(event.key === "Delete" || event.key === "Backspace") {
-          //   deleteTodo(currentRow);
-          // }
+          // find and delete todo
+
+          if(event.key === "Delete" || event.key === "Backspace") {
+            const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
+            const index = await items.objects.map(function(object) {return object.raw; }).indexOf(todoTableRow.getAttribute("data-item"));
+            deleteTodo(index);
+            focusRow(currentRow);
+            return false;
+          }
 
           // move focus down in table list
 

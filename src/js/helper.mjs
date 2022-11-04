@@ -2,7 +2,7 @@
 import { appData, userData, setUserData, translations } from "../render.js";
 import { generateGroupedObjects, items, generateTodoTxtObject } from "./todos.mjs";
 import { isToday, isPast, isTomorrow } from "./date.mjs";
-import { generateFileTabs } from "./files.mjs";
+import { generateFileTabs, generateFileList } from "./files.mjs";
 import { showGenericMessage } from "./messages.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showOnboarding } from "./onboarding.mjs";
@@ -243,7 +243,13 @@ export function setupInterface() {
     window.api.send("update-badge", getBadgeCount());
 
     // close file chooser if it's open
-    if(modalChangeFile.classList.contains("is-active")) modalChangeFile.classList.remove("is-active");
+    //if(modalChangeFile.classList.contains("is-active")) modalChangeFile.classList.remove("is-active");
+
+    generateFileList(false).then(function(response) {
+      console.info(response);
+    }).catch(function(error) {
+      handleError(error);
+    });
 
     // if files are available, (re)generate tabs
     if(userData.files && userData.files.length > 0) {

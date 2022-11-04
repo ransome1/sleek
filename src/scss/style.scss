@@ -219,6 +219,9 @@ strong {
   p {
     margin: .5em;
   }
+  a i {
+    font-size: 5em;
+  }
   .fa-file-alt {
     font-size: 6em;
   }
@@ -238,17 +241,6 @@ strong {
 .contentContainer.is-active {
   display: flex;
 }
-
-/*.btnOnboarding {
-  font-size: 1em;
-  margin: 0 1em;
-  padding: .25em;
-  text-decoration: none;
-}
-.btnOnboarding i {
-  font-size: 5em;
-  margin: .25em 0;
-}*/
 
 //  ####################################
 //  BASIC FRAME

@@ -90,11 +90,7 @@ modalForm.onsubmit = async function(event) {
     let todo = await generateTodoTxtObject(inputValue);
 
     // we add the current date to the start date attribute of the todo.txt object
-    //if(userData.appendStartDate) todo.date = new Date();
-    if(userData.appendStartDate) {
-      const creationDate = convertDate(new Date()) + " ";
-      inputValue = creationDate.concat(inputValue);
-    }
+    if(userData.appendStartDate) todo.date = new Date();
 
     // check if todo already exists 
     let index;
@@ -130,8 +126,6 @@ modalForm.onsubmit = async function(event) {
     //item.previous = todo;
 
     // send file to main process to save it
-    //window.api.send("writeToFile", [items.objects.join("\n").toString() + "\n"]);
-    //window.api.send("writeToFile", [todo.toString(), index]);
     window.api.send("writeToFile", [inputValue, index]);
 
     // close and clean up the modal
@@ -207,8 +201,7 @@ function addInputEvents(element) {
       let autoCompleteValue ="";
       
       // TODO: describe
-      //if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+" || inputValue.charAt(caretPosition-1) === "#")) {
-        if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+")) {
+      if((inputValue.charAt(caretPosition-2) === " " || inputValue.charAt(caretPosition-2) === "\n") && (inputValue.charAt(caretPosition-1) === "@" || inputValue.charAt(caretPosition-1) === "+")) {
         autoCompleteValue = inputValue.substr(caretPosition, inputValue.lastIndexOf(" ")).split(" ").shift();
         autoCompletePrefix = inputValue.charAt(caretPosition-1);
       } else if(inputValue.charAt(caretPosition) === " ") {
@@ -635,4 +628,4 @@ if(userData.useTextarea) {
   });
 }
 
-export { show, resizeInput, setPriority, resetForm};
+export { show, resizeInput, setPriority, resetForm, item};

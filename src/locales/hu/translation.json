@@ -36,6 +36,7 @@
   "duePast": "Lejárt",
   "dueToday": "Ma esedékes",
   "dueTomorrow": "Holnap esedékes",
+  "dragDropFile": "Húzza ide a todo.txt fájlt vagy",
   "edit": "Szerkesztés",
   "editTodo": "Tennivaló szerkesztése",
   "errorEventLogging": "Hiba- és eseménynaplózás",
