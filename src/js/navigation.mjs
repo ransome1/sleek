@@ -16,10 +16,11 @@ const navBtnView = document.getElementById("navBtnView");
 const versionNumber = document.getElementById("versionNumber");
 
 navBtnAddTodo.setAttribute("title", translations.addTodo);
-navBtnFilter.firstElementChild.setAttribute("title", translations.filter);
+navBtnFilter.firstElementChild.setAttribute("title", translations.toggleFilter);
 navBtnHelp.firstElementChild.setAttribute("title", translations.help);
 navBtnSettings.firstElementChild.setAttribute("title", translations.settings);
 navBtnView.firstElementChild.setAttribute("title", translations.view);
+navBtnOpenTodoFile.firstElementChild.setAttribute("title", translations.openFile);
 versionNumber.innerHTML = appData.version;
 
 navBtnAddTodo.onclick = function () {

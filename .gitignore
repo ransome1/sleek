@@ -31,3 +31,4 @@ src/css/
 *.drawio*
 *.provisionprofile
 out/
+filterlang.mjs
