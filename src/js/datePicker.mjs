@@ -20,7 +20,6 @@ Object.assign(Datepicker.locales, de, it, es, fr);
 
 const datePickerInput = document.getElementById("datePickerInput");
 const datePickerResult = document.getElementById("datePickerResult");
-const dateTypes = ["due", "t"];
 datePickerResult.innerHTML = translations.dueDate;
 
 let 
@@ -42,18 +41,16 @@ let
   };
 
 function fillDatePickerInput(todo) {
-  //modalFormInput = document.getElementById("modalFormInput");
   // empty it
   datePickerResult.innerHTML = "";
+
+  const dateTypes = ["due", "t"];
   dateTypes.forEach(function(type) {
     if(!todo[type]) return false;
     datePickerResult.innerHTML += `<span class="prefix">${type}:</span>${todo[type + "String"]}&nbsp;`;
   });
   // if it's still empty fill it with placeholder text
   if(datePickerResult.innerHTML === "") datePickerResult.innerHTML = translations.formSelectDueDate;
-
-  // write date into input element
-  //modalFormInput.value = todo.toString();
 
   // put focus on input field
   document.getElementById("modalFormInput").focus();
@@ -124,9 +121,8 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
     // create datepicker instance
     // ******************************************************
 
-    //(todo.due) ? datePickerOptions.defaultViewDate = todo.due : datePickerOptions.defaultViewDate = undefined
-
     datePicker = await new Datepicker(attachToElement, datePickerOptions);
+    if(todo.due) datePicker.setDate(todo.due);
 
     // close datepicker when container loses focus
     attachToElement.onblur = function() { datePicker.destroy(); }
@@ -157,16 +153,16 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
     datepickerContainer.insertBefore(header, firstChild);
 
     dueButton.addEventListener("click", function(event) {
-      event.stopPropagation();
-      //(todo.due) ? datePicker.setDate(todo.due) : datePicker.setDate({ clear: true })
+      datePicker.setDate();
+      if(todo.due) datePicker.setDate(todo.due);
       this.classList.add("is-active");
       tabs[1].classList.remove("is-active");
       extension = "due";
     });
 
     thresholdButton.addEventListener("click", function(event) {
-      event.stopPropagation();
-      //(todo.t) ? datePicker.setDate(todo.t) : datePicker.setDate({ clear: true })
+      datePicker.setDate();
+      if(todo.t) datePicker.setDate(todo.t);
       this.classList.add("is-active");
       tabs[0].classList.remove("is-active");
       extension = "t";
@@ -174,21 +170,21 @@ async function createDatepickerInstance(attachToElement, addDateToElement, exten
 
     // intercept the clear button event
     const clearButton = datepickerContainer.querySelector(".clear-btn");
-    clearButton.onclick = function(event) {
+    clearButton.addEventListener("click", function(event) {
       event.stopImmediatePropagation();
       delete todo[extension];
       delete todo[extension + "String"];
       applyDate(todo, addDateToElement);
-    }
+    });
 
-    attachToElement.addEventListener("changeDate", function(event) {
-      // ******************************************************
-      // add due date to todo object or remove a given one if no date is passed
-      // ******************************************************
+    datepickerContainer.addEventListener("click", async function(event) {
 
-      const date = datePicker.getDate();
+      if(!event.target.classList.contains("datepicker-cell")) return false;
+      //if(event.target.indexOf(".datepicker-cell.day.selected.focused")) console.log(true);
 
-      // fill in due date
+      //const date = datePicker.getDate();
+      const date = await datePicker.getDate();
+
       if(date) {
         todo[extension] = date;
         todo[extension + "String"] = convertDate(date);
