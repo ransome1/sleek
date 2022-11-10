@@ -150,7 +150,7 @@
     "vanillajs-datepicker": "^1.1.4"
   },
   "devDependencies": {
-    "electron": "17.2.0",
+    "electron": "18.3.7",
     "electron-builder": "23.0.2",
     "electron-notarize": "^1.2.2",
     "electron-reloader": "^1.2.2",
