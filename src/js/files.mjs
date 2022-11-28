@@ -8,8 +8,6 @@ import { resetFilters } from "./filters.mjs";
 import { showOnboarding } from "./onboarding.mjs";
 
 const btnFilesCancel = document.getElementById("btnFilesCancel");
-// const btnFilesCreateTodoFile = document.getElementById("btnFilesCreateTodoFile");
-// const btnFilesOpenTodoFile = document.getElementById("btnFilesOpenTodoFile");
 const btnNoResultContainerResetFilters = document.getElementById("btnNoResultContainerResetFilters");
 const fileTabBar = document.getElementById("fileTabBar");
 const fileTabBarList = document.querySelector("#fileTabBar ul");
@@ -30,8 +28,9 @@ modalFileDrop.forEach(function(modal) {
   const spanFilesCreateTodoFile = modal.querySelector(".spanFilesCreateTodoFile");
   const btnFilesOpenTodoFile = modal.querySelector(".btnFilesOpenTodoFile");
   const btnFilesCreateTodoFile = modal.querySelector(".btnFilesCreateTodoFile");
+  const btnFilesAddTodoFile = modal.querySelector(".btnFilesAddTodoFile");
   let modalChangeFileAdd = modal.querySelector(".modalChangeFileAdd");
-
+  
   spanFilesOpenTodoFile.innerHTML = translations.openFile;
   spanFilesCreateTodoFile.innerHTML = translations.createFile;
   modalChangeFileAdd.innerHTML = translations.dragDropFile;
@@ -47,6 +46,11 @@ modalFileDrop.forEach(function(modal) {
     // trigger matomo event
     if(userData.matomoEvents) _paq.push(["trackEvent", "Change-Modal", "Click on Open file"]);
   }
+
+  // stop here if it's the MAS build as it can't support drag and drop (Security Scoped Bookmark issue)
+  if(appData.channel === "Mac App Store") return false;
+
+  btnFilesAddTodoFile.classList.remove("is-hidden");
 
   modal.addEventListener("drop", (event) => {
     event.preventDefault();

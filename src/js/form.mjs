@@ -174,7 +174,7 @@ datePickerInput.onchange = function() {
 
 datePickerInput.onfocus = async function() {
   const datePicker = await import("./datePicker.mjs");
-  datePicker.createDatepickerInstance(this, true, "due").then(() => {
+  datePicker.createDatepickerInstance(this, "due").then(() => {
     console.log("Success: Date picker created")
   }).catch(error => {
     handleError(error);

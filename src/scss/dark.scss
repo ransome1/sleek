@@ -22,11 +22,12 @@
       color: $has-text-link;
     }
 
-    .button {
+    .button, .button:active, .button:focus, .button:hover {
       background-color: transparent;
+      color: white;
     }
 
-    button, .button:focus:not(:active), .button.is-focused:not(:active), .button:active, .button.is-active, input[type=number], .button:focus, .button.is-focused, .select select, .textarea, .input, .select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input {
+    input[type=number], .select select, .textarea, .input, .select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input {
       background: $darker-grey;
       border: none;
       color: white;
@@ -126,11 +127,18 @@
     }
     a.button.projects.is-dark,
     a.button.projects.is-dark:hover,
-    a.button.projects:focus-visible {
+    a.button.projects:focus-visible,
+    a.button.projects:focus:not(.is-greyed-out),
+    a.button.projects:focus:hover:not(.is-greyed-out) {
       background: darken($sleek-projects-button, 70%);
       color: white;
     }
-    a.button.is-greyed-out {
+    a.button.is-greyed-out,
+    a.button.is-dark.is-greyed-out,
+    a.button.is-dark.is-greyed-out:hover,
+    a.button.is-greyed-out:hover,
+    a.button.is-greyed-out:focus,
+    a.button.is-greyed-out:focus-visible {
       background: $has-text-link;
       color: white;
       filter: opacity(40%) grayscale(100%);
@@ -179,6 +187,7 @@
       }
     }
     #todoTable {
+      
       i.fa-sort-down {
         color: $dark-grey;
       }
@@ -191,12 +200,10 @@
           color: $almost-white;
         }
       }
-
       .is-white {
         color: $lighter-grey;
         background: none;
       }
-
       .todo {
         border-color: $even-darker-grey;
         .cell.checkbox {

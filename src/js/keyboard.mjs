@@ -4,7 +4,7 @@ import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
 import { resetFilters } from "./filters.mjs";
-import { handleError, getActiveFile } from "./helper.mjs";
+import { handleError, getActiveFile, isModalOpen, modalWindows, isInputFocused, isRowFocused, isDrawerOpen, isOnboardingOpen, isContextOpen } from "./helper.mjs";
 import { show, setPriority, resetForm } from "./form.mjs";
 import { showDrawer } from "./drawer.mjs";
 import { showModal } from "./content.mjs";
@@ -14,7 +14,6 @@ import { appData, userData, translations } from "../render.js";
 const 
   autoCompleteContainer = document.getElementById("autoCompleteContainer"),
   modalForm = document.getElementById("modalForm"),
-  modalWindows = document.querySelectorAll(".modal"),
   todoContext = document.getElementById("todoContext"),
   todoTable = document.getElementById("todoTable");
   
@@ -30,21 +29,9 @@ export function focusRow(row) {
   return false;
 }
 
-// ******************************************************
-// check if any input field is focused
-// ******************************************************
-
-export const isInputFocused = () => { return document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput"; }
-export const isRowFocused = () => { return document.activeElement.classList.contains("todo"); }
-export const isModalOpen = () => {
-  for(let i = 0; i < modalWindows.length; i++) {
-    if(modalWindows[i].classList.contains("is-active")) return true;
-  }
-  return false;
-}
-const isDrawerOpen = () => { return userData.filterDrawer || userData.viewDrawer; }
-const isOnboardingOpen = () => { return document.getElementById("onboardingContainer").classList.contains("is-active"); }
-const isContextOpen = () => { return todoContext.classList.contains("is-active"); }
+// const isDrawerOpen = () => { return userData.filterDrawer || userData.viewDrawer; }
+// const isOnboardingOpen = () => { return document.getElementById("onboardingContainer").classList.contains("is-active"); }
+// const isContextOpen = () => { return todoContext.classList.contains("is-active"); }
 
 export async function registerShortcuts() {
   try {
