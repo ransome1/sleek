@@ -1,12 +1,20 @@
 # sleek
 
-## Help wanted
-Amazing feature requests, major and minor bug reports are piling up, and great discussions are ongoing. I want to thank you for supporting this project. But I also need to admit that I'm overwhelmed by the sheer amount of work. Please understand that sleek is FOSS and I'm not aiming to earn money with it, so my time on the project is limited. If you are skilled in HTML, CSS, JavaScript, the Electron framework, writing Playwright test cases, improving UX/UI or if you're able to maintain sleek for one of the distribution channels, please check in with me <a href="https://github.com/ransome1/sleek/discussions/388">here</a> or check the <a href="https://github.com/ransome1/sleek/issues">issue list</a> and start working on bugs and feature requests.
+## 🚨 Help wanted 🚨
+Amazing feature requests, major and minor bug reports are piling up, and great discussions are ongoing. I want to thank you for supporting this project. But I also need to admit that I'm overwhelmed by the sheer amount of work. Please understand that sleek is FOSS and I'm not aiming to earn money with it, so my time on the project is limited. This project will benefit from
+* Refactoring existing code (HTML, CSS, JavaScript)
+* Adding missing e2e test cases (Playwright)
+* Improving UX/UI
+* Improving automation in sleeks distribution channels (Snap, Flathub, homebrew, AUR, Windows App Store, Mac App Store)
+* Managing the issues list on GitHub
+
+If you want to support, please get in touch with me <a href="https://github.com/ransome1/sleek/discussions/388">here</a> or check the <a href="https://github.com/ransome1/sleek/issues">issue list</a> and start working on bugs and feature requests.
 
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
++ [Development](#development)
 + [Support sleek](#support-sleek)
-+ [Sponsor sleek's development](#Sponsor-sleek's-development)
++ [Sponsor sleek](#sponsor-sleek)
 + [Get it from Mac App Store](#get-sleek-from-apple-mac-app-store)
 + [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
 + [Get it from Snap Store](#get-sleek-from-snap-store)
@@ -15,7 +23,6 @@ Amazing feature requests, major and minor bug reports are piling up, and great d
 + [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
 + [Download it](#download-sleek)
 + [Build it from source code](#build-sleek-from-source-code)
-+ [State of development](#sleeks-state-of-development)
 + [Features](#features)
 + [Used libraries](#used-libraries)
 
@@ -23,13 +30,13 @@ sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripp
 
 All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
-sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below.
+sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below. Many useful information can be found in <a href="https://github.com/ransome1/sleek/wiki">sleek's wiki</a>.
 
 ### Screenshots
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's todo list view")
 ![Alt text](assets/screenshots/mac/drawer.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature")
 
-### sleeks state of development
+### Development
 A prioritized backlog of new features and known issues as well as an overview on what is being worked on at the moment can be found <a href="https://github.com/ransome1/sleek/projects/2">here</a>.
 
 ### Support sleek
@@ -37,7 +44,7 @@ A prioritized backlog of new features and known issues as well as an overview on
 * Review it on <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank">Mac App Store</a>, <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
 * <a href="https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md">Contribute to sleek</a>
 
-### Sponsor sleek's development
+### Sponsor sleek
 Pushing sleek to Apple's and Micosoft's app stores creates anual costs. You can support me by covering these costs and <a href="https://github.com/sponsors/ransome1">sponsor me</a>.
 
 ### Get sleek from Apple Mac App Store

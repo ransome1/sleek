@@ -83,7 +83,10 @@ function configureMatomo() {
       return Promise.resolve("Info: Consent given, Matomo error and event logging enabled");
     } else {
       // revoke matomoEvents consent
-      _paq.push(["forgetConsentGiven"]);
+      setTimeout(function(){
+        _paq.push(["forgetConsentGiven"]);
+      }, 500);
+      
       return Promise.resolve("Info: No consent given, Matomo error and event logging disabled");
     }
   } catch(error) {

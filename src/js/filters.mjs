@@ -19,6 +19,10 @@ const filterContextInput = document.getElementById("filterContextInput");
 const filterContextSave = document.getElementById("filterContextSave");
 const filterContextDelete = document.getElementById("filterContextDelete");
 const btnResetFilters = document.querySelectorAll(".btnResetFilters");
+const filterPrefix = {
+  "contexts": "@",
+  "projects": "+"
+}
 
 let categories,
     filtersCounted,
@@ -37,7 +41,7 @@ btnResetFilters.forEach(function(button) {
 autoCompleteContainer.onkeyup = function(event) {
   // if there is only one filter shown it will be selected automatically
   if(event.key === "Tab" && Object.keys(filtersCounted).length === 1) {
-    addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-prefix")).then(function(response) {
+    addFilterToInput(Object.keys(filtersCounted)[0], event.target.getAttribute("data-category")).then(function(response) {
       console.info(response);
     }).catch(function(error) {
       handleError(error);
@@ -274,13 +278,13 @@ function resetFilters(refresh) {
   }
 }
 
-function addFilterToInput(filter, autoCompletePrefix) {
-  try {  
+function addFilterToInput(filter, category) {
+  try {
+
     const modalFormInput = document.getElementById("modalFormInput");
     const caretPosition = getCaretPosition(modalFormInput);
 
     // split string into elements
-    //const inputElements = modalFormInput.value.split(/[^\r\n]+/);
     const inputElements = modalFormInput.value.split(" ");
 
     let i;
@@ -291,12 +295,9 @@ function addFilterToInput(filter, autoCompletePrefix) {
       if(x > caretPosition) break;
     }
 
-    inputElements.splice(i, 1, autoCompletePrefix + filter + " ");
+    inputElements.splice(i, 1, filterPrefix[category] + filter + " ");
   
     modalFormInput.value = inputElements.join(" ");
-
-    // empty autoCompleteValue to prevent multiple inputs using multiple Enter presses
-    autoCompletePrefix = null;
 
     // put focus back into input so user can continue writing
     modalFormInput.focus();
@@ -312,9 +313,9 @@ function addFilterToInput(filter, autoCompletePrefix) {
   }
 }
 
-function generateCategoryContainer(category, autoCompletePrefix, buttons) {
+function generateCategoryContainer(category, buttons) {
   try {
-  
+
     selectedFilters = (userData.selectedFilters && userData.selectedFilters.length > 0) ? JSON.parse(userData.selectedFilters) : new Array
 
     // creates a div for the specific filter section
@@ -324,7 +325,7 @@ function generateCategoryContainer(category, autoCompletePrefix, buttons) {
     const todoFilterHeadline = document.createElement("h4");
 
     // show suggestion box when prefix is present
-    if(autoCompletePrefix !== undefined) {
+    if(modalFormInput.value !== "") {
 
       autoCompleteContainer.classList.add("is-active");
       todoFilterHeadline.innerHTML = translations[category];
@@ -411,7 +412,7 @@ function generateCategoryContainer(category, autoCompletePrefix, buttons) {
   }
 }
 
-function generateFilterButtons(category, autoCompletePrefix) {
+function generateFilterButtons(category) {
   try {
 
     // create a fragment to collect the filters in
@@ -438,14 +439,13 @@ function generateFilterButtons(category, autoCompletePrefix) {
       // add attributes
       todoFiltersItem.setAttribute("data-filter", filter);
       todoFiltersItem.setAttribute("data-category", category);
-      todoFiltersItem.setAttribute("data-prefix", autoCompletePrefix);
       todoFiltersItem.classList.add("button", category);
       todoFiltersItem.setAttribute("tabindex", 0)    
       todoFiltersItem.setAttribute("href", "#")    
       todoFiltersItem.innerHTML = filter;
 
       // configuration for filter drawer buttons
-      if(!autoCompletePrefix) {
+      if(!modalFormInput.value) {
 
         // set highlighting if filter/category combination is on selected filters array
         selectedFilters.forEach(function(item) {
@@ -500,8 +500,6 @@ function generateFilterButtons(category, autoCompletePrefix) {
             }).catch(function(error) {
               handleError(error);
             });
-
-
           }
 
           // create the event listener for filter selection by user
@@ -529,7 +527,7 @@ function generateFilterButtons(category, autoCompletePrefix) {
       // add filter to input
       } else {
         todoFiltersItem.onclick = function(event) {
-          addFilterToInput(this.getAttribute("data-filter"), autoCompletePrefix).then(function(response) {
+          addFilterToInput(this.getAttribute("data-filter"), category).then(function(response) {
             console.info(response);
           }).catch(function(error) {
             handleError(error);
@@ -549,7 +547,7 @@ function generateFilterButtons(category, autoCompletePrefix) {
   }
 }
 
-function generateFilterData(autoCompleteCategory, autoCompleteValue, autoCompletePrefix) {
+function generateFilterData(autoCompleteCategory, autoCompleteValue) {
   try {
 
     // select the container (filter drawer or autocomplete) in which filters will be shown
@@ -593,13 +591,10 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
             }
           }
         }
-      });    
+      });   
 
       // search within filters according to autoCompleteValue
-      if(autoCompletePrefix) filters = filters.filter(function(filter) { 
-        // (!userData.caseSensitive)
-        //   autoCompleteValue = queryString.toLowerCase();
-        //   filter.raw = item.raw.toLowerCase();
+      if(autoCompleteValue) filters = filters.filter(function(filter) { 
         return filter.toString().toLowerCase().includes(autoCompleteValue.toLowerCase());
       })
 
@@ -663,27 +658,16 @@ function generateFilterData(autoCompleteCategory, autoCompleteValue, autoComplet
           return filters;
         }
       }, {});
-
-      // TODO can this be done above already?
-      // remove empty filter entries
-      // filters = filters.filter(function(filter) {
-      //   if(filter[0]) return filter;
-      // });
-
-      // Cancel if autcomplete container and no filters available
-      // if(filters.length === 0 && autoCompletePrefix) {
-      //   return;
-      // }
       
       // build filter buttons and add them to a fragment
-      const buttons = await generateFilterButtons(category, autoCompletePrefix).then(response => {
+      const buttons = await generateFilterButtons(category).then(response => {
         return response;
       }).catch (error => {
         handleError(error);
       });
 
       // build and configure the category container and finally append the fragments
-      const todoFiltersContainer = await generateCategoryContainer(category, autoCompletePrefix, buttons).then(response => {
+      const todoFiltersContainer = await generateCategoryContainer(category, buttons).then(response => {
         return response;
       }).catch (error => {
         handleError(error);

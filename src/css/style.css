@@ -20,10 +20,11 @@
   body a, body a:hover, body a:active, body a:focus {
     color: hsl(217deg, 71%, 53%);
   }
-  body .button {
+  body .button, body .button:active, body .button:focus, body .button:hover {
     background-color: transparent;
+    color: white;
   }
-  body button, body .button:focus:not(:active), body .button.is-focused:not(:active), body .button:active, body .button.is-active, body input[type=number], body .button:focus, body .button.is-focused, body .select select, body .textarea, body .input, body .select select:focus, body .textarea:focus, body .input:focus, body .select select.is-focused, body .is-focused.textarea, body .is-focused.input, body .select select:active, body .textarea:active, body .input:active, body .select select.is-active, body .is-active.textarea, body .is-active.input {
+  body input[type=number], body .select select, body .textarea, body .input, body .select select:focus, body .textarea:focus, body .input:focus, body .select select.is-focused, body .is-focused.textarea, body .is-focused.input, body .select select:active, body .textarea:active, body .input:active, body .select select.is-active, body .is-active.textarea, body .is-active.input {
     background: #2d2d2d;
     border: none;
     color: white;
@@ -119,11 +120,18 @@
   }
   body a.button.projects.is-dark,
   body a.button.projects.is-dark:hover,
-  body a.button.projects:focus-visible {
+  body a.button.projects:focus-visible,
+  body a.button.projects:focus:not(.is-greyed-out),
+  body a.button.projects:focus:hover:not(.is-greyed-out) {
     background: #491949;
     color: white;
   }
-  body a.button.is-greyed-out {
+  body a.button.is-greyed-out,
+  body a.button.is-dark.is-greyed-out,
+  body a.button.is-dark.is-greyed-out:hover,
+  body a.button.is-greyed-out:hover,
+  body a.button.is-greyed-out:focus,
+  body a.button.is-greyed-out:focus-visible {
     background: hsl(217deg, 71%, 53%);
     color: white;
     filter: opacity(40%) grayscale(100%);
@@ -569,6 +577,7 @@ a:focus {
 .button.is-greyed-out {
   cursor: not-allowed;
   pointer-events: all;
+  background-color: gray;
 }
 
 .card {
@@ -11339,6 +11348,10 @@ nav ul:nth-child(2):hover #versionNumber {
   .modal.content .modal-card {
     padding: 1em;
   }
+  #todoTableSearchContainer #todoTableSearchAddTodo {
+    top: 1.45em;
+    right: 6em;
+  }
   table tr td {
     padding: 0.25em 1.5em 0.25em 0;
   }
@@ -11431,6 +11444,10 @@ body.compact #modalForm textarea {
 }
 body.compact .modal.content .modal-card {
   padding: 1em;
+}
+body.compact #todoTableSearchContainer #todoTableSearchAddTodo {
+  top: 1.45em;
+  right: 6em;
 }
 body.compact table tr td {
   padding: 0.25em 1.5em 0.25em 0;
@@ -11556,44 +11573,40 @@ a.button.projects:hover span.tag {
   background: #822c82;
 }
 
-a.button.projects:focus-visible,
-a.button.projects.is-dark:focus-visible,
-a.button.projects:focus {
+a.button.projects:focus-visible:not(.is-greyed-out),
+a.button.projects.is-dark:focus-visible:not(.is-greyed-out),
+a.button.projects:focus:not(.is-greyed-out) {
   background: #822c82;
   color: white;
 }
 
-a.button.projects.is-dark,
-a.button.projects.is-dark:hover,
-a.button.projects.is-dark.is-hovered {
+a.button.projects.is-dark:not(.is-greyed-out),
+a.button.projects.is-dark:hover:not(.is-greyed-out),
+a.button.projects.is-dark.is-hovered:not(.is-greyed-out) {
   background: #5c1f5c;
   color: white;
 }
 
-a.button.customTags,
+/*a.button.customTags,
 a.button.customTags:hover {
-  background: #ccc;
-  color: #595959;
+  background: $sleek-customTags-button;
+  color: darken($sleek-customTags-button, 45%);
+  span.tag {
+    color: white;
+    background: darken($sleek-customTags-button, 55%);
+  }
 }
-a.button.customTags span.tag,
-a.button.customTags:hover span.tag {
-  color: white;
-  background: #404040;
-}
-
 a.button.customTags:focus-visible,
 a.button.customTags.is-dark:focus-visible {
-  background: #4d4d4d;
+  background: darken($sleek-customTags-button, 50%);
   color: white;
 }
-
 a.button.customTags.is-dark,
 a.button.customTags.is-dark:hover,
 a.button.customTags.is-dark.is-hovered {
-  background: #333333;
+  background: darken($sleek-customTags-button, 60%);
   color: white;
-}
-
+}*/
 a.button.priority,
 a.button.priority:focus,
 a.button.priority:focus-visible,
@@ -11878,10 +11891,7 @@ a.button.priority.C:focus-visible span.tag {
   cursor: pointer;
 }
 
-.button:focus:not(:active), .button.is-focused:not(:active),
-.button:active, .button.is-active,
 input[type=number],
-.button:focus, .button.is-focused,
 .select select, .textarea, .input,
 .select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input,
 .transparentInput {
@@ -11890,6 +11900,14 @@ input[type=number],
   outline: none;
   border-radius: 0.65em;
   background-color: #f0f0f0;
+}
+
+.button:focus, .button.is-focused, .button:focus:not(:active), .button.is-focused:not(:active), .button:active, .button.is-active {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  border-radius: 0.65em;
+  /*  background-color: transparent;*/
 }
 
 .field ::placeholder {

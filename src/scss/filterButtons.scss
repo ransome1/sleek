@@ -57,20 +57,20 @@ a.button.projects:hover {
     background: darken($sleek-projects-button, 55%);
   }
 }
-a.button.projects:focus-visible,
-a.button.projects.is-dark:focus-visible,
-a.button.projects:focus {
+a.button.projects:focus-visible:not(.is-greyed-out),
+a.button.projects.is-dark:focus-visible:not(.is-greyed-out),
+a.button.projects:focus:not(.is-greyed-out) {
   background: darken($sleek-projects-button, 55%);
   color: white;
 }
-a.button.projects.is-dark,
-a.button.projects.is-dark:hover,
-a.button.projects.is-dark.is-hovered {
+a.button.projects.is-dark:not(.is-greyed-out),
+a.button.projects.is-dark:hover:not(.is-greyed-out),
+a.button.projects.is-dark.is-hovered:not(.is-greyed-out) {
   background: darken($sleek-projects-button, 65%);
   color: white;
 }
 
-a.button.customTags,
+/*a.button.customTags,
 a.button.customTags:hover {
   background: $sleek-customTags-button;
   color: darken($sleek-customTags-button, 45%);
@@ -89,7 +89,7 @@ a.button.customTags.is-dark:hover,
 a.button.customTags.is-dark.is-hovered {
   background: darken($sleek-customTags-button, 60%);
   color: white;
-}
+}*/
 
 a.button.priority,
 a.button.priority:focus,

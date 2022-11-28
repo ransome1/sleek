@@ -56,6 +56,7 @@ a:focus {
 .button.is-greyed-out {
   cursor: not-allowed;
   pointer-events: all;
+  background-color: gray;
 }
 
 .card {

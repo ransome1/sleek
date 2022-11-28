@@ -174,7 +174,7 @@ datePickerInput.onchange = function() {
 
 datePickerInput.onfocus = async function() {
   const datePicker = await import("./datePicker.mjs");
-  datePicker.createDatepickerInstance(this, true, "due").then(() => {
+  datePicker.createDatepickerInstance(this, "due").then(() => {
     console.log("Success: Date picker created")
   }).catch(error => {
     handleError(error);
@@ -430,6 +430,21 @@ function resetForm() {
   }
 }
 
+function preFillInput(selectedFilters) {
+  let returnString = "";
+  const prefixes = {
+    "projects": "+",
+    "contexts": "@"
+  }
+  JSON.parse(selectedFilters).forEach(function(filter) {
+    if(!prefixes[filter[1]]) return false;
+    returnString += " ";
+    returnString += prefixes[filter[1]];
+    returnString += filter[0];
+  })
+  return returnString;
+}
+
 async function show(todo, templated) {
   try {
 
@@ -489,6 +504,14 @@ async function show(todo, templated) {
 
       // if so we paste it into the input field
       if(todo.due || todo.t) fillDatePickerInput(todo)
+    
+    } else {
+
+      const value = (userData.selectedFilters.length > 0) ? preFillInput(userData.selectedFilters) : "";
+
+      // if textarea is being used replace invisible multiline ascii character with new line
+      (userData.useTextarea) ? modalFormInput.value = value.replaceAll(String.fromCharCode(16),"\r\n") : modalFormInput.value = value;
+      modalFormInput.setSelectionRange(0, 0);
     }
     
     // resize all necessary input elements

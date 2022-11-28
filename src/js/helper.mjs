@@ -12,6 +12,14 @@ import "../../node_modules/marked/marked.min.js";
 const body = document.getElementById("body");
 const todoContext = document.getElementById("todoContext");
 const addTodoContainer = document.getElementById("addTodoContainer");
+export const modalWindows = document.querySelectorAll(".modal");
+
+export const isInputFocused = () => { return document.activeElement.id==="todoTableSearch" || document.activeElement.id==="filterContextInput" || document.activeElement.id==="modalFormInput"; }
+export const isRowFocused = () => { return document.activeElement.classList.contains("todo"); }
+
+export const isDrawerOpen = () => { return userData.filterDrawer || userData.viewDrawer; }
+export const isOnboardingOpen = () => { return document.getElementById("onboardingContainer").classList.contains("is-active"); }
+export const isContextOpen = () => { return todoContext.classList.contains("is-active"); }
 
 marked.setOptions({
   pedantic: false,
@@ -25,25 +33,12 @@ marked.setOptions({
   baseUrl: "https://"
 });
 
-// const renderer = {
-//   link(href, title, text) {
-//     return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
-//   }
-// };
-
-// // Override function
-// const walkTokens = (token) => {
-//   if(token.type !== "link") return false;
-//   console.log(token.text)
-//   //return `${token.text} <a href="${token.href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
-//   // link(href, text) {
-//   //   console.log(href)
-//   //   //temp(href);
-//   //   return `${text} <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
-//   // }
-// };
-
-// marked.use({ renderer, walkTokens });
+export const isModalOpen = () => {
+  for(let i = 0; i < modalWindows.length; i++) {
+    if(modalWindows[i].classList.contains("is-active")) return true;
+  }
+  return false;
+}
 
 export function isInViewport(item) {
   const rect = item.getBoundingClientRect();

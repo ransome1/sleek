@@ -1,7 +1,5 @@
-.button:focus:not(:active), .button.is-focused:not(:active),
-.button:active, .button.is-active,
+
 input[type="number"],
-.button:focus, .button.is-focused,
 .select select, .textarea, .input,
 .select select:focus, .textarea:focus, .input:focus, .select select.is-focused, .is-focused.textarea, .is-focused.input, .select select:active, .textarea:active, .input:active, .select select.is-active, .is-active.textarea, .is-active.input,
 .transparentInput {
@@ -11,6 +9,15 @@ input[type="number"],
   border-radius: $radius;
   background-color: $almost-white;
 }
+
+.button:focus, .button.is-focused, .button:focus:not(:active), .button.is-focused:not(:active), .button:active, .button.is-active {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  border-radius: $radius;
+/*  background-color: transparent;*/
+}
+
 .field ::placeholder {
   color: $darker-grey;
 }
