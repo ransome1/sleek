@@ -29,10 +29,6 @@ export function focusRow(row) {
   return false;
 }
 
-// const isDrawerOpen = () => { return userData.filterDrawer || userData.viewDrawer; }
-// const isOnboardingOpen = () => { return document.getElementById("onboardingContainer").classList.contains("is-active"); }
-// const isContextOpen = () => { return todoContext.classList.contains("is-active"); }
-
 export async function registerShortcuts() {
   try {
 
@@ -135,20 +131,9 @@ export async function registerShortcuts() {
 
       if(isModalOpen()) {
 
-        // // set priority directly
-        // if(event.altKey && event.key.length === 1 && event.key.match(/[A-Z]/i)) {
-
-        //   setPriority(event.key.substr(0,1)).then(response => {
-        //     console.log(response);
-        //   }).catch(error => {
-        //     handleError(error);
-        //   });
-        //   return false;
-        // }
-
         // due date plus 1
 
-        if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowUp") {
+        if(event.altKey && event.key === "ArrowUp") {
           setDueDate(1).then(response => {
             console.log(response);
           }).catch(error => {
@@ -159,7 +144,7 @@ export async function registerShortcuts() {
 
         // due date minus 1
 
-        if((event.ctrlKey || event.metaKey) && event.altKey && event.key === "ArrowDown") {
+        if(event.altKey && event.key === "ArrowDown") {
           setDueDate(-1).then(response => {
             console.log(response);
           }).catch(error => {
@@ -170,7 +155,7 @@ export async function registerShortcuts() {
 
         // reset due date
 
-        if((event.ctrlKey || event.metaKey) && event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        if(event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
           setDueDate(0).then(response => {
             console.log(response);
           }).catch(error => {
@@ -235,7 +220,6 @@ export async function registerShortcuts() {
           // setup x key
           // ******************************************************
 
-          // TODO: not working any more
           if (isRowFocused() && event.key === "x") {
             const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow].getAttribute("data-item");
             setTodoComplete(todoTableRow).then(function(response) {
@@ -468,7 +452,7 @@ export async function registerShortcuts() {
 
         // priority up
 
-        if(event.altKey && event.metaKey && event.key === "ArrowUp") {
+        if(event.ctrlKey && event.shiftKey && event.key === "ArrowUp") {
           setPriority(-1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -479,7 +463,7 @@ export async function registerShortcuts() {
 
         // priority down
 
-        if(event.altKey && event.metaKey && event.key === "ArrowDown") {
+        if(event.ctrlKey && event.shiftKey && event.key === "ArrowDown") {
           setPriority(1).then(function(result) {
             console.log(result);
           }).catch(function(error) {
@@ -490,7 +474,7 @@ export async function registerShortcuts() {
 
         // set priority directly
         
-        if(event.altKey && event.metaKey && event.key.length === 1) {
+        if(event.ctrlKey && event.shiftKey && event.key.length === 1) {
 
           if(!event.code.includes("Key")) return false
 
@@ -506,7 +490,7 @@ export async function registerShortcuts() {
 
         // remove priority
         
-        if(event.altKey && event.metaKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        if(event.ctrlKey && event.shiftKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
 
           setPriority(false).then(response => {
             console.log(response);
@@ -525,21 +509,6 @@ export async function registerShortcuts() {
           location.reload(true);
           return false;
         }
-
-        // // toggle completed todos
-        
-        // if(event.key==="h" && !isInputFocused()) {
-        //   // abort when onboarding is shown
-        //   if(isOnboardingOpen()) return false;
-
-        //   const showCompleted = document.getElementById("showCompleted");
-        //   triggerToggle(showCompleted, true).then(function(response) {
-        //     console.info(response);
-        //   }).catch(function(error) {
-        //     handleError(error);
-        //   });
-        //   return false;
-        // }
         
         // toggle deferred todos
 
