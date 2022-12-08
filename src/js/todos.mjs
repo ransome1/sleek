@@ -879,7 +879,7 @@ async function archiveTodos() {
     let incompleteTodos = await items.objects.filter(function(item) { return item.complete === false });
 
     // if user archives within done.txt file, operating is canceled
-    if(activeFile.includes("_done.")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
+    if(activeFile.endsWith("done.txt")) return Promise.resolve("Info: Current file seems to be a done.txt file, won't archive")
   
     let contentFromDoneFile = await window.api.invoke("getContent", doneFile);
 
