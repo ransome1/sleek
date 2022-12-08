@@ -165,11 +165,8 @@ export function getActiveFile() {
 }
 export function getDoneFile() {
   const activeFile = getActiveFile();
-  if(appData.os==="windows") {
-    return activeFile.replace(activeFile.split("\\").pop(), activeFile.substr(0, activeFile.lastIndexOf(".")).split("\\").pop() + "_done.txt");
-  } else {
-    return activeFile.replace(activeFile.split("/").pop(), activeFile.substr(0, activeFile.lastIndexOf(".")).split("/").pop() + "_done.txt");
-  }
+  var pathSeperator = (appData.os==="windows") ? "\\" : "/";
+  return activeFile.substr(0, activeFile.lastIndexOf(pathSeperator)) + pathSeperator +  "done.txt";
 }
 export function getBadgeCount() {
   let count = 0;
