@@ -133,7 +133,7 @@ export async function registerShortcuts() {
 
         // due date plus 1
 
-        if(event.altKey && event.key === "ArrowUp") {
+        if(event.altKey && event.shiftKey && event.key === "ArrowUp") {
           setDueDate(1).then(response => {
             console.log(response);
           }).catch(error => {
@@ -144,7 +144,7 @@ export async function registerShortcuts() {
 
         // due date minus 1
 
-        if(event.altKey && event.key === "ArrowDown") {
+        if(event.altKey && event.shiftKey && event.key === "ArrowDown") {
           setDueDate(-1).then(response => {
             console.log(response);
           }).catch(error => {
@@ -155,7 +155,7 @@ export async function registerShortcuts() {
 
         // reset due date
 
-        if(event.altKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+        if(event.altKey && event.shiftKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
           setDueDate(0).then(response => {
             console.log(response);
           }).catch(error => {
@@ -409,6 +409,11 @@ export async function registerShortcuts() {
 
       if((event.ctrlKey || event.metaKey) && event.key === "o") {
         window.api.send("openOrCreateFile", ["open"]);
+        return false;
+      }
+
+      if((event.ctrlKey || event.metaKey) && event.key === "n") {
+        window.api.send("openOrCreateFile", ["create"]);
         return false;
       }
 

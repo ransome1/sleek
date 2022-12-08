@@ -203,7 +203,7 @@ async function startFileWatcher(pathToFile, bookmark) {
   try {
 
     // TODO: consider doing this in store.config.js
-    // skip persisted files and go with ENV if set
+    // skip persisted files and go with the one set by ENV
     if(process.env.SLEEK_CUSTOM_FILE && fs.existsSync(process.env.SLEEK_CUSTOM_FILE)) pathToFile = process.env.SLEEK_CUSTOM_FILE
 
     // if requested file is not found on disk, this function will be aborted
@@ -241,7 +241,10 @@ async function startFileWatcher(pathToFile, bookmark) {
     if(process.mas) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(file[3])
 
     if(fileWatcher) await fileWatcher.close().then(() => console.log("Info: Filewatcher closed"));
-    fileWatcher = await chokidar.watch(file[1])
+    fileWatcher = await chokidar.watch(file[1], {
+      usePolling: true,
+      interval: 100
+    })
     fileWatcher
     .on("add", async function(fileToLink) {
   
