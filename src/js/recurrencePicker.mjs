@@ -26,7 +26,7 @@ recurrencePickerDay.innerHTML = translations.day;
 recurrencePickerYear.innerHTML = translations.year;
 recurrencePickerNoRecurrence.innerHTML = translations.noRecurrence;
 recurrencePickerEvery.innerHTML = translations.every;
-recurrencePickerInput.placeholder = translations.noRecurrence;
+recurrencePickerInput.value = translations.noRecurrence;
 
 recurrencePickerInput.onfocus = function(element) {
   // only like this compatible with body click event in event.mjs
@@ -88,7 +88,7 @@ export function setInput(recurrence) {
       }
       recurrencePickerInput.value = label;
     } else {
-      recurrencePickerInput.value = null;
+      recurrencePickerInput.value = translations.noRecurrence;
     }
 
     resizeInput(recurrencePickerInput);

@@ -71,13 +71,13 @@ export function jumpToItem(item) {
     return Promise.reject(error);
   }
 }
-export async function pasteItemToClipboard(item) {
+export async function pasteItemToClipboard(todos) {
   try {
 
-    window.api.send("copyToClipboard", [item.raw]);
+    window.api.send("copyToClipboard", [todos.join("\n").toString()]);
     showGenericMessage(translations.todoCopiedToClipboard, 3);
 
-    return Promise.resolve("Success: Todo text pasted to clipboard: " + item.text);
+    return Promise.resolve("Success: Todo text pasted to clipboard: " + todos.text);
 
   } catch(error) {
     error.functionName = pasteItemToClipboard.name;

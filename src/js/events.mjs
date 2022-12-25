@@ -14,7 +14,8 @@ const cancelButtons = document.querySelectorAll("[role='cancel']");
 
 export function registerEvents() {
   try {
-    body.onclick = async function(event) {
+    body.addEventListener("click", async function(event) {
+
       // close todo context if click is outside of it
       if(filterContext.classList.contains("is-active")) {
         if(!filterContext.contains(event.target)) {
@@ -34,7 +35,7 @@ export function registerEvents() {
           recurrencePickerContainer.classList.remove("is-active");
         }
       }
-    }
+    });
 
     // event for all cancel buttons
     cancelButtons.forEach(function(cancelButton) {

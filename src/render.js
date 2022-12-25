@@ -154,6 +154,8 @@ window.onload = async function() {
       helper.handleError(error);
     });
 
+    import("./js/bulk.mjs");
+
     // stop timer for app
     console.info("App built in", performance.now() - a0, "ms");
 

@@ -18,7 +18,8 @@ const validChannels = [
   "restart",
   "closeWindow",
   "changeWindowTitle",
-  "setTheme"
+  "setTheme",
+  "deleteLineInFile"
 ];
 contextBridge.exposeInMainWorld(
   "api", {

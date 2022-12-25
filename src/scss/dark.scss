@@ -191,6 +191,7 @@
       i.fa-sort-down {
         color: $dark-grey;
       }
+      .todo.selected,
       .todo#previousItem.is-highlighted {
         background-color: $even-darker-grey;
       }

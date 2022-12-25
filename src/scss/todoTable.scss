@@ -47,7 +47,7 @@
   .todo:last-child {
     border: none;
   }
-  .todo:focus {
+  .todo.selected {
     background: lighten($has-text-link, 40%);
   }
   .todo.completed {

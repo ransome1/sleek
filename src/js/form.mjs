@@ -20,6 +20,9 @@ const modalFormInput = document.getElementById("modalFormInput");
 const modalFormInputResize = document.getElementById("modalFormInputResize");
 const priorityPicker = document.getElementById("priorityPicker");
 const todoContext = document.getElementById("todoContext");
+const bulkEditForm = document.getElementById("bulkEditForm");
+const bulkEditFormAddTags = document.getElementById("bulkEditFormAddTags");
+const bulkEditFormRemoveTags = document.getElementById("bulkEditFormRemoveTags");
 
 btnSave.innerHTML = translations.save;
 btnCancel.innerHTML = translations.cancel;

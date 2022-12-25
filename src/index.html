@@ -17,6 +17,8 @@
 
   <body id="body">
 
+    <section id="gridDiv" tabindex="-1"></section>
+
     <div class="columns is-gapless is-mobile">
 
       <div class="column is-narrow">
@@ -211,24 +213,12 @@
         <section id="onboardingContainer" class="contentContainer">
           <h1 id="welcomeToSleek" class="title is-1"></h1>
           <p id="onboardingContainerSubtitle" class="subtitle"></p>
-          <!-- <p class="file is-boxed is-centered"> -->
-            <!-- <a href="#" id="btnOnboardingOpenTodoFile" class="btnOnboarding">
-              <i class="fas fa-folder-open"></i>
-              <span id="onboardingContainerBtnOpen" class="file-label"></span>
-            </a>
-            <a href="#" id="btnOnboardingCreateTodoFile" class="btnOnboarding">
-              <i class="fas fa-plus-circle"></i>
-              <span id="onboardingContainerBtnCreate" class="file-label"></span>
-            </a> -->
-
           <div class="modalFileDrop">
             <div class="btnFilesAddTodoFile is-hidden" tabindex="0"><i class="fa-solid fa-file-arrow-down"></i><br><span class="modalChangeFileAdd">Drag and drop todo.txt file here or</span></div>
             <div class="break"></div>
             <button class="btnFilesOpenTodoFile" tabindex="0"><i class="fas fa-folder-open"></i>&nbsp;<span class="spanFilesOpenTodoFile"></span></button>
             <button class="btnFilesCreateTodoFile" tabindex="0"><i class="fas fa-plus-circle"></i>&nbsp;<span class="spanFilesCreateTodoFile"></span></button>
           </div>
-
-          <!-- </p> -->
         </section>
 
         <section id="addTodoContainer" class="contentContainer">
@@ -250,6 +240,86 @@
 
       </div>
     </div>
+
+    <form id="bulkEditForm" class="modal">
+      <div class="modal-background" role="cancel"></div>
+      <div class="modal-content" style="width: 30em">
+        <div class="card">
+          <div class="card-content">
+
+            <h4 class="is-4" style="margin-top: 0">Change <span id="bulkEditFormHeadlineCount"></span> todos</h4>
+
+            <label for="bulkEditFormPriorityPicker">Add priority</label>
+            <div class="field">
+              <div class="control">
+                <div class="select">
+                  <select id="bulkEditFormPriorityPicker" tabindex="0">
+                    <option value="">-</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="G">G</option>
+                    <option value="H">H</option>
+                    <option value="I">I</option>
+                    <option value="J">J</option>
+                    <option value="K">K</option>
+                    <option value="L">L</option>
+                    <option value="M">M</option>
+                    <option value="N">N</option>
+                    <option value="O">O</option>
+                    <option value="P">P</option>
+                    <option value="Q">Q</option>
+                    <option value="R">R</option>
+                    <option value="S">S</option>
+                    <option value="T">T</option>
+                    <option value="U">U</option>
+                    <option value="V">V</option>
+                    <option value="W">W</option>
+                    <option value="X">X</option>
+                    <option value="Y">Y</option>
+                    <option value="Z">Z</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="bulkEditFormAddTags">Add tags</label>
+              <input id="bulkEditFormAddTags" class="input is-medium" type="text" tabindex="0" placeholder="+projects @contexts">
+            </div>
+
+            <div class="field">
+              <label for="bulkEditFormRemoveTags">Remove tags</label>
+              <input id="bulkEditFormRemoveTags" class="input is-medium" type="text" tabindex="0" placeholder="+projects @contexts">
+            </div>
+
+            <!--
+            <div class="field">
+              <div class="control has-icons-left">
+                <input class="transparentInput" tabindex="0" readonly>
+                <i class="fa-solid fa-clock is-left"></i>&nbsp;
+                <span ></span>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control has-icons-left">
+                <input class="input" readonly tabindex="-1">
+                <a href="#" class="icon is-left" tabindex="-1">
+                  <i class="fa-solid fa-repeat"></i>
+                </a>
+              </div>
+            </div> -->
+          </div>
+          <footer class="card-footer">
+            <a href="#" id="bulkEditFormSubmit" class="card-footer-item" tabindex="0">Save</a>
+            <a href="#" id="" class="card-footer-item" role="cancel" tabindex="0">Cancel</a>
+          </footer>
+        </div>
+      </div>
+    </form>
 
     <form id="modalForm" class="modal" data-item="">
       <div class="modal-background" role="cancel"></div>
@@ -825,10 +895,13 @@
             <label>Priority</label>
             <a href="#" id="todoContextPriorityIncrease" class="dropdown-item" tabindex="0"><i class="fas fa-plus"></i></a>
             <a href="#" id="todoContextPriorityDecrease" class="dropdown-item" tabindex="0"><i class="fas fa-minus"></i></a>
+            <a href="#" id="todoContextPriorityDelete" class="dropdown-item" tabindex="0"><i class="fas fa-trash"></i></a>
           </div>
+          <a href="#" id="todoContextMore" class="dropdown-item" tabindex="0">Bulk operations</a>
           <a href="#" id="todoContextUseAsTemplate" class="dropdown-item" tabindex="0"></a>
           <a href="#" id="todoContextCopy" class="dropdown-item" tabindex="0"></a>
           <a href="#" id="todoContextDelete" class="dropdown-item" tabindex="0"></a>
+                    
         </div>
       </div>
     </div>

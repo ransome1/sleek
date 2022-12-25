@@ -1,5 +1,5 @@
 "use strict";
-import { createTodoContext, setTodoComplete, deleteTodo, archiveTodos, items } from "./todos.mjs";
+import { createTodoContext, setTodoComplete, deleteTodo, archiveTodos, items, copyTodo } from "./todos.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { pasteItemsToClipboard, setDueDate } from "./helper.mjs";
 import { removeFileFromList } from "./files.mjs";
@@ -17,17 +17,17 @@ const
   todoContext = document.getElementById("todoContext"),
   todoTable = document.getElementById("todoTable");
   
-export let 
-  currentRow = -1;
+// export let 
+//   currentRow = -1;
 
-export function focusRow(row) {
-  if(!row) currentRow = 0;
-  if(row >= 0) currentRow = row;
-  if(row === -1) return false;
-  let todoTableRow = todoTable.querySelectorAll(".todo")[row];
-  if(typeof todoTableRow === "object") todoTableRow.focus();
-  return false;
-}
+// export function focusRow(row) {
+//   if(!row) currentRow = 0;
+//   if(row >= 0) currentRow = row;
+//   if(row === -1) return false;
+//   let todoTableRow = todoTable.querySelectorAll(".todo")[row];
+//   if(typeof todoTableRow === "object") todoTableRow.focus();
+//   return false;
+// }
 
 export async function registerShortcuts() {
   try {
@@ -77,7 +77,7 @@ export async function registerShortcuts() {
 
         if(todoContext.classList.contains("is-active")) {
           todoContext.classList.remove("is-active");
-          focusRow(currentRow);
+          //focusRow(currentRow);
           return false;
         }
 
@@ -181,40 +181,74 @@ export async function registerShortcuts() {
           // find and delete todo
 
           if(event.key === "Delete" || event.key === "Backspace") {
-            const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
-            const index = await items.objects.map(function(object) {return object.raw; }).indexOf(todoTableRow.getAttribute("data-item"));
-            deleteTodo(index);
-            focusRow(currentRow);
+
+            if(items.selected.length === 0) return false
+
+            // console.log(items.selected)
+            // return false
+
+            // const todoTableRow = todoTable.querySelectorAll(".todo")[currentRow];
+            // let indexes = new Array;
+            // indexes.push(todoTableRow.getAttribute("data-index"));
+            deleteTodo(items.selected);
+            //focusRow(currentRow);
             return false;
           }
+
+          // if(event.shiftKey && event.key === "ArrowUp") {
+
+          //   if(!document.activeElement.previousElementSibling.classList.contains("todo")) {
+          //     document.activeElement.previousElementSibling.previousElementSibling.focus();
+          //   } else {
+          //     document.activeElement.previousElementSibling.focus();              
+          //   }
+
+          //   return false;
+
+          // }
+
+
+          // if(event.shiftKey && event.key === "ArrowDown") {
+
+          //   console.log(document.activeElement.nextElementSibling)
+
+          //   if(!document.activeElement.nextElementSibling.classList.contains("todo")) {
+          //     document.activeElement.nextElementSibling.nextElementSibling.focus();
+          //   } else {
+          //     document.activeElement.nextElementSibling.focus();              
+          //   }
+
+          //   return false;
+
+          // }
 
           // move focus down in table list
 
-          if(event.key === "ArrowDown") {
+          // if(event.key === "ArrowDown") {
 
-            // stop if end of todos is reached
+          //   // stop if end of todos is reached
 
-            if(currentRow >= todoTable.querySelectorAll(".todo").length - 1) {
-              focusRow(todoTable.querySelectorAll(".todo").length - 1);
-              return false;
-            }
-            currentRow++;
-            focusRow(currentRow);
-            return false;
-          }
+          //   if(currentRow >= todoTable.querySelectorAll(".todo").length - 1) {
+          //     focusRow(todoTable.querySelectorAll(".todo").length - 1);
+          //     return false;
+          //   }
+          //   currentRow++;
+          //   focusRow(currentRow);
+          //   return false;
+          // }
 
           // move focus up in table list
 
-          if(event.key === "ArrowUp") {
+          // if(event.key === "ArrowUp") {
 
-            if(currentRow === 0) {
-              focusRow(currentRow);
-              return false;
-            }
-            currentRow--;
-            focusRow(currentRow);
-            return false;
-          }
+          //   if(currentRow === 0) {
+          //     focusRow(currentRow);
+          //     return false;
+          //   }
+          //   currentRow--;
+          //   focusRow(currentRow);
+          //   return false;
+          // }
 
           // ******************************************************
           // setup x key
@@ -305,7 +339,7 @@ export async function registerShortcuts() {
           if(!filesInTabBar[event.key-1]) return false;
           if(filesInTabBar[event.key-1][1]) {
             // throw false at this function and current row will be reset
-            focusRow(false);
+            //focusRow(false);
             //
             window.api.send("startFileWatcher", filesInTabBar[event.key-1][1]);
           }
@@ -423,7 +457,11 @@ export async function registerShortcuts() {
 
       if((event.ctrlKey || event.metaKey && userData.files) && event.key === "c" && !isInputFocused()) {
         if(!getActiveFile()) return false;
-        pasteItemsToClipboard();
+        if(items.selected.length === 0) {
+          pasteItemsToClipboard();
+        } else {
+          copyTodo(items.selected)
+        }
         return false;
       }
 

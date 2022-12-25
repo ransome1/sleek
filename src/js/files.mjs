@@ -2,7 +2,7 @@
 import { _paq } from "./matomo.mjs";
 import { appData, userData, setUserData, translations } from "../render.js";
 import { createModalJail } from "./jail.mjs";
-import { focusRow } from "./keyboard.mjs";
+//import { focusRow } from "./keyboard.mjs";
 import { handleError } from "./helper.mjs";
 import { resetFilters } from "./filters.mjs";
 import { showOnboarding } from "./onboarding.mjs";
@@ -153,7 +153,7 @@ function selectFileFromList(index) {
     modalChangeFile.classList.remove("is-active");
 
     // throw false at this function and current row will be reset
-    focusRow(false);
+    //focusRow(false);
     
     // load new file
     window.api.send("startFileWatcher", userData.files[index][1]);

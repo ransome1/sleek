@@ -1,22 +1,26 @@
 "use strict"; 
 import "../../node_modules/sugar/dist/sugar.min.js";
 import "../../node_modules/jstodotxt/jsTodoExtensions.js";
-
 import { _paq } from "./matomo.mjs"; 
 import { userData, appData, translations, buildTable } from "../render.js";
 import { categories, selectFilter } from "./filters.mjs";
 import { convertDate, isToday, isTomorrow, isPast } from "./date.mjs";
 import { createModalJail } from "./jail.mjs";
-import { focusRow } from "./keyboard.mjs";
+//import { focusRow } from "./keyboard.mjs";
 import { showRecurrences, setInput } from "./recurrencePicker.mjs";
 import { generateRecurrence } from "./recurrences.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification, isInViewport } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
-import { show } from "./form.mjs"; 
+import { show,resetForm } from "./form.mjs"; 
+import { showBulkModal } from "./bulk.mjs";
 import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension, TagExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
-const items = { objects: {} }
+const items = { 
+  objects: {},
+  selected: new Array
+}
+const body = document.getElementById("body");
 const resultStats = document.getElementById("resultStats");
 const tableContainerCategoriesTemplate = document.createElement("div");
 const todoContext = document.getElementById("todoContext");
@@ -25,6 +29,7 @@ const todoContextCopy = document.getElementById("todoContextCopy");
 const todoContextUseAsTemplate = document.getElementById("todoContextUseAsTemplate");
 const todoContextPriorityIncrease = document.getElementById("todoContextPriorityIncrease");
 const todoContextPriorityDecrease = document.getElementById("todoContextPriorityDecrease");
+const todoContextMore = document.getElementById("todoContextMore");
 const todoTable = document.getElementById("todoTable");
 const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
@@ -36,6 +41,7 @@ const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 const todoTableBodyCellTextTemplate = document.createElement("div");
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
+
 let
   linkId,
   clusterCounter = 0,
@@ -73,6 +79,17 @@ todoTableWrapper.onscroll = function(event) {
   }
 }
 
+body.addEventListener("click", function(event) {
+  // remove highlight of selected rows
+  if(items.selected.length === 0) return false;
+  if(!document.getElementById("todoTable").contains(event.target)){
+    const rows = todoTable.querySelectorAll(".selected");
+    rows.forEach(row => {
+      row.classList.remove("selected")
+    });
+  }
+});
+
 // receives a page title and if found replaces the link with it
 function getAndSetPageTitle(linkId, href) {
   const pageBody = fetch(href);
@@ -87,35 +104,30 @@ function getAndSetPageTitle(linkId, href) {
 
 async function generateTodoTxtObjects(raw) {
   try {
-
     if(raw !== undefined) {
       items.objects = new Array;
-
       const todoArray = raw.split(/\r?\n/);
-
       // create todo.txt objects
       let l = todoArray.length;
       for(let i = 0; i < l; i++) {
-        const todoObject = await generateTodoTxtObject(todoArray[i]);
+        const todoObject = await generateTodoTxtObject(todoArray[i], i);
         // push objects into array
         items.objects.push(todoObject);
       }
     }
-
     // empty lines will be filtered
     items.objects = items.objects.filter(function(item) { return item.toString() !== "" });
-
     return Promise.resolve("Success: New todo object created");
-
   } catch(error) {
     error.functionName = generateTodoTxtObjects.name;
     return Promise.reject(error);
   }
 }
-function generateTodoTxtObject(string) {
+function generateTodoTxtObject(string, index) {
   try {
     const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ]);
     todo.raw = string;
+    todo.index = index;
     return Promise.resolve(todo);
   } catch(error) {
     error.functionName = editTodo.name;
@@ -206,6 +218,14 @@ function generateTable(loadAll) {
         todoTable.appendChild(generateTableRow(todo));
       }
     }
+
+    // const todoRows = todoTable.querySelectorAll(".todo");
+    // todoRows.forEach(row => {
+    //   row.onclick = function(event) {
+    //     if(event.metaKey || event.ctrlKey) row.classList.toggle("selected")
+    //     //(row.classList.contains("selected")) ? row.classList.remove("selected") : row.classList.add("selected")
+    //   }
+    // });
 
     // reset cluster counter
     clusterCounter = 0;
@@ -326,11 +346,16 @@ function generateTableRow(todo) {
     //   item.previous = null;
     // }
 
+    // if row use to be selected, it will be reselected on reload
+    if(items.selected.indexOf(todo.index) !== -1) todoTableBodyRow.classList.add("selected")
+
     // start with the individual config of the items
     if(todo.complete) todoTableBodyRow.setAttribute("class", "todo completed")
 
     // add todo string to data-item attribute
     todoTableBodyRow.setAttribute("data-item", todo.raw);
+
+    todoTableBodyRow.setAttribute("data-index", todo.index);
 
     // add the priority marker or a white spacer
     if(todo.priority && (sortBy === "priority" && !userData.sortByFile)) {
@@ -540,21 +565,57 @@ function generateTableRow(todo) {
     });
     
     todoTableBodyRow.oncontextmenu = function() {
-      createTodoContext(todoTableBodyRow).then(response => {
+
+      if(items.selected.indexOf(todo.index) === -1) items.selected.push(todo.index)
+  
+      createTodoContext(items.selected).then(response => {
         console.log(response);
       }).catch(error => {
         handleError(error);
       });
-
-      const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
-      focusRow(index);
     }
 
-    todoTableBodyRow.onfocus = function() {
-      const index = Array.prototype.indexOf.call(todoTable.querySelectorAll(".todo"), todoTableBodyRow);
-      focusRow(index);
+    todoTableBodyRow.onclick = function(event) {
+
+      const index = parseInt(this.getAttribute("data-index"))
+      const indexInArray = items.selected.indexOf(index)
+      
+      if(!event.metaKey && !event.ctrlKey) {
+        //const index = parseInt(this.getAttribute("data-index"))
+        items.selected = new Array;
+        const selectedTodoRows = todoTable.querySelectorAll(".selected");
+        selectedTodoRows.forEach(row => {
+          row.classList.remove("selected")
+        });
+        this.classList.add("selected")
+        items.selected.push(index)
+      } else {
+        
+        if(indexInArray === -1) {
+          items.selected.push(index)
+          this.classList.add("selected")
+        } else {
+          items.selected.splice(indexInArray, 1)
+          this.classList.remove("selected")
+        }
+      }
     }
-    
+
+    // todoTableBodyRow.onfocus = function() {
+
+    //   const index = parseInt(this.getAttribute("data-index"))
+    //   const indexInArray = items.selected.indexOf(index)
+
+    //   if(indexInArray === -1) {
+    //     items.selected.push(index)
+    //     this.classList.add("selected")
+    //   } else {
+    //     items.selected.splice(indexInArray, 1)
+    //     this.classList.remove("selected")
+    //   }
+
+    // }
+
     // only add the categories to text cell if it has child nodes
     if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
 
@@ -567,52 +628,125 @@ function generateTableRow(todo) {
   }
 }
 
-const deleteTodo = async function(index) {
-  //send index to main process in order to delete line
-  window.api.send("writeToFile", [undefined, index, undefined]);      
-  
+function deleteTodo(indexes) {
+  indexes.forEach(index => {
+    const todo = items.objects[index];
+    //window.api.send("writeToFile", [undefined, index, undefined]);
+    window.api.send("deleteLineInFile", todo.raw);
+  });
   todoContext.classList.remove("is-active");
-  todoContext.removeAttribute("data-item");
-  
-  // trigger matomo event
-  if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
+  items.selected = new Array;
 }
 
-async function createTodoContext(todoTableRow) {
+function copyTodo(indexes) {
+  let todoArray = new Array;
+  indexes.forEach(index => {
+    todoArray.push(items.objects[index])
+  });
+  pasteItemToClipboard(todoArray).then(response => {
+    console.log(response);
+  }).catch(error => {
+    handleError(error);
+  });
+  todoContext.classList.remove("is-active");
+}
+
+function changePriority(indexes, direction) {
+  indexes.forEach(index => {
+    const todo = items.objects[index];
+    if(direction === 0) {
+      todo.priority = null
+    } else {
+      const nextPriority = (todo.priority) ? todo.priority.toLowerCase().charCodeAt(0) + direction : 97
+      if(nextPriority <= 96 || nextPriority >= 123) return false
+      todo.priority = String.fromCharCode(nextPriority).toUpperCase()
+    }
+    window.api.send("writeToFile", [todo.toString(), index]);
+  });
+  items.selected = new Array;
+  todoContext.classList.remove("is-active");
+}
+
+function useAsTemplate(indexes) {
+  const todo = items.objects[indexes[0]]
+  show(todo.toString(), true).then(response => {
+    console.log(response);
+  }).catch(error => {
+    handleError(error);
+  });
+  todoContext.classList.remove("is-active");
+  // trigger matomo event
+  if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
+}
+
+function createTodoContext(indexes) {
   try {
 
-    // get index of todo
-    let index = await items.objects.map(function(object) {return object.raw; }).indexOf(todoTableRow.getAttribute("data-item"));
-    // retrieve todo object
-    const todo = items.objects[index]
-
-    const useAsTemplate = function() {
-      show(todo.toString(), true).then(response => {
-        console.log(response);
-      }).catch(error => {
-        handleError(error);
-      });
-
-      todoContext.classList.toggle("is-active");
-      todoContext.removeAttribute("data-item");
-
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Use as template"]);
+    // hide template menu item when more than one todo was selected
+    if(indexes.length > 1) {
+      todoContextUseAsTemplate.classList.add("is-hidden")
+    } else {
+      todoContextUseAsTemplate.classList.remove("is-hidden")
     }
-    const copyTodo = async function() {
-
-      pasteItemToClipboard(todo).then(response => {
-        console.log(response);
-      }).catch(error => {
-        handleError(error);
-      });
-
-      todoContext.classList.toggle("is-active");
-      todoContext.removeAttribute("data-item");
-
+    todoContextPriorityIncrease.onclick = function() {
+      changePriority(indexes, -1);
       // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority increase"]);
     }
+    todoContextPriorityIncrease.onkeypress = function() {
+      if(event.key !== "Enter") return false;
+      changePriority(indexes, -1);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority increase"]);
+    }
+    todoContextPriorityDecrease.onclick = function() {
+      changePriority(indexes, 1);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority decrease"]);
+    }
+    todoContextPriorityDecrease.onkeypress = function() {
+      if(event.key !== "Enter") return false;
+      changePriority(indexes, 1);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority decrease"]);
+    }
+    todoContextPriorityDelete.onclick = function() {
+      changePriority(indexes, 0);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority delete"]);
+    }
+    todoContextPriorityDelete.onkeypress = function() {
+      if(event.key !== "Enter") return false;
+      changePriority(indexes, 0);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority delete"]);
+    }
+    todoContextDelete.onclick = function() {
+      deleteTodo(indexes);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
+    }
+    todoContextDelete.onkeypress = function() {
+      if(event.key !== "Enter") return false;
+      deleteTodo(indexes);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
+    }
+
+    // const copyTodo = async function() {
+
+    //   pasteItemToClipboard(todo).then(response => {
+    //     console.log(response);
+    //   }).catch(error => {
+    //     handleError(error);
+    //   });
+
+    //   todoContext.classList.toggle("is-active");
+    //   todoContext.removeAttribute("data-item");
+
+    //   // trigger matomo event
+    //   if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
+    // }
     // const deleteTodo = async function() {
       
     //   //send index to main process in order to delete line
@@ -624,80 +758,48 @@ async function createTodoContext(todoTableRow) {
     //   // trigger matomo event
     //   if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Delete"]);
     // }
-    const changePriority = function(direction) {
-
-      const todo = items.objects[index];
-
-      let nextIndex = 97;
-
-      // in case a todo has no priority and the 1st grouping method is priority
-      if(!todo.priority && userData.sortBy[0] === "priority") {
-        const index = items.grouped.length - 2;
-        // this receives the lowest available priority group
-        (index >= 0) ? nextIndex = items.grouped[index][0].toLowerCase().charCodeAt(0) : nextIndex = 97
-      // change priority based on current priority
-      } else if(todo.priority) {
-        const currentPriority = todo.priority.toLowerCase().charCodeAt(0)
-        nextIndex = currentPriority + direction;
-      }
-
-      if(nextIndex <= 96 || nextIndex >= 123) return false
-
-      todo.priority = String.fromCharCode(nextIndex).toUpperCase();
-
-      //write the data to the file
-      window.api.send("writeToFile", [todo.toString(), index]);
-
-      todoContext.classList.remove("is-active");
-      todoContext.removeAttribute("data-item");
-
-      // trigger matomo event
-      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Priority changer"]);
-
-    }
-
-    todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
-    todoContext.setAttribute("data-item", todoTableRow.getAttribute("data-item"))
   
-    // click on increse priority option
-    todoContextPriorityIncrease.onclick = function() {
-      changePriority(-1);
-    }
-    todoContextPriorityIncrease.onkeypress = function(event) {
-      if(event.key !== "Enter") return false;
-      changePriority(-1);
-    }
-    // click on decrease priority option
-    todoContextPriorityDecrease.onclick = function() {
-      changePriority(1);
-    }
-    todoContextPriorityDecrease.onkeypress = function(event) {
-      if(event.key !== "Enter") return false;
-      changePriority(1);
-    }
-    // click on use as template option
     todoContextUseAsTemplate.onclick = function() {
-      useAsTemplate();
+      useAsTemplate(indexes);
     }
     todoContextUseAsTemplate.onkeypress = function(event) {
       if(event.key !== "Enter") return false;
-      useAsTemplate();
+      useAsTemplate(indexes);
     }
-    // click on copy
     todoContextCopy.onclick = function() {
-      copyTodo();
+      copyTodo(indexes);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
     }
     todoContextCopy.onkeypress = function(event) {
       if(event.key !== "Enter") return false;
-      copyTodo();
+      copyTodo(indexes);
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on Copy"]);
     }
-    // click on delete
-    todoContextDelete.onclick = function() {
-      deleteTodo(index);
+
+    todoContextMore.onclick = function() {
+      
+      showBulkModal().then(response => {
+        console.log(response);
+      }).catch(error => {
+        handleError(error);
+      });
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on More"]);
     }
-    todoContextDelete.onkeypress = function(event) {
+    todoContextMore.onkeypress = function(event) {
       if(event.key !== "Enter") return false;
-      deleteTodo(index);
+
+      showBulkModal().then(response => {
+        console.log(response);
+      }).catch(error => {
+        handleError(error);
+      });
+
+      // trigger matomo event
+      if(userData.matomoEvents) _paq.push(["trackEvent", "Todo-Table-Context", "Click on More"]);
     }
 
     todoContext.classList.add("is-active");
@@ -712,7 +814,6 @@ async function createTodoContext(todoTableRow) {
     }
 
     if(!isInViewport(todoContext)) {
-      console.log(todoContext.clientHeight)
       todoContext.style.top = event.y - todoContext.clientHeight + "px";
       todoContext.style.left = event.x - todoContext.clientWidth + "px";
     }
@@ -807,7 +908,6 @@ async function setTodoComplete(todo) {
         // finally remove priority
         todo.priority = null;
       }
-
     }
 
     //write the data to the file and advice to focus the row after reload
@@ -918,4 +1018,4 @@ async function archiveTodos() {
   }
 }
 
-export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, deleteTodo, archiveTodos, addTodo, editTodo, show, createTodoContext, generateTodoTxtObject };
+export { generateTodoTxtObjects, generateGroupedObjects, generateTable, items, item, setTodoComplete, deleteTodo, copyTodo, archiveTodos, addTodo, editTodo, show, createTodoContext, generateTodoTxtObject };
