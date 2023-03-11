@@ -355,6 +355,8 @@ function getUserData() {
     if(typeof userData.data.theme != "string") userData.set("theme", "system");
     if(typeof userData.data.getPageTitles != "boolean") userData.data.getPageTitles = false;
     if(typeof userData.data.caseSensitive != "boolean") userData.data.caseSensitive = false;
+    if(typeof userData.data.poromodo != "string") userData.data.poromodo = '🍅';
+
     
     //TODO remove this after 1.1.7 has been fully distributed
     const indexOfDueString = userData.data.sortBy.indexOf("dueString");

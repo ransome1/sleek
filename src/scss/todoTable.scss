@@ -88,6 +88,14 @@
       margin-left: .25em;
     }*/
   }
+  .cell.meta {
+    min-width: 10em;
+    text-align: right;
+    margin-left: auto;
+    .tag {
+      margin-left: .25em;
+    }
+  }
   .cell.checkbox {
     flex-shrink: 0;
     i {

@@ -13,7 +13,7 @@ import { generateRecurrence } from "./recurrences.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification, isInViewport } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
-import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension } from "./todotxtExtensions.mjs";
+import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension, PomodoroExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
 const items = { objects: {} }
@@ -36,6 +36,8 @@ const todoTableBodyCellRecurrenceTemplate = document.createElement("span");
 const todoTableBodyCellTextTemplate = document.createElement("div");
 const todoTableBodyRowTemplate = document.createElement("div");
 const todoTableWrapper = document.getElementById("todoTableWrapper");
+const tableContainerMetaTemplate = document.createElement("div");
+
 let
   linkId,
   clusterCounter = 0,
@@ -55,6 +57,7 @@ todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
 todoTableBodyCellTextTemplate.setAttribute("href", "#");
 todoTableBodyRowTemplate.setAttribute("class", "todo");
 todoTableBodyRowTemplate.setAttribute("tabindex", "0");
+tableContainerMetaTemplate.setAttribute("class", "cell meta")
 
 todoTableWrapper.onscroll = function(event) {
   // abort if all todos are shown already
@@ -122,7 +125,7 @@ async function generateTodoTxtObject(todoRaw) {
 
   todoRaw = todoRaw.trim()
   const exts = [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(),
-    new ThresholdExtension(), new PriExtension()];
+    new ThresholdExtension(), new PriExtension(), new PomodoroExtension()];
   let todo = new TodoTxtItem(todoRaw, exts);
   // customize user input text
   {
@@ -325,11 +328,11 @@ function generateTableRow(todo) {
     let tableContainerCategories = tableContainerCategoriesTemplate.cloneNode(true);
     let todoTableBodyCellPriority = todoTableBodyCellPriorityTemplate.cloneNode(true);
     let todoTableBodyCellDueDate = todoTableBodyCellDueDateTemplate.cloneNode(true);
-    let todoTableBodyCellTDate = todoTableBodyCellTDateTemplate.cloneNode(true);
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
     let todoTableBodyCellHidden = todoTableBodyCellHiddenTemplate.cloneNode(true);
-    
+    let tableContainerMeta = tableContainerMetaTemplate.cloneNode(true);
+
     const sortBy = userData.sortBy[0];
 
     // if new item was saved, row is being marked
@@ -570,6 +573,23 @@ function generateTableRow(todo) {
     
     // only add the categories to text cell if it has child nodes
     if(tableContainerCategories.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerCategories);
+
+    // add meta 
+    let poromodo = ''; 
+    if (todo.pm && todo.pm.length > 0) {
+      poromodo = `${parseInt(todo.pm, 10)}x${userData.poromodo} `
+    }
+
+    let todoDate = '';
+    if (todo.date && userData.appendStartDate) {
+      if (todo.complete) {
+        todoDate = `${convertDate(todo.date)}-${convertDate(todo.completed)}`
+      } else {
+        todoDate = `${convertDate(todo.date)}`
+      }
+    }
+    tableContainerMeta.innerHTML += `${poromodo}${todoDate}`
+    if(tableContainerMeta.hasChildNodes()) todoTableBodyRow.appendChild(tableContainerMeta);
 
     // return the fully built row
     return todoTableBodyRow;
