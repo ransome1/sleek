@@ -5,8 +5,7 @@ import { generateFilterData } from "./filters.mjs";
 import { handleError } from "./helper.mjs";
 import { items, item, setTodoComplete, generateTodoTxtObject } from "./todos.mjs";
 import { getCaretPosition } from "./helper.mjs";
-import { convertDate } from "./date.mjs";
-import { showRecurrences, setInput } from "./recurrencePicker.mjs";
+import { setInput } from "./recurrencePicker.mjs";
 import { fillDatePickerInput } from "./datePicker.mjs";
 import { userData, setUserData, translations } from "../render.js";
 
@@ -89,9 +88,6 @@ modalForm.onsubmit = async function(event) {
     // create todo object from input value
     let todo = await generateTodoTxtObject(inputValue);
 
-    // we add the current date to the start date attribute of the todo.txt object
-    if(userData.appendStartDate) todo.date = new Date();
-
     // check if todo already exists 
     let index;
     // get the index for EDITING
@@ -126,7 +122,7 @@ modalForm.onsubmit = async function(event) {
     //item.previous = todo;
 
     // send file to main process to save it
-    window.api.send("writeToFile", [inputValue, index]);
+    window.api.send("writeToFile", [todo.raw, index]);
 
     // close and clean up the modal
     resetForm().then(function(response) {
@@ -469,8 +465,6 @@ async function show(todo, templated) {
       
       // this is a new templated todo task
       if(templated) {  
-        // erase the original creation date and description
-        if(userData.appendStartDate) todo.date = new Date();
         todo.text = "____________";
         modalFormInput.value = todo.toString();
         

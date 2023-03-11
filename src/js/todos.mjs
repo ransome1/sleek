@@ -13,7 +13,7 @@ import { generateRecurrence } from "./recurrences.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification, isInViewport } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
-import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension, TagExtension } from "./todotxtExtensions.mjs";
+import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
 const items = { objects: {} }
@@ -112,16 +112,29 @@ async function generateTodoTxtObjects(raw) {
     return Promise.reject(error);
   }
 }
-function generateTodoTxtObject(string) {
-  try {
-    const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ]);
-    todo.raw = string;
-    return Promise.resolve(todo);
-  } catch(error) {
-    error.functionName = editTodo.name;
-    return Promise.reject(error);
+
+/**
+ * generate todo object from string
+ * @param {string} todoRaw 
+ * @returns 
+ */
+async function generateTodoTxtObject(todoRaw) {
+
+  todoRaw = todoRaw.trim()
+  const exts = [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(),
+    new ThresholdExtension(), new PriExtension()];
+  let todo = new TodoTxtItem(todoRaw, exts);
+  // customize user input text
+  {
+    // if turn on appendStartDate and have no
+    if(userData.appendStartDate && todoRaw.length > 0 && todo.date === null) {
+      todo.date = new Date();
+    }
   }
+  todo.raw = todo.toString();
+  return todo
 }
+
 function generateTable(loadAll) {
   try {
 
@@ -832,9 +845,6 @@ async function addTodo(todo) {
 
     // abort if there is no text
     if(!todo.text && !todo.h) return Promise.resolve("Info: Text is missing, no todo is written");
-
-    // we add the current date to the start date attribute of the todo.txt object
-    if(userData.appendStartDate) todo.date = new Date();
 
     // get index of todo
     const index = items.objects.map(function(item) { return item.toString(); }).indexOf(todo.toString());
