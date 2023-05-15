@@ -13,7 +13,7 @@ import { generateRecurrence } from "./recurrences.mjs";
 import { getActiveFile, getDoneFile, handleError, pasteItemToClipboard, generateGenericNotification, generateTodoNotification, isInViewport } from "./helper.mjs";
 import { getConfirmation } from "./prompt.mjs";
 import { show } from "./form.mjs"; 
-import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension, TagExtension } from "./todotxtExtensions.mjs";
+import { SugarDueExtension, RecExtension, ThresholdExtension, PriExtension, TagExtension, PomodoroExtension } from "./todotxtExtensions.mjs";
 
 const item = { previous: "" }
 const items = { objects: {} }
@@ -29,6 +29,7 @@ const todoTable = document.getElementById("todoTable");
 const todoTableBodyCellArchiveTemplate = document.createElement("span");
 const todoTableBodyCellCheckboxTemplate  = document.createElement("div");
 const todoTableBodyCellDueDateTemplate = document.createElement("span");
+const todoTableBodyCellPomodoroTemplate = document.createElement("span");
 const todoTableBodyCellTDateTemplate = document.createElement("span");
 const todoTableBodyCellHiddenTemplate = document.createElement("span");
 const todoTableBodyCellPriorityTemplate = document.createElement("div");
@@ -50,6 +51,7 @@ tableContainerCategoriesTemplate.setAttribute("class", "cell categories");
 todoTableBodyCellCheckboxTemplate.setAttribute("class", "cell checkbox");
 todoTableBodyCellDueDateTemplate.setAttribute("class", "cell hint itemDueDate");
 todoTableBodyCellTDateTemplate.setAttribute("class", "cell hint");
+todoTableBodyCellPomodoroTemplate.setAttribute("class", "cell hint");
 todoTableBodyCellRecurrenceTemplate.setAttribute("class", "cell hint");
 todoTableBodyCellTextTemplate.setAttribute("class", "cell text");
 todoTableBodyCellTextTemplate.setAttribute("href", "#");
@@ -114,7 +116,7 @@ async function generateTodoTxtObjects(raw) {
 }
 function generateTodoTxtObject(string) {
   try {
-    const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension() ]);
+    const todo = new TodoTxtItem(string, [ new SugarDueExtension(), new HiddenExtension(), new RecExtension(), new ThresholdExtension(), new PriExtension(), new PomodoroExtension() ]);
     todo.raw = string;
     return Promise.resolve(todo);
   } catch(error) {
@@ -316,6 +318,7 @@ function generateTableRow(todo) {
     let todoTableBodyCellRecurrence = todoTableBodyCellRecurrenceTemplate.cloneNode(true);
     let todoTableBodyCellArchive = todoTableBodyCellArchiveTemplate.cloneNode(true);
     let todoTableBodyCellHidden = todoTableBodyCellHiddenTemplate.cloneNode(true);
+    let todoTableBodyCellPomodoro = todoTableBodyCellPomodoroTemplate.cloneNode(true);
     
     const sortBy = userData.sortBy[0];
 
@@ -400,6 +403,9 @@ function generateTableRow(todo) {
           if(userData.getPageTitles) getAndSetPageTitle(linkId, text);
 
           return `<span id="linkId${linkId}" class="linkText">${text}</span> <a href="${href}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
+        },
+        listitem() {
+          return todo.text;
         }
       };
 
@@ -508,6 +514,12 @@ function generateTableRow(todo) {
 
       }
       todoTableBodyRow.appendChild(todoTableBodyCellRecurrence);
+    }
+
+    // add pomodoro icon
+    if(todo.pm) {
+      todoTableBodyCellPomodoro.innerHTML = `<i class="fa-regular fa-tomato"></i>`;
+      todoTableBodyRow.appendChild(todoTableBodyCellPomodoro);
     }
 
     // cell for the categories

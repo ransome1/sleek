@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=sleek
-Exec=sleek %U
+Exec=sleek
 Terminal=false
 Type=Application
 Icon=${SNAP}/meta/gui/icon.png

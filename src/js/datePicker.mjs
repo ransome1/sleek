@@ -23,7 +23,8 @@ const datePickerInput = document.getElementById("datePickerInput");
 const datePickerResult = document.getElementById("datePickerResult");
 datePickerResult.innerHTML = translations.dueDate;
 
-let 
+let
+  datePicker,
   extension,
   modalFormInput;
 
@@ -113,8 +114,10 @@ async function createDatepickerInstance(attachToElement, extension, todo ) {
       }
     };
 
+    if(datePicker) datePicker.destroy();
+
     // create datepicker instance
-    const datePicker = await new Datepicker(attachToElement, datePickerOptions);
+    datePicker = await new Datepicker(attachToElement, datePickerOptions);
     
     // pre select the due date if it is available
     if(todo.due) datePicker.setDate(todo.due);

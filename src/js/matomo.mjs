@@ -71,7 +71,7 @@ function configureMatomo() {
     _paq.push(["enableLinkTracking"]);
     _paq.push(["trackVisibleContentImpressions"]);
     (function() {
-      var u="https://www.robbfolio.de/matomo/";
+      var u="https://www.datenkrake.eu/matomo/";
       _paq.push(["setTrackerUrl", u+"matomo.php"]);
       _paq.push(["setSiteId", "3"]);
       var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];

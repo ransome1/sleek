@@ -138,4 +138,18 @@ function resolveRelativeDate(relativeDate) {
     return addIntervalToDate(today, increment, unit);
 }
 
-export { RecExtension, SugarDueExtension, ThresholdExtension, PriExtension, TagExtension };
+function PomodoroExtension() {
+	this.name = "pm";
+}
+PomodoroExtension.prototype = new TodoTxtExtension();
+PomodoroExtension.prototype.parsingFunction = function (line) {
+	let regex = /pm:(\d+)/;
+	let m = regex.exec(line)
+	if (m !== null) {
+		let pm = m[1];
+		return [pm, line.replace(regex, ''), pm];
+	}
+	return [null, null, null];
+};
+
+export { RecExtension, SugarDueExtension, ThresholdExtension, PriExtension, PomodoroExtension, TagExtension };

@@ -100,7 +100,7 @@ export function showGenericMessage(text, autoClose) {
 // export function fetchMessages() {
 //   try {
 
-//     const fetchPromise = fetch("https://www.robbfolio.de/dev/fetch.json", {
+//     const fetchPromise = fetch("https://www.datenkrake.eu/dev/fetch.json", {
 //       method: "POST",
 //       cache: "no-cache",
 //       headers: {

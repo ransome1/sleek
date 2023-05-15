@@ -125,6 +125,9 @@ modalForm.onsubmit = async function(event) {
     // mark the todo for anchor jump after next reload
     //item.previous = todo;
 
+    // remove white space at the end of line
+    inputValue = inputValue.trimEnd()
+
     // send file to main process to save it
     window.api.send("writeToFile", [inputValue, index]);
 
