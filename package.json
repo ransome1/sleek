@@ -1,162 +1,30 @@
 {
-  "name": "sleek",
-  "productName": "sleek",
-  "version": "1.3.2-rc.1",
-  "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
-  "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
-  "category": "ProjectManagement",
-  "keywords": [
-    "todo.txt",
-    "todo",
-    "productivity",
-    "tasks"
-  ],
-  "author": "Robin Ahle <ransome@duck.com>",
-  "copyright": "Copyright © 2022 ${author}",
-  "license": "MIT",
-  "repository": "https://github.com/ransome1/sleek/",
-  "icon": "assets/icons/sleek.png",
-  "main": "src/main.js",
-  "buildResources": "src",
-  "build": {
-    "buildVersion": "23",
-    "files": [
-      "!flatpak-node${/*}",
-      "!snap${/*}",
-      "!flatpak${/*}",
-      "!.git${/*}",
-      "!.github${/*}",
-      "!dist${/*}",
-      "!**.pfx",
-      "!**.bak",
-      "!**.md",
-      "!**.gitignore",
-      "!yarn.lock",
-      "!yarn-error.log",
-      "!assets/screenshots${/*}",
-      "!assets/store_badges${/*}",
-      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,__tests__,tests,powered-test,example,examples,*.d.ts}",
-      "!**/node_modules/.bin",
-      "!**/*.{o,hprof,orig,pyc,pyo,rbc}",
-      "!**/._*",
-      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.flowconfig,.yarn-metadata.json,.idea,appveyor.yml,.travis.yml,circle.yml,npm-debug.log,.nyc_output,yarn.lock,.yarn-integrity}",
-      "!**/node_modules/search-index/si${/*}"
-    ],
-    "linux": {
-      "icon": "assets/icons/sleek.png",
-      "category": "ProjectManagement",
-      "target": [
-        "deb",
-        "freebsd",
-        "rpm",
-        "AppImage"
-      ]
-    },
-    "mac": {
-      "appId": "com.todotxt.sleek",
-      "target": [
-        {
-          "target": "default",
-          "arch": "universal"
-        }
-      ],
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist",
-      "icon": "build/icon.icns",
-      "category": "public.app-category.productivity",
-      "artifactName": "${productName}-${version}-mac.${ext}",
-      "darkModeSupport": true
-    },
-    "dmg": {
-      "sign": false,
-      "background": "build/background.tiff",
-      "window": {
-        "width": 720,
-        "height": 380
-      }
-    },
-    "mas": {
-      "asarUnpack": [
-        "node_modules/fsevents"
-      ],
-      "hardenedRuntime": false,
-      "provisioningProfile": "build/distribution.provisionprofile",
-      "entitlements": "build/entitlements.mas.plist",
-      "entitlementsInherit": "build/entitlements.mas.inherit.plist"
-    },
-    "win": {
-      "target": [
-        "zip",
-        "portable",
-        "nsis"
-      ],
-      "icon": "assets/icons/sleek.ico",
-      "artifactName": "${productName}-${version}-win.${ext}"
-    },
-    "nsis": {
-      "artifactName": "${productName}-${version}-win-Setup.${ext}"
-    },
-    "appx": {
-      "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
-      "identityName": "17450RobinAhle.sleektodomanager",
-      "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
-      "publisherDisplayName": "Robin Ahle",
-      "applicationId": "RobinAhle.sleektodomanager"
-    },
-    "afterSign": "build/notarize.js"
-  },
-  "appImage": {
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
-  },
-  "rpm": {
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
-  },
-  "deb": {
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
-  },
-  "freebsd": {
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
-  },
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
   "scripts": {
-    "build:windows": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -w --publish never",
-    "build:linux": "cross-env NODE_ENV=production yarn build:css && yarn build:pegjs && electron-builder -l --publish never",
-    "build:mas": "yarn build:css && yarn build:pegjs && electron-builder -m mas --universal --publish never && bash build/resignPkg.sh",
-    "build:macos": "yarn build:css && yarn build:pegjs && electron-builder -m zip --universal --publish never && bash build/resignPkg.sh",
-    "build:appx": "yarn build:css && yarn build:pegjs && electron-builder -w appx --publish never",
-    "build:css": "sass src/scss/style.scss:src/css/style.css",
-    "build:pegjs": "peggy --format es --output src/js/filterlang.mjs src/js/filterlang.pegjs",
-    "pack": "yarn build:css && yarn build:pegjs && electron-builder --dir",
-    "lint": "eslint --ext .js, src --ext .mjs, src",
-    "sass": "sass -w src/scss/style.scss:src/css/style.css",
-    "start": "yarn sass & electron .",
-    "test": "yarn playwright test --config=test/playwright.config.js",
-    "test1": "yarn playwright test -g 'Creating todos' --config=test/playwright.config.js"
+    "start": "electron .",
+    "watch": "nodemon --exec electron ."
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^25.1.0",
+    "nodemon": "^2.0.22"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.1.1",
-    "@playwright/test": "^1.31.2",
-    "bulma": "^0.9.2",
-    "chokidar": "^3.5.1",
-    "electron-updater": "^5.3.0",
-    "electron-windows-badge": "^1.1.0",
-    "i18next": "^22.0.4",
-    "i18next-fs-backend": "^2.0.0",
-    "jstodotxt": "^0.10.0",
-    "marked": "^4.0.12",
-    "peggy": "^2.0.1",
-    "playwright": "^1.31.2",
-    "sass": "^1.34.1",
-    "sugar": "^2.0.6",
-    "vanillajs-datepicker": "^1.1.4"
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3",
-    "electron": "18.3.7",
-    "electron-builder": "23.0.2",
-    "electron-notarize": "^1.2.2",
-    "electron-reloader": "^1.2.2",
-    "eslint": "^8.6.0"
+    "chokidar": "^3.5.3",
+    "electron-store": "^8.1.0",
+    "jstodotxt": "^1.0.0-alpha.0",
+    "sugar": "^2.0.6"
   }
 }
