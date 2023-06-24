@@ -4,10 +4,13 @@ import fs from 'fs';
 import { Item } from 'jsTodoTxt';
 import { store, mainWindow } from '../main.ts';
 
+export let todoTxtObjects;
+export let lines;
+
 async function processTodoTxtObjects(file) {
   try {
     const fileContent = await fs.readFileSync(file, 'utf8');
-    const todoTxtObjects = sortTodoTxtObjects(groupTodoTxtObjects(createTodoTxtObjects(fileContent)));
+    todoTxtObjects = sortTodoTxtObjects(groupTodoTxtObjects(createTodoTxtObjects(fileContent)));
     return todoTxtObjects;
   } catch (error) {
     throw error;
@@ -19,7 +22,8 @@ function createTodoTxtObjects(fileContent) {
     throw new Error("No file content found");
   }
 
-  const lines = fileContent.split('\n');
+  lines = fileContent.split('\n');
+
   const todoTxtObjects = lines.map((line, i) => {
     const item = new Item(line);
     const extensions = item.extensions();

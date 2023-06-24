@@ -1,8 +1,10 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
+  | 'changeCompleteState'
   | 'receiveTodoTxtObjects'
   | 'requestTodoTxtObjects'
+  | 'reloadGrid'
   | 'displayError';
 
 const electronHandler = {

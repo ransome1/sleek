@@ -22,5 +22,5 @@
 		"completed"
 	],
 	"invertGroupSorting": false,
-	"sortCompletedAtTheEnd": true
+	"sortCompletedAtTheEnd": false
 }

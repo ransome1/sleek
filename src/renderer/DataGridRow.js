@@ -1,13 +1,20 @@
 import React from 'react';
-import { Button } from '@mui/material';
-import theme from './Theme.js';
+import { Button, Checkbox } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
+import theme from './Theme.js';
 
-const TodoTxtDataGridRow = ({ rowData }) => {
-  const body = rowData.body;
+const DataGridRow = ({ rowData }) => {
+
+  if(rowData.group) return ( <h1>{rowData.body}</h1> )
+
+  const handleCheckboxChange = (event) => {
+    window.electron.ipcRenderer.send('changeCompleteState', rowData.id, event.target.checked);
+  };
+
+  if(rowData.body === '') return null
 
   // Split the string into an array of words
-  const words = body.split(' ');
+  const words = rowData.body.split(' ');
 
   // Function to check if a word matches the pattern
   const isContext = (word) => /^@\S+$/.test(word);
@@ -20,6 +27,10 @@ const TodoTxtDataGridRow = ({ rowData }) => {
   return (
     <ThemeProvider theme={theme}>
       <div id={rowData.id}>
+        <Checkbox 
+          checked={rowData.complete}
+          onChange={handleCheckboxChange} 
+        />
         {words.map((word, index) => {
           if (
             isContext(word) ||
@@ -30,11 +41,15 @@ const TodoTxtDataGridRow = ({ rowData }) => {
           ) {
             return (
               <Button variant="contained" size="small" key={index}>
-                {word}
+                {word}{' '}
               </Button>
             );
           } else {
-            return <React.Fragment key={index}>{word} </React.Fragment>;
+            return (
+              <React.Fragment key={index}>
+                {word}{' '}
+              </React.Fragment>
+            );
           }
         })}
       </div>
@@ -42,4 +57,4 @@ const TodoTxtDataGridRow = ({ rowData }) => {
   );
 };
 
-export { TodoTxtDataGridRow };
+export { DataGridRow };
