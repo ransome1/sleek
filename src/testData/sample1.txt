@@ -1,0 +1,27 @@
+(C) 2023-12-01 +testProject test2 @testContext due:2023-06-03
+(C) 2023-12-01 test6 +testProject @testContext t:2023-01-02
+(C) 2023-12-01 test7 +testProject @testContext due:2023-06-30
+x (C) test1 +testProject @testContext due:2023-06-02
+(C) test3 +testProject @testContext due:2023-06-01 rec:w
+(C) 2023-12-01 test4 +testProject @testContext due:2023-06-05 t:2023-01-01
+(C) 2023-12-01 test5 +testProject @testContext due:2023-06-04
+x (C) 2023-12-12 test5 +testProject @testContext due:2023-06-02
+(C) 2023-12-12 test5 +testProject h:1 @testContext due:2023-06-05 rec:d
+(C) 2023-12-12 test5 +testProject @testContext due:2023-06-01 t:2023-01-01
+x (C) 2023-12-12 test5 +testProject @testContext due:2023-06-03 t:2023-01-02
+(C) 2023-12-12 test5 +testProject @testContext due:2023-06-04
+
+
+test2 +testProject @testContext due:2023-06-03
+test6 +testProject @testContext t:2023-01-02
+2023-12-02 test7 +testProject h:1 @testContext due:2023-06-30
+x test1 +testProject @testContext due:2023-06-02 rec:2w
+test3 +testProject @testContext due:2023-06-01
+x 2023-12-15 test4 +testProject @testContext due:2023-06-05 t:2023-01-01
+2023-12-01 test5 +testProject @testContext due:2023-06-04
+
+x (A) 2023-12-12 test5 +testProject @testContext due:2023-06-02
+(A) 2023-12-12 test5 +testProject h:1 @testContext due:2023-06-05
+(A) 2023-12-12 test5 +testProject @testContext due:2023-06-01 t:2023-01-01
+x (A) 2023-12-12 test5 +testProject @testContext due:2023-06-03 t:2023-01-02
+(A) 2023-12-12 test5 +testProject @testContext due:2023-06-04

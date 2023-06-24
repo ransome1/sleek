@@ -1,0 +1,26 @@
+{
+	"files": [
+		{
+			"active": 0,
+			"path": "/Users/ransome/Development/sleek/src/testData/sample.txt"
+		},
+		{
+			"active": 1,
+			"path": "/Users/ransome/Development/sleek/src/testData/sample1.txt"
+		},
+		{
+			"active": 0,
+			"path": "/Users/ransome/Development/sleek/src/testData/empty.txt"
+		}
+	],
+	"grouping": "priority",
+	"sorting": [
+		"due",
+		"created",
+		"t",
+		"priority",
+		"completed"
+	],
+	"invertGroupSorting": false,
+	"sortCompletedAtTheEnd": true
+}

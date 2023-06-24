@@ -1,0 +1,6 @@
+(B) There is a more button on the right end of this row if you hover over it. There you can delete todos instead of just completing them due:2022-04-08 rec:2w t:2022-05-27 +sleek @features
+(F) 2020-12-22 Check out some keyboard shortcuts: <strong>"CMD or CTRL and n"</strong> for adding todos, <strong>"CMD or CTRL and f"</strong> to search for todos or <strong>"CMD or CTRL and o"</strong> to open a different todo.txt file. Use <strong>"CMD or CTRL and d"</strong> to toggle the dark mode due:2022-04-10 pri:C +sleek @features @shortcuts
+x 2022-06-10 Items are grouped by their priorities and within those are sorted by due date. If a todo has no due date it will be sorted according to it's position in the file   @   @  + pri:C due:2022-05-12 +sleek @features
+If you don't like to see completed todos, <code>use the toggle</code> to turn them off. Use the "CMD or CTRL and h" shortcut. due:2022-02-03 +sleek @features @filter h:1
+x 2020-12-22 Download sleek (thanks!) +sleek @laptop
+x 2022-06-10 Items are grouped by their priorities and within those are sorted by due date. If a todo has no due date it will be sorted according to it's position in the file   @   @  + pri:C due:2022-05-12 +sleek @features
