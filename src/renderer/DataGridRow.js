@@ -21,7 +21,13 @@ const DataGridRow = ({ rowData }) => {
   const isProject = (word) => /^\+\S+$/.test(word);
   const isDueDate = (word) => /\bdue:\d{4}-\d{2}-\d{2}\b/.test(word);
   const isThresholdDate = (word) => /\bt:\d{4}-\d{2}-\d{2}\b/.test(word);
-  const isRecurrance = (word) => /\brec:[dwmy]\b/.test(word);
+  const isRecurrance = (word) => /^rec:\d*[dwmy]$/.test(word);
+  const isHidden = (word) => /\bh:1\b/.test(word);
+  const isTag = (word) => /^#\S+$/.test(word);
+  const isPomodoro = (word) => {
+    const isPmSubstring = /pm:\d+\b/.test(word);
+    return /^#\S+$/.test(word) || isPmSubstring;
+  };
 
   // Render the row with replaced words as spans
   return (
@@ -37,7 +43,10 @@ const DataGridRow = ({ rowData }) => {
             isProject(word) ||
             isDueDate(word) ||
             isThresholdDate(word) ||
-            isRecurrance(word)
+            isRecurrance(word) ||
+            isHidden(word) ||
+            isTag(word) ||
+            isPomodoro(word)
           ) {
             return (
               <Button variant="contained" size="small" key={index}>

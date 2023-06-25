@@ -3,13 +3,14 @@ import path from 'path';
 import Store from 'electron-store';
 const configFilePath = path.join(__dirname, '../testData/');
 export const store = new Store({ cwd: configFilePath });
-
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import createFileWatchers from './modules/FileWatchers.ts';
 import './modules/ipcEvents.ts';
+import { activeFile } from './util.ts'; 
+import processTodoTxtObjects from './modules/TodoTxtObjects.ts';
 
 const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
@@ -60,6 +61,9 @@ const createWindow = () => {
 
   mainWindow
     .on('ready-to-show', () => {
+
+      processTodoTxtObjects(activeFile.path);
+
       if (process.env.START_MINIMIZED) {
         mainWindow.minimize();
       } else {

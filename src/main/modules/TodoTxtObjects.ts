@@ -10,17 +10,15 @@ export let lines;
 async function processTodoTxtObjects(file) {
   try {
     const fileContent = await fs.readFileSync(file, 'utf8');
-    todoTxtObjects = sortTodoTxtObjects(groupTodoTxtObjects(createTodoTxtObjects(fileContent)));
-    return todoTxtObjects;
+    todoTxtObjects = await sortTodoTxtObjects(groupTodoTxtObjects(createTodoTxtObjects(fileContent)));
+    mainWindow.webContents.send('receiveTodoTxtObjects', todoTxtObjects);
+    //return todoTxtObjects;
   } catch (error) {
     throw error;
   }
 }
 
 function createTodoTxtObjects(fileContent) {
-  if (!fileContent) {
-    throw new Error("No file content found");
-  }
 
   lines = fileContent.split('\n');
 

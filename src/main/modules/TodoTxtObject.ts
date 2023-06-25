@@ -3,7 +3,7 @@ import { Item } from 'jsTodoTxt';
 import { activeFile } from '../util';
 import fs from 'fs/promises';
 
-async function changeCompleteState(id, state) {
+function changeCompleteState(id, state) {
   const todosAsFlatArray = Object.values(todoTxtObjects).flat();
   const lineNumber = parseInt(id);
   const todo = todosAsFlatArray.find(item => item.id === lineNumber);
@@ -11,17 +11,17 @@ async function changeCompleteState(id, state) {
   if (todo) {
     todo.complete = state;
     state ? (todo.completed = new Date()) : (todo.completed = null);
-    await createTodoTxtObject(todo, lineNumber);
+    createTodoTxtObject(todo, lineNumber);
   }
 }
 
-async function createTodoTxtObject(todoObject, lineNumber) {
+function createTodoTxtObject(todoObject, lineNumber) {
   const todoTxtObject = new Item(todoObject.body);
   todoTxtObject.setPriority(todoObject.priority);
   todoTxtObject.setCreated(todoObject.created ? todoObject.created : new Date());
   todoTxtObject.setComplete(todoObject.complete);
   todoTxtObject.setCompleted(todoObject.completed);
-  await writeTodoTxtObjectToFile(todoTxtObject, lineNumber);
+  writeTodoTxtObjectToFile(todoTxtObject, lineNumber);
 }
 
 async function writeTodoTxtObjectToFile(todoTxtObject, lineNumber) {

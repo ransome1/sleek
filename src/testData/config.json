@@ -2,15 +2,23 @@
 	"files": [
 		{
 			"active": 0,
-			"path": "/Users/ransome/Development/sleek/src/testData/sample.txt"
+			"path": "/Users/ransome/Development/sleek/src/testData/sample.txt",
+			"file": "sample.txt"
 		},
 		{
 			"active": 1,
-			"path": "/Users/ransome/Development/sleek/src/testData/sample1.txt"
+			"path": "/Users/ransome/Development/sleek/src/testData/sample1.txt",
+			"file": "sample1.txt"
 		},
 		{
 			"active": 0,
-			"path": "/Users/ransome/Development/sleek/src/testData/empty.txt"
+			"path": "/Users/ransome/Development/sleek/src/testData/empty.txt",
+			"file": "empty.txt"
+		},
+		{
+			"active": 0,
+			"path": "/Users/ransome/Development/sleek/src/testData/long.txt",
+			"file": "long.txt"
 		}
 	],
 	"grouping": "priority",

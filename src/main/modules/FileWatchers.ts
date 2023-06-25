@@ -13,13 +13,13 @@ function createFileWatchers(files) {
   watcher
     .on('add', (file) => console.log(`File ${file} has been added`))
     .on('change', async (file) => {
+      
       console.log(`File ${file} has been changed`);
 
       if(file !== activeFile.path) return false
 
-      const todoTxtObjects = await processTodoTxtObjects(file);
-      mainWindow.webContents.send('reloadGrid');
-      console.log(`File ${file} has been reloaded`);
+      processTodoTxtObjects(file);
+      
     })
     .on('unlink', (file) => console.log(`File ${file} has been unlinked`))
     .on('ready', () => console.log('Initial scan complete. Ready for changes'));
