@@ -5,6 +5,7 @@ export type Channels =
   | 'receiveTodoTxtObjects'
   | 'requestTodoTxtObjects'
   | 'reloadGrid'
+  | 'showSplashScreen'
   | 'displayError';
 
 const electronHandler = {

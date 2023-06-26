@@ -1,0 +1,5 @@
+nav {
+	width: 5em;
+	background: #f0f0f0;
+	flex-shrink: 0;
+}

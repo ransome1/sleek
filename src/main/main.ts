@@ -1,8 +1,10 @@
 import { app, BrowserWindow, shell } from 'electron';
 import path from 'path';
 import Store from 'electron-store';
+
 const configFilePath = path.join(__dirname, '../testData/');
 export const store = new Store({ cwd: configFilePath });
+
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -62,7 +64,7 @@ const createWindow = () => {
   mainWindow
     .on('ready-to-show', () => {
 
-      processTodoTxtObjects(activeFile.path);
+      createFileWatchers(store.get('files'));
 
       if (process.env.START_MINIMIZED) {
         mainWindow.minimize();
@@ -71,8 +73,8 @@ const createWindow = () => {
       }
     })
     .on('closed', () => {
-    mainWindow = null;
-  });
+      mainWindow = null;
+    });
 
   // const menuBuilder = new MenuBuilder(mainWindow);
   // menuBuilder.buildMenu();
@@ -85,8 +87,8 @@ const createWindow = () => {
   if(!isDebug) new AppUpdater();
 };
 
-
 app
+  .setMaxListeners(1)
   .on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
       app.quit();
@@ -94,10 +96,7 @@ app
   })
   .whenReady()
   .then(() => {
-
     createWindow();
-    createFileWatchers(store.get('files'));
-
     app.on('activate', () => {
       if (mainWindow === null) {
         createWindow();

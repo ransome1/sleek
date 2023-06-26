@@ -3,7 +3,10 @@ import { URL } from 'url';
 import path from 'path';
 import { store } from './main.ts';
 
-export const activeFile = store.get('files').find((file) => file.active === 1);
+export function activeFile() {
+  const activeFile = store.get('files').find((file) => file.active === 1);
+  return activeFile;
+}
 
 export function resolveHtmlPath(htmlFileName: string) {
   if (process.env.NODE_ENV === 'development') {

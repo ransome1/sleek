@@ -1,141 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import CssBaseline from '@mui/material/CssBaseline';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import TodoTxtDataGrid from './DataGrid.js';
-import FileTabs from './FileTabs.js';
-import DrawerComponent from './Drawer.js';
-
-export const drawerWidth = 240;
-
-export const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: 'hidden',
-});
-
-export const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-const StyledAppBar = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-export const useOpenState = () => {
-  const [open, setOpen] = useState(false);
-  return { open, setOpen };
-};
+import { Box, CssBaseline } from '@mui/material';
+import NavigationComponent from './Navigation';
+import DrawerComponent from './Drawer';
+import TodoTxtDataGrid from './DataGrid';
+import SplashScreen from './SplashScreen';
+import FileTabs from './FileTabs';
+import './App.css';
 
 const App = () => {
   const [todoTxtObjects, setTodoTxtObjects] = useState(null);
-  const [userPreferences, setuserPreferences] = useState(null);
+  const [splashScreen, setSplashScreen] = useState('Splash Screen Content'); // Set the initial value for splashScreen
 
-  const [reloadGrid, setReloadGrid] = useState(false);
-  const { open, setOpen } = useOpenState();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleReloadGrid = () => {
-    setReloadGrid(true);
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  const receiveTodoTxtObjects = (todoTxtObjects) => {
+    setSplashScreen(null);
+    setTodoTxtObjects(todoTxtObjects);
+  };
+
+  const showSplashScreen = (screen) => {
+    setTodoTxtObjects(null);
+    setSplashScreen(screen);
   };
 
   useEffect(() => {
-    const receiveTodoTxtObjects = (todoTxtObjects) => {
-      setTodoTxtObjects(todoTxtObjects);
-    };
-
     window.electron.ipcRenderer.on('receiveTodoTxtObjects', receiveTodoTxtObjects);
-
-    
-  }, [reloadGrid]);  
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-
-  //       const receiveTodoTxtObjects = await new Promise((resolve, reject) => {
-  //         window.electron.ipcRenderer.once('receiveTodoTxtObjects', resolve);
-  //         window.electron.ipcRenderer.send('requestTodoTxtObjects');
-  //       });
-
-  //       setTodoTxtObjects(receiveTodoTxtObjects);
-  //       setReloadGrid(false);
-
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [reloadGrid]);
-
-  // useEffect(() => {
-  //   window.electron.ipcRenderer.on('reloadGrid', handleReloadGrid);
-  //   return () => {
-  //     window.electron.ipcRenderer.off('reloadGrid', handleReloadGrid);
-  //   };
-  // }, []);
-
-  const theme = useTheme();
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    window.electron.ipcRenderer.on('showSplashScreen', showSplashScreen);
+    window.electron.ipcRenderer.send('requestTodoTxtObjects');
+  }, []);
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box className="wrapper1">
       <CssBaseline />
-      <StyledAppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+
+      <NavigationComponent toggleDrawer={toggleDrawer} />
+
+      <Box className="wrapper2">
+        <DrawerComponent isOpen={isDrawerOpen} />
+        <Box className="wrapper3">
           <FileTabs />
-        </Toolbar>
-      </StyledAppBar>
-      <DrawerComponent open={open} setOpen={setOpen} handleDrawerClose={handleDrawerClose} />
-      <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />
+          <Box
+            className="DataGrid"
+            style={{ width: `calc(100vw - ${5 * parseFloat(getComputedStyle(document.documentElement).fontSize)}px)` }}
+          >
+            {todoTxtObjects !== null && <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />}
+            {splashScreen !== null && <SplashScreen screen={splashScreen} />} {/* Pass the splashScreen value as a prop */}
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };

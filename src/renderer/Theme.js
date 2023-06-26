@@ -12,9 +12,7 @@ const theme = createTheme({
           '&:active': {
             boxShadow: 'none',
           },
-          // Add more styles for other states if needed
         },
-        // Add more style overrides for other button variants if needed
       },
     },
   },

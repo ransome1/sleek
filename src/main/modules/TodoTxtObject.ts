@@ -34,7 +34,7 @@ async function writeTodoTxtObjectToFile(todoTxtObject, lineNumber) {
   const modifiedContent = lines.join('\n');
 
   try {
-    await fs.writeFile(activeFile.path, modifiedContent, 'utf8');
+    await fs.writeFile(activeFile().path, modifiedContent, 'utf8');
     console.log(`Line ${lineNumber + 1} overwritten successfully.`);
   } catch (error) {
     console.error(error);

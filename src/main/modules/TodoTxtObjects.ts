@@ -11,8 +11,11 @@ async function processTodoTxtObjects(file) {
   try {
     const fileContent = await fs.readFileSync(file, 'utf8');
     todoTxtObjects = await sortTodoTxtObjects(groupTodoTxtObjects(createTodoTxtObjects(fileContent)));
-    mainWindow.webContents.send('receiveTodoTxtObjects', todoTxtObjects);
-    //return todoTxtObjects;
+    if (Object.keys(todoTxtObjects).length === 0) {
+      mainWindow.webContents.send('showSplashScreen', 'noTodoTxtObjects');
+    } else {
+      mainWindow.webContents.send('receiveTodoTxtObjects', todoTxtObjects);
+    }
   } catch (error) {
     throw error;
   }
@@ -29,7 +32,7 @@ function createTodoTxtObjects(fileContent) {
     const t = extensions.find(extension => extension.key === "t")?.value || null;
     const rec = extensions.find(extension => extension.key === "rec")?.value || null;
 
-    return {
+    const todoTxtObject = {
       id: i,
       body: item.body(),
       created: item.created(),
@@ -41,6 +44,12 @@ function createTodoTxtObjects(fileContent) {
       t,
       rec
     };
+
+    if(todoTxtObject.body === '') {
+      return null
+    } else {
+      return todoTxtObject
+    }
   });
 
   return todoTxtObjects;
@@ -53,6 +62,11 @@ function groupTodoTxtObjects(todoTxtObjects) {
 
   const grouping = store.get('grouping');
   const groupedTodoTxtObjects = todoTxtObjects.reduce((result, todoTxtObject) => {
+
+    if (todoTxtObject === null) {
+      return result;
+    }
+
     const groupTitle = todoTxtObject[grouping] ?? null;
     result[groupTitle] ??= [];
     result[groupTitle].push(todoTxtObject);
