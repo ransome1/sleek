@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
 import { Box, CssBaseline } from '@mui/material';
 import NavigationComponent from './Navigation';
 import DrawerComponent from './Drawer';
 import TodoTxtDataGrid from './DataGrid';
 import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs';
+import theme from './Theme';
 import './App.css';
 
 const App: React.FC = () => {
@@ -13,7 +15,8 @@ const App: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [files, setFiles] = useState<object[]>([]);
 
-  const toggleDrawer = () => {
+  const toggleDrawer: any = () => {
+    console.log(toggleDrawer)
     setIsDrawerOpen(!isDrawerOpen);
   };
 
@@ -52,26 +55,28 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <Box className="wrapper1">
-      <CssBaseline />
-      <NavigationComponent toggleDrawer={toggleDrawer} />
-      <Box className="wrapper2">
-        <DrawerComponent isOpen={isDrawerOpen} />
-        <Box className="wrapper3">
-          <FileTabs files={files} />
-          <Box
-            className="Content"
-            style={{ width: `calc(100vw - ${5 * parseFloat(getComputedStyle(document.documentElement).fontSize)}px)` }}
-          >
-            {splashScreen && (!todoTxtObjects || Object.keys(todoTxtObjects).length === 0) ? (
-              <SplashScreen screen={splashScreen} />
-            ) : (
-              <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />
-            )}
+    <ThemeProvider theme={theme}>
+      <Box className="wrapper1">
+        <CssBaseline />
+        <NavigationComponent toggleDrawer={toggleDrawer} />
+        <Box className="wrapper2">
+          <DrawerComponent isOpen={isDrawerOpen} />
+          <Box className="wrapper3">
+            <FileTabs files={files} />
+            <Box
+              className="Content"
+              style={{ width: `calc(100vw - ${5 * parseFloat(getComputedStyle(document.documentElement).fontSize)}px)` }}
+            >
+              {splashScreen && (!todoTxtObjects || Object.keys(todoTxtObjects).length === 0) ? (
+                <SplashScreen screen={splashScreen} />
+              ) : (
+                <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />
+              )}
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 

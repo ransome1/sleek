@@ -33,9 +33,9 @@ describe('App', () => {
 
 	it('renders DrawerComponent when isDrawerOpen is true', () => {
 		render(<App />);
-		const toggleDrawer = screen.getByTestId('toggle-drawer');
+		const filterButton = screen.getByTestId('navigation-button-filter');
 		act(() => {
-			toggleDrawer.click();
+			filterButton.click();
 		});
 		expect(screen.getByTestId('drawer-component')).toBeInTheDocument();
 	});

@@ -1,5 +1,29 @@
 nav {
-	width: 5em;
-	background: #f0f0f0;
-	flex-shrink: 0;
+  height: 100vh;
+  background: #f0f0f0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
+
+nav > * {
+  width: 5em;
+  height: 5em;
+}
+
+nav div {
+  font-family: FreeSansBold;
+  line-height: 5em;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(0.33turn, #1b5551, #813e93);
+}
+
+nav button {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05)!important;
+}
+
+nav button:nth-child(6) {
+	margin-top: auto;
+}
+
