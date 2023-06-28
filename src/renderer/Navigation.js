@@ -3,8 +3,8 @@ import './Navigation.css';
 
 const NavigationComponent = ({ toggleDrawer }) => {
   return (
-    <nav>
-      <button onClick={toggleDrawer}>Toggle Drawer</button>
+    <nav data-testid='navigation-component'>
+      <button data-testid='toggle-drawer' onClick={toggleDrawer}>Toggle Drawer</button>
       {/* Additional app bar content */}
     </nav>
   );

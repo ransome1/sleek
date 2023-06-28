@@ -7,6 +7,7 @@ const drawerWidth = 240;
 const DrawerComponent = ({ isOpen }) => {
   return (
     <Drawer
+      data-testid='drawer-component'
       variant='persistent'
       anchor='left'
       open={isOpen}

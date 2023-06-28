@@ -6,6 +6,10 @@ import './DataGrid.css';
 
 const TodoTxtDataGrid = ( { todoTxtObjects } ) => {
 
+  if (!todoTxtObjects || Object.keys(todoTxtObjects).length === 0) {
+    return null;
+  }  
+
   const rowRenderer = ({ index, key, style }) => {
     const rowData = rows[index];
     if (rowData.group) {
@@ -33,9 +37,12 @@ const TodoTxtDataGrid = ( { todoTxtObjects } ) => {
       }, [])
     : [];
 
+  const listTestId = 'data-grid';
+
   return (
-      <AutoSizer>
-        {({ height, width }) => (
+    <AutoSizer>
+      {({ height, width }) => (
+        <div data-testid="data-grid-component">
           <List
             width={width}
             height={height}
@@ -43,8 +50,9 @@ const TodoTxtDataGrid = ( { todoTxtObjects } ) => {
             rowHeight={50}
             rowRenderer={rowRenderer}
           />
-        )}
-      </AutoSizer>
+        </div>
+      )}
+    </AutoSizer>
   );
 };
 

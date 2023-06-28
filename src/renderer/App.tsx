@@ -7,48 +7,67 @@ import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs';
 import './App.css';
 
-const App = () => {
-  const [todoTxtObjects, setTodoTxtObjects] = useState(null);
-  const [splashScreen, setSplashScreen] = useState('Splash Screen Content'); // Set the initial value for splashScreen
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+const App: React.FC = () => {
+  const [todoTxtObjects, setTodoTxtObjects] = useState<object>({});
+  const [splashScreen, setSplashScreen] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [files, setFiles] = useState<object[]>([]);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  const receiveTodoTxtObjects = (todoTxtObjects) => {
+  const receiveTodoTxtObjects = (todoTxtObjects: any) => {
     setSplashScreen(null);
     setTodoTxtObjects(todoTxtObjects);
   };
 
-  const showSplashScreen = (screen) => {
-    setTodoTxtObjects(null);
+  const showSplashScreen = (screen: string) => {
+    setTodoTxtObjects({});
     setSplashScreen(screen);
+  };
+
+  const displayError = (error: string) => {
+    console.error('Main process ' + error);
   };
 
   useEffect(() => {
     window.electron.ipcRenderer.on('receiveTodoTxtObjects', receiveTodoTxtObjects);
-    window.electron.ipcRenderer.on('showSplashScreen', showSplashScreen);
+    window.electron.ipcRenderer.on('showSplashScreen', showSplashScreen as (...args: unknown[]) => void);
+    window.electron.ipcRenderer.on('displayErrorFromMainProcess', displayError as (...args: unknown[]) => void);
     window.electron.ipcRenderer.send('requestTodoTxtObjects');
+
+    const requestFiles = async () => {
+      try {
+        const files = await new Promise<object[]>((resolve, reject) => {
+          window.electron.ipcRenderer.once('receiveFiles', resolve as (...args: unknown[]) => void);
+          window.electron.ipcRenderer.send('requestFiles');
+        });
+        setFiles(files);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    requestFiles();
   }, []);
 
   return (
     <Box className="wrapper1">
       <CssBaseline />
-
       <NavigationComponent toggleDrawer={toggleDrawer} />
-
       <Box className="wrapper2">
         <DrawerComponent isOpen={isDrawerOpen} />
         <Box className="wrapper3">
-          <FileTabs />
+          <FileTabs files={files} />
           <Box
-            className="DataGrid"
+            className="Content"
             style={{ width: `calc(100vw - ${5 * parseFloat(getComputedStyle(document.documentElement).fontSize)}px)` }}
           >
-            {todoTxtObjects !== null && <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />}
-            {splashScreen !== null && <SplashScreen screen={splashScreen} />} {/* Pass the splashScreen value as a prop */}
+            {splashScreen && (!todoTxtObjects || Object.keys(todoTxtObjects).length === 0) ? (
+              <SplashScreen screen={splashScreen} />
+            ) : (
+              <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />
+            )}
           </Box>
         </Box>
       </Box>

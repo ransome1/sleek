@@ -1,12 +1,12 @@
-.DataGrid {
+.Content {
 	height: 100vh;
 }
 
-.DataGrid::-webkit-scrollbar {
+.Content::-webkit-scrollbar {
   background-color: transparent;
   width: .8em
 }
-.DataGrid::-webkit-scrollbar-thumb:window-inactive,
-.DataGrid::-webkit-scrollbar-thumb {
+.Content::-webkit-scrollbar-thumb:window-inactive,
+.Content::-webkit-scrollbar-thumb {
   border-radius: 5px;
 }

@@ -1,20 +1,19 @@
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell, Menu, globalShortcut } from 'electron';
 import path from 'path';
-import Store from 'electron-store';
-
-const configFilePath = path.join(__dirname, '../testData/');
-export const store = new Store({ cwd: configFilePath });
-
+import store from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
+import menu from './menu';
 import { resolveHtmlPath } from './util';
-import createFileWatchers from './modules/FileWatchers.ts';
-import './modules/ipcEvents.ts';
-import { activeFile } from './util.ts'; 
-import processTodoTxtObjects from './modules/TodoTxtObjects.ts';
+import createFileWatchers from './modules/FileWatchers';
+import { activeFile } from './util';
+import './modules/ipcEvents';
+
+export let mainWindow: BrowserWindow | null = null;
+let eventListeners: Record<string, any> = {};
 
 const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+const appStartTime = process.hrtime();
 
 if (isDebug) {
   require('electron-debug')();
@@ -34,23 +33,27 @@ class AppUpdater {
   }
 }
 
-export let mainWindow = null;
-
-const createWindow = () => {
+const createWindow = async() => {
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
     : path.join(__dirname, '../../assets');
 
-  const getAssetPath = (...paths) => {
-    return path.join(RESOURCES_PATH, ...paths);
+  const getAssetPath = (...paths: string[]): string => {
+    return path.resolve(RESOURCES_PATH, ...paths);
   };
+
+  try {
+    const files = store.get('files') as { path: string }[];
+    if (files) await createFileWatchers(files); // Wait for createFileWatchers to complete
+  } catch (error) {
+    console.error(error);
+  }  
 
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
     icon: getAssetPath('icons/512x512.png'),
     webPreferences: {
-      nativeWindowOpen: true,
       contextIsolation: true,
       nodeIntegration: false,
       preload: app.isPackaged
@@ -62,44 +65,64 @@ const createWindow = () => {
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow
-    .on('ready-to-show', () => {
-
-      createFileWatchers(store.get('files'));
-
-      if (process.env.START_MINIMIZED) {
-        mainWindow.minimize();
-      } else {
-        mainWindow.show();
-      }
-    })
-    .on('closed', () => {
-      mainWindow = null;
-    });
-
-  // const menuBuilder = new MenuBuilder(mainWindow);
-  // menuBuilder.buildMenu();
+    .on('ready-to-show', handleReadyToShow)
+    .on('closed', handleClosed);
 
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
 
-  if(!isDebug) new AppUpdater();
+  if (!isDebug) {
+    eventListeners.appUpdater = new AppUpdater();
+  }
+};
+
+const handleReadyToShow = () => {
+  if (process.env.START_MINIMIZED) {
+    if (mainWindow) {
+      mainWindow.minimize();
+    }
+  } else {
+    if (mainWindow) {
+      mainWindow.show();
+  }
+}
+
+  const appEndTime = process.hrtime(appStartTime);
+  const startupTime = (appEndTime[0] * 1000) + (appEndTime[1] / 1e6); // Convert to milliseconds
+
+  console.log(`App fully loaded in ${startupTime.toFixed(2)} ms`);
+};
+
+const handleClosed = () => {
+  mainWindow = null;
+};
+
+const removeEventListeners = () => {
+  Object.values(eventListeners).forEach(listener => listener());
+  eventListeners = {};
 };
 
 app
-  .setMaxListeners(1)
   .on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
       app.quit();
     }
   })
+  .on('will-quit', () => {
+    globalShortcut.unregisterAll();
+  })
+  .on('before-quit', removeEventListeners)
   .whenReady()
   .then(() => {
+    globalShortcut.unregister('CmdOrCtrl+R');
+    globalShortcut.unregister('F5');
     createWindow();
     app.on('activate', () => {
       if (mainWindow === null) {
         createWindow();
       }
     });
-  }).catch(console.error);
+  })
+  .catch(console.error);

@@ -1,30 +1,36 @@
-import chokidar from 'chokidar';
-import processTodoTxtObjects from './TodoTxtObjects.ts';
+import chokidar, { FSWatcher } from 'chokidar';
+import processTodoTxtObjects from './TodoTxtObjects';
 import { activeFile } from '../util';
+import { mainWindow } from '../main';
 
-let watcher = null;
+let watcher: FSWatcher | null = null;
 
-function createFileWatchers(files) {
+function createFileWatchers(files: { path: string }[]) {
   if (!files || files.length === 0) {
     throw new Error('Filewatcher: No files available');
   }
-
   if (watcher) {
     watcher.close();
   }
-
-  watcher = chokidar.watch(files.map(file => file.path), { persistent: true });
+  watcher = chokidar.watch(files.map((file) => file.path), { persistent: true });
 
   watcher
     .on('add', (file) => {
       console.log(`New file added: ${file}`);
     })
     .on('change', async (file) => {
-      console.log(`File ${file} has been changed`);
-      if (file !== activeFile().path) {
-        return false;
+      try {
+        console.log(`File ${file} has been changed`);
+        
+        const activeFilePath = activeFile()?.path || '';
+        if (file !== activeFilePath) {
+          return false;
+        }
+        await processTodoTxtObjects(file);
+      } catch (error) {
+        console.error(error);
+        mainWindow?.webContents.send('displayErrorFromMainProcess', error);
       }
-      processTodoTxtObjects(file);
     })
     .on('unlink', (file) => {
       console.log(`File ${file} has been unlinked`);
@@ -32,7 +38,6 @@ function createFileWatchers(files) {
     .on('ready', () => {
       console.log('Initial scan complete. Ready for changes');
     });
-
   return 'Filewatcher: File watchers created';
 }
 

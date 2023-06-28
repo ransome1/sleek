@@ -5,8 +5,10 @@ export type Channels =
   | 'receiveTodoTxtObjects'
   | 'requestTodoTxtObjects'
   | 'reloadGrid'
+  | 'receiveFiles'
+  | 'requestFiles'
   | 'showSplashScreen'
-  | 'displayError';
+  | 'displayErrorFromMainProcess';
 
 const electronHandler = {
   ipcRenderer: {
