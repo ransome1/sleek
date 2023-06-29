@@ -1,22 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Checkbox } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from './Theme.js';
+import theme from './Theme';
+import TodoDialog from './TodoDialog';
 
 const DataGridRow = ({ rowData }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  if(rowData.group) return ( <h1>{rowData.body}</h1> )
+  const openAddTodoDialog = () => {
+    setDialogOpen(true);
+  };
 
   const handleCheckboxChange = (event) => {
     window.electron.ipcRenderer.send('changeCompleteState', rowData.id, event.target.checked);
   };
 
-  if(rowData.body === '') return null
+  if (rowData.group) {
+    return <h1>{rowData.body}</h1>;
+  }
 
-  // Split the string into an array of words
+  if (rowData.body === '') {
+    return null;
+  }
+
   const words = rowData.body.split(' ');
 
-  // Function to check if a word matches the pattern
   const isContext = (word) => /^@\S+$/.test(word);
   const isProject = (word) => /^\+\S+$/.test(word);
   const isDueDate = (word) => /\bdue:\d{4}-\d{2}-\d{2}\b/.test(word);
@@ -24,19 +32,23 @@ const DataGridRow = ({ rowData }) => {
   const isRecurrance = (word) => /^rec:\d*[dwmy]$/.test(word);
   const isHidden = (word) => /\bh:1\b/.test(word);
   const isTag = (word) => /^#\S+$/.test(word);
-  const isPomodoro = (word) => {
-    const isPmSubstring = /pm:\d+\b/.test(word);
-    return /^#\S+$/.test(word) || isPmSubstring;
+  const isPomodoro = (word) => /^#\S+$/.test(word) || /pm:\d+\b/.test(word);
+
+  const handleDivClick = (event) => {
+    if (!event.target.matches('input[type="checkbox"]') && !event.target.matches('button[type="button"]')) {
+      openAddTodoDialog();
+    }
   };
 
-  // Render the row with replaced words as spans
+  const handleButtonClick = (event) => {
+    console.log(event)
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <div id={rowData.id}>
-        <Checkbox 
-          checked={rowData.complete}
-          onChange={handleCheckboxChange} 
-        />
+      {dialogOpen && <TodoDialog todoTxtObject={rowData} setDialogOpen={setDialogOpen} />}
+      <div id={rowData.id} onClick={handleDivClick}>
+        <Checkbox checked={rowData.complete} onChange={handleCheckboxChange} />
         {words.map((word, index) => {
           if (
             isContext(word) ||
@@ -49,16 +61,12 @@ const DataGridRow = ({ rowData }) => {
             isPomodoro(word)
           ) {
             return (
-              <Button variant="contained" size="small" key={index}>
+              <Button variant="contained" size="small" key={index} onClick={handleButtonClick}>
                 {word}{' '}
               </Button>
             );
           } else {
-            return (
-              <React.Fragment key={index}>
-                {word}{' '}
-              </React.Fragment>
-            );
+            return <React.Fragment key={index}>{word} </React.Fragment>;
           }
         })}
       </div>

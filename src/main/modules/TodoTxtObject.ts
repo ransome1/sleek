@@ -1,45 +1,28 @@
-import { todoTxtObjects, lines } from './TodoTxtObjects';
+import { todoTxtObjects } from './TodoTxtObjects';
+import { writeTodoTxtObjectToFile } from './WriteToFile';
 import { Item } from 'jsTodoTxt';
-import { activeFile } from '../util';
-import fs from 'fs/promises';
 
-function changeCompleteState(id: number, state: boolean): void {
+async function changeCompleteState(id: number, state: boolean): Promise<void> {
   const todosAsFlatArray = Object.values(todoTxtObjects).flat();
   const lineNumber = parseInt(id.toString(), 10);
-  const todo = todosAsFlatArray.find((item) => item.id === lineNumber);
+  const todoObject = todosAsFlatArray.find((item) => item.id === lineNumber);
 
-  if (todo) {
-    todo.complete = state;
-    state ? (todo.completed = new Date()) : (todo.completed = null);
-    createTodoTxtObject(todo, lineNumber);
+  if (todoObject) {
+    try {
+      todoObject.complete = state;
+      todoObject.completed = state ? new Date() : null;
+
+      const todoTxtObject = new Item(todoObject.string);
+      todoTxtObject.setPriority(todoObject.priority);
+      todoTxtObject.setCreated(todoObject.created || new Date());
+      todoTxtObject.setComplete(todoObject.complete);
+      todoTxtObject.setCompleted(todoObject.completed);
+
+      await writeTodoTxtObjectToFile(lineNumber, todoTxtObject.toString());
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
-function createTodoTxtObject(todoObject: any, lineNumber: number): void {
-  const todoTxtObject = new Item(todoObject.body);
-  todoTxtObject.setPriority(todoObject.priority);
-  todoTxtObject.setCreated(todoObject.created ? todoObject.created : new Date());
-  todoTxtObject.setComplete(todoObject.complete);
-  todoTxtObject.setCompleted(todoObject.completed);
-  writeTodoTxtObjectToFile(todoTxtObject, lineNumber);
-}
-
-async function writeTodoTxtObjectToFile(todoTxtObject: any, lineNumber: number): Promise<void> {
-  if (lineNumber >= 0 && lineNumber < lines.length) {
-    lines[lineNumber] = todoTxtObject.toString();
-  } else {
-    throw new Error('Invalid line number');
-  }
-
-  const modifiedContent = lines.join('\n');
-
-  try {
-    const activeFilePath = activeFile()?.path || '';
-    await fs.writeFile(activeFilePath, modifiedContent, 'utf8');
-    console.log(`Line ${lineNumber + 1} overwritten successfully.`);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export { changeCompleteState, createTodoTxtObject, writeTodoTxtObjectToFile };
+export { changeCompleteState };

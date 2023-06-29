@@ -2,10 +2,9 @@ import { ipcMain, app, IpcMainEvent } from 'electron';
 import { mainWindow } from '../main';
 import processTodoTxtObjects from './TodoTxtObjects';
 import { changeCompleteState } from './TodoTxtObject';
+import { writeTodoTxtObjectToFile } from './WriteToFile';
 import { activeFile } from '../util';
 import store from '../config';
-
-const eventListeners: (() => void)[] = [];
 
 interface File {
   path: string;
@@ -14,7 +13,7 @@ interface File {
 
 const handleSetActiveFile = async (event: IpcMainEvent, arg: number): Promise<void> => {
   try {
-    const files: File[] = store.get('files') as File[] || [];
+    const files: File[] = store.get('files') || [];
     
     files.forEach((file: File) => {
       file.active = false;
@@ -31,7 +30,8 @@ const handleSetActiveFile = async (event: IpcMainEvent, arg: number): Promise<vo
     mainWindow?.webContents.send('displayErrorFromMainProcess', error);
   }
 };
-const handleRequestTodoTxtObjects = async (event: IpcMainEvent) => {
+
+const handleRequestTodoTxtObjects = async (event: IpcMainEvent): Promise<void> => {
   try {
     const activeFilePath = activeFile()?.path || '';
     await processTodoTxtObjects(activeFilePath);
@@ -41,7 +41,16 @@ const handleRequestTodoTxtObjects = async (event: IpcMainEvent) => {
   }
 };
 
-const handleRequestFiles = (event: IpcMainEvent) => {
+const handleWriteTodoToFile = async (event: IpcMainEvent, id: number, string: string): Promise<void> => {
+  try {
+    const response = await writeTodoTxtObjectToFile(id, string);
+    event.reply('successWritingToFile', response);
+  } catch (error) {
+    event.reply('errorWritingToFile', error);
+  }
+};
+
+const handleRequestFiles = (event: IpcMainEvent): void => {
   try {
     const files = store.get('files');
     event.reply('receiveFiles', files);
@@ -51,7 +60,7 @@ const handleRequestFiles = (event: IpcMainEvent) => {
   }
 };
 
-const handleChangeCompleteState = (event: IpcMainEvent, id: number, state: boolean) => {
+const handleChangeCompleteState = (event: IpcMainEvent, id: number, state: boolean): void => {
   try {
     changeCompleteState(id, state);
   } catch (error) {
@@ -64,17 +73,14 @@ ipcMain.on('setActiveFile', handleSetActiveFile);
 ipcMain.on('requestTodoTxtObjects', handleRequestTodoTxtObjects);
 ipcMain.on('requestFiles', handleRequestFiles);
 ipcMain.on('changeCompleteState', handleChangeCompleteState);
+ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 
-eventListeners.push(
-  () => ipcMain.off('setActiveFile', handleSetActiveFile),
-  () => ipcMain.off('requestTodoTxtObjects', handleRequestTodoTxtObjects),
-  () => ipcMain.off('requestFiles', handleRequestFiles),
-  () => ipcMain.off('changeCompleteState', handleChangeCompleteState)
-);
-
-const removeEventListeners = () => {
-  eventListeners.forEach(listener => listener());
-  eventListeners.length = 0;
+const removeEventListeners = (): void => {
+  ipcMain.off('setActiveFile', handleSetActiveFile);
+  ipcMain.off('requestTodoTxtObjects', handleRequestTodoTxtObjects);
+  ipcMain.off('requestFiles', handleRequestFiles);
+  ipcMain.off('changeCompleteState', handleChangeCompleteState);
+  ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
 };
 
-//app.on('before-quit', removeEventListeners);
+app.on('before-quit', removeEventListeners);

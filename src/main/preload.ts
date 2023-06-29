@@ -8,6 +8,9 @@ export type Channels =
   | 'receiveFiles'
   | 'requestFiles'
   | 'showSplashScreen'
+  | 'errorWritingToFile'
+  | 'successWritingToFile'
+  | 'writeTodoToFile'
   | 'displayErrorFromMainProcess';
 
 const electronHandler = {

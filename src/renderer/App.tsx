@@ -16,7 +16,6 @@ const App: React.FC = () => {
   const [files, setFiles] = useState<object[]>([]);
 
   const toggleDrawer: any = () => {
-    console.log(toggleDrawer)
     setIsDrawerOpen(!isDrawerOpen);
   };
 

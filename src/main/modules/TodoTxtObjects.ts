@@ -43,6 +43,7 @@ function createTodoTxtObjects(fileContent: string): (object | null)[] {
       due,
       t,
       rec,
+      string: item.toString(),
     };
 
     if (todoTxtObject.body === '') {

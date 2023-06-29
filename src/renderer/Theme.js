@@ -16,11 +16,33 @@ const theme = createTheme({
     ].join(','),
   },  
   components: {
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          
+        },
+        paper: {
+          width: '100vw',
+          maxWidth: '50em',
+          borderRadius: '1em',
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '.65em',
+          background: '#ebebeb',
+          padding: '.5em .75em',
+        },
+      },
+    },
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,
       },
-    },
+    },    
     MuiButton: {
       styleOverrides: {
         root: {
