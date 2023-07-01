@@ -1,0 +1,11 @@
+$width: 100vw;
+$height: 100vh;
+$navigation: 5em;
+$filetabs: 3em;
+
+.todoTxtGrid {
+  width: calc(#{$width} - #{$navigation}); // Addition
+  height: calc(#{$height} - #{$filetabs}); // Subtraction
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

@@ -101,10 +101,11 @@
     "jstodotxt": "^1.0.0-alpha.0",
     "mock-fs": "^5.2.0",
     "react": "^18.2.0",
+    "react-autosuggest": "^10.1.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
-    "react-virtualized": "^9.22.5",
-    "styled-components": "^5.3.11"
+    "react-table": "^7.8.0",
+    "react-virtualized": "^9.22.5"
   },
   "devDependencies": {
     "@electron/notarize": "^1.2.3",
@@ -159,7 +160,7 @@
     "react-test-renderer": "^18.2.0",
     "rimraf": "^5.0.1",
     "sass": "^1.62.1",
-    "sass-loader": "^13.3.1",
+    "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "^5.3.9",
     "ts-jest": "^29.1.0",

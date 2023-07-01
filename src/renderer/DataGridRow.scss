@@ -1,0 +1,26 @@
+.row {
+	cursor: pointer;
+
+	div[role=button] {
+		font-size: 0.8em;
+		margin: 0 0.2em;
+		text-transform: lowercase;
+	}
+	div[role=button][data-todotxt-attribute="+"] {
+		color: #6f266f;
+		background: #f1d6f1;
+	}
+	div[data-todotxt-attribute="@"] {
+		color: #1e6251;
+		background: #c5ede3;
+	}
+}
+
+.row.group {
+	h2 {
+		font-size: 1.1em;
+		padding: 0.15em 0.5em;
+		color: white;
+		background: hsl(48, 100%, 67%);
+	}
+}

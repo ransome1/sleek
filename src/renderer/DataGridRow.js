@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Checkbox } from '@mui/material';
+import { Chip, Checkbox, ListItem, Divider } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Theme';
 import TodoDialog from './TodoDialog';
+import './DataGridRow.scss';
 
 const DataGridRow = ({ rowData }) => {
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openAddTodoDialog = () => {
@@ -16,60 +18,60 @@ const DataGridRow = ({ rowData }) => {
   };
 
   if (rowData.group) {
-    return <h1>{rowData.body}</h1>;
-  }
-
-  if (rowData.body === '') {
-    return null;
+    if(!rowData.body) return <Divider />
+    return <ListItem className="row group"><Chip label={rowData.body}></Chip></ListItem>;
   }
 
   const words = rowData.body.split(' ');
 
-  const isContext = (word) => /^@\S+$/.test(word);
-  const isProject = (word) => /^\+\S+$/.test(word);
-  const isDueDate = (word) => /\bdue:\d{4}-\d{2}-\d{2}\b/.test(word);
-  const isThresholdDate = (word) => /\bt:\d{4}-\d{2}-\d{2}\b/.test(word);
-  const isRecurrance = (word) => /^rec:\d*[dwmy]$/.test(word);
-  const isHidden = (word) => /\bh:1\b/.test(word);
-  const isTag = (word) => /^#\S+$/.test(word);
-  const isPomodoro = (word) => /^#\S+$/.test(word) || /pm:\d+\b/.test(word);
+  const isExpression = (word, pattern) => pattern.test(word);
+
+  const expressions = [
+    { pattern: /^@\S+$/, value: '@' },
+    { pattern: /^\+\S+$/, value: '+' },
+    { pattern: /\bdue:\d{4}-\d{2}-\d{2}\b/, value: 'due:' },
+    { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't:' },
+    { pattern: /^rec:\d*[dwmy]$/, value: 'rec:' },
+    { pattern: /\bh:1\b/, value: 'h:1' },
+    { pattern: /^#\S+$/, value: '#' },
+    { pattern: /pm:\d+\b/, value: 'pm:' },
+  ];
 
   const handleDivClick = (event) => {
-    if (!event.target.matches('input[type="checkbox"]') && !event.target.matches('button[type="button"]')) {
+    if (!event.target.matches('input[type="checkbox"]') && !event.target.matches('span.MuiChip-label')) {
       openAddTodoDialog();
     }
   };
 
-  const handleButtonClick = (event) => {
-    console.log(event)
+  const handleButtonClick = (word, value) => {
+    //console.log(value);
   };
 
   return (
     <ThemeProvider theme={theme}>
       {dialogOpen && <TodoDialog todoTxtObject={rowData} setDialogOpen={setDialogOpen} />}
-      <div id={rowData.id} onClick={handleDivClick}>
+      <ListItem className="row" onClick={handleDivClick}>
         <Checkbox checked={rowData.complete} onChange={handleCheckboxChange} />
         {words.map((word, index) => {
-          if (
-            isContext(word) ||
-            isProject(word) ||
-            isDueDate(word) ||
-            isThresholdDate(word) ||
-            isRecurrance(word) ||
-            isHidden(word) ||
-            isTag(word) ||
-            isPomodoro(word)
-          ) {
+          const expression = expressions.find((expr) => isExpression(word, expr.pattern));
+          if (expression) {
             return (
-              <Button variant="contained" size="small" key={index} onClick={handleButtonClick}>
-                {word}{' '}
-              </Button>
+              <Chip
+                variant="contained"
+                size="small"
+                key={index}
+                onClick={() => handleButtonClick(word, expression.value)}
+                data-type="filter"
+                data-todotxt-attribute={expression.value}
+                label={word}
+              >
+              </Chip>
             );
           } else {
-            return <React.Fragment key={index}>{word} </React.Fragment>;
+            return <React.Fragment key={index}>{word}</React.Fragment>;
           }
         })}
-      </div>
+      </ListItem>
     </ThemeProvider>
   );
 };

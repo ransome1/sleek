@@ -1,0 +1,31 @@
+nav {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  height: 100vh;
+
+  background: #f0f0f0;
+
+  display: flex;
+  flex-direction: column;
+  div {
+    font-family: FreeSansBold;
+    line-height: 5em;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(0.33turn, #1b5551, #813e93);
+  }
+  button {
+    border-radius: 0!important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05)!important;
+  }
+  button:nth-child(6) {
+    margin-top: auto;
+  }
+}
+
+nav > * {
+  width: 5em;
+  height: 5em;
+}

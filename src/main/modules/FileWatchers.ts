@@ -1,5 +1,5 @@
 import chokidar, { FSWatcher } from 'chokidar';
-import processTodoTxtObjects from './TodoTxtObjects';
+import processDataRequest from './TodoTxtObjects';
 import { activeFile } from '../util';
 import { mainWindow } from '../main';
 
@@ -26,7 +26,7 @@ function createFileWatchers(files: { path: string }[]) {
         if (file !== activeFilePath) {
           return false;
         }
-        await processTodoTxtObjects(file);
+        await processDataRequest(file);
       } catch (error) {
         console.error(error);
         mainWindow?.webContents.send('displayErrorFromMainProcess', error);

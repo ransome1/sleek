@@ -1,6 +1,6 @@
 import { ipcMain, app, IpcMainEvent } from 'electron';
 import { mainWindow } from '../main';
-import processTodoTxtObjects from './TodoTxtObjects';
+import processDataRequest from './TodoTxtObjects';
 import { changeCompleteState } from './TodoTxtObject';
 import { writeTodoTxtObjectToFile } from './WriteToFile';
 import { activeFile } from '../util';
@@ -13,7 +13,7 @@ interface File {
 
 const handleSetActiveFile = async (event: IpcMainEvent, arg: number): Promise<void> => {
   try {
-    const files: File[] = store.get('files') || [];
+    const files: File[] = (store.get('files') as File[]) || [];
     
     files.forEach((file: File) => {
       file.active = false;
@@ -24,20 +24,21 @@ const handleSetActiveFile = async (event: IpcMainEvent, arg: number): Promise<vo
     
     console.log(`Active file is set to ${files[arg].path}`);
     
-    await processTodoTxtObjects(files[arg].path);
+    await processDataRequest(files[arg].path);
   } catch (error) {
     console.error(error);
-    mainWindow?.webContents.send('displayErrorFromMainProcess', error);
+    event.reply('displayErrorFromMainProcess', error);
   }
 };
 
-const handleRequestTodoTxtObjects = async (event: IpcMainEvent): Promise<void> => {
+const handleDataRequest = async (event: IpcMainEvent): Promise<void> => {
   try {
     const activeFilePath = activeFile()?.path || '';
-    await processTodoTxtObjects(activeFilePath);
+    const response = await processDataRequest(activeFilePath);
+    event.reply('writeToConsole', response);
   } catch (error) {
     console.error(error);
-    mainWindow?.webContents.send('displayErrorFromMainProcess', error);
+    event.reply('displayErrorFromMainProcess', error);
   }
 };
 
@@ -56,7 +57,7 @@ const handleRequestFiles = (event: IpcMainEvent): void => {
     event.reply('receiveFiles', files);
   } catch (error) {
     console.error(error);
-    mainWindow?.webContents.send('displayErrorFromMainProcess', error);
+    event.reply('displayErrorFromMainProcess', error);
   }
 };
 
@@ -65,19 +66,19 @@ const handleChangeCompleteState = (event: IpcMainEvent, id: number, state: boole
     changeCompleteState(id, state);
   } catch (error) {
     console.error(error);
-    mainWindow?.webContents.send('displayErrorFromMainProcess', error);
+    event.reply('displayErrorFromMainProcess', error);
   }
 };
 
 ipcMain.on('setActiveFile', handleSetActiveFile);
-ipcMain.on('requestTodoTxtObjects', handleRequestTodoTxtObjects);
+ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('requestFiles', handleRequestFiles);
 ipcMain.on('changeCompleteState', handleChangeCompleteState);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 
 const removeEventListeners = (): void => {
   ipcMain.off('setActiveFile', handleSetActiveFile);
-  ipcMain.off('requestTodoTxtObjects', handleRequestTodoTxtObjects);
+  ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('requestFiles', handleRequestFiles);
   ipcMain.off('changeCompleteState', handleChangeCompleteState);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);

@@ -1,0 +1,43 @@
+body {
+	overflow: hidden;
+	#root {
+		.flex-container {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			justify-content: normal;
+			align-items: normal;
+			align-content: normal;
+			margin-left: 5em;
+		}
+
+		.flex-items:nth-child(1) {
+			display: block;
+			flex-grow: 0;
+			flex-shrink: 1;
+			flex-basis: auto;
+			align-self: auto;
+			order: 0;
+		}
+
+		.flex-items:nth-child(2) {
+			display: block;
+			flex-grow: 1;
+			flex-shrink: 1;
+			flex-basis: auto;
+			align-self: auto;
+			order: 0;
+		}
+
+	}
+	#root > *
+	::-webkit-scrollbar {
+  		background-color: transparent;
+  		width: .8em
+	}
+	::-webkit-scrollbar-thumb:window-inactive,
+	::-webkit-scrollbar-thumb {
+  		background: lightgray;
+  		border-radius: 5px;
+	}
+}

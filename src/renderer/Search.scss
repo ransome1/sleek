@@ -1,0 +1,17 @@
+.search {
+	width: 100%;
+	padding: 1em;
+	input[type=text] {
+		outline: 0;
+		border: 0;
+		background: #f0f0f0;
+		margin-bottom: 1em;
+	}
+	fieldset {
+		border: 0;
+	}
+}
+
+.search > * {
+  width: 100%;
+}

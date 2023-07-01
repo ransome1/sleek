@@ -1,0 +1,12 @@
+.fileTabs {
+	height: 1.85em;
+	background: #ebebeb;
+	button[role=tab] {
+		max-width: 15em;
+		min-width: 8.5em;
+		padding: 0.35em 2.35em;
+		color: #5a5a5a;
+		margin-top: 2px;
+		text-transform: lowercase;
+	}
+}

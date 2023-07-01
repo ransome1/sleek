@@ -2,8 +2,8 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
   | 'changeCompleteState'
-  | 'receiveTodoTxtObjects'
-  | 'requestTodoTxtObjects'
+  | 'receiveTodos'
+  | 'requestData'
   | 'reloadGrid'
   | 'receiveFiles'
   | 'requestFiles'
@@ -11,6 +11,9 @@ export type Channels =
   | 'errorWritingToFile'
   | 'successWritingToFile'
   | 'writeTodoToFile'
+  | 'writeToConsole'
+  | 'requestFilters'
+  | 'receiveFilters'
   | 'displayErrorFromMainProcess';
 
 const electronHandler = {

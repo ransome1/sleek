@@ -2,11 +2,12 @@ import fs from 'fs';
 import { Item } from 'jsTodoTxt';
 import { mainWindow } from '../main';
 import store from '../config';
+import { createFiltersObject } from './Filters';
 
 export let todoTxtObjects: Record<string, any>;
 export let lines: string[];
 
-async function processTodoTxtObjects(file: string): Promise<void> {
+async function processDataRequest(file: string): Promise<void> {
 
   if(!file) return
 
@@ -17,8 +18,16 @@ async function processTodoTxtObjects(file: string): Promise<void> {
   todoTxtObjects = sortedTodoTxtObjects;
   if (Object.keys(todoTxtObjects).length === 0) {
     mainWindow?.webContents.send('showSplashScreen', 'noTodoTxtObjects');
+    return 'No todo.txt objects created, showing splashscreen';
   } else {
-    mainWindow?.webContents.send('receiveTodoTxtObjects', todoTxtObjects);
+
+    mainWindow?.webContents.send('receiveTodos', todoTxtObjects);
+
+    // TODO: is this ideal here?
+    const filters = await createFiltersObject(todoTxtObjects);
+    mainWindow?.webContents.send('receiveFilters', filters);
+    
+    return 'todo.txt objects and filters created and send to renderer';
   }
 }
 
@@ -79,18 +88,22 @@ function sortGroups(groupedTodoTxtObjects: Record<string, any[]>): Record<string
   const invertGroupSorting = store.get('invertGroupSorting');
   const entries = Object.entries(groupedTodoTxtObjects);
 
-  entries.sort((a, b) => {
-    // if (a[0] === 'null') return 1;
-    // if (b[0] === 'null') return -1;
-    if (invertGroupSorting) {
-      return b[0].localeCompare(a[0]);
-    } else {
-      return a[0].localeCompare(b[0]);
+  entries.sort(([keyA], [keyB]) => {
+    if (keyA.length === 0 && keyB.length > 0) {
+      return 1;
     }
+    if (keyA.length > 0 && keyB.length === 0) {
+      return -1;
+    }
+
+    const comparison = invertGroupSorting ? keyB.localeCompare(keyA) : keyA.localeCompare(keyB);
+    return comparison;
   });
 
   return Object.fromEntries(entries);
 }
+
+
 
 function sortTodoTxtObjects(groupedTodoTxtObjects: Record<string, any[]>): Record<string, any[]> {
   if (!groupedTodoTxtObjects) {
@@ -109,7 +122,6 @@ function sortTodoTxtObjects(groupedTodoTxtObjects: Record<string, any[]>): Recor
         if (b[method].value) b[method] = b[method].value;
         return new Date(a[method]).getTime() - new Date(b[method]).getTime();
       });
-
       if (sortCompletedAtTheEnd) {
         group.sort((a, b) => {
           if (a.complete && !b.complete) return 1;
@@ -123,4 +135,4 @@ function sortTodoTxtObjects(groupedTodoTxtObjects: Record<string, any[]>): Recor
   return groupedTodoTxtObjects;
 }
 
-export default processTodoTxtObjects;
+export default processDataRequest;

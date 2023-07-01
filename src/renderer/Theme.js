@@ -1,6 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
+  shape: {
+    borderRadius: "0.65em"
+  },
   typography: {
     fontFamily: [
       'FreeSans',
@@ -16,6 +19,14 @@ const theme = createTheme({
     ].join(','),
   },  
   components: {
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          border: 'none',
+          background: 'transparent',
+        },
+      },
+    },
     MuiDialog: {
       styleOverrides: {
         root: {
@@ -26,15 +37,6 @@ const theme = createTheme({
           maxWidth: '50em',
           borderRadius: '1em',
           boxShadow: 'none',
-        },
-      },
-    },
-    MuiInput: {
-      styleOverrides: {
-        root: {
-          borderRadius: '.65em',
-          background: '#ebebeb',
-          padding: '.5em .75em',
         },
       },
     },
