@@ -38,9 +38,9 @@ function createTodoTxtObjects(fileContent: string): (object | null)[] {
     const item = new Item(line);
     const extensions = item.extensions();
     const due = extensions.find((extension) => extension.key === 'due')?.value || null;
+    const tags = extensions.find((extension) => extension.key === '#') || null;
     const t = extensions.find((extension) => extension.key === 't')?.value || null;
     const rec = extensions.find((extension) => extension.key === 'rec')?.value || null;
-
     const todoTxtObject: Record<string, any> = {
       id: i,
       body: item.body(),
@@ -52,6 +52,7 @@ function createTodoTxtObjects(fileContent: string): (object | null)[] {
       due,
       t,
       rec,
+      tags,
       string: item.toString(),
     };
 
@@ -76,7 +77,6 @@ function groupTodoTxtObjects(todoTxtObjects: (object | null)[]): Record<string, 
       groupedTodoTxtObjects[groupTitle].push(todoTxtObject);
     }
   }
-
   return sortGroups(groupedTodoTxtObjects);
 }
 

@@ -1,0 +1,15 @@
+@import "Variables.scss";
+
+.splashScreen {
+	/*width: calc(#{$width} - #{$navigation});
+    height: calc(#{$height} - #{$filetabs});*/
+    overflow-y: hidden;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h1 {
+    	font-family: $font-family-bold;
+    }
+}

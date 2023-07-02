@@ -1,3 +1,5 @@
+@import "Variables.scss";
+
 nav {
   position: fixed;
   z-index: 10;
@@ -8,9 +10,10 @@ nav {
   background: #f0f0f0;
 
   display: flex;
+
   flex-direction: column;
   div {
-    font-family: FreeSansBold;
+    font-family: $font-family-bold;
     line-height: 5em;
     text-align: center;
     color: #fff;

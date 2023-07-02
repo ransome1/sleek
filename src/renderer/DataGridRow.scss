@@ -1,26 +1,83 @@
-.row {
-	cursor: pointer;
+@import "Variables.scss";
 
-	div[role=button] {
-		font-size: 0.8em;
-		margin: 0 0.2em;
-		text-transform: lowercase;
+.todoTxtGrid {
+	.row {
+		width: auto;
+		height: auto;
+
+		border-left: solid 5px $light-grey;
+		border-bottom: solid 1px $light-grey;
+
+		flex-wrap: wrap;
+
+		cursor: pointer;
+
+		div[role=button] {
+			height: 2em;
+			font-size: 0.8em;
+			margin: 0 0.2em;
+			text-transform: lowercase;
+			svg {
+				width: 1.5em;
+				height: 1.5em;
+				color: $dark-grey;
+			}
+		}
+		.MuiCheckbox-root {
+			padding: 0.35em 0.5em 0.35em 0.25em;
+			svg {
+				color: $links;
+			}
+		}
+		*[role=button][data-todotxt-attribute="+"] {
+			color: $sleek-projects-foreground;
+			background: $sleek-projects-background;
+		}
+		*[data-todotxt-attribute="@"] {
+			color: $sleek-contexts-foreground;
+			background: $sleek-contexts-background;
+		}		
 	}
-	div[role=button][data-todotxt-attribute="+"] {
-		color: #6f266f;
-		background: #f1d6f1;
+	.row[data-priority=A] {
+		border-left-color: $danger;
 	}
-	div[data-todotxt-attribute="@"] {
-		color: #1e6251;
-		background: #c5ede3;
+	.row[data-priority=B] {
+		border-left-color: $attention;
 	}
+	.row[data-priority=C] {
+		border-left-color: $warning;
+	}	
+	.row[data-complete=true] {
+		filter: opacity(50%) grayscale(100%);
+	}
+	.row.group {
+		margin-top: 1em;
+		padding-left: 0;
+		border: none;
+		.MuiChip-root {
+			font-size: 1.3em;
+			font-family: $font-family-bold;
+			padding: 0.9em 0;
+			color: white;
+			background: $mid-grey;
+			border-radius: 0.65em;
+		}
+		.MuiChip-root[data-body=A] {
+			background: $danger;
+		}
+		.MuiChip-root[data-body=B] {
+			background: $attention;
+		}
+		.MuiChip-root[data-body=C] {
+			background: $warning;
+		}			
+
+	}
+	.MuiDivider-root {
+		margin: 1.5em;
+		border: none;
+	}	
 }
 
-.row.group {
-	h2 {
-		font-size: 1.1em;
-		padding: 0.15em 0.5em;
-		color: white;
-		background: hsl(48, 100%, 67%);
-	}
-}
+
+

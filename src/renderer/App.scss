@@ -1,34 +1,20 @@
+@import "Variables.scss";
+
 body {
+	font-family: $font-family-regular!important;
 	overflow: hidden;
 	#root {
 		.flex-container {
 			display: flex;
-			flex-direction: row;
-			flex-wrap: nowrap;
-			justify-content: normal;
-			align-items: normal;
-			align-content: normal;
-			margin-left: 5em;
+			flex-direction: row;	
+			margin-left: 5em;;
+			.flex-items {
+				display: flex;
+				flex-direction: column;
+				height: 100vh;
+				width: 100vw;
+			}
 		}
-
-		.flex-items:nth-child(1) {
-			display: block;
-			flex-grow: 0;
-			flex-shrink: 1;
-			flex-basis: auto;
-			align-self: auto;
-			order: 0;
-		}
-
-		.flex-items:nth-child(2) {
-			display: block;
-			flex-grow: 1;
-			flex-shrink: 1;
-			flex-basis: auto;
-			align-self: auto;
-			order: 0;
-		}
-
 	}
 	#root > *
 	::-webkit-scrollbar {

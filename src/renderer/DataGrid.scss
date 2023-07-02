@@ -1,11 +1,12 @@
-$width: 100vw;
-$height: 100vh;
-$navigation: 5em;
-$filetabs: 3em;
+@import "Variables.scss";
 
 .todoTxtGrid {
-  width: calc(#{$width} - #{$navigation}); // Addition
-  height: calc(#{$height} - #{$filetabs}); // Subtraction
-  overflow-y: scroll;
-  overflow-x: hidden;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1em;
+  .todoCounter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

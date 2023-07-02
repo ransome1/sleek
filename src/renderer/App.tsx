@@ -15,11 +15,13 @@ const App: React.FC = () => {
   const [todoTxtObjects, setTodoTxtObjects] = useState<object>({});
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [files, setFiles] = useState<object[]>([]);
+  const [searchString, setSearchString] = useState('');
 
   const [drawerParameter, setDrawerParameter] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
   const toggleDrawer = (parameter: string | null = null) => {
-    setIsDrawerOpen(!isDrawerOpen);
+    setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen);
     setDrawerParameter(parameter);
   };
 
@@ -41,18 +43,24 @@ const App: React.FC = () => {
     console.error('Main process ' + error);
   };
 
+  const handleSearchChange = (searchString: string) => {
+    setSearchString(searchString);
+  };
+
   useEffect(() => {
-    window.electron.ipcRenderer.on('receiveTodos', receiveData);
-    window.electron.ipcRenderer.on('writeToConsole', writeToConsole);
-    window.electron.ipcRenderer.on('showSplashScreen', showSplashScreen);
-    window.electron.ipcRenderer.on('displayErrorFromMainProcess', displayError);
-    window.electron.ipcRenderer.send('requestData');
+    const ipcRenderer = window.electron.ipcRenderer;
+
+    ipcRenderer.on('receiveTodos', receiveData);
+    ipcRenderer.on('writeToConsole', writeToConsole);
+    ipcRenderer.on('showSplashScreen', showSplashScreen);
+    ipcRenderer.on('displayErrorFromMainProcess', displayError);
+    ipcRenderer.send('requestData');
 
     const requestFiles = async () => {
       try {
         const files = await new Promise<object[]>((resolve, reject) => {
-          window.electron.ipcRenderer.once('receiveFiles', resolve);
-          window.electron.ipcRenderer.send('requestFiles');
+          ipcRenderer.once('receiveFiles', resolve);
+          ipcRenderer.send('requestFiles');
         });
         setFiles(files);
       } catch (error) {
@@ -60,25 +68,32 @@ const App: React.FC = () => {
       }
     };
     requestFiles();
+
+    return () => {
+      ipcRenderer.removeAllListeners();
+    };
   }, []);
+
+  const renderContent = () => {
+    if (splashScreen && (!todoTxtObjects || Object.keys(todoTxtObjects).length === 0)) {
+      return <SplashScreen screen={splashScreen} />;
+    } else {
+      return <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} searchString={searchString} />;
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      
       <div className="flex-container">
         <DrawerComponent isOpen={isDrawerOpen} drawerParameter={drawerParameter} />
-        <div>
+        <div className="flex-items">
           <FileTabs files={files} />
-          <Search todoTxtObjects={todoTxtObjects} />
-          {splashScreen && (!todoTxtObjects || Object.keys(todoTxtObjects).length === 0) ? (
-            <SplashScreen screen={splashScreen} />
-          ) : (
-            <TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />
-          )} 
+          <Search todoTxtObjects={todoTxtObjects} handleSearchChange={handleSearchChange} />
+          {renderContent()}
         </div>
       </div>
-      <NavigationComponent toggleDrawer={toggleDrawer} />  
+      <NavigationComponent toggleDrawer={toggleDrawer} />
     </ThemeProvider>
   );
 };

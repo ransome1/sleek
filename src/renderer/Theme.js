@@ -7,17 +7,9 @@ const theme = createTheme({
   typography: {
     fontFamily: [
       'FreeSans',
-      'Helvetica',
-      'Arial Unicode MS',
-      'Arial',
-      'Noto Sans',
-      'DejaVu Sans',
-      'Microsoft JhengHei',
-      '微軟正黑體',
-      'Microsoft YaHei',
       'sans-serif',
     ].join(','),
-  },  
+  },
   components: {
     MuiDrawer: {
       styleOverrides: {
@@ -27,6 +19,14 @@ const theme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          background: '#ebebeb',
+          border: '0',
+        },
+      },
+    },    
     MuiDialog: {
       styleOverrides: {
         root: {
@@ -40,6 +40,14 @@ const theme = createTheme({
         },
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minHeight: 'auto',
+          height: 'auto',
+        },
+      },
+    },
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,
@@ -48,10 +56,10 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          textTransform: 'none',
           fontSize: '1em',
           boxShadow: 'none',
           color: '#5a5a5a',
-          background: '#f0f0f0',
           '&:hover': {
             background: '#ebebeb',
             boxShadow: 'none',
@@ -60,6 +68,9 @@ const theme = createTheme({
             background: '#ebebeb',
             boxShadow: 'none',
           },
+        },
+        filled: {
+          background: '#ebebeb',
         },
       },
     },

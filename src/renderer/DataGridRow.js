@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Chip, Checkbox, ListItem, Divider } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
 import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import './DataGridRow.scss';
 
 const DataGridRow = ({ rowData }) => {
-
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openAddTodoDialog = () => {
@@ -18,8 +19,8 @@ const DataGridRow = ({ rowData }) => {
   };
 
   if (rowData.group) {
-    if(!rowData.body) return <Divider />
-    return <ListItem className="row group"><Chip label={rowData.body}></Chip></ListItem>;
+    if (!rowData.body) return <Divider />;
+    return <ListItem className="row group"><Chip data-body={rowData.body} label={rowData.body} /></ListItem>;
   }
 
   const words = rowData.body.split(' ');
@@ -44,31 +45,40 @@ const DataGridRow = ({ rowData }) => {
   };
 
   const handleButtonClick = (word, value) => {
-    //console.log(value);
+    // console.log(value);
   };
 
   return (
     <ThemeProvider theme={theme}>
       {dialogOpen && <TodoDialog todoTxtObject={rowData} setDialogOpen={setDialogOpen} />}
-      <ListItem className="row" onClick={handleDivClick}>
+      <ListItem className="row" data-complete={rowData.complete} data-priority={rowData.priority} onClick={handleDivClick}>
         <Checkbox checked={rowData.complete} onChange={handleCheckboxChange} />
         {words.map((word, index) => {
           const expression = expressions.find((expr) => isExpression(word, expr.pattern));
-          if (expression) {
+          if (expression && expression.value !== 'due:' && expression.value !== 't:') {
             return (
               <Chip
                 variant="contained"
                 size="small"
-                key={index}
+                key={index} // Unique key prop
                 onClick={() => handleButtonClick(word, expression.value)}
                 data-type="filter"
                 data-todotxt-attribute={expression.value}
                 label={word}
-              >
-              </Chip>
+              />
+            );
+          } else if (expression && (expression.value === 'due:' || expression.value === 't:')) {
+            return (
+              <Chip
+                key={index}
+                avatar={<FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />}
+                onClick={() => handleButtonClick(word, expression.value)}
+                label={word}
+                variant="contained"
+              />
             );
           } else {
-            return <React.Fragment key={index}>{word}</React.Fragment>;
+            return <React.Fragment key={index}>{word}&nbsp;</React.Fragment>;
           }
         })}
       </ListItem>

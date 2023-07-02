@@ -1,12 +1,33 @@
+@import "Variables.scss";
+
 .fileTabs {
-	height: 1.85em;
+	height: 100px;
+  	flex-shrink: 0;
+	min-height: auto;
 	background: #ebebeb;
-	button[role=tab] {
-		max-width: 15em;
-		min-width: 8.5em;
-		padding: 0.35em 2.35em;
-		color: #5a5a5a;
-		margin-top: 2px;
-		text-transform: lowercase;
+	padding: 0.25em 1em 0 1em;
+	.MuiTabs-scroller {
+		button[role=tab] {
+			max-width: 15em;
+			min-width: 8.5em;
+			height: auto;
+			min-height: auto;
+			padding: 0.5em 2.35em;
+			color: #5a5a5a;
+			margin-top: 2px;
+			text-transform: lowercase;
+			font-size: 0.85em;
+		}
+		button[aria-selected=true] {
+			border-top-left-radius: $radius;
+			border-top-right-radius: $radius;
+			background: white;
+			font-family: $font-family-bold;
+			color: $links;
+		}
+		.MuiTabs-indicator {
+			background: transparent;
+		}
 	}
+
 }
