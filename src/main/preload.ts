@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
   | 'changeCompleteState'
-  | 'receiveTodos'
+  | 'receiveData'
   | 'requestData'
   | 'reloadGrid'
   | 'receiveFiles'
@@ -12,8 +12,6 @@ export type Channels =
   | 'successWritingToFile'
   | 'writeTodoToFile'
   | 'writeToConsole'
-  | 'requestFilters'
-  | 'receiveFilters'
   | 'applySearchString'
   | 'displayErrorFromMainProcess';
 

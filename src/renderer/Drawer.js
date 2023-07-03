@@ -2,29 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Box, Chip, Drawer, Accordion, AccordionSummary, AccordionDetails, Avatar } from '@mui/material';
 import './Drawer.scss';
 
-const DrawerComponent = ({ isOpen, drawerParameter }) => {
+const DrawerComponent = ({ isOpen, drawerParameter, filters }) => {
   const [expanded, setExpanded] = useState(false);
-  const [filters, setFilters] = useState({});
-
-  const receiveFilters = (filters) => {
-    setFilters(filters);
-  };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
-  useEffect(() => {
-    const receiveFiltersHandler = (filters) => {
-      receiveFilters(filters);
-    };
-
-    window.electron.ipcRenderer.on('receiveFilters', receiveFiltersHandler);
-
-    return () => {
-      window.electron.ipcRenderer.removeListener('receiveFilters', receiveFiltersHandler);
-    };
-  }, []);
 
   return (
     <Drawer
@@ -33,9 +16,7 @@ const DrawerComponent = ({ isOpen, drawerParameter }) => {
       anchor='left'
       open={isOpen}
       className={`Drawer ${isOpen ? 'open' : ''}`}
-      sx={{
-        transition: isOpen ? 'margin-left 0.3s ease' : 'margin-left 0.3s ease',
-      }}
+      sx={{ transition: isOpen ? 'margin-left 0.3s ease' : 'margin-left 0.3s ease', }}
     >
       {Object.keys(filters).length > 0 && (
         <Box className='Accordion'>

@@ -14,6 +14,7 @@ import './App.scss';
 const App: React.FC = () => {
   const [todoObjects, setTodoTxtObjects] = useState<object>({});
   const [headers, setHeaders] = useState<object>({});
+  const [filters, setFilters] = useState<object>({});
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [files, setFiles] = useState<object[]>([]);
   const [drawerParameter, setDrawerParameter] = useState<string | null>(null);
@@ -24,14 +25,16 @@ const App: React.FC = () => {
     setDrawerParameter(parameter);
   };
 
-  const handleReceiveTodos = (todoObjects: object, headers: object) => {
+  const handleReceiveData = (todoObjects: object, filters: any, headers: object) => {
     setHeaders(headers);
+    setFilters(filters);
     setTodoTxtObjects(todoObjects);
     setSplashScreen(null);
   };
 
   const handleShowSplashScreen = (screen: string, headers: object) => {
     setHeaders(headers);
+    setFilters(filters);
     setTodoTxtObjects({});
     setSplashScreen(screen);
   };
@@ -46,13 +49,11 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer;
-
-    ipcRenderer.on('receiveTodos', handleReceiveTodos);
+    ipcRenderer.on('receiveData', handleReceiveData);
     ipcRenderer.on('writeToConsole', handleWriteToConsole);
     ipcRenderer.on('showSplashScreen', handleShowSplashScreen);
     ipcRenderer.on('displayErrorFromMainProcess', handleDisplayError);
     ipcRenderer.send('requestData');
-
     const requestFiles = async () => {
       try {
         const files = await new Promise<object[]>((resolve, reject) => {
@@ -65,7 +66,6 @@ const App: React.FC = () => {
       }
     };
     requestFiles();
-
     return () => {
       ipcRenderer.removeAllListeners();
     };
@@ -75,7 +75,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="flex-container">
-        <DrawerComponent isOpen={isDrawerOpen} drawerParameter={drawerParameter} />
+        <DrawerComponent isOpen={isDrawerOpen} drawerParameter={drawerParameter} filters={filters} />
         <div className="flex-items">
           <FileTabs files={files} />
           <Search headers={headers} />

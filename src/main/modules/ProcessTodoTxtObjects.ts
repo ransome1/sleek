@@ -1,22 +1,45 @@
 import store from '../config';
 
+type TodoTxtObject = Record<string, any>;
+type TodoTxtObjects = Record<string, TodoTxtObject[]>;
 
-function countTodoObjects(todoTxtObjects: Record<string, any[]>): Record<string, any[]> {
-  const count = todoTxtObjects.filter(object => object && object.group !== false);
+function countTodoObjects(todoTxtObjects: TodoTxtObjects): number {
+  const count = Object.values(todoTxtObjects)
+    .flatMap((objects: TodoTxtObject[]) => objects)
+    .filter((object: TodoTxtObject | null) => object && object.group !== false);
   return count.length;
 }
 
-function applySearchString(searchString: string, todoTxtObjects: Record<string, any[]>): Record<string, any[]> {
-  const filteredTodoTxtObjects = todoTxtObjects.filter(object => object && object.string && object.string.toLowerCase().includes(searchString.toLowerCase()));
+function applySearchString(searchString: string, todoTxtObjects: TodoTxtObjects): TodoTxtObjects {
+  const filteredTodoTxtObjects: TodoTxtObjects = Object.values(todoTxtObjects)
+    .flat()
+    .filter((object: TodoTxtObject | null) =>
+      object && object.string.toLowerCase().includes(searchString.toLowerCase())
+    );
   return filteredTodoTxtObjects;
 }
 
-function sortGroups(groupedTodoTxtObjects: Record<string, any[]>): Record<string, any[]> {
+function groupTodoTxtObjects(todoTxtObjects: TodoTxtObjects, grouping: string): TodoTxtObjects {
+  const groupedTodoTxtObjects: TodoTxtObjects = Object.entries(todoTxtObjects).reduce(
+    (groups: TodoTxtObjects, [key, todoTxtObject]) => {
+      if (todoTxtObject !== null) {
+        const groupTitle: string = todoTxtObject[grouping as keyof typeof todoTxtObject] ?? '';
+        groups[groupTitle] = groups[groupTitle] ?? [];
+        groups[groupTitle].push(todoTxtObject);
+      }
+      return groups;
+    },
+    {}
+  );
+
+  return groupedTodoTxtObjects;
+}
+
+function sortGroups(groupedTodoTxtObjects: TodoTxtObjects, invertGroupSorting: boolean): TodoTxtObjects {
   if (!groupedTodoTxtObjects) {
     throw new Error('No grouped todo.txt objects found');
   }
 
-  const invertGroupSorting = store.get('invertGroupSorting');
   const entries = Object.entries(groupedTodoTxtObjects);
 
   entries.sort(([keyA], [keyB]) => {
@@ -31,28 +54,49 @@ function sortGroups(groupedTodoTxtObjects: Record<string, any[]>): Record<string
     return comparison;
   });
 
-  return Object.fromEntries(entries);
+  return Object.fromEntries(entries) as TodoTxtObjects;
 }
 
-function sortTodoTxtObjects(groupedTodoTxtObjects: Record<string, any[]>): Record<string, any[]> {
+function sortTodoTxtObjects(groupedTodoTxtObjects: TodoTxtObjects, sorting: string[], sortCompletedAtTheEnd: boolean): TodoTxtObjects {
   if (!groupedTodoTxtObjects) {
     throw new Error('No grouped todo.txt objects found');
   }
 
-  const sorting = store.get('sorting') as string[] ?? [];
-  const sortCompletedAtTheEnd = store.get('sortCompletedAtTheEnd');
+  function getValue(obj: TodoTxtObject, prop: string): any {
+    const value = obj[prop];
+    return value && value.value !== undefined ? value.value : value;
+  }
+
+  function compareStrings(a: any, b: any): number {
+    const stringA = String(a);
+    const stringB = String(b);
+    return stringA.localeCompare(stringB);
+  }
+
+  function compareDates(a: any, b: any): number {
+    const dateA = new Date(a).getTime();
+    const dateB = new Date(b).getTime();
+    return dateA - dateB;
+  }  
 
   for (const method of sorting.reverse()) {
     for (const group of Object.values(groupedTodoTxtObjects)) {
-      group.sort((a, b) => {
-        if (!a[method]) return 1;
-        if (!b[method]) return -1;
-        if (a[method].value) a[method] = a[method].value;
-        if (b[method].value) b[method] = b[method].value;
-        return new Date(a[method]).getTime() - new Date(b[method]).getTime();
+      group.sort((a: TodoTxtObject, b: TodoTxtObject) => {
+        const valueA = getValue(a, method);
+        const valueB = getValue(b, method);
+
+        if (method === 'projects' || method === 'contexts') {
+          return compareStrings(valueA, valueB);
+        }
+
+        if (!valueA) return 1;
+        if (!valueB) return -1;
+
+        return compareDates(valueA, valueB);
       });
+
       if (sortCompletedAtTheEnd) {
-        group.sort((a, b) => {
+        group.sort((a: TodoTxtObject, b: TodoTxtObject) => {
           if (a.complete && !b.complete) return 1;
           if (!a.complete && b.complete) return -1;
           return 0;
@@ -64,4 +108,10 @@ function sortTodoTxtObjects(groupedTodoTxtObjects: Record<string, any[]>): Recor
   return groupedTodoTxtObjects;
 }
 
-export { countTodoObjects, sortGroups, sortTodoTxtObjects, applySearchString }
+export {
+  groupTodoTxtObjects,
+  countTodoObjects,
+  sortGroups,
+  sortTodoTxtObjects,
+  applySearchString
+};

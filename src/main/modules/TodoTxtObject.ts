@@ -5,7 +5,7 @@ import { Item } from 'jsTodoTxt';
 async function changeCompleteState(id: number, state: boolean): Promise<void> {
   const todosAsFlatArray = Object.values(todoTxtObjects).flat();
   const lineNumber = parseInt(id.toString(), 10);
-  const todoObject = todosAsFlatArray.find((item) => item.id === lineNumber);
+  const todoObject = todosAsFlatArray.find((todoObject) => todoObject.id === lineNumber);
 
   if (todoObject) {
     try {

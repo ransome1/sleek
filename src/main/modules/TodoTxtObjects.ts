@@ -3,41 +3,45 @@ import { Item } from 'jsTodoTxt';
 import { mainWindow } from '../main';
 import store from '../config';
 import { createFiltersObject } from './Filters';
-import { countTodoObjects, applySearchString, sortTodoTxtObjects, sortGroups } from './ProcessTodoTxtObjects';
+import { groupTodoTxtObjects, countTodoObjects, applySearchString, sortTodoTxtObjects, sortGroups } from './ProcessTodoTxtObjects';
 
 let todoTxtObjects: Record<string, any>;
 let lines: string[];
+const headers = {
+  availableObjects: 0,
+  visibleObjects: 0
+}
 
 async function processDataRequest(file: string, searchString: string) {
   if(!file) return
-  const headers = {
-    availableObjects: 0,
-    visibleObjects: 0
-  }
-
+  
   const fileContent = await fs.promises.readFile(file, 'utf8');
 
   todoTxtObjects = await createTodoTxtObjects(fileContent);
   
   headers.availableObjects = await countTodoObjects(todoTxtObjects);
+  
   if(searchString) todoTxtObjects = await applySearchString(searchString, todoTxtObjects);
+  
   headers.visibleObjects = await countTodoObjects(todoTxtObjects);
 
-  const groupedTodoTxtObjects = await groupTodoTxtObjects(Object.values(todoTxtObjects));
-  const sortedTodoTxtObjects = await sortTodoTxtObjects(groupedTodoTxtObjects);
+  const groupedTodoTxtObjects = await groupTodoTxtObjects(Object.values(todoTxtObjects), store.get('grouping'));
+
+  const sortedGroups = await sortGroups(groupedTodoTxtObjects, store.get('invertGroupSorting'));
+
+  const sortedTodoTxtObjects = await sortTodoTxtObjects(sortedGroups, store.get('sorting'), store.get('sortCompletedAtTheEnd'));
+
+  const filters = await createFiltersObject(sortedTodoTxtObjects);
 
   if (headers.visibleObjects === 0) {
-    mainWindow?.webContents.send('showSplashScreen', 'noTodoTxtObjects', headers);
+    mainWindow?.webContents.send('showSplashScreen', 'noTodoTxtObjects', filters, headers);
     return 'No todo.txt objects created, showing splashscreen';
   } else {
-    mainWindow?.webContents.send('receiveTodos', sortedTodoTxtObjects, headers);
-    // TODO: is this ideal here?
-    const filters = await createFiltersObject(sortedTodoTxtObjects);
-    mainWindow?.webContents.send('receiveFilters', filters);
-  
+    mainWindow?.webContents.send('receiveData', sortedTodoTxtObjects, filters, headers);  
     return 'todo.txt objects and filters created and send to renderer';
   }
 }
+
 function createTodoTxtObjects(fileContent: string) {
   lines = fileContent.split('\n');
 
@@ -61,30 +65,14 @@ function createTodoTxtObjects(fileContent: string) {
       rec,
       tags,
       string: item.toString(),
+      group: null,
     };
 
-    if (todoTxtObject.body === '') {
-      return null;
-    } else {
-      return todoTxtObject;
-    }
-  });
+    return todoTxtObject;
+  }).filter((todoTxtObject) => todoTxtObject && todoTxtObject.body !== '');
+
   return todoTxtObjects;
 }
-function groupTodoTxtObjects(todoTxtObjects: (object | null)[]): Record<string, any> {
-  const grouping = store.get('grouping');
-  const groupedTodoTxtObjects: Record<string, any> = {};
-
-  for (const todoTxtObject of todoTxtObjects) {
-    if (todoTxtObject !== null) {
-      const groupTitle: string = todoTxtObject[grouping as keyof typeof todoTxtObject] ?? '';
-      groupedTodoTxtObjects[groupTitle] = groupedTodoTxtObjects[groupTitle] ?? [];
-      groupedTodoTxtObjects[groupTitle].push(todoTxtObject);
-    }
-  }
-  return sortGroups(groupedTodoTxtObjects);
-}
-
 
 export default processDataRequest;
-export { sortTodoTxtObjects, lines, todoTxtObjects };
+export { lines, todoTxtObjects };
