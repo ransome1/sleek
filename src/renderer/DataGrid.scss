@@ -1,12 +1,5 @@
-@import "Variables.scss";
-
-.todoTxtGrid {
+.MuiList-root.todoTxtGrid {
   flex-grow: 1;
   overflow-y: auto;
-  padding: 1em;
-  .todoCounter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  padding: 0 1em;
 }

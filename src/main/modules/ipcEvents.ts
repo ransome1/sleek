@@ -31,6 +31,16 @@ const handleSetActiveFile = async (event: IpcMainEvent, arg: number): Promise<vo
   }
 };
 
+const handleApplySearchString = async (event: IpcMainEvent, arg: string): Promise<void> => {
+  try {
+    const activeFilePath = activeFile()?.path || '';
+    processDataRequest(activeFilePath, arg)
+  } catch (error) {
+    console.error(error);
+    event.reply('displayErrorFromMainProcess', error);
+  }
+};
+
 const handleDataRequest = async (event: IpcMainEvent): Promise<void> => {
   try {
     const activeFilePath = activeFile()?.path || '';
@@ -75,6 +85,7 @@ ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('requestFiles', handleRequestFiles);
 ipcMain.on('changeCompleteState', handleChangeCompleteState);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
+ipcMain.on('applySearchString', handleApplySearchString);
 
 const removeEventListeners = (): void => {
   ipcMain.off('setActiveFile', handleSetActiveFile);
@@ -82,6 +93,7 @@ const removeEventListeners = (): void => {
   ipcMain.off('requestFiles', handleRequestFiles);
   ipcMain.off('changeCompleteState', handleChangeCompleteState);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
+  ipcMain.off('applySearchString', handleApplySearchString);
 };
 
 app.on('before-quit', removeEventListeners);

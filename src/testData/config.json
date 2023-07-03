@@ -19,6 +19,11 @@
 			"active": false,
 			"path": "/Users/ransome/Development/sleek/src/testData/long.txt",
 			"filename": "long.txt"
+		},
+		{
+			"active": false,
+			"path": "/Users/ransome/Development/sleek/src/testData/test.txt",
+			"filename": "test.txt"
 		}
 	],
 	"grouping": "priority",

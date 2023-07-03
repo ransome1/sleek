@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFilter, faSlidersH, faFolderOpen, faCog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button, Box } from '@mui/material';
 import TodoDialog from './TodoDialog';
-import DrawerComponent from './Drawer';
 import './Navigation.scss';
 
-const NavigationComponent = ({ toggleDrawer }) => {
+const NavigationComponent = ({ toggleDrawer, isOpen }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [activeButton, setActiveButton] = useState(null);
 
   const openAddTodoDialog = () => {
     setDialogOpen(true);
@@ -15,29 +15,30 @@ const NavigationComponent = ({ toggleDrawer }) => {
 
   const handleButtonClicked = (parameter) => {
     toggleDrawer(parameter);
+    setActiveButton(parameter);
   };
 
-  return (    
+  return (
     <nav data-testid='navigation-component'>
       {dialogOpen && <TodoDialog setDialogOpen={setDialogOpen} />}
       <Box>sleek</Box>
-      <Button data-testid='navigation-button-add' onClick={openAddTodoDialog}>
-        <FontAwesomeIcon data-testid='fa-icon-plus' icon={faPlus} />
+      <Button onClick={openAddTodoDialog} className={activeButton === 'add' ? 'active' : ''}>
+        <FontAwesomeIcon icon={faPlus} />
       </Button>
-      <Button data-testid='navigation-button-filter' onClick={() => handleButtonClicked('filter')}>
-        <FontAwesomeIcon data-testid='fa-icon-filter' icon={faFilter} />
+      <Button onClick={() => handleButtonClicked('filter')} className={isOpen && activeButton === 'filter' ? 'active' : ''}>
+        <FontAwesomeIcon icon={faFilter} />
       </Button>
-      <Button data-testid='navigation-button-view' onClick={() => handleButtonClicked('view')}>
-        <FontAwesomeIcon data-testid='fa-icon-slider-h' icon={faSlidersH} />
+      <Button onClick={() => handleButtonClicked('view')} className={isOpen && activeButton === 'view' ? 'active' : ''}>
+        <FontAwesomeIcon icon={faSlidersH} />
       </Button>
-      <Button data-testid='navigation-button-files'>
-        <FontAwesomeIcon data-testid='fa-icon-folder-open' icon={faFolderOpen} />
+      <Button>
+        <FontAwesomeIcon icon={faFolderOpen} />
       </Button>
-      <Button data-testid='navigation-button-settings' className='bottom'>
-        <FontAwesomeIcon data-testid='fa-icon-cog' icon={faCog} />
+      <Button>
+        <FontAwesomeIcon icon={faCog} />
       </Button>
-      <Button data-testid='navigation-button-help'>
-        <FontAwesomeIcon data-testid='fa-icon-question-circle' icon={faQuestionCircle} />
+      <Button>
+        <FontAwesomeIcon icon={faQuestionCircle} />
       </Button>
     </nav>
   );

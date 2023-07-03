@@ -28,15 +28,7 @@
 			svg {
 				color: $links;
 			}
-		}
-		*[role=button][data-todotxt-attribute="+"] {
-			color: $sleek-projects-foreground;
-			background: $sleek-projects-background;
-		}
-		*[data-todotxt-attribute="@"] {
-			color: $sleek-contexts-foreground;
-			background: $sleek-contexts-background;
-		}		
+		}	
 	}
 	.row[data-priority=A] {
 		border-left-color: $danger;

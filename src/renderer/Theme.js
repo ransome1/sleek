@@ -19,14 +19,6 @@ const theme = createTheme({
         },
       },
     },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          background: '#ebebeb',
-          border: '0',
-        },
-      },
-    },    
     MuiDialog: {
       styleOverrides: {
         root: {

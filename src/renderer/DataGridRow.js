@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Chip, Checkbox, ListItem, Divider } from '@mui/material';
+import { Avatar, Chip, Checkbox, ListItem, Divider } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faPizzaSlice } from '@fortawesome/free-solid-svg-icons';
 import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import './DataGridRow.scss';
 
-const DataGridRow = ({ rowData }) => {
+const DataGridRow = ({ todoObject }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openAddTodoDialog = () => {
@@ -15,27 +15,26 @@ const DataGridRow = ({ rowData }) => {
   };
 
   const handleCheckboxChange = (event) => {
-    window.electron.ipcRenderer.send('changeCompleteState', rowData.id, event.target.checked);
+    window.electron.ipcRenderer.send('changeCompleteState', todoObject.id, event.target.checked);
   };
 
-  if (rowData.group) {
-    if (!rowData.body) return <Divider />;
-    return <ListItem className="row group"><Chip data-body={rowData.body} label={rowData.body} /></ListItem>;
+  if (todoObject.group) {
+    if (!todoObject.key) return <Divider />;
+    return <ListItem key={todoObject.id} className="row group"><Chip data-body={todoObject.key} label={todoObject.key} /></ListItem>;
   }
 
-  const words = rowData.body.split(' ');
-
-  const isExpression = (word, pattern) => pattern.test(word);
+  const words = todoObject.body.split(' ');
+  const isExpression = (word, pattern, shortcut) => pattern.test(word);
 
   const expressions = [
-    { pattern: /^@\S+$/, value: '@' },
-    { pattern: /^\+\S+$/, value: '+' },
-    { pattern: /\bdue:\d{4}-\d{2}-\d{2}\b/, value: 'due:' },
-    { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't:' },
-    { pattern: /^rec:\d*[dwmy]$/, value: 'rec:' },
-    { pattern: /\bh:1\b/, value: 'h:1' },
-    { pattern: /^#\S+$/, value: '#' },
-    { pattern: /pm:\d+\b/, value: 'pm:' },
+    { pattern: /^@\S+$/, value: 'contexts', shortcut: '@' },
+    { pattern: /^\+\S+$/, value: 'projects', shortcut: '+' },
+    { pattern: /\bdue:\d{4}-\d{2}-\d{2}\b/, value: 'due:', shortcut: 'due:' },
+    { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't:', shortcut: 't:' },
+    { pattern: /^rec:\d*[dwmy]$/, value: 'rec:', shortcut: 'rec:' },
+    { pattern: /\bh:1\b/, value: 'h:1', shortcut: 'h:1' },
+    { pattern: /^#\S+$/, value: '#', shortcut: '#' },
+    { pattern: /pm:\d+\b/, value: 'pm:', shortcut: 'pm:' }
   ];
 
   const handleDivClick = (event) => {
@@ -46,44 +45,86 @@ const DataGridRow = ({ rowData }) => {
 
   const handleButtonClick = (word, value) => {
     // console.log(value);
+    // console.log(word);
   };
 
   return (
     <ThemeProvider theme={theme}>
-      {dialogOpen && <TodoDialog todoTxtObject={rowData} setDialogOpen={setDialogOpen} />}
-      <ListItem className="row" data-complete={rowData.complete} data-priority={rowData.priority} onClick={handleDivClick}>
-        <Checkbox checked={rowData.complete} onChange={handleCheckboxChange} />
+      {dialogOpen && <TodoDialog todoTxtObject={todoObject} setDialogOpen={setDialogOpen} />}
+      <ListItem key={todoObject.id} className="row" data-complete={todoObject.complete} data-priority={todoObject.priority} onClick={handleDivClick}>
+        <Checkbox checked={todoObject.complete} onChange={handleCheckboxChange} />
         {words.map((word, index) => {
           const expression = expressions.find((expr) => isExpression(word, expr.pattern));
-          if (expression && expression.value !== 'due:' && expression.value !== 't:') {
-            return (
-              <Chip
-                variant="contained"
-                size="small"
-                key={index} // Unique key prop
-                onClick={() => handleButtonClick(word, expression.value)}
-                data-type="filter"
-                data-todotxt-attribute={expression.value}
-                label={word}
-              />
-            );
-          } else if (expression && (expression.value === 'due:' || expression.value === 't:')) {
-            return (
-              <Chip
-                key={index}
-                avatar={<FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />}
-                onClick={() => handleButtonClick(word, expression.value)}
-                label={word}
-                variant="contained"
-              />
-            );
-          } else {
-            return <React.Fragment key={index}>{word}&nbsp;</React.Fragment>;
+
+          if (expression) {
+            word = word.substr(expression.shortcut.length);
+            if (expression.value === 'projects' || expression.value === 'contexts') {
+              return (
+                <Chip
+                  variant="contained"
+                  size="small"
+                  onClick={() => handleButtonClick(word, expression.value)}
+                  data-filter-type="filter"
+                  data-todotxt-attribute={expression.value}
+                  label={word}
+                  avatar={<Avatar>{expression.shortcut}</Avatar>}
+                  key={index}
+                />
+              );
+            } else if (expression.value === 'due:' || expression.value === 't:') {
+              return (
+                <Chip
+                  avatar={<FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />}
+                  onClick={() => handleButtonClick(word, expression.value)}
+                  data-todotxt-attribute={expression.value}
+                  label={word}
+                  variant="contained"
+                  key={index}
+                />
+              );
+            } else if (expression.value === 'h:1') {
+              return (
+                <Chip
+                  size="small"
+                  avatar={<FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />}
+                  onClick={() => handleButtonClick(word, expression.value)}
+                  data-todotxt-attribute={expression.value}
+                  variant="contained"
+                  label="Hidden"
+                  key={index}
+                />
+              );
+            } else if (expression.value === 'pm:') {
+              return (
+                <Chip
+                  size="small"
+                  avatar={<FontAwesomeIcon data-testid='fa-icon-pizza-slice' icon={faPizzaSlice} />}
+                  onClick={() => handleButtonClick(word, expression.value)}
+                  data-todotxt-attribute={expression.value}
+                  variant="contained"
+                  label={word}
+                  key={index}
+                />
+              );
+            } else {
+              return (
+                <Chip
+                  size="small"
+                  avatar={<Avatar>{expression.shortcut}</Avatar>}
+                  data-todotxt-attribute={expression.value}
+                  onClick={() => handleButtonClick(word, expression.value)}
+                  label={word}
+                  variant="contained"
+                  key={index}
+                />
+              );
+            }
           }
+          return <React.Fragment key={index}>{word}&nbsp;</React.Fragment>;
         })}
       </ListItem>
     </ThemeProvider>
   );
 };
 
-export { DataGridRow };
+export default DataGridRow;

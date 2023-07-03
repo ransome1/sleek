@@ -9,12 +9,38 @@ body {
 			flex-direction: row;	
 			margin-left: 5em;;
 			.flex-items {
+				width: 100vw;
+				height: 100vh;
 				display: flex;
 				flex-direction: column;
-				height: 100vh;
-				width: 100vw;
 			}
 		}
+		*[data-todotxt-attribute="projects"] {
+			color: $sleek-projects-foreground;
+			background: $sleek-projects-background;
+			div.MuiAvatar-root {
+				color: white;
+				background: darken($sleek-projects-background, 50%);
+			}
+		}
+		*[data-todotxt-attribute="contexts"] {
+			color: $sleek-contexts-foreground;
+			background: $sleek-contexts-background;
+			div.MuiAvatar-root {
+				color: white;
+				background: darken($sleek-contexts-background, 50%);
+			}
+		}
+		*[data-todotxt-attribute="pm:"] {
+			color: white;
+			background: $danger;
+			svg {
+				color: white;
+			}
+			div.MuiAvatar-root {
+				background: darken($warning, 50%);
+			}
+		}		
 	}
 	#root > *
 	::-webkit-scrollbar {

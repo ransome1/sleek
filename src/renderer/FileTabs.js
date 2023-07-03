@@ -7,7 +7,9 @@ const FileTabs = ({ files }) => {
 
   useEffect(() => {
     const activeIndex = files.findIndex(file => file.active);
-    if (activeIndex >= 0) setValue(activeIndex);
+    if (activeIndex >= 0) {
+      setValue(activeIndex);
+    }
   }, [files]);
 
   const handleChange = (event, index) => {
@@ -15,7 +17,9 @@ const FileTabs = ({ files }) => {
     setValue(index);
   };
 
-  if (!files || files.length <= 1) return null;
+  if (!files || files.length <= 1) {
+    return null;
+  }
 
   return (
     <Tabs className="fileTabs" value={value} onChange={handleChange} data-testid="file-tabs-component">

@@ -1,41 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Chip, Box, TextField, InputAdornment } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import TodoTxtDataGrid from './DataGrid';
-import App from './App';
 import './Search.scss';
 
-const Search = ({ todoTxtObjects, handleSearchChange }) => {
-  const [searchString, setSearchString] = useState('');
+const Search = ({ headers }) => {
   const [inputString, setInputString] = useState('');
+  const [showAddTodoButton, setShowAddTodoButton] = useState(false);
+  const searchFieldRef = useRef(null);
+  const addTodoButton = document.getElementById("addTodoButton");
 
-  const handleOnInput = (event) => {
+  const label = (headers.availableObjects) ? "Showing " + headers.visibleObjects + " of " + headers.availableObjects : null
+
+  const handleInput = (event) => {
     const searchString = event.target.value.toLowerCase();
+    (searchString) ? setShowAddTodoButton(true) : setShowAddTodoButton(false)
     setInputString(searchString);
   };
 
   const handleSearch = () => {
-    setSearchString(inputString);
-    handleSearchChange(inputString);
+    window.electron.ipcRenderer.send('applySearchString', inputString);
   };
 
   const handleChipClick = () => {
-    const searchField = document.getElementById("outlined-start-adornment");
-    if(searchField.value != '') window.electron.ipcRenderer.send('writeTodoToFile', undefined, searchField.value);
+    window.electron.ipcRenderer.send('writeTodoToFile', undefined, inputString);
   };
 
   const handleXClick = (event) => {
-    const searchField = document.getElementById("outlined-start-adornment");
-    searchField.value = "";
-    setSearchString("");
+    setShowAddTodoButton(false);
+    setInputString('');
+    window.electron.ipcRenderer.send('applySearchString', '');
   };
 
   useEffect(() => {
     const delayTimer = setTimeout(() => {
       handleSearch();
     }, 250);
-
     return () => clearTimeout(delayTimer);
   }, [inputString]);
 
@@ -43,9 +43,10 @@ const Search = ({ todoTxtObjects, handleSearchChange }) => {
     <Box className="search">
       <TextField
         variant="outlined"
-        id="outlined-start-adornment"
         placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12"
-        onChange={handleOnInput}
+        onChange={handleInput}
+        label={label}
+        value={inputString}
         InputProps={{
           startAdornment: 
             <InputAdornment position="start">
@@ -53,7 +54,7 @@ const Search = ({ todoTxtObjects, handleSearchChange }) => {
             </InputAdornment>,
           endAdornment:
             <InputAdornment position="end">
-              <Chip label="Add as todo" onClick={handleChipClick} />
+              <Chip id="addTodoButton" aria-hidden={showAddTodoButton} label="Add as todo" onClick={handleChipClick} />
               <Button onClick={handleXClick}>
                 <FontAwesomeIcon data-testid='fa-icon-circle-xmark' icon={faCircleXmark} />
               </Button>

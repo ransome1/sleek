@@ -48,12 +48,9 @@ const handleReadyToShow = () => {
   }
 
   const appEndTime = process.hrtime(appStartTime);
-  const startupTime = (appEndTime[0] * 1000) + (appEndTime[1] / 1e6); // Convert to milliseconds
+  const startupTime = (appEndTime[0] * 1000) + (appEndTime[1] / 1e6);
 
   console.log(`App fully loaded in ${startupTime.toFixed(2)} ms`);
-
-  mainWindow?.webContents.send('writeToConsole', eventListeners.length);
-
 }
 
 const handleClosed = () => {
@@ -87,8 +84,8 @@ const createWindow = async() => {
   mainWindow
   .on('ready-to-show', handleReadyToShow)
   .on('closed', handleClosed);
-  eventListeners['ready-to-show', handleReadyToShow]
-  eventListeners['closed', handleClosed]
+  eventListeners.mainWindowReadyToShow = handleReadyToShow;
+  eventListeners.mainWindowClosed = handleClosed,
 
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
@@ -137,9 +134,9 @@ app
   })
   .catch(console.error);
 
-  eventListeners['window-all-closed', handleWindowAllClosed]
-  eventListeners['will-quit', handleWillQuit]
-  eventListeners['before-quit', handleBeforeQuit]
-  eventListeners['activate', handleActivate]
+  eventListeners.AppWindowAllClosed = handleWindowAllClosed;
+  eventListeners.AppWillQuit = handleWillQuit;
+  eventListeners.AppBeforeQuit = handleBeforeQuit;
+  eventListeners.AppActivate = handleActivate;
 
 export { mainWindow }

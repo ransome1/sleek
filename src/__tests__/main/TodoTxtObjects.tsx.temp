@@ -1,0 +1,96 @@
+import fs from 'fs/promises';
+import { sortTodoTxtObjects } from '../../main/modules/TodoTxtObjects';
+
+const todoObjects = {
+"A": [
+    {
+        "id": 0,
+        "body": "Line 1",
+        "created": null,
+        "complete": false,
+        "priority": "A",
+        "contexts": [],
+        "projects": [],
+        "due": null,
+        "t": null,
+        "rec": null,
+        "tags": null,
+        "string": "(A) Line 1"
+    }
+],
+"B": [
+    {
+        "id": 1,
+        "body": "Line 2",
+        "created": null,
+        "complete": false,
+        "priority": "B",
+        "contexts": [],
+        "projects": [],
+        "due": null,
+        "t": null,
+        "rec": null,
+        "tags": null,
+        "string": "(B) Line 2"
+    }
+],
+"C": [
+    {
+        "id": 2,
+        "body": "Line 3",
+        "created": null,
+        "complete": false,
+        "priority": "C",
+        "contexts": [],
+        "projects": [],
+        "due": null,
+        "t": null,
+        "rec": null,
+        "tags": null,
+        "string": "(C) Line 3"
+    }
+  ]
+}
+
+// jest.mock('fs/promises', () => ({
+//   writeFile: jest.fn(),
+// }));
+
+jest.mock('../../main/modules/TodoTxtObjects', () => ({
+  sorting: [
+    "due",
+    "created",
+    "t",
+    "priority",
+    "completed"
+  ],
+  sortCompletedAtTheEnd: false,
+}));
+
+jest.mock('electron', () => ({
+  mainWindow: jest.fn(),
+  ipcMain: {
+    on: jest.fn(),
+  },
+  app: {
+    on: jest.fn(),
+    getPath: jest.fn(),
+    getVersion: jest.fn(),
+    getName: jest.fn(),
+  },
+}));
+
+//const file = 'src/testData/test.txt';
+
+describe('Change state of todo and write result to file', () => {
+  beforeEach(() => {
+  });
+
+  afterEach(() => {
+  });
+
+  test('sortTodoTxtObjects', async() => {
+    const result = await sortTodoTxtObjects(todoObjects);
+    expect(result).toEqual('test');
+  });
+});

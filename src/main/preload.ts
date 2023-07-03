@@ -14,6 +14,7 @@ export type Channels =
   | 'writeToConsole'
   | 'requestFilters'
   | 'receiveFilters'
+  | 'applySearchString'
   | 'displayErrorFromMainProcess';
 
 const electronHandler = {

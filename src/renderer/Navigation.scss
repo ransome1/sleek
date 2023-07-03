@@ -6,25 +6,29 @@ nav {
   top: 0;
   left: 0;
   height: 100vh;
-
-  background: #f0f0f0;
-
+  background: $lighter-grey;
   display: flex;
-
   flex-direction: column;
+
   div {
     font-family: $font-family-bold;
     line-height: 5em;
     text-align: center;
-    color: #fff;
+    color: white;
     background: linear-gradient(0.33turn, #1b5551, #813e93);
   }
+
   button {
-    border-radius: 0!important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05)!important;
-  }
-  button:nth-child(6) {
-    margin-top: auto;
+    border-radius: 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+
+    &:nth-child(6) {
+      margin-top: auto;
+    }
+
+    &.active {
+      background: $light-grey;
+    }
   }
 }
 

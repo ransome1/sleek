@@ -44,7 +44,12 @@ const DrawerComponent = ({ isOpen, drawerParameter }) => {
               <AccordionSummary>{key}</AccordionSummary>
               <AccordionDetails>
                 {Object.keys(filters[key]).map((childKey, childIndex) => (
-                  <Chip key={childIndex} avatar={<Avatar>{filters[key][childKey]}</Avatar>} label={childKey} />
+                  <Chip 
+                    key={childIndex}
+                    avatar={<Avatar>{filters[key][childKey]}</Avatar>}
+                    label={childKey}
+                    data-todotxt-attribute={key}
+                  />
                 ))}
               </AccordionDetails>
             </Accordion>

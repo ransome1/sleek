@@ -82,14 +82,14 @@ describe('App', () => {
 	        },
 	      ]
 	    };
-	    render(<TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />);
+	    render(<TodoTxtDataGrid todoTxtObjects={todoTxtObjects} searchString='' />);
 	    expect(screen.getByRole('grid')).toHaveClass('ReactVirtualized__Grid');
 	  });
 
 	it('does not render TodoTxtDataGrid when todoTxtObjects is empty', () => {
 		render(<App />);
 		const todoTxtObjects = {};
-		render(<TodoTxtDataGrid todoTxtObjects={todoTxtObjects} />);
+		render(<TodoTxtDataGrid todoTxtObjects={todoTxtObjects} searchString='' />);
   		const dataGridComponent = screen.queryByTestId('data-grid-component');
   		expect(dataGridComponent).toBeNull();
 	});

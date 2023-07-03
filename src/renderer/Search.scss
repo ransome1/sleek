@@ -1,12 +1,10 @@
 @import "Variables.scss";
 
 .search {
-  height: 100px;
   flex-shrink: 0;
 
 	width: 100%;
 	display: flex;
-	
 
 	padding: 1em;
 	svg {
@@ -14,8 +12,17 @@
 	}
 	.MuiInputBase-root {
 		font-size: 1.25em;
-		border-radius: $radius;
+		border-radius: $radius;	
 	}
+	*[aria-hidden=false] {
+		display: none;
+	}
+	*[aria-hidden=true] {
+		display: flex;
+	}
+	/*.MuiInputBase-root > * {
+  	border: 0;
+	}*/
 	.Mui-focused {
 		svg {
 			color: $links;

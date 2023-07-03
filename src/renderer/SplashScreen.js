@@ -6,13 +6,12 @@ const SplashScreen = ({ screen }) => {
   if (!screen) {
     return null;
   }
-
   return (
     <Box className="splashScreen" data-testid="splashscreen-component">
       {screen === "noTodoTxtObjects" && (
         <>
           <h1>No results</h1>
-          No results found for either your search input nor your selected filters
+          <p>No results found for either your search input nor your selected filters</p>
           <Button variant="filled" data-testid='navigation-button-files'>
             Reset filters and search
           </Button>

@@ -8,6 +8,7 @@ function createFiltersObject(todoTxtObjects) {
     t: {},
     rec: {},
     tag: {},
+    pm: {},
   };
 
   Object.values(todoTxtObjects).forEach((items) => {
