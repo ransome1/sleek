@@ -6,5 +6,5 @@
 (C) 2023-12-01 test4 +project2 @context4 due:2023-06-05
 (C) 2023-12-12 test5 +project8 @context6 due:2023-04-03 
 x (C) 2023-07-03 2023-12-12 test5 +project4 @context5 due:2023-01-04
-x (B) 2023-07-03 2023-12-01 test5 +testProject @testContext due:2023-06-04
-(B) 2023-12-12 test5 +testProject @testContext due:2023-06-02
+(B) 2023-12-01 test5 +testProject @testContext due:2023-06-04
+x (B) 2023-07-07 2023-12-12 test5 +testProject @testContext due:2023-06-02

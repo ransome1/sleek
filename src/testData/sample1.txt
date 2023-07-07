@@ -27,8 +27,8 @@ x (A) 2023-06-25 2023-12-12 test5 +testProject h:1 @testContext due:2023-06-05
 x (A) 2023-06-26 2023-12-12 test5 +testProject @testContext due:2023-06-01 t:2023-01-01
 x (A) 2023-06-26 2023-06-24 This +TestProject is the line @TestContext you want to change rec:2d 
 (A) 2023-12-12 test5 +testProject @testContext due:2023-06-03 t:2023-01-02
-x (A) 2023-06-24 2023-06-24 Here is a #new one with a tag
-x (A) 2023-06-26 2023-12-12 test5 +testProject @testContext due:2023-06-04 @robin
+x (A) 2023-07-06 2023-06-24 Here is a #new one with a tag
+(A) 2023-12-12 test5 +testProject @testContext due:2023-06-04 @robin
 
 (D) 2023-12-01 +testProject test2 @testContext due:2023-06-03
 (D) 2023-12-01 test6 +testProject @testContext t:2023-01-02
@@ -53,5 +53,5 @@ x (D) 2023-06-24 2023-12-01 test4 +testProject @testContext due:2023-06-05 t:202
 (D) 2023-12-12 test5 +testProject h:1 @testContext due:2023-06-05 rec:d
 (D) 2023-12-12 test5 +testProject @testContext due:2023-06-01 t:2023-01-01
 x (D) 2023-12-12 test5 +testProject @testContext due:2023-06-03 t:2023-01-02
-x (D) 2023-06-24 2023-12-12 test5 +testProject @testContext due:2023-06-04
+(D) 2023-12-12 test5 +testProject @testContext due:2023-06-04
 Another one for @robin in a line

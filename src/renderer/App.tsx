@@ -12,7 +12,7 @@ import Search from './Search';
 import './App.scss';
 
 const App: React.FC = () => {
-  const [todoObjects, setTodoTxtObjects] = useState<object>({});
+  const [todoObjects, settodoObjects] = useState<object>({});
   const [headers, setHeaders] = useState<object>({});
   const [filters, setFilters] = useState<object>({});
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
@@ -28,14 +28,14 @@ const App: React.FC = () => {
   const handleReceiveData = (todoObjects: object, filters: any, headers: object) => {
     setHeaders(headers);
     setFilters(filters);
-    setTodoTxtObjects(todoObjects);
+    settodoObjects(todoObjects);
     setSplashScreen(null);
   };
 
   const handleShowSplashScreen = (screen: string, headers: object) => {
     setHeaders(headers);
     setFilters(filters);
-    setTodoTxtObjects({});
+    settodoObjects({});
     setSplashScreen(screen);
   };
 

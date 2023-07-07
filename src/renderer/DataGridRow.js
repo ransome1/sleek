@@ -38,9 +38,13 @@ const DataGridRow = ({ todoObject }) => {
   ];
 
   const handleDivClick = (event) => {
-    if (!event.target.matches('input[type="checkbox"]') && !event.target.matches('span.MuiChip-label')) {
-      openAddTodoDialog();
-    }
+    
+    //event.stopPropagation();
+
+    if(event.target.tagName === 'LI') openAddTodoDialog();
+    // if (!event.target.matches('input[type="checkbox"]') && !event.target.matches('.MuiChip-label')) {
+    //   openAddTodoDialog();
+    // }
   };
 
   const handleButtonClick = (word, value) => {

@@ -1,6 +1,6 @@
 import { mainWindow } from '../main';
 
-function createFiltersObject(todoTxtObjects) {
+function createFiltersObject(todoObjects) {
   const filters = {
     projects: {},
     contexts: {},
@@ -11,7 +11,7 @@ function createFiltersObject(todoTxtObjects) {
     pm: {},
   };
 
-  Object.values(todoTxtObjects).forEach((items: TodoTxtObject[]) => {
+  Object.values(todoObjects).forEach((items: TodoTxtObject[]) => {
     items.forEach((item: TodoTxtObject) => {
       const { projects, contexts, due, t, rec, tags } = item;
 

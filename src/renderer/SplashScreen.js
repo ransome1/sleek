@@ -8,7 +8,7 @@ const SplashScreen = ({ screen }) => {
   }
   return (
     <Box className="splashScreen" data-testid="splashscreen-component">
-      {screen === "noTodoTxtObjects" && (
+      {screen === "notodoObjects" && (
         <>
           <h1>No results</h1>
           <p>No results found for either your search input nor your selected filters</p>

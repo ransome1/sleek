@@ -40,9 +40,9 @@ describe('App', () => {
 		expect(screen.getByTestId('drawer-component')).toBeInTheDocument();
 	});
 
-	it('renders TodoTxtDataGrid when todoTxtObjects is not empty', () => {
+	it('renders TodoTxtDataGrid when todoObjects is not empty', () => {
 	    render(<App />);
-	    const todoTxtObjects = {
+	    const todoObjects = {
 	      A: [
 	        {
 	          id: 2,
@@ -82,21 +82,21 @@ describe('App', () => {
 	        },
 	      ]
 	    };
-	    render(<TodoTxtDataGrid todoTxtObjects={todoTxtObjects} searchString='' />);
+	    render(<TodoTxtDataGrid todoObjects={todoObjects} searchString='' />);
 	    expect(screen.getByRole('grid')).toHaveClass('ReactVirtualized__Grid');
 	  });
 
-	it('does not render TodoTxtDataGrid when todoTxtObjects is empty', () => {
+	it('does not render TodoTxtDataGrid when todoObjects is empty', () => {
 		render(<App />);
-		const todoTxtObjects = {};
-		render(<TodoTxtDataGrid todoTxtObjects={todoTxtObjects} searchString='' />);
+		const todoObjects = {};
+		render(<TodoTxtDataGrid todoObjects={todoObjects} searchString='' />);
   		const dataGridComponent = screen.queryByTestId('data-grid-component');
   		expect(dataGridComponent).toBeNull();
 	});
 
 	it('renders SplashScreen when splashScreen is not null', () => {
 		render(<App />);
-		const splashScreen = 'noTodoTxtObjects';
+		const splashScreen = 'notodoObjects';
 		render(<SplashScreen screen={splashScreen} />)
 		expect(screen.getByTestId('splashscreen-component')).toBeInTheDocument();
 	});

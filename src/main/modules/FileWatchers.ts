@@ -1,5 +1,5 @@
 import chokidar, { FSWatcher } from 'chokidar';
-import processDataRequest from './TodoTxtObjects';
+import processDataRequest from './todoObjects';
 import { activeFile } from '../util';
 import { mainWindow } from '../main';
 

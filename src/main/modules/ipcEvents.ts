@@ -1,8 +1,8 @@
 import { ipcMain, app, IpcMainEvent } from 'electron';
 import { mainWindow } from '../main';
-import processDataRequest from './TodoTxtObjects';
-import { changeCompleteState } from './TodoTxtObject';
-import { writeTodoTxtObjectToFile } from './WriteToFile';
+import processDataRequest from './todoObjects';
+import { changeCompleteState } from './TodoObject';
+import { writeTodoObjectToFile } from './WriteToFile';
 import { activeFile } from '../util';
 import store from '../config';
 
@@ -54,7 +54,7 @@ const handleDataRequest = async (event: IpcMainEvent): Promise<void> => {
 
 const handleWriteTodoToFile = async (event: IpcMainEvent, id: number, string: string): Promise<void> => {
   try {
-    const response = await writeTodoTxtObjectToFile(id, string);
+    const response = await writeTodoObjectToFile(id, string);
     event.reply('successWritingToFile', response);
   } catch (error) {
     event.reply('errorWritingToFile', error);
@@ -71,14 +71,23 @@ const handleRequestFiles = (event: IpcMainEvent): void => {
   }
 };
 
-const handleChangeCompleteState = (event: IpcMainEvent, id: number, state: boolean): void => {
+const handleChangeCompleteState = async (event: IpcMainEvent, id: number, state: boolean): Promise<void> => {
   try {
-    changeCompleteState(id, state);
+    const updatedTodoObject = await changeCompleteState(id, state);
+    
+    if (updatedTodoObject === null) {
+      event.reply('displayErrorFromMainProcess', updatedTodoObject);
+      return;
+    }
+
+    const response = await writeTodoObjectToFile(id, updatedTodoObject.toString());
+    event.reply('writeToConsole', response);
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
 };
+
 
 ipcMain.on('setActiveFile', handleSetActiveFile);
 ipcMain.on('requestData', handleDataRequest);

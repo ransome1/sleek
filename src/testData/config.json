@@ -26,16 +26,17 @@
 			"filename": "test.txt"
 		}
 	],
-	"grouping": "priority",
 	"sorting": [
-		"contexts",
-		"projects",
-		"created",
-		"t",
 		"priority",
+		"projects",
+		"due",
+		"contexts",
+		"t",
 		"completed",
-		"due"
+		"created"
 	],
-	"invertGroupSorting": true,
-	"sortCompletedAtTheEnd": true
+	"invertGroups": false,
+	"invertSorting": false,
+	"completedLast": false,
+	"hideCompleted": false
 }

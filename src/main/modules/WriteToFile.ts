@@ -1,13 +1,13 @@
-import { lines } from '../modules/TodoTxtObjects';
+import { lines } from '../modules/todoObjects';
 import { activeFile } from '../util';
 import fs from 'fs/promises';
 
-async function writeTodoTxtObjectToFile(id: number, string: string): Promise<void> {
+async function writeTodoObjectToFile(id: number, string: string) {
   if (!string) {
     throw new Error(`No string provided, won't write empty todo to file`);
   }
 
-  if (id && id >= 0 && id < lines.length) {
+  if (typeof id === 'number' && id >= 0) {
     lines[id] = string;
   } else {
     lines.push(string);
@@ -16,16 +16,12 @@ async function writeTodoTxtObjectToFile(id: number, string: string): Promise<voi
   const modifiedContent = lines.join('\n');
   const activeFilePath = activeFile()?.path || '';
 
-  try {
-    await fs.writeFile(activeFilePath, modifiedContent, 'utf8');
-    if (id) {
-      console.log(`Line ${id + 1} overwritten successfully`);
-    } else {
-      console.log(`New line added`);
-    }
-  } catch (error) {
-    throw error;
+  await fs.writeFile(activeFilePath, modifiedContent, 'utf8');
+  if (id) {
+    return `Line ${id + 1} overwritten successfully`
+  } else {
+    return `New line added`
   }
 }
 
-export { writeTodoTxtObjectToFile };
+export { writeTodoObjectToFile };
