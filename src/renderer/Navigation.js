@@ -5,7 +5,7 @@ import { Button, Box } from '@mui/material';
 import TodoDialog from './TodoDialog';
 import './Navigation.scss';
 
-const NavigationComponent = ({ toggleDrawer, isOpen }) => {
+const NavigationComponent = ({ toggleDrawer, isOpen, filters }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(null);
 
@@ -20,7 +20,7 @@ const NavigationComponent = ({ toggleDrawer, isOpen }) => {
 
   return (
     <nav data-testid='navigation-component'>
-      {dialogOpen && <TodoDialog setDialogOpen={setDialogOpen} />}
+      {dialogOpen && <TodoDialog setDialogOpen={setDialogOpen} filters={filters} />}
       <Box>sleek</Box>
       <Button onClick={openAddTodoDialog} className={activeButton === 'add' ? 'active' : ''}>
         <FontAwesomeIcon icon={faPlus} />

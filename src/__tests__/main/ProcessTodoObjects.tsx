@@ -115,6 +115,10 @@ let groupedTodoObjects: any;
 
 describe('Process todo.txt objects', () => {
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });    
+
     test('Objects are counted correctly', () => {
         const count = countTodoObjects(todoObjects);
         expect(count).toEqual(7);

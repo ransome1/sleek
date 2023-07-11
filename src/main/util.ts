@@ -9,27 +9,39 @@ type ActiveFile = {
 };
 
 export function activeFile(): ActiveFile | undefined {
-  const files: ActiveFile[] = store.get('files') as ActiveFile[];
-  if(!files) return
-  const activeFile: ActiveFile | undefined = files.find(
-    (file: ActiveFile) => file.active === true
-  );
-  return activeFile
+  try {
+    const files: ActiveFile[] = store.get('files') as ActiveFile[];
+    if(!files) return
+    const activeFile: ActiveFile | undefined = files.find(
+      (file: ActiveFile) => file.active === true
+    );
+    return activeFile
+  } catch (error) {
+    throw new Error(`Failed to resolve active file: ${error}`);
+  }  
 }
 
 export function resolveHtmlPath(htmlFileName: string): string {
-  if (process.env.NODE_ENV === 'development') {
-    const port = process.env.PORT || 1212;
-    const url = new URL(`http://localhost:${port}`);
-    url.pathname = htmlFileName;
-    return url.href;
+  try {
+    if (process.env.NODE_ENV === 'development') {
+      const port = process.env.PORT || 1212;
+      const url = new URL(`http://localhost:${port}`);
+      url.pathname = htmlFileName;
+      return url.href;
+    }
+    return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
+  } catch (error) {
+    throw new Error(`Failed to resolve path: ${error}`);
   }
-  return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 }
 
 export function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  try {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  } catch (error) {
+    throw new Error(`Failed to format date: ${error}`);
+  }
 }

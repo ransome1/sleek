@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Box, CssBaseline } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import NavigationComponent from './Navigation';
-import TodoTxtDataGrid from './DataGrid';
+import TodoDataGrid from './DataGrid';
 import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs';
 import theme from './Theme';
@@ -80,10 +80,10 @@ const App: React.FC = () => {
           <FileTabs files={files} />
           <Search headers={headers} />
           <SplashScreen screen={splashScreen} />
-          <TodoTxtDataGrid todoObjects={todoObjects} />
+          <TodoDataGrid todoObjects={todoObjects} filters={filters} />
         </div>
       </div>
-      <NavigationComponent toggleDrawer={toggleDrawer} isOpen={isDrawerOpen} />
+      <NavigationComponent toggleDrawer={toggleDrawer} filters={filters} isOpen={isDrawerOpen} />
     </ThemeProvider>
   );
 };

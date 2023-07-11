@@ -1,0 +1,25 @@
+@import 'variables.scss';
+
+.addTodo {
+	.MuiFormControl-root {
+		width: 100%;
+	}
+	.react-autosuggest__suggestions-container--open {
+		width: 40em;
+		position: fixed;
+		z-index: 10;
+		backdrop-filter: blur(10px);
+		background-color: rgba(255, 255, 255, 0.5);
+		border-radius: $radius;	
+		padding: 0.75em 1em;
+		ul {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			li {
+				float: left;
+				margin: 0 0.35em 0.35em 0;
+			}
+		}
+	}
+}

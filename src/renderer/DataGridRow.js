@@ -7,7 +7,7 @@ import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import './DataGridRow.scss';
 
-const DataGridRow = ({ todoObject }) => {
+const DataGridRow = ({ todoObject, filters }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openAddTodoDialog = () => {
@@ -37,7 +37,7 @@ const DataGridRow = ({ todoObject }) => {
     { pattern: /pm:\d+\b/, value: 'pm:', shortcut: 'pm:' }
   ];
 
-  const handleDivClick = (event) => {
+  const handleRowClick = (event) => {
     
     //event.stopPropagation();
 
@@ -54,8 +54,8 @@ const DataGridRow = ({ todoObject }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      {dialogOpen && <TodoDialog todoTxtObject={todoObject} setDialogOpen={setDialogOpen} />}
-      <ListItem key={todoObject.id} className="row" data-complete={todoObject.complete} data-priority={todoObject.priority} onClick={handleDivClick}>
+      {dialogOpen && <TodoDialog todoObject={todoObject} filters={filters} setDialogOpen={setDialogOpen} />}
+      <ListItem key={todoObject.id} className="row" data-complete={todoObject.complete} data-priority={todoObject.priority} onClick={handleRowClick}>
         <Checkbox checked={todoObject.complete} onChange={handleCheckboxChange} />
         {words.map((word, index) => {
           const expression = expressions.find((expr) => isExpression(word, expr.pattern));

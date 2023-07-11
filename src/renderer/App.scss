@@ -14,33 +14,7 @@ body {
 				display: flex;
 				flex-direction: column;
 			}
-		}
-		*[data-todotxt-attribute="projects"] {
-			color: $sleek-projects-foreground;
-			background: $sleek-projects-background;
-			div.MuiAvatar-root {
-				color: white;
-				background: darken($sleek-projects-background, 50%);
-			}
-		}
-		*[data-todotxt-attribute="contexts"] {
-			color: $sleek-contexts-foreground;
-			background: $sleek-contexts-background;
-			div.MuiAvatar-root {
-				color: white;
-				background: darken($sleek-contexts-background, 50%);
-			}
-		}
-		*[data-todotxt-attribute="pm:"] {
-			color: white;
-			background: $danger;
-			svg {
-				color: white;
-			}
-			div.MuiAvatar-root {
-				background: darken($warning, 50%);
-			}
-		}		
+		}	
 	}
 	#root > *
 	::-webkit-scrollbar {
@@ -52,4 +26,56 @@ body {
   		background: lightgray;
   		border-radius: 5px;
 	}
+
+	*[data-todotxt-attribute="projects"],
+	*[data-todotxt-attribute="+"] {
+		color: $sleek-projects-foreground;
+		background: $sleek-projects-background;
+		div.MuiAvatar-root {
+			color: white;
+			background: darken($sleek-projects-background, 50%);
+		}
+	}
+
+	*[data-todotxt-attribute="contexts"],
+	*[data-todotxt-attribute="@"] {
+		color: $sleek-contexts-foreground;
+		background: $sleek-contexts-background;
+		div.MuiAvatar-root {
+			color: white;
+			background: darken($sleek-contexts-background, 50%);
+		}
+	}
+
+	*[data-todotxt-attribute="pm:"] {
+		color: white;
+		background: $danger;
+		svg {
+			color: white;
+		}
+		div.MuiAvatar-root {
+			background: darken($warning, 50%);
+		}
+	}
+
+	*[aria-selected="true"] {
+		*[data-todotxt-attribute="projects"],
+		*[data-todotxt-attribute="+"] {
+			color: white;
+			background: darken($sleek-projects-background, 60%);
+			div.MuiAvatar-root {
+				color: white;
+				background: darken($sleek-projects-background, 50%);
+			}
+		}
+		*[data-todotxt-attribute="contexts"],
+		*[data-todotxt-attribute="@"] {
+			color: white;
+			background: darken($sleek-contexts-background, 60%);
+			div.MuiAvatar-root {
+				color: white;
+				background: darken($sleek-contexts-background, 50%);
+			}
+		}		
+	}	
 }

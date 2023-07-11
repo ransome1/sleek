@@ -19,11 +19,26 @@ const theme = createTheme({
         },
       },
     },
-    MuiDialog: {
+    MuiAccordion: {
       styleOverrides: {
         root: {
-          
+          background: 'none',
+          border: 'none',
+          boxShadow: 'none',
+          padding: ' 0 1em',
         },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          border: 'none',
+          cursor: 'pointer',          
+        },
+      },
+    }, 
+    MuiDialog: {
+      styleOverrides: {
         paper: {
           width: '100vw',
           maxWidth: '50em',
@@ -53,11 +68,9 @@ const theme = createTheme({
           boxShadow: 'none',
           color: '#5a5a5a',
           '&:hover': {
-            background: '#ebebeb',
             boxShadow: 'none',
           },
           '&:active': {
-            background: '#ebebeb',
             boxShadow: 'none',
           },
         },

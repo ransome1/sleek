@@ -40,6 +40,11 @@ jest.mock('../../main/modules/TodoObjects', () => {
 });
 
 describe('Mark todo as complete', () => {
+  
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
 	test('Unfinished todo is being marked as complete', () => {
 		const updatedTodoObject = changeCompleteState(0, true);
 		expect(updatedTodoObject?.toString()).toEqual('x (C) ' + date + ' ' + date + ' +testProject5 test0 @testContext due:2023-01-02');
@@ -50,14 +55,9 @@ describe('Mark todo as complete', () => {
 		expect(updatedTodoObject?.toString()).toEqual('(C) 2023-07-01 +testProject2 test1 @testContext due:2023-12-12');
 	});
 
-	test('changeCompleteState throws an error for invalid parameters', () => {
+	test('changeCompleteState throws an error if line is outside range', () => {
 	  expect(() => {
 	    changeCompleteState(167, true);
 	  }).toThrow('Invalid ID: ID must be between 0 and');
-	});	
-
-	// test('If no ID is passed, function will return null', () => {
-	// 	const updatedTodoObject = changeCompleteState(-1, false);
-	// 	expect(updatedTodoObject).toThrow('Invalid ID: ID must be between 0 and');
-	// });
+	});
 });
