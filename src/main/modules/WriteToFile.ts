@@ -1,4 +1,4 @@
-import { lines } from '../modules/todoObjects';
+import { lines } from '../modules/TodoObjects';
 import { activeFile } from '../util';
 import fs from 'fs/promises';
 

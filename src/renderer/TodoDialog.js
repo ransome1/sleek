@@ -1,37 +1,40 @@
-import React, { useState } from 'react';
-import { Button, Dialog, DialogContent, DialogActions, Alert } from '@mui/material';
+import React, { useState, useRef, useEffect } from 'react';
+import { Button, Dialog, DialogContent, DialogActions, Alert, Tooltip } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const TodoDialog = ({ setDialogOpen, todoObject, filters }) => {
-  const [open, setOpen] = useState(true);
-  const [error, setError] = useState(null);
+const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, filters, setSnackBarSeverity, setSnackBarContent, setSnackBarOpen }) => {
+  const textFieldRef = useRef(null);
+
 
   const handleClose = () => {
-    setOpen(false);
     setDialogOpen(false);
   };
 
   const handleAdd = async () => {
     try {
-      const string = textFieldValue;
+      const inputValue = textFieldRef.current?.value;
+      if(inputValue === '') {
+        setSnackBarSeverity('info');
+        setSnackBarContent('Please enter something into the text field');
+        setSnackBarOpen(true);
+        return;
+      }
       const id = todoObject?.id || '';
-
-      await ipcRenderer.send('writeTodoToFile', id, string);
-
-      setOpen(false);
-      setDialogOpen(false);
+      await ipcRenderer.send('writeTodoToFile', id, inputValue);
+      setDialogOpen(false)
     } catch (error) {
-      setError(error);
+      setSnackBarSeverity('error');
+      setSnackBarContent('Error');
+      setSnackBarOpen(true);
     }
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} className="addTodo">
+    <Dialog open={dialogOpen} onClose={handleClose} className='addTodo'>
       <DialogContent>
-        <AutoSuggest todoObject={todoObject} setDialogOpen={setDialogOpen} filters={filters}  />
-        {error && <Alert severity="error">Error: {error.message}</Alert>}
+        <AutoSuggest textFieldRef={textFieldRef} todoObject={todoObject} setDialogOpen={setDialogOpen} filters={filters}  />
       </DialogContent>
       <DialogActions>
         {todoObject?.id ? (

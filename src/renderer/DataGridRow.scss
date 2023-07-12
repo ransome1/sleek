@@ -5,12 +5,12 @@
 		width: auto;
 		height: auto;
 
+		cursor: pointer;
+
 		border-left: solid 5px $light-grey;
 		border-bottom: solid 1px $light-grey;
 
 		flex-wrap: wrap;
-
-		cursor: pointer;
 
 		div[role=button] {
 			height: 2em;
@@ -46,6 +46,7 @@
 		margin-top: 1em;
 		padding-left: 0;
 		border: none;
+		cursor: auto;
 		.MuiChip-root {
 			font-size: 1.3em;
 			font-family: $font-family-bold;

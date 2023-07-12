@@ -5,10 +5,8 @@ const theme = createTheme({
     borderRadius: "0.65em"
   },
   typography: {
-    fontFamily: [
-      'FreeSans',
-      'sans-serif',
-    ].join(','),
+    fontFamily: 'FreeSans, sans-serif',
+    color: 'red',
   },
   components: {
     MuiDrawer: {
@@ -26,6 +24,20 @@ const theme = createTheme({
           border: 'none',
           boxShadow: 'none',
           padding: ' 0 1em',
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.25em',
+        },
+      },
+    },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: {
+          padding: '0 1em',
         },
       },
     },
@@ -68,15 +80,14 @@ const theme = createTheme({
           boxShadow: 'none',
           color: '#5a5a5a',
           '&:hover': {
+            background: 'none',
             boxShadow: 'none',
           },
           '&:active': {
+            background: 'none',
             boxShadow: 'none',
           },
-        },
-        filled: {
-          background: '#ebebeb',
-        },
+        }
       },
     },
   },

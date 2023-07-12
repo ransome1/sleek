@@ -46,7 +46,7 @@ async function processDataRequest(file: string, searchString: string) {
     mainWindow?.webContents.send('showSplashScreen', 'notodoObjects', filters, headers);
     return 'No todo.txt objects created, showing splashscreen';
   } else {
-    mainWindow?.webContents.send('receiveData', sortedTodoObjects, filters, headers);
+    mainWindow?.webContents.send('requestData', sortedTodoObjects, filters, headers);
     return 'todo.txt objects and filters created and sent to renderer';
   }
 }

@@ -1,5 +1,5 @@
 import { writeTodoObjectToFile } from '../../main/modules/WriteToFile';
-import { lines } from '../../main/modules/todoObjects';
+import { lines } from '../../main/modules/TodoObjects';
 
 jest.mock('../../main/modules/todoObjects', () => ({
   lines: ['Line 1', 'Line 2', 'Line 3'],

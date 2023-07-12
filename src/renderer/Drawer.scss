@@ -1,22 +1,28 @@
+@import "Variables.scss";
+
 .Drawer {
 	width: 30em;
 	height: 100vh;
 	padding: 0;
 	margin-left: -30em;
-	background: #ebebeb;
+	background: $light-grey;
 	.MuiPaper-root {
 		position: relative;
 		z-index: 5;
 	}
 	.Accordion {
-		margin: 1em;
+		margin: 1em 0;
+		h3 {
+			font-family: 'FreeSansBold';
+			padding: 0;
+			margin: 0;
+		}
 		.MuiChip-root {
 			margin: 0 0.35em 0.35em 0;
 		}
 		.MuiCollapse-wrapperInner {
 			overflow-y: auto;
 			overflow-x: hidden;
-			max-height: 30vh;
 		}
 	}
 }

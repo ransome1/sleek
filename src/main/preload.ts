@@ -1,15 +1,10 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
-  | 'changeCompleteState'
-  | 'receiveData'
   | 'requestData'
   | 'reloadGrid'
-  | 'receiveFiles'
   | 'requestFiles'
   | 'showSplashScreen'
-  | 'errorWritingToFile'
-  | 'successWritingToFile'
   | 'writeTodoToFile'
   | 'writeToConsole'
   | 'applySearchString'

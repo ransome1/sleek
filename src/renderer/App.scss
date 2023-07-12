@@ -3,6 +3,10 @@
 body {
 	font-family: $font-family-regular!important;
 	overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;	
 	#root {
 		.flex-container {
 			display: flex;
@@ -16,6 +20,17 @@ body {
 			}
 		}	
 	}
+
+
+	.MuiOutlinedInput-notchedOutline {
+		border: none;
+	}
+
+	.MuiOutlinedInput-root {
+		background: $lighter-grey;
+	}
+
+
 	#root > *
 	::-webkit-scrollbar {
   		background-color: transparent;
@@ -23,12 +38,14 @@ body {
 	}
 	::-webkit-scrollbar-thumb:window-inactive,
 	::-webkit-scrollbar-thumb {
-  		background: lightgray;
+  		background: $light-grey;
   		border-radius: 5px;
 	}
 
 	*[data-todotxt-attribute="projects"],
-	*[data-todotxt-attribute="+"] {
+	*[data-todotxt-attribute="projects"]:hover,
+	*[data-todotxt-attribute="+"],
+	*[data-todotxt-attribute="+"]:hover {
 		color: $sleek-projects-foreground;
 		background: $sleek-projects-background;
 		div.MuiAvatar-root {
@@ -38,7 +55,9 @@ body {
 	}
 
 	*[data-todotxt-attribute="contexts"],
-	*[data-todotxt-attribute="@"] {
+	*[data-todotxt-attribute="contexts"]:hover,
+	*[data-todotxt-attribute="@"],
+	*[data-todotxt-attribute="@"]:hover {
 		color: $sleek-contexts-foreground;
 		background: $sleek-contexts-background;
 		div.MuiAvatar-root {

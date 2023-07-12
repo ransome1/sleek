@@ -7,6 +7,17 @@ import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import './DataGridRow.scss';
 
+const expressions = [
+  { pattern: /^@\S+$/, value: 'contexts', shortcut: '@' },
+  { pattern: /^\+\S+$/, value: 'projects', shortcut: '+' },
+  { pattern: /\bdue:\d{4}-\d{2}-\d{2}\b/, value: 'due:', shortcut: 'due:' },
+  { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't:', shortcut: 't:' },
+  { pattern: /^rec:\d*[dwmy]$/, value: 'rec:', shortcut: 'rec:' },
+  { pattern: /\bh:1\b/, value: 'h:1', shortcut: 'h:1' },
+  { pattern: /^#\S+$/, value: '#', shortcut: '#' },
+  { pattern: /pm:\d+\b/, value: 'pm:', shortcut: 'pm:' }
+];
+
 const DataGridRow = ({ todoObject, filters }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -15,7 +26,7 @@ const DataGridRow = ({ todoObject, filters }) => {
   };
 
   const handleCheckboxChange = (event) => {
-    window.electron.ipcRenderer.send('changeCompleteState', todoObject.id, event.target.checked);
+    window.electron.ipcRenderer.send('writeTodoToFile', todoObject.id, undefined, event.target.checked);
   };
 
   if (todoObject.group) {
@@ -26,25 +37,8 @@ const DataGridRow = ({ todoObject, filters }) => {
   const words = todoObject.body.split(' ');
   const isExpression = (word, pattern, shortcut) => pattern.test(word);
 
-  const expressions = [
-    { pattern: /^@\S+$/, value: 'contexts', shortcut: '@' },
-    { pattern: /^\+\S+$/, value: 'projects', shortcut: '+' },
-    { pattern: /\bdue:\d{4}-\d{2}-\d{2}\b/, value: 'due:', shortcut: 'due:' },
-    { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't:', shortcut: 't:' },
-    { pattern: /^rec:\d*[dwmy]$/, value: 'rec:', shortcut: 'rec:' },
-    { pattern: /\bh:1\b/, value: 'h:1', shortcut: 'h:1' },
-    { pattern: /^#\S+$/, value: '#', shortcut: '#' },
-    { pattern: /pm:\d+\b/, value: 'pm:', shortcut: 'pm:' }
-  ];
-
   const handleRowClick = (event) => {
-    
-    //event.stopPropagation();
-
     if(event.target.tagName === 'LI') openAddTodoDialog();
-    // if (!event.target.matches('input[type="checkbox"]') && !event.target.matches('.MuiChip-label')) {
-    //   openAddTodoDialog();
-    // }
   };
 
   const handleButtonClick = (word, value) => {
@@ -54,7 +48,7 @@ const DataGridRow = ({ todoObject, filters }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      {dialogOpen && <TodoDialog todoObject={todoObject} filters={filters} setDialogOpen={setDialogOpen} />}
+      {dialogOpen && <TodoDialog todoObject={todoObject} filters={filters} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />}
       <ListItem key={todoObject.id} className="row" data-complete={todoObject.complete} data-priority={todoObject.priority} onClick={handleRowClick}>
         <Checkbox checked={todoObject.complete} onChange={handleCheckboxChange} />
         {words.map((word, index) => {

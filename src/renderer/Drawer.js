@@ -16,25 +16,30 @@ const DrawerComponent = ({ isOpen, drawerParameter, filters }) => {
       anchor='left'
       open={isOpen}
       className={`Drawer ${isOpen ? 'open' : ''}`}
-      sx={{ transition: isOpen ? 'margin-left 0.3s ease' : 'margin-left 0.3s ease', }}
+      sx={{ transition: isOpen ? 'margin-left 0.3s ease' : 'margin-left 0.3s ease' }}
     >
       {Object.keys(filters).length > 0 && (
         <Box className='Accordion'>
-          {Object.keys(filters).map((key, index) => (
-            <Accordion key={index} expanded onChange={handleChange(key)}>
-              <AccordionSummary>{key}</AccordionSummary>
-              <AccordionDetails>
-                {Object.keys(filters[key]).map((childKey, childIndex) => (
-                  <Chip 
-                    key={childIndex}
-                    avatar={<Avatar>{filters[key][childKey]}</Avatar>}
-                    label={childKey}
-                    data-todotxt-attribute={key}
-                  />
-                ))}
-              </AccordionDetails>
-            </Accordion>
-          ))}
+          {Object.keys(filters).map((key, index) => {
+            if (Object.keys(filters[key]).length > 0) {
+              return (
+                <Accordion key={index} expanded onChange={handleChange(key)}>
+                  <AccordionSummary><h3>{key}</h3></AccordionSummary>
+                  <AccordionDetails>
+                    {Object.keys(filters[key]).map((childKey, childIndex) => (
+                      <Chip
+                        key={childIndex}
+                        avatar={<Avatar>{filters[key][childKey]}</Avatar>}
+                        label={childKey}
+                        data-todotxt-attribute={key}
+                      />
+                    ))}
+                  </AccordionDetails>
+                </Accordion>
+              );
+            }
+            return null;
+          })}
         </Box>
       )}
     </Drawer>

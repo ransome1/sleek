@@ -1,20 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { Avatar, Chip, TextField } from '@mui/material';
+import { Avatar, Chip, TextField, InputAdornment, Button } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './AutoSuggest.scss';
 
-const AutoSuggest = ({ todoObject, setDialogOpen, filters }) => {
-  const textFieldRef = useRef(null);
+const AutoSuggest = ({ textFieldRef, todoObject, setDialogOpen, filters }) => {
+  
   const [textFieldValue, setTextFieldValue] = useState(todoObject?.string || '');
   const [suggestions, setSuggestions] = useState([]);
   const [prefix, setPrefix] = useState(null);
   const regex = / [\+@][^ ]*/g;
   const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
-
+  const suggestionsContainerRef = useRef(null);
 
   useEffect(() => {
     textFieldRef.current?.focus();
-  });  
+  });
 
   const handleSuggestionsFetchRequested = ({ value, reason }) => {
 
@@ -38,7 +40,6 @@ const AutoSuggest = ({ todoObject, setDialogOpen, filters }) => {
         setMatchPosition({ start: matchStart, end: matchEnd });
       }
     }
-    
   };
 
   function handleSuggestionSelected(event, { suggestion }) {
@@ -51,7 +52,6 @@ const AutoSuggest = ({ todoObject, setDialogOpen, filters }) => {
     };
 
     const newValue = createNewValue(suggestion, matchPosition.start, matchPosition.end);
-
 
     setTextFieldValue(newValue);
     setSuggestions([]);
@@ -82,18 +82,28 @@ const AutoSuggest = ({ todoObject, setDialogOpen, filters }) => {
     />
   );
 
+  const handleXClick = (event) => {
+    setTextFieldValue(newValue);
+  };
+
   const inputProps = {
     placeholder: `(A) Todo text +project @context due:2020-12-12 rec:d`,
     value: textFieldValue,
     onChange: handleChange,
     inputRef: textFieldRef,
+    endadornment: (
+      <InputAdornment position="end">
+        <Button onClick={handleXClick}>
+          <FontAwesomeIcon data-testid='fa-icon-circle-xmark' icon={faCircleXmark} />
+        </Button>
+      </InputAdornment>
+    ),
   };
 
   const renderInputComponent = (inputProps) => <TextField {...inputProps} />;
 
   const handleSuggestionsClearRequested = () => {
     setSuggestions([]);
-    textFieldRef.current?.focus();
   };
 
   return (
@@ -103,10 +113,10 @@ const AutoSuggest = ({ todoObject, setDialogOpen, filters }) => {
       onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
       onSuggestionsClearRequested={handleSuggestionsClearRequested}
       getSuggestionValue={(suggestion) => suggestion}
-      //getSuggestionValue={(suggestion) => handleSuggestionSelected(suggestion, matchPosition)}
       renderSuggestion={(suggestion) => renderSuggestion(suggestion, matchPosition)}
       onSuggestionSelected={handleSuggestionSelected}
       inputProps={inputProps}
+      highlightFirstSuggestion={true}
     />
   );
 };

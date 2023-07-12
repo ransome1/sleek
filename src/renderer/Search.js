@@ -9,8 +9,20 @@ const Search = ({ headers }) => {
   const [showAddTodoButton, setShowAddTodoButton] = useState(false);
   const searchFieldRef = useRef(null);
   const addTodoButton = document.getElementById("addTodoButton");
-
   const label = (headers.availableObjects) ? "Showing " + headers.visibleObjects + " of " + headers.availableObjects : null
+
+  useEffect(() => {
+    searchFieldRef.current?.focus();
+  }, [inputString]);
+
+  useEffect(() => {
+    const errorHandler = () => console.log(error);
+    window.electron.ipcRenderer.on('mainProcessError', errorHandler);
+
+    return () => {
+      window.electron.ipcRenderer.off('mainProcessError', errorHandler);
+    };
+  }, []);
 
   const handleInput = (event) => {
     const searchString = event.target.value.toLowerCase();
@@ -24,6 +36,8 @@ const Search = ({ headers }) => {
 
   const handleChipClick = () => {
     window.electron.ipcRenderer.send('writeTodoToFile', undefined, inputString);
+    setShowAddTodoButton(false);
+    setInputString('');
   };
 
   const handleXClick = (event) => {
@@ -35,7 +49,7 @@ const Search = ({ headers }) => {
   useEffect(() => {
     const delayTimer = setTimeout(() => {
       handleSearch();
-    }, 250);
+    }, 200);
     return () => clearTimeout(delayTimer);
   }, [inputString]);
 
@@ -46,6 +60,7 @@ const Search = ({ headers }) => {
         placeholder="(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12"
         onChange={handleInput}
         label={label}
+        inputRef={searchFieldRef}
         value={inputString}
         InputProps={{
           startAdornment: 

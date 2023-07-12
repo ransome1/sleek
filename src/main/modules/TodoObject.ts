@@ -1,4 +1,4 @@
-import { todoObjects } from './todoObjects';
+import { todoObjects } from './TodoObjects';
 import { Item } from 'jsTodoTxt';
 
 type TodoObject = Record<string, any>;

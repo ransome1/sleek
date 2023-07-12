@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFilter, faSlidersH, faFolderOpen, faCog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button, Box } from '@mui/material';
-import TodoDialog from './TodoDialog';
 import './Navigation.scss';
 
-const NavigationComponent = ({ toggleDrawer, isOpen, filters }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
+const NavigationComponent = ({ toggleDrawer, isOpen, filters, setDialogOpen }) => {
   const [activeButton, setActiveButton] = useState(null);
 
   const openAddTodoDialog = () => {
@@ -20,7 +18,6 @@ const NavigationComponent = ({ toggleDrawer, isOpen, filters }) => {
 
   return (
     <nav data-testid='navigation-component'>
-      {dialogOpen && <TodoDialog setDialogOpen={setDialogOpen} filters={filters} />}
       <Box>sleek</Box>
       <Button onClick={openAddTodoDialog} className={activeButton === 'add' ? 'active' : ''}>
         <FontAwesomeIcon icon={faPlus} />

@@ -1,6 +1,6 @@
 import { ipcMain, app, IpcMainEvent } from 'electron';
 import { mainWindow } from '../main';
-import processDataRequest from './todoObjects';
+import processDataRequest from './TodoObjects';
 import { changeCompleteState } from './TodoObject';
 import { writeTodoObjectToFile } from './WriteToFile';
 import { activeFile } from '../util';
@@ -52,47 +52,31 @@ const handleDataRequest = async (event: IpcMainEvent): Promise<void> => {
   }
 };
 
-const handleWriteTodoToFile = async (event: IpcMainEvent, id: number, string: string): Promise<void> => {
+const handleWriteTodoToFile = async (event: IpcMainEvent, id: number, string: string, state: boolean): Promise<void> => {
   try {
+    if(string === undefined && state !== undefined && id >= 0) {
+      string = await changeCompleteState(id, state).toString();
+    }
     const response = await writeTodoObjectToFile(id, string);
-    event.reply('successWritingToFile', response);
+    event.reply('writeTodoToFile', response);
   } catch (error) {
-    event.reply('errorWritingToFile', error);
+    event.reply('writeTodoToFile', error);
   }
 };
 
 const handleRequestFiles = (event: IpcMainEvent): void => {
   try {
     const files = store.get('files');
-    event.reply('receiveFiles', files);
+    event.reply('requestFiles', files);
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
 };
-
-const handleChangeCompleteState = async (event: IpcMainEvent, id: number, state: boolean): Promise<void> => {
-  try {
-    const updatedTodoObject = await changeCompleteState(id, state);
-    
-    if (updatedTodoObject === null) {
-      event.reply('displayErrorFromMainProcess', updatedTodoObject);
-      return;
-    }
-
-    const response = await writeTodoObjectToFile(id, updatedTodoObject.toString());
-    event.reply('writeToConsole', response);
-  } catch (error) {
-    console.error(error);
-    event.reply('displayErrorFromMainProcess', error);
-  }
-};
-
 
 ipcMain.on('setActiveFile', handleSetActiveFile);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('requestFiles', handleRequestFiles);
-ipcMain.on('changeCompleteState', handleChangeCompleteState);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('applySearchString', handleApplySearchString);
 
@@ -100,7 +84,6 @@ const removeEventListeners = (): void => {
   ipcMain.off('setActiveFile', handleSetActiveFile);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('requestFiles', handleRequestFiles);
-  ipcMain.off('changeCompleteState', handleChangeCompleteState);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('applySearchString', handleApplySearchString);
 };

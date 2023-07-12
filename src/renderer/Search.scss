@@ -20,13 +20,14 @@
 	*[aria-hidden=true] {
 		display: flex;
 	}
-	/*.MuiInputBase-root > * {
-  	border: 0;
-	}*/
 	.Mui-focused {
 		svg {
 			color: $links;
 		}
+	}
+	.MuiChip-filled.Mui-focusVisible {
+		background: $links;
+		color: white;
 	}
 }
 

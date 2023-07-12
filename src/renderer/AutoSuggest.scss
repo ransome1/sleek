@@ -5,7 +5,8 @@
 		width: 100%;
 	}
 	.react-autosuggest__suggestions-container--open {
-		width: 40em;
+		max-height: 20em;
+		overflow-y: auto;
 		position: fixed;
 		z-index: 10;
 		backdrop-filter: blur(10px);
