@@ -1,24 +1,103 @@
-# Contributing
+# Contributing Guidelines
 
-## What is needed?
+Thank you for your interest in contributing to the sleek project! We welcome contributions from the community to help improve and enhance the project. To ensure a smooth collaboration, please review and follow these guidelines.
 
-### Refactor JavaScript
-sleek is written in plain vanilla JavaScript. I'm doing my best to keep the code as slim and tidy as possible. But I'm not a professional developer and limited on time I can invest into this project. You can contribute by reviewing the JavaScript with the aim of making sleek faster and more maintainable.
+## Table of Contents
 
-### Clean up the CSS
-In order to create sleeks' unique look a lot of (S)CSS had been written. If you have experience in CSS you can review and optimise it.
+1. [Getting Started](#getting-started)
+2. [Contributing](#contributing)
+    - [Reporting Issues](#reporting-issues)
+    - [Feature Requests](#feature-requests)
+    - [Pull Requests](#pull-requests)
+    - [GitHub Issue Backlog](#github-issue-backlog)
+3. [Development Setup](#development-setup)
+4. [Testing](#testing)
+5. [Coding Guidelines](#coding-guidelines)
+6. [Commit Guidelines](#commit-guidelines)
+7. [Code of Conduct](#code-of-conduct)
 
-### Work on feature requests
-Over the time plenty of feature requests had been added to sleeks backlog: https://github.com/ransome1/sleek/issues. You can simply pick a feature request and start working on it. Every feature needs to be contributed with a sufficient amount of test cases (see "Write test cases"). There is a prioritised backlog too: https://github.com/ransome1/sleek/projects/2
+## Getting Started
 
-### Enhance the CI process
-sleek is being distributed through Github and many other platforms (Snap Store, Flathub, Arch User Repository, Windows Store, Mac App Store). Releasing sleek is still plenty of work and it would be of great help if the releasing process would be further automated. For instance the build process on Flathub or AUR could be triggered on tag creation on Github. The current CI configuration can be found here: https://github.com/ransome1/sleek/blob/develop/.github/workflows/github-ci.yml
+Before contributing, make sure you have the latest version of Node.js and npm installed on your system.
 
-### Enhance the design
-If you have interface design experience you can propose design changes. As sleek has a strong focus on its design, all changes should be discussed before any implementation is being done.
+## Contributing
 
-### Translate sleek into your language
-Plenty of languages are already available, but if yours is missing, you can translate the app to it.
+### Reporting Issues
 
-### Write test cases
-Test cases are written for the Playwright end to end testing environment: https://playwright.dev/docs/api/class-playwright. Creating cases it pretty much straight forward and you can take a look on how it has been done so far: https://github.com/ransome1/sleek/blob/master/test/playwright.spec.js
+If you encounter any issues or bugs while using sleek, please open an issue on the GitHub repository. When reporting issues, please provide detailed information about the problem, including steps to reproduce and any error messages or logs if applicable.
+
+### Feature Requests
+
+If you have ideas for new features or improvements, we encourage you to open a feature request issue on GitHub. Describe the desired functionality or improvement in detail to help us understand and evaluate the suggestion.
+
+### Pull Requests
+
+We welcome pull requests for bug fixes, enhancements, or new features. To contribute code, please follow these steps:
+
+1. Fork the repository and create a new branch for your feature or bug fix.
+2. Make your changes in the new branch, adhering to the [coding guidelines](#coding-guidelines).
+3. Write tests using [Jest](https://jestjs.io/) to cover your changes.
+4. Ensure that your code and tests pass by running `npm test`.
+5. Commit your changes using [proper commit guidelines](#commit-guidelines).
+6. Push your branch to your forked repository.
+7. Open a pull request against the main repository's `master` branch.
+8. Provide a clear description of your changes and the problem they solve.
+
+We will review your pull request as soon as possible. Your contributions are greatly appreciated!
+
+### GitHub Issue Backlog
+
+Before starting work on sleek, we recommend reviewing the GitHub Issue backlog to align your contributions with existing issues. This helps avoid duplication of efforts and ensures that your work aligns with the project roadmap. If you find an issue that you would like to contribute to, please indicate your interest by commenting on the issue.
+
+## Development Setup
+
+To set up the development environment and run sleek locally, follow these steps:
+
+1. Clone the repository: `git clone https://github.com/your-username/sleek.git`
+2. Install project dependencies: `npm install`
+3. Start the development server: `npm start`
+
+## Testing
+
+sleek uses [Jest](https://jestjs.io/) as the testing framework. To run tests, use the following command: `npm test`
+
+To contribute to the testing efforts, consider the following:
+
+- Write tests to cover new features or changes in functionality.
+- Ensure that existing tests pass before making new contributions.
+- Aim for high test coverage to maintain code quality.
+
+## Coding Guidelines
+
+To maintain code consistency, readability, and quality, please adhere to the following guidelines:
+
+- Write lean and efficient code. Avoid unnecessary complexity or redundant logic.
+- Follow the [React coding style guide](https://reactjs.org/docs/style-guide.html) for writing React components.
+- Use meaningful and descriptive variable and function names.
+- Write clear and concise comments when necessary.
+- Prioritize code readability over cleverness.
+- Consider the user interface and user experience when adding new functionality. Strive for an intuitive and visually appealing interface.
+
+## Commit Guidelines
+
+When making commits, please follow these guidelines:
+
+- Use descriptive and meaningful commit messages.
+- Separate the subject from the body with a blank line.
+- Start the subject with a verb in the imperative mood (e.g., "Add," "Fix," "Update").
+- Keep the subject line short and concise (preferably 50 characters or less).
+- Provide additional details in the body if needed.
+- Reference relevant issues or pull requests in the commit message if applicable.
+
+Example:
+```
+Add new feature
+
+Implement a new feature that allows users to customize settings.
+
+Fixes #123
+```
+
+Thank you for taking the time to review these contributing guidelines. We appreciate your contributions and look forward to collaborating with you! If you have any questions, feel free to reach out to us.
+
+Happy coding and testing!
