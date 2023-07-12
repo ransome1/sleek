@@ -7,6 +7,8 @@ import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import './DataGridRow.scss';
 
+const ipcRenderer = window.electron.ipcRenderer;
+
 const expressions = [
   { pattern: /^@\S+$/, value: 'contexts', shortcut: '@' },
   { pattern: /^\+\S+$/, value: 'projects', shortcut: '+' },
@@ -26,7 +28,7 @@ const DataGridRow = ({ todoObject, filters }) => {
   };
 
   const handleCheckboxChange = (event) => {
-    window.electron.ipcRenderer.send('writeTodoToFile', todoObject.id, undefined, event.target.checked);
+    ipcRenderer.send('writeTodoToFile', todoObject.id, undefined, event.target.checked);
   };
 
   if (todoObject.group) {

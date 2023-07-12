@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { Avatar, Chip, TextField, InputAdornment, Button } from '@mui/material';
+import { Chip, TextField, InputAdornment, Button } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './AutoSuggest.scss';
 
-const AutoSuggest = ({ textFieldRef, todoObject, setDialogOpen, filters }) => {
-  
-  const [textFieldValue, setTextFieldValue] = useState(todoObject?.string || '');
+const AutoSuggest = ({ textFieldRef, setDialogOpen, filters, textFieldValue, setTextFieldValue }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [prefix, setPrefix] = useState(null);
   const regex = / [\+@][^ ]*/g;
   const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
-  const suggestionsContainerRef = useRef(null);
 
   useEffect(() => {
     textFieldRef.current?.focus();
-  });
+  }, []);
 
-  const handleSuggestionsFetchRequested = ({ value, reason }) => {
-
+  const handleSuggestionsFetchRequested = ({ value }) => {
     const inputValue = textFieldRef.current?.value;
     if (!inputValue) return;
 
@@ -42,8 +38,7 @@ const AutoSuggest = ({ textFieldRef, todoObject, setDialogOpen, filters }) => {
     }
   };
 
-  function handleSuggestionSelected(event, { suggestion }) {
-
+  const handleSuggestionSelected = (_, { suggestion }) => {
     const inputValue = textFieldRef.current?.value;
     if (!inputValue) return;
 
@@ -55,10 +50,10 @@ const AutoSuggest = ({ textFieldRef, todoObject, setDialogOpen, filters }) => {
 
     setTextFieldValue(newValue);
     setSuggestions([]);
-  }
+  };
 
   const handleChange = (event, { newValue, method }) => {
-    if(method === 'type') setTextFieldValue(newValue);
+    if (method === 'type') setTextFieldValue(newValue);
   };
 
   const getSuggestions = (trigger, match) => {
@@ -77,12 +72,12 @@ const AutoSuggest = ({ textFieldRef, todoObject, setDialogOpen, filters }) => {
       variant="outlined"
       data-todotxt-attribute={prefix}
       label={suggestion}
-      avatar={<Avatar>{prefix}</Avatar>}
       key={suggestion}
     />
   );
 
-  const handleXClick = (event) => {
+  const handleXClick = () => {
+    const newValue = '';
     setTextFieldValue(newValue);
   };
 
@@ -113,7 +108,7 @@ const AutoSuggest = ({ textFieldRef, todoObject, setDialogOpen, filters }) => {
       onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
       onSuggestionsClearRequested={handleSuggestionsClearRequested}
       getSuggestionValue={(suggestion) => suggestion}
-      renderSuggestion={(suggestion) => renderSuggestion(suggestion, matchPosition)}
+      renderSuggestion={renderSuggestion}
       onSuggestionSelected={handleSuggestionSelected}
       inputProps={inputProps}
       highlightFirstSuggestion={true}

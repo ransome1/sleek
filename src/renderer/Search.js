@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './Search.scss';
 
+const ipcRenderer = window.electron.ipcRenderer;
+
 const Search = ({ headers }) => {
   const [inputString, setInputString] = useState('');
   const [showAddTodoButton, setShowAddTodoButton] = useState(false);
@@ -17,10 +19,12 @@ const Search = ({ headers }) => {
 
   useEffect(() => {
     const errorHandler = () => console.log(error);
-    window.electron.ipcRenderer.on('mainProcessError', errorHandler);
+    ipcRenderer.on('mainProcessError', errorHandler);
 
     return () => {
-      window.electron.ipcRenderer.off('mainProcessError', errorHandler);
+      if (ipcRenderer && ipcRenderer.removeAllListeners) {
+        ipcRenderer.removeAllListeners();
+      }
     };
   }, []);
 
@@ -31,11 +35,11 @@ const Search = ({ headers }) => {
   };
 
   const handleSearch = () => {
-    window.electron.ipcRenderer.send('applySearchString', inputString);
+    ipcRenderer.send('applySearchString', inputString);
   };
 
   const handleChipClick = () => {
-    window.electron.ipcRenderer.send('writeTodoToFile', undefined, inputString);
+    ipcRenderer.send('writeTodoToFile', undefined, inputString);
     setShowAddTodoButton(false);
     setInputString('');
   };
@@ -43,7 +47,7 @@ const Search = ({ headers }) => {
   const handleXClick = (event) => {
     setShowAddTodoButton(false);
     setInputString('');
-    window.electron.ipcRenderer.send('applySearchString', '');
+    ipcRenderer.send('applySearchString', '');
   };
 
   useEffect(() => {

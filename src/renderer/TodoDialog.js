@@ -1,12 +1,29 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Button, Dialog, DialogContent, DialogActions, Alert, Tooltip } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Button, Dialog, DialogContent, DialogActions, Box, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
+import PriorityPicker from './PriorityPicker';
+import DatePicker from './DatePicker';
+import { formatDate } from './util.ts';
+import { Item } from 'jsTodoTxt';
+import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
 const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, filters, setSnackBarSeverity, setSnackBarContent, setSnackBarOpen }) => {
   const textFieldRef = useRef(null);
+  const [textFieldValue, setTextFieldValue] = useState(todoObject?.string || '');
 
+  const handlePriorityChange = (priority) => {
+    const updatedTodoObject = new Item(textFieldValue);
+    updatedTodoObject.setPriority(priority === '-' ? null : priority);
+    setTextFieldValue(updatedTodoObject.toString())
+  };
+
+  const handleDateChange = (response) => {
+    const updatedTodoObject = new Item(textFieldValue);
+    updatedTodoObject.setExtension(response.type, formatDate(response.date));
+    setTextFieldValue(updatedTodoObject.toString());
+  }; 
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -32,9 +49,16 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, filters, setSnackBa
   };
 
   return (
-    <Dialog open={dialogOpen} onClose={handleClose} className='addTodo'>
+    <Dialog open={dialogOpen} onClose={handleClose} className='TodoDialog'>
       <DialogContent>
-        <AutoSuggest textFieldRef={textFieldRef} todoObject={todoObject} setDialogOpen={setDialogOpen} filters={filters}  />
+        <AutoSuggest textFieldValue={textFieldValue} setTextFieldValue={setTextFieldValue} textFieldRef={textFieldRef} todoObject={todoObject} setDialogOpen={setDialogOpen} filters={filters}  />
+
+        <PriorityPicker currentPriority={todoObject?.priority} onPriorityChange={handlePriorityChange} />
+
+        <DatePicker date={todoObject?.due} type="due" onDateChange={(date) => handleDateChange(date, "due")} />
+
+        <DatePicker date={todoObject?.t} type="t" onDateChange={(date) => handleDateChange(date, "t")} />
+
       </DialogContent>
       <DialogActions>
         {todoObject?.id ? (

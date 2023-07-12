@@ -1,0 +1,54 @@
+@import 'variables.scss';
+
+.TodoDialog {
+	.MuiDialog-container {
+		.MuiPaper-root {
+			.MuiDialogContent-root {
+				.react-datepicker__tab-loop {
+					position: fixed;
+					.react-datepicker {
+						font-size: 1em;
+						border-radius: $radius;
+						border: none;
+						padding: 1em;
+						background-color: $lighter-grey;
+						.react-datepicker__navigation-icon--next::before,
+						.react-datepicker__navigation-icon::before {
+							border-color: $links;
+						}
+						.react-datepicker__triangle::before,
+						.react-datepicker__triangle::after {
+							border-bottom-color: $lighter-grey;
+						}
+						.react-datepicker__header {
+							background: none;
+							border: none;
+							font-family: $font-family-bold;
+							padding: 0;
+						}
+						.react-datepicker__day,
+						.react-datepicker__day-name {
+							width: 2.25em;
+							height: 2.25em;
+							line-height: 2.25em;
+						}
+						.react-datepicker__current-month {
+							font-size: inherit;
+						}
+						.react-datepicker__navigation--next,
+						.react-datepicker__navigation--previous {
+							width: 4em;
+							height: 4em;
+						}
+						.react-datepicker__day--selected {
+							background: $links;
+							font-family: $font-family-bold;
+						}
+					}
+				}
+			}
+			
+		}
+	}
+}
+

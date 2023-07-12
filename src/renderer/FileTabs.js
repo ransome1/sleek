@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Tab, Tabs } from '@mui/material';
 import './FileTabs.scss';
 
+const ipcRenderer = window.electron.ipcRenderer;
+
 const FileTabs = ({ files }) => {
   const [value, setValue] = useState(0);
 
@@ -13,7 +15,7 @@ const FileTabs = ({ files }) => {
   }, [files]);
 
   const handleChange = (event, index) => {
-    window.electron.ipcRenderer.send('setActiveFile', index);
+    ipcRenderer.send('setActiveFile', index);
     setValue(index);
   };
 

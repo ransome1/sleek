@@ -94,8 +94,11 @@ const App: React.FC = () => {
       }
     };
     requestFiles();
+    
     return () => {
-      ipcRenderer.removeAllListeners();
+      if (ipcRenderer && ipcRenderer.removeAllListeners) {
+        ipcRenderer.removeAllListeners();
+      }
     };
   }, []);
 
