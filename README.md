@@ -11,7 +11,7 @@ In the meantime, I invite you to explore the current state of development on Git
 
 If you're interested and eager to contribute, you can already begin working on tasks and features that are still pending. You can find an overview of these tasks in the project board located at https://github.com/users/ransome1/projects/3/views/1.
 
-Feel free to explore the codebase and project board, and if you're passionate about any particular tasks or features, don't hesitate to start working on them. Your contributions will be greatly appreciated and will help propel the development of sleek to new heights.
+Feel free to explore the codebase and project board, and if you're passionate about any particular tasks or features, don't hesitate to start working on them. Here you can find the updated contribution guidelines: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md. Your contributions will be greatly appreciated and will help propel the development of sleek to new heights.
 
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
