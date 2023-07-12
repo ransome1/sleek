@@ -1,6 +1,6 @@
 # sleek
 
-## sleek is currently being rewritten
+## sleek is currently undergoing a rewriting process
 Thank you for your continued support of this application. The community surrounding it has grown significantly over time, and the numerous feature requests and bug reports demonstrate the ongoing interest and potential for further improvement.
 
 However, I recognize that I cannot accomplish this alone. To foster greater collaboration and participation, it is crucial that the codebase is accessible. Currently, this is not the case, which explains the limited contributions from others. Therefore, I am in the process of rewriting sleek using React, which will result in a significantly smaller codebase. I will also ensure that it adheres more closely to the specifications of Electron.
