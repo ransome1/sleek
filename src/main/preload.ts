@@ -7,6 +7,7 @@ export type Channels =
   | 'showSplashScreen'
   | 'writeTodoToFile'
   | 'writeToConsole'
+  | 'selectedFilters'
   | 'applySearchString'
   | 'displayErrorFromMainProcess';
 

@@ -12,15 +12,15 @@
 
 		flex-wrap: wrap;
 
-		div[role=button] {
+		button {
 			height: 2em;
-			font-size: 0.8em;
+			font-size: 0.9em;
 			margin: 0 0.2em;
 			text-transform: lowercase;
 			svg {
-				width: 1.5em;
-				height: 1.5em;
-				color: $dark-grey;
+				width: 1em;
+				height: 1em;
+				margin-right: 0.25em;
 			}
 		}
 		.MuiCheckbox-root {
@@ -39,7 +39,8 @@
 	.row[data-priority=C] {
 		border-left-color: $warning;
 	}	
-	.row[data-complete=true] {
+	.row[data-complete=true],
+	.row[data-hidden="1"] {
 		filter: opacity(50%) grayscale(100%);
 	}
 	.row.group {

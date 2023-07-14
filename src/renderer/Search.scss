@@ -25,6 +25,9 @@
 			color: $links;
 		}
 	}
+	.Mui-focusVisible {
+		color: $links;
+	}
 	.MuiChip-filled.Mui-focusVisible {
 		background: $links;
 		color: white;

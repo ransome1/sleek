@@ -1,8 +1,10 @@
 import { activeFile, formatDate } from '../../main/util';
-import store from '../../main/config';
+import { configStorage } from '../../main/config';
 
 jest.mock('../../main/config', () => ({
-  get: jest.fn(),
+  configStorage: {
+    get: jest.fn(),
+  },
 }));
 
 describe('activeFile', () => {
@@ -31,14 +33,14 @@ describe('activeFile', () => {
 	});
 
 	test('returns undefined when files is undefined', () => {
-		(store.get as jest.Mock).mockReturnValue(undefined);
+		(configStorage.get as jest.Mock).mockReturnValue(undefined);
 
 		const result = activeFile();
 		expect(result).toBeUndefined();
 	});
 
 	test('returns the active file in an array of file objects', () => {
-		(store.get as jest.Mock).mockReturnValue(mockFiles);
+		(configStorage.get as jest.Mock).mockReturnValue(mockFiles);
 		const result = activeFile();
 		expect(result).toEqual(mockActiveFile);
 	});

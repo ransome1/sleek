@@ -1,46 +1,42 @@
 import React, { useState, useRef } from 'react';
-import { Button, Dialog, DialogContent, DialogActions, Box, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogContent, DialogActions } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
 import DatePicker from './DatePicker';
-import { formatDate } from './util.ts';
+import PomodoroPicker from './PomodoroPicker';
+import RecurrencePicker from './RecurrencePicker';
+import { formatDate } from './util';
 import { Item } from 'jsTodoTxt';
 import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, filters, setSnackBarSeverity, setSnackBarContent, setSnackBarOpen }) => {
+const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent, setSnackBarOpen }) => {
   const textFieldRef = useRef(null);
   const [textFieldValue, setTextFieldValue] = useState(todoObject?.string || '');
 
   const handlePriorityChange = (priority) => {
     const updatedTodoObject = new Item(textFieldValue);
     updatedTodoObject.setPriority(priority === '-' ? null : priority);
-    setTextFieldValue(updatedTodoObject.toString())
+    setTextFieldValue(updatedTodoObject.toString());
   };
 
-  const handleDateChange = (response) => {
+  const handleExtensionChange = (type, response) => {    
     const updatedTodoObject = new Item(textFieldValue);
-    updatedTodoObject.setExtension(response.type, formatDate(response.date));
+    updatedTodoObject.setExtension(type, response);
     setTextFieldValue(updatedTodoObject.toString());
-  }; 
-
-  const handleClose = () => {
-    setDialogOpen(false);
   };
 
   const handleAdd = async () => {
+    if (!textFieldValue.trim()) {
+      setSnackBarSeverity('info');
+      setSnackBarContent('Please enter something into the text field');
+      setSnackBarOpen(true);
+      return;
+    }
     try {
-      const inputValue = textFieldRef.current?.value;
-      if(inputValue === '') {
-        setSnackBarSeverity('info');
-        setSnackBarContent('Please enter something into the text field');
-        setSnackBarOpen(true);
-        return;
-      }
-      const id = todoObject?.id || '';
-      await ipcRenderer.send('writeTodoToFile', id, inputValue);
-      setDialogOpen(false)
+      await ipcRenderer.send('writeTodoToFile', todoObject?.id || '', textFieldValue);
+      setDialogOpen(false);
     } catch (error) {
       setSnackBarSeverity('error');
       setSnackBarContent('Error');
@@ -49,26 +45,31 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, filters, setSnackBa
   };
 
   return (
-    <Dialog open={dialogOpen} onClose={handleClose} className='TodoDialog'>
+    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} className='TodoDialog'>
       <DialogContent>
-        <AutoSuggest textFieldValue={textFieldValue} setTextFieldValue={setTextFieldValue} textFieldRef={textFieldRef} todoObject={todoObject} setDialogOpen={setDialogOpen} filters={filters}  />
+        <AutoSuggest
+          attributes={attributes}
+          textFieldValue={textFieldValue}
+          setTextFieldValue={setTextFieldValue}
+          textFieldRef={textFieldRef}
+          todoObject={todoObject}
+          setDialogOpen={setDialogOpen}
+        />
 
-        <PriorityPicker currentPriority={todoObject?.priority} onPriorityChange={handlePriorityChange} />
+        <PriorityPicker currentPriority={todoObject?.priority} onChange={handlePriorityChange} />
 
-        <DatePicker date={todoObject?.due} type="due" onDateChange={(date) => handleDateChange(date, "due")} />
+        <DatePicker date={todoObject?.due} type="due" onChange={(date) => handleExtensionChange("due", date)} />
 
-        <DatePicker date={todoObject?.t} type="t" onDateChange={(date) => handleDateChange(date, "t")} />
+        <DatePicker date={todoObject?.t} type="t" onChange={(date) => handleExtensionChange("t", date)} />
+
+        <RecurrencePicker pomodoro={todoObject?.rec} onChange={(recurrence) => handleExtensionChange("rec", recurrence)} />
+
+        <PomodoroPicker pomodoro={todoObject?.pm} onChange={(pomodoro) => handleExtensionChange("pm", pomodoro)} />
 
       </DialogContent>
       <DialogActions>
-        {todoObject?.id ? (
-          <Button onClick={handleAdd} id={todoObject.id}>
-            Edit
-          </Button>
-        ) : (
-          <Button onClick={handleAdd}>Add</Button>
-        )}
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleAdd}>{todoObject?.id ? 'Edit' : 'Add'}</Button>
+        <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
       </DialogActions>
     </Dialog>
   );

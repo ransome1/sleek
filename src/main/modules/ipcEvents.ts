@@ -4,7 +4,7 @@ import processDataRequest from './TodoObjects';
 import { changeCompleteState } from './TodoObject';
 import { writeTodoObjectToFile } from './WriteToFile';
 import { activeFile } from '../util';
-import store from '../config';
+import { configStorage } from '../config';
 
 interface File {
   path: string;
@@ -13,7 +13,7 @@ interface File {
 
 const handleSetActiveFile = async (event: IpcMainEvent, arg: number): Promise<void> => {
   try {
-    const files: File[] = (store.get('files') as File[]) || [];
+    const files: File[] = (configStorage.get('files') as File[]) || [];
     
     files.forEach((file: File) => {
       file.active = false;
@@ -35,6 +35,16 @@ const handleApplySearchString = async (event: IpcMainEvent, arg: string): Promis
   try {
     const activeFilePath = activeFile()?.path || '';
     processDataRequest(activeFilePath, arg)
+  } catch (error) {
+    console.error(error);
+    event.reply('displayErrorFromMainProcess', error);
+  }
+};
+
+const handleSelectedFilters = async (event: IpcMainEvent, filters: object): Promise<void> => {
+  try {
+    const activeFilePath = activeFile()?.path || '';
+    const response = await processDataRequest(activeFilePath, null, filters);
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
@@ -66,7 +76,7 @@ const handleWriteTodoToFile = async (event: IpcMainEvent, id: number, string: st
 
 const handleRequestFiles = (event: IpcMainEvent): void => {
   try {
-    const files = store.get('files');
+    const files = configStorage.get('files');
     event.reply('requestFiles', files);
   } catch (error) {
     console.error(error);
@@ -78,6 +88,7 @@ ipcMain.on('setActiveFile', handleSetActiveFile);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('requestFiles', handleRequestFiles);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
+ipcMain.on('selectedFilters', handleSelectedFilters);
 ipcMain.on('applySearchString', handleApplySearchString);
 
 const removeEventListeners = (): void => {
@@ -85,6 +96,7 @@ const removeEventListeners = (): void => {
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('requestFiles', handleRequestFiles);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
+  ipcMain.off('selectedFilters', handleSelectedFilters);
   ipcMain.off('applySearchString', handleApplySearchString);
 };
 

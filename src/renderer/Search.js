@@ -74,7 +74,7 @@ const Search = ({ headers }) => {
           endAdornment:
             <InputAdornment position="end">
               <Chip id="addTodoButton" aria-hidden={showAddTodoButton} label="Add as todo" onClick={handleChipClick} />
-              <Button onClick={handleXClick}>
+              <Button className="xClick" onClick={handleXClick} style={{ display: inputString ? 'block' : 'none' }}>
                 <FontAwesomeIcon data-testid='fa-icon-circle-xmark' icon={faCircleXmark} />
               </Button>
             </InputAdornment>,

@@ -4,7 +4,7 @@ import { faPlus, faFilter, faSlidersH, faFolderOpen, faCog, faQuestionCircle } f
 import { Button, Box } from '@mui/material';
 import './Navigation.scss';
 
-const NavigationComponent = ({ toggleDrawer, isOpen, filters, setDialogOpen }) => {
+const NavigationComponent = ({ toggleDrawer, isOpen, setDialogOpen }) => {
   const [activeButton, setActiveButton] = useState(null);
 
   const openAddTodoDialog = () => {

@@ -17,12 +17,49 @@
 			padding: 0;
 			margin: 0;
 		}
-		.MuiChip-root {
-			margin: 0 0.35em 0.35em 0;
+		.MuiAccordionDetails-root {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 5px;
 		}
+		
 		.MuiCollapse-wrapperInner {
-			overflow-y: auto;
-			overflow-x: hidden;
+			/*max-height: 20em;
+			overflow-y: scroll;
+			overflow-x: hidden;*/
+		}
+		.chipWrapper {
+			position: relative;
+			.overlay {
+				width: 100%;
+				height: 100%;
+				display: none;
+				line-height: 2.2em;
+				border-radius: 1em;
+				position: absolute;
+				top: 0;
+				left: 0;
+				text-align: center;
+				background-color: rgba(255, 255, 255, 0.5);
+				cursor: pointer;
+			}			
+		}
+		.chipWrapper:hover {
+			.overlay {
+				display: block;
+				svg {
+					color: $darker-grey;
+				}
+			}
+		}
+		.chipWrapper.excluded {
+			filter: opacity(50%) grayscale(100%);
+			.overlay {
+				display: block;
+				svg {
+					color: $darker-grey;
+				}
+			}
 		}
 	}
 }

@@ -1,39 +1,32 @@
 import React, { useState } from 'react';
-import { Box, TextField } from '@mui/material';
-import DatePicker from 'react-datepicker';
-import { parseISO } from 'date-fns';
-import 'react-datepicker/dist/react-datepicker.css';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import './DatePicker.scss';
 
-const DatePickerComponent = ({ date, type, onDateChange }) => {
-  const [selectedDate, setSelectedDate] = useState(date ? parseISO(date) : null);
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+const DatePickerComponent = ({ date, type, onChange }) => {
+  const initialValue = date ? dayjs(date) : null;
+  const [value, setValue] = useState(initialValue);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    onDateChange(date ? { date, type } : null);
-  };
-
-  const handleTextFieldClick = () => {
-    setIsDatePickerOpen(true);
-  };
-
-  const handleDatePickerClose = () => {
-    setIsDatePickerOpen(false);
+  const handleChange = (newValue) => {
+    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
+    if (!dayjs(formattedDate).isValid()) {
+      return;
+    }
+    setValue(dayjs(formattedDate));
+    onChange(formattedDate);
   };
 
   return (
+    <LocalizationProvider dateAdapter={AdapterDayjs} locale="en">
       <DatePicker
         className="datePicker"
-        selected={selectedDate}
-        onChange={handleDateChange}
-        dateFormat="yyyy-MM-dd"
-        open={isDatePickerOpen}
-        onClickOutside={handleDatePickerClose}
-        onFocus={handleTextFieldClick}
-        customInput={<TextField id="datePicker" label={type} />}
-        locale="en"
+        format="YYYY-MM-DD"
+        label={type === 't' ? 'Threshold' : 'Due'}
+        value={value}
+        onChange={handleChange}
       />
+    </LocalizationProvider>
   );
 };
 

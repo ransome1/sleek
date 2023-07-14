@@ -27,13 +27,6 @@ const theme = createTheme({
         },
       },
     },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          fontSize: '1.25em',
-        },
-      },
-    },
     MuiAccordionDetails: {
       styleOverrides: {
         root: {
@@ -48,7 +41,16 @@ const theme = createTheme({
           cursor: 'pointer',          
         },
       },
-    }, 
+    },
+    MuiPopover: {
+      styleOverrides: {
+        paper: {
+          borderRadius: '1em',
+          boxShadow: 'none',
+          padding: '1em',
+        },
+      },
+    },
     MuiDialog: {
       styleOverrides: {
         paper: {
@@ -78,6 +80,7 @@ const theme = createTheme({
           textTransform: 'none',
           fontSize: '1em',
           boxShadow: 'none',
+          borderRadius: '0.65em',
           color: '#5a5a5a',
           '&:hover': {
             background: 'none',

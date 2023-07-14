@@ -1,4 +1,4 @@
-import store from '../config';
+import { configStorage } from '../config';
 
 type TodoObject = Record<string, any>;
 type TodoObjects = Record<string, TodoObject>;
@@ -21,7 +21,6 @@ function applySearchString(searchString: string, todoObjects: TodoObjects): Todo
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObjects, hideCompleted: boolean): TodoObject {
-
   if(hideCompleted) {
     const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
     .flat()

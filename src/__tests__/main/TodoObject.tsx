@@ -54,10 +54,4 @@ describe('Mark todo as complete', () => {
 		const updatedTodoObject = changeCompleteState(1, false);
 		expect(updatedTodoObject?.toString()).toEqual('(C) 2023-07-01 +testProject2 test1 @testContext due:2023-12-12');
 	});
-
-	test('changeCompleteState throws an error if line is outside range', () => {
-	  expect(() => {
-	    changeCompleteState(167, true);
-	  }).toThrow('Invalid ID: ID must be between 0 and');
-	});
 });

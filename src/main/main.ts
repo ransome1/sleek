@@ -5,7 +5,7 @@ if (isDebug) {
 }
 import { app, BrowserWindow, shell, Menu, globalShortcut } from 'electron';
 import path from 'path';
-import store from './config';
+import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import menu from './menu';
@@ -15,7 +15,7 @@ import { activeFile } from './util';
 import './modules/ipcEvents';
 
 try {
-  const files = store.get('files') as { path: string }[];
+  const files = configStorage.get('files') as { path: string }[];
   if (files) createFileWatchers(files);
 } catch (error) {
   console.error(error);

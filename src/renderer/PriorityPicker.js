@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import './PriorityPicker.scss';
 
 const alphabetArray = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
 
 const priorities = [{ value: '-', label: '-' }, ...alphabetArray.map((letter) => ({ value: letter, label: letter }))];
 
-const PriorityPicker = ({ currentPriority, onPriorityChange }) => {
+const PriorityPicker = ({ currentPriority, onChange }) => {
   const [priority, setPriority] = useState(currentPriority || '-');
 
   const handleChange = (event) => {
     const selectedPriority = event.target.value;
     setPriority(selectedPriority)
-    onPriorityChange(selectedPriority)
+    onChange(selectedPriority)
   };
 
   return (
-      <FormControl className="priorityPicker">
-        <InputLabel id="priorityPicker">Priority</InputLabel>
+      <FormControl id="priorityPicker" className="priorityPicker">
+        <InputLabel>Priority</InputLabel>
         <Select
           labelId="priorityPicker"
           id="priorityPicker"

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { Chip, TextField, InputAdornment, Button } from '@mui/material';
+import { Chip, TextField, InputAdornment, Button, Avatar } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './AutoSuggest.scss';
 
-const AutoSuggest = ({ textFieldRef, setDialogOpen, filters, textFieldValue, setTextFieldValue }) => {
+const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, setTextFieldValue }) => {
+
   const [suggestions, setSuggestions] = useState([]);
   const [prefix, setPrefix] = useState(null);
   const regex = / [\+@][^ ]*/g;
@@ -59,21 +60,18 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, filters, textFieldValue, set
   const getSuggestions = (trigger, match) => {
     if (trigger === '@') {
       setPrefix('@');
-      return Object.keys(filters.contexts).filter(key => key.includes(match));
+      return Object.keys(attributes.contexts).filter(key => key.includes(match));
     } else if (trigger === '+') {
       setPrefix('+');
-      return Object.keys(filters.projects).filter(key => key.includes(match));
+      return Object.keys(attributes.projects).filter(key => key.includes(match));
     }
     return [];
   };
 
-  const renderSuggestion = (suggestion) => (
-    <Chip
-      variant="outlined"
-      data-todotxt-attribute={prefix}
-      label={suggestion}
-      key={suggestion}
-    />
+  const renderSuggestion = (suggestion, { isHighlighted }) => (
+    <div data-todotxt-attribute={prefix} className={isHighlighted ? 'selected' : ''}>
+      <Button key={suggestion}>{suggestion}</Button>
+    </div>
   );
 
   const handleXClick = () => {
@@ -101,9 +99,18 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, filters, textFieldValue, set
     setSuggestions([]);
   };
 
+  const containerStyle = {
+    width: textFieldRef?.current?.offsetWidth || 'auto',
+  }; 
+
   return (
     <Autosuggest
       renderInputComponent={renderInputComponent}
+      renderSuggestionsContainer={({ containerProps, children }) => (
+        <div {...containerProps} style={containerStyle}>
+          {children}
+        </div>
+      )}      
       suggestions={suggestions}
       onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
       onSuggestionsClearRequested={handleSuggestionsClearRequested}

@@ -1,0 +1,13 @@
+.TodoDialog {
+	.MuiDialog-container {
+		.MuiPaper-root {
+			.MuiDialogContent-root {
+				.pomodoroPicker {
+					input {
+						width: 3.5em;
+					}
+				}
+			}
+		}
+	}
+}

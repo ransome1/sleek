@@ -18,7 +18,7 @@ const ipcRenderer = window.electron.ipcRenderer;
 const App: React.FC = () => {
   const [todoObjects, setTodoObjects] = useState<object>({});
   const [headers, setHeaders] = useState<object>({});
-  const [filters, setFilters] = useState<object>({});
+  const [attributes, setAttributes] = useState<object>({});
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [files, setFiles] = useState<object[]>([]);
   const [drawerParameter, setDrawerParameter] = useState<string | null>(null);
@@ -33,16 +33,16 @@ const App: React.FC = () => {
     setDrawerParameter(parameter);
   };
 
-  const handleReceivedData = (todoObjects: object, filters: any, headers: object) => {
+  const handleReceivedData = (todoObjects: object, attributes: any, headers: object) => {
     setHeaders(headers);
-    setFilters(filters);
+    setAttributes(attributes);
     setTodoObjects(todoObjects);
     setSplashScreen(null);
   };
 
-  const handleShowSplashScreen = (screen: string, headers: object) => {
+  const handleShowSplashScreen = (screen: string, headers: object, attributes: object) => {
     setHeaders(headers);
-    setFilters(filters);
+    setAttributes(attributes);
     setTodoObjects({});
     setSplashScreen(screen);
   };
@@ -106,16 +106,16 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="flex-container">
-        <DrawerComponent isOpen={isDrawerOpen} drawerParameter={drawerParameter} filters={filters} />
+        <DrawerComponent isOpen={isDrawerOpen} drawerParameter={drawerParameter} attributes={attributes} />
         <div className="flex-items">
           <FileTabs files={files} />
           <Search headers={headers} />
           <SplashScreen screen={splashScreen} />
-          <TodoDataGrid todoObjects={todoObjects} filters={filters} setSnackBarOpen={setSnackBarOpen} />
+          <TodoDataGrid todoObjects={todoObjects} attributes={attributes} setSnackBarOpen={setSnackBarOpen} />
         </div>
       </div>
-      <NavigationComponent toggleDrawer={toggleDrawer} filters={filters} isOpen={isDrawerOpen} setDialogOpen={setDialogOpen} />
-      {dialogOpen && <TodoDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} filters={filters} setSnackBarSeverity={setSnackBarSeverity} setSnackBarContent={setSnackBarContent} setSnackBarOpen={setSnackBarOpen} />}
+      <NavigationComponent toggleDrawer={toggleDrawer} isOpen={isDrawerOpen} setDialogOpen={setDialogOpen} />
+      {dialogOpen && <TodoDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} attributes={attributes} setSnackBarSeverity={setSnackBarSeverity} setSnackBarContent={setSnackBarContent} setSnackBarOpen={setSnackBarOpen} />}
       <Snackbar open={snackBarOpen} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={snackBarSeverity}>
           {snackBarContent}

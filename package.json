@@ -1,6 +1,5 @@
 {
   "name": "sleek",
-  "productName": "sleek",
   "version": "2.0.0",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
@@ -27,6 +26,7 @@
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
@@ -93,14 +93,14 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.14.0",
     "@mui/styled-engine-sc": "^5.12.0",
-    "@mui/x-data-grid": "^6.9.0",
-    "@mui/x-date-pickers": "^6.9.2",
+    "@mui/x-date-pickers": "^6.10.0",
     "dayjs": "^1.11.9",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.3.0",
     "jstodotxt": "^1.0.0-alpha.0",
+    "material-ui-popup-state": "^5.0.9",
     "mock-fs": "^5.2.0",
     "react": "^18.2.0",
     "react-autosuggest": "^10.1.0",
@@ -179,8 +179,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "productName": "sleek",
-    "appId": "org.erb.ElectronReact",
+    "appId": "com.todotxt.sleek",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -241,9 +240,6 @@
       "owner": "electron-react-boilerplate",
       "repo": "electron-react-boilerplate"
     }
-  },
-  "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
   "devEngines": {
     "node": ">=14.x",

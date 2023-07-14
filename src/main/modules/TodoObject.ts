@@ -9,12 +9,6 @@ function changeCompleteState(id: number, state: boolean): Item | null {
   }
 
   const todosAsFlatArray: TodoObject[] = Object.values(todoObjects).flat();
-  const maxId: number = todosAsFlatArray.length - 1;
-
-  if (id < 0 || id > maxId) {
-    throw new Error(`Invalid ID: ID must be between 0 and ${maxId}`);
-  }
-
   const todoObject: TodoObject | undefined = todosAsFlatArray.find((todo) => todo.id === id);
 
   if (todoObject) {

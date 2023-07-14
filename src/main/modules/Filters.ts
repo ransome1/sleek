@@ -1,51 +1,58 @@
 import { mainWindow } from '../main';
+import filterStorage from '../config';
 
-function createFiltersObject(todoObjects) {
-  const filters = {
+function applyFilters(todoObjects, filters) {
+  if (filters && Object.keys(filters).length > 0) {
+    return todoObjects.filter((todo) => {
+      return Object.entries(filters).every(([key, filterArray]) => {
+        if (Array.isArray(filterArray) && filterArray.length === 0) {
+          return true;
+        }
+
+        const todoValues = todo[key];
+
+        return filterArray.some(({ value, exclude }) => {
+          if (todoValues === undefined || todoValues === null || (Array.isArray(todoValues) && todoValues.length === 0)) {
+            return exclude;
+          }
+
+          const hasMatchingValue = todoValues.includes(value);
+          return exclude ? !hasMatchingValue : hasMatchingValue;
+        });
+      });
+    });
+  }
+  return todoObjects;
+}
+
+
+function createAttributesObject(todoObjects) {
+  const attributes = {
     projects: {},
     contexts: {},
     due: {},
     t: {},
     rec: {},
-    tag: {},
+    tags: {},
     pm: {},
   };
 
-  Object.values(todoObjects).forEach((items: TodoTxtObject[]) => {
-    items.forEach((item: TodoTxtObject) => {
-      const { projects, contexts, due, t, rec, tags } = item;
+  todoObjects.forEach((item) => {
+    Object.keys(attributes).forEach((key) => {
+      const value = item[key];
 
-      if (Array.isArray(projects)) {
-        projects.forEach((project) => {
-          if (project !== null) {
-            filters.projects[project] = (filters.projects[project] || 0) + 1;
+      if (Array.isArray(value)) {
+        value.forEach((element) => {
+          if (element !== null) {
+            attributes[key][element] = (attributes[key][element] || 0) + 1;
           }
         });
+      } else {
+        incrementCount(attributes[key], value);
       }
-
-      if (Array.isArray(contexts)) {
-        contexts.forEach((context) => {
-          if (context !== null) {
-            filters.contexts[context] = (filters.contexts[context] || 0) + 1;
-          }
-        });
-      }
-
-      if (Array.isArray(tags)) {
-        tags.forEach((tag) => {
-          if (tag !== null) {
-            filters.tags[tag] = (filters.tags[tag] || 0) + 1;
-          }
-        });
-      }
-
-      incrementCount(filters.due, due);
-      incrementCount(filters.t, t);
-      incrementCount(filters.rec, rec);
     });
   });
-
-  return filters;
+  return attributes;
 }
 
 function incrementCount(countObject, key) {
@@ -54,4 +61,5 @@ function incrementCount(countObject, key) {
   }
 }
 
-export { createFiltersObject };
+
+export { createAttributesObject, applyFilters };

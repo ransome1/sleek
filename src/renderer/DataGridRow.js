@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Avatar, Chip, Checkbox, ListItem, Divider } from '@mui/material';
+import { Avatar, Chip, Checkbox, ListItem, Divider, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faPizzaSlice } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import './DataGridRow.scss';
@@ -20,7 +20,7 @@ const expressions = [
   { pattern: /pm:\d+\b/, value: 'pm:', shortcut: 'pm:' }
 ];
 
-const DataGridRow = ({ todoObject, filters }) => {
+const DataGridRow = ({ todoObject, attributes }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openAddTodoDialog = () => {
@@ -50,73 +50,48 @@ const DataGridRow = ({ todoObject, filters }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      {dialogOpen && <TodoDialog todoObject={todoObject} filters={filters} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />}
-      <ListItem key={todoObject.id} className="row" data-complete={todoObject.complete} data-priority={todoObject.priority} onClick={handleRowClick}>
+      {dialogOpen && <TodoDialog todoObject={todoObject} attributes={attributes} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />}
+      <ListItem key={todoObject.id} className="row" data-complete={todoObject.complete} data-priority={todoObject.priority} data-hidden={todoObject.hidden} onClick={handleRowClick}>
         <Checkbox checked={todoObject.complete} onChange={handleCheckboxChange} />
+
+        {todoObject.hidden && todoObject.hidden === '1' && (
+          <FontAwesomeIcon data-testid='fa-icon-eye-slash' icon={faEyeSlash} />
+        )}
+
         {words.map((word, index) => {
           const expression = expressions.find((expr) => isExpression(word, expr.pattern));
-
           if (expression) {
             word = word.substr(expression.shortcut.length);
             if (expression.value === 'projects' || expression.value === 'contexts') {
               return (
-                <Chip
-                  variant="contained"
-                  size="small"
-                  onClick={() => handleButtonClick(word, expression.value)}
-                  data-filter-type="filter"
-                  data-todotxt-attribute={expression.value}
-                  label={word}
-                  avatar={<Avatar>{expression.shortcut}</Avatar>}
-                  key={index}
-                />
+                <div key={index} data-todotxt-attribute={expression.value}>
+                  <Button onClick={() => handleButtonClick(word, expression.value)}>{word}</Button>
+                </div>
               );
             } else if (expression.value === 'due:' || expression.value === 't:') {
               return (
-                <Chip
-                  avatar={<FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />}
-                  onClick={() => handleButtonClick(word, expression.value)}
-                  data-todotxt-attribute={expression.value}
-                  label={word}
-                  variant="contained"
-                  key={index}
-                />
+                <div key={index} data-todotxt-attribute={expression.value}>
+                  <Button onClick={() => handleButtonClick(word, expression.value)}>
+                    <FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />{word}
+                  </Button>
+                </div>
               );
             } else if (expression.value === 'h:1') {
-              return (
-                <Chip
-                  size="small"
-                  avatar={<FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />}
-                  onClick={() => handleButtonClick(word, expression.value)}
-                  data-todotxt-attribute={expression.value}
-                  variant="contained"
-                  label="Hidden"
-                  key={index}
-                />
-              );
+              return;
             } else if (expression.value === 'pm:') {
               return (
-                <Chip
-                  size="small"
-                  avatar={<FontAwesomeIcon data-testid='fa-icon-pizza-slice' icon={faPizzaSlice} />}
-                  onClick={() => handleButtonClick(word, expression.value)}
-                  data-todotxt-attribute={expression.value}
-                  variant="contained"
-                  label={word}
-                  key={index}
-                />
+                <div key={index} data-todotxt-attribute={expression.value}>
+                  <Button onClick={() => handleButtonClick(word, expression.value)}>
+                    <FontAwesomeIcon data-testid='fa-icon-pizza-slice' icon={faPizzaSlice} />
+                    {word}
+                  </Button>
+                </div>
               );
             } else {
               return (
-                <Chip
-                  size="small"
-                  avatar={<Avatar>{expression.shortcut}</Avatar>}
-                  data-todotxt-attribute={expression.value}
-                  onClick={() => handleButtonClick(word, expression.value)}
-                  label={word}
-                  variant="contained"
-                  key={index}
-                />
+                <div key={index} data-todotxt-attribute={expression.value}>
+                  <Button onClick={() => handleButtonClick(word, expression.value)}>{word}</Button>
+                </div>
               );
             }
           }

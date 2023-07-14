@@ -1,8 +1,8 @@
 import fs from 'fs';
 import { Item } from 'jsTodoTxt';
 import { mainWindow } from '../main';
-import store from '../config';
-import { createFiltersObject } from './Filters';
+import { configStorage } from '../config';
+import { createAttributesObject, applyFilters } from './Filters';
 import { handleCompletedTodoObjects, groupTodoObjects, countTodoObjects, applySearchString, sortTodoObjects, sortGroups } from './ProcessTodoObjects';
 
 let todoObjects: Record<string, any>;
@@ -12,24 +12,28 @@ const headers = {
   visibleObjects: 0,
 };
 
-async function processDataRequest(file: string, searchString: string) {
+async function processDataRequest(file: string, searchString: string, filters: object) {
   if (!file) {
     return;
   }
 
-  const hideCompleted: boolean = store.get('hideCompleted');
-  const grouping: string = store.get('sorting')[0];
-  const invertGroups: boolean = store.get('invertGroups');
-  const sorting: string[] = store.get('sorting');
-  const invertSorting : boolean = store.get('invertSorting');
-  const completedLast : boolean = store.get('completedLast');
-
+  const hideCompleted: boolean = configStorage.get('hideCompleted');
+  const grouping: string = configStorage.get('sorting')[0];
+  const invertGroups: boolean = configStorage.get('invertGroups');
+  const sorting: string[] = configStorage.get('sorting');
+  const invertSorting : boolean = configStorage.get('invertSorting');
+  const completedLast : boolean = configStorage.get('completedLast');
   const fileContent = await fs.promises.readFile(file, 'utf8');
+
   todoObjects = await createTodoObjects(fileContent);
 
   headers.availableObjects = countTodoObjects(todoObjects);
 
   todoObjects = handleCompletedTodoObjects(todoObjects, hideCompleted);
+
+  const attributes = createAttributesObject(todoObjects);
+
+  todoObjects = applyFilters(todoObjects, filters);
   
   if (searchString) {
     todoObjects = applySearchString(searchString, todoObjects);
@@ -40,14 +44,13 @@ async function processDataRequest(file: string, searchString: string) {
   const groupedTodoObjects = groupTodoObjects(todoObjects, grouping);
   const sortedGroups = sortGroups(groupedTodoObjects, invertGroups);
   const sortedTodoObjects = sortTodoObjects(sortedGroups, sorting, invertSorting, completedLast);
-  const filters = createFiltersObject(sortedTodoObjects);
 
   if (headers.visibleObjects === 0) {
-    mainWindow?.webContents.send('showSplashScreen', 'notodoObjects', filters, headers);
+    mainWindow?.webContents.send('showSplashScreen', 'notodoObjects', headers, attributes);
     return 'No todo.txt objects created, showing splashscreen';
   } else {
-    mainWindow?.webContents.send('requestData', sortedTodoObjects, filters, headers);
-    return 'todo.txt objects and filters created and sent to renderer';
+    mainWindow?.webContents.send('requestData', sortedTodoObjects, attributes, headers);
+    return 'todo.txt objects and attributes created and sent to renderer';
   }
 }
 
@@ -60,6 +63,8 @@ function createTodoObjects(fileContent: string) {
       const due = extensions.find((extension) => extension.key === 'due')?.value || null;
       const tags = extensions.find((extension) => extension.key === '#') || null;
       const t = extensions.find((extension) => extension.key === 't')?.value || null;
+      const hidden = extensions.find((extension) => extension.key === 'h')?.value || null;
+      const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;
       const rec = extensions.find((extension) => extension.key === 'rec')?.value || null;
       if (!item.body()) {
         return null;
@@ -75,7 +80,9 @@ function createTodoObjects(fileContent: string) {
         due,
         t,
         rec,
+        hidden,
         tags,
+        pm,
         string: item.toString(),
         group: null,
       };

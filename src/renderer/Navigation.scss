@@ -26,6 +26,10 @@ nav {
       margin-top: auto;
     }
 
+    &.hover {
+      background: $light-grey;
+    }
+
     &.active {
       background: $light-grey;
     }
