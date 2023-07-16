@@ -1,21 +1,21 @@
-import { app, Menu, dialog } from 'electron';
+import { app, Menu, dialog, shell } from 'electron';
+import path from 'path';
+import { openFile, createFile } from './modules/File';
 
-const appPackage = app.getAppPath('package.json');
+const appPackage = require('../../release/app/package.json');
 const description = appPackage.description;
 
-// Create the application menu
-const template: Electron.MenuItemConstructorOptions[] = [
-  // Other menu items...
+const template = [
   {
     label: 'sleek',
     submenu: [
       {
         label: 'About',
         click: () => {
-          const options: Electron.MessageBoxOptions = {
+          const options = {
             type: 'info',
             title: 'About sleek',
-            message: `sleek v${app.getVersion()}`, // Retrieve the version number dynamically
+            message: `sleek v${app.getVersion()}`,
             detail: description,
             buttons: ['OK']
           };
@@ -41,10 +41,31 @@ const template: Electron.MenuItemConstructorOptions[] = [
     label: 'File',
     submenu: [
       {
+        label: 'Open todo.txt file',
+        accelerator: 'CmdOrCtrl+O',
+        click: openFile,
+      },
+      {
+        label: 'Create todo.txt file',
+        click: createFile,
+      },
+      {
         label: 'Close Window',
         accelerator: 'CmdOrCtrl+W',
         role: 'close',
       },
+    ],
+  },
+  {
+    label: 'Edit',
+    submenu: [
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { role: 'selectall' },
     ],
   },
   {

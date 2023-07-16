@@ -1,0 +1,89 @@
+  *[data-todotxt-attribute],
+  *[data-todotxt-attribute]:hover {
+    .MuiButtonBase-root {
+      color: darken($mid-grey, 40%);
+      background: darken($light-grey, 10%);
+    }
+    .MuiBadge-badge {
+      color: white;
+      background: darken($mid-grey, 40%);
+    }
+  }
+
+  *[data-todotxt-attribute="projects"],
+  *[data-todotxt-attribute="projects"]:hover,
+  *[data-todotxt-attribute="+"],
+  *[data-todotxt-attribute="+"]:hover {
+    .MuiButtonBase-root {
+      color: $sleek-projects-foreground;
+      background: $sleek-projects-background;
+    }
+    .MuiBadge-badge {
+      color: white;
+      background: darken($sleek-projects-background, 50%);
+    }
+    svg {
+      color: darken($sleek-projects-background, 50%) !important;
+    }
+  }
+
+  *[data-todotxt-attribute="contexts"],
+  *[data-todotxt-attribute="contexts"]:hover,
+  *[data-todotxt-attribute="@"],
+  *[data-todotxt-attribute="@"]:hover {
+    .MuiButtonBase-root {
+      color: $sleek-contexts-foreground;
+      background: $sleek-contexts-background;
+    }
+    .MuiBadge-badge {
+      color: white;
+      background: darken($sleek-contexts-background, 50%);
+    }
+    svg {
+      color: darken($sleek-contexts-background, 50%) !important;
+    }
+  }
+
+  *[data-todotxt-attribute^="pm"],
+  *[data-todotxt-attribute^="pm"]:hover {
+    .MuiButtonBase-root {
+      color: white;
+      background: $danger;
+    }
+    .MuiBadge-badge {
+      background: darken($danger, 25%);
+    }
+  }
+
+  .selected[data-todotxt-attribute],
+  .selected[data-todotxt-attribute]:hover {
+    .MuiButtonBase-root {
+      color: white;
+      background: darken($mid-grey, 40%);
+    }
+  }
+
+  .selected[data-todotxt-attribute="projects"],
+  .selected[data-todotxt-attribute="projects"]:hover,
+  .selected[data-todotxt-attribute="+"],
+  .selected[data-todotxt-attribute="+"]:hover {
+    .MuiButtonBase-root {
+      background: darken($sleek-projects-background, 50%);
+    }
+  }
+
+  .selected[data-todotxt-attribute="contexts"],
+  .selected[data-todotxt-attribute="contexts"]:hover,
+  .selected[data-todotxt-attribute="@"],
+  .selected[data-todotxt-attribute="@"]:hover {
+    .MuiButtonBase-root {
+      background: darken($sleek-contexts-background, 50%);
+    }
+  }
+
+  .selected[data-todotxt-attribute^="pm"],
+  .selected[data-todotxt-attribute^="pm"]:hover {
+    .MuiButtonBase-root {
+      background: darken($danger, 25%);
+    }
+  }

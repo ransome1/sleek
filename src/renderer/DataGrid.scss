@@ -1,5 +1,5 @@
-.MuiList-root.todoTxtGrid {
-  flex-grow: 1;
-  overflow-y: auto;
+#dataGrid {
   padding: 0 1em 1em 1em;
+  overflow-y: scroll;
+  flex-grow: 1;
 }

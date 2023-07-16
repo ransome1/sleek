@@ -1,7 +1,27 @@
-import { mainWindow } from '../main';
-import filterStorage from '../config';
+import { BrowserWindow } from 'electron';
 
-function applyFilters(todoObjects, filters) {
+declare const mainWindow: BrowserWindow;
+
+interface Filter {
+  value: any;
+  exclude: boolean;
+}
+
+interface Filters {
+  [key: string]: Filter[];
+}
+
+interface TodoObject {
+  [key: string]: any;
+}
+
+interface Attributes {
+  [key: string]: {
+    [key: string]: number;
+  };
+}
+
+function applyFilters(todoObjects: TodoObject[], filters: Filters): TodoObject[] {
   if (filters && Object.keys(filters).length > 0) {
     return todoObjects.filter((todo) => {
       return Object.entries(filters).every(([key, filterArray]) => {
@@ -9,31 +29,42 @@ function applyFilters(todoObjects, filters) {
           return true;
         }
 
-        const todoValues = todo[key];
+        const attributeValues = todo[key];
 
-        return filterArray.some(({ value, exclude }) => {
-          if (todoValues === undefined || todoValues === null || (Array.isArray(todoValues) && todoValues.length === 0)) {
+        return filterArray.every(({ value, exclude }) => {
+          if (
+            attributeValues === undefined ||
+            attributeValues === null ||
+            (Array.isArray(attributeValues) && attributeValues.length === 0)
+          ) {
             return exclude;
           }
 
-          const hasMatchingValue = todoValues.includes(value);
+          const valuesToCheck = Array.isArray(attributeValues) ? attributeValues : [attributeValues];
+
+          const hasMatchingValue = valuesToCheck.includes(value);
           return exclude ? !hasMatchingValue : hasMatchingValue;
         });
       });
     });
   }
+
   return todoObjects;
 }
 
-
-function createAttributesObject(todoObjects) {
-  const attributes = {
+function createAttributesObject(todoObjects: TodoObject[]): Attributes {
+  const incrementCount = function(countObject: { [key: string]: number }, key: string | null): void {
+    if (key !== null) {
+      countObject[key] = (countObject[key] || 0) + 1;
+    }
+  }  
+  const attributes: Attributes = {
     projects: {},
     contexts: {},
     due: {},
     t: {},
     rec: {},
-    tags: {},
+    //tag: {},
     pm: {},
   };
 
@@ -52,14 +83,8 @@ function createAttributesObject(todoObjects) {
       }
     });
   });
+
   return attributes;
 }
-
-function incrementCount(countObject, key) {
-  if (key !== null) {
-    countObject[key] = (countObject[key] || 0) + 1;
-  }
-}
-
 
 export { createAttributesObject, applyFilters };

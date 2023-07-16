@@ -11,15 +11,13 @@ import log from 'electron-log';
 import menu from './menu';
 import { resolveHtmlPath } from './util';
 import createFileWatchers from './modules/FileWatchers';
-import { activeFile } from './util';
+import { activeFile } from './modules/File';
 import './modules/ipcEvents';
 
-try {
-  const files = configStorage.get('files') as { path: string }[];
-  if (files) createFileWatchers(files);
-} catch (error) {
-  console.error(error);
-}  
+const files = configStorage.get('files') as { path: string }[];
+if (files !== undefined) {
+  createFileWatchers(files);
+}
 
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
@@ -37,6 +35,11 @@ class AppUpdater {
 }
 
 const handleReadyToShow = () => {
+
+  if (files == undefined) {
+    mainWindow.webContents.send('showSplashScreen', 'noFiles');
+  }
+
   if (process.env.START_MINIMIZED) {
     if (mainWindow) {
       mainWindow.minimize();
@@ -81,12 +84,13 @@ const createWindow = async() => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
+  Menu.setApplicationMenu(menu);
+
   mainWindow
   .on('ready-to-show', handleReadyToShow)
   .on('closed', handleClosed);
   eventListeners.mainWindowReadyToShow = handleReadyToShow;
-  eventListeners.mainWindowClosed = handleClosed,
-
+  eventListeners.mainWindowClosed = handleClosed,  
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
@@ -108,7 +112,11 @@ const handleWillQuit = () => {
 }
 
 const handleBeforeQuit = () => {
-    Object.values(eventListeners).forEach(listener => listener());
+    Object.values(eventListeners).forEach(listener => {
+        if (listener !== handleBeforeQuit) {
+            listener();
+        }
+    });
     eventListeners = {};
 }
 

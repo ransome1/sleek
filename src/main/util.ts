@@ -1,25 +1,5 @@
 import { URL } from 'url';
 import path from 'path';
-import { configStorage } from './config';
-
-type ActiveFile = {
-  active: boolean;
-  path: string;
-  file: string;
-};
-
-export function activeFile(): ActiveFile | undefined {
-  try {
-    const files: ActiveFile[] = configStorage.get('files') as ActiveFile[];
-    if(!files) return
-    const activeFile: ActiveFile | undefined = files.find(
-      (file: ActiveFile) => file.active === true
-    );
-    return activeFile
-  } catch (error) {
-    throw new Error(`Failed to resolve active file: ${error}`);
-  }  
-}
 
 export function resolveHtmlPath(htmlFileName: string): string {
   try {

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { Item } from 'jsTodoTxt';
 import { mainWindow } from '../main';
-import { configStorage } from '../config';
+import { configStorage, filterStorage } from '../config';
 import { createAttributesObject, applyFilters } from './Filters';
 import { handleCompletedTodoObjects, groupTodoObjects, countTodoObjects, applySearchString, sortTodoObjects, sortGroups } from './ProcessTodoObjects';
 
@@ -12,17 +12,27 @@ const headers = {
   visibleObjects: 0,
 };
 
-async function processDataRequest(file: string, searchString: string, filters: object) {
+async function processDataRequest(file: string, searchString: string) {
   if (!file) {
-    return;
+    return 'No todo.txt file available';
   }
 
-  const hideCompleted: boolean = configStorage.get('hideCompleted');
-  const grouping: string = configStorage.get('sorting')[0];
-  const invertGroups: boolean = configStorage.get('invertGroups');
-  const sorting: string[] = configStorage.get('sorting');
-  const invertSorting : boolean = configStorage.get('invertSorting');
-  const completedLast : boolean = configStorage.get('completedLast');
+  const hideCompleted: boolean = configStorage.get('hideCompleted', false);
+  const sorting: string[] = configStorage.get('sorting', [
+    "priority",
+    "due",
+    "projects",
+    "contexts",
+    "t",
+    "completed",
+    "created"
+  ]);
+  const grouping = sorting[0];
+  const invertGroups: boolean = configStorage.get('invertGroups', false);
+  const invertSorting : boolean = configStorage.get('invertSorting', false);
+  const completedLast : boolean = configStorage.get('completedLast', false);
+  const filters : object = filterStorage.get('filters', {});
+
   const fileContent = await fs.promises.readFile(file, 'utf8');
 
   todoObjects = await createTodoObjects(fileContent);
@@ -33,7 +43,9 @@ async function processDataRequest(file: string, searchString: string, filters: o
 
   const attributes = createAttributesObject(todoObjects);
 
-  todoObjects = applyFilters(todoObjects, filters);
+  if (filters) {
+    todoObjects = applyFilters(todoObjects, filters);
+  }
   
   if (searchString) {
     todoObjects = applySearchString(searchString, todoObjects);
@@ -45,11 +57,14 @@ async function processDataRequest(file: string, searchString: string, filters: o
   const sortedGroups = sortGroups(groupedTodoObjects, invertGroups);
   const sortedTodoObjects = sortTodoObjects(sortedGroups, sorting, invertSorting, completedLast);
 
-  if (headers.visibleObjects === 0) {
-    mainWindow?.webContents.send('showSplashScreen', 'notodoObjects', headers, attributes);
-    return 'No todo.txt objects created, showing splashscreen';
+  if (headers.availableObjects === 0) {
+    mainWindow?.webContents.send('showSplashScreen', 'noTodosAvailable', attributes, headers, filters);
+    return 'No todos available';
+  } else if (headers.visibleObjects === 0) {
+    mainWindow?.webContents.send('showSplashScreen', 'noTodosVisible', attributes, headers, filters);
+    return 'No todos visible';
   } else {
-    mainWindow?.webContents.send('requestData', sortedTodoObjects, attributes, headers);
+    mainWindow?.webContents.send('requestData', sortedTodoObjects, attributes, headers, filters);
     return 'todo.txt objects and attributes created and sent to renderer';
   }
 }
@@ -61,7 +76,7 @@ function createTodoObjects(fileContent: string) {
       const item = new Item(line);
       const extensions = item.extensions();
       const due = extensions.find((extension) => extension.key === 'due')?.value || null;
-      const tags = extensions.find((extension) => extension.key === '#') || null;
+      //const tags = extensions.find((extension) => extension.key === 'tag')?.value || null;
       const t = extensions.find((extension) => extension.key === 't')?.value || null;
       const hidden = extensions.find((extension) => extension.key === 'h')?.value || null;
       const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;
@@ -81,7 +96,7 @@ function createTodoObjects(fileContent: string) {
         t,
         rec,
         hidden,
-        tags,
+        //tags,
         pm,
         string: item.toString(),
         group: null,

@@ -6,9 +6,28 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'FreeSans, sans-serif',
-    color: 'red',
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        '*, *::before, *::after': {
+          outline: 'none',
+        },
+        '&.Mui-focusVisible': {
+          color: '#1976d2',
+        },
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          background: '#f0f0f0',
+        },        
+        notchedOutline: {
+          border: 'none',
+        },
+      }
+    },    
     MuiDrawer: {
       styleOverrides: {
         paper: {
@@ -38,7 +57,19 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           border: 'none',
-          cursor: 'pointer',          
+          cursor: 'pointer',
+          background: '#5a5a5a',
+          color: '#fff',
+          '&:hover': {
+            color: '#fff',
+            background: '#5a5a5a',
+            boxShadow: 'none',
+          },
+          '&:active': {
+            color: '#5a5a5a',
+            background: '#ebebeb',
+            boxShadow: 'none',
+          },          
         },
       },
     },
@@ -61,6 +92,14 @@ const theme = createTheme({
         },
       },
     },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          margin: '1.5em',
+          border: 'none',
+        },
+      },
+    },
     MuiTabs: {
       styleOverrides: {
         root: {
@@ -73,25 +112,38 @@ const theme = createTheme({
       defaultProps: {
         disableRipple: true,
       },
-    },    
+    },
     MuiButton: {
       styleOverrides: {
         root: {
+          minWidth: '2.5em',
           textTransform: 'none',
           fontSize: '1em',
           boxShadow: 'none',
           borderRadius: '0.65em',
-          color: '#5a5a5a',
+          background: '#ebebeb',
+          color: '#1976d2',
           '&:hover': {
-            background: 'none',
+            color: '#2d2d2d',
+            background: '#ebebeb',
             boxShadow: 'none',
           },
           '&:active': {
-            background: 'none',
+            color: '#2d2d2d',
+            background: '#ebebeb',
             boxShadow: 'none',
           },
         }
       },
+      variants: [
+        {
+          props: { variant: 'contained' },
+          style: {
+            backgroundColor: '#1976d2',
+            color: '#ffffff',
+          },
+        },
+      ],      
     },
   },
 });

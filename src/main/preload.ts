@@ -6,7 +6,10 @@ export type Channels =
   | 'requestFiles'
   | 'showSplashScreen'
   | 'writeTodoToFile'
+  | 'setFile'
   | 'writeToConsole'
+  | 'openFile'
+  | 'createFile'
   | 'selectedFilters'
   | 'applySearchString'
   | 'displayErrorFromMainProcess';

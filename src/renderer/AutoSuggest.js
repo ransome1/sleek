@@ -84,13 +84,6 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
     value: textFieldValue,
     onChange: handleChange,
     inputRef: textFieldRef,
-    endadornment: (
-      <InputAdornment position="end">
-        <Button onClick={handleXClick}>
-          <FontAwesomeIcon data-testid='fa-icon-circle-xmark' icon={faCircleXmark} />
-        </Button>
-      </InputAdornment>
-    ),
   };
 
   const renderInputComponent = (inputProps) => <TextField {...inputProps} />;

@@ -3,7 +3,7 @@ import { List } from '@mui/material';
 import DataGridRow from './DataGridRow';
 import './DataGrid.scss';
 
-const TodoDataGrid = ({ todoObjects, attributes }) => {
+const TodoDataGrid = ({ todoObjects, attributes, filters }) => {
   if (!todoObjects || Object.keys(todoObjects).length === 0) {
     return null;
   }
@@ -22,9 +22,9 @@ const TodoDataGrid = ({ todoObjects, attributes }) => {
   }
 
   return (
-    <List className="todoTxtGrid" data-testid="data-grid-component">
+    <List id="dataGrid" data-testid="data-grid-component">
       {rows.map((row, index) => (
-        <DataGridRow key={index} attributes={attributes} todoObject={row} />
+        <DataGridRow key={index} attributes={attributes} todoObject={row} filters={filters} />
       ))}
     </List>
   );

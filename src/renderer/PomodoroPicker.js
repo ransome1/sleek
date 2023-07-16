@@ -14,12 +14,11 @@ const PomodoraPicker = ({ currentPomodoro, onChange }) => {
   };
 
   return (
-      <FormControl className="pomodoroPicker">
+      <FormControl id="pomodoroPicker">
         <TextField
           id="pomodoroPicker"
           label=<FontAwesomeIcon data-testid='fa-icon-pizza-slice' icon={faPizzaSlice} />
           type="number"
-          className="pomodoroPicker"
           onChange={handleChange}
           defaultValue="0"
           InputLabelProps={{

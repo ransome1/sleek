@@ -1,36 +1,43 @@
 @import "Variables.scss";
 
-.search {
+#search {
   flex-shrink: 0;
-
 	width: 100%;
 	display: flex;
-
 	padding: 1em;
-	svg {
-		font-size: 1.25em;
+	.MuiFormControl-root {
+		width: 100%;
+	}
+	.MuiChip-root {
+		color: $links;
+		background: white;
+		&.Mui-focusVisible {
+			background: $links;
+			color: white;
+		}
 	}
 	.MuiInputBase-root {
 		font-size: 1.25em;
-		border-radius: $radius;	
+	}
+	button.xClick {
+		padding: $radius;
+		cursor: pointer;
+		color: $darker-grey;
+		border: none;
+		outline: none;
+		svg {
+			font-size: 2em;
+		}
+	}
+	button.xClick:focus {
+		color: $links;
+		outline: none;
 	}
 	*[aria-hidden=false] {
 		display: none;
 	}
 	*[aria-hidden=true] {
 		display: flex;
-	}
-	.Mui-focused {
-		svg {
-			color: $links;
-		}
-	}
-	.Mui-focusVisible {
-		color: $links;
-	}
-	.MuiChip-filled.Mui-focusVisible {
-		background: $links;
-		color: white;
 	}
 }
 

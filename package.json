@@ -1,26 +1,6 @@
 {
   "name": "sleek",
   "version": "2.0.0",
-  "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
-  "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
-  "keywords": [
-    "todo.txt",
-    "todo",
-    "productivity",
-    "tasks"
-  ],
-  "category": "ProjectManagement",
-  "homepage": "https://github.com/ransome1/",
-  "bugs": {
-    "url": "https://github.com/ransome1/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ransome1/sleek.git"
-  },
-  "author": "Robin Ahle <ransome@duck.com>",
-  "copyright": "Copyright © 2023 ${author}",
-  "license": "MIT",
   "main": "./src/main/main.ts",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
@@ -29,6 +9,8 @@
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
+    "mas": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m mas --universal --publish never",
+    "mac": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m zip --universal --publish never",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
@@ -104,11 +86,8 @@
     "mock-fs": "^5.2.0",
     "react": "^18.2.0",
     "react-autosuggest": "^10.1.0",
-    "react-datepicker": "^4.16.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.11.2",
-    "react-table": "^7.8.0",
-    "react-virtualized": "^9.22.5"
+    "react-router-dom": "^6.11.2"
   },
   "devDependencies": {
     "@electron/notarize": "^1.2.3",
@@ -180,6 +159,7 @@
   },
   "build": {
     "appId": "com.todotxt.sleek",
+    "buildVersion": "25",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -216,6 +196,11 @@
         }
       ]
     },
+    "mas": {
+      "provisioningProfile": "assets/distribution.provisionprofile",
+      "entitlements": "assets/entitlements.mas.plist",
+      "entitlementsInherit": "assets/entitlements.mas.plist"
+    },
     "win": {
       "target": [
         "nsis"
@@ -234,12 +219,7 @@
     },
     "extraResources": [
       "./assets/**"
-    ],
-    "publish": {
-      "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
-    }
+    ]
   },
   "devEngines": {
     "node": ">=14.x",

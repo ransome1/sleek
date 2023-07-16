@@ -1,5 +1,5 @@
 import { lines } from '../modules/TodoObjects';
-import { activeFile } from '../util';
+import { configStorage } from '../config';
 import fs from 'fs/promises';
 
 async function writeTodoObjectToFile(id: number, string: string) {
@@ -14,9 +14,10 @@ async function writeTodoObjectToFile(id: number, string: string) {
   }
 
   const modifiedContent = lines.join('\n');
-  const activeFilePath = activeFile()?.path || '';
 
-  await fs.writeFile(activeFilePath, modifiedContent, 'utf8');
+  const activeFile = configStorage.get('activeFile') as string;
+
+  await fs.writeFile(activeFile, modifiedContent, 'utf8');
   if (id) {
     return `Line ${id + 1} overwritten successfully`
   } else {

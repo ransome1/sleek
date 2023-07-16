@@ -1,7 +1,7 @@
 import chokidar, { FSWatcher } from 'chokidar';
 import processDataRequest from './TodoObjects';
-import { activeFile } from '../util';
 import { mainWindow } from '../main';
+import { configStorage } from '../config';
 
 let watcher: FSWatcher | null = null;
 
@@ -18,15 +18,14 @@ function createFileWatchers(files: { path: string }[]) {
     .on('add', (file) => {
       console.log(`New file added: ${file}`);
     })
-    .on('change', async (file) => {
+    .on('change', (file) => {
       try {
         console.log(`File ${file} has been changed`);
         
-        const activeFilePath = activeFile()?.path || '';
-        if (file !== activeFilePath) {
+        if (file !== configStorage.get('activeFile')) {
           return false;
         }
-        await processDataRequest(file);
+        processDataRequest(file);
       } catch (error) {
         console.error(error);
         mainWindow?.webContents.send('displayErrorFromMainProcess', error);

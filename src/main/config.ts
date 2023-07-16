@@ -1,29 +1,27 @@
 import Store from 'electron-store';
 import path from 'path';
-import { app, dialog } from 'electron';
+import { app } from 'electron';
+import fs from 'fs';
 
-const configPath = path.join(__dirname, '../testData/');
-const configStorage = new Store({ cwd: configPath });
+const userDataDirectory = path.join(app.getPath('userData'), 'userData');
 
-if (!configStorage.path || configStorage.size === 0) {
-  dialog.showErrorBox(
-    'Error',
-    `The configuration file at ${configPath} could not be found or is empty. Please make sure the config file exists.`
-  );
-  app.quit();
-  process.exit(1);
+if (!fs.existsSync(userDataDirectory)) {
+  fs.mkdirSync(userDataDirectory);
 }
 
-const filterStoragePath = path.join(__dirname, '../testData/');
-const filterStorage = new Store({ cwd: filterStoragePath });
+const configPath = path.join(userDataDirectory, 'config.json');
+const configStorage = new Store({ cwd: userDataDirectory, name: 'config' });
+const filtersPath = path.join(userDataDirectory, 'filters.json');
+const filterStorage = new Store({ cwd: userDataDirectory, name: 'filters' });
 
-if (!filterStorage.path || filterStorage.size === 0) {
-  dialog.showErrorBox(
-    'Error',
-    `The filter file at ${filterStoragePath} could not be found or is empty. Please make sure the config file exists.`
-  );
-  app.quit();
-  process.exit(1);
+if (!fs.existsSync(configPath)) {
+  const defaultConfigData = {};
+  fs.writeFileSync(configPath, JSON.stringify(defaultConfigData));
+}
+
+if (!fs.existsSync(filtersPath)) {
+  const defaultFilterData = {};
+  fs.writeFileSync(filtersPath, JSON.stringify(defaultFilterData));
 }
 
 export { configStorage, filterStorage };

@@ -1,36 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { Tab, Tabs } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './FileTabs.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
 const FileTabs = ({ files }) => {
-  const [value, setValue] = useState(0);
+
+  const activeIndex = files.findIndex((file) => file.active === true);
 
   useEffect(() => {
-    const activeIndex = files.findIndex(file => file.active);
-    if (activeIndex >= 0) {
-      setValue(activeIndex);
-    }
-  }, [files]);
+    const handleSetFileReply = (newIndex) => {
+      ipcRenderer.send('updateConfig');
+      ipcRenderer.send('requestData');
+    };
+
+    ipcRenderer.on('setFile', handleSetFileReply);
+
+    return () => {
+      ipcRenderer.removeAllListeners('setFile');
+    };
+  }, []);
 
   const handleChange = (event, index) => {
-    ipcRenderer.send('setActiveFile', index);
-    setValue(index);
+    ipcRenderer.send('setFile', [index, false]);
   };
 
-  if (!files || files.length <= 1) {
+  const handleRemove = (event, index) => {
+    event.stopPropagation();
+    ipcRenderer.send('setFile', [index, true]);
+  };
+
+  if (files && files.length <= 1) {
     return null;
   }
 
   return (
-    <Tabs className="fileTabs" value={value} onChange={handleChange} data-testid="file-tabs-component">
+    <Tabs value={activeIndex} id="fileTabs" onChange={handleChange} data-testid="file-tabs-component">
       {files.map((file, index) => (
-        <Tab
-          key={index}
-          label={file.filename}
-          className={file.active ? 'active-tab' : ''}
-        />
+        file && (
+          <Tab
+            key={index}
+            label={file.filename}
+            icon={<FontAwesomeIcon icon={faCircleXmark} onClick={(event) => handleRemove(event, index)} />}
+            className={file.active ? 'active-tab' : ''}
+          />
+        )
       ))}
     </Tabs>
   );

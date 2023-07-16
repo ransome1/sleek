@@ -1,6 +1,6 @@
 @import "Variables.scss";
 
-nav {
+#navigation {
   position: fixed;
   z-index: 10;
   top: 0;
@@ -21,22 +21,20 @@ nav {
   button {
     border-radius: 0 !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    width: 5em;
+    height: 5em;
+    background: none;
 
-    &:nth-child(6) {
+    &.break {
       margin-top: auto;
     }
 
-    &.hover {
-      background: $light-grey;
+    svg {
+      color: $darker-grey;
     }
 
-    &.active {
+    &:hover, &:active, &:focus-visible, &.active {
       background: $light-grey;
     }
   }
-}
-
-nav > * {
-  width: 5em;
-  height: 5em;
 }

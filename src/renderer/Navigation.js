@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFilter, faSlidersH, faFolderOpen, faCog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button, Box } from '@mui/material';
 import './Navigation.scss';
 
-const NavigationComponent = ({ toggleDrawer, isOpen, setDialogOpen }) => {
+const ipcRenderer = window.electron.ipcRenderer;
+
+const NavigationComponent = ({ toggleDrawer, isDrawerOpen, setDialogOpen, files }) => {
+
   const [activeButton, setActiveButton] = useState(null);
 
   const openAddTodoDialog = () => {
@@ -16,22 +19,48 @@ const NavigationComponent = ({ toggleDrawer, isOpen, setDialogOpen }) => {
     setActiveButton(parameter);
   };
 
+  const handleKeyDown = (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === 'n') {
+      openAddTodoDialog();
+    }
+  };
+
+  const handleOpenFile = () => {
+    ipcRenderer.send('openFile');
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);  
+
   return (
-    <nav data-testid='navigation-component'>
+    <nav id='navigation' data-testid='navigation-component'>
       <Box>sleek</Box>
-      <Button onClick={openAddTodoDialog} className={activeButton === 'add' ? 'active' : ''}>
-        <FontAwesomeIcon icon={faPlus} />
-      </Button>
-      <Button onClick={() => handleButtonClicked('filter')} className={isOpen && activeButton === 'filter' ? 'active' : ''}>
-        <FontAwesomeIcon icon={faFilter} />
-      </Button>
-      <Button onClick={() => handleButtonClicked('view')} className={isOpen && activeButton === 'view' ? 'active' : ''}>
-        <FontAwesomeIcon icon={faSlidersH} />
-      </Button>
-      <Button>
+      {files !== undefined && (
+        <>
+          <Button onClick={openAddTodoDialog} className={activeButton === 'add' ? 'active' : ''}>
+            <FontAwesomeIcon icon={faPlus} />
+          </Button>
+        
+          <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen && activeButton === 'filter' ? 'active' : ''}>
+            <FontAwesomeIcon icon={faFilter} />
+          </Button>
+        
+
+          <Button className={isDrawerOpen && activeButton === 'view' ? 'active' : ''}>
+            <FontAwesomeIcon icon={faSlidersH} />
+          </Button>
+        </>
+      )}
+      
+      <Button onClick={handleOpenFile}>
         <FontAwesomeIcon icon={faFolderOpen} />
       </Button>
-      <Button>
+      <Button className='break'>
         <FontAwesomeIcon icon={faCog} />
       </Button>
       <Button>

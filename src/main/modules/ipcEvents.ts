@@ -1,60 +1,46 @@
-import { ipcMain, app, IpcMainEvent } from 'electron';
-import { mainWindow } from '../main';
+import { ipcMain, app } from 'electron';
 import processDataRequest from './TodoObjects';
 import { changeCompleteState } from './TodoObject';
 import { writeTodoObjectToFile } from './WriteToFile';
-import { activeFile } from '../util';
-import { configStorage } from '../config';
+import { configStorage, filterStorage } from '../config';
+import { openFile, createFile, setActiveFile } from './File';
+import createFileWatchers from './Filewatchers';
 
-interface File {
-  path: string;
-  active: boolean;
-}
-
-const handleSetActiveFile = async (event: IpcMainEvent, arg: number): Promise<void> => {
+export const handleUpdateConfig = (event, args) => {
   try {
-    const files: File[] = (configStorage.get('files') as File[]) || [];
-    
-    files.forEach((file: File) => {
-      file.active = false;
-    });
-    
-    files[arg].active = true;
-    store.set('files', files);
-    
-    console.log(`Active file is set to ${files[arg].path}`);
-    
-    await processDataRequest(files[arg].path);
+    if (args !== undefined && args[1] !== undefined) {
+      configStorage.set(args[0], args[1]);
+    }
+    const config = configStorage.get();
+    event.reply('updateConfig', config);
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
 };
 
-const handleApplySearchString = async (event: IpcMainEvent, arg: string): Promise<void> => {
+const handleApplySearchString = (event, arg) => {
   try {
-    const activeFilePath = activeFile()?.path || '';
-    processDataRequest(activeFilePath, arg)
+    processDataRequest(configStorage.get('activeFile'), arg);
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
 };
 
-const handleSelectedFilters = async (event: IpcMainEvent, filters: object): Promise<void> => {
+const handleSelectedFilters = (event, filters) => {
   try {
-    const activeFilePath = activeFile()?.path || '';
-    const response = await processDataRequest(activeFilePath, null, filters);
+    filterStorage.set('filters', filters);
+    processDataRequest(configStorage.get('activeFile'));
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
 };
 
-const handleDataRequest = async (event: IpcMainEvent): Promise<void> => {
+const handleDataRequest = async (event) => {
   try {
-    const activeFilePath = activeFile()?.path || '';
-    const response = await processDataRequest(activeFilePath);
+    const response = await processDataRequest(configStorage.get('activeFile'));
     event.reply('writeToConsole', response);
   } catch (error) {
     console.error(error);
@@ -62,10 +48,10 @@ const handleDataRequest = async (event: IpcMainEvent): Promise<void> => {
   }
 };
 
-const handleWriteTodoToFile = async (event: IpcMainEvent, id: number, string: string, state: boolean): Promise<void> => {
+const handleWriteTodoToFile = async (event, id, string, state) => {
   try {
-    if(string === undefined && state !== undefined && id >= 0) {
-      string = await changeCompleteState(id, state).toString();
+    if (string === undefined && state !== undefined && id >= 0) {
+      string = (await changeCompleteState(id, state)).toString();
     }
     const response = await writeTodoObjectToFile(id, string);
     event.reply('writeTodoToFile', response);
@@ -74,7 +60,7 @@ const handleWriteTodoToFile = async (event: IpcMainEvent, id: number, string: st
   }
 };
 
-const handleRequestFiles = (event: IpcMainEvent): void => {
+const handleRequestFiles = (event) => {
   try {
     const files = configStorage.get('files');
     event.reply('requestFiles', files);
@@ -84,15 +70,11 @@ const handleRequestFiles = (event: IpcMainEvent): void => {
   }
 };
 
-ipcMain.on('setActiveFile', handleSetActiveFile);
-ipcMain.on('requestData', handleDataRequest);
-ipcMain.on('requestFiles', handleRequestFiles);
-ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
-ipcMain.on('selectedFilters', handleSelectedFilters);
-ipcMain.on('applySearchString', handleApplySearchString);
-
-const removeEventListeners = (): void => {
-  ipcMain.off('setActiveFile', handleSetActiveFile);
+const removeEventListeners = () => {
+  ipcMain.off('setFile', setActiveFile);
+  ipcMain.off('openFile', openFile);
+  ipcMain.off('createFile', createFile);
+  ipcMain.off('updateConfig', handleUpdateConfig);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('requestFiles', handleRequestFiles);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
@@ -101,3 +83,13 @@ const removeEventListeners = (): void => {
 };
 
 app.on('before-quit', removeEventListeners);
+
+ipcMain.on('setFile', setActiveFile);
+ipcMain.on('openFile', openFile);
+ipcMain.on('createFile', createFile);
+ipcMain.on('updateConfig', handleUpdateConfig);
+ipcMain.on('requestData', handleDataRequest);
+ipcMain.on('requestFiles', handleRequestFiles);
+ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
+ipcMain.on('selectedFilters', handleSelectedFilters);
+ipcMain.on('applySearchString', handleApplySearchString);

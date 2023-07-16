@@ -22,6 +22,10 @@ Before contributing, make sure you have the latest version of Node.js and npm in
 
 ## Contributing
 
+### Refactoring
+
+Our goal for Sleek is to maintain a clean and well-coded project. We prioritize refactoring efforts over adding an excessive number of features. By focusing on improving the code base, we increase the likelihood of attracting participants who are interested in joining the project and contributing.
+
 ### Reporting Issues
 
 If you encounter any issues or bugs while using sleek, please open an issue on the GitHub repository. When reporting issues, please provide detailed information about the problem, including steps to reproduce and any error messages or logs if applicable.
