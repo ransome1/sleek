@@ -17,7 +17,7 @@ global.window.electron = {
 };
 
 jest.mock('../../main/util', () => ({
-  activeFile: jest.fn(),
+  getActiveFile: jest.fn(),
 }));
 
 

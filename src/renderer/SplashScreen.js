@@ -4,7 +4,7 @@ import './SplashScreen.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const SplashScreen = ({ screen, setInputString, setDialogOpen }) => {
+const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
   if (!screen) {
     return null;
   }
@@ -20,7 +20,7 @@ const SplashScreen = ({ screen, setInputString, setDialogOpen }) => {
   const handleClearFiltersSearch = () => {
     ipcRenderer.send('selectedFilters', {});
     ipcRenderer.send('applySearchString', null);
-    setInputString('');
+    setSearchString('');
   };
 
   const openAddTodoDialog = () => {

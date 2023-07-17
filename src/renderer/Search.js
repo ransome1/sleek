@@ -16,15 +16,15 @@ const debounce = (func, delay) => {
   };
 };
 
-const Search = ({ headers, setInputString, inputString }) => {
+const Search = ({ headers, setSearchString, searchString }) => {
   const searchFieldRef = useRef(null);
   const [showAddTodoButton, setShowAddTodoButton] = useState(false);
   const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     searchFieldRef.current?.focus();
-    setShowAddTodoButton(inputString.length > 0);
-  }, [inputString]);
+    setShowAddTodoButton(searchString.length > 0);
+  }, [searchString]);
 
   useEffect(() => {
     const handleEscapeKey = (event) => {
@@ -45,29 +45,29 @@ const Search = ({ headers, setInputString, inputString }) => {
     delayedSearch();
 
     return delayedSearch.cancel;
-  }, [inputString]);
+  }, [searchString]);
 
   const handleInput = (event) => {
     const searchString = event.target.value.toLowerCase();
-    setInputString(searchString);
+    setSearchString(searchString);
   };
 
   const handleSearch = () => {
-    ipcRenderer.send('applySearchString', inputString);
+    ipcRenderer.send('applySearchString', searchString);
   };
 
-  const resetInputString = () => {
-    setInputString('');
+  const resetSearchString = () => {
+    setSearchString('');
     ipcRenderer.send('applySearchString', '');
   };
 
   const handleFilterSelect = () => {
-    ipcRenderer.send('writeTodoToFile', undefined, inputString);
-    resetInputString();
+    ipcRenderer.send('writeTodoToFile', undefined, searchString);
+    resetSearchString();
   };
 
   const handleXClick = () => {
-    resetInputString();
+    resetSearchString();
   };
 
   const label = headers.availableObjects ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}` : null;
@@ -79,7 +79,7 @@ const Search = ({ headers, setInputString, inputString }) => {
         placeholder='(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12'
         label={label}
         inputRef={searchFieldRef}
-        value={inputString}
+        value={searchString}
         onChange={handleInput}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
@@ -101,7 +101,7 @@ const Search = ({ headers, setInputString, inputString }) => {
                   onClick={handleFilterSelect}
                 />
               )}
-              {inputString && (
+              {searchString && (
               <button
                 tabIndex={0}
                 className='xClick'

@@ -1,4 +1,3 @@
-const appStartTime = process.hrtime();
 const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 if (isDebug) {
   require('electron-debug')();
@@ -11,13 +10,7 @@ import log from 'electron-log';
 import menu from './menu';
 import { resolveHtmlPath } from './util';
 import createFileWatchers from './modules/FileWatchers';
-import { activeFile } from './modules/File';
 import './modules/ipcEvents';
-
-const files = configStorage.get('files') as { path: string }[];
-if (files !== undefined) {
-  createFileWatchers(files);
-}
 
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
@@ -34,30 +27,10 @@ class AppUpdater {
   }
 }
 
-const handleReadyToShow = () => {
-
-  if (files == undefined) {
-    mainWindow.webContents.send('showSplashScreen', 'noFiles');
-  }
-
-  if (process.env.START_MINIMIZED) {
-    if (mainWindow) {
-      mainWindow.minimize();
-    }
-  } else {
-    if (mainWindow) {
-      mainWindow.show();
-    }
-  }
-
-  const appEndTime = process.hrtime(appStartTime);
-  const startupTime = (appEndTime[0] * 1000) + (appEndTime[1] / 1e6);
-
-  console.log(`App fully loaded in ${startupTime.toFixed(2)} ms`);
-}
-
 const handleClosed = () => {
   mainWindow = null;
+  delete eventListeners.readyToShow;
+  delete eventListeners.closed;
 }
 
 const createWindow = async() => {
@@ -89,16 +62,31 @@ const createWindow = async() => {
   mainWindow
   .on('ready-to-show', handleReadyToShow)
   .on('closed', handleClosed);
-  eventListeners.mainWindowReadyToShow = handleReadyToShow;
-  eventListeners.mainWindowClosed = handleClosed,  
-  mainWindow.webContents.setWindowOpenHandler((edata) => {
-    shell.openExternal(edata.url);
-    return { action: 'deny' };
-  });
+}
+
+const handleReadyToShow = async () => {
+
+  const files = configStorage.get('files') as { path: string }[];
+  try {
+    const response = await createFileWatchers(files);
+    console.log(response);
+  } catch(error) {
+    console.log(error)
+  } 
+
+  if (process.env.START_MINIMIZED) {
+    if (mainWindow) {
+      mainWindow.minimize();
+    }
+  } else {
+    if (mainWindow) {
+      mainWindow.show();
+    }
+  }
 
   if (!isDebug) {
     eventListeners.appUpdater = new AppUpdater();
-  }
+  }  
 }
 
 const handleWindowAllClosed = () => {
@@ -109,19 +97,16 @@ const handleWindowAllClosed = () => {
 
 const handleWillQuit = () => {
   globalShortcut.unregisterAll();
+  delete eventListeners.willQuit;
 }
 
 const handleBeforeQuit = () => {
-    Object.values(eventListeners).forEach(listener => {
-        if (listener !== handleBeforeQuit) {
-            listener();
-        }
-    });
-    eventListeners = {};
+  app.releaseSingleInstanceLock();
+  delete eventListeners.beforeQuit;
 }
 
 const handleActivate = () => {
-  if(mainWindow === null) {
+  if (mainWindow === null) {
     createWindow();
   }
 }
@@ -132,19 +117,17 @@ app
   .on('before-quit', handleBeforeQuit)
   .whenReady()
   .then(() => {
-    
+    eventListeners.readyToShow = handleReadyToShow;
+    eventListeners.closed = handleClosed;
+
     createWindow();
 
     globalShortcut.unregister('CmdOrCtrl+R');
     globalShortcut.unregister('F5');
     
     app.on('activate', handleActivate);
+    eventListeners.activate = handleActivate;
   })
   .catch(console.error);
 
-  eventListeners.AppWindowAllClosed = handleWindowAllClosed;
-  eventListeners.AppWillQuit = handleWillQuit;
-  eventListeners.AppBeforeQuit = handleBeforeQuit;
-  eventListeners.AppActivate = handleActivate;
-
-export { mainWindow }
+export { mainWindow };

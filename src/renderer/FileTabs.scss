@@ -18,8 +18,13 @@
 			flex-direction: row;
 			
 			svg {
+				filter: opacity(50%) grayscale(100%);
 				margin: 0 0 0 0.5em;
+				padding: 0.2em;
 				order: 2;
+			}
+			svg:hover {
+				filter: none;
 			}
 		}
 		button[aria-selected=true] {

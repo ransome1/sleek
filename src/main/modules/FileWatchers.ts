@@ -1,13 +1,17 @@
 import chokidar, { FSWatcher } from 'chokidar';
 import processDataRequest from './TodoObjects';
+import { getActiveFile } from './File';
 import { mainWindow } from '../main';
 import { configStorage } from '../config';
 
 let watcher: FSWatcher | null = null;
 
 function createFileWatchers(files: { path: string }[]) {
-  if (!files || files.length === 0) {
-    throw new Error('Filewatcher: No files available');
+
+  if(!files || Object.keys(files).length === 0) {
+    mainWindow?.webContents.send('setFile', files);
+    mainWindow?.webContents.send('showSplashScreen', 'noFiles');
+    return 'Filewatcher: No files available';
   }
   if (watcher) {
     watcher.close();
@@ -22,10 +26,14 @@ function createFileWatchers(files: { path: string }[]) {
       try {
         console.log(`File ${file} has been changed`);
         
-        if (file !== configStorage.get('activeFile')) {
+        if (file !== getActiveFile().path) {
           return false;
         }
-        processDataRequest(file);
+        processDataRequest(file).then(function(response) {
+          console.info(response);
+        }).catch(function(error) {
+          throw "error";
+        });
       } catch (error) {
         console.error(error);
         mainWindow?.webContents.send('displayErrorFromMainProcess', error);
@@ -36,6 +44,7 @@ function createFileWatchers(files: { path: string }[]) {
     })
     .on('ready', () => {
       console.log('Initial scan complete. Ready for changes');
+      mainWindow?.webContents.send('setFile', files);
     });
   return 'Filewatcher: File watchers created';
 }

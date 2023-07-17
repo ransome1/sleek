@@ -73,6 +73,15 @@ const theme = createTheme({
         },
       },
     },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          padding: '0',
+          borderRadius: '1em',
+          boxShadow: '0px 0.25em 0.5em rgba(0, 0, 0, 0.2)',
+        },
+      },
+    },    
     MuiPopover: {
       styleOverrides: {
         paper: {
@@ -85,7 +94,6 @@ const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          width: '100vw',
           maxWidth: '50em',
           borderRadius: '1em',
           boxShadow: 'none',

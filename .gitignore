@@ -6,6 +6,7 @@
 *.log
 *.py
 *.snap
+*.dtmp
 *_done.txt
 *conflict*
 .eslintrc.json
@@ -28,7 +29,6 @@ squashfs-root/
 System Volume Information/
 Thumbs.db
 src/css/
-*.drawio*
 *.provisionprofile
 out/
 filterlang.mjs

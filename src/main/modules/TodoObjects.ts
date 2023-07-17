@@ -14,7 +14,8 @@ const headers = {
 
 async function processDataRequest(file: string, searchString: string) {
   if (!file) {
-    return 'No todo.txt file available';
+    mainWindow?.webContents.send('showSplashScreen', 'noFiles');
+    return 'processDataRequest: No file passed';
   }
 
   const hideCompleted: boolean = configStorage.get('hideCompleted', false);

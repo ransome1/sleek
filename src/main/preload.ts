@@ -7,14 +7,25 @@ export type Channels =
   | 'showSplashScreen'
   | 'writeTodoToFile'
   | 'setFile'
+  | 'deleteFile'
   | 'writeToConsole'
   | 'openFile'
   | 'createFile'
+  | 'storeGet'
+  | 'storeSet'
   | 'selectedFilters'
   | 'applySearchString'
   | 'displayErrorFromMainProcess';
 
 const electronHandler = {
+  store: {
+    get(key) {
+      return ipcRenderer.sendSync('storeGet', key);
+    },
+    set(property, val) {
+      ipcRenderer.send('storeSet', property, val);
+    },
+  },  
   ipcRenderer: {
     send: (channel: Channels, ...args: unknown[]) => {
       ipcRenderer.send(channel, ...args);

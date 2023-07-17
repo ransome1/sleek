@@ -78,6 +78,59 @@ const template = [
       },
     ],
   },
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: 'sleek wiki',
+        click: () => {
+          shell.openExternal('https://github.com/ransome1/sleek/wiki');
+        },
+      },
+      {
+        label: 'Report bugs',
+        click: () => {
+          shell.openExternal('https://github.com/ransome1/sleek/issues');
+        },
+      },
+      {
+        label: 'Discuss new or existing features',
+        click: () => {
+          shell.openExternal('https://github.com/ransome1/sleek/discussions');
+        },
+      },
+      {
+        label: 'Contributing',
+        click: () => {
+          shell.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
+        },
+      },
+      {
+        label: 'Privacy policy',
+        click: () => {
+          shell.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
+        },
+      },
+      {
+        label: 'Sponsoring',
+        click: () => {
+          shell.openExternal('https://github.com/sponsors/ransome1');
+        },
+      },
+      {
+        label: 'Changelog',
+        click: () => {
+          shell.openExternal('https://github.com/ransome1/sleek/blob/master/CHANGELOG.md');
+        },
+      },
+      {
+        label: 'sleek on GitHub',
+        click: () => {
+          shell.openExternal('https://github.com/ransome1/sleek/');
+        },
+      },
+    ],
+  },
 ];
 
 // Set the application menu

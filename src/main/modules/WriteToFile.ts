@@ -1,27 +1,33 @@
-import { lines } from '../modules/TodoObjects';
+import { lines } from './TodoObjects';
+import { getActiveFile } from './File';
 import { configStorage } from '../config';
 import fs from 'fs/promises';
 
-async function writeTodoObjectToFile(id: number, string: string) {
-  if (!string) {
+async function writeTodoObjectToFile(id: number, string: string, remove: boolean): Promise<string> {
+  if (string === '' && id < 1 && !remove) {
     throw new Error(`No string provided, won't write empty todo to file`);
-  }
-
-  if (typeof id === 'number' && id >= 0) {
-    lines[id] = string;
+  } else if (remove) {
+    lines.splice(id, 1);
   } else {
-    lines.push(string);
+    if (typeof id === 'number' && id >= 0) {
+      lines[id] = string;
+    } else {
+      lines.push(string);
+    }
   }
-
   const modifiedContent = lines.join('\n');
-
-  const activeFile = configStorage.get('activeFile') as string;
-
-  await fs.writeFile(activeFile, modifiedContent, 'utf8');
-  if (id) {
-    return `Line ${id + 1} overwritten successfully`
+  const activeFile = getActiveFile();
+  if (!activeFile) {
+    throw new Error('No active file found');
+  }
+  const activeFilePath = activeFile.path;
+  await fs.writeFile(activeFilePath, modifiedContent, 'utf8');
+  if (id && !remove) {
+    return `Line ${id + 1} overwritten successfully`;
+  } else if (remove) {
+    return `Line ${id} removed from file`;
   } else {
-    return `New line added`
+    return `New line added`;
   }
 }
 

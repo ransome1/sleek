@@ -3,64 +3,60 @@ import processDataRequest from './TodoObjects';
 import { changeCompleteState } from './TodoObject';
 import { writeTodoObjectToFile } from './WriteToFile';
 import { configStorage, filterStorage } from '../config';
-import { openFile, createFile, setActiveFile } from './File';
-import createFileWatchers from './Filewatchers';
+import { openFile, createFile, setActiveFile, getActiveFile, deleteFile } from './File';
 
-export const handleUpdateConfig = (event, args) => {
+function handleApplySearchString(event, searchString) {
   try {
-    if (args !== undefined && args[1] !== undefined) {
-      configStorage.set(args[0], args[1]);
-    }
-    const config = configStorage.get();
-    event.reply('updateConfig', config);
+    if(!getActiveFile()) return;
+    processDataRequest(getActiveFile().path, searchString);
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
-};
+}
 
-const handleApplySearchString = (event, arg) => {
+function handleSelectedFilters(event, filters) {
   try {
-    processDataRequest(configStorage.get('activeFile'), arg);
-  } catch (error) {
-    console.error(error);
-    event.reply('displayErrorFromMainProcess', error);
-  }
-};
-
-const handleSelectedFilters = (event, filters) => {
-  try {
+    if(!getActiveFile()) return;
     filterStorage.set('filters', filters);
-    processDataRequest(configStorage.get('activeFile'));
+    processDataRequest(getActiveFile().path, '').then(function(response) {
+      console.info("Filters have changed: " + response);
+    }).catch(function(error) {
+      throw "error";
+    });
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
-};
+}
 
-const handleDataRequest = async (event) => {
+function handleDataRequest(event) {
   try {
-    const response = await processDataRequest(configStorage.get('activeFile'));
-    event.reply('writeToConsole', response);
+    if(!getActiveFile()) return;
+    processDataRequest(getActiveFile().path, '').then(function(response) {
+      event.reply('writeToConsole', response);
+    }).catch(function(error) {
+      throw "error";
+    });    
   } catch (error) {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
-};
+}
 
-const handleWriteTodoToFile = async (event, id, string, state) => {
+async function handleWriteTodoToFile(event, id, string, state, remove) {
   try {
-    if (string === undefined && state !== undefined && id >= 0) {
+    if (string === undefined && state !== undefined && id >= 0 && !remove) {
       string = (await changeCompleteState(id, state)).toString();
     }
-    const response = await writeTodoObjectToFile(id, string);
+    const response = await writeTodoObjectToFile(id, string, remove);
     event.reply('writeTodoToFile', response);
   } catch (error) {
     event.reply('writeTodoToFile', error);
   }
-};
+}
 
-const handleRequestFiles = (event) => {
+function handleRequestFiles(event) {
   try {
     const files = configStorage.get('files');
     event.reply('requestFiles', files);
@@ -68,26 +64,48 @@ const handleRequestFiles = (event) => {
     console.error(error);
     event.reply('displayErrorFromMainProcess', error);
   }
-};
+}
 
-const removeEventListeners = () => {
+function handleStoreGet (event, val) {
+  try {
+    event.returnValue = configStorage.get(val);
+  } catch (error) {
+    console.error(error);
+    event.reply('displayErrorFromMainProcess', error);
+  }
+}
+
+function handleStoreSet (event, key, val) {
+  try {
+    configStorage.set(key, val);
+  } catch (error) {
+    console.error(error);
+    event.reply('displayErrorFromMainProcess', error);
+  }
+}
+
+function removeEventListeners () {
+  ipcMain.off('storeGet', handleStoreGet);
+  ipcMain.off('storeSet', handleStoreSet);
   ipcMain.off('setFile', setActiveFile);
+  ipcMain.off('deleteFile', deleteFile);
   ipcMain.off('openFile', openFile);
   ipcMain.off('createFile', createFile);
-  ipcMain.off('updateConfig', handleUpdateConfig);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('requestFiles', handleRequestFiles);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('selectedFilters', handleSelectedFilters);
   ipcMain.off('applySearchString', handleApplySearchString);
-};
+}
 
 app.on('before-quit', removeEventListeners);
 
+ipcMain.on('storeGet', handleStoreGet);
+ipcMain.on('storeSet', handleStoreSet);
 ipcMain.on('setFile', setActiveFile);
+ipcMain.on('deleteFile', deleteFile);
 ipcMain.on('openFile', openFile);
 ipcMain.on('createFile', createFile);
-ipcMain.on('updateConfig', handleUpdateConfig);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('requestFiles', handleRequestFiles);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);

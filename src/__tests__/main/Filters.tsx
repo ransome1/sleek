@@ -29,17 +29,17 @@ describe('applyFilters', () => {
 describe('createAttributesObject', () => {
   test('should create attributes object with counts for each attribute', () => {
     const todoObjects = [
-      { id: 1, projects: ['Project 1'], contexts: null, due: '2023-01-01', completed: false, t: null, rec: null, pm: null },
+      { id: 1, projects: ['Project 1'], contexts: ['Context 1'], due: '2023-01-01', completed: false, t: '2024-02-01', rec: null, pm: null },
       { id: 2, projects: ['Project 2'], contexts: null, due: '2023-02-01', completed: true, t: null, rec: null, pm: null },
-      { id: 3, projects: ['Project 1'], contexts: null, due: '2023-03-01', completed: false, t: null, rec: null, pm: null },
-      { id: 4, projects: ['Project 2'], contexts: null, due: '2023-04-01', completed: false, t: null, rec: null, pm: null },
+      { id: 3, projects: ['Project 1'], contexts: null, due: '2023-03-01', completed: false, t: null, rec: '2b', pm: null },
+      { id: 4, projects: ['Project 2'], contexts: ['Context 1'], due: '2023-04-01', completed: false, t: '2024-02-01', rec: null, pm: null },
     ];
     const expectedAttributes = {
       projects: { 'Project 1': 2, 'Project 2': 2 },
-      contexts: {},
+      contexts: { 'Context 1': 2 },
       due: { '2023-01-01': 1, '2023-02-01': 1, '2023-03-01': 1, '2023-04-01': 1 },
-      t: {},
-      rec: {},
+      t: { '2024-02-01': 2 },
+      rec: { '2b': 1 },
       pm: {},
     };
     const result = createAttributesObject(todoObjects);
