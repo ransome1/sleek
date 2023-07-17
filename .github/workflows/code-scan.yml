@@ -39,15 +39,20 @@ jobs:
       matrix:
         language: [ 'javascript' ]
     steps:
-    - uses: actions/checkout@master
-    - uses: codecov/codecov-action@v3
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage1.xml,./coverage2.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: true
-        verbose: true
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Set up Node 18
+        uses: actions/setup-node@v3        
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Run tests
+        run: npm run test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   codeql:
     needs: codecov
     name: CodeQL
