@@ -1,4 +1,4 @@
-import { dialog, app } from 'electron';
+import { dialog, app, globalShortcut } from 'electron';
 import { mainWindow } from '../main';
 import { configStorage } from '../config';
 import createFileWatchers from './FileWatchers';
@@ -88,12 +88,6 @@ function addFile(filePath: string): void {
 
     configStorage.set('files', files);
 
-    processDataRequest(filePath, '').then(function(response) {
-      console.info("New file added: " + response);
-    }).catch(function(error) {
-      throw "error";
-    });
-
     createFileWatchers(files);
 
   } catch(error) {
@@ -118,12 +112,6 @@ function deleteFile(event: any, index: number): void {
 
     configStorage.set('files', files);
 
-    processDataRequest(getActiveFile()?.path, '').then(function(response) {
-      console.info("File removed: " + response);
-    }).catch(function(error) {
-      throw "error";
-    });
-
     createFileWatchers(files);
 
   } catch (error) {
@@ -132,7 +120,7 @@ function deleteFile(event: any, index: number): void {
   }
 }
 
-function setActiveFile(event: any, index: number): void {
+async function setFile(event: any, index: number): void {
   try {
     const files: File[] | [] = configStorage.get('files') as File[] | [];
 
@@ -146,11 +134,13 @@ function setActiveFile(event: any, index: number): void {
 
     configStorage.set('files', files);
 
-    processDataRequest(files[index].path, '').then(function(response) {
+    await processDataRequest(files[index].path, '').then(function(response) {
       console.info(`Active file is set to ${files[index].path}: ` + response);
     }).catch(function(error) {
       throw "error";
     });
+
+    mainWindow?.webContents.send('setFile', files);
 
   } catch (error) {
     console.error(error);
@@ -159,7 +149,7 @@ function setActiveFile(event: any, index: number): void {
 }
 
 export {
-  setActiveFile,
+  setFile,
   deleteFile,
   createFile,
   getActiveFile,

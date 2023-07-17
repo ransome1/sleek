@@ -1,4 +1,6 @@
-  *[data-todotxt-attribute],
+@import "Variables.scss";
+
+ *[data-todotxt-attribute],
   *[data-todotxt-attribute]:hover {
     .MuiButtonBase-root {
       color: darken($mid-grey, 40%);

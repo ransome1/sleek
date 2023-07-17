@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Item } from 'jsTodoTxt';
+import { Item } from 'jstodotxt';
 import { mainWindow } from '../main';
 import { configStorage, filterStorage } from '../config';
 import { createAttributesObject, applyFilters } from './Filters';

@@ -1,5 +1,5 @@
 import { todoObjects } from './TodoObjects';
-import { Item } from 'jsTodoTxt';
+import { Item } from 'jstodotxt';
 
 type TodoObject = Record<string, any>;
 

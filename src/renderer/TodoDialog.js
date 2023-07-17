@@ -5,7 +5,7 @@ import PriorityPicker from './PriorityPicker';
 import DatePicker from './DatePicker';
 import PomodoroPicker from './PomodoroPicker';
 import RecurrencePicker from './RecurrencePicker';
-import { Item } from 'jsTodoTxt';
+import { Item } from 'jstodotxt';
 import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;

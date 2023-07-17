@@ -63,6 +63,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+    - name: Set up Node 18
+      uses: actions/setup-node@v3      
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:

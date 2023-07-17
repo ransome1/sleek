@@ -1,37 +1,3 @@
-*.bak
-*.db
-*.db:encryptable
-*.DS_Store
-*.ini
-*.log
-*.py
-*.snap
-*.dtmp
-*_done.txt
-*conflict*
-.eslintrc.json
-.git/
-.gitignore
-.stylelintrc.json
-.vs/
-.vscode/
-.yarnclean
-assets/icons/bak
-dist/
-flatpak/com.github.ransome1.sleek.yml
-flatpak/generated-sources.json
-node_modules/
-package-lock.json
-sleek.sublime-project
-sleek.sublime-workspace
-snap/local/
-squashfs-root/
-System Volume Information/
-Thumbs.db
-src/css/
-*.provisionprofile
-out/
-filterlang.mjs
 # Logs
 logs
 *.log
@@ -61,4 +27,6 @@ npm-debug.log.*
 *.css.d.ts
 *.sass.d.ts
 *.scss.d.ts
-long.txt
+
+*.provisionprofile
+*.dtmp

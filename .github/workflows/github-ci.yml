@@ -11,12 +11,18 @@ jobs:
       matrix:
         os: [macos-latest]
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+      - name: Install Node and NPM
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
+          cache: npm
+      - name: Install and build
+        run: |
+          npm install
+          npm run postinstall
+          npm run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         env:
@@ -27,7 +33,7 @@ jobs:
         with:
           max_attempts: 3
           github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          release: ${{ startsWith(github.ref, 'refs/tags/') }}
   windows:
     name: Windows (Build & Release)
     runs-on: ${{ matrix.os }}
@@ -35,18 +41,24 @@ jobs:
       matrix:
         os: [windows-latest]
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+      - name: Install Node and NPM
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
+          cache: npm
+      - name: Install and build
+        run: |
+          npm install
+          npm run postinstall
+          npm run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         with:
           max_attempts: 3
           github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          release: ${{ startsWith(github.ref, 'refs/tags/') }}
   linux:
     name: Linux (Build & Release)
     runs-on: ${{ matrix.os }}
@@ -54,15 +66,21 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+      - name: Install Node and NPM
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
+          cache: npm
+      - name: Install and build
+        run: |
+          npm install
+          npm run postinstall
+          npm run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         with:
           max_attempts: 3
           github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          release: ${{ startsWith(github.ref, 'refs/tags/') }}

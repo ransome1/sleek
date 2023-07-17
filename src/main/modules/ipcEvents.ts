@@ -3,7 +3,7 @@ import processDataRequest from './TodoObjects';
 import { changeCompleteState } from './TodoObject';
 import { writeTodoObjectToFile } from './WriteToFile';
 import { configStorage, filterStorage } from '../config';
-import { openFile, createFile, setActiveFile, getActiveFile, deleteFile } from './File';
+import { openFile, createFile, setFile, getActiveFile, deleteFile } from './File';
 
 function handleApplySearchString(event, searchString) {
   try {
@@ -87,7 +87,7 @@ function handleStoreSet (event, key, val) {
 function removeEventListeners () {
   ipcMain.off('storeGet', handleStoreGet);
   ipcMain.off('storeSet', handleStoreSet);
-  ipcMain.off('setFile', setActiveFile);
+  ipcMain.off('setFile', setFile);
   ipcMain.off('deleteFile', deleteFile);
   ipcMain.off('openFile', openFile);
   ipcMain.off('createFile', createFile);
@@ -102,7 +102,7 @@ app.on('before-quit', removeEventListeners);
 
 ipcMain.on('storeGet', handleStoreGet);
 ipcMain.on('storeSet', handleStoreSet);
-ipcMain.on('setFile', setActiveFile);
+ipcMain.on('setFile', setFile);
 ipcMain.on('deleteFile', deleteFile);
 ipcMain.on('openFile', openFile);
 ipcMain.on('createFile', createFile);

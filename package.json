@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.0",
+  "version": "2.0.0-dev1",
   "main": "./src/main/main.ts",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
@@ -10,7 +10,6 @@
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
     "mas": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m mas --universal --publish never",
-    "mac": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m zip --universal --publish never",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
@@ -203,15 +202,33 @@
     },
     "win": {
       "target": [
+        "zip",
+        "portable",
         "nsis"
-      ]
+      ],
+      "icon": "assets/icons/sleek.ico",
+      "artifactName": "${productName}-${version}-win.${ext}"
+    },
+    "nsis": {
+      "artifactName": "${productName}-${version}-win-Setup.${ext}"
+    },
+    "appx": {
+      "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
+      "identityName": "17450RobinAhle.sleektodomanager",
+      "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
+      "publisherDisplayName": "Robin Ahle",
+      "applicationId": "RobinAhle.sleektodomanager"
     },
     "linux": {
+      "icon": "assets/icons/sleek.png",
+      "category": "ProjectManagement",
       "target": [
+        "deb",
+        "freebsd",
+        "rpm",
         "AppImage"
-      ],
-      "category": "Development"
-    },
+      ]
+    },    
     "directories": {
       "app": "release/app",
       "buildResources": "assets",

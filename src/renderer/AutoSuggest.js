@@ -111,7 +111,6 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
       renderSuggestion={renderSuggestion}
       onSuggestionSelected={handleSuggestionSelected}
       inputProps={inputProps}
-      highlightFirstSuggestion={true}
     />
   );
 };

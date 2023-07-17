@@ -2,16 +2,17 @@ const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD
 if (isDebug) {
   require('electron-debug')();
 }
-import { app, BrowserWindow, shell, Menu, globalShortcut } from 'electron';
+import { app, BrowserWindow, globalShortcut, Menu } from 'electron';
 import path from 'path';
 import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import menu from './menu';
+import buildMenu from './menu';
 import { resolveHtmlPath } from './util';
 import createFileWatchers from './modules/FileWatchers';
 import './modules/ipcEvents';
 
+const files = configStorage.get('files') as { path: string }[];
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
 
@@ -57,23 +58,15 @@ const createWindow = async() => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
+  const menu = buildMenu(files);
   Menu.setApplicationMenu(menu);
 
   mainWindow
-  .on('ready-to-show', handleReadyToShow)
-  .on('closed', handleClosed);
+    .on('ready-to-show', handleReadyToShow)
+    .on('closed', handleClosed);
 }
 
 const handleReadyToShow = async () => {
-
-  const files = configStorage.get('files') as { path: string }[];
-  try {
-    const response = await createFileWatchers(files);
-    console.log(response);
-  } catch(error) {
-    console.log(error)
-  } 
-
   if (process.env.START_MINIMIZED) {
     if (mainWindow) {
       mainWindow.minimize();
@@ -84,9 +77,16 @@ const handleReadyToShow = async () => {
     }
   }
 
+  try {
+    const response = await createFileWatchers(files);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }  
+
   if (!isDebug) {
     eventListeners.appUpdater = new AppUpdater();
-  }  
+  }
 }
 
 const handleWindowAllClosed = () => {
@@ -124,7 +124,7 @@ app
 
     globalShortcut.unregister('CmdOrCtrl+R');
     globalShortcut.unregister('F5');
-    
+
     app.on('activate', handleActivate);
     eventListeners.activate = handleActivate;
   })
