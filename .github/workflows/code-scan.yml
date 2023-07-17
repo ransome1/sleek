@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Install dependencies
-      run: npm install    
+      run: npm install
     - name: Run Snyk to check for vulnerabilities
       uses: snyk/actions/node@master
       env:
@@ -27,7 +27,7 @@ jobs:
       with:
         args: '. --sarif --output results.sarif || true'
     - name: Upload njsscan report
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: results.sarif
   codecov:
@@ -42,9 +42,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Set up Node 18
-        uses: actions/setup-node@v3        
+        uses: actions/setup-node@v3
       - name: Install dependencies
-        run: npm install
+        run: npm install        
       - name: Build
         run: npm run build
       - name: Run tests
@@ -54,7 +54,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   codeql:
-    needs: codecov
     name: CodeQL
     runs-on: ubuntu-latest
     strategy:
@@ -65,13 +64,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+      uses: github/codeql-action/autobuild@v2
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2
   mirror:
     name: Mirror code to opencode.net
     runs-on: ubuntu-latest
