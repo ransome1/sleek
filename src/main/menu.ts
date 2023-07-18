@@ -1,6 +1,8 @@
 import { app, Menu, dialog, shell } from 'electron';
 import path from 'path';
-import { openFile, createFile, setFile } from './modules/File';
+import { setFile } from './modules/File';
+import { mainWindow } from './main';
+import { openFile, createFile } from './modules/FileDialog';
 
 const appPackage = require('../../release/app/package.json');
 const description = appPackage.description;
@@ -87,12 +89,17 @@ function buildMenu(files) {
       ],
     },
     {
-      label: 'View',
+      label: 'Todos',
       submenu: [
-        // Other submenu items...
+        {
+          label: 'Find',
+          accelerator: 'CmdOrCtrl+F',
+          click: () => {
+          },
+        },
         {
           role: 'reload',
-          visible: false, // Set the visibility to false to hide the reload menu item
+          visible: false,
         },
       ],
     },
@@ -165,7 +172,8 @@ function buildMenu(files) {
   };
   fileMenu.submenu.push(filesSubMenu);
 
-  return Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  //return Menu.buildFromTemplate(template);
 }
 
 export default buildMenu;

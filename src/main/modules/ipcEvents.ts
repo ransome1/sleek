@@ -3,14 +3,20 @@ import processDataRequest from './TodoObjects';
 import { changeCompleteState } from './TodoObject';
 import { writeTodoObjectToFile } from './WriteToFile';
 import { configStorage, filterStorage } from '../config';
-import { openFile, createFile, setFile, getActiveFile, deleteFile } from './File';
+import { getActiveFile } from './ActiveFile';
+import { setFile, deleteFile } from './File';
+import { openFile, createFile } from './FileDialog';
 
 function handleApplySearchString(event, searchString) {
   try {
     if(!getActiveFile()) return;
-    processDataRequest(getActiveFile().path, searchString);
+    processDataRequest(getActiveFile(), searchString).then(function(response) {
+      console.info('ipcEvents.ts: Search string applied: ' + searchString);
+    }).catch(function(error) {
+      throw 'error';
+    });    
   } catch (error) {
-    console.error(error);
+    console.error('ipcEvents.ts:', error);
     event.reply('displayErrorFromMainProcess', error);
   }
 }
@@ -19,13 +25,13 @@ function handleSelectedFilters(event, filters) {
   try {
     if(!getActiveFile()) return;
     filterStorage.set('filters', filters);
-    processDataRequest(getActiveFile().path, '').then(function(response) {
-      console.info("Filters have changed: " + response);
+    processDataRequest(getActiveFile(), '').then(function(response) {
+      console.info('ipcEvents.ts: Filters have changed: ' + response);
     }).catch(function(error) {
-      throw "error";
+      throw 'error';
     });
   } catch (error) {
-    console.error(error);
+    console.error('ipcEvents.ts:', error);
     event.reply('displayErrorFromMainProcess', error);
   }
 }
@@ -33,13 +39,13 @@ function handleSelectedFilters(event, filters) {
 function handleDataRequest(event) {
   try {
     if(!getActiveFile()) return;
-    processDataRequest(getActiveFile().path, '').then(function(response) {
-      event.reply('writeToConsole', response);
+    processDataRequest(getActiveFile(), '').then(function(response) {
+      console.log('ipcEvents.ts:', response)
     }).catch(function(error) {
-      throw "error";
-    });    
+      throw 'error';
+    });
   } catch (error) {
-    console.error(error);
+    console.error('ipcEvents.ts:', error);
     event.reply('displayErrorFromMainProcess', error);
   }
 }
@@ -50,8 +56,9 @@ async function handleWriteTodoToFile(event, id, string, state, remove) {
       string = (await changeCompleteState(id, state)).toString();
     }
     const response = await writeTodoObjectToFile(id, string, remove);
-    event.reply('writeTodoToFile', response);
+    console.log(response);
   } catch (error) {
+    console.error(error)
     event.reply('writeTodoToFile', error);
   }
 }
@@ -60,8 +67,9 @@ function handleRequestFiles(event) {
   try {
     const files = configStorage.get('files');
     event.reply('requestFiles', files);
+    console.log(`ipcEvents.ts: Files sent back to renderer`);
   } catch (error) {
-    console.error(error);
+    console.error('ipcEvents.ts:', error);
     event.reply('displayErrorFromMainProcess', error);
   }
 }
@@ -69,8 +77,9 @@ function handleRequestFiles(event) {
 function handleStoreGet (event, val) {
   try {
     event.returnValue = configStorage.get(val);
+    console.log(`ipcEvents.ts: Received config value for ${val}`);
   } catch (error) {
-    console.error(error);
+    console.error('ipcEvents.ts:', error);
     event.reply('displayErrorFromMainProcess', error);
   }
 }
@@ -78,8 +87,9 @@ function handleStoreGet (event, val) {
 function handleStoreSet (event, key, val) {
   try {
     configStorage.set(key, val);
+    console.log(`ipcEvents.ts: Set ${key} to ${val}`);
   } catch (error) {
-    console.error(error);
+    console.error('ipcEvents.ts:', error);
     event.reply('displayErrorFromMainProcess', error);
   }
 }

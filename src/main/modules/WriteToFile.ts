@@ -1,9 +1,10 @@
 import { lines } from './TodoObjects';
-import { getActiveFile } from './File';
+import { getActiveFile } from './ActiveFile';
 import { configStorage } from '../config';
 import fs from 'fs/promises';
 
 async function writeTodoObjectToFile(id: number, string: string, remove: boolean): Promise<string> {
+
   if (string === '' && id < 1 && !remove) {
     throw new Error(`No string provided, won't write empty todo to file`);
   } else if (remove) {

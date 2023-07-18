@@ -2,19 +2,17 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels =
   | 'requestData'
-  | 'reloadGrid'
   | 'requestFiles'
   | 'showSplashScreen'
   | 'writeTodoToFile'
-  | 'setFile'
   | 'deleteFile'
-  | 'writeToConsole'
   | 'openFile'
   | 'createFile'
   | 'storeGet'
   | 'storeSet'
   | 'selectedFilters'
   | 'applySearchString'
+  | 'focusSearch'
   | 'displayErrorFromMainProcess';
 
 const electronHandler = {

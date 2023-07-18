@@ -6,6 +6,7 @@
 	padding: 0;
 	margin-left: -30em;
 	background: $light-grey;
+	transition: margin-left 0.3s ease;
 	.MuiPaper-root {
 		position: relative;
 		z-index: 5;

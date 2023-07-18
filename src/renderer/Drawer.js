@@ -20,6 +20,7 @@ const attributeMapping = {
 
 const DrawerComponent = ({ isDrawerOpen, attributes, filters }) => {
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
+  const isDrawerOpenBoolean = Boolean(isDrawerOpen);
 
   const handleKeyDown = (event) => {
     if (event.ctrlKey || event.metaKey) {
@@ -49,7 +50,6 @@ const DrawerComponent = ({ isDrawerOpen, attributes, filters }) => {
       anchor="left"
       open={isDrawerOpen}
       className={`Drawer ${isDrawerOpen ? 'open' : ''}`}
-      sx={{ transition: isDrawerOpen ? 'margin-left 0.3s ease' : 'margin-left 0.3s ease' }}
     >
       {Object.keys(attributes).length > 0 && (
         <Box className="Accordion">

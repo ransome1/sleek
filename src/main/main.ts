@@ -9,7 +9,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import buildMenu from './menu';
 import { resolveHtmlPath } from './util';
-import createFileWatchers from './modules/FileWatchers';
+import createFileWatcher from './modules/FileWatcher';
 import './modules/ipcEvents';
 
 const files = configStorage.get('files') as { path: string }[];
@@ -21,9 +21,9 @@ class AppUpdater {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify().then(result => {
-      console.log('Update check completed:', result);
+      console.log('main.ts: Update check completed:', result);
     }).catch(error => {
-      console.error('Error checking for updates:', error);
+      console.error('main.ts: Error checking for updates:', error);
     });
   }
 }
@@ -58,12 +58,13 @@ const createWindow = async() => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  const menu = buildMenu(files);
-  Menu.setApplicationMenu(menu);
+  buildMenu(files);
 
   mainWindow
     .on('ready-to-show', handleReadyToShow)
     .on('closed', handleClosed);
+
+  return "Main window has been created successfully"
 }
 
 const handleReadyToShow = async () => {
@@ -78,15 +79,24 @@ const handleReadyToShow = async () => {
   }
 
   try {
-    const response = await createFileWatchers(files);
-    console.log(response);
+    // if(!files || Object.keys(files).length === 0) {
+    //   mainWindow?.webContents.send('showSplashScreen', 'noFiles');
+    // } else {
+    //   const response = await createFileWatcher(files);
+    //   console.log('main.ts:', response);
+    // }
+    if(files && Object.keys(files).length > 0) {
+      const response = await createFileWatcher(files);
+      console.log('main.ts:', response);
+    }
+
   } catch (error) {
     console.log(error);
   }  
 
-  if (!isDebug) {
-    eventListeners.appUpdater = new AppUpdater();
-  }
+  // if (!isDebug) {
+  //   eventListeners.appUpdater = new AppUpdater();
+  // }
 }
 
 const handleWindowAllClosed = () => {
@@ -107,7 +117,13 @@ const handleBeforeQuit = () => {
 
 const handleActivate = () => {
   if (mainWindow === null) {
-    createWindow();
+
+    createWindow().then(result => {
+      console.log('Main window created:', result);
+    }).catch(error => {
+      console.error('Error creating main window:', error);
+    });
+
   }
 }
 
@@ -120,7 +136,11 @@ app
     eventListeners.readyToShow = handleReadyToShow;
     eventListeners.closed = handleClosed;
 
-    createWindow();
+    createWindow().then(result => {
+      console.log('main.ts:', result);
+    }).catch(error => {
+      console.error('main.ts:', error);
+    });
 
     globalShortcut.unregister('CmdOrCtrl+R');
     globalShortcut.unregister('F5');

@@ -121,6 +121,13 @@ const theme = createTheme({
         disableRipple: true,
       },
     },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          padding: '0',
+        },
+      },
+    },    
     MuiButton: {
       styleOverrides: {
         root: {
@@ -130,17 +137,17 @@ const theme = createTheme({
           boxShadow: 'none',
           borderRadius: '0.65em',
           background: '#ebebeb',
+          whiteSpace: 'nowrap',
           color: '#1976d2',
           '&:hover': {
-            color: '#2d2d2d',
-            background: '#ebebeb',
             boxShadow: 'none',
           },
           '&:active': {
-            color: '#2d2d2d',
-            background: '#ebebeb',
             boxShadow: 'none',
           },
+          '&:focus': {
+            boxShadow: 'none',
+          },       
         }
       },
       variants: [

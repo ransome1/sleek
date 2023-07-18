@@ -1,6 +1,6 @@
 import { changeCompleteState } from '../../main/modules/TodoObject';
 import { formatDate } from '../../main/util';
-import { Item } from 'jsTodoTxt';
+import { Item } from 'jstodotxt';
 
 const date: string = formatDate(new Date());
 

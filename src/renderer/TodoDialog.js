@@ -5,7 +5,6 @@ import PriorityPicker from './PriorityPicker';
 import DatePicker from './DatePicker';
 import PomodoroPicker from './PomodoroPicker';
 import RecurrencePicker from './RecurrencePicker';
-import { Item } from 'jstodotxt';
 import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
@@ -13,35 +12,44 @@ const ipcRenderer = window.electron.ipcRenderer;
 const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent, setSnackBarOpen }) => {
   const [textFieldValue, setTextFieldValue] = useState(todoObject?.string || '');
   const textFieldRef = useRef(null);
-
-  const handlePriorityChange = (priority) => {
-    const updatedTodoObject = new Item(textFieldValue);
-    updatedTodoObject.setPriority(priority === '-' ? null : priority);
-    setTextFieldValue(updatedTodoObject.toString());
-  };
-
-  const handleExtensionChange = (type, response) => {
-    const updatedTodoObject = new Item(textFieldValue);
-    updatedTodoObject.setExtension(type, response);
-    setTextFieldValue(updatedTodoObject.toString());
-  };
+  const textFieldValueRef = useRef(textFieldValue);
 
   const handleAdd = async () => {
-    if (!textFieldValue.trim()) {
+    if (!textFieldValueRef.current.trim()) {
       setSnackBarSeverity('info');
       setSnackBarContent('Please enter something into the text field');
       setSnackBarOpen(true);
       return;
     }
     try {
-      await ipcRenderer.send('writeTodoToFile', todoObject?.id || '', textFieldValue);
       setDialogOpen(false);
+      await ipcRenderer.send('writeTodoToFile', todoObject?.id || '', textFieldValueRef.current);
     } catch (error) {
       setSnackBarSeverity('error');
       setSnackBarContent('Error');
       setSnackBarOpen(true);
     }
   };
+
+  useEffect(() => {
+    textFieldValueRef.current = textFieldValue;
+  }, [textFieldValue]);
+
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     if (event.key === 'Enter') {
+  //       if (document.activeElement === textFieldRef.current) {
+  //         handleAdd();
+  //       }
+  //     }
+  //   };
+
+  //   document.addEventListener('keydown', handleKeyDown);
+
+  //   return () => {
+  //     document.removeEventListener('keydown', handleKeyDown);
+  //   };
+  // }, []);
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} id='todoDialog'>
@@ -53,17 +61,18 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnac
           textFieldRef={textFieldRef}
           todoObject={todoObject}
           setDialogOpen={setDialogOpen}
+          handleAdd={handleAdd}
         />
 
-        <PriorityPicker currentPriority={todoObject?.priority} onChange={handlePriorityChange} />
+        <PriorityPicker currentPriority={todoObject?.priority} setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
 
-        <DatePicker date={todoObject?.due} type="due" onChange={(date) => handleExtensionChange("due", date)} />
+        <DatePicker currentDate={todoObject?.due} type="due" setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
 
-        <DatePicker date={todoObject?.t} type="t" onChange={(date) => handleExtensionChange("t", date)} />
+        <DatePicker currentDate={todoObject?.t} type="t" setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
 
-        <RecurrencePicker pomodoro={todoObject?.rec} onChange={(recurrence) => handleExtensionChange("rec", recurrence)} />
+        <RecurrencePicker currentRecurrence={todoObject?.rec} setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
 
-        <PomodoroPicker pomodoro={todoObject?.pm} onChange={(pomodoro) => handleExtensionChange("pm", pomodoro)} />
+        <PomodoroPicker currentPomodoro={todoObject?.pm} setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
   
       </DialogContent>
       <DialogActions>

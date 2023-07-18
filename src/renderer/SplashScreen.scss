@@ -5,12 +5,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     flex-grow: 1;
     h1 {
     	font-family: $font-family-bold;
+        line-height: 1.2em;
     }
-    .buttons {
-        display: flex;
-        gap: 1em;
+    button {
+        margin: 0 1em 0.5em 0;
     }
 }

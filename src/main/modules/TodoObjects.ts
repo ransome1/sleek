@@ -12,10 +12,13 @@ const headers = {
   visibleObjects: 0,
 };
 
-async function processDataRequest(file: string, searchString: string) {
-  if (!file) {
-    mainWindow?.webContents.send('showSplashScreen', 'noFiles');
-    return 'processDataRequest: No file passed';
+async function processDataRequest(file: object, searchString: string) {
+
+  const files : object = configStorage.get('files');
+
+  if(file === null) {
+    mainWindow?.webContents.send('requestData', {}, {}, headers, {}, files);
+    return 'No todo file passed, will only send headers and files';
   }
 
   const hideCompleted: boolean = configStorage.get('hideCompleted', false);
@@ -34,7 +37,7 @@ async function processDataRequest(file: string, searchString: string) {
   const completedLast : boolean = configStorage.get('completedLast', false);
   const filters : object = filterStorage.get('filters', {});
 
-  const fileContent = await fs.promises.readFile(file, 'utf8');
+  const fileContent = await fs.promises.readFile(file.path, 'utf8');
 
   todoObjects = await createTodoObjects(fileContent);
 
@@ -58,16 +61,8 @@ async function processDataRequest(file: string, searchString: string) {
   const sortedGroups = sortGroups(groupedTodoObjects, invertGroups);
   const sortedTodoObjects = sortTodoObjects(sortedGroups, sorting, invertSorting, completedLast);
 
-  if (headers.availableObjects === 0) {
-    mainWindow?.webContents.send('showSplashScreen', 'noTodosAvailable', attributes, headers, filters);
-    return 'No todos available';
-  } else if (headers.visibleObjects === 0) {
-    mainWindow?.webContents.send('showSplashScreen', 'noTodosVisible', attributes, headers, filters);
-    return 'No todos visible';
-  } else {
-    mainWindow?.webContents.send('requestData', sortedTodoObjects, attributes, headers, filters);
-    return 'todo.txt objects and attributes created and sent to renderer';
-  }
+  mainWindow?.webContents.send('requestData', sortedTodoObjects, attributes, headers, filters, files);
+  return 'todo.txt objects and attributes created and sent to renderer';
 }
 
 function createTodoObjects(fileContent: string) {

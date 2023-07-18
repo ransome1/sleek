@@ -1,33 +1,41 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FormControl, InputLabel, TextField, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import { Item } from 'jstodotxt';
 import './RecurrencePicker.scss';
 
 let interval = 'd';
 let amount = 1;
 
-const RecurrencePicker = ({ currentRecurrence, onChange }) => {
-  const textFieldRef = useRef(null);
+const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue }) => {
+  const recurrenceFieldRef = useRef(null);
+  const [recurrence, setRecurrence] = useState(currentRecurrence);
 
   const handleChange = (event) => {
     const updatedValue = event.target.value;
-    onChange(updatedValue);
+    setTextFieldValue(updatedValue);
   };
 
   const handleIntervalChange = (event) => {
     interval = event.target.value;
     const updatedValue = amount + interval;
-    onChange(updatedValue);
-    textFieldRef.current.value = updatedValue;
+    setRecurrence(updatedValue);
   };
 
   const handleAmountChange = (event) => {
     amount = event.target.value;
     const updatedValue = amount + interval;
-    onChange(updatedValue);
-    textFieldRef.current.value = updatedValue;
+    setRecurrence(updatedValue);
   };
+
+  useEffect(() => {
+    if(!recurrence) return;
+    recurrenceFieldRef.current.value = recurrence;
+    const todoObject = new Item(textFieldValue);
+    todoObject.setExtension('rec', recurrence);
+    setTextFieldValue(todoObject.toString());
+  }, [recurrence]);      
 
   return (
     <PopupState variant="popover" popupId="recurrencePicker">
@@ -38,7 +46,7 @@ const RecurrencePicker = ({ currentRecurrence, onChange }) => {
             className="recurrencePicker"
             onChange={handleChange}
             defaultValue={currentRecurrence || '-'}
-            inputRef={textFieldRef}
+            inputRef={recurrenceFieldRef}
             InputLabelProps={{
               shrink: true,
             }}
@@ -62,6 +70,9 @@ const RecurrencePicker = ({ currentRecurrence, onChange }) => {
                 onChange={handleAmountChange}
                 defaultValue={currentRecurrence ? currentRecurrence.slice(0, -1) : '1'}
                 className="recurrencePickerPopupInput"
+                inputProps={{
+                  min: 1,
+                }}
                 InputLabelProps={{
                   shrink: true,
                 }}

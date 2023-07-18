@@ -5,16 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './AutoSuggest.scss';
 
-const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, setTextFieldValue }) => {
+const regex = / [\+@][^ ]*/g;
+
+const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, setTextFieldValue, handleAdd }) => {
 
   const [suggestions, setSuggestions] = useState([]);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [prefix, setPrefix] = useState(null);
-  const regex = / [\+@][^ ]*/g;
   const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
-
-  useEffect(() => {
-    textFieldRef.current?.focus();
-  }, []);
 
   const handleSuggestionsFetchRequested = ({ value }) => {
     const inputValue = textFieldRef.current?.value;
@@ -69,15 +67,10 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
   };
 
   const renderSuggestion = (suggestion, { isHighlighted }) => (
-    <div data-todotxt-attribute={prefix} className={isHighlighted ? 'selected' : ''}>
+    <div data-todotxt-attribute={prefix} onClick={() => setSelectedSuggestionIndex(isHighlighted ? suggestions.indexOf(suggestion) : -1)} className={isHighlighted ? 'selected' : ''}>
       <Button key={suggestion}>{suggestion}</Button>
     </div>
   );
-
-  const handleXClick = () => {
-    const newValue = '';
-    setTextFieldValue(newValue);
-  };
 
   const inputProps = {
     placeholder: `(A) Todo text +project @context due:2020-12-12 rec:d`,
@@ -94,7 +87,44 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
 
   const containerStyle = {
     width: textFieldRef?.current?.offsetWidth || 'auto',
-  }; 
+  };
+
+  useEffect(() => {
+    //textFieldRef.current?.focus();
+    const handleKeyDown = (event) => {
+      // Check if the container is visible before handling the keyboard command
+      if (suggestions.length > 0) {
+        // Handle your keyboard commands here
+        if (event.key === 'Enter') {
+          // Handle the Enter key press when suggestions are visible
+          if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
+            //event.preventDefault();
+            // Select the first suggestion or perform any action you want here
+            const selectedSuggestion = suggestions[selectedSuggestionIndex];
+            handleSuggestionSelected(null, { suggestion: selectedSuggestion });
+          }
+        } else if (event.key === 'Escape') {
+          event.stopPropagation();
+          // Handle the Escape key press to clear suggestions
+          handleSuggestionsClearRequested();
+        }
+      } else {
+        if (event.key === 'Enter') {
+          handleAdd();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [suggestions]);
+
+  useEffect(() => {
+    textFieldRef.current?.focus();
+  }, []); 
 
   return (
     <Autosuggest

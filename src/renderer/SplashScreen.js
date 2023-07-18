@@ -5,9 +5,9 @@ import './SplashScreen.scss';
 const ipcRenderer = window.electron.ipcRenderer;
 
 const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
-  if (!screen) {
-    return null;
-  }
+  // if (!screen) {
+  //   return null;
+  // }
 
   const handleOpenFile = () => {
     ipcRenderer.send('openFile');

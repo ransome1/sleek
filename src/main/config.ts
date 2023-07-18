@@ -2,7 +2,6 @@ import Store from 'electron-store';
 import path from 'path';
 import { app } from 'electron';
 import fs from 'fs';
-import { setFilesShortcuts } from './modules/File';
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData');
 

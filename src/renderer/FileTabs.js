@@ -8,14 +8,13 @@ import './FileTabs.scss';
 const ipcRenderer = window.electron.ipcRenderer;
 
 const FileTabs = ({ files }) => {
+
+  if(!files) return;
+
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptIndex, setPromptIndex] = useState(null);
-  const activeIndex = files.findIndex((file) => file.active === true);
-  const [fileTab, setFileTab] = useState(activeIndex !== -1 ? activeIndex : 0);
-
-  useEffect(() => {
-    setFileTab(activeIndex !== -1 ? activeIndex : 0);
-  }, [activeIndex]);
+  const index = files.findIndex((file) => file.active);
+  const [fileTab, setFileTab] = useState(index !== -1 ? index : 0);
 
   const handleChange = (event, index) => {
     setFileTab(index);
@@ -36,6 +35,10 @@ const FileTabs = ({ files }) => {
     setShowPrompt(false);
     ipcRenderer.send('deleteFile', promptIndex);
   };
+
+  useEffect(() => {
+    setFileTab(index !== -1 ? index : 0);
+  }, [index]);  
 
   return (
     <>

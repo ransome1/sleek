@@ -16,61 +16,58 @@ const debounce = (func, delay) => {
   };
 };
 
-const Search = ({ headers, setSearchString, searchString }) => {
+const Search = ({ headers, searchString, setSearchString }) => {
+
+  if(headers.availableObjects === 0) {
+    return null;
+  }
+
   const searchFieldRef = useRef(null);
-  const [showAddTodoButton, setShowAddTodoButton] = useState(false);
   const [focused, setFocused] = useState(false);
-
-  useEffect(() => {
-    searchFieldRef.current?.focus();
-    setShowAddTodoButton(searchString.length > 0);
-  }, [searchString]);
-
-  useEffect(() => {
-    const handleEscapeKey = (event) => {
-      if (event.key === 'Escape') {
-        searchFieldRef.current?.blur();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscapeKey);
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, []);
-
-  useEffect(() => {
-    const delayedSearch = debounce(handleSearch, 200);
-    delayedSearch();
-
-    return delayedSearch.cancel;
-  }, [searchString]);
+  const label = headers.availableObjects ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}` : null;
 
   const handleInput = (event) => {
-    const searchString = event.target.value.toLowerCase();
+    const searchString = event.target.value;
     setSearchString(searchString);
   };
 
   const handleSearch = () => {
-    ipcRenderer.send('applySearchString', searchString);
+    ipcRenderer.send('applySearchString', searchString)
   };
 
-  const resetSearchString = () => {
-    setSearchString('');
-    ipcRenderer.send('applySearchString', '');
-  };
-
-  const handleFilterSelect = () => {
+  const handleAddTodo = (event) => {
     ipcRenderer.send('writeTodoToFile', undefined, searchString);
-    resetSearchString();
+    setSearchString('');
+    searchFieldRef.current.focus();
   };
 
   const handleXClick = () => {
-    resetSearchString();
+    setSearchString('');
+    searchFieldRef.current.focus();
   };
 
-  const label = headers.availableObjects ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}` : null;
+  useEffect(() => {
+    const delayedSearch = debounce(handleSearch, 200);
+    delayedSearch();
+    return delayedSearch.cancel;
+  }, [searchString]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
+        event.preventDefault();
+        if (searchFieldRef.current) {
+          searchFieldRef.current.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Box id='search'>
@@ -95,21 +92,19 @@ const Search = ({ headers, setSearchString, searchString }) => {
           ),
           endAdornment: (
             <InputAdornment position='end'>
-              {showAddTodoButton && (
+              {searchString.length > 0 && (
                 <Chip
                   label='Add as todo'
-                  onClick={handleFilterSelect}
+                  onClick={handleAddTodo}
                 />
               )}
-              {searchString && (
-              <button
-                tabIndex={0}
-                className='xClick'
-                onClick={handleXClick}
-              >
-                <FontAwesomeIcon
-                  data-testid='fa-icon-circle-xmark'
-                  icon={faCircleXmark}
+              {searchString.length > 0 && (
+                <button
+                  tabIndex={0}
+                  className='xClick'
+                  onClick={handleXClick}
+                >
+                  <FontAwesomeIcon data-testid='fa-icon-circle-xmark' icon={faCircleXmark}
                 />
               </button>
               )}
