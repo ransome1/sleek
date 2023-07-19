@@ -5,9 +5,6 @@ import './SplashScreen.scss';
 const ipcRenderer = window.electron.ipcRenderer;
 
 const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
-  // if (!screen) {
-  //   return null;
-  // }
 
   const handleOpenFile = () => {
     ipcRenderer.send('openFile');
@@ -18,8 +15,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
   };
 
   const handleClearFiltersSearch = () => {
-    ipcRenderer.send('selectedFilters', {});
-    ipcRenderer.send('applySearchString', null);
+    ipcRenderer.send('requestData', '', {});
     setSearchString('');
   };
 

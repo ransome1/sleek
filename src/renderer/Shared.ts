@@ -12,5 +12,5 @@ export function handleFilterSelect(key: string, value: string, filters: object, 
   } else {
     updatedFilters[key] = [{ value: value, exclude: isCtrlKeyPressed }];
   }
-  ipcRenderer.send('selectedFilters', updatedFilters);
+  ipcRenderer.send('requestData', '', updatedFilters);
 }

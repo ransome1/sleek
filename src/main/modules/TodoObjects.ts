@@ -13,56 +13,58 @@ const headers = {
 };
 
 async function processDataRequest(file: object, searchString: string) {
+  try {
+    const files : object = configStorage.get('files');
 
-  const files : object = configStorage.get('files');
+    if(file === null) {
+      mainWindow?.webContents.send('requestData', {}, {}, headers, {}, files);
+      return 'No todo file passed, will only send headers and files';
+    }
 
-  if(file === null) {
-    mainWindow?.webContents.send('requestData', {}, {}, headers, {}, files);
-    return 'No todo file passed, will only send headers and files';
+    const fileContent = await fs.promises.readFile(file.path, 'utf8');
+    const hideCompleted: boolean = configStorage.get('hideCompleted', false);
+    const sorting: string[] = configStorage.get('sorting', [
+      "priority",
+      "due",
+      "projects",
+      "contexts",
+      "t",
+      "completed",
+      "created"
+    ]);
+    const grouping = sorting[0];
+    const invertGroups: boolean = configStorage.get('invertGroups', false);
+    const invertSorting : boolean = configStorage.get('invertSorting', false);
+    const completedLast : boolean = configStorage.get('completedLast', false);
+    const filters : object = filterStorage.get('filters', {});
+
+    todoObjects = await createTodoObjects(fileContent);
+
+    headers.availableObjects = countTodoObjects(todoObjects);
+
+    todoObjects = handleCompletedTodoObjects(todoObjects, hideCompleted);
+
+    const attributes = createAttributesObject(todoObjects);
+
+    if (filters) {
+      todoObjects = applyFilters(todoObjects, filters);
+    }
+    
+    if (searchString) {
+      todoObjects = applySearchString(searchString, todoObjects);
+    }
+
+    headers.visibleObjects = countTodoObjects(todoObjects);
+
+    const groupedTodoObjects = groupTodoObjects(todoObjects, grouping);
+    const sortedGroups = sortGroups(groupedTodoObjects, invertGroups);
+    const sortedTodoObjects = sortTodoObjects(sortedGroups, sorting, invertSorting, completedLast);
+
+    mainWindow?.webContents.send('requestData', sortedTodoObjects, attributes, headers, filters, files);
+    return Promise.resolve('todo.txt objects and attributes created and sent to renderer');
+  } catch(error) {
+    return Promise.reject(error);
   }
-
-  const hideCompleted: boolean = configStorage.get('hideCompleted', false);
-  const sorting: string[] = configStorage.get('sorting', [
-    "priority",
-    "due",
-    "projects",
-    "contexts",
-    "t",
-    "completed",
-    "created"
-  ]);
-  const grouping = sorting[0];
-  const invertGroups: boolean = configStorage.get('invertGroups', false);
-  const invertSorting : boolean = configStorage.get('invertSorting', false);
-  const completedLast : boolean = configStorage.get('completedLast', false);
-  const filters : object = filterStorage.get('filters', {});
-
-  const fileContent = await fs.promises.readFile(file.path, 'utf8');
-
-  todoObjects = await createTodoObjects(fileContent);
-
-  headers.availableObjects = countTodoObjects(todoObjects);
-
-  todoObjects = handleCompletedTodoObjects(todoObjects, hideCompleted);
-
-  const attributes = createAttributesObject(todoObjects);
-
-  if (filters) {
-    todoObjects = applyFilters(todoObjects, filters);
-  }
-  
-  if (searchString) {
-    todoObjects = applySearchString(searchString, todoObjects);
-  }
-
-  headers.visibleObjects = countTodoObjects(todoObjects);
-
-  const groupedTodoObjects = groupTodoObjects(todoObjects, grouping);
-  const sortedGroups = sortGroups(groupedTodoObjects, invertGroups);
-  const sortedTodoObjects = sortTodoObjects(sortedGroups, sorting, invertSorting, completedLast);
-
-  mainWindow?.webContents.send('requestData', sortedTodoObjects, attributes, headers, filters, files);
-  return 'todo.txt objects and attributes created and sent to renderer';
 }
 
 function createTodoObjects(fileContent: string) {

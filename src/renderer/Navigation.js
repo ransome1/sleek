@@ -32,7 +32,6 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
   };
 
   useEffect(() => {
-    // Reset the active button class when the drawer is closed
     if (!isDrawerOpen) {
       setActiveButtonClass(null);
     }

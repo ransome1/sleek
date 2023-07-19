@@ -32,7 +32,7 @@ const Search = ({ headers, searchString, setSearchString }) => {
   };
 
   const handleSearch = () => {
-    ipcRenderer.send('applySearchString', searchString)
+    ipcRenderer.send('requestData', searchString);
   };
 
   const handleAddTodo = (event) => {

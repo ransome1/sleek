@@ -29,7 +29,15 @@ const App = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
 
-  const handleReceivedData = (todoObjects: object, attributes: any, headers: object, filters: object, files: object) => {
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackBarOpen(false);
+  };  
+
+  const handleRequestedData = (todoObjects: object, attributes: any, headers: object, filters: object, files: object) => {
     if(headers) setHeaders(headers);
     if(attributes) setAttributes(attributes);
     if(filters) setFilters(filters);
@@ -67,9 +75,9 @@ const App = () => {
       }
     }
     ipcRenderer.on('writeTodoToFile', responseHandler);    
-    ipcRenderer.on('requestData', handleReceivedData);
+    ipcRenderer.on('requestData', handleRequestedData);
     ipcRenderer.send('requestData');
-  }, []);  
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -90,8 +98,8 @@ const App = () => {
       </div>
       
       {dialogOpen && <TodoDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} attributes={attributes} setSnackBarSeverity={setSnackBarSeverity} setSnackBarContent={setSnackBarContent} setSnackBarOpen={setSnackBarOpen} />}
-      <Snackbar open={snackBarOpen} autoHideDuration={2000}>
-        <Alert severity={snackBarSeverity}>
+      <Snackbar open={snackBarOpen} autoHideDuration={2000} onClose={handleSnackbarClose}>
+        <Alert severity={snackBarSeverity} onClose={handleSnackbarClose}>
           {snackBarContent}
         </Alert>
       </Snackbar>

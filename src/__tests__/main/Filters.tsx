@@ -23,7 +23,6 @@ describe('applyFilters', () => {
     expect(result).toEqual(expected);
   });
 
-  // Add more test cases for other filters...
 });
 
 describe('createAttributesObject', () => {
@@ -46,5 +45,4 @@ describe('createAttributesObject', () => {
     expect(result).toEqual(expectedAttributes);
   });
 
-  // Add more test cases for different sets of todo objects...
 });

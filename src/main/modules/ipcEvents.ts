@@ -7,60 +7,26 @@ import { getActiveFile } from './ActiveFile';
 import { setFile, deleteFile } from './File';
 import { openFile, createFile } from './FileDialog';
 
-function handleApplySearchString(event, searchString) {
-  try {
-    if(!getActiveFile()) return;
-    processDataRequest(getActiveFile(), searchString).then(function(response) {
-      console.info('ipcEvents.ts: Search string applied: ' + searchString);
-    }).catch(function(error) {
-      throw 'error';
-    });    
-  } catch (error) {
-    console.error('ipcEvents.ts:', error);
-    event.reply('displayErrorFromMainProcess', error);
-  }
-}
 
-function handleSelectedFilters(event, filters) {
-  try {
-    if(!getActiveFile()) return;
-    filterStorage.set('filters', filters);
-    processDataRequest(getActiveFile(), '').then(function(response) {
-      console.info('ipcEvents.ts: Filters have changed: ' + response);
-    }).catch(function(error) {
-      throw 'error';
-    });
-  } catch (error) {
-    console.error('ipcEvents.ts:', error);
-    event.reply('displayErrorFromMainProcess', error);
-  }
-}
-
-function handleDataRequest(event) {
-  try {
-    if(!getActiveFile()) return;
-    processDataRequest(getActiveFile(), '').then(function(response) {
-      console.log('ipcEvents.ts:', response)
-    }).catch(function(error) {
-      throw 'error';
-    });
-  } catch (error) {
-    console.error('ipcEvents.ts:', error);
-    event.reply('displayErrorFromMainProcess', error);
-  }
+function handleDataRequest(event, searchString, filters) {
+  if(filters) filterStorage.set('filters', filters)
+  const activeFile = getActiveFile();
+  processDataRequest(activeFile, searchString).then(function(response) {
+    console.log('ipcEvents.ts:', response)
+  }).catch(function(error) {
+    console.log(error);
+  });
 }
 
 async function handleWriteTodoToFile(event, id, string, state, remove) {
-  try {
-    if (string === undefined && state !== undefined && id >= 0 && !remove) {
-      string = (await changeCompleteState(id, state)).toString();
-    }
-    const response = await writeTodoObjectToFile(id, string, remove);
-    console.log(response);
-  } catch (error) {
-    console.error(error)
-    event.reply('writeTodoToFile', error);
+  if (string === undefined && state !== undefined && id >= 0 && !remove) {
+    string = (await changeCompleteState(id, state)).toString();
   }
+  writeTodoObjectToFile(id, string, remove).then(function(response) {
+    console.log('ipcEvents.ts:', response)
+  }).catch(function(error) {
+    console.log(error);
+  });    
 }
 
 function handleRequestFiles(event) {
@@ -104,8 +70,6 @@ function removeEventListeners () {
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('requestFiles', handleRequestFiles);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
-  ipcMain.off('selectedFilters', handleSelectedFilters);
-  ipcMain.off('applySearchString', handleApplySearchString);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -119,5 +83,3 @@ ipcMain.on('createFile', createFile);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('requestFiles', handleRequestFiles);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
-ipcMain.on('selectedFilters', handleSelectedFilters);
-ipcMain.on('applySearchString', handleApplySearchString);
