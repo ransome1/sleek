@@ -1,0 +1,19 @@
+name: Close Stale Issues
+
+on:
+  schedule:
+    - cron: "0,30 * * * *"  # Run every half hour (UTC time)
+
+jobs:
+  close-stale-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Close stale issues
+        uses: actions/stale@v4.1.1
+        with:
+          stale-issue-message: 'This issue has been automatically closed due to inactivity. Feel free to reopen if the problem persists.'
+          days-before-stale: 30
+          days-before-close: 15
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}

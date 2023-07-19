@@ -175,10 +175,11 @@
           "x64"
         ]
       },
+      "icon": "assets/icons/icon.icns",
       "type": "distribution",
       "hardenedRuntime": true,
-      "entitlements": "assets/entitlements.mac.plist",
-      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "entitlements": "assets/mas/entitlements.mac.plist",
+      "entitlementsInherit": "assets/mas/entitlements.mac.plist",
       "gatekeeperAssess": false
     },
     "dmg": {
@@ -196,9 +197,9 @@
       ]
     },
     "mas": {
-      "provisioningProfile": "assets/distribution.provisionprofile",
-      "entitlements": "assets/entitlements.mas.plist",
-      "entitlementsInherit": "assets/entitlements.mas.plist"
+      "provisioningProfile": "assets/mas/distribution.provisionprofile",
+      "entitlements": "assets/mas/entitlements.mas.plist",
+      "entitlementsInherit": "assets/mas/entitlements.mas.plist"
     },
     "win": {
       "target": [

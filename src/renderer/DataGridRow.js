@@ -16,7 +16,7 @@ const expressions = [
   { pattern: /^\+\S+$/, value: 'projects', shortcut: '+' },
   { pattern: /\bdue:\d{4}-\d{2}-\d{2}\b/, value: 'due', shortcut: 'due:' },
   { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't', shortcut: 't:' },
-  { pattern: /^rec:\d*[dwmy]$/, value: 'rec', shortcut: 'rec:' },
+  { pattern: /^rec:\d*[dbwmy]$/, value: 'rec', shortcut: 'rec:' },
   { pattern: /\bh:1\b/, value: 'h:1', shortcut: 'h:1' },
   //{ pattern: /^tag:\S+$/, value: 'tags', shortcut: 'tag:' },
   { pattern: /pm:\d+\b/, value: 'pm', shortcut: 'pm:' }

@@ -5,18 +5,20 @@ import { Button, Box } from '@mui/material';
 import './Navigation.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
+const store = window.electron.store;
 
-const NavigationComponent = ({ toggleDrawer, isDrawerOpen, setDialogOpen, headers, files }) => {
+const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers }) => {
 
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButtonClass, setActiveButtonClass] = useState(null);
 
   const openAddTodoDialog = () => {
     setDialogOpen(true);
   };
 
   const handleButtonClicked = (parameter) => {
-    toggleDrawer(parameter);
-    setActiveButton(parameter);
+    setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)
+    setDrawerParameter(parameter)
+    setActiveButtonClass(parameter); // Set the active button class when a button is clicked
   };
 
   const handleKeyDown = (event) => {
@@ -30,10 +32,14 @@ const NavigationComponent = ({ toggleDrawer, isDrawerOpen, setDialogOpen, header
   };
 
   useEffect(() => {
-    setActiveButton(isDrawerOpen ? 'filter' : null);
-  }, [isDrawerOpen]);
+    // Reset the active button class when the drawer is closed
+    if (!isDrawerOpen) {
+      setActiveButtonClass(null);
+    }
+  }, [isDrawerOpen]);  
 
   useEffect(() => {
+
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {
@@ -46,7 +52,7 @@ const NavigationComponent = ({ toggleDrawer, isDrawerOpen, setDialogOpen, header
       <Box>sleek</Box>
       {files && files.length > 0 && (
         <>
-          <Button onClick={openAddTodoDialog} className={activeButton === 'add' ? 'active' : ''}>
+          <Button onClick={openAddTodoDialog}>
             <FontAwesomeIcon icon={faPlus} />
           </Button>
         </>
@@ -54,10 +60,10 @@ const NavigationComponent = ({ toggleDrawer, isDrawerOpen, setDialogOpen, header
 
       {files && files.length > 0 && headers.availableObjects > 0 && (
         <>
-          <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen && activeButton === 'filter' ? 'active' : ''}>
+          <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen && drawerParameter === 'filter' ? 'active' : ''}>
             <FontAwesomeIcon icon={faFilter} />
           </Button>
-          <Button className={isDrawerOpen && activeButton === 'view' ? 'active' : ''}>
+          <Button className={isDrawerOpen && drawerParameter === 'view' ? 'active' : ''}>
             <FontAwesomeIcon icon={faSlidersH} />
           </Button>
         </>

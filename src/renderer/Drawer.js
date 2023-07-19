@@ -6,6 +6,7 @@ import { handleFilterSelect } from './Shared';
 import './Drawer.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
+const store = window.electron.store;
 
 const attributeMapping = {
   t: 'Threshold date',
@@ -18,30 +19,45 @@ const attributeMapping = {
   //tags: 'Tags',
 };
 
-const DrawerComponent = ({ isDrawerOpen, attributes, filters }) => {
+const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attributes, filters }) => {
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
-  const isDrawerOpenBoolean = Boolean(isDrawerOpen);
 
-  const handleKeyDown = (event) => {
+  const handleCtrlCmdDown = (event) => {
     if (event.ctrlKey || event.metaKey) {
       setIsCtrlKeyPressed(true);
     }
   };
 
-  const handleKeyUp = (event) => {
+  const handleCtrlCmdUp = (event) => {
     if (!event.ctrlKey && !event.metaKey) {
       setIsCtrlKeyPressed(false);
     }
   };
 
+  const handleEscape = (event) => {
+    if (event.key === 'Escape') {
+      setIsDrawerOpen(false);
+    }
+  };
+
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
+    if (isDrawerOpen) {
+      document.addEventListener('keydown', handleCtrlCmdDown);
+      document.addEventListener('keyup', handleCtrlCmdUp);
+      document.addEventListener('keydown', handleEscape);
+
+    } else {
+      document.removeEventListener('keydown', handleCtrlCmdDown);
+      document.removeEventListener('keyup', handleCtrlCmdUp);
+      document.removeEventListener('keydown', handleEscape);
+    }
+
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener('keydown', handleCtrlCmdDown);
+      document.removeEventListener('keyup', handleCtrlCmdUp);
+      document.removeEventListener('keydown', handleEscape);
     };
-  }, []);
+  }, [isDrawerOpen]);
 
   return (
     <Drawer

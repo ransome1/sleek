@@ -165,15 +165,12 @@ function buildMenu(files) {
       label: file.filename,
       accelerator: `CommandOrControl+${index + 1}`,
       click: () => {
-        console.log(`Menu item clicked for file: ${file.filename}`);
         setFile(undefined, index);
       },
     })),
   };
   fileMenu.submenu.push(filesSubMenu);
-
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-  //return Menu.buildFromTemplate(template);
 }
 
 export default buildMenu;

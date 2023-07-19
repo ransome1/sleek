@@ -1,38 +1,51 @@
 ---
 name: Bug report
-about: Create a report and help to improve sleek
+about: Report a bug and help improving sleek
 title: ''
 labels: 'bug'
-assignees: 'ransome1'
 
 ---
 
-**Is it an actual bug?**
-Or can it be a specific behavior of sleek that others would not consider a bug? In this case a feature request can be better suited: https://github.com/ransome1/sleek/issues/new?assignees=&labels=&template=feature_request.md&title=
+## Bug Report
 
-**Did you check if the bug has already been reported?**
-Please do so first: https://github.com/ransome1/sleek/issues
+**IMPORTANT:**
+Please follow this template strictly when reporting bugs. Providing detailed and accurate information helps the development team to understand and address the issue effectively.
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**App Version:** [Enter app version here]
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Platform:** [Windows / macOS / Linux]
 
-**Do you see any error entries in sleeks developer tools?**
-While sleek is open press Ctrl + Shift + I which will open the developer tools. If the shortcut doesn't work, press the Alt key, select the tab "About" and select the developer tools. In the dev tools select the tab "Console" and check if any error entries are written, while you provoke the bug.
+**Installation Method:** [App Store / Direct Download / Other]
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Bug Description:**
+[Provide a clear and concise description of the bug you encountered.]
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Steps to Reproduce:**
+1. [List the steps to reproduce the bug. Be as specific as possible.]
 
-**Desktop (please complete the following information):**
- - OS: [e.g. Ubuntu 20.10, Windows 10, Debian 10.9, MacOS 10.15 et cetera]
- - Version of sleek [e.g. 0.9.8]
- - Source: Github, SourceForge, Snap Store, Flathub, Windows Store, Arch User Repository
+**Expected Behavior:**
+[Explain what you expected to happen.]
+
+**Actual Behavior:**
+[Explain what actually happened.]
+
+**Additional Information:**
+- [Include any additional information that might be relevant to the bug, such as error messages or console logs.]
+
+**Screenshots:**
+[If applicable, include screenshots that demonstrate the bug.]
+
+**System Information:**
+- OS Version: [e.g., Windows 10, macOS Monterey, Ubuntu 20.04]
+- Processor: [e.g., Intel Core i5, AMD Ryzen 7]
+- RAM: [e.g., 8GB, 16GB]
+- Graphics Card: [e.g., NVIDIA GeForce GTX 1650, AMD Radeon RX 5600]
+
+**Reproducibility:**
+- [Always / Sometimes / Rarely / Unable to Reproduce]
+
+**Impact:**
+- [Minor / Moderate / Major]
+
+**Workaround:**
+[If you found any temporary workaround for the bug, please mention it here.]

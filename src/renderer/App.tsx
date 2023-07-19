@@ -12,28 +12,22 @@ import TodoDialog from './TodoDialog';
 import './App.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
-const store = window.electron.store;
 
 const App = () => {
+  const [files, setFiles] = useState<string[]>();
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [todoObjects, setTodoObjects] = useState<object>();
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [headers, setHeaders] = useState<object>({});
   const [filters, setFilters] = useState<object>({});
   const [attributes, setAttributes] = useState<object>({});
-  const [files, setFiles] = useState<string[]>(store.get('files'));
-  const [drawerParameter, setDrawerParameter] = useState<string | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(store.get('isDrawerOpen') | false);
+  const [drawerParameter, setDrawerParameter] = useState<string | null>();
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [fileTabs, setFileTabs] = useState<boolean>(true);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
-
-  const toggleDrawer = (parameter: string | null = null) => {
-    setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen);
-    setDrawerParameter(parameter);
-  };
 
   const handleReceivedData = (todoObjects: object, attributes: any, headers: object, filters: object, files: object) => {
     if(headers) setHeaders(headers);
@@ -42,13 +36,6 @@ const App = () => {
     if(files) setFiles(files);
     if(todoObjects) setTodoObjects(todoObjects);
     setSplashScreen(null);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackBarOpen(false);
   };
 
   useEffect(() => {
@@ -60,12 +47,7 @@ const App = () => {
     } else {
       setSplashScreen(null);
     }
-  }, [headers]);  
-
-  useEffect(() => {
-    store.set('isDrawerOpen', isDrawerOpen);
-  }, [isDrawerOpen]);
-
+  }, [headers]);
 
   useEffect(() => {
     if(!files || files.length === 0) {
@@ -93,7 +75,8 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="flex-container">
-        <DrawerComponent isDrawerOpen={isDrawerOpen} drawerParameter={drawerParameter} attributes={attributes} filters={filters} />
+        <NavigationComponent isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} drawerParameter={drawerParameter} setDrawerParameter={setDrawerParameter} setDialogOpen={setDialogOpen} files={files} headers={headers} />
+        {files && files.length > 0 && <DrawerComponent isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} drawerParameter={drawerParameter} attributes={attributes} filters={filters} />}
         <div className="flex-items">
           {files && files.length > 0 && (
             <>
@@ -105,13 +88,13 @@ const App = () => {
           <SplashScreen screen={splashScreen} setDialogOpen={setDialogOpen} setSearchString={setSearchString} />
         </div>
       </div>
-      <NavigationComponent toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} setDialogOpen={setDialogOpen} files={files} headers={headers} />
+      
       {dialogOpen && <TodoDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} attributes={attributes} setSnackBarSeverity={setSnackBarSeverity} setSnackBarContent={setSnackBarContent} setSnackBarOpen={setSnackBarOpen} />}
-      <Snackbar open={snackBarOpen} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={snackBarSeverity}>
+      <Snackbar open={snackBarOpen} autoHideDuration={2000}>
+        <Alert severity={snackBarSeverity}>
           {snackBarContent}
         </Alert>
-      </Snackbar>  
+      </Snackbar>
     </ThemeProvider>
   );
 };
