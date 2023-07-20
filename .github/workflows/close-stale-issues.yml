@@ -1,19 +1,32 @@
-name: Close Stale Issues
-
+---
+name: Close stale issues and PRs
 on:
   schedule:
-    - cron: "0,30 * * * *"  # Run every half hour (UTC time)
-
+    - cron: 0,30 * * * *
 jobs:
-  close-stale-issues:
+  stale:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Close stale issues
-        uses: actions/stale@v4.1.1
+      - uses: actions/stale@v8
         with:
-          stale-issue-message: 'This issue has been automatically closed due to inactivity. Feel free to reopen if the problem persists.'
-          days-before-stale: 30
+          stale-issue-message: This is an automated response. We acknowledge your report,
+            and we appreciate your engagement. However, as there has been no
+            recent activity in this thread, it has been marked as stale. If you
+            have any further feedback or if the matter is still relevant, please
+            do not hesitate to respond. Otherwise, this thread will be
+            automatically closed in 15 days from now.
+          stale-pr-message: This is an automated response. Thank you for your
+            contribution. This is an automated response. Your pull request has
+            been received and acknowledged. However, due to inactivity and lack
+            of recent updates on the pull request, it has been marked as stale.
+            If the pull request is still relevant and requires further
+            attention, please feel free to provide updates or respond to any
+            feedback. Otherwise, this pull request will be automatically closed
+            in 15 days from now. Your efforts are greatly appreciated, and we
+            value your contributions to the project.
+          stale-issue-label: no-issue-activity
+          days-before-stale: 90
           days-before-close: 15
+          debug-only: true
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}

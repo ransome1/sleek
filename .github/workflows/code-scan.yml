@@ -54,6 +54,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   codeql:
+    needs: Codecov
     name: CodeQL
     runs-on: ubuntu-latest
     strategy:

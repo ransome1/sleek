@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { Chip, TextField, InputAdornment, Button, Avatar } from '@mui/material';
+import { TextField, InputAdornment, Button, Avatar } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './AutoSuggest.scss';
@@ -110,7 +110,7 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
         }
       } else {
         if (event.key === 'Enter') {
-          handleAdd();
+          //handleAdd();
         }
       }
     };

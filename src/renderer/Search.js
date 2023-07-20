@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TextField, InputAdornment, Chip, Box } from '@mui/material';
+import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './Search.scss';
@@ -93,10 +93,7 @@ const Search = ({ headers, searchString, setSearchString }) => {
           endAdornment: (
             <InputAdornment position='end'>
               {searchString.length > 0 && (
-                <Chip
-                  label='Add as todo'
-                  onClick={handleAddTodo}
-                />
+                <Button onClick={handleAddTodo}>Add as todo</Button>
               )}
               {searchString.length > 0 && (
                 <button

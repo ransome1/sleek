@@ -33,8 +33,7 @@ function handleCompletedTodoObjects(todoObjects: TodoObjects, hideCompleted: boo
 }
 
 function groupTodoObjects(todoObjects: TodoObjects, grouping: string): TodoObjects {
-  const groupedTodoObjects: TodoObjects = Object.entries(todoObjects).reduce(
-    (groups: TodoObjects, [key, todoObject]) => {
+  const groupedTodoObjects: TodoObjects = Object.entries(todoObjects).reduce((groups: TodoObjects, [key, todoObject]) => {
       if (todoObject !== null) {
         const groupTitle: string = todoObject[grouping as keyof typeof todoObject] ?? '';
         const groupKey = groupTitle || '';

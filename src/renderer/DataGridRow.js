@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Avatar, Chip, Checkbox, ListItem, Divider, Button } from '@mui/material';
+import { Avatar, Checkbox, ListItem, Divider, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import { handleFilterSelect } from './Shared';
 import ContextMenu from './ContextMenu';
+import DatePicker from './DatePicker';
 import './DataGridRow.scss';
-
-const ipcRenderer = window.electron.ipcRenderer;
 
 const expressions = [
   { pattern: /^@\S+$/, value: 'contexts', shortcut: '@' },
@@ -33,6 +32,7 @@ const DataGridRow = ({ todoObject, attributes, filters }) => {
   };
 
   const handleCheckboxChange = (event) => {
+    const ipcRenderer = window.electron.ipcRenderer;
     ipcRenderer.send('writeTodoToFile', todoObject.id, undefined, event.target.checked);
   };
 
@@ -49,11 +49,14 @@ const DataGridRow = ({ todoObject, attributes, filters }) => {
 
   const handleButtonClick = (value, key) => {
     handleFilterSelect(key, value, filters, false);
+    
   };
 
   if (todoObject.group) {
+    const store = window.electron.store;
+    const groupAttribute = store.get('sorting')[0];
     if (!todoObject.key) return <Divider />;
-    return <ListItem key={todoObject.id} className="row group"><Chip data-body={todoObject.key} label={todoObject.key} /></ListItem>;
+    return <ListItem key={todoObject.id} className="row group" data-todotxt-attribute={groupAttribute} data-todotxt-value={todoObject.key}><Button>{todoObject.key}</Button></ListItem>;
   }
 
   const words = todoObject.body.split(' ');
@@ -85,9 +88,12 @@ const DataGridRow = ({ todoObject, attributes, filters }) => {
               if (expression.value === 'due' || expression.value === 't') {
                 return (
                   <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
-                    <Button onClick={() => handleButtonClick(word, expression.value)}>
-                      <FontAwesomeIcon data-testid='fa-icon-clock' icon={faClock} />{word}
-                    </Button>
+                    <DatePicker
+                      currentDate={todoObject[expression.value]}
+                      type={expression.value}
+                      inline={true}
+                      todoObject={todoObject}
+                    />
                   </div>
                 );
               } else if (expression.value === 'h:1') {

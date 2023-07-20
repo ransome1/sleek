@@ -23,15 +23,18 @@ async function processDataRequest(file: object, searchString: string) {
 
     const fileContent = await fs.promises.readFile(file.path, 'utf8');
     const hideCompleted: boolean = configStorage.get('hideCompleted', false);
-    const sorting: string[] = configStorage.get('sorting', [
-      "priority",
-      "due",
-      "projects",
-      "contexts",
-      "t",
-      "completed",
-      "created"
-    ]);
+    if(!configStorage.get('sorting')) {
+      configStorage.set('sorting', [
+        "priority",
+        "due",
+        "projects",
+        "contexts",
+        "t",
+        "completed",
+        "created"
+      ]);
+    }
+    const sorting: string[] = configStorage.get('sorting');
     const grouping = sorting[0];
     const invertGroups: boolean = configStorage.get('invertGroups', false);
     const invertSorting : boolean = configStorage.get('invertSorting', false);

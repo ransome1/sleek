@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Chip, Drawer, Accordion, AccordionSummary, AccordionDetails, Avatar, Button, Badge } from '@mui/material';
+import { Box, Drawer, Accordion, AccordionSummary, AccordionDetails, Avatar, Button, Badge } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { handleFilterSelect } from './Shared';
@@ -86,7 +86,8 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attri
                         <div
                           key={`${key}-${childIndex}`}
                           data-todotxt-attribute={key}
-                          className={`chipWrapper ${isCtrlKeyPressed ? 'hide' : ''} ${selected ? 'selected' : ''} ${
+                          data-todotxt-value={value}
+                          className={`filter${isCtrlKeyPressed ? ' hide' : ''} ${selected ? 'selected' : ''} ${
                             excluded ? 'excluded' : ''
                           }`}
                         >
@@ -98,6 +99,7 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attri
                           {(isCtrlKeyPressed || excluded) && (
                             <div
                               data-todotxt-attribute={key}
+                              data-todotxt-value={value}
                               className="overlay"
                               onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
                             >

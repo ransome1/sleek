@@ -53,26 +53,6 @@ const theme = createTheme({
         },
       },
     },
-    MuiChip: {
-      styleOverrides: {
-        root: {
-          border: 'none',
-          cursor: 'pointer',
-          background: '#5a5a5a',
-          color: '#fff',
-          '&:hover': {
-            color: '#fff',
-            background: '#5a5a5a',
-            boxShadow: 'none',
-          },
-          '&:active': {
-            color: '#5a5a5a',
-            background: '#ebebeb',
-            boxShadow: 'none',
-          },          
-        },
-      },
-    },
     MuiMenu: {
       styleOverrides: {
         paper: {

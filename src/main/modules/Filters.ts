@@ -59,12 +59,12 @@ function createAttributesObject(todoObjects: TodoObject[]): Attributes {
     }
   }  
   const attributes: Attributes = {
+    priority: {},
     projects: {},
     contexts: {},
     due: {},
     t: {},
     rec: {},
-    //tag: {},
     pm: {},
   };
 

@@ -35,22 +35,6 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnac
     textFieldValueRef.current = textFieldValue;
   }, [textFieldValue]);
 
-  // useEffect(() => {
-  //   const handleKeyDown = (event) => {
-  //     if (event.key === 'Enter') {
-  //       if (document.activeElement === textFieldRef.current) {
-  //         handleAdd();
-  //       }
-  //     }
-  //   };
-
-  //   document.addEventListener('keydown', handleKeyDown);
-
-  //   return () => {
-  //     document.removeEventListener('keydown', handleKeyDown);
-  //   };
-  // }, []);
-
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} id='todoDialog'>
       <DialogContent>

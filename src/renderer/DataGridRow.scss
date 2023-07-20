@@ -10,8 +10,8 @@
   gap: 0.25em;
 
   button {
-    height: 2em;
     font-size: 0.9em;
+    padding: 0.2em 0.6em;
     svg {
       width: 1em;
       height: 1em;
@@ -26,18 +26,6 @@
     }
   }	
   
-  &[data-priority=A] {
-    border-left-color: $danger;
-  }
-  
-  &[data-priority=B] {
-    border-left-color: $attention;
-  }
-  
-  &[data-priority=C] {
-    border-left-color: $warning;
-  }	
-  
   &[data-complete=true],
   &[data-hidden="1"] {
     filter: opacity(50%) grayscale(100%);
@@ -48,27 +36,15 @@
     padding-left: 0;
     border: none;
     cursor: auto;
-    
-    .MuiChip-root {
-      min-width: 1.75em;
-      font-size: 1.3em;
+    button {
+      min-width: auto;
+      min-height: auto;
+      font-size: 1.25em;
       font-family: $font-family-bold;
-      padding: 0.9em 0;
+      padding: 0.1em 0.6em;
       color: white;
       background: $mid-grey;
       border-radius: 0.65em;
-      
-      &[data-body=A] {
-        background: $danger;
-      }
-      
-      &[data-body=B] {
-        background: $attention;
-      }
-      
-      &[data-body=C] {
-        background: $warning;
-      }			
     }
   }
 }

@@ -1,6 +1,6 @@
 @import "Variables.scss";
 
- *[data-todotxt-attribute],
+  *[data-todotxt-attribute],
   *[data-todotxt-attribute]:hover {
     .MuiButtonBase-root {
       color: darken($mid-grey, 40%);
@@ -10,6 +10,49 @@
       color: white;
       background: darken($mid-grey, 40%);
     }
+  }
+
+  *[data-todotxt-attribute="priority"][data-todotxt-value="A"],
+  *[data-todotxt-attribute="priority"][data-todotxt-value="A"]:hover {
+    button {
+      color: white;
+      background: $danger;
+    }
+    .MuiBadge-badge {
+      color: white;
+      background: darken($danger, 20%);
+    }
+    svg {
+      color: darken($danger, 20%) !important;
+    }    
+  }
+  *[data-todotxt-attribute="priority"][data-todotxt-value="B"],
+  *[data-todotxt-attribute="priority"][data-todotxt-value="B"]:hover {
+    button {
+      color: white;
+      background: $attention;
+    }
+    .MuiBadge-badge {
+      color: white;
+      background: darken($attention, 20%);
+    }
+    svg {
+      color: darken($attention, 20%) !important;
+    }
+  }
+  *[data-todotxt-attribute="priority"][data-todotxt-value="C"],
+  *[data-todotxt-attribute="priority"][data-todotxt-value="C"]:hover {
+    button {
+      color: white;
+      background: $warning;
+    }
+    .MuiBadge-badge {
+      color: white;
+      background: darken($warning, 20%);
+    }
+    svg {
+      color: darken($warning, 30%) !important;
+    }    
   }
 
   *[data-todotxt-attribute="projects"],
@@ -87,5 +130,26 @@
   .selected[data-todotxt-attribute^="pm"]:hover {
     .MuiButtonBase-root {
       background: darken($danger, 25%);
+    }
+  }
+
+  .selected[data-todotxt-attribute="priority"][data-todotxt-value="A"],
+  .selected[data-todotxt-attribute="priority"][data-todotxt-value="A"]:hover {
+    .MuiButtonBase-root {
+      background: darken($danger, 25%);
+    }
+  }
+
+  .selected[data-todotxt-attribute="priority"][data-todotxt-value="B"],
+  .selected[data-todotxt-attribute="priority"][data-todotxt-value="B"]:hover {
+    .MuiButtonBase-root {
+      background: darken($attention, 15%);
+    }
+  }
+
+  .selected[data-todotxt-attribute="priority"][data-todotxt-value="C"],
+  .selected[data-todotxt-attribute="priority"][data-todotxt-value="C"]:hover {
+    .MuiButtonBase-root {
+      background: darken($warning, 25%);
     }
   }
