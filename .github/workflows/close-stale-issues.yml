@@ -27,6 +27,5 @@ jobs:
           stale-issue-label: no-issue-activity
           days-before-stale: 90
           days-before-close: 15
-          debug-only: true
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
