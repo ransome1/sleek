@@ -48,6 +48,7 @@ const FileTabs = ({ files }) => {
             <Tab
               key={index}
               label={file.filename}
+              tabIndex={0}
               icon={<FontAwesomeIcon icon={faCircleXmark} onClick={(event) => handleRemove(event, index)} />}
               className={file.active ? 'active-tab' : ''}
               value={index}

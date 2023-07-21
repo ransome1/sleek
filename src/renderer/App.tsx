@@ -28,6 +28,7 @@ const App = () => {
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
+  const [todoObject, setTodoObject] = useState(null);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -43,11 +44,12 @@ const App = () => {
     if(filters) setFilters(filters);
     if(files) setFiles(files);
     if(todoObjects) setTodoObjects(todoObjects);
-    setSplashScreen(null);
-  };
+  };  
 
   useEffect(() => {
-    if (headers.availableObjects === 0) {
+    if(!files || files.length === 0) {
+      return;
+    } else if (headers.availableObjects === 0) {
       setSplashScreen('noTodosAvailable');
       setIsDrawerOpen(false);
     } else if (headers.visibleObjects === 0) {
@@ -64,7 +66,27 @@ const App = () => {
   }, [files]);
 
   useEffect(() => {
+    if(todoObject) {
+      setDialogOpen(true);
+    } else {
+      setDialogOpen(false);
+    }
+  }, [todoObject]);
+  
+  useEffect(() => {
+    if(!dialogOpen) {
+      setTodoObject(null)
+    }
+  }, [dialogOpen]);
+
+  useEffect(() => {
+    if(!snackBarContent) return;
+    setSnackBarOpen(true);
+  }, [snackBarContent]);
+
+  useEffect(() => {
     const responseHandler = function(response) {
+      console.log(response)
       if (response instanceof Error) {
         setSnackBarSeverity('error');
         setSnackBarContent(response.message);
@@ -74,9 +96,10 @@ const App = () => {
         console.log(response)
       }
     }
-    ipcRenderer.on('writeTodoToFile', responseHandler);    
+    ipcRenderer.on('writeTodoToFile', responseHandler);
     ipcRenderer.on('requestData', handleRequestedData);
-    ipcRenderer.send('requestData');
+    ipcRenderer.send('requestData');    
+    
   }, []);
 
   return (
@@ -90,14 +113,23 @@ const App = () => {
             <>
               <FileTabs files={files} />
               <Search headers={headers} searchString={searchString} setSearchString={setSearchString} />
-              <TodoDataGrid todoObjects={todoObjects} attributes={attributes} setSnackBarOpen={setSnackBarOpen} filters={filters} />
+              <TodoDataGrid todoObjects={todoObjects} attributes={attributes} filters={filters} setSnackBarSeverity={setSnackBarSeverity} setSnackBarContent={setSnackBarContent} setTodoObject={setTodoObject} />
             </>
           )}
           <SplashScreen screen={splashScreen} setDialogOpen={setDialogOpen} setSearchString={setSearchString} />
         </div>
       </div>
       
-      {dialogOpen && <TodoDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} attributes={attributes} setSnackBarSeverity={setSnackBarSeverity} setSnackBarContent={setSnackBarContent} setSnackBarOpen={setSnackBarOpen} />}
+      {dialogOpen && (
+        <TodoDialog
+          dialogOpen={dialogOpen}
+          setDialogOpen={setDialogOpen}
+          attributes={attributes}
+          setSnackBarSeverity={setSnackBarSeverity}
+          setSnackBarContent={setSnackBarContent}
+          todoObject={todoObject}
+        />
+      )}
       <Snackbar open={snackBarOpen} autoHideDuration={2000} onClose={handleSnackbarClose}>
         <Alert severity={snackBarSeverity} onClose={handleSnackbarClose}>
           {snackBarContent}

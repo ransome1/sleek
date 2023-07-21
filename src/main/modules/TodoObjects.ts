@@ -8,8 +8,8 @@ import { handleCompletedTodoObjects, groupTodoObjects, countTodoObjects, applySe
 let todoObjects: Record<string, any>;
 let lines: string[];
 const headers = {
-  availableObjects: 0,
-  visibleObjects: 0,
+  availableObjects: null,
+  visibleObjects: null,
 };
 
 async function processDataRequest(file: object, searchString: string) {

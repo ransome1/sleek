@@ -7,11 +7,9 @@ import { getActiveFile } from './ActiveFile';
 import { setFile, deleteFile } from './File';
 import { openFile, createFile } from './FileDialog';
 
-
 function handleDataRequest(event, searchString, filters) {
   if(filters) filterStorage.set('filters', filters)
-  const activeFile = getActiveFile();
-  processDataRequest(activeFile, searchString).then(function(response) {
+  processDataRequest(getActiveFile(), searchString).then(function(response) {
     console.log('ipcEvents.ts:', response)
   }).catch(function(error) {
     console.log(error);
@@ -25,19 +23,8 @@ async function handleWriteTodoToFile(event, id, string, state, remove) {
   writeTodoObjectToFile(id, string, remove).then(function(response) {
     console.log('ipcEvents.ts:', response)
   }).catch(function(error) {
-    console.log(error);
+    event.reply('writeTodoToFile', error);
   });    
-}
-
-function handleRequestFiles(event) {
-  try {
-    const files = configStorage.get('files');
-    event.reply('requestFiles', files);
-    console.log(`ipcEvents.ts: Files sent back to renderer`);
-  } catch (error) {
-    console.error('ipcEvents.ts:', error);
-    event.reply('displayErrorFromMainProcess', error);
-  }
 }
 
 function handleStoreGet (event, val) {
@@ -46,7 +33,6 @@ function handleStoreGet (event, val) {
     console.log(`ipcEvents.ts: Received config value for ${val}`);
   } catch (error) {
     console.error('ipcEvents.ts:', error);
-    event.reply('displayErrorFromMainProcess', error);
   }
 }
 
@@ -56,7 +42,6 @@ function handleStoreSet (event, key, val) {
     console.log(`ipcEvents.ts: Set ${key} to ${val}`);
   } catch (error) {
     console.error('ipcEvents.ts:', error);
-    event.reply('displayErrorFromMainProcess', error);
   }
 }
 
@@ -68,7 +53,6 @@ function removeEventListeners () {
   ipcMain.off('openFile', openFile);
   ipcMain.off('createFile', createFile);
   ipcMain.off('requestData', handleDataRequest);
-  ipcMain.off('requestFiles', handleRequestFiles);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
 }
 
@@ -81,5 +65,4 @@ ipcMain.on('deleteFile', deleteFile);
 ipcMain.on('openFile', openFile);
 ipcMain.on('createFile', createFile);
 ipcMain.on('requestData', handleDataRequest);
-ipcMain.on('requestFiles', handleRequestFiles);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);

@@ -23,11 +23,16 @@
 	button.xClick {
 		padding: $radius;
 		cursor: pointer;
-		color: $darker-grey;
 		border: none;
 		outline: none;
 		svg {
 			font-size: 2em;
+			color: $links;
+		}
+	}
+	button.xClick:focus-visible {
+		svg {
+			color: $dark-grey;
 		}
 	}
 	button.xClick:focus {

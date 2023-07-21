@@ -31,7 +31,6 @@ function createFileWatcher(files: { path: string }[]) {
       .on('unlink', (file) => {
         console.log(`FileWatcher.ts: File ${file} has been unlinked`);
 
-        
         const updatedFiles = files.filter(item => item.path !== file);
         configStorage.set('files', updatedFiles);
 

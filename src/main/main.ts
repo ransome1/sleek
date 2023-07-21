@@ -79,12 +79,6 @@ const handleReadyToShow = async () => {
   }
 
   try {
-    // if(!files || Object.keys(files).length === 0) {
-    //   mainWindow?.webContents.send('showSplashScreen', 'noFiles');
-    // } else {
-    //   const response = await createFileWatcher(files);
-    //   console.log('main.ts:', response);
-    // }
     if(files && Object.keys(files).length > 0) {
       const response = await createFileWatcher(files);
       console.log('main.ts:', response);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Drawer, Accordion, AccordionSummary, AccordionDetails, Avatar, Button, Badge } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +21,7 @@ const attributeMapping = {
 
 const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attributes, filters }) => {
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
+  const firstTabbableElementRef = useRef(null);
 
   const handleCtrlCmdDown = (event) => {
     if (event.ctrlKey || event.metaKey) {
@@ -46,6 +47,11 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attri
       document.addEventListener('keyup', handleCtrlCmdUp);
       document.addEventListener('keydown', handleEscape);
 
+console.log(firstTabbableElementRef.current)
+      if (firstTabbableElementRef.current) {
+        firstTabbableElementRef.current.focus();
+      }      
+
     } else {
       document.removeEventListener('keydown', handleCtrlCmdDown);
       document.removeEventListener('keyup', handleCtrlCmdUp);
@@ -68,7 +74,7 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attri
       className={`Drawer ${isDrawerOpen ? 'open' : ''}`}
     >
       {Object.keys(attributes).length > 0 && (
-        <Box className="Accordion">
+        <Box className="Accordion" ref={firstTabbableElementRef}>
           {Object.keys(attributes).map((key, index) => {
             if (Object.keys(attributes[key]).length > 0) {
               return (
@@ -92,7 +98,7 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attri
                           }`}
                         >
                           <Badge badgeContent={attributes[key][value]}>
-                            <Button key={`${value}-${childIndex}`} onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}>
+                            <Button key={`${value}-${childIndex}`} tabIndex={0} onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}>
                               {value}
                             </Button>
                           </Badge>

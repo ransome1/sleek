@@ -7,15 +7,16 @@ import './AutoSuggest.scss';
 
 const regex = / [\+@][^ ]*/g;
 
-const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, setTextFieldValue, handleAdd }) => {
-
+const AutoSuggest = ({ textFieldValue, setTextFieldValue, attributes, handleAdd }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [prefix, setPrefix] = useState(null);
   const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
+  const textFieldRef = useRef(null);
 
   const handleSuggestionsFetchRequested = ({ value }) => {
-    const inputValue = textFieldRef.current?.value;
+
+    const inputValue = value;
     if (!inputValue) return;
 
     const cursorPosition = textFieldRef.current?.selectionStart;
@@ -38,16 +39,17 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
   };
 
   const handleSuggestionSelected = (_, { suggestion }) => {
-    const inputValue = textFieldRef.current?.value;
-    if (!inputValue) return;
+
+    const inputValue = textFieldValue;
+    if (!textFieldValue) return;
 
     const createNewValue = (string, a, b) => {
-      return `${inputValue.slice(0, a)} ${prefix}${string} ${inputValue.slice(b + 1)}`;
+      return `${textFieldValue.slice(0, a)} ${prefix}${string} ${textFieldValue.slice(b + 1)}`;
     };
 
     const newValue = createNewValue(suggestion, matchPosition.start, matchPosition.end);
 
-    setTextFieldValue(newValue);
+    setTextFieldValue(newValue)
     setSuggestions([]);
   };
 
@@ -90,27 +92,18 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
   };
 
   useEffect(() => {
-    //textFieldRef.current?.focus();
     const handleKeyDown = (event) => {
-      // Check if the container is visible before handling the keyboard command
       if (suggestions.length > 0) {
-        // Handle your keyboard commands here
         if (event.key === 'Enter') {
-          // Handle the Enter key press when suggestions are visible
+          
           if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
-            //event.preventDefault();
-            // Select the first suggestion or perform any action you want here
+            event.stopPropagation();
             const selectedSuggestion = suggestions[selectedSuggestionIndex];
             handleSuggestionSelected(null, { suggestion: selectedSuggestion });
           }
         } else if (event.key === 'Escape') {
           event.stopPropagation();
-          // Handle the Escape key press to clear suggestions
           handleSuggestionsClearRequested();
-        }
-      } else {
-        if (event.key === 'Enter') {
-          //handleAdd();
         }
       }
     };
@@ -120,11 +113,27 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
     return () => {
       document.removeEventListener('keydown', handleKeyDown, true);
     };
-  }, [suggestions]);
+  }, [suggestions]);  
+
+  useEffect(() => {
+    const handleKeyUp = (event) => {
+      if(suggestions.length > 0) return;
+
+      if (event.key === 'Enter') {
+        handleAdd();
+      }
+    };
+
+    textFieldRef?.current?.addEventListener('keydown', handleKeyUp, true);
+
+    return () => {
+      textFieldRef?.current?.removeEventListener('keydown', handleKeyUp, true);
+    };
+  }, [textFieldRef, suggestions]);
 
   useEffect(() => {
     textFieldRef.current?.focus();
-  }, []); 
+  }, []);
 
   return (
     <Autosuggest
@@ -133,7 +142,7 @@ const AutoSuggest = ({ textFieldRef, setDialogOpen, attributes, textFieldValue, 
         <div {...containerProps} style={containerStyle}>
           {children}
         </div>
-      )}      
+      )}
       suggestions={suggestions}
       onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
       onSuggestionsClearRequested={handleSuggestionsClearRequested}

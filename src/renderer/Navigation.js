@@ -5,25 +5,24 @@ import { Button, Box } from '@mui/material';
 import './Navigation.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
-const store = window.electron.store;
 
 const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers }) => {
 
   const [activeButtonClass, setActiveButtonClass] = useState(null);
 
-  const openAddTodoDialog = () => {
-    setDialogOpen(true);
-  };
-
   const handleButtonClicked = (parameter) => {
     setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)
     setDrawerParameter(parameter)
-    setActiveButtonClass(parameter); // Set the active button class when a button is clicked
+    setActiveButtonClass(parameter);
   };
 
   const handleKeyDown = (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key === 'n') {
-      openAddTodoDialog();
+      setDialogOpen(true);
+    }
+
+    if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
+      setIsDrawerOpen((prevIsDrawerOpen) => !prevIsDrawerOpen);
     }
   };
 
@@ -51,7 +50,7 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
       <Box>sleek</Box>
       {files && files.length > 0 && (
         <>
-          <Button onClick={openAddTodoDialog}>
+          <Button onClick={() => setDialogOpen(true)}>
             <FontAwesomeIcon icon={faPlus} />
           </Button>
         </>

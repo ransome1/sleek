@@ -1,5 +1,6 @@
+// RecurrencePicker.js
 import React, { useState, useRef, useEffect } from 'react';
-import { FormControl, InputLabel, TextField, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { FormControl, TextField, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import { Item } from 'jstodotxt';
@@ -14,7 +15,7 @@ const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue
 
   const handleChange = (event) => {
     const updatedValue = event.target.value;
-    setTextFieldValue(updatedValue);
+    setRecurrence(updatedValue);
   };
 
   const handleIntervalChange = (event) => {
@@ -29,13 +30,32 @@ const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue
     setRecurrence(updatedValue);
   };
 
+  const handleEnterKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (recurrenceFieldRef.current) {
+        recurrenceFieldRef.current.click();
+      }      
+    }
+  };
+
   useEffect(() => {
-    if(!recurrence) return;
+    if (!recurrence) return;
     recurrenceFieldRef.current.value = recurrence;
     const todoObject = new Item(textFieldValue);
     todoObject.setExtension('rec', recurrence);
     setTextFieldValue(todoObject.toString());
-  }, [recurrence]);      
+  }, [recurrence]);
+
+  useEffect(() => {
+    recurrenceFieldRef.current.addEventListener('keydown', handleEnterKeyPress);
+
+    return () => {
+      if (recurrenceFieldRef.current) {
+        recurrenceFieldRef.current.removeEventListener('keydown', handleEnterKeyPress);
+      }
+    };
+  }, [recurrenceFieldRef]);
 
   return (
     <PopupState variant="popover" popupId="recurrencePicker">

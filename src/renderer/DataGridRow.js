@@ -7,8 +7,9 @@ import theme from './Theme';
 import TodoDialog from './TodoDialog';
 import { handleFilterSelect } from './Shared';
 import ContextMenu from './ContextMenu';
-import DatePicker from './DatePicker';
+import DatePickerInline from './DatePickerInline';
 import './DataGridRow.scss';
+const store = window.electron.store;
 
 const expressions = [
   { pattern: /^@\S+$/, value: 'contexts', shortcut: '@' },
@@ -23,13 +24,8 @@ const expressions = [
 
 const isExpression = (word, pattern) => pattern.test(word);
 
-const DataGridRow = ({ todoObject, attributes, filters }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
+const DataGridRow = ({ todoObject, attributes, filters, setTodoObject }) => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
-
-  const openAddTodoDialog = () => {
-    setDialogOpen(true);
-  };
 
   const handleCheckboxChange = (event) => {
     const ipcRenderer = window.electron.ipcRenderer;
@@ -37,8 +33,10 @@ const DataGridRow = ({ todoObject, attributes, filters }) => {
   };
 
   const handleRowClick = (event) => {
-    if (event.target.tagName === 'SPAN' || event.target.tagName === 'LI') {
-      openAddTodoDialog();
+    if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+      if (event.target.tagName === 'SPAN' || event.target.tagName === 'LI') {
+        setTodoObject(todoObject);
+      }
     }
   };
 
@@ -49,14 +47,12 @@ const DataGridRow = ({ todoObject, attributes, filters }) => {
 
   const handleButtonClick = (value, key) => {
     handleFilterSelect(key, value, filters, false);
-    
   };
 
   if (todoObject.group) {
-    const store = window.electron.store;
-    const groupAttribute = store.get('sorting')[0];
     if (!todoObject.key) return <Divider />;
-    return <ListItem key={todoObject.id} className="row group" data-todotxt-attribute={groupAttribute} data-todotxt-value={todoObject.key}><Button>{todoObject.key}</Button></ListItem>;
+    const groupAttribute = store.get('sorting')[0];
+    return <ListItem key={todoObject.id} className="row group" data-todotxt-attribute={groupAttribute} data-todotxt-value={todoObject.key}><Button onClick={() => handleButtonClick(todoObject.key, groupAttribute)}>{todoObject.key}</Button></ListItem>;
   }
 
   const words = todoObject.body.split(' ');
@@ -65,13 +61,20 @@ const DataGridRow = ({ todoObject, attributes, filters }) => {
   return (
     <ThemeProvider theme={theme}>
 
-      {dialogOpen && <TodoDialog todoObject={todoObject} attributes={attributes} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />}
-
       <ContextMenu index={todoObject.id} anchorPosition={contextMenuPosition} setContextMenuPosition={setContextMenuPosition} />
       
-      <ListItem key={todoObject.id} className="row" data-complete={todoObject.complete} data-priority={todoObject.priority} data-hidden={todoObject.hidden} onClick={handleRowClick} onContextMenu={handleContextMenu}>
+      <ListItem
+        tabIndex={0}
+        key={todoObject.id}
+        className="row"
+        data-complete={todoObject.complete}
+        data-priority={todoObject.priority}
+        data-hidden={todoObject.hidden}
+        onClick={handleRowClick}
+        onKeyDown={handleRowClick}
+        onContextMenu={handleContextMenu}>
       
-        <Checkbox checked={todoObject.complete} onChange={handleCheckboxChange} />
+        <Checkbox tabIndex={0} checked={todoObject.complete} onChange={handleCheckboxChange} />
 
         {todoObject.hidden && todoObject.hidden === '1' && (
           <FontAwesomeIcon data-testid='fa-icon-eye-slash' icon={faEyeSlash} />
@@ -88,10 +91,9 @@ const DataGridRow = ({ todoObject, attributes, filters }) => {
               if (expression.value === 'due' || expression.value === 't') {
                 return (
                   <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
-                    <DatePicker
+                    <DatePickerInline
                       currentDate={todoObject[expression.value]}
                       type={expression.value}
-                      inline={true}
                       todoObject={todoObject}
                     />
                   </div>

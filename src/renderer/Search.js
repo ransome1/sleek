@@ -17,11 +17,10 @@ const debounce = (func, delay) => {
 };
 
 const Search = ({ headers, searchString, setSearchString }) => {
-
   if(headers.availableObjects === 0) {
     return null;
   }
-
+  
   const searchFieldRef = useRef(null);
   const [focused, setFocused] = useState(false);
   const label = headers.availableObjects ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}` : null;
@@ -47,6 +46,7 @@ const Search = ({ headers, searchString, setSearchString }) => {
   };
 
   useEffect(() => {
+    if(searchString === undefined) return;
     const delayedSearch = debounce(handleSearch, 200);
     delayedSearch();
     return delayedSearch.cancel;
@@ -92,10 +92,10 @@ const Search = ({ headers, searchString, setSearchString }) => {
           ),
           endAdornment: (
             <InputAdornment position='end'>
-              {searchString.length > 0 && (
+              {searchString && searchString.length > 0 && (
                 <Button onClick={handleAddTodo}>Add as todo</Button>
               )}
-              {searchString.length > 0 && (
+              {searchString && searchString.length > 0 && (
                 <button
                   tabIndex={0}
                   className='xClick'

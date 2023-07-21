@@ -9,31 +9,23 @@ import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent, setSnackBarOpen }) => {
+const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent }) => {
   const [textFieldValue, setTextFieldValue] = useState(todoObject?.string || '');
-  const textFieldRef = useRef(null);
-  const textFieldValueRef = useRef(textFieldValue);
 
-  const handleAdd = async () => {
-    if (!textFieldValueRef.current.trim()) {
+  const handleAdd = () => {
+    if (!textFieldValue) {
       setSnackBarSeverity('info');
       setSnackBarContent('Please enter something into the text field');
-      setSnackBarOpen(true);
       return;
     }
     try {
       setDialogOpen(false);
-      await ipcRenderer.send('writeTodoToFile', todoObject?.id || '', textFieldValueRef.current);
+      ipcRenderer.send('writeTodoToFile', todoObject?.id || '', textFieldValue);
     } catch (error) {
       setSnackBarSeverity('error');
-      setSnackBarContent('Error');
-      setSnackBarOpen(true);
+      setSnackBarContent(error.message);
     }
   };
-
-  useEffect(() => {
-    textFieldValueRef.current = textFieldValue;
-  }, [textFieldValue]);
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} id='todoDialog'>
@@ -42,22 +34,37 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnac
           attributes={attributes}
           textFieldValue={textFieldValue}
           setTextFieldValue={setTextFieldValue}
-          textFieldRef={textFieldRef}
           todoObject={todoObject}
           setDialogOpen={setDialogOpen}
           handleAdd={handleAdd}
         />
-
-        <PriorityPicker currentPriority={todoObject?.priority} setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
-
-        <DatePicker currentDate={todoObject?.due} type="due" setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
-
-        <DatePicker currentDate={todoObject?.t} type="t" setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
-
-        <RecurrencePicker currentRecurrence={todoObject?.rec} setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
-
-        <PomodoroPicker currentPomodoro={todoObject?.pm} setTextFieldValue={setTextFieldValue} textFieldValue={textFieldValue} />
-  
+        <PriorityPicker
+          currentPriority={todoObject?.priority}
+          setTextFieldValue={setTextFieldValue}
+          textFieldValue={textFieldValue}
+        />
+        <DatePicker
+          todoObject={todoObject}
+          type="due"
+          setTextFieldValue={setTextFieldValue}
+          textFieldValue={textFieldValue}
+        />
+        <DatePicker
+          todoObject={todoObject}
+          type="t"
+          setTextFieldValue={setTextFieldValue}
+          textFieldValue={textFieldValue}
+        />
+        <RecurrencePicker
+          currentRecurrence={todoObject?.rec}
+          setTextFieldValue={setTextFieldValue}
+          textFieldValue={textFieldValue}
+        />
+        <PomodoroPicker
+          currentPomodoro={todoObject?.pm}
+          setTextFieldValue={setTextFieldValue}
+          textFieldValue={textFieldValue}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleAdd}>Save</Button>

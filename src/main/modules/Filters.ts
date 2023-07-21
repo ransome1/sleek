@@ -81,6 +81,7 @@ function createAttributesObject(todoObjects: TodoObject[]): Attributes {
       } else {
         incrementCount(attributes[key], value);
       }
+      attributes[key] = Object.fromEntries(Object.entries(attributes[key]).sort(([a], [b]) => a.localeCompare(b)));
     });
   });
 

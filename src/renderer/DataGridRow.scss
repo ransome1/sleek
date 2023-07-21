@@ -24,7 +24,14 @@
     svg {
       color: $links;
     }
-  }	
+  }
+
+  .MuiCheckbox-root:focus-visible,
+  .MuiCheckbox-root.Mui-focusVisible {
+    svg {
+      color: $dark-grey;
+    }
+  }
   
   &[data-complete=true],
   &[data-hidden="1"] {
@@ -42,9 +49,11 @@
       font-size: 1.25em;
       font-family: $font-family-bold;
       padding: 0.1em 0.6em;
-      color: white;
-      background: $mid-grey;
       border-radius: 0.65em;
     }
   }
+}
+
+.row:focus {
+  background: $lighter-grey;
 }

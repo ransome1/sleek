@@ -32,6 +32,10 @@
 			
 			color: $links;
 		}
+		button[role=tab]:focus-visible {
+			background: $mid-grey;
+			color: $dark-grey;
+		}
 		.MuiTabs-indicator {
 			background: transparent;
 		}

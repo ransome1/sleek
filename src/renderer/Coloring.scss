@@ -6,6 +6,9 @@
       color: darken($mid-grey, 40%);
       background: darken($light-grey, 10%);
     }
+    .MuiButtonBase-root:focus-visible {
+      background: darken($light-grey, 20%);
+    }
     .MuiBadge-badge {
       color: white;
       background: darken($mid-grey, 40%);
@@ -17,6 +20,9 @@
     button {
       color: white;
       background: $danger;
+    }
+    button:focus-visible {
+      background: darken($danger, 10%);
     }
     .MuiBadge-badge {
       color: white;
@@ -32,6 +38,9 @@
       color: white;
       background: $attention;
     }
+    button:focus-visible {
+      background: darken($attention, 10%);
+    }
     .MuiBadge-badge {
       color: white;
       background: darken($attention, 20%);
@@ -45,6 +54,9 @@
     button {
       color: white;
       background: $warning;
+    }
+    button:focus-visible {
+      background: darken($warning, 10%);
     }
     .MuiBadge-badge {
       color: white;
@@ -63,6 +75,9 @@
       color: $sleek-projects-foreground;
       background: $sleek-projects-background;
     }
+    .MuiButtonBase-root:focus-visible {
+      background: darken($sleek-projects-background, 10%);
+    }
     .MuiBadge-badge {
       color: white;
       background: darken($sleek-projects-background, 50%);
@@ -80,6 +95,9 @@
       color: $sleek-contexts-foreground;
       background: $sleek-contexts-background;
     }
+    .MuiButtonBase-root:focus-visible {
+      background: darken($sleek-contexts-background, 10%);
+    }
     .MuiBadge-badge {
       color: white;
       background: darken($sleek-contexts-background, 50%);
@@ -95,6 +113,9 @@
       color: white;
       background: $danger;
     }
+    .MuiButtonBase-root:focus-visible {
+      background: darken($danger, 10%);
+    }    
     .MuiBadge-badge {
       background: darken($danger, 25%);
     }
