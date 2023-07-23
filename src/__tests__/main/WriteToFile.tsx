@@ -1,9 +1,9 @@
 import fs from 'fs';
 import { writeTodoObjectToFile } from '../../main/modules/WriteToFile';
 import { getActiveFile } from '../../main/modules/ActiveFile';
-import { lines } from '../../main/modules/TodoObjects';
+import { lines } from '../../main/modules/ProcessTodoObjects';
 
-jest.mock('../../main/modules/TodoObjects', () => ({
+jest.mock('../../main/modules/ProcessTodoObjects', () => ({
   lines: ['Line 1', 'Line 2', 'Line 3'],
 }));
 
@@ -24,7 +24,7 @@ jest.mock('../../main/config', () => ({
   },
 }));
 
-describe('writeTodoObjectToFile', () => {
+describe('Writing to file', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
   });

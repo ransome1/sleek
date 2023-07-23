@@ -1,9 +1,7 @@
 import { configStorage } from '../config';
-import { getActiveFile } from './ActiveFile';
-import { mainWindow } from '../main';
 import createFileWatcher from './FileWatcher';
-import processDataRequest from './TodoObjects';
 import buildMenu from '../menu';
+import { mainWindow } from '../main';
 import path from 'path';
 
 interface File {
@@ -39,27 +37,24 @@ async function addFile(filePath: string): Promise<void> {
     buildMenu(files);
 
     configStorage.set('files', files);
+    mainWindow.send('updateFiles', files);
 
     createFileWatcher(files).then(function(response) {
       console.info('File.ts: File added, restarting file watchers');
-    }).catch(function(error) {
+    }).catch((error) => {
       throw error;
     });
-
-    processDataRequest(getActiveFile(), '').then(function(response) {
-      console.info('File.ts: File deleted, requesting data for new active file');
-    }).catch(function(error) {
-      throw error;
-    });      
     
   } catch (error) {
     console.error('File.ts:', error);
   }
 }
 
-async function deleteFile(event: any, index: number): Promise<void> {
+async function removeFile(event: any, index: number): Promise<void> {
   try {
+
     let files: File[] | [] = configStorage.get('files') as File[] | [];
+
     files.splice(index, 1);
     const activeIndex: number = files.findIndex((file) => file.active);
 
@@ -74,18 +69,13 @@ async function deleteFile(event: any, index: number): Promise<void> {
     buildMenu(files);
 
     configStorage.set('files', files);
+    mainWindow.send('updateFiles', files);
 
-    await createFileWatcher(files).then(function(response) {
+    createFileWatcher(files).then(function(response) {
       console.info('File.ts: File deleted, restarting file watchers');
-    }).catch(function(error) {
+    }).catch((error) => {
       throw error;
     });
-
-    processDataRequest(getActiveFile(), '').then(function(response) {
-      console.info('File.ts: File deleted, requesting data for new active file');
-    }).catch(function(error) {
-      throw error;
-    });  
 
   } catch (error) {
     console.error('File.ts:', error);
@@ -105,16 +95,11 @@ function setFile(event: any, index: number): void {
     files[index].active = true;
 
     configStorage.set('files', files);
-
-    processDataRequest(getActiveFile(), '').then(function (response) {
-      console.info(`File.ts: Active file is set to ${files[index].path}`);
-    }).catch(function (error) {
-      throw error;
-    });
+    mainWindow.send('updateFiles', files);
 
   } catch (error) {
     console.error('File.ts:', error);
   }
 }
 
-export { setFile, deleteFile, addFile };
+export { setFile, removeFile, addFile };

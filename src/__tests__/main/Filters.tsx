@@ -1,6 +1,6 @@
 import { applyFilters, createAttributesObject } from '../../main/modules/Filters';
 
-describe('applyFilters', () => {
+describe('Should filter todos based on passed filters', () => {
   const todoObjects = [
     { id: 1, project: 'Project 1', due: '2023-01-01', completed: false },
     { id: 2, project: 'Project 2', due: '2023-02-01', completed: true },
@@ -25,8 +25,8 @@ describe('applyFilters', () => {
 
 });
 
-describe('createAttributesObject', () => {
-  test('should create attributes object with counts for each attribute', () => {
+describe('Set of filters must create a respective set of attributes and its counts', () => {
+  test('Should create attributes based on todo objects', () => {
     const todoObjects = [
       { id: 1, priority: 'A', projects: ['Project 1'], contexts: ['Context 1'], due: '2023-01-01', completed: false, t: '2024-02-01', rec: null, pm: null },
       { id: 2, priority: null, projects: ['Project 2'], contexts: null, due: '2023-02-01', completed: true, t: null, rec: null, pm: null },

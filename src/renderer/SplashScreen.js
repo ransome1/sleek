@@ -14,14 +14,9 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
     ipcRenderer.send('createFile');
   };
 
-  const handleClearFiltersSearch = () => {
-    ipcRenderer.send('requestData', '', {});
-    setSearchString('');
-  };
-
-  const openAddTodoDialog = () => {
+  const handleCreateTodo = (event) => {
     setDialogOpen(true);
-  };  
+  };
 
   return (
     <Box id='splashScreen' data-testid='splashscreen-component'>
@@ -30,7 +25,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
           <h1>No todos found</h1>
           <p>No results found for either your search input nor your selected filters</p>
           <Box className="buttons">
-            <Button variant='contained' data-testid='navigation-button-files' onClick={handleClearFiltersSearch}>
+            <Button variant='contained' data-testid='navigation-button-files' onClick={() => setSearchString('')}>
               Reset filters and search
             </Button>
           </Box>
@@ -41,7 +36,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
           <h1>No todos available</h1>
           <p>Currently no todos in this file, let's create some</p>
           <Box className="buttons">
-            <Button variant='contained' onClick={openAddTodoDialog}>
+            <Button variant='contained' onClick={handleCreateTodo}>
               Create a todo
             </Button>
           </Box>

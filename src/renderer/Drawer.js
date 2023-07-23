@@ -33,9 +33,9 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attri
     if (!event.ctrlKey && !event.metaKey) {
       setIsCtrlKeyPressed(false);
     }
-  };
+  };  
 
-  const handleEscape = (event) => {
+  const handleKeyDown = (event) => {
     if (event.key === 'Escape') {
       setIsDrawerOpen(false);
     }
@@ -44,24 +44,23 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attri
   useEffect(() => {
     if (isDrawerOpen) {
       document.addEventListener('keydown', handleCtrlCmdDown);
-      document.addEventListener('keyup', handleCtrlCmdUp);
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener('keyup', handleCtrlCmdUp);      
+      document.addEventListener('keydown', handleKeyDown);
 
-console.log(firstTabbableElementRef.current)
       if (firstTabbableElementRef.current) {
         firstTabbableElementRef.current.focus();
       }      
 
     } else {
       document.removeEventListener('keydown', handleCtrlCmdDown);
-      document.removeEventListener('keyup', handleCtrlCmdUp);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keyup', handleCtrlCmdUp);      
+      document.removeEventListener('keydown', handleKeyDown);
     }
 
     return () => {
       document.removeEventListener('keydown', handleCtrlCmdDown);
-      document.removeEventListener('keyup', handleCtrlCmdUp);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keyup', handleCtrlCmdUp);      
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isDrawerOpen]);
 

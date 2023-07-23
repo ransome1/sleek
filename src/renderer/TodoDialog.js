@@ -9,18 +9,19 @@ import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent }) => {
-  const [textFieldValue, setTextFieldValue] = useState(todoObject?.string || '');
-
+const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent, textFieldValue, setTextFieldValue }) => {
+  
+  const textFieldRef = useRef(null);
+  
   const handleAdd = () => {
-    if (!textFieldValue) {
+    if (textFieldRef.current.value === '') {
       setSnackBarSeverity('info');
       setSnackBarContent('Please enter something into the text field');
       return;
     }
     try {
       setDialogOpen(false);
-      ipcRenderer.send('writeTodoToFile', todoObject?.id || '', textFieldValue);
+      ipcRenderer.send('writeTodoToFile', todoObject?.id, textFieldRef.current.value);
     } catch (error) {
       setSnackBarSeverity('error');
       setSnackBarContent(error.message);
@@ -32,6 +33,7 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnac
       <DialogContent>
         <AutoSuggest
           attributes={attributes}
+          textFieldRef={textFieldRef}
           textFieldValue={textFieldValue}
           setTextFieldValue={setTextFieldValue}
           todoObject={todoObject}

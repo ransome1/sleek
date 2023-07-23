@@ -9,14 +9,15 @@ const ipcRenderer = window.electron.ipcRenderer;
 
 const FileTabs = ({ files }) => {
 
-  if(!files) return;
-
+  if (!files || Object.keys(files).length === 0) return null;
+  
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptIndex, setPromptIndex] = useState(null);
   const index = files.findIndex((file) => file.active);
   const [fileTab, setFileTab] = useState(index !== -1 ? index : 0);
 
   const handleChange = (event, index) => {
+    if(index < 0 || index > 9) return false;
     setFileTab(index);
     ipcRenderer.send('setFile', index);
   };
@@ -33,12 +34,12 @@ const FileTabs = ({ files }) => {
 
   const handlePromptConfirm = () => {
     setShowPrompt(false);
-    ipcRenderer.send('deleteFile', promptIndex);
+    ipcRenderer.send('removeFile', promptIndex);
   };
 
   useEffect(() => {
     setFileTab(index !== -1 ? index : 0);
-  }, [index]);  
+  }, [index]);
 
   return (
     <>

@@ -4,11 +4,13 @@ export type Channels =
   | 'requestData'
   | 'showSplashScreen'
   | 'writeTodoToFile'
-  | 'deleteFile'
+  | 'removeFile'
   | 'openFile'
   | 'createFile'
+  | 'updateFiles'
   | 'storeGet'
   | 'storeSet'
+  | 'storeSetFilters'
   | 'selectedFilters'
   | 'applySearchString'
   | 'focusSearch';
@@ -21,7 +23,10 @@ const electronHandler = {
     set(property, val) {
       ipcRenderer.send('storeSet', property, val);
     },
-  },  
+    setFilters(val) {
+      ipcRenderer.send('storeSetFilters', val);
+    },
+  },
   ipcRenderer: {
     send: (channel: Channels, ...args: unknown[]) => {
       ipcRenderer.send(channel, ...args);

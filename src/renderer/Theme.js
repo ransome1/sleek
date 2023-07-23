@@ -127,7 +127,11 @@ const theme = createTheme({
           },
           '&:focus': {
             boxShadow: 'none',
-          },       
+          },
+          '&:focus-visible': {
+            color: '#5a5a5a',
+            background: '#ccc',
+          },     
         }
       },
       variants: [

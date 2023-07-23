@@ -15,8 +15,19 @@ const filtersPath = path.join(userDataDirectory, 'filters.json');
 const filterStorage = new Store({ cwd: userDataDirectory, name: 'filters' });
 
 if (!fs.existsSync(configPath)) {
-  const defaultConfigData = {};
-  fs.writeFileSync(configPath, JSON.stringify(defaultConfigData));
+  const defaultConfigData = {
+    sorting: [
+      "priority",
+      "due",
+      "projects",
+      "contexts",
+      "t",
+      "completed",
+      "created"
+    ],
+  };
+
+  fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));
 }
 
 if (!fs.existsSync(filtersPath)) {

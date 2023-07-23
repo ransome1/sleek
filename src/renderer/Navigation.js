@@ -16,20 +16,10 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
     setActiveButtonClass(parameter);
   };
 
-  const handleKeyDown = (event) => {
-    if ((event.metaKey || event.ctrlKey) && event.key === 'n') {
-      setDialogOpen(true);
-    }
-
-    if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
-      setIsDrawerOpen((prevIsDrawerOpen) => !prevIsDrawerOpen);
-    }
-  };
-
   const handleOpenFile = () => {
     ipcRenderer.send('openFile');
   };
-
+  
   useEffect(() => {
     if (!isDrawerOpen) {
       setActiveButtonClass(null);
@@ -38,12 +28,25 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
 
   useEffect(() => {
 
+    const handleKeyDown = (event) => {
+
+      if (files?.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
+        setDialogOpen(true);
+        return;
+      }
+
+      if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
+        setIsDrawerOpen((prevIsDrawerOpen) => !prevIsDrawerOpen);
+        return;
+      }
+    };    
+
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [files]);
 
   return (
     <nav id='navigation' data-testid='navigation-component'>
@@ -56,7 +59,7 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
         </>
       )}
 
-      {files && files.length > 0 && headers.availableObjects > 0 && (
+      {files?.length > 0 && headers?.availableObjects > 0 && (
         <>
           <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen && drawerParameter === 'filter' ? 'active' : ''}>
             <FontAwesomeIcon icon={faFilter} />

@@ -1,5 +1,7 @@
 const ipcRenderer = window.electron.ipcRenderer;
 
+const store = window.electron.store;
+
 export function handleFilterSelect(key: string, value: string, filters: object, isCtrlKeyPressed: boolean): void {
   const updatedFilters = { ...filters };
   if (updatedFilters[key]) {
@@ -12,5 +14,6 @@ export function handleFilterSelect(key: string, value: string, filters: object, 
   } else {
     updatedFilters[key] = [{ value: value, exclude: isCtrlKeyPressed }];
   }
-  ipcRenderer.send('requestData', '', updatedFilters);
+  store.setFilters(updatedFilters);
+  ipcRenderer.send('requestData');
 }

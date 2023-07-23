@@ -18,7 +18,7 @@ jest.mock('../../main/config', () => ({
 }));
 
 // Test case
-test('getActiveFile returns the active file', () => {
+test('Should return the active file', () => {
   const activeFile = getActiveFile();
   expect(activeFile).toEqual({
     active: true,

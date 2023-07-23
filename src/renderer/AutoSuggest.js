@@ -7,12 +7,11 @@ import './AutoSuggest.scss';
 
 const regex = / [\+@][^ ]*/g;
 
-const AutoSuggest = ({ textFieldValue, setTextFieldValue, attributes, handleAdd }) => {
+const AutoSuggest = ({ setDialogOpen, textFieldRef, textFieldValue, setTextFieldValue, attributes, handleAdd }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [prefix, setPrefix] = useState(null);
   const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
-  const textFieldRef = useRef(null);
 
   const handleSuggestionsFetchRequested = ({ value }) => {
 
@@ -92,10 +91,9 @@ const AutoSuggest = ({ textFieldValue, setTextFieldValue, attributes, handleAdd 
   };
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event) => {      
       if (suggestions.length > 0) {
-        if (event.key === 'Enter') {
-          
+        if (event.key === 'Enter') {   
           if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
             event.stopPropagation();
             const selectedSuggestion = suggestions[selectedSuggestionIndex];
@@ -105,31 +103,25 @@ const AutoSuggest = ({ textFieldValue, setTextFieldValue, attributes, handleAdd 
           event.stopPropagation();
           handleSuggestionsClearRequested();
         }
+      } else {
+        if (event.key === 'Enter') {
+          event.stopPropagation();
+          handleAdd();
+        } else if (event.key === 'Escape') {
+          event.stopPropagation();
+          setDialogOpen(false);
+          handleSuggestionsClearRequested();
+        }
+
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown, true);
+    textFieldRef?.current?.addEventListener('keydown', handleKeyDown, true);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown, true);
+      textFieldRef?.current?.removeEventListener('keydown', handleKeyDown, true);
     };
-  }, [suggestions]);  
-
-  useEffect(() => {
-    const handleKeyUp = (event) => {
-      if(suggestions.length > 0) return;
-
-      if (event.key === 'Enter') {
-        handleAdd();
-      }
-    };
-
-    textFieldRef?.current?.addEventListener('keydown', handleKeyUp, true);
-
-    return () => {
-      textFieldRef?.current?.removeEventListener('keydown', handleKeyUp, true);
-    };
-  }, [textFieldRef, suggestions]);
+  }, [textFieldRef, suggestions]);  
 
   useEffect(() => {
     textFieldRef.current?.focus();

@@ -17,21 +17,13 @@ const debounce = (func, delay) => {
 };
 
 const Search = ({ headers, searchString, setSearchString }) => {
-  if(headers.availableObjects === 0) {
-    return null;
-  }
-  
   const searchFieldRef = useRef(null);
   const [focused, setFocused] = useState(false);
-  const label = headers.availableObjects ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}` : null;
+  const label = headers?.availableObjects ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}` : null;
 
   const handleInput = (event) => {
     const searchString = event.target.value;
     setSearchString(searchString);
-  };
-
-  const handleSearch = () => {
-    ipcRenderer.send('requestData', searchString);
   };
 
   const handleAddTodo = (event) => {
@@ -46,7 +38,10 @@ const Search = ({ headers, searchString, setSearchString }) => {
   };
 
   useEffect(() => {
-    if(searchString === undefined) return;
+    if(searchString === null) return;
+    const handleSearch = () => {
+      ipcRenderer.send('requestData', searchString);
+    };
     const delayedSearch = debounce(handleSearch, 200);
     delayedSearch();
     return delayedSearch.cancel;
@@ -69,6 +64,8 @@ const Search = ({ headers, searchString, setSearchString }) => {
     };
   }, []);
 
+  if(!headers || headers.availableObjects === 0) return null;
+
   return (
     <Box id='search'>
       <TextField
@@ -76,7 +73,7 @@ const Search = ({ headers, searchString, setSearchString }) => {
         placeholder='(A) Todo text +project @context due:2022-12-12 rec:d h:0 t:2022-12-12'
         label={label}
         inputRef={searchFieldRef}
-        value={searchString}
+        value={searchString === null ? '' : searchString}
         onChange={handleInput}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}

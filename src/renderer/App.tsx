@@ -12,44 +12,55 @@ import TodoDialog from './TodoDialog';
 import './App.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
+const store = window.electron.store;
+const sorting = store.get('sorting');
 
 const App = () => {
-  const [files, setFiles] = useState<string[]>();
+  const [files, setFiles] = useState<string[]>(store.get('files') || null);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [todoObjects, setTodoObjects] = useState<object>();
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
-  const [headers, setHeaders] = useState<object>({});
-  const [filters, setFilters] = useState<object>({});
-  const [attributes, setAttributes] = useState<object>({});
   const [drawerParameter, setDrawerParameter] = useState<string | null>();
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [fileTabs, setFileTabs] = useState<boolean>(true);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [searchString, setSearchString] = useState('');
   const [todoObject, setTodoObject] = useState(null);
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
+  const [searchString, setSearchString] = useState(null);
+  const [todoObjects, setTodoObjects] = useState<object>(null);
+  const [headers, setHeaders] = useState<object>(null);
+  const [filters, setFilters] = useState<object>({});
+  const [attributes, setAttributes] = useState<object>({});
+  const [textFieldValue, setTextFieldValue] = useState('');
+  
+  const responseHandler = function(response) {
+    if (response instanceof Error) {
+      setSnackBarSeverity('error');
+      setSnackBarContent(response.message);
+      setSnackBarOpen(true);
+      console.error(response)
+    } else {
+      setDialogOpen(false);
+      console.log(response)
     }
-
-    setSnackBarOpen(false);
-  };  
-
-  const handleRequestedData = (todoObjects: object, attributes: any, headers: object, filters: object, files: object) => {
-    if(headers) setHeaders(headers);
-    if(attributes) setAttributes(attributes);
-    if(filters) setFilters(filters);
-    if(files) setFiles(files);
+  } 
+  
+  const handleRequestedData = (todoObjects: object, attributes: any, headers: object, filters: object) => {
     if(todoObjects) setTodoObjects(todoObjects);
-  };  
+    if(attributes) setAttributes(attributes);
+    if(headers) setHeaders(headers);
+    if(filters) setFilters(filters);
+    setSplashScreen(null);
+  };
+
+  const handleUpdateFiles = (files: object) => {
+    //if (!files || Object.keys(files).length === 0) return false;
+    setFiles(files)
+  };
 
   useEffect(() => {
-    if(!files || files.length === 0) {
-      return;
-    } else if (headers.availableObjects === 0) {
+    if(!headers) return;
+    if (headers.availableObjects === 0) {
       setSplashScreen('noTodosAvailable');
       setIsDrawerOpen(false);
     } else if (headers.visibleObjects === 0) {
@@ -60,24 +71,14 @@ const App = () => {
   }, [headers]);
 
   useEffect(() => {
-    if(!files || files.length === 0) {
+    if(files === null || files?.length === 0) {
+      setTodoObjects(null);
+      setHeaders(null);
       setSplashScreen('noFiles');
+    } else {
+      ipcRenderer.send('requestData');
     }
   }, [files]);
-
-  useEffect(() => {
-    if(todoObject) {
-      setDialogOpen(true);
-    } else {
-      setDialogOpen(false);
-    }
-  }, [todoObject]);
-  
-  useEffect(() => {
-    if(!dialogOpen) {
-      setTodoObject(null)
-    }
-  }, [dialogOpen]);
 
   useEffect(() => {
     if(!snackBarContent) return;
@@ -85,53 +86,83 @@ const App = () => {
   }, [snackBarContent]);
 
   useEffect(() => {
-    const responseHandler = function(response) {
-      console.log(response)
-      if (response instanceof Error) {
-        setSnackBarSeverity('error');
-        setSnackBarContent(response.message);
-        setSnackBarOpen(true);
-      } else {
-        setDialogOpen(false);
-        console.log(response)
-      }
+    if(!dialogOpen) {
+      setTodoObject(null);
+      setTextFieldValue('');
     }
+  }, [dialogOpen]);
+
+  useEffect(() => {
     ipcRenderer.on('writeTodoToFile', responseHandler);
     ipcRenderer.on('requestData', handleRequestedData);
-    ipcRenderer.send('requestData');    
-    
+    ipcRenderer.on('updateFiles', handleUpdateFiles);
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="flex-container">
-        <NavigationComponent isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} drawerParameter={drawerParameter} setDrawerParameter={setDrawerParameter} setDialogOpen={setDialogOpen} files={files} headers={headers} />
-        {files && files.length > 0 && <DrawerComponent isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} drawerParameter={drawerParameter} attributes={attributes} filters={filters} />}
+        <NavigationComponent
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          drawerParameter={drawerParameter}
+          setDrawerParameter={setDrawerParameter}
+          setDialogOpen={setDialogOpen}
+          files={files}
+          headers={headers}
+        />
+        <DrawerComponent 
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          drawerParameter={drawerParameter}
+          attributes={attributes}
+          filters={filters}
+        />
         <div className="flex-items">
-          {files && files.length > 0 && (
-            <>
-              <FileTabs files={files} />
-              <Search headers={headers} searchString={searchString} setSearchString={setSearchString} />
-              <TodoDataGrid todoObjects={todoObjects} attributes={attributes} filters={filters} setSnackBarSeverity={setSnackBarSeverity} setSnackBarContent={setSnackBarContent} setTodoObject={setTodoObject} />
-            </>
-          )}
-          <SplashScreen screen={splashScreen} setDialogOpen={setDialogOpen} setSearchString={setSearchString} />
+          <FileTabs files={files} />
+          <Search
+            headers={headers}
+            searchString={searchString}
+            setSearchString={setSearchString}
+          />
+          <TodoDataGrid 
+            todoObjects={todoObjects}
+            todoObject={todoObject}
+            setTodoObject={setTodoObject}
+            attributes={attributes}
+            filters={filters}
+            setSnackBarSeverity={setSnackBarSeverity}
+            setSnackBarContent={setSnackBarContent}
+            setDialogOpen={setDialogOpen}
+            setTextFieldValue={setTextFieldValue}
+            sorting={sorting}
+          />
+          <SplashScreen 
+            screen={splashScreen}
+            setDialogOpen={setDialogOpen}
+            setSearchString={setSearchString}
+          />
         </div>
       </div>
-      
-      {dialogOpen && (
-        <TodoDialog
-          dialogOpen={dialogOpen}
-          setDialogOpen={setDialogOpen}
-          attributes={attributes}
-          setSnackBarSeverity={setSnackBarSeverity}
-          setSnackBarContent={setSnackBarContent}
-          todoObject={todoObject}
-        />
-      )}
-      <Snackbar open={snackBarOpen} autoHideDuration={2000} onClose={handleSnackbarClose}>
-        <Alert severity={snackBarSeverity} onClose={handleSnackbarClose}>
+      <TodoDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        todoObject={todoObject}
+        attributes={attributes}
+        setSnackBarSeverity={setSnackBarSeverity}
+        setSnackBarContent={setSnackBarContent}
+        textFieldValue={textFieldValue}
+        setTextFieldValue={setTextFieldValue}
+      />
+      <Snackbar 
+        open={snackBarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackBarOpen(false)}
+      >
+        <Alert
+          severity={snackBarSeverity}
+          onClose={() => setSnackBarOpen(false)}
+        >
           {snackBarContent}
         </Alert>
       </Snackbar>

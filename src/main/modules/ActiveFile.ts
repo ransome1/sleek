@@ -1,4 +1,5 @@
 import { configStorage } from '../config';
+//import { mainWindow } from '../main';
 
 interface File {
   active: boolean;
@@ -14,6 +15,8 @@ export function getActiveFile(): File | null {
     if (files.length === 0) return null;
 
     const activeIndex = files.findIndex((file) => file.active);
+
+    //mainWindow.setTitle(files[activeIndex].filename + " - sleek");
 
     return files[activeIndex] || null;
 

@@ -1,4 +1,4 @@
-import { lines } from './TodoObjects';
+import { lines } from './ProcessTodoObjects';
 import { getActiveFile } from './ActiveFile';
 import { configStorage } from '../config';
 import fs from 'fs/promises';
@@ -17,13 +17,14 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
   }
 
   const modifiedContent = lines.join('\n');
-  const activeFile = getActiveFile();
 
-  if (!activeFile) {
+  const activeFilePath = getActiveFile()?.path;
+
+  if (!activeFilePath) {
     throw new Error('No active file found');
   }
 
-  const activeFilePath = activeFile.path;
+  
   await fs.writeFile(activeFilePath, modifiedContent, 'utf8');
   
   if (id && !remove) {
@@ -31,7 +32,7 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
   } else if (remove) {
     return `Line ${id} removed from file`;
   } else {
-    return `New line added`;
+    return `FIX ME!`;
   }
 }
 

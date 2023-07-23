@@ -3,22 +3,7 @@ import { List } from '@mui/material';
 import DataGridRow from './DataGridRow';
 import './DataGrid.scss';
 
-const TodoDataGrid = ({ todoObjects, attributes, filters, setTodoObject }) => {
-
-  if (!todoObjects || Object.keys(todoObjects).length === 0) {
-    return null;
-  }
-
-  const rows = [];
-  for (const [key, data] of Object.entries(todoObjects)) {
-    const header = { group: true, key: key };
-    const todos = data.filter(todo => todo.body.trim() !== '').map(todo => ({
-      ...todo,
-      id: todo.id,
-      group: false,
-    }));
-    rows.push(header, ...todos);
-  }
+const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, sorting }) => {
 
   const handleKeyUp = (event) => {
     if (event.key === 'ArrowDown') {
@@ -52,10 +37,32 @@ const TodoDataGrid = ({ todoObjects, attributes, filters, setTodoObject }) => {
     }
   };
 
+  if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
+
+  const rows = [];
+  for (const [key, data] of Object.entries(todoObjects)) {
+    const header = { group: true, key: key };
+    const todos = data.filter(todo => todo.body.trim() !== '').map(todo => ({
+      ...todo,
+      id: todo.id,
+      group: false,
+    }));
+    rows.push(header, ...todos);
+  }
+
   return (
     <List id="dataGrid" data-testid="data-grid-component" onKeyUp={handleKeyUp}>
       {rows.map((row, index) => (
-        <DataGridRow key={index} attributes={attributes} todoObject={row} filters={filters} setTodoObject={setTodoObject} />
+        <DataGridRow 
+          key={index}
+          attributes={attributes}
+          todoObject={row}
+          filters={filters}
+          setDialogOpen={setDialogOpen}
+          setTextFieldValue={setTextFieldValue}
+          setTodoObject={setTodoObject}
+          sorting={sorting}
+        />
       ))}
     </List>
   );

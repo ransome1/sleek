@@ -9,14 +9,13 @@ import { handleFilterSelect } from './Shared';
 import ContextMenu from './ContextMenu';
 import DatePickerInline from './DatePickerInline';
 import './DataGridRow.scss';
-const store = window.electron.store;
 
 const expressions = [
   { pattern: /^@\S+$/, value: 'contexts', shortcut: '@' },
   { pattern: /^\+\S+$/, value: 'projects', shortcut: '+' },
   { pattern: /\bdue:\d{4}-\d{2}-\d{2}\b/, value: 'due', shortcut: 'due:' },
   { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't', shortcut: 't:' },
-  { pattern: /^rec:\d*[dbwmy]$/, value: 'rec', shortcut: 'rec:' },
+  { pattern: /^rec:(\+?\d*[dbwmy])$/, value: 'rec', shortcut: 'rec:' },
   { pattern: /\bh:1\b/, value: 'h:1', shortcut: 'h:1' },
   //{ pattern: /^tag:\S+$/, value: 'tags', shortcut: 'tag:' },
   { pattern: /pm:\d+\b/, value: 'pm', shortcut: 'pm:' }
@@ -24,18 +23,20 @@ const expressions = [
 
 const isExpression = (word, pattern) => pattern.test(word);
 
-const DataGridRow = ({ todoObject, attributes, filters, setTodoObject }) => {
+const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, sorting }) => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
   const handleCheckboxChange = (event) => {
     const ipcRenderer = window.electron.ipcRenderer;
-    ipcRenderer.send('writeTodoToFile', todoObject.id, undefined, event.target.checked);
+    ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, event.target.checked, false);
   };
 
   const handleRowClick = (event) => {
     if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if (event.target.tagName === 'SPAN' || event.target.tagName === 'LI') {
+        setDialogOpen(true);
         setTodoObject(todoObject);
+        setTextFieldValue(todoObject.string);
       }
     }
   };
@@ -51,8 +52,7 @@ const DataGridRow = ({ todoObject, attributes, filters, setTodoObject }) => {
 
   if (todoObject.group) {
     if (!todoObject.key) return <Divider />;
-    const groupAttribute = store.get('sorting')[0];
-    return <ListItem key={todoObject.id} className="row group" data-todotxt-attribute={groupAttribute} data-todotxt-value={todoObject.key}><Button onClick={() => handleButtonClick(todoObject.key, groupAttribute)}>{todoObject.key}</Button></ListItem>;
+    return <ListItem key={todoObject.id} className="row group" data-todotxt-attribute={sorting[0]} data-todotxt-value={todoObject.key}><Button onClick={() => handleButtonClick(todoObject.key, groupAttribute)}>{todoObject.key}</Button></ListItem>;
   }
 
   const words = todoObject.body.split(' ');
@@ -68,7 +68,6 @@ const DataGridRow = ({ todoObject, attributes, filters, setTodoObject }) => {
         key={todoObject.id}
         className="row"
         data-complete={todoObject.complete}
-        data-priority={todoObject.priority}
         data-hidden={todoObject.hidden}
         onClick={handleRowClick}
         onKeyDown={handleRowClick}
