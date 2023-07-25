@@ -86,7 +86,8 @@
     "react": "^18.2.0",
     "react-autosuggest": "^10.1.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.11.2"
+    "react-router-dom": "^6.11.2",
+    "react-window": "^1.8.9"
   },
   "devDependencies": {
     "@electron/notarize": "^1.2.3",
@@ -229,7 +230,7 @@
         "rpm",
         "AppImage"
       ]
-    },    
+    },
     "directories": {
       "app": "release/app",
       "buildResources": "assets",

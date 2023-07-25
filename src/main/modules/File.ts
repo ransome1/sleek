@@ -52,8 +52,7 @@ async function addFile(filePath: string): Promise<void> {
 
 async function removeFile(event: any, index: number): Promise<void> {
   try {
-
-    let files: File[] | [] = configStorage.get('files') as File[] | [];
+    let files: File[] = configStorage.get('files') as File[];
 
     files.splice(index, 1);
     const activeIndex: number = files.findIndex((file) => file.active);
@@ -84,9 +83,9 @@ async function removeFile(event: any, index: number): Promise<void> {
 
 function setFile(event: any, index: number): void {
   try {
-    const files: File[] | [] = configStorage.get('files') as File[] | [];
+    const files: File[] = configStorage.get('files') as File[];
 
-    if (Object.keys(files).length > 0) {
+    if (files.length > 0) {
       files.forEach((file) => {
         file.active = false;
       });

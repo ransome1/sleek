@@ -1,9 +1,9 @@
 import fs from 'fs';
 import { writeTodoObjectToFile } from '../../main/modules/WriteToFile';
 import { getActiveFile } from '../../main/modules/ActiveFile';
-import { lines } from '../../main/modules/ProcessTodoObjects';
+import { lines } from '../../main/modules/CreateTodoObjects';
 
-jest.mock('../../main/modules/ProcessTodoObjects', () => ({
+jest.mock('../../main/modules/CreateTodoObjects', () => ({
   lines: ['Line 1', 'Line 2', 'Line 3'],
 }));
 

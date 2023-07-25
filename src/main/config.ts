@@ -25,6 +25,9 @@ if (!fs.existsSync(configPath)) {
       "completed",
       "created"
     ],
+    appendCreationDate: false,
+    hideCompleted: true,
+    windowMaximized: false,
   };
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));

@@ -18,6 +18,8 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
     setDialogOpen(true);
   };
 
+  if(!screen) return null;
+
   return (
     <Box id='splashScreen' data-testid='splashscreen-component'>
       {screen === 'noTodosVisible' && (

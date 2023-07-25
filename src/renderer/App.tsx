@@ -54,7 +54,6 @@ const App = () => {
   };
 
   const handleUpdateFiles = (files: object) => {
-    //if (!files || Object.keys(files).length === 0) return false;
     setFiles(files)
   };
 

@@ -46,7 +46,7 @@ const addRecurrenceToDate = (date: Date, recurrence: string): Date => {
 
 const formatDate = (date: Date): string => dayjs(date).format('YYYY-MM-DD');
 
-const createRecurringTodo = (string: string, recurrence: string): Promise<string> => {
+const createRecurringTodo = async (string: string, recurrence: string): Promise<string> => {
   try {
     const recurringTodoObject = new Item(string);
     const completedDate = recurringTodoObject.completed();
@@ -55,19 +55,20 @@ const createRecurringTodo = (string: string, recurrence: string): Promise<string
       const strictRecurrence = recurrence.startsWith('+');
       const recurrenceInterval = strictRecurrence ? recurrence.slice(1) : recurrence;
 
-      const oldDueDate = recurringTodoObject?.extensions()?.find(item => item.key === 'due');
-      const targetDate = strictRecurrence && oldDueDate?.value ?
-        addRecurrenceToDate(dayjs(oldDueDate.value, 'YYYY-MM-DD').toDate(), recurrenceInterval) :
-        addRecurrenceToDate(completedDate, recurrenceInterval);
+      const oldDueDate = recurringTodoObject?.extensions()?.find((item) => item.key === 'due');
+      const targetDate = strictRecurrence && oldDueDate?.value
+        ? addRecurrenceToDate(dayjs(oldDueDate.value, 'YYYY-MM-DD').toDate(), recurrenceInterval)
+        : addRecurrenceToDate(completedDate, recurrenceInterval);
 
       recurringTodoObject.setExtension('due', formatDate(targetDate));
       recurringTodoObject.setComplete(false);
       recurringTodoObject.setCompleted(null);
 
-      writeTodoObjectToFile(-1, recurringTodoObject.toString(), false);
-      return Promise.resolve('Recurring todo created');
+      await writeTodoObjectToFile(-1, recurringTodoObject.toString(), false);
+      return 'Recurring todo created';
     }
-    return Promise.resolve('No recurring todo created');
+
+    return 'No recurring todo created';
   } catch (error) {
     return Promise.reject(error);
   }

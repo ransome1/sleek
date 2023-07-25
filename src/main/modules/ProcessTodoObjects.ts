@@ -1,46 +1,5 @@
-import { Item } from 'jstodotxt';
-
-let lines: string[];
-
 type TodoObject = Record<string, any>;
 type TodoObjects = Record<string, TodoObject>;
-
-function createTodoObjects(fileContent: string) {
-  lines = fileContent.split('\n');
-  const todoObjects = lines
-    .map((line, i) => {
-      const item = new Item(line);
-      const extensions = item.extensions();
-      const due = extensions.find((extension) => extension.key === 'due')?.value || null;
-      //const tags = extensions.find((extension) => extension.key === 'tag')?.value || null;
-      const t = extensions.find((extension) => extension.key === 't')?.value || null;
-      const hidden = extensions.find((extension) => extension.key === 'h')?.value || null;
-      const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;
-      const rec = extensions.find((extension) => extension.key === 'rec')?.value || null;
-      if (!item.body()) {
-        return null;
-      }
-      return {
-        id: i,
-        body: item.body(),
-        created: item.created(),
-        complete: item.complete(),
-        priority: item.priority(),
-        contexts: item.contexts(),
-        projects: item.projects(),
-        due,
-        t,
-        rec,
-        hidden,
-        //tags,
-        pm,
-        string: item.toString(),
-        group: null,
-      };
-    })
-    .filter((todoObject) => todoObject !== null);
-  return todoObjects;
-}
 
 function countTodoObjects(todoObjects: TodoObjects): number {
   const count = Object.values(todoObjects)
@@ -60,15 +19,12 @@ function applySearchString(searchString: string, todoObjects: TodoObjects): Todo
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObjects, hideCompleted: boolean): TodoObject {
-  if(hideCompleted) {
-    const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
+  const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
     .flat()
     .filter((object: TodoObject | null) =>
       object && object.complete === !hideCompleted
     );
     return filteredTodoObjects;
-  }
-  return todoObjects; 
 }
 
 function groupTodoObjects(todoObjects: TodoObjects, grouping: string): TodoObjects {
@@ -160,8 +116,6 @@ function sortTodoObjects(groupedTodoObjects: TodoObjects, sorting: string[], inv
 }
 
 export {
-  lines,
-  createTodoObjects,
   groupTodoObjects,
   countTodoObjects,
   sortGroups,

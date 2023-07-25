@@ -3,35 +3,40 @@ import path from 'path';
 import { setFile } from './modules/File';
 import { mainWindow } from './main';
 import { openFile, createFile } from './modules/FileDialog';
+import processDataRequest from './modules/processDataRequest';
+import { configStorage } from './config';
 
+const isMac = process.platform === 'darwin';
 const appPackage = require('../../release/app/package.json');
 const description = appPackage.description;
 
-function buildMenu(files) {
-  if (!files) {
-    files = [];
-  }
+interface File {
+  active: boolean;
+  path: string;
+  filename: string;
+}
 
-  const template = [
+function buildMenu(files: File[] = []) {
+  const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'sleek',
       submenu: [
         {
           label: 'About',
           click: () => {
-            const options = {
+            const options: Electron.MessageBoxOptions = {
               type: 'info',
               title: 'About sleek',
               message: `sleek v${app.getVersion()}`,
               detail: description,
-              buttons: ['OK']
+              buttons: ['OK'],
             };
             dialog.showMessageBox(options);
-          }
+          },
         },
         {
           label: 'Hide',
-          accelerator: 'CmdOrCtrl+H',
+          accelerator: isMac ? 'Cmd+H' : 'Win+D',
           role: 'hide',
         },
         { type: 'separator' },
@@ -40,9 +45,9 @@ function buildMenu(files) {
           accelerator: 'CmdOrCtrl+Q',
           click: () => {
             app.quit();
-          }
+          },
         },
-      ]
+      ],
     },
     {
       id: 'fileMenu',
@@ -95,8 +100,19 @@ function buildMenu(files) {
           label: 'Find',
           accelerator: 'CmdOrCtrl+F',
           click: () => {
+            // Handle Find functionality
           },
         },
+        {
+          label: 'Hide completed',
+          accelerator: 'Ctrl+H',
+          click: async () => {
+            const hideCompleted = configStorage.get('hideCompleted');
+            configStorage.set('hideCompleted', !hideCompleted);
+            const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
+            mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
+          },
+        },        
         {
           role: 'reload',
           visible: false,
@@ -131,6 +147,12 @@ function buildMenu(files) {
           },
         },
         {
+          label: 'Keyboard shortcuts',
+          click: () => {
+            shell.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
+          },
+        },
+        {
           label: 'Privacy policy',
           click: () => {
             shell.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
@@ -158,18 +180,6 @@ function buildMenu(files) {
     },
   ];
 
-  const fileMenu = template.find(item => item.id === 'fileMenu');
-  const filesSubMenu = {
-    label: 'Files',
-    submenu: files.map((file, index) => ({
-      label: file.filename,
-      accelerator: `CommandOrControl+${index + 1}`,
-      click: () => {
-        setFile(undefined, index);
-      },
-    })),
-  };
-  fileMenu.submenu.push(filesSubMenu);
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 

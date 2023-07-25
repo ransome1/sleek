@@ -2,7 +2,7 @@ const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD
 if (isDebug) {
   require('electron-debug')();
 }
-import { app, BrowserWindow, globalShortcut, Menu } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import path from 'path';
 import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
@@ -10,7 +10,7 @@ import log from 'electron-log';
 import buildMenu from './menu';
 import { resolveHtmlPath } from './util';
 import createFileWatcher from './modules/FileWatcher';
-import './modules/ipcEvents';
+import './modules/Ipc';
 
 const files = configStorage.get('files') as { path: string }[];
 let mainWindow: BrowserWindow | null = null;
@@ -34,6 +34,20 @@ const handleClosed = () => {
   delete eventListeners.closed;
 }
 
+const handleResize = () => {
+  if (mainWindow) {
+    const { width, height } = mainWindow.getBounds();
+    configStorage.set('windowDimensions', { width, height });
+  }  
+}
+
+const handleMove = () => {
+  if (mainWindow) {
+    const { x, y } = mainWindow.getBounds();
+    configStorage.set('windowPosition', { x, y });
+  }  
+}
+
 const createWindow = async() => {
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
@@ -42,7 +56,6 @@ const createWindow = async() => {
   const getAssetPath = (...paths: string[]): string => {
     return path.resolve(RESOURCES_PATH, ...paths);
   };
-
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
@@ -55,15 +68,25 @@ const createWindow = async() => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
+  
+  const windowDimensions = configStorage.get('windowDimensions');
+  if (windowDimensions) {
+    const { width, height } = windowDimensions;
+    mainWindow.setSize(width, height);
+    const windowPosition = configStorage.get('windowPosition');
+    if(windowPosition) {
+      const { x, y } = windowPosition;
+      mainWindow.setPosition(x, y);
+    }
+  }
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
-
   buildMenu(files);
-
   mainWindow
     .on('ready-to-show', handleReadyToShow)
+    .on('resize', handleResize)
+    .on('move', handleMove)
     .on('closed', handleClosed);
-
   return "Main window has been created successfully"
 }
 
@@ -77,17 +100,14 @@ const handleReadyToShow = async () => {
       mainWindow.show();
     }
   }
-
   try {
     if(files && Object.keys(files)?.length > 0) {
       const response = await createFileWatcher(files);
       console.log('main.ts:', response);
     }
-
   } catch (error) {
     console.log(error);
   }  
-
   // if (!isDebug) {
   //   eventListeners.appUpdater = new AppUpdater();
   // }
@@ -100,7 +120,6 @@ const handleWindowAllClosed = () => {
 }
 
 const handleWillQuit = () => {
-  globalShortcut.unregisterAll();
   delete eventListeners.willQuit;
 }
 
@@ -111,13 +130,11 @@ const handleBeforeQuit = () => {
 
 const handleActivate = () => {
   if (mainWindow === null) {
-
     createWindow().then(result => {
       console.log('Main window created:', result);
     }).catch(error => {
       console.error('Error creating main window:', error);
     });
-
   }
 }
 
@@ -129,16 +146,11 @@ app
   .then(() => {
     eventListeners.readyToShow = handleReadyToShow;
     eventListeners.closed = handleClosed;
-
     createWindow().then(result => {
       console.log('main.ts:', result);
     }).catch(error => {
       console.error('main.ts:', error);
     });
-
-    globalShortcut.unregister('CmdOrCtrl+R');
-    globalShortcut.unregister('F5');
-
     app.on('activate', handleActivate);
     eventListeners.activate = handleActivate;
   })

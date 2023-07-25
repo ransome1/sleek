@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FormControl, TextField, FormControlLabel, Radio, RadioGroup, Checkbox } from '@mui/material';
-import Popover from '@mui/material/Popover';
+import { FormControl, TextField, FormControlLabel, Radio, RadioGroup, Checkbox, Badge } from '@mui/material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import Popover from '@mui/material/Popover';
 import { Item } from 'jstodotxt';
 import './RecurrencePicker.scss';
 
@@ -39,6 +41,11 @@ const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue
     } else {
       setRecurrence('+' + recurrence);
     }
+  };
+
+  const handleBadgeClick = (event) => {
+    const url = 'https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)';
+    window.open(url);
   };
 
   useEffect(() => {
@@ -97,6 +104,7 @@ const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue
             }}
             {...bindTrigger(popupState)}
           />
+          
           <Popover
             {...bindPopover(popupState)}
             anchorOrigin={{
@@ -109,45 +117,45 @@ const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue
             }}
           >
             <FormControl>
-      <TextField
-        label="Every"
-        type="number"
-        onChange={handleAmountChange}
-        defaultValue={amount || 1}
-        className="recurrencePickerPopupInput"
-        inputProps={{
-          min: 1,
-        }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-    </FormControl>
-    <FormControl>
-      <RadioGroup
-        aria-labelledby="recurrencePickerRadioGroup"
-        value={interval || 'd'}
-        onChange={handleIntervalChange}
-      >
-        <FormControlLabel value="d" control={<Radio />} label="day" />
-        <FormControlLabel value="b" control={<Radio />} label="business day" />
-        <FormControlLabel value="w" control={<Radio />} label="week" />
-        <FormControlLabel value="m" control={<Radio />} label="month" />
-        <FormControlLabel value="y" control={<Radio />} label="year" />
-      </RadioGroup>
-    </FormControl>
-    <FormControl>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={strictRecurrence}
-            onChange={handleStrictRecurrenceChange}
-            name="strictRecurrenceCheckbox"
-          />
-        }
-        label="Strict"
-      />
-    </FormControl>          
+              <TextField
+                label="Every"
+                type="number"
+                onChange={handleAmountChange}
+                defaultValue={amount || 1}
+                className="recurrencePickerPopupInput"
+                inputProps={{
+                  min: 1,
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </FormControl>
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="recurrencePickerRadioGroup"
+                value={interval || 'd'}
+                onChange={handleIntervalChange}
+              >
+                <FormControlLabel value="d" control={<Radio />} label="day" />
+                <FormControlLabel value="b" control={<Radio />} label="business day" />
+                <FormControlLabel value="w" control={<Radio />} label="week" />
+                <FormControlLabel value="m" control={<Radio />} label="month" />
+                <FormControlLabel value="y" control={<Radio />} label="year" />
+              </RadioGroup>
+            </FormControl>
+            <FormControl>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={strictRecurrence}
+                    onChange={handleStrictRecurrenceChange}
+                    name="strictRecurrenceCheckbox"
+                  />
+                }
+                label="Strict"
+              />
+            </FormControl>
           </Popover>
         </FormControl>
       )}

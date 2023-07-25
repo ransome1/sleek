@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { List } from '@mui/material';
 import DataGridRow from './DataGridRow';
 import './DataGrid.scss';
 
 const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, sorting }) => {
+  const [visibleRowCount, setVisibleRowCount] = useState(50);
+  const [loadMoreRows, setLoadMoreRows] = useState(true);
 
   const handleKeyUp = (event) => {
     if (event.key === 'ArrowDown') {
@@ -37,22 +39,44 @@ const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setText
     }
   };
 
-  if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
+  const handleScroll = () => {
+    const list = document.getElementById('dataGrid');
+    if (list && loadMoreRows) {
+      const scrollPos = list.scrollTop;
+      const totalHeight = list.scrollHeight;
+      const clientHeight = list.clientHeight;
+
+      if (totalHeight - scrollPos <= clientHeight * 2) {
+        const remainingRows = rows.slice(visibleRowCount, visibleRowCount + 20);
+        if (remainingRows.length === 0) {
+          setLoadMoreRows(false);
+        } else {
+          setVisibleRowCount(prevVisibleRowCount => prevVisibleRowCount + 20);
+        }
+      }
+    }
+  };
 
   const rows = [];
-  for (const [key, data] of Object.entries(todoObjects)) {
-    const header = { group: true, key: key };
-    const todos = data.filter(todo => todo.body.trim() !== '').map(todo => ({
-      ...todo,
-      id: todo.id,
-      group: false,
-    }));
-    rows.push(header, ...todos);
+  if (todoObjects && Object.keys(todoObjects).length !== 0) {
+    for (const [key, data] of Object.entries(todoObjects)) {
+      const header = { group: true, key: key };
+      const todos = data.filter(todo => todo.body.trim() !== '').map(todo => ({
+        ...todo,
+        id: todo.id,
+        group: false,
+      }));
+      rows.push(header, ...todos);
+    }
   }
 
+  const visibleRows = rows.slice(0, visibleRowCount);  
+
+  if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
+
   return (
-    <List id="dataGrid" data-testid="data-grid-component" onKeyUp={handleKeyUp}>
-      {rows.map((row, index) => (
+    <List id="dataGrid" data-testid="data-grid-component" onScroll={handleScroll} onKeyUp={handleKeyUp}>
+      {visibleRows.map((row, index) => (
         <DataGridRow 
           key={index}
           attributes={attributes}

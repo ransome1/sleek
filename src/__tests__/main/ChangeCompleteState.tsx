@@ -8,7 +8,7 @@ jest.mock('../../main/modules/CreateRecurringTodo', () => ({
   createRecurringTodo: jest.fn(),
 }));
 
-describe('Marking todo as complete', () => {
+describe('Marking todo as complete and vice versa', () => {
   
   beforeEach(() => {
     jest.clearAllMocks();

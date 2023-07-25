@@ -2,10 +2,10 @@ import fs from 'fs/promises';
 import { writeTodoObjectToFile } from '../../main/modules/WriteToFile';
 import { createRecurringTodo } from '../../main/modules/CreateRecurringTodo';
 import { getActiveFile } from '../../main/modules/ActiveFile';
-import { lines } from '../../main/modules/ProcessTodoObjects';
+import { lines } from '../../main/modules/CreateTodoObjects';
 import dayjs from 'dayjs';
 
-jest.mock('../../main/modules/ProcessTodoObjects', () => ({
+jest.mock('../../main/modules/CreateTodoObjects', () => ({
   lines: [''],
 }));
 
