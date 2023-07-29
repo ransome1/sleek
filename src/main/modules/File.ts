@@ -70,7 +70,7 @@ async function removeFile(index: number): Promise<void> {
   }
 }
 
-function setFile(index: number): void {
+function setFile(event: event, index: number): void {
   try {
     const files: File[] = configStorage.get('files') as File[];
 
