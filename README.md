@@ -1,7 +1,8 @@
 # sleek
 [![Code scan and test cases](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml/badge.svg?branch=2.x)](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml)
 ## ❤️ Join the project and become a contributer
-Join our mission: build a free, open-source todo.txt client that's easy to use. Contribute to a seamless, intuitive app that enhances productivity and empowers users. We are actively seeking contributors with expertise in React, TypeScript, Electron and Jest/Playwright to join our collaborative project.
+Join our mission: build a free, open-source todo.txt client that's easy to use. Contribute to a seamless, intuitive app that enhances productivity and empowers users. We are actively seeking contributors with expertise in `React`, `TypeScript`, `Electron` and `Jest/Playwright` to join our collaborative project.
+
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
 

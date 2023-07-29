@@ -16,30 +16,29 @@ function createFileWatcher(files: File[]): Promise<string> {
     }
 
     watcher = chokidar.watch(files.map((file) => file.path), { persistent: true });
-
     watcher
-      .on('add', (file) => {
-        console.log(`FileWatcher.ts: New file added: ${file}`);
-      })
-      .on('change', async (file) => {
-        console.log(`File ${file} has been changed`);
-        try {
-          const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
-          mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
-        } catch (error) {
-          console.log(error);
-        }
-      })
-      .on('unlink', (file) => {
-        console.log(`FileWatcher.ts: File ${file} has been unlinked`);
+    .on('add', (file) => {
+      console.log(`FileWatcher.ts: New file added: ${file}`);
+    })
+    .on('change', async (file) => {
+      console.log(`File ${file} has been changed`);
+      try {
+        const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
+        mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
+      } catch (error) {
+        console.log(error);
+      }
+    })
+    .on('unlink', (file) => {
+      console.log(`FileWatcher.ts: File ${file} has been unlinked`);
 
-        const updatedFiles = files.filter((item) => item.path !== file);
-        configStorage.set('files', updatedFiles);
-        mainWindow.send('updateFiles', updatedFiles);
-      })
-      .on('ready', () => {
-        console.log('FileWatcher.ts: Initial scan complete. Ready for changes');
-      });
+      const updatedFiles = files.filter((item) => item.path !== file);
+      configStorage.set('files', updatedFiles);
+      
+    })
+    .on('ready', () => {
+      console.log('FileWatcher.ts: Initial scan complete. Ready for changes');
+    });
 
     return Promise.resolve('File watchers created');
   } catch (error) {

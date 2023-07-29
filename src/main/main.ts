@@ -2,7 +2,7 @@ const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD
 if (isDebug) {
   require('electron-debug')();
 }
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, Rectangle, Menu } from 'electron';
 import path from 'path';
 import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
@@ -12,7 +12,14 @@ import { resolveHtmlPath } from './util';
 import createFileWatcher from './modules/FileWatcher';
 import './modules/Ipc';
 
-const files = configStorage.get('files') as { path: string }[];
+//const files = configStorage.get('files') as { path: string }[];
+interface File {
+  active: boolean;
+  path: string;
+  filename: string;
+}
+const files: File[] = (configStorage.get('files') as File[]) || [];
+
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
 
@@ -69,19 +76,22 @@ const createWindow = async() => {
     },
   });
   
-  const windowDimensions = configStorage.get('windowDimensions');
+  const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
+
   if (windowDimensions) {
     const { width, height } = windowDimensions;
     mainWindow.setSize(width, height);
-    const windowPosition = configStorage.get('windowPosition');
-    if(windowPosition) {
+
+    const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
+    if (windowPosition) {
       const { x, y } = windowPosition;
       mainWindow.setPosition(x, y);
     }
   }
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
   buildMenu(files);
+
+  mainWindow.loadURL(resolveHtmlPath('index.html'));
   mainWindow
     .on('ready-to-show', handleReadyToShow)
     .on('resize', handleResize)

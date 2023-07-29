@@ -4,13 +4,13 @@ import dayjs from 'dayjs';
 export const notifiedTodoObjects: Set<number> = new Set();
 
 export const sendNotification = (title: string, body: string) => {
-  const notificationOptions: object = {
+  const options: object = {
     title: title,
     body: body,
     silent: false,
   };
 
-  const notification = new Notification(notificationOptions);
+  const notification = new Notification(options);
   notification.show();
 }
 

@@ -17,14 +17,14 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
   }
 
   const modifiedContent = lines.join('\n');
+  const files = configStorage.get('files');
+  const activeFile = getActiveFile(files);
 
-  const activeFilePath = getActiveFile()?.path;
-
-  if (!activeFilePath) {
+  if (!activeFile) {
     throw new Error('No active file found');
   }
 
-  await fs.writeFile(activeFilePath, modifiedContent, 'utf8');
+  await fs.writeFile(activeFile?.path, modifiedContent, 'utf8');
 
   if (id && !remove) {
     return `Line ${id + 1} overwritten successfully`;

@@ -5,7 +5,6 @@ import { createAttributesObject, applyFilters } from './Filters';
 import { createTodoObjects } from './CreateTodoObjects';
 import { handleCompletedTodoObjects, groupTodoObjects, countTodoObjects, applySearchString, sortTodoObjects, sortGroups } from './ProcessTodoObjects';
 
-
 interface TodoObjectsResponse {
   sortedTodoObjects: Record<string, any>;
   attributes: Record<string, any>;
@@ -16,16 +15,21 @@ interface TodoObjectsResponse {
   filters: object;
 }
 
-
 const headers = {
   availableObjects: null,
   visibleObjects: null,
 };
 
+interface FileData {
+  active: boolean;
+  path: string;
+  filename: string;
+}
+
 async function processDataRequest(searchString: string): Promise<TodoObjectsResponse | null> {
   try {
-    const files: object[] = configStorage.get('files');
-    const file = getActiveFile();
+    const files: FileData[] = configStorage.get('files');
+    const file = getActiveFile(files);
 
     if (file === null) {
       return Promise.resolve(null);
@@ -69,7 +73,5 @@ async function processDataRequest(searchString: string): Promise<TodoObjectsResp
     return Promise.reject(error);
   }
 }
-
-
 
 export default processDataRequest;

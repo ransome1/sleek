@@ -6,10 +6,8 @@ interface File {
   filename: string;
 }
 
-export function getActiveFile(): File | null {
+export function getActiveFile(files: File[]): File | null {
   try {
-
-    const files: File[] = (configStorage.get('files') as File[]) || [];
 
     if (files.length === 0) return null;
 

@@ -1,7 +1,5 @@
 import { configStorage } from '../config';
 import createFileWatcher from './FileWatcher';
-import buildMenu from '../menu';
-import { mainWindow } from '../main';
 import path from 'path';
 
 interface File {
@@ -34,23 +32,20 @@ async function addFile(filePath: string): Promise<void> {
       }
     }
 
-    buildMenu(files);
-
     configStorage.set('files', files);
-    mainWindow.send('updateFiles', files);
 
-    createFileWatcher(files).then(function(response) {
-      console.info('File.ts: File added, restarting file watchers');
-    }).catch((error) => {
-      throw error;
-    });
-    
+    await createFileWatcher(files);
+
+    console.info('File.ts: File added, restarting file watchers');
+    return;
+
   } catch (error) {
     console.error('File.ts:', error);
+    throw error;
   }
 }
 
-async function removeFile(event: any, index: number): Promise<void> {
+async function removeFile(index: number): Promise<void> {
   try {
     let files: File[] = configStorage.get('files') as File[];
 
@@ -65,23 +60,17 @@ async function removeFile(event: any, index: number): Promise<void> {
       files = [];
     }
 
-    buildMenu(files);
-
     configStorage.set('files', files);
-    mainWindow.send('updateFiles', files);
 
-    createFileWatcher(files).then(function(response) {
-      console.info('File.ts: File deleted, restarting file watchers');
-    }).catch((error) => {
-      throw error;
-    });
-
+    await createFileWatcher(files);
+    return;
   } catch (error) {
     console.error('File.ts:', error);
+    throw error;
   }
 }
 
-function setFile(event: any, index: number): void {
+function setFile(index: number): void {
   try {
     const files: File[] = configStorage.get('files') as File[];
 
@@ -94,10 +83,11 @@ function setFile(event: any, index: number): void {
     files[index].active = true;
 
     configStorage.set('files', files);
-    mainWindow.send('updateFiles', files);
 
+    return;
   } catch (error) {
     console.error('File.ts:', error);
+    throw error;
   }
 }
 

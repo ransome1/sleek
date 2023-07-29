@@ -3,7 +3,6 @@ import path from 'path';
 import { setFile } from './modules/File';
 import { mainWindow } from './main';
 import { openFile, createFile } from './modules/FileDialog';
-import processDataRequest from './modules/processDataRequest';
 import { configStorage } from './config';
 
 const isMac = process.platform === 'darwin';
@@ -64,12 +63,12 @@ function buildMenu(files: File[] = []) {
           click: createFile,
         },
         { type: 'separator' },
-        ...(files.length > 0
+        ...(files?.length > 0
           ? files.map((file, index) => ({
               label: file.filename,
               accelerator: `CommandOrControl+${index + 1}`,
               click: () => {
-                setFile(undefined, index);
+                setFile(index);
               },
             }))
           : []),
@@ -109,8 +108,6 @@ function buildMenu(files: File[] = []) {
           click: async () => {
             const hideCompleted = configStorage.get('hideCompleted');
             configStorage.set('hideCompleted', !hideCompleted);
-            const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
-            mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
           },
         },        
         {

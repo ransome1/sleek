@@ -10,17 +10,10 @@ jest.mock('../../main/modules/CreateTodoObjects', () => ({
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn().mockReturnValue([
-      {
-        active: false,
-        path: 'test1.txt',
-        filename: 'test1.txt',
-      },
-      {
-        active: true,
-        path: './src/__tests__/__mock__/test.txt',
-        filename: 'test.txt',
-      },
+      { active: false, path: '/path/to/test1.txt', filename: 'test1.txt' },
+      { active: true, path: './src/__tests__/__mock__/test.txt', filename: 'test.txt' },
     ]),
+    set: jest.fn(),
   },
 }));
 

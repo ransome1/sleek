@@ -50,7 +50,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
         body,
         created: item.created(),
         complete: item.complete(),
-        completed: item.completed(),
+        completed: item.completed(),  
         priority: item.priority(),
         contexts: item.contexts(),
         projects: item.projects(),

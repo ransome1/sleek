@@ -1,19 +1,21 @@
 const ipcRenderer = window.electron.ipcRenderer;
-
 const store = window.electron.store;
 
-export function handleFilterSelect(key: string, value: string, filters: object, isCtrlKeyPressed: boolean): void {
+export function handleFilterSelect(key, value, filters, isCtrlKeyPressed) {
   const updatedFilters = { ...filters };
-  if (updatedFilters[key]) {
-    const filterIndex = updatedFilters[key].findIndex((filter: { value: string }) => filter.value === value);
-    if (filterIndex !== -1) {
-      updatedFilters[key].splice(filterIndex, 1);
-    } else {
-      updatedFilters[key].push({ value: value, exclude: isCtrlKeyPressed });
+  const filterList = updatedFilters[key] || [];
+
+  const filterIndex = filterList.findIndex((filter) => filter.value === value);
+  if (filterIndex !== -1) {
+    filterList.splice(filterIndex, 1);
+    if (isCtrlKeyPressed) {
+      filterList.push({ value, exclude: true });
     }
   } else {
-    updatedFilters[key] = [{ value: value, exclude: isCtrlKeyPressed }];
+    filterList.push({ value, exclude: isCtrlKeyPressed });
   }
+
+  updatedFilters[key] = filterList;
   store.setFilters(updatedFilters);
   ipcRenderer.send('requestData');
 }
