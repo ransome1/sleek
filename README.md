@@ -1,17 +1,13 @@
 # sleek
 
-## sleek is currently undergoing a rewriting process
-Thank you for your continued support of this application. The community surrounding it has grown significantly over time, and the numerous feature requests and bug reports demonstrate the ongoing interest and potential for further improvement.
+## Are you familiar with writing effective tests or do you have experience working with React?
+I am presently seeking developers who can assist me in creating both `end-to-end` and `unit` tests. I started writing unit tests but just cannot keep up with it.
 
-However, I recognize that I cannot accomplish this alone. To foster greater collaboration and participation, it is crucial that the codebase is accessible. Currently, this is not the case, which explains the limited contributions from others. Therefore, I am in the process of rewriting sleek using React, which will result in a significantly smaller codebase. I will also ensure that it adheres more closely to the specifications of Electron.
+Additionally, I would greatly appreciate help from someone experienced in `React` to review our existing components and aid in refactoring them.
 
-My objective is to release version 2.0 of sleek with the same set of features found in version 1.3.1. However, please note that the application will undergo a complete overhaul beneath the surface. Once this foundational work is complete, I will be able to focus on developing new features. I sincerely hope that this endeavor will attract a broader range of contributors who will support me in achieving these goals.
+I invite you to explore the current state of development on GitHub at the following link: https://github.com/ransome1/sleek/tree/2.x. This will give you an opportunity to see the progress I've made so far.
 
-In the meantime, I invite you to explore the current state of development on GitHub at the following link: https://github.com/ransome1/sleek/tree/2.x. This will give you an opportunity to see the progress I've made so far.
-
-If you're interested and eager to contribute, you can already begin working on tasks and features that are still pending. You can find an overview of these tasks in the project board located at https://github.com/users/ransome1/projects/3/views/1.
-
-Feel free to explore the codebase and project board, and if you're passionate about any particular tasks or features, don't hesitate to start working on them. Here you can find the updated contribution guidelines: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md. Your contributions will be greatly appreciated and will help propel the development of sleek to new heights.
+Here you can find the updated contribution guidelines: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md. Your contributions will be greatly appreciated and will help propel the development of sleek to new heights.
 
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
