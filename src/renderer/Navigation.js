@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faFilter, faSlidersH, faFolderOpen, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faFilter, faFolderOpen, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Button, Box } from '@mui/material';
 import './Navigation.scss';
 
@@ -63,9 +63,6 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
         <>
           <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen && drawerParameter === 'filter' ? 'active' : ''}>
             <FontAwesomeIcon icon={faFilter} />
-          </Button>
-          <Button className={isDrawerOpen && drawerParameter === 'view' ? 'active' : ''}>
-            <FontAwesomeIcon icon={faSlidersH} />
           </Button>
         </>
       )} 

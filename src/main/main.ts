@@ -12,7 +12,6 @@ import { resolveHtmlPath } from './util';
 import createFileWatcher from './modules/FileWatcher';
 import './modules/Ipc';
 
-//const files = configStorage.get('files') as { path: string }[];
 interface File {
   active: boolean;
   path: string;

@@ -1,7 +1,5 @@
 import { BrowserWindow } from 'electron';
 
-declare const mainWindow: BrowserWindow;
-
 interface Filter {
   value: any;
   exclude: boolean;

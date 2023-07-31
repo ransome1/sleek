@@ -13,7 +13,6 @@ import './App.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 const store = window.electron.store;
-const sorting = store.get('sorting');
 
 const App = () => {
   const [files, setFiles] = useState<string[]>(store.get('files') || null);
@@ -32,6 +31,7 @@ const App = () => {
   const [filters, setFilters] = useState<object>({});
   const [attributes, setAttributes] = useState<object>({});
   const [textFieldValue, setTextFieldValue] = useState('');
+  const [sorting, setSorting] = useState<string[]>(store.get('sorting') || null);
   
   const responseHandler = function(response) {
     if (response instanceof Error) {
@@ -57,6 +57,10 @@ const App = () => {
     setFiles(files)
   };
 
+  const handleUpdateSorting = (sorting: object) => {
+    setSorting(sorting)
+  };
+
   useEffect(() => {
     if(!headers) return;
     if (headers.availableObjects === 0) {
@@ -80,6 +84,10 @@ const App = () => {
   }, [files]);
 
   useEffect(() => {
+    store.set('sorting', sorting)
+  }, [sorting]);
+
+  useEffect(() => {
     if(!snackBarContent) return;
     setSnackBarOpen(true);
   }, [snackBarContent]);
@@ -95,6 +103,7 @@ const App = () => {
     ipcRenderer.on('writeTodoToFile', responseHandler);
     ipcRenderer.on('requestData', handleRequestedData);
     ipcRenderer.on('updateFiles', handleUpdateFiles);
+    ipcRenderer.on('updateSorting', handleUpdateSorting);
   }, []);
 
   return (
@@ -116,6 +125,8 @@ const App = () => {
           drawerParameter={drawerParameter}
           attributes={attributes}
           filters={filters}
+          sorting={sorting}
+          setSorting={setSorting}
         />
         <div className="flex-items">
           <FileTabs files={files} />
@@ -134,7 +145,6 @@ const App = () => {
             setSnackBarContent={setSnackBarContent}
             setDialogOpen={setDialogOpen}
             setTextFieldValue={setTextFieldValue}
-            sorting={sorting}
           />
           <SplashScreen 
             screen={splashScreen}

@@ -23,7 +23,7 @@ const expressions = [
 
 const isExpression = (word, pattern) => pattern.test(word);
 
-const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, sorting }) => {
+const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject }) => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
   const handleCheckboxChange = (event) => {
@@ -50,9 +50,38 @@ const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFi
     handleFilterSelect(key, value, filters, false);
   };
 
+  const renderButtonsForMultipleValues = (value, group, handleButtonClick) => {
+    const valuesArray = value.split(',');
+
+    return valuesArray.map((val, index) => (
+      <Button
+        key={index}
+        className="attribute"
+        onClick={() => handleButtonClick(val.trim(), group)}
+      >
+        {val.trim()}
+      </Button>
+    ));
+  };  
+
   if (todoObject.group) {
-    if (!todoObject.key) return <Divider />;
-    return <ListItem key={todoObject.id} className="row group" data-todotxt-attribute={sorting[0]} data-todotxt-value={todoObject.key}><Button onClick={() => handleButtonClick(todoObject.key, groupAttribute)}>{todoObject.key}</Button></ListItem>;
+    if (todoObject.value === 'null' || todoObject.value === '') {
+      return <Divider />;
+    }
+    if (todoObject.value.includes(',')) {
+      return (
+        <ListItem className="row group" data-todotxt-attribute={todoObject.group}>
+          {renderButtonsForMultipleValues(todoObject.value, todoObject.group, handleButtonClick)}
+        </ListItem>
+      );
+    }
+    return (
+      <ListItem className="row group" data-todotxt-attribute={todoObject.group} data-todotxt-value={todoObject.value}>
+        <Button className="attribute" onClick={() => handleButtonClick(todoObject.value, todoObject.group)}>
+          {todoObject.value}
+        </Button>
+      </ListItem>
+    );
   }
 
   const words = todoObject.body.split(' ');
@@ -71,7 +100,9 @@ const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFi
         data-hidden={todoObject.hidden}
         onClick={handleRowClick}
         onKeyDown={handleRowClick}
-        onContextMenu={handleContextMenu}>
+        onContextMenu={handleContextMenu}
+        data-todotxt-attribute='priority'
+        data-todotxt-value={todoObject.priority}>
       
         <Checkbox tabIndex={0} checked={todoObject.complete} onChange={handleCheckboxChange} />
 

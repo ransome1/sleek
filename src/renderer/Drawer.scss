@@ -1,74 +1,37 @@
 @import "Variables.scss";
 
 .Drawer {
-	width: 30em;
 	height: 100vh;
 	padding: 0;
-	margin-left: -30em;
 	background: $light-grey;
 	transition: margin-left 0.3s ease;
 	.MuiPaper-root {
 		position: relative;
 		z-index: 5;
-	}
-	.Accordion {
-		margin: 1em 0;
-		.MuiAccordionSummary-gutters:focus-visible {
-			background: none;
-			h3 {
-				color: $dark-grey;
-			}
+		.MuiTabs-root {
+			min-height: 5em;
 		}
-		h3 {
-			font-family: 'FreeSansBold';
-			padding: 0;
-			margin: 0;
-		}
-		.MuiAccordionDetails-root {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 5px;
-		}
-		.filter {
-			position: relative;
-			.overlay {
-				width: 100%;
-				height: 100%;
-				display: none;
-				line-height: 2.6em;
-				border-radius: $radius;
-				position: absolute;
-				z-index: 5;
-				top: 0;
-				left: 0;
-				text-align: center;
-				background-color: rgba(255, 255, 255, 0.5);
-				cursor: pointer;
-
-			}
-			.MuiBadge-badge {
-				z-index: 10;
-			}	
-		}
-		.filter:hover,
-		.filter.excluded {
-			.overlay {
-				display: block;
-				color: $darker-grey;
-				
-			}
-		}
-		.filter[data-todotxt-attribute="priority"] {
+		.MuiTabs-flexContainer {
 			button {
-				min-width: 1.75em;
-				font-size: 1.25em;
-				font-family: 'FreeSansBold';
-				padding: 0.1em 0.65em;
+				text-transform: none;
+				white-space: nowrap;
 			}
 		}
+		.MuiTabs-indicator {
+			top: 0;
+		}
+		
 	}
-}
-
-.Drawer.open {
-	margin-left: 0;
+	.drawerHandle {
+		width: 5px;
+		height: 100vh;
+		position: absolute;
+		top: 0;
+		right: 0;
+		cursor: ew-resize;
+	}
+	&.open {
+		min-width: 300px;
+		margin-left: 0!important;
+	}
 }

@@ -3,7 +3,8 @@ import { getActiveFile } from './ActiveFile';
 import { configStorage, filterStorage } from '../config';
 import { createAttributesObject, applyFilters } from './Filters';
 import { createTodoObjects } from './CreateTodoObjects';
-import { handleCompletedTodoObjects, groupTodoObjects, countTodoObjects, applySearchString, sortTodoObjects, sortGroups } from './ProcessTodoObjects';
+import { mainWindow } from '../main';
+import { handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString } from './ProcessTodoObjects';
 
 interface TodoObjectsResponse {
   sortedTodoObjects: Record<string, any>;
@@ -38,7 +39,6 @@ async function processDataRequest(searchString: string): Promise<TodoObjectsResp
     const fileContent = await fs.promises.readFile(file.path, 'utf8');
     const hideCompleted: boolean = configStorage.get('hideCompleted');
     const sorting: string[] = configStorage.get('sorting');
-    const grouping = sorting[0];
     const invertGroups: boolean = configStorage.get('invertGroups', false);
     const invertSorting: boolean = configStorage.get('invertSorting', false);
     const completedLast: boolean = configStorage.get('completedLast', false);
@@ -64,11 +64,11 @@ async function processDataRequest(searchString: string): Promise<TodoObjectsResp
 
     headers.visibleObjects = countTodoObjects(todoObjects);
 
-    const groupedTodoObjects = groupTodoObjects(todoObjects, grouping);
-    const sortedGroups = sortGroups(groupedTodoObjects, invertGroups);
-    const sortedTodoObjects = sortTodoObjects(sortedGroups, sorting, invertSorting, completedLast);
+    const sortedAndGroupedTodos = sortAndGroupTodoObjects(todoObjects, sorting);
 
-    return Promise.resolve([sortedTodoObjects, attributes, headers, filters]);
+    const flattenedTodoObjects = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
+
+    return Promise.resolve([flattenedTodoObjects, attributes, headers, filters]);
   } catch(error) {
     return Promise.reject(error);
   }

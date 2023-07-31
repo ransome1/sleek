@@ -1,69 +1,82 @@
 @import "Variables.scss";
 
-  *[data-todotxt-attribute],
-  *[data-todotxt-attribute]:hover {
-    .MuiButtonBase-root {
+  *[data-todotxt-attribute] {
+    .MuiButtonBase-root:not(.MuiCheckbox-root) {
       color: darken($mid-grey, 40%);
       background: darken($light-grey, 10%);
     }
-    .MuiButtonBase-root:focus-visible {
+    .MuiButtonBase-root:not(.MuiCheckbox-root):focus-visible {
       background: darken($light-grey, 20%);
     }
     .MuiBadge-badge {
       color: white;
       background: darken($mid-grey, 40%);
     }
+    .overlay {
+      svg {
+        color: darken($mid-grey, 40%);
+      }
+    }    
   }
 
   *[data-todotxt-attribute="priority"][data-todotxt-value="A"],
   *[data-todotxt-attribute="priority"][data-todotxt-value="A"]:hover {
-    button {
+    border-left-color: lighten($danger, 15%);
+    button.attribute {
       color: white;
       background: $danger;
     }
-    button:focus-visible {
+    button.attribute:focus-visible {
       background: darken($danger, 10%);
     }
     .MuiBadge-badge {
       color: white;
       background: darken($danger, 20%);
     }
-    svg {
-      color: darken($danger, 20%) !important;
-    }    
+    .overlay {
+      svg {
+        color: darken($danger, 20%);
+      }
+    }
   }
   *[data-todotxt-attribute="priority"][data-todotxt-value="B"],
   *[data-todotxt-attribute="priority"][data-todotxt-value="B"]:hover {
-    button {
+    border-left-color: lighten($attention, 20%);
+    button.attribute {
       color: white;
       background: $attention;
     }
-    button:focus-visible {
+    button.attribute:focus-visible {
       background: darken($attention, 10%);
     }
     .MuiBadge-badge {
       color: white;
       background: darken($attention, 20%);
     }
-    svg {
-      color: darken($attention, 20%) !important;
-    }
+    .overlay {
+      svg {
+        color: darken($attention, 20%);
+      }
+    }    
   }
   *[data-todotxt-attribute="priority"][data-todotxt-value="C"],
   *[data-todotxt-attribute="priority"][data-todotxt-value="C"]:hover {
-    button {
+    border-left-color: lighten($warning, 10%);
+    button.attribute {
       color: white;
       background: $warning;
     }
-    button:focus-visible {
+    button.attribute:focus-visible {
       background: darken($warning, 10%);
     }
     .MuiBadge-badge {
       color: white;
       background: darken($warning, 20%);
     }
-    svg {
-      color: darken($warning, 30%) !important;
+    .overlay {
+      svg {
+        color: darken($warning, 30%);
+      }
     }    
   }
 
@@ -71,11 +84,11 @@
   *[data-todotxt-attribute="projects"]:hover,
   *[data-todotxt-attribute="+"],
   *[data-todotxt-attribute="+"]:hover {
-    .MuiButtonBase-root {
+    .MuiButtonBase-root:not(.MuiCheckbox-root) {
       color: $sleek-projects-foreground;
       background: $sleek-projects-background;
     }
-    .MuiButtonBase-root:focus-visible {
+    .MuiButtonBase-root:not(.MuiCheckbox-root):focus-visible {
       background: darken($sleek-projects-background, 10%);
     }
     .MuiBadge-badge {
@@ -91,11 +104,11 @@
   *[data-todotxt-attribute="contexts"]:hover,
   *[data-todotxt-attribute="@"],
   *[data-todotxt-attribute="@"]:hover {
-    .MuiButtonBase-root {
+    .MuiButtonBase-root:not(.MuiCheckbox-root) {
       color: $sleek-contexts-foreground;
       background: $sleek-contexts-background;
     }
-    .MuiButtonBase-root:focus-visible {
+    .MuiButtonBase-root:not(.MuiCheckbox-root):focus-visible {
       background: darken($sleek-contexts-background, 10%);
     }
     .MuiBadge-badge {
@@ -109,11 +122,11 @@
 
   *[data-todotxt-attribute^="pm"],
   *[data-todotxt-attribute^="pm"]:hover {
-    .MuiButtonBase-root {
+    .MuiButtonBase-root:not(.MuiCheckbox-root) {
       color: white;
       background: $danger;
     }
-    .MuiButtonBase-root:focus-visible {
+    .MuiButtonBase-root:not(.MuiCheckbox-root):focus-visible {
       background: darken($danger, 10%);
     }    
     .MuiBadge-badge {
@@ -121,56 +134,58 @@
     }
   }
 
-  .selected[data-todotxt-attribute],
-  .selected[data-todotxt-attribute]:hover {
-    .MuiButtonBase-root {
-      color: white;
-      background: darken($mid-grey, 40%);
+  .selected {
+    &[data-todotxt-attribute],
+    &[data-todotxt-attribute]:hover {
+      .MuiButtonBase-root:not(.MuiCheckbox-root) {
+        color: white;
+        background: darken($mid-grey, 40%);
+      }
     }
-  }
 
-  .selected[data-todotxt-attribute="projects"],
-  .selected[data-todotxt-attribute="projects"]:hover,
-  .selected[data-todotxt-attribute="+"],
-  .selected[data-todotxt-attribute="+"]:hover {
-    .MuiButtonBase-root {
-      background: darken($sleek-projects-background, 50%);
+    &[data-todotxt-attribute="projects"],
+    &[data-todotxt-attribute="projects"]:hover,
+    &[data-todotxt-attribute="+"],
+    &[data-todotxt-attribute="+"]:hover {
+      .MuiButtonBase-root:not(.MuiCheckbox-root) {
+        background: darken($sleek-projects-background, 50%);
+      }
     }
-  }
 
-  .selected[data-todotxt-attribute="contexts"],
-  .selected[data-todotxt-attribute="contexts"]:hover,
-  .selected[data-todotxt-attribute="@"],
-  .selected[data-todotxt-attribute="@"]:hover {
-    .MuiButtonBase-root {
-      background: darken($sleek-contexts-background, 50%);
+    &[data-todotxt-attribute="contexts"],
+    &[data-todotxt-attribute="contexts"]:hover,
+    &[data-todotxt-attribute="@"],
+    &[data-todotxt-attribute="@"]:hover {
+      .MuiButtonBase-root:not(.MuiCheckbox-root) {
+        background: darken($sleek-contexts-background, 50%);
+      }
     }
-  }
 
-  .selected[data-todotxt-attribute^="pm"],
-  .selected[data-todotxt-attribute^="pm"]:hover {
-    .MuiButtonBase-root {
-      background: darken($danger, 25%);
+    &[data-todotxt-attribute^="pm"],
+    &[data-todotxt-attribute^="pm"]:hover {
+      .MuiButtonBase-root:not(.MuiCheckbox-root) {
+        background: darken($danger, 25%);
+      }
     }
-  }
 
-  .selected[data-todotxt-attribute="priority"][data-todotxt-value="A"],
-  .selected[data-todotxt-attribute="priority"][data-todotxt-value="A"]:hover {
-    .MuiButtonBase-root {
-      background: darken($danger, 25%);
+    &[data-todotxt-attribute="priority"][data-todotxt-value="A"],
+    &[data-todotxt-attribute="priority"][data-todotxt-value="A"]:hover {
+      .MuiButtonBase-root:not(.MuiCheckbox-root) {
+        background: darken($danger, 25%);
+      }
     }
-  }
 
-  .selected[data-todotxt-attribute="priority"][data-todotxt-value="B"],
-  .selected[data-todotxt-attribute="priority"][data-todotxt-value="B"]:hover {
-    .MuiButtonBase-root {
-      background: darken($attention, 15%);
+    &[data-todotxt-attribute="priority"][data-todotxt-value="B"],
+    &[data-todotxt-attribute="priority"][data-todotxt-value="B"]:hover {
+      .MuiButtonBase-root:not(.MuiCheckbox-root) {
+        background: darken($attention, 15%);
+      }
     }
-  }
 
-  .selected[data-todotxt-attribute="priority"][data-todotxt-value="C"],
-  .selected[data-todotxt-attribute="priority"][data-todotxt-value="C"]:hover {
-    .MuiButtonBase-root {
-      background: darken($warning, 25%);
+    &[data-todotxt-attribute="priority"][data-todotxt-value="C"],
+    &[data-todotxt-attribute="priority"][data-todotxt-value="C"]:hover {
+      .MuiButtonBase-root:not(.MuiCheckbox-root) {
+        background: darken($warning, 25%);
+      }
     }
   }

@@ -68,7 +68,7 @@ function buildMenu(files: File[] = []) {
               label: file.filename,
               accelerator: `CommandOrControl+${index + 1}`,
               click: () => {
-                setFile(index);
+                setFile(undefined, index);
               },
             }))
           : []),

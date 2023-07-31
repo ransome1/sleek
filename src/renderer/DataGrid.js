@@ -3,7 +3,7 @@ import { List } from '@mui/material';
 import DataGridRow from './DataGridRow';
 import './DataGrid.scss';
 
-const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, sorting }) => {
+const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject }) => { 
   const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
 
@@ -47,7 +47,7 @@ const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setText
       const clientHeight = list.clientHeight;
 
       if (totalHeight - scrollPos <= clientHeight * 2) {
-        const remainingRows = rows.slice(visibleRowCount, visibleRowCount + 20);
+        const remainingRows = todoObjects.slice(visibleRowCount, visibleRowCount + 20);
         if (remainingRows.length === 0) {
           setLoadMoreRows(false);
         } else {
@@ -57,20 +57,7 @@ const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setText
     }
   };
 
-  const rows = [];
-  if (todoObjects && Object.keys(todoObjects).length !== 0) {
-    for (const [key, data] of Object.entries(todoObjects)) {
-      const header = { group: true, key: key };
-      const todos = data.filter(todo => todo.body.trim() !== '').map(todo => ({
-        ...todo,
-        id: todo.id,
-        group: false,
-      }));
-      rows.push(header, ...todos);
-    }
-  }
-
-  const visibleRows = rows.slice(0, visibleRowCount);  
+  const visibleRows = todoObjects?.slice(0, visibleRowCount); 
 
   if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
 
@@ -85,7 +72,6 @@ const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setText
           setDialogOpen={setDialogOpen}
           setTextFieldValue={setTextFieldValue}
           setTodoObject={setTodoObject}
-          sorting={sorting}
         />
       ))}
     </List>

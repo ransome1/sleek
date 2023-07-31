@@ -73,13 +73,6 @@ const AutoSuggest = ({ setDialogOpen, textFieldRef, textFieldValue, setTextField
     </div>
   );
 
-  const inputProps = {
-    placeholder: `(A) Todo text +project @context due:2020-12-12 rec:d`,
-    value: textFieldValue,
-    onChange: handleChange,
-    inputRef: textFieldRef,
-  };
-
   const renderInputComponent = (inputProps) => <TextField {...inputProps} />;
 
   const handleSuggestionsClearRequested = () => {
@@ -90,42 +83,43 @@ const AutoSuggest = ({ setDialogOpen, textFieldRef, textFieldValue, setTextField
     width: textFieldRef?.current?.offsetWidth || 'auto',
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {      
-      if (suggestions.length > 0) {
-        if (event.key === 'Enter') {   
-          if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
-            event.stopPropagation();
-            const selectedSuggestion = suggestions[selectedSuggestionIndex];
-            handleSuggestionSelected(null, { suggestion: selectedSuggestion });
-          }
-        } else if (event.key === 'Escape') {
+  const handleKeyDown = (event) => {
+    if (suggestions.length > 0) {
+      if (event.key === 'Enter') {   
+        if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
           event.stopPropagation();
-          handleSuggestionsClearRequested();
+          const selectedSuggestion = suggestions[selectedSuggestionIndex];
+          handleSuggestionSelected(null, { suggestion: selectedSuggestion });
         }
-      } else {
-        if (event.key === 'Enter') {
-          event.stopPropagation();
-          handleAdd();
-        } else if (event.key === 'Escape') {
-          event.stopPropagation();
-          setDialogOpen(false);
-          handleSuggestionsClearRequested();
-        }
-
+      } else if (event.key === 'Escape') {
+        event.stopPropagation();
+        handleSuggestionsClearRequested();
       }
-    };
+    } else {
+      if (event.key === 'Enter') {
+        event.stopPropagation();
+        handleAdd();
+        setDialogOpen(false);
 
-    textFieldRef?.current?.addEventListener('keydown', handleKeyDown, true);
+      } else if (event.key === 'Escape') {
+        event.stopPropagation();
+        setDialogOpen(false);
+        handleSuggestionsClearRequested();
+      }
+    }
+  };
 
-    return () => {
-      textFieldRef?.current?.removeEventListener('keydown', handleKeyDown, true);
-    };
-  }, [textFieldRef, suggestions]);  
+  const inputProps = {
+    placeholder: `(A) Todo text +project @context due:2020-12-12 rec:d`,
+    value: textFieldValue,
+    onChange: handleChange,
+    inputRef: textFieldRef,
+    onKeyDown: handleKeyDown,
+  };
 
   useEffect(() => {
-    textFieldRef.current?.focus();
-  }, []);
+    textFieldRef.current.focus();
+  }, []);  
 
   return (
     <Autosuggest

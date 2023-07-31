@@ -1,126 +1,102 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, Drawer, Accordion, AccordionSummary, AccordionDetails, Avatar, Button, Badge } from '@mui/material';
+import React, { useState, useRef, useEffect } from 'react';
+import { Drawer, Tabs, Tab } from '@mui/material';
+import Attributes from './DrawerAttributes';
+import Sorting from './DrawerSorting';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { handleFilterSelect } from './Shared';
+import { faSlidersH, faFilter, faBars } from '@fortawesome/free-solid-svg-icons';
 import './Drawer.scss';
 
-const ipcRenderer = window.electron.ipcRenderer;
 const store = window.electron.store;
 
-const attributeMapping = {
-  t: 'Threshold date',
-  due: 'Due date',
-  projects: 'Projects',
-  contexts: 'Contexts',
-  priority: 'Priority',
-  rec: 'Recurrence',
-  pm: 'Pomodoro timer',
-  //tags: 'Tags',
-};
+const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, sorting, setSorting }) => {
+  const [activeTab, setActiveTab] = useState('attributes');
+  const [drawerWidth, setDrawerWidth] = useState(store.get('drawerWidth') || 500); // Initial width of the drawer
+  const containerRef = useRef(null);
+  const startXRef = useRef(0);
 
-const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, attributes, filters }) => {
-  const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
-  const firstTabbableElementRef = useRef(null);
-
-  const handleCtrlCmdDown = (event) => {
-    if (event.ctrlKey || event.metaKey) {
-      setIsCtrlKeyPressed(true);
-    }
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
   };
 
-  const handleCtrlCmdUp = (event) => {
-    if (!event.ctrlKey && !event.metaKey) {
-      setIsCtrlKeyPressed(false);
-    }
-  };  
+  const handleMouseDown = (e) => {
+    startXRef.current = e.pageX;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Escape') {
-      setIsDrawerOpen(false);
-    }
+  const handleMouseMove = (e) => {
+    const deltaX = startXRef.current - e.pageX;
+    setDrawerWidth((prevWidth) => prevWidth - deltaX);
+    startXRef.current = e.pageX;
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
   };
 
   useEffect(() => {
-    if (isDrawerOpen) {
-      document.addEventListener('keydown', handleCtrlCmdDown);
-      document.addEventListener('keyup', handleCtrlCmdUp);      
-      document.addEventListener('keydown', handleKeyDown);
-
-      if (firstTabbableElementRef.current) {
-        firstTabbableElementRef.current.focus();
-      }      
-
-    } else {
-      document.removeEventListener('keydown', handleCtrlCmdDown);
-      document.removeEventListener('keyup', handleCtrlCmdUp);      
-      document.removeEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleCtrlCmdDown);
-      document.removeEventListener('keyup', handleCtrlCmdUp);      
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isDrawerOpen]);
+    store.set('drawerWidth', drawerWidth)
+  }, [drawerWidth]);  
 
   return (
     <Drawer
+      ref={containerRef}
       data-testid="drawer-component"
       variant="persistent"
       anchor="left"
       open={isDrawerOpen}
       className={`Drawer ${isDrawerOpen ? 'open' : ''}`}
+      style={{ width: drawerWidth, marginLeft: -drawerWidth }} // Set the width of the drawer dynamically
     >
-      {Object.keys(attributes).length > 0 && (
-        <Box className="Accordion" ref={firstTabbableElementRef}>
-          {Object.keys(attributes).map((key, index) => {
-            if (Object.keys(attributes[key]).length > 0) {
-              return (
-                <Accordion key={index} expanded>
-                  <AccordionSummary>
-                    <h3>{attributeMapping[key]}</h3>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {Object.keys(attributes[key]).map((value, childIndex) => {
+      <div
+        className="drawerHandle"
+        onMouseDown={handleMouseDown}
+      />
 
-                      const excluded = filters[key]?.some((filter) => filter.value === value && filter.exclude);
-                      const selected = filters[key]?.some((filter) => filter.value === value);
+      <Tabs className="tabs" centered value={activeTab} onChange={handleTabChange}>
+        <Tab 
+          label="Attributes"
+          value="attributes" 
+          icon={<FontAwesomeIcon icon={faFilter} />}
+        />
+        <Tab 
+          label="Filters"
+          value="filters"
+          icon={<FontAwesomeIcon icon={faSlidersH} />}
+        />
+        <Tab 
+          label="Sorting"
+          value="sorting"
+          icon={<FontAwesomeIcon icon={faBars} />}
+        />
+      </Tabs>
 
-                      return (
-                        <div
-                          key={`${key}-${childIndex}`}
-                          data-todotxt-attribute={key}
-                          data-todotxt-value={value}
-                          className={`filter${isCtrlKeyPressed ? ' hide' : ''} ${selected ? 'selected' : ''} ${
-                            excluded ? 'excluded' : ''
-                          }`}
-                        >
-                          <Badge badgeContent={attributes[key][value]}>
-                            <Button key={`${value}-${childIndex}`} tabIndex={0} onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}>
-                              {value}
-                            </Button>
-                          </Badge>
-                          {(isCtrlKeyPressed || excluded) && (
-                            <div
-                              data-todotxt-attribute={key}
-                              data-todotxt-value={value}
-                              className="overlay"
-                              onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
-                            >
-                              <FontAwesomeIcon icon={faEyeSlash} />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </AccordionDetails>
-                </Accordion>
-              );
-            }
-            return null;
-          })}
-        </Box>
+      {activeTab === 'attributes' && (
+        <Attributes
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          attributes={attributes}
+          filters={filters}
+        />
+      )}
+
+      {activeTab === 'filters' && (
+        <Filters
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          sorting={sorting}
+          setSorting={setSorting}
+        />
+      )}
+
+      {activeTab === 'sorting' && (
+        <Sorting
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          sorting={sorting}
+          setSorting={setSorting}
+        />
       )}
     </Drawer>
   );

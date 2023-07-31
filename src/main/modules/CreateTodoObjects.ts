@@ -19,7 +19,6 @@ interface TodoObject {
   hidden: string | null;
   pm: string | null;
   string: string;
-  group: null;
 }
 
 function createTodoObjects(fileContent: string): TodoObject[] {
@@ -61,7 +60,6 @@ function createTodoObjects(fileContent: string): TodoObject[] {
         //tags,
         pm,
         string: item.toString(),
-        group: null,
       } as TodoObject;
     })
     .filter((todoObject): todoObject is TodoObject => todoObject !== null);

@@ -27,99 +27,117 @@ function handleCompletedTodoObjects(todoObjects: TodoObjects, hideCompleted: boo
     return filteredTodoObjects;
 }
 
-function groupTodoObjects(todoObjects: TodoObjects, grouping: string): TodoObjects {
-  const groupedTodoObjects: TodoObjects = Object.entries(todoObjects).reduce((groups: TodoObjects, [key, todoObject]) => {
-      if (todoObject !== null) {
-        const groupTitle: string = todoObject[grouping as keyof typeof todoObject] ?? '';
-        const groupKey = groupTitle || '';
-        groups[groupKey] = groups[groupKey] ?? [];
-        groups[groupKey].push(todoObject);
-      }
-      return groups;
-    },
-    {}
-  );
-  return groupedTodoObjects;
-}
-
-function sortGroups(groupedTodoObjects: TodoObjects, invert: boolean): TodoObjects {
-  if (!groupedTodoObjects) {
-    throw new Error('No grouped todo.txt objects found');
-  }
-
-  const entries = Object.entries(groupedTodoObjects);
-
-  entries.sort(([keyA], [keyB]) => {
-    if (keyA.length === 0 && keyB.length > 0) {
-      return 1;
+function sortAndGroupTodoObjects(todoObjects, sorting) {
+  function compareValues(a, b, invert) {
+    if (a === null || a === undefined || a === '') {
+      return invert ? -1 : 1;
+    } else if (b === null || b === undefined || b === '') {
+      return invert ? 1 : -1;
     }
-    if (keyA.length > 0 && keyB.length === 0) {
-      return -1;
+    if (typeof a === 'number' && typeof b === 'number') {
+      return invert ? b - a : a - b;
+    } else {
+      return invert
+        ? String(b).localeCompare(String(a), undefined, { sensitivity: 'base' })
+        : String(a).localeCompare(String(b), undefined, { sensitivity: 'base' });
     }
-
-    const comparison = invert ? keyB.localeCompare(keyA) : keyA.localeCompare(keyB);
-    return comparison;
-  });
-
-  return Object.fromEntries(entries) as TodoObjects;
-}
-
-function sortTodoObjects(groupedTodoObjects: TodoObjects, sorting: string[], invert: boolean, completedLast: boolean): TodoObjects {
-  if (!groupedTodoObjects) {
-    throw new Error('No grouped todo.txt objects found');
   }
 
-  function getValue(obj: TodoObject, prop: string): any {
-    const value = obj[prop];
-    return value && value.value !== undefined ? value.value : value;
-  }
-
-  function compareStrings(a: any, b: any): number {
-    const stringA = String(a);
-    const stringB = String(b);
-    return stringA.localeCompare(stringB);
-  }
-
-  function compareDates(a: any, b: any): number {
-    const dateA = new Date(a).getTime();
-    const dateB = new Date(b).getTime();
-    return dateA - dateB;
-  }
-
-  for (const method of sorting.reverse()) {
-    for (const group of Object.values(groupedTodoObjects)) {
-      group.sort((a: TodoObject, b: TodoObject) => {
-        const valueA = getValue(a, method);
-        const valueB = getValue(b, method);
-
-        if (method === 'projects' || method === 'contexts') {
-          return invert ? compareStrings(valueB, valueA) : compareStrings(valueA, valueB);
-        }
-
-        if (!valueA) return 1;
-        if (!valueB) return -1;
-
-        return compareDates(valueA, valueB);
-      });
-
-      if (completedLast) {
-        group.sort((a: TodoObject, b: TodoObject) => {
-          if (a.complete && !b.complete) return 1;
-          if (!a.complete && b.complete) return -1;
-          return 0;
-        });
+  function sortObjectsBySorting(a, b) {
+    for (const { value, invert } of sorting) {
+      const compareResult = compareValues(a[value], b[value], invert);
+      if (compareResult !== 0) {
+        return compareResult;
       }
     }
+    return 0;
   }
 
-  return groupedTodoObjects;
+  function sortAndGroupWithException(todoObjects, sortIndex) {
+    if (sortIndex >= sorting.length) {
+      return todoObjects;
+    }
+
+    const { value, invert } = sorting[sortIndex];
+    const groupedObjects = {};
+
+    for (const todoObject of todoObjects) {
+      const groupKey = todoObject[value] || '';
+      if (!groupedObjects[groupKey]) {
+        groupedObjects[groupKey] = [];
+      }
+      groupedObjects[groupKey].push(todoObject);
+    }
+
+    const sortedKeys = Object.keys(groupedObjects);
+
+    // Remove the 'null' key from the sortedKeys if it exists
+    const nullIndex = sortedKeys.indexOf('');
+    if (nullIndex !== -1) {
+      sortedKeys.splice(nullIndex, 1);
+    }
+
+    // Sort the remaining keys based on the provided sorting criteria
+    sortedKeys.sort((a, b) => (invert ? compareValues(b, a) : compareValues(a, b)));
+
+    // Add the 'null' key back at the end
+    if (nullIndex !== -1) {
+      sortedKeys.push('');
+    }
+
+    const sortedGroups = {};
+    for (const key of sortedKeys) {
+      sortedGroups[key] = sortAndGroupWithException(groupedObjects[key], sortIndex + 1);
+    }
+
+    return sortedGroups;
+  }
+
+  return sortAndGroupWithException(todoObjects.sort(sortObjectsBySorting), 0);
+}
+
+
+
+function flattenTodoObjects(todoObjects, topLevelKey) {
+  function flatten(obj, sortingKey) {
+    const result = [];
+
+    if (typeof obj !== 'object' || obj === null) {
+      return result;
+    }
+
+    if ('id' in obj) {
+      result.push(obj);
+    }
+
+    for (const key in obj) {
+      if (key === sortingKey) continue;
+
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        result.push(...flatten(obj[key], sortingKey));
+      }
+    }
+
+    return result;
+  }
+
+  const flattenedObjects = [];
+  for (const key in todoObjects) {
+    const separatorEntry = {
+      group: topLevelKey,
+      value: key,
+    };
+    flattenedObjects.push(separatorEntry);
+    flattenedObjects.push(...flatten(todoObjects[key], topLevelKey));
+  }
+
+  return flattenedObjects;
 }
 
 export {
-  groupTodoObjects,
+  flattenTodoObjects,
+  sortAndGroupTodoObjects,
   countTodoObjects,
-  sortGroups,
-  sortTodoObjects,
   applySearchString,
   handleCompletedTodoObjects
 };

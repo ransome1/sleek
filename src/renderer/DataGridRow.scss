@@ -52,8 +52,11 @@
       border-radius: 0.65em;
     }
   }
-}
-
-.row:focus-visible {
-  background: $lighter-grey;
+  &:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  &:focus-visible {
+    background: $lighter-grey;
+  }
 }
