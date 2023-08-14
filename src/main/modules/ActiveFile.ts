@@ -3,7 +3,8 @@ import { configStorage } from '../config';
 interface File {
   active: boolean;
   path: string;
-  filename: string;
+  todoFile: string;
+  doneFile: string;
 }
 
 export function getActiveFile(files: File[]): File | null {

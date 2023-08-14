@@ -1,12 +1,13 @@
 import fs from 'fs';
+import path from 'path';
 import { getActiveFile } from './ActiveFile';
 import { configStorage, filterStorage } from '../config';
 import { createAttributesObject, applyFilters } from './Filters';
 import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../main';
-import { handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString } from './ProcessTodoObjects';
+import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString } from './ProcessTodoObjects';
 
-interface TodoObjectsResponse {
+interface TodoObjects {
   sortedTodoObjects: Record<string, any>;
   attributes: Record<string, any>;
   headers: {
@@ -21,48 +22,49 @@ const headers = {
   visibleObjects: null,
 };
 
-interface FileData {
+interface File {
   active: boolean;
   path: string;
   filename: string;
 }
 
-async function processDataRequest(searchString: string): Promise<TodoObjectsResponse | null> {
+async function processDataRequest(searchString: string): Promise<TodoObjects | null> {
   try {
-    const files: FileData[] = configStorage.get('files');
+    const files: File[] = configStorage.get('files');
     const file = getActiveFile(files);
 
-    if (file === null) {
-      return Promise.resolve(null);
-    }
+    if (file === null) return Promise.resolve(null)
 
-    const fileContent = await fs.promises.readFile(file.path, 'utf8');
-    const hideCompleted: boolean = configStorage.get('hideCompleted');
+    const showCompleted: boolean = configStorage.get('showCompleted');
+    const showHidden: boolean = configStorage.get('showHidden');
     const sorting: string[] = configStorage.get('sorting');
-    const invertGroups: boolean = configStorage.get('invertGroups', false);
-    const invertSorting: boolean = configStorage.get('invertSorting', false);
-    const completedLast: boolean = configStorage.get('completedLast', false);
+    const fileSorting: boolean = configStorage.get('fileSorting');
     const filters: object = filterStorage.get('filters', {});
+
+    const fileContent = await fs.promises.readFile(path.join(file.path, '', file.todoFile), 'utf8');
 
     let todoObjects: Record<string, any>;
     
     todoObjects = await createTodoObjects(fileContent);
 
-    headers.availableObjects = countTodoObjects(todoObjects);
+    if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects, false);
 
-    if(hideCompleted) todoObjects = handleCompletedTodoObjects(todoObjects, hideCompleted);
+    todoObjects = handleCompletedTodoObjects(todoObjects, showCompleted);
+
+    headers.availableObjects = countTodoObjects(todoObjects);
 
     const attributes = createAttributesObject(todoObjects);
 
-    if (filters) {
-      todoObjects = applyFilters(todoObjects, filters);
-    }
+    if (filters) todoObjects = applyFilters(todoObjects, filters);
     
-    if (searchString) {
-      todoObjects = applySearchString(searchString, todoObjects);
-    }
+    if (searchString) todoObjects = applySearchString(searchString, todoObjects);
 
     headers.visibleObjects = countTodoObjects(todoObjects);
+
+    if(fileSorting) {
+      const flattenedTodoObjects = flattenTodoObjects(todoObjects, null);
+      return Promise.resolve([flattenedTodoObjects, attributes, headers, filters]);
+    }
 
     const sortedAndGroupedTodos = sortAndGroupTodoObjects(todoObjects, sorting);
 

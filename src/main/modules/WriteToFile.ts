@@ -2,6 +2,7 @@ import { lines } from './CreateTodoObjects';
 import { getActiveFile } from './ActiveFile';
 import { configStorage } from '../config';
 import fs from 'fs/promises';
+import path from 'path';
 
 async function writeTodoObjectToFile(id: number, string: string, remove: boolean): Promise<string> {
   if (string === '' && id < 1 && !remove) {
@@ -24,7 +25,7 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
     throw new Error('No active file found');
   }
 
-  await fs.writeFile(activeFile?.path, modifiedContent, 'utf8');
+  await fs.writeFile(path.join(activeFile?.path, '', activeFile?.todoFile), modifiedContent, 'utf8');
 
   if (id && !remove) {
     return `Line ${id + 1} overwritten successfully`;
@@ -35,4 +36,8 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
   }
 }
 
-export { writeTodoObjectToFile };
+async function writeStringToFile(string: string, filePath: string): Promise<string> {
+  await fs.writeFile(filePath, string, 'utf8');
+}
+
+export { writeTodoObjectToFile, writeStringToFile };

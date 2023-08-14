@@ -34,7 +34,7 @@
   }
   
   &[data-complete=true],
-  &[data-hidden="1"] {
+  &[data-hidden=true] {
     filter: opacity(50%) grayscale(100%);
   }
   

@@ -8,7 +8,7 @@ function countTodoObjects(todoObjects: TodoObjects): number {
   return count.length;
 }
 
-function applySearchString(searchString: string, todoObjects: TodoObjects): TodoObject {
+function applySearchString(searchString: string, todoObjects: TodoObjects): TodoObjects {
   const lowerSearchString = searchString.toLowerCase();
   const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
     .flat()
@@ -18,29 +18,31 @@ function applySearchString(searchString: string, todoObjects: TodoObjects): Todo
   return filteredTodoObjects;
 }
 
-function handleCompletedTodoObjects(todoObjects: TodoObjects, hideCompleted: boolean): TodoObject {
+function handleCompletedTodoObjects(todoObjects, showCompleted) {
+  const filteredTodoObjects = todoObjects.filter((object) => {
+    if (showCompleted) {
+      return true;
+    } else {
+      return !object.complete;
+    }
+  });
+
+  return filteredTodoObjects;
+}
+
+function handleHiddenTodoObjects(todoObjects: TodoObjects): TodoObjects {
   const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
     .flat()
     .filter((object: TodoObject | null) =>
-      object && object.complete === !hideCompleted
+      object && object.hidden === false
     );
     return filteredTodoObjects;
 }
 
 function sortAndGroupTodoObjects(todoObjects, sorting) {
   function compareValues(a, b, invert) {
-    if (a === null || a === undefined || a === '') {
-      return invert ? -1 : 1;
-    } else if (b === null || b === undefined || b === '') {
-      return invert ? 1 : -1;
-    }
-    if (typeof a === 'number' && typeof b === 'number') {
-      return invert ? b - a : a - b;
-    } else {
-      return invert
-        ? String(b).localeCompare(String(a), undefined, { sensitivity: 'base' })
-        : String(a).localeCompare(String(b), undefined, { sensitivity: 'base' });
-    }
+    const comparison = String(a).localeCompare(String(b), undefined, { sensitivity: 'base' });
+    return invert ? -comparison : comparison;
   }
 
   function sortObjectsBySorting(a, b) {
@@ -53,88 +55,80 @@ function sortAndGroupTodoObjects(todoObjects, sorting) {
     return 0;
   }
 
-  function sortAndGroupWithException(todoObjects, sortIndex) {
-    if (sortIndex >= sorting.length) {
-      return todoObjects;
-    }
+  function groupObjectsByKey(objects, key) {
+    const grouped = {};
 
-    const { value, invert } = sorting[sortIndex];
-    const groupedObjects = {};
-
-    for (const todoObject of todoObjects) {
-      const groupKey = todoObject[value] || '';
-      if (!groupedObjects[groupKey]) {
-        groupedObjects[groupKey] = [];
+    for (const obj of objects) {
+      const groupKey = obj[key] || '';
+      if (!grouped[groupKey]) {
+        grouped[groupKey] = [];
       }
-      groupedObjects[groupKey].push(todoObject);
+      grouped[groupKey].push(obj);
     }
 
-    const sortedKeys = Object.keys(groupedObjects);
+    return grouped;
+  }
 
-    // Remove the 'null' key from the sortedKeys if it exists
-    const nullIndex = sortedKeys.indexOf('');
-    if (nullIndex !== -1) {
-      sortedKeys.splice(nullIndex, 1);
+  function sortAndGroupObjects(objects, sortIndex) {
+    if (sortIndex >= sorting.length) {
+      return objects;
     }
 
-    // Sort the remaining keys based on the provided sorting criteria
-    sortedKeys.sort((a, b) => (invert ? compareValues(b, a) : compareValues(a, b)));
+    const { value } = sorting[sortIndex];
+    const grouped = groupObjectsByKey(objects, value);
+    const sortedKeys = Object.keys(grouped);
 
-    // Add the 'null' key back at the end
-    if (nullIndex !== -1) {
+    if (sortedKeys.includes('')) {
+      sortedKeys.splice(sortedKeys.indexOf(''), 1);
       sortedKeys.push('');
     }
 
     const sortedGroups = {};
     for (const key of sortedKeys) {
-      sortedGroups[key] = sortAndGroupWithException(groupedObjects[key], sortIndex + 1);
+      sortedGroups[key] = sortAndGroupObjects(grouped[key], sortIndex + 1);
     }
 
     return sortedGroups;
   }
 
-  return sortAndGroupWithException(todoObjects.sort(sortObjectsBySorting), 0);
+  const sortedTodoObjects = todoObjects.sort(sortObjectsBySorting);
+  const sortedAndGrouped = sortAndGroupObjects(sortedTodoObjects, 0);
+
+  return sortedAndGrouped;
 }
 
+function flattenTodoObjects(todoObjects, topLevelGroup) {
+  const flattenedObjects = [];
 
-
-function flattenTodoObjects(todoObjects, topLevelKey) {
   function flatten(obj, sortingKey) {
-    const result = [];
+    if (typeof obj === 'object' && obj !== null) {
+      if ('id' in obj) {
+        flattenedObjects.push(obj);
+      }
 
-    if (typeof obj !== 'object' || obj === null) {
-      return result;
-    }
-
-    if ('id' in obj) {
-      result.push(obj);
-    }
-
-    for (const key in obj) {
-      if (key === sortingKey) continue;
-
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
-        result.push(...flatten(obj[key], sortingKey));
+      for (const key in obj) {
+        if (key !== sortingKey) {  
+          flatten(obj[key], sortingKey);
+        }
       }
     }
-
-    return result;
   }
-
-  const flattenedObjects = [];
+  
   for (const key in todoObjects) {
-    const separatorEntry = {
-      group: topLevelKey,
-      value: key,
-    };
-    flattenedObjects.push(separatorEntry);
-    flattenedObjects.push(...flatten(todoObjects[key], topLevelKey));
+    if (topLevelGroup !== null) {
+      flattenedObjects.push({
+        group: topLevelGroup,
+        value: key,
+      });
+    }
+    flatten(todoObjects[key], topLevelGroup);
   }
 
   return flattenedObjects;
 }
 
 export {
+  handleHiddenTodoObjects,
   flattenTodoObjects,
   sortAndGroupTodoObjects,
   countTodoObjects,

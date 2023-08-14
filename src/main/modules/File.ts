@@ -5,7 +5,8 @@ import path from 'path';
 interface File {
   active: boolean;
   path: string;
-  filename: string;
+  todoFile: string;
+  doneFile: string;
 }
 
 async function addFile(filePath: string): Promise<void> {
@@ -23,8 +24,9 @@ async function addFile(filePath: string): Promise<void> {
     if (existingFileIndex === -1) {
       files.push({
         active: true,
-        path: filePath,
-        filename: path.basename(filePath),
+        path: path.dirname(filePath),
+        todoFile: path.basename(filePath),
+        doneFile: 'done.txt',
       });
     } else {
       if (existingFileIndex !== -1) {

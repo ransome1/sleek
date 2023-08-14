@@ -25,7 +25,7 @@ const PomodoraPicker = ({ currentPomodoro, setTextFieldValue, textFieldValue }) 
       <FormControl id="pomodoroPicker">
         <TextField
           id="pomodoroPicker"
-          label=<FontAwesomeIcon data-testid='fa-icon-pizza-slice' icon={faPizzaSlice} />
+          label=<FontAwesomeIcon icon={faPizzaSlice} />
           type="number"
           onChange={handleChange}
           value={pomodoro}

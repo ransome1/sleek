@@ -17,8 +17,7 @@ const DraggableList = React.memo(({ sorting, setSorting, onDragEnd }: DraggableL
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable-list">
         {provided => (
-          <Box className='sorting' ref={provided.innerRef} {...provided.droppableProps}>
-            <h3>Sorting</h3>
+          <Box ref={provided.innerRef} {...provided.droppableProps}>
             {sorting.map((sortingItem, index) => (
               <DraggableListItem
                 item={sortingItem}

@@ -9,6 +9,7 @@ import theme from './Theme';
 import DrawerComponent from './Drawer';
 import Search from './Search';
 import TodoDialog from './TodoDialog';
+import ArchiveTodos from './ArchiveTodos';
 import './App.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
@@ -175,6 +176,7 @@ const App = () => {
           {snackBarContent}
         </Alert>
       </Snackbar>
+      <ArchiveTodos />
     </ThemeProvider>
   );
 };

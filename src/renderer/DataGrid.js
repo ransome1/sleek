@@ -62,7 +62,7 @@ const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setText
   if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
 
   return (
-    <List id="dataGrid" data-testid="data-grid-component" onScroll={handleScroll} onKeyUp={handleKeyUp}>
+    <List id="dataGrid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
       {visibleRows.map((row, index) => (
         <DataGridRow 
           key={index}

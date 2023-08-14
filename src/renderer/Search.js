@@ -81,7 +81,6 @@ const Search = ({ headers, searchString, setSearchString }) => {
           startAdornment: (
             <InputAdornment position='start'>
               <FontAwesomeIcon
-                data-testid='fa-icon-search'
                 icon={faSearch}
                 className={focused ? 'Mui-focusVisible' : ''}
               />
@@ -98,7 +97,7 @@ const Search = ({ headers, searchString, setSearchString }) => {
                   className='xClick'
                   onClick={handleXClick}
                 >
-                  <FontAwesomeIcon data-testid='fa-icon-circle-xmark' icon={faCircleXmark}
+                  <FontAwesomeIcon icon={faCircleXmark}
                 />
               </button>
               )}

@@ -29,7 +29,6 @@ export function handleFilterSelect(key, value, filters, isCtrlKeyPressed) {
       filterList.push({ value, exclude: isCtrlKeyPressed });
     }
   }
-
   updatedFilters[key] = filterList;
   store.setFilters(updatedFilters);
   ipcRenderer.send('requestData');

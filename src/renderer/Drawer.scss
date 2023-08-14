@@ -15,12 +15,14 @@
 			button {
 				text-transform: none;
 				white-space: nowrap;
+				&:focus-visible {
+					background: $mid-grey;
+				}
 			}
 		}
 		.MuiTabs-indicator {
 			top: 0;
 		}
-		
 	}
 	.drawerHandle {
 		width: 5px;

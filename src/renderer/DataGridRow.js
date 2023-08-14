@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Avatar, Checkbox, ListItem, Divider, Button } from '@mui/material';
+import dayjs from 'dayjs';
+import { Checkbox, ListItem, Divider, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -17,13 +18,10 @@ const expressions = [
   { pattern: /\bt:\d{4}-\d{2}-\d{2}\b/, value: 't', shortcut: 't:' },
   { pattern: /^rec:(\+?\d*[dbwmy])$/, value: 'rec', shortcut: 'rec:' },
   { pattern: /\bh:1\b/, value: 'h:1', shortcut: 'h:1' },
-  //{ pattern: /^tag:\S+$/, value: 'tags', shortcut: 'tag:' },
   { pattern: /pm:\d+\b/, value: 'pm', shortcut: 'pm:' }
 ];
 
-const isExpression = (word, pattern) => pattern.test(word);
-
-const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject }) => {
+const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject }) => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
   const handleCheckboxChange = (event) => {
@@ -32,7 +30,7 @@ const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFi
   };
 
   const handleRowClick = (event) => {
-    if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+    if ((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if (event.target.tagName === 'SPAN' || event.target.tagName === 'LI') {
         setDialogOpen(true);
         setTodoObject(todoObject);
@@ -43,45 +41,56 @@ const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFi
 
   const handleContextMenu = (event) => {
     event.preventDefault();
-    setContextMenuPosition({ top: event.clientY, left: event.clientX }, );
+    setContextMenuPosition({ top: event.clientY, left: event.clientX });
   };
 
   const handleButtonClick = (value, key) => {
     handleFilterSelect(key, value, filters, false);
   };
 
-  const renderButtonsForMultipleValues = (value, group, handleButtonClick) => {
-    const valuesArray = value.split(',');
+  const renderGroup = () => {
+    const value = todoObject.value;
+    const group = todoObject.group;
 
-    return valuesArray.map((val, index) => (
-      <Button
-        key={index}
-        className="attribute"
-        onClick={() => handleButtonClick(val.trim(), group)}
-      >
-        {val.trim()}
-      </Button>
-    ));
-  };  
-
-  if (todoObject.group) {
-    if (todoObject.value === 'null' || todoObject.value === '') {
+    if (value === 'null' || value === '') {
       return <Divider />;
     }
-    if (todoObject.value.includes(',')) {
+
+    const valuesArray = value.split(',');
+
+    if (valuesArray.length > 1) {
       return (
-        <ListItem className="row group" data-todotxt-attribute={todoObject.group}>
-          {renderButtonsForMultipleValues(todoObject.value, todoObject.group, handleButtonClick)}
+        <ListItem className="row group" data-todotxt-attribute={group} data-todotxt-value={value}>
+          {valuesArray.map((val, index) => (
+            <Button
+              key={index}
+              className="attribute"
+              onClick={() => handleButtonClick(val.trim(), group)}
+            >
+              {val.trim()}
+            </Button>
+          ))}
+        </ListItem>
+      );
+    } else {
+      const trimmedValue = value.trim();
+      const formattedValue = dayjs(trimmedValue).isValid()
+        ? dayjs(trimmedValue).format('YYYY-MM-DD')
+        : trimmedValue;
+
+      return (
+        <ListItem className="row group" data-todotxt-attribute={group} data-todotxt-value={value}>
+          <Button className="attribute" onClick={() => handleButtonClick(formattedValue, group)}>
+            {formattedValue}
+          </Button>
         </ListItem>
       );
     }
-    return (
-      <ListItem className="row group" data-todotxt-attribute={todoObject.group} data-todotxt-value={todoObject.value}>
-        <Button className="attribute" onClick={() => handleButtonClick(todoObject.value, todoObject.group)}>
-          {todoObject.value}
-        </Button>
-      </ListItem>
-    );
+    return null;
+  };
+
+  if (todoObject.group) {
+    return renderGroup();
   }
 
   const words = todoObject.body.split(' ');
@@ -89,9 +98,8 @@ const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFi
 
   return (
     <ThemeProvider theme={theme}>
-
       <ContextMenu index={todoObject.id} anchorPosition={contextMenuPosition} setContextMenuPosition={setContextMenuPosition} />
-      
+
       <ListItem
         tabIndex={0}
         key={todoObject.id}
@@ -101,58 +109,56 @@ const DataGridRow = ({ todoObject, attributes, filters, setDialogOpen, setTextFi
         onClick={handleRowClick}
         onKeyDown={handleRowClick}
         onContextMenu={handleContextMenu}
-        data-todotxt-attribute='priority'
-        data-todotxt-value={todoObject.priority}>
-      
+        data-todotxt-attribute="priority"
+        data-todotxt-value={todoObject.priority}
+      >
         <Checkbox tabIndex={0} checked={todoObject.complete} onChange={handleCheckboxChange} />
 
-        {todoObject.hidden && todoObject.hidden === '1' && (
-          <FontAwesomeIcon data-testid='fa-icon-eye-slash' icon={faEyeSlash} />
+        {todoObject.hidden && todoObject.hidden && (
+          <FontAwesomeIcon icon={faEyeSlash} />
         )}
 
-        {(() => {
-          return words.map((word, index) => {
-            const expression = expressions.find((expr) => isExpression(word, expr.pattern));
-            if (expression) {
-              word = word.substr(expression.shortcut.length);
+        {words.map((word, index) => {
+          const expression = expressions.find((expr) => isExpression(word, expr.pattern));
+          if (expression) {
+            word = word.substr(expression.shortcut.length);
 
-              const selected = (filters[expression.value] || []).some((filter) => filter.value === word);
+            const selected = (filters[expression.value] || []).some((filter) => filter.value === word);
 
-              if (expression.value === 'due' || expression.value === 't') {
-                return (
-                  <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
-                    <DatePickerInline
-                      currentDate={todoObject[expression.value]}
-                      type={expression.value}
-                      todoObject={todoObject}
-                    />
-                  </div>
-                );
-              } else if (expression.value === 'h:1') {
-                return null;
-              } else if (expression.value === 'pm') {
-                return (
-                  <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
-                    <Button onClick={() => handleButtonClick(word, expression.value)}>
-                      <FontAwesomeIcon data-testid='fa-icon-pizza-slice' icon={faPizzaSlice} />
-                      {word}
-                    </Button>
-                  </div>
-                );
-              } else {
-                return (
-                  <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
-                    <Button onClick={() => handleButtonClick(word, expression.value)}>{word}</Button>
-                  </div>
-                );
-              }
+            if (expression.value === 'due' || expression.value === 't') {
+              return (
+                <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
+                  <DatePickerInline
+                    currentDate={todoObject[expression.value]}
+                    type={expression.value}
+                    todoObject={todoObject}
+                  />
+                </div>
+              );
+            } else if (expression.value === 'h:1') {
+              return null;
+            } else if (expression.value === 'pm') {
+              return (
+                <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
+                  <Button onClick={() => handleButtonClick(word, expression.value)}>
+                    <FontAwesomeIcon icon={faPizzaSlice} />
+                    {word}
+                  </Button>
+                </div>
+              );
+            } else {
+              return (
+                <div key={index} data-todotxt-attribute={expression.value} className={selected ? 'selected' : ''}>
+                  <Button onClick={() => handleButtonClick(word, expression.value)}>{word}</Button>
+                </div>
+              );
             }
-            return <span key={index}>{word} </span>;
-          });
-        })()}
+          }
+          return <span key={index}>{word} </span>;
+        })}
       </ListItem>
     </ThemeProvider>
   );
-};
+});
 
 export default DataGridRow;

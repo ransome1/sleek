@@ -3,6 +3,7 @@ import { Button, Box } from '@mui/material';
 import './SplashScreen.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
+const store = window.electron.store;
 
 const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
 
@@ -14,20 +15,25 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
     ipcRenderer.send('createFile');
   };
 
-  const handleCreateTodo = (event) => {
+  const handleCreateTodo = () => {
     setDialogOpen(true);
+  };
+
+  const handleReset = () => {
+    store.setFilters([]);
+    setSearchString('');
   };
 
   if(!screen) return null;
 
   return (
-    <Box id='splashScreen' data-testid='splashscreen-component'>
+    <Box id='splashScreen'>
       {screen === 'noTodosVisible' && (
         <>
           <h1>No todos found</h1>
           <p>No results found for either your search input nor your selected filters</p>
           <Box className="buttons">
-            <Button variant='contained' data-testid='navigation-button-files' onClick={() => setSearchString('')}>
+            <Button variant='contained' onClick={handleReset}>
               Reset filters and search
             </Button>
           </Box>

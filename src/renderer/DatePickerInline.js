@@ -31,7 +31,7 @@ const DatePickerComponent = ({ currentDate, todoObject, type, textFieldValueRef,
 
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} onClick={() => setOpen?.((prev) => !prev)}>
-          <FontAwesomeIcon data-testid="fa-icon-clock" icon={faClock} />
+          <FontAwesomeIcon icon={faClock} />
           {updatedDate}
         </Button>
       );

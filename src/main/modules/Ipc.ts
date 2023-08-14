@@ -3,6 +3,7 @@ import { Item } from 'jstodotxt';
 import processDataRequest from './ProcessDataRequest';
 import { changeCompleteState } from './ChangeCompleteState';
 import { writeTodoObjectToFile } from './WriteToFile';
+import archiveTodos from './ArchiveTodos';
 import { configStorage, filterStorage } from '../config';
 import { setFile, removeFile } from './File';
 import { openFile, createFile } from './FileDialog';
@@ -80,6 +81,7 @@ function removeEventListeners(): void {
   ipcMain.off('createFile', createFile);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
+  ipcMain.off('archiveTodos', archiveTodos);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -93,3 +95,4 @@ ipcMain.on('openFile', openFile);
 ipcMain.on('createFile', createFile);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
+ipcMain.on('archiveTodos', archiveTodos);

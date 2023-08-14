@@ -35,7 +35,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
       const due = extensions.find((extension) => extension.key === 'due')?.value || null;
       //const tags = extensions.find((extension) => extension.key === 'tag')?.value || null;
       const t = extensions.find((extension) => extension.key === 't')?.value || null;
-      const hidden = extensions.find((extension) => extension.key === 'h')?.value || null;
+      const hidden = extensions.find((extension) => extension.key === 'h')?.value === '1' ? true : false;
       const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;
       const rec = extensions.find((extension) => extension.key === 'rec')?.value || null;
       if (!item.body()) {

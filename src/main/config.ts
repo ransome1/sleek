@@ -30,9 +30,10 @@ if (!fs.existsSync(configPath)) {
       { id: "7", value: "created", invert: false },
     ],
     appendCreationDate: false,
-    hideCompleted: true,
+    showCompleted: true,
+    showHidden: true,
     windowMaximized: false,
-    completedLast: false,
+    fileSorting: false,
   };
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));
@@ -43,21 +44,34 @@ if (!fs.existsSync(filtersPath)) {
   fs.writeFileSync(filtersPath, JSON.stringify(defaultFilterData));
 }
 
+const handleConfigChange = async (key, newValue) => {
+  const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
+  mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
+
+  if (key === 'sorting') {
+    mainWindow.send('updateSorting', newValue);
+  }
+};
+
 configStorage.onDidChange('files', (newValue, oldValue) => {
   buildMenu(newValue);
   mainWindow.webContents.send('updateFiles', newValue);
 });
 
-configStorage.onDidChange('hideCompleted', async () => {
-  const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
-  mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
+configStorage.onDidChange('showCompleted', async () => {
+  handleConfigChange('showCompleted', configStorage.get('showCompleted'));
+});
+
+configStorage.onDidChange('showHidden', async () => {
+  handleConfigChange('showHidden', configStorage.get('showHidden'));
 });
 
 configStorage.onDidChange('sorting', async (newValue) => {
-  console.log(newValue)
-  const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
-  mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
-  mainWindow.send('updateSorting', newValue);
+  handleConfigChange('sorting', newValue);
+});
+
+configStorage.onDidChange('fileSorting', async (newValue) => {
+  handleConfigChange('fileSorting', newValue);
 });
 
 export { configStorage, filterStorage };

@@ -13,6 +13,7 @@ export type Channels =
   | 'storeSetFilters'
   | 'selectedFilters'
   | 'applySearchString'
+  | 'archiveTodos'
   | 'focusSearch';
 
 interface ElectronStore {

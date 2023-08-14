@@ -49,7 +49,7 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
   }, [files]);
 
   return (
-    <nav id='navigation' data-testid='navigation-component'>
+    <nav id='navigation'>
       <Box>sleek</Box>
       {files && files.length > 0 && (
         <>

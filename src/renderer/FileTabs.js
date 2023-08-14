@@ -43,12 +43,12 @@ const FileTabs = ({ files }) => {
 
   return (
     <>
-      <Tabs value={fileTab} id="fileTabs" onChange={handleChange} data-testid="file-tabs-component">
+      <Tabs value={fileTab} id="fileTabs" onChange={handleChange}>
         {files.map((file, index) => (
           file && (
             <Tab
               key={index}
-              label={file.filename}
+              label={file.todoFile}
               tabIndex={0}
               icon={<FontAwesomeIcon icon={faCircleXmark} onClick={(event) => handleRemove(event, index)} />}
               className={file.active ? 'active-tab' : ''}

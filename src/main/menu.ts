@@ -1,6 +1,8 @@
 import { app, Menu, dialog, shell } from 'electron';
 import path from 'path';
 import { setFile } from './modules/File';
+import archiveTodos from './modules/ArchiveTodos';
+import { getActiveFile } from './modules/ActiveFile';
 import { mainWindow } from './main';
 import { openFile, createFile } from './modules/FileDialog';
 import { configStorage } from './config';
@@ -12,7 +14,8 @@ const description = appPackage.description;
 interface File {
   active: boolean;
   path: string;
-  filename: string;
+  todoFile: string;
+  doneFile: string;
 }
 
 function buildMenu(files: File[] = []) {
@@ -65,7 +68,7 @@ function buildMenu(files: File[] = []) {
         { type: 'separator' },
         ...(files?.length > 0
           ? files.map((file, index) => ({
-              label: file.filename,
+              label: file.todoFile,
               accelerator: `CommandOrControl+${index + 1}`,
               click: () => {
                 setFile(undefined, index);
@@ -106,10 +109,17 @@ function buildMenu(files: File[] = []) {
           label: 'Hide completed',
           accelerator: 'Ctrl+H',
           click: async () => {
-            const hideCompleted = configStorage.get('hideCompleted');
-            configStorage.set('hideCompleted', !hideCompleted);
+            const showCompleted = configStorage.get('showCompleted');
+            configStorage.set('showCompleted', !showCompleted);
           },
-        },        
+        },
+        {
+          label: 'Archive completed todos',
+          click: () => {
+            const activeFile = getActiveFile(files);
+            mainWindow.send('archiveTodos', activeFile.doneFile);
+          },
+        },
         {
           role: 'reload',
           visible: false,
