@@ -41,9 +41,8 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters): TodoObject[]
 
           const valuesToCheck = Array.isArray(attributeValues) ? attributeValues : [attributeValues];
           const hasMatchingValue = valuesToCheck.some((attrValue) => {
-            const isDate = dayjs(attrValue).isValid();
-            const formattedAttrValue = isDate ? dayjs(attrValue).format('YYYY-MM-DD') : attrValue;
-            return formattedAttrValue === value;
+            
+            return attrValue === value;
           });
 
           return exclude ? !hasMatchingValue : hasMatchingValue;

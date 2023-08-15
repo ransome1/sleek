@@ -2,13 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFilter, faFolderOpen, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Button, Box } from '@mui/material';
+import Settings from './Settings';
 import './Navigation.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
 const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers }) => {
-
   const [activeButtonClass, setActiveButtonClass] = useState(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const openSettings = () => {
+    setIsSettingsOpen(true);
+  };
+
+  const closeSettings = () => {
+    setIsSettingsOpen(false);
+  };
 
   const handleButtonClicked = (parameter) => {
     setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)
@@ -71,9 +80,11 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
         <FontAwesomeIcon icon={faFolderOpen} />
       </Button>
 
-      <Button className='break'>
+      <Button className='break' onClick={openSettings}>
         <FontAwesomeIcon icon={faCog} />
       </Button>
+
+      <Settings isOpen={isSettingsOpen} onClose={closeSettings} />
     </nav>
   );
 };

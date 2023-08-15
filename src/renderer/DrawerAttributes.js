@@ -65,36 +65,34 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
                   <Box>
                   {Object.keys(attributes[key]).map((value, childIndex) => {
                     
-                    const isDate = dayjs(value).isValid();
-                    const formattedValue = isDate ? dayjs(value).format('YYYY-MM-DD') : value;
-                    const excluded = filters[key]?.some((filter) => filter.value === formattedValue && filter.exclude);
-                    const selected = filters[key]?.some((filter) => filter.value === formattedValue);
+                    const excluded = filters[key]?.some((filter) => filter.value === value && filter.exclude);
+                    const selected = filters[key]?.some((filter) => filter.value === value);
 
                     return (
                       <div
                         key={`${key}-${childIndex}`}
                         data-todotxt-attribute={key}
-                        data-todotxt-value={formattedValue}
+                        data-todotxt-value={value}
                         className={`filter${isCtrlKeyPressed ? ' hide' : ''} ${selected ? 'selected' : ''} ${
                           excluded ? 'excluded' : ''
                         }`}
                       >
-                        <Badge badgeContent={attributes[key][formattedValue]}>
+                        <Badge badgeContent={attributes[key][value]}>
                           <Button
                             className="attribute"
-                            key={`${formattedValue}-${childIndex}`}
+                            key={`${value}-${childIndex}`}
                             tabIndex={0}
-                            onClick={() => handleFilterSelect(key, formattedValue, filters, isCtrlKeyPressed)}
+                            onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
                           >
-                            {formattedValue}
+                            {value}
                           </Button>
                         </Badge>
                         {(isCtrlKeyPressed || excluded) && (
                           <div
                             data-todotxt-attribute={key}
-                            data-todotxt-value={formattedValue}
+                            data-todotxt-value={value}
                             className="overlay"
-                            onClick={() => handleFilterSelect(key, formattedValue, filters, isCtrlKeyPressed)}
+                            onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
                           >
                             <FontAwesomeIcon icon={faEyeSlash} />
                           </div>

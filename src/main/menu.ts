@@ -115,6 +115,7 @@ function buildMenu(files: File[] = []) {
         },
         {
           label: 'Archive completed todos',
+          accelerator: 'Ctrl+Alt+A',
           click: () => {
             const activeFile = getActiveFile(files);
             mainWindow.send('archiveTodos', activeFile.doneFile);

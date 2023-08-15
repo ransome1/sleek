@@ -1,6 +1,6 @@
 import { Item } from 'jstodotxt';
-import { configStorage } from '../config';
 import { handleNotification } from './HandleNotification';
+import dayjs from 'dayjs';
 
 let lines: string[];
 
@@ -22,22 +22,19 @@ interface TodoObject {
 }
 
 function createTodoObjects(fileContent: string): TodoObject[] {
-  const appendCreationDate = configStorage.get('appendCreationDate');
-
   lines = fileContent.split('\n');
   const todoObjects: TodoObject[] = lines
     .map((line, i) => {
       const item = new Item(line);
-      if (!item.created()) item.setCreated(appendCreationDate ? new Date() : null);
-
       const body = item.body();
       const extensions = item.extensions();
       const due = extensions.find((extension) => extension.key === 'due')?.value || null;
-      //const tags = extensions.find((extension) => extension.key === 'tag')?.value || null;
       const t = extensions.find((extension) => extension.key === 't')?.value || null;
       const hidden = extensions.find((extension) => extension.key === 'h')?.value === '1' ? true : false;
       const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;
       const rec = extensions.find((extension) => extension.key === 'rec')?.value || null;
+      const creation = dayjs(item.created()).isValid() ? dayjs(item.created()).format('YYYY-MM-DD') : null;
+      const completed = dayjs(item.completed()).isValid() ? dayjs(item.completed()).format('YYYY-MM-DD') : null;
       if (!item.body()) {
         return null;
       }
@@ -47,9 +44,9 @@ function createTodoObjects(fileContent: string): TodoObject[] {
       return {
         id: i,
         body,
-        created: item.created(),
+        created: creation,
         complete: item.complete(),
-        completed: item.completed(),  
+        completed: completed,  
         priority: item.priority(),
         contexts: item.contexts(),
         projects: item.projects(),
@@ -57,7 +54,6 @@ function createTodoObjects(fileContent: string): TodoObject[] {
         t,
         rec,
         hidden,
-        //tags,
         pm,
         string: item.toString(),
       } as TodoObject;

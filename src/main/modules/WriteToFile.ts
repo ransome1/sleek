@@ -3,16 +3,25 @@ import { getActiveFile } from './ActiveFile';
 import { configStorage } from '../config';
 import fs from 'fs/promises';
 import path from 'path';
+import { Item } from 'jstodotxt';
 
 async function writeTodoObjectToFile(id: number, string: string, remove: boolean): Promise<string> {
   if (string === '' && id < 1 && !remove) {
-    throw new Error(`No string provided, won't write empty todo to file`);
+    throw new Error("No string provided, won't write empty todo to file");
   } else if (remove) {
     lines.splice(id, 1);
   } else {
     if (typeof id === 'number' && id >= 0) {
       lines[id] = string;
     } else {
+      const appendCreationDate = configStorage.get('appendCreationDate');
+      if (appendCreationDate) {
+        const item = new Item(string);
+        if (!item.created()) {
+          item.setCreated(new Date());
+        }
+        string = item.toString();
+      }
       lines.push(string);
     }
   }
