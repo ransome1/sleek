@@ -14,3 +14,10 @@ export function resolveHtmlPath(htmlFileName: string): string {
     throw new Error(`Failed to resolve path: ${error}`);
   }
 }
+
+export interface File {
+  active: boolean;
+  path: string;
+  todoFile: string;
+  doneFile: string;
+}

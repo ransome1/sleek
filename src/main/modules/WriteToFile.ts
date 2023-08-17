@@ -4,6 +4,7 @@ import { configStorage } from '../config';
 import fs from 'fs/promises';
 import path from 'path';
 import { Item } from 'jstodotxt';
+import { File } from '../util';
 
 async function writeTodoObjectToFile(id: number, string: string, remove: boolean): Promise<string> {
   if (string === '' && id < 1 && !remove) {
@@ -27,7 +28,8 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
   }
 
   const modifiedContent = lines.join('\n');
-  const files = configStorage.get('files');
+  
+  const files = configStorage.get('files') as File[];
   const activeFile = getActiveFile(files);
 
   if (!activeFile) {
@@ -45,7 +47,7 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
   }
 }
 
-async function writeStringToFile(string: string, filePath: string): Promise<string> {
+async function writeStringToFile(string: string, filePath: string) {
   await fs.writeFile(filePath, string, 'utf8');
 }
 

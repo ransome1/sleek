@@ -1,13 +1,7 @@
 import { configStorage } from '../config';
 import createFileWatcher from './FileWatcher';
 import path from 'path';
-
-interface File {
-  active: boolean;
-  path: string;
-  todoFile: string;
-  doneFile: string;
-}
+import { File } from '../util';
 
 async function addFile(filePath: string): Promise<void> {
   try {
@@ -72,7 +66,7 @@ async function removeFile(index: number): Promise<void> {
   }
 }
 
-function setFile(event: event, index: number): void {
+function setFile(event: any, index: number): void {
   try {
     const files: File[] = configStorage.get('files') as File[];
 

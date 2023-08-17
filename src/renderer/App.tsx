@@ -10,6 +10,7 @@ import DrawerComponent from './Drawer';
 import Search from './Search';
 import TodoDialog from './TodoDialog';
 import ArchiveTodos from './ArchiveTodos';
+import ToolBar from './ToolBar';
 import './App.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
@@ -18,6 +19,7 @@ const store = window.electron.store;
 const App = () => {
   const [files, setFiles] = useState<string[]>(store.get('files') || null);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [drawerParameter, setDrawerParameter] = useState<string | null>();
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
@@ -130,11 +132,21 @@ const App = () => {
           setSorting={setSorting}
         />
         <div className="flex-items">
-          <FileTabs files={files} />
+          <header>
+            <FileTabs
+              files={files}
+            />
+            <ToolBar
+              isSearchOpen={isSearchOpen}
+              setIsSearchOpen={setIsSearchOpen}
+            />
+          </header>
           <Search
             headers={headers}
             searchString={searchString}
             setSearchString={setSearchString}
+            isSearchOpen={isSearchOpen}
+            setIsSearchOpen={setIsSearchOpen}
           />
           <TodoDataGrid 
             todoObjects={todoObjects}

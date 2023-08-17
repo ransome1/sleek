@@ -1,13 +1,51 @@
-import { sortGroups, groupTodoObjects, sortTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/ProcessTodoObjects';
+import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/ProcessTodoObjects';
 
 type todoObjects = Record<string, any>;
+
+const sorting = [
+    {
+        "id": "1",
+        "value": "priority",
+        "invert": false
+    },
+    {
+        "id": "2",
+        "value": "due",
+        "invert": false
+    },
+    {
+        "id": "3",
+        "value": "projects",
+        "invert": false
+    },
+    {
+        "id": "4",
+        "value": "contexts",
+        "invert": false
+    },
+    {
+        "id": "5",
+        "value": "created",
+        "invert": false
+    },
+    {
+        "id": "6",
+        "value": "t",
+        "invert": false
+    },
+    {
+        "id": "7",
+        "value": "completed",
+        "invert": false
+    }
+]
 
 const todoObjects: todoObjects = 
 [
   {
     id: 0,
     body: '+testProject5 test0 @testContext due:2023-01-02',
-    created: '2023-11-30T23:00:00.000Z',
+    created: '2025-12-09',
     complete: false,
     priority: 'C',
     contexts: [ 'testContext' ],
@@ -16,13 +54,13 @@ const todoObjects: todoObjects =
     t: null,
     rec: null,
     tags: null,
-    string: '(C) 2023-12-01 +testProject5 test0 @testContext due:2023-01-02',
+    string: '(C) 2025-12-09 +testProject5 test0 @testContext due:2023-01-02',
     group: null
   },
   {
     id: 1,
     body: 'test1 +testProject7 @testContext7 t:2023-12-15',
-    created: '2023-11-30T23:00:00.000Z',
+    created: '2023-12-01',
     complete: false,
     priority: 'B',
     contexts: [ 'testContext7' ],
@@ -37,7 +75,7 @@ const todoObjects: todoObjects =
   {
     id: 2,
     body: 'test2 +testProject1 @testContext due:2023-01-01',
-    created: '2023-11-30T23:00:00.000Z',
+    created: '2025-12-08',
     complete: true,
     priority: 'C',
     contexts: [ 'testContext' ],
@@ -46,13 +84,13 @@ const todoObjects: todoObjects =
     t: null,
     rec: null,
     tags: null,
-    string: 'x (C) 2023-06-24 2023-12-01 test2 +testProject1 @testContext due:2023-01-01',
+    string: 'x (C) 2025-12-08 2023-12-01 test2 +testProject1 @testContext due:2023-01-01',
     group: null
   },
   {
     id: 3,
     body: 'test3 +testProject6 @testContext6 due:2023-12-03',
-    created: '2023-06-23T22:00:00.000Z',
+    created: '2023-06-24',
     complete: false,
     priority: 'A',
     contexts: [ 'testContext6' ],
@@ -67,7 +105,7 @@ const todoObjects: todoObjects =
   {
     id: 4,
     body: 'test3 +testProject3 @testContext due:2023-01-03',
-    created: '2023-06-23T22:00:00.000Z',
+    created: '2025-12-06',
     complete: false,
     priority: 'C',
     contexts: [ 'testContext' ],
@@ -76,13 +114,13 @@ const todoObjects: todoObjects =
     t: null,
     rec: null,
     tags: null,
-    string: '(C) 2023-06-24 test3 +testProject3 @testContext due:2023-01-03',
+    string: '(C) 2025-12-06 test3 +testProject3 @testContext due:2023-01-03',
     group: null
   },
   {
     id: 5,
     body: 'test3 +testProject2 @testContext due:2023-01-05',
-    created: '2023-06-23T22:00:00.000Z',
+    created: '2025-12-05',
     complete: false,
     priority: 'C',
     contexts: [ 'testContext' ],
@@ -91,13 +129,13 @@ const todoObjects: todoObjects =
     t: null,
     rec: null,
     tags: null,
-    string: '(C) 2023-06-24 test3 +testProject2 @testContext due:2023-01-05',
+    string: '(C) 2025-12-05 test3 +testProject2 @testContext due:2023-01-05',
     group: null
   },
   {
     id: 6,
     body: 'test3 +testProject4 @testContext due:2023-01-04',
-    created: '2023-06-23T22:00:00.000Z',
+    created: '2025-12-07',
     complete: false,
     priority: 'C',
     contexts: [ 'testContext' ],
@@ -106,7 +144,7 @@ const todoObjects: todoObjects =
     t: null,
     rec: null,
     tags: null,
-    string: '(C) 2023-06-24 test3 +testProject4 @testContext due:2023-01-04',
+    string: '(C) 2025-12-07 test3 +testProject4 @testContext due:2023-01-04',
     group: null
   }  
 ];
@@ -136,130 +174,99 @@ describe('Process todo.txt objects', () => {
         expect(results.length).toEqual(0);
     });
 
-    test('Function creates 3 groups (A, B, C)', () => {
-        groupedTodoObjects = groupTodoObjects(todoObjects, "priority");
-        const groups = Object.keys(groupedTodoObjects);
-        expect(groups).toEqual(['C', 'B', 'A']);
-    });
-
-    test('Groups sorted asc', () => {
-        const sortedGroups = sortGroups(groupedTodoObjects, false);
-        const groups = Object.keys(sortedGroups);
+    test('Function creates 3 top level groups (A, B, C)', () => {
+        const sortedAndGroupedTodoObjects = sortAndGroupTodoObjects(todoObjects, sorting);
+        const groups = Object.keys(sortedAndGroupedTodoObjects);
         expect(groups).toEqual(['A', 'B', 'C']);
     });
 
-    test('Groups sorting inverted', () => {
-        const sortedGroups = sortGroups(groupedTodoObjects, true);
-        const groups = Object.keys(sortedGroups);
+    test('Top level group sorted asc', () => {
+        sorting[0].invert = true;
+        const sortedAndGroupedTodoObjects = sortAndGroupTodoObjects(todoObjects, sorting);
+        const groups = Object.keys(sortedAndGroupedTodoObjects);
         expect(groups).toEqual(['C', 'B', 'A']);
     });
 
     test('Sorting: Priority -> Due dates ', () => {
-        const sortedGroups = sortGroups(groupedTodoObjects, false);
-        const groups = Object.keys(sortedGroups);
-        expect(groups).toEqual(['A', 'B', 'C']);
-        const sorting = [
-            "priority",
-            "due",
-            "projects",
-            "contexts",
-            "t",
-            "completed",
-            "created"
-        ]
-        const sortedObjects = sortTodoObjects(sortedGroups, sorting, false, false);
-        const entriesForPriorityC = Object.entries(sortedObjects)[2];
-        expect(entriesForPriorityC[1][0].due).toEqual('2023-01-01');
-        expect(entriesForPriorityC[1][1].due).toEqual('2023-01-02');
-        expect(entriesForPriorityC[1][2].due).toEqual('2023-01-03');
-        expect(entriesForPriorityC[1][3].due).toEqual('2023-01-04');
-        expect(entriesForPriorityC[1][4].due).toEqual('2023-01-05');
+        sorting[0].invert = false;
+        const sortedAndGrouped: any = sortAndGroupTodoObjects(todoObjects, sorting);
+        const flattenedObjects: any = flattenTodoObjects(sortedAndGrouped, "priority")
+
+        expect(flattenedObjects[5].due).toContain('2023-01-01');
+        expect(flattenedObjects[6].due).toContain('2023-01-02');
+        expect(flattenedObjects[7].due).toContain('2023-01-03');
+        expect(flattenedObjects[8].due).toContain('2023-01-04');
+        expect(flattenedObjects[9].due).toContain('2023-01-05');
     });
 
-    test('Sorting: Priority -> Projects', () => {
-        const sortedGroups = sortGroups(groupedTodoObjects, false);
-        const groups = Object.keys(sortedGroups);
-        expect(groups).toEqual(['A', 'B', 'C']);
+    test('Sorting: Priority -> Projects ', () => {
+        sorting[0].invert = false;
+        sorting[1].value = 'projects';
+        const sortedAndGrouped: any = sortAndGroupTodoObjects(todoObjects, sorting);
+        const flattenedObjects: any = flattenTodoObjects(sortedAndGrouped, "priority")
 
-        const sorting = [
-            "priority",
-            "projects",
-            "due",
-            "contexts",
-            "t",
-            "completed",
-            "created"
-        ]
-        const sortedObjects = sortTodoObjects(sortedGroups, sorting, false, false);
-        const entriesForPriorityC = Object.entries(sortedObjects)[2];
-        expect(entriesForPriorityC[1][0].projects[0]).toEqual('testProject1');
-        expect(entriesForPriorityC[1][1].projects[0]).toEqual('testProject2');
-        expect(entriesForPriorityC[1][2].projects[0]).toEqual('testProject3');
-        expect(entriesForPriorityC[1][3].projects[0]).toEqual('testProject4');
-        expect(entriesForPriorityC[1][4].projects[0]).toEqual('testProject5');
+        expect(flattenedObjects[5].projects[0]).toContain('testProject1');
+        expect(flattenedObjects[6].projects[0]).toContain('testProject2');
+        expect(flattenedObjects[7].projects[0]).toContain('testProject3');
+        expect(flattenedObjects[8].projects[0]).toContain('testProject4');
+        expect(flattenedObjects[9].projects[0]).toContain('testProject5');
     });
 
-    test('Sorting: Priority -> Projects but inverted', () => {
-        const sortedGroups = sortGroups(groupedTodoObjects, false);
-        const groups = Object.keys(sortedGroups);
-        expect(groups).toEqual(['A', 'B', 'C']);
+    test('Sorting: Priority -> Projects, but inverted ', () => {
+        sorting[1].invert = true;
+        sorting[1].value = 'projects';
+        const sortedAndGrouped: any = sortAndGroupTodoObjects(todoObjects, sorting);
+        const flattenedObjects: any = flattenTodoObjects(sortedAndGrouped, "priority")
 
-        const sorting = [
-            "priority",
-            "projects",
-            "due",
-            "contexts",
-            "t",
-            "completed",
-            "created"
-        ]
-        const sortedObjects = sortTodoObjects(sortedGroups, sorting, true, false);
-        const entriesForPriorityC = Object.entries(sortedObjects)[2];
-        expect(entriesForPriorityC[1][0].projects[0]).toEqual('testProject5');
-        expect(entriesForPriorityC[1][1].projects[0]).toEqual('testProject4');
-        expect(entriesForPriorityC[1][2].projects[0]).toEqual('testProject3');
-        expect(entriesForPriorityC[1][3].projects[0]).toEqual('testProject2');
-        expect(entriesForPriorityC[1][4].projects[0]).toEqual('testProject1');
+        expect(flattenedObjects[5].projects[0]).toContain('testProject5');
+        expect(flattenedObjects[6].projects[0]).toContain('testProject4');
+        expect(flattenedObjects[7].projects[0]).toContain('testProject3');
+        expect(flattenedObjects[8].projects[0]).toContain('testProject2');
+        expect(flattenedObjects[9].projects[0]).toContain('testProject1');
     });
 
-    test('Sorting: Priority -> Contexts -> Projects', () => {
-        const sortedGroups = sortGroups(groupedTodoObjects, false);
-        const groups = Object.keys(sortedGroups);
-        expect(groups).toEqual(['A', 'B', 'C']);
+    test('Sorting: Priority -> Contexts -> Creation', () => {
+        sorting[1].invert = false;
+        sorting[1].value = 'contexts';
+        sorting[2].value = 'creation';
+        const sortedAndGrouped: any = sortAndGroupTodoObjects(todoObjects, sorting);
+        const flattenedObjects: any = flattenTodoObjects(sortedAndGrouped, "priority")
 
-        const sorting = [
-            "priority",
-            "contexts",
-            "due",
-            "projects",
-            "t",
-            "completed",
-            "created"
-        ]
-        const sortedObjects = sortTodoObjects(sortedGroups, sorting, false, false);
-        const entriesForPriorityC = Object.entries(sortedObjects)[2];
-        expect(entriesForPriorityC[1][0].due).toEqual('2023-01-01');
-        expect(entriesForPriorityC[1][1].due).toEqual('2023-01-02');
-        expect(entriesForPriorityC[1][2].due).toEqual('2023-01-03');
+        expect(flattenedObjects[5].created).toContain('2025-12-05');
+        expect(flattenedObjects[6].created).toContain('2025-12-06');
+        expect(flattenedObjects[7].created).toContain('2025-12-07');
+        expect(flattenedObjects[8].created).toContain('2025-12-08');
+        expect(flattenedObjects[9].created).toContain('2025-12-09');
     });
 
-    test('Sorting completed last: Priority -> Contexts', () => {
-        const sortedGroups = sortGroups(groupedTodoObjects, false);
-        const groups = Object.keys(sortedGroups);
-        expect(groups).toEqual(['A', 'B', 'C']);
+    test('Sorting: Priority -> Contexts -> Projects (inverted)', () => {
+        sorting[1].invert = false;
+        sorting[1].value = 'contexts';
+        sorting[2].value = 'projects';
+        sorting[2].invert = true;
+        const sortedAndGrouped: any = sortAndGroupTodoObjects(todoObjects, sorting);
+        const flattenedObjects: any = flattenTodoObjects(sortedAndGrouped, "priority")
 
-        const sorting = [
-            "priority",
-            "contexts",
-            "due",
-            "projects",
-            "t",
-            "completed",
-            "created"
-        ]
-        const sortedObjects = sortTodoObjects(sortedGroups, sorting, false, true);
-        const entriesForPriorityC = Object.entries(sortedObjects)[2];
-        const lastEntry = entriesForPriorityC[1].pop();
-        expect(lastEntry.complete).toEqual(true);
+        expect(flattenedObjects[5].projects[0]).toContain('testProject5');
+        expect(flattenedObjects[6].projects[0]).toContain('testProject4');
+        expect(flattenedObjects[7].projects[0]).toContain('testProject3');
+        expect(flattenedObjects[8].projects[0]).toContain('testProject2');
+        expect(flattenedObjects[9].projects[0]).toContain('testProject1');
     });    
+
+    test('Sorting: Contexts -> Projects, but inverted ', () => {
+        sorting[0].invert = false;
+        sorting[0].value = 'contexts';
+        sorting[1].invert = true;
+        sorting[1].value = 'projects';
+        const sortedAndGrouped: any = sortAndGroupTodoObjects(todoObjects, sorting);
+        const flattenedObjects: any = flattenTodoObjects(sortedAndGrouped, "contexts")
+
+        expect(flattenedObjects[1].projects[0]).toContain('testProject5');
+        expect(flattenedObjects[2].projects[0]).toContain('testProject4');
+        expect(flattenedObjects[3].projects[0]).toContain('testProject3');
+        expect(flattenedObjects[4].projects[0]).toContain('testProject2');
+        expect(flattenedObjects[5].projects[0]).toContain('testProject1');
+    });       
+ 
 });

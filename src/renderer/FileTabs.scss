@@ -1,9 +1,7 @@
 @import "Variables.scss";
 
 #fileTabs {
-  	flex-shrink: 0;
 	min-height: auto;
-	background: #ebebeb;
 	
 	.MuiTabs-scroller {
 		button[role=tab] {

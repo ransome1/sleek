@@ -7,8 +7,8 @@ import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../main';
 import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString } from './ProcessTodoObjects';
 
-interface TodoObjects {
-  sortedTodoObjects: Record<string, any>;
+interface RequestedData {
+  flattenedTodoObjects: Record<string, any>;
   attributes: Record<string, any>;
   headers: {
     availableObjects: number;
@@ -17,21 +17,21 @@ interface TodoObjects {
   filters: object;
 }
 
-const headers = {
-  availableObjects: null,
-  visibleObjects: null,
-};
-
 interface File {
   active: boolean;
   path: string;
   filename: string;
 }
 
-async function processDataRequest(searchString: string): Promise<TodoObjects | null> {
+const headers = {
+  availableObjects: null,
+  visibleObjects: null,
+};
+
+async function processDataRequest(searchString: string): Promise<RequestedData | null> {
   try {
     const files: File[] = configStorage.get('files');
-    const file = getActiveFile(files);
+    const file: File = getActiveFile(files);
 
     if (file === null) return Promise.resolve(null)
 

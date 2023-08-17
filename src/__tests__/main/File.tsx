@@ -4,9 +4,9 @@ import { addFile, removeFile, setFile } from '../../main/modules/File';
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn().mockReturnValue([
-      { active: false, path: '/path/to/test1.txt', filename: 'test1.txt' },
-      { active: true, path: '/path/to/test2.txt', filename: 'test2.txt' },
-      { active: false, path: '/path/to/test3.txt', filename: 'test3.txt' },
+      { active: false, path: '/path/to', todoFile: 'test1.txt', doneFile: 'done.txt' },
+      { active: true, path: '/path/to', todoFile: 'test2.txt', doneFile: 'done.txt' },
+      { active: false, path: '/path/to', todoFile: 'test3.txt', doneFile: 'done.txt' },
     ]),
     set: jest.fn(),
   },
@@ -24,23 +24,27 @@ describe('File functions', () => {
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: false,
-        path: '/path/to/test1.txt',
-        filename: 'test1.txt',
+        path: '/path/to',
+        todoFile: 'test1.txt',
+        doneFile: 'done.txt',
       },
       {
         active: false,
-        path: '/path/to/test2.txt',
-        filename: 'test2.txt',
+        path: '/path/to',
+        todoFile: 'test2.txt',
+        doneFile: 'done.txt',
       },
       {
         active: false,
-        path: '/path/to/test3.txt',
-        filename: 'test3.txt',
+        path: '/path/to',
+        todoFile: 'test3.txt',
+        doneFile: 'done.txt',
       },
       {
         active: true,
-        path: '/path/to/test4.txt',
-        filename: 'test4.txt',
+        path: '/path/to',
+        todoFile: 'test4.txt',
+        doneFile: 'done.txt',
       },
     ]);
   });
@@ -50,18 +54,21 @@ describe('File functions', () => {
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: false,
-        path: '/path/to/test1.txt',
-        filename: 'test1.txt',
+        path: '/path/to',
+        todoFile: 'test1.txt',
+        doneFile: 'done.txt',
       },
       {
         active: false,
-        path: '/path/to/test3.txt',
-        filename: 'test3.txt',
+        path: '/path/to',
+        todoFile: 'test3.txt',
+        doneFile: 'done.txt',
       },
       {
         active: true,
-        path: '/path/to/test4.txt',
-        filename: 'test4.txt',
+        path: '/path/to',
+        todoFile: 'test4.txt',
+        doneFile: 'done.txt',
       }
     ]);
   });
@@ -71,29 +78,33 @@ describe('File functions', () => {
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: true,
-        path: '/path/to/test1.txt',
-        filename: 'test1.txt',
+        path: '/path/to',
+        todoFile: 'test1.txt',
+        doneFile: 'done.txt',
       },
       {
         active: false,
-        path: '/path/to/test3.txt',
-        filename: 'test3.txt',
+        path: '/path/to',
+        todoFile: 'test3.txt',
+        doneFile: 'done.txt',
       }
     ]);
   });
   test('setFile should set a file as active in the config storage', async () => {
-    await setFile(1);
+    await setFile({}, 1);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: false,
-        path: '/path/to/test1.txt',
-        filename: 'test1.txt',
+        path: '/path/to',
+        todoFile: 'test1.txt',
+        doneFile: 'done.txt',
       },
       {
         active: true,
-        path: '/path/to/test3.txt',
-        filename: 'test3.txt',
+        path: '/path/to',
+        todoFile: 'test3.txt',
+        doneFile: 'done.txt',
       }
     ]);
   });  

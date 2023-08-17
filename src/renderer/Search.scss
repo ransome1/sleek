@@ -1,15 +1,7 @@
 @import "Variables.scss";
 
 #search {
-  flex-shrink: 0;
-	width: 100%;
-	display: flex;
 	padding: 1em;
-
-	// backdrop-filter: blur(10px);
-	// background-color: rgba(255, 255, 255, 0.5);
-
-	background: transparent;
 
 	.MuiFormControl-root {
 		width: 100%;
@@ -51,8 +43,7 @@
 	*[aria-hidden=true] {
 		display: flex;
 	}
-}
-
-.search > * {
-  width: 100%;
+	> * {
+		width: 100%;
+	}
 }

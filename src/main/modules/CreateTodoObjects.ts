@@ -7,16 +7,16 @@ let lines: string[];
 interface TodoObject {
   id: number;
   body: string;
-  created: Date | null;
+  created: string | null;
   complete: boolean;
-  completed: Date | null;
+  completed: string | null;
   priority: string | null;
   contexts: string[];
   projects: string[];
   due: string | null;
   t: string | null;
   rec: string | null;
-  hidden: string | null;
+  hidden: boolean | null;
   pm: string | null;
   string: string;
 }

@@ -6,19 +6,13 @@ import { getActiveFile } from './modules/ActiveFile';
 import { mainWindow } from './main';
 import { openFile, createFile } from './modules/FileDialog';
 import { configStorage } from './config';
+import { File } from './util';
 
 const isMac = process.platform === 'darwin';
 const appPackage = require('../../release/app/package.json');
 const description = appPackage.description;
 
-interface File {
-  active: boolean;
-  path: string;
-  todoFile: string;
-  doneFile: string;
-}
-
-function buildMenu(files: File[] = []) {
+function buildMenu(files: any) {
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'sleek',
@@ -67,7 +61,7 @@ function buildMenu(files: File[] = []) {
         },
         { type: 'separator' },
         ...(files?.length > 0
-          ? files.map((file, index) => ({
+          ? files.map((file: File, index: number) => ({
               label: file.todoFile,
               accelerator: `CommandOrControl+${index + 1}`,
               click: () => {
@@ -92,7 +86,7 @@ function buildMenu(files: File[] = []) {
         { role: 'cut' },
         { role: 'copy' },
         { role: 'paste' },
-        { role: 'selectall' },
+        { role: 'selectAll' },
       ],
     },
     {

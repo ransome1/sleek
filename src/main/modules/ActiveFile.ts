@@ -1,11 +1,5 @@
 import { configStorage } from '../config';
-
-interface File {
-  active: boolean;
-  path: string;
-  todoFile: string;
-  doneFile: string;
-}
+import { File } from '../util';
 
 export function getActiveFile(files: File[]): File | null {
   try {

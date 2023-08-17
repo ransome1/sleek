@@ -14,12 +14,13 @@ jest.mock('../../main/config', () => ({
     get: jest.fn().mockReturnValue([
       {
         active: true,
-        path: './src/__tests__/__mock__/recurrenceTest.txt',
-        filename: 'recurrenceTest.txt',
+        path: './src/__tests__/__mock__',
+        todoFile: 'recurrenceTest.txt',
+        doneFile: 'done.txt',
       },
     ]),
   },
-}));
+}));  
 
 const dateToday = dayjs(new Date());
 const dateTodayString = dayjs(dateToday).format('YYYY-MM-DD');
@@ -31,7 +32,7 @@ const dateTodayInSevenWeeks = dateToday.add(7, 'week').format('YYYY-MM-DD');
 describe('Create recurring todos', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
-	fs.writeFile('./src/__tests__/__mock__/recurrenceTest.txt', '');
+    fs.writeFile('./src/__tests__/__mock__/recurrenceTest.txt', '');
   });
 
   test('Should add a new todo with due date set to tomorrow', async () => {

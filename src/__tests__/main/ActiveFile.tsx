@@ -3,26 +3,30 @@ import { getActiveFile } from '../../main/modules/ActiveFile';
 interface File {
   active: boolean;
   path: string;
-  filename: string;
+  todoFile: string;
+  doneFile: string;
 }
 
 test('Should return the active file', () => {
   const files: File[] = [
     {
       active: false,
-      path: 'test1.txt',
-      filename: 'test1.txt',
+      path: '/',
+      todoFile: 'test1.txt',
+      doneFile: 'done.txt',
     },
     {
       active: true,
-      path: 'test2.txt',
-      filename: 'test2.txt',
+      path: '/',
+      todoFile: 'test2.txt',
+      doneFile: 'done.txt',
     },
   ]
   const activeFile = getActiveFile(files);
   expect(activeFile).toEqual({
     active: true,
-    path: 'test2.txt',
-    filename: 'test2.txt',
+    path: '/',
+    todoFile: 'test2.txt',
+    doneFile: 'done.txt',
   });
 });

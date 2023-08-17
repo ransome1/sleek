@@ -2,6 +2,7 @@ import chokidar, { FSWatcher } from 'chokidar';
 import processDataRequest from './ProcessDataRequest';
 import { mainWindow } from '../main';
 import { configStorage } from '../config';
+import path from 'path';
 
 let watcher: FSWatcher | null = null;
 
@@ -14,8 +15,7 @@ function createFileWatcher(files: File[]): Promise<string> {
     if (watcher) {
       watcher.close();
     }
-
-    watcher = chokidar.watch(files.map((file) => file.path), { persistent: true });
+    watcher = chokidar.watch(files.map((file) => path.join(file.path, file.todoFile)), { persistent: true });
     watcher
     .on('add', (file) => {
       console.log(`FileWatcher.ts: New file added: ${file}`);
