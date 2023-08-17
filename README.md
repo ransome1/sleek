@@ -1,13 +1,9 @@
 # sleek
 
-## Are you familiar with writing effective tests or do you have experience working with React?
-I am presently seeking developers who can assist me in creating both `end-to-end` and `unit` tests. I started writing unit tests but just cannot keep up with it.
+## ❤️ Join the project and become a contributer
+Join us in our mission to create a user-friendly, free, and open-source todo.txt client. We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `2.x` branch reflects the most recent progress, so feel free to fork it and dive into the exciting work ahead: https://github.com/users/ransome1/projects/3.
 
-Additionally, I would greatly appreciate help from someone experienced in `React` to review our existing components and aid in refactoring them.
-
-I invite you to explore the current state of development on GitHub at the following link: https://github.com/ransome1/sleek/tree/2.x. This will give you an opportunity to see the progress I've made so far.
-
-Here you can find the updated contribution guidelines: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md. Your contributions will be greatly appreciated and will help propel the development of sleek to new heights.
+For those interested, we've updated our contribution guidelines, which you can find here: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md. Your contributions will play a significant role in shaping the future of our project.
 
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 + [Screenshots](#screenshots)
