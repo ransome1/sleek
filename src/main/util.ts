@@ -30,8 +30,8 @@ export interface TodoObject {
   completed: string | null;
   priority: string | null;
   contexts: string[] | null;
-  projects: string[] | null;
-  due: string | null;
+  projects: string[] | createdull;
+  due: string | completed
   t: string | null;
   rec: string | null;
   hidden: boolean;
@@ -43,6 +43,17 @@ export interface Sorting {
   id: string;
   value: string;
   invert: boolean;
+}
+
+export interface Filters {
+  projects?: Filter[];
+  contexts?: Filter[];
+  priority?: Filter[];
+  pm?: Filter[];
+  due?: Filter[];
+  t?: Filter[];
+  created?: Filter[];
+  completed?: Filter[];
 }
 
 export interface Filter {

@@ -96,16 +96,17 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: { id: strin
 }
 
 function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string) {
+
   const flattenedObjects = [];
 
-  function flatten(todoObject: TodoObject, sortingKey: string) {
+  function flatten(todoObject: any, sortingKey: string) {
     if (typeof todoObject === 'object' && todoObject !== null) {
       if ('id' in todoObject) {
         flattenedObjects.push(todoObject);
       }
 
       for (const key in todoObject) {
-        if (key !== sortingKey) {  
+        if (key !== sortingKey && typeof todoObject[key] === 'object') {  
           flatten(todoObject[key], sortingKey);
         }
       }

@@ -42,7 +42,7 @@ async function addFile(filePath: string): Promise<void> {
   }
 }
 
-async function removeFile(index: number): Promise<void> {
+async function removeFile(event: any, index: number): Promise<void> {
   try {
     let files: File[] = configStorage.get('files') as File[];
 

@@ -18,6 +18,7 @@ describe('File functions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
   test('addFile should add a new file to the config storage', async () => {
     await addFile('/path/to/test4.txt');
     expect(configStorage.set).toHaveBeenCalledTimes(1);
@@ -49,7 +50,7 @@ describe('File functions', () => {
     ]);
   });
   test('removeFile should remove a file from the config storage, the active file stays unchanged', async () => {
-    await removeFile(1);
+    await removeFile(null, 1);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
@@ -73,7 +74,7 @@ describe('File functions', () => {
     ]);
   });
   test('removeFile should remove the active file from the config storage, a new active file is defined', async () => {
-    await removeFile(2);
+    await removeFile(null, 2);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
@@ -91,7 +92,7 @@ describe('File functions', () => {
     ]);
   });
   test('setFile should set a file as active in the config storage', async () => {
-    await setFile({}, 1);
+    await setFile(null, 1);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {

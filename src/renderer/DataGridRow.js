@@ -90,7 +90,7 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     return substrings;
   };
 
-  const matches = () => {
+  const extractedMatches = () => {
     const expressions = [
       { pattern: /(@\S+)/, type: 'contexts', key: '@' },
       { pattern: /\+\S+/, type: 'projects', key: '+' },
@@ -149,7 +149,7 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
   };
 
 
-  const elements = matches().map((element, index) => {
+  const rowElements = extractedMatches().map((element, index) => {
 
     if(!element.value) return;
 
@@ -185,7 +185,6 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     }
   });
 
-
   return (
     <ThemeProvider theme={theme}>
       <ContextMenu index={todoObject.id} anchorPosition={contextMenuPosition} setContextMenuPosition={setContextMenuPosition} />
@@ -208,7 +207,7 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
           <FontAwesomeIcon icon={faEyeSlash} />
         )}
 
-        {elements}
+        {rowElements}
 
       </ListItem>
     </ThemeProvider>

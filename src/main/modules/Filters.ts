@@ -1,19 +1,20 @@
 import { BrowserWindow } from 'electron';
 import dayjs from 'dayjs';
-import { TodoObject, Filter, Attributes } from '../util';
+import { TodoObject, Filters, Filter, Attributes } from '../util';
 
-function applyFilters(todoObjects: TodoObject[], filters: Filter[] | null): TodoObject[] {
+function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
   if (filters && Object.keys(filters).length > 0) {
     return todoObjects.filter((todoObject: TodoObject) => {
+
       return Object.entries(filters).every(([key, filterArray]) => {
         
-        if (Array.isArray(filterArray) && filterArray.length === 0) {
+        if (filterArray?.length === 0) {
           return true;
         }
 
         const attributeValues: any = todoObject[key as keyof TodoObject];
 
-        return filterArray.every(({ value, exclude }) => {
+        return filterArray.every(({ value, exclude }: Filter) => {
           if (
             attributeValues === undefined ||
             attributeValues === null ||
@@ -29,7 +30,6 @@ function applyFilters(todoObjects: TodoObject[], filters: Filter[] | null): Todo
       });
     });
   }
-
   return todoObjects;
 }
 
@@ -53,7 +53,8 @@ function createAttributesObject(todoObjects: TodoObject[]): Attributes {
 
   todoObjects.forEach((item) => {
     Object.keys(attributes).forEach((key) => {
-      const value: any = item[key];
+
+      const value = item[key as keyof TodoObject];
 
       if (Array.isArray(value)) {
         value.forEach((element) => {

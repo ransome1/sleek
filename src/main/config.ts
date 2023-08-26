@@ -7,7 +7,7 @@ import buildMenu from './menu';
 import { Sorting, File } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 
-const userDataDirectory = path.join(app.getPath('userData'), 'userData');
+const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
 console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
 if (!fs.existsSync(userDataDirectory)) {
