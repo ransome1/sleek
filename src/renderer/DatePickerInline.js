@@ -4,7 +4,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button, Chip } from '@mui/material';
 import dayjs from 'dayjs';
 import { Item } from 'jstodotxt';
-import './DatePickerInline.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 

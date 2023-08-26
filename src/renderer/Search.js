@@ -55,25 +55,6 @@ const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSea
     }
   }, [isSearchOpen]);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
-        event.preventDefault();
-
-        setIsSearchOpen(true);
-      }
-      if (event.key === 'Escape' && focused) {
-        setIsSearchOpen(false);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [focused]);
-
   if (!headers || headers.availableObjects === 0) return null;
 
   return (

@@ -10,6 +10,23 @@ const ToolBar = ({ isSearchOpen, setIsSearchOpen, headers }) => {
     setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
+        event.preventDefault();
+        setIsSearchOpen(!isSearchOpen);
+      } else if (event.key === 'Escape' && isSearchOpen) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSearchOpen]);  
+
   if (!headers || headers.availableObjects === 0) return null;
 
   return (

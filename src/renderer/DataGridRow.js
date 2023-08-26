@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sugar from 'sugar';
 import dayjs from 'dayjs';
-import { Checkbox, ListItem, Button, Divider } from '@mui/material';
+import { Checkbox, ListItem, Button, Divider, Chip } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -153,15 +153,17 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
 
     if(!element.value) return;
 
+    const selected = (filters[element.type] || []).some((filter) => filter.value === element.value);
+
     if (element.type === 'contexts' || element.type === 'projects') {
       return (
-        <div key={index} data-todotxt-attribute={element.type}>
+        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
           <Button onClick={() => handleButtonClick(element.type, element.value)}>{element.value}</Button>
         </div>
       );
     } else if (element.type === 'due' || element.type === 't') {
       return (
-        <div key={index} data-todotxt-attribute={element.type}>
+        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
           <DatePickerInline
             currentDate={element.value}
             type={element.type}
@@ -171,9 +173,18 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
       );
     } else if (element.type === 'pm') {
       return (
-        <div key={index} data-todotxt-attribute={element.type}>
+        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
           <Button onClick={() => handleButtonClick(element.type, element.value)}>
             <FontAwesomeIcon icon={faPizzaSlice} />
+            {element.value}
+          </Button>
+        </div>
+      );
+    } else if (element.type === 'rec') {
+      return (
+        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
+          <Button onClick={() => handleButtonClick(element.type, element.value)}>
+            <Chip label='Recurrence' />
             {element.value}
           </Button>
         </div>

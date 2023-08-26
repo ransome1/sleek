@@ -17,6 +17,19 @@
       height: 1em;
       margin-right: 0.25em;
     }
+    .MuiChip-root {
+      width: auto;
+      height: auto;
+      border-radius: $radius!important;
+      background: $dark-grey;
+      color: white;
+      opacity: 0.75;
+      margin-right: 0.4em;
+      .MuiChip-label {
+        font-size: 0.8em;
+        padding: 0 0.6em;
+      }      
+    }    
   }
   
   .MuiCheckbox-root {
