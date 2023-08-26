@@ -1,34 +1,17 @@
 import { BrowserWindow } from 'electron';
 import dayjs from 'dayjs';
+import { TodoObject, Filter, Attributes } from '../util';
 
-interface Filter {
-  value: any;
-  exclude: boolean;
-}
-
-interface Filters {
-  [key: string]: Filter[];
-}
-
-interface TodoObject {
-  [key: string]: any;
-}
-
-interface Attributes {
-  [key: string]: {
-    [key: string]: number;
-  };
-}
-
-function applyFilters(todoObjects: TodoObject[], filters: Filters): TodoObject[] {
+function applyFilters(todoObjects: TodoObject[], filters: Filter[] | null): TodoObject[] {
   if (filters && Object.keys(filters).length > 0) {
-    return todoObjects.filter((todo) => {
+    return todoObjects.filter((todoObject: TodoObject) => {
       return Object.entries(filters).every(([key, filterArray]) => {
+        
         if (Array.isArray(filterArray) && filterArray.length === 0) {
           return true;
         }
 
-        const attributeValues = todo[key];
+        const attributeValues: any = todoObject[key as keyof TodoObject];
 
         return filterArray.every(({ value, exclude }) => {
           if (
@@ -39,11 +22,7 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters): TodoObject[]
             return exclude;
           }
 
-          const valuesToCheck = Array.isArray(attributeValues) ? attributeValues : [attributeValues];
-          const hasMatchingValue = valuesToCheck.some((attrValue) => {
-            
-            return attrValue === value;
-          });
+          const hasMatchingValue = attributeValues.includes(value);
 
           return exclude ? !hasMatchingValue : hasMatchingValue;
         });
@@ -74,7 +53,7 @@ function createAttributesObject(todoObjects: TodoObject[]): Attributes {
 
   todoObjects.forEach((item) => {
     Object.keys(attributes).forEach((key) => {
-      const value = item[key];
+      const value: any = item[key];
 
       if (Array.isArray(value)) {
         value.forEach((element) => {

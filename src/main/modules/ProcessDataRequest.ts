@@ -5,22 +5,17 @@ import { configStorage, filterStorage } from '../config';
 import { createAttributesObject, applyFilters } from './Filters';
 import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../main';
+import { File, Filter, Attributes } from '../util';
 import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString } from './ProcessTodoObjects';
 
 interface RequestedData {
   flattenedTodoObjects: Record<string, any>;
-  attributes: Record<string, any>;
+  attributes: Attributes;
   headers: {
     availableObjects: number;
     visibleObjects: number;
   };
-  filters: object;
-}
-
-interface File {
-  active: boolean;
-  path: string;
-  filename: string;
+  filters: Filter[];
 }
 
 const headers = {
@@ -39,11 +34,11 @@ async function processDataRequest(searchString: string): Promise<RequestedData |
     const showHidden: boolean = configStorage.get('showHidden');
     const sorting: string[] = configStorage.get('sorting');
     const fileSorting: boolean = configStorage.get('fileSorting');
-    const filters: object = filterStorage.get('filters', {});
+    const filters: object = filterStorage.get('filters');
 
     const fileContent = await fs.promises.readFile(path.join(file.path, '', file.todoFile), 'utf8');
 
-    let todoObjects: Record<string, any>;
+    let todoObjects: TodoObject[];
     
     todoObjects = await createTodoObjects(fileContent);
 
@@ -53,7 +48,7 @@ async function processDataRequest(searchString: string): Promise<RequestedData |
 
     headers.availableObjects = countTodoObjects(todoObjects);
 
-    const attributes = createAttributesObject(todoObjects);
+    const attributes: Attributes = createAttributesObject(todoObjects);
 
     if (filters) todoObjects = applyFilters(todoObjects, filters);
     

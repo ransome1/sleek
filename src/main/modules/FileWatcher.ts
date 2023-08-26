@@ -2,13 +2,10 @@ import chokidar, { FSWatcher } from 'chokidar';
 import processDataRequest from './ProcessDataRequest';
 import { mainWindow } from '../main';
 import { configStorage } from '../config';
+import { File } from '../util';
 import path from 'path';
 
 let watcher: FSWatcher | null = null;
-
-interface File {
-  path: string;
-}
 
 function createFileWatcher(files: File[]): Promise<string> {
   try {

@@ -30,7 +30,8 @@ async function addFile(filePath: string): Promise<void> {
 
     configStorage.set('files', files);
 
-    await createFileWatcher(files);
+    const response = await createFileWatcher(files);
+    console.log('File.ts:', response);
 
     console.info('File.ts: File added, restarting file watchers');
     return;
@@ -58,7 +59,9 @@ async function removeFile(index: number): Promise<void> {
 
     configStorage.set('files', files);
 
-    await createFileWatcher(files);
+    const response = await createFileWatcher(files);
+    console.log('File.ts:', response);
+
     return;
   } catch (error) {
     console.error('File.ts:', error);

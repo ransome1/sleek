@@ -4,49 +4,46 @@ import { getActiveFile } from './ActiveFile';
 import { configStorage } from '../config';
 import { writeStringToFile } from './WriteToFile';
 import { createTodoObjects } from './CreateTodoObjects';
+import { TodoObject } from '../util';
 
-async function archiveTodos() {
-  const files = configStorage.get('files');
-  const file = getActiveFile(files);
-
-  if (!file) return null;
-
-  const todoFilePath = path.join(file.path, '', file.todoFile);
-  const doneFilePath = path.join(file.path, '', file.doneFile);
-
-  let contentTodoFile = '';
-  let contentDoneFile = '';
-
+async function extractTodosFromFile(filePath: string, complete: boolean): Promise<string[]> {
   try {
-    contentTodoFile = await fs.readFile(todoFilePath, 'utf8');
+    const content = await fs.readFile(filePath, 'utf8');
+    const todoObjects = createTodoObjects(content);
+    const strings = todoObjects
+      .filter(todoObject => todoObject.complete === complete)
+      .map(todoObject => todoObject.string);
+    return strings;
   } catch (error) {
-    console.error('Error reading todo file:', error);
+    console.error(error);
+    return [];
   }
+}
 
+async function archiveTodos(): Promise<void> {
   try {
-    contentDoneFile = await fs.readFile(doneFilePath, 'utf8');
-  } catch (error) {
-    console.error('Error reading done file:', error);
+    const files = configStorage.get('files');
+    const activeFile = getActiveFile(files);
+
+    if (!activeFile) return;
+
+    const todoFilePath = path.join(activeFile.path, '', activeFile.todoFile);
+    const doneFilePath = path.join(activeFile.path, '', activeFile.doneFile);
+
+    const completedTodos = await extractTodosFromFile(todoFilePath, true);
+    const incompletedTodos = await extractTodosFromFile(todoFilePath, false);
+    const todosFromDoneFile = await extractTodosFromFile(doneFilePath, true);
+
+    const contentForDoneFile = todosFromDoneFile.length === 0 ? completedTodos.join('\n') : todosFromDoneFile.join('\n') + '\n' + completedTodos.join('\n');
+
+    const stringDoneFile = contentForDoneFile;
+    const stringTodoFile = incompletedTodos.join('\n');
+
+    writeStringToFile(stringDoneFile, doneFilePath);
+    writeStringToFile(stringTodoFile, todoFilePath);
+  } catch(error) {
+    console.error(error);
   }
-
-  const todoObjects = createTodoObjects(contentTodoFile);
-
-  const completedTodoStrings = todoObjects
-    .filter(todoObject => todoObject.complete)
-    .map(todoObject => todoObject.string);
-
-  const notCompletedTodoStrings = todoObjects
-    .filter(todoObject => !todoObject.complete)
-    .map(todoObject => todoObject.string); 
-
-  const stringDoneFile = contentDoneFile.trim() === '' ? 
-    completedTodoStrings.join('\n') : 
-    contentDoneFile + '\n' + completedTodoStrings.join('\n');
-  
-  const stringTodoFile = notCompletedTodoStrings.join('\n');
-
-  writeStringToFile(stringDoneFile, doneFilePath);
-  writeStringToFile(stringTodoFile, todoFilePath);
 }
 
 export default archiveTodos;

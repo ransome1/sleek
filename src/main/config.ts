@@ -4,6 +4,7 @@ import { app } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
 import buildMenu from './menu';
+import { Sorting, File } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData');
@@ -14,7 +15,7 @@ if (!fs.existsSync(userDataDirectory)) {
 }
 
 const configPath = path.join(userDataDirectory, 'config.json');
-const configStorage = new Store<{ files: any, sorting: any[]; appendCreationDate: boolean; showCompleted: boolean; showHidden: boolean; windowMaximized: boolean; fileSorting: boolean }>({ cwd: userDataDirectory, name: 'config' });
+const configStorage = new Store<{ files: File[], sorting: Sorting[]; appendCreationDate: boolean; showCompleted: boolean; showHidden: boolean; windowMaximized: boolean; fileSorting: boolean }>({ cwd: userDataDirectory, name: 'config' });
 const filtersPath = path.join(userDataDirectory, 'filters.json');
 const filterStorage = new Store<{}>({ cwd: userDataDirectory, name: 'filters' });
 
@@ -46,10 +47,11 @@ if (!fs.existsSync(filtersPath)) {
 }
 
 const handleConfigChange = async (key: string, newValue: any) => {
+  // todo: what if search string was set previously? This would remove it
   const result = await processDataRequest('');
   
   if (result !== null) {
-    const { flattenedTodoObjects, attributes, headers, filters } = result;
+    const [ flattenedTodoObjects, attributes, headers, filters ] = result;
   
     mainWindow!.webContents.send('requestData', flattenedTodoObjects, attributes, headers, filters);
   

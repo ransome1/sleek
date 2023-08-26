@@ -1,16 +1,15 @@
-type TodoObject = Record<string, any>;
-type TodoObjects = Record<string, TodoObject>;
+import { TodoObject } from '../util';
 
-function countTodoObjects(todoObjects: TodoObjects): number {
-  const count = Object.values(todoObjects)
-    .flatMap((objects: TodoObject) => objects)
-    .filter((object: TodoObject | null) => object && object.group !== false);
+function countTodoObjects(todoObjects: TodoObject[]): number {
+  const count = todoObjects.filter((object: TodoObject | null) => {
+    return object;
+  });
   return count.length;
 }
 
-function applySearchString(searchString: string, todoObjects: TodoObjects): TodoObjects {
+function applySearchString(searchString: string, todoObjects: TodoObject[]):TodoObject[] {
   const lowerSearchString = searchString.toLowerCase();
-  const filteredTodoObjects: TodoObject = Object.values(todoObjects)
+  const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
     .flat()
     .filter((todoObject: TodoObject | null) =>
       todoObject && todoObject.string.toLowerCase().includes(lowerSearchString)
@@ -18,7 +17,7 @@ function applySearchString(searchString: string, todoObjects: TodoObjects): Todo
   return filteredTodoObjects;
 }
 
-function handleCompletedTodoObjects(todoObjects: TodoObjects[], showCompleted: boolean): TodoObjects[] {
+function handleCompletedTodoObjects(todoObjects: TodoObject[], showCompleted: boolean):TodoObject[] {
   const filteredTodoObjects = todoObjects.filter((todoObject: TodoObject) => {
     if (showCompleted) {
       return true;
@@ -30,7 +29,7 @@ function handleCompletedTodoObjects(todoObjects: TodoObjects[], showCompleted: b
   return filteredTodoObjects;
 }
 
-function handleHiddenTodoObjects(todoObjects: TodoObjects[]): TodoObjects[] {
+function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
   const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
     .flat()
     .filter((object: TodoObject | null) =>
@@ -39,7 +38,7 @@ function handleHiddenTodoObjects(todoObjects: TodoObjects[]): TodoObjects[] {
     return filteredTodoObjects;
 }
 
-function sortAndGroupTodoObjects(todoObjects: TodoObjects, sorting: { id: string, value: string; invert: boolean }[]): TodoObjects[] {
+function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: { id: string, value: string; invert: boolean }[]): TodoObject[] {
   function compareValues(a: any, b: any, invert: boolean): number {
     const comparison = String(a).localeCompare(String(b), undefined, { sensitivity: 'base' });
     return invert ? -comparison : comparison;
@@ -96,10 +95,10 @@ function sortAndGroupTodoObjects(todoObjects: TodoObjects, sorting: { id: string
   return sortedAndGrouped;
 }
 
-function flattenTodoObjects(todoObjects: TodoObjects, topLevelGroup: string) {
+function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string) {
   const flattenedObjects = [];
 
-  function flatten(todoObject: any, sortingKey: string) {
+  function flatten(todoObject: TodoObject, sortingKey: string) {
     if (typeof todoObject === 'object' && todoObject !== null) {
       if ('id' in todoObject) {
         flattenedObjects.push(todoObject);

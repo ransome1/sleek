@@ -87,7 +87,8 @@
     "react-autosuggest": "^10.1.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.11.2"
+    "react-router-dom": "^6.11.2",
+    "sugar": "^2.0.6"
   },
   "devDependencies": {
     "@electron/notarize": "^1.2.3",

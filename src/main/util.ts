@@ -21,3 +21,37 @@ export interface File {
   todoFile: string;
   doneFile: string;
 }
+
+export interface TodoObject {
+  id: number;
+  body: string | null;
+  created: string | null;
+  complete: boolean;
+  completed: string | null;
+  priority: string | null;
+  contexts: string[] | null;
+  projects: string[] | null;
+  due: string | null;
+  t: string | null;
+  rec: string | null;
+  hidden: boolean;
+  pm: string | null;
+  string: string;
+}
+
+export interface Sorting {
+  id: string;
+  value: string;
+  invert: boolean;
+}
+
+export interface Filter {
+  value: string;
+  exclude: boolean;
+}
+
+export interface Attributes {
+  [key: string]: {
+    [key: string]: number;
+  };
+}

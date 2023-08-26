@@ -1,6 +1,6 @@
 import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron';
 import path from 'path';
-import fs from 'fs-extra';
+import fs from 'fs/promises';
 import { addFile } from './File';
 
 async function openFile(): Promise<void> {

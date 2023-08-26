@@ -1,25 +1,9 @@
 import { Item } from 'jstodotxt';
 import { handleNotification } from './HandleNotification';
 import dayjs from 'dayjs';
+import { TodoObject } from '../util';
 
 let lines: string[];
-
-interface TodoObject {
-  id: number;
-  body: string;
-  created: string | null;
-  complete: boolean;
-  completed: string | null;
-  priority: string | null;
-  contexts: string[];
-  projects: string[];
-  due: string | null;
-  t: string | null;
-  rec: string | null;
-  hidden: boolean | null;
-  pm: string | null;
-  string: string;
-}
 
 function createTodoObjects(fileContent: string): TodoObject[] {
   lines = fileContent.split('\n');

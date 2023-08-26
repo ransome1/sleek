@@ -12,7 +12,7 @@ const isMac = process.platform === 'darwin';
 const appPackage = require('../../release/app/package.json');
 const description = appPackage.description;
 
-function buildMenu(files: any) {
+function buildMenu(files: File[]) {
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'sleek',

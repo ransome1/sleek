@@ -1,7 +1,5 @@
 import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/ProcessTodoObjects';
 
-type todoObjects = Record<string, any>;
-
 const sorting = [
     {
         "id": "1",
@@ -40,112 +38,119 @@ const sorting = [
     }
 ]
 
-const todoObjects: todoObjects = 
+const todoObjects: any = 
 [
   {
     id: 0,
     body: '+testProject5 test0 @testContext due:2023-01-02',
     created: '2025-12-09',
     complete: false,
+    completed: null,
     priority: 'C',
     contexts: [ 'testContext' ],
     projects: [ 'testProject5' ],
     due: '2023-01-02',
     t: null,
     rec: null,
-    tags: null,
+    hidden: false,
+    pm: null,
     string: '(C) 2025-12-09 +testProject5 test0 @testContext due:2023-01-02',
-    group: null
   },
   {
     id: 1,
     body: 'test1 +testProject7 @testContext7 t:2023-12-15',
     created: '2023-12-01',
     complete: false,
+    completed: null,
     priority: 'B',
     contexts: [ 'testContext7' ],
     projects: [ 'testProject7' ],
     due: null,
     t: '2023-12-15',
     rec: null,
-    tags: null,
+    hidden: false,
+    pm: null,    
     string: '(B) 2023-12-01 test1 +testProject7 @testContext7 t:2023-12-15',
-    group: null
   },
   {
     id: 2,
     body: 'test2 +testProject1 @testContext due:2023-01-01',
     created: '2025-12-08',
     complete: true,
+    completed: null,
     priority: 'C',
     contexts: [ 'testContext' ],
     projects: [ 'testProject1' ],
     due: '2023-01-01',
     t: null,
     rec: null,
-    tags: null,
+    hidden: false,
+    pm: null,    
     string: 'x (C) 2025-12-08 2023-12-01 test2 +testProject1 @testContext due:2023-01-01',
-    group: null
   },
   {
     id: 3,
     body: 'test3 +testProject6 @testContext6 due:2023-12-03',
     created: '2023-06-24',
     complete: false,
+    completed: null,
     priority: 'A',
     contexts: [ 'testContext6' ],
     projects: [ 'testProject6' ],
     due: '2023-12-03',
     t: null,
     rec: null,
-    tags: null,
+    hidden: false,
+    pm: null,    
     string: '(A) 2023-06-24 test3 +testProject6 @testContext6 due:2023-12-03',
-    group: null
   },
   {
     id: 4,
     body: 'test3 +testProject3 @testContext due:2023-01-03',
     created: '2025-12-06',
     complete: false,
+    completed: null,
     priority: 'C',
     contexts: [ 'testContext' ],
     projects: [ 'testProject3' ],
     due: '2023-01-03',
     t: null,
     rec: null,
-    tags: null,
+    hidden: false,
+    pm: null,    
     string: '(C) 2025-12-06 test3 +testProject3 @testContext due:2023-01-03',
-    group: null
   },
   {
     id: 5,
     body: 'test3 +testProject2 @testContext due:2023-01-05',
     created: '2025-12-05',
     complete: false,
+    completed: null,
     priority: 'C',
     contexts: [ 'testContext' ],
     projects: [ 'testProject2' ],
     due: '2023-01-05',
     t: null,
     rec: null,
-    tags: null,
+    hidden: false,
+    pm: null,
     string: '(C) 2025-12-05 test3 +testProject2 @testContext due:2023-01-05',
-    group: null
   },
   {
     id: 6,
     body: 'test3 +testProject4 @testContext due:2023-01-04',
     created: '2025-12-07',
     complete: false,
+    completed: null,
     priority: 'C',
     contexts: [ 'testContext' ],
     projects: [ 'testProject4' ],
     due: '2023-01-04',
     t: null,
     rec: null,
-    tags: null,
-    string: '(C) 2025-12-07 test3 +testProject4 @testContext due:2023-01-04',
-    group: null
+    hidden: false,
+    pm: null,    
+    string: '(C) 2025-12-07 test3 +testProject4 @testContext due:2023-01-04'
   }  
 ];
 
@@ -158,7 +163,7 @@ describe('Process todo.txt objects', () => {
     });    
 
     test('Objects are counted correctly', () => {
-        const count = countTodoObjects(todoObjects);
+        const count: number = countTodoObjects(todoObjects);
         expect(count).toEqual(7);
     });
 

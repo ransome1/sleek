@@ -15,7 +15,7 @@ jest.mock('../../main/config', () => ({
       {
         active: true,
         path: './src/__tests__/__mock__',
-        todoFile: 'recurrenceTest.txt',
+        todoFile: 'recurrence.txt',
         doneFile: 'done.txt',
       },
     ]),
@@ -32,36 +32,36 @@ const dateTodayInSevenWeeks = dateToday.add(7, 'week').format('YYYY-MM-DD');
 describe('Create recurring todos', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
-    fs.writeFile('./src/__tests__/__mock__/recurrenceTest.txt', '');
+    fs.writeFile('./src/__tests__/__mock__/recurrence.txt', '');
   });
 
   test('Should add a new todo with due date set to tomorrow', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:1d`, '1d');
-    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrenceTest.txt', 'utf8');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
     expect(fileContent.split('\n').pop()).toEqual(dateTodayString + ' Line 1 rec:1d due:' + dateTomorrowString);
   });
 
   test('Should add a new todo with due date set to today in 2 months', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:2m`, '2m');
-    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrenceTest.txt', 'utf8');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
     expect(fileContent.split('\n').pop()).toEqual(dateTodayString + ' Line 1 rec:2m due:' + dateTodayInTwoMonths);
   });  
 
   test('Should add a new todo with due date set to day after tomorrow', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:+1d due:${dateTomorrowString}`, '+1d');
-    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrenceTest.txt', 'utf8');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
     expect(fileContent.split('\n').pop()).toEqual(dateTodayString + ' Line 1 rec:+1d due:' + dateDayAfterTomorrowString);
   });
 
   test('Should add a new todo with due date set to today in 7 weeks', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:7w due:${dateTomorrowString}`, '7w');
-    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrenceTest.txt', 'utf8');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
     expect(fileContent.split('\n').pop()).toEqual(dateTodayString + ' Line 1 rec:7w due:' + dateTodayInSevenWeeks);
   });  
 
   test('Should add a new todo with due date set to next possible business day', async () => {
     const recurringTodo = await createRecurringTodo(`x 2023-07-21 2023-07-21 Line 1 rec:+1b`, '+1b');
-    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrenceTest.txt', 'utf8');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
     expect(fileContent.split('\n').pop()).toEqual('2023-07-21 Line 1 rec:+1b due:2023-07-24');
   });
   

@@ -23,4 +23,5 @@ describe('Marking todo as complete and vice versa', () => {
 		const updatedTodoObject = await changeCompleteState('x (C) 2023-07-06 2023-07-01 +testProject2 test1 @testContext due:2023-12-12', false);
 		expect(updatedTodoObject?.toString()).toEqual('(C) 2023-07-01 +testProject2 test1 @testContext due:2023-12-12');
 	});
+
 });

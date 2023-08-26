@@ -1,11 +1,10 @@
 import { Item } from 'jstodotxt';
 import { createRecurringTodo } from './CreateRecurringTodo';
-
-type TodoObject = Record<string, any>;
+import { TodoObject } from '../util';
 
 async function changeCompleteState(todoString: string, state: boolean): Promise<string | null> {
   if (typeof state !== 'boolean') {
-    throw new Error('Invalid parameters: State must be of type boolean');
+    throw new Error('State must be of type boolean');
   }
 
   const todoObject = new Item(todoString);

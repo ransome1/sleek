@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Button } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { Button, Chip } from '@mui/material';
 import dayjs from 'dayjs';
 import { Item } from 'jstodotxt';
-import './DatePicker.scss';
+import './DatePickerInline.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
 const DatePickerComponent = ({ currentDate, todoObject, type, textFieldValueRef, setTextFieldValue }) => {
 	const [open, setOpen] = useState(false);
   const datePickerRef = useRef(null);
-	
+
+  const chipText = type === 'due' ? "Due" : type === 't' ? "Threshold" : null;
+
   const handleChange = (date) => {
     const updatedDate = dayjs(date).format('YYYY-MM-DD');
     const updatedTodoObject = (!textFieldValueRef) ? new Item(todoObject.string || '') : new Item(textFieldValueRef.current || '');
@@ -31,7 +31,7 @@ const DatePickerComponent = ({ currentDate, todoObject, type, textFieldValueRef,
 
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} onClick={() => setOpen?.((prev) => !prev)}>
-          <FontAwesomeIcon icon={faClock} />
+          <Chip label={chipText} />
           {updatedDate}
         </Button>
       );

@@ -46,9 +46,9 @@ const App = () => {
       setDialogOpen(false);
       console.log(response)
     }
-  } 
+  }
   
-  const handleRequestedData = (todoObjects: object, attributes: any, headers: object, filters: object) => {
+  const handleRequestedData = (todoObjects: object, attributes: object, headers: object, filters: object) => {
     if(todoObjects) setTodoObjects(todoObjects);
     if(attributes) setAttributes(attributes);
     if(headers) setHeaders(headers);
@@ -139,6 +139,7 @@ const App = () => {
             <ToolBar
               isSearchOpen={isSearchOpen}
               setIsSearchOpen={setIsSearchOpen}
+              headers={headers}
             />
           </header>
           <Search
