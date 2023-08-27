@@ -7,7 +7,7 @@ import { Item } from 'jstodotxt';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const DatePickerComponent = ({ currentDate, todoObject, type, textFieldValueRef, setTextFieldValue }) => {
+const DatePickerComponent = ({ todoObject, type, textFieldValueRef, setTextFieldValue }) => {
 	const [open, setOpen] = useState(false);
   const datePickerRef = useRef(null);
 
@@ -16,10 +16,14 @@ const DatePickerComponent = ({ currentDate, todoObject, type, textFieldValueRef,
   const handleChange = (date) => {
     const updatedDate = dayjs(date).format('YYYY-MM-DD');
     const updatedTodoObject = (!textFieldValueRef) ? new Item(todoObject.string || '') : new Item(textFieldValueRef.current || '');
+    
     updatedTodoObject.setExtension(type, updatedDate);
+    
     todoObject.string = updatedTodoObject.toString();
+    
     setOpen(false);
-    ipcRenderer.send('writeTodoToFile', todoObject.id || '', todoObject.string);    
+
+    ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string);    
   };
 
   const DatePickerInline = ({ date, ...props }) => {
@@ -50,7 +54,7 @@ const DatePickerComponent = ({ currentDate, todoObject, type, textFieldValueRef,
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} locale="en">
-      <DatePickerInline date={currentDate} onChange={handleChange} />
+      <DatePickerInline date={todoObject[type]} onChange={handleChange} />
     </LocalizationProvider>
   );
 };

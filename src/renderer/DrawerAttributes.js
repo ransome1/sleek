@@ -63,8 +63,7 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
                 <React.Fragment key={index}>
                   <h3>{attributeMapping[key]}</h3>
                   <Box>
-                  {Object.keys(attributes[key]).map((value, childIndex) => {
-                    
+                  {Object.keys(attributes[key]).map((value, childIndex) => {                  
                     const excluded = filters[key]?.some((filter) => filter.value === value && filter.exclude);
                     const selected = filters[key]?.some((filter) => filter.value === value);
 

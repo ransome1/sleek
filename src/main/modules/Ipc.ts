@@ -1,5 +1,4 @@
 import { ipcMain, app, IpcMainEvent } from 'electron';
-import { Item } from 'jstodotxt';
 import processDataRequest from './ProcessDataRequest';
 import { changeCompleteState } from './ChangeCompleteState';
 import { writeTodoObjectToFile } from './WriteToFile';

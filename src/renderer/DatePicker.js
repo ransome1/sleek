@@ -6,17 +6,18 @@ import { Item } from 'jstodotxt';
 import './DatePicker.scss';
 
 const DatePickerComponent = ({ todoObject, type, setTextFieldValue, textFieldValue }) => {
-  const [date, setDate] = useState(todoObject && dayjs(todoObject[type]).isValid() ? dayjs(todoObject[type]) : null);
+  const initialDate = todoObject && todoObject[type]?.date && dayjs(todoObject[type].date).isValid() ? dayjs(todoObject[type].date) : null;
+  const [date, setDate] = useState(initialDate);
 
   const handleChange = (updatedDate) => {
-    if(!dayjs(updatedDate).isValid()) return;
+    if (!dayjs(updatedDate).isValid()) return;
     const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
-    const todoObject = new Item(textFieldValue);
+    const todoObjectCopy = new Item(textFieldValue);
 
-    todoObject.setExtension(type, formattedDate);
+    todoObjectCopy.setExtension(type, formattedDate);
     setDate(updatedDate);
-    setTextFieldValue(todoObject.toString());
-  }
+    setTextFieldValue(todoObjectCopy.toString());
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} locale="en">

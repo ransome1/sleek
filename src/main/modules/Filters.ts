@@ -1,44 +1,44 @@
 import { BrowserWindow } from 'electron';
 import dayjs from 'dayjs';
-import { TodoObject, Filters, Filter, Attributes } from '../util';
+import { TodoObject, Filters, Filter, Attributes, Attribute } from '../util';
 
 function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
-  if (filters && Object.keys(filters).length > 0) {
-    return todoObjects.filter((todoObject: TodoObject) => {
+  if (!filters || Object.keys(filters).length === 0) {
+    return todoObjects;
+  }
 
-      return Object.entries(filters).every(([key, filterArray]) => {
-        
-        if (filterArray?.length === 0) {
-          return true;
+  return todoObjects.filter((todoObject: TodoObject) => {
+    return Object.entries(filters).every(([key, filterArray]) => {
+      if (!filterArray?.length) {
+        return true;
+      }
+
+      const attributeValues: any = ['due', 't'].includes(key) ? todoObject[key as keyof TodoObject] : todoObject[key as keyof TodoObject];
+
+      return filterArray.every(({ value, exclude }: Filter) => {
+        if (
+          attributeValues === undefined ||
+          attributeValues === null ||
+          (Array.isArray(attributeValues) && attributeValues.length === 0)
+        ) {
+          return exclude;
         }
 
-        const attributeValues: any = todoObject[key as keyof TodoObject];
+        const hasMatchingValue = attributeValues.includes(value);
 
-        return filterArray.every(({ value, exclude }: Filter) => {
-          if (
-            attributeValues === undefined ||
-            attributeValues === null ||
-            (Array.isArray(attributeValues) && attributeValues.length === 0)
-          ) {
-            return exclude;
-          }
-
-          const hasMatchingValue = attributeValues.includes(value);
-
-          return exclude ? !hasMatchingValue : hasMatchingValue;
-        });
+        return exclude ? !hasMatchingValue : hasMatchingValue;
       });
     });
-  }
-  return todoObjects;
+  });
 }
 
 function createAttributesObject(todoObjects: TodoObject[]): Attributes {
-  const incrementCount = function(countObject: { [key: string]: number }, key: string | null): void {
+  const incrementCount = function(countObject: { [key: string]: number }, key: any | null): void {
     if (key !== null) {
       countObject[key] = (countObject[key] || 0) + 1;
     }
-  }  
+  };
+
   const attributes: Attributes = {
     priority: {},
     projects: {},
@@ -51,20 +51,20 @@ function createAttributesObject(todoObjects: TodoObject[]): Attributes {
     completed: {},
   };
 
-  todoObjects.forEach((item) => {
+  todoObjects.forEach((todoObject: TodoObject) => {
     Object.keys(attributes).forEach((key) => {
-
-      const value = item[key as keyof TodoObject];
+      const value = ['due', 't'].includes(key) ? todoObject[key as keyof TodoObject] : todoObject[key as keyof TodoObject];
 
       if (Array.isArray(value)) {
         value.forEach((element) => {
           if (element !== null) {
-            attributes[key][element] = (attributes[key][element] || 0) + 1;
+            incrementCount(attributes[key], element as keyof Attribute);
           }
         });
       } else {
         incrementCount(attributes[key], value);
       }
+
       attributes[key] = Object.fromEntries(Object.entries(attributes[key]).sort(([a], [b]) => a.localeCompare(b)));
     });
   });

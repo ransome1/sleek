@@ -30,9 +30,11 @@ export interface TodoObject {
   completed: string | null;
   priority: string | null;
   contexts: string[] | null;
-  projects: string[] | createdull;
-  due: string | completed
+  projects: string[] | null;
+  due: string | null;
+  dueString: string | null;
   t: string | null;
+  tString: string | null;
   rec: string | null;
   hidden: boolean;
   pm: string | null;
@@ -51,7 +53,9 @@ export interface Filters {
   priority?: Filter[];
   pm?: Filter[];
   due?: Filter[];
+  dueString?: Filter[];
   t?: Filter[];
+  tString?: Filter[];
   created?: Filter[];
   completed?: Filter[];
 }
@@ -62,7 +66,15 @@ export interface Filter {
 }
 
 export interface Attributes {
-  [key: string]: {
-    [key: string]: number;
-  };
+  [key: string]: Attribute;
 }
+
+export interface Attribute {
+  [key: string]: number;
+}
+
+export type DateAttribute = {
+  key: string;
+  date: string;
+  string: string;
+};

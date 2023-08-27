@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import Sugar from 'sugar';
-import dayjs from 'dayjs';
 import { Checkbox, ListItem, Button, Divider, Chip } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -43,7 +41,6 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     handleFilterSelect(key, value, filters, false);
   };
 
-
   if (todoObject.group) {
     const value = todoObject.value;
 
@@ -64,51 +61,57 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     );
   }
 
-  const processDateWithSugar = (substrings, dateIndex) => {
-    let currentIndex = dateIndex;
-    let combinedValue = substrings[currentIndex].value;
-
-    while (currentIndex < substrings.length) {
-      const sugarDate = Sugar.Date.create(combinedValue);
-
-      if (Sugar.Date.isValid(sugarDate)) {
-        substrings[dateIndex].value = dayjs(sugarDate).format('YYYY-MM-DD');
-        for (let i = dateIndex + 1; i <= currentIndex; i++) {
-          substrings[i] = { type: null, value: null, index: i };
-        }        
-        break;
-      } else {
-        currentIndex++;
-
-        if (currentIndex < substrings.length) {
-          combinedValue += substrings[currentIndex].value + ' ';
-        } else {
-          break;
-        }
-      }
-    }
-    return substrings;
+  const replacements = {
+    'due': () => (
+        <DatePickerInline
+          type="due"
+          todoObject={todoObject}
+        />
+    ),
+    't': () => (
+        <DatePickerInline
+          type="t"
+          todoObject={todoObject}
+        />
+    ),    
+    'contexts': (match, type) => (
+        <Button onClick={() => handleButtonClick(type, match)}>{match}</Button>
+    ),
+    'projects': (match, type) => (
+        <Button onClick={() => handleButtonClick(type, match)}>{match}</Button>
+    ),
+    'rec': (match, type) => (
+        <Button onClick={() => handleButtonClick(type, match)}>
+          <Chip label='Recurrence' />
+          {match}
+        </Button>
+    ),
+    'pm': (match, type) => (
+        <Button onClick={() => handleButtonClick(type, match)}>
+          <FontAwesomeIcon icon={faPizzaSlice} />
+          {match}
+        </Button>
+    ),   
+    'hidden': () => (null),
   };
 
-  const extractedMatches = () => {
+  const matches = () => {
     const expressions = [
+      { pattern: new RegExp(`t:${todoObject.tString?.replace(/\s/g, '\\s')}`, 'g'), type: 't', key: 't:' },
+      { pattern: new RegExp(`due:${todoObject.dueString?.replace(/\s/g, '\\s')}`, 'g'), type: 'due', key: 'due:' },
       { pattern: /(@\S+)/, type: 'contexts', key: '@' },
       { pattern: /\+\S+/, type: 'projects', key: '+' },
-      { pattern: /\bdue:\S+\b/, type: 'due', key: 'due:' },
-      { pattern: /\bt:\S+\b/, type: 't', key: 't:' },
       { pattern: /^rec:(\+?\d*[dbwmy])$/, type: 'rec', key: 'rec:' },
+      { pattern: /\bh:1\b/, type: 'hidden', key: 'h:1' },
       { pattern: /pm:\d+\b/, type: 'pm', key: 'pm:' },
     ];
 
     let body = todoObject.body;
     let substrings = [];
     let index = 0;
-    let dueIndex;
-    let tIndex;
 
     while (body.length > 0) {
       let matched = false;
-
 
       for (const expression of expressions) {
         const regex = new RegExp(`^(${expression.pattern.source})`);
@@ -116,8 +119,6 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
 
         if (match) {
           matched = true;
-          if(expression.type === "due") dueIndex = index;
-          if(expression.type === "t") tIndex = index;
 
           const value = match[0].substr(expression.key.length);
 
@@ -138,62 +139,32 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
       index++;
     }
 
-    if (dueIndex > 0) {
-      substrings = processDateWithSugar(substrings, dueIndex);
-    }
-    if(tIndex > 0) {
-      substrings = processDateWithSugar(substrings, tIndex);
-    }
-
     return substrings;
   };
 
-
-  const rowElements = extractedMatches().map((element, index) => {
-
-    if(!element.value) return;
+  const elements = matches().map((element, index) => {
+    if (!element.value) return null;
 
     const selected = (filters[element.type] || []).some((filter) => filter.value === element.value);
 
-    if (element.type === 'contexts' || element.type === 'projects') {
-      return (
-        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
-          <Button onClick={() => handleButtonClick(element.type, element.value)}>{element.value}</Button>
-        </div>
-      );
-    } else if (element.type === 'due' || element.type === 't') {
-      return (
-        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
-          <DatePickerInline
-            currentDate={element.value}
-            type={element.type}
-            todoObject={todoObject}
-          />
-        </div>
-      );
-    } else if (element.type === 'pm') {
-      return (
-        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
-          <Button onClick={() => handleButtonClick(element.type, element.value)}>
-            <FontAwesomeIcon icon={faPizzaSlice} />
-            {element.value}
-          </Button>
-        </div>
-      );
-    } else if (element.type === 'rec') {
-      return (
-        <div key={index} data-todotxt-attribute={element.type} className={selected ? 'selected' : ''}>
-          <Button onClick={() => handleButtonClick(element.type, element.value)}>
-            <Chip label='Recurrence' />
-            {element.value}
-          </Button>
-        </div>
-      );
-    } else {
-      return (
-        <span key={index}>{element.value} </span>
-      );
-    }
+    const content = replacements[element.type]
+      ? replacements[element.type](element.value, element.type)
+      : <span>{element.value}</span>;
+
+    return (
+      <React.Fragment key={index}>
+        {element.type !== null ? (
+          <div
+            className={selected ? 'selected' : ''}
+            data-todotxt-attribute={element.type}
+          >
+            {content}
+          </div>
+        ) : (
+          content
+        )}
+      </React.Fragment>
+    );
   });
 
   return (
@@ -218,7 +189,7 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
           <FontAwesomeIcon icon={faEyeSlash} />
         )}
 
-        {rowElements}
+        {elements}
 
       </ListItem>
     </ThemeProvider>
