@@ -153,8 +153,8 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "electron": "18.3.7",
-    "electron-builder": "23.0.2",
+    "electron": "26.1.0",
+    "electron-builder": "^24.6.3",
     "electron-notarize": "^1.2.2",
     "electron-reloader": "^1.2.2",
     "eslint": "^8.6.0"

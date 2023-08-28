@@ -31,9 +31,6 @@ sleek is available for Windows, MacOS and Linux, and in several languages. For a
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's todo list view")
 ![Alt text](assets/screenshots/mac/drawer.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature")
 
-### Development
-A prioritized backlog of new features and known issues as well as an overview on what is being worked on at the moment can be found <a href="https://github.com/ransome1/sleek/projects/2">here</a>.
-
 ### Support sleek
 * Star, fork and watch it on Github.
 * Review it on <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank">Mac App Store</a>, <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
