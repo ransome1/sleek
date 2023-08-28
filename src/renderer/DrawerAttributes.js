@@ -66,6 +66,7 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
                   {Object.keys(attributes[key]).map((value, childIndex) => {                  
                     const excluded = filters[key]?.some((filter) => filter.value === value && filter.exclude);
                     const selected = filters[key]?.some((filter) => filter.value === value);
+                    const disabled = (attributes[key][value] === 0) ? true : false;
 
                     return (
                       <div
@@ -73,15 +74,15 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
                         data-todotxt-attribute={key}
                         data-todotxt-value={value}
                         className={`filter${isCtrlKeyPressed ? ' hide' : ''} ${selected ? 'selected' : ''} ${
-                          excluded ? 'excluded' : ''
-                        }`}
+                          excluded ? 'excluded' : ''}`}
                       >
                         <Badge badgeContent={attributes[key][value]}>
                           <Button
                             className="attribute"
                             key={`${value}-${childIndex}`}
                             tabIndex={0}
-                            onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
+                            onClick={disabled ? null : () => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
+                            disabled={disabled}
                           >
                             {value}
                           </Button>

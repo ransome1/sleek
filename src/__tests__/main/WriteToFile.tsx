@@ -54,7 +54,7 @@ describe('Writing to file', () => {
       if (key === 'appendCreationDate') {
         return true;
       }
-      return originalGet.call(configStorage, key); // Call the original method
+      return originalGet.call(configStorage, key);
     };    
     await writeTodoObjectToFile(-1, 'New line with creation date', false);
     const fileContent = fs.readFileSync('./src/__tests__/__mock__/test.txt', 'utf8');

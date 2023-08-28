@@ -78,3 +78,18 @@ export type DateAttribute = {
   date: string;
   string: string;
 };
+
+export type Headers = {
+  availableObjects: number;
+  visibleObjects: number;
+};
+
+export interface RequestedData {
+  flattenedTodoObjects: Record<string, any>;
+  attributes: Attributes;
+  headers: {
+    availableObjects: number;
+    visibleObjects: number;
+  };
+  filters: Filter[];
+}

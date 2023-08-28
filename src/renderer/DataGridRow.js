@@ -66,12 +66,14 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
         <DatePickerInline
           type="due"
           todoObject={todoObject}
+          date={todoObject.due}
         />
     ),
     't': () => (
         <DatePickerInline
           type="t"
           todoObject={todoObject}
+          date={todoObject.t}
         />
     ),    
     'contexts': (match, type) => (
@@ -146,7 +148,6 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     if (!element.value) return null;
 
     const selected = (filters[element.type] || []).some((filter) => filter.value === element.value);
-
     const content = replacements[element.type]
       ? replacements[element.type](element.value, element.type)
       : <span>{element.value}</span>;

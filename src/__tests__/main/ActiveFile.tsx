@@ -38,5 +38,4 @@ describe('Get active file', () => {
     const activeFile = getActiveFile(files);
     expect(activeFile).toEqual(null);
   });  
-
 });

@@ -5,7 +5,7 @@ import archiveTodos from './modules/ArchiveTodos';
 import { getActiveFile } from './modules/ActiveFile';
 import { mainWindow } from './main';
 import { openFile, createFile } from './modules/FileDialog';
-import { configStorage } from './config';
+import { configStorage, filterStorage } from './config';
 import { File } from './util';
 
 const isMac = process.platform === 'darwin';
@@ -105,6 +105,13 @@ function buildMenu(files: File[]) {
           click: async () => {
             const showCompleted = configStorage.get('showCompleted');
             configStorage.set('showCompleted', !showCompleted);
+          },
+        },
+        {
+          label: 'Reset filters',
+          accelerator: 'Ctrl+0',
+          click: async () => {
+            filterStorage.set('filters', {});
           },
         },
         {

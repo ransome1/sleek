@@ -2,23 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import { getActiveFile } from './ActiveFile';
 import { configStorage, filterStorage } from '../config';
-import { createAttributesObject, applyFilters } from './Filters';
+import { updateAttributes, applyFilters } from './Filters';
 import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../main';
-import { File, Filter, Attributes } from '../util';
+import { File, Filter, Attributes, RequestedData, Headers } from '../util';
 import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString } from './ProcessTodoObjects';
 
-interface RequestedData {
-  flattenedTodoObjects: Record<string, any>;
-  attributes: Attributes;
-  headers: {
-    availableObjects: number;
-    visibleObjects: number;
-  };
-  filters: Filter[];
-}
-
-const headers = {
+const headers: Headers = {
   availableObjects: null,
   visibleObjects: null,
 };
@@ -27,6 +17,17 @@ async function processDataRequest(searchString: string): Promise<RequestedData |
   try {
     const files: File[] = configStorage.get('files');
     const file: File = getActiveFile(files);
+    let attributes: Attributes = {
+      priority: {},
+      projects: {},
+      contexts: {},
+      due: {},
+      t: {},
+      rec: {},
+      pm: {},
+      created: {},
+      completed: {},
+    };    
 
     if (file === null) return Promise.resolve(null)
 
@@ -48,13 +49,15 @@ async function processDataRequest(searchString: string): Promise<RequestedData |
 
     headers.availableObjects = countTodoObjects(todoObjects);
 
-    const attributes: Attributes = createAttributesObject(todoObjects);
+    attributes = updateAttributes(attributes, todoObjects, false);
 
     if (filters) todoObjects = applyFilters(todoObjects, filters);
     
     if (searchString) todoObjects = applySearchString(searchString, todoObjects);
 
     headers.visibleObjects = countTodoObjects(todoObjects);
+
+    attributes = updateAttributes(attributes, todoObjects, true);
 
     if(fileSorting) {
       const flattenedTodoObjects = flattenTodoObjects(todoObjects, null);

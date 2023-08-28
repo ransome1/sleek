@@ -151,7 +151,6 @@ const App = () => {
           />
           <TodoDataGrid 
             todoObjects={todoObjects}
-            todoObject={todoObject}
             setTodoObject={setTodoObject}
             attributes={attributes}
             filters={filters}

@@ -6,7 +6,7 @@ import { Item } from 'jstodotxt';
 import './DatePicker.scss';
 
 const DatePickerComponent = ({ todoObject, type, setTextFieldValue, textFieldValue }) => {
-  const initialDate = todoObject && todoObject[type]?.date && dayjs(todoObject[type].date).isValid() ? dayjs(todoObject[type].date) : null;
+  const initialDate = todoObject && todoObject[type] && dayjs(todoObject[type]).isValid() ? dayjs(todoObject[type]) : null;
   const [date, setDate] = useState(initialDate);
 
   const handleChange = (updatedDate) => {
@@ -25,7 +25,7 @@ const DatePickerComponent = ({ todoObject, type, setTextFieldValue, textFieldVal
         className="datePicker"
         format="YYYY-MM-DD"
         label={type === 't' ? 'Threshold' : 'Due'}
-        value={date}
+        value={initialDate}
         onChange={(updatedDate) => handleChange(updatedDate)}
       />
     </LocalizationProvider>

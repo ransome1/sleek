@@ -9,10 +9,9 @@ labels: 'feature request'
 ## Feature Request
 
 **IMPORTANT:**
-Feature requests should strictly adhere to this template. Requests with insufficient information or vague ideas may not be considered. Providing comprehensive details helps the development team assess and prioritize the feature accordingly.
-
-**Discussion:**
 [If your feature request is more of a loose idea and you are unsure about its implementation or potential impact, please discuss it first in the GitHub Discussions section: [Link to Discussions](https://github.com/ransome1/sleek/discussions). Engage with the community and gather feedback before submitting a formal feature request.]
+
+Feature requests should strictly adhere to this template. Requests with insufficient information or vague ideas may not be considered. Providing comprehensive details helps the development team assess and prioritize the feature accordingly.
 
 **Description:**
 [Provide a clear and detailed description of the feature you are requesting. Explain what the feature should do and how it would enhance the functionality or user experience of the app.]

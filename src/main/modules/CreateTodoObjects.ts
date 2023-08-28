@@ -3,10 +3,11 @@ import { handleNotification } from './HandleNotification';
 import dayjs from 'dayjs';
 import Sugar from 'sugar';
 import { TodoObject, DateAttribute } from '../util';
+import { addRecurrenceToDate } from './CreateRecurringTodo';
 
 let lines: string[];
 
-function processDateWithSugar(string: string, key: string): any {
+function processDateWithSugar(string: string, key: string, type: string): any {
   const array = string.split(' ');
   let index = 0;
   let combinedValue = '';
@@ -23,7 +24,15 @@ function processDateWithSugar(string: string, key: string): any {
         key: key,
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
         string: combinedValue.slice(0, -1)
-      }   
+      }
+    } else if(type === 'relative') {
+      const now = new Date();
+      const relativeDate = addRecurrenceToDate(now, string);
+      lastMatch = {
+        key: key,
+        date: dayjs(relativeDate).format('YYYY-MM-DD'),
+        string: string
+      }
     }
     index++;
   }
@@ -32,8 +41,10 @@ function processDateWithSugar(string: string, key: string): any {
 
 function extractSpeakingDates(body: string): any {
   const expressions = [
-    { pattern: /due:(.*?)(?=t:|$)/g, key: 'due:' },
-    { pattern: /t:(.*?)(?=due:|$)/g, key: 't:' },
+    { pattern: /due:(.*?)(?=t:|$)/g, key: 'due:', type: 'absolute' },
+    { pattern: /due:(\d+[dwm])/g, key: 'due:', type: 'relative' },
+    { pattern: /t:(.*?)(?=due:|$)/g, key: 't:', type: 'absolute' },
+    { pattern: /t:(\d+[dwm])/g, key: 't:', type: 'relative' },
   ];
 
   const speakingDates = [];
@@ -42,8 +53,8 @@ function extractSpeakingDates(body: string): any {
     const regex = new RegExp(`(${expression.pattern.source})`);
     const match = body.match(regex);
     if(match) {
-      const value = match[0].substr(expression.key.length);
-      speakingDates.push(processDateWithSugar(value, expression.key));
+      const attributeValue = match[0].substr(expression.key.length);
+      speakingDates.push(processDateWithSugar(attributeValue, expression.key, expression.type));
     }
   }
   return speakingDates;
@@ -54,17 +65,16 @@ function createTodoObjects(fileContent: string): TodoObject[] {
   const todoObjects: TodoObject[] = lines
     .map((line, i) => {
       const item = new Item(line);
-      if (!item.body()) {
+      const body = item.body();
+      if (!body) {
         return null;
       }
-
-      const speakingDates: DateAttribute[] = extractSpeakingDates(item.body());
-
-      const due = speakingDates.find(speakingDate => speakingDate.key === 'due:')?.date || null;
-      const dueString = speakingDates.find(speakingDate => speakingDate.key === 'due:')?.string || null;
-      const t = speakingDates.find(speakingDate => speakingDate.key === 't:')?.date || null;
-      const tString = speakingDates.find(speakingDate => speakingDate.key === 't:')?.string || null;
-      const body = item.body();
+      const speakingDates: DateAttribute[] = extractSpeakingDates(body);
+      const due = speakingDates.find(speakingDate => speakingDate?.key === 'due:')?.date ?? null;
+      const dueString = speakingDates.find(speakingDate => speakingDate?.key === 'due:')?.string ?? null;
+      const t = speakingDates.find(speakingDate => speakingDate?.key === 't:')?.date ?? null;
+      const tString = speakingDates.find(speakingDate => speakingDate?.key === 't:')?.string ?? null;
+      
       const extensions = item.extensions();
       const hidden = extensions.find((extension) => extension.key === 'h')?.value === '1' ? true : false;
       const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;

@@ -57,13 +57,13 @@ const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setText
     }
   };
 
-  const visibleRows = todoObjects?.slice(0, visibleRowCount); 
-
   if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
+
+  const visibleRows = todoObjects.slice(0, visibleRowCount);
 
   return (
     <List id="dataGrid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
-      {visibleRows.map((row, index) => (
+      {visibleRows.map((row, index) => (  
         <DataGridRow 
           key={index}
           attributes={attributes}

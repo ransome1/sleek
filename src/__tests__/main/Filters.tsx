@@ -1,4 +1,17 @@
-import { applyFilters, createAttributesObject } from '../../main/modules/Filters';
+import { applyFilters, updateAttributes } from '../../main/modules/Filters';
+import { Attributes } from '../../main/util';
+
+let attributes: Attributes = {
+  priority: {},
+  projects: {},
+  contexts: {},
+  due: {},
+  t: {},
+  rec: {},
+  pm: {},
+  created: {},
+  completed: {},
+};
 
 describe('Should filter todos based on passed filters', () => {
   const todoObjects = [
@@ -46,7 +59,7 @@ describe('Set of filters must create a respective set of attributes and its coun
       created: { '2026-01-01': 2 },
       completed: {},
     };
-    const result = createAttributesObject(todoObjects);
+    const result = updateAttributes(attributes, todoObjects, false);
     expect(result).toEqual(expectedAttributes);
   });
 });

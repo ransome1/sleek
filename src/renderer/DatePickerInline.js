@@ -7,35 +7,28 @@ import { Item } from 'jstodotxt';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const DatePickerComponent = ({ todoObject, type, textFieldValueRef, setTextFieldValue }) => {
+const DatePickerInline = ({ type, todoObject, date }) => {
 	const [open, setOpen] = useState(false);
   const datePickerRef = useRef(null);
-
   const chipText = type === 'due' ? "Due" : type === 't' ? "Threshold" : null;
 
   const handleChange = (date) => {
     const updatedDate = dayjs(date).format('YYYY-MM-DD');
-    const updatedTodoObject = (!textFieldValueRef) ? new Item(todoObject.string || '') : new Item(textFieldValueRef.current || '');
-    
+    const updatedTodoObject = new Item(todoObject.string || '');
     updatedTodoObject.setExtension(type, updatedDate);
-    
-    todoObject.string = updatedTodoObject.toString();
-    
     setOpen(false);
-
-    ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string);    
+    ipcRenderer.send('writeTodoToFile', todoObject.id, updatedTodoObject.toString());
   };
 
   const DatePickerInline = ({ date, ...props }) => {
   
     const ButtonField = ({ date, ...props }) => {
       const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
-      const updatedDate = dayjs(date).format('YYYY-MM-DD');
 
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} onClick={() => setOpen?.((prev) => !prev)}>
           <Chip label={chipText} />
-          {updatedDate}
+          {date}
         </Button>
       );
     };
@@ -54,9 +47,12 @@ const DatePickerComponent = ({ todoObject, type, textFieldValueRef, setTextField
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} locale="en">
-      <DatePickerInline date={todoObject[type]} onChange={handleChange} />
+      <DatePickerInline
+        onChange={handleChange}
+        date={date}
+      />
     </LocalizationProvider>
   );
 };
 
-export default DatePickerComponent;
+export default DatePickerInline;

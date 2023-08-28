@@ -44,8 +44,6 @@ const addRecurrenceToDate = (date: Date, recurrence: string): Date => {
   }
 };
 
-const formatDate = (date: Date): string => dayjs(date).format('YYYY-MM-DD');
-
 const createRecurringTodo = async (string: string, recurrence: string): Promise<string> => {
   try {
     const recurringTodoObject = new Item(string);
@@ -60,7 +58,7 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
         ? addRecurrenceToDate(dayjs(oldDueDate.value, 'YYYY-MM-DD').toDate(), recurrenceInterval)
         : addRecurrenceToDate(completedDate, recurrenceInterval);
 
-      recurringTodoObject.setExtension('due', formatDate(targetDate));
+      recurringTodoObject.setExtension('due', dayjs(targetDate).format('YYYY-MM-DD'));
       recurringTodoObject.setComplete(false);
       recurringTodoObject.setCompleted(null);
 
@@ -74,4 +72,4 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
   }
 };
 
-export { createRecurringTodo };
+export { createRecurringTodo, addRecurrenceToDate };

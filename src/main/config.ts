@@ -61,6 +61,21 @@ const handleConfigChange = async (key: string, newValue: any) => {
   }
 };
 
+const handleFilterChange = async (key: string, newValue: any) => {
+  // todo: what if search string was set previously? This would remove it
+  const result = await processDataRequest('');
+  
+  if (result !== null) {
+    const [ flattenedTodoObjects, attributes, headers, filters ] = result;
+  
+    mainWindow!.webContents.send('requestData', flattenedTodoObjects, attributes, headers, filters);
+  }
+};
+
+filterStorage.onDidChange('filters', () => {
+  handleFilterChange('filters', filterStorage.get('filters'));
+});
+
 configStorage.onDidChange('files', (files) => {
   buildMenu(files);
   mainWindow!.webContents.send('updateFiles', files);

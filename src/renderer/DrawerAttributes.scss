@@ -33,7 +33,11 @@
 		}
 		.MuiBadge-badge {
 			z-index: 10;
-		}	
+		}
+		button:disabled {
+			cursor: not-allowed;
+			filter: opacity(50%) grayscale(100%);
+		}
 	}
 	.filter:hover,
 	.filter.excluded {
