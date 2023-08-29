@@ -9,11 +9,34 @@
 		padding: 0;
 		margin: 0;
 	}
-	.MuiBox-root {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 5px;
-		padding: 1em 0;
+	.MuiAccordion-root {
+		padding: 0;
+		.Mui-expanded {
+			margin: 1em 0;
+		}
+		.MuiAccordionDetails-root {
+			padding: 0.5em 0;
+		}
+		.MuiAccordionSummary-root {
+			height: 3em;
+			min-height: 3em;
+			padding: 0;
+			margin: 0;
+			&.Mui-expanded {
+				min-height: auto;
+			}
+		}
+		.MuiBox-root {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 5px;
+		}
+		&:before {
+			display: none;
+		}
+		&.Mui-expanded {
+			margin: 0;
+		}
 	}
 	.filter {
 		position: relative;

@@ -53,7 +53,7 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     return (
       <ListItem className="row group" data-todotxt-attribute={todoObject.group} data-todotxt-value={value}>
         {valuesArray.map((val, index) => (
-          <Button key={index} className="attribute" onClick={() => handleButtonClick(val.trim(), todoObject.group)}>
+          <Button key={index} className="attribute" onClick={() => handleButtonClick(todoObject.group, val.trim())}>
             {val.trim()}
           </Button>
         ))}
@@ -67,6 +67,7 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
           type="due"
           todoObject={todoObject}
           date={todoObject.due}
+          filters={filters}
         />
     ),
     't': () => (
@@ -74,24 +75,29 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
           type="t"
           todoObject={todoObject}
           date={todoObject.t}
+          filters={filters}
         />
     ),    
-    'contexts': (match, type) => (
-        <Button onClick={() => handleButtonClick(type, match)}>{match}</Button>
-    ),
-    'projects': (match, type) => (
-        <Button onClick={() => handleButtonClick(type, match)}>{match}</Button>
-    ),
-    'rec': (match, type) => (
-        <Button onClick={() => handleButtonClick(type, match)}>
-          <Chip label='Recurrence' />
-          {match}
+    'contexts': (value, type) => (
+        <Button onClick={() => handleButtonClick(type, value)}>
+          <div>{value}</div>
         </Button>
     ),
-    'pm': (match, type) => (
-        <Button onClick={() => handleButtonClick(type, match)}>
+    'projects': (value, type) => (
+        <Button onClick={() => handleButtonClick(type, value)}>
+          <div>{value}</div>
+        </Button>
+    ),
+    'rec': (value, type) => (
+        <Button onClick={() => handleButtonClick(type, value)}>
+          <Chip label='rec:' />
+          <div>{value}</div>
+        </Button>
+    ),
+    'pm': (value, type) => (
+        <Button onClick={() => handleButtonClick(type, value)}>
           <FontAwesomeIcon icon={faPizzaSlice} />
-          {match}
+          <div>{value}</div>
         </Button>
     ),   
     'hidden': () => (null),
@@ -103,9 +109,9 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
       { pattern: new RegExp(`due:${todoObject.dueString?.replace(/\s/g, '\\s')}`, 'g'), type: 'due', key: 'due:' },
       { pattern: /(@\S+)/, type: 'contexts', key: '@' },
       { pattern: /\+\S+/, type: 'projects', key: '+' },
-      { pattern: /^rec:(\+?\d*[dbwmy])$/, type: 'rec', key: 'rec:' },
       { pattern: /\bh:1\b/, type: 'hidden', key: 'h:1' },
       { pattern: /pm:\d+\b/, type: 'pm', key: 'pm:' },
+      { pattern: /rec:([^ ]+)/, type: 'rec', key: 'rec:' }
     ];
 
     let body = todoObject.body;
@@ -148,6 +154,7 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     if (!element.value) return null;
 
     const selected = (filters[element.type] || []).some((filter) => filter.value === element.value);
+
     const content = replacements[element.type]
       ? replacements[element.type](element.value, element.type)
       : <span>{element.value}</span>;

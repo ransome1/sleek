@@ -36,6 +36,17 @@ if (!fs.existsSync(configPath)) {
     showHidden: true,
     windowMaximized: false,
     fileSorting: false,
+    accordionOpenState: [
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
   };
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));

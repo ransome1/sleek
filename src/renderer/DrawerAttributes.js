@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Drawer, Button, Badge } from '@mui/material';
-import dayjs from 'dayjs';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Button, Badge } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { handleFilterSelect, attributeMapping } from './Shared';
 import './DrawerAttributes.scss';
 
+const store = window.electron.store;
+
 const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
+
+  if(Object.keys(attributes).length === 0) return null;
+
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
+  const [accordionOpenState, setAccordionOpenState] = useState(store.get('accordionOpenState') || null);
   const firstTabbableElementRef = useRef(null);
 
   const handleCtrlCmdDown = (event) => {
@@ -26,6 +32,14 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
     if (event.key === 'Escape') {
       setIsDrawerOpen(false);
     }
+  };
+
+  const handleAccordionToggle = (index) => {
+    setAccordionOpenState((prevState) =>
+      prevState.map((prevState, prevIndex) =>
+        prevIndex === index ? !prevState : prevState
+      )
+    );
   };
 
   useEffect(() => {
@@ -53,59 +67,75 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
     };
   }, [isDrawerOpen]);
 
+  useEffect(() => {
+    store.set('accordionOpenState', accordionOpenState)
+  }, [accordionOpenState]); 
+
   return (
     <>
       {Object.keys(attributes).length > 0 && (
         <Box className="Attributes" ref={firstTabbableElementRef}>
-          {Object.keys(attributes).map((key, index) => {
-            if (Object.keys(attributes[key]).length > 0) {
-              return (
-                <React.Fragment key={index}>
+          {Object.keys(attributes).map((key, index) =>
+            Object.keys(attributes[key]).length > 0 ? (
+              <Accordion
+                TransitionProps={{ unmountOnExit: true }}
+                key={index}
+                expanded={accordionOpenState[index]}
+                onChange={() => handleAccordionToggle(index)}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <h3>{attributeMapping[key]}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
                   <Box>
-                  {Object.keys(attributes[key]).map((value, childIndex) => {                  
-                    const excluded = filters[key]?.some((filter) => filter.value === value && filter.exclude);
-                    const selected = filters[key]?.some((filter) => filter.value === value);
-                    const disabled = (attributes[key][value] === 0) ? true : false;
+                    {Object.keys(attributes[key]).map((value, childIndex) => {
+                      const excluded = filters[key]?.some((filter) => filter.value === value && filter.exclude);
+                      const selected = filters[key]?.some((filter) => filter.value === value);
+                      const disabled = attributes[key][value] === 0;
 
-                    return (
-                      <div
-                        key={`${key}-${childIndex}`}
-                        data-todotxt-attribute={key}
-                        data-todotxt-value={value}
-                        className={`filter${isCtrlKeyPressed ? ' hide' : ''} ${selected ? 'selected' : ''} ${
-                          excluded ? 'excluded' : ''}`}
-                      >
-                        <Badge badgeContent={attributes[key][value]}>
-                          <Button
-                            className="attribute"
-                            key={`${value}-${childIndex}`}
-                            tabIndex={0}
-                            onClick={disabled ? null : () => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
-                            disabled={disabled}
-                          >
-                            {value}
-                          </Button>
-                        </Badge>
-                        {(isCtrlKeyPressed || excluded) && (
-                          <div
-                            data-todotxt-attribute={key}
-                            data-todotxt-value={value}
-                            className="overlay"
-                            onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
-                          >
-                            <FontAwesomeIcon icon={faEyeSlash} />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                      return (
+                        <div
+                          key={`${key}-${value}-${childIndex}`}
+                          data-todotxt-attribute={key}
+                          data-todotxt-value={value}
+                          className={`filter${isCtrlKeyPressed ? ' hide' : ''} ${
+                            selected ? 'selected' : ''
+                          } ${excluded ? 'excluded' : ''}`}
+                        >
+                          <Badge badgeContent={attributes[key][value]}>
+                            <Button
+                              className="attribute"
+                              onClick={
+                                disabled
+                                  ? null
+                                  : () => handleFilterSelect(key, value, filters, isCtrlKeyPressed)
+                              }
+                              disabled={disabled}
+                            >
+                              {value}
+                            </Button>
+                          </Badge>
+                          {(isCtrlKeyPressed || excluded) && (
+                            <div
+                              data-todotxt-attribute={key}
+                              data-todotxt-value={value}
+                              className="overlay"
+                              onClick={() =>
+                                handleFilterSelect(key, value, filters, isCtrlKeyPressed)
+                              }
+                            >
+                              <FontAwesomeIcon icon={faEyeSlash} />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </Box>
-                </React.Fragment>
-              );
-            }
-            return null;
-          })}
+                </AccordionDetails>
+
+              </Accordion>
+            ) : null
+          )}
         </Box>
       )}
     </>

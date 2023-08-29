@@ -139,7 +139,7 @@
     &[data-todotxt-attribute]:hover {
       .MuiButtonBase-root:not(.MuiCheckbox-root) {
         color: white;
-        background: darken($mid-grey, 40%);
+        background: $dark-grey;
       }
     }
 

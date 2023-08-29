@@ -4,13 +4,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button, Chip } from '@mui/material';
 import dayjs from 'dayjs';
 import { Item } from 'jstodotxt';
+import { handleFilterSelect } from './Shared';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const DatePickerInline = ({ type, todoObject, date }) => {
+const DatePickerInline = ({ type, todoObject, date, filters }) => {
 	const [open, setOpen] = useState(false);
   const datePickerRef = useRef(null);
-  const chipText = type === 'due' ? "Due" : type === 't' ? "Threshold" : null;
+  const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
 
   const handleChange = (date) => {
     const updatedDate = dayjs(date).format('YYYY-MM-DD');
@@ -26,9 +27,9 @@ const DatePickerInline = ({ type, todoObject, date }) => {
       const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
 
       return (
-        <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} onClick={() => setOpen?.((prev) => !prev)}>
-          <Chip label={chipText} />
-          {date}
+        <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel}>
+          <Chip onClick={() => handleFilterSelect(type, date, filters, false)} label={chipText} />
+          <div onClick={() => setOpen?.((prev) => !prev)}>{date}</div>
         </Button>
       );
     };

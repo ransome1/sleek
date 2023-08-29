@@ -10,26 +10,33 @@
   gap: 0.25em;
 
   button {
+    height: 2em;
     font-size: 0.9em;
-    padding: 0.2em 0.6em;
+    padding: 0;
     svg {
       width: 1em;
       height: 1em;
-      margin-right: 0.25em;
+      margin: 0 0 0 0.5em;
+    }
+    div {
+      padding: 0 0.5em;
     }
     .MuiChip-root {
       width: auto;
-      height: auto;
-      border-radius: $radius!important;
-      background: $dark-grey;
-      color: white;
-      opacity: 0.75;
-      margin-right: 0.4em;
+      height: 100%;
+      background: $dark-grey!important;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: $radius;
+      border-bottom-left-radius: $radius;
+      color: white!important;
+      margin: 0;
       .MuiChip-label {
-        font-size: 0.8em;
-        padding: 0 0.6em;
+        padding: 0;
+        margin: 0;
+        
       }      
-    }    
+    }  
   }
   
   .MuiCheckbox-root {
