@@ -49,10 +49,10 @@ const App = () => {
   }
   
   const handleRequestedData = (todoObjects: object, attributes: object, headers: object, filters: object) => {
-    if(todoObjects) setTodoObjects(todoObjects);
-    if(attributes) setAttributes(attributes);
     if(headers) setHeaders(headers);
+    if(attributes) setAttributes(attributes);
     if(filters) setFilters(filters);
+    if(todoObjects) setTodoObjects(todoObjects);
     setSplashScreen(null);
   };
 

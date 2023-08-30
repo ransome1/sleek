@@ -13,9 +13,10 @@ function createFileWatcher(files: File[]): Promise<string> {
       watcher.close();
     }
     watcher = chokidar.watch(files.map((file) => path.join(file.path, file.todoFile)), { 
-      useFsEvents: false,
-      usePolling: false,
-      atomic: true 
+      awaitWriteFinish: {
+        stabilityThreshold: 50,
+        pollInterval: 50
+      }
     });
     watcher
       .on('add', (file) => {
@@ -24,8 +25,8 @@ function createFileWatcher(files: File[]): Promise<string> {
       .on('change', async (file) => {
         console.log(`File ${file} has been changed`);
         try {
-          const [sortedTodoObjects, attributes, headers, filters] = await processDataRequest();
-          mainWindow.send('requestData', sortedTodoObjects, attributes, headers, filters);
+          const [todoObjects, attributes, headers, filters] = await processDataRequest();
+          mainWindow.send('requestData', todoObjects, attributes, headers, filters);
         } catch (error) {
           console.log(error);
         }

@@ -7,14 +7,9 @@ import { configStorage, filterStorage } from '../config';
 import { setFile, removeFile } from './File';
 import { openFile, createFile } from './FileDialog';
 
-function handleDataRequest(event: IpcMainEvent, searchString: string): void {
-  processDataRequest(searchString)
-    .then(([sortedTodoObjects, attributes, headers, filters]) => {
-      event.reply('requestData', sortedTodoObjects, attributes, headers, filters);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+async function handleDataRequest(event: IpcMainEvent, searchString: string): void {
+  const [todoObjects, attributes, headers, filters] = await processDataRequest();
+  event.reply('requestData', todoObjects, attributes, headers, filters);
 }
 
 async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean | undefined, remove: boolean): Promise<void> {

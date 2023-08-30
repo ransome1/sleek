@@ -59,28 +59,17 @@ if (!fs.existsSync(filtersPath)) {
 
 const handleConfigChange = async (key: string, newValue: any) => {
   // todo: what if search string was set previously? This would remove it
-  const result = await processDataRequest('');
-  
-  if (result !== null) {
-    const [ flattenedTodoObjects, attributes, headers, filters ] = result;
-  
-    mainWindow!.webContents.send('requestData', flattenedTodoObjects, attributes, headers, filters);
-  
-    if (key === 'sorting') {
-      mainWindow!.webContents.send('updateSorting', newValue);
-    }
+  const [todoObjects, attributes, headers, filters] = await processDataRequest();
+  mainWindow.send('requestData', todoObjects, attributes, headers, filters);
+  if (key === 'sorting') {
+    mainWindow!.webContents.send('updateSorting', newValue);
   }
 };
 
 const handleFilterChange = async (key: string, newValue: any) => {
   // todo: what if search string was set previously? This would remove it
-  const result = await processDataRequest('');
-  
-  if (result !== null) {
-    const [ flattenedTodoObjects, attributes, headers, filters ] = result;
-  
-    mainWindow!.webContents.send('requestData', flattenedTodoObjects, attributes, headers, filters);
-  }
+  const [todoObjects, attributes, headers, filters] = await processDataRequest();
+  mainWindow.send('requestData', todoObjects, attributes, headers, filters);
 };
 
 filterStorage.onDidChange('filters', () => {
