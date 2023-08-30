@@ -8,7 +8,6 @@ import './Navigation.scss';
 const ipcRenderer = window.electron.ipcRenderer;
 
 const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers }) => {
-  const [activeButtonClass, setActiveButtonClass] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const openSettings = () => {
@@ -22,18 +21,11 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
   const handleButtonClicked = (parameter) => {
     setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)
     setDrawerParameter(parameter)
-    setActiveButtonClass(parameter);
   };
 
   const handleOpenFile = () => {
     ipcRenderer.send('openFile');
   };
-  
-  useEffect(() => {
-    if (!isDrawerOpen) {
-      setActiveButtonClass(null);
-    }
-  }, [isDrawerOpen]);  
 
   useEffect(() => {
 
@@ -60,7 +52,7 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
   return (
     <nav id='navigation'>
       <Box>sleek</Box>
-      {files && files.length > 0 && (
+      {files?.length > 0 && (
         <>
           <Button onClick={() => setDialogOpen(true)}>
             <FontAwesomeIcon icon={faPlus} />
@@ -70,7 +62,7 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
 
       {files?.length > 0 && headers?.availableObjects > 0 && (
         <>
-          <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen && drawerParameter === 'filter' ? 'active' : ''}>
+          <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen ? 'active' : ''}>
             <FontAwesomeIcon icon={faFilter} />
           </Button>
         </>

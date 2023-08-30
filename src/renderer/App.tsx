@@ -18,8 +18,8 @@ const store = window.electron.store;
 
 const App = () => {
   const [files, setFiles] = useState<string[]>(store.get('files') || null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(store.get('isDrawerOpen') || false);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(store.get('isSearchOpen') || false);
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [drawerParameter, setDrawerParameter] = useState<string | null>();
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
@@ -89,6 +89,14 @@ const App = () => {
   useEffect(() => {
     store.set('sorting', sorting)
   }, [sorting]);
+
+  useEffect(() => {
+    store.set('isDrawerOpen', isDrawerOpen)
+  }, [isDrawerOpen]);
+
+  useEffect(() => {
+    store.set('isSearchOpen', isSearchOpen)
+  }, [isSearchOpen]);
 
   useEffect(() => {
     if(!snackBarContent) return;

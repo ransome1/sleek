@@ -1,4 +1,4 @@
-import { TodoObject } from '../util';
+import { TodoObject, Sorting } from '../util';
 
 function countTodoObjects(todoObjects: TodoObject[]): number {
   const count = todoObjects.filter((object: TodoObject | null) => {
@@ -38,7 +38,7 @@ function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
     return filteredTodoObjects;
 }
 
-function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: { id: string, value: string; invert: boolean }[]): TodoObject[] {
+function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]): TodoObject[] {
   function compareValues(a: any, b: any, invert: boolean): number {
     const comparison = String(a).localeCompare(String(b), undefined, { sensitivity: 'base' });
     return invert ? -comparison : comparison;
@@ -64,7 +64,6 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: { id: strin
       }
       grouped[groupKey].push(obj);
     }
-
     return grouped;
   }
 
@@ -91,7 +90,6 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: { id: strin
 
   const sortedTodoObjects = Object.values(todoObjects).sort(sortObjectsBySorting);
   const sortedAndGrouped = sortAndGroupObjects(sortedTodoObjects, 0);
-
   return sortedAndGrouped;
 }
 

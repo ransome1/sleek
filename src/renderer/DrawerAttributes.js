@@ -10,8 +10,6 @@ const store = window.electron.store;
 
 const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
 
-  if(Object.keys(attributes).length === 0) return null;
-
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const [accordionOpenState, setAccordionOpenState] = useState(store.get('accordionOpenState') || null);
   const firstTabbableElementRef = useRef(null);
@@ -70,6 +68,8 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
   useEffect(() => {
     store.set('accordionOpenState', accordionOpenState)
   }, [accordionOpenState]); 
+
+  if(Object.keys(attributes).length === 0) return null;
 
   return (
     <>

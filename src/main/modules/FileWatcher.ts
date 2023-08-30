@@ -12,7 +12,11 @@ function createFileWatcher(files: File[]): Promise<string> {
     if (watcher) {
       watcher.close();
     }
-    watcher = chokidar.watch(files.map((file) => path.join(file.path, file.todoFile)), { persistent: true });
+    watcher = chokidar.watch(files.map((file) => path.join(file.path, file.todoFile)), { 
+      useFsEvents: false,
+      usePolling: false,
+      atomic: true 
+    });
     watcher
       .on('add', (file) => {
         console.log(`FileWatcher.ts: New file added: ${file}`);

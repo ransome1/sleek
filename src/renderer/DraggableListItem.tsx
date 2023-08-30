@@ -12,7 +12,6 @@ export type DraggableListItemProps = {
 
 const DraggableListItem = ({ item, index, sorting, setSorting }: DraggableListItemProps) => {
   const handleButtonClick = () => {
-    
     const updatedSorting = sorting.map(sortingItem => {
       if (sortingItem.id === item.id) {
         return { ...sortingItem, invert: !item.invert };
