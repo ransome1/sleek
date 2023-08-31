@@ -4,17 +4,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './ToolBar.scss';
 
-const ToolBar = ({ isSearchOpen, setIsSearchOpen, headers }) => {
+const ToolBar = ({ isSearchOpen, setIsSearchOpen, headers, isSearchFocused, searchFieldRef }) => {
 
   const handleClick = (event) => {
     setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
   };
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
+    const handleKeyDown = (event) => {      
+      if ((event.metaKey || event.ctrlKey) && event.key === 'f' && !isSearchOpen) {
         event.preventDefault();
         setIsSearchOpen(!isSearchOpen);
+      } else if((event.metaKey || event.ctrlKey) && event.key === 'f' && !isSearchFocused) {
+        searchFieldRef.current.focus();
       } else if (event.key === 'Escape' && isSearchOpen) {
         setIsSearchOpen(false);
       }

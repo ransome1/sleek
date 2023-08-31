@@ -43,11 +43,6 @@ const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue
     }
   };
 
-  const handleBadgeClick = (event) => {
-    const url = 'https://github.com/ransome1/sleek/wiki/Recurring-todos-(rec:)';
-    window.open(url);
-  };
-
   useEffect(() => {
     const updatedValue = (strictRecurrence) ? '+' + amount + interval : amount + interval;
     setRecurrence(updatedValue);

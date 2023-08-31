@@ -8,7 +8,7 @@ import { setFile, removeFile } from './File';
 import { openFile, createFile } from './FileDialog';
 
 async function handleDataRequest(event: IpcMainEvent, searchString: string): void {
-  const [todoObjects, attributes, headers, filters] = await processDataRequest();
+  const [todoObjects, attributes, headers, filters] = await processDataRequest(searchString);
   event.reply('requestData', todoObjects, attributes, headers, filters);
 }
 
@@ -20,13 +20,11 @@ async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: st
       updatedString = await changeCompleteState(string, state);
     }
 
-    writeTodoObjectToFile(id, updatedString, remove)
-      .then(function (response) {
-        console.log('ipcEvents.ts:', response);
-      })
-      .catch((error) => {
-        event.reply('writeTodoToFile', error);
-      });
+    writeTodoObjectToFile(id, updatedString, remove).then(function (response) {
+      console.log('ipcEvents.ts:', response);
+    }).catch((error) => {
+      event.reply('writeTodoToFile', error);
+    });
   } catch (error) {
     console.error(error);
   }

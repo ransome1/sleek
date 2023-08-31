@@ -1,20 +1,16 @@
 @import "Variables.scss";
 
 #fileTabs {
-	min-height: auto;
-	
 	.MuiTabs-scroller {
 		button[role=tab] {
 			max-width: 15em;
 			min-width: 8.5em;
-			height: auto;
 			min-height: auto;
 			padding: 0.75em 2em;
 			color: #5a5a5a;
 			text-transform: lowercase;
 			display: flex;
 			flex-direction: row;
-			
 			svg {
 				filter: opacity(50%) grayscale(100%);
 				margin: 0 0 0 0.5em;
@@ -27,7 +23,6 @@
 		}
 		button[aria-selected=true] {
 			background: white;
-			
 			color: $links;
 		}
 		button[role=tab]:focus-visible {

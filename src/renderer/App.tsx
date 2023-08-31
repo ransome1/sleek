@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Snackbar, Alert } from '@mui/material';
 import NavigationComponent from './Navigation';
@@ -7,7 +7,8 @@ import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs';
 import theme from './Theme';
 import DrawerComponent from './Drawer';
-import Search from './Search';
+//import Search from './Search';
+import Search from './SearchHeader';
 import TodoDialog from './TodoDialog';
 import ArchiveTodos from './ArchiveTodos';
 import ToolBar from './ToolBar';
@@ -35,6 +36,8 @@ const App = () => {
   const [attributes, setAttributes] = useState<object>({});
   const [textFieldValue, setTextFieldValue] = useState('');
   const [sorting, setSorting] = useState<string[]>(store.get('sorting') || null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchFieldRef = useRef(null);
   
   const responseHandler = function(response) {
     if (response instanceof Error) {
@@ -141,22 +144,25 @@ const App = () => {
         />
         <div className="flex-items">
           <header>
-            <FileTabs
-              files={files}
-            />
+            {isSearchOpen ? null : <FileTabs files={files} />}
+            <Search
+              headers={headers}
+              searchString={searchString}
+              setSearchString={setSearchString}
+              isSearchOpen={isSearchOpen}
+              setIsSearchOpen={setIsSearchOpen}
+              isSearchFocused={isSearchFocused}
+              setIsSearchFocused={setIsSearchFocused}
+              searchFieldRef={searchFieldRef}
+            />            
             <ToolBar
               isSearchOpen={isSearchOpen}
               setIsSearchOpen={setIsSearchOpen}
               headers={headers}
+              isSearchFocused={isSearchFocused}
+              searchFieldRef={searchFieldRef}
             />
           </header>
-          <Search
-            headers={headers}
-            searchString={searchString}
-            setSearchString={setSearchString}
-            isSearchOpen={isSearchOpen}
-            setIsSearchOpen={setIsSearchOpen}
-          />
           <TodoDataGrid 
             todoObjects={todoObjects}
             setTodoObject={setTodoObject}

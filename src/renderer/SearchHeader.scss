@@ -1,0 +1,49 @@
+@import "Variables.scss";
+
+#Search {
+	display: flex;
+	flex: 1;
+	.MuiTextField-root {
+		height: 100%;
+		flex-direction: row;
+		flex: 1;
+		.MuiInputBase-root {
+			flex: 1;
+			background: transparent;
+			.MuiInputBase-input {
+				padding: 0;
+				margin: 0 1em;
+			}
+			.MuiButtonBase-root {
+				font-size: 0.9em;
+				padding: 0.2em 0.5em;
+				color: $links;
+				background: white;
+				&.Mui-focusVisible {
+					background: $links;
+					color: white;
+				}
+			}
+			button.xClick {
+				padding: $radius;
+				cursor: pointer;
+				border: none;
+				outline: none;
+				background: transparent;
+				svg {
+					font-size: 1.5em;
+					color: $links;
+				}
+			}
+			button.xClick:focus-visible {
+				svg {
+					color: $dark-grey;
+				}
+			}
+			button.xClick:focus {
+				color: $links;
+				outline: none;
+			}					
+		}
+	}
+}
