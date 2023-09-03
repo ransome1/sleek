@@ -5,6 +5,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { Item } from 'jstodotxt';
 import { File } from '../util';
+import { replaceSpeakingDatesWithAbsoluteDates } from './Date';
 
 async function writeTodoObjectToFile(id: number, string: string, remove: boolean): Promise<string> {
   if (string === '' && id < 1 && !remove) {
@@ -12,18 +13,21 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
   } else if (remove) {
     lines.splice(id, 1);
   } else {
+
+    const convertRelativeToAbsoluteDates = configStorage.get('convertRelativeToAbsoluteDates');
+    if(convertRelativeToAbsoluteDates) {
+      string = replaceSpeakingDatesWithAbsoluteDates(string);
+    }
+
     if (typeof id === 'number' && id >= 0) {
       lines[id] = string;
     } else {
       const appendCreationDate = configStorage.get('appendCreationDate');
-      if (appendCreationDate) {
-        const item = new Item(string);
-        if (!item.created()) {
-          item.setCreated(new Date());
-        }
-        string = item.toString();
+      const item = new Item(string);
+      if (appendCreationDate && !item.created()) {
+        item.setCreated(new Date());
       }
-      lines.push(string);
+      lines.push(item.toString());
     }
   }
 

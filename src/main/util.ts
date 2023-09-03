@@ -73,11 +73,15 @@ export interface Attribute {
   [key: string]: number;
 }
 
-export type DateAttribute = {
-  key: string;
-  date: string;
-  string: string;
+export interface DateAttribute {
+  date: string | null;
+  string: string | null;
+  type: string | null;
 };
+
+export interface DateAttributes {
+  [key: string]: DateAttribute;
+}
 
 export type Headers = {
   availableObjects: number;

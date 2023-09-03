@@ -47,6 +47,8 @@ if (!fs.existsSync(configPath)) {
       false,
       false
     ],
+    allowAllFileExtensions: false,
+    convertRelativeToAbsoluteDates: true,
   };
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));
@@ -59,8 +61,8 @@ if (!fs.existsSync(filtersPath)) {
 
 const handleConfigChange = async (key: string, newValue: any) => {
   // todo: what if search string was set previously? This would remove it
-  const [todoObjects, attributes, headers, filters] = await processDataRequest();
-  mainWindow.send('requestData', todoObjects, attributes, headers, filters);
+  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
+  mainWindow!.send('requestData', todoObjects, attributes, headers, filters);
   if (key === 'sorting') {
     mainWindow!.webContents.send('updateSorting', newValue);
   }
@@ -68,8 +70,8 @@ const handleConfigChange = async (key: string, newValue: any) => {
 
 const handleFilterChange = async (key: string, newValue: any) => {
   // todo: what if search string was set previously? This would remove it
-  const [todoObjects, attributes, headers, filters] = await processDataRequest();
-  mainWindow.send('requestData', todoObjects, attributes, headers, filters);
+  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
+  mainWindow!.send('requestData', todoObjects, attributes, headers, filters);
 };
 
 filterStorage.onDidChange('filters', () => {
