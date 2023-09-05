@@ -119,7 +119,7 @@ function buildMenu(files: File[]) {
           accelerator: 'Ctrl+Alt+A',
           click: () => {
             const activeFile = getActiveFile(files);
-            mainWindow.send('archiveTodos', activeFile.doneFile);
+            if(activeFile) mainWindow!.webContents.send('archiveTodos', activeFile.doneFile);
           },
         },
         {

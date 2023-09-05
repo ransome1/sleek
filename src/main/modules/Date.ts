@@ -7,42 +7,38 @@ function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const speakingDates: DateAttributes = extractSpeakingDates(string);
   const due: DateAttribute = speakingDates['due:'];
   const t: DateAttribute = speakingDates['t:'];
-
-  if(due.date) {
-    string = string.replace(due.string, due.date);
+  if (due.date) {
+    string = string.replace(due.string!, due.date);
   }
-  if(t.date) {
-    string = string.replace(t.string, t.date);
+  if (t.date) {
+    string = string.replace(t.string!, t.date);
   }
   return string;
 }
 
-function processDateWithSugar(string: string, key: string, type: string): DateAttribute {
+function processDateWithSugar(string: string, key: string, type: string): DateAttribute | null {
   const array = string.split(' ');
   let index = 0;
   let combinedValue = '';
   let lastMatch = null;
 
   while (index < array.length) {
-
-    if(array[index]) combinedValue += array[index] + ' ';
-
+    if (array[index]) combinedValue += array[index] + ' ';
     const sugarDate = Sugar.Date.create(combinedValue);
-
-    if(Sugar.Date.isValid(sugarDate)) {
+    if (Sugar.Date.isValid(sugarDate) && type === 'absolute') {
       lastMatch = {
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
         string: combinedValue.slice(0, -1),
-        type: type
-      }
-    } else if(type === 'relative') {
+        type: type,
+      };
+    } else if (Sugar.Date.isValid(sugarDate) && type === 'relative') {
       const now = new Date();
       const relativeDate = addRecurrenceToDate(now, string);
       lastMatch = {
-        date: dayjs(relativeDate).format('YYYY-MM-DD'),
-        string: string,
-        type: type
-      }
+        date: dayjs(sugarDate).format('YYYY-MM-DD'),
+        string: combinedValue.slice(0, -1),
+        type: type,
+      };
     }
     index++;
   }
@@ -75,7 +71,8 @@ function extractSpeakingDates(body: string): DateAttributes {
     const match = body.match(regex);
     if(match) {
       const attributeValue = match[0].substr(expression.key.length);
-      speakingDates[expression.key] = processDateWithSugar(attributeValue, expression.key, expression.type);
+      const dateAttribute = processDateWithSugar(attributeValue, expression.key, expression.type);
+      speakingDates[expression.key] = dateAttribute || speakingDates[expression.key];
     }
   }
 

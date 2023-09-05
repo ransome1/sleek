@@ -8,15 +8,10 @@ import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import buildMenu from './menu';
-import { resolveHtmlPath } from './util';
+import { resolveHtmlPath, File } from './util';
 import createFileWatcher from './modules/FileWatcher';
 import './modules/Ipc';
 
-interface File {
-  active: boolean;
-  path: string;
-  filename: string;
-}
 const files: File[] = (configStorage.get('files') as File[]) || [];
 
 let mainWindow: BrowserWindow | null = null;

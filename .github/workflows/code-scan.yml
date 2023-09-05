@@ -1,4 +1,4 @@
-name: Code scan on branch push and mirror to opencode.net
+name: Code scan and mirror to opencode.net
 on:
   push:
     branches:

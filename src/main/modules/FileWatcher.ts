@@ -26,7 +26,7 @@ function createFileWatcher(files: File[]): Promise<string> {
         console.log(`File ${file} has been changed`);
         try {
           const [todoObjects, attributes, headers, filters] = await processDataRequest();
-          mainWindow.send('requestData', todoObjects, attributes, headers, filters);
+          mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
         } catch (error) {
           console.log(error);
         }

@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { Item } from 'jstodotxt';
 import { File } from '../util';
-import { replaceSpeakingDatesWithAbsoluteDates } from './Date';
+import { replaceSpeakingDatesWithAbsoluteDates, extractSpeakingDates } from './Date';
 
 async function writeTodoObjectToFile(id: number, string: string, remove: boolean): Promise<string> {
   if (string === '' && id < 1 && !remove) {

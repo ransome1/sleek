@@ -1,11 +1,17 @@
-import { dialog } from 'electron'; // Importing dialog explicitly
+import { dialog } from 'electron';
 import { openFile, createFile } from '../../main/modules/FileDialog';
 import { addFile } from '../../main/modules/File';
+import { configStorage } from '../../main/config';
 import fs from 'fs/promises';
+
+jest.mock('../../main/main', () => ({
+  mainWindow: jest.fn(),
+}));
 
 jest.mock('electron', () => ({
   app: {
-    getPath: jest.fn(() => '/mock/documents/path'),
+    getPath: jest.fn(() => './src/__tests__/__mock__'),
+    getVersion: jest.fn(() => ''),
   },	
   dialog: {
     showOpenDialog: jest.fn(() => ({
@@ -16,7 +22,13 @@ jest.mock('electron', () => ({
       canceled: false,
       filePath: './src/__tests__/__mock__/fileDialog.txt',
     })),  
-  }
+  },
+}));
+
+jest.mock('../../main/config', () => ({
+  configStorage: {
+    get: jest.fn()
+  },
 }));
 
 jest.mock('../../main/modules/File', () => ({
@@ -70,7 +82,7 @@ describe('createFile', () => {
 
     expect(dialog.showSaveDialog).toHaveBeenCalledWith({
       defaultPath: expect.any(String),
-      filters: [{ name: 'Text Files', extensions: ['txt'] }],
+      filters: [{ name: 'Text Files', extensions: ['txt', 'md'] }],
     });
 
     expect(fs.writeFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', '');

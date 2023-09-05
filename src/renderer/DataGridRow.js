@@ -51,12 +51,26 @@ const DataGridRow = React.memo(({ todoObject, attributes, filters, setDialogOpen
     const valuesArray = value.split(',');
 
     return (
-      <ListItem className="row group" data-todotxt-attribute={todoObject.group} data-todotxt-value={value}>
-        {valuesArray.map((val, index) => (
-          <Button key={index} className="attribute" onClick={() => handleButtonClick(todoObject.group, val.trim())}>
-            {val.trim()}
-          </Button>
-        ))}
+      <ListItem className="row group">
+        {valuesArray.map((val, index) => {
+          const selected = (filters[todoObject.group] || []).some((filter) => filter.value === val.trim());
+          
+          return (
+            <div 
+              key={index}
+              className={selected ? 'selected' : ''}
+              data-todotxt-attribute={todoObject.group}
+            >
+              <Button 
+                
+                data-todotxt-value={value}
+                onClick={() => handleButtonClick(todoObject.group, val.trim())}
+              >
+                {val.trim()}
+              </Button>
+            </div>
+          );
+        })}
       </ListItem>
     );
   }

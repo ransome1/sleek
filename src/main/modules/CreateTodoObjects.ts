@@ -1,6 +1,6 @@
 import { Item } from 'jstodotxt';
 import { handleNotification } from './HandleNotification';
-import { TodoObject, DateAttribute } from '../util';
+import { TodoObject, DateAttributes } from '../util';
 import { extractSpeakingDates } from './Date';
 import dayjs from 'dayjs';
 
@@ -16,12 +16,12 @@ function createTodoObjects(fileContent: string): TodoObject[] {
         if (!body) {
           return null;
         }
-        const speakingDates: DateAttribute[] = extractSpeakingDates(body);
+        const speakingDates: DateAttributes = extractSpeakingDates(body);
 
-        const due = speakingDates['due:'].date;
-        const dueString = speakingDates['due:'].string;
-        const t = speakingDates['t:'].date;
-        const tString = speakingDates['t:'].string;
+        const due = speakingDates['due:'] ? speakingDates['due:'].date : null;
+        const dueString = speakingDates['due:'] ? speakingDates['due:'].string : null;
+        const t = speakingDates['t:'] ? speakingDates['t:'].date : null;
+        const tString = speakingDates['t:'] ? speakingDates['t:'].string : null;
         
         const extensions = item.extensions();
         const hidden = extensions.find((extension) => extension.key === 'h')?.value === '1' ? true : false;
@@ -37,7 +37,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
           body,
           created: creation,
           complete: item.complete(),
-          completed: completed,  
+          completed: completed,
           priority: item.priority(),
           contexts: item.contexts(),
           projects: item.projects(),
@@ -48,15 +48,17 @@ function createTodoObjects(fileContent: string): TodoObject[] {
           rec,
           hidden,
           pm,
-          string: item.toString(),        
-        }
-        return todoObject as TodoObject;        
-      } catch(error) {
+          string: item.toString(),
+        };
+
+        return todoObject as TodoObject;
+      } catch (error) {
         console.log(error);
         return null;
       }
     })
     .filter((todoObject): todoObject is TodoObject => todoObject !== null);
+
   return todoObjects;
 }
 

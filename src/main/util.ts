@@ -73,7 +73,7 @@ export interface Attribute {
   [key: string]: number;
 }
 
-export interface DateAttribute {
+export type DateAttribute = {
   date: string | null;
   string: string | null;
   type: string | null;
@@ -95,5 +95,5 @@ export interface RequestedData {
     availableObjects: number;
     visibleObjects: number;
   };
-  filters: Filter[];
+  filters: Filters;
 }

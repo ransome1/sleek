@@ -10,7 +10,7 @@ jest.mock('../../main/config', () => ({
   },
 }));
 
-const fileContent = `(B) Test +project @context todo 1 due:2023-12-31 t:2024-03-24 h:1 test @anotherContext pm:4 and a strict rec:+2w\nx 2023-07-23 2023-07-21 Test todo 2\nTest todo 3 due:end of the year\nTest todo 4 t:first day of next year\n`;
+const fileContent = `(B) Test +project @context todo 1 due:2023-12-31 t:2024-03-24 h:1 test @anotherContext pm:4 and a strict rec:+2w\nx 2023-07-23 2023-07-21 Test todo 2\nTest todo 3 due:end of the year\nTest todo 4 t:first day of next year`;
 const todoObjects = createTodoObjects(fileContent);
 
 describe('Create todo objects', () => {
