@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, FormGroup, FormControlLabel, Switch, Divider, Modal } from '@mui/material';
+import { Box, FormGroup, FormControlLabel, FormControl, InputLabel, MenuItem, Select, Switch, Divider, Modal } from '@mui/material';
 import './Settings.scss';
 
 const store = window.electron.store;
@@ -50,6 +50,20 @@ const Settings = ({ isOpen, onClose }) => {
             control={<Switch checked={convertRelativeToAbsoluteDates} onChange={handleSwitchChange} name="convertRelativeToAbsoluteDates" />}
             label="Convert relative dates to absolute dates"
           />
+          <FormControl>
+            <InputLabel id="settingsTheme">Theme</InputLabel>
+            <Select
+              labelId="settingsTheme"
+              id="settingsTheme"
+              value=""
+              label="Theme"
+              onChange={handleSwitchChange}
+            >
+              <MenuItem value={10}>Follow system</MenuItem>
+              <MenuItem value={20}>Light</MenuItem>
+              <MenuItem value={30}>Dark</MenuItem>
+            </Select>
+          </FormControl>          
         </FormGroup>
       </Box>
     </Modal>

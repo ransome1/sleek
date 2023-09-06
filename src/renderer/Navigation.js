@@ -28,22 +28,17 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
   };
 
   useEffect(() => {
-
     const handleKeyDown = (event) => {
-
       if (files?.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
         setDialogOpen(true);
         return;
       }
-
       if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
         setIsDrawerOpen((prevIsDrawerOpen) => !prevIsDrawerOpen);
         return;
       }
     };    
-
     document.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
@@ -57,25 +52,17 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
           <Button onClick={() => setDialogOpen(true)}>
             <FontAwesomeIcon icon={faPlus} />
           </Button>
-        </>
-      )}
-
-      {files?.length > 0 && headers?.availableObjects > 0 && (
-        <>
           <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen ? 'active' : ''}>
             <FontAwesomeIcon icon={faFilter} />
           </Button>
         </>
       )} 
-
       <Button onClick={handleOpenFile}>
         <FontAwesomeIcon icon={faFolderOpen} />
       </Button>
-
       <Button className='break' onClick={openSettings}>
         <FontAwesomeIcon icon={faCog} />
       </Button>
-
       <Settings isOpen={isSettingsOpen} onClose={closeSettings} />
     </nav>
   );

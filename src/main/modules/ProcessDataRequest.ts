@@ -5,7 +5,7 @@ import { configStorage, filterStorage } from '../config';
 import { updateAttributes, applyFilters } from './Filters';
 import { createTodoObjects } from './CreateTodoObjects';
 import { File, Filter, Attributes, RequestedData, Headers, Sorting, TodoObject } from '../util';
-import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString } from './ProcessTodoObjects';
+import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString, handleTodoObjectsDates } from './ProcessTodoObjects';
 
 const headers: Headers = {
   availableObjects: 0,
@@ -38,6 +38,8 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     const sorting: Sorting[] = configStorage.get('sorting');
     const fileSorting: boolean = configStorage.get('fileSorting');
     const filters: object = filterStorage.get('filters');
+    const thresholdDateInTheFuture: boolean = configStorage.get('thresholdDateInTheFuture');
+    const dueDateInTheFuture: boolean = configStorage.get('dueDateInTheFuture');
 
     const fileContent = await fs.promises.readFile(path.join(file.path, '', file.todoFile), 'utf8');
 
@@ -46,6 +48,8 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     todoObjects = await createTodoObjects(fileContent);
 
     if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
+
+    if(!thresholdDateInTheFuture || !dueDateInTheFuture) todoObjects = handleTodoObjectsDates(todoObjects, dueDateInTheFuture, thresholdDateInTheFuture);
 
     todoObjects = handleCompletedTodoObjects(todoObjects, showCompleted);
 

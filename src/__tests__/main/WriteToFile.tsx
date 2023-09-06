@@ -21,6 +21,8 @@ jest.mock('../../main/config', () => ({
         ];
       } else if (key === 'appendCreationDate') {
         return false;
+      } else if (key === 'convertRelativeToAbsoluteDates') {
+        return true;
       }
     }),
     set: jest.fn(),
@@ -48,29 +50,49 @@ describe('Writing to file', () => {
     expect(fileContent).toEqual('Line 1\nLine 2\nLine 3\nNew line');
   });
 
-   test('should write a new line when id is not provided and append a creation date', async () => {
+  test('should write a new line when id is not provided and append a creation date', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
       if (key === 'appendCreationDate') {
         return true;
       }
       return originalGet.call(configStorage, key);
-    };    
+    };  
     await writeTodoObjectToFile(-1, 'New line with creation date', false);
     const fileContent = fs.readFileSync('./src/__tests__/__mock__/test.txt', 'utf8');
     expect(fileContent).toEqual(`Line 1\nLine 2\nLine 3\nNew line\n${date} New line with creation date`);
     configStorage.get = originalGet;
-  }); 
+  });
+
+  test('should write a new line when id is not provided and convert a relative (speaking) date to an absolute date', async () => {
+    await writeTodoObjectToFile(-1, 'New line with relative threshold date t:June 3rd, 2005', false);
+    const fileContent = fs.readFileSync('./src/__tests__/__mock__/test.txt', 'utf8');
+    expect(fileContent).toEqual(`Line 1\nLine 2\nLine 3\nNew line\n${date} New line with creation date\nNew line with relative threshold date t:2005-06-03`);
+  });
+
+  test('should overwrite a line when id is provided and NOT convert a relative (speaking) date to an absolute date', async () => {
+    const originalGet = configStorage.get;
+    configStorage.get = (key: string) => {
+      if (key === 'convertRelativeToAbsoluteDates') {
+        return false;
+      }
+      return originalGet.call(configStorage, key);
+    };    
+    await writeTodoObjectToFile(5, 'New line with relative threshold date t:June 3rd, 2005', false);
+    const fileContent = fs.readFileSync('./src/__tests__/__mock__/test.txt', 'utf8');
+    expect(fileContent).toEqual(`Line 1\nLine 2\nLine 3\nNew line\n${date} New line with creation date\nNew line with relative threshold date t:June 3rd, 2005`);
+    configStorage.get = originalGet;
+  });      
 
   test('should overwrite a line when id is provided', async () => {
     await writeTodoObjectToFile(1, 'Edited line', false);
     const fileContent = fs.readFileSync('./src/__tests__/__mock__/test.txt', 'utf8');
-    expect(fileContent).toEqual(`Line 1\nEdited line\nLine 3\nNew line\n${date} New line with creation date`);
+    expect(fileContent).toEqual(`Line 1\nEdited line\nLine 3\nNew line\n${date} New line with creation date\nNew line with relative threshold date t:June 3rd, 2005`);
   });
 
   test('should delete a line when remove is true', async () => {
     await writeTodoObjectToFile(2, '', true);
     const fileContent = fs.readFileSync('./src/__tests__/__mock__/test.txt', 'utf8');
-    expect(fileContent).toEqual(`Line 1\nEdited line\nNew line\n${date} New line with creation date`);
+    expect(fileContent).toEqual(`Line 1\nEdited line\nNew line\n${date} New line with creation date\nNew line with relative threshold date t:June 3rd, 2005`);
   });
 });

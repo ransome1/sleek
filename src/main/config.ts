@@ -4,7 +4,7 @@ import { app } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
 import buildMenu from './menu';
-import { Sorting, File } from './util';
+import { Sorting, File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
@@ -15,7 +15,7 @@ if (!fs.existsSync(userDataDirectory)) {
 }
 
 const configPath = path.join(userDataDirectory, 'config.json');
-const configStorage = new Store<{ files: File[], sorting: Sorting[]; appendCreationDate: boolean; showCompleted: boolean; showHidden: boolean; windowMaximized: boolean; fileSorting: boolean }>({ cwd: userDataDirectory, name: 'config' });
+const configStorage = new Store<ConfigData>({ cwd: userDataDirectory, name: 'config' });
 const filtersPath = path.join(userDataDirectory, 'filters.json');
 const filterStorage = new Store<{}>({ cwd: userDataDirectory, name: 'filters' });
 
@@ -49,6 +49,8 @@ if (!fs.existsSync(configPath)) {
     ],
     allowAllFileExtensions: false,
     convertRelativeToAbsoluteDates: true,
+    thresholdDateInTheFuture: true,
+    dueDateInTheFuture: true,
   };
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));
@@ -73,7 +75,7 @@ filterStorage.onDidChange('filters' as never, async () => {
   mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
 });
 
-configStorage.onDidChange('files', (files) => {
+configStorage.onDidChange('files', (files: File[] | undefined) => {
   if (files) {
     buildMenu(files);
     mainWindow!.webContents.send('updateFiles', files);
@@ -86,6 +88,14 @@ configStorage.onDidChange('showCompleted', () => {
 
 configStorage.onDidChange('showHidden', () => {
   handleConfigChange('showHidden', configStorage.get('showHidden'));
+});
+
+configStorage.onDidChange('thresholdDateInTheFuture', () => {
+  handleConfigChange('thresholdDateInTheFuture', configStorage.get('thresholdDateInTheFuture'));
+});
+
+configStorage.onDidChange('dueDateInTheFuture', () => {
+  handleConfigChange('dueDateInTheFuture', configStorage.get('dueDateInTheFuture'));
 });
 
 configStorage.onDidChange('sorting', (sorting) => {

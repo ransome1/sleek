@@ -1,4 +1,5 @@
 import { TodoObject, Sorting } from '../util';
+import dayjs from 'dayjs';
 
 function countTodoObjects(todoObjects: TodoObject[]): number {
   const count = todoObjects.filter((object: TodoObject | null) => {
@@ -36,6 +37,20 @@ function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
       object && object.hidden === false
     );
     return filteredTodoObjects;
+}
+
+function handleTodoObjectsDates(todoObjects: TodoObject[], dueDateInTheFuture: boolean, thresholdDateInTheFuture: boolean): TodoObject[] {
+  return todoObjects.flat().filter((todoObject) => {
+    const tDate = dayjs(todoObject?.t);
+    const dueDate = dayjs(todoObject?.due);
+    if (!dueDateInTheFuture && dueDate && dueDate.isAfter(dayjs())) {
+      return false;
+    }
+    if (!thresholdDateInTheFuture && tDate && tDate.isAfter(dayjs())) {
+      return false;
+    }
+    return true;
+  });
 }
 
 function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]): TodoObject[] {
@@ -94,9 +109,7 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
 }
 
 function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string) {
-
   const flattenedObjects = [];
-
   function flatten(todoObject: any, sortingKey: string) {
     if (typeof todoObject === 'object' && todoObject !== null) {
       if ('id' in todoObject) {
@@ -109,10 +122,9 @@ function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string) {
         }
       }
     }
-  }
-  
+  }  
   for (const key in todoObjects) {
-    if (topLevelGroup !== null) {
+    if (topLevelGroup) {
       flattenedObjects.push({
         group: topLevelGroup,
         value: key,
@@ -120,7 +132,6 @@ function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string) {
     }
     flatten(todoObjects[key], topLevelGroup);
   }
-
   return flattenedObjects;
 }
 
@@ -130,5 +141,6 @@ export {
   sortAndGroupTodoObjects,
   countTodoObjects,
   applySearchString,
-  handleCompletedTodoObjects
+  handleCompletedTodoObjects,
+  handleTodoObjectsDates
 };

@@ -88,6 +88,21 @@ export type Headers = {
   visibleObjects: number;
 };
 
+export interface ConfigData {
+  files: File[];
+  sorting: Sorting[];
+  appendCreationDate: boolean;
+  showCompleted: boolean;
+  showHidden: boolean;
+  windowMaximized: boolean;
+  fileSorting: boolean;
+  accordionOpenState: boolean[];
+  allowAllFileExtensions: boolean;
+  convertRelativeToAbsoluteDates: boolean;
+  thresholdDateInTheFuture: boolean;
+  dueDateInTheFuture: boolean;
+}
+
 export interface RequestedData {
   flattenedTodoObjects: Record<string, any>;
   attributes: Attributes;
