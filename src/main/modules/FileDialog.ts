@@ -6,14 +6,29 @@ import { configStorage } from '../config';
 
 async function openFile(): Promise<void> {
   try {
-    const allowedFileExtensions = (configStorage.get('allowAllFileExtensions')) ? [] : ['txt', 'md']
+    if (true) { //configStorage.get('allowAllFileExtensions')
+    // const allowedFileExtensions = (configStorage.get('allowAllFileExtensions')) ? ['*'] : ['txt', 'md']
     const result: OpenDialogReturnValue = await dialog.showOpenDialog({
       properties: ['openFile'],
-      filters: [{ 
-        name: 'Text Files',
-        extensions: allowedFileExtensions }],
-    });
-
+      filters: [
+        { 
+          name: 'All Files',
+          extensions: ['*']
+        },
+        {
+          name: 'Text Files',
+          extensions: ['txt', 'md'] 
+        }],
+        });
+      
+    } else {
+      const result: OpenDialogReturnValue = await dialog.showOpenDialog({
+          properties: ['openFile'],
+          filters: [{ 
+            name: 'Text Files',
+            extensions: ['txt', 'md'] }],
+          });
+    }
     if (!result.canceled && result.filePaths.length > 0) {
       const filePath: string = result.filePaths[0];
       addFile(filePath);
