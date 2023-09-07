@@ -6,8 +6,7 @@ import { configStorage } from '../config';
 
 async function openFile(): Promise<void> {
   try {
-    if (true) { //configStorage.get('allowAllFileExtensions')
-    // const allowedFileExtensions = (configStorage.get('allowAllFileExtensions')) ? ['*'] : ['txt', 'md']
+    if (configStorage.get('allowAllFileExtensions')) {
     const result: OpenDialogReturnValue = await dialog.showOpenDialog({
       properties: ['openFile'],
       filters: [
@@ -17,7 +16,7 @@ async function openFile(): Promise<void> {
         },
         {
           name: 'Text Files',
-          extensions: ['txt', 'md'] 
+          extensions: ['txt', 'md', 'todotxt'] 
         }],
         });
       
@@ -26,7 +25,7 @@ async function openFile(): Promise<void> {
           properties: ['openFile'],
           filters: [{ 
             name: 'Text Files',
-            extensions: ['txt', 'md'] }],
+            extensions: ['txt', 'md', 'todotxt'] }],
           });
     }
     if (!result.canceled && result.filePaths.length > 0) {
