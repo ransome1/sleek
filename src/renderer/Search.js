@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -16,9 +16,8 @@ const debounce = (func, delay) => {
   };
 };
 
-const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSearchOpen }) => {
-  const searchFieldRef = useRef(null);
-  const [focused, setFocused] = useState(false);
+const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
+  
   const label = headers?.availableObjects
     ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}`
     : null;
@@ -61,27 +60,16 @@ const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSea
     <>
       {isSearchOpen && (
         <Box 
-          id='search'
+          id='Search'
           className={isSearchOpen ? 'active' : ''}
         >
           <TextField
             variant='outlined'
-            placeholder='Search'
-            label={label}
+            placeholder={`Searching ${headers.availableObjects} todos`}
             inputRef={searchFieldRef}
             value={searchString === null ? '' : searchString}
             onChange={handleInput}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
             InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <FontAwesomeIcon
-                    icon={faSearch}
-                    className={focused ? 'Mui-focusVisible' : ''}
-                  />
-                </InputAdornment>
-              ),
               endAdornment: (
                 <InputAdornment position='end'>
                   {searchString && searchString.length > 0 && (

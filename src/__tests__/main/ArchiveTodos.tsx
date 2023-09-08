@@ -32,7 +32,7 @@ describe('Archiving', () => {
 		await archiveTodos();
 		const fileContent = await fs.readFile('./src/__tests__/__mock__/done.txt', 'utf8');
 		const expectedContent = `x 2022-02-02 todo from done.txt 1\nx 2022-02-03 todo from done.txt 2\nx 2022-02-04 todo from done.txt 3\nx 2022-02-05 todo from done.txt 4\nx 2022-02-01 Finished todo 3\nx 2022-02-08 Finished todo 1\nx 2022-02-17 Finished todo 2`;
-		await new Promise((resolve) => setTimeout(resolve, 100));
+		await new Promise((resolve) => setTimeout(resolve, 500));
 		expect(fileContent).toEqual(expectedContent);
 	});
 });

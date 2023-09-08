@@ -6,14 +6,20 @@ import { configStorage } from '../config';
 
 async function openFile(): Promise<void> {
   try {
-    const allowedFileExtensions = (configStorage.get('allowAllFileExtensions')) ? [] : ['txt', 'md']
+    const dialogFilters = [
+      {
+        name: 'Text files',
+        extensions: configStorage.get('allowedFileExtensions') || ['txt']
+      },
+      {
+        name: 'All files',
+        extensions: ['*']
+      }  
+    ]
     const result: OpenDialogReturnValue = await dialog.showOpenDialog({
       properties: ['openFile'],
-      filters: [{ 
-        name: 'Text Files',
-        extensions: allowedFileExtensions }],
+      filters: dialogFilters,
     });
-
     if (!result.canceled && result.filePaths.length > 0) {
       const filePath: string = result.filePaths[0];
       addFile(filePath);
@@ -25,17 +31,23 @@ async function openFile(): Promise<void> {
 
 async function createFile(): Promise<void> {
   try {
-    const allowedFileExtensions = (configStorage.get('allowAllFileExtensions')) ? [] : ['txt', 'md']
+    const dialogFilters = [
+      {
+        name: 'Text files',
+        extensions: configStorage.get('allowedFileExtensions') || ['txt']
+      },
+      {
+        name: 'All files',
+        extensions: ['*']
+      }  
+    ]    
     const result: SaveDialogReturnValue = await dialog.showSaveDialog({
       defaultPath: path.join(app.getPath('documents'), 'todo.txt'),
-      filters: [{ name: 'Text Files', extensions: allowedFileExtensions }],
+      filters: dialogFilters,
     });
-
     if (!result.canceled && result.filePath) {
       const filePath: string = result.filePath;
-
       await fs.writeFile(filePath, '');
-
       addFile(filePath);
     }
   } catch (error) {

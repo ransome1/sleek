@@ -1,47 +1,49 @@
 @import "Variables.scss";
 
-#search {
-	.MuiFormControl-root {
-		width: 100%;
-	}
-	.MuiButtonBase-root {
-		font-size: 0.65em;
-		color: $links;
-		background: white;
-		&.Mui-focusVisible {
-			background: $links;
-			color: white;
+#Search {
+	display: flex;
+	flex: 1;
+	.MuiTextField-root {
+		height: 100%;
+		flex-direction: row;
+		flex: 1;
+		.MuiInputBase-root {
+			flex: 1;
+			background: transparent;
+			.MuiInputBase-input {
+				padding: 0;
+				margin: 0 1em;
+			}
+			.MuiButtonBase-root {
+				font-size: 0.9em;
+				padding: 0.2em 0.5em;
+				color: $links;
+				background: white;
+				&.Mui-focusVisible {
+					background: $links;
+					color: white;
+				}
+			}
+			button.xClick {
+				padding: $radius;
+				cursor: pointer;
+				border: none;
+				outline: none;
+				background: transparent;
+				svg {
+					font-size: 1.5em;
+					color: $links;
+				}
+			}
+			button.xClick:focus-visible {
+				svg {
+					color: $dark-grey;
+				}
+			}
+			button.xClick:focus {
+				color: $links;
+				outline: none;
+			}					
 		}
-	}
-	.MuiInputBase-root {
-		font-size: 1.25em;
-	}
-	button.xClick {
-		padding: $radius;
-		cursor: pointer;
-		border: none;
-		outline: none;
-		svg {
-			font-size: 2em;
-			color: $links;
-		}
-	}
-	button.xClick:focus-visible {
-		svg {
-			color: $dark-grey;
-		}
-	}
-	button.xClick:focus {
-		color: $links;
-		outline: none;
-	}
-	*[aria-hidden=false] {
-		display: none;
-	}
-	*[aria-hidden=true] {
-		display: flex;
-	}
-	> * {
-		width: 100%;
 	}
 }

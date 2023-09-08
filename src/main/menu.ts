@@ -96,11 +96,11 @@ function buildMenu(files: File[]) {
           label: 'Find',
           accelerator: 'CmdOrCtrl+F',
           click: () => {
-            // Handle Find functionality
+            mainWindow!.webContents.send('setIsSearchOpen');
           },
         },
         {
-          label: 'Hide completed',
+          label: 'Toggle completed',
           accelerator: 'Ctrl+H',
           click: async () => {
             const showCompleted = configStorage.get('showCompleted');
@@ -108,7 +108,7 @@ function buildMenu(files: File[]) {
           },
         },
         {
-          label: 'Reset filters',
+          label: 'Reset search and filters',
           accelerator: 'Ctrl+0',
           click: async () => {
             filterStorage.set('filters', {});

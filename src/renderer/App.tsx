@@ -7,8 +7,7 @@ import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs';
 import theme from './Theme';
 import DrawerComponent from './Drawer';
-//import Search from './Search';
-import Search from './SearchHeader';
+import Search from './Search';
 import TodoDialog from './TodoDialog';
 import ArchiveTodos from './ArchiveTodos';
 import ToolBar from './ToolBar';
@@ -36,7 +35,6 @@ const App = () => {
   const [attributes, setAttributes] = useState<object>({});
   const [textFieldValue, setTextFieldValue] = useState('');
   const [sorting, setSorting] = useState<string[]>(store.get('sorting') || null);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchFieldRef = useRef(null);
   
   const responseHandler = function(response) {
@@ -65,6 +63,10 @@ const App = () => {
 
   const handleUpdateSorting = (sorting: object) => {
     setSorting(sorting)
+  };
+
+  const handleSetIsSearchOpen = () => {
+    setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
   };
 
   useEffect(() => {
@@ -118,6 +120,7 @@ const App = () => {
     ipcRenderer.on('requestData', handleRequestedData);
     ipcRenderer.on('updateFiles', handleUpdateFiles);
     ipcRenderer.on('updateSorting', handleUpdateSorting);
+    ipcRenderer.on('setIsSearchOpen', handleSetIsSearchOpen);
   }, []);
 
   return (
@@ -151,15 +154,12 @@ const App = () => {
               setSearchString={setSearchString}
               isSearchOpen={isSearchOpen}
               setIsSearchOpen={setIsSearchOpen}
-              isSearchFocused={isSearchFocused}
-              setIsSearchFocused={setIsSearchFocused}
               searchFieldRef={searchFieldRef}
             />            
             <ToolBar
               isSearchOpen={isSearchOpen}
               setIsSearchOpen={setIsSearchOpen}
               headers={headers}
-              isSearchFocused={isSearchFocused}
               searchFieldRef={searchFieldRef}
             />
           </header>

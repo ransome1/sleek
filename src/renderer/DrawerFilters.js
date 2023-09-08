@@ -36,19 +36,19 @@ const DrawerFilters = () => {
       <FormGroup>
         <FormControlLabel
           control={<Switch checked={showCompleted} onChange={handleSwitchChange} name="showCompleted" />}
-          label="Show completed todos"
+          label="Completed todos"
         />
         <FormControlLabel
           control={<Switch checked={showHidden} onChange={handleSwitchChange} name="showHidden" />}
-          label="Show hidden todos"
+          label="Hidden todos"
         />
         <FormControlLabel
           control={<Switch checked={thresholdDateInTheFuture} onChange={handleSwitchChange} name="thresholdDateInTheFuture" />}
-          label="Display tasks with a threshold date set in the future"
+          label="Threshold date set in the future"
         />
         <FormControlLabel
           control={<Switch checked={dueDateInTheFuture} onChange={handleSwitchChange} name="dueDateInTheFuture" />}
-          label="Display tasks with a due date set in the future"
+          label="Due date set in the future"
         />
       </FormGroup>
     </Box>

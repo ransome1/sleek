@@ -97,7 +97,6 @@ export interface ConfigData {
   windowMaximized: boolean;
   fileSorting: boolean;
   accordionOpenState: boolean[];
-  allowAllFileExtensions: boolean;
   convertRelativeToAbsoluteDates: boolean;
   thresholdDateInTheFuture: boolean;
   dueDateInTheFuture: boolean;
