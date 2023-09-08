@@ -47,7 +47,6 @@ if (!fs.existsSync(configPath)) {
       false,
       false
     ],
-    allowAllFileExtensions: false,
     convertRelativeToAbsoluteDates: true,
     thresholdDateInTheFuture: true,
     dueDateInTheFuture: true,

@@ -6,12 +6,22 @@ import { configStorage } from '../config';
 
 async function openFile(): Promise<void> {
   try {
-    const allowedFileExtensions = (configStorage.get('allowAllFileExtensions')) ? [] : ['txt', 'md']
     const result: OpenDialogReturnValue = await dialog.showOpenDialog({
       properties: ['openFile'],
-      filters: [{ 
-        name: 'Text Files',
-        extensions: allowedFileExtensions }],
+      filters: [
+        {
+          name: 'Text Files (.txt .md)',
+          extensions:  ['txt', 'md']
+        },
+        {
+          name: 'todotxt Files (.todotxt)',
+          extensions:  ['todotxt']
+        },
+        {
+          name: 'All Files',
+          extensions:  ['*']
+        }
+      ],
     });
 
     if (!result.canceled && result.filePaths.length > 0) {
@@ -25,10 +35,22 @@ async function openFile(): Promise<void> {
 
 async function createFile(): Promise<void> {
   try {
-    const allowedFileExtensions = (configStorage.get('allowAllFileExtensions')) ? [] : ['txt', 'md']
     const result: SaveDialogReturnValue = await dialog.showSaveDialog({
       defaultPath: path.join(app.getPath('documents'), 'todo.txt'),
-      filters: [{ name: 'Text Files', extensions: allowedFileExtensions }],
+      filters: [
+        {
+          name: 'Text Files (.txt .md)',
+          extensions:  ['txt', 'md']
+        },
+        {
+          name: 'todotxt Files (.todotxt)',
+          extensions:  ['todotxt']
+        },
+        {
+          name: 'All Files',
+          extensions:  ['*']
+        }
+      ],
     });
 
     if (!result.canceled && result.filePath) {
