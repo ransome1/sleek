@@ -50,7 +50,6 @@ if (!fs.existsSync(configPath)) {
     convertRelativeToAbsoluteDates: true,
     thresholdDateInTheFuture: true,
     dueDateInTheFuture: true,
-    allowedFileExtensions: ['txt']
   };
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));

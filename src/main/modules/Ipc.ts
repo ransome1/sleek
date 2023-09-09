@@ -30,7 +30,7 @@ async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: st
   }
 }
 
-function handleStoreGet(event: IpcMainEvent, value: string): void {
+function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
   try {
     event.returnValue = configStorage.get(value);
     console.log(`ipcEvents.ts: Received config value for ${value}`);
@@ -39,7 +39,7 @@ function handleStoreGet(event: IpcMainEvent, value: string): void {
   }
 }
 
-function handleStoreSet(event: IpcMainEvent, key: string, value: any): void {
+function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any): void {
   try {
     configStorage.set(key, value);
     console.log(`ipcEvents.ts: Set ${key} to ${value}`);
@@ -58,8 +58,8 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
 }
 
 function removeEventListeners(): void {
-  ipcMain.off('storeGet', handleStoreGet);
-  ipcMain.off('storeSet', handleStoreSet);
+  ipcMain.off('storeGetConfig', handleStoreGetConfig);
+  ipcMain.off('storeSetConfig', handleStoreSetConfig);
   ipcMain.off('storeSetFilters', handleStoreSetFilters);
   ipcMain.off('setFile', setFile);
   ipcMain.off('removeFile', removeFile);
@@ -72,8 +72,8 @@ function removeEventListeners(): void {
 
 app.on('before-quit', removeEventListeners);
 
-ipcMain.on('storeGet', handleStoreGet);
-ipcMain.on('storeSet', handleStoreSet);
+ipcMain.on('storeGetConfig', handleStoreGetConfig);
+ipcMain.on('storeSetConfig', handleStoreSetConfig);
 ipcMain.on('storeSetFilters', handleStoreSetFilters);
 ipcMain.on('setFile', setFile);
 ipcMain.on('removeFile', removeFile);

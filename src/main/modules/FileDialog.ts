@@ -2,20 +2,20 @@ import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'elect
 import path from 'path';
 import fs from 'fs/promises';
 import { addFile } from './File';
-import { configStorage } from '../config';
+
+const dialogFilters = [
+  {
+    name: 'Text files',
+    extensions: ['txt']
+  },
+  {
+    name: 'All files',
+    extensions: ['*']
+  }  
+]
 
 async function openFile(): Promise<void> {
   try {
-    const dialogFilters = [
-      {
-        name: 'Text files',
-        extensions: configStorage.get('allowedFileExtensions') || ['txt']
-      },
-      {
-        name: 'All files',
-        extensions: ['*']
-      }  
-    ]
     const result: OpenDialogReturnValue = await dialog.showOpenDialog({
       properties: ['openFile'],
       filters: dialogFilters,
@@ -30,17 +30,7 @@ async function openFile(): Promise<void> {
 }
 
 async function createFile(): Promise<void> {
-  try {
-    const dialogFilters = [
-      {
-        name: 'Text files',
-        extensions: configStorage.get('allowedFileExtensions') || ['txt']
-      },
-      {
-        name: 'All files',
-        extensions: ['*']
-      }  
-    ]    
+  try { 
     const result: SaveDialogReturnValue = await dialog.showSaveDialog({
       defaultPath: path.join(app.getPath('documents'), 'todo.txt'),
       filters: dialogFilters,

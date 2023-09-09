@@ -36,6 +36,7 @@ const App = () => {
   const [textFieldValue, setTextFieldValue] = useState('');
   const [sorting, setSorting] = useState<string[]>(store.get('sorting') || null);
   const searchFieldRef = useRef(null);
+  const [isNavigationHidden, setIsNavigationHidden] = useState<boolean>(store.get('isNavigationHidden') || false);
   
   const responseHandler = function(response) {
     if (response instanceof Error) {
@@ -68,6 +69,14 @@ const App = () => {
   const handleSetIsSearchOpen = () => {
     setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
   };
+
+  const handleSetIsNavigationHidden = () => {
+    setIsNavigationHidden(prevIsNavigationHidden => !prevIsNavigationHidden);
+  };
+
+  useEffect(() => {
+    store.set('isNavigationHidden', isNavigationHidden)
+  }, [isNavigationHidden]);
 
   useEffect(() => {
     if(!headers) return;
@@ -121,12 +130,13 @@ const App = () => {
     ipcRenderer.on('updateFiles', handleUpdateFiles);
     ipcRenderer.on('updateSorting', handleUpdateSorting);
     ipcRenderer.on('setIsSearchOpen', handleSetIsSearchOpen);
+    ipcRenderer.on('setIsNavigationHidden', handleSetIsNavigationHidden);
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="flex-container">
+      <div className={isNavigationHidden ? 'flexContainer hideNavigation' : 'flexContainer'}>
         <NavigationComponent
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
@@ -135,6 +145,8 @@ const App = () => {
           setDialogOpen={setDialogOpen}
           files={files}
           headers={headers}
+          isNavigationHidden={isNavigationHidden}
+          setIsNavigationHidden={setIsNavigationHidden}
         />
         <DrawerComponent 
           isDrawerOpen={isDrawerOpen}
@@ -145,7 +157,7 @@ const App = () => {
           sorting={sorting}
           setSorting={setSorting}
         />
-        <div className="flex-items">
+        <div className="flexItems">
           <header>
             {isSearchOpen ? null : <FileTabs files={files} />}
             <Search

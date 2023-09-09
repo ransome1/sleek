@@ -69,8 +69,8 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnac
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleAdd}>Save</Button>
         <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+        <Button onClick={handleAdd}>Save</Button>
       </DialogActions>
     </Dialog>
   );

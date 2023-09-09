@@ -4,6 +4,15 @@
 	padding: 0 1em;
 	margin: 0;
 	overflow-y: scroll;
+	.placeholder {
+		padding: 2em 0;
+		color: $dark-grey;
+		text-align: center;
+		svg {
+			font-size: 2.5em;
+			margin-bottom: 0.5em;
+		}
+	}
 	h3 {
 		font-family: 'FreeSansBold';
 		padding: 0;

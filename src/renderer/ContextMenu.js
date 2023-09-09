@@ -4,28 +4,31 @@ import Prompt from './Prompt';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const ContextMenu = ({ anchorPosition, index, setContextMenuPosition }) => {
+const ContextMenu = ({ anchorPosition, items, onClose, index }) => {
   const [showPrompt, setShowPrompt] = useState(false);
+  const [promptItem, setPromptItem] = useState(null);
 
-  const handleMenuClick = (action) => {
-    if (action === 'delete') {
+  const handleMenuClick = (item) => {
+    if (item.id === 'delete') {
       setShowPrompt(true);
+      setPromptItem(item);
     }
-    handleCloseContextMenu();
+    onClose();
   };
 
   const handleCloseContextMenu = () => {
-    setContextMenuPosition(null);
+    onClose();
   };
 
   const handlePromptClose = () => {
     setShowPrompt(false);
+    setPromptItem(null);
   };
 
   const handlePromptConfirm = () => {
     setShowPrompt(false);
     ipcRenderer.send('writeTodoToFile', index, undefined, undefined, true);
-  };    
+  };
 
   return (
     <>
@@ -35,16 +38,22 @@ const ContextMenu = ({ anchorPosition, index, setContextMenuPosition }) => {
         anchorReference="anchorPosition"
         anchorPosition={anchorPosition}
       >
-        <MenuItem onClick={() => handleMenuClick('delete')}>Delete</MenuItem>
+        {items.map((item) => (
+          <MenuItem key={item.id} onClick={() => handleMenuClick(item)}>
+            {item.label}
+          </MenuItem>
+        ))}
       </Menu>
-      <Prompt
-        open={showPrompt}
-        onClose={handlePromptClose}
-        onConfirm={handlePromptConfirm}
-        headline="Delete todo?"
-        text="The todo will be permanentaly removed from the file"
-        buttonText="Delete"
-      />      
+      {promptItem && (
+        <Prompt
+          open={showPrompt}
+          onClose={handlePromptClose}
+          onConfirm={handlePromptConfirm}
+          headline={promptItem.headline}
+          text={promptItem.text}
+          buttonText={promptItem.label}
+        />
+      )}
     </>
   );
 };

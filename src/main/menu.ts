@@ -90,6 +90,18 @@ function buildMenu(files: File[]) {
       ],
     },
     {
+      label: 'View',
+      submenu: [        
+        {
+          label: 'Toggle navigation',
+          accelerator: 'Ctrl+Alt+H',
+          click: () => {
+            mainWindow!.webContents.send('setIsNavigationHidden');
+          },
+        },
+      ],
+    },    
+    {
       label: 'Todos',
       submenu: [
         {

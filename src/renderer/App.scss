@@ -9,12 +9,12 @@ body {
   -ms-user-select: none;
 
   #root {
-    .flex-container {
+    .flexContainer {
       display: flex;
       flex-direction: row;
       margin-left: 5em;
-
-      .flex-items {
+      transition: margin-left 0.3s ease;
+      .flexItems {
         width: 100%;
         height: 100vh;
         display: flex;
@@ -23,6 +23,32 @@ body {
           display: flex;
           flex-direction: row;
           background: #ebebeb;
+        }
+      }
+      button.showNavigation {
+        width: 2.5em;
+        height: 5em;
+        position: fixed;
+        bottom: 0;
+        display: none;
+        background: white;
+        z-index: 10;
+        transition: width 0.3s ease;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        &:hover {
+          width: 5em;
+        }
+      }      
+      &.hideNavigation {
+        transition: margin-left 0.3s ease;
+        margin-left: 0;
+        button.showNavigation {
+          display: flex;
+        }        
+        #navigation {
+          left: -5em;
         }
       }
     }

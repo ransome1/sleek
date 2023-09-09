@@ -8,13 +8,10 @@ export type Channels =
   | 'openFile'
   | 'createFile'
   | 'updateFiles'
-  | 'storeGet'
-  | 'storeSet'
+  | 'storeGetConfig'
+  | 'storeSetConfig'
   | 'storeSetFilters'
-  | 'selectedFilters'
-  | 'applySearchString'
-  | 'archiveTodos'
-  | 'focusSearch';
+  | 'archiveTodos';
 
 interface ElectronStore {
   get: <T>(key: string) => T;
@@ -34,10 +31,10 @@ const electronHandler: {
 } = {
   store: {
     get<T>(key: string): T {
-      return ipcRenderer.sendSync('storeGet', key);
+      return ipcRenderer.sendSync('storeGetConfig', key);
     },
     set(property: string, val: unknown): void {
-      ipcRenderer.send('storeSet', property, val);
+      ipcRenderer.send('storeSetConfig', property, val);
     },
     setFilters(val: unknown): void {
       ipcRenderer.send('storeSetFilters', val);

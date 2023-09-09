@@ -47,15 +47,6 @@ const DataGridRow = React.memo(
       }
     };
 
-    const handleContextMenu = (event) => {
-      event.preventDefault();
-      setContextMenuPosition({ top: event.clientY, left: event.clientX });
-    };
-
-    const handleButtonClick = (key, value) => {
-      handleFilterSelect(key, value, filters, false);
-    };
-
     const replacements = {
       due: () => (
         <DatePickerInline
@@ -200,9 +191,36 @@ const DataGridRow = React.memo(
       );
     }
 
+    const handleContextMenuClick = (event) => {
+      event.preventDefault();
+      setContextMenuPosition({ top: event.clientY, left: event.clientX });
+    };
+
+    const handleCloseContextMenu = () => {
+      setContextMenuPosition(null);
+    };    
+
+    const contextMenuItems = [
+      {
+        id: 'delete',
+        action: () => {
+          handleCloseContextMenu();
+        },
+        headline: 'Delete todo?',
+        text: 'The todo will be permanently removed from the file',
+        label: 'Delete',
+      },
+    ];
+
     return (
       <ThemeProvider theme={theme}>
-        <ContextMenu index={todoObject.id} anchorPosition={contextMenuPosition} setContextMenuPosition={setContextMenuPosition} />
+        
+        <ContextMenu
+          index={todoObject.id}
+          anchorPosition={contextMenuPosition}
+          items={contextMenuItems}
+          onClose={handleCloseContextMenu}
+        />        
 
         <ListItem
           tabIndex={0}
@@ -212,7 +230,7 @@ const DataGridRow = React.memo(
           data-hidden={todoObject.hidden}
           onClick={handleRowClick}
           onKeyDown={handleRowClick}
-          onContextMenu={handleContextMenu}
+          onContextMenu={handleContextMenuClick}
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
         >

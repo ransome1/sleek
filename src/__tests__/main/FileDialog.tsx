@@ -49,7 +49,7 @@ describe('openFile', () => {
 
     expect(dialog.showOpenDialog).toHaveBeenCalledWith({
       properties: ['openFile'],
-      filters: [{ name: 'Text Files', extensions: ['txt', 'md'] }],
+      filters: [{ name: 'Text files', extensions: ['txt'] }, { name: 'All files', extensions: ['*'] }],
     });
 
     expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt');
@@ -82,7 +82,7 @@ describe('createFile', () => {
 
     expect(dialog.showSaveDialog).toHaveBeenCalledWith({
       defaultPath: expect.any(String),
-      filters: [{ name: 'Text Files', extensions: ['txt', 'md'] }],
+      filters: [{ name: 'Text files', extensions: ['txt'] }, { name: 'All files', extensions: ['*'] }],
     });
 
     expect(fs.writeFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', '');

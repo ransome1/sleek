@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faFilter, faFolderOpen, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faFilter, faFolderOpen, faCog, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { Button, Box } from '@mui/material';
 import Settings from './Settings';
 import './Navigation.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers }) => {
+const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers, isNavigationHidden, setIsNavigationHidden }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const openSettings = () => {
@@ -25,6 +25,10 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
 
   const handleOpenFile = () => {
     ipcRenderer.send('openFile');
+  };
+
+  const hideNavigation = () => {
+    setIsNavigationHidden(prevIsNavigationHidden => !prevIsNavigationHidden);
   };
 
   useEffect(() => {
@@ -45,26 +49,34 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
   }, [files]);
 
   return (
-    <nav id='navigation'>
-      <Box>sleek</Box>
-      {files?.length > 0 && (
-        <>
-          <Button onClick={() => setDialogOpen(true)}>
-            <FontAwesomeIcon icon={faPlus} />
-          </Button>
-          <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen ? 'active' : ''}>
-            <FontAwesomeIcon icon={faFilter} />
-          </Button>
-        </>
-      )} 
-      <Button onClick={handleOpenFile}>
-        <FontAwesomeIcon icon={faFolderOpen} />
+    <>
+      <nav id='navigation'>
+        <Box>sleek</Box>
+        {files?.length > 0 && (
+          <>
+            <Button onClick={() => setDialogOpen(true)}>
+              <FontAwesomeIcon icon={faPlus} />
+            </Button>
+            <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen ? 'active' : ''}>
+              <FontAwesomeIcon icon={faFilter} />
+            </Button>
+          </>
+        )} 
+        <Button onClick={handleOpenFile}>
+          <FontAwesomeIcon icon={faFolderOpen} />
+        </Button>
+        <Button className='break' onClick={openSettings}>
+          <FontAwesomeIcon icon={faCog} />
+        </Button>
+        <Settings isOpen={isSettingsOpen} onClose={closeSettings} />
+        <Button onClick={hideNavigation}>
+          <FontAwesomeIcon icon={faAngleLeft} />
+        </Button>
+      </nav>
+      <Button onClick={hideNavigation} className="showNavigation">
+        <FontAwesomeIcon icon={faAngleRight} />
       </Button>
-      <Button className='break' onClick={openSettings}>
-        <FontAwesomeIcon icon={faCog} />
-      </Button>
-      <Settings isOpen={isSettingsOpen} onClose={closeSettings} />
-    </nav>
+    </>
   );
 };
 

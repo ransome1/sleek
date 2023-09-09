@@ -1,6 +1,7 @@
 @import "Variables.scss";
 
 #navigation {
+  width: 5em;
   position: fixed;
   z-index: 10;
   top: 0;
@@ -9,7 +10,7 @@
   background: $lighter-grey;
   display: flex;
   flex-direction: column;
-
+  transition: left 0.3s ease;
   div {
     font-family: $font-family-bold;
     line-height: 5em;
@@ -17,22 +18,18 @@
     color: white;
     background: linear-gradient(0.33turn, #1b5551, #813e93);
   }
-
   button {
-    border-radius: 0 !important;
+    border-radius: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
     width: 5em;
     height: 5em;
     background: none;
-
     &.break {
       margin-top: auto;
     }
-
     svg {
       color: $dark-grey;
     }
-
     &:hover, &:active, &.active {
       background: $light-grey;
     }
