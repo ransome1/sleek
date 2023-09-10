@@ -1,4 +1,4 @@
-# Contributing Guidelines
+# Contribution Guidelines
 
 Thank you for your interest in contributing to the sleek project! We welcome contributions from the community to help improve and enhance the project. To ensure a smooth collaboration, please review and follow these guidelines.
 

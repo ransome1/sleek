@@ -1,6 +1,6 @@
 # sleek
 
-## ❤️ Join the project and become a contributer
+## ❤️ Join the project and become a contributor
 Join us in our mission to create a user-friendly, free, and open-source todo.txt client. We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `2.x` branch reflects the most recent progress, so feel free to fork it and dive into the exciting work ahead: https://github.com/users/ransome1/projects/3.
 
 For those interested, we've updated our contribution guidelines, which you can find here: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md. Your contributions will play a significant role in shaping the future of our project.
@@ -23,21 +23,21 @@ For those interested, we've updated our contribution guidelines, which you can f
 
 sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
 
-All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
+All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allows for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
-sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below. Many useful information can be found in <a href="https://github.com/ransome1/sleek/wiki">sleek's wiki</a>.
+sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below. Useful information can be found in <a href="https://github.com/ransome1/sleek/wiki">sleek's wiki</a>.
 
 ### Screenshots
 ![Alt text](assets/screenshots/mac/main.png?raw=true "Screenshot of sleek's todo list view")
 ![Alt text](assets/screenshots/mac/drawer.png?raw=true "Screenshot of sleek's auto complete function and multi line todo feature")
 
 ### Support sleek
-* Star, fork and watch it on Github.
-* Review it on <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank">Mac App Store</a>, <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
+* Star, fork, and watch it on Github.
+* Review it on the <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank">Mac App Store</a>, <a href="https://sourceforge.net/projects/sleek/reviews" target="blank">SourceForge</a> or the <a href="https://www.microsoft.com/store/apps/9NWM2WXF60KR" target="blank">Windows Store</a>
 * <a href="https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md">Contribute to sleek</a>
 
 ### Sponsor sleek
-Pushing sleek to Apple's and Micosoft's app stores creates anual costs. You can support me by covering these costs and <a href="https://github.com/sponsors/ransome1">sponsor me</a>.
+Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can cover these costs by <a href="https://github.com/sponsors/ransome1">sponsoring me</a>.
 
 ### Get sleek from Apple Mac App Store
 <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank"><img src='assets/store_badges/Download_on_the_Mac_App_Store.png' alt='Get sleek from Apple Mac App Store' width='180'/></a>
@@ -73,7 +73,7 @@ You can download sleek for Windows, MacOS and Linux from
 
 ### Build sleek from source code
 1. Setup <a href="https://docs.github.com/en/github/getting-started-with-github/set-up-git" target="blank">Git</a>, <a href="https://nodejs.org/" target="blank">node.js</a> and <a href="https://yarnpkg.com/getting-started" target="blank">yarn</a>.
-2. Clone sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
+2. Clone sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleek's directory
 3. Install dependencies `yarn install --production`
 4. Build sleek `yarn build:windows` or `yarn build:linux` or `yarn build:macos`
 5. The binaries will be placed in the working directory, in a subfolder named `dist`
@@ -88,8 +88,8 @@ You can download sleek for Windows, MacOS and Linux from
   - creation dates
   - recurrences (repeating todos)
   - threshold dates
-* Sort and group todos by priority, due and creation date, context and project or as they occur in the text file
-* Filter todos by context, project and priority
+* Sort and group todos by priority, due date, creation date, context, project, or as they occur in the text file
+* Filter todos by context, project, and priority
 * Find todos using full-text search compatible with todo.txt syntax
 * Inline autocomplete available
 * Dates and priorities can be selected by built-in picker elements 
@@ -98,8 +98,8 @@ You can download sleek for Windows, MacOS and Linux from
 * Options for due date reminders and notification badges
 * Easily toggle between dark and light mode
 * Compact view and zoom available
-* Completed todos can be shown, hidden and archived
-* Multi line todos can be created
+* Completed todos can be shown, hidden, and archived
+* Multiline todos can be created
 * Filters are sorted alphanummerically and can be renamed or deleted
 * Hyperlinks detected automatically
 * File watcher scans todo.txt files for changes
@@ -119,7 +119,7 @@ You can download sleek for Windows, MacOS and Linux from
   - Polish
   - Russian
 
-A more detailed documentation can be found in <a href="https://github.com/ransome1/sleek/wiki/">sleeks wiki</a>.
+A more detailed documentation can be found in <a href="https://github.com/ransome1/sleek/wiki/">sleek's wiki</a>.
 
 ### Used libraries
 - Electron: https://github.com/electron/electron
