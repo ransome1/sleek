@@ -1,18 +1,50 @@
 import Store from 'electron-store';
 import path from 'path';
-import { app } from 'electron';
+import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
 import buildMenu from './menu';
 import { Sorting, File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 
-const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
-console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
+const defaultConfigData = {
+  sorting: [
+    { id: '1', value: 'priority', invert: false },
+    { id: '2', value: 'projects', invert: false },
+    { id: '3', value: 'contexts', invert: false },
+    { id: '4', value: 'due', invert: false },
+    { id: '5', value: 't', invert: false },
+    { id: '6', value: 'completed', invert: false },
+    { id: '7', value: 'created', invert: false },
+  ],
+  accordionOpenState: [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  files: [],
+  appendCreationDate: false,
+  showCompleted: true,
+  showHidden: true,
+  windowMaximized: false,
+  fileSorting: false,
+  convertRelativeToAbsoluteDates: true,
+  thresholdDateInTheFuture: true,
+  dueDateInTheFuture: true,
+  colorTheme: 'system',
+  shouldUseDarkColors: false,
+  notificationsAllowed: false,
+};
 
-if (!fs.existsSync(userDataDirectory)) {
-  fs.mkdirSync(userDataDirectory);
-}
+const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
+if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
+console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
 const configPath = path.join(userDataDirectory, 'config.json');
 const configStorage = new Store<ConfigData>({ cwd: userDataDirectory, name: 'config' });
@@ -20,38 +52,6 @@ const filtersPath = path.join(userDataDirectory, 'filters.json');
 const filterStorage = new Store<{}>({ cwd: userDataDirectory, name: 'filters' });
 
 if (!fs.existsSync(configPath)) {
-  const defaultConfigData = {
-    files: [],
-    sorting: [
-      { id: '1', value: 'priority', invert: false },
-      { id: '2', value: 'projects', invert: false },
-      { id: '3', value: 'contexts', invert: false },
-      { id: '4', value: 'due', invert: false },
-      { id: '5', value: 't', invert: false },
-      { id: '6', value: 'completed', invert: false },
-      { id: '7', value: 'created', invert: false },
-    ],
-    appendCreationDate: false,
-    showCompleted: true,
-    showHidden: true,
-    windowMaximized: false,
-    fileSorting: false,
-    accordionOpenState: [
-      true,
-      true,
-      true,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ],
-    convertRelativeToAbsoluteDates: true,
-    thresholdDateInTheFuture: true,
-    dueDateInTheFuture: true,
-  };
-
   fs.writeFileSync(configPath, JSON.stringify(defaultConfigData, null, 2));
 }
 
@@ -103,6 +103,16 @@ configStorage.onDidChange('sorting', (sorting) => {
 
 configStorage.onDidChange('fileSorting', (fileSorting) => {
   handleConfigChange('fileSorting', fileSorting);
+});
+
+configStorage.onDidChange('colorTheme', (colorTheme) => {
+  nativeTheme.themeSource = colorTheme;
+});
+
+nativeTheme.on('updated', () => {
+  const shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
+  configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
+  mainWindow!.webContents.send('shouldUseDarkColors', shouldUseDarkColors);
 });
 
 export { configStorage, filterStorage };

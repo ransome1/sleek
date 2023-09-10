@@ -14,4 +14,13 @@
   border-radius: $radius;
 
   padding: 1em 2em 2em 2em;
+
+  .MuiFormControl-root {
+    
+    margin: 1em 0;
+    .MuiInputBase-root {
+      background: white;
+
+    }
+  }
 }

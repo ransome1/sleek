@@ -21,9 +21,10 @@
   button {
     border-radius: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    width: 5em;
-    height: 5em;
+    min-width: 5em;
+    min-height: 5em;
     background: none;
+    font-size: 1em;
     &.break {
       margin-top: auto;
     }

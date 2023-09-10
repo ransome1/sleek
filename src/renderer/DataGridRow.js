@@ -5,11 +5,9 @@ import {
   Button,
   Divider,
   Chip,
-  ThemeProvider,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import theme from './Theme';
 import { handleFilterSelect } from './Shared';
 import ContextMenu from './ContextMenu';
 import DatePickerInline from './DatePickerInline';
@@ -46,6 +44,10 @@ const DataGridRow = React.memo(
         }
       }
     };
+
+    const handleButtonClick = (key, value) => {
+      handleFilterSelect(key, value, filters, false);
+    };    
 
     const replacements = {
       due: () => (
@@ -213,8 +215,7 @@ const DataGridRow = React.memo(
     ];
 
     return (
-      <ThemeProvider theme={theme}>
-        
+      <> 
         <ContextMenu
           index={todoObject.id}
           anchorPosition={contextMenuPosition}
@@ -243,7 +244,7 @@ const DataGridRow = React.memo(
           {elements}
 
         </ListItem>
-      </ThemeProvider>
+      </>
     );
   }
 );

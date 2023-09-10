@@ -1,5 +1,6 @@
 import { Notification } from 'electron';
 import dayjs from 'dayjs';
+import { configStorage } from '../config';
 
 export const notifiedTodoObjects: Set<number> = new Set();
 
@@ -9,13 +10,13 @@ export const sendNotification = (title: string, body: string) => {
     body: body,
     silent: false,
   };
-
   const notification = new Notification(options);
   notification.show();
 }
 
 export function handleNotification(id: number, due: string | null, body: string) {
-  if (due && !notifiedTodoObjects.has(id)) {
+  const notificationAllowed = configStorage.get('notifications');
+  if (notificationAllowed && due && !notifiedTodoObjects.has(id)) {
     const dueDate = dayjs(due, 'YYYY-MM-DD');
     const today = dayjs().startOf('day');
     const tomorrow = dayjs().add(1, 'day').startOf('day');

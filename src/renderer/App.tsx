@@ -5,7 +5,7 @@ import NavigationComponent from './Navigation';
 import TodoDataGrid from './DataGrid';
 import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs';
-import theme from './Theme';
+import { darkTheme, lightTheme } from './Themes';
 import DrawerComponent from './Drawer';
 import Search from './Search';
 import TodoDialog from './TodoDialog';
@@ -37,6 +37,8 @@ const App = () => {
   const [sorting, setSorting] = useState<string[]>(store.get('sorting') || null);
   const searchFieldRef = useRef(null);
   const [isNavigationHidden, setIsNavigationHidden] = useState<boolean>(store.get('isNavigationHidden') || false);
+  const [colorTheme, setColorTheme] = useState<boolean>(store.get('colorTheme') || 'system');
+  const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
   
   const responseHandler = function(response) {
     if (response instanceof Error) {
@@ -72,6 +74,10 @@ const App = () => {
 
   const handleSetIsNavigationHidden = () => {
     setIsNavigationHidden(prevIsNavigationHidden => !prevIsNavigationHidden);
+  };
+
+  const handleSetShouldUseDarkColors = (shouldUseDarkColors: boolean) => {
+    setShouldUseDarkColors(shouldUseDarkColors);
   };
 
   useEffect(() => {
@@ -131,10 +137,11 @@ const App = () => {
     ipcRenderer.on('updateSorting', handleUpdateSorting);
     ipcRenderer.on('setIsSearchOpen', handleSetIsSearchOpen);
     ipcRenderer.on('setIsNavigationHidden', handleSetIsNavigationHidden);
+    ipcRenderer.on('shouldUseDarkColors', handleSetShouldUseDarkColors);
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
       <CssBaseline />
       <div className={isNavigationHidden ? 'flexContainer hideNavigation' : 'flexContainer'}>
         <NavigationComponent
@@ -147,6 +154,8 @@ const App = () => {
           headers={headers}
           isNavigationHidden={isNavigationHidden}
           setIsNavigationHidden={setIsNavigationHidden}
+          colorTheme={colorTheme}
+          setColorTheme={setColorTheme}
         />
         <DrawerComponent 
           isDrawerOpen={isDrawerOpen}

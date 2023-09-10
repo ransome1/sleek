@@ -7,7 +7,7 @@ import './Navigation.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers, isNavigationHidden, setIsNavigationHidden }) => {
+const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers, isNavigationHidden, setIsNavigationHidden, colorTheme, setColorTheme }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const openSettings = () => {
@@ -68,7 +68,7 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
         <Button className='break' onClick={openSettings}>
           <FontAwesomeIcon icon={faCog} />
         </Button>
-        <Settings isOpen={isSettingsOpen} onClose={closeSettings} />
+        <Settings isOpen={isSettingsOpen} onClose={closeSettings} colorTheme={colorTheme} setColorTheme={setColorTheme} />
         <Button onClick={hideNavigation}>
           <FontAwesomeIcon icon={faAngleLeft} />
         </Button>

@@ -11,7 +11,8 @@ export type Channels =
   | 'storeGetConfig'
   | 'storeSetConfig'
   | 'storeSetFilters'
-  | 'archiveTodos';
+  | 'archiveTodos'
+  | 'shouldUseDarkColors';
 
 interface ElectronStore {
   get: <T>(key: string) => T;

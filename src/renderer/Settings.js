@@ -4,19 +4,29 @@ import './Settings.scss';
 
 const store = window.electron.store;
 
-const Settings = ({ isOpen, onClose }) => {
+const Settings = ({ isOpen, onClose, colorTheme, setColorTheme }) => {
   const [appendCreationDate, setAppendCreationDate] = useState(store.get('appendCreationDate'));
   const [convertRelativeToAbsoluteDates, setConvertRelativeToAbsoluteDates] = useState(store.get('convertRelativeToAbsoluteDates'));
+  const [notificationsAllowed, setNotificationsAllowed] = useState(store.get('notificationsAllowed'));
 
   const handleSwitchChange = (event) => {
     const { name, checked } = event.target;
-    store.set(name, checked);
     switch (name) {
       case 'appendCreationDate':
+        store.set(name, checked);
         setAppendCreationDate(checked);
         break;
       case 'convertRelativeToAbsoluteDates':
+        store.set(name, checked);
         setConvertRelativeToAbsoluteDates(checked);
+        break;
+      case 'notificationsAllowed':
+        store.set(name, checked);
+        setNotificationsAllowed(checked);
+        break;
+      case 'colorTheme':
+        store.set(name, event.target.value);
+        setColorTheme(event.target.value);
         break;
       default:
         break;
@@ -42,18 +52,23 @@ const Settings = ({ isOpen, onClose }) => {
             control={<Switch checked={convertRelativeToAbsoluteDates} onChange={handleSwitchChange} name="convertRelativeToAbsoluteDates" />}
             label="Convert relative dates to absolute dates"
           />
+          <FormControlLabel
+            control={<Switch checked={notificationsAllowed} onChange={handleSwitchChange} name="notificationsAllowed" />}
+            label="Send notification when due date is today or tomorrow"
+          />
           <FormControl>
-            <InputLabel id="settingsTheme">Theme</InputLabel>
+            <InputLabel id="colorTheme">Theme</InputLabel>
             <Select
-              labelId="settingsTheme"
-              id="settingsTheme"
-              value=""
+              labelId="colorTheme"
+              id="colorTheme"
               label="Theme"
+              value={colorTheme}
+              name="colorTheme"
               onChange={handleSwitchChange}
             >
-              <MenuItem value={10}>Follow system</MenuItem>
-              <MenuItem value={20}>Light</MenuItem>
-              <MenuItem value={30}>Dark</MenuItem>
+              <MenuItem value="system">Follow system</MenuItem>
+              <MenuItem value="light">Light</MenuItem>
+              <MenuItem value="dark">Dark</MenuItem>
             </Select>
           </FormControl>          
         </FormGroup>

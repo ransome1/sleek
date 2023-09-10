@@ -1,4 +1,4 @@
-# Contributing Guidelines
+# Contribution Guidelines
 
 Thank you for your interest in contributing to the sleek project! We welcome contributions from the community to help improve and enhance the project. To ensure a smooth collaboration, please review and follow these guidelines.
 
@@ -21,10 +21,6 @@ Thank you for your interest in contributing to the sleek project! We welcome con
 Before contributing, make sure you have the latest version of Node.js and npm installed on your system.
 
 ## Contributing
-
-### Refactoring
-
-Our goal for Sleek is to maintain a clean and well-coded project. We prioritize refactoring efforts over adding an excessive number of features. By focusing on improving the code base, we increase the likelihood of attracting participants who are interested in joining the project and contributing.
 
 ### Reporting Issues
 

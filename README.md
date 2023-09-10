@@ -8,9 +8,9 @@ For those interested, we've updated our contribution guidelines, which you can f
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
 
-All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
+All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allows for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
-sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below. Many useful information can be found in <a href="https://github.com/ransome1/sleek/wiki">sleek's wiki</a>.
+sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below. Useful information can be found in <a href="https://github.com/ransome1/sleek/wiki">sleek's wiki</a>.
 
 + [Sponsor sleek](#sponsor-sleek)
 + [Get it from Mac App Store](#get-sleek-from-apple-mac-app-store)
@@ -24,7 +24,7 @@ sleek is available for Windows, MacOS and Linux, and in several languages. For a
 + [Features](#features)
 
 ### Sponsor sleek
-Pushing sleek to Apple's and Micosoft's app stores creates anual costs. You can support me by covering these costs and <a href="https://github.com/sponsors/ransome1">sponsor me</a>.
+Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can cover these costs by <a href="https://github.com/sponsors/ransome1">sponsoring me</a>.
 
 ### Get sleek from Apple Mac App Store
 <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank"><img src='assets/store_badges/Download_on_the_Mac_App_Store.png' alt='Get sleek from Apple Mac App Store' width='180'/></a>
@@ -60,7 +60,7 @@ You can download sleek for Windows, MacOS and Linux from
 
 ### Build sleek from source code
 1. Setup <a href="https://docs.github.com/en/github/getting-started-with-github/set-up-git" target="blank">Git</a> and <a href="https://nodejs.org/" target="blank">node.js</a>.
-2. Clone sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleeks directory
+2. Clone sleek `git clone https://github.com/ransome1/sleek.git` and cd into sleek's directory
 3. Install dependencies `npm install`
 4. Build and package sleek `npm run package`
 5. The binaries will be placed in the working directory, in a subfolder named `release/build`
@@ -75,7 +75,7 @@ You can download sleek for Windows, MacOS and Linux from
   - creation dates
   - recurrences (repeating todos)
   - threshold dates
-* Sort and group todos by priority, due and creation date, context and project or as they occur in the text file
+* Sort and group todos by priority, due date, creation date, threshold date, completion date, context and project or as they occur in the text file
 * Filter todos by context, project and priority
 * Find todos using full-text search compatible with todo.txt syntax
 * Inline autocomplete available
@@ -85,8 +85,8 @@ You can download sleek for Windows, MacOS and Linux from
 * Options for due date reminders and notification badges
 * Easily toggle between dark and light mode
 * Compact view and zoom available
-* Completed todos can be shown, hidden and archived
-* Multi line todos can be created
+* Completed todos can be shown, hidden, and archived
+* Multiline todos can be created
 * Filters are sorted alphanummerically and can be renamed or deleted
 * Hyperlinks detected automatically
 * File watcher scans todo.txt files for changes
@@ -106,4 +106,4 @@ You can download sleek for Windows, MacOS and Linux from
   - Polish
   - Russian
 
-A more detailed documentation can be found in <a href="https://github.com/ransome1/sleek/wiki/">sleeks wiki</a>.
+A more detailed documentation can be found in <a href="https://github.com/ransome1/sleek/wiki/">sleek's wiki</a>.
