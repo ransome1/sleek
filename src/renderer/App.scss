@@ -1,0 +1,71 @@
+@import "Variables.scss";
+@import "Coloring.scss";
+
+body {
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  #root {
+    .flexContainer {
+      display: flex;
+      flex-direction: row;
+      margin-left: 5em;
+      transition: margin-left 0.3s ease;
+      .flexItems {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        header {
+          display: flex;
+          flex-direction: row;
+          background: #ebebeb;
+        }
+      }
+      button.showNavigation {
+        width: 2.5em;
+        height: 5em;
+        position: fixed;
+        bottom: 0;
+        display: none;
+        background: white;
+        z-index: 10;
+        transition: width 0.3s ease;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        &:hover {
+          width: 5em;
+        }
+      }      
+      &.hideNavigation {
+        transition: margin-left 0.3s ease;
+        margin-left: 0;
+        button.showNavigation {
+          display: flex;
+        }        
+        #navigation {
+          left: -5em;
+        }
+      }
+    }
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: $font-family-bold;
+  }
+
+  *::-webkit-scrollbar {
+    background-color: transparent;
+    width: 0.8em;
+  }
+
+  *::-webkit-scrollbar-thumb:window-inactive,
+  *::-webkit-scrollbar-thumb {
+    background: $light-grey;
+    border-radius: 5px;
+  }
+}

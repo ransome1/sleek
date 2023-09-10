@@ -1,0 +1,42 @@
+@import "Variables.scss";
+
+#navigation {
+  width: 5em;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: $lighter-grey;
+  display: flex;
+  flex-direction: column;
+  transition: left 0.3s ease;
+  div {
+    font-family: $font-family-bold;
+    line-height: 5em;
+    text-align: center;
+    color: white;
+    background: linear-gradient(0.33turn, #1b5551, #813e93);
+  }
+  button {
+    border-radius: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    min-width: 5em;
+    min-height: 5em;
+    background: none;
+    font-size: 1em;
+    &.break {
+      margin-top: auto;
+    }
+    svg {
+      color: $dark-grey;
+    }
+    &:hover, &:active, &.active {
+      background: $light-grey;
+    }
+    &:focus-visible {
+      background: $mid-grey;
+      border-color: $mid-grey;
+    }
+  }
+}

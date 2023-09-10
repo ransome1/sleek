@@ -1,0 +1,17 @@
+@import "Variables.scss";
+
+.ToolBar {
+	display: flex;
+	margin-left: auto;
+	align-items: center;
+	svg {
+		cursor: pointer;
+		padding: 0.5em 1em;
+		font-size: 1.25em;
+		color: $dark-grey;
+		>:hover,
+		&.active {
+			color: $links;
+		}
+	}
+}

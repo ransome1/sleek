@@ -1,0 +1,254 @@
+{
+  "name": "sleek",
+  "main": "./src/main/main.ts",
+  "scripts": {
+    "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
+    "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
+    "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
+    "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
+    "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
+    "mas": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m mas --universal --publish never",
+    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
+    "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
+    "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
+    "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
+    "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
+    "test": "jest"
+  },
+  "browserslist": [],
+  "prettier": {
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": [
+          ".prettierrc",
+          ".eslintrc"
+        ],
+        "options": {
+          "parser": "json"
+        }
+      }
+    ]
+  },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "release/app/node_modules",
+      "src"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "setupFiles": [
+      "./.erb/scripts/check-build-exists.ts",
+      "<rootDir>/jest.setup.js"
+    ],
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    },
+    "testPathIgnorePatterns": [
+      "release/app/dist",
+      ".erb/dll"
+    ],
+    "transform": {
+      "\\.(ts|tsx|js|jsx)$": "ts-jest"
+    }
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.14.0",
+    "@mui/styled-engine-sc": "^5.12.0",
+    "@mui/x-date-pickers": "^6.10.0",
+    "dayjs": "^1.11.9",
+    "electron-debug": "^3.2.0",
+    "electron-log": "^4.4.8",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^5.3.0",
+    "jstodotxt": "^1.0.0-alpha.0",
+    "material-ui-popup-state": "^5.0.9",
+    "mock-fs": "^5.2.0",
+    "react": "^18.2.0",
+    "react-autosuggest": "^10.1.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.2",
+    "sugar": "^2.0.6"
+  },
+  "devDependencies": {
+    "@electron/notarize": "^1.2.3",
+    "@electron/rebuild": "^3.2.13",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "@svgr/webpack": "^8.0.1",
+    "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.2",
+    "@types/node": "20.2.5",
+    "@types/react": "^18.2.8",
+    "@types/react-dom": "^18.2.4",
+    "@types/react-test-renderer": "^18.0.0",
+    "@types/terser-webpack-plugin": "^5.0.4",
+    "@types/webpack-bundle-analyzer": "^4.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "browserslist-config-erb": "^0.0.3",
+    "chalk": "^4.1.2",
+    "concurrently": "^8.1.0",
+    "core-js": "^3.30.2",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.8.1",
+    "css-minimizer-webpack-plugin": "^5.0.0",
+    "detect-port": "^1.5.1",
+    "electron": "^25.5.0",
+    "electron-builder": "^24.2.1",
+    "electron-devtools-installer": "^3.2.0",
+    "electronmon": "^2.0.2",
+    "eslint": "^8.42.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-erb": "^4.0.6",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-import-resolver-webpack": "^0.13.2",
+    "eslint-plugin-compat": "^4.1.4",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "mini-css-extract-plugin": "^2.7.6",
+    "prettier": "^2.8.8",
+    "react-refresh": "^0.14.0",
+    "react-test-renderer": "^18.2.0",
+    "rimraf": "^5.0.1",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.3.2",
+    "style-loader": "^3.3.3",
+    "terser-webpack-plugin": "^5.3.9",
+    "ts-jest": "^29.1.0",
+    "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths-webpack-plugin": "^4.0.1",
+    "typescript": "^5.1.3",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.85.0",
+    "webpack-bundle-analyzer": "^4.9.0",
+    "webpack-cli": "^5.1.1",
+    "webpack-dev-server": "^4.15.0",
+    "webpack-merge": "^5.9.0"
+  },
+  "build": {
+    "appId": "com.todotxt.sleek",
+    "buildVersion": "25",
+    "asar": true,
+    "asarUnpack": "**\\*.{node,dll}",
+    "files": [
+      "dist",
+      "node_modules",
+      "package.json"
+    ],
+    "afterSign": ".erb/scripts/notarize.js",
+    "mac": {
+      "target": {
+        "target": "default",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      },
+      "icon": "assets/icons/icon.icns",
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "assets/mas/entitlements.mac.plist",
+      "entitlementsInherit": "assets/mas/entitlements.mac.plist",
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "mas": {
+      "provisioningProfile": "assets/mas/distribution.provisionprofile",
+      "entitlements": "assets/mas/entitlements.mas.plist",
+      "entitlementsInherit": "assets/mas/entitlements.mas.plist"
+    },
+    "win": {
+      "target": [
+        "zip",
+        "portable",
+        "nsis"
+      ],
+      "icon": "assets/icons/sleek.ico",
+      "artifactName": "${productName}-${version}-win.${ext}"
+    },
+    "nsis": {
+      "artifactName": "${productName}-${version}-win-Setup.${ext}"
+    },
+    "appx": {
+      "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
+      "identityName": "17450RobinAhle.sleektodomanager",
+      "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
+      "publisherDisplayName": "Robin Ahle",
+      "applicationId": "RobinAhle.sleektodomanager"
+    },
+    "linux": {
+      "icon": "assets/icons/sleek.png",
+      "category": "ProjectManagement",
+      "target": [
+        "deb",
+        "freebsd",
+        "rpm",
+        "AppImage"
+      ]
+    },
+    "directories": {
+      "app": "release/app",
+      "buildResources": "assets",
+      "output": "release/build"
+    },
+    "extraResources": [
+      "./assets/**"
+    ]
+  },
+  "devEngines": {
+    "node": ">=14.x",
+    "npm": ">=7.x"
+  },
+  "electronmon": {
+    "patterns": [
+      "!**/**",
+      "src/main/**"
+    ],
+    "logLevel": "quiet"
+  }
+}

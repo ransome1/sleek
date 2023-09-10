@@ -1,0 +1,82 @@
+@import "Variables.scss";
+
+.row {
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  border-left: solid 5px $light-grey;
+  border-bottom: solid 1px $light-grey;
+  flex-wrap: wrap;
+  gap: 0.25em;
+
+  button {
+    height: 2em;
+    font-size: 0.9em;
+    padding: 0;
+    svg {
+      width: 1em;
+      height: 1em;
+      margin: 0 0 0 0.5em;
+    }
+    div {
+      padding: 0 0.5em;
+    }
+    .MuiChip-root {
+      width: auto;
+      height: 100%;
+      background: $dark-grey!important;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: $radius;
+      border-bottom-left-radius: $radius;
+      color: white!important;
+      margin: 0;
+      .MuiChip-label {
+        padding: 0;
+        margin: 0;
+        
+      }      
+    }  
+  }
+  
+  .MuiCheckbox-root {
+    padding: 0.35em 0.5em 0.35em 0.25em;
+    svg {
+      color: $links;
+    }
+  }
+
+  .MuiCheckbox-root:focus-visible,
+  .MuiCheckbox-root.Mui-focusVisible {
+    svg {
+      color: $dark-grey;
+    }
+  }
+  
+  &[data-complete=true],
+  &[data-hidden=true] {
+    filter: opacity(50%) grayscale(100%);
+  }
+  
+  &.group {
+    margin-top: 1em;
+    padding-left: 0;
+    border: none;
+    cursor: auto;
+    button {
+      min-width: auto;
+      min-height: auto;
+      font-size: 1.25em;
+      font-family: $font-family-bold;
+      padding: 0.1em 0.6em;
+      border-radius: 0.65em;
+    }
+  }
+  &:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  &:focus-visible {
+    background: $lighter-grey;
+  }
+}

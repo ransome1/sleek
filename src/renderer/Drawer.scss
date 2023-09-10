@@ -1,0 +1,39 @@
+@import "Variables.scss";
+
+.Drawer {
+	height: 100vh;
+	padding: 0;
+	background: $light-grey;
+	transition: margin-left 0.3s ease;
+	.MuiPaper-root {
+		position: relative;
+		z-index: 5;
+		.MuiTabs-root {
+			min-height: 5em;
+		}
+		.MuiTabs-flexContainer {
+			button {
+				text-transform: none;
+				white-space: nowrap;
+				&:focus-visible {
+					background: $mid-grey;
+				}
+			}
+		}
+		.MuiTabs-indicator {
+			top: 0;
+		}
+	}
+	.drawerHandle {
+		width: 5px;
+		height: 100vh;
+		position: absolute;
+		top: 0;
+		right: 0;
+		cursor: ew-resize;
+	}
+	&.open {
+		min-width: 300px;
+		margin-left: 0!important;
+	}
+}

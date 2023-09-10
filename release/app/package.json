@@ -1,0 +1,33 @@
+{
+  "name": "sleek",
+  "version": "2.0.0-dev9",
+  "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
+  "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
+  "keywords": [
+    "todo.txt",
+    "todo",
+    "productivity",
+    "tasks"
+  ],
+  "category": "ProjectManagement",
+  "homepage": "https://github.com/ransome1/",
+  "bugs": {
+    "url": "https://github.com/ransome1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ransome1/sleek.git"
+  },
+  "author": "Robin Ahle <ransome@duck.com>",
+  "copyright": "Copyright © 2023 ${author}",
+  "license": "MIT",
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "npm run rebuild && npm run link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3"
+  }
+}

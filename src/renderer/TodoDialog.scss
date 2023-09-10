@@ -1,0 +1,37 @@
+@import "Variables.scss";
+
+#todoDialog {
+  .MuiDialogContent-root {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    .react-autosuggest__container {
+      width: 100%;
+      flex-grow: 1;
+      .react-autosuggest__input {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.MuiDialogActions-root {
+    button {
+      width: 100%;
+      background: none;
+      border-radius: 0;
+      margin: 0!important;
+      padding: 0.5em 1em;
+      color: $links;
+      border-top: 1px solid $light-grey;
+      border-right: 1px solid $light-grey;
+      &:last-child {
+        border-right: none;
+      }
+    }
+    button:hover,
+    button.Mui-focusVisible {
+      color: $dark-grey;
+      background: $light-grey;
+    }
+  }

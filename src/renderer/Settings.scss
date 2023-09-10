@@ -1,0 +1,26 @@
+@import "Variables.scss";
+
+.Modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: $light-grey;
+
+  width: 700px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: $radius;
+
+  padding: 1em 2em 2em 2em;
+
+  .MuiFormControl-root {
+    
+    margin: 1em 0;
+    .MuiInputBase-root {
+      background: white;
+
+    }
+  }
+}
