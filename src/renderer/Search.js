@@ -54,8 +54,6 @@ const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSea
     }
   }, [isSearchOpen]);
 
-  if (!headers || headers.availableObjects === 0) return null;
-
   return (
     <>
       {isSearchOpen && (

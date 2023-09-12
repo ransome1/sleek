@@ -1,9 +1,9 @@
 # sleek
-[![Code scan and test cases](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml/badge.svg?branch=2.x)](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml)
-## ❤️ Join the project and become a contributer
-Join us in our mission to create a user-friendly, free, and open-source todo.txt client. We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `2.x` branch reflects the most recent progress, so feel free to fork it and dive into the exciting work ahead: https://github.com/users/ransome1/projects/3.
+[![Code scan and test cases](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml/badge.svg?branch=develop)](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml)
+## ❤️ Become a contributer.
+sleek is currently being rewritten. Now is a good time to join us in our mission to provide a user-friendly, free, and open-source todo.txt client. We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `develop` branch reflects the most recent progress. Here you'll find our roadmap: https://github.com/users/ransome1/projects/3.
 
-For those interested, we've updated our contribution guidelines, which you can find here: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md. Your contributions will play a significant role in shaping the future of our project.
+For those interested, we've updated our contribution guidelines, which you can find here: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md.
 
 ## sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, MacOS and Linux
 sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
@@ -13,18 +13,18 @@ All classic todo.txt attributes are supported and enhanced by additional feature
 sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below. Useful information can be found in <a href="https://github.com/ransome1/sleek/wiki">sleek's wiki</a>.
 
 + [Sponsor sleek](#sponsor-sleek)
-+ [Get it from Mac App Store](#get-sleek-from-apple-mac-app-store)
-+ [Get it from Microsoft Store](#get-sleek-from-microsoft-store)
-+ [Get it from Snap Store](#get-sleek-from-snap-store)
-+ [Get it from Flathub](#get-sleek-from-flathub)
-+ [Get it from Homebrew](#get-sleek-from-homebrew)
-+ [Get it from Arch User Repository](#get-sleek-from-arch-user-repository)
-+ [Download it](#download-sleek)
-+ [Build it from source code](#build-sleek-from-source-code)
-+ [Features](#features)
++ [Get sleek from Apple Mac App Store](#get-sleek-from-apple-mac-app-store)
++ [Get sleek from Microsoft Store](#get-sleek-from-microsoft-store)
++ [Get sleek from Snap Store](#get-sleek-from-snap-store)
++ [Get sleek from Flathub](#get-sleek-from-flathub)
++ [Get sleek from Homebrew](#get-sleek-from-homebrew)
++ [Get sleek from Arch User Repository](#get-sleek-from-arch-user-repository)
++ [Download sleek](#download-sleek)
++ [Build sleek from source code](#build-sleek-from-source-code)
++ [sleek's features](#sleeks-features)
 
 ### Sponsor sleek
-Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can cover these costs by <a href="https://github.com/sponsors/ransome1">sponsoring me</a>.
+Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can help covering these by <a href="https://github.com/sponsors/ransome1">sponsoring the project</a>.
 
 ### Get sleek from Apple Mac App Store
 <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank"><img src='assets/store_badges/Download_on_the_Mac_App_Store.png' alt='Get sleek from Apple Mac App Store' width='180'/></a>
@@ -65,29 +65,31 @@ You can download sleek for Windows, MacOS and Linux from
 4. Build and package sleek `npm run package`
 5. The binaries will be placed in the working directory, in a subfolder named `release/build`
 
-### Features
+### sleek's features
 * Uses existing todo.txt files or creates new ones
 * Add and search for todos by
-  - priorities
-  - contexts
-  - projects
-  - due dates
-  - creation dates
-  - recurrences (repeating todos)
+  - priority
+  - context
+  - project
+  - due date
+  - creation date
+  - completion date
+  - recurrence (repeating todo)
   - threshold dates
-* Sort and group todos by priority, due date, creation date, threshold date, completion date, context and project or as they occur in the text file
-* Filter todos by context, project and priority
+  - pomodoro timer
+* Filter, sort, and group todos by all available attributes
+* Invert the sorting of each group
 * Find todos using full-text search compatible with todo.txt syntax
-* Inline autocomplete available
+* Inline autocomplete available for adding contexts and projects
 * Dates and priorities can be selected by built-in picker elements 
 * Navigable via keyboard shortcuts
 * Tabindex available
-* Options for due date reminders and notification badges
-* Easily toggle between dark and light mode
+* Due date notifications
+* Toggle between dark and light mode
 * Compact view and zoom available
 * Completed todos can be shown, hidden, and archived
 * Multiline todos can be created
-* Filters are sorted alphanummerically and can be renamed or deleted
+* Filters are sorted alphanummerically
 * Hyperlinks detected automatically
 * File watcher scans todo.txt files for changes
 * Simultaneously manage multiple todo.txt files

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './ToolBar.scss';
 
-const ToolBar = ({ isSearchOpen, setIsSearchOpen, headers, searchFieldRef }) => {
+const ToolBar = ({ isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
 
   const handleClick = (event) => {
     setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
@@ -12,9 +12,7 @@ const ToolBar = ({ isSearchOpen, setIsSearchOpen, headers, searchFieldRef }) => 
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-
       const isSearchFocused = document.activeElement === searchFieldRef.current;
-      
       if ((event.metaKey || event.ctrlKey) && event.key === 'f' && isSearchOpen && !isSearchFocused) {
         event.preventDefault();
         searchFieldRef.current.focus();
@@ -24,9 +22,7 @@ const ToolBar = ({ isSearchOpen, setIsSearchOpen, headers, searchFieldRef }) => 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isSearchOpen]);  
-
-  if (!headers || headers.availableObjects === 0) return null;
+  }, [isSearchOpen]);
 
   return (
     <Box className="ToolBar">
