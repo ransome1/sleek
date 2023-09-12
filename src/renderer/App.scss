@@ -19,11 +19,6 @@ body {
         height: 100vh;
         display: flex;
         flex-direction: column;
-        header {
-          display: flex;
-          flex-direction: row;
-          background: #ebebeb;
-        }
       }
       button.showNavigation {
         width: 2.5em;

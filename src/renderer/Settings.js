@@ -4,7 +4,7 @@ import './Settings.scss';
 
 const store = window.electron.store;
 
-const Settings = ({ isOpen, onClose, colorTheme, setColorTheme }) => {
+const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, setShowFileTabs }) => {
   const [appendCreationDate, setAppendCreationDate] = useState(store.get('appendCreationDate'));
   const [convertRelativeToAbsoluteDates, setConvertRelativeToAbsoluteDates] = useState(store.get('convertRelativeToAbsoluteDates'));
   const [notificationsAllowed, setNotificationsAllowed] = useState(store.get('notificationsAllowed'));
@@ -27,6 +27,10 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme }) => {
       case 'colorTheme':
         store.set(name, event.target.value);
         setColorTheme(event.target.value);
+        break;
+      case 'showFileTabs':
+        store.set(name, checked);
+        setShowFileTabs(checked);
         break;
       default:
         break;
@@ -55,6 +59,10 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme }) => {
           <FormControlLabel
             control={<Switch checked={notificationsAllowed} onChange={handleSwitchChange} name="notificationsAllowed" />}
             label="Send notification when due date is today or tomorrow"
+          />
+          <FormControlLabel
+            control={<Switch checked={showFileTabs} onChange={handleSwitchChange} name="showFileTabs" />}
+            label="Show file tabs"
           />
           <FormControl>
             <InputLabel id="colorTheme">Theme</InputLabel>

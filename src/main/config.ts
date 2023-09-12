@@ -39,7 +39,8 @@ const defaultConfigData = {
   dueDateInTheFuture: true,
   colorTheme: 'system',
   shouldUseDarkColors: false,
-  notificationsAllowed: false,
+  notificationsAllowed: true,
+  showFileTabs: true,
 };
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());

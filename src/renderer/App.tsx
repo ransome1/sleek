@@ -39,6 +39,7 @@ const App = () => {
   const [isNavigationHidden, setIsNavigationHidden] = useState<boolean>(store.get('isNavigationHidden') || false);
   const [colorTheme, setColorTheme] = useState<boolean>(store.get('colorTheme') || 'system');
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
+  const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
   
   const responseHandler = function(response) {
     if (response instanceof Error) {
@@ -141,7 +142,7 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
+    <ThemeProvider theme={shouldUseDarkColors ? lightTheme : lightTheme}>
       <CssBaseline />
       <div className={isNavigationHidden ? 'flexContainer hideNavigation' : 'flexContainer'}>
         <NavigationComponent
@@ -156,6 +157,8 @@ const App = () => {
           setIsNavigationHidden={setIsNavigationHidden}
           colorTheme={colorTheme}
           setColorTheme={setColorTheme}
+          showFileTabs={showFileTabs}
+          setShowFileTabs={setShowFileTabs}
         />
         <DrawerComponent 
           isDrawerOpen={isDrawerOpen}
@@ -168,8 +171,8 @@ const App = () => {
         />
         <div className="flexItems">
           {files?.length > 0 && (
-          <header>
-            {isSearchOpen ? null : <FileTabs files={files} />}
+          <>
+            {!isSearchOpen && showFileTabs ? <FileTabs files={files} /> : null}
             {headers?.availableObjects > 0 ?
             <>
               <Search
@@ -187,7 +190,7 @@ const App = () => {
               />
             </>
             : null }
-          </header>
+          </>
           )}
           <TodoDataGrid 
             todoObjects={todoObjects}

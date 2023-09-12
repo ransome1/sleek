@@ -1,9 +1,13 @@
 @import "Variables.scss";
 
 .ToolBar {
-	display: flex;
-	margin-left: auto;
-	align-items: center;
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 9;
+	// display: flex;
+	// margin-left: auto;
+	// align-items: center;
 	svg {
 		cursor: pointer;
 		padding: 0.5em 1em;
