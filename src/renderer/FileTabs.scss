@@ -1,7 +1,8 @@
 @import "Variables.scss";
 
 #fileTabs {
-	min-height: 2.5em;
+	height: 2.5em;
+	min-height: 2.5em; 
 	.MuiTabs-scroller {
 		button[role=tab] {
 			max-width: 15em;

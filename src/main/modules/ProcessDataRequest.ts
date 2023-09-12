@@ -47,13 +47,13 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     
     todoObjects = await createTodoObjects(fileContent);
 
+    headers.availableObjects = countTodoObjects(todoObjects);
+
     if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
 
     if(!thresholdDateInTheFuture || !dueDateInTheFuture) todoObjects = handleTodoObjectsDates(todoObjects, dueDateInTheFuture, thresholdDateInTheFuture);
 
     todoObjects = handleCompletedTodoObjects(todoObjects, showCompleted);
-
-    headers.availableObjects = countTodoObjects(todoObjects);
 
     attributes = updateAttributes(attributes, todoObjects, false);
 

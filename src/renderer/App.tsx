@@ -167,23 +167,28 @@ const App = () => {
           setSorting={setSorting}
         />
         <div className="flexItems">
+          {files?.length > 0 && (
           <header>
             {isSearchOpen ? null : <FileTabs files={files} />}
-            <Search
-              headers={headers}
-              searchString={searchString}
-              setSearchString={setSearchString}
-              isSearchOpen={isSearchOpen}
-              setIsSearchOpen={setIsSearchOpen}
-              searchFieldRef={searchFieldRef}
-            />            
-            <ToolBar
-              isSearchOpen={isSearchOpen}
-              setIsSearchOpen={setIsSearchOpen}
-              headers={headers}
-              searchFieldRef={searchFieldRef}
-            />
+            {headers?.availableObjects > 0 ?
+            <>
+              <Search
+                headers={headers}
+                searchString={searchString}
+                setSearchString={setSearchString}
+                isSearchOpen={isSearchOpen}
+                setIsSearchOpen={setIsSearchOpen}
+                searchFieldRef={searchFieldRef}
+              />
+              <ToolBar
+                isSearchOpen={isSearchOpen}
+                setIsSearchOpen={setIsSearchOpen}
+                searchFieldRef={searchFieldRef}
+              />
+            </>
+            : null }
           </header>
+          )}
           <TodoDataGrid 
             todoObjects={todoObjects}
             setTodoObject={setTodoObject}
