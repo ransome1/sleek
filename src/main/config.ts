@@ -41,6 +41,7 @@ const defaultConfigData = {
   shouldUseDarkColors: false,
   notificationsAllowed: true,
   showFileTabs: true,
+  isNavigationOpen: true,
 };
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
@@ -75,7 +76,7 @@ filterStorage.onDidChange('filters' as never, async () => {
   mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
 });
 
-configStorage.onDidChange('files', (files: File[] | undefined) => {
+configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
     buildMenu(files);
     mainWindow!.webContents.send('updateFiles', files);

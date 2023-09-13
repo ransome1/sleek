@@ -7,9 +7,7 @@ import './Navigation.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, setDrawerParameter, setDialogOpen, files, headers, isNavigationHidden, setIsNavigationHidden, colorTheme, setColorTheme, showFileTabs, setShowFileTabs }) => {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
+const NavigationComponent = ({ isSettingsOpen, setIsSettingsOpen, isDrawerOpen, setIsDrawerOpen, setDialogOpen, files, headers, isNavigationOpen, setIsNavigationOpen, colorTheme, setColorTheme, showFileTabs, setShowFileTabs }) => {
   const openSettings = () => {
     setIsSettingsOpen(true);
   };
@@ -20,25 +18,20 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
 
   const handleButtonClicked = (parameter) => {
     setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)
-    setDrawerParameter(parameter)
   };
 
   const handleOpenFile = () => {
     ipcRenderer.send('openFile');
   };
 
-  const hideNavigation = () => {
-    setIsNavigationHidden(prevIsNavigationHidden => !prevIsNavigationHidden);
+  const toggleNavigation = () => {
+    setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen);
   };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (files?.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
         setDialogOpen(true);
-        return;
-      }
-      if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
-        setIsDrawerOpen((prevIsDrawerOpen) => !prevIsDrawerOpen);
         return;
       }
     };    
@@ -76,11 +69,11 @@ const NavigationComponent = ({ isDrawerOpen, setIsDrawerOpen, drawerParameter, s
           showFileTabs={showFileTabs}
           setShowFileTabs={setShowFileTabs}
           />
-        <Button onClick={hideNavigation}>
+        <Button onClick={toggleNavigation}>
           <FontAwesomeIcon icon={faAngleLeft} />
         </Button>
       </nav>
-      <Button onClick={hideNavigation} className="showNavigation">
+      <Button onClick={toggleNavigation} className="showNavigation">
         <FontAwesomeIcon icon={faAngleRight} />
       </Button>
     </>

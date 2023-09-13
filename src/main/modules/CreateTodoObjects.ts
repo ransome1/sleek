@@ -3,11 +3,12 @@ import { handleNotification } from './HandleNotification';
 import { TodoObject, DateAttributes } from '../util';
 import { extractSpeakingDates } from './Date';
 import dayjs from 'dayjs';
+import os from 'os';
 
 let lines: string[];
 
 function createTodoObjects(fileContent: string): TodoObject[] {
-  lines = fileContent.split('\n');
+  lines = fileContent.split(os.EOL);
   const todoObjects: TodoObject[] = lines
     .map((line, i) => {
       try {

@@ -11,7 +11,12 @@
     	font-family: $font-family-bold;
         line-height: 1.2em;
     }
-    button {
-        margin: 0 1em 0.5em 0;
+    svg {
+        font-size: 3em;
+        color: $mid-grey;
+    }
+    .buttons {
+        display: flex;
+        gap: 0.5em;
     }
 }

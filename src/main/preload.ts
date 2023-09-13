@@ -12,7 +12,9 @@ export type Channels =
   | 'storeSetConfig'
   | 'storeSetFilters'
   | 'archiveTodos'
-  | 'shouldUseDarkColors';
+  | 'setIsNavigationOpen'
+  | 'setShowFileTabs'
+  | 'setIsSettingsOpen';
 
 interface ElectronStore {
   get: <T>(key: string) => T;

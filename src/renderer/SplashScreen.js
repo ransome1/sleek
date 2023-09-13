@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button, Box } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGhost, faHippo, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import './SplashScreen.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
@@ -30,7 +32,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
     <Box id='splashScreen'>
       {screen === 'noTodosVisible' && (
         <>
-          <h1>No todos found</h1>
+          <FontAwesomeIcon icon={faHippo} />
           <p>No results found for either your search input nor your selected filters</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleReset}>
@@ -41,7 +43,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
       )}
       {screen === 'noTodosAvailable' && (
         <>
-          <h1>No todos available</h1>
+          <FontAwesomeIcon icon={faGhost} />
           <p>Currently no todos in this file, let's create some</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleCreateTodo}>
@@ -52,7 +54,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
       )}      
       {screen === 'noFiles' && (
         <>
-          <h1>No files</h1>
+          <FontAwesomeIcon icon={faFolderOpen} />
           <p>No todo.txt files found, let's add one</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleOpenFile}>
