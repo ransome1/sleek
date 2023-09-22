@@ -76,6 +76,7 @@ const createWindow = async() => {
     fs.readFile(customStylesPath, 'utf8', (err, data) => {
       if (!err) {
         mainWindow.webContents.insertCSS(data);
+        console.error('Styles injected found in CSS file:', customStylesPath);
       } else {
         console.error('Error reading the CSS file:', err);
       }

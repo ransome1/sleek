@@ -46,13 +46,19 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
     const recurringTodoObject = new Item(string);
     const completedDate = recurringTodoObject.completed();
     if (recurrence && completedDate) {
-      const strictRecurrence = recurrence.startsWith('+');
-      const recurrenceInterval = strictRecurrence ? recurrence.slice(1) : recurrence;
-      const oldDueDate = recurringTodoObject?.extensions()?.find((item) => item.key === 'due');
-      const targetDate = strictRecurrence && oldDueDate?.value
-        ? addRecurrenceToDate(dayjs(oldDueDate.value, 'YYYY-MM-DD').toDate(), recurrenceInterval)
-        : addRecurrenceToDate(completedDate, recurrenceInterval);
-      recurringTodoObject.setExtension('due', dayjs(targetDate).format('YYYY-MM-DD'));
+      const strictRecurrence: boolean = recurrence.startsWith('+');
+      const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
+      const oldDueDate: any = recurringTodoObject?.extensions()?.find((item) => item.key === 'due')?.value;
+      const oldThresholdDate: any = recurringTodoObject?.extensions()?.find((item) => item.key === 't')?.value;
+      const daysBetween = dayjs(oldDueDate, 'YYYY-MM-DD').diff(oldThresholdDate, 'day');
+      const newDueDate = strictRecurrence
+        ? addRecurrenceToDate(dayjs(oldDueDate).toDate(), recurrenceInterval)
+        : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
+      const newThresholdDate = strictRecurrence
+        ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
+        : dayjs(newDueDate).subtract(daysBetween, 'day').toDate();
+      if(completedDate) recurringTodoObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
+      if(oldThresholdDate) recurringTodoObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
       recurringTodoObject.setComplete(false);
       recurringTodoObject.setCompleted(null);
       await writeTodoObjectToFile(-1, recurringTodoObject.toString(), false);
