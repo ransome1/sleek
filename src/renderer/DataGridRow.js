@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Checkbox,
-  ListItem,
-  Button,
-  Divider,
-  Chip,
-} from '@mui/material';
+import { Checkbox, ListItem, Button, Divider, Chip, Box } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { handleFilterSelect } from './Shared';
@@ -13,15 +7,7 @@ import ContextMenu from './ContextMenu';
 import DatePickerInline from './DatePickerInline';
 import './DataGridRow.scss';
 
-const DataGridRow = React.memo(
-  ({
-    todoObject,
-    attributes,
-    filters,
-    setDialogOpen,
-    setTextFieldValue,
-    setTodoObject,
-  }) => {
+const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject,}) => {
     const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
     const handleCheckboxChange = (event) => {
@@ -68,24 +54,24 @@ const DataGridRow = React.memo(
       ),
       contexts: (value, type) => (
         <Button onClick={() => handleButtonClick(type, value)}>
-          <div>{value}</div>
+          <Box>{value}</Box>
         </Button>
       ),
       projects: (value, type) => (
         <Button onClick={() => handleButtonClick(type, value)}>
-          <div>{value}</div>
+          <Box>{value}</Box>
         </Button>
       ),
       rec: (value, type) => (
         <Button onClick={() => handleButtonClick(type, value)}>
           <Chip label="rec:" />
-          <div>{value}</div>
+          <Box>{value}</Box>
         </Button>
       ),
       pm: (value, type) => (
         <Button onClick={() => handleButtonClick(type, value)}>
           <FontAwesomeIcon icon={faPizzaSlice} />
-          <div>{value}</div>
+          <Box>{value}</Box>
         </Button>
       ),
       hidden: () => null,
@@ -149,12 +135,12 @@ const DataGridRow = React.memo(
       return (
         <React.Fragment key={index}>
           {element.type !== null ? (
-            <div
+            <Box
               className={selected ? 'selected' : ''}
               data-todotxt-attribute={element.type}
             >
               {content}
-            </div>
+            </Box>
           ) : (
             content
           )}
@@ -177,7 +163,7 @@ const DataGridRow = React.memo(
             const selected = (filters[todoObject.group] || []).some((filter) => filter.value === val.trim());
 
             return (
-              <div
+              <Box
                 key={index}
                 className={selected ? 'selected' : ''}
                 data-todotxt-attribute={todoObject.group}
@@ -186,7 +172,7 @@ const DataGridRow = React.memo(
                 <Button className='attribute' onClick={() => handleButtonClick(todoObject.group, val.trim())}>
                   {val.trim()}
                 </Button>
-              </div>
+              </Box>
             );
           })}
         </ListItem>

@@ -7,6 +7,12 @@ import buildMenu from './menu';
 import { Sorting, File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 
+const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
+if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
+console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
+
+const customStylesPath = path.join(userDataDirectory, 'customStyles.css');
+
 const defaultConfigData = {
   sorting: [
     { id: '1', value: 'priority', invert: false },
@@ -41,11 +47,9 @@ const defaultConfigData = {
   shouldUseDarkColors: false,
   notificationsAllowed: true,
   showFileTabs: true,
+  isNavigationOpen: true,
+  customStylesPath: customStylesPath,
 };
-
-const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
-if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
-console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
 const configPath = path.join(userDataDirectory, 'config.json');
 const configStorage = new Store<ConfigData>({ cwd: userDataDirectory, name: 'config' });
@@ -59,6 +63,10 @@ if (!fs.existsSync(configPath)) {
 if (!fs.existsSync(filtersPath)) {
   const defaultFilterData = {};
   fs.writeFileSync(filtersPath, JSON.stringify(defaultFilterData));
+}
+
+if (!fs.existsSync(customStylesPath)) {
+  fs.writeFileSync(customStylesPath, '');
 }
 
 const handleConfigChange = async (key: string, newValue: any) => {
@@ -75,7 +83,7 @@ filterStorage.onDidChange('filters' as never, async () => {
   mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
 });
 
-configStorage.onDidChange('files', (files: File[] | undefined) => {
+configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
     buildMenu(files);
     mainWindow!.webContents.send('updateFiles', files);
@@ -113,7 +121,7 @@ configStorage.onDidChange('colorTheme', (colorTheme) => {
 nativeTheme.on('updated', () => {
   const shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
   configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
-  mainWindow!.webContents.send('shouldUseDarkColors', shouldUseDarkColors);
+  mainWindow!.webContents.send('setShouldUseDarkColors', shouldUseDarkColors);
 });
 
 export { configStorage, filterStorage };

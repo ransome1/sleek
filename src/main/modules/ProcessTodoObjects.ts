@@ -82,7 +82,7 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
     return grouped;
   }
 
-  function sortAndGroupObjects(objects: any[], sortIndex: number): any {
+  function sortAndGroupObjects(objects: any[], sortIndex: number, sorting: Sorting[]): any {
     if (sortIndex >= sorting.length) {
       return objects;
     }
@@ -98,13 +98,13 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
 
     const sortedGroups: { [key: string]: any } = {};
     for (const key of sortedKeys) {
-      sortedGroups[key] = sortAndGroupObjects(grouped[key], sortIndex + 1);
+      sortedGroups[key] = sortAndGroupObjects(grouped[key], sortIndex + 1, sorting);
     }
     return sortedGroups;
   }
 
   const sortedTodoObjects = Object.values(todoObjects).sort(sortObjectsBySorting);
-  const sortedAndGrouped = sortAndGroupObjects(sortedTodoObjects, 0);
+  const sortedAndGrouped = sortAndGroupObjects(sortedTodoObjects, 0, sorting);
   return sortedAndGrouped;
 }
 

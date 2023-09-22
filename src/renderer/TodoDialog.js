@@ -9,7 +9,7 @@ import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent, textFieldValue, setTextFieldValue }) => {
+const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent, textFieldValue, setTextFieldValue, shouldUseDarkColors }) => {
   
   const textFieldRef = useRef(null);
   
@@ -29,7 +29,7 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnac
   };
 
   return (
-    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} id='todoDialog'>
+    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} id='todoDialog' className={shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}>
       <DialogContent>
         <AutoSuggest
           attributes={attributes}

@@ -3,7 +3,6 @@
 .Drawer {
 	height: 100vh;
 	padding: 0;
-	background: $light-grey;
 	transition: margin-left 0.3s ease;
 	.MuiPaper-root {
 		position: relative;
@@ -15,9 +14,9 @@
 			button {
 				text-transform: none;
 				white-space: nowrap;
-				&:focus-visible {
-					background: $mid-grey;
-				}
+				// &:focus-visible {
+				// 	background: $dark-grey;
+				// }
 			}
 		}
 		.MuiTabs-indicator {

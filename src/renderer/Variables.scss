@@ -9,8 +9,12 @@
 	src: url("../../assets/fonts/FreeSansBold.ttf") format("truetype");
 }
 
+$font-family-regular: "FreeSans", sans-serif;
+$font-family-bold: "FreeSansBold", sans-serif;
+
+$radius: 0.65em;
+
 $links: #1976d2;
-$text: hsl(0, 0%, 71%);
 
 $darker-grey: #2d2d2d;
 $dark-grey: #5a5a5a;
@@ -18,22 +22,7 @@ $mid-grey: #ccc;
 $light-grey: #ebebeb;
 $lighter-grey: #f0f0f0;
 
-$danger: hsl(348, 100%, 61%);
-$attention: #fa745e;
-$warning: hsl(48, 100%, 67%);
-$success: hsl(141, 71%, 48%);
-
-$sleek-contexts-background: #c5ede3;
-$sleek-contexts-foreground: #1e6251;
-$sleek-projects-background: #f1d6f1;
-$sleek-projects-foreground: #6f266f;
-
-$radius: 0.65em;
-
-$font-family-regular: "FreeSans", sans-serif;
-$font-family-bold: "FreeSansBold", sans-serif;
-
-$width: 100vw;
-$height: 100vh;
-$navigation: 5em;
-$filetabs: 3em;
+// $danger: hsl(348, 100%, 61%);
+// $attention: #fa745e;
+// $warning: hsl(48, 100%, 67%);
+//$success: hsl(141, 71%, 48%);

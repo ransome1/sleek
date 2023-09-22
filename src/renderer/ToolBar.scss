@@ -1,13 +1,10 @@
 @import "Variables.scss";
 
-.ToolBar {
+#ToolBar {
 	position: fixed;
 	top: 0;
 	right: 0;
 	z-index: 9;
-	// display: flex;
-	// margin-left: auto;
-	// align-items: center;
 	svg {
 		cursor: pointer;
 		padding: 0.5em 1em;
@@ -16,6 +13,18 @@
 		>:hover,
 		&.active {
 			color: $links;
+		}
+	}
+}
+
+.darkTheme {
+	#ToolBar {
+		svg {
+			color: $mid-grey;
+			>:hover,
+			&.active {
+				color: $links;
+			}			
 		}
 	}
 }

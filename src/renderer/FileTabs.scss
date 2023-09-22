@@ -2,19 +2,16 @@
 
 #fileTabs {
 	height: 2.5em;
-	min-height: 2.5em; 
+	min-height: 2.5em;
 	.MuiTabs-scroller {
 		button[role=tab] {
-			max-width: 15em;
 			min-width: 8.5em;
 			min-height: auto;
 			padding: 0.75em 2em;
-			color: #5a5a5a;
 			text-transform: lowercase;
 			display: flex;
 			flex-direction: row;
 			svg {
-				filter: opacity(50%) grayscale(100%);
 				margin: 0 0 0 0.5em;
 				padding: 0.2em;
 				order: 2;
@@ -22,14 +19,6 @@
 			svg:hover {
 				filter: none;
 			}
-		}
-		button[aria-selected=true] {
-			background: white;
-			color: $links;
-		}
-		button[role=tab]:focus-visible {
-			background: $mid-grey;
-			color: $dark-grey;
 		}
 		.MuiTabs-indicator {
 			top: 0;

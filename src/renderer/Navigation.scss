@@ -40,3 +40,21 @@
     }
   }
 }
+
+.darkTheme {
+  #navigation {
+    background: $darker-grey;
+    button {
+      border-color: rgba(255, 255, 255, 0.05) !important;
+      svg {
+        color: $mid-grey;
+      }
+      &:hover, &:active, &.active {
+        background: #3B3B3B;
+      }
+      &:focus-visible {
+        background: #3B3B3B;
+      }      
+    }
+  }
+}

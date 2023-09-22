@@ -6,12 +6,11 @@
 	overflow-y: auto;
 	position: fixed;
 	z-index: 10;
-	backdrop-filter: blur(10px);
-	background: $lighter-grey;
 	margin-top: -0.4em;
 	padding: 0.75em 1em;
 	border-bottom-right-radius: $radius;
 	border-bottom-left-radius: $radius;
+	background: $lighter-grey;
 	ul {
 		padding: 0;
 		margin: 0;
@@ -20,6 +19,12 @@
 			float: left;
 			margin: 0 0.35em 0.35em 0;
 		}
+	}
+}
+
+.darkTheme {
+	.react-autosuggest__suggestions-container--open {
+		background: $darker-grey;
 	}
 }
 .react-autosuggest__container {

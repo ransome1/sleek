@@ -1,7 +1,7 @@
 # sleek
 [![Code scan and test cases](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml/badge.svg?branch=develop)](https://github.com/ransome1/sleek/actions/workflows/code-scan.yml)
 ## ❤️ Become a contributer.
-sleek is currently being rewritten. Now is a good time to join us in our mission to provide a user-friendly, free, and open-source todo.txt client. We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `develop` branch reflects the most recent progress. Here you'll find our roadmap: https://github.com/users/ransome1/projects/3.
+[sleek is currently being rewritten.](https://github.com/ransome1/sleek/discussions/501) Now is a good time to join us in our mission to provide a user-friendly, free, and open-source todo.txt client. We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `develop` branch reflects the most recent progress. Here you'll find our roadmap: https://github.com/users/ransome1/projects/3.
 
 For those interested, we've updated our contribution guidelines, which you can find here: https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md.
 

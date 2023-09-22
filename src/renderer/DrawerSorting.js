@@ -43,8 +43,6 @@ const DrawerSorting = ({ isDrawerOpen, setIsDrawerOpen, sorting, setSorting }) =
 			</FormGroup>
 			<Divider />
 			<DraggableList sorting={sorting} setSorting={setSorting} onDragEnd={onDragEnd} disabled={fileSorting} />
-			
-
 		</Box>
 	);
 };

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Drawer, Tabs, Tab } from '@mui/material';
+import { Drawer, Tabs, Tab, Box } from '@mui/material';
 import Attributes from './DrawerAttributes';
 import Sorting from './DrawerSorting';
 import Filters from './DrawerFilters';
@@ -49,11 +49,10 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, s
       className={`Drawer ${isDrawerOpen ? 'open' : ''}`}
       style={{ width: drawerWidth, marginLeft: -drawerWidth }}
     >
-      <div
+      <Box
         className="drawerHandle"
         onMouseDown={handleMouseDown}
       />
-
       <Tabs className="tabs" centered value={activeTab} onChange={handleTabChange}>
         <Tab 
           tabIndex={0}
@@ -74,7 +73,6 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, s
           icon={<FontAwesomeIcon icon={faArrowUpShortWide} />}
         />
       </Tabs>
-
       {activeTab === 'attributes' && (
         <Attributes
           isDrawerOpen={isDrawerOpen}
@@ -83,7 +81,6 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, s
           filters={filters}
         />
       )}
-
       {activeTab === 'filters' && (
         <Filters
           isDrawerOpen={isDrawerOpen}
@@ -92,7 +89,6 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, s
           setSorting={setSorting}
         />
       )}
-
       {activeTab === 'sorting' && (
         <Sorting
           isDrawerOpen={isDrawerOpen}

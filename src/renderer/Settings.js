@@ -45,6 +45,7 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, se
     >
       <Box
       	className="Modal"
+        bgcolor="background.paper"
       >
         <h3>Settings</h3>
         <FormGroup>

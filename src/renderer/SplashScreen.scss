@@ -11,7 +11,26 @@
     	font-family: $font-family-bold;
         line-height: 1.2em;
     }
-    button {
-        margin: 0 1em 0.5em 0;
+    svg {
+        font-size: 3em;
+        color: $mid-grey;
     }
+    .buttons {
+        display: flex;
+        gap: 0.5em;
+    }
+    .fileDropZone {
+        padding: 1em 2em;
+        border-radius: $radius;
+        border: 2px dashed #ccc;
+    }    
+}
+
+.darkTheme {
+    #splashScreen {
+        svg {
+            color: $dark-grey;
+        }
+ 
+    } 
 }

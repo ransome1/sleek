@@ -31,6 +31,14 @@ function buildMenu(files: File[]) {
           },
         },
         {
+          label: 'Settings',
+          accelerator: 'CmdOrCtrl+.',
+          click: () => {
+            mainWindow!.webContents.send('setIsSettingsOpen');
+          },
+        },
+        { type: 'separator' },
+        {
           label: 'Hide',
           accelerator: isMac ? 'Cmd+H' : 'Win+D',
           role: 'hide',
@@ -91,14 +99,35 @@ function buildMenu(files: File[]) {
     },
     {
       label: 'View',
-      submenu: [        
+      submenu: [
+        {
+          label: 'Toggle drawer',
+          accelerator: 'CmdOrCtrl+B',
+          click: () => {
+            mainWindow!.webContents.send('setIsDrawerOpen');
+          },
+        },        
         {
           label: 'Toggle navigation',
           accelerator: 'Ctrl+Alt+H',
           click: () => {
-            mainWindow!.webContents.send('setIsNavigationHidden');
+            mainWindow!.webContents.send('setIsNavigationOpen');
           },
         },
+        {
+          label: 'Toggle file tabs',
+          click: () => {
+            mainWindow!.webContents.send('setShowFileTabs');
+          },
+        },
+        {
+          label: 'Toggle theme',
+          accelerator: 'Ctrl+Alt+D',
+          click: () => {
+            const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
+            configStorage.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
+          },
+        },        
       ],
     },    
     {

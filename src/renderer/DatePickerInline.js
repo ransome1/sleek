@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Button, Chip } from '@mui/material';
+import { Button, Chip, Box } from '@mui/material';
 import dayjs from 'dayjs';
 import { Item } from 'jstodotxt';
 import { handleFilterSelect } from './Shared';
@@ -29,7 +29,7 @@ const DatePickerInline = ({ type, todoObject, date, filters }) => {
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel}>
           <Chip onClick={() => handleFilterSelect(type, date, filters, false)} label={chipText} />
-          <div onClick={() => setOpen?.((prev) => !prev)}>{date}</div>
+          <Box onClick={() => setOpen?.((prev) => !prev)}>{date}</Box>
         </Button>
       );
     };

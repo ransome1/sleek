@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Snackbar, Alert } from '@mui/material';
+import { CssBaseline, Snackbar, Alert, Box } from '@mui/material';
 import NavigationComponent from './Navigation';
 import TodoDataGrid from './DataGrid';
 import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs';
-import { darkTheme, lightTheme } from './Themes';
+import { baseTheme, darkTheme, lightTheme } from './Themes';
 import DrawerComponent from './Drawer';
 import Search from './Search';
 import TodoDialog from './TodoDialog';
 import ArchiveTodos from './ArchiveTodos';
 import ToolBar from './ToolBar';
+import { Sorting } from '../main/util';
 import './App.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
@@ -21,25 +22,24 @@ const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(store.get('isDrawerOpen') || false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(store.get('isSearchOpen') || false);
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
-  const [drawerParameter, setDrawerParameter] = useState<string | null>();
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
-  const [fileTabs, setFileTabs] = useState<boolean>(true);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [todoObject, setTodoObject] = useState(null);
   const [searchString, setSearchString] = useState(null);
   const [todoObjects, setTodoObjects] = useState<object>(null);
+  const [todoObject, setTodoObject] = useState(null);
   const [headers, setHeaders] = useState<object>(null);
   const [filters, setFilters] = useState<object>({});
   const [attributes, setAttributes] = useState<object>({});
   const [textFieldValue, setTextFieldValue] = useState('');
-  const [sorting, setSorting] = useState<string[]>(store.get('sorting') || null);
+  const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
   const searchFieldRef = useRef(null);
-  const [isNavigationHidden, setIsNavigationHidden] = useState<boolean>(store.get('isNavigationHidden') || false);
+  const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(store.get('isNavigationOpen'));
   const [colorTheme, setColorTheme] = useState<boolean>(store.get('colorTheme') || 'system');
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
   const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
   const responseHandler = function(response) {
     if (response instanceof Error) {
@@ -62,7 +62,7 @@ const App = () => {
   };
 
   const handleUpdateFiles = (files: object) => {
-    setFiles(files)
+    setFiles(files);
   };
 
   const handleUpdateSorting = (sorting: object) => {
@@ -73,17 +73,35 @@ const App = () => {
     setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
   };
 
-  const handleSetIsNavigationHidden = () => {
-    setIsNavigationHidden(prevIsNavigationHidden => !prevIsNavigationHidden);
+  const handleSetIsNavigationOpen = () => {
+    setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen);
   };
 
   const handleSetShouldUseDarkColors = (shouldUseDarkColors: boolean) => {
     setShouldUseDarkColors(shouldUseDarkColors);
   };
 
-  useEffect(() => {
-    store.set('isNavigationHidden', isNavigationHidden)
-  }, [isNavigationHidden]);
+  const handleSetShowFileTabs = () => {
+    setShowFileTabs(prevShowFileTabs => !prevShowFileTabs);
+  };
+
+  const handleSetIsDrawerOpen = () => {
+    setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen);
+  };
+
+  const handleSetIsSettingsOpen = () => {
+    setIsSettingsOpen(prevIsSettingsOpen => !prevIsSettingsOpen);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const filePath = event.dataTransfer.files[0].path;
+    if(typeof filePath === 'string') ipcRenderer.send('addFile', filePath);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
 
   useEffect(() => {
     if(!headers) return;
@@ -120,6 +138,10 @@ const App = () => {
   }, [isSearchOpen]);
 
   useEffect(() => {
+    store.set('', isNavigationOpen)
+  }, [isNavigationOpen]);
+
+  useEffect(() => {
     if(!snackBarContent) return;
     setSnackBarOpen(true);
   }, [snackBarContent]);
@@ -137,39 +159,53 @@ const App = () => {
     ipcRenderer.on('updateFiles', handleUpdateFiles);
     ipcRenderer.on('updateSorting', handleUpdateSorting);
     ipcRenderer.on('setIsSearchOpen', handleSetIsSearchOpen);
-    ipcRenderer.on('setIsNavigationHidden', handleSetIsNavigationHidden);
-    ipcRenderer.on('shouldUseDarkColors', handleSetShouldUseDarkColors);
+    ipcRenderer.on('setIsNavigationOpen', handleSetIsNavigationOpen);
+    ipcRenderer.on('setShouldUseDarkColors', handleSetShouldUseDarkColors);
+    ipcRenderer.on('setShowFileTabs', handleSetShowFileTabs);
+    ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
+    ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
+    
+    window.addEventListener('drop', handleDrop);
+    window.addEventListener('dragover', handleDragOver);
+
+    return () => {
+      window.removeEventListener('drop', handleDrop);
+      window.removeEventListener('dragover', handleDragOver);
+    };    
   }, []);
 
   return (
-    <ThemeProvider theme={shouldUseDarkColors ? lightTheme : lightTheme}>
+    <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
       <CssBaseline />
-      <div className={isNavigationHidden ? 'flexContainer hideNavigation' : 'flexContainer'}>
+      <Box
+          className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${
+            shouldUseDarkColors ? 'darkTheme' : 'lightTheme'
+          }`}  
+        >
         <NavigationComponent
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
-          drawerParameter={drawerParameter}
-          setDrawerParameter={setDrawerParameter}
           setDialogOpen={setDialogOpen}
           files={files}
           headers={headers}
-          isNavigationHidden={isNavigationHidden}
-          setIsNavigationHidden={setIsNavigationHidden}
+          isNavigationOpen={isNavigationOpen}
+          setIsNavigationOpen={setIsNavigationOpen}
           colorTheme={colorTheme}
           setColorTheme={setColorTheme}
           showFileTabs={showFileTabs}
           setShowFileTabs={setShowFileTabs}
+          isSettingsOpen={isSettingsOpen}
+          setIsSettingsOpen={setIsSettingsOpen}
         />
         <DrawerComponent 
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
-          drawerParameter={drawerParameter}
           attributes={attributes}
           filters={filters}
           sorting={sorting}
           setSorting={setSorting}
         />
-        <div className="flexItems">
+        <Box className="flexItems">
           {files?.length > 0 && (
           <>
             {!isSearchOpen && showFileTabs ? <FileTabs files={files} /> : null}
@@ -207,8 +243,8 @@ const App = () => {
             setDialogOpen={setDialogOpen}
             setSearchString={setSearchString}
           />
-        </div>
-      </div>
+        </Box>
+      </Box>
       <TodoDialog
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
@@ -218,6 +254,7 @@ const App = () => {
         setSnackBarContent={setSnackBarContent}
         textFieldValue={textFieldValue}
         setTextFieldValue={setTextFieldValue}
+        shouldUseDarkColors={shouldUseDarkColors}
       />
       <Snackbar 
         open={snackBarOpen}

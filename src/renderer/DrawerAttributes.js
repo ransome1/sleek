@@ -74,12 +74,12 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
   }, [accordionOpenState]); 
 
   return (
-    <Box className="Attributes" ref={firstTabbableElementRef}>
+    <Box id="Attributes" ref={firstTabbableElementRef}>
       {isAttributesEmpty(attributes) ? (
-        <div className="placeholder">
+        <Box className="placeholder">
           <FontAwesomeIcon icon={faMeteor} /><br />
           No attributes available yet
-        </div>
+        </Box>
       ) : (
         Object.keys(attributes).map((key, index) =>
           Object.keys(attributes[key]).length > 0 ? (
@@ -102,7 +102,7 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
                     const disabled = attributes[key][value] === 0;
 
                     return (
-                      <div
+                      <Box
                         key={`${key}-${value}-${childIndex}`}
                         data-todotxt-attribute={key}
                         data-todotxt-value={value}
@@ -124,16 +124,16 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
                           </Button>
                         </Badge>
                         {(isCtrlKeyPressed || excluded) && (
-                          <div
+                          <Box
                             data-todotxt-attribute={key}
                             data-todotxt-value={value}
                             className="overlay"
                             onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
                           >
                             <FontAwesomeIcon icon={faEyeSlash} />
-                          </div>
+                          </Box>
                         )}
-                      </div>
+                      </Box>
                     );
                   })}
                 </Box>

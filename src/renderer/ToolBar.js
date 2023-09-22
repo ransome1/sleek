@@ -25,7 +25,7 @@ const ToolBar = ({ isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
   }, [isSearchOpen]);
 
   return (
-    <Box className="ToolBar">
+    <Box id="ToolBar">
       <FontAwesomeIcon
       	icon={faMagnifyingGlass}
       	onClick={handleClick}

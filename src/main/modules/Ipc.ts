@@ -4,7 +4,7 @@ import { changeCompleteState } from './ChangeCompleteState';
 import { writeTodoObjectToFile } from './WriteToFile';
 import archiveTodos from './ArchiveTodos';
 import { configStorage, filterStorage } from '../config';
-import { setFile, removeFile } from './File';
+import { addFile, setFile, removeFile } from './File';
 import { openFile, createFile } from './FileDialog';
 
 async function handleDataRequest(event: IpcMainEvent, searchString: string): void {
@@ -15,11 +15,9 @@ async function handleDataRequest(event: IpcMainEvent, searchString: string): voi
 async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean | undefined, remove: boolean): Promise<void> {
   try {
     let updatedString: string = string;
-
     if (state !== undefined && id >= 0 && !remove) {
       updatedString = await changeCompleteState(string, state);
     }
-
     writeTodoObjectToFile(id, updatedString, remove).then(function (response) {
       console.log('ipcEvents.ts:', response);
     }).catch((error) => {
@@ -41,6 +39,7 @@ function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
 
 function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any): void {
   try {
+    if(!key) return false;
     configStorage.set(key, value);
     console.log(`ipcEvents.ts: Set ${key} to ${value}`);
   } catch (error) {
@@ -68,6 +67,7 @@ function removeEventListeners(): void {
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', archiveTodos);
+  ipcMain.off('addFile', addFile);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -82,3 +82,4 @@ ipcMain.on('createFile', createFile);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', archiveTodos);
+ipcMain.on('addFile', addFile);

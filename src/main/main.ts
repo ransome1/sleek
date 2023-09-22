@@ -4,6 +4,7 @@ if (isDebug) {
 }
 import { app, BrowserWindow, Rectangle, Menu } from 'electron';
 import path from 'path';
+import fs from 'fs';
 import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -69,6 +70,17 @@ const createWindow = async() => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
+
+  const customStylesPath = configStorage.get('customStylesPath');
+  if(customStylesPath) {
+    fs.readFile(customStylesPath, 'utf8', (err, data) => {
+      if (!err) {
+        mainWindow.webContents.insertCSS(data);
+      } else {
+        console.error('Error reading the CSS file:', err);
+      }
+    });
+  }
   
   const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
 

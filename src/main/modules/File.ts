@@ -3,7 +3,7 @@ import createFileWatcher from './FileWatcher';
 import path from 'path';
 import { File } from '../util';
 
-async function addFile(filePath: string): Promise<void> {
+async function addFile(event: Event | null, filePath: string): Promise<void> {
   try {
     const files: File[] = (configStorage.get('files') as File[]) || [];
     let existingFileIndex = -1;
@@ -12,7 +12,11 @@ async function addFile(filePath: string): Promise<void> {
       files.forEach((file) => {
         file.active = false;
       });
-      existingFileIndex = files.findIndex((file) => file.path.includes(filePath));
+      existingFileIndex = files.findIndex((file) => {
+        const pathName = path.dirname(filePath);
+        const fileName = path.basename(filePath)
+        if(file.path === pathName && file.todoFile === fileName) return true;
+      });
     }
 
     if (existingFileIndex === -1) {
@@ -31,7 +35,6 @@ async function addFile(filePath: string): Promise<void> {
     configStorage.set('files', files);
 
     const response = await createFileWatcher(files);
-    console.log('File.ts:', response);
 
     console.info('File.ts: File added, restarting file watchers');
     return;
@@ -60,7 +63,7 @@ async function removeFile(event: any, index: number): Promise<void> {
     configStorage.set('files', files);
 
     const response = await createFileWatcher(files);
-    console.log('File.ts:', response);
+    console.info('File.ts: File removed, restarting file watchers');
 
     return;
   } catch (error) {

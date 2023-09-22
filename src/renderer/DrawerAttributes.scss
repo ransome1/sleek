@@ -1,12 +1,12 @@
 @import "Variables.scss";
 
-.Attributes {
+#Attributes {
 	padding: 0 1em;
 	margin: 0;
 	overflow-y: scroll;
 	.placeholder {
 		padding: 2em 0;
-		color: $dark-grey;
+		opacity: 0.5;
 		text-align: center;
 		svg {
 			font-size: 2.5em;
@@ -65,25 +65,40 @@
 		}
 		.MuiBadge-badge {
 			z-index: 10;
+			font-family: 'FreeSansBold';
 		}
 		button:disabled {
 			cursor: not-allowed;
 			filter: opacity(50%) grayscale(100%);
 		}
-	}
-	.filter:hover,
-	.filter.excluded {
-		.overlay {
-			display: block;
-			color: $darker-grey;
+		&.filter:hover,
+		&.filter.excluded {
+			.overlay {
+				display: block;
+				color: $darker-grey;
+			}
 		}
 	}
-	.filter[data-todotxt-attribute="priority"] {
+	[data-todotxt-attribute="priority"] {
 		button {
 			min-width: 1.75em;
 			font-size: 1.25em;
 			font-family: 'FreeSansBold';
 			padding: 0.1em 0.65em;
 		}
+	}
+    &::-webkit-scrollbar-thumb:window-inactive,
+    &::-webkit-scrollbar-thumb {
+      background: $mid-grey;
+      border-radius: 5px;
+    }	
+}
+
+.darkTheme {
+	#Attributes {
+	    &::-webkit-scrollbar-thumb:window-inactive,
+	    &::-webkit-scrollbar-thumb {
+	      background: $dark-grey;
+	    }		
 	}
 }

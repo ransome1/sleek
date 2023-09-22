@@ -20,7 +20,7 @@ describe('File functions', () => {
   });
 
   test('addFile should add a new file to the config storage', async () => {
-    await addFile('/path/to/test4.txt');
+    await addFile(null, '/path/to/test4.txt');
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {

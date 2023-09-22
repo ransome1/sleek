@@ -22,7 +22,7 @@ async function openFile(): Promise<void> {
     });
     if (!result.canceled && result.filePaths.length > 0) {
       const filePath: string = result.filePaths[0];
-      addFile(filePath);
+      addFile(null, filePath);
     }
   } catch (error) {
     console.error('FileDialog.ts:', error);
@@ -38,7 +38,7 @@ async function createFile(): Promise<void> {
     if (!result.canceled && result.filePath) {
       const filePath: string = result.filePath;
       await fs.writeFile(filePath, '');
-      addFile(filePath);
+      addFile(null, filePath);
     }
   } catch (error) {
     console.error('FileDialog.ts:', error);

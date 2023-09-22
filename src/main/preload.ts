@@ -12,7 +12,10 @@ export type Channels =
   | 'storeSetConfig'
   | 'storeSetFilters'
   | 'archiveTodos'
-  | 'shouldUseDarkColors';
+  | 'setIsNavigationOpen'
+  | 'setShowFileTabs'
+  | 'setIsSettingsOpen'
+  | 'setShouldUseDarkColors';
 
 interface ElectronStore {
   get: <T>(key: string) => T;
@@ -60,6 +63,9 @@ const electronHandler: {
         (_event: IpcRendererEvent, ...args: unknown[]) => func(...args)
       );
     },
+    startDrag: (fileName) => {
+      ipcRenderer.send('ondragstart', path.join(process.cwd(), fileName))
+    }
   },
 };
 

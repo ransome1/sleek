@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { TextField, InputAdornment, Button, Avatar } from '@mui/material';
+import { TextField, InputAdornment, Button, Avatar, Box } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './AutoSuggest.scss';
@@ -68,9 +68,13 @@ const AutoSuggest = ({ setDialogOpen, textFieldRef, textFieldValue, setTextField
   };
 
   const renderSuggestion = (suggestion, { isHighlighted }) => (
-    <div data-todotxt-attribute={prefix} onClick={() => setSelectedSuggestionIndex(isHighlighted ? suggestions.indexOf(suggestion) : -1)} className={isHighlighted ? 'selected' : ''}>
+    <Box
+      data-todotxt-attribute={prefix === '+' ? 'projects' : prefix === '@' ? 'contexts' : ''}
+      onClick={() => setSelectedSuggestionIndex(isHighlighted ? suggestions.indexOf(suggestion) : -1)}
+      className={isHighlighted ? 'selected' : ''}
+    >
       <Button key={suggestion}>{suggestion}</Button>
-    </div>
+    </Box>
   );
 
   const renderInputComponent = (inputProps) => <TextField {...inputProps} />;
@@ -125,9 +129,9 @@ const AutoSuggest = ({ setDialogOpen, textFieldRef, textFieldValue, setTextField
     <Autosuggest
       renderInputComponent={renderInputComponent}
       renderSuggestionsContainer={({ containerProps, children }) => (
-        <div {...containerProps} style={containerStyle}>
+        <Box {...containerProps} style={containerStyle}>
           {children}
-        </div>
+        </Box>
       )}
       suggestions={suggestions}
       onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
