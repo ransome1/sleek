@@ -15,6 +15,7 @@ import { createTray } from './tray';
 import './modules/Ipc';
 
 const files: File[] = (configStorage.get('files') as File[]) || [];
+const windowMaximized: boolean = configStorage.get('windowMaximized');
 
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
@@ -38,17 +39,31 @@ const handleClosed = () => {
 }
 
 const handleResize = () => {
-  if (mainWindow) {
+  if (!windowMaximized && mainWindow) {
     const { width, height } = mainWindow.getBounds();
     configStorage.set('windowDimensions', { width, height });
   }  
 }
 
 const handleMove = () => {
-  if (mainWindow) {
+  if (!windowMaximized && mainWindow) {
     const { x, y } = mainWindow.getBounds();
     configStorage.set('windowPosition', { x, y });
   }  
+}
+
+const handleUnmaximize = () => {
+  configStorage.set('windowMaximized', false)
+}
+
+const handleMaximize = () => {
+  configStorage.set('windowMaximized', true)
+}
+
+const handleShow = () => {
+  if (app.dock) {
+    app.dock.show();
+  }
 }
 
 const createWindow = async() => {
@@ -76,27 +91,33 @@ const createWindow = async() => {
       }
     });
   }
-  
-  const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
 
-  if (windowDimensions) {
-    const { width, height } = windowDimensions;
-    mainWindow.setSize(width, height);
+  if(windowMaximized) {
+    mainWindow.maximize();
+  } else {
+    const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
 
-    const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
-    if (windowPosition) {
-      const { x, y } = windowPosition;
-      mainWindow.setPosition(x, y);
+    if (windowDimensions) {
+      const { width, height } = windowDimensions;
+      mainWindow.setSize(width, height);
+
+      const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
+      if (windowPosition) {
+        const { x, y } = windowPosition;
+        mainWindow.setPosition(x, y);
+      }
     }
   }
-
+  
   mainWindow.loadURL(resolveHtmlPath('index.html'));
   mainWindow
     .on('ready-to-show', handleReadyToShow)
     .on('resize', handleResize)
     .on('move', handleMove)
     .on('show', handleShow)
-    .on('closed', handleClosed);
+    .on('closed', handleClosed)
+    .on('maximize', handleMaximize)
+    .on('unmaximize', handleUnmaximize);
   return "Main window has been created successfully"
 }
 
@@ -123,11 +144,7 @@ const handleReadyToShow = async () => {
   // }
 }
 
-const handleShow = () => {
-  if (app.dock) {
-    app.dock.show();
-  }
-}
+
 
 const handleWindowAllClosed = () => {
   const tray: boolean = configStorage.get('tray');

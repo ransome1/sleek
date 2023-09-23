@@ -198,14 +198,18 @@ const App = () => {
           isSettingsOpen={isSettingsOpen}
           setIsSettingsOpen={setIsSettingsOpen}
         />
-        <DrawerComponent 
-          isDrawerOpen={isDrawerOpen}
-          setIsDrawerOpen={setIsDrawerOpen}
-          attributes={attributes}
-          filters={filters}
-          sorting={sorting}
-          setSorting={setSorting}
-        />
+        {files?.length > 0 && (
+          <>
+            <DrawerComponent 
+              isDrawerOpen={isDrawerOpen}
+              setIsDrawerOpen={setIsDrawerOpen}
+              attributes={attributes}
+              filters={filters}
+              sorting={sorting}
+              setSorting={setSorting}
+            />
+          </>
+        )}
         <Box className="flexItems">
           {files?.length > 0 && (
           <>
