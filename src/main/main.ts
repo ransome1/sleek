@@ -131,7 +131,9 @@ const handleReadyToShow = async () => {
 }
 
 const handleShow = () => {
-  app.dock.show();
+  if (app.dock) {
+    app.dock.show();
+  }
 }
 
 const handleWindowAllClosed = () => {
@@ -139,7 +141,7 @@ const handleWindowAllClosed = () => {
   if (process.platform !== 'darwin' && !tray) {
     app.quit();
   } else if (process.platform === 'darwin' && tray) {
-    app.dock.hide();
+    app.dock?.hide();
   } else {
     mainWindow?.hide();
   }

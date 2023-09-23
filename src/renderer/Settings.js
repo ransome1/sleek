@@ -8,7 +8,7 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, se
   const [appendCreationDate, setAppendCreationDate] = useState(store.get('appendCreationDate'));
   const [convertRelativeToAbsoluteDates, setConvertRelativeToAbsoluteDates] = useState(store.get('convertRelativeToAbsoluteDates'));
   const [notificationsAllowed, setNotificationsAllowed] = useState(store.get('notificationsAllowed'));
-  const [tray, setTray] = useState(store.get('tray'));
+  const [tray, setTray] = useState(store.get('tray') || false);
 
   const handleSwitchChange = (event) => {
     const { name, checked } = event.target;

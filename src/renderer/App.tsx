@@ -79,6 +79,7 @@ const App = () => {
 
   const handleSetShouldUseDarkColors = (shouldUseDarkColors: boolean) => {
     setShouldUseDarkColors(shouldUseDarkColors);
+    setColorTheme((shouldUseDarkColors) ? 'dark' : 'light');
   };
 
   const handleSetShowFileTabs = () => {

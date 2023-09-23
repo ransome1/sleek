@@ -69,6 +69,19 @@ function createTray(create) {
 
     tray = new Tray('./assets/icons/tray/tray.png');
     tray.setContextMenu(menu);
+    tray.on('click', (event) => {
+        if (mainWindow) {
+          mainWindow?.show();
+        } else {
+          createWindow()
+            .then((result) => {
+              console.log('main.ts:', result);
+            })
+            .catch((error) => {
+              console.error('main.ts:', error);
+            });
+        }
+    });
 
     return Promise.resolve('Tray created');
   } catch (error) {
