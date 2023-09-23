@@ -9,7 +9,7 @@ import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import createMenu from './menu';
-import { resolveHtmlPath, File } from './util';
+import { resolveHtmlPath, getAssetPath, File } from './util';
 import createFileWatcher from './modules/FileWatcher';
 import { createTray } from './tray';
 import './modules/Ipc';
@@ -52,13 +52,6 @@ const handleMove = () => {
 }
 
 const createWindow = async() => {
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
-
-  const getAssetPath = (...paths: string[]): string => {
-    return path.resolve(RESOURCES_PATH, ...paths);
-  };
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,

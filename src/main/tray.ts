@@ -1,6 +1,7 @@
 import { app, Tray, Menu } from 'electron';
 import { mainWindow, createWindow } from './main';
 import { configStorage } from './config';
+import { getAssetPath } from './util';
 import { setFile } from './modules/File';
 
 let tray;
@@ -56,8 +57,8 @@ function getMenuTemplate(files) {
 
 function createTray(create) {
   try {
+    tray?.destroy();
     if (!create) {
-      tray?.destroy();
       if (app.dock) {
         app.dock.show();
       }
@@ -67,7 +68,7 @@ function createTray(create) {
     const files = configStorage.get('files') as File[] || [];
     const menu = Menu.buildFromTemplate(getMenuTemplate(files));
 
-    tray = new Tray('./assets/icons/tray/tray.png');
+    tray = new Tray(getAssetPath('icons/tray/tray.png'));
     tray.setContextMenu(menu);
     tray.on('click', (event) => {
         if (mainWindow) {

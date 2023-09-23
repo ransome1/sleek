@@ -165,6 +165,7 @@
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
+      "assets/icons/tray",
       "dist",
       "node_modules",
       "package.json"
