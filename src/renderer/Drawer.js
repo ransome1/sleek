@@ -79,6 +79,7 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, s
           setIsDrawerOpen={setIsDrawerOpen}
           attributes={attributes}
           filters={filters}
+          sorting={sorting}
         />
       )}
       {activeTab === 'filters' && (

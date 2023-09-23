@@ -12,225 +12,230 @@ const isMac = process.platform === 'darwin';
 const appPackage = require('../../release/app/package.json');
 const description = appPackage.description;
 
-function buildMenu(files: File[]) {
-  const template: Electron.MenuItemConstructorOptions[] = [
-    {
-      label: 'sleek',
-      submenu: [
-        {
-          label: 'About',
-          click: () => {
-            const options: Electron.MessageBoxOptions = {
-              type: 'info',
-              title: 'About sleek',
-              message: `sleek v${app.getVersion()}`,
-              detail: description,
-              buttons: ['OK'],
-            };
-            dialog.showMessageBox(options);
+function createMenu(files: File[]) {
+  try {
+    const template: Electron.MenuItemConstructorOptions[] = [
+      {
+        label: 'sleek',
+        submenu: [
+          {
+            label: 'About',
+            click: () => {
+              const options: Electron.MessageBoxOptions = {
+                type: 'info',
+                title: 'About sleek',
+                message: `sleek v${app.getVersion()}`,
+                detail: description,
+                buttons: ['OK'],
+              };
+              dialog.showMessageBox(options);
+            },
           },
-        },
-        {
-          label: 'Settings',
-          accelerator: 'CmdOrCtrl+.',
-          click: () => {
-            mainWindow!.webContents.send('setIsSettingsOpen');
+          {
+            label: 'Settings',
+            accelerator: 'CmdOrCtrl+.',
+            click: () => {
+              mainWindow!.webContents.send('setIsSettingsOpen');
+            },
           },
-        },
-        { type: 'separator' },
-        {
-          label: 'Hide',
-          accelerator: isMac ? 'Cmd+H' : 'Win+D',
-          role: 'hide',
-        },
-        { type: 'separator' },
-        {
-          label: 'Quit',
-          accelerator: 'CmdOrCtrl+Q',
-          click: () => {
-            app.quit();
+          { type: 'separator' },
+          {
+            label: 'Hide',
+            accelerator: isMac ? 'Cmd+H' : 'Win+D',
+            role: 'hide',
           },
-        },
-      ],
-    },
-    {
-      id: 'fileMenu',
-      label: 'File',
-      submenu: [
-        { type: 'separator' },
-        {
-          label: 'Open todo.txt file',
-          accelerator: 'CmdOrCtrl+O',
-          click: openFile,
-        },
-        {
-          label: 'Create todo.txt file',
-          click: createFile,
-        },
-        { type: 'separator' },
-        ...(files?.length > 0
-          ? files.map((file: File, index: number) => ({
-              label: file.todoFile,
-              accelerator: `CommandOrControl+${index + 1}`,
-              click: () => {
-                setFile(undefined, index);
-              },
-            }))
-          : []),
-        { type: 'separator' },
-        {
-          label: 'Close Window',
-          accelerator: 'CmdOrCtrl+W',
-          role: 'close',
-        },
-      ],
-    },
-    {
-      label: 'Edit',
-      submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        { role: 'selectAll' },
-      ],
-    },
-    {
-      label: 'View',
-      submenu: [
-        {
-          label: 'Toggle drawer',
-          accelerator: 'CmdOrCtrl+B',
-          click: () => {
-            mainWindow!.webContents.send('setIsDrawerOpen');
+          { type: 'separator' },
+          {
+            label: 'Quit',
+            accelerator: 'CmdOrCtrl+Q',
+            click: () => {
+              app.quit();
+            },
           },
-        },        
-        {
-          label: 'Toggle navigation',
-          accelerator: 'Ctrl+Alt+H',
-          click: () => {
-            mainWindow!.webContents.send('setIsNavigationOpen');
+        ],
+      },
+      {
+        id: 'fileMenu',
+        label: 'File',
+        submenu: [
+          { type: 'separator' },
+          {
+            label: 'Open todo.txt file',
+            accelerator: 'CmdOrCtrl+O',
+            click: openFile,
           },
-        },
-        {
-          label: 'Toggle file tabs',
-          click: () => {
-            mainWindow!.webContents.send('setShowFileTabs');
+          {
+            label: 'Create todo.txt file',
+            click: createFile,
           },
-        },
-        {
-          label: 'Toggle theme',
-          accelerator: 'Ctrl+Alt+D',
-          click: () => {
-            const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
-            configStorage.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
+          { type: 'separator' },
+          ...(files?.length > 0
+            ? files.map((file: File, index: number) => ({
+                label: file.todoFile,
+                accelerator: `CommandOrControl+${index + 1}`,
+                click: () => {
+                  setFile(undefined, index);
+                },
+              }))
+            : []),
+          { type: 'separator' },
+          {
+            label: 'Close Window',
+            accelerator: 'CmdOrCtrl+W',
+            role: 'close',
           },
-        },        
-      ],
-    },    
-    {
-      label: 'Todos',
-      submenu: [
-        {
-          label: 'Find',
-          accelerator: 'CmdOrCtrl+F',
-          click: () => {
-            mainWindow!.webContents.send('setIsSearchOpen');
+        ],
+      },
+      {
+        label: 'Edit',
+        submenu: [
+          { role: 'undo' },
+          { role: 'redo' },
+          { type: 'separator' },
+          { role: 'cut' },
+          { role: 'copy' },
+          { role: 'paste' },
+          { role: 'selectAll' },
+        ],
+      },
+      {
+        label: 'View',
+        submenu: [
+          {
+            label: 'Toggle drawer',
+            accelerator: 'CmdOrCtrl+B',
+            click: () => {
+              mainWindow!.webContents.send('setIsDrawerOpen');
+            },
+          },        
+          {
+            label: 'Toggle navigation',
+            accelerator: 'Ctrl+Alt+H',
+            click: () => {
+              mainWindow!.webContents.send('setIsNavigationOpen');
+            },
           },
-        },
-        {
-          label: 'Toggle completed',
-          accelerator: 'Ctrl+H',
-          click: async () => {
-            const showCompleted = configStorage.get('showCompleted');
-            configStorage.set('showCompleted', !showCompleted);
+          {
+            label: 'Toggle file tabs',
+            click: () => {
+              mainWindow!.webContents.send('setShowFileTabs');
+            },
           },
-        },
-        {
-          label: 'Reset search and filters',
-          accelerator: 'Ctrl+0',
-          click: async () => {
-            filterStorage.set('filters', {});
+          {
+            label: 'Toggle theme',
+            accelerator: 'Ctrl+Alt+D',
+            click: () => {
+              const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
+              configStorage.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
+            },
+          },        
+        ],
+      },    
+      {
+        label: 'Todos',
+        submenu: [
+          {
+            label: 'Find',
+            accelerator: 'CmdOrCtrl+F',
+            click: () => {
+              mainWindow!.webContents.send('setIsSearchOpen');
+            },
           },
-        },
-        {
-          label: 'Archive completed todos',
-          accelerator: 'Ctrl+Alt+A',
-          click: () => {
-            const activeFile = getActiveFile(files);
-            if(activeFile) mainWindow!.webContents.send('archiveTodos', activeFile.doneFile);
+          {
+            label: 'Toggle completed',
+            accelerator: 'Ctrl+H',
+            click: async () => {
+              const showCompleted = configStorage.get('showCompleted');
+              configStorage.set('showCompleted', !showCompleted);
+            },
           },
-        },
-        {
-          role: 'reload',
-          visible: false,
-        },
-      ],
-    },
-    {
-      label: 'Help',
-      submenu: [
-        {
-          label: 'sleek wiki',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/wiki');
+          {
+            label: 'Reset search and filters',
+            accelerator: 'Ctrl+0',
+            click: async () => {
+              filterStorage.set('filters', {});
+            },
           },
-        },
-        {
-          label: 'Report bugs',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/issues');
+          {
+            label: 'Archive completed todos',
+            accelerator: 'Ctrl+Alt+A',
+            click: () => {
+              const activeFile = getActiveFile(files);
+              if(activeFile) mainWindow!.webContents.send('archiveTodos', activeFile.doneFile);
+            },
           },
-        },
-        {
-          label: 'Discuss new or existing features',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/discussions');
+          {
+            role: 'reload',
+            visible: false,
           },
-        },
-        {
-          label: 'Contributing',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
+        ],
+      },
+      {
+        label: 'Help',
+        submenu: [
+          {
+            label: 'sleek wiki',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/wiki');
+            },
           },
-        },
-        {
-          label: 'Keyboard shortcuts',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
+          {
+            label: 'Report bugs',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/issues');
+            },
           },
-        },
-        {
-          label: 'Privacy policy',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
+          {
+            label: 'Discuss new or existing features',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/discussions');
+            },
           },
-        },
-        {
-          label: 'Sponsoring',
-          click: () => {
-            shell.openExternal('https://github.com/sponsors/ransome1');
+          {
+            label: 'Contributing',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
+            },
           },
-        },
-        {
-          label: 'Changelog',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/blob/master/CHANGELOG.md');
+          {
+            label: 'Keyboard shortcuts',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
+            },
           },
-        },
-        {
-          label: 'sleek on GitHub',
-          click: () => {
-            shell.openExternal('https://github.com/ransome1/sleek/');
+          {
+            label: 'Privacy policy',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
+            },
           },
-        },
-      ],
-    },
-  ];
+          {
+            label: 'Sponsoring',
+            click: () => {
+              shell.openExternal('https://github.com/sponsors/ransome1');
+            },
+          },
+          {
+            label: 'Changelog',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/blob/master/CHANGELOG.md');
+            },
+          },
+          {
+            label: 'sleek on GitHub',
+            click: () => {
+              shell.openExternal('https://github.com/ransome1/sleek/');
+            },
+          },
+        ],
+      },
+    ];
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    return Promise.resolve('Menu created');
+  } catch(error) {
+    return Promise.reject(error);
+  }
 }
 
-export default buildMenu;
+export default createMenu;

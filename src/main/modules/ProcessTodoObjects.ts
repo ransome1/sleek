@@ -1,4 +1,6 @@
 import { TodoObject, Sorting } from '../util';
+import * as FilterLang from "./FilterLang/FilterLang.js";
+import { runQuery } from "./FilterLang/FilterQuery.js";
 import dayjs from 'dayjs';
 
 function countTodoObjects(todoObjects: TodoObject[]): number {
@@ -8,14 +10,22 @@ function countTodoObjects(todoObjects: TodoObject[]): number {
   return count.length;
 }
 
-function applySearchString(searchString: string, todoObjects: TodoObject[]):TodoObject[] {
-  const lowerSearchString = searchString.toLowerCase();
-  const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
-    .flat()
-    .filter((todoObject: TodoObject | null) =>
-      todoObject && todoObject.string.toLowerCase().includes(lowerSearchString)
-    );
-  return filteredTodoObjects;
+function applySearchString(searchString: string, todoObjects: TodoObject[]): TodoObject[] {
+  try {
+    const query = FilterLang.parse(searchString);
+    const filteredTodoObjects = todoObjects.filter(function(todoObject: TodoObject): TodoObject[] {
+      return runQuery(todoObject, query);
+    });
+    return filteredTodoObjects;
+  } catch(error) {
+    const lowerSearchString = searchString.toLowerCase();
+    const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
+      .flat()
+      .filter((todoObject: TodoObject | null) =>
+        todoObject && todoObject.string.toLowerCase().includes(lowerSearchString)
+      );
+    return filteredTodoObjects;
+  }
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[], showCompleted: boolean):TodoObject[] {

@@ -25,7 +25,7 @@ const App = () => {
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState(null);
   const [todoObjects, setTodoObjects] = useState<object>(null);
   const [todoObject, setTodoObject] = useState(null);

@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { getActiveFile } from './ActiveFile';
 import { configStorage, filterStorage } from '../config';
-import { updateAttributes, applyFilters } from './Filters';
+import { applyFilters } from './Filters';
+import { updateAttributes, attributes } from './Attributes';
 import { createTodoObjects } from './CreateTodoObjects';
 import { File, Filter, Attributes, RequestedData, Headers, Sorting, TodoObject } from '../util';
 import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString, handleTodoObjectsDates } from './ProcessTodoObjects';
@@ -21,41 +22,27 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
       return Promise.resolve([]);
     }
 
-    let attributes: Attributes = {
-      priority: {},
-      projects: {},
-      contexts: {},
-      due: {},
-      t: {},
-      rec: {},
-      pm: {},
-      created: {},
-      completed: {},
-    };    
-
+    const sorting: Sorting[] = configStorage.get('sorting');
     const showCompleted: boolean = configStorage.get('showCompleted');
     const showHidden: boolean = configStorage.get('showHidden');
-    const sorting: Sorting[] = configStorage.get('sorting');
     const fileSorting: boolean = configStorage.get('fileSorting');
     const filters: object = filterStorage.get('filters');
     const thresholdDateInTheFuture: boolean = configStorage.get('thresholdDateInTheFuture');
     const dueDateInTheFuture: boolean = configStorage.get('dueDateInTheFuture');
-
     const fileContent = await fs.promises.readFile(path.join(file.path, '', file.todoFile), 'utf8');
-
     let todoObjects: TodoObject[];
     
     todoObjects = await createTodoObjects(fileContent);
-
-    headers.availableObjects = countTodoObjects(todoObjects);
 
     if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
 
     if(!thresholdDateInTheFuture || !dueDateInTheFuture) todoObjects = handleTodoObjectsDates(todoObjects, dueDateInTheFuture, thresholdDateInTheFuture);
 
+    headers.availableObjects = countTodoObjects(todoObjects);
+
     todoObjects = handleCompletedTodoObjects(todoObjects, showCompleted);
 
-    attributes = updateAttributes(attributes, todoObjects, false);
+    updateAttributes(todoObjects, sorting, true);
 
     if (filters) todoObjects = applyFilters(todoObjects, filters);
     
@@ -63,7 +50,7 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
 
     headers.visibleObjects = countTodoObjects(todoObjects);
 
-    attributes = updateAttributes(attributes, todoObjects, true);
+    updateAttributes(todoObjects, sorting, false);
 
     if(fileSorting) {
       const flattenedTodoObjects: any = flattenTodoObjects(todoObjects, '');
@@ -75,6 +62,7 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     const flattenedTodoObjects: any = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
 
     return Promise.resolve([flattenedTodoObjects, attributes, headers, filters]);
+    
   } catch(error) {
     return Promise.reject(error);
   }

@@ -8,9 +8,10 @@ import fs from 'fs';
 import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import buildMenu from './menu';
+import createMenu from './menu';
 import { resolveHtmlPath, File } from './util';
 import createFileWatcher from './modules/FileWatcher';
+import { createTray } from './tray';
 import './modules/Ipc';
 
 const files: File[] = (configStorage.get('files') as File[]) || [];
@@ -18,17 +19,17 @@ const files: File[] = (configStorage.get('files') as File[]) || [];
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
 
-class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify().then(result => {
-      console.log('main.ts: Update check completed:', result);
-    }).catch(error => {
-      console.error('main.ts: Error checking for updates:', error);
-    });
-  }
-}
+// class AppUpdater {
+//   constructor() {
+//     log.transports.file.level = 'info';
+//     autoUpdater.logger = log;
+//     autoUpdater.checkForUpdatesAndNotify().then(result => {
+//       console.log('main.ts: Update check completed:', result);
+//     }).catch(error => {
+//       console.error('main.ts: Error checking for updates:', error);
+//     });
+//   }
+// }
 
 const handleClosed = () => {
   mainWindow = null;
@@ -96,27 +97,26 @@ const createWindow = async() => {
     }
   }
 
-  buildMenu(files);
-
   mainWindow.loadURL(resolveHtmlPath('index.html'));
   mainWindow
     .on('ready-to-show', handleReadyToShow)
     .on('resize', handleResize)
     .on('move', handleMove)
+    .on('show', handleShow)
     .on('closed', handleClosed);
   return "Main window has been created successfully"
 }
 
 const handleReadyToShow = async () => {
-  if (process.env.START_MINIMIZED) {
-    if (mainWindow) {
-      mainWindow.minimize();
-    }
-  } else {
-    if (mainWindow) {
-      mainWindow.show();
-    }
-  }
+  // if (process.env.START_MINIMIZED) {
+  //   if (mainWindow) {
+  //     mainWindow.minimize();
+  //   }
+  // } else {
+  //   if (mainWindow) {
+  //     mainWindow.show();
+  //   }
+  // }
   try {
     if(files && Object.keys(files)?.length > 0) {
       const response = await createFileWatcher(files);
@@ -130,9 +130,18 @@ const handleReadyToShow = async () => {
   // }
 }
 
+const handleShow = () => {
+  app.dock.show();
+}
+
 const handleWindowAllClosed = () => {
-  if (process.platform !== 'darwin') {
+  const tray: boolean = configStorage.get('tray');
+  if (process.platform !== 'darwin' && !tray) {
     app.quit();
+  } else if (process.platform === 'darwin' && tray) {
+    app.dock.hide();
+  } else {
+    mainWindow?.hide();
   }
 }
 
@@ -163,14 +172,29 @@ app
   .then(() => {
     eventListeners.readyToShow = handleReadyToShow;
     eventListeners.closed = handleClosed;
+    
     createWindow().then(result => {
       console.log('main.ts:', result);
     }).catch(error => {
       console.error('main.ts:', error);
     });
+
+    createMenu(files).then(result => {
+      console.log('main.ts:', result);
+    }).catch(error => {
+      console.error('main.ts:', error);
+    });
+
+    const tray: boolean = configStorage.get('tray');
+    createTray(tray).then(result => {
+      console.log('main.ts:', result);
+    }).catch(error => {
+      console.error('main.ts:', error);
+    });
+
     app.on('activate', handleActivate);
     eventListeners.activate = handleActivate;
   })
   .catch(console.error);
 
-export { mainWindow };
+export { mainWindow, createWindow };

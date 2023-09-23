@@ -20,7 +20,6 @@ const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnac
       return;
     }
     try {
-      setDialogOpen(false);
       ipcRenderer.send('writeTodoToFile', todoObject?.id, textFieldRef.current.value);
     } catch (error) {
       setSnackBarSeverity('error');

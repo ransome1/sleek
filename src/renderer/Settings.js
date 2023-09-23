@@ -8,6 +8,7 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, se
   const [appendCreationDate, setAppendCreationDate] = useState(store.get('appendCreationDate'));
   const [convertRelativeToAbsoluteDates, setConvertRelativeToAbsoluteDates] = useState(store.get('convertRelativeToAbsoluteDates'));
   const [notificationsAllowed, setNotificationsAllowed] = useState(store.get('notificationsAllowed'));
+  const [tray, setTray] = useState(store.get('tray'));
 
   const handleSwitchChange = (event) => {
     const { name, checked } = event.target;
@@ -31,6 +32,10 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, se
       case 'showFileTabs':
         store.set(name, checked);
         setShowFileTabs(checked);
+        break;
+      case 'tray':
+        store.set(name, checked);
+        setTray(checked);
         break;
       default:
         break;
@@ -79,7 +84,11 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, se
               <MenuItem value="light">Light</MenuItem>
               <MenuItem value="dark">Dark</MenuItem>
             </Select>
-          </FormControl>          
+          </FormControl>
+          <FormControlLabel
+            control={<Switch checked={tray} onChange={handleSwitchChange} name="tray" />}
+            label="Minimize to tray"
+          />       
         </FormGroup>
       </Box>
     </Modal>

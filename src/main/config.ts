@@ -3,7 +3,8 @@ import path from 'path';
 import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
-import buildMenu from './menu';
+import createMenu from './menu';
+import { createTray } from './tray';
 import { Sorting, File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 
@@ -22,6 +23,8 @@ const defaultConfigData = {
     { id: '5', value: 't', invert: false },
     { id: '6', value: 'completed', invert: false },
     { id: '7', value: 'created', invert: false },
+    { id: '8', value: 'rec', invert: false },
+    { id: '9', value: 'pm', invert: false },
   ],
   accordionOpenState: [
     true,
@@ -49,6 +52,7 @@ const defaultConfigData = {
   showFileTabs: true,
   isNavigationOpen: true,
   customStylesPath: customStylesPath,
+  tray: false,
 };
 
 const configPath = path.join(userDataDirectory, 'config.json');
@@ -85,7 +89,11 @@ filterStorage.onDidChange('filters' as never, async () => {
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
-    buildMenu(files);
+    createMenu(files).then(result => {
+      console.log('config.ts:', result);
+    }).catch(error => {
+      console.error('config.ts:', error);
+    });
     mainWindow!.webContents.send('updateFiles', files);
   }
 });
@@ -116,6 +124,14 @@ configStorage.onDidChange('fileSorting', (fileSorting) => {
 
 configStorage.onDidChange('colorTheme', (colorTheme) => {
   nativeTheme.themeSource = colorTheme;
+});
+
+configStorage.onDidChange('tray', (tray) => {
+  createTray(tray).then(result => {
+    console.log('config.ts:', result);
+  }).catch(error => {
+    console.error('config.ts:', error);
+  });
 });
 
 nativeTheme.on('updated', () => {

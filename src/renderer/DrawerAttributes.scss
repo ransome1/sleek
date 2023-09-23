@@ -68,7 +68,8 @@
 			font-family: 'FreeSansBold';
 		}
 		button:disabled {
-			cursor: not-allowed;
+			color: $dark-grey;
+			background: $mid-grey;
 			filter: opacity(50%) grayscale(100%);
 		}
 		&.filter:hover,
@@ -99,6 +100,15 @@
 	    &::-webkit-scrollbar-thumb:window-inactive,
 	    &::-webkit-scrollbar-thumb {
 	      background: $dark-grey;
-	    }		
+	    }
+	    .filter {
+	    	button:disabled {
+					color: $mid-grey;
+					background: $dark-grey;
+				}
+				.overlay {
+					background: rgba(0, 0, 0, 0.15);
+				}
+	    }
 	}
 }

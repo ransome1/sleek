@@ -1,6 +1,6 @@
 @import "Variables.scss";
 
-.Sorting {
+#Sorting {
 	padding: 0 1em;
 	h3 {
 		font-family: 'FreeSansBold';
@@ -29,5 +29,13 @@
 	.MuiBox-root.disabled {
 		cursor: not-allowed;
 		filter: opacity(50%) grayscale(100%);
+	}
+}
+
+.darkTheme {
+	#Sorting {
+		li {
+			border-color: $dark-grey;
+		}
 	}
 }

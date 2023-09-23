@@ -130,7 +130,7 @@ const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen,
 
       const content = replacements[element.type]
         ? replacements[element.type](element.value, element.type)
-        : <span>{element.value}</span>;
+        : element.value ? <span>{element.value}</span> : null;
 
       return (
         <React.Fragment key={index}>

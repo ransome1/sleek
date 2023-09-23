@@ -170,13 +170,26 @@ const darkTheme = createTheme({
         root: {
           color: '#1976d2',
           "&.Mui-checked": {
-            "color": '#1976d2',
+            color: '#1976d2',
           },
           '&.Mui-focusVisible svg': {
             color: 'white',
           },
           '&.Mui-checked.Mui-focusVisible svg': {
             color: 'white',
+          },
+        },
+      },
+    },
+    MuiPickersDay: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            color: 'white',
+            backgroundColor: '#1976d2',
+          },
+          '&.MuiPickersDay-today': {
+            color: '#2d2d2d',
           },
         },
       },

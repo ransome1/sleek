@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button, Chip, Box } from '@mui/material';
-import dayjs from 'dayjs';
 import { Item } from 'jstodotxt';
 import { handleFilterSelect } from './Shared';
+import dayjs from 'dayjs';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
@@ -22,6 +22,8 @@ const DatePickerInline = ({ type, todoObject, date, filters }) => {
   };
 
   const DatePickerInline = ({ date, ...props }) => {
+
+    const parsedDate = dayjs(date);
   
     const ButtonField = ({ date, ...props }) => {
       const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
@@ -42,6 +44,7 @@ const DatePickerInline = ({ type, todoObject, date, filters }) => {
         open={open}
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
+        value={parsedDate}
       />
     );
   };

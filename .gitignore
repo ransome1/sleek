@@ -30,3 +30,5 @@ npm-debug.log.*
 
 *.provisionprofile
 *.dtmp
+
+*FilterLang.js

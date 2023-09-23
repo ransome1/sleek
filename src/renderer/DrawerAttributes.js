@@ -71,7 +71,7 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
 
   useEffect(() => {
     store.set('accordionOpenState', accordionOpenState)
-  }, [accordionOpenState]); 
+  }, [accordionOpenState]);
 
   return (
     <Box id="Attributes" ref={firstTabbableElementRef}>

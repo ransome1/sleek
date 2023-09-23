@@ -20,6 +20,7 @@ async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: st
     }
     writeTodoObjectToFile(id, updatedString, remove).then(function (response) {
       console.log('ipcEvents.ts:', response);
+      event.reply('writeTodoToFile', response);
     }).catch((error) => {
       event.reply('writeTodoToFile', error);
     });

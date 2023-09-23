@@ -44,5 +44,4 @@ export const attributeMapping = {
   pm: 'Pomodoro timer',
   created: 'Creation date',
   completed: 'Completion date',
-  //tags: 'Tags',
 };

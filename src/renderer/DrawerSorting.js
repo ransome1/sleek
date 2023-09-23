@@ -34,7 +34,7 @@ const DrawerSorting = ({ isDrawerOpen, setIsDrawerOpen, sorting, setSorting }) =
 	};
 
 	return (
-		<Box className='Sorting'>
+		<Box id='Sorting'>
 			<FormGroup>
 				<FormControlLabel
 					control={<Switch checked={fileSorting} onChange={handleSwitchChange} name="fileSorting" />}

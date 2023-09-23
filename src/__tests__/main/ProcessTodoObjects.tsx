@@ -1,5 +1,18 @@
 import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/ProcessTodoObjects';
 
+jest.mock('../../main/config', () => ({
+  configStorage: {
+    get: jest.fn().mockReturnValue([
+      {
+        active: true,
+        path: './src/__tests__/__mock__',
+        todoFile: 'recurrence.txt',
+        doneFile: 'done.txt',
+      },
+    ]),
+  },
+}));  
+
 const sorting = [
     {
         "id": "1",
@@ -177,6 +190,24 @@ describe('Process todo.txt objects', () => {
         const searchString:string = 'lorem';
         const results = applySearchString(searchString, todoObjects);
         expect(results.length).toEqual(0);
+    });
+
+    test('Advanced search for "+testProject4 or +testProject2" result in 2 found objects', () => {
+        const searchString:string = '+testProject4 or +testProject2';
+        const results = applySearchString(searchString, todoObjects);
+        expect(results.length).toEqual(2);
+    });
+
+    test('Advanced search for "+testProject4 and +testProject2" result in 0 found objects', () => {
+        const searchString:string = '+testProject4 and +testProject2';
+        const results = applySearchString(searchString, todoObjects);
+        expect(results.length).toEqual(0);
+    });
+
+    test('Advanced search for "+testProject4 and !+testProject2" result in 1 found objects', () => {
+        const searchString:string = '+testProject4 and !+testProject2';
+        const results = applySearchString(searchString, todoObjects);
+        expect(results.length).toEqual(1);
     });
 
     test('Function creates 3 top level groups (A, B, C)', () => {

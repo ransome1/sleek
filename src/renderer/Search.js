@@ -17,10 +17,6 @@ const debounce = (func, delay) => {
 };
 
 const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
-  
-  const label = headers?.availableObjects
-    ? `Showing ${headers.visibleObjects} of ${headers.availableObjects}`
-    : null;
 
   const handleInput = (event) => {
     const searchString = event.target.value;
@@ -63,7 +59,7 @@ const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSea
         >
           <TextField
             variant='outlined'
-            placeholder={`Searching ${headers.availableObjects} todos`}
+            placeholder={`Searching ${headers.visibleObjects} todos`}
             inputRef={searchFieldRef}
             value={searchString === null ? '' : searchString}
             onChange={handleInput}
