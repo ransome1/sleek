@@ -9,7 +9,7 @@ const todoObjects = [
 ];
 
 describe('Set of filters must create a respective set of attributes and its counts', () => {
-  test('Should create attributes based on todo objects', () => {
+  test('Should create attributes based on todo objects', async () => {
     
     const sorting = [
       { id: '1', value: 'priority', invert: false },
@@ -19,6 +19,8 @@ describe('Set of filters must create a respective set of attributes and its coun
       { id: '5', value: 't', invert: false },
       { id: '6', value: 'completed', invert: false },
       { id: '7', value: 'created', invert: false },
+      { id: '8', value: 'rec', invert: false },
+      { id: '9', value: 'pm', invert: false },
     ];
 
     const expectedAttributes = {
@@ -32,41 +34,8 @@ describe('Set of filters must create a respective set of attributes and its coun
       created: { '2026-01-01': 2 },
       completed: {},
     };
-    
-    console.log(attributes)
-
-    updateAttributes(todoObjects, sorting, true);
-
-    console.log(attributes)
+    await updateAttributes(todoObjects, sorting, true);
     expect(attributes).toEqual(expectedAttributes);
   });
-
-  // test('Should create attributes in a specific order based on todo objects', () => {
-
-  //   const sorting = [
-  //     { id: '2', value: 'projects', invert: false },
-  //     { id: '1', value: 'priority', invert: false },
-  //     { id: '7', value: 'created', invert: false },
-  //     { id: '4', value: 'due', invert: false },
-  //     { id: '5', value: 't', invert: false },
-  //     { id: '3', value: 'contexts', invert: false },
-  //     { id: '6', value: 'completed', invert: false },      
-  //   ];
-
-  //   const expectedAttributes = {
-  //     projects: { 'Project 1': 2, 'Project 2': 2 },
-  //     priority: { 'A': 1, 'C': 1 },
-  //     created: { '2026-01-01': 2 },
-  //     due: { '2023-01-01': 1, '2023-02-01': 1, '2023-03-01': 1, '2023-04-01': 1 },
-  //     rec: { '2b': 1 },
-  //     pm: {},
-  //     t: { '2024-02-01': 2 },
-  //     contexts: { 'Context 1': 2 },
-  //     completed: {},
-  //   };
-  //   //const result = updateAttributes(todoObjects, sorting, false);
-  //   updateAttributes(todoObjects, sorting, true);
-  //   expect(attributes).toEqual(expectedAttributes);
-  // });  
 
 });
