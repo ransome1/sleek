@@ -33,7 +33,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
       {screen === 'noTodosVisible' && (
         <>
           <FontAwesomeIcon icon={faHippo} />
-          <p>No results found for either your search input nor your selected filters</p>
+          <p>No results found. Check your selected filters, filter settings or search input.</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleReset}>
               Reset filters and search

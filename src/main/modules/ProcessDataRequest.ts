@@ -32,9 +32,7 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     const fileContent = await fs.promises.readFile(path.join(file.path, '', file.todoFile), 'utf8');
     let todoObjects: TodoObject[];
     
-    todoObjects = await createTodoObjects(fileContent);
-
-    if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
+    todoObjects = await createTodoObjects(fileContent); 
 
     if(!thresholdDateInTheFuture || !dueDateInTheFuture) todoObjects = handleTodoObjectsDates(todoObjects, dueDateInTheFuture, thresholdDateInTheFuture);
 
@@ -43,6 +41,8 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     todoObjects = handleCompletedTodoObjects(todoObjects, showCompleted);
 
     updateAttributes(todoObjects, sorting, true);
+
+    if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
 
     if (filters) todoObjects = applyFilters(todoObjects, filters);
     

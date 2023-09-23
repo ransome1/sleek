@@ -40,7 +40,7 @@ const defaultConfigData = {
   files: [],
   appendCreationDate: false,
   showCompleted: true,
-  showHidden: true,
+  showHidden: false,
   windowMaximized: false,
   fileSorting: false,
   convertRelativeToAbsoluteDates: true,
