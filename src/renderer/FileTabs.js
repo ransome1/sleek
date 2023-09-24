@@ -18,7 +18,7 @@ const FileTabs = ({
     setContextMenuItems([
       {
         id: 'changeDoneFilePath',
-        label: 'Change location of done file',
+        label: 'Change location of done.txt file',
         index: index,
         doneFilePath: files[index].doneFilePath,
       },

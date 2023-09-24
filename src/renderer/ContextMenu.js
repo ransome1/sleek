@@ -10,6 +10,8 @@ const ContextMenu = ({
   setContextMenuPosition,
   contextMenuItems,
   setContextMenuItems,
+  setSnackBarSeverity,
+  setSnackBarContent
 }) => {
   const [promptItem, setPromptItem] = useState(null);
 
@@ -48,6 +50,20 @@ const ContextMenu = ({
     ipcRenderer.send('changeDoneFilePath', index);
   };  
 
+  const handleSaveToClipboard = function(response) {
+    if (response instanceof Error) {
+      setSnackBarSeverity('error');
+      setSnackBarContent(response.message);
+    } else {
+      setSnackBarSeverity('success');
+      setSnackBarContent(response);
+    }
+  }
+
+  useEffect(() => {
+    ipcRenderer.on('saveToClipboard', handleSaveToClipboard);
+  }, []);  
+
   return (
     <>
       <Menu
@@ -60,7 +76,7 @@ const ContextMenu = ({
           <MenuItem key={item.id} onClick={() => handleContextMenuClick(item)}>
             {item.id === 'changeDoneFilePath' ? (
               <Tooltip title={item.doneFilePath}>
-                <Button variant="outlined" onClick={() => handleChangeDoneFilePath(item.index)} startIcon={<FileOpenIcon />}>
+                <Button onClick={() => handleChangeDoneFilePath(item.index)} startIcon={<FileOpenIcon />}>
                   {item.label}
                 </Button>
               </Tooltip>

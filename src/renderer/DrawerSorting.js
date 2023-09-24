@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Box, FormGroup, FormControlLabel, Switch, Divider } from '@mui/material';
 import DraggableList from './DraggableList';
-import './DrawerSorting.scss';
 
 const store = window.electron.store;
 
-const DrawerSorting = ({ isDrawerOpen, setIsDrawerOpen, sorting, setSorting }) => {
+const DrawerSorting = ({ 
+	sorting,
+	setSorting
+}) => {
 	const [fileSorting, setFileSorting] = useState(store.get('fileSorting'));
 
 	const handleSwitchChange = (event) => {

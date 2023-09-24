@@ -11,7 +11,19 @@ import './Navigation.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const NavigationComponent = ({ isSettingsOpen, setIsSettingsOpen, isDrawerOpen, setIsDrawerOpen, setDialogOpen, files, headers, isNavigationOpen, setIsNavigationOpen, colorTheme, setColorTheme, showFileTabs, setShowFileTabs }) => {
+const NavigationComponent = ({ 
+  isSettingsOpen,
+  setIsSettingsOpen,
+  isDrawerOpen,
+  setIsDrawerOpen,
+  setDialogOpen,
+  files,
+  setIsNavigationOpen,
+  colorTheme,
+  setColorTheme,
+  showFileTabs,
+  setShowFileTabs
+}) => {
   const openSettings = () => {
     setIsSettingsOpen(true);
   };

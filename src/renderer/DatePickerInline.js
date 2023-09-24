@@ -5,10 +5,28 @@ import { Button, Chip, Box } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { handleFilterSelect } from './Shared';
 import dayjs from 'dayjs';
+import 'dayjs/locale/en';
+import 'dayjs/locale/de';
+import 'dayjs/locale/fr';
+import 'dayjs/locale/it';
+import 'dayjs/locale/cs';
+import 'dayjs/locale/es';
+import 'dayjs/locale/hu';
+import 'dayjs/locale/pl';
+import 'dayjs/locale/pt';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/tr';
+import 'dayjs/locale/zh';
 
+const userLocale = navigator.language || navigator.userLanguage;
 const ipcRenderer = window.electron.ipcRenderer;
 
-const DatePickerInline = ({ type, todoObject, date, filters }) => {
+const DatePickerInline = ({ 
+  type,
+  todoObject,
+  date,
+  filters
+}) => {
 	const [open, setOpen] = useState(false);
   const datePickerRef = useRef(null);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
@@ -50,7 +68,7 @@ const DatePickerInline = ({ type, todoObject, date, filters }) => {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} locale="en">
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={userLocale}>
       <DatePickerInline
         onChange={handleChange}
         date={date}

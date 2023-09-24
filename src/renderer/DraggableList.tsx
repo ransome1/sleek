@@ -14,7 +14,12 @@ export type DraggableListProps = {
   disabled?: boolean;
 };
 
-const DraggableList = React.memo(({ sorting, setSorting, onDragEnd, disabled }: DraggableListProps) => {
+const DraggableList = React.memo(({ 
+  sorting,
+  setSorting,
+  onDragEnd,
+  disabled
+}: DraggableListProps) => {
   return (
     <DragDropContext onDragEnd={disabled ? undefined : onDragEnd}>
       <Droppable droppableId="droppable-list">

@@ -7,7 +7,11 @@ const alphabetArray = Array.from({ length: 26 }, (_, index) => String.fromCharCo
 
 const priorities = [{ value: '-', label: '-' }, ...alphabetArray.map((letter) => ({ value: letter, label: letter }))];
 
-const PriorityPicker = ({ currentPriority, setTextFieldValue, textFieldValue }) => {
+const PriorityPicker = ({ 
+  currentPriority,
+  setTextFieldValue,
+  textFieldValue
+}) => {
   const [priority, setPriority] = useState(currentPriority || '-');
 
   const handleChange = (event) => {

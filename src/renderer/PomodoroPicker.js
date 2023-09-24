@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FormControl, InputLabel, TextField } from '@mui/material';
-import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import { Item } from 'jstodotxt';
 import './PomodoroPicker.scss';
 
-const PomodoraPicker = ({ currentPomodoro, setTextFieldValue, textFieldValue }) => {
+const PomodoraPicker = ({ 
+  currentPomodoro,
+  setTextFieldValue,
+  textFieldValue
+}) => {
   const [pomodoro, setPomodoro] = useState(currentPomodoro || 0);
 
   const handleChange = (event) => {
@@ -24,7 +27,7 @@ const PomodoraPicker = ({ currentPomodoro, setTextFieldValue, textFieldValue }) 
       <FormControl id="pomodoroPicker">
         <TextField
           id="pomodoroPicker"
-          label=<LocalPizzaIcon />
+          label="Pomodoro"
           type="number"
           onChange={handleChange}
           value={pomodoro}

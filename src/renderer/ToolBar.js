@@ -3,7 +3,11 @@ import { Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import './ToolBar.scss';
 
-const ToolBar = ({ isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
+const ToolBar = ({ 
+  isSearchOpen,
+  setIsSearchOpen,
+  searchFieldRef
+}) => {
 
   const handleClick = (event) => {
     setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);

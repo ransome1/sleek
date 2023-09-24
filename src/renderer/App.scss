@@ -8,6 +8,12 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
 
+  code {
+    font-family: $font-family-mono;
+    background: $lighter-grey;
+    color: $mid-grey;
+  }
+
   #root {
     .flexContainer {
       display: flex;

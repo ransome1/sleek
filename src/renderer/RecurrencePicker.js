@@ -5,7 +5,11 @@ import Popover from '@mui/material/Popover';
 import { Item } from 'jstodotxt';
 import './RecurrencePicker.scss';
 
-const RecurrencePicker = ({ currentRecurrence, setTextFieldValue, textFieldValue }) => {
+const RecurrencePicker = ({ 
+  currentRecurrence,
+  setTextFieldValue,
+  textFieldValue
+}) => {
   const recurrenceFieldRef = useRef(null);
   const [recurrence, setRecurrence] = useState(currentRecurrence || null);
   const [interval, setInterval] = useState(

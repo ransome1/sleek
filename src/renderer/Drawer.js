@@ -10,7 +10,14 @@ import './Drawer.scss';
 
 const store = window.electron.store;
 
-const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, sorting, setSorting }) => {
+const DrawerComponent = ({ 
+  isDrawerOpen,
+  setIsDrawerOpen,
+  attributes,
+  filters,
+  sorting,
+  setSorting
+}) => {
   const [activeTab, setActiveTab] = useState('attributes');
   const [drawerWidth, setDrawerWidth] = useState(store.get('drawerWidth') || 500);
   const containerRef = useRef(null);

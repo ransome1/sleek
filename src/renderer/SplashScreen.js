@@ -8,7 +8,11 @@ import './SplashScreen.scss';
 const ipcRenderer = window.electron.ipcRenderer;
 const store = window.electron.store;
 
-const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
+const SplashScreen = ({ 
+  screen,
+  setSearchString,
+  setDialogOpen
+}) => {
 
   const handleCreateTodo = () => {
     setDialogOpen(true);
@@ -34,7 +38,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
       {screen === 'noTodosVisible' && (
         <>
           <DryCleaningIcon />
-          <p>No results found. Check your selected filters, filter settings or search input.</p>
+          <p>No results visible.</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleReset}>
               Reset filters and search
@@ -45,7 +49,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
       {screen === 'noTodosAvailable' && (
         <>
           <BeachAccessIcon />
-          <p>Currently no todos in this file, let's create some</p>
+          <p>Currently no todos in this file</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleCreateTodo}>
               Create a todo

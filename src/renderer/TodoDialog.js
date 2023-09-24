@@ -9,23 +9,45 @@ import './TodoDialog.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const TodoDialog = ({ dialogOpen, setDialogOpen, todoObject, attributes, setSnackBarSeverity, setSnackBarContent, textFieldValue, setTextFieldValue, shouldUseDarkColors }) => {
+const TodoDialog = ({ 
+  dialogOpen,
+  setDialogOpen,
+  todoObject,
+  attributes,
+  setSnackBarSeverity,
+  setSnackBarContent,
+  textFieldValue,
+  setTextFieldValue,
+  shouldUseDarkColors
+}) => {
   
   const textFieldRef = useRef(null);
   
   const handleAdd = () => {
-    if (textFieldRef.current.value === '') {
-      setSnackBarSeverity('info');
-      setSnackBarContent('Please enter something into the text field');
-      return;
-    }
     try {
+      if (textFieldRef.current.value === '') {
+        setSnackBarSeverity('info');
+        setSnackBarContent('Please enter something into the text field');
+        return false;
+      }
       ipcRenderer.send('writeTodoToFile', todoObject?.id, textFieldRef.current.value);
     } catch (error) {
-      setSnackBarSeverity('error');
-      setSnackBarContent(error.message);
+      console.error(error);
     }
   };
+
+  const handleWriteTodoToFile = function(response) {
+    if (response instanceof Error) {
+      setSnackBarSeverity('error');
+      setSnackBarContent(response.message);
+    } else {
+      setDialogOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
+  }, []);
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} id='todoDialog' className={shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}>

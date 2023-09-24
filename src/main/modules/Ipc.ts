@@ -61,7 +61,7 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
     clipboard.writeText(string);
     if (clipboard.readText() === string) {
-      event.reply('saveToClipboard', 'Text copied to clipboard successfully: ' + string);
+      event.reply('saveToClipboard', 'Text copied to clipboard: ' + string);
     } else {
       throw('Failed to copy text to clipboard');
     }

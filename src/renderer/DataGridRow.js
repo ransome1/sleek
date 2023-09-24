@@ -6,7 +6,15 @@ import { handleFilterSelect } from './Shared';
 import DatePickerInline from './DatePickerInline';
 import './DataGridRow.scss';
 
-const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, contextMenuPosition, setContextMenuPosition, contextMenuItems, setContextMenuItems }) => {
+const DataGridRow = React.memo(({
+  todoObject,
+  filters,
+  setDialogOpen,
+  setTextFieldValue,
+  setTodoObject,
+  setContextMenuPosition,
+  setContextMenuItems
+}) => {
     const handleContextMenu = (event) => {
       event.preventDefault();
       setContextMenuPosition({ top: event.clientY, left: event.clientX });
@@ -14,8 +22,6 @@ const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen,
         {
           id: 'copy',
           todoObject: todoObject,
-          headline: 'Copy',
-          text: 'Todo saved to clipboard',
           label: 'Copy',
         },
         {

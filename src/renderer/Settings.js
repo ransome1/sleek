@@ -4,7 +4,14 @@ import './Settings.scss';
 
 const store = window.electron.store;
 
-const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, setShowFileTabs }) => {
+const Settings = ({ 
+  isOpen, 
+  onClose,
+  colorTheme,
+  setColorTheme,
+  showFileTabs,
+  setShowFileTabs
+}) => {
   const [appendCreationDate, setAppendCreationDate] = useState(store.get('appendCreationDate'));
   const [convertRelativeToAbsoluteDates, setConvertRelativeToAbsoluteDates] = useState(store.get('convertRelativeToAbsoluteDates'));
   const [notificationsAllowed, setNotificationsAllowed] = useState(store.get('notificationsAllowed'));
@@ -40,7 +47,7 @@ const Settings = ({ isOpen, onClose, colorTheme, setColorTheme, showFileTabs, se
       default:
         break;
     }
-  };  
+  };
 
   return (
     <Modal

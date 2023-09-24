@@ -3,12 +3,25 @@ import Prompt from './Prompt';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const ArchiveTodos = () => {
+const ArchiveTodos = ({ 
+  setSnackBarContent,
+  setSnackBarSeverity
+}) => {
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptIndex, setPromptIndex] = useState(null);
 
-  const handleArchiveTodos = (activeFile) => {
-    setShowPrompt(true);
+  const handleArchiveTodos = (response) => {
+    if (typeof response === 'string') {
+      setSnackBarSeverity('success');
+      setSnackBarContent(response);
+      setShowPrompt(false);
+    } else if(response instanceof Error) {
+      setSnackBarSeverity('error');
+      setSnackBarContent(response.message);
+      setShowPrompt(true);
+    } else {
+      setShowPrompt(true);
+    }
   };
 
   const handlePromptClose = () => {
@@ -16,7 +29,6 @@ const ArchiveTodos = () => {
   };
 
   const handlePromptConfirm = () => {
-    setShowPrompt(false);
     ipcRenderer.send('archiveTodos');
   };
 

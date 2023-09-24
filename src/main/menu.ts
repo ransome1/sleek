@@ -160,8 +160,7 @@ function createMenu(files: File[]) {
             label: 'Archive completed todos',
             accelerator: 'Ctrl+Alt+A',
             click: () => {
-              const activeFile = getActiveFile(files);
-              if(activeFile) mainWindow!.webContents.send('archiveTodos', activeFile.doneFile);
+              mainWindow!.webContents.send('archiveTodos');
             },
           },
           {

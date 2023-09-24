@@ -44,18 +44,6 @@ const App = () => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuItems, setContextMenuItems] = useState([]);
   
-  const responseHandler = function(response) {
-    if (response instanceof Error) {
-      setSnackBarSeverity('error');
-      setSnackBarContent(response.message);
-      setSnackBarOpen(true);
-      console.error(response)
-    } else {
-      setDialogOpen(false);
-      console.log(response)
-    }
-  }
-  
   const handleRequestedData = (todoObjects: object, attributes: object, headers: object, filters: object) => {
     if(headers) setHeaders(headers);
     if(attributes) setAttributes(attributes);
@@ -106,6 +94,11 @@ const App = () => {
   const handleDragOver = (event) => {
     event.preventDefault();
   };
+
+  const handleAlertClose = () => {
+    setSnackBarContent(null);
+    setSnackBarOpen(false);
+  }
 
   useEffect(() => {
     if(!headers) return;
@@ -158,7 +151,6 @@ const App = () => {
   }, [dialogOpen]);
 
   useEffect(() => {
-    ipcRenderer.on('writeTodoToFile', responseHandler);
     ipcRenderer.on('requestData', handleRequestedData);
     ipcRenderer.on('updateFiles', handleUpdateFiles);
     ipcRenderer.on('updateSorting', handleUpdateSorting);
@@ -168,7 +160,6 @@ const App = () => {
     ipcRenderer.on('setShowFileTabs', handleSetShowFileTabs);
     ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
     ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
-    ipcRenderer.on('saveToClipboard', responseHandler);
     
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
@@ -278,20 +269,24 @@ const App = () => {
         setContextMenuPosition={setContextMenuPosition}
         contextMenuItems={contextMenuItems}
         setContextMenuItems={setContextMenuItems}        
+        setSnackBarSeverity={setSnackBarSeverity}
+        setSnackBarContent={setSnackBarContent}        
       />
       <Snackbar 
         open={snackBarOpen}
-        autoHideDuration={2000}
-        onClose={() => setSnackBarOpen(false)}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
       >
         <Alert
           severity={snackBarSeverity}
-          onClose={() => setSnackBarOpen(false)}
         >
           {snackBarContent}
         </Alert>
       </Snackbar>
-      <ArchiveTodos />
+      <ArchiveTodos
+        setSnackBarSeverity={setSnackBarSeverity}
+        setSnackBarContent={setSnackBarContent}
+      />
     </ThemeProvider>
   );
 };

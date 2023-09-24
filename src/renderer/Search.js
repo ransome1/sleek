@@ -15,7 +15,14 @@ const debounce = (func, delay) => {
   };
 };
 
-const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
+const Search = ({
+  headers,
+  searchString,
+  setSearchString,
+  isSearchOpen,
+  setIsSearchOpen,
+  searchFieldRef
+}) => {
 
   const handleInput = (event) => {
     const searchString = event.target.value;

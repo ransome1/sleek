@@ -3,7 +3,18 @@ import { List } from '@mui/material';
 import DataGridRow from './DataGridRow';
 import './DataGrid.scss';
 
-const TodoDataGrid = ({ todoObjects, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, contextMenuPosition, setContextMenuPosition, contextMenuItems, setContextMenuItems }) => { 
+const TodoDataGrid = ({ 
+  todoObjects,
+  attributes,
+  filters,
+  setDialogOpen,
+  setTextFieldValue,
+  setTodoObject,
+  contextMenuPosition,
+  setContextMenuPosition,
+  contextMenuItems,
+  setContextMenuItems
+}) => { 
   const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
 

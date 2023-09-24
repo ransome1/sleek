@@ -8,7 +8,12 @@ import './DrawerAttributes.scss';
 
 const store = window.electron.store;
 
-const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
+const Attributes = ({ 
+  isDrawerOpen,
+  setIsDrawerOpen,
+  attributes,
+  filters
+}) => {
 
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const [accordionOpenState, setAccordionOpenState] = useState(store.get('accordionOpenState') || null);

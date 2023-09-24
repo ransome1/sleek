@@ -5,7 +5,14 @@ import './AutoSuggest.scss';
 
 const regex = / [\+@][^ ]*/g;
 
-const AutoSuggest = ({ setDialogOpen, textFieldRef, textFieldValue, setTextFieldValue, attributes, handleAdd }) => {
+const AutoSuggest = ({ 
+  setDialogOpen,
+  textFieldRef,
+  textFieldValue,
+  setTextFieldValue,
+  attributes,
+  handleAdd
+}) => {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [prefix, setPrefix] = useState(null);
@@ -101,8 +108,6 @@ const AutoSuggest = ({ setDialogOpen, textFieldRef, textFieldValue, setTextField
       if (event.key === 'Enter') {
         event.stopPropagation();
         handleAdd();
-        setDialogOpen(false);
-
       } else if (event.key === 'Escape') {
         event.stopPropagation();
         setDialogOpen(false);

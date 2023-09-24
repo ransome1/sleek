@@ -1,3 +1,4 @@
+import { IpcMainEvent } from 'electron';
 import fs from 'fs/promises';
 import path from 'path';
 import { getActiveFile } from './ActiveFile';
@@ -20,7 +21,7 @@ async function extractTodosFromFile(filePath: string, complete: boolean): Promis
   }
 }
 
-async function archiveTodos(): Promise<void> {
+async function archiveTodos(event: IpcMainEvent): Promise<void> {
   try {
     const files = configStorage.get('files');
     const activeFile = getActiveFile(files);
@@ -39,9 +40,13 @@ async function archiveTodos(): Promise<void> {
     const stringDoneFile = contentForDoneFile;
     const stringTodoFile = incompletedTodos.join('\n');
 
-    writeStringToFile(stringDoneFile, doneFilePath);
-    writeStringToFile(stringTodoFile, todoFilePath);
+    await writeStringToFile(stringDoneFile, doneFilePath);
+    await writeStringToFile(stringTodoFile, todoFilePath);
+
+    event.reply('archiveTodos', `Todos successfully archived to: ${doneFilePath}`);
+
   } catch(error) {
+    event.reply('archiveTodos', error);
     console.error(error);
   }
 }

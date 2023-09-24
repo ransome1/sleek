@@ -1,7 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
-const Prompt = ({ open, onClose, onConfirm, headline, text, buttonText = 'OK' }) => {
+const Prompt = ({ 
+  open,
+  onClose,
+  onConfirm,
+  headline,
+  text,
+  buttonText = 'OK'
+}) => {
 
   const handlePromptChoice = (allow) => {
     onClose();
