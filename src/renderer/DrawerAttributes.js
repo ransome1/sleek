@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Box, Button, Badge } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEyeSlash, faMeteor } from '@fortawesome/free-solid-svg-icons';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import AirIcon from '@mui/icons-material/Air';
 import { handleFilterSelect, attributeMapping } from './Shared';
 import './DrawerAttributes.scss';
 
@@ -77,7 +77,7 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
     <Box id="Attributes" ref={firstTabbableElementRef}>
       {isAttributesEmpty(attributes) ? (
         <Box className="placeholder">
-          <FontAwesomeIcon icon={faMeteor} /><br />
+          <AirIcon /><br />
           No attributes available yet
         </Box>
       ) : (
@@ -130,7 +130,7 @@ const Attributes = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters }) => {
                             className="overlay"
                             onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
                           >
-                            <FontAwesomeIcon icon={faEyeSlash} />
+                            <VisibilityOffIcon />
                           </Box>
                         )}
                       </Box>

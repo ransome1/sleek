@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, InputAdornment, Button, Box } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import CancelIcon from '@mui/icons-material/Cancel';
 import './Search.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
@@ -75,7 +74,7 @@ const Search = ({ headers, searchString, setSearchString, isSearchOpen, setIsSea
                       className='xClick'
                       onClick={handleXClick}
                     >
-                      <FontAwesomeIcon icon={faCircleXmark} />
+                      <CancelIcon />
                     </button>
                   )}
                 </InputAdornment>

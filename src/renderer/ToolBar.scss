@@ -1,14 +1,19 @@
 @import "Variables.scss";
 
 #ToolBar {
+	width: 2.5em;
+	height: 2.5em;
 	position: fixed;
 	top: 0;
 	right: 0;
 	z-index: 9;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	svg {
+		display: flex;
 		cursor: pointer;
-		padding: 0.5em 1em;
-		font-size: 1.25em;
+		font-size: 1.85em;
 		color: $dark-grey;
 		>:hover,
 		&.active {

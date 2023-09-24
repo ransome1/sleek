@@ -12,7 +12,7 @@ function createFileWatcher(files: File[]): Promise<string> {
     if (watcher) {
       watcher.close();
     }
-    watcher = chokidar.watch(files.map((file) => path.join(file.path, file.todoFile)), { 
+    watcher = chokidar.watch(files.map((file) => file.todoFilePath), { 
       awaitWriteFinish: {
         stabilityThreshold: 50,
         pollInterval: 50

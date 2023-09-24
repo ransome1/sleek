@@ -71,7 +71,7 @@ function createMenu(files: File[]) {
           { type: 'separator' },
           ...(files?.length > 0
             ? files.map((file: File, index: number) => ({
-                label: file.todoFile,
+                label: file.todoFileName,
                 accelerator: `CommandOrControl+${index + 1}`,
                 click: () => {
                   setFile(undefined, index);

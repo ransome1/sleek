@@ -15,9 +15,9 @@ jest.mock('../../main/config', () => ({
     get: jest.fn((key) => {
       if (key === 'files') {
         return [
-          { active: false, path: './src/__tests__/__mock__', todoFile: 'test1.txt', doneFile: 'done.txt' },
-          { active: true, path: './src/__tests__/__mock__', todoFile: 'test.txt', doneFile: 'done.txt' },
-          { active: false, path: './src/__tests__/__mock__', todoFile: 'test3.txt', doneFile: 'done.txt' },
+          { active: false, todoFileName: 'test1.txt', todoFilePath: './src/__tests__/__mock__/test1.txt', doneFile: 'done.txt' },
+          { active: true, todoFileName: 'test.txt', todoFilePath: './src/__tests__/__mock__/test.txt', doneFile: 'done.txt' },
+          { active: false, todoFileName: 'test3.txt', todoFilePath: './src/__tests__/__mock__/test3.txt', doneFile: 'done.txt' },
         ];
       } else if (key === 'appendCreationDate') {
         return false;

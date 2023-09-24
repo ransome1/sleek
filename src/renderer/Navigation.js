@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faFilter, faFolderOpen, faCog, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import AddIcon from '@mui/icons-material/Add';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import FileOpenIcon from '@mui/icons-material/FileOpen';
+import SettingsIcon from '@mui/icons-material/Settings';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Box } from '@mui/material';
 import Settings from './Settings';
 import './Navigation.scss';
@@ -48,18 +52,18 @@ const NavigationComponent = ({ isSettingsOpen, setIsSettingsOpen, isDrawerOpen, 
         {files?.length > 0 && (
           <>
             <Button onClick={() => setDialogOpen(true)}>
-              <FontAwesomeIcon icon={faPlus} />
+              <AddIcon />
             </Button>
             <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen ? 'active' : ''}>
-              <FontAwesomeIcon icon={faFilter} />
+              <FilterAltIcon />
             </Button>
           </>
         )} 
         <Button onClick={handleOpenFile}>
-          <FontAwesomeIcon icon={faFolderOpen} />
+          <FileOpenIcon />
         </Button>
         <Button className='break' onClick={openSettings}>
-          <FontAwesomeIcon icon={faCog} />
+          <SettingsIcon />
         </Button>
         <Settings 
           isOpen={isSettingsOpen}
@@ -70,11 +74,11 @@ const NavigationComponent = ({ isSettingsOpen, setIsSettingsOpen, isDrawerOpen, 
           setShowFileTabs={setShowFileTabs}
           />
         <Button onClick={toggleNavigation}>
-          <FontAwesomeIcon icon={faAngleLeft} />
+          <KeyboardArrowLeftIcon />
         </Button>
       </Box>
       <Button onClick={toggleNavigation} className="showNavigation">
-        <FontAwesomeIcon icon={faAngleRight} />
+        <KeyboardArrowRightIcon />
       </Button>
     </>
   );

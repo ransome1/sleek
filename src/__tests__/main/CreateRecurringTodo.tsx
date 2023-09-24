@@ -14,9 +14,9 @@ jest.mock('../../main/config', () => ({
     get: jest.fn().mockReturnValue([
       {
         active: true,
-        path: './src/__tests__/__mock__',
-        todoFile: 'recurrence.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'recurrence.txt',
+        todoFilePath: './src/__tests__/__mock__/recurrence.txt',
+        doneFilePath: './src/__tests__/__mock__/done.txt',
       },
     ]),
   },

@@ -4,9 +4,9 @@ import { addFile, removeFile, setFile } from '../../main/modules/File';
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn().mockReturnValue([
-      { active: false, path: '/path/to', todoFile: 'test1.txt', doneFile: 'done.txt' },
-      { active: true, path: '/path/to', todoFile: 'test2.txt', doneFile: 'done.txt' },
-      { active: false, path: '/path/to', todoFile: 'test3.txt', doneFile: 'done.txt' },
+      { active: false, todoFileName: 'test1.txt', todoFilePath: '/path/to/test1.txt', doneFilePath: '/path/to/done.txt' },
+      { active: true, todoFileName: 'test2.txt', todoFilePath: '/path/to/test2.txt', doneFilePath: '/path/to/done.txt' },
+      { active: false, todoFileName: 'test3.txt', todoFilePath: '/path/to/test3.txt', doneFilePath: '/path/to/done.txt' },
     ]),
     set: jest.fn(),
   },
@@ -25,27 +25,27 @@ describe('File functions', () => {
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: false,
-        path: '/path/to',
-        todoFile: 'test1.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test1.txt',
+        todoFilePath: '/path/to/test1.txt',
+        doneFilePath: '/path/to/done.txt',
       },
       {
         active: false,
-        path: '/path/to',
-        todoFile: 'test2.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test2.txt',
+        todoFilePath: '/path/to/test2.txt',
+        doneFilePath: '/path/to/done.txt',
       },
       {
         active: false,
-        path: '/path/to',
-        todoFile: 'test3.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test3.txt',
+        todoFilePath: '/path/to/test3.txt',
+        doneFilePath: '/path/to/done.txt',
       },
       {
         active: true,
-        path: '/path/to',
-        todoFile: 'test4.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test4.txt',
+        todoFilePath: '/path/to/test4.txt',
+        doneFilePath: '/path/to/done.txt',
       },
     ]);
   });
@@ -55,22 +55,22 @@ describe('File functions', () => {
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: false,
-        path: '/path/to',
-        todoFile: 'test1.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test1.txt',
+        todoFilePath: '/path/to/test1.txt',
+        doneFilePath: '/path/to/done.txt',
       },
       {
         active: false,
-        path: '/path/to',
-        todoFile: 'test3.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test3.txt',
+        todoFilePath: '/path/to/test3.txt',
+        doneFilePath: '/path/to/done.txt',
       },
       {
         active: true,
-        path: '/path/to',
-        todoFile: 'test4.txt',
-        doneFile: 'done.txt',
-      }
+        todoFileName: 'test4.txt',
+        todoFilePath: '/path/to/test4.txt',
+        doneFilePath: '/path/to/done.txt',
+      },
     ]);
   });
   test('removeFile should remove the active file from the config storage, a new active file is defined', async () => {
@@ -79,16 +79,16 @@ describe('File functions', () => {
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: true,
-        path: '/path/to',
-        todoFile: 'test1.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test1.txt',
+        todoFilePath: '/path/to/test1.txt',
+        doneFilePath: '/path/to/done.txt',
       },
       {
         active: false,
-        path: '/path/to',
-        todoFile: 'test3.txt',
-        doneFile: 'done.txt',
-      }
+        todoFileName: 'test3.txt',
+        todoFilePath: '/path/to/test3.txt',
+        doneFilePath: '/path/to/done.txt',
+      },
     ]);
   });
   test('setFile should set a file as active in the config storage', async () => {
@@ -97,16 +97,16 @@ describe('File functions', () => {
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: false,
-        path: '/path/to',
-        todoFile: 'test1.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test1.txt',
+        todoFilePath: '/path/to/test1.txt',
+        doneFilePath: '/path/to/done.txt',
       },
       {
         active: true,
-        path: '/path/to',
-        todoFile: 'test3.txt',
-        doneFile: 'done.txt',
-      }
+        todoFileName: 'test3.txt',
+        todoFilePath: '/path/to/test3.txt',
+        doneFilePath: '/path/to/done.txt',
+      },
     ]);
   });  
 });

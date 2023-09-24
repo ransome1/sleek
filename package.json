@@ -68,9 +68,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fortawesome/fontawesome-svg-core": "^6.4.0",
-    "@fortawesome/free-solid-svg-icons": "^6.4.0",
-    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.0",
     "@mui/styled-engine-sc": "^5.12.0",
@@ -165,7 +162,6 @@
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
-      "assets/icons/tray",
       "dist",
       "node_modules",
       "package.json"
@@ -201,7 +197,6 @@
       ]
     },
     "mas": {
-      "provisioningProfile": "assets/mas/distribution.provisionprofile",
       "entitlements": "assets/mas/entitlements.mas.plist",
       "entitlementsInherit": "assets/mas/entitlements.mas.plist"
     },

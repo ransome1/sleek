@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, Box } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGhost, faHippo, faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
+import DryCleaningIcon from '@mui/icons-material/DryCleaning';
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import './SplashScreen.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
@@ -32,7 +33,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
     <Box id='splashScreen'>
       {screen === 'noTodosVisible' && (
         <>
-          <FontAwesomeIcon icon={faHippo} />
+          <DryCleaningIcon />
           <p>No results found. Check your selected filters, filter settings or search input.</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleReset}>
@@ -43,7 +44,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
       )}
       {screen === 'noTodosAvailable' && (
         <>
-          <FontAwesomeIcon icon={faGhost} />
+          <BeachAccessIcon />
           <p>Currently no todos in this file, let's create some</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleCreateTodo}>
@@ -54,7 +55,7 @@ const SplashScreen = ({ screen, setSearchString, setDialogOpen }) => {
       )}      
       {screen === 'noFiles' && (
         <Box className="fileDropZone">
-          <FontAwesomeIcon icon={faFileArrowDown} />
+          <SaveAltIcon />
           <p>Drop your todo.txt file here or use the buttons</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleOpenFile}>Open todo.txt file</Button>

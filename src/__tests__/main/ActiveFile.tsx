@@ -1,11 +1,5 @@
 import { getActiveFile } from '../../main/modules/ActiveFile';
-
-interface File {
-  active: boolean;
-  path: string;
-  todoFile: string;
-  doneFile: string;
-}
+import { File } from '../../main/util';
 
 describe('Get active file', () => {
 
@@ -13,23 +7,23 @@ describe('Get active file', () => {
     const files: File[] = [
       {
         active: false,
-        path: '/',
-        todoFile: 'test1.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test1.txt',
+        todoFilePath: '/test1.txt',
+        doneFilePath: 'done.txt',
       },
       {
         active: true,
-        path: '/',
-        todoFile: 'test2.txt',
-        doneFile: 'done.txt',
+        todoFileName: 'test2.txt',
+        todoFilePath: '/test2.txt',
+        doneFilePath: 'done.txt',
       },
     ]
     const activeFile = getActiveFile(files);
     expect(activeFile).toEqual({
       active: true,
-      path: '/',
-      todoFile: 'test2.txt',
-      doneFile: 'done.txt',
+      todoFileName: 'test2.txt',
+      todoFilePath: '/test2.txt',
+      doneFilePath: 'done.txt',
     });
   });
 

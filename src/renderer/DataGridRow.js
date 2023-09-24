@@ -1,14 +1,32 @@
 import React, { useState } from 'react';
 import { Checkbox, ListItem, Button, Divider, Chip, Box } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPizzaSlice, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import { handleFilterSelect } from './Shared';
-import ContextMenu from './ContextMenu';
 import DatePickerInline from './DatePickerInline';
 import './DataGridRow.scss';
 
-const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject,}) => {
-    const [contextMenuPosition, setContextMenuPosition] = useState(null);
+const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen, setTextFieldValue, setTodoObject, contextMenuPosition, setContextMenuPosition, contextMenuItems, setContextMenuItems }) => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+      setContextMenuPosition({ top: event.clientY, left: event.clientX });
+      setContextMenuItems([
+        {
+          id: 'copy',
+          todoObject: todoObject,
+          headline: 'Copy',
+          text: 'Todo saved to clipboard',
+          label: 'Copy',
+        },
+        {
+          id: 'delete',
+          todoObject: todoObject,
+          headline: 'Delete todo?',
+          text: 'The todo will be permanently removed from the file',
+          label: 'Delete',
+        },
+      ]);
+    };
 
     const handleCheckboxChange = (event) => {
       const ipcRenderer = window.electron.ipcRenderer;
@@ -70,7 +88,7 @@ const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen,
       ),
       pm: (value, type) => (
         <Button onClick={() => handleButtonClick(type, value)}>
-          <FontAwesomeIcon icon={faPizzaSlice} />
+          <LocalPizzaIcon />
           <Box>{value}</Box>
         </Button>
       ),
@@ -179,36 +197,8 @@ const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen,
       );
     }
 
-    const handleContextMenuClick = (event) => {
-      event.preventDefault();
-      setContextMenuPosition({ top: event.clientY, left: event.clientX });
-    };
-
-    const handleCloseContextMenu = () => {
-      setContextMenuPosition(null);
-    };    
-
-    const contextMenuItems = [
-      {
-        id: 'delete',
-        action: () => {
-          handleCloseContextMenu();
-        },
-        headline: 'Delete todo?',
-        text: 'The todo will be permanently removed from the file',
-        label: 'Delete',
-      },
-    ];
-
     return (
       <> 
-        <ContextMenu
-          index={todoObject.id}
-          anchorPosition={contextMenuPosition}
-          items={contextMenuItems}
-          onClose={handleCloseContextMenu}
-        />        
-
         <ListItem
           tabIndex={0}
           key={todoObject.id}
@@ -217,14 +207,14 @@ const DataGridRow = React.memo(({todoObject, attributes, filters, setDialogOpen,
           data-hidden={todoObject.hidden}
           onClick={handleRowClick}
           onKeyDown={handleRowClick}
-          onContextMenu={handleContextMenuClick}
+          onContextMenu={handleContextMenu}
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
         >
           <Checkbox tabIndex={0} checked={todoObject.complete} onChange={handleCheckboxChange} />
 
           {todoObject.hidden && (
-            <FontAwesomeIcon icon={faEyeSlash} />
+            <VisibilityOffIcon />
           )}
 
           {elements}

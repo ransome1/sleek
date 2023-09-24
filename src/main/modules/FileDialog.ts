@@ -1,7 +1,9 @@
-import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron';
+import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue, IpcMainEvent } from 'electron';
 import path from 'path';
 import fs from 'fs/promises';
+import { configStorage } from '../config';
 import { addFile } from './File';
+import { File } from '../util';
 
 const dialogFilters = [
   {
@@ -24,6 +26,27 @@ async function openFile(): Promise<void> {
       const filePath: string = result.filePaths[0];
       addFile(null, filePath);
     }
+    return;
+  } catch (error) {
+    console.error('FileDialog.ts:', error);
+  }
+}
+
+async function changeDoneFilePath(event: IpcMainEvent, index: number): Promise<void> {
+  try {
+    const files: File[] = (configStorage.get('files') as File[]) || [];
+    const currentPath = path.dirname(files[index].todoFilePath);
+    const result: OpenDialogReturnValue = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: dialogFilters,
+      defaultPath: currentPath,
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      const filePath: string = result.filePaths[0];
+      if(filePath) files[index].doneFilePath = filePath;
+      configStorage.set('files', files)
+    }
+    return;
   } catch (error) {
     console.error('FileDialog.ts:', error);
   }
@@ -40,6 +63,7 @@ async function createFile(): Promise<void> {
       await fs.writeFile(filePath, '');
       addFile(null, filePath);
     }
+    return;
   } catch (error) {
     console.error('FileDialog.ts:', error);
   }
@@ -47,5 +71,6 @@ async function createFile(): Promise<void> {
 
 export {
   createFile,
-  openFile
+  openFile,
+  changeDoneFilePath
 };

@@ -3,8 +3,9 @@ import { Drawer, Tabs, Tab, Box } from '@mui/material';
 import Attributes from './DrawerAttributes';
 import Sorting from './DrawerSorting';
 import Filters from './DrawerFilters';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSlidersH, faFilter, faArrowUpShortWide } from '@fortawesome/free-solid-svg-icons';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import TuneIcon from '@mui/icons-material/Tune';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import './Drawer.scss';
 
 const store = window.electron.store;
@@ -58,19 +59,19 @@ const DrawerComponent = ({ isDrawerOpen, setIsDrawerOpen, attributes, filters, s
           tabIndex={0}
           label="Attributes"
           value="attributes" 
-          icon={<FontAwesomeIcon icon={faFilter} />}
+          icon={<FilterAltIcon />}
         />
         <Tab 
           tabIndex={0}
           label="Filters"
           value="filters"
-          icon={<FontAwesomeIcon icon={faSlidersH} />}
+          icon={<TuneIcon />}
         />
         <Tab 
           tabIndex={0}
           label="Sorting"
           value="sorting"
-          icon={<FontAwesomeIcon icon={faArrowUpShortWide} />}
+          icon={<FilterListIcon />}
         />
       </Tabs>
       {activeTab === 'attributes' && (

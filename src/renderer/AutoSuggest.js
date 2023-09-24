@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { TextField, InputAdornment, Button, Avatar, Box } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import './AutoSuggest.scss';
 
 const regex = / [\+@][^ ]*/g;

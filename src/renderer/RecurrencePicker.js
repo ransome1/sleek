@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FormControl, TextField, FormControlLabel, Radio, RadioGroup, Checkbox, Badge } from '@mui/material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import Popover from '@mui/material/Popover';
 import { Item } from 'jstodotxt';
 import './RecurrencePicker.scss';

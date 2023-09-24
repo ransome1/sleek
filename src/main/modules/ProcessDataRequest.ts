@@ -29,7 +29,7 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     const filters: object = filterStorage.get('filters');
     const thresholdDateInTheFuture: boolean = configStorage.get('thresholdDateInTheFuture');
     const dueDateInTheFuture: boolean = configStorage.get('dueDateInTheFuture');
-    const fileContent = await fs.promises.readFile(path.join(file.path, '', file.todoFile), 'utf8');
+    const fileContent = await fs.promises.readFile(file.todoFilePath, 'utf8');
     let todoObjects: TodoObject[];
     
     todoObjects = await createTodoObjects(fileContent); 

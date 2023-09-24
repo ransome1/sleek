@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import SearchIcon from '@mui/icons-material/Search';
 import './ToolBar.scss';
 
 const ToolBar = ({ isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
@@ -26,11 +25,7 @@ const ToolBar = ({ isSearchOpen, setIsSearchOpen, searchFieldRef }) => {
 
   return (
     <Box id="ToolBar">
-      <FontAwesomeIcon
-      	icon={faMagnifyingGlass}
-      	onClick={handleClick}
-      	className={isSearchOpen ? 'active' : ''}
-      />
+      <SearchIcon onClick={handleClick} className={isSearchOpen ? 'active' : ''} />
     </Box>
   );
 };

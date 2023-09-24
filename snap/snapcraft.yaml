@@ -16,7 +16,6 @@ license: MIT
 compression: lzo
 architectures:
 - build-on: amd64
-- build-on: i386
 - build-on: arm64
 - build-on: armhf
 apps:
@@ -40,7 +39,7 @@ parts:
     build-environment:
     - PATH: "$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin"
     build-snaps:
-    - node/14/stable
+    - node/16/stable
     source: .
     override-build: |
       if [ -n "$http_proxy" ]; then

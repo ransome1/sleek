@@ -11,6 +11,7 @@ import Search from './Search';
 import TodoDialog from './TodoDialog';
 import ArchiveTodos from './ArchiveTodos';
 import ToolBar from './ToolBar';
+import ContextMenu from './ContextMenu';
 import { Sorting } from '../main/util';
 import './App.scss';
 
@@ -40,6 +41,8 @@ const App = () => {
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
   const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState(null);
+  const [contextMenuItems, setContextMenuItems] = useState([]);
   
   const responseHandler = function(response) {
     if (response instanceof Error) {
@@ -165,6 +168,7 @@ const App = () => {
     ipcRenderer.on('setShowFileTabs', handleSetShowFileTabs);
     ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
     ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
+    ipcRenderer.on('saveToClipboard', responseHandler);
     
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
@@ -213,7 +217,11 @@ const App = () => {
         <Box className="flexItems">
           {files?.length > 0 && (
           <>
-            {!isSearchOpen && showFileTabs ? <FileTabs files={files} /> : null}
+            {!isSearchOpen && showFileTabs ? <FileTabs 
+              files={files}
+              setContextMenuPosition={setContextMenuPosition}
+              setContextMenuItems={setContextMenuItems}              
+             /> : null}
             {headers?.availableObjects > 0 ?
             <>
               <Search
@@ -242,6 +250,10 @@ const App = () => {
             setSnackBarContent={setSnackBarContent}
             setDialogOpen={setDialogOpen}
             setTextFieldValue={setTextFieldValue}
+            contextMenuPosition={contextMenuPosition}
+            setContextMenuPosition={setContextMenuPosition}
+            contextMenuItems={contextMenuItems}
+            setContextMenuItems={setContextMenuItems}
           />
           <SplashScreen 
             screen={splashScreen}
@@ -260,6 +272,12 @@ const App = () => {
         textFieldValue={textFieldValue}
         setTextFieldValue={setTextFieldValue}
         shouldUseDarkColors={shouldUseDarkColors}
+      />
+      <ContextMenu
+        contextMenuPosition={contextMenuPosition}
+        setContextMenuPosition={setContextMenuPosition}
+        contextMenuItems={contextMenuItems}
+        setContextMenuItems={setContextMenuItems}        
       />
       <Snackbar 
         open={snackBarOpen}

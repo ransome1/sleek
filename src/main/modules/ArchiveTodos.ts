@@ -27,8 +27,8 @@ async function archiveTodos(): Promise<void> {
 
     if (!activeFile) return;
 
-    const todoFilePath = path.join(activeFile.path, '', activeFile.todoFile);
-    const doneFilePath = path.join(activeFile.path, '', activeFile.doneFile);
+    const todoFilePath = activeFile.todoFilePath;
+    const doneFilePath = activeFile.doneFilePath;
 
     const completedTodos = await extractTodosFromFile(todoFilePath, true);
     const incompletedTodos = await extractTodosFromFile(todoFilePath, false);

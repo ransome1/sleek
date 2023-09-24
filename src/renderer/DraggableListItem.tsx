@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { ListItem, Button, Box } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDownWideShort, faArrowUpShortWide, faBars } from '@fortawesome/free-solid-svg-icons';
+import SortIcon from '@mui/icons-material/Sort';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { attributeMapping } from './Shared';
+import './DraggableListItem.scss';
 
 export type DraggableListItemProps = {
   item: Item;
@@ -30,11 +31,11 @@ const DraggableListItem = ({ item, index, sorting, setSorting }: DraggableListIt
           {...provided.dragHandleProps}
           className={snapshot.isDragging ? 'draggingListItem' : ''}
         >
-          <Box><FontAwesomeIcon icon={faBars} /></Box>
+          <Box><DragHandleIcon /></Box>
           {attributeMapping[item.value]}
           <Button onClick={handleButtonClick}>
-            {!item.invert && <FontAwesomeIcon icon={faArrowDownWideShort} />}
-            {item.invert && <FontAwesomeIcon icon={faArrowUpShortWide} />}
+            {!item.invert && <SortIcon />}
+            {item.invert && <SortIcon className='invert' />}
           </Button>
           
         </ListItem>

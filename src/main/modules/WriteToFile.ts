@@ -40,7 +40,7 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
     throw new Error('No active file found');
   }
 
-  await fs.writeFile(path.join(activeFile?.path, '', activeFile?.todoFile), modifiedContent, 'utf8');
+  await fs.writeFile(activeFile?.todoFilePath, modifiedContent, 'utf8');
 
   if (id && !remove) {
     return `Line ${id + 1} overwritten successfully`;

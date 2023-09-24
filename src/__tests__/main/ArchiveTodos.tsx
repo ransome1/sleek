@@ -6,9 +6,9 @@ jest.mock('../../main/config', () => ({
     get: jest.fn((key) => {
       if (key === 'files') {
         return [
-          { active: false, path: './src/__tests__/__mock__', todoFile: 'test1.txt', doneFile: 'done.txt' },
-          { active: true, path: './src/__tests__/__mock__', todoFile: 'archiving.txt', doneFile: 'done.txt' },
-          { active: false, path: './src/__tests__/__mock__', todoFile: 'test3.txt', doneFile: 'done.txt' },
+          { active: false, todoFilePath: './src/__tests__/__mock__/test1.txt', todoFileName: 'test1.txt', doneFilePath: './src/__tests__/__mock__/done.txt' },
+          { active: true, todoFilePath: './src/__tests__/__mock__/archiving.txt', todoFileName: 'archiving.txt', doneFilePath: './src/__tests__/__mock__/done.txt' },
+          { active: false, todoFilePath: './src/__tests__/__mock__/test3.txt', todoFileName: 'test3.txt', doneFilePath: './src/__tests__/__mock__/done.txt' },
         ];
       }
     }),

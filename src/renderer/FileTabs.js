@@ -1,18 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Tab, Tabs } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import CancelIcon from '@mui/icons-material/Cancel';
 import Prompt from './Prompt';
 import './FileTabs.scss';
 
 const ipcRenderer = window.electron.ipcRenderer;
 
-const FileTabs = ({ files }) => {
+const FileTabs = ({ 
+  files,
+  setContextMenuPosition,
+  setContextMenuItems,  
+}) => {
+
+  const handleContextMenu = (event, index) => {
+    event.preventDefault();
+    setContextMenuPosition({ top: event.clientY, left: event.clientX });
+    setContextMenuItems([
+      {
+        id: 'changeDoneFilePath',
+        label: 'Change location of done file',
+        index: index,
+        doneFilePath: files[index].doneFilePath,
+      },
+      {
+        id: 'revealFile',
+        label: 'Reveal in finder',
+        index: index,
+      },
+      {
+        id: 'removeFile',
+        headline: 'Remove file from sleek?',
+        text: 'It will not be deleted from your hard drive.',
+        label: 'Remove',
+        index: index,
+      },
+    ]);
+  };  
 
   if (!files || Object.keys(files).length === 0) return null;
   
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [promptIndex, setPromptIndex] = useState(null);
   const index = files.findIndex((file) => file.active);
   const [fileTab, setFileTab] = useState(index !== -1 ? index : 0);
 
@@ -28,15 +54,6 @@ const FileTabs = ({ files }) => {
     setShowPrompt(true);
   };
 
-  const handlePromptClose = () => {
-    setShowPrompt(false);
-  };
-
-  const handlePromptConfirm = () => {
-    setShowPrompt(false);
-    ipcRenderer.send('removeFile', promptIndex);
-  };
-
   useEffect(() => {
     setFileTab(index !== -1 ? index : 0);
   }, [index]);
@@ -48,23 +65,22 @@ const FileTabs = ({ files }) => {
           file && (
             <Tab
               key={index}
-              label={file.todoFile}
+              label={file.todoFileName}
               tabIndex={0}
-              icon={<FontAwesomeIcon icon={faCircleXmark} onClick={(event) => handleRemove(event, index)} />}
+              onContextMenu={() => handleContextMenu(event, index)}
+              icon={
+                <CancelIcon 
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleContextMenu(event, index);
+                  }}
+                />}
               className={file.active ? 'active-tab' : ''}
               value={index}
             />
           )
         ))}
       </Tabs>
-      <Prompt
-        open={showPrompt}
-        onClose={handlePromptClose}
-        onConfirm={handlePromptConfirm}
-        headline="Remove file from sleek?"
-        text="It will not be deleted from your hard drive."
-        buttonText="Remove"
-      />
     </>
   );
 };

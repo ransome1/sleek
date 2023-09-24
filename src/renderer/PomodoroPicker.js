@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FormControl, InputLabel, TextField } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPizzaSlice } from '@fortawesome/free-solid-svg-icons';
+import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import { Item } from 'jstodotxt';
 import './PomodoroPicker.scss';
 
@@ -25,7 +24,7 @@ const PomodoraPicker = ({ currentPomodoro, setTextFieldValue, textFieldValue }) 
       <FormControl id="pomodoroPicker">
         <TextField
           id="pomodoroPicker"
-          label=<FontAwesomeIcon icon={faPizzaSlice} />
+          label=<LocalPizzaIcon />
           type="number"
           onChange={handleChange}
           value={pomodoro}

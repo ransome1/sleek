@@ -1,11 +1,11 @@
-import { ipcMain, app, IpcMainEvent } from 'electron';
+import { ipcMain, app, IpcMainEvent, clipboard } from 'electron';
 import processDataRequest from './ProcessDataRequest';
 import { changeCompleteState } from './ChangeCompleteState';
 import { writeTodoObjectToFile } from './WriteToFile';
 import archiveTodos from './ArchiveTodos';
 import { configStorage, filterStorage } from '../config';
-import { addFile, setFile, removeFile } from './File';
-import { openFile, createFile } from './FileDialog';
+import { addFile, setFile, removeFile, revealFile } from './File';
+import { openFile, createFile, changeDoneFilePath } from './FileDialog';
 
 async function handleDataRequest(event: IpcMainEvent, searchString: string): void {
   const [todoObjects, attributes, headers, filters] = await processDataRequest(searchString);
@@ -57,6 +57,19 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
   }
 }
 
+function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
+  try {
+    clipboard.writeText(string);
+    if (clipboard.readText() === string) {
+      event.reply('saveToClipboard', 'Text copied to clipboard successfully: ' + string);
+    } else {
+      throw('Failed to copy text to clipboard');
+    }
+  } catch (error) {
+    event.reply('saveToClipboard', error);
+  }
+}
+
 function removeEventListeners(): void {
   ipcMain.off('storeGetConfig', handleStoreGetConfig);
   ipcMain.off('storeSetConfig', handleStoreSetConfig);
@@ -69,6 +82,9 @@ function removeEventListeners(): void {
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', archiveTodos);
   ipcMain.off('addFile', addFile);
+  ipcMain.off('saveToClipboard', handleSaveToClipboard);
+  ipcMain.off('revealFile', revealFile);
+  ipcMain.off('changeDoneFilePath', changeDoneFilePath);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -84,3 +100,6 @@ ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', archiveTodos);
 ipcMain.on('addFile', addFile);
+ipcMain.on('saveToClipboard', handleSaveToClipboard);
+ipcMain.on('revealFile', revealFile);
+ipcMain.on('changeDoneFilePath', changeDoneFilePath);

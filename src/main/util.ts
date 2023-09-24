@@ -26,9 +26,9 @@ export function resolveHtmlPath(htmlFileName: string): string {
 
 export interface File {
   active: boolean;
-  path: string;
-  todoFile: string;
-  doneFile: string;
+  todoFileName: string;
+  todoFilePath: string;
+  doneFilePath: string;
 }
 
 export interface TodoObject {

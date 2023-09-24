@@ -1,3 +1,4 @@
+import { shell, IpcMainEvent } from 'electron';
 import { configStorage } from '../config';
 import createFileWatcher from './FileWatcher';
 import path from 'path';
@@ -13,18 +14,18 @@ async function addFile(event: Event | null, filePath: string): Promise<void> {
         file.active = false;
       });
       existingFileIndex = files.findIndex((file) => {
-        const pathName = path.dirname(filePath);
-        const fileName = path.basename(filePath)
-        if(file.path === pathName && file.todoFile === fileName) return true;
+        // const pathName = path.dirname(filePath);
+        // const fileName = path.basename(filePath)
+        if(file.todoFilePath === filePath) return true;
       });
     }
 
     if (existingFileIndex === -1) {
       files.push({
         active: true,
-        path: path.dirname(filePath),
-        todoFile: path.basename(filePath),
-        doneFile: 'done.txt',
+        todoFileName: path.basename(filePath),
+        todoFilePath: filePath,
+        doneFilePath: path.join(path.dirname(filePath), 'done.txt'),
       });
     } else {
       if (existingFileIndex !== -1) {
@@ -93,4 +94,22 @@ function setFile(event: any, index: number): void {
   }
 }
 
-export { setFile, removeFile, addFile };
+function revealFile(event: IpcMainEvent, index: number): void {
+  try {
+
+    const  files: File[] = configStorage.get('files') as File[];
+
+    const fileToReveal = files[index].todoFilePath;
+
+    if(fileToReveal) {
+      shell.showItemInFolder(fileToReveal);
+      console.info('File.ts: File revealed in file manager');
+    }    
+    return;
+  } catch (error) {
+    console.error('File.ts:', error);
+    throw error;
+  }
+}
+
+export { setFile, removeFile, addFile, revealFile };

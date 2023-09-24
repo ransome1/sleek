@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer, IpcRendererEvent, clipboard } from 'electron';
 
 export type Channels =
   | 'requestData'
@@ -15,7 +15,10 @@ export type Channels =
   | 'setIsNavigationOpen'
   | 'setShowFileTabs'
   | 'setIsSettingsOpen'
-  | 'setShouldUseDarkColors';
+  | 'setShouldUseDarkColors'
+  | 'saveToClipboard'
+  | 'revealFile'
+  | 'changeDoneFilePath';
 
 interface ElectronStore {
   get: <T>(key: string) => T;
