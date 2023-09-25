@@ -1,11 +1,11 @@
-name: Build & release
+name: Prepare release
 on:
   push:
     tags:
       - '*'
 jobs:
   macos:
-    name: MacOS (Build & Release)
+    name: MacOS (Prepare release)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -35,7 +35,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/') }}
   windows:
-    name: Windows (Build & Release)
+    name: Windows (Prepare release)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -60,7 +60,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/') }}
   linux:
-    name: Linux (Build & Release)
+    name: Linux (Prepare release)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

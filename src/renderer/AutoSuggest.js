@@ -19,7 +19,6 @@ const AutoSuggest = ({
   const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
 
   const handleSuggestionsFetchRequested = ({ value }) => {
-
     const inputValue = value;
     if (!inputValue) return;
 
@@ -94,6 +93,7 @@ const AutoSuggest = ({
 
   const handleKeyDown = (event) => {
     if (suggestions.length > 0) {
+      
       if (event.key === 'Enter') {   
         if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
           event.stopPropagation();

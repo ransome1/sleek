@@ -3,9 +3,9 @@ import { Checkbox, ListItem, Button, Divider, Chip, Box } from '@mui/material';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import { handleFilterSelect } from './Shared';
 import DatePickerInline from './DatePickerInline';
+import { ReactComponent as TomatoIconDuo } from '../../assets/icons/tomato-duo.svg'
 import './DataGridRow.scss';
 
 const DataGridRow = React.memo(({
@@ -95,8 +95,8 @@ const DataGridRow = React.memo(({
         </Button>
       ),
       pm: (value, type) => (
-        <Button onClick={() => handleButtonClick(type, value)}>
-          <LocalPizzaIcon />
+        <Button className='pomodoro' onClick={() => handleButtonClick(type, value)}>
+          <TomatoIconDuo />
           <Box>{value}</Box>
         </Button>
       ),

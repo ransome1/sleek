@@ -9,6 +9,7 @@
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
     "mas": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m mas --universal --publish never",
+    "appimage": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -l appimage --universal --publish never",
     "peggy": "peggy --format es --output ./src/main/modules/FilterLang/FilterLang.js ./src/main/modules/FilterLang/FilterLang.pegjs",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
@@ -175,7 +176,7 @@
           "x64"
         ]
       },
-      "icon": "assets/icons/icon.icns",
+      "icon": "assets/icons/512x512.png",
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/mas/entitlements.mac.plist",

@@ -91,7 +91,7 @@
 
 *[data-todotxt-attribute^="pm"] {
   --color1: white;
-  --color2: #FF3860;
+  --color2: #c00027;
   button {
     &.Mui-disabled {
       color: white;
@@ -104,7 +104,7 @@
   } 
   &.selected {
     button {
-      background: darken(#FF3860, 25%);
+      background: darken(#c00027, 10%);
     }
   } 
 }
@@ -121,7 +121,7 @@
 
 .darkTheme {
 
-  *[data-todotxt-attribute]:not([data-todotxt-attribute="priority"], [data-todotxt-attribute="projects"], [data-todotxt-attribute="contexts"], [data-todotxt-attribute="pm"]) {
+  *[data-todotxt-attribute]:not([data-todotxt-attribute="priority"], [data-todotxt-attribute="projects"], [data-todotxt-attribute="contexts"], [data-todotxt-attribute^="pm"]) {
     --color1: #f0f0f0;
     --color2: #5a5a5a;
     &.selected {
@@ -130,6 +130,7 @@
       }
     }
   }
+
   *[data-todotxt-attribute="contexts"] {
     --color1: #c5ede3;
     --color2: #1e6251;

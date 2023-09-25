@@ -6,25 +6,27 @@
 	overflow-y: auto;
 	position: fixed;
 	z-index: 10;
-	margin-top: -0.4em;
-	padding: 0.75em 1em;
-	border-bottom-right-radius: $radius;
-	border-bottom-left-radius: $radius;
-	background: $lighter-grey;
+	margin-top: 2px;
+	padding: 1em;
+	display: block;
+	border-radius: $radius;
+	background-color: rgba(240, 240, 240, 0.5);
+	backdrop-filter: blur(5px);
 	ul {
 		padding: 0;
 		margin: 0;
 		list-style: none;
 		li {
 			float: left;
-			margin: 0 0.35em 0.35em 0;
+			margin: 0.15em 0.3em 0.15em 0;
 		}
 	}
 }
 
 .darkTheme {
 	.react-autosuggest__suggestions-container--open {
-		background: $darker-grey;
+		background-color: rgba(45, 45, 45, 0.5);
+		backdrop-filter: blur(5px);
 	}
 }
 .react-autosuggest__container {

@@ -41,7 +41,7 @@ export const attributeMapping = {
   contexts: 'Contexts',
   priority: 'Priority',
   rec: 'Recurrence',
-  pm: 'Pomodoro timer',
+  pm: 'Pomodoro intervals',
   created: 'Creation date',
   completed: 'Completion date',
 };

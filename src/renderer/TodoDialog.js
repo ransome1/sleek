@@ -32,7 +32,7 @@ const TodoDialog = ({
       }
       ipcRenderer.send('writeTodoToFile', todoObject?.id, textFieldRef.current.value);
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
     }
   };
 

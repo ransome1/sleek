@@ -39,21 +39,22 @@ const handleClosed = () => {
 }
 
 const handleResize = () => {
-  if (!windowMaximized && mainWindow) {
+  if (mainWindow) {
     const { width, height } = mainWindow.getBounds();
     configStorage.set('windowDimensions', { width, height });
   }  
 }
 
 const handleMove = () => {
-  if (!windowMaximized && mainWindow) {
+  if (mainWindow) {
     const { x, y } = mainWindow.getBounds();
     configStorage.set('windowPosition', { x, y });
   }  
 }
 
 const handleUnmaximize = () => {
-  configStorage.set('windowMaximized', false)
+  configStorage.set('windowMaximized', false);
+  handleWindowSizeAndPosition();
 }
 
 const handleMaximize = () => {
@@ -65,6 +66,29 @@ const handleShow = () => {
     app.dock.show();
   }
 }
+
+const handleWindowSizeAndPosition = () => {
+  const isMaximized = configStorage.get('windowMaximized');
+  if(isMaximized) {
+    mainWindow.maximize();
+    return false;
+  }
+
+  const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
+
+  console.log(windowDimensions)
+
+  if (windowDimensions) {
+    const { width, height } = windowDimensions;
+    mainWindow.setSize(width, height);
+
+    const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
+    if (windowPosition) {
+      const { x, y } = windowPosition;
+      mainWindow.setPosition(x, y);
+    }
+  }
+};
 
 const createWindow = async() => {
   mainWindow = new BrowserWindow({
@@ -92,22 +116,7 @@ const createWindow = async() => {
     });
   }
 
-  if(windowMaximized) {
-    mainWindow.maximize();
-  } else {
-    const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
-
-    if (windowDimensions) {
-      const { width, height } = windowDimensions;
-      mainWindow.setSize(width, height);
-
-      const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
-      if (windowPosition) {
-        const { x, y } = windowPosition;
-        mainWindow.setPosition(x, y);
-      }
-    }
-  }
+  handleWindowSizeAndPosition();
   
   mainWindow.loadURL(resolveHtmlPath('index.html'));
   mainWindow

@@ -50,6 +50,7 @@ function createTray() {
   try {
     const isDark = nativeTheme.shouldUseDarkColors;
     const isMac = process.platform === 'darwin';
+    const isWindows = process.platform === 'win32';
     const isTray = configStorage.get('tray');
 
     tray?.destroy();
@@ -64,7 +65,7 @@ function createTray() {
     const files = configStorage.get('files') as File[] || [];
     const menu = Menu.buildFromTemplate(getMenuTemplate(files));
 
-    tray = new Tray((isDark || isMac) ? getAssetPath('icons/tray/darkTheme/tray.png') : getAssetPath('icons/tray/lightTheme/tray.png'));
+    tray = new Tray((isWindows) ? getAssetPath('icons/tray/lightTheme/tray.png') : getAssetPath('icons/tray/darkTheme/tray.png'));
     tray.setContextMenu(menu);
 
     return Promise.resolve('Tray created');

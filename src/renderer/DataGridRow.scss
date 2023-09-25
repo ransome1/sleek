@@ -35,7 +35,13 @@
         margin: 0;
         
       }      
-    }  
+    }
+    &.pomodoro {
+      padding: 0;
+      svg {
+        font-size: 1.5em;
+      }
+    }
   }
   .MuiCheckbox-root {
     padding: 0.35em 0.5em 0.35em 0.25em;
@@ -71,10 +77,10 @@
     button {
       .MuiChip-root {
         background: darken($dark-grey, 10%);
-      }
+      }  
     }
     &.group {
       border: none;
-    }    
+    }  
   }
 }

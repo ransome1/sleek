@@ -75,7 +75,7 @@ const ContextMenu = ({
         {contextMenuItems.map((item) => (
           <MenuItem key={item.id} onClick={() => handleContextMenuClick(item)}>
             {item.id === 'changeDoneFilePath' ? (
-              <Tooltip title={item.doneFilePath}>
+              <Tooltip placement='right' arrow title={item.doneFilePath}>
                 <Button onClick={() => handleChangeDoneFilePath(item.index)} startIcon={<FileOpenIcon />}>
                   {item.label}
                 </Button>

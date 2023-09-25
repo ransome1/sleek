@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FormControl, InputLabel, TextField } from '@mui/material';
 import { Item } from 'jstodotxt';
+import { ReactComponent as TomatoIconDuo } from '../../assets/icons/tomato-duo.svg'
 import './PomodoroPicker.scss';
 
 const PomodoraPicker = ({ 
@@ -27,7 +28,7 @@ const PomodoraPicker = ({
       <FormControl id="pomodoroPicker">
         <TextField
           id="pomodoroPicker"
-          label="Pomodoro"
+          label=<TomatoIconDuo />
           type="number"
           onChange={handleChange}
           value={pomodoro}
