@@ -89,14 +89,14 @@ filterStorage.onDidChange('filters' as never, async () => {
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
-    
+  
     createMenu(files).then(result => {
       console.log('config.ts:', result);
     }).catch(error => {
       console.error('config.ts:', error);
     });
 
-    createTray(true).then(result => {
+    createTray().then(result => {
       console.log('config.ts:', result);
     }).catch(error => {
       console.error('config.ts:', error);
@@ -134,8 +134,8 @@ configStorage.onDidChange('colorTheme', (colorTheme) => {
   nativeTheme.themeSource = colorTheme;
 });
 
-configStorage.onDidChange('tray', (tray) => {
-  createTray(tray).then(result => {
+configStorage.onDidChange('tray', () => {
+  createTray().then(result => {
     console.log('config.ts:', result);
   }).catch(error => {
     console.error('config.ts:', error);
@@ -144,8 +144,16 @@ configStorage.onDidChange('tray', (tray) => {
 
 nativeTheme.on('updated', () => {
   const shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
+  
   configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
+  
   mainWindow!.webContents.send('setShouldUseDarkColors', shouldUseDarkColors);
+
+  createTray().then(result => {
+    console.log('config.ts:', result);
+  }).catch(error => {
+    console.error('config.ts:', error);
+  });
 });
 
 export { configStorage, filterStorage };

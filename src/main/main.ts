@@ -197,8 +197,7 @@ app
       console.error('main.ts:', error);
     });
 
-    const tray: boolean = configStorage.get('tray');
-    createTray(tray).then(result => {
+    createTray().then(result => {
       console.log('main.ts:', result);
     }).catch(error => {
       console.error('main.ts:', error);

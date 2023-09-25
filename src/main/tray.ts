@@ -1,4 +1,4 @@
-import { app, Tray, Menu } from 'electron';
+import { app, Tray, Menu, nativeTheme } from 'electron';
 import { mainWindow, createWindow } from './main';
 import { configStorage } from './config';
 import { getAssetPath } from './util';
@@ -9,7 +9,7 @@ let tray;
 function getMenuTemplate(files) {
   const menuTemplate = [
     {
-      label: 'Show Window',
+      label: 'Show sleek',
       click: () => {
         if (mainWindow) {
           mainWindow?.show();
@@ -22,15 +22,6 @@ function getMenuTemplate(files) {
               console.error('main.ts:', error);
             });
         }
-      },
-    },
-    {
-      label: 'Hide Window',
-      click: () => {
-      	if (app.dock) {
-        	app.dock.hide();
-      	}
-        mainWindow?.hide();
       },
     },
     { type: 'separator' },
@@ -55,10 +46,15 @@ function getMenuTemplate(files) {
   return menuTemplate;
 }
 
-function createTray(create) {
+function createTray() {
   try {
+    const isDark = nativeTheme.shouldUseDarkColors;
+    const isMac = process.platform === 'darwin';
+    const isTray = configStorage.get('tray');
+
     tray?.destroy();
-    if (!create) {
+
+    if (!isTray) {
       if (app.dock) {
         app.dock.show();
       }
@@ -68,21 +64,8 @@ function createTray(create) {
     const files = configStorage.get('files') as File[] || [];
     const menu = Menu.buildFromTemplate(getMenuTemplate(files));
 
-    tray = new Tray(getAssetPath('icons/tray/tray.png'));
+    tray = new Tray((isDark || isMac) ? getAssetPath('icons/tray/darkTheme/tray.png') : getAssetPath('icons/tray/lightTheme/tray.png'));
     tray.setContextMenu(menu);
-    tray.on('click', (event) => {
-        if (mainWindow) {
-          mainWindow?.show();
-        } else {
-          createWindow()
-            .then((result) => {
-              console.log('main.ts:', result);
-            })
-            .catch((error) => {
-              console.error('main.ts:', error);
-            });
-        }
-    });
 
     return Promise.resolve('Tray created');
   } catch (error) {

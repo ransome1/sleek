@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox, ListItem, Button, Divider, Chip, Box } from '@mui/material';
+import CircleChecked from '@mui/icons-material/CheckCircle';
+import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import { handleFilterSelect } from './Shared';
@@ -217,7 +219,14 @@ const DataGridRow = React.memo(({
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
         >
-          <Checkbox tabIndex={0} checked={todoObject.complete} onChange={handleCheckboxChange} />
+
+          <Checkbox 
+            icon={<CircleUnchecked />}
+            checkedIcon={<CircleChecked />}
+            tabIndex={0}
+            checked={todoObject.complete}
+            onChange={handleCheckboxChange}
+            />
 
           {todoObject.hidden && (
             <VisibilityOffIcon />
