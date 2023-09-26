@@ -9,7 +9,7 @@ import { Button, Box } from '@mui/material';
 import Settings from './Settings';
 import './Navigation.scss';
 
-const ipcRenderer = window.electron.ipcRenderer;
+const ipcRenderer = window.api.ipcRenderer;
 
 const NavigationComponent = ({ 
   isSettingsOpen,
@@ -20,9 +20,7 @@ const NavigationComponent = ({
   files,
   setIsNavigationOpen,
   colorTheme,
-  setColorTheme,
   showFileTabs,
-  setShowFileTabs
 }) => {
   const openSettings = () => {
     setIsSettingsOpen(true);
@@ -81,9 +79,7 @@ const NavigationComponent = ({
           isOpen={isSettingsOpen}
           onClose={closeSettings}
           colorTheme={colorTheme}
-          setColorTheme={setColorTheme}
           showFileTabs={showFileTabs}
-          setShowFileTabs={setShowFileTabs}
           />
         <Button onClick={toggleNavigation}>
           <KeyboardArrowLeftIcon />

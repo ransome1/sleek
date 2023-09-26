@@ -1,13 +1,13 @@
 @import "Variables.scss";
 
 #fileTabs {
-	height: 2.5em;
-	min-height: 2.5em;
+	height: 3em;
+	min-height: 3em;
 	.MuiTabs-scroller {
 		button[role=tab] {
 			min-width: 8.5em;
 			min-height: auto;
-			padding: 0.75em 2em;
+			padding: 0.85em 2em;
 			text-transform: lowercase;
 			display: flex;
 			flex-direction: row;

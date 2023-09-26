@@ -89,7 +89,6 @@ filterStorage.onDidChange('filters' as never, async () => {
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
-  
     createMenu(files).then(result => {
       console.log('config.ts:', result);
     }).catch(error => {
@@ -120,6 +119,10 @@ configStorage.onDidChange('thresholdDateInTheFuture', () => {
 
 configStorage.onDidChange('dueDateInTheFuture', () => {
   handleConfigChange('dueDateInTheFuture', configStorage.get('dueDateInTheFuture'));
+});
+
+configStorage.onDidChange('showFileTabs', () => {
+  mainWindow!.webContents.send('setShowFileTabs');
 });
 
 configStorage.onDidChange('sorting', (sorting) => {

@@ -1,52 +1,72 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Box, Button, Badge } from '@mui/material';
+import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Box,
+  Button,
+  Badge,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AirIcon from '@mui/icons-material/Air';
+import { withTranslation } from 'react-i18next';
+import { i18n } from './LanguageSelector';
 import { handleFilterSelect, attributeMapping } from './Shared';
 import './DrawerAttributes.scss';
 
-const store = window.electron.store;
+const store = window.api.store;
 
-const Attributes = ({ 
-  isDrawerOpen,
-  setIsDrawerOpen,
+interface Attribute {
+  [key: string]: number;
+}
+
+interface Attributes {
+  attributes: { [key: string]: Attribute };
+  filters: { [key: string]: { value: string; exclude: boolean }[] };
+}
+
+interface Settings {
+  accordionOpenState: boolean[];
+}
+
+const Attributes: React.FC<Attributes> = ({
   attributes,
-  filters
-}) => {
-
+  filters,
+  isDrawerOpen,
+  t,
+}: AttributesProps) => {
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
-  const [accordionOpenState, setAccordionOpenState] = useState(store.get('accordionOpenState') || null);
-  const firstTabbableElementRef = useRef(null);
 
-  const isAttributesEmpty = (attributes) => {
-    return Object.values(attributes).every(attribute => !Object.keys(attribute).length);
-  }  
+  const [settings, setSettings] = useState<Settings>({
+    accordionOpenState: store.get('accordionOpenState'),
+    isDrawerOpen: store.get('isDrawerOpen'),
+  });
 
-  const handleCtrlCmdDown = (event) => {
+  const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
+
+  const isAttributesEmpty = (attributes: { [key: string]: Attribute }) => {
+    return Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
+  };
+
+  const handleCtrlCmdDown = (event: KeyboardEvent) => {
     if (event.ctrlKey || event.metaKey) {
       setIsCtrlKeyPressed(true);
     }
   };
 
-  const handleCtrlCmdUp = (event) => {
+  const handleCtrlCmdUp = (event: KeyboardEvent) => {
     if (!event.ctrlKey && !event.metaKey) {
       setIsCtrlKeyPressed(false);
     }
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Escape') {
-      setIsDrawerOpen(false);
-    }
-  };
-
-  const handleAccordionToggle = (index) => {
-    setAccordionOpenState((prevState) =>
-      prevState.map((prevState, prevIndex) =>
-        prevIndex === index ? !prevState : prevState
-      )
-    );
+  const handleAccordionToggle = (index: number) => {
+    setSettings((prevState) => {
+      const updatedAccordionOpenState = [...prevState.accordionOpenState];
+      updatedAccordionOpenState[index] = !updatedAccordionOpenState[index];
+      return { ...prevState, accordionOpenState: updatedAccordionOpenState };
+    });
   };
 
   useEffect(() => {
@@ -56,34 +76,27 @@ const Attributes = ({
       }
     };
 
-    if (isDrawerOpen) {
-      document.addEventListener('keydown', handleCtrlCmdDown);
-      document.addEventListener('keyup', handleCtrlCmdUp);
-      document.addEventListener('keydown', handleKeyDown);
-      handleFocusFirstTabbableElement();
-    } else {
-      document.removeEventListener('keydown', handleCtrlCmdDown);
-      document.removeEventListener('keyup', handleCtrlCmdUp);
-      document.removeEventListener('keydown', handleKeyDown);
-    }
-
+    handleFocusFirstTabbableElement();
+    
+    document.addEventListener('keydown', handleCtrlCmdDown);
+    document.addEventListener('keyup', handleCtrlCmdUp);
     return () => {
       document.removeEventListener('keydown', handleCtrlCmdDown);
       document.removeEventListener('keyup', handleCtrlCmdUp);
-      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isDrawerOpen]);
+  }, []);
 
   useEffect(() => {
-    store.set('accordionOpenState', accordionOpenState)
-  }, [accordionOpenState]);
+    store.set('accordionOpenState', settings.accordionOpenState);
+  }, [settings.accordionOpenState]);
 
   return (
     <Box id="Attributes" ref={firstTabbableElementRef}>
       {isAttributesEmpty(attributes) ? (
         <Box className="placeholder">
-          <AirIcon /><br />
-          No attributes available yet
+          <AirIcon />
+          <br />
+          {t(`drawer.attributes.noAttributesAvailable`)}
         </Box>
       ) : (
         Object.keys(attributes).map((key, index) =>
@@ -91,7 +104,7 @@ const Attributes = ({
             <Accordion
               TransitionProps={{ unmountOnExit: true }}
               key={index}
-              expanded={accordionOpenState[index]}
+              expanded={settings.accordionOpenState[index]}
               onChange={() => handleAccordionToggle(index)}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -120,8 +133,9 @@ const Attributes = ({
                             className="attribute"
                             onClick={
                               disabled
-                                ? null
-                                : () => handleFilterSelect(key, value, filters, isCtrlKeyPressed)
+                                ? undefined
+                                : () =>
+                                    handleFilterSelect(key, value, filters, isCtrlKeyPressed)
                             }
                             disabled={disabled}
                           >
@@ -151,4 +165,4 @@ const Attributes = ({
   );
 };
 
-export default Attributes;
+export default withTranslation()(Attributes);

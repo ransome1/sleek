@@ -2,7 +2,7 @@ const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD
 if (isDebug) {
   require('electron-debug')();
 }
-import { app, BrowserWindow, Rectangle, Menu } from 'electron';
+import { app, BrowserWindow, Rectangle, Menu, ipcMain, nativeTheme } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
@@ -76,8 +76,6 @@ const handleWindowSizeAndPosition = () => {
 
   const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
 
-  console.log(windowDimensions)
-
   if (windowDimensions) {
     const { width, height } = windowDimensions;
     mainWindow.setSize(width, height);
@@ -115,6 +113,9 @@ const createWindow = async() => {
       }
     });
   }
+
+  const colorTheme = configStorage.get('colorTheme');
+  if(colorTheme) nativeTheme.themeSource = colorTheme;
 
   handleWindowSizeAndPosition();
   

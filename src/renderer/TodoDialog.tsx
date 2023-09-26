@@ -5,11 +5,25 @@ import PriorityPicker from './PriorityPicker';
 import DatePicker from './DatePicker';
 import PomodoroPicker from './PomodoroPicker';
 import RecurrencePicker from './RecurrencePicker';
+import { withTranslation } from 'react-i18next';
+import { i18n } from './LanguageSelector';
 import './TodoDialog.scss';
 
-const ipcRenderer = window.electron.ipcRenderer;
+const ipcRenderer = window.api.ipcRenderer;
 
-const TodoDialog = ({ 
+interface TodoDialogProps {
+  dialogOpen: boolean;
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  todoObject: any;
+  attributes: any;
+  setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
+  setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
+  textFieldValue: string;
+  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
+  shouldUseDarkColors: boolean;
+}
+
+const TodoDialog: React.FC<TodoDialogProps> = ({
   dialogOpen,
   setDialogOpen,
   todoObject,
@@ -18,39 +32,47 @@ const TodoDialog = ({
   setSnackBarContent,
   textFieldValue,
   setTextFieldValue,
-  shouldUseDarkColors
-}) => {
-  
-  const textFieldRef = useRef(null);
-  
+  shouldUseDarkColors,
+  t
+}: TodoDialogProps) => {
+  const textFieldRef = useRef<HTMLInputElement | null>(null);
+
   const handleAdd = () => {
     try {
-      if (textFieldRef.current.value === '') {
+      if (textFieldRef.current?.value === '') {
         setSnackBarSeverity('info');
-        setSnackBarContent('Please enter something into the text field');
+        setSnackBarContent(t('todoDialog.snackbar.emptyInput'));
         return false;
       }
-      ipcRenderer.send('writeTodoToFile', todoObject?.id, textFieldRef.current.value);
+      ipcRenderer.send('writeTodoToFile', todoObject?.id, textFieldRef.current?.value);
     } catch (error) {
       console.error(error.message);
     }
   };
 
-  const handleWriteTodoToFile = function(response) {
+  const handleWriteTodoToFile = (response: any) => {
     if (response instanceof Error) {
       setSnackBarSeverity('error');
       setSnackBarContent(response.message);
     } else {
       setDialogOpen(false);
     }
-  }
+  };
 
   useEffect(() => {
     ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
+    return () => {
+      ipcRenderer.removeListener('writeTodoToFile', handleWriteTodoToFile);
+    };
   }, []);
 
   return (
-    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} id='todoDialog' className={shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}>
+    <Dialog
+      open={dialogOpen}
+      onClose={() => setDialogOpen(false)}
+      id="todoDialog"
+      className={shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}
+    >
       <DialogContent>
         <AutoSuggest
           attributes={attributes}
@@ -90,11 +112,11 @@ const TodoDialog = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-        <Button onClick={handleAdd}>Save</Button>
+        <Button onClick={() => setDialogOpen(false)}>{t('todoDialog.footer.cancel')}</Button>
+        <Button onClick={handleAdd}>{t('todoDialog.footer.save')}</Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default TodoDialog;
+export default withTranslation()(TodoDialog);

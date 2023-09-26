@@ -7,7 +7,7 @@ const baseTheme = createTheme({
   typography: {
     fontFamily: 'FreeSans, sans-serif',
   },
-  components: {
+  components: { 
     MuiFormLabel: {
       styleOverrides: {
         root: {
@@ -29,7 +29,7 @@ const baseTheme = createTheme({
       styleOverrides: {
         indicator: {
           backgroundColor: '#1976d2',
-          height: '2px',
+          height: '0.2em',
         },
       },
     },
@@ -44,6 +44,9 @@ const baseTheme = createTheme({
           },
           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
             backgroundColor: '#1976d2',
+          },
+          '& .MuiSwitch-switchBase.Mui-focusVisible': {
+            background: 'rgb(25, 118, 210, 0.2)',
           },
         },
       },

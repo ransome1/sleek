@@ -14,8 +14,6 @@ async function addFile(event: Event | null, filePath: string): Promise<void> {
         file.active = false;
       });
       existingFileIndex = files.findIndex((file) => {
-        // const pathName = path.dirname(filePath);
-        // const fileName = path.basename(filePath)
         if(file.todoFilePath === filePath) return true;
       });
     }

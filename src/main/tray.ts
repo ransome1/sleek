@@ -6,7 +6,7 @@ import { setFile } from './modules/File';
 
 let tray;
 
-function getMenuTemplate(files) {
+function createMenuTemplate(files) {
   const menuTemplate = [
     {
       label: 'Show sleek',
@@ -49,7 +49,6 @@ function getMenuTemplate(files) {
 function createTray() {
   try {
     const isDark = nativeTheme.shouldUseDarkColors;
-    const isMac = process.platform === 'darwin';
     const isWindows = process.platform === 'win32';
     const isTray = configStorage.get('tray');
 
@@ -59,13 +58,13 @@ function createTray() {
       if (app.dock) {
         app.dock.show();
       }
-      return Promise.resolve('Tray removed');
+      return Promise.resolve('Tray not shown');
     }
 
     const files = configStorage.get('files') as File[] || [];
-    const menu = Menu.buildFromTemplate(getMenuTemplate(files));
+    const menu = Menu.buildFromTemplate(createMenuTemplate(files));
 
-    tray = new Tray((isWindows) ? getAssetPath('icons/tray/lightTheme/tray.png') : getAssetPath('icons/tray/darkTheme/tray.png'));
+    tray = new Tray((isWindows && !isDark) ? getAssetPath('icons/tray/lightTheme/tray.png') : getAssetPath('icons/tray/darkTheme/tray.png'));
     tray.setContextMenu(menu);
 
     return Promise.resolve('Tray created');

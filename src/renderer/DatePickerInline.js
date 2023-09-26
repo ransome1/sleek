@@ -19,7 +19,7 @@ import 'dayjs/locale/tr';
 import 'dayjs/locale/zh';
 
 const userLocale = navigator.language || navigator.userLanguage;
-const ipcRenderer = window.electron.ipcRenderer;
+const ipcRenderer = window.api.ipcRenderer;
 
 const DatePickerInline = ({ 
   type,

@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Snackbar, Alert, Box } from '@mui/material';
 import NavigationComponent from './Navigation';
-import TodoDataGrid from './DataGrid';
+import TodoDataGrid from './DataGrid/Grid';
 import SplashScreen from './SplashScreen';
-import FileTabs from './FileTabs';
+import FileTabs from './FileTabs.tsx';
 import { baseTheme, darkTheme, lightTheme } from './Themes';
 import DrawerComponent from './Drawer';
 import Search from './Search';
@@ -13,10 +13,11 @@ import ArchiveTodos from './ArchiveTodos';
 import ToolBar from './ToolBar';
 import ContextMenu from './ContextMenu';
 import { Sorting } from '../main/util';
+import { I18nextProvider } from 'react-i18next';
+import { i18n } from './LanguageSelector';
 import './App.scss';
 
-const ipcRenderer = window.electron.ipcRenderer;
-const store = window.electron.store;
+const { ipcRenderer, store } = window.api;
 
 const App = () => {
   const [files, setFiles] = useState<string[]>(store.get('files') || null);
@@ -165,129 +166,139 @@ const App = () => {
     window.addEventListener('dragover', handleDragOver);
 
     return () => {
+      ipcRenderer.off('requestData', handleRequestedData);
+      ipcRenderer.off('updateFiles', handleUpdateFiles);
+      ipcRenderer.off('updateSorting', handleUpdateSorting);
+      ipcRenderer.off('setIsSearchOpen', handleSetIsSearchOpen);
+      ipcRenderer.off('setIsNavigationOpen', handleSetIsNavigationOpen);
+      ipcRenderer.off('setShouldUseDarkColors', handleSetShouldUseDarkColors);
+      ipcRenderer.off('setShowFileTabs', handleSetShowFileTabs);
+      ipcRenderer.off('setIsDrawerOpen', handleSetIsDrawerOpen);
+      ipcRenderer.off('setIsSettingsOpen', handleSetIsSettingsOpen);
+
       window.removeEventListener('drop', handleDrop);
       window.removeEventListener('dragover', handleDragOver);
     };    
   }, []);
 
   return (
-    <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
-      <CssBaseline />
-      <Box
-          className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${
-            shouldUseDarkColors ? 'darkTheme' : 'lightTheme'
-          }`}  
-        >
-        <NavigationComponent
-          isDrawerOpen={isDrawerOpen}
-          setIsDrawerOpen={setIsDrawerOpen}
-          setDialogOpen={setDialogOpen}
-          files={files}
-          headers={headers}
-          isNavigationOpen={isNavigationOpen}
-          setIsNavigationOpen={setIsNavigationOpen}
-          colorTheme={colorTheme}
-          setColorTheme={setColorTheme}
-          showFileTabs={showFileTabs}
-          setShowFileTabs={setShowFileTabs}
-          isSettingsOpen={isSettingsOpen}
-          setIsSettingsOpen={setIsSettingsOpen}
-        />
-        {files?.length > 0 && (
-          <>
-            <DrawerComponent 
-              isDrawerOpen={isDrawerOpen}
-              setIsDrawerOpen={setIsDrawerOpen}
-              attributes={attributes}
-              filters={filters}
-              sorting={sorting}
-              setSorting={setSorting}
-            />
-          </>
-        )}
-        <Box className="flexItems">
+    <I18nextProvider i18n={i18n}>
+      <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
+        <CssBaseline />
+        <Box
+            className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${
+              shouldUseDarkColors ? 'darkTheme' : 'lightTheme'
+            }`}  
+          >
+          <NavigationComponent
+            isDrawerOpen={isDrawerOpen}
+            setIsDrawerOpen={setIsDrawerOpen}
+            setDialogOpen={setDialogOpen}
+            files={files}
+            headers={headers}
+            isNavigationOpen={isNavigationOpen}
+            setIsNavigationOpen={setIsNavigationOpen}
+            colorTheme={colorTheme}
+            showFileTabs={showFileTabs}
+            isSettingsOpen={isSettingsOpen}
+            setIsSettingsOpen={setIsSettingsOpen}
+          />
           {files?.length > 0 && (
-          <>
-            {!isSearchOpen && showFileTabs ? <FileTabs 
-              files={files}
-              setContextMenuPosition={setContextMenuPosition}
-              setContextMenuItems={setContextMenuItems}              
-             /> : null}
-            {headers?.availableObjects > 0 ?
             <>
-              <Search
-                headers={headers}
-                searchString={searchString}
-                setSearchString={setSearchString}
-                isSearchOpen={isSearchOpen}
-                setIsSearchOpen={setIsSearchOpen}
-                searchFieldRef={searchFieldRef}
-              />
-              <ToolBar
-                isSearchOpen={isSearchOpen}
-                setIsSearchOpen={setIsSearchOpen}
-                searchFieldRef={searchFieldRef}
+              <DrawerComponent 
+                isDrawerOpen={isDrawerOpen}
+                setIsDrawerOpen={setIsDrawerOpen}
+                attributes={attributes}
+                filters={filters}
+                sorting={sorting}
+                setSorting={setSorting}
               />
             </>
-            : null }
-          </>
           )}
-          <TodoDataGrid 
-            todoObjects={todoObjects}
-            setTodoObject={setTodoObject}
-            attributes={attributes}
-            filters={filters}
-            setSnackBarSeverity={setSnackBarSeverity}
-            setSnackBarContent={setSnackBarContent}
-            setDialogOpen={setDialogOpen}
-            setTextFieldValue={setTextFieldValue}
-            contextMenuPosition={contextMenuPosition}
-            setContextMenuPosition={setContextMenuPosition}
-            contextMenuItems={contextMenuItems}
-            setContextMenuItems={setContextMenuItems}
-          />
-          <SplashScreen 
-            screen={splashScreen}
-            setDialogOpen={setDialogOpen}
-            setSearchString={setSearchString}
-          />
+          <Box className="flexItems">
+            {files?.length > 0 && (
+            <>
+              {!isSearchOpen && showFileTabs ? <FileTabs 
+                files={files}
+                setContextMenuPosition={setContextMenuPosition}
+                setContextMenuItems={setContextMenuItems}              
+               /> : null}
+              {headers?.availableObjects > 0 ?
+              <>
+                <Search
+                  headers={headers}
+                  searchString={searchString}
+                  setSearchString={setSearchString}
+                  isSearchOpen={isSearchOpen}
+                  setIsSearchOpen={setIsSearchOpen}
+                  searchFieldRef={searchFieldRef}
+                />
+                <ToolBar
+                  isSearchOpen={isSearchOpen}
+                  setIsSearchOpen={setIsSearchOpen}
+                  searchFieldRef={searchFieldRef}
+                />
+              </>
+              : null }
+            </>
+            )}
+            <TodoDataGrid 
+              todoObjects={todoObjects}
+              setTodoObject={setTodoObject}
+              attributes={attributes}
+              filters={filters}
+              setSnackBarSeverity={setSnackBarSeverity}
+              setSnackBarContent={setSnackBarContent}
+              setDialogOpen={setDialogOpen}
+              setTextFieldValue={setTextFieldValue}
+              contextMenuPosition={contextMenuPosition}
+              setContextMenuPosition={setContextMenuPosition}
+              contextMenuItems={contextMenuItems}
+              setContextMenuItems={setContextMenuItems}
+            />
+            <SplashScreen 
+              screen={splashScreen}
+              setDialogOpen={setDialogOpen}
+              setSearchString={setSearchString}
+            />
+          </Box>
         </Box>
-      </Box>
-      <TodoDialog
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
-        todoObject={todoObject}
-        attributes={attributes}
-        setSnackBarSeverity={setSnackBarSeverity}
-        setSnackBarContent={setSnackBarContent}
-        textFieldValue={textFieldValue}
-        setTextFieldValue={setTextFieldValue}
-        shouldUseDarkColors={shouldUseDarkColors}
-      />
-      <ContextMenu
-        contextMenuPosition={contextMenuPosition}
-        setContextMenuPosition={setContextMenuPosition}
-        contextMenuItems={contextMenuItems}
-        setContextMenuItems={setContextMenuItems}        
-        setSnackBarSeverity={setSnackBarSeverity}
-        setSnackBarContent={setSnackBarContent}        
-      />
-      <Snackbar 
-        open={snackBarOpen}
-        autoHideDuration={3000}
-        onClose={handleAlertClose}
-      >
-        <Alert
-          severity={snackBarSeverity}
+        <TodoDialog
+          dialogOpen={dialogOpen}
+          setDialogOpen={setDialogOpen}
+          todoObject={todoObject}
+          attributes={attributes}
+          setSnackBarSeverity={setSnackBarSeverity}
+          setSnackBarContent={setSnackBarContent}
+          textFieldValue={textFieldValue}
+          setTextFieldValue={setTextFieldValue}
+          shouldUseDarkColors={shouldUseDarkColors}
+        />
+        <ContextMenu
+          contextMenuPosition={contextMenuPosition}
+          setContextMenuPosition={setContextMenuPosition}
+          contextMenuItems={contextMenuItems}
+          setContextMenuItems={setContextMenuItems}        
+          setSnackBarSeverity={setSnackBarSeverity}
+          setSnackBarContent={setSnackBarContent}        
+        />
+        <Snackbar 
+          open={snackBarOpen}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
         >
-          {snackBarContent}
-        </Alert>
-      </Snackbar>
-      <ArchiveTodos
-        setSnackBarSeverity={setSnackBarSeverity}
-        setSnackBarContent={setSnackBarContent}
-      />
-    </ThemeProvider>
+          <Alert
+            severity={snackBarSeverity}
+          >
+            {snackBarContent}
+          </Alert>
+        </Snackbar>
+        <ArchiveTodos
+          setSnackBarSeverity={setSnackBarSeverity}
+          setSnackBarContent={setSnackBarContent}
+        />
+      </ThemeProvider>
+    </I18nextProvider>
   );
 };
 

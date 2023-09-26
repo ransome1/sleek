@@ -1,11 +1,11 @@
 @import "Variables.scss";
 
 #ToolBar {
-	width: 2.5em;
-	height: 2.5em;
+	width: 3em;
+	height: 3em;
 	position: fixed;
 	top: 0;
-	right: 0;
+	right: 1em;
 	z-index: 9;
 	display: flex;
 	justify-content: center;
@@ -15,10 +15,12 @@
 		cursor: pointer;
 		font-size: 1.85em;
 		color: $dark-grey;
-		>:hover,
 		&.active {
 			color: $links;
 		}
+	}
+	& svg:hover {
+		color: $links;
 	}
 }
 

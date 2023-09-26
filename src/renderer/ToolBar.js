@@ -28,8 +28,8 @@ const ToolBar = ({
   }, [isSearchOpen]);
 
   return (
-    <Box id="ToolBar">
-      <SearchIcon onClick={handleClick} className={isSearchOpen ? 'active' : ''} />
+    <Box id="ToolBar" onClick={handleClick}>
+      <SearchIcon className={isSearchOpen ? 'active' : ''} />
     </Box>
   );
 };

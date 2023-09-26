@@ -1,40 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DraggableListItem from './DraggableListItem';
 import { Box } from '@mui/material';
-import { DragDropContext, Droppable, OnDragEndResponder } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './DraggableList.scss';
 
-const store = window.electron.store;
+const store = window.api.store;
 
-export type DraggableListProps = {
-  items: Item[];
-  onDragEnd: OnDragEndResponder;
-  sorting: Sorting[]; // You might need to import or define the Sorting type
-  setSorting: (sorting: Sorting[]) => void; // You might need to define this function type
-  disabled?: boolean;
-};
+interface Settings {
+  sorting: string[];
+}
 
-const DraggableList = React.memo(({ 
-  sorting,
-  setSorting,
-  onDragEnd,
-  disabled
-}: DraggableListProps) => {
+const DraggableList = React.memo(() => {
+  const [settings, setSettings] = useState<Settings>({
+    sorting: store.get('sorting'),
+  });
+
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  const onDragEnd = ({ destination, source }) => {
+    if (!destination) return;
+    const updatedSorting = reorder(settings.sorting, source.index, destination.index);
+    store.set('sorting', updatedSorting);
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      sorting: updatedSorting,
+    }));
+  };  
+
   return (
-    <DragDropContext onDragEnd={disabled ? undefined : onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable-list">
-        {provided => (
-          <Box ref={provided.innerRef} {...provided.droppableProps} className={disabled ? 'disabled' : ''}>
-            {!disabled &&
-              sorting.map((sortingItem, index) => (
-                <DraggableListItem
-                  item={sortingItem}
-                  index={index}
-                  key={sortingItem.id}
-                  sorting={sorting}
-                  setSorting={setSorting}
-                />
-              ))}
+        {(provided) => (
+          <Box ref={provided.innerRef} {...provided.droppableProps}>
+          {settings.sorting.map((item, index) => (
+            <DraggableListItem
+              item={item}
+              index={index}
+              key={item.id}
+              settings={settings}
+              setSettings={setSettings}
+            />
+          ))}
             {provided.placeholder}
           </Box>
         )}
@@ -44,4 +55,3 @@ const DraggableList = React.memo(({
 });
 
 export default DraggableList;
-  

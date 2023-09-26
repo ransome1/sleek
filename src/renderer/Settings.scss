@@ -12,6 +12,12 @@
   border-radius: $radius;
   padding: 1em 2em 2em 2em;
   .MuiFormControl-root {
-    margin: 1em 0;
+    margin: 1em 1em 0 0;
+  }
+  .MuiFormControlLabel-root {
+    display: block;
+  }
+  .MuiSelect-select {
+    min-width: 9em;
   }
 }

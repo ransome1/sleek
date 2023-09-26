@@ -1,20 +1,21 @@
 @import "Variables.scss";
 
 #Search {
-	height: 2.5em;
-	min-height: 2.5em;
+	height: 3em;
+	min-height: 3em;
 	display: flex;
-	padding-right: 2.5em;
+	overflow: hidden;
 	.MuiTextField-root {
-		height: 100%;
 		flex-direction: row;
 		flex: 1;
+		margin: 0.25em 1em;
 		.MuiInputBase-root {
 			flex: 1;
-			background: transparent;
+			padding-right: 3em;
 			.MuiInputBase-input {
+				height: 100%;
 				padding: 0;
-				margin: 0 1em;
+				margin: 1em;
 			}
 			.MuiButtonBase-root {
 				font-size: 0.9em;

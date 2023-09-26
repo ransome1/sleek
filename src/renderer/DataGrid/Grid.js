@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { List } from '@mui/material';
-import DataGridRow from './DataGridRow';
-import './DataGrid.scss';
+import Row from './Row';
+import '../DataGrid.scss';
 
 const TodoDataGrid = ({ 
   todoObjects,
@@ -70,12 +70,12 @@ const TodoDataGrid = ({
 
   if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
 
-  const visibleRows = todoObjects.slice(0, visibleRowCount);
+  const rows = todoObjects.slice(0, visibleRowCount);
 
   return (
     <List id="dataGrid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
-      {visibleRows.map((row, index) => (  
-        <DataGridRow 
+      {rows.map((row, index) => (  
+        <Row 
           key={index}
           attributes={attributes}
           todoObject={row}

@@ -117,7 +117,7 @@ const AutoSuggest = ({
   };
 
   const inputProps = {
-    placeholder: `(A) Todo text +project @context due:2020-12-12 rec:d`,
+    placeholder: `(A) text +project @context due:2020-12-12 t:2021-01-10 rec:d pm:1`,
     value: textFieldValue,
     onChange: handleChange,
     inputRef: textFieldRef,

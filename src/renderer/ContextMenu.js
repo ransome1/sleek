@@ -3,7 +3,7 @@ import { Menu, MenuItem, Button, Tooltip } from '@mui/material';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import Prompt from './Prompt';
 
-const ipcRenderer = window.electron.ipcRenderer;
+const ipcRenderer = window.api.ipcRenderer;
 
 const ContextMenu = ({
   contextMenuPosition,

@@ -1,4 +1,4 @@
-@import "Variables.scss";
+@import "./Variables.scss";
 
 .row {
   width: auto;
@@ -44,7 +44,7 @@
     }
   }
   .MuiCheckbox-root {
-    padding: 0.35em 0.5em 0.35em 0.25em;
+    padding: 0.35em;
   }
   &[data-complete=true],
   &[data-hidden=true] {

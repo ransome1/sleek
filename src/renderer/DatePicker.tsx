@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Item } from 'jstodotxt';
+import { withTranslation } from 'react-i18next';
+import { i18n } from './LanguageSelector';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -14,22 +17,29 @@ import 'dayjs/locale/pt';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/tr';
 import 'dayjs/locale/zh';
-import { Item } from 'jstodotxt';
 import './DatePicker.scss';
 
 const userLocale = navigator.language || navigator.userLanguage;
 
-const DatePickerComponent = ({ 
+interface DatePicker {
+  todoObject: Item | null;
+  type: string;
+  setTextFieldValue: (value: string) => void;
+  textFieldValue: string;
+}
+
+const DatePickerComponent: React.FC<DatePicker> = ({
   todoObject,
   type,
   setTextFieldValue,
-  textFieldValue
+  textFieldValue,
+  t,
 }) => {
   const initialDate = todoObject && todoObject[type] && dayjs(todoObject[type]).isValid() ? dayjs(todoObject[type]) : null;
-  const [date, setDate] = useState(initialDate);
+  const [date, setDate] = useState<dayjs.Dayjs | null>(initialDate);
 
-  const handleChange = (updatedDate) => {
-    if (!dayjs(updatedDate).isValid()) return;
+  const handleChange = (updatedDate: dayjs.Dayjs | null) => {
+    if (!updatedDate || !dayjs(updatedDate).isValid()) return;
     const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
     const todoObjectCopy = new Item(textFieldValue);
 
@@ -43,7 +53,7 @@ const DatePickerComponent = ({
       <DatePicker
         className="datePicker"
         format="YYYY-MM-DD"
-        label={type === 't' ? 'Threshold' : 'Due'}
+        label={type === 't' ? t('todoDialog.datePicker.threshold') : t('todoDialog.datePicker.due')}
         value={initialDate}
         onChange={(updatedDate) => handleChange(updatedDate)}
       />
@@ -51,4 +61,4 @@ const DatePickerComponent = ({
   );
 };
 
-export default DatePickerComponent;
+export default withTranslation()(DatePickerComponent);

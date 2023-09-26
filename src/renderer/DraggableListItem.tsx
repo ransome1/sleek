@@ -6,25 +6,28 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { attributeMapping } from './Shared';
 import './DraggableListItem.scss';
 
-export type DraggableListItemProps = {
+const store = window.api.store;
+
+type DraggableListItem = {
   item: Item;
   index: number;
+  settings: any;
+  setSettings: any;
 };
 
-const DraggableListItem = ({ 
-  item,
-  index,
-  sorting,
-  setSorting
-}: DraggableListItemProps) => {
+const DraggableListItem: React.FC<DraggableListItem> = ({ item, index, settings, setSettings }) => {
   const handleButtonClick = () => {
-    const updatedSorting = sorting.map(sortingItem => {
+    const updatedSorting = settings.sorting.map((sortingItem) => {
       if (sortingItem.id === item.id) {
         return { ...sortingItem, invert: !item.invert };
       }
       return sortingItem;
     });
-    setSorting(updatedSorting);
+    store.set('sorting', updatedSorting);
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      sorting: updatedSorting,
+    }));
   };
 
   return (
@@ -39,10 +42,9 @@ const DraggableListItem = ({
           <Box><DragHandleIcon /></Box>
           {attributeMapping[item.value]}
           <Button onClick={handleButtonClick}>
-            {!item.invert && <SortIcon />}
-            {item.invert && <SortIcon className='invert' />}
+            {!item.invert && <SortIcon className='invert' />}
+            {item.invert && <SortIcon />}
           </Button>
-          
         </ListItem>
       )}
     </Draggable>

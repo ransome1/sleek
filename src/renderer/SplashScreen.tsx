@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Button, Box } from '@mui/material';
 import DryCleaningIcon from '@mui/icons-material/DryCleaning';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { withTranslation } from 'react-i18next';
+import { i18n } from './LanguageSelector';
 import './SplashScreen.scss';
 
-const ipcRenderer = window.electron.ipcRenderer;
-const store = window.electron.store;
+interface SplashScreen {
+  screen: 'noTodosVisible' | 'noTodosAvailable' | 'noFiles' | null;
+  setSearchString: (search: string) => void;
+  setDialogOpen: (isOpen: boolean) => void;
+}
 
-const SplashScreen = ({ 
+const ipcRenderer = window.api.ipcRenderer;
+const store = window.api.store;
+
+const SplashScreen: FC<SplashScreen> = ({
   screen,
   setSearchString,
-  setDialogOpen
-}) => {
-
+  setDialogOpen,
+  t,
+}: SplashScreenProps) => {
   const handleCreateTodo = () => {
     setDialogOpen(true);
   };
@@ -31,17 +39,15 @@ const SplashScreen = ({
     ipcRenderer.send('createFile');
   };
 
-  if(!screen) return null;
-
   return (
     <Box id='splashScreen'>
       {screen === 'noTodosVisible' && (
         <>
           <DryCleaningIcon />
-          <p>No results visible.</p>
+          <p>{t('splashscreen.noTodosVisible.text')}</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleReset}>
-              Reset filters and search
+              {t('splashscreen.noTodosVisible.reset')}
             </Button>
           </Box>
         </>
@@ -49,28 +55,30 @@ const SplashScreen = ({
       {screen === 'noTodosAvailable' && (
         <>
           <BeachAccessIcon />
-          <p>Currently no todos in this file</p>
+          <p>{t('splashscreen.noTodosAvailable.text')}</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleCreateTodo}>
-              Create a todo
+              {t('splashscreen.noTodosAvailable.create')}
             </Button>
           </Box>
         </>
-      )}      
+      )}
       {screen === 'noFiles' && (
         <Box className="fileDropZone">
           <SaveAltIcon />
-          <p>Drop your todo.txt file here or use the buttons</p>
+          <p>{t('splashscreen.noFiles.text')}</p>
           <Box className="buttons">
-            <Button variant='contained' onClick={handleOpenFile}>Open todo.txt file</Button>
-            <Button variant='contained' onClick={handleCreateFile}>
-              Create todo.txt file
+            <Button variant='contained' onClick={handleOpenFile}>
+              {t('splashscreen.noFiles.open')}
             </Button>
-          </Box>       
+            <Button variant='contained' onClick={handleCreateFile}>
+              {t('splashscreen.noFiles.create')}
+            </Button>
+          </Box>
         </Box>
       )}
     </Box>
   );
 };
 
-export default SplashScreen;
+export default withTranslation()(SplashScreen);

@@ -3,9 +3,6 @@
 *[data-todotxt-attribute] {
   --color1: #5a5a5a;
   --color2: #ccc;
-  span {
-    border-radius: $radius;
-  }
   .overlay {
     svg {
       color: var(--color1);
@@ -90,8 +87,8 @@
 }
 
 *[data-todotxt-attribute^="pm"] {
-  --color1: white;
-  --color2: #c00027;
+  --color1: #c00027;
+  --color2: #ccc;
   button {
     &.Mui-disabled {
       color: white;
@@ -104,7 +101,8 @@
   } 
   &.selected {
     button {
-      background: darken(#c00027, 10%);
+      color: white;
+      background: c00027;
     }
   } 
 }

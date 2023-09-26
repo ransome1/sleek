@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent, clipboard } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
 export type Channels =
   | 'requestData'
@@ -20,39 +20,24 @@ export type Channels =
   | 'revealFile'
   | 'changeDoneFilePath';
 
-interface ElectronStore {
-  get: <T>(key: string) => T;
-  set: (property: string, val: unknown) => void;
-  setFilters: (val: unknown) => void;
-}
-
-interface ElectronIpcRenderer {
-  send: (channel: Channels, ...args: unknown[]) => void;
-  on: (channel: Channels, func: (...args: unknown[]) => void) => () => void;
-  once: (channel: Channels, func: (...args: unknown[]) => void) => void;
-}
-
-const electronHandler: {
-  store: ElectronStore;
-  ipcRenderer: ElectronIpcRenderer;
-} = {
+contextBridge.exposeInMainWorld('api', {
   store: {
-    get<T>(key: string): T {
+    get(key: string): void {
       return ipcRenderer.sendSync('storeGetConfig', key);
     },
-    set(property: string, val: unknown): void {
-      ipcRenderer.send('storeSetConfig', property, val);
+    set(property: string, value: unknown): void {
+      ipcRenderer.send('storeSetConfig', property, value);
     },
-    setFilters(val: unknown): void {
-      ipcRenderer.send('storeSetFilters', val);
+    setFilters(value: unknown): void {
+      ipcRenderer.send('storeSetFilters', value);
     },
   },
   ipcRenderer: {
-    send(channel: Channels, ...args: unknown[]): void {
+    send(channel: Channels, ...args): void {
       ipcRenderer.send(channel, ...args);
     },
-    on(channel: Channels, func: (...args: unknown[]) => void): () => void {
-      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
+    on(channel: Channels, func: (...args) => void): () => void {
+      const subscription = (_event, ...args) =>
         func(...args);
       ipcRenderer.on(channel, subscription);
 
@@ -60,18 +45,16 @@ const electronHandler: {
         ipcRenderer.removeListener(channel, subscription);
       };
     },
-    once(channel: Channels, func: (...args: unknown[]) => void): void {
+    off(channel: Channels, func: (...args) => void): () => void {
+      const subscription = (_event, ...args) =>
+        func(...args);
+      ipcRenderer.removeListener(channel, subscription);
+    },    
+    once(channel: Channels, func: (...args) => void): void {
       ipcRenderer.once(
         channel,
-        (_event: IpcRendererEvent, ...args: unknown[]) => func(...args)
+        (_event, ...args) => func(...args)
       );
     },
-    startDrag: (fileName) => {
-      ipcRenderer.send('ondragstart', path.join(process.cwd(), fileName))
-    }
-  },
-};
-
-contextBridge.exposeInMainWorld('electron', electronHandler);
-
-export type ElectronHandler = typeof electronHandler;
+  }
+});

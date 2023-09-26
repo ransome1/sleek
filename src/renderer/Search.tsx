@@ -1,43 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent, useRef } from 'react';
 import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { withTranslation } from 'react-i18next';
+import { i18n } from './LanguageSelector';
 import './Search.scss';
 
-const ipcRenderer = window.electron.ipcRenderer;
+const ipcRenderer = window.api.ipcRenderer;
 
-const debounce = (func, delay) => {
-  let timer;
-  return (...args) => {
+interface Search {
+  headers: { visibleObjects: string };
+  searchString: string | null;
+  setSearchString: (searchString: string) => void;
+  isSearchOpen: boolean;
+  setIsSearchOpen: (isSearchOpen: boolean) => void;
+  searchFieldRef: React.RefObject<HTMLInputElement>;
+}
+
+const debounce = <T extends (...args: any[]) => any>(func: T, delay: number) => {
+  let timer: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      func.apply(this, args);
+      func(...args);
     }, delay);
   };
 };
 
-const Search = ({
+const Search: React.FC<Search> = ({
   headers,
   searchString,
   setSearchString,
   isSearchOpen,
   setIsSearchOpen,
-  searchFieldRef
-}) => {
-
-  const handleInput = (event) => {
+  searchFieldRef,
+  t,
+}: SearchProps) => {
+  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
     const searchString = event.target.value;
     setSearchString(searchString);
   };
 
-  const handleAddTodo = (event) => {
-    ipcRenderer.send('writeTodoToFile', undefined, searchString);
-    setSearchString('');
-    searchFieldRef.current.focus();
+  const handleAddTodo = () => {
+    if (searchString) {
+      ipcRenderer.send('writeTodoToFile', undefined, searchString);
+      setSearchString('');
+      searchFieldRef.current?.focus();
+    }
   };
 
   const handleXClick = () => {
     setSearchString('');
-    searchFieldRef.current.focus();
+    searchFieldRef.current?.focus();
   };
 
   useEffect(() => {
@@ -47,25 +60,25 @@ const Search = ({
     };
     const delayedSearch = debounce(handleSearch, 200);
     delayedSearch();
-    return delayedSearch.cancel;
+    return () => {
+      clearTimeout(delayedSearch as NodeJS.Timeout);
+    };
   }, [searchString]);
 
   useEffect(() => {
     if (isSearchOpen && searchFieldRef.current) {
       searchFieldRef.current.focus();
     }
-  }, [isSearchOpen]);
+  }, [isSearchOpen, searchFieldRef]);
 
   return (
     <>
       {isSearchOpen && (
-        <Box 
-          id='Search'
-          className={isSearchOpen ? 'active' : ''}
-        >
+        <Box id='Search' className={isSearchOpen ? 'active' : ''}>
           <TextField
             variant='outlined'
-            placeholder={`Searching ${headers.visibleObjects} todos`}
+            placeholder={`${t('search.visibleTodos')} ${headers.visibleObjects}`}
+
             inputRef={searchFieldRef}
             value={searchString === null ? '' : searchString}
             onChange={handleInput}
@@ -94,4 +107,4 @@ const Search = ({
   );
 };
 
-export default Search;
+export default withTranslation()(Search);
