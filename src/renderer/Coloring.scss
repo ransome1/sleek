@@ -1,4 +1,4 @@
-@import "Variables.scss";
+@import "./Variables.scss";
 
 *[data-todotxt-attribute] {
   --color1: #5a5a5a;
@@ -12,6 +12,7 @@
   button:hover {
     color: var(--color1);
     background: var(--color2);
+    font-family: 'FreeSansBold';
     &:focus-visible {
       outline-color: var(--color1);
     }
@@ -87,9 +88,15 @@
 }
 
 *[data-todotxt-attribute^="pm"] {
-  --color1: #c00027;
-  --color2: #ccc;
+  --color1: rgb(221, 44, 0);
+  --color2: white;
   button {
+    svg {
+      margin: 0 0.2em;
+    }
+    .MuiBox-root {
+      padding: 0 0.5em 0 0;
+    }
     &.Mui-disabled {
       color: white;
     }
@@ -102,7 +109,7 @@
   &.selected {
     button {
       color: white;
-      background: c00027;
+      background: rgb(221, 44, 0);
     }
   } 
 }

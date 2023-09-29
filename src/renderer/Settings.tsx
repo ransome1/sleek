@@ -24,6 +24,7 @@ interface Settings extends WithTranslation {
 const Settings: React.FC<Settings> = ({
   isOpen,
   onClose,
+  setAttributeMapping,
   t,
 }) => {
   const [settings, setSettings] = useState({
@@ -34,6 +35,17 @@ const Settings: React.FC<Settings> = ({
     showFileTabs: store.get('showFileTabs'),
     colorTheme: store.get('colorTheme'),
   });
+
+  const handleColorThemeChange = (event) => {
+    const selectedValue = event.target.value;
+    if(selectedValue) {
+      store.set('colorTheme', selectedValue);
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        colorTheme: selectedValue,
+      }));
+    }
+  };  
 
   return (
     <Modal open={isOpen} onClose={onClose} aria-labelledby='settings-modal-title'>
@@ -60,7 +72,7 @@ const Settings: React.FC<Settings> = ({
             className='colorTheme'
             label={t('settings.colorTheme')}
             value={settings.colorTheme}
-            onChange={handleSettingChange('colorTheme', setSettings)}
+            onChange={handleColorThemeChange}
           >
             {['system', 'light', 'dark'].map((theme) => (
               <MenuItem key={theme} value={theme}>
@@ -69,7 +81,7 @@ const Settings: React.FC<Settings> = ({
             ))}
           </Select>
         </FormControl>
-        <LanguageSelector />
+        <LanguageSelector setAttributeMapping={setAttributeMapping} />
       </Box>
     </Modal>
   );

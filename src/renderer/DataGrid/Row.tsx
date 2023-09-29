@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Checkbox, ListItem, Box } from '@mui/material';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
@@ -8,12 +8,12 @@ import { i18n } from './LanguageSelector';
 import Group from './Group';
 import Elements from './Elements';
 import { handleFilterSelect } from '../Shared';
-import '../DataGridRow.scss';
+import './Row.scss';
 
 const ipcRenderer = window.api.ipcRenderer;
 
 interface Row {
-  todoObject: any;
+  row: any;
   filters: any;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
@@ -24,7 +24,7 @@ interface Row {
 }
 
 const Row: React.FC<DataGridRowProps> = ({
-  todoObject,
+  row,
   filters,
   setDialogOpen,
   setTextFieldValue,
@@ -33,19 +33,18 @@ const Row: React.FC<DataGridRowProps> = ({
   setContextMenuItems,
   t,
 }) => {
-  
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
     setContextMenuItems([
       {
         id: 'copy',
-        todoObject: todoObject,
+        todoObject: row,
         label: t(`copy`),
       },
       {
         id: 'delete',
-        todoObject: todoObject,
+        todoObject: row,
         headline: t(`prompt.delete.headline`),
         text: t(`prompt.delete.text`),
         label: t(`delete`),
@@ -56,8 +55,8 @@ const Row: React.FC<DataGridRowProps> = ({
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     ipcRenderer.send(
       'writeTodoToFile',
-      todoObject.id,
-      todoObject.string,
+      row.id,
+      row.string,
       event.target.checked,
       false
     );
@@ -65,11 +64,7 @@ const Row: React.FC<DataGridRowProps> = ({
 
   const handleRowClick = (event: React.MouseEvent | React.KeyboardEvent) => {
     const clickedElement = event.target as HTMLElement;
-
-    if (
-      (event.type === 'keydown' && event.key === 'Enter') ||
-      event.type === 'click'
-    ) {
+    if ((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if (
         clickedElement.classList.contains('MuiChip-label') ||
         clickedElement.closest('.MuiChip-label')
@@ -81,9 +76,11 @@ const Row: React.FC<DataGridRowProps> = ({
         clickedElement.tagName === 'SPAN' ||
         clickedElement.tagName === 'LI'
       ) {
-        setDialogOpen(true);
-        setTodoObject(todoObject);
-        setTextFieldValue(todoObject.string);
+        if(row) {
+          setTodoObject(row);
+          setDialogOpen(true);
+        }
+        //setTextFieldValue(row.string);
       }
     }
   };
@@ -92,10 +89,10 @@ const Row: React.FC<DataGridRowProps> = ({
     handleFilterSelect(key, value, filters, false);
   };
 
-  if (todoObject.group) {
+  if (row.group) {
     return (
       <Group
-        todoObject={todoObject}
+        todoObject={row}
         filters={filters}
         onClick={handleButtonClick}
       />
@@ -105,28 +102,28 @@ const Row: React.FC<DataGridRowProps> = ({
   return (
     <ListItem
       tabIndex={0}
-      key={todoObject.id}
+      key={row.id}
       className="row"
-      data-complete={todoObject.complete}
-      data-hidden={todoObject.hidden}
+      data-complete={row.complete}
+      data-hidden={row.hidden}
       onClick={handleRowClick}
       onKeyDown={handleRowClick}
       onContextMenu={handleContextMenu}
       data-todotxt-attribute="priority"
-      data-todotxt-value={todoObject.priority}
+      data-todotxt-value={row.priority}
     >
       <Checkbox
         icon={<CircleUnchecked />}
         checkedIcon={<CircleChecked />}
         tabIndex={0}
-        checked={todoObject.complete}
+        checked={row.complete}
         onChange={handleCheckboxChange}
       />
 
-      {todoObject.hidden && <VisibilityOffIcon />}
+      {row.hidden && <VisibilityOffIcon />}
 
       <Elements
-        todoObject={todoObject}
+        todoObject={row}
         filters={filters}
         handleButtonClick={handleButtonClick}
       />

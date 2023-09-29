@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { List } from '@mui/material';
 import Row from './Row';
-import '../DataGrid.scss';
+import './Grid.scss';
 
 const TodoDataGrid = ({ 
   todoObjects,
@@ -9,11 +9,11 @@ const TodoDataGrid = ({
   filters,
   setDialogOpen,
   setTextFieldValue,
-  setTodoObject,
   contextMenuPosition,
   setContextMenuPosition,
   contextMenuItems,
-  setContextMenuItems
+  setContextMenuItems,
+  setTodoObject
 }) => { 
   const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
@@ -24,7 +24,6 @@ const TodoDataGrid = ({
       const currentIndex = Array.from(listItems).indexOf(document.activeElement);
       const nextIndex = currentIndex + 1;
       const nextElement = listItems[nextIndex];
-
       if (nextElement) {
         nextElement.focus();
       }
@@ -33,7 +32,6 @@ const TodoDataGrid = ({
       const currentIndex = Array.from(listItems).indexOf(document.activeElement);
       const prevIndex = currentIndex - 1;
       const prevElement = listItems[prevIndex];
-
       if (prevElement) {
         prevElement.focus();
       }
@@ -43,7 +41,6 @@ const TodoDataGrid = ({
       const currentIndex = Array.from(rowItems).indexOf(document.activeElement);
       const nextIndex = event.key === 'ArrowRight' ? currentIndex + 1 : currentIndex - 1;
       const nextElement = rowItems[nextIndex];
-
       if (nextElement) {
         nextElement.focus();
       }
@@ -56,7 +53,6 @@ const TodoDataGrid = ({
       const scrollPos = list.scrollTop;
       const totalHeight = list.scrollHeight;
       const clientHeight = list.clientHeight;
-
       if (totalHeight - scrollPos <= clientHeight * 2) {
         const remainingRows = todoObjects.slice(visibleRowCount, visibleRowCount + 20);
         if (remainingRows.length === 0) {
@@ -78,11 +74,11 @@ const TodoDataGrid = ({
         <Row 
           key={index}
           attributes={attributes}
-          todoObject={row}
+          row={row}
+          setTodoObject={setTodoObject}
           filters={filters}
           setDialogOpen={setDialogOpen}
           setTextFieldValue={setTextFieldValue}
-          setTodoObject={setTodoObject}
           contextMenuPosition={contextMenuPosition}
           setContextMenuPosition={setContextMenuPosition}
           contextMenuItems={contextMenuItems}

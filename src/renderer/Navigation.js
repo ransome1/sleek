@@ -6,13 +6,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Box } from '@mui/material';
-import Settings from './Settings';
 import './Navigation.scss';
 
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer } = window.api;
 
-const NavigationComponent = ({ 
-  isSettingsOpen,
+const NavigationComponent = ({
   setIsSettingsOpen,
   isDrawerOpen,
   setIsDrawerOpen,
@@ -21,26 +19,8 @@ const NavigationComponent = ({
   setIsNavigationOpen,
   colorTheme,
   showFileTabs,
+  setAttributeMapping,
 }) => {
-  const openSettings = () => {
-    setIsSettingsOpen(true);
-  };
-
-  const closeSettings = () => {
-    setIsSettingsOpen(false);
-  };
-
-  const handleButtonClicked = (parameter) => {
-    setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)
-  };
-
-  const handleOpenFile = () => {
-    ipcRenderer.send('openFile');
-  };
-
-  const toggleNavigation = () => {
-    setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen);
-  };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -48,7 +28,7 @@ const NavigationComponent = ({
         setDialogOpen(true);
         return;
       }
-    };    
+    };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -64,28 +44,22 @@ const NavigationComponent = ({
             <Button onClick={() => setDialogOpen(true)}>
               <AddIcon />
             </Button>
-            <Button onClick={() => handleButtonClicked('filter')} className={isDrawerOpen ? 'active' : ''}>
+            <Button onClick={() => setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)} className={isDrawerOpen ? 'active' : ''}>
               <FilterAltIcon />
             </Button>
           </>
         )} 
-        <Button onClick={handleOpenFile}>
+        <Button onClick={() => ipcRenderer.send('openFile')}>
           <FileOpenIcon />
         </Button>
-        <Button className='break' onClick={openSettings}>
+        <Button className='break' onClick={() => setIsSettingsOpen(true)}>
           <SettingsIcon />
         </Button>
-        <Settings 
-          isOpen={isSettingsOpen}
-          onClose={closeSettings}
-          colorTheme={colorTheme}
-          showFileTabs={showFileTabs}
-          />
-        <Button onClick={toggleNavigation}>
+        <Button onClick={() => setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen)}>
           <KeyboardArrowLeftIcon />
         </Button>
       </Box>
-      <Button onClick={toggleNavigation} className="showNavigation">
+      <Button onClick={() => setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen)} className="showNavigation">
         <KeyboardArrowRightIcon />
       </Button>
     </>

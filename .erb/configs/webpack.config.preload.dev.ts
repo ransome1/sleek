@@ -19,11 +19,11 @@ const configuration: webpack.Configuration = {
 
   target: 'electron-preload',
 
-  entry: path.join(webpackPaths.srcMainPath, 'preload.ts'),
+  entry: path.join(webpackPaths.srcMainPath, 'preload.js'),
 
   output: {
     path: webpackPaths.dllPath,
-    filename: 'preload.js',
+    filename: 'preload.ts',
     library: {
       type: 'umd',
     },

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { translatedAttributes } from './Shared';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import de from '../locales/de.json';
@@ -62,7 +63,7 @@ const friendlyLanguageName = {
 	es: 'Español',
 	fr: 'Français',
 	zh: '简体中文',
-	pt: 'Português do Brasil',
+	pt: 'Português',
 	jp: '日本語',
 	tr: 'Türkçe',
 	hu: 'Magyar',
@@ -73,7 +74,7 @@ const friendlyLanguageName = {
 	hi: 'हिन्दी'
 }
 
-const LanguageSelector = () => {
+const LanguageSelector = ({ setAttributeMapping }) => {
 	const [selectedLanguage, setSelectedLanguage] = useState(store.get('language') || i18n.language);
 	const supportedLanguages = i18n.options.supportedLngs;
 
@@ -85,7 +86,8 @@ const LanguageSelector = () => {
 	useEffect(() => {
 		i18n.changeLanguage(selectedLanguage, (error) => {
 			if (error) return console.error('Error loading translation:', error);
-			store.set('language', selectedLanguage)
+			store.set('language', selectedLanguage);
+			setAttributeMapping(translatedAttributes(i18n.t));
 		});
 	}, [selectedLanguage]);
 

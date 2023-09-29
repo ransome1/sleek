@@ -1,5 +1,5 @@
 // This is a simple stack machine that executes a filter language query
-// compiled by filterlang.pegjs (which generates filterlang.mjs).
+// compiled by filterlang.pegjs (which generates filterlang.ts).
 // The compiled query consists of a list of postfix opcodes designed
 // specifically for todo.txt searching and filtering.
 

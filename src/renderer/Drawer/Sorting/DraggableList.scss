@@ -1,0 +1,41 @@
+@import "../../Variables.scss";
+
+#Sorting {
+	padding: 0 1em;
+	h3 {
+		font-family: 'FreeSansBold';
+		padding: 0;
+		margin: 0;
+	}
+	li {
+		padding: 0 0.5em 0 0;
+		border-bottom: 1px dashed $mid-grey;
+		.MuiBox-root {
+			padding: 0.5em 1em;
+		}
+		& > *:not(:last-child) {
+			margin-right: 1em;
+		}
+		&:last-child {
+			border: none;
+		}
+		button {
+			margin-left: auto;
+		}
+		&.draggingListItem {
+			box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.1);
+		}
+	}
+	.MuiBox-root.disabled {
+		cursor: not-allowed;
+		filter: opacity(50%) grayscale(100%);
+	}
+}
+
+.darkTheme {
+	#Sorting {
+		li {
+			border-color: $dark-grey;
+		}
+	}
+}

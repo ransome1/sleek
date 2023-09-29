@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Chip } from '@mui/material';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg';
-import DatePickerInline from '../DatePickerInline';
+import DatePickerInline from './DatePickerInline';
 import { TodoObject, Filters } from '../../../main/util';
 
 interface Element {

@@ -6,15 +6,17 @@ import TodoDataGrid from './DataGrid/Grid';
 import SplashScreen from './SplashScreen';
 import FileTabs from './FileTabs.tsx';
 import { baseTheme, darkTheme, lightTheme } from './Themes';
-import DrawerComponent from './Drawer';
+import DrawerComponent from './Drawer/Drawer';
 import Search from './Search';
-import TodoDialog from './TodoDialog';
-import ArchiveTodos from './ArchiveTodos';
+import TodoDialog from './TodoDialog/TodoDialog';
+import Archive from './Archive';
 import ToolBar from './ToolBar';
 import ContextMenu from './ContextMenu';
 import { Sorting } from '../main/util';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from './LanguageSelector';
+import Settings from './Settings';
+import { translatedAttributes } from './Shared';
 import './App.scss';
 
 const { ipcRenderer, store } = window.api;
@@ -34,16 +36,16 @@ const App = () => {
   const [headers, setHeaders] = useState<object>(null);
   const [filters, setFilters] = useState<object>({});
   const [attributes, setAttributes] = useState<object>({});
-  const [textFieldValue, setTextFieldValue] = useState('');
   const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
   const searchFieldRef = useRef(null);
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(store.get('isNavigationOpen'));
-  const [colorTheme, setColorTheme] = useState<boolean>(store.get('colorTheme') || 'system');
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
   const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuItems, setContextMenuItems] = useState([]);
+  const [attributeMapping, setAttributeMapping] = useState(translatedAttributes(i18n.t) || {});
+  const [textFieldValue, setTextFieldValue] = useState('');
   
   const handleRequestedData = (todoObjects: object, attributes: object, headers: object, filters: object) => {
     if(headers) setHeaders(headers);
@@ -71,7 +73,6 @@ const App = () => {
 
   const handleSetShouldUseDarkColors = (shouldUseDarkColors: boolean) => {
     setShouldUseDarkColors(shouldUseDarkColors);
-    setColorTheme((shouldUseDarkColors) ? 'dark' : 'light');
   };
 
   const handleSetShowFileTabs = () => {
@@ -99,11 +100,21 @@ const App = () => {
   const handleAlertClose = () => {
     setSnackBarContent(null);
     setSnackBarOpen(false);
-  }
+  };
+
+  const handleWriteTodoToFile = (response: any) => {
+    if (response instanceof Error) {
+      setSnackBarSeverity('error');
+      setSnackBarContent(response.message);
+    } else {
+      setDialogOpen(false);
+    }
+  };  
 
   useEffect(() => {
-    if(!headers) return;
-    if (headers.availableObjects === 0) {
+    if(!headers) {
+      return;
+    } else  if (headers.availableObjects === 0) {
       setSplashScreen('noTodosAvailable');
       setIsDrawerOpen(false);
     } else if (headers.visibleObjects === 0) {
@@ -149,7 +160,7 @@ const App = () => {
       setTodoObject(null);
       setTextFieldValue('');
     }
-  }, [dialogOpen]);
+  }, [dialogOpen]); 
 
   useEffect(() => {
     ipcRenderer.on('requestData', handleRequestedData);
@@ -161,21 +172,20 @@ const App = () => {
     ipcRenderer.on('setShowFileTabs', handleSetShowFileTabs);
     ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
     ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
-    
+    ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
-
-    return () => {
-      ipcRenderer.off('requestData', handleRequestedData);
-      ipcRenderer.off('updateFiles', handleUpdateFiles);
-      ipcRenderer.off('updateSorting', handleUpdateSorting);
-      ipcRenderer.off('setIsSearchOpen', handleSetIsSearchOpen);
-      ipcRenderer.off('setIsNavigationOpen', handleSetIsNavigationOpen);
-      ipcRenderer.off('setShouldUseDarkColors', handleSetShouldUseDarkColors);
-      ipcRenderer.off('setShowFileTabs', handleSetShowFileTabs);
-      ipcRenderer.off('setIsDrawerOpen', handleSetIsDrawerOpen);
-      ipcRenderer.off('setIsSettingsOpen', handleSetIsSettingsOpen);
-
+    return () => {      
+      ipcRenderer.removeListener('requestData', handleRequestedData);
+      ipcRenderer.removeListener('updateFiles', handleUpdateFiles);
+      ipcRenderer.removeListener('updateSorting', handleUpdateSorting);
+      ipcRenderer.removeListener('setIsSearchOpen', handleSetIsSearchOpen);
+      ipcRenderer.removeListener('setIsNavigationOpen', handleSetIsNavigationOpen);
+      ipcRenderer.removeListener('setShouldUseDarkColors', handleSetShouldUseDarkColors);
+      ipcRenderer.removeListener('setShowFileTabs', handleSetShowFileTabs);
+      ipcRenderer.removeListener('setIsDrawerOpen', handleSetIsDrawerOpen);
+      ipcRenderer.removeListener('setIsSettingsOpen', handleSetIsSettingsOpen);
+      ipcRenderer.removeListener('writeTodoToFile', handleWriteTodoToFile);
       window.removeEventListener('drop', handleDrop);
       window.removeEventListener('dragover', handleDragOver);
     };    
@@ -186,9 +196,7 @@ const App = () => {
       <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
         <CssBaseline />
         <Box
-            className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${
-              shouldUseDarkColors ? 'darkTheme' : 'lightTheme'
-            }`}  
+            className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}  
           >
           <NavigationComponent
             isDrawerOpen={isDrawerOpen}
@@ -198,10 +206,8 @@ const App = () => {
             headers={headers}
             isNavigationOpen={isNavigationOpen}
             setIsNavigationOpen={setIsNavigationOpen}
-            colorTheme={colorTheme}
-            showFileTabs={showFileTabs}
-            isSettingsOpen={isSettingsOpen}
             setIsSettingsOpen={setIsSettingsOpen}
+            setTodoObject={setTodoObject}
           />
           {files?.length > 0 && (
             <>
@@ -212,13 +218,15 @@ const App = () => {
                 filters={filters}
                 sorting={sorting}
                 setSorting={setSorting}
+                attributeMapping={attributeMapping}
               />
             </>
           )}
           <Box className="flexItems">
             {files?.length > 0 && (
             <>
-              {!isSearchOpen && showFileTabs ? <FileTabs 
+              {!isSearchOpen && showFileTabs ? 
+              <FileTabs 
                 files={files}
                 setContextMenuPosition={setContextMenuPosition}
                 setContextMenuItems={setContextMenuItems}              
@@ -242,15 +250,12 @@ const App = () => {
               : null }
             </>
             )}
-            <TodoDataGrid 
+            <TodoDataGrid
               todoObjects={todoObjects}
               setTodoObject={setTodoObject}
               attributes={attributes}
               filters={filters}
-              setSnackBarSeverity={setSnackBarSeverity}
-              setSnackBarContent={setSnackBarContent}
               setDialogOpen={setDialogOpen}
-              setTextFieldValue={setTextFieldValue}
               contextMenuPosition={contextMenuPosition}
               setContextMenuPosition={setContextMenuPosition}
               contextMenuItems={contextMenuItems}
@@ -264,9 +269,10 @@ const App = () => {
           </Box>
         </Box>
         <TodoDialog
+          todoObject={todoObject}
+          setTodoObject={setTodoObject}
           dialogOpen={dialogOpen}
           setDialogOpen={setDialogOpen}
-          todoObject={todoObject}
           attributes={attributes}
           setSnackBarSeverity={setSnackBarSeverity}
           setSnackBarContent={setSnackBarContent}
@@ -274,6 +280,11 @@ const App = () => {
           setTextFieldValue={setTextFieldValue}
           shouldUseDarkColors={shouldUseDarkColors}
         />
+        <Settings 
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          setAttributeMapping={setAttributeMapping}
+        />        
         <ContextMenu
           contextMenuPosition={contextMenuPosition}
           setContextMenuPosition={setContextMenuPosition}
@@ -284,8 +295,8 @@ const App = () => {
         />
         <Snackbar 
           open={snackBarOpen}
-          autoHideDuration={3000}
           onClose={handleAlertClose}
+          autoHideDuration={3000}
         >
           <Alert
             severity={snackBarSeverity}
@@ -293,7 +304,7 @@ const App = () => {
             {snackBarContent}
           </Alert>
         </Snackbar>
-        <ArchiveTodos
+        <Archive
           setSnackBarSeverity={setSnackBarSeverity}
           setSnackBarContent={setSnackBarContent}
         />

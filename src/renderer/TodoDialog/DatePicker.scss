@@ -1,0 +1,17 @@
+@import "../Variables.scss";
+
+.datePicker {
+	width: 10em;
+}
+
+.MuiPickersLayout-root {
+	button {
+			font-size: 1em;
+			border: none;
+			border-radius: $radius;
+			&.MuiPickersDay-today {
+				border: inherit;		
+				background: $mid-grey;
+			}
+		}
+}

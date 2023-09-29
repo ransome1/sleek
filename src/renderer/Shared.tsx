@@ -1,4 +1,4 @@
-import { i18n } from './LanguageSelector';
+//import { i18n } from './LanguageSelector';
 
 const { ipcRenderer, store } = window.api;
 
@@ -39,17 +39,17 @@ const handleFilterSelect = (key: string, value: string | string[], filters: Reco
   }
 };
 
-const attributeMapping = {
-  t: i18n.t('shared.attributeMapping.t'),
-  due: i18n.t('shared.attributeMapping.due'),
-  projects: i18n.t('shared.attributeMapping.projects'),
-  contexts: i18n.t('shared.attributeMapping.contexts'),
-  priority: i18n.t('shared.attributeMapping.priority'),
-  rec: i18n.t('shared.attributeMapping.rec'),
-  pm: i18n.t('shared.attributeMapping.pm'),
-  created: i18n.t('shared.attributeMapping.created'),
-  completed: i18n.t('shared.attributeMapping.completed'),
-};
+const translatedAttributes = (t) => ({
+  t: t('shared.attributeMapping.t'),
+  due: t('shared.attributeMapping.due'),
+  projects: t('shared.attributeMapping.projects'),
+  contexts: t('shared.attributeMapping.contexts'),
+  priority: t('shared.attributeMapping.priority'),
+  rec: t('shared.attributeMapping.rec'),
+  pm: t('shared.attributeMapping.pm'),
+  created: t('shared.attributeMapping.created'),
+  completed: t('shared.attributeMapping.completed'),
+});
 
 const handleSettingChange = (name: keyof typeof settings, setSettings: React.Dispatch<React.SetStateAction<any>>) => (event: React.ChangeEvent<any>) => {
   try {
@@ -73,4 +73,16 @@ const handleSettingChange = (name: keyof typeof settings, setSettings: React.Dis
   }
 };
 
-export { handleFilterSelect, attributeMapping, handleSettingChange };
+// const translatedAttributes = (t) => ({
+//   t: t('shared.attributeMapping.t'),
+//   due: t('shared.attributeMapping.due'),
+//   projects: t('shared.attributeMapping.projects'),
+//   contexts: t('shared.attributeMapping.contexts'),
+//   priority: t('shared.attributeMapping.priority'),
+//   rec: t('shared.attributeMapping.rec'),
+//   pm: t('shared.attributeMapping.pm'),
+//   created: t('shared.attributeMapping.created'),
+//   completed: t('shared.attributeMapping.completed'),
+// });
+
+export { handleFilterSelect, translatedAttributes, handleSettingChange };

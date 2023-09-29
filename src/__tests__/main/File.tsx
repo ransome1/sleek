@@ -1,5 +1,5 @@
 import { configStorage } from '../../main/config';
-import { addFile, removeFile, setFile } from '../../main/modules/File';
+import { addFile, removeFile, setFile } from '../../main/modules/File/File';
 
 jest.mock('../../main/config', () => ({
   configStorage: {
@@ -12,7 +12,7 @@ jest.mock('../../main/config', () => ({
   },
 }));
 
-jest.mock('../../main/modules/FileWatcher', () => jest.fn());
+jest.mock('../../main/modules/File/Watcher', () => jest.fn());
 
 describe('File functions', () => {
   beforeEach(() => {

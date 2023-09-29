@@ -1,0 +1,116 @@
+@import "../Variables.scss";
+
+#Attributes {
+	padding: 0 1em;
+	margin: 0;
+	overflow-y: scroll;
+	.placeholder {
+		padding: 2em 0;
+		opacity: 0.5;
+		text-align: center;
+		svg {
+			font-size: 2.5em;
+			margin-bottom: 0.5em;
+		}
+	}
+	h3 {
+		font-family: 'FreeSansBold';
+		padding: 0;
+		margin: 0;
+	}
+	.MuiAccordion-root {
+		padding: 0;
+		.Mui-expanded {
+			margin: 1em 0;
+		}
+		.MuiAccordionDetails-root {
+			padding: 0.5em 0;
+		}
+		.MuiAccordionSummary-root {
+			height: 3em;
+			min-height: 3em;
+			padding: 0;
+			margin: 0;
+			&.Mui-expanded {
+				min-height: auto;
+			}
+		}
+		.MuiBox-root {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 5px;
+		}
+		&:before {
+			display: none;
+		}
+		&.Mui-expanded {
+			margin: 0;
+		}
+	}
+	.filter {
+		position: relative;
+		.overlay {
+			width: 100%;
+			height: 100%;
+			display: none;
+			justify-content: center;
+			align-items: center;
+			line-height: 2.6em;
+			border-radius: $radius;
+			position: absolute;
+			z-index: 5;
+			top: 0;
+			left: 0;
+			text-align: center;
+			background-color: rgba(255, 255, 255, 0.5);
+			cursor: pointer;
+		}
+		.MuiBadge-badge {
+			z-index: 10;
+			font-family: 'FreeSansBold';
+		}
+		button:disabled {
+			color: $dark-grey;
+			background: $mid-grey;
+			filter: opacity(50%) grayscale(100%);
+		}
+		&.filter:hover,
+		&.filter.excluded {
+			.overlay {
+				display: flex;
+				color: $darker-grey;
+			}
+		}
+	}
+	[data-todotxt-attribute="priority"] {
+		button {
+			min-width: 1.75em;
+			font-size: 1.25em;
+			font-family: 'FreeSansBold';
+			padding: 0.1em 0.65em;
+		}
+	}
+    &::-webkit-scrollbar-thumb:window-inactive,
+    &::-webkit-scrollbar-thumb {
+      background: $mid-grey;
+      border-radius: 5px;
+    }	
+}
+
+.darkTheme {
+	#Attributes {
+	    &::-webkit-scrollbar-thumb:window-inactive,
+	    &::-webkit-scrollbar-thumb {
+	      background: $dark-grey;
+	    }
+	    .filter {
+	    	button:disabled {
+					color: $mid-grey;
+					background: $dark-grey;
+				}
+				.overlay {
+					background: rgba(0, 0, 0, 0.35);
+				}
+	    }
+	}
+}

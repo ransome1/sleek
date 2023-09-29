@@ -8,10 +8,10 @@ import fs from 'fs';
 import { configStorage } from './config';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import createMenu from './menu';
+import createMenu from './modules/Menu';
 import { resolveHtmlPath, getAssetPath, File } from './util';
-import createFileWatcher from './modules/FileWatcher';
-import { createTray } from './tray';
+import createFileWatcher from './modules/File/Watcher';
+import { createTray } from './modules/Tray';
 import './modules/Ipc';
 
 const files: File[] = (configStorage.get('files') as File[]) || [];
@@ -42,6 +42,7 @@ const handleResize = () => {
   if (mainWindow) {
     const { width, height } = mainWindow.getBounds();
     configStorage.set('windowDimensions', { width, height });
+    configStorage.set('windowMaximized', false);
   }  
 }
 
@@ -49,6 +50,7 @@ const handleMove = () => {
   if (mainWindow) {
     const { x, y } = mainWindow.getBounds();
     configStorage.set('windowPosition', { x, y });
+    configStorage.set('windowMaximized', false);
   }  
 }
 
@@ -98,7 +100,7 @@ const createWindow = async() => {
       nodeIntegration: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
+        : path.join(__dirname, '../../.erb/dll/preload.ts'),
     },
   });
 

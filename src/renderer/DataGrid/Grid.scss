@@ -1,0 +1,26 @@
+@import "../Variables.scss";
+
+#dataGrid {
+  padding: 1em;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  flex-grow: 1;
+  .MuiDivider-root:first-child {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb:window-inactive,
+  &::-webkit-scrollbar-thumb {
+    background: $light-grey;
+    border-radius: 5px;
+  }
+}
+
+.darkTheme {
+  #dataGrid {
+    &::-webkit-scrollbar-thumb:window-inactive,
+    &::-webkit-scrollbar-thumb {
+      background: $dark-grey;
+      border-radius: 5px;
+    }
+  }  
+}

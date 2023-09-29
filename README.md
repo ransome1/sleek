@@ -10,7 +10,7 @@ sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripp
 
 All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allows for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
-sleek is available for Windows, macOS and Linux, and in several languages. https://github.com/ransome1/sleek/wiki/Features.
+sleek is available for Windows, macOS and Linux, and in several languages.
 
 ### Sponsor sleek
 Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can help covering these by [sponsoring the project](https://github.com/sponsors/ransome1).

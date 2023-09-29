@@ -1,5 +1,5 @@
 {{
-    import { addRecurrenceToDate } from "../CreateRecurringTodo.ts";
+    import { addRecurrenceToDate } from "../TodoObject/CreateRecurringTodo.tsx";
 }}
 
 filterQuery
