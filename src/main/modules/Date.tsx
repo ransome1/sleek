@@ -24,7 +24,7 @@ function processDateWithSugar(string: string, key: string, type: string): DateAt
 
   while (index < array.length) {
     if (array[index]) combinedValue += array[index] + ' ';
-    const sugarDate = Sugar.Date.create(combinedValue);
+    const sugarDate = Sugar.Date.create(combinedValue, {future: true});
     if (Sugar.Date.isValid(sugarDate) && type === 'absolute') {
       lastMatch = {
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
