@@ -74,4 +74,4 @@ function createTray() {
   }
 }
 
-export { createTray };
+export default createTray;

@@ -11,8 +11,9 @@ import log from 'electron-log';
 import createMenu from './modules/Menu';
 import { resolveHtmlPath, getAssetPath, File } from './util';
 import createFileWatcher from './modules/File/Watcher';
-import { createTray } from './modules/Tray';
+import createTray from './modules/Tray';
 import './modules/Ipc';
+import handleTheme from './modules/Theme';
 
 const files: File[] = (configStorage.get('files') as File[]) || [];
 const windowMaximized: boolean = configStorage.get('windowMaximized');
@@ -116,8 +117,7 @@ const createWindow = async() => {
     });
   }
 
-  const colorTheme = configStorage.get('colorTheme');
-  if(colorTheme) nativeTheme.themeSource = colorTheme;
+  handleTheme();
 
   handleWindowSizeAndPosition();
   

@@ -7,6 +7,7 @@ import createMenu from './modules/Menu';
 import { createTray } from './modules/Tray';
 import { Sorting, File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
+import handleTheme from './modules/Theme';
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
 if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
@@ -145,18 +146,6 @@ configStorage.onDidChange('tray', () => {
   });
 });
 
-nativeTheme.on('updated', () => {
-  const shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
-  
-  configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
-  
-  mainWindow!.webContents.send('setShouldUseDarkColors', shouldUseDarkColors);
-
-  createTray().then(result => {
-    console.log('config.ts:', result);
-  }).catch(error => {
-    console.error('config.ts:', error);
-  });
-});
+nativeTheme.on('updated', handleTheme);
 
 export { configStorage, filterStorage };

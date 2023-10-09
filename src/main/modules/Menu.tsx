@@ -215,12 +215,6 @@ function createMenu(files: File[]) {
             },
           },
           {
-            label: 'Changelog',
-            click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/blob/master/CHANGELOG.md');
-            },
-          },
-          {
             label: 'sleek on GitHub',
             click: () => {
               shell.openExternal('https://github.com/ransome1/sleek/');
