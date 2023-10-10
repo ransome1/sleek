@@ -41,7 +41,7 @@ const handleClosed = () => {
 
 const handleResize = () => {
   if (mainWindow) {
-    const { width, height } = mainWindow.getBounds();
+    const { width, height } = mainWindow?.getBounds();
     configStorage.set('windowDimensions', { width, height });
     configStorage.set('windowMaximized', false);
   }  
@@ -49,7 +49,7 @@ const handleResize = () => {
 
 const handleMove = () => {
   if (mainWindow) {
-    const { x, y } = mainWindow.getBounds();
+    const { x, y } = mainWindow?.getBounds();
     configStorage.set('windowPosition', { x, y });
     configStorage.set('windowMaximized', false);
   }  
@@ -73,7 +73,7 @@ const handleShow = () => {
 const handleWindowSizeAndPosition = () => {
   const isMaximized = configStorage.get('windowMaximized');
   if(isMaximized) {
-    mainWindow.maximize();
+    mainWindow?.maximize();
     return false;
   }
 
@@ -81,12 +81,12 @@ const handleWindowSizeAndPosition = () => {
 
   if (windowDimensions) {
     const { width, height } = windowDimensions;
-    mainWindow.setSize(width, height);
+    mainWindow?.setSize(width, height);
 
     const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
     if (windowPosition) {
       const { x, y } = windowPosition;
-      mainWindow.setPosition(x, y);
+      mainWindow?.setPosition(x, y);
     }
   }
 };
@@ -105,14 +105,14 @@ const createWindow = async() => {
     },
   });
 
-  const customStylesPath = configStorage.get('customStylesPath');
+  const customStylesPath: string = configStorage.get('customStylesPath');
   if(customStylesPath) {
-    fs.readFile(customStylesPath, 'utf8', (err, data) => {
-      if (!err) {
-        mainWindow.webContents.insertCSS(data);
+    fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
+      if (!error) {
+        mainWindow?.webContents.insertCSS(data);
         console.error('Styles injected found in CSS file:', customStylesPath);
       } else {
-        console.error('Error reading the CSS file:', err);
+        console.error('Error reading the CSS file:', error);
       }
     });
   }
@@ -121,7 +121,7 @@ const createWindow = async() => {
 
   handleWindowSizeAndPosition();
   
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  mainWindow?.loadURL(resolveHtmlPath('index.html'));
   mainWindow
     .on('ready-to-show', handleReadyToShow)
     .on('resize', handleResize)
@@ -136,11 +136,11 @@ const createWindow = async() => {
 const handleReadyToShow = async () => {
   // if (process.env.START_MINIMIZED) {
   //   if (mainWindow) {
-  //     mainWindow.minimize();
+  //     mainWindow?.minimize();
   //   }
   // } else {
   //   if (mainWindow) {
-  //     mainWindow.show();
+  //     mainWindow?.show();
   //   }
   // }
   try {

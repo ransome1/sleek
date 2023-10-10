@@ -109,6 +109,9 @@ export interface ConfigData {
   convertRelativeToAbsoluteDates: boolean;
   thresholdDateInTheFuture: boolean;
   dueDateInTheFuture: boolean;
+  showFileTabs: boolean;
+  colorTheme: string;
+  tray: boolean;
 }
 
 export interface RequestedData {

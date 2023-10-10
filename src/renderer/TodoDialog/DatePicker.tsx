@@ -40,13 +40,18 @@ const DatePickerComponent: React.FC<DatePicker> = ({
 
   const handleChange = (updatedDate: dayjs.Dayjs | null) => {
     if (!updatedDate || !dayjs(updatedDate).isValid()) return;
+
     const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
-    
-    const todoObject = new Item(textFieldValue);
-    todoObject.setExtension(type, formattedDate);
-    
+
+    const updatedTextFieldValue = todoObject?.dueString
+      ? textFieldValue.replace(` ${type}:${todoObject.dueString}`, '')
+      : textFieldValue;
+
+    const updatedTodoObject = new Item(updatedTextFieldValue);
+    updatedTodoObject.setExtension(type, formattedDate);
+
     setDate(updatedDate);
-    setTextFieldValue(todoObject.toString());
+    setTextFieldValue(updatedTodoObject.toString());
   };
 
   return (

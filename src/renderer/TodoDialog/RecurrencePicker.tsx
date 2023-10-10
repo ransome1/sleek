@@ -133,7 +133,7 @@ const RecurrencePicker: React.FC<RecurrencePicker> = ({
             <FormControl>
               <RadioGroup
                 aria-labelledby="recurrencePickerRadioGroup"
-                value={interval || 'd'}
+                value={interval || null}
                 onChange={handleIntervalChange}
               >
                 <FormControlLabel value="d" control={<Radio />} label={t('todoDialog.recurrencePicker.day')} />

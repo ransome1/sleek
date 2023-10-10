@@ -21,7 +21,7 @@ import 'dayjs/locale/zh';
 const userLocale = navigator.language || navigator.userLanguage;
 const ipcRenderer = window.api.ipcRenderer;
 
-const DatePickerInline = ({ 
+const DatePickerInline: React.FC<DatePicker> = ({
   type,
   todoObject,
   date,
@@ -31,10 +31,19 @@ const DatePickerInline = ({
   const datePickerRef = useRef(null);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
 
-  const handleChange = (date) => {
-    const updatedDate = dayjs(date).format('YYYY-MM-DD');
-    const updatedTodoObject = new Item(todoObject.string || '');
-    updatedTodoObject.setExtension(type, updatedDate);
+  const handleChange = (updatedDate: dayjs.Dayjs | null) => {
+    if (!updatedDate || !dayjs(updatedDate).isValid()) return;
+
+    const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
+
+    if (todoObject?.dueString) {
+      const stringToReplace = ` ${type}:${todoObject.dueString}`;
+      todoObject.string = todoObject.string.replace(stringToReplace, '');
+    }
+
+    const updatedTodoObject = new Item(todoObject.string);
+    updatedTodoObject.setExtension(type, formattedDate);
+
     setOpen(false);
     ipcRenderer.send('writeTodoToFile', todoObject.id, updatedTodoObject.toString());
   };

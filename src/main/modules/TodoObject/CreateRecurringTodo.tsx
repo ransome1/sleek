@@ -1,6 +1,7 @@
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 import { writeTodoObjectToFile } from '../File/Write';
+import { configStorage } from '../../config';
 
 enum RecurrenceInterval {
   Daily = 'd',
@@ -45,6 +46,12 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
   try {
     const recurringTodoObject = new Item(string);
     const completedDate = recurringTodoObject.completed();
+    const appendCreationDate = configStorage.get('appendCreationDate');
+
+    if(!appendCreationDate) {
+      recurringTodoObject.setCreated(null);
+    }
+
     if (recurrence && completedDate) {
       const strictRecurrence: boolean = recurrence.startsWith('+');
       const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
@@ -61,6 +68,7 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       if(oldThresholdDate) recurringTodoObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
       recurringTodoObject.setComplete(false);
       recurringTodoObject.setCompleted(null);
+
       await writeTodoObjectToFile(-1, recurringTodoObject.toString(), false);
       return 'Recurring todo created';
     }

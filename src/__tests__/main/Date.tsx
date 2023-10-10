@@ -1,9 +1,14 @@
 import { extractSpeakingDates, replaceSpeakingDatesWithAbsoluteDates } from '../../main/modules/Date';
-import { writeTodoObjectToFile } from '../../main/modules/File/Write';
 import dayjs from 'dayjs';
 
 jest.mock('../../main/modules/File/Write', () => ({
   writeTodoObjectToFile: jest.fn(),
+}));
+
+jest.mock('../../main/config', () => ({
+  configStorage: {
+    get: jest.fn(),
+  }
 }));
 
 const currentDate = dayjs();

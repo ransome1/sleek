@@ -21,12 +21,15 @@ async function extractTodosFromFile(filePath: string, complete: boolean): Promis
   }
 }
 
-async function archiveTodos(event: any): Promise<void> {
+async function archiveTodos(callback: (message: string | Error) => void): Promise<void> {
   try {
     const files = configStorage.get('files');
     const activeFile = getActiveFile(files);
 
-    if (!activeFile) return;
+    if (!activeFile) {
+      callback(new Error('No active file found'));
+      return;
+    }
 
     const todoFilePath = activeFile.todoFilePath;
     const doneFilePath = activeFile.doneFilePath;
@@ -43,10 +46,9 @@ async function archiveTodos(event: any): Promise<void> {
     await writeStringToFile(stringDoneFile, doneFilePath);
     await writeStringToFile(stringTodoFile, todoFilePath);
 
-    event.reply('archiveTodos', `Todos successfully archived to: ${doneFilePath}`);
-
-  } catch(error) {
-    event.reply('archiveTodos', error);
+    callback(`Todos successfully archived to: ${doneFilePath}`);
+  } catch (error) {
+    callback(error as Error);
     console.error(error);
   }
 }

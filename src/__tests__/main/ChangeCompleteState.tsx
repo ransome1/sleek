@@ -16,12 +16,12 @@ describe('Marking todo as complete and vice versa', () => {
 
 	test('Unfinished todo is being marked as complete', async () => {
 		const updatedTodoObject = await changeCompleteState('(C) +testProject5 test0 @testContext due:2023-01-02', true);
-		expect(updatedTodoObject?.toString()).toEqual('x (C) ' + date + ' ' + date + ' +testProject5 test0 @testContext due:2023-01-02');
+		expect(updatedTodoObject?.toString()).toEqual('x ' + date + ' ' + date + ' +testProject5 test0 @testContext due:2023-01-02 pri:C');
 	});
 
 	test('Finished todo is being marked as incomplete', async () => {
-		const updatedTodoObject = await changeCompleteState('x (C) 2023-07-06 2023-07-01 +testProject2 test1 @testContext due:2023-12-12', false);
-		expect(updatedTodoObject?.toString()).toEqual('(C) 2023-07-01 +testProject2 test1 @testContext due:2023-12-12');
+		const updatedTodoObject = await changeCompleteState('x 2023-07-06 2023-07-01 +testProject2 test1 @testContext due:2023-12-12 pri:C', false);
+		expect(updatedTodoObject?.toString()).toEqual('(C) 2023-07-01 +testProject2 test1 @testContext due:2023-12-12 pri:C');
 	});
 
 });
