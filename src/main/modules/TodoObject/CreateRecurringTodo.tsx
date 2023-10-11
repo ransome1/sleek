@@ -52,6 +52,12 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       recurringTodoObject.setCreated(null);
     }
 
+    const previousPriorityIndex = recurringTodoObject.extensions().findIndex((extension) => extension.key === 'pri');
+    const previousPriorityString = recurringTodoObject.extensions()[previousPriorityIndex]?.value;
+    if(previousPriorityString && previousPriorityString !== 'null') {
+      recurringTodoObject.setPriority(previousPriorityString)
+    }
+
     if (recurrence && completedDate) {
       const strictRecurrence: boolean = recurrence.startsWith('+');
       const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
