@@ -91,5 +91,11 @@ describe('Create recurring todos', () => {
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
     expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Line 1 rec:+1d t:2023-09-20 due:${dateTomorrowString}`);
   });  
-  
+
+  test('Should add a new todo and set the priority to the value of the pri extension', async () => {
+    const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:1d pri:A`, '1d');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
+    expect(fileContent.split('\n').pop()).toEqual(`(A) ${dateTodayString} Line 1 rec:1d due:${dateTomorrowString} pri:A`);
+  });
+
 });
