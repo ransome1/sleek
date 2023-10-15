@@ -1,6 +1,7 @@
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 import { writeTodoObjectToFile } from '../File/Write';
+import restorePreviousPriority from './RestorePreviousPriority';
 import { configStorage } from '../../config';
 
 enum RecurrenceInterval {
@@ -44,25 +45,21 @@ const addRecurrenceToDate = (date: Date, recurrence: string): Date => {
 
 const createRecurringTodo = async (string: string, recurrence: string): Promise<string> => {
   try {
-    const recurringTodoObject = new Item(string);
-    const completedDate = recurringTodoObject.completed();
+    const JsTodoTxtObject = new Item(string);
+    const completedDate = JsTodoTxtObject.completed();
     const appendCreationDate = configStorage.get('appendCreationDate');
 
     if(!appendCreationDate) {
-      recurringTodoObject.setCreated(null);
+      JsTodoTxtObject.setCreated(null);
     }
 
-    const previousPriorityIndex = recurringTodoObject.extensions().findIndex((extension) => extension.key === 'pri');
-    const previousPriorityString = recurringTodoObject.extensions()[previousPriorityIndex]?.value;
-    if(previousPriorityString && previousPriorityString !== 'null') {
-      recurringTodoObject.setPriority(previousPriorityString)
-    }
+    restorePreviousPriority(JsTodoTxtObject);
 
     if (recurrence && completedDate) {
       const strictRecurrence: boolean = recurrence.startsWith('+');
       const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
-      const oldDueDate: any = recurringTodoObject?.extensions()?.find((item) => item.key === 'due')?.value;
-      const oldThresholdDate: any = recurringTodoObject?.extensions()?.find((item) => item.key === 't')?.value;
+      const oldDueDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 'due')?.value;
+      const oldThresholdDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 't')?.value;
       const daysBetween = dayjs(oldDueDate, 'YYYY-MM-DD').diff(oldThresholdDate, 'day');
       const newDueDate = strictRecurrence
         ? addRecurrenceToDate(dayjs(oldDueDate).toDate(), recurrenceInterval)
@@ -70,12 +67,12 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       const newThresholdDate = strictRecurrence
         ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
         : dayjs(newDueDate).subtract(daysBetween, 'day').toDate();
-      if(completedDate) recurringTodoObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
-      if(oldThresholdDate) recurringTodoObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
-      recurringTodoObject.setComplete(false);
-      recurringTodoObject.setCompleted(null);
+      if(completedDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
+      if(oldThresholdDate) JsTodoTxtObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
+      JsTodoTxtObject.setComplete(false);
+      JsTodoTxtObject.setCompleted(null);
 
-      await writeTodoObjectToFile(-1, recurringTodoObject.toString(), false);
+      await writeTodoObjectToFile(-1, JsTodoTxtObject.toString(), false);
       return 'Recurring todo created';
     }
     return 'No recurring todo created';

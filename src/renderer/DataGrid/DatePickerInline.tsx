@@ -5,21 +5,8 @@ import { Button, Chip, Box } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { handleFilterSelect } from '../Shared';
 import dayjs from 'dayjs';
-import 'dayjs/locale/en';
-import 'dayjs/locale/de';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/it';
-import 'dayjs/locale/cs';
-import 'dayjs/locale/es';
-import 'dayjs/locale/hu';
-import 'dayjs/locale/pl';
-import 'dayjs/locale/pt';
-import 'dayjs/locale/ru';
-import 'dayjs/locale/tr';
-import 'dayjs/locale/zh';
 
-const userLocale = navigator.language || navigator.userLanguage;
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer, store } = window.api;
 
 const DatePickerInline: React.FC<DatePicker> = ({
   type,
@@ -41,11 +28,11 @@ const DatePickerInline: React.FC<DatePicker> = ({
       todoObject.string = todoObject.string.replace(stringToReplace, '');
     }
 
-    const updatedTodoObject = new Item(todoObject.string);
-    updatedTodoObject.setExtension(type, formattedDate);
+    const JsTodoTxtObject = new Item(todoObject.string);
+    JsTodoTxtObject.setExtension(type, formattedDate);
 
     setOpen(false);
-    ipcRenderer.send('writeTodoToFile', todoObject.id, updatedTodoObject.toString());
+    ipcRenderer.send('writeTodoToFile', todoObject.id, JsTodoTxtObject.toString());
   };
 
   const DatePickerInline = ({ date, ...props }) => {
@@ -76,8 +63,10 @@ const DatePickerInline: React.FC<DatePicker> = ({
     );
   };
 
+  const selectedLanguage = store.get('language');
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={userLocale}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={selectedLanguage}>
       <DatePickerInline
         onChange={handleChange}
         date={date}

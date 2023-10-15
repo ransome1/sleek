@@ -12,8 +12,8 @@ function createTodoObjects(fileContent: string): TodoObject[] {
   const todoObjects: TodoObject[] = lines
     .map((line, i) => {
       try {
-        const item = new Item(line);
-        const body = item.body();
+        const JsTodoTxtObject = new Item(line);
+        const body = JsTodoTxtObject.body();
         if (!body) {
           return null;
         }
@@ -24,12 +24,12 @@ function createTodoObjects(fileContent: string): TodoObject[] {
         const t = speakingDates['t:'] ? speakingDates['t:'].date : null;
         const tString = speakingDates['t:'] ? speakingDates['t:'].string : null;
         
-        const extensions = item.extensions();
+        const extensions = JsTodoTxtObject.extensions();
         const hidden = extensions.find((extension) => extension.key === 'h')?.value === '1' ? true : false;
         const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;
         const rec = extensions.find((extension) => extension.key === 'rec')?.value || null;
-        const creation = dayjs(item.created()).isValid() ? dayjs(item.created()).format('YYYY-MM-DD') : null;
-        const completed = dayjs(item.completed()).isValid() ? dayjs(item.completed()).format('YYYY-MM-DD') : null;
+        const creation = dayjs(JsTodoTxtObject.created()).isValid() ? dayjs(JsTodoTxtObject.created()).format('YYYY-MM-DD') : null;
+        const completed = dayjs(JsTodoTxtObject.completed()).isValid() ? dayjs(JsTodoTxtObject.completed()).format('YYYY-MM-DD') : null;
 
         if(due) handleNotification(i, due, body);
 
@@ -37,11 +37,11 @@ function createTodoObjects(fileContent: string): TodoObject[] {
           id: i,
           body,
           created: creation,
-          complete: item.complete(),
+          complete: JsTodoTxtObject.complete(),
           completed: completed,
-          priority: item.priority(),
-          contexts: item.contexts(),
-          projects: item.projects(),
+          priority: JsTodoTxtObject.priority(),
+          contexts: JsTodoTxtObject.contexts(),
+          projects: JsTodoTxtObject.projects(),
           due,
           dueString,
           t,
@@ -49,7 +49,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
           rec,
           hidden,
           pm,
-          string: item.toString(),
+          string: JsTodoTxtObject.toString(),
         };
 
         return todoObject as TodoObject;

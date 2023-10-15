@@ -8,6 +8,8 @@ import {
   Modal,
   Select,
   Switch,
+  Slider,
+  Typography
 } from '@mui/material';
 import { withTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';
@@ -19,12 +21,16 @@ const store = window.api.store;
 interface Settings extends WithTranslation {
   isOpen: boolean;
   onClose: () => void;
+  zoom: number;
+  setZoom: function;
 }
 
 const Settings: React.FC<Settings> = ({
   isOpen,
   onClose,
   setAttributeMapping,
+  zoom,
+  setZoom,
   t,
 }) => {
   const [settings, setSettings] = useState({
@@ -45,7 +51,7 @@ const Settings: React.FC<Settings> = ({
         colorTheme: selectedValue,
       }));
     }
-  };  
+  };
 
   return (
     <Modal open={isOpen} onClose={onClose} aria-labelledby='settings-modal-title'>
@@ -66,6 +72,19 @@ const Settings: React.FC<Settings> = ({
             />
           )
         ))}
+
+        <FormControl sx={{ width: 300, clear: 'both', }}>
+          Zoom
+          <Slider
+            id="zoomSlider"
+            value={zoom}
+            step={5}
+            valueLabelDisplay="on"
+            min={75} max={125}
+            onChange={(event) => setZoom(event.target.value)}
+          />
+        </FormControl>
+
         <FormControl>
           <InputLabel>{t('settings.colorTheme')}</InputLabel>
           <Select

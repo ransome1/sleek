@@ -5,21 +5,7 @@ import { i18n } from '../LanguageSelector';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import 'dayjs/locale/en';
-import 'dayjs/locale/de';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/it';
-import 'dayjs/locale/cs';
-import 'dayjs/locale/es';
-import 'dayjs/locale/hu';
-import 'dayjs/locale/pl';
-import 'dayjs/locale/pt';
-import 'dayjs/locale/ru';
-import 'dayjs/locale/tr';
-import 'dayjs/locale/zh';
 import './DatePicker.scss';
-
-const userLocale = navigator.language || navigator.userLanguage;
 
 interface DatePicker {
   todoObject: Item | null;
@@ -27,6 +13,8 @@ interface DatePicker {
   setTextFieldValue: (value: string) => void;
   textFieldValue: string;
 }
+
+const { store } = window.api;
 
 const DatePickerComponent: React.FC<DatePicker> = ({
   todoObject,
@@ -47,15 +35,17 @@ const DatePickerComponent: React.FC<DatePicker> = ({
       ? textFieldValue.replace(` ${type}:${todoObject.dueString}`, '')
       : textFieldValue;
 
-    const updatedTodoObject = new Item(updatedTextFieldValue);
-    updatedTodoObject.setExtension(type, formattedDate);
+    const JsTodoTxtObject = new Item(updatedTextFieldValue);
+    JsTodoTxtObject.setExtension(type, formattedDate);
 
     setDate(updatedDate);
-    setTextFieldValue(updatedTodoObject.toString());
+    setTextFieldValue(JsTodoTxtObject.toString());
   };
 
+  const selectedLanguage = store.get('language');
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={userLocale}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={selectedLanguage}>
       <DatePicker
         className="datePicker"
         format="YYYY-MM-DD"

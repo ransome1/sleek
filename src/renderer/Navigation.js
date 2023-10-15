@@ -17,8 +17,6 @@ const NavigationComponent = ({
   setDialogOpen,
   files,
   setIsNavigationOpen,
-  colorTheme,
-  showFileTabs,
   setAttributeMapping,
 }) => {
 

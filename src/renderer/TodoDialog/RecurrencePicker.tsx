@@ -35,10 +35,10 @@ const RecurrencePicker: React.FC<RecurrencePicker> = ({
     // TODO: solves a problem but creates another one: If a task is empty, no recurrence can be added
     if(recurrence === 0 || !textFieldValue) return false;
 
-    const todoObjectCopy = new Item(textFieldValue || '');
-    todoObjectCopy.setExtension('rec', recurrence);
+    const JsTodoTxtObject = new Item(textFieldValue || '');
+    JsTodoTxtObject.setExtension('rec', recurrence);
 
-    setTextFieldValue(todoObjectCopy.toString());
+    setTextFieldValue(JsTodoTxtObject.toString());
     
     setRecurrence(recurrence);
     

@@ -5,7 +5,7 @@ import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-du
 import './PomodoroPicker.scss';
 
 interface PomodoroPicker {
-  todoObject: object | null;
+  JsTodoTxtObject: object | null;
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   textFieldValue: string;
 }
@@ -19,9 +19,9 @@ const PomodoroPicker: PomodoroPicker = ({
 
   const handleChange = (event) => {
     const updatedPomodoro = event.target.value;
-    const todoObject = new Item(textFieldValue);
-    todoObject.setExtension('pm', updatedPomodoro);
-    setTextFieldValue(todoObject.toString());
+    const JsTodoTxtObject = new Item(textFieldValue);
+    JsTodoTxtObject.setExtension('pm', updatedPomodoro);
+    setTextFieldValue(JsTodoTxtObject.toString());
     setPomodoro(updatedPomodoro);
   };
 

@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { getActiveFile } from './File/Active';
-import { mainWindow } from '../main';
 import { configStorage, filterStorage } from '../config';
 import { applyFilters } from './Filters';
 import { updateAttributes, attributes } from './Attributes';

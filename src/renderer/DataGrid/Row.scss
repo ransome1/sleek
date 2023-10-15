@@ -21,6 +21,7 @@
       padding: 0 0.5em;
     }
     .MuiChip-root {
+      font-size: 1em;
       width: auto;
       height: 100%;
       background: $dark-grey;
@@ -31,6 +32,7 @@
       color: white;
       margin: 0;
       .MuiChip-label {
+        font-size: 1em;
         padding: 0;
         margin: 0;
         

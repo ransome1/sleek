@@ -54,6 +54,7 @@ const defaultConfigData = {
   isNavigationOpen: true,
   customStylesPath: customStylesPath,
   tray: false,
+  zoom: 100,
 };
 
 const configPath = path.join(userDataDirectory, 'config.json');

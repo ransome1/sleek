@@ -1,8 +1,6 @@
-//import { i18n } from './LanguageSelector';
-
 const { ipcRenderer, store } = window.api;
 
-const handleFilterSelect = (key: string, value: string | string[], filters: Record<string, any>, isCtrlKeyPressed: boolean) => {
+export const handleFilterSelect = (key: string, value: string | string[], filters: Record<string, any>, isCtrlKeyPressed: boolean) => {
   try {
     const updatedFilters = { ...filters };
     const filterList = updatedFilters[key] || [];
@@ -39,7 +37,7 @@ const handleFilterSelect = (key: string, value: string | string[], filters: Reco
   }
 };
 
-const translatedAttributes = (t) => ({
+export const translatedAttributes = (t) => ({
   t: t('shared.attributeMapping.t'),
   due: t('shared.attributeMapping.due'),
   projects: t('shared.attributeMapping.projects'),
@@ -51,7 +49,7 @@ const translatedAttributes = (t) => ({
   completed: t('shared.attributeMapping.completed'),
 });
 
-const handleSettingChange = (name: keyof typeof settings, setSettings: React.Dispatch<React.SetStateAction<any>>) => (event: React.ChangeEvent<any>) => {
+export const handleSettingChange = (name: keyof typeof settings, setSettings: React.Dispatch<React.SetStateAction<any>>) => (event: React.ChangeEvent<any>) => {
   try {
     if (typeof event.target.checked === 'boolean') {
       const checked = event.target.checked;
@@ -60,8 +58,8 @@ const handleSettingChange = (name: keyof typeof settings, setSettings: React.Dis
         ...prevSettings,
         [name]: checked,
       }));
-    } else if (typeof event.target.value === 'string') {
-      const value = event.target.value as string;
+    } else {
+      const value = event.target.value as any;
       store.set(name, value);
       setSettings((prevSettings) => ({
         ...prevSettings,
@@ -84,5 +82,3 @@ const handleSettingChange = (name: keyof typeof settings, setSettings: React.Dis
 //   created: t('shared.attributeMapping.created'),
 //   completed: t('shared.attributeMapping.completed'),
 // });
-
-export { handleFilterSelect, translatedAttributes, handleSettingChange };

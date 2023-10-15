@@ -2,6 +2,7 @@ import { IpcMainEvent } from 'electron';
 import fs from 'fs/promises';
 import path from 'path';
 import { getActiveFile } from './Active';
+import { mainWindow } from '../../main';
 import { configStorage } from '../../config';
 import { writeStringToFile } from './Write';
 import { createTodoObjects } from '../TodoObject/CreateTodoObjects';
@@ -21,13 +22,13 @@ async function extractTodosFromFile(filePath: string, complete: boolean): Promis
   }
 }
 
-async function archiveTodos(callback: (message: string | Error) => void): Promise<void> {
+async function archiveTodos(): Promise<void> {
   try {
     const files = configStorage.get('files');
     const activeFile = getActiveFile(files);
 
     if (!activeFile) {
-      callback(new Error('No active file found'));
+      mainWindow!.webContents.send('archiveTodos', new Error('No active file found'));
       return;
     }
 
@@ -46,9 +47,10 @@ async function archiveTodos(callback: (message: string | Error) => void): Promis
     await writeStringToFile(stringDoneFile, doneFilePath);
     await writeStringToFile(stringTodoFile, todoFilePath);
 
-    callback(`Todos successfully archived to: ${doneFilePath}`);
+    mainWindow!.webContents.send('archiveTodos', `Todos successfully archived to: ${doneFilePath}`);
+
   } catch (error) {
-    callback(error as Error);
+    mainWindow!.webContents.send('archiveTodos', error);
     console.error(error);
   }
 }

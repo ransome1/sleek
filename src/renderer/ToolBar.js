@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import './ToolBar.scss';
@@ -8,24 +8,27 @@ const ToolBar = ({
   setIsSearchOpen,
   searchFieldRef
 }) => {
-
-  const handleClick = (event) => {
-    setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
+  const handleClick = () => {
+    setIsSearchOpen((prevIsSearchOpen) => !prevIsSearchOpen);
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
+  const handleKeyDown = useCallback(
+    (event) => {
       const isSearchFocused = document.activeElement === searchFieldRef.current;
       if ((event.metaKey || event.ctrlKey) && event.key === 'f' && isSearchOpen && !isSearchFocused) {
         event.preventDefault();
         searchFieldRef.current.focus();
       }
-    };
+    },
+    [isSearchOpen, searchFieldRef]
+  );
+
+  useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isSearchOpen]);
+  }, [handleKeyDown]);
 
   return (
     <Box id="ToolBar" onClick={handleClick}>

@@ -5,14 +5,17 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 700px;
+  width: 44em;
   max-width: 90vw;
   max-height: 90vh;
   overflow: auto;
   border-radius: $radius;
   padding: 1em 2em 2em 2em;
+  display: flex;
+  flex-direction: column;
   .MuiFormControl-root {
-    margin: 1em 1em 0 0;
+    width: 50%;
+    margin: 1em 0 0 0;
   }
   .MuiFormControlLabel-root {
     display: block;

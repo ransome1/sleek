@@ -11,7 +11,7 @@
   &::-webkit-scrollbar-thumb:window-inactive,
   &::-webkit-scrollbar-thumb {
     background: $light-grey;
-    border-radius: 5px;
+    border-radius: 0.3em;
   }
 }
 
@@ -20,7 +20,7 @@
     &::-webkit-scrollbar-thumb:window-inactive,
     &::-webkit-scrollbar-thumb {
       background: $dark-grey;
-      border-radius: 5px;
+      border-radius: 0.3em;
     }
   }  
 }

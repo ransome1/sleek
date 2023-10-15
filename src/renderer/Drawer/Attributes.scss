@@ -38,7 +38,7 @@
 		.MuiBox-root {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 5px;
+			gap: 0.3em;
 		}
 		&:before {
 			display: none;
@@ -68,6 +68,7 @@
 		.MuiBadge-badge {
 			z-index: 10;
 			font-family: 'FreeSansBold';
+			font-size: 0.75em;
 		}
 		button:disabled {
 			color: $dark-grey;
@@ -93,7 +94,7 @@
     &::-webkit-scrollbar-thumb:window-inactive,
     &::-webkit-scrollbar-thumb {
       background: $mid-grey;
-      border-radius: 5px;
+      border-radius: 0.3em;
     }	
 }
 

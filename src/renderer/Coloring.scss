@@ -12,7 +12,6 @@
   button:hover {
     color: var(--color1);
     background: var(--color2);
-    font-family: 'FreeSansBold';
     &:focus-visible {
       outline-color: var(--color1);
     }
@@ -40,6 +39,7 @@
 *[data-todotxt-attribute="priority"] {
   --color1: white;
   button {
+
     &.Mui-disabled {
       color: white;
     }

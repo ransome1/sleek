@@ -3,10 +3,15 @@
 #TodoDialog {
   .MuiDialog-paper {
     max-width: 50em;
+    button {
+      svg {
+        font-size: 1em;
+      }
+    }
   }
   .MuiDialogContent-root {
     display: flex;
-    gap: 10px;
+    gap: 0.625em;
     flex-wrap: wrap;
     .react-autosuggest__container {
       width: 100%;

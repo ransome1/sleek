@@ -3,11 +3,11 @@ import { Button, Box } from '@mui/material';
 import DryCleaningIcon from '@mui/icons-material/DryCleaning';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from './LanguageSelector';
 import './SplashScreen.scss';
 
-interface SplashScreen {
+interface SplashScreenProps extends WithTranslation {
   screen: 'noTodosVisible' | 'noTodosAvailable' | 'noFiles' | null;
   setSearchString: (search: string) => void;
   setDialogOpen: (isOpen: boolean) => void;
@@ -16,7 +16,7 @@ interface SplashScreen {
 const ipcRenderer = window.api.ipcRenderer;
 const store = window.api.store;
 
-const SplashScreen: FC<SplashScreen> = ({
+const SplashScreen: FC<SplashScreenProps> = ({
   screen,
   setSearchString,
   setDialogOpen,

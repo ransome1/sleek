@@ -23,11 +23,11 @@ async function writeTodoObjectToFile(id: number, string: string, remove: boolean
       lines[id] = string;
     } else {
       const appendCreationDate = configStorage.get('appendCreationDate');
-      const item = new Item(string);
-      if (appendCreationDate && !item.created()) {
-        item.setCreated(new Date());
+      const JsTodoTxtObject = new Item(string);
+      if (appendCreationDate && !JsTodoTxtObject.created()) {
+        JsTodoTxtObject.setCreated(new Date());
       }
-      lines.push(item.toString());
+      lines.push(JsTodoTxtObject.toString());
     }
   }
 

@@ -5,7 +5,8 @@ const baseTheme = createTheme({
     borderRadius: "0.65em"
   },
   typography: {
-    fontFamily: 'FreeSans, sans-serif',
+    fontFamily: 'FreeSans, Helvetica, Arial, sans-serif',
+    fontSize: 'auto',
   },
   components: { 
     MuiFormLabel: {
@@ -27,9 +28,19 @@ const baseTheme = createTheme({
     },
     MuiTabs: {
       styleOverrides: {
+        root: {
+          minHeight: 'auto',
+        },
         indicator: {
           backgroundColor: '#1976d2',
           height: '0.2em',
+        },
+      },
+    },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.5em',
         },
       },
     },
@@ -51,6 +62,13 @@ const baseTheme = createTheme({
         },
       },
     },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          color: '#1976d2',
+        },
+      },
+    },    
     MuiDivider: {
       styleOverrides: {
         root: {
@@ -75,6 +93,13 @@ const baseTheme = createTheme({
       styleOverrides: {
         root: {
           padding: '0',
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          fontSize: '1em',
         },
       },
     },

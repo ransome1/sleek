@@ -37,6 +37,7 @@ const App = () => {
   const [filters, setFilters] = useState<object>({});
   const [attributes, setAttributes] = useState<object>({});
   const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
+  const [zoom, setZoom] = useState<number>(store.get('zoom') || 100);
   const searchFieldRef = useRef(null);
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(store.get('isNavigationOpen'));
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
@@ -160,7 +161,14 @@ const App = () => {
       setTodoObject(null);
       setTextFieldValue('');
     }
-  }, [dialogOpen]); 
+  }, [dialogOpen]);
+
+  useEffect(() => {
+    store.set('zoom', zoom);
+    const adjustedFontSize = Math.ceil(16 * (zoom / 100));
+    document.body.style.fontSize = `${adjustedFontSize}px`;
+  }, [zoom]);
+
 
   useEffect(() => {
     ipcRenderer.on('requestData', handleRequestedData);
@@ -188,16 +196,14 @@ const App = () => {
       ipcRenderer.removeListener('writeTodoToFile', handleWriteTodoToFile);
       window.removeEventListener('drop', handleDrop);
       window.removeEventListener('dragover', handleDragOver);
-    };    
+    }; 
   }, []);
 
   return (
     <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
         <CssBaseline />
-        <Box
-            className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}  
-          >
+        <Box className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}>
           <NavigationComponent
             isDrawerOpen={isDrawerOpen}
             setIsDrawerOpen={setIsDrawerOpen}
@@ -284,6 +290,8 @@ const App = () => {
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           setAttributeMapping={setAttributeMapping}
+          zoom={zoom}
+          setZoom={setZoom}
         />        
         <ContextMenu
           contextMenuPosition={contextMenuPosition}

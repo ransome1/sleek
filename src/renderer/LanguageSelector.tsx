@@ -5,6 +5,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import de from '../locales/de.json';
 import en from '../locales/en.json';
+import en_GB from '../locales/en-gb.json';
 import it from '../locales/it.json';
 import es from '../locales/es.json';
 import fr from '../locales/fr.json';
@@ -18,6 +19,21 @@ import pl from '../locales/pl.json';
 import ru from '../locales/ru.json';
 import ko from '../locales/ko.json';
 import hi from '../locales/hi.json';
+import 'dayjs/locale/de';
+import 'dayjs/locale/en';
+import 'dayjs/locale/en-gb';
+import 'dayjs/locale/it';
+import 'dayjs/locale/es';
+import 'dayjs/locale/fr';
+import 'dayjs/locale/zh';
+import 'dayjs/locale/pt';
+import 'dayjs/locale/tr';
+import 'dayjs/locale/hu';
+import 'dayjs/locale/cs';
+import 'dayjs/locale/pl';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/ko';
+import 'dayjs/locale/hi';
 
 const { store } = window.api;
 
@@ -25,6 +41,7 @@ const options = {
     resources: {
     	de: { translation: de },
 			en: { translation: en },
+			en_GB: { translation: en_GB },
 			it: { translation: it },
 			es: { translation: es },
 			fr: { translation: fr },
@@ -41,7 +58,7 @@ const options = {
     },
     lng: store.get('language') || navigator.language,
     fallbackLng: 'en',
-    supportedLngs: ['de', 'en', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
+    supportedLngs: ['de', 'en', 'en-gb', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
     interpolation: {
       escapeValue: false,
     },
@@ -59,6 +76,7 @@ i18n.on('missingKey', (language, ns, key, res) => {
 const friendlyLanguageName = {
 	de: 'Deutsch',
 	en: 'English',
+	'en-gb': 'English (UK)',
 	it: 'Italiano',
 	es: 'Español',
 	fr: 'Français',

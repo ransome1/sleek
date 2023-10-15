@@ -80,8 +80,6 @@ const Attributes: React.FC<Attributes> = ({
       }
     };
 
-    //setAttributeMapping(translatedAttributes(t));
-
     handleFocusFirstTabbableElement();
     
     document.addEventListener('keydown', handleCtrlCmdDown);

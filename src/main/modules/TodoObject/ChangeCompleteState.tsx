@@ -1,5 +1,6 @@
 import { Item } from 'jstodotxt';
 import { createRecurringTodo } from './CreateRecurringTodo';
+import restorePreviousPriority from './RestorePreviousPriority';
 import { TodoObject } from '../../util';
 import { configStorage } from '../../config';
 
@@ -8,41 +9,35 @@ async function changeCompleteState(todoString: string, state: boolean): Promise<
     throw new Error('State must be of type boolean');
   }
 
-  const todoObject = new Item(todoString);
-  todoObject.setComplete(state);
+  const JsTodoTxtObject = new Item(todoString);
+  JsTodoTxtObject.setComplete(state);
 
   if(state) {
-    todoObject.setCreated(todoObject.created() ? todoObject.created() : new Date());
-    todoObject.setCompleted(new Date());
+    JsTodoTxtObject.setCreated(JsTodoTxtObject.created() ? JsTodoTxtObject.created() : new Date());
+    JsTodoTxtObject.setCompleted(new Date());
 
-    const currentPriority = todoObject.priority();
+    const currentPriority = JsTodoTxtObject.priority();
     if(currentPriority) {
-      todoObject.setPriority(null)
-      todoObject.setExtension('pri', currentPriority);
+      JsTodoTxtObject.setPriority(null)
+      JsTodoTxtObject.setExtension('pri', currentPriority);
     }
 
   } else {
-    todoObject.setCompleted(null);
-
-    const previousPriorityIndex = todoObject.extensions().findIndex((extension) => extension.key === 'pri');
-    const previousPriorityString = todoObject.extensions()[previousPriorityIndex]?.value;
-    if(previousPriorityString && previousPriorityString !== 'null') {
-      todoObject.setPriority(previousPriorityString)
-    }
-
+    JsTodoTxtObject.setCompleted(null);
+    restorePreviousPriority(JsTodoTxtObject);
   }
 
-  const recurrence = todoObject?.extensions().find((item) => item.key === 'rec');
+  const recurrence = JsTodoTxtObject?.extensions().find((item) => item.key === 'rec');
   if (state && recurrence?.value) {
     try {
-      const response = await createRecurringTodo(todoObject.toString(), recurrence.value);
+      const response = await createRecurringTodo(JsTodoTxtObject.toString(), recurrence.value);
       console.log('changeCompleteState.ts:', response);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const updatedTodoString = todoObject.toString();
+  const updatedTodoString = JsTodoTxtObject.toString();
 
   return Promise.resolve(updatedTodoString);
 }

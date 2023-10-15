@@ -23,11 +23,11 @@ const PriorityPicker: React.FC<PriorityPicker> = ({
 }: PriorityPickerProps) => {
   const [priority, setPriority] = useState<string | null>(todoObject?.priority || '-');
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {  
     const updatedPriority = event.target.value as string;
-    const todoObject = new Item(textFieldValue);
-    todoObject.setPriority(updatedPriority);
-    setTextFieldValue(todoObject.toString());
+    const JsTodoTxtObject = new Item(textFieldValue);
+    JsTodoTxtObject.setPriority((updatedPriority === '-') ? null : updatedPriority);
+    setTextFieldValue(JsTodoTxtObject.toString());
     setPriority(updatedPriority);
   };
 

@@ -39,9 +39,6 @@ const Archive: React.FC<ArchiveTodos> = ({ setSnackBarContent, setSnackBarSeveri
 
   useEffect(() => {
     ipcRenderer.on('archiveTodos', handleArchiveTodos);
-    // return () => {
-    //   ipcRenderer.removeListener('archiveTodos', handleArchiveTodos);
-    // };
   }, []);
 
   return (

@@ -63,7 +63,11 @@ const TodoDialog: React.FC<TodoDialog> = ({
     if(!dialogOpen) {
       setTodoObject(null);
     }
-  }, [dialogOpen]); 
+  }, [dialogOpen]);
+
+  useEffect(() => {
+    textFieldRef.current?.focus();
+  }, [textFieldValue]);
 
   return (
     <Dialog

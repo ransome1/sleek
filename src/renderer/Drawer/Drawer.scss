@@ -12,11 +12,9 @@
 		}
 		.MuiTabs-flexContainer {
 			button {
+				font-size: 0.85em;
 				text-transform: none;
 				white-space: nowrap;
-				// &:focus-visible {
-				// 	background: $dark-grey;
-				// }
 			}
 		}
 		.MuiTabs-indicator {
@@ -24,7 +22,7 @@
 		}
 	}
 	.drawerHandle {
-		width: 5px;
+		width: 0.3em;
 		height: 100vh;
 		position: absolute;
 		top: 0;
@@ -32,7 +30,7 @@
 		cursor: ew-resize;
 	}
 	&.open {
-		min-width: 300px;
+		min-width: 19em;
 		margin-left: 0!important;
 	}
 }
