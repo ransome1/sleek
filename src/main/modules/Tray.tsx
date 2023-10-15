@@ -64,7 +64,7 @@ function createTray() {
     const files = configStorage.get('files') as File[] || [];
     const menu = Menu.buildFromTemplate(createMenuTemplate(files));
 
-    tray = new Tray((isWindows && !isDark) ? getAssetPath('icons/tray/lightTheme/tray.png') : getAssetPath('icons/tray/darkTheme/tray.png'));
+    tray = new Tray(getAssetPath('icons/tray/tray.png'));
     tray.setContextMenu(menu);
 
     return Promise.resolve('Tray created');
