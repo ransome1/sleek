@@ -12,7 +12,9 @@ function createTodoObjects(fileContent: string): TodoObject[] {
   const todoObjects: TodoObject[] = lines
     .map((line, i) => {
       try {
-        const JsTodoTxtObject = new Item(line);
+        const updatedLine = line.replaceAll(String.fromCharCode(16), ` `)
+
+        const JsTodoTxtObject = new Item(updatedLine);
         const body = JsTodoTxtObject.body();
         if (!body) {
           return null;
@@ -49,9 +51,8 @@ function createTodoObjects(fileContent: string): TodoObject[] {
           rec,
           hidden,
           pm,
-          string: JsTodoTxtObject.toString(),
+          string: line,
         };
-
         return todoObject as TodoObject;
       } catch (error) {
         console.log(error);
@@ -59,7 +60,6 @@ function createTodoObjects(fileContent: string): TodoObject[] {
       }
     })
     .filter((todoObject): todoObject is TodoObject => todoObject !== null);
-
   return todoObjects;
 }
 

@@ -80,7 +80,7 @@ const Row: React.FC<DataGridRowProps> = ({
           setTodoObject(row);
           setDialogOpen(true);
         }
-        //setTextFieldValue(row.string);
+        setTextFieldValue(row.string);
       }
     }
   };

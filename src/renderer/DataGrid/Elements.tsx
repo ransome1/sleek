@@ -72,7 +72,7 @@ const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonCl
       { pattern: /rec:([^ ]+)/, type: 'rec', key: 'rec:' },
     ];
 
-    let body = todoObject.body;
+    let body = todoObject.body.replaceAll(String.fromCharCode(16), ' ');
     let substrings = [];
     let index = 0;
 
@@ -81,15 +81,14 @@ const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonCl
         let matched = false;
 
         for (const expression of expressions) {
+
           const regex = new RegExp(`^(${expression.pattern.source})`);
           const match = body.match(regex);
 
           if (match) {
             matched = true;
-
-            const value = match[0].substr(expression.key.length);
-
-            substrings.push({ type: expression.type, value: value, key: expression.key, index: index });
+            const value = match[0].substr(expression.key?.length);
+            if(value) substrings.push({ type: expression.type, value: value, key: expression.key, index: index });
             body = body.substring(match[0].length);
             break;
           }
@@ -98,11 +97,10 @@ const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonCl
         if (!matched) {
           const nextSpaceIndex = body.indexOf(' ');
           const endOfWordIndex = nextSpaceIndex !== -1 ? nextSpaceIndex : body.length;
-
-          substrings.push({ type: null, value: body.substring(0, endOfWordIndex), index: index });
+          const value = body.substring(0, endOfWordIndex);
+          if(value !== '') substrings.push({ type: null, value: value, index: index });
           body = body.substring(endOfWordIndex + 1);
         }
-
         index++;
       }
     }

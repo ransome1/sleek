@@ -223,7 +223,6 @@
       "applicationId": "RobinAhle.sleektodomanager"
     },
     "linux": {
-      "icon": "assets/icons/sleek.png",
       "category": "ProjectManagement",
       "target": [
         "deb",

@@ -26,6 +26,8 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoO
 
         const hasMatchingValue = attributeValues.includes(value);
 
+        console.log(hasMatchingValue)
+
         return exclude ? !hasMatchingValue : hasMatchingValue;
       });
     });

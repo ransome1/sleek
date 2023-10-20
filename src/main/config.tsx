@@ -55,6 +55,7 @@ const defaultConfigData = {
   customStylesPath: customStylesPath,
   tray: false,
   zoom: 100,
+  multilineTextField: false,
 };
 
 const configPath = path.join(userDataDirectory, 'config.json');

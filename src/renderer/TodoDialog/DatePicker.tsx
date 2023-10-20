@@ -31,9 +31,11 @@ const DatePickerComponent: React.FC<DatePicker> = ({
 
     const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
 
+    const content = textFieldValue.replaceAll(/\n/g, ` ${String.fromCharCode(16)}`);
+
     const updatedTextFieldValue = todoObject?.dueString
-      ? textFieldValue.replace(` ${type}:${todoObject.dueString}`, '')
-      : textFieldValue;
+      ? content.replace(` ${type}:${todoObject.dueString}`, '')
+      : content;
 
     const JsTodoTxtObject = new Item(updatedTextFieldValue);
     JsTodoTxtObject.setExtension(type, formattedDate);

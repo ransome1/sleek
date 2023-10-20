@@ -93,8 +93,12 @@ const friendlyLanguageName = {
 }
 
 const LanguageSelector = ({ setAttributeMapping }) => {
-	const [selectedLanguage, setSelectedLanguage] = useState(store.get('language') || i18n.language);
 	const supportedLanguages = i18n.options.supportedLngs;
+	const [selectedLanguage, setSelectedLanguage] = useState(
+  supportedLanguages.includes(store.get('language') || navigator.language) 
+    ? store.get('language') || navigator.language
+    : 'en'
+	);
 
 	const changeLanguage = (event) => {
 		const language = event.target.value;

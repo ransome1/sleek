@@ -11,7 +11,6 @@
 	display: block;
 	border-radius: $radius;
 	background-color: rgba(240, 240, 240, 0.85);
-	
 	ul {
 		padding: 0;
 		margin: 0;
@@ -26,13 +25,5 @@
 .darkTheme {
 	.react-autosuggest__suggestions-container--open {
 		background-color: rgba(45, 45, 45, 0.85);
-	}
-}
-.react-autosuggest__container {
-	.react-autosuggest__input {
-		input {
-			font-size: 1.25em;	
-		}
-		
 	}
 }

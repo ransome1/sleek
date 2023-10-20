@@ -19,7 +19,8 @@ const PomodoroPicker: PomodoroPicker = ({
 
   const handleChange = (event) => {
     const updatedPomodoro = event.target.value;
-    const JsTodoTxtObject = new Item(textFieldValue);
+    let string = textFieldValue.replaceAll('\n', ` ${String.fromCharCode(16)}`);
+    const JsTodoTxtObject = new Item(string);
     JsTodoTxtObject.setExtension('pm', updatedPomodoro);
     setTextFieldValue(JsTodoTxtObject.toString());
     setPomodoro(updatedPomodoro);

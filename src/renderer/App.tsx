@@ -35,7 +35,7 @@ const App = () => {
   const [todoObject, setTodoObject] = useState(null);
   const [headers, setHeaders] = useState<object>(null);
   const [filters, setFilters] = useState<object>({});
-  const [attributes, setAttributes] = useState<object>({});
+  const [attributes, setAttributes] = useState<object>({}); 
   const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
   const [zoom, setZoom] = useState<number>(store.get('zoom') || 100);
   const searchFieldRef = useRef(null);
@@ -169,7 +169,6 @@ const App = () => {
     document.body.style.fontSize = `${adjustedFontSize}px`;
   }, [zoom]);
 
-
   useEffect(() => {
     ipcRenderer.on('requestData', handleRequestedData);
     ipcRenderer.on('updateFiles', handleUpdateFiles);
@@ -183,20 +182,20 @@ const App = () => {
     ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
-    return () => {      
-      ipcRenderer.removeListener('requestData', handleRequestedData);
-      ipcRenderer.removeListener('updateFiles', handleUpdateFiles);
-      ipcRenderer.removeListener('updateSorting', handleUpdateSorting);
-      ipcRenderer.removeListener('setIsSearchOpen', handleSetIsSearchOpen);
-      ipcRenderer.removeListener('setIsNavigationOpen', handleSetIsNavigationOpen);
-      ipcRenderer.removeListener('setShouldUseDarkColors', handleSetShouldUseDarkColors);
-      ipcRenderer.removeListener('setShowFileTabs', handleSetShowFileTabs);
-      ipcRenderer.removeListener('setIsDrawerOpen', handleSetIsDrawerOpen);
-      ipcRenderer.removeListener('setIsSettingsOpen', handleSetIsSettingsOpen);
-      ipcRenderer.removeListener('writeTodoToFile', handleWriteTodoToFile);
-      window.removeEventListener('drop', handleDrop);
-      window.removeEventListener('dragover', handleDragOver);
-    }; 
+    // return () => {      
+    //   ipcRenderer.removeListener('requestData', handleRequestedData);
+    //   ipcRenderer.removeListener('updateFiles', handleUpdateFiles);
+    //   ipcRenderer.removeListener('updateSorting', handleUpdateSorting);
+    //   ipcRenderer.removeListener('setIsSearchOpen', handleSetIsSearchOpen);
+    //   ipcRenderer.removeListener('setIsNavigationOpen', handleSetIsNavigationOpen);
+    //   ipcRenderer.removeListener('setShouldUseDarkColors', handleSetShouldUseDarkColors);
+    //   ipcRenderer.removeListener('setShowFileTabs', handleSetShowFileTabs);
+    //   ipcRenderer.removeListener('setIsDrawerOpen', handleSetIsDrawerOpen);
+    //   ipcRenderer.removeListener('setIsSettingsOpen', handleSetIsSettingsOpen);
+    //   ipcRenderer.removeListener('writeTodoToFile', handleWriteTodoToFile);
+    //   window.removeEventListener('drop', handleDrop);
+    //   window.removeEventListener('dragover', handleDragOver);
+    // }; 
   }, []);
 
   return (
@@ -266,6 +265,7 @@ const App = () => {
               setContextMenuPosition={setContextMenuPosition}
               contextMenuItems={contextMenuItems}
               setContextMenuItems={setContextMenuItems}
+              setTextFieldValue={setTextFieldValue}
             />
             <SplashScreen 
               screen={splashScreen}

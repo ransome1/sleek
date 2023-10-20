@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Dialog, DialogContent, DialogActions, FormControl } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
@@ -9,7 +9,7 @@ import { withTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
 import './TodoDialog.scss';
 
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer, store } = window.api;
 
 interface TodoDialog {
   dialogOpen: boolean;
@@ -35,16 +35,15 @@ const TodoDialog: React.FC<TodoDialog> = ({
   t
 }: TodoDialogProps) => {
 
-  const textFieldRef = useRef<HTMLInputElement | null>(null);
-
   const handleAdd = (event, id, string) => {
     try {
       if(string === '') {
         setSnackBarSeverity('info');
         setSnackBarContent(t('todoDialog.snackbar.emptyInput'));
-        return false;
       } else {
-        ipcRenderer.send('writeTodoToFile', id, string);
+        const multilineTextField = store.get('multilineTextField');
+        const content = string.replaceAll(/\n/g, String.fromCharCode(16));
+        ipcRenderer.send('writeTodoToFile', id, content);
       }
     } catch (error) {
       console.error(error.message);
@@ -65,10 +64,6 @@ const TodoDialog: React.FC<TodoDialog> = ({
     }
   }, [dialogOpen]);
 
-  useEffect(() => {
-    textFieldRef.current?.focus();
-  }, [textFieldValue]);
-
   return (
     <Dialog
       id="TodoDialog"
@@ -79,7 +74,6 @@ const TodoDialog: React.FC<TodoDialog> = ({
       <DialogContent>
         <AutoSuggest
           attributes={attributes}
-          textFieldRef={textFieldRef}
           textFieldValue={textFieldValue}
           setTextFieldValue={setTextFieldValue}
           setDialogOpen={setDialogOpen}
@@ -117,7 +111,7 @@ const TodoDialog: React.FC<TodoDialog> = ({
       <DialogActions>
         <Button onClick={() => setDialogOpen(false)}>{t('todoDialog.footer.cancel')}</Button>
         <Button onClick={(event) => handleAdd(event, todoObject?.id, textFieldValue)}>
-          {t('todoDialog.footer.save')}
+          {todoObject?.body ? t('todoDialog.footer.update') : t('todoDialog.footer.add')}
         </Button>
       </DialogActions>
     </Dialog>

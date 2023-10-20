@@ -3,21 +3,48 @@
 #TodoDialog {
   .MuiDialog-paper {
     max-width: 50em;
-    button {
-      svg {
-        font-size: 1em;
-      }
-    }
+    position: relative;
   }
   .MuiDialogContent-root {
     display: flex;
     gap: 0.625em;
     flex-wrap: wrap;
+    .input {
+      width: 100%;
+      input, textarea {
+        font-size: 1.25em;
+        padding-right: 3em;
+      }
+      textarea {
+        min-height: 3.5em;
+      }
+    }
+    // input.input {
+    //   width: 100%;
+    //   font-size: 1.25em;
+    // }
+    // textarea.input {
+    //   width: 100%;
+    //   height: auto;
+    //   min-height: 3em;
+    //   font-family: 'FreeSans';
+    //   background: $lighter-grey;
+    //   border: none;
+    //   border-radius: $radius;
+    //   outline: none;
+    //   padding: 0.85em;
+    // }    
     .react-autosuggest__container {
       width: 100%;
       flex-grow: 1;
-      .react-autosuggest__input {
-        width: 100%;
+    }
+    .resize {
+      position: absolute;
+      right: 2.5em;
+      top: 3.2em;
+      svg {
+        font-size: 1.75em;
+        color: #1976d2; 
       }
     }
   }

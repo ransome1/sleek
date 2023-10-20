@@ -8,7 +8,14 @@ import dayjs from 'dayjs';
 
 const { ipcRenderer, store } = window.api;
 
-const DatePickerInline: React.FC<DatePicker> = ({
+interface DatePickerInlineProps {
+  type: string,
+  todoObject: TodoObject,
+  date: date,
+  filters
+}
+
+const DatePickerInline: React.FC<DatePickerInlineProps> = ({
   type,
   todoObject,
   date,
