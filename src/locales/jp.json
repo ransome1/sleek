@@ -10,7 +10,7 @@
   "settings.headline": "設定",
   "settings.appendCreationDate": "タスク作成時に作成日を追加",
   "settings.convertRelativeToAbsoluteDates": "相対日付を絶対日付に変換",
-  "settings.notificationsAllowed": "期限が今日または明日の場合に通知を送信",
+  "settings.notificationsAllowed": "通知を送信",
   "settings.showFileTabs": "ファイルタブを表示",
   "settings.tray": "トレイに最小化",
   "settings.colorTheme": "テーマ",

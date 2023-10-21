@@ -16,7 +16,7 @@ import LanguageSelector, { i18n } from './LanguageSelector';
 import { handleSettingChange } from './Shared';
 import './Settings.scss';
 
-const store = window.api.store;
+const { store } = window.api;
 
 interface Settings extends WithTranslation {
   isOpen: boolean;
@@ -36,10 +36,11 @@ const Settings: React.FC<Settings> = ({
   const [settings, setSettings] = useState({
     appendCreationDate: store.get('appendCreationDate'),
     convertRelativeToAbsoluteDates: store.get('convertRelativeToAbsoluteDates'),
-    notificationsAllowed: store.get('notificationsAllowed'),
     tray: store.get('tray'),
     showFileTabs: store.get('showFileTabs'),
     colorTheme: store.get('colorTheme'),
+    notificationsAllowed: store.get('notificationsAllowed'),
+    notificationThresholdDueDates: store.get('notificationThresholdDueDates'),
   });
 
   const handleColorThemeChange = (event) => {
@@ -58,7 +59,7 @@ const Settings: React.FC<Settings> = ({
       <Box className='Modal' bgcolor='background.paper'>
         <h3>{t('settings.headline')}</h3>
         {Object.entries(settings).map(([settingName, settingValue]) => (
-          settingName !== 'colorTheme' && (
+          (settingName !== 'colorTheme' && settingName !== 'notificationThresholdDueDates') && (
             <FormControlLabel
               key={settingName}
               control={
@@ -73,13 +74,28 @@ const Settings: React.FC<Settings> = ({
           )
         ))}
 
+        {settings.notificationsAllowed && (
+          <FormControl sx={{ width: 300, clear: 'both' }}>
+            {t('settings.notificationThresholdDueDates')}
+            <Slider
+              id="notificationThresholdDueDates"
+              value={settings.notificationThresholdDueDates}
+              step={1}
+              valueLabelDisplay="auto"
+              min={1}
+              max={10}
+              onChange={handleSettingChange('notificationThresholdDueDates', setSettings)}
+            />
+          </FormControl>
+        )}     
+
         <FormControl sx={{ width: 300, clear: 'both', }}>
           Zoom
           <Slider
             id="zoomSlider"
             value={zoom}
             step={5}
-            valueLabelDisplay="on"
+            valueLabelDisplay="auto"
             min={75} max={125}
             onChange={(event) => setZoom(event.target.value)}
           />

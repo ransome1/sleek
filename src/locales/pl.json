@@ -10,7 +10,7 @@
   "settings.headline": "Ustawienia",
   "settings.appendCreationDate": "Dodaj datę utworzenia podczas tworzenia zadania",
   "settings.convertRelativeToAbsoluteDates": "Konwertuj daty względne na daty bezwzględne",
-  "settings.notificationsAllowed": "Wysyłaj powiadomienia, gdy data wykonania jest dzisiaj lub jutro",
+  "settings.notificationsAllowed": "Wysyłaj powiadomienia",
   "settings.showFileTabs": "Pokaż karty plików",
   "settings.tray": "Minimalizuj do zasobnika",
   "settings.colorTheme": "Motyw kolorystyczny",

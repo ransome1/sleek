@@ -10,7 +10,7 @@
   "settings.headline": "Paramètres",
   "settings.appendCreationDate": "Ajouter la date de création lors de la création de la tâche",
   "settings.convertRelativeToAbsoluteDates": "Convertir les dates relatives en dates absolues",
-  "settings.notificationsAllowed": "Envoyer une notification lorsque la date d'échéance est aujourd'hui ou demain",
+  "settings.notificationsAllowed": "Envoyer des notifications",
   "settings.showFileTabs": "Afficher les onglets de fichier",
   "settings.tray": "Réduire dans la zone de notification",
   "settings.colorTheme": "Thème",

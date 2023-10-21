@@ -10,7 +10,7 @@
   "settings.headline": "设置",
   "settings.appendCreationDate": "创建任务时附加创建日期",
   "settings.convertRelativeToAbsoluteDates": "将相对日期转换为绝对日期",
-  "settings.notificationsAllowed": "当截止日期为今天或明天时发送通知",
+  "settings.notificationsAllowed": "发送通知",
   "settings.showFileTabs": "显示文件选项卡",
   "settings.tray": "最小化到系统托盘",
   "settings.colorTheme": "主题",

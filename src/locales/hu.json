@@ -10,7 +10,7 @@
   "settings.headline": "Beállítások",
   "settings.appendCreationDate": "Létrehozáskor hozzáadja a létrehozás dátumát",
   "settings.convertRelativeToAbsoluteDates": "Relatív dátumok konvertálása abszolút dátumokká",
-  "settings.notificationsAllowed": "Értesítés küldése, ha a határidő ma vagy holnap van",
+  "settings.notificationsAllowed": "Értesítések küldése",
   "settings.showFileTabs": "Fájl lapok megjelenítése",
   "settings.tray": "Minimálás a tálcára",
   "settings.colorTheme": "Téma",

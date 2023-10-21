@@ -28,10 +28,12 @@
 	#ToolBar {
 		svg {
 			color: $mid-grey;
-			>:hover,
 			&.active {
 				color: $links;
 			}			
+		}
+		& svg:hover {
+			color: $links;
 		}
 	}
 }

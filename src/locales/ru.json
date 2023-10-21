@@ -10,7 +10,7 @@
   "settings.headline": "Настройки",
   "settings.appendCreationDate": "Добавить дату создания при создании задачи",
   "settings.convertRelativeToAbsoluteDates": "Преобразовать относительные даты в абсолютные",
-  "settings.notificationsAllowed": "Отправлять уведомление, когда срок выполнения сегодня или завтра",
+  "settings.notificationsAllowed": "Отправлять уведомления",
   "settings.showFileTabs": "Показать вкладки файлов",
   "settings.tray": "Свернуть в лоток",
   "settings.colorTheme": "Тема",

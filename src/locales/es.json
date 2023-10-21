@@ -10,7 +10,7 @@
   "settings.headline": "Configuración",
   "settings.appendCreationDate": "Añadir fecha de creación al crear una tarea",
   "settings.convertRelativeToAbsoluteDates": "Convertir fechas relativas a fechas absolutas",
-  "settings.notificationsAllowed": "Enviar notificación cuando la fecha de vencimiento sea hoy o mañana",
+  "settings.notificationsAllowed": "Enviar notificaciones",
   "settings.showFileTabs": "Mostrar pestañas de archivo",
   "settings.tray": "Minimizar a la bandeja",
   "settings.colorTheme": "Tema",

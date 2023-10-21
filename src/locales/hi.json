@@ -10,7 +10,7 @@
   "settings.headline": "सेटिंग्स",
   "settings.appendCreationDate": "कार्य बनाते समय निर्माण तिथि जोड़ें",
   "settings.convertRelativeToAbsoluteDates": "सांख्यिक तिथियों को पूर्ण तिथियों में परिवर्तित करें",
-  "settings.notificationsAllowed": "समापन तिथि आज या कल है तो सूचना भेजें",
+  "settings.notificationsAllowed": "सूचनाएँ भेजें",
   "settings.showFileTabs": "फ़ाइल टैब दिखाएं",
   "settings.tray": "सिस्टम ट्रे में मिनिमाइज़ करें",
   "settings.colorTheme": "थीम",

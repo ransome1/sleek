@@ -10,7 +10,7 @@
   "settings.headline": "Impostazioni",
   "settings.appendCreationDate": "Aggiungi data di creazione quando viene creato il compito",
   "settings.convertRelativeToAbsoluteDates": "Converti date relative in date assolute",
-  "settings.notificationsAllowed": "Invia notifica quando la data di scadenza è oggi o domani",
+  "settings.notificationsAllowed": "Invia notifiche",
   "settings.showFileTabs": "Mostra le schede dei file",
   "settings.tray": "Minimizza nella barra delle applicazioni",
   "settings.colorTheme": "Tema",

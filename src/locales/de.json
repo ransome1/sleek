@@ -10,7 +10,7 @@
   "settings.headline": "Einstellungen",
   "settings.appendCreationDate": "Erstellungsdatum hinzufügen, wenn eine Aufgabe erstellt wird",
   "settings.convertRelativeToAbsoluteDates": "Relative Daten in absolute Daten umwandeln",
-  "settings.notificationsAllowed": "Benachrichtigung senden, wenn das Fälligkeitsdatum heute oder morgen ist",
+  "settings.notificationsAllowed": "Benachrichtigungen senden",
   "settings.showFileTabs": "Datei-Tabs anzeigen",
   "settings.tray": "In die Taskleiste minimieren",
   "settings.colorTheme": "Design",

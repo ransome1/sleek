@@ -50,6 +50,7 @@ const defaultConfigData = {
   colorTheme: 'system',
   shouldUseDarkColors: false,
   notificationsAllowed: true,
+  notificationThresholdDueDates: 2,
   showFileTabs: true,
   isNavigationOpen: true,
   customStylesPath: customStylesPath,

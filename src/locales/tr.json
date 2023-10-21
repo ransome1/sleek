@@ -10,7 +10,7 @@
   "settings.headline": "Ayarlar",
   "settings.appendCreationDate": "Görev oluşturulduğunda oluşturma tarihini ekle",
   "settings.convertRelativeToAbsoluteDates": "İlgili tarihleri mutlak tarihlere dönüştür",
-  "settings.notificationsAllowed": "Bitiş tarihi bugün veya yarın ise bildirim gönder",
+  "settings.notificationsAllowed": "Bildirimleri Gönder",
   "settings.showFileTabs": "Dosya sekmesini göster",
   "settings.tray": "Tepsiye Küçült",
   "settings.colorTheme": "Tema",

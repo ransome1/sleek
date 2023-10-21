@@ -10,7 +10,7 @@
   "settings.headline": "Nastavení",
   "settings.appendCreationDate": "Přidat datum vytvoření při vytvoření úkolu",
   "settings.convertRelativeToAbsoluteDates": "Převést relativní data na absolutní data",
-  "settings.notificationsAllowed": "Poslat oznámení, když je termín dnes nebo zítra",
+  "settings.notificationsAllowed": "Odeslat oznámení",
   "settings.showFileTabs": "Zobrazit záložky souborů",
   "settings.tray": "Minimalizovat do oznamovací oblasti",
   "settings.colorTheme": "Téma",

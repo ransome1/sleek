@@ -178,7 +178,7 @@
           "x64"
         ]
       },
-      "icon": "assets/icons/512x512.png",
+      "icon": "assets/icons/icon.icns",
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/mas/entitlements.mac.plist",
@@ -223,6 +223,7 @@
       "applicationId": "RobinAhle.sleektodomanager"
     },
     "linux": {
+      "icon": "assets/icons",
       "category": "ProjectManagement",
       "target": [
         "deb",

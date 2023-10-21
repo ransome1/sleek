@@ -165,7 +165,7 @@ const App = () => {
 
   useEffect(() => {
     store.set('zoom', zoom);
-    const adjustedFontSize = Math.ceil(16 * (zoom / 100));
+    const adjustedFontSize = 16 * (zoom / 100);
     document.body.style.fontSize = `${adjustedFontSize}px`;
   }, [zoom]);
 

@@ -10,7 +10,7 @@
   "settings.headline": "설정",
   "settings.appendCreationDate": "작업 생성 시 생성 날짜 추가",
   "settings.convertRelativeToAbsoluteDates": "상대적 날짜를 절대 날짜로 변환",
-  "settings.notificationsAllowed": "마감일이 오늘이나 내일일 때 알림 보내기",
+  "settings.notificationsAllowed": "알림 보내기",
   "settings.showFileTabs": "파일 탭 표시",
   "settings.tray": "트레이로 최소화",
   "settings.colorTheme": "테마",
