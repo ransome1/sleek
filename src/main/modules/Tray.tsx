@@ -1,4 +1,4 @@
-import { app, Tray, Menu, nativeTheme } from 'electron';
+import { app, Tray, Menu } from 'electron';
 import { mainWindow, createWindow } from '../main';
 import { configStorage } from '../config';
 import { getAssetPath } from '../util';
@@ -12,7 +12,7 @@ function createMenuTemplate(files) {
       label: 'Show sleek',
       click: () => {
         if (mainWindow) {
-          mainWindow?.show();
+          mainWindow.show();
         } else {
           createWindow()
             .then((result) => {
@@ -30,6 +30,17 @@ function createMenuTemplate(files) {
           label: file.todoFileName,
           accelerator: `CommandOrControl+${index + 1}`,
           click: () => {
+            if (mainWindow) {
+              mainWindow.show();
+            } else {
+              createWindow()
+                .then((result) => {
+                  console.log('main.ts:', result);
+                })
+                .catch((error) => {
+                  console.error('main.ts:', error);
+                });
+            }
             setFile(undefined, index);
           },
         }))
@@ -48,8 +59,6 @@ function createMenuTemplate(files) {
 
 function createTray() {
   try {
-    const isDark = nativeTheme.shouldUseDarkColors;
-    const isWindows = process.platform === 'win32';
     const isTray = configStorage.get('tray');
 
     tray?.destroy();

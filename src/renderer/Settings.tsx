@@ -39,8 +39,9 @@ const Settings: React.FC<Settings> = ({
     tray: store.get('tray'),
     showFileTabs: store.get('showFileTabs'),
     colorTheme: store.get('colorTheme'),
+    useMultilineForBulkTodoCreation: store.get('useMultilineForBulkTodoCreation'),
     notificationsAllowed: store.get('notificationsAllowed'),
-    notificationThresholdDueDates: store.get('notificationThresholdDueDates'),
+    notificationThreshold: store.get('notificationThreshold'),
   });
 
   const handleColorThemeChange = (event) => {
@@ -59,7 +60,7 @@ const Settings: React.FC<Settings> = ({
       <Box className='Modal' bgcolor='background.paper'>
         <h3>{t('settings.headline')}</h3>
         {Object.entries(settings).map(([settingName, settingValue]) => (
-          (settingName !== 'colorTheme' && settingName !== 'notificationThresholdDueDates') && (
+          (settingName !== 'colorTheme' && settingName !== 'notificationThreshold') && (
             <FormControlLabel
               key={settingName}
               control={
@@ -76,15 +77,16 @@ const Settings: React.FC<Settings> = ({
 
         {settings.notificationsAllowed && (
           <FormControl sx={{ width: 300, clear: 'both' }}>
-            {t('settings.notificationThresholdDueDates')}
+            {t('settings.notificationThreshold')}
             <Slider
-              id="notificationThresholdDueDates"
-              value={settings.notificationThresholdDueDates}
+              id="notificationThreshold"
+              value={settings.notificationThreshold}
               step={1}
               valueLabelDisplay="auto"
+              valueLabelFormat={(value) => `${value} days`}
               min={1}
               max={10}
-              onChange={handleSettingChange('notificationThresholdDueDates', setSettings)}
+              onChange={handleSettingChange('notificationThreshold', setSettings)}
             />
           </FormControl>
         )}     
@@ -96,6 +98,7 @@ const Settings: React.FC<Settings> = ({
             value={zoom}
             step={5}
             valueLabelDisplay="auto"
+            valueLabelFormat={(value) => `${value}%`}
             min={75} max={125}
             onChange={(event) => setZoom(event.target.value)}
           />

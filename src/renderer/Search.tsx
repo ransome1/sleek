@@ -86,7 +86,7 @@ const Search: React.FC<Search> = ({
               endAdornment: (
                 <InputAdornment position='end'>
                   {searchString && searchString.length > 0 && (
-                    <Button onClick={handleAddTodo}>Add as todo</Button>
+                    <Button onClick={handleAddTodo}>{t('search.addAsTodo')}</Button>
                   )}
                   {searchString && searchString.length > 0 && (
                     <button

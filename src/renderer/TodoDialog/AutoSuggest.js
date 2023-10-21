@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { Button, Avatar, Box, TextField, InputAdornment, IconButton } from '@mui/material';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
@@ -7,9 +7,7 @@ import './AutoSuggest.scss';
 
 const { store } = window.api;
 
-//const regex = / [\+@][^ ]*/g;
 const regex = /(?<=^| )[\+@][^ ]*/g;
-//const regex = /[@+]/g;
 
 const AutoSuggest = ({ 
   setDialogOpen,
@@ -17,14 +15,14 @@ const AutoSuggest = ({
   setTextFieldValue,
   attributes,
   handleAdd,
-  todoObject
+  todoObject,
+  textFieldRef
 }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [prefix, setPrefix] = useState(null);
   const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
   const [multilineTextField, setMultilineTextField] = useState(store.get('multilineTextField', false));
-  const textFieldRef = useRef(null);
 
   const handleSetMultilineTextField = () => {
     setMultilineTextField(prevMultilineTextField => !prevMultilineTextField);

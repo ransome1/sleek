@@ -50,13 +50,14 @@ const defaultConfigData = {
   colorTheme: 'system',
   shouldUseDarkColors: false,
   notificationsAllowed: true,
-  notificationThresholdDueDates: 2,
+  notificationThreshold: 2,
   showFileTabs: true,
   isNavigationOpen: true,
   customStylesPath: customStylesPath,
   tray: false,
   zoom: 100,
   multilineTextField: false,
+  useMultilineForBulkTodoCreation: false,
 };
 
 const configPath = path.join(userDataDirectory, 'config.json');

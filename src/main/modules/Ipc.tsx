@@ -1,7 +1,7 @@
 import { ipcMain, app, IpcMainEvent, clipboard } from 'electron';
 import processDataRequest from './ProcessDataRequest';
 import { changeCompleteState } from './TodoObject/ChangeCompleteState';
-import { writeTodoObjectToFile } from './File/Write';
+import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
 import archiveTodos from './File/Archive';
 import { configStorage, filterStorage } from '../config';
 import { addFile, setFile, removeFile, revealFile } from './File/File';
@@ -12,13 +12,13 @@ async function handleDataRequest(event: IpcMainEvent, searchString: string): voi
   event.reply('requestData', todoObjects, attributes, headers, filters);
 }
 
-async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean | undefined, remove: boolean): Promise<void> {
+async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean | undefined): Promise<void> {
   try {
     let updatedString: string = string;
     if (state !== undefined && id >= 0 && !remove) {
       updatedString = await changeCompleteState(string, state);
     }
-    writeTodoObjectToFile(id, updatedString, remove).then(function (response) {
+    writeTodoObjectToFile(id, updatedString).then(function (response) {
       console.log('ipcEvents.ts:', response);
       event.reply('writeTodoToFile', response);
     }).catch((error) => {
@@ -85,6 +85,7 @@ function removeEventListeners(): void {
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
   ipcMain.off('revealFile', revealFile);
   ipcMain.off('changeDoneFilePath', changeDoneFilePath);
+  ipcMain.off('removeLineFromFile', removeLineFromFile);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -103,3 +104,4 @@ ipcMain.on('addFile', addFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
 ipcMain.on('revealFile', revealFile);
 ipcMain.on('changeDoneFilePath', changeDoneFilePath);
+ipcMain.on('removeLineFromFile', removeLineFromFile);

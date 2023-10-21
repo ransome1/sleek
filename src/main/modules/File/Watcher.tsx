@@ -7,17 +7,19 @@ import path from 'path';
 
 let watcher: FSWatcher | null = null;
 
-function createFileWatcher(files: File[]): Promise<string> {
+async function createFileWatcher(files: File[]): Promise<string> {
   try {
     if (watcher) {
       watcher.close();
     }
-    watcher = chokidar.watch(files.map((file) => file.todoFilePath), { 
+
+    watcher = chokidar.watch(files.map((file) => file.todoFilePath), {
       awaitWriteFinish: {
         stabilityThreshold: 50,
-        pollInterval: 50
-      }
+        pollInterval: 50,
+      },
     });
+
     watcher
       .on('add', (file) => {
         console.log(`FileWatcher.ts: New file added: ${file}`);
@@ -28,7 +30,7 @@ function createFileWatcher(files: File[]): Promise<string> {
           const [todoObjects, attributes, headers, filters] = await processDataRequest();
           mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       })
       .on('unlink', (file) => {
@@ -36,16 +38,15 @@ function createFileWatcher(files: File[]): Promise<string> {
 
         const updatedFiles = files.filter((item) => item.path !== file);
         configStorage.set('files', updatedFiles);
-        
       })
       .on('ready', () => {
         console.log('FileWatcher.ts: Initial scan complete. Ready for changes');
       });
 
-    return Promise.resolve('File watchers created');
+    return 'File watchers created';
   } catch (error) {
     console.error(error);
-    return Promise.reject(error);
+    throw error;
   }
 }
 

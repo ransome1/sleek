@@ -6,17 +6,11 @@ import { File } from '../../util';
 
 async function addFile(event: Event | null, filePath: string): Promise<void> {
   try {
-    const files: File[] = (configStorage.get('files') as File[]) || [];
-    let existingFileIndex = -1;
+    const files: File[] = configStorage.get('files') || [];
 
-    if (files && files.length > 0) {
-      files.forEach((file) => {
-        file.active = false;
-      });
-      existingFileIndex = files.findIndex((file) => {
-        if(file.todoFilePath === filePath) return true;
-      });
-    }
+    files.forEach((file) => (file.active = false));
+
+    const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath);
 
     if (existingFileIndex === -1) {
       files.push({
@@ -26,18 +20,14 @@ async function addFile(event: Event | null, filePath: string): Promise<void> {
         doneFilePath: path.join(path.dirname(filePath), 'done.txt'),
       });
     } else {
-      if (existingFileIndex !== -1) {
-        files[existingFileIndex].active = true;
-      }
+      files[existingFileIndex].active = true;
     }
 
     configStorage.set('files', files);
 
-    const response = await createFileWatcher(files);
+    await createFileWatcher(files);
 
     console.info('File.ts: File added, restarting file watchers');
-    return;
-
   } catch (error) {
     console.error('File.ts:', error);
     throw error;

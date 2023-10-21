@@ -1,11 +1,11 @@
 
-2023-10-20 Line 1 rec:1d due:2023-10-21
-2023-10-20 Line 1 rec:w due:2023-10-27
-2023-10-20 Line 1 rec:2m due:2023-12-20
-2023-10-20 Line 1 rec:+1d due:2023-10-22
-2023-10-20 Line 1 rec:7w due:2023-12-08
+2023-10-21 Line 1 rec:1d due:2023-10-22
+2023-10-21 Line 1 rec:w due:2023-10-28
+2023-10-21 Line 1 rec:2m due:2023-12-21
+2023-10-21 Line 1 rec:+1d due:2023-10-23
+2023-10-21 Line 1 rec:7w due:2023-12-09
 2023-07-21 Line 1 due:2023-07-24 rec:+1b
 2021-01-01 taxes are due in one year t:2022-03-30 due:2022-04-30 rec:+1y
-2023-10-20 Water plants @home +quick due:2023-10-27 t:2023-10-17 rec:1w
-2023-10-20 Line 1 rec:+1d t:2023-09-20 due:2023-10-21
-(A) 2023-10-20 Line 1 rec:1d pri:A due:2023-10-21
+2023-10-21 Water plants @home +quick due:2023-10-28 t:2023-10-18 rec:1w
+2023-10-21 Line 1 rec:+1d t:2023-09-20 due:2023-10-22
+(A) 2023-10-21 Line 1 rec:1d pri:A due:2023-10-22

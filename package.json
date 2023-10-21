@@ -160,7 +160,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "appId": "com.todotxt.sleek",
+    "appId": "com.github.ransome1.sleek",
     "buildVersion": "25",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",

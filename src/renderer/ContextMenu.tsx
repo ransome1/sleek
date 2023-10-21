@@ -78,7 +78,7 @@ const ContextMenu: React.FC<ContextMenu> = ({
 
     switch (id) {
       case 'delete':
-        ipcRenderer.send('writeTodoToFile', todoObject?.id, undefined, undefined, true);
+        ipcRenderer.send('removeLineFromFile', todoObject?.id);
         break;
       case 'removeFile':
         ipcRenderer.send('removeFile', index);
@@ -105,9 +105,6 @@ const ContextMenu: React.FC<ContextMenu> = ({
       handleSaveToClipboard(response);
     };
     ipcRenderer.on('saveToClipboard', saveToClipboardListener);
-    // return () => {
-    //   ipcRenderer.removeListener('saveToClipboard', saveToClipboardListener);
-    // };
   }, []);  
 
   return (

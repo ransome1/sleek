@@ -2,14 +2,14 @@ import { app } from 'electron';
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 import { handleNotification } from '../HandleNotification';
-import { TodoObject, DateAttributes } from '../../util';
+import { TodoObject, DateAttributes, Badge } from '../../util';
 import { extractSpeakingDates } from '../Date';
 
 let lines: string[];
-const badgeCount = { count: 0 };
+export const badge: Badge = { count: 0 };
 
 function createTodoObjects(fileContent: string): TodoObject[] {
-  badgeCount.count = 0;
+  badge.count = 0;
   lines = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
   const todoObjects: TodoObject[] = lines
   .map((line, i) => {
@@ -50,7 +50,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
         pm,
         string: line,
       };
-      if(due && !todoObject.complete) handleNotification(i, due, body, badgeCount);
+      if(due && !todoObject.complete) handleNotification(i, due, body, badge);
       return todoObject as TodoObject;
     } catch (error) {
       console.log(error);
@@ -58,7 +58,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
     }
   })
   .filter((todoObject): todoObject is TodoObject => todoObject !== null);
-  app.setBadgeCount(badgeCount.count);
+  app.setBadgeCount(badge.count);
   return todoObjects;
 }
 

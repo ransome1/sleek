@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Dialog, DialogContent, DialogActions, FormControl } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
@@ -35,15 +35,18 @@ const TodoDialog: React.FC<TodoDialog> = ({
   t
 }: TodoDialogProps) => {
 
+  const useMultilineForBulkTodoCreation = store.get('useMultilineForBulkTodoCreation');
+  const multilineTextField = store.get('multilineTextField');
+  const textFieldRef = useRef(null);
+  const numRowsWithContent = textFieldValue.split('\n').filter(line => line.trim() !== '').length;
+
   const handleAdd = (event, id, string) => {
     try {
       if(string === '') {
         setSnackBarSeverity('info');
         setSnackBarContent(t('todoDialog.snackbar.emptyInput'));
       } else {
-        const multilineTextField = store.get('multilineTextField');
-        const content = string.replaceAll(/\n/g, String.fromCharCode(16));
-        ipcRenderer.send('writeTodoToFile', id, content);
+        ipcRenderer.send('writeTodoToFile', id, string);
       }
     } catch (error) {
       console.error(error.message);
@@ -79,6 +82,7 @@ const TodoDialog: React.FC<TodoDialog> = ({
           setDialogOpen={setDialogOpen}
           handleAdd={handleAdd}
           todoObject={todoObject}
+          textFieldRef={textFieldRef}
         />
         <PriorityPicker
           todoObject={todoObject}
@@ -111,7 +115,7 @@ const TodoDialog: React.FC<TodoDialog> = ({
       <DialogActions>
         <Button onClick={() => setDialogOpen(false)}>{t('todoDialog.footer.cancel')}</Button>
         <Button onClick={(event) => handleAdd(event, todoObject?.id, textFieldValue)}>
-          {todoObject?.body ? t('todoDialog.footer.update') : t('todoDialog.footer.add')}
+          {todoObject?.body ? t('todoDialog.footer.update') : (useMultilineForBulkTodoCreation && multilineTextField ? `${t('todoDialog.footer.add')} (${numRowsWithContent})` : `${t('todoDialog.footer.add')}`)}
         </Button>
       </DialogActions>
     </Dialog>

@@ -72,7 +72,7 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       JsTodoTxtObject.setComplete(false);
       JsTodoTxtObject.setCompleted(null);
 
-      await writeTodoObjectToFile(-1, JsTodoTxtObject.toString(), false);
+      await writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
       return 'Recurring todo created';
     }
     return 'No recurring todo created';

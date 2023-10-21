@@ -4,6 +4,12 @@ import { configStorage } from '../../main/config';
 
 const dateTodayString: string = dayjs(new Date()).format('YYYY-MM-DD');
 
+jest.mock('electron', () => ({
+  app: {
+    setBadgeCount: jest.fn(),
+  },
+}));
+
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn()

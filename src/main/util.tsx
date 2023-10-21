@@ -97,6 +97,10 @@ export type Headers = {
   visibleObjects: number;
 };
 
+export type Badge = {
+  count: number;
+};
+
 export interface ConfigData {
   files: File[];
   sorting: Sorting[];
