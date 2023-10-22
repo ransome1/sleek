@@ -1,13 +1,13 @@
-import { app, Tray, Menu } from 'electron';
-import { mainWindow, createWindow } from '../main';
+import { app, Menu, Tray } from 'electron';
+import { createWindow, mainWindow } from '../main';
 import { configStorage } from '../config';
-import { getAssetPath } from '../util';
+import { getAssetPath, File } from '../util';
 import { setFile } from './File/File';
 
-let tray;
+let tray: Tray;
 
-function createMenuTemplate(files) {
-  const menuTemplate = [
+function createMenuTemplate(files: File[]): Electron.MenuItemConstructorOptions[] {
+  return [
     {
       label: 'Show sleek',
       click: () => {
@@ -26,24 +26,24 @@ function createMenuTemplate(files) {
     },
     { type: 'separator' },
     ...(files?.length > 0
-      ? files.map((file, index) => ({
-          label: file.todoFileName,
-          accelerator: `CommandOrControl+${index + 1}`,
-          click: () => {
-            if (mainWindow) {
-              mainWindow.show();
-            } else {
-              createWindow()
-                .then((result) => {
-                  console.log('main.ts:', result);
-                })
-                .catch((error) => {
-                  console.error('main.ts:', error);
-                });
-            }
-            setFile(undefined, index);
-          },
-        }))
+      ? files.map((file: File, index: number) => ({
+        label: file.todoFileName,
+        accelerator: `CommandOrControl+${index + 1}`,
+        click: () => {
+          if (mainWindow) {
+            mainWindow.show();
+          } else {
+            createWindow()
+              .then((result) => {
+                console.log('main.ts:', result);
+              })
+              .catch((error) => {
+                console.error('main.ts:', error);
+              });
+          }
+          setFile(index);
+        },
+      }))
       : []),
     { type: 'separator' },
     {
@@ -53,8 +53,6 @@ function createMenuTemplate(files) {
       },
     },
   ];
-
-  return menuTemplate;
 }
 
 function createTray() {
@@ -64,9 +62,7 @@ function createTray() {
     tray?.destroy();
 
     if (!isTray) {
-      if (app.dock) {
-        app.dock.show();
-      }
+      app.dock?.show();
       return Promise.resolve('Tray not shown');
     }
 

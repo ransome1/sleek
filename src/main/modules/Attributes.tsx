@@ -20,14 +20,11 @@ function incrementCount(countObject: { [key: string]: number }, key: any | null)
 
 function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: boolean) {
   Object.keys(attributes).forEach((key) => {
-	
-	Object.keys(attributes[key]).forEach((attributeKey) => {
-		(reset) ? attributes[key] = {} : attributes[key][attributeKey] = 0
-	});
-
+    Object.keys(attributes[key]).forEach((attributeKey) => {
+      (reset) ? attributes[key] = {} : attributes[key][attributeKey] = 0
+    });
     todoObjects.forEach((todoObject: TodoObject) => {
       const value = todoObject[key as keyof TodoObject];
-
       if (Array.isArray(value)) {
         value.forEach((element) => {
           if (element !== null) {
@@ -41,10 +38,8 @@ function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: 
         }
       }
     });
-
     attributes[key] = Object.fromEntries(Object.entries(attributes[key]).sort(([a], [b]) => a.localeCompare(b)));
   });
-
   attributes = Object.fromEntries(sorting.map((item) => [item.value, attributes[item.value]]));
 }
 

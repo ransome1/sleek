@@ -2,25 +2,23 @@ import React from 'react';
 import { Box, Button, Chip } from '@mui/material';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg';
 import DatePickerInline from './DatePickerInline';
-import { TodoObject, Filters } from '../../../main/util';
+import { TodoObject, Filters, Filter, Element } from '../../main/util';
 
-interface Element {
-  type: string | null;
-  value: string;
-}
-
-interface ElementsProps {
+interface Props {
   todoObject: TodoObject;
   filters: Filters;
   handleButtonClick: (key: string, value: string) => void;
 }
 
-const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonClick }) => {
-
+const Elements: React.FC<Props> = ({
+  todoObject,
+  filters,
+  handleButtonClick
+}) => {
   const replacements: {
     [key: string]: (value: string, type: string) => React.ReactNode;
   } = {
-    due: (value, type) => (
+    due: (value,type) => (
       <DatePickerInline
         type={type}
         todoObject={todoObject}
@@ -72,7 +70,7 @@ const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonCl
       { pattern: /rec:([^ ]+)/, type: 'rec', key: 'rec:' },
     ];
 
-    let body = todoObject.body.replaceAll(String.fromCharCode(16), ' ');
+    let body = todoObject.body?.replaceAll(String.fromCharCode(16), ' ') ?? '';
     let substrings = [];
     let index = 0;
 
@@ -87,7 +85,7 @@ const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonCl
 
           if (match) {
             matched = true;
-            const value = match[0].substr(expression.key?.length);
+            const value = match[0].substring(expression.key?.length ?? 0);
             if(value) substrings.push({ type: expression.type, value: value, key: expression.key, index: index });
             body = body.substring(match[0].length);
             break;
@@ -107,9 +105,9 @@ const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonCl
     return substrings;
   };
 
-  const elements = matches().map((element, index) => {
-    const selected = (filters[element.type] || []).some(
-      (filter) => filter.value === element.value
+  const elements = matches().map((element: Element, index) => {
+    const selected = element.type !== null && (filters[element.type as keyof Filters] || []).some(
+      (filter: Filter) => filter.value === element.value
     );
 
     return (
@@ -124,7 +122,6 @@ const Elements: React.FC<ElementsProps> = ({ todoObject, filters, handleButtonCl
       </Box>
     );
   });
-
   return <>{elements}</>;
 };
 

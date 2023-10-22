@@ -1,21 +1,27 @@
 import React from 'react';
 import { ListItem, Box, Button, Divider } from '@mui/material';
-import { TodoObject, Filters } from '../../main/util.ts';
+import { Filters, Filter } from '../../main/util';
 
-interface Group {
-  todoObject: TodoObject;
+interface Props {
+  value: string;
+  group: string;
   filters: Filters;
   onClick: (key: string, value: string) => void;
 }
 
-const Group: React.FC<GroupListItem> = ({ todoObject, filters, onClick }) => {
-  const values = todoObject.value?.split(',') || [];
+const Group: React.FC<Props> = ({
+  value,
+  group,
+  filters,
+  onClick
+}) => {
+  const values = value?.split(',') || [];
 
   return (
     <ListItem className="row group">
       {values.map((value, index) => {
-        const selected = (filters[todoObject.group] || []).some(
-          (filter) => filter.value === value.trim()
+        const selected = (filters[group as keyof Filters] || []).some(
+          (filter: Filter) => filter.value === value.trim()
         );
 
         if (!value) {
@@ -26,10 +32,10 @@ const Group: React.FC<GroupListItem> = ({ todoObject, filters, onClick }) => {
           <Box
             key={index}
             className={selected ? 'selected' : ''}
-            data-todotxt-attribute={todoObject.group}
+            data-todotxt-attribute={group}
             data-todotxt-value={value}
           >
-            <Button className='attribute' onClick={() => onClick(todoObject.group, value.trim())}>
+            <Button className='attribute' onClick={() => onClick(group, value.trim())}>
               {value.trim()}
             </Button>
           </Box>

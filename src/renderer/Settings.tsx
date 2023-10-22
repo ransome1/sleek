@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   FormControl,
@@ -9,23 +9,25 @@ import {
   Select,
   Switch,
   Slider,
-  Typography
 } from '@mui/material';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';
 import { handleSettingChange } from './Shared';
+import { Attribute } from '../main/util';
 import './Settings.scss';
 
 const { store } = window.api;
 
-interface Settings extends WithTranslation {
+interface Props extends WithTranslation {
   isOpen: boolean;
   onClose: () => void;
+  setAttributeMapping: React.Dispatch<React.SetStateAction<Attribute>>;
   zoom: number;
-  setZoom: function;
+  setZoom: React.Dispatch<React.SetStateAction<number>>;
+  t: typeof i18n.t;
 }
 
-const Settings: React.FC<Settings> = ({
+const Settings: React.FC<Props> = ({
   isOpen,
   onClose,
   setAttributeMapping,
@@ -44,8 +46,8 @@ const Settings: React.FC<Settings> = ({
     notificationThreshold: store.get('notificationThreshold'),
   });
 
-  const handleColorThemeChange = (event) => {
-    const selectedValue = event.target.value;
+  const handleColorThemeChange = (event: Event) => {
+    const selectedValue = event.target?.value;
     if(selectedValue) {
       store.set('colorTheme', selectedValue);
       setSettings((prevSettings) => ({
@@ -89,7 +91,7 @@ const Settings: React.FC<Settings> = ({
               onChange={handleSettingChange('notificationThreshold', setSettings)}
             />
           </FormControl>
-        )}     
+        )}
 
         <FormControl sx={{ width: 300, clear: 'both', }}>
           Zoom
@@ -100,7 +102,7 @@ const Settings: React.FC<Settings> = ({
             valueLabelDisplay="auto"
             valueLabelFormat={(value) => `${value}%`}
             min={75} max={125}
-            onChange={(event) => setZoom(event.target.value)}
+            onChange={(event) => setZoom(event.target?.value)}
           />
         </FormControl>
 

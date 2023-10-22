@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
@@ -6,25 +6,32 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Box } from '@mui/material';
+import { File } from '../main/util';
 import './Navigation.scss';
 
 const { ipcRenderer } = window.api;
 
-const NavigationComponent = ({
+interface Props {
+  setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isDrawerOpen: boolean;
+  setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  files: File[];
+  setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const NavigationComponent: React.FC<Props> = ({
   setIsSettingsOpen,
   isDrawerOpen,
   setIsDrawerOpen,
   setDialogOpen,
   files,
   setIsNavigationOpen,
-  setAttributeMapping,
 }) => {
-
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (files?.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (files.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
         setDialogOpen(true);
-        return;
       }
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -37,7 +44,7 @@ const NavigationComponent = ({
     <>
       <Box id='navigation'>
         <Box>sleek</Box>
-        {files?.length > 0 && (
+        {files.length > 0 && (
           <>
             <Button onClick={() => setDialogOpen(true)}>
               <AddIcon />
@@ -46,7 +53,7 @@ const NavigationComponent = ({
               <FilterAltIcon />
             </Button>
           </>
-        )} 
+        )}
         <Button onClick={() => ipcRenderer.send('openFile')}>
           <FileOpenIcon />
         </Button>

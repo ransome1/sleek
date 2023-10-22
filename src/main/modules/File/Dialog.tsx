@@ -1,4 +1,4 @@
-import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue, IpcMainEvent } from 'electron';
+import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron';
 import path from 'path';
 import fs from 'fs/promises';
 import { configStorage } from '../../config';
@@ -13,7 +13,7 @@ const dialogFilters = [
   {
     name: 'All files',
     extensions: ['*']
-  }  
+  }
 ]
 
 async function openFile(): Promise<void> {
@@ -24,7 +24,7 @@ async function openFile(): Promise<void> {
     });
     if (!result.canceled && result.filePaths.length > 0) {
       const filePath: string = result.filePaths[0];
-      addFile(null, filePath);
+      addFile(filePath);
     }
     return;
   } catch (error) {
@@ -32,7 +32,7 @@ async function openFile(): Promise<void> {
   }
 }
 
-async function changeDoneFilePath(event: IpcMainEvent, index: number): Promise<void> {
+async function changeDoneFilePath(index: number): Promise<void> {
   try {
     const files: File[] = (configStorage.get('files') as File[]) || [];
     const currentPath = path.dirname(files[index].todoFilePath);
@@ -53,7 +53,7 @@ async function changeDoneFilePath(event: IpcMainEvent, index: number): Promise<v
 }
 
 async function createFile(): Promise<void> {
-  try { 
+  try {
     const result: SaveDialogReturnValue = await dialog.showSaveDialog({
       defaultPath: path.join(app.getPath('documents'), 'todo.txt'),
       filters: dialogFilters,
@@ -61,7 +61,7 @@ async function createFile(): Promise<void> {
     if (!result.canceled && result.filePath) {
       const filePath: string = result.filePath;
       await fs.writeFile(filePath, '');
-      addFile(null, filePath);
+      addFile(filePath);
     }
     return;
   } catch (error) {

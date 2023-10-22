@@ -1,6 +1,7 @@
 import { URL } from 'url';
 import path from 'path';
 import { app } from 'electron';
+import React from 'react';
 
 const RESOURCES_PATH = app.isPackaged
   ? path.join(process.resourcesPath, 'assets')
@@ -9,6 +10,27 @@ const RESOURCES_PATH = app.isPackaged
 export const getAssetPath = (...paths: string[]): string => {
   return path.resolve(RESOURCES_PATH, ...paths);
 };
+
+export interface ContextMenuItem {
+  id: string;
+  label: string;
+  todoObject?: {
+    id: string;
+    string: string;
+  };
+  index?: number;
+  doneFilePath?: string;
+  headline?: string;
+  text?: string;
+}
+
+export interface InputProps {
+  placeholder: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
+  onKeyDown: (event: React.KeyboardEvent) => void;
+}
 
 export function resolveHtmlPath(htmlFileName: string): string {
   try {
@@ -22,6 +44,13 @@ export function resolveHtmlPath(htmlFileName: string): string {
   } catch (error) {
     throw new Error(`Failed to resolve path: ${error}`);
   }
+}
+
+export interface Settings {
+  showCompleted: boolean;
+  showHidden: boolean;
+  thresholdDateInTheFuture: boolean;
+  dueDateInTheFuture: boolean;
 }
 
 export interface File {
@@ -50,6 +79,18 @@ export interface TodoObject {
   string: string;
 }
 
+export interface TranslatedAttributes {
+  t: string;
+  due: string;
+  projects: string;
+  contexts: string;
+  priority: string;
+  rec: string;
+  pm: string;
+  created: string;
+  completed: string;
+}
+
 export interface Sorting {
   id: string;
   value: string;
@@ -74,12 +115,12 @@ export interface Filter {
   exclude: boolean;
 }
 
-export interface Attributes {
-  [key: string]: Attribute;
-}
-
 export interface Attribute {
   [key: string]: number;
+}
+
+export interface Attributes {
+  [key: string]: Attribute;
 }
 
 export type DateAttribute = {
@@ -99,6 +140,12 @@ export type Headers = {
 
 export type Badge = {
   count: number;
+};
+
+export type Element = {
+  type: string | null;
+  value: string | null;
+  index: number;
 };
 
 export interface ConfigData {

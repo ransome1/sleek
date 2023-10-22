@@ -26,12 +26,12 @@ function createTodoObjects(fileContent: string): TodoObject[] {
       const t = speakingDates['t:'] ? speakingDates['t:'].date : null;
       const tString = speakingDates['t:'] ? speakingDates['t:'].string : null;
       const extensions = JsTodoTxtObject.extensions();
-      const hidden = extensions.find((extension) => extension.key === 'h')?.value === '1' ? true : false;
+      const hidden = extensions.find((extension) => extension.key === 'h')?.value === '1';
       const pm = extensions.find((extension) => extension.key === 'pm')?.value || null;
       const rec = extensions.find((extension) => extension.key === 'rec')?.value || null;
       const creation = dayjs(JsTodoTxtObject.created()).isValid() ? dayjs(JsTodoTxtObject.created()).format('YYYY-MM-DD') : null;
       const completed = dayjs(JsTodoTxtObject.completed()).isValid() ? dayjs(JsTodoTxtObject.completed()).format('YYYY-MM-DD') : null;
-      
+
       const todoObject = {
         id: i,
         body,

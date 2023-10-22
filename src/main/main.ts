@@ -2,12 +2,10 @@ const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD
 if (isDebug) {
   require('electron-debug')();
 }
-import { app, BrowserWindow, Rectangle, Menu, ipcMain, nativeTheme } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
 import createMenu from './modules/Menu';
 import { resolveHtmlPath, getAssetPath, File } from './util';
 import createFileWatcher from './modules/File/Watcher';
@@ -16,22 +14,9 @@ import './modules/Ipc';
 import handleTheme from './modules/Theme';
 
 const files: File[] = (configStorage.get('files') as File[]) || [];
-const windowMaximized: boolean = configStorage.get('windowMaximized');
 
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
-
-// class AppUpdater {
-//   constructor() {
-//     log.transports.file.level = 'info';
-//     autoUpdater.logger = log;
-//     autoUpdater.checkForUpdatesAndNotify().then(result => {
-//       console.log('main.ts: Update check completed:', result);
-//     }).catch(error => {
-//       console.error('main.ts: Error checking for updates:', error);
-//     });
-//   }
-// }
 
 const handleClosed = () => {
   mainWindow = null;
@@ -44,7 +29,7 @@ const handleResize = () => {
     const { width, height } = mainWindow?.getBounds();
     configStorage.set('windowDimensions', { width, height });
     configStorage.set('windowMaximized', false);
-  }  
+  }
 }
 
 const handleMove = () => {
@@ -52,7 +37,7 @@ const handleMove = () => {
     const { x, y } = mainWindow?.getBounds();
     configStorage.set('windowPosition', { x, y });
     configStorage.set('windowMaximized', false);
-  }  
+  }
 }
 
 const handleUnmaximize = () => {
@@ -65,9 +50,7 @@ const handleMaximize = () => {
 }
 
 const handleShow = () => {
-  if (app.dock) {
-    app.dock.show();
-  }
+  app.dock?.show();
 }
 
 const handleWindowSizeAndPosition = () => {
@@ -120,7 +103,7 @@ const createWindow = async() => {
   handleTheme();
 
   handleWindowSizeAndPosition();
-  
+
   mainWindow?.loadURL(resolveHtmlPath('index.html'));
   mainWindow
     .on('ready-to-show', handleReadyToShow)
@@ -145,12 +128,12 @@ const handleReadyToShow = async () => {
   // }
   try {
     if(files && Object.keys(files)?.length > 0) {
-      const response = await createFileWatcher(files);
+      const response = createFileWatcher(files);
       console.log('main.ts:', response);
     }
   } catch (error) {
     console.log(error);
-  }  
+  }
   // if (!isDebug) {
   //   eventListeners.appUpdater = new AppUpdater();
   // }
@@ -196,7 +179,7 @@ app
   .then(() => {
     eventListeners.readyToShow = handleReadyToShow;
     eventListeners.closed = handleClosed;
-    
+
     createWindow().then(result => {
       console.log('main.ts:', result);
     }).catch(error => {

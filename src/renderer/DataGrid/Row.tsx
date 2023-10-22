@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
-import { Checkbox, ListItem, Box } from '@mui/material';
+import React from 'react';
+import { Checkbox, ListItem } from '@mui/material';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { withTranslation } from 'react-i18next';
-import { i18n } from './LanguageSelector';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import Group from './Group';
 import Elements from './Elements';
 import { handleFilterSelect } from '../Shared';
 import './Row.scss';
+import { i18n } from '../LanguageSelector';
 
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer } = window.api;
 
-interface Row {
+interface Props extends WithTranslation {
   row: any;
   filters: any;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,10 +20,10 @@ interface Row {
   setTodoObject: React.Dispatch<React.SetStateAction<any>>;
   setContextMenuPosition: React.Dispatch<React.SetStateAction<{ top: number; left: number } | null>>;
   setContextMenuItems: React.Dispatch<React.SetStateAction<any[]>>;
-  t: any;
+  t: typeof i18n.t;
 }
 
-const Row: React.FC<DataGridRowProps> = ({
+const Row: React.FC<Props> = ({
   row,
   filters,
   setDialogOpen,
@@ -62,7 +62,7 @@ const Row: React.FC<DataGridRowProps> = ({
     );
   };
 
-  const handleRowClick = (event: React.MouseEvent | React.KeyboardEvent) => {
+  const handleRowClick = (event: React.KeyboardEvent | React.MouseEvent) => {
     const clickedElement = event.target as HTMLElement;
     if ((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if (
@@ -92,7 +92,8 @@ const Row: React.FC<DataGridRowProps> = ({
   if (row.group) {
     return (
       <Group
-        todoObject={row}
+        value={row.value}
+        group={row.group}
         filters={filters}
         onClick={handleButtonClick}
       />

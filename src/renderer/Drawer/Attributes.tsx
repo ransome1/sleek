@@ -11,42 +11,36 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AirIcon from '@mui/icons-material/Air';
 import { handleFilterSelect } from '../Shared';
-import { withTranslation } from 'react-i18next';
-import { i18n } from './LanguageSelector';
+import { Attributes, Filters } from '../../main/util';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { i18n } from '../LanguageSelector';
 import './Attributes.scss';
 
-const store = window.api.store;
+const { store } = window.api;
 
-interface Attribute {
-  [key: string]: number;
+interface Props extends WithTranslation {
+  attributes: Attributes | null;
+  filters: Filters; // Replace with actual filter type
+  attributeMapping: { [key: string]: string };
+  t: typeof i18n.t;
 }
 
-interface Attributes {
-  attributes: { [key: string]: Attribute };
-  filters: { [key: string]: { value: string; exclude: boolean }[] };
-}
-
-interface Settings {
-  accordionOpenState: boolean[];
-}
-
-const Attributes: React.FC<Attributes> = ({
-  attributes,
-  filters,
-  isDrawerOpen,
-  attributeMapping,
-  t
-}: AttributesProps) => {
+const DrawerAttributes: React.FC<Props> = ({
+   attributes,
+   filters,
+   attributeMapping,
+   t,
+ }) => {
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
-  const [settings, setSettings] = useState<Settings>({
-    accordionOpenState: store.get('accordionOpenState'),
+  const [settings, setSettings] = useState({
+    accordionOpenState: store.get('accordionOpenState', []),
     isDrawerOpen: store.get('isDrawerOpen'),
   });
 
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
 
-  const isAttributesEmpty = (attributes: { [key: string]: Attribute }) => {
-    return Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
+  const isAttributesEmpty = (attributes: Attributes | null) => {
+    return !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
   };
 
   const handleCtrlCmdDown = (event: KeyboardEvent) => {
@@ -81,7 +75,7 @@ const Attributes: React.FC<Attributes> = ({
     };
 
     handleFocusFirstTabbableElement();
-    
+
     document.addEventListener('keydown', handleCtrlCmdDown);
     document.addEventListener('keyup', handleCtrlCmdUp);
     return () => {
@@ -114,9 +108,9 @@ const Attributes: React.FC<Attributes> = ({
                 <Box>
                   {Object.keys(attributes[key]).map((value, childIndex) => {
                     const excluded = filters[key]?.some(
-                      (filter) => filter.value === value && filter.exclude
+                      (filter: any) => filter.value === value && filter.exclude
                     );
-                    const selected = filters[key]?.some((filter) => filter.value === value);
+                    const selected = filters[key]?.some((filter: any) => filter.value === value);
                     const disabled = attributes[key][value] === 0;
 
                     return (
@@ -135,7 +129,7 @@ const Attributes: React.FC<Attributes> = ({
                               disabled
                                 ? undefined
                                 : () =>
-                                    handleFilterSelect(key, value, filters, isCtrlKeyPressed)
+                                  handleFilterSelect(key, value, filters, isCtrlKeyPressed)
                             }
                             disabled={disabled}
                           >
@@ -165,4 +159,4 @@ const Attributes: React.FC<Attributes> = ({
   );
 };
 
-export default withTranslation()(Attributes);
+export default withTranslation()(DrawerAttributes);

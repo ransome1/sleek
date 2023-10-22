@@ -4,17 +4,17 @@ import { CssBaseline, Snackbar, Alert, Box } from '@mui/material';
 import NavigationComponent from './Navigation';
 import TodoDataGrid from './DataGrid/Grid';
 import SplashScreen from './SplashScreen';
-import FileTabs from './FileTabs.tsx';
-import { baseTheme, darkTheme, lightTheme } from './Themes';
+import FileTabs from './FileTabs';
+import { darkTheme, lightTheme } from './Themes';
 import DrawerComponent from './Drawer/Drawer';
 import Search from './Search';
 import TodoDialog from './TodoDialog/TodoDialog';
 import Archive from './Archive';
 import ToolBar from './ToolBar';
 import ContextMenu from './ContextMenu';
-import { Sorting } from '../main/util';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from './LanguageSelector';
+import { Sorting, Headers, File, TodoObject, Attributes, Filters, TranslatedAttributes } from '../main/util';
 import Settings from './Settings';
 import { translatedAttributes } from './Shared';
 import './App.scss';
@@ -22,7 +22,7 @@ import './App.scss';
 const { ipcRenderer, store } = window.api;
 
 const App = () => {
-  const [files, setFiles] = useState<string[]>(store.get('files') || null);
+  const [files, setFiles] = useState<File[]>(store.get('files') || null);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(store.get('isDrawerOpen') || false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(store.get('isSearchOpen') || false);
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
@@ -30,12 +30,12 @@ const App = () => {
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [searchString, setSearchString] = useState(null);
-  const [todoObjects, setTodoObjects] = useState<object>(null);
-  const [todoObject, setTodoObject] = useState(null);
-  const [headers, setHeaders] = useState<object>(null);
-  const [filters, setFilters] = useState<object>({});
-  const [attributes, setAttributes] = useState<object>({}); 
+  const [searchString, setSearchString] = useState<string>('');
+  const [todoObjects, setTodoObjects] = useState<TodoObject[]>();
+  const [todoObject, setTodoObject] = useState<TodoObject | null>();
+  const [headers, setHeaders] = useState<Headers | null>();
+  const [filters, setFilters] = useState<Filters | null>({});
+  const [attributes, setAttributes] = useState<Attributes | null>(null);
   const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
   const [zoom, setZoom] = useState<number>(store.get('zoom') || 100);
   const searchFieldRef = useRef(null);
@@ -45,10 +45,10 @@ const App = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuItems, setContextMenuItems] = useState([]);
-  const [attributeMapping, setAttributeMapping] = useState(translatedAttributes(i18n.t) || {});
+  const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
   const [textFieldValue, setTextFieldValue] = useState('');
-  
-  const handleRequestedData = (todoObjects: object, attributes: object, headers: object, filters: object) => {
+
+  const handleRequestedData = (todoObjects: TodoObject[], attributes: Attributes, headers: Headers, filters: Filters) => {
     if(headers) setHeaders(headers);
     if(attributes) setAttributes(attributes);
     if(filters) setFilters(filters);
@@ -56,11 +56,11 @@ const App = () => {
     setSplashScreen(null);
   };
 
-  const handleUpdateFiles = (files: object) => {
+  const handleUpdateFiles = (files: File[]) => {
     setFiles(files);
   };
 
-  const handleUpdateSorting = (sorting: object) => {
+  const handleUpdateSorting = (sorting: Sorting) => {
     setSorting(sorting)
   };
 
@@ -88,13 +88,13 @@ const App = () => {
     setIsSettingsOpen(prevIsSettingsOpen => !prevIsSettingsOpen);
   };
 
-  const handleDrop = (event) => {
+  const handleDrop = (event: any) => {
     event.preventDefault();
     const filePath = event.dataTransfer.files[0].path;
     if(typeof filePath === 'string') ipcRenderer.send('addFile', filePath);
   };
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (event: Event) => {
     event.preventDefault();
   };
 
@@ -110,7 +110,7 @@ const App = () => {
     } else {
       setDialogOpen(false);
     }
-  };  
+  };
 
   useEffect(() => {
     if(!headers) {
@@ -182,20 +182,6 @@ const App = () => {
     ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
-    // return () => {      
-    //   ipcRenderer.removeListener('requestData', handleRequestedData);
-    //   ipcRenderer.removeListener('updateFiles', handleUpdateFiles);
-    //   ipcRenderer.removeListener('updateSorting', handleUpdateSorting);
-    //   ipcRenderer.removeListener('setIsSearchOpen', handleSetIsSearchOpen);
-    //   ipcRenderer.removeListener('setIsNavigationOpen', handleSetIsNavigationOpen);
-    //   ipcRenderer.removeListener('setShouldUseDarkColors', handleSetShouldUseDarkColors);
-    //   ipcRenderer.removeListener('setShowFileTabs', handleSetShowFileTabs);
-    //   ipcRenderer.removeListener('setIsDrawerOpen', handleSetIsDrawerOpen);
-    //   ipcRenderer.removeListener('setIsSettingsOpen', handleSetIsSettingsOpen);
-    //   ipcRenderer.removeListener('writeTodoToFile', handleWriteTodoToFile);
-    //   window.removeEventListener('drop', handleDrop);
-    //   window.removeEventListener('dragover', handleDragOver);
-    // }; 
   }, []);
 
   return (
@@ -216,7 +202,7 @@ const App = () => {
           />
           {files?.length > 0 && (
             <>
-              <DrawerComponent 
+              <DrawerComponent
                 isDrawerOpen={isDrawerOpen}
                 setIsDrawerOpen={setIsDrawerOpen}
                 attributes={attributes}
@@ -230,11 +216,11 @@ const App = () => {
           <Box className="flexItems">
             {files?.length > 0 && (
             <>
-              {!isSearchOpen && showFileTabs ? 
-              <FileTabs 
+              {!isSearchOpen && showFileTabs ?
+              <FileTabs
                 files={files}
                 setContextMenuPosition={setContextMenuPosition}
-                setContextMenuItems={setContextMenuItems}              
+                setContextMenuItems={setContextMenuItems}
                /> : null}
               {headers?.availableObjects > 0 ?
               <>
@@ -267,7 +253,7 @@ const App = () => {
               setContextMenuItems={setContextMenuItems}
               setTextFieldValue={setTextFieldValue}
             />
-            <SplashScreen 
+            <SplashScreen
               screen={splashScreen}
               setDialogOpen={setDialogOpen}
               setSearchString={setSearchString}
@@ -286,22 +272,22 @@ const App = () => {
           setTextFieldValue={setTextFieldValue}
           shouldUseDarkColors={shouldUseDarkColors}
         />
-        <Settings 
+        <Settings
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           setAttributeMapping={setAttributeMapping}
           zoom={zoom}
           setZoom={setZoom}
-        />        
+        />
         <ContextMenu
           contextMenuPosition={contextMenuPosition}
           setContextMenuPosition={setContextMenuPosition}
           contextMenuItems={contextMenuItems}
-          setContextMenuItems={setContextMenuItems}        
+          setContextMenuItems={setContextMenuItems}
           setSnackBarSeverity={setSnackBarSeverity}
-          setSnackBarContent={setSnackBarContent}        
+          setSnackBarContent={setSnackBarContent}
         />
-        <Snackbar 
+        <Snackbar
           open={snackBarOpen}
           onClose={handleAlertClose}
           autoHideDuration={3000}

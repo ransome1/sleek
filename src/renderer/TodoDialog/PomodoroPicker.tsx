@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { FormControl, InputLabel, TextField } from '@mui/material';
+import React, { useState } from 'react';
+import { FormControl, TextField } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg'
+import { TodoObject } from '../../main/util'
 import './PomodoroPicker.scss';
 
-interface PomodoroPicker {
-  JsTodoTxtObject: object | null;
+interface Props {
+  todoObject: TodoObject | null;
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   textFieldValue: string;
 }
 
-const PomodoroPicker: PomodoroPicker = ({ 
+const PomodoroPicker: React.FC<Props> = ({
   todoObject,
   setTextFieldValue,
   textFieldValue
 }) => {
-  const [pomodoro, setPomodoro] = useState<string | null>(todoObject?.pm || 0);
-
-  const handleChange = (event) => {
+  const [pomodoro, setPomodoro] = useState<number | null>(todoObject?.pm || 0);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedPomodoro = event.target.value;
     let string = textFieldValue.replaceAll('\n', ` ${String.fromCharCode(16)}`);
     const JsTodoTxtObject = new Item(string);

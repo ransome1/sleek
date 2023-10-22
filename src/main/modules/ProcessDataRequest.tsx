@@ -1,11 +1,10 @@
 import fs from 'fs';
-import path from 'path';
 import { getActiveFile } from './File/Active';
 import { configStorage, filterStorage } from '../config';
 import { applyFilters } from './Filters';
 import { updateAttributes, attributes } from './Attributes';
 import { createTodoObjects } from './TodoObject/CreateTodoObjects';
-import { File, Filter, Attributes, RequestedData, Headers, Sorting, TodoObject } from '../util';
+import { File, RequestedData, Headers, Sorting, TodoObject } from '../util';
 import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString, handleTodoObjectsDates } from './TodoObject/ProcessTodoObjects';
 
 const headers: Headers = {
@@ -31,8 +30,8 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     const dueDateInTheFuture: boolean = configStorage.get('dueDateInTheFuture');
     const fileContent = await fs.promises.readFile(file.todoFilePath, 'utf8');
     let todoObjects: TodoObject[];
-    
-    todoObjects = await createTodoObjects(fileContent); 
+
+    todoObjects = createTodoObjects(fileContent);
 
     if(!thresholdDateInTheFuture || !dueDateInTheFuture) todoObjects = handleTodoObjectsDates(todoObjects, dueDateInTheFuture, thresholdDateInTheFuture);
 
@@ -45,7 +44,7 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
 
     if (filters) todoObjects = applyFilters(todoObjects, filters);
-    
+
     if (searchString) todoObjects = applySearchString(searchString, todoObjects);
 
     headers.visibleObjects = countTodoObjects(todoObjects);
@@ -62,7 +61,7 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     const flattenedTodoObjects: any = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
 
     return Promise.resolve([flattenedTodoObjects, attributes, headers, filters]);
-    
+
   } catch(error) {
     return Promise.reject(error);
   }

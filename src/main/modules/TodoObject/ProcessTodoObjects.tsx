@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import { TodoObject, Sorting } from '../../util';
-import * as FilterLang from "../FilterLang/FilterLang.js";
-import { runQuery } from "../FilterLang/FilterQuery.js";
+import { Sorting, TodoObject } from '../../util';
+import * as FilterLang from '../FilterLang/FilterLang.js';
+import { runQuery } from '../FilterLang/FilterQuery.js';
 
 function countTodoObjects(todoObjects: TodoObject[]): number {
   const count = todoObjects.filter((object: TodoObject | null) => {
@@ -13,40 +13,35 @@ function countTodoObjects(todoObjects: TodoObject[]): number {
 function applySearchString(searchString: string, todoObjects: TodoObject[]): TodoObject[] {
   try {
     const query = FilterLang.parse(searchString);
-    const filteredTodoObjects = todoObjects.filter(function(todoObject: TodoObject): TodoObject[] {
+    return todoObjects.filter(function(todoObject: TodoObject): TodoObject[] {
       return runQuery(todoObject, query);
     });
-    return filteredTodoObjects;
   } catch(error) {
     const lowerSearchString = searchString.toLowerCase();
-    const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
+    return Object.values(todoObjects)
       .flat()
       .filter((todoObject: TodoObject | null) =>
         todoObject && todoObject.string.toLowerCase().includes(lowerSearchString)
       );
-    return filteredTodoObjects;
   }
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[], showCompleted: boolean):TodoObject[] {
-  const filteredTodoObjects = todoObjects.filter((todoObject: TodoObject) => {
+  return todoObjects.filter((todoObject: TodoObject) => {
     if (showCompleted) {
       return true;
     } else {
       return !todoObject.complete;
     }
   });
-
-  return filteredTodoObjects;
 }
 
 function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  const filteredTodoObjects: TodoObject[] = Object.values(todoObjects)
-    .flat()
-    .filter((object: TodoObject | null) =>
-      object && object.hidden === false
-    );
-    return filteredTodoObjects;
+  return Object.values(todoObjects)
+      .flat()
+      .filter((object: TodoObject | null) =>
+        object && !object.hidden
+      );
 }
 
 function handleTodoObjectsDates(todoObjects: TodoObject[], dueDateInTheFuture: boolean, thresholdDateInTheFuture: boolean): TodoObject[] {
@@ -56,10 +51,8 @@ function handleTodoObjectsDates(todoObjects: TodoObject[], dueDateInTheFuture: b
     if (!dueDateInTheFuture && dueDate && dueDate.isAfter(dayjs())) {
       return false;
     }
-    if (!thresholdDateInTheFuture && tDate && tDate.isAfter(dayjs())) {
-      return false;
-    }
-    return true;
+    return !(!thresholdDateInTheFuture && tDate && tDate.isAfter(dayjs()));
+
   });
 }
 
@@ -114,8 +107,7 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
   }
 
   const sortedTodoObjects = Object.values(todoObjects).sort(sortObjectsBySorting);
-  const sortedAndGrouped = sortAndGroupObjects(sortedTodoObjects, 0, sorting);
-  return sortedAndGrouped;
+  return sortAndGroupObjects(sortedTodoObjects, 0, sorting);
 }
 
 function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string) {
@@ -127,12 +119,12 @@ function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string) {
       }
 
       for (const key in todoObject) {
-        if (key !== sortingKey && typeof todoObject[key] === 'object') {  
+        if (key !== sortingKey && typeof todoObject[key] === 'object') {
           flatten(todoObject[key], sortingKey);
         }
       }
     }
-  }  
+  }
   for (const key in todoObjects) {
     if (topLevelGroup) {
       flattenedObjects.push({

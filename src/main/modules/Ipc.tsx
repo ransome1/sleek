@@ -7,15 +7,15 @@ import { configStorage, filterStorage } from '../config';
 import { addFile, setFile, removeFile, revealFile } from './File/File';
 import { openFile, createFile, changeDoneFilePath } from './File/Dialog';
 
-async function handleDataRequest(event: IpcMainEvent, searchString: string): void {
+async function handleDataRequest(event: IpcMainEvent, searchString: string): Promise<void> {
   const [todoObjects, attributes, headers, filters] = await processDataRequest(searchString);
   event.reply('requestData', todoObjects, attributes, headers, filters);
 }
 
-async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean | undefined): Promise<void> {
+async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string | null, state: boolean | undefined): Promise<void> {
   try {
-    let updatedString: string = string;
-    if (state !== undefined && id >= 0 && !remove) {
+    let updatedString: string | null = string;
+    if (state !== undefined && id >= 0) {
       updatedString = await changeCompleteState(string, state);
     }
     writeTodoObjectToFile(id, updatedString).then(function (response) {
@@ -32,13 +32,12 @@ async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: st
 function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
   try {
     event.returnValue = configStorage.get(value);
-    console.log(`ipcEvents.ts: Received config value for ${value}`);
   } catch (error) {
     console.error('ipcEvents.ts:', error);
   }
 }
 
-function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any): void {
+function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
   try {
     if(!key) return false;
     configStorage.set(key, value);
@@ -52,6 +51,46 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
   try {
     filterStorage.set('filters', value);
     console.log(`ipcEvents.ts: Filters saved`);
+  } catch (error) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleSetFile(event: IpcMainEvent, index: number): void {
+  try {
+    setFile(index);
+  } catch (error) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleRemoveFile(event: IpcMainEvent, index: number): void {
+  try {
+    removeFile(index);
+  } catch (error) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleAddFile(event: IpcMainEvent, index: number): void {
+  try {
+    addFile(index);
+  } catch (error) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleRevealFile(event: IpcMainEvent, index: number): void {
+  try {
+    revealFile(index);
+  } catch (error) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleChangeDoneFilePath(event: IpcMainEvent, index: number): void {
+  try {
+    changeDoneFilePath(index);
   } catch (error) {
     console.error('ipcEvents.ts:', error);
   }
@@ -74,17 +113,17 @@ function removeEventListeners(): void {
   ipcMain.off('storeGetConfig', handleStoreGetConfig);
   ipcMain.off('storeSetConfig', handleStoreSetConfig);
   ipcMain.off('storeSetFilters', handleStoreSetFilters);
-  ipcMain.off('setFile', setFile);
-  ipcMain.off('removeFile', removeFile);
+  ipcMain.off('setFile', handleSetFile);
+  ipcMain.off('removeFile', handleRemoveFile);
   ipcMain.off('openFile', openFile);
   ipcMain.off('createFile', createFile);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', archiveTodos);
-  ipcMain.off('addFile', addFile);
+  ipcMain.off('addFile', handleAddFile);
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
-  ipcMain.off('revealFile', revealFile);
-  ipcMain.off('changeDoneFilePath', changeDoneFilePath);
+  ipcMain.off('revealFile', handleRevealFile);
+  ipcMain.off('changeDoneFilePath', handleChangeDoneFilePath);
   ipcMain.off('removeLineFromFile', removeLineFromFile);
 }
 
@@ -93,15 +132,15 @@ app.on('before-quit', removeEventListeners);
 ipcMain.on('storeGetConfig', handleStoreGetConfig);
 ipcMain.on('storeSetConfig', handleStoreSetConfig);
 ipcMain.on('storeSetFilters', handleStoreSetFilters);
-ipcMain.on('setFile', setFile);
-ipcMain.on('removeFile', removeFile);
+ipcMain.on('setFile', handleSetFile);
+ipcMain.on('removeFile', handleRemoveFile);
 ipcMain.on('openFile', openFile);
 ipcMain.on('createFile', createFile);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', archiveTodos);
-ipcMain.on('addFile', addFile);
+ipcMain.on('addFile', handleAddFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
-ipcMain.on('revealFile', revealFile);
-ipcMain.on('changeDoneFilePath', changeDoneFilePath);
+ipcMain.on('revealFile', handleRevealFile);
+ipcMain.on('changeDoneFilePath', handleChangeDoneFilePath);
 ipcMain.on('removeLineFromFile', removeLineFromFile);

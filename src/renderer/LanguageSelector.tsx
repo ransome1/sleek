@@ -32,48 +32,51 @@ import 'dayjs/locale/hu';
 import 'dayjs/locale/cs';
 import 'dayjs/locale/pl';
 import 'dayjs/locale/ru';
-import 'dayjs/locale/ko';
-import 'dayjs/locale/hi';
 
 const { store } = window.api;
 
-const options = {
-    resources: {
-    	de: { translation: de },
-			en: { translation: en },
-			en_GB: { translation: en_GB },
-			it: { translation: it },
-			es: { translation: es },
-			fr: { translation: fr },
-			zh: { translation: zh },
-			pt: { translation: pt },
-			jp: { translation: jp },
-			tr: { translation: tr },
-			hu: { translation: hu },
-			cs: { translation: cs },
-			pl: { translation: pl },
-			ru: { translation: ru },
-			ko: { translation: ko },
-			hi: { translation: hi }
-    },
-    lng: store.get('language') || navigator.language,
-    fallbackLng: 'en',
-    supportedLngs: ['de', 'en', 'en-gb', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
-    interpolation: {
-      escapeValue: false,
-    },
-    saveMissing: true,
-}
+const options: i18n.InitOptions = {
+	resources: {
+		de: { translation: de },
+		en: { translation: en },
+		en_GB: { translation: en_GB },
+		it: { translation: it },
+		es: { translation: es },
+		fr: { translation: fr },
+		zh: { translation: zh },
+		pt: { translation: pt },
+		jp: { translation: jp },
+		tr: { translation: tr },
+		hu: { translation: hu },
+		cs: { translation: cs },
+		pl: { translation: pl },
+		ru: { translation: ru },
+		ko: { translation: ko },
+		hi: { translation: hi },
+	},
+	lng: store.get('language') || navigator.language,
+	fallbackLng: 'en',
+	supportedLngs: ['de', 'en', 'en-gb', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
+	interpolation: {
+		escapeValue: false,
+	},
+	saveMissing: true,
+};
 
 i18n
-  .use(initReactI18next)
-  .init(options);
+	.use(initReactI18next)
+	.init(options)
+	.then(() => {
+		// TODO: check if this is still working
+		i18n.on('missingKey', (key: string) => {
+			console.warn(`Missing translation key: ${key}`);
+		});
+	})
+	.catch((error) => {
+		console.error('Error initializing i18next:', error);
+	});
 
-i18n.on('missingKey', (language, ns, key, res) => {
-	console.warn(`Missing translation key: ${key}`);
-});
-
-const friendlyLanguageName = {
+const friendlyLanguageName: Record<string, string> = {
 	de: 'Deutsch',
 	en: 'English',
 	'en-gb': 'English (UK)',
@@ -89,50 +92,59 @@ const friendlyLanguageName = {
 	pl: 'Polski',
 	ru: 'Русский',
 	ko: '한국어',
-	hi: 'हिन्दी'
+	hi: 'हिन्दी',
+};
+
+interface Props {
+	setAttributeMapping: (attributes: Record<string, string>) => void;
 }
 
-const LanguageSelector = ({ setAttributeMapping }) => {
-	const supportedLanguages = i18n.options.supportedLngs;
-	const [selectedLanguage, setSelectedLanguage] = useState(
-  supportedLanguages.includes(store.get('language') || navigator.language) 
-    ? store.get('language') || navigator.language
-    : 'en'
-	);
+const LanguageSelector: React.FC<Props> = ({ setAttributeMapping }) => {
+	const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
+	const [selectedLanguage, setSelectedLanguage] = useState<string>(() => {
+		const storedLanguage = store.get('language') || navigator.language;
+		if (supportedLanguages && supportedLanguages.includes(storedLanguage)) {
+			return storedLanguage;
+		}
+		return 'en';
+	});
 
-	const changeLanguage = (event) => {
-		const language = event.target.value;
+	const changeLanguage = (event: React.ChangeEvent<{ value: unknown }>) => {
+		const language = event.target.value as string;
 		setSelectedLanguage(language);
 	};
 
 	useEffect(() => {
-		i18n.changeLanguage(selectedLanguage, (error) => {
-			if (error) return console.error('Error loading translation:', error);
-			store.set('language', selectedLanguage);
-			setAttributeMapping(translatedAttributes(i18n.t));
-		});
-	}, [selectedLanguage]);
+		i18n.changeLanguage(selectedLanguage)
+			.then(() => {
+				store.set('language', selectedLanguage);
+				setAttributeMapping(translatedAttributes(i18n.t));
+			})
+			.catch((error) => {
+				console.error('Error loading translation:', error);
+			});
+	}, [selectedLanguage, setAttributeMapping]);
 
 	return (
-	<FormControl>
-	<InputLabel id='language'>{i18n.t('settings.language')}</InputLabel>
-		<Select
-		  labelId='language'
-		  id='language'
-		  label='Language'
-		  value={selectedLanguage}
-		  name='language'
-		  onChange={changeLanguage}
-		>
-		{supportedLanguages.map((languageCode) => (
-		  languageCode !== 'cimode' && (
-		    <MenuItem key={languageCode} value={languageCode}>
-		      {friendlyLanguageName[languageCode]}
-		    </MenuItem>
-		  )
-		))}
-		</Select>
-	</FormControl>  	
+		<FormControl>
+			<InputLabel id='language'>{i18n.t('settings.language')}</InputLabel>
+			<Select
+				labelId='language'
+				id='language'
+				label='Language'
+				value={selectedLanguage}
+				name='language'
+				onChange={changeLanguage}
+			>
+				{supportedLanguages.map((languageCode) => (
+					languageCode !== 'cimode' && (
+						<MenuItem key={languageCode} value={languageCode}>
+							{friendlyLanguageName[languageCode]}
+						</MenuItem>
+					)
+				))}
+			</Select>
+		</FormControl>
 	);
 };
 

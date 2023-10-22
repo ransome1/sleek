@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button, Chip, Box } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { handleFilterSelect } from '../Shared';
+import { TodoObject, Filters } from '../../main/util';
 import dayjs from 'dayjs';
 
 const { ipcRenderer, store } = window.api;
 
-interface DatePickerInlineProps {
+interface Props {
   type: string,
   todoObject: TodoObject,
-  date: date,
-  filters
+  date: Date,
+  filters: Filters
 }
 
-const DatePickerInline: React.FC<DatePickerInlineProps> = ({
+const DatePickerInline: React.FC<Props> = ({
   type,
   todoObject,
   date,
   filters
 }) => {
 	const [open, setOpen] = useState(false);
-  const datePickerRef = useRef(null);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
 
   const handleChange = (updatedDate: dayjs.Dayjs | null) => {
@@ -43,9 +43,8 @@ const DatePickerInline: React.FC<DatePickerInlineProps> = ({
   };
 
   const DatePickerInline = ({ date, ...props }) => {
-
     const parsedDate = dayjs(date);
-  
+
     const ButtonField = ({ date, ...props }) => {
       const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
 

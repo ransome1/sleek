@@ -1,24 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 import { List } from '@mui/material';
 import Row from './Row';
+import { TodoObject, Attributes, Filters } from '../../main/util';
 import './Grid.scss';
 
-const TodoDataGrid = ({ 
-  todoObjects,
-  attributes,
-  filters,
-  setDialogOpen,
-  setTextFieldValue,
-  contextMenuPosition,
-  setContextMenuPosition,
-  contextMenuItems,
-  setContextMenuItems,
-  setTodoObject
-}) => { 
+interface TodoDataGridProps {
+  todoObjects: TodoObject[]; // Replace 'any' with your actual type for todoObjects
+  attributes: Attributes; // Replace 'any' with your actual type for attributes
+  filters: Filters; // Replace 'any' with your actual type for filters
+  setDialogOpen: (open: boolean) => void;
+  setTextFieldValue: (value: string) => void;
+  contextMenuPosition: { top: number; left: number } | null;
+  setContextMenuPosition: (position: { top: number; left: number } | null) => void;
+  contextMenuItems: any[]; // Replace 'any' with your actual type for contextMenuItems
+  setContextMenuItems: (items: any[]) => void; // Replace 'any' with your actual type
+  setTodoObject: (todoObject: any) => void; // Replace 'any' with your actual type
+}
+
+const TodoDataGrid: React.FC<TodoDataGridProps> = ({
+   todoObjects,
+   attributes,
+   filters,
+   setDialogOpen,
+   setTextFieldValue,
+   contextMenuPosition,
+   setContextMenuPosition,
+   contextMenuItems,
+   setContextMenuItems,
+   setTodoObject,
+ }) => {
   const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
 
-  const handleKeyUp = (event) => {
+  const handleKeyUp = (event: KeyboardEvent) => {
     if (event.key === 'ArrowDown') {
       const listItems = document.querySelectorAll('li:not(.group)');
       const currentIndex = Array.from(listItems).indexOf(document.activeElement);
@@ -36,8 +50,10 @@ const TodoDataGrid = ({
         prevElement.focus();
       }
     } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-      if(!event.target.closest('li')) return;
-      const rowItems = event.target.closest('li').querySelectorAll('button, input, select, a[href], [tabindex]:not([tabindex="-1"])');
+      if (!event.target.closest('li')) return;
+      const rowItems = event.target.closest('li').querySelectorAll(
+        'button, input, select, a[href], [tabindex]:not([tabindex="-1"])'
+      );
       const currentIndex = Array.from(rowItems).indexOf(document.activeElement);
       const nextIndex = event.key === 'ArrowRight' ? currentIndex + 1 : currentIndex - 1;
       const nextElement = rowItems[nextIndex];
@@ -58,7 +74,7 @@ const TodoDataGrid = ({
         if (remainingRows.length === 0) {
           setLoadMoreRows(false);
         } else {
-          setVisibleRowCount(prevVisibleRowCount => prevVisibleRowCount + 20);
+          setVisibleRowCount((prevVisibleRowCount) => prevVisibleRowCount + 20);
         }
       }
     }
@@ -70,8 +86,8 @@ const TodoDataGrid = ({
 
   return (
     <List id="dataGrid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
-      {rows.map((row, index) => (  
-        <Row 
+      {rows.map((row, index) => (
+        <Row
           key={index}
           attributes={attributes}
           row={row}

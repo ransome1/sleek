@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Item } from 'jstodotxt';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import './DatePicker.scss';
 
-interface DatePicker {
+interface Props extends WithTranslation {
   todoObject: Item | null;
   type: string;
   setTextFieldValue: (value: string) => void;
   textFieldValue: string;
+  t: typeof i18n.t;
 }
 
 const { store } = window.api;
 
-const DatePickerComponent: React.FC<DatePicker> = ({
+const DatePickerComponent: React.FC<Props> = ({
   todoObject,
   type,
   setTextFieldValue,

@@ -5,7 +5,7 @@ import fs from 'fs';
 import { mainWindow } from './main';
 import createMenu from './modules/Menu';
 import createTray from './modules/Tray';
-import { Sorting, File, ConfigData } from './util';
+import { File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 import handleTheme from './modules/Theme';
 
@@ -139,7 +139,9 @@ configStorage.onDidChange('fileSorting', (fileSorting) => {
 });
 
 configStorage.onDidChange('colorTheme', (colorTheme) => {
-  nativeTheme.themeSource = colorTheme;
+  if (colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
+    nativeTheme.themeSource = colorTheme;
+  }
 });
 
 configStorage.onDidChange('tray', () => {

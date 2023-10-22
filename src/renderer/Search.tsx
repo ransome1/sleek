@@ -1,40 +1,30 @@
-import React, { useState, useEffect, ChangeEvent, useRef } from 'react';
+import React, { useEffect, ChangeEvent } from 'react';
 import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from './LanguageSelector';
 import './Search.scss';
 
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer } = window.api;
 
-interface Search {
+interface Props extends WithTranslation {
   headers: { visibleObjects: string };
   searchString: string | null;
   setSearchString: (searchString: string) => void;
   isSearchOpen: boolean;
   setIsSearchOpen: (isSearchOpen: boolean) => void;
   searchFieldRef: React.RefObject<HTMLInputElement>;
+  t: typeof i18n.t;
 }
 
-const debounce = <T extends (...args: any[]) => any>(func: T, delay: number) => {
-  let timer: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-};
-
-const Search: React.FC<Search> = ({
+const Search: React.FC<Props> = ({
   headers,
   searchString,
   setSearchString,
   isSearchOpen,
-  setIsSearchOpen,
   searchFieldRef,
   t,
-}: SearchProps) => {
+}) => {
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
     const searchString = event.target.value;
     setSearchString(searchString);
@@ -55,13 +45,17 @@ const Search: React.FC<Search> = ({
 
   useEffect(() => {
     if (searchString === null) return;
+
+    let delayedSearch: NodeJS.Timeout;
+
     const handleSearch = () => {
       ipcRenderer.send('requestData', searchString);
     };
-    const delayedSearch = debounce(handleSearch, 200);
-    delayedSearch();
+
+    delayedSearch = setTimeout(handleSearch, 200);
+
     return () => {
-      clearTimeout(delayedSearch as NodeJS.Timeout);
+      clearTimeout(delayedSearch);
     };
   }, [searchString]);
 

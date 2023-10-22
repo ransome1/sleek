@@ -1,29 +1,31 @@
 import React, { useState } from 'react';
 import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Item } from 'jstodotxt';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
+import { TodoObject } from '../../main/util';
 import './PriorityPicker.scss';
-
-interface PriorityPicker {
-  todoObject: object | null;
-  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
-  textFieldValue: string;
-}
 
 const alphabetArray = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
 
 const priorities = [{ value: '-', label: '-' }, ...alphabetArray.map((letter) => ({ value: letter, label: letter }))];
 
-const PriorityPicker: React.FC<PriorityPicker> = ({
+interface Props extends WithTranslation {
+  todoObject: TodoObject | null;
+  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
+  textFieldValue: string;
+  t: typeof i18n.t;
+}
+
+const PriorityPicker: React.FC<Props> = ({
   todoObject,
   setTextFieldValue,
   textFieldValue,
   t,
-}: PriorityPickerProps) => {
+}: Props) => {
   const [priority, setPriority] = useState<string | null>(todoObject?.priority || '-');
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {  
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const updatedPriority = event.target.value as string;
     const JsTodoTxtObject = new Item(textFieldValue);
     JsTodoTxtObject.setPriority((updatedPriority === '-') ? null : updatedPriority);

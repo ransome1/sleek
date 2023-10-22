@@ -1,11 +1,10 @@
 import fs from 'fs/promises';
-import path from 'path';
 import { Item } from 'jstodotxt';
 import { lines } from '../TodoObject/CreateTodoObjects';
-import { getActiveFile } from '../File/Active';
+import { getActiveFile } from './Active';
 import { configStorage } from '../../config';
 import { File } from '../../util';
-import { replaceSpeakingDatesWithAbsoluteDates, extractSpeakingDates } from '../Date';
+import { replaceSpeakingDatesWithAbsoluteDates } from '../Date';
 
 async function removeLineFromFile(id: number) {
   const files = configStorage.get('files') as File[];
@@ -41,7 +40,7 @@ async function writeTodoObjectToFile(id: number, inputString: string): Promise<s
         linesToWrite[i] = replaceSpeakingDatesWithAbsoluteDates(linesToWrite[i]);
       }
     }
-    if (typeof id === 'number' && id >= 0) {
+    if (id >= 0) {
       lines[id] = linesToWrite.join('\n');
     } else {
       for (let i = 0; i < linesToWrite.length; i++) {
@@ -55,7 +54,7 @@ async function writeTodoObjectToFile(id: number, inputString: string): Promise<s
   }
 
   const modifiedContent: string = lines.join('\n');
-  
+
   const activeFile = getActiveFile(files);
 
   if (!activeFile) {

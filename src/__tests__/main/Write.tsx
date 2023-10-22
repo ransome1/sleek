@@ -34,7 +34,7 @@ jest.mock('../../main/modules/TodoObject/CreateTodoObjects', () => ({
 }));
 
 describe('Writing to file', () => {
-  
+
   beforeEach(async () => {
     jest.clearAllMocks();
   });
@@ -56,7 +56,7 @@ describe('Writing to file', () => {
         return true;
       }
       return originalGet.call(configStorage, key);
-    };  
+    };
     await writeTodoObjectToFile(-1, 'New line with creation date');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/test.txt', 'utf8');
     expect(fileContent).toEqual(`Line 1\nLine 2\nLine 3\nNew line\n${date} New line with creation date`);
@@ -76,12 +76,12 @@ describe('Writing to file', () => {
         return false;
       }
       return originalGet.call(configStorage, key);
-    };    
+    };
     await writeTodoObjectToFile(5, 'New line with relative threshold date t:June 3rd, 2005');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/test.txt', 'utf8');
     expect(fileContent).toEqual(`Line 1\nLine 2\nLine 3\nNew line\n${date} New line with creation date\nNew line with relative threshold date t:June 3rd, 2005`);
     configStorage.get = originalGet;
-  });      
+  });
 
   test('should overwrite a line when id is provided', async () => {
     await writeTodoObjectToFile(1, 'Edited line');
@@ -104,7 +104,7 @@ describe('Writing to file', () => {
         return true;
       }
       return originalGet.call(configStorage, key);
-    }; 
+    };
 
     const content = 'Line4\nLine5\nLine6';
 
@@ -123,7 +123,7 @@ describe('Writing to file', () => {
         return true;
       }
       return originalGet.call(configStorage, key);
-    }; 
+    };
 
     const content = 'Updated line\nAppend 1\nAppend 2';
 
@@ -142,7 +142,7 @@ describe('Writing to file', () => {
         return false;
       }
       return originalGet.call(configStorage, key);
-    }; 
+    };
 
     const content = 'Multi line 1\nMulti line 2\nMulti line 3';
 
@@ -161,7 +161,7 @@ describe('Writing to file', () => {
         return false;
       }
       return originalGet.call(configStorage, key);
-    }; 
+    };
 
     const content = 'Multi line 1\nMulti line 2\nMulti line 3';
 
@@ -169,5 +169,5 @@ describe('Writing to file', () => {
     const fileContent = await fs.readFile('./src/__tests__/__mock__/test.txt', 'utf8');
     expect(fileContent).toEqual(`Line 1\nEdited line\nMulti line 1Multi line 2Multi line 3\nUpdated line\nAppend 1\nAppend 2\nNew line with relative threshold date t:June 3rd, 2005\nLine4\nLine5\nLine6\nMulti line 1Multi line 2Multi line 3`);
     configStorage.get = originalGet;
-  });   
+  });
 });

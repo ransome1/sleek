@@ -1,27 +1,32 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Button, Dialog, DialogContent, DialogActions, FormControl } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
 import DatePicker from './DatePicker';
 import PomodoroPicker from './PomodoroPicker';
 import RecurrencePicker from './RecurrencePicker';
-import { withTranslation } from 'react-i18next';
-import { i18n } from '../LanguageSelector';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { TodoObject, Attributes } from '../../main/util';
 import './TodoDialog.scss';
+import { i18n } from '../LanguageSelector';
 
 const { ipcRenderer, store } = window.api;
 
-interface TodoDialog {
+interface Props extends WithTranslation {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  todoObject: any;
-  attributes: any;
+  todoObject: TodoObject;
+  setTodoObject: React.Dispatch<React.SetStateAction<boolean>>;
+  attributes: Attributes;
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
   shouldUseDarkColors: boolean;
+  textFieldValue: string,
+  setTextFieldValue: React.Dispatch<React.SetStateAction<boolean>>,
+  t: typeof i18n.t;
 }
 
-const TodoDialog: React.FC<TodoDialog> = ({
+const TodoDialog: React.FC<Props> = ({
   dialogOpen,
   setDialogOpen,
   todoObject,
@@ -33,14 +38,14 @@ const TodoDialog: React.FC<TodoDialog> = ({
   textFieldValue,
   setTextFieldValue,
   t
-}: TodoDialogProps) => {
+}: TodoDialog) => {
 
   const useMultilineForBulkTodoCreation = store.get('useMultilineForBulkTodoCreation');
   const multilineTextField = store.get('multilineTextField');
   const textFieldRef = useRef(null);
   const numRowsWithContent = textFieldValue.split('\n').filter(line => line.trim() !== '').length;
 
-  const handleAdd = (event, id, string) => {
+  const handleAdd = (id: number, string: string) => {
     try {
       if(string === '') {
         setSnackBarSeverity('info');
@@ -56,7 +61,7 @@ const TodoDialog: React.FC<TodoDialog> = ({
   const handleClose = () => {
     try {
       setDialogOpen(false);
-    } catch (error) {
+    } catch (error: Error) {
       console.error(error.message);
     }
   };
@@ -114,7 +119,7 @@ const TodoDialog: React.FC<TodoDialog> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setDialogOpen(false)}>{t('todoDialog.footer.cancel')}</Button>
-        <Button onClick={(event) => handleAdd(event, todoObject?.id, textFieldValue)}>
+        <Button onClick={() => handleAdd(todoObject?.id, textFieldValue)}>
           {todoObject?.body ? t('todoDialog.footer.update') : (useMultilineForBulkTodoCreation && multilineTextField ? `${t('todoDialog.footer.add')} (${numRowsWithContent})` : `${t('todoDialog.footer.add')}`)}
         </Button>
       </DialogActions>

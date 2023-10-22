@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { Box, FormGroup, FormControlLabel, Switch } from '@mui/material';
-import { withTranslation } from 'react-i18next';
-import LanguageSelector, { i18n } from '../LanguageSelector';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { handleSettingChange } from '../Shared';
+import { Settings } from '../../main/util';
 import './Filters.scss';
+import { i18n } from '../LanguageSelector';
 
-const store = window.api.store;
+const { store } = window.api;
 
-interface Settings {
-  showCompleted: boolean;
-  showHidden: boolean;
-  thresholdDateInTheFuture: boolean;
-  dueDateInTheFuture: boolean;
+interface Props extends WithTranslation {
+  t: typeof i18n.t;
 }
 
-const DrawerFilters: React.FC = ({ t }) => {
+const DrawerFilters: React.FC<Props> = ({ t }) => {
   const [settings, setSettings] = useState<Settings>({
     showCompleted: store.get('showCompleted'),
     showHidden: store.get('showHidden'),

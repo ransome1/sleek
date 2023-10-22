@@ -1,6 +1,5 @@
 import Sugar from 'sugar';
 import dayjs from 'dayjs';
-import { addRecurrenceToDate } from './TodoObject/CreateRecurringTodo';
 import { DateAttribute, DateAttributes } from '../util';
 
 function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
@@ -16,7 +15,7 @@ function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   return string;
 }
 
-function processDateWithSugar(string: string, key: string, type: string): DateAttribute | null {
+function processDateWithSugar(string: string, type: string): DateAttribute | null {
   const array = string.split(' ');
   let index = 0;
   let combinedValue = '';
@@ -32,8 +31,6 @@ function processDateWithSugar(string: string, key: string, type: string): DateAt
         type: type,
       };
     } else if (Sugar.Date.isValid(sugarDate) && type === 'relative') {
-      const now = new Date();
-      const relativeDate = addRecurrenceToDate(now, string);
       lastMatch = {
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
         string: combinedValue.slice(0, -1),
@@ -54,15 +51,15 @@ function extractSpeakingDates(body: string): DateAttributes {
   ];
 
   const speakingDates: DateAttributes = {
-    'due:': { 
+    'due:': {
       date: null,
       string: null,
-      type: null 
+      type: null
     },
     't:': {
       date: null,
       string: null,
-      type: null 
+      type: null
     }
   };
 
@@ -70,8 +67,8 @@ function extractSpeakingDates(body: string): DateAttributes {
     const regex = new RegExp(`(${expression.pattern.source})`);
     const match = body.match(regex);
     if(match) {
-      const attributeValue = match[0].substr(expression.key.length);
-      const dateAttribute = processDateWithSugar(attributeValue, expression.key, expression.type);
+      const attributeValue = match[0].slice(expression.key.length);
+      const dateAttribute = processDateWithSugar(attributeValue, expression.type);
       speakingDates[expression.key] = dateAttribute || speakingDates[expression.key];
     }
   }

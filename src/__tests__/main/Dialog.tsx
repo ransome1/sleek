@@ -52,7 +52,7 @@ describe('openFile', () => {
       filters: [{ name: 'Text files', extensions: ['txt'] }, { name: 'All files', extensions: ['*'] }],
     });
 
-    expect(addFile).toHaveBeenCalledWith(null, './src/__tests__/__mock__/fileDialog.txt');
+    expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt');
   });
 
   it('should not call addFile when file selection is canceled', async () => {
@@ -86,7 +86,7 @@ describe('createFile', () => {
     });
 
     expect(fs.writeFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', '');
-    expect(addFile).toHaveBeenCalledWith(null, './src/__tests__/__mock__/fileDialog.txt');
+    expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt');
   });
 
   it('should not call addFile when file creation is canceled', async () => {

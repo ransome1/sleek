@@ -1,34 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { Button, Avatar, Box, TextField, InputAdornment, IconButton } from '@mui/material';
+import { Box, Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import './AutoSuggest.scss';
+import { Attributes, TodoObject, InputProps } from '../../main/util';
 
 const { store } = window.api;
 
 const regex = /(?<=^| )[\+@][^ ]*/g;
 
-const AutoSuggest = ({ 
-  setDialogOpen,
-  textFieldValue,
-  setTextFieldValue,
-  attributes,
-  handleAdd,
-  todoObject,
-  textFieldRef
-}) => {
-  const [suggestions, setSuggestions] = useState([]);
-  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
-  const [prefix, setPrefix] = useState(null);
-  const [matchPosition, setMatchPosition] = useState({ start: -1, end: -1 });
-  const [multilineTextField, setMultilineTextField] = useState(store.get('multilineTextField', false));
+interface Props {
+  setDialogOpen: (open: boolean) => void;
+  textFieldValue: string;
+  setTextFieldValue: (value: string) => void;
+  attributes: Attributes; // You should replace 'any' with the correct type.
+  handleAdd: (id: string, string: string) => void;
+  todoObject: TodoObject;
+  textFieldRef: React.RefObject<HTMLInputElement>;
+}
+
+const AutoSuggest: React.FC<Props> = ({
+   setDialogOpen,
+   textFieldValue,
+   setTextFieldValue,
+   attributes,
+   handleAdd,
+   todoObject,
+   textFieldRef,
+ }) => {
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(
+    -1
+  );
+  const [prefix, setPrefix] = useState<string | null>(null);
+  const [matchPosition, setMatchPosition] = useState<{ start: number; end: number }>(
+    { start: -1, end: -1 }
+  );
+  const [multilineTextField, setMultilineTextField] = useState<boolean>(
+    store.get('multilineTextField')
+  );
 
   const handleSetMultilineTextField = () => {
-    setMultilineTextField(prevMultilineTextField => !prevMultilineTextField);
+    setMultilineTextField((prevMultilineTextField) => !prevMultilineTextField);
   };
 
-  const handleSuggestionsFetchRequested = ({ value }) => {
+  const handleSuggestionsFetchRequested = ({ value }: { value: string }) => {
     let content = value.replaceAll('\n', ' ').replaceAll(String.fromCharCode(16), ' ');
 
     if (!content) return;
@@ -44,44 +61,63 @@ const AutoSuggest = ({
       const matchEnd = matchStart + matchValue.length;
 
       if (cursorPosition >= matchStart && cursorPosition <= matchEnd) {
-        const suggestions = getSuggestions(matchValue.substr(0, 1), matchValue.substr(1));
+        const suggestions = getSuggestions(
+          matchValue.substring(0, 1),
+          matchValue.substring(1)
+        );
         setSuggestions(suggestions);
         setMatchPosition({ start: matchStart, end: matchEnd });
       }
     }
   };
 
-  const handleSuggestionSelected = (_, { suggestion }) => {
-    const inputValue = textFieldValue;
+  const handleSuggestionSelected = (
+    _event: React.SyntheticEvent,
+    { suggestion }: { suggestion: string }
+  ) => {
+
     if (!textFieldValue) return;
-    const createNewValue = (string, a, b) => {
-      return `${textFieldValue.slice(0, a)}${prefix}${string} ${textFieldValue.slice(b + 1)}`;
+    const createNewValue = (string: string, a: number, b: number) => {
+      return `${textFieldValue.slice(0, a)}${prefix}${string} ${textFieldValue.slice(
+        b + 1
+      )}`;
     };
-    const newValue = createNewValue(suggestion, matchPosition.start, matchPosition.end);
-    setTextFieldValue(newValue)
+    const newValue = createNewValue(
+      suggestion,
+      matchPosition.start,
+      matchPosition.end
+    );
+    setTextFieldValue(newValue);
     setSuggestions([]);
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setTextFieldValue(newValue);
   };
 
-  const getSuggestions = (trigger, match) => {
+  const getSuggestions = (trigger: string, match: string): string[] => {
     if (trigger === '@') {
       setPrefix('@');
-      return Object.keys(attributes.contexts).filter(key => key.includes(match));
+      // You should replace 'any' with the correct type for attributes.contexts.
+      return Object.keys(attributes.contexts).filter((key) => key.includes(match));
     } else if (trigger === '+') {
       setPrefix('+');
-      return Object.keys(attributes.projects).filter(key => key.includes(match));
+      // You should replace 'any' with the correct type for attributes.projects.
+      return Object.keys(attributes.projects).filter((key) => key.includes(match));
     }
     return [];
   };
 
-  const renderSuggestion = (suggestion, { isHighlighted }) => (
+  const renderSuggestion = (
+    suggestion: string,
+    { isHighlighted }: { isHighlighted: boolean }
+  ) => (
     <Box
       data-todotxt-attribute={prefix === '+' ? 'projects' : prefix === '@' ? 'contexts' : ''}
-      onClick={() => setSelectedSuggestionIndex(isHighlighted ? suggestions.indexOf(suggestion) : -1)}
+      onClick={() =>
+        setSelectedSuggestionIndex(isHighlighted ? suggestions.indexOf(suggestion) : -1)
+      }
       className={isHighlighted ? 'selected' : ''}
     >
       <Button key={suggestion}>{suggestion}</Button>
@@ -96,9 +132,13 @@ const AutoSuggest = ({
     width: textFieldRef?.current?.offsetWidth || 'auto',
   };
 
-  const handleKeyDown = (event, id, string) => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent,
+    id: string,
+    string: string
+  ) => {
     if (suggestions.length > 0) {
-      if (event.key === 'Enter') {   
+      if (event.key === 'Enter') {
         if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
           event.stopPropagation();
           const selectedSuggestion = suggestions[selectedSuggestionIndex];
@@ -109,9 +149,12 @@ const AutoSuggest = ({
         handleSuggestionsClearRequested();
       }
     } else {
-      if ((multilineTextField && (event.metaKey || event.ctrlKey) && event.key === 'Enter') || (!multilineTextField && event.key === 'Enter')) {
+      if (
+        (multilineTextField && (event.metaKey || event.ctrlKey) && event.key === 'Enter') ||
+        (!multilineTextField && event.key === 'Enter')
+      ) {
         event.stopPropagation();
-        handleAdd(event, id, string);
+        handleAdd(id, string);
       } else if (event.key === 'Escape') {
         event.stopPropagation();
         setDialogOpen(false);
@@ -121,24 +164,24 @@ const AutoSuggest = ({
   };
 
   const value = () => {
-    const value = (multilineTextField) 
-      ? textFieldValue.replaceAll(String.fromCharCode(16), '\n') 
+    return multilineTextField
+      ? textFieldValue.replaceAll(String.fromCharCode(16), '\n')
       : textFieldValue.replaceAll('\n', String.fromCharCode(16));
-    return value;
-  }
+  };
 
-  const inputProps = {
+  const inputProps: InputProps = {
     placeholder: `(A) text +project @context due:2020-12-12 t:2021-01-10 rec:d pm:1`,
     value: value(),
     onChange: handleChange,
     inputRef: textFieldRef,
-    onKeyDown: (event) => handleKeyDown(event, todoObject?.id, textFieldValue),
+    onKeyDown: (event: React.KeyboardEvent) =>
+      handleKeyDown(event, todoObject?.id, textFieldValue),
   };
 
   useEffect(() => {
     store.set('multilineTextField', multilineTextField);
     textFieldRef.current?.focus();
-  }, [multilineTextField]);  
+  }, [multilineTextField]);
 
   useEffect(() => {
     textFieldRef.current?.focus();
@@ -147,20 +190,13 @@ const AutoSuggest = ({
   return (
     <>
       <Autosuggest
-        renderInputComponent={(inputProps) => (
+        renderInputComponent={(inputProps: InputProps) =>
           multilineTextField ? (
-            <TextField
-              {...inputProps}
-              multiline
-              className="input"
-            />
+            <TextField {...inputProps} multiline className="input" />
           ) : (
-            <TextField
-              {...inputProps}
-              className="input"
-            />
+            <TextField {...inputProps} className="input" />
           )
-        )}
+        }
         renderSuggestionsContainer={({ containerProps, children }) => (
           <Box {...containerProps} style={containerStyle}>
             {children}
@@ -179,7 +215,7 @@ const AutoSuggest = ({
           {multilineTextField ? <CloseFullscreenIcon /> : <OpenInFullIcon />}
         </IconButton>
       </InputAdornment>
-    </>      
+    </>
   );
 };
 

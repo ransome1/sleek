@@ -3,14 +3,13 @@ import processDataRequest from '../ProcessDataRequest';
 import { mainWindow } from '../../main';
 import { configStorage } from '../../config';
 import { File } from '../../util';
-import path from 'path';
 
 let watcher: FSWatcher | null = null;
 
-async function createFileWatcher(files: File[]): Promise<string> {
+function createFileWatcher(files: File[]): string {
   try {
     if (watcher) {
-      watcher.close();
+      watcher?.close();
     }
 
     watcher = chokidar.watch(files.map((file) => file.todoFilePath), {
@@ -27,7 +26,7 @@ async function createFileWatcher(files: File[]): Promise<string> {
       .on('change', async (file) => {
         console.log(`File ${file} has been changed`);
         try {
-          const [todoObjects, attributes, headers, filters] = await processDataRequest();
+          const [todoObjects, attributes, headers, filters] = await processDataRequest('');
           mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
         } catch (error) {
           console.error(error);
@@ -36,7 +35,7 @@ async function createFileWatcher(files: File[]): Promise<string> {
       .on('unlink', (file) => {
         console.log(`FileWatcher.ts: File ${file} has been unlinked`);
 
-        const updatedFiles = files.filter((item) => item.path !== file);
+        const updatedFiles = files.filter((item) => item.todoFilePath !== file);
         configStorage.set('files', updatedFiles);
       })
       .on('ready', () => {

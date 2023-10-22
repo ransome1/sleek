@@ -1,10 +1,10 @@
-import { shell, IpcMainEvent } from 'electron';
+import { shell } from 'electron';
 import { configStorage } from '../../config';
 import createFileWatcher from './Watcher';
 import path from 'path';
 import { File } from '../../util';
 
-async function addFile(event: Event | null, filePath: string): Promise<void> {
+function addFile(filePath: string) {
   try {
     const files: File[] = configStorage.get('files') || [];
 
@@ -25,7 +25,7 @@ async function addFile(event: Event | null, filePath: string): Promise<void> {
 
     configStorage.set('files', files);
 
-    await createFileWatcher(files);
+    createFileWatcher(files);
 
     console.info('File.ts: File added, restarting file watchers');
   } catch (error) {
@@ -34,7 +34,7 @@ async function addFile(event: Event | null, filePath: string): Promise<void> {
   }
 }
 
-async function removeFile(event: any, index: number): Promise<void> {
+async function removeFile(index: number): Promise<void> {
   try {
     let files: File[] = configStorage.get('files') as File[];
 
@@ -51,7 +51,6 @@ async function removeFile(event: any, index: number): Promise<void> {
 
     configStorage.set('files', files);
 
-    const response = await createFileWatcher(files);
     console.info('File.ts: File removed, restarting file watchers');
 
     return;
@@ -61,7 +60,7 @@ async function removeFile(event: any, index: number): Promise<void> {
   }
 }
 
-function setFile(event: any, index: number): void {
+function setFile(index: number): void {
   try {
     const files: File[] = configStorage.get('files') as File[];
 
@@ -82,17 +81,15 @@ function setFile(event: any, index: number): void {
   }
 }
 
-function revealFile(event: IpcMainEvent, index: number): void {
+function revealFile(index: number): void {
   try {
-
-    const  files: File[] = configStorage.get('files') as File[];
-
+    const files: File[] = configStorage.get('files') as File[];
     const fileToReveal = files[index].todoFilePath;
 
     if(fileToReveal) {
       shell.showItemInFolder(fileToReveal);
       console.info('File.ts: File revealed in file manager');
-    }    
+    }
     return;
   } catch (error) {
     console.error('File.ts:', error);

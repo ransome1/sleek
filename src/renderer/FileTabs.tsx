@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Tab, Tabs } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import Prompt from './Prompt';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { File } from '../main/util';
 import './FileTabs.scss';
+import { i18n } from './LanguageSelector';
 
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer } = window.api;
 
-interface FileTabs extends WithTranslation {
+interface Props extends WithTranslation {
   files: File[];
   setContextMenuPosition: (position: { top: number; left: number }) => void;
   setContextMenuItems: (items: any[]) => void;
+  t: typeof i18n.t;
 }
 
-const FileTabs: React.FC<FileTabs> = ({ 
+const FileTabs: React.FC<Props> = ({
   files,
   setContextMenuPosition,
-  setContextMenuItems,  
+  setContextMenuItems,
   t,
 }) => {
-  const [promptIndex, setPromptIndex] = useState<number | null>(null);
-  const [showPrompt, setShowPrompt] = useState<boolean>(false);
-
   const handleContextMenu = (event: React.MouseEvent<HTMLElement>, index: number) => {
     event.preventDefault();
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
@@ -46,23 +44,17 @@ const FileTabs: React.FC<FileTabs> = ({
         index: index,
       },
     ]);
-  };  
+  };
 
   if (!files || files.length === 0) return null;
-  
+
   const index = files.findIndex((file) => file.active);
   const [fileTab, setFileTab] = useState<number>(index !== -1 ? index : 0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newIndex: number) => {
-    if (newIndex < 0 || newIndex > 9) return false;
-    setFileTab(newIndex);
-    ipcRenderer.send('setFile', newIndex);
-  };
-
-  const handleRemove = (event: React.MouseEvent<SVGElement, MouseEvent>, index: number) => {
-    event.stopPropagation();
-    setPromptIndex(index);
-    setShowPrompt(true);
+  const handleChange = (event, index: number) => {
+    if (index < 0 || index > 9) return false;
+    setFileTab(index);
+    ipcRenderer.send('setFile', index);
   };
 
   useEffect(() => {
@@ -79,7 +71,7 @@ const FileTabs: React.FC<FileTabs> = ({
           tabIndex={0}
           onContextMenu={(event) => handleContextMenu(event, index)}
           icon={
-            <CancelIcon 
+            <CancelIcon
               onClick={(event) => {
                 event.stopPropagation();
                 handleContextMenu(event, index);

@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { withTranslation } from 'react-i18next';
-import { i18n } from './LanguageSelector';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import Prompt from './Prompt';
+import { i18n } from './LanguageSelector';
 
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer } = window.api;
 
-interface ArchiveTodos {
+interface Props extends WithTranslation {
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
-  t: any;
+  t: typeof i18n.t;
 }
 
-const Archive: React.FC<ArchiveTodos> = ({ setSnackBarContent, setSnackBarSeverity, t }) => {
+const Archive: React.FC<Props> = ({ setSnackBarContent, setSnackBarSeverity, t }) => {
   const [showPrompt, setShowPrompt] = useState<boolean>(false);
-  const [promptIndex, setPromptIndex] = useState<number | null>(null);
 
   const handleArchiveTodos = (response: string | Error) => {
     if (typeof response === 'string') {

@@ -1,5 +1,3 @@
-import { BrowserWindow } from 'electron';
-import dayjs from 'dayjs';
 import { TodoObject, Filters, Filter } from '../util';
 
 function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {

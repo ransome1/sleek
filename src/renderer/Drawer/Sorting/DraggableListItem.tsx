@@ -3,12 +3,13 @@ import { Draggable } from 'react-beautiful-dnd';
 import { ListItem, Button, Box } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { Sorting } from '../../../main/util';
 import './DraggableListItem.scss';
 
-const store = window.api.store;
+const { store } = window.api;
 
 type DraggableListItem = {
-  item: Item;
+  item: Sorting;
   index: number;
   settings: any;
   setSettings: any;

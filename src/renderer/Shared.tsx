@@ -70,15 +70,3 @@ export const handleSettingChange = (name: keyof typeof settings, setSettings: Re
     console.error(error);
   }
 };
-
-// const translatedAttributes = (t) => ({
-//   t: t('shared.attributeMapping.t'),
-//   due: t('shared.attributeMapping.due'),
-//   projects: t('shared.attributeMapping.projects'),
-//   contexts: t('shared.attributeMapping.contexts'),
-//   priority: t('shared.attributeMapping.priority'),
-//   rec: t('shared.attributeMapping.rec'),
-//   pm: t('shared.attributeMapping.pm'),
-//   created: t('shared.attributeMapping.created'),
-//   completed: t('shared.attributeMapping.completed'),
-// });

@@ -1,36 +1,36 @@
 import React, { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Drawer, Tabs, Tab, Box } from '@mui/material';
-import Attributes from './Attributes';
-import Sorting from './Sorting/Sorting';
-import Filters from './Filters';
+import DrawerAttributes from './Attributes';
+import DrawerSorting from './Sorting/Sorting';
+import DrawerFilters from './Filters';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import TuneIcon from '@mui/icons-material/Tune';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { withTranslation } from 'react-i18next';
-import { i18n } from '../LanguageSelector';
-import DraggableList from '../DraggableList';
+import TuneIcon from '@mui/icons-material/Tune';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import './Drawer.scss';
+import { i18n } from '../LanguageSelector';
+import { Attributes, Sorting, TranslatedAttributes, Filters } from '../../main/util';
 
 const { store } = window.api;
 
-interface DrawerComponent {
+interface Props extends WithTranslation {
   isDrawerOpen: boolean;
   setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   attributes: { [key: string]: { [key: string]: number } };
-  filters: { [key: string]: { value: string; exclude: boolean }[] };
-  sorting: any;
-  attributeMapping: object;
+  filters: Filters;
+  sorting: Sorting;
+  attributeMapping: TranslatedAttributes;
+  t: typeof i18n.t;
 }
 
-const DrawerComponent: React.FC<DrawerComponent> = ({
+const DrawerComponent: React.FC<Props> = ({
   isDrawerOpen,
   setIsDrawerOpen,
   attributes,
   filters,
-  sorting,
   attributeMapping,
   t
-}: DrawerComponentProps) => {
+}) => {
   const [activeTab, setActiveTab] = useState<string>('attributes');
   const [drawerWidth, setDrawerWidth] = useState<number>(store.get('drawerWidth') || 500);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -93,16 +93,16 @@ const DrawerComponent: React.FC<DrawerComponent> = ({
         <Tab tabIndex={0} label={t('drawer.tabs.sorting')} value="sorting" icon={<FilterListIcon />} />
       </Tabs>
       {isDrawerOpen && activeTab === 'attributes' && (
-        <Attributes
+        <DrawerAttributes
           isDrawerOpen={isDrawerOpen}
           attributes={attributes}
           filters={filters}
           attributeMapping={attributeMapping}
         />
       )}
-      {isDrawerOpen && activeTab === 'filters' && <Filters />}
+      {isDrawerOpen && activeTab === 'filters' && <DrawerFilters />}
       {isDrawerOpen && activeTab === 'sorting' && (
-        <Sorting attributeMapping={attributeMapping} />
+        <DrawerSorting attributeMapping={attributeMapping}/>
       )}
     </Drawer>
   );

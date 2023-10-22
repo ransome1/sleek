@@ -2,21 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Menu, MenuItem, Button, Tooltip } from '@mui/material';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import Prompt from './Prompt';
+import { ContextMenuItem } from '../main/util';
 
-interface ContextMenuItem {
-  id: string;
-  label: string;
-  todoObject?: {
-    id: string;
-    string: string;
-  };
-  index?: number;
-  doneFilePath?: string;
-  headline?: string;
-  text?: string;
-}
-
-interface ContextMenu {
+interface Props {
   contextMenuPosition: {
     top: number;
     left: number;
@@ -28,9 +16,9 @@ interface ContextMenu {
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const ipcRenderer = window.api.ipcRenderer;
+const { ipcRenderer } = window.api;
 
-const ContextMenu: React.FC<ContextMenu> = ({
+const ContextMenu: React.FC<Props> = ({
   contextMenuPosition,
   setContextMenuPosition,
   contextMenuItems,
@@ -48,10 +36,10 @@ const ContextMenu: React.FC<ContextMenu> = ({
   const handlePromptClose = () => {
     setPromptItem(null);
     handleCloseContextMenu();
-  };  
+  };
 
   const handleContextMenuClick = (item: ContextMenuItem) => {
-    const { id, todoObject, index, doneFilePath } = item;
+    const { id, todoObject, index} = item;
 
     switch (id) {
       case 'delete':
@@ -89,7 +77,7 @@ const ContextMenu: React.FC<ContextMenu> = ({
   };
 
   const handleChangeDoneFilePath = (index: number | undefined) => {
-    if (index !== '') {
+    if (index) {
       ipcRenderer.send('changeDoneFilePath', index);
     }
   };
@@ -105,7 +93,7 @@ const ContextMenu: React.FC<ContextMenu> = ({
       handleSaveToClipboard(response);
     };
     ipcRenderer.on('saveToClipboard', saveToClipboardListener);
-  }, []);  
+  }, []);
 
   return (
     <>
@@ -113,7 +101,7 @@ const ContextMenu: React.FC<ContextMenu> = ({
         open={Boolean(contextMenuPosition)}
         onClose={handleCloseContextMenu}
         anchorReference="anchorPosition"
-        anchorPosition={contextMenuPosition}
+        anchorPosition={contextMenuPosition || undefined}
       >
         {contextMenuItems.map((item) => (
           <MenuItem key={item.id} onClick={() => handleContextMenuClick(item)}>

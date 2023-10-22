@@ -1,4 +1,3 @@
-import { configStorage } from '../../config';
 import { File } from '../../util';
 
 export function getActiveFile(files: File[]): File | null {

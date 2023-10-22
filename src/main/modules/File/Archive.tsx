@@ -1,21 +1,17 @@
-import { IpcMainEvent } from 'electron';
 import fs from 'fs/promises';
-import path from 'path';
 import { getActiveFile } from './Active';
 import { mainWindow } from '../../main';
 import { configStorage } from '../../config';
 import { writeStringToFile } from './Write';
 import { createTodoObjects } from '../TodoObject/CreateTodoObjects';
-import { TodoObject } from '../../util';
 
 async function extractTodosFromFile(filePath: string, complete: boolean): Promise<string[]> {
   try {
     const content = await fs.readFile(filePath, 'utf8');
     const todoObjects = createTodoObjects(content);
-    const strings = todoObjects
+    return todoObjects
       .filter(todoObject => todoObject.complete === complete)
       .map(todoObject => todoObject.string);
-    return strings;
   } catch (error) {
     console.error(error);
     return [];
@@ -36,13 +32,11 @@ async function archiveTodos(): Promise<void> {
     const doneFilePath = activeFile.doneFilePath;
 
     const completedTodos = await extractTodosFromFile(todoFilePath, true);
-    const incompletedTodos = await extractTodosFromFile(todoFilePath, false);
+    const uncompletedTodos = await extractTodosFromFile(todoFilePath, false);
     const todosFromDoneFile = await extractTodosFromFile(doneFilePath, true);
 
-    const contentForDoneFile = todosFromDoneFile.length === 0 ? completedTodos.join('\n') : todosFromDoneFile.join('\n') + '\n' + completedTodos.join('\n');
-
-    const stringDoneFile = contentForDoneFile;
-    const stringTodoFile = incompletedTodos.join('\n');
+    const stringDoneFile = todosFromDoneFile.length === 0 ? completedTodos.join('\n') : todosFromDoneFile.join('\n') + '\n' + completedTodos.join('\n');
+    const stringTodoFile = uncompletedTodos.join('\n');
 
     await writeStringToFile(stringDoneFile, doneFilePath);
     await writeStringToFile(stringTodoFile, todoFilePath);

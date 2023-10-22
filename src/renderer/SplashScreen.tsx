@@ -4,24 +4,24 @@ import DryCleaningIcon from '@mui/icons-material/DryCleaning';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { i18n } from './LanguageSelector';
 import './SplashScreen.scss';
+import { i18n } from './LanguageSelector';
 
-interface SplashScreenProps extends WithTranslation {
+interface Props extends WithTranslation {
   screen: 'noTodosVisible' | 'noTodosAvailable' | 'noFiles' | null;
   setSearchString: (search: string) => void;
   setDialogOpen: (isOpen: boolean) => void;
+  t: typeof i18n.t;
 }
 
-const ipcRenderer = window.api.ipcRenderer;
-const store = window.api.store;
+const { ipcRenderer, store } = window.api;
 
-const SplashScreen: FC<SplashScreenProps> = ({
+const SplashScreen: FC<Props> = ({
   screen,
   setSearchString,
   setDialogOpen,
   t,
-}: SplashScreenProps) => {
+}) => {
   const handleCreateTodo = () => {
     setDialogOpen(true);
   };

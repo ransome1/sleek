@@ -1,14 +1,8 @@
 import { Item } from 'jstodotxt';
 import { createRecurringTodo } from './CreateRecurringTodo';
 import restorePreviousPriority from './RestorePreviousPriority';
-import { TodoObject } from '../../util';
-import { configStorage } from '../../config';
 
 async function changeCompleteState(todoString: string, state: boolean): Promise<string | null> {
-  if (typeof state !== 'boolean') {
-    throw new Error('State must be of type boolean');
-  }
-
   const JsTodoTxtObject = new Item(todoString);
   JsTodoTxtObject.setComplete(state);
 

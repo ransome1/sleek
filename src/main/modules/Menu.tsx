@@ -1,15 +1,12 @@
 import { app, Menu, dialog, shell } from 'electron';
-import path from 'path';
 import { setFile } from './File/File';
-import archiveTodos from './File/Archive';
-import { getActiveFile } from './File/File';
 import { mainWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { configStorage, filterStorage } from '../config';
 import { File } from '../util';
+import appPackage from '../../../release/app/package.json';
 
-const isMac = process.platform === 'darwin';
-const appPackage = require('../../../release/app/package.json');
+const isMac: boolean = process.platform === 'darwin';
 const description = appPackage.description;
 
 function createMenu(files: File[]) {
@@ -28,12 +25,12 @@ function createMenu(files: File[]) {
                 detail: description,
                 buttons: ['OK'],
               };
-              dialog.showMessageBox(options);
+              dialog?.showMessageBox(options);
             },
           },
           {
             label: 'Settings',
-            accelerator: 'CmdOrCtrl+.',
+            accelerator: 'CmdOrCtrl+,',
             click: () => {
               mainWindow!.webContents.send('setIsSettingsOpen');
             },
@@ -74,7 +71,7 @@ function createMenu(files: File[]) {
                 label: file.todoFileName,
                 accelerator: `CommandOrControl+${index + 1}`,
                 click: () => {
-                  setFile(undefined, index);
+                  setFile(index);
                 },
               }))
             : []),
@@ -107,7 +104,7 @@ function createMenu(files: File[]) {
             click: () => {
               mainWindow!.webContents.send('setIsDrawerOpen');
             },
-          },        
+          },
           {
             label: 'Toggle navigation',
             accelerator: 'Ctrl+Alt+H',
@@ -128,9 +125,9 @@ function createMenu(files: File[]) {
               const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
               configStorage.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
             },
-          },        
+          },
         ],
-      },    
+      },
       {
         label: 'Todos',
         submenu: [
@@ -175,49 +172,49 @@ function createMenu(files: File[]) {
           {
             label: 'sleek wiki',
             click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/wiki');
+              shell?.openExternal('https://github.com/ransome1/sleek/wiki');
             },
           },
           {
             label: 'Report bugs',
             click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/issues');
+              shell?.openExternal('https://github.com/ransome1/sleek/issues');
             },
           },
           {
             label: 'Discuss new or existing features',
             click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/discussions');
+              shell?.openExternal('https://github.com/ransome1/sleek/discussions');
             },
           },
           {
             label: 'Contributing',
             click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
+              shell?.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
             },
           },
           {
             label: 'Keyboard shortcuts',
             click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
+              shell?.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
             },
           },
           {
             label: 'Privacy policy',
             click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
+              shell?.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
             },
           },
           {
             label: 'Sponsoring',
             click: () => {
-              shell.openExternal('https://github.com/sponsors/ransome1');
+              shell?.openExternal('https://github.com/sponsors/ransome1');
             },
           },
           {
             label: 'sleek on GitHub',
             click: () => {
-              shell.openExternal('https://github.com/ransome1/sleek/');
+              shell?.openExternal('https://github.com/ransome1/sleek/');
             },
           },
           {

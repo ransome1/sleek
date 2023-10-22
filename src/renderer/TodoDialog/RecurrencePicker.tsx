@@ -1,47 +1,47 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FormControl, TextField, FormControlLabel, Radio, RadioGroup, Checkbox, Badge } from '@mui/material';
+import { FormControl, TextField, FormControlLabel, Radio, RadioGroup, Checkbox } from '@mui/material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
 import { Item } from 'jstodotxt';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
+import { TodoObject } from '../../main/util';
 import './RecurrencePicker.scss';
 
-interface RecurrencePicker {
-  todoObject: object | null;
+interface Props extends WithTranslation {
+  todoObject: TodoObject | null;
   setTextFieldValue: (value: string) => void;
   textFieldValue: string;
+  t: typeof i18n.t;
 }
 
-const RecurrencePicker: React.FC<RecurrencePicker> = ({
+const RecurrencePicker: React.FC<Props> = ({
   todoObject,
   setTextFieldValue,
   textFieldValue,
   t
 }) => {
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null);
-
   const [recurrence, setRecurrence] = useState<string | null>(todoObject?.rec || null);
-  
   const [strictRecurrence, setStrictRecurrence] = useState<boolean>(recurrence ? recurrence.startsWith('+') : false);
   const [interval, setInterval] = useState<string | null>(
     recurrence && recurrence.startsWith('+') ? recurrence.slice(2, 3) : recurrence ? recurrence.slice(1, 2) : null
   );
   const [amount, setAmount] = useState<string | null>(
     recurrence && recurrence.startsWith('+') ? recurrence.slice(1, 2) : recurrence ? recurrence.slice(0, 1) : null
-  );  
+  );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, recurrence: string) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | undefined, recurrence: string) => {
     // TODO: solves a problem but creates another one: If a task is empty, no recurrence can be added
-    if(recurrence === 0 || !textFieldValue) return false;
+    if (Number(recurrence) === 0 || !textFieldValue) return false;
 
     const JsTodoTxtObject = new Item(textFieldValue || '');
     JsTodoTxtObject.setExtension('rec', recurrence);
 
     setTextFieldValue(JsTodoTxtObject.toString());
-    
+
     setRecurrence(recurrence);
-    
+
     if (recurrenceFieldRef.current) {
       recurrenceFieldRef.current.value = recurrence;
     }
@@ -63,8 +63,10 @@ const RecurrencePicker: React.FC<RecurrencePicker> = ({
   };
 
   useEffect(() => {
-    const updatedValue = strictRecurrence ? '+' + amount + interval : amount + interval;
-    handleChange(undefined, updatedValue);
+    if (amount !== null && interval !== null) {
+      const updatedValue = strictRecurrence ? '+' + amount + interval : amount + interval;
+      handleChange(undefined, updatedValue);
+    }
   }, [interval, amount, strictRecurrence]);
 
   useEffect(() => {
@@ -89,7 +91,7 @@ const RecurrencePicker: React.FC<RecurrencePicker> = ({
   }, [recurrenceFieldRef]);
 
   return (
-    <PopupState variant="popover" popupId="recurrencePicker">
+    <PopupState variant="popover" popupId="recurrencePicker" disableAutoFocus={true} parentPopupState={null}>
       {(popupState) => (
         <FormControl>
           <TextField

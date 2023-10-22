@@ -1,19 +1,19 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, Theme } from '@mui/material/styles';
 
-const baseTheme = createTheme({
+const baseTheme: Theme = createTheme({
   shape: {
-    borderRadius: "0.65em"
+    borderRadius: '0.65em'
   },
   typography: {
     fontFamily: 'FreeSans, Helvetica, Arial, sans-serif',
     fontSize: 'auto',
   },
-  components: { 
+  components: {
     MuiFormLabel: {
       styleOverrides: {
         root: {
-          "&.Mui-focused": {
-            "color": "#1976d2"
+          '&.Mui-focused': {
+            color: '#1976d2'
           }
         },
       },
@@ -68,7 +68,7 @@ const baseTheme = createTheme({
           color: '#1976d2',
         },
       },
-    },    
+    },
     MuiDivider: {
       styleOverrides: {
         root: {
@@ -107,11 +107,11 @@ const baseTheme = createTheme({
       defaultProps: {
         disableRipple: true,
       },
-    },    
+    },
   },
 });
 
-const darkTheme = createTheme({
+const darkTheme: Theme = createTheme({
   ...baseTheme,
   palette: {
     mode: 'dark',
@@ -145,7 +145,7 @@ const darkTheme = createTheme({
           },
         },
       },
-    },    
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
@@ -162,7 +162,6 @@ const darkTheme = createTheme({
           padding: '0',
           '& .MuiButton-root': {
             borderColor: '#2d2d2d',
-
           },
           '& .MuiButton-root:hover': {
             background: 'none',
@@ -170,16 +169,16 @@ const darkTheme = createTheme({
           },
         },
       },
-    },        
+    },
     MuiTab: {
       styleOverrides: {
         root: {
-          "&.Mui-selected": {
-            "color": '#1976d2',
+          '&.Mui-selected': {
+            'color': '#1976d2',
           },
           '&.Mui-focusVisible': {
             backgroundColor: '#2d2d2d',
-          },          
+          },
         },
       },
     },
@@ -187,8 +186,8 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           color: 'white',
-          "&.Mui-checked": {
-            "color": '#1976d2',
+          '&.Mui-checked': {
+            'color': '#1976d2',
           },
         },
       },
@@ -197,8 +196,8 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           color: '#1976d2',
-          "&.Mui-checked": {
-            color: '#1976d2',
+          '&.Mui-checked': {
+            'color': '#1976d2',
           },
           '&.Mui-focusVisible svg': {
             color: 'white',
@@ -246,16 +245,16 @@ const darkTheme = createTheme({
             backgroundColor: 'none',
           },
         }
-      }, 
+      },
     },
   },
 });
 
-const lightTheme = createTheme({
+const lightTheme: Theme = createTheme({
   ...baseTheme,
   palette: {
     mode: 'light',
-  },  
+  },
   components: {
     ...baseTheme.components,
     MuiDrawer: {
@@ -298,25 +297,25 @@ const lightTheme = createTheme({
           },
         },
       },
-    },    
+    },
     MuiTab: {
       styleOverrides: {
         root: {
-          "&.Mui-selected": {
-            "color": '#1976d2',
+          '&.Mui-selected': {
+            'color': '#1976d2',
           },
           '&.Mui-focusVisible': {
             backgroundColor: '#ccc',
-          },          
-        },    
+          },
+        },
       },
     },
     MuiCheckbox: {
       styleOverrides: {
         root: {
           color: '#1976d2',
-          "&.Mui-checked": {
-            "color": '#1976d2',
+          '&.Mui-checked': {
+            'color': '#1976d2',
           },
           '&.Mui-focusVisible svg': {
             color: '#5a5a5a',
@@ -351,8 +350,8 @@ const lightTheme = createTheme({
             border: 'none',
           },
         }
-      }, 
-    },    
+      },
+    },
   },
 });
 
