@@ -4,20 +4,21 @@ import createFileWatcher from './Watcher';
 import path from 'path';
 import { File } from '../../util';
 
-function addFile(filePath: string) {
+function addFile(filePath: string, bookmark: string | null) {
   try {
     const files: File[] = configStorage.get('files') || [];
+    const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath);
 
     files.forEach((file) => (file.active = false));
-
-    const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath);
 
     if (existingFileIndex === -1) {
       files.push({
         active: true,
         todoFileName: path.basename(filePath),
         todoFilePath: filePath,
+        todoFileBookmark: bookmark,
         doneFilePath: path.join(path.dirname(filePath), 'done.txt'),
+        doneFileBookmark: null
       });
     } else {
       files[existingFileIndex].active = true;
@@ -28,7 +29,7 @@ function addFile(filePath: string) {
     createFileWatcher(files);
 
     console.info('File.ts: File added, restarting file watchers');
-  } catch (error) {
+  } catch (error: any) {
     console.error('File.ts:', error);
     throw error;
   }
@@ -54,7 +55,7 @@ async function removeFile(index: number): Promise<void> {
     console.info('File.ts: File removed, restarting file watchers');
 
     return;
-  } catch (error) {
+  } catch (error: any) {
     console.error('File.ts:', error);
     throw error;
   }
@@ -75,7 +76,7 @@ function setFile(index: number): void {
     configStorage.set('files', files);
 
     return;
-  } catch (error) {
+  } catch (error: any) {
     console.error('File.ts:', error);
     throw error;
   }
@@ -91,7 +92,7 @@ function revealFile(index: number): void {
       console.info('File.ts: File revealed in file manager');
     }
     return;
-  } catch (error) {
+  } catch (error: any) {
     console.error('File.ts:', error);
     throw error;
   }

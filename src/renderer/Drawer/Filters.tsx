@@ -12,7 +12,9 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const DrawerFilters: React.FC<Props> = ({ t }) => {
+const DrawerFilters: React.FC<Props> = ({ 
+  t
+}) => {
   const [settings, setSettings] = useState<Settings>({
     showCompleted: store.get('showCompleted'),
     showHidden: store.get('showHidden'),

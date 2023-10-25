@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Item } from 'jstodotxt';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
+import { TodoObject } from '../../main/util';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import './DatePicker.scss';
 
 interface Props extends WithTranslation {
-  todoObject: Item | null;
+  todoObject: TodoObject | null;
   type: string;
   setTextFieldValue: (value: string) => void;
   textFieldValue: string;
@@ -24,8 +25,7 @@ const DatePickerComponent: React.FC<Props> = ({
   textFieldValue,
   t,
 }) => {
-  const initialDate = todoObject && todoObject[type] && dayjs(todoObject[type]).isValid() ? dayjs(todoObject[type]) : null;
-  const [date, setDate] = useState<dayjs.Dayjs | null>(initialDate);
+  const initialDate: dayjs.Dayjs | null = todoObject && todoObject[type] && !!todoObject[type] && dayjs(todoObject[type]).isValid() ? dayjs(todoObject[type]) : null;
 
   const handleChange = (updatedDate: dayjs.Dayjs | null) => {
     if (!updatedDate || !dayjs(updatedDate).isValid()) return;
@@ -41,7 +41,6 @@ const DatePickerComponent: React.FC<Props> = ({
     const JsTodoTxtObject = new Item(updatedTextFieldValue);
     JsTodoTxtObject.setExtension(type, formattedDate);
 
-    setDate(updatedDate);
     setTextFieldValue(JsTodoTxtObject.toString());
   };
 

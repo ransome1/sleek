@@ -1,7 +1,3 @@
-const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
-if (isDebug) {
-  require('electron-debug')();
-}
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import fs from 'fs';
@@ -117,29 +113,15 @@ const createWindow = async() => {
 }
 
 const handleReadyToShow = async () => {
-  // if (process.env.START_MINIMIZED) {
-  //   if (mainWindow) {
-  //     mainWindow?.minimize();
-  //   }
-  // } else {
-  //   if (mainWindow) {
-  //     mainWindow?.show();
-  //   }
-  // }
   try {
     if(files && Object.keys(files)?.length > 0) {
       const response = createFileWatcher(files);
       console.log('main.ts:', response);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
   }
-  // if (!isDebug) {
-  //   eventListeners.appUpdater = new AppUpdater();
-  // }
 }
-
-
 
 const handleWindowAllClosed = () => {
   const tray: boolean = configStorage.get('tray');

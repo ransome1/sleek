@@ -9,13 +9,17 @@ describe('Get active file', () => {
         active: false,
         todoFileName: 'test1.txt',
         todoFilePath: '/test1.txt',
+        todoFileBookmark: null,
         doneFilePath: 'done.txt',
+        doneFileBookmark: null,
       },
       {
         active: true,
         todoFileName: 'test2.txt',
         todoFilePath: '/test2.txt',
+        todoFileBookmark: null,
         doneFilePath: 'done.txt',
+        doneFileBookmark: null,
       },
     ]
     const activeFile = getActiveFile(files);
@@ -23,7 +27,9 @@ describe('Get active file', () => {
       active: true,
       todoFileName: 'test2.txt',
       todoFilePath: '/test2.txt',
+      todoFileBookmark: null,
       doneFilePath: 'done.txt',
+      doneFileBookmark: null,
     });
   });
 

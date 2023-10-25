@@ -5,7 +5,7 @@ export function getActiveFile(files: File[]): File | null {
     if (files.length === 0) return null;
     const activeIndex = files.findIndex((file) => file.active);
     return files[activeIndex] || null;
-  } catch (error) {
+  } catch (error: any) {
     console.error('File.ts:', error);
     return null;
   }

@@ -34,18 +34,3 @@ Please follow this template strictly when reporting bugs. Providing detailed and
 
 **Screenshots:**
 [If applicable, include screenshots that demonstrate the bug.]
-
-**System Information:**
-- OS Version: [e.g., Windows 10, macOS Monterey, Ubuntu 20.04]
-- Processor: [e.g., Intel Core i5, AMD Ryzen 7]
-- RAM: [e.g., 8GB, 16GB]
-- Graphics Card: [e.g., NVIDIA GeForce GTX 1650, AMD Radeon RX 5600]
-
-**Reproducibility:**
-- [Always / Sometimes / Rarely / Unable to Reproduce]
-
-**Impact:**
-- [Minor / Moderate / Major]
-
-**Workaround:**
-[If you found any temporary workaround for the bug, please mention it here.]

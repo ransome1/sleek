@@ -24,7 +24,7 @@ async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: st
     }).catch((error) => {
       event.reply('writeTodoToFile', error);
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
   }
 }
@@ -32,7 +32,7 @@ async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: st
 function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
   try {
     event.returnValue = configStorage.get(value);
-  } catch (error) {
+  } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -42,7 +42,7 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
     if(!key) return false;
     configStorage.set(key, value);
     console.log(`ipcEvents.ts: Set ${key} to ${value}`);
-  } catch (error) {
+  } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -51,7 +51,7 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
   try {
     filterStorage.set('filters', value);
     console.log(`ipcEvents.ts: Filters saved`);
-  } catch (error) {
+  } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -59,7 +59,7 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
 function handleSetFile(event: IpcMainEvent, index: number): void {
   try {
     setFile(index);
-  } catch (error) {
+  } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -67,7 +67,7 @@ function handleSetFile(event: IpcMainEvent, index: number): void {
 function handleRemoveFile(event: IpcMainEvent, index: number): void {
   try {
     removeFile(index);
-  } catch (error) {
+  } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -75,7 +75,20 @@ function handleRemoveFile(event: IpcMainEvent, index: number): void {
 function handleAddFile(event: IpcMainEvent, index: number): void {
   try {
     addFile(index);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleDroppedFile(event: IpcMainEvent, index: number): void {
+  try {
+    if(!process.mas) { 
+      addFile(index);
+    } else {
+      throw new Error('This release does not support the drag and drop function, please use the file dialog');
+    }
+  } catch (error: any) {
+    event.reply('droppedFile', error);
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -83,7 +96,7 @@ function handleAddFile(event: IpcMainEvent, index: number): void {
 function handleRevealFile(event: IpcMainEvent, index: number): void {
   try {
     revealFile(index);
-  } catch (error) {
+  } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -91,7 +104,7 @@ function handleRevealFile(event: IpcMainEvent, index: number): void {
 function handleChangeDoneFilePath(event: IpcMainEvent, index: number): void {
   try {
     changeDoneFilePath(index);
-  } catch (error) {
+  } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
 }
@@ -104,7 +117,7 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
     } else {
       throw('Failed to copy text to clipboard');
     }
-  } catch (error) {
+  } catch (error: any) {
     event.reply('saveToClipboard', error);
   }
 }
@@ -121,6 +134,7 @@ function removeEventListeners(): void {
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', archiveTodos);
   ipcMain.off('addFile', handleAddFile);
+  ipcMain.off('droppedFile', handleDroppedFile);
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
   ipcMain.off('revealFile', handleRevealFile);
   ipcMain.off('changeDoneFilePath', handleChangeDoneFilePath);
@@ -140,6 +154,7 @@ ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', archiveTodos);
 ipcMain.on('addFile', handleAddFile);
+ipcMain.on('droppedFile', handleDroppedFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
 ipcMain.on('revealFile', handleRevealFile);
 ipcMain.on('changeDoneFilePath', handleChangeDoneFilePath);

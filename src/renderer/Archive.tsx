@@ -11,7 +11,11 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const Archive: React.FC<Props> = ({ setSnackBarContent, setSnackBarSeverity, t }) => {
+const Archive: React.FC<Props> = ({
+    setSnackBarContent,
+    setSnackBarSeverity,
+    t
+}) => {
   const [showPrompt, setShowPrompt] = useState<boolean>(false);
 
   const handleArchiveTodos = (response: string | Error) => {

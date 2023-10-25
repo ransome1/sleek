@@ -76,7 +76,7 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       return 'Recurring todo created';
     }
     return 'No recurring todo created';
-  } catch (error) {
+  } catch (error: any) {
     return Promise.reject(error);
   }
 };

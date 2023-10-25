@@ -30,5 +30,6 @@ npm-debug.log.*
 *.iml
 *.provisionprofile
 *.dtmp
-
+*.drawio
+*.snap
 *FilterLang.js

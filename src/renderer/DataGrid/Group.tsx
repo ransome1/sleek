@@ -20,13 +20,13 @@ const Group: React.FC<Props> = ({
   return (
     <ListItem className="row group">
       {values.map((value, index) => {
-        const selected = (filters[group as keyof Filters] || []).some(
-          (filter: Filter) => filter.value === value.trim()
-        );
-
         if (!value) {
           return <Divider key={index} />;
         }
+
+        const selected: boolean = filters && (filters[group as keyof Filters] || []).some(
+          (filter: Filter) => filter && filter.value === value.trim()
+        );
 
         return (
           <Box

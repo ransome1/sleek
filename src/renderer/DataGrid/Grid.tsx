@@ -1,20 +1,20 @@
 import React, { useState, KeyboardEvent } from 'react';
 import { List } from '@mui/material';
 import Row from './Row';
-import { TodoObject, Attributes, Filters } from '../../main/util';
+import { TodoObject, Attributes, Filters, ContextMenuItem } from '../../main/util';
 import './Grid.scss';
 
 interface TodoDataGridProps {
-  todoObjects: TodoObject[]; // Replace 'any' with your actual type for todoObjects
-  attributes: Attributes; // Replace 'any' with your actual type for attributes
-  filters: Filters; // Replace 'any' with your actual type for filters
+  todoObjects: TodoObject[] | null;
+  attributes: Attributes | null;
+  filters: Filters | null;
   setDialogOpen: (open: boolean) => void;
   setTextFieldValue: (value: string) => void;
   contextMenuPosition: { top: number; left: number } | null;
   setContextMenuPosition: (position: { top: number; left: number } | null) => void;
-  contextMenuItems: any[]; // Replace 'any' with your actual type for contextMenuItems
-  setContextMenuItems: (items: any[]) => void; // Replace 'any' with your actual type
-  setTodoObject: (todoObject: any) => void; // Replace 'any' with your actual type
+  contextMenuItems: ContextMenuItem[];
+  setContextMenuItems: (items: any[]) => void;
+  setTodoObject: (todoObject: TodoObject) => void;
 }
 
 const TodoDataGrid: React.FC<TodoDataGridProps> = ({
@@ -70,8 +70,8 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({
       const totalHeight = list.scrollHeight;
       const clientHeight = list.clientHeight;
       if (totalHeight - scrollPos <= clientHeight * 2) {
-        const remainingRows = todoObjects.slice(visibleRowCount, visibleRowCount + 20);
-        if (remainingRows.length === 0) {
+        const remainingRows: TodoObject[] | null = todoObjects?.slice(visibleRowCount, visibleRowCount + 20);
+        if (remainingRows?.length === 0) {
           setLoadMoreRows(false);
         } else {
           setVisibleRowCount((prevVisibleRowCount) => prevVisibleRowCount + 20);

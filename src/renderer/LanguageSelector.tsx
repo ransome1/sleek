@@ -99,7 +99,9 @@ interface Props {
 	setAttributeMapping: (attributes: Record<string, string>) => void;
 }
 
-const LanguageSelector: React.FC<Props> = ({ setAttributeMapping }) => {
+const LanguageSelector: React.FC<Props> = ({ 
+	setAttributeMapping
+}) => {
 	const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
 	const [selectedLanguage, setSelectedLanguage] = useState<string>(() => {
 		const storedLanguage = store.get('language') || navigator.language;
@@ -109,8 +111,8 @@ const LanguageSelector: React.FC<Props> = ({ setAttributeMapping }) => {
 		return 'en';
 	});
 
-	const changeLanguage = (event: React.ChangeEvent<{ value: unknown }>) => {
-		const language = event.target.value as string;
+	const changeLanguage = (event: React.ChangeEvent<{ value: string }>) => {
+		const language = event.target.value;
 		setSelectedLanguage(language);
 	};
 
@@ -136,13 +138,15 @@ const LanguageSelector: React.FC<Props> = ({ setAttributeMapping }) => {
 				name='language'
 				onChange={changeLanguage}
 			>
-				{supportedLanguages.map((languageCode) => (
-					languageCode !== 'cimode' && (
-						<MenuItem key={languageCode} value={languageCode}>
-							{friendlyLanguageName[languageCode]}
-						</MenuItem>
-					)
-				))}
+				{Array.isArray(supportedLanguages) ? (
+					supportedLanguages.map((languageCode: string) => (
+						languageCode !== 'cimode' && (
+							<MenuItem key={languageCode} value={languageCode}>
+								{friendlyLanguageName[languageCode]}
+							</MenuItem>
+						)
+					))
+				) : null}
 			</Select>
 		</FormControl>
 	);

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Button, Dialog, DialogContent, DialogActions, FormControl } from '@mui/material';
+import { Button, Dialog, DialogContent, DialogActions } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
 import DatePicker from './DatePicker';
@@ -15,9 +15,9 @@ const { ipcRenderer, store } = window.api;
 interface Props extends WithTranslation {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  todoObject: TodoObject;
+  todoObject: TodoObject | null;
   setTodoObject: React.Dispatch<React.SetStateAction<boolean>>;
-  attributes: Attributes;
+  attributes: Attributes | null;
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
   shouldUseDarkColors: boolean;
@@ -38,12 +38,12 @@ const TodoDialog: React.FC<Props> = ({
   textFieldValue,
   setTextFieldValue,
   t
-}: TodoDialog) => {
+}) => {
 
   const useMultilineForBulkTodoCreation = store.get('useMultilineForBulkTodoCreation');
   const multilineTextField = store.get('multilineTextField');
   const textFieldRef = useRef(null);
-  const numRowsWithContent = textFieldValue.split('\n').filter(line => line.trim() !== '').length;
+  const numRowsWithContent = textFieldValue?.split('\n').filter(line => line.trim() !== '').length;
 
   const handleAdd = (id: number, string: string) => {
     try {
@@ -53,7 +53,7 @@ const TodoDialog: React.FC<Props> = ({
       } else {
         ipcRenderer.send('writeTodoToFile', id, string);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error.message);
     }
   };
@@ -61,7 +61,7 @@ const TodoDialog: React.FC<Props> = ({
   const handleClose = () => {
     try {
       setDialogOpen(false);
-    } catch (error: Error) {
+    } catch (error: any) {
       console.error(error.message);
     }
   };

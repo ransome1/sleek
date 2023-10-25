@@ -14,9 +14,9 @@ interface Props {
   setDialogOpen: (open: boolean) => void;
   textFieldValue: string;
   setTextFieldValue: (value: string) => void;
-  attributes: Attributes; // You should replace 'any' with the correct type.
-  handleAdd: (id: string, string: string) => void;
-  todoObject: TodoObject;
+  attributes: Attributes | null;
+  handleAdd: (id: number, string: string) => void;
+  todoObject: TodoObject | null;
   textFieldRef: React.RefObject<HTMLInputElement>;
 }
 
@@ -99,12 +99,10 @@ const AutoSuggest: React.FC<Props> = ({
   const getSuggestions = (trigger: string, match: string): string[] => {
     if (trigger === '@') {
       setPrefix('@');
-      // You should replace 'any' with the correct type for attributes.contexts.
-      return Object.keys(attributes.contexts).filter((key) => key.includes(match));
+      return Object.keys(attributes?.contexts).filter((key) => key.includes(match));
     } else if (trigger === '+') {
       setPrefix('+');
-      // You should replace 'any' with the correct type for attributes.projects.
-      return Object.keys(attributes.projects).filter((key) => key.includes(match));
+      return Object.keys(attributes?.projects).filter((key) => key.includes(match));
     }
     return [];
   };
@@ -205,7 +203,7 @@ const AutoSuggest: React.FC<Props> = ({
         suggestions={suggestions}
         onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
         onSuggestionsClearRequested={handleSuggestionsClearRequested}
-        getSuggestionValue={(suggestion) => suggestion}
+        getSuggestionValue={(suggestion: any) => suggestion}
         renderSuggestion={renderSuggestion}
         onSuggestionSelected={handleSuggestionSelected}
         inputProps={inputProps}

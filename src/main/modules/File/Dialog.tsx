@@ -21,13 +21,16 @@ async function openFile(): Promise<void> {
     const result: OpenDialogReturnValue = await dialog.showOpenDialog({
       properties: ['openFile'],
       filters: dialogFilters,
+      securityScopedBookmarks: true,
     });
     if (!result.canceled && result.filePaths.length > 0) {
       const filePath: string = result.filePaths[0];
-      addFile(filePath);
+      const securityScopedBookmark: string | null = result.bookmarks?.[0] || null;
+
+      addFile(filePath, securityScopedBookmark);
     }
     return;
-  } catch (error) {
+  } catch (error: any) {
     console.error('FileDialog.ts:', error);
   }
 }
@@ -40,14 +43,18 @@ async function changeDoneFilePath(index: number): Promise<void> {
       properties: ['openFile'],
       filters: dialogFilters,
       defaultPath: currentPath,
+      securityScopedBookmarks: true,
     });
     if (!result.canceled && result.filePaths.length > 0) {
       const filePath: string = result.filePaths[0];
+      const securityScopedBookmarks: string[] | null = result.bookmarks || null;
+      
       if(filePath) files[index].doneFilePath = filePath;
+      if(securityScopedBookmarks) files[index].doneFileBookmark = securityScopedBookmarks[0];
       configStorage.set('files', files)
     }
     return;
-  } catch (error) {
+  } catch (error: any) {
     console.error('FileDialog.ts:', error);
   }
 }
@@ -57,14 +64,18 @@ async function createFile(): Promise<void> {
     const result: SaveDialogReturnValue = await dialog.showSaveDialog({
       defaultPath: path.join(app.getPath('documents'), 'todo.txt'),
       filters: dialogFilters,
+      securityScopedBookmarks: true,
     });
     if (!result.canceled && result.filePath) {
       const filePath: string = result.filePath;
+      
+      const securityScopedBookmark: string | null = result.bookmark || null;
+
       await fs.writeFile(filePath, '');
-      addFile(filePath);
+      addFile(filePath, securityScopedBookmark);
     }
     return;
-  } catch (error) {
+  } catch (error: any) {
     console.error('FileDialog.ts:', error);
   }
 }

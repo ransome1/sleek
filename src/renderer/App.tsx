@@ -31,14 +31,13 @@ const App = () => {
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>('');
-  const [todoObjects, setTodoObjects] = useState<TodoObject[]>();
+  const [todoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
   const [todoObject, setTodoObject] = useState<TodoObject | null>();
   const [headers, setHeaders] = useState<Headers | null>();
-  const [filters, setFilters] = useState<Filters | null>({});
+  const [filters, setFilters] = useState<Filters | null>(null);
   const [attributes, setAttributes] = useState<Attributes | null>(null);
   const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
   const [zoom, setZoom] = useState<number>(store.get('zoom') || 100);
-  const searchFieldRef = useRef(null);
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(store.get('isNavigationOpen'));
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
   const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
@@ -46,7 +45,9 @@ const App = () => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuItems, setContextMenuItems] = useState([]);
   const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
-  const [textFieldValue, setTextFieldValue] = useState('');
+  const [textFieldValue, setTextFieldValue] = useState<string | null>(null);
+
+  const searchFieldRef = useRef(null);
 
   const handleRequestedData = (todoObjects: TodoObject[], attributes: Attributes, headers: Headers, filters: Filters) => {
     if(headers) setHeaders(headers);
@@ -91,7 +92,7 @@ const App = () => {
   const handleDrop = (event: any) => {
     event.preventDefault();
     const filePath = event.dataTransfer.files[0].path;
-    if(typeof filePath === 'string') ipcRenderer.send('addFile', filePath);
+    if(typeof filePath === 'string') ipcRenderer.send('droppedFile', filePath);
   };
 
   const handleDragOver = (event: Event) => {
@@ -180,6 +181,7 @@ const App = () => {
     ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
     ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
     ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
+    ipcRenderer.on('droppedFile', handleWriteTodoToFile);
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
   }, []);
@@ -194,7 +196,6 @@ const App = () => {
             setIsDrawerOpen={setIsDrawerOpen}
             setDialogOpen={setDialogOpen}
             files={files}
-            headers={headers}
             isNavigationOpen={isNavigationOpen}
             setIsNavigationOpen={setIsNavigationOpen}
             setIsSettingsOpen={setIsSettingsOpen}

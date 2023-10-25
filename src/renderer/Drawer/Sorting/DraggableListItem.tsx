@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { ListItem, Button, Box } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-import { Sorting } from '../../../main/util';
+import { Sorting, Settings, TranslatedAttributes } from '../../../main/util';
 import './DraggableListItem.scss';
 
 const { store } = window.api;
@@ -11,11 +11,18 @@ const { store } = window.api;
 type DraggableListItem = {
   item: Sorting;
   index: number;
-  settings: any;
+  settings: Settings;
   setSettings: any;
+  attributeMapping: TranslatedAttributes;
 };
 
-const DraggableListItem: React.FC<DraggableListItem> = ({ item, index, settings, setSettings, attributeMapping }) => {
+const DraggableListItem: React.FC<DraggableListItem> = ({
+  item,
+  index,
+  settings,
+  setSettings,
+  attributeMapping
+}) => {
   const handleButtonClick = () => {
     const updatedSorting = settings.sorting.map((sortingItem) => {
       if (sortingItem.id === item.id) {

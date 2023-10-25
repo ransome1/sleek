@@ -12,12 +12,6 @@
   src: url("../../assets/fonts/FreeSansBold.ttf") format("truetype");
 }
 
-@font-face {
-  font-family: "FreeMono";
-  src: url("../../assets/fonts/FreeMono.otf") format("opentype");
-  src: url("../../assets/fonts/FreeMono.ttf") format("truetype");
-}
-
 body {
   overflow: hidden;
   user-select: none;
@@ -26,7 +20,6 @@ body {
   -ms-user-select: none;
 
   code {
-    font-family: $font-family-mono;
     background: $lighter-grey;
     color: $mid-grey;
   }

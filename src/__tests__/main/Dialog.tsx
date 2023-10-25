@@ -17,10 +17,12 @@ jest.mock('electron', () => ({
     showOpenDialog: jest.fn(() => ({
       canceled: false,
       filePaths: ['./src/__tests__/__mock__/fileDialog.txt'],
+      securityScopedBookmarks: true,
     })),
     showSaveDialog: jest.fn(() => ({
       canceled: false,
       filePath: './src/__tests__/__mock__/fileDialog.txt',
+      securityScopedBookmarks: true,
     })),  
   },
 }));
@@ -49,16 +51,18 @@ describe('openFile', () => {
 
     expect(dialog.showOpenDialog).toHaveBeenCalledWith({
       properties: ['openFile'],
+      securityScopedBookmarks: true,
       filters: [{ name: 'Text files', extensions: ['txt'] }, { name: 'All files', extensions: ['*'] }],
     });
 
-    expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt');
+    expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', null);
   });
 
   it('should not call addFile when file selection is canceled', async () => {
     (dialog.showOpenDialog as jest.Mock).mockReturnValueOnce({
       canceled: true,
       filePaths: [],
+      securityScopedBookmarks: true,
     });
 
     await openFile();
@@ -76,23 +80,26 @@ describe('createFile', () => {
     (dialog.showSaveDialog as jest.Mock).mockResolvedValueOnce({
       canceled: false,
       filePath: './src/__tests__/__mock__/fileDialog.txt',
+      securityScopedBookmarks: true,
     });
 
     await createFile();
 
     expect(dialog.showSaveDialog).toHaveBeenCalledWith({
       defaultPath: expect.any(String),
+      securityScopedBookmarks: true,
       filters: [{ name: 'Text files', extensions: ['txt'] }, { name: 'All files', extensions: ['*'] }],
     });
 
     expect(fs.writeFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', '');
-    expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt');
+    expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', null);
   });
 
   it('should not call addFile when file creation is canceled', async () => {
     (dialog.showSaveDialog as jest.Mock).mockResolvedValueOnce({
       canceled: true,
       filePath: undefined,
+      securityScopedBookmarks: true,
     });
 
     await createFile();

@@ -26,7 +26,7 @@ async function changeCompleteState(todoString: string, state: boolean): Promise<
     try {
       const response = await createRecurringTodo(JsTodoTxtObject.toString(), recurrence.value);
       console.log('changeCompleteState.ts:', response);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     }
   }

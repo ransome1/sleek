@@ -1,3 +1,4 @@
+import { app } from 'electron';
 import fs from 'fs';
 import { getActiveFile } from './File/Active';
 import { configStorage, filterStorage } from '../config';
@@ -12,6 +13,8 @@ const headers: Headers = {
   visibleObjects: 0,
 };
 
+let stopAccessingSecurityScopedResource;
+
 async function processDataRequest(searchString: string): Promise<RequestedData[]> {
   try {
     const files: File[] = configStorage.get('files');
@@ -20,6 +23,9 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     if (file === null) {
       return Promise.resolve([]);
     }
+
+    const securityScopedBookmark = file.todoFileBookmark;
+    if(securityScopedBookmark) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(securityScopedBookmark);
 
     const sorting: Sorting[] = configStorage.get('sorting');
     const showCompleted: boolean = configStorage.get('showCompleted');

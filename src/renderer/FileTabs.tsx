@@ -51,7 +51,7 @@ const FileTabs: React.FC<Props> = ({
   const index = files.findIndex((file) => file.active);
   const [fileTab, setFileTab] = useState<number>(index !== -1 ? index : 0);
 
-  const handleChange = (event, index: number) => {
+  const handleChange = (event: React.SyntheticEvent, index: number) => {
     if (index < 0 || index > 9) return false;
     setFileTab(index);
     ipcRenderer.send('setFile', index);
@@ -76,6 +76,7 @@ const FileTabs: React.FC<Props> = ({
                 event.stopPropagation();
                 handleContextMenu(event, index);
               }}
+              role="button"
             />
           }
           className={file.active ? 'active-tab' : ''}

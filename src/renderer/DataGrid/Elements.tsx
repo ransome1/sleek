@@ -106,7 +106,7 @@ const Elements: React.FC<Props> = ({
   };
 
   const elements = matches().map((element: Element, index) => {
-    const selected = element.type !== null && (filters[element.type as keyof Filters] || []).some(
+    const selected = filters && element.type !== null && (filters[element.type as keyof Filters] || []).some(
       (filter: Filter) => filter.value === element.value
     );
 

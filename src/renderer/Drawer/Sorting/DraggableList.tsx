@@ -15,7 +15,9 @@ interface Props {
   attributeMapping: TranslatedAttributes;
 }
 
-const DraggableList: React.FC<Props> = ({ attributeMapping }) => {
+const DraggableList: React.FC<Props> = ({ 
+  attributeMapping
+}) => {
   const [settings, setSettings] = useState<Settings>({ sorting: store.get('sorting') });
 
   const reorder = (list: string[], startIndex: number, endIndex: number): string[] => {

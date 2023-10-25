@@ -20,7 +20,7 @@ const { store } = window.api;
 
 interface Props extends WithTranslation {
   attributes: Attributes | null;
-  filters: Filters; // Replace with actual filter type
+  filters: Filters | null;
   attributeMapping: { [key: string]: string };
   t: typeof i18n.t;
 }
@@ -33,7 +33,7 @@ const DrawerAttributes: React.FC<Props> = ({
  }) => {
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const [settings, setSettings] = useState({
-    accordionOpenState: store.get('accordionOpenState', []),
+    accordionOpenState: store.get('accordionOpenState'),
     isDrawerOpen: store.get('isDrawerOpen'),
   });
 
@@ -107,10 +107,10 @@ const DrawerAttributes: React.FC<Props> = ({
               <AccordionDetails>
                 <Box>
                   {Object.keys(attributes[key]).map((value, childIndex) => {
-                    const excluded = filters[key]?.some(
+                    const excluded = filters && filters[key]?.some(
                       (filter: any) => filter.value === value && filter.exclude
                     );
-                    const selected = filters[key]?.some((filter: any) => filter.value === value);
+                    const selected = filters && filters[key]?.some((filter: any) => filter.value === value);
                     const disabled = attributes[key][value] === 0;
 
                     return (

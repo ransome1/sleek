@@ -73,7 +73,7 @@ function createTray() {
     tray.setContextMenu(menu);
 
     return Promise.resolve('Tray created');
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating tray:', error);
     return Promise.reject(error);
   }

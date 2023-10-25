@@ -8,7 +8,9 @@
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
+    "dir": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder --dir",
     "mas": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m mas --universal --publish never",
+    "masDev": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m 'mas-dev' --arm64 --publish never",
     "appimage": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -l appimage --universal --publish never",
     "peggy": "peggy --format es --output ./src/main/modules/FilterLang/FilterLang.js ./src/main/modules/FilterLang/FilterLang.pegjs",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
@@ -143,7 +145,7 @@
     "react-refresh": "^0.14.0",
     "react-test-renderer": "^18.2.0",
     "rimraf": "^5.0.1",
-    "sass": "^1.62.1",
+    "sass": "^1.69.4",
     "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "^5.3.9",
@@ -153,15 +155,14 @@
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^5.1.3",
     "url-loader": "^4.1.1",
-    "webpack": "^5.85.0",
+    "webpack": "^5.89.0",
     "webpack-bundle-analyzer": "^4.9.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0",
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "appId": "com.github.ransome1.sleek",
-    "buildVersion": "25",
+    "buildVersion": "27",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -171,6 +172,7 @@
     ],
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
+      "appId": "com.todotxt.sleek",
       "target": {
         "target": "default",
         "arch": [
@@ -183,7 +185,10 @@
       "hardenedRuntime": true,
       "entitlements": "assets/mas/entitlements.mac.plist",
       "entitlementsInherit": "assets/mas/entitlements.mac.plist",
-      "gatekeeperAssess": false
+      "gatekeeperAssess": false,
+      "category": "public.app-category.productivity",
+      "artifactName": "${productName}-${version}-mac.${ext}",
+      "darkModeSupport": true
     },
     "dmg": {
       "contents": [
@@ -199,9 +204,15 @@
         }
       ]
     },
+    "masDev": {
+      "entitlements": "assets/mas/entitlements.mas.plist",
+      "entitlementsInherit": "assets/mas/entitlements.mas.inherit.plist",
+      "provisioningProfile": "assets/mas/development.provisionprofile"
+    },
     "mas": {
       "entitlements": "assets/mas/entitlements.mas.plist",
-      "entitlementsInherit": "assets/mas/entitlements.mas.plist"
+      "entitlementsInherit": "assets/mas/entitlements.mas.inherit.plist",
+      "provisioningProfile": "assets/mas/distribution.provisionprofile"
     },
     "win": {
       "target": [

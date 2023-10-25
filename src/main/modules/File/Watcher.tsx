@@ -28,7 +28,7 @@ function createFileWatcher(files: File[]): string {
         try {
           const [todoObjects, attributes, headers, filters] = await processDataRequest('');
           mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
-        } catch (error) {
+        } catch (error: any) {
           console.error(error);
         }
       })
@@ -43,7 +43,7 @@ function createFileWatcher(files: File[]): string {
       });
 
     return 'File watchers created';
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     throw error;
   }

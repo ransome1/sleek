@@ -77,9 +77,7 @@ const ContextMenu: React.FC<Props> = ({
   };
 
   const handleChangeDoneFilePath = (index: number | undefined) => {
-    if (index) {
-      ipcRenderer.send('changeDoneFilePath', index);
-    }
+    ipcRenderer.send('changeDoneFilePath', index);
   };
 
   const handleSaveToClipboard = function (response: Error | string) {

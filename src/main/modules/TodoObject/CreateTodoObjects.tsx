@@ -52,7 +52,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
       };
       if(due && !todoObject.complete) handleNotification(i, due, body, badge);
       return todoObject as TodoObject;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       return null;
     }

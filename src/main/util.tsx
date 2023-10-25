@@ -41,7 +41,7 @@ export function resolveHtmlPath(htmlFileName: string): string {
       return url.href;
     }
     return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Failed to resolve path: ${error}`);
   }
 }
@@ -57,7 +57,9 @@ export interface File {
   active: boolean;
   todoFileName: string;
   todoFilePath: string;
+  todoFileBookmark: string | null;
   doneFilePath: string;
+  doneFileBookmark: string | null;
 }
 
 export interface TodoObject {
@@ -76,7 +78,8 @@ export interface TodoObject {
   rec: string | null;
   hidden: boolean;
   pm: string | null;
-  string: string;
+  string: string | null;
+  [key: string]: string | string[] | number | boolean | null;
 }
 
 export interface TranslatedAttributes {
@@ -166,7 +169,7 @@ export interface ConfigData {
 }
 
 export interface RequestedData {
-  flattenedTodoObjects: Record<string, any>;
+  flattenedTodoObjects: TodoObject[];
   attributes: Attributes;
   headers: {
     availableObjects: number;

@@ -48,15 +48,14 @@ parts:
         export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
       fi
 
-      npm install electron-packager@latest
+      npm install electron-builder
       npm install
-      npm build
-      electron-packager . --overwrite --platform=linux --output=release-build \
-          --prune=true --out $SNAPCRAFT_PART_INSTALL/
-      mv $SNAPCRAFT_PART_INSTALL/$SNAPCRAFT_PROJECT_NAME-linux-* \
-          $SNAPCRAFT_PART_INSTALL/sleek
+      npm run dir
+
+      mv $SNAPCRAFT_PART_BUILD/release/build/linux-* \
+        $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
-    - libnss3
+      - libnss3        
   cleanup:
     after: [ sleek ]
     plugin: nil
@@ -64,6 +63,7 @@ parts:
     override-prime: |
       cd sleek
       ls -l
+      rm LICENSE.electron.txt
       rm LICENSES.chromium.html
       rm chrome-sandbox
       ls -l
@@ -74,5 +74,3 @@ parts:
       for CRUFT in bug lintian man; do
         rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
       done
-      find $SNAPCRAFT_PRIME/usr/share/doc/ -type f -not -name 'copyright' -delete
-      find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete

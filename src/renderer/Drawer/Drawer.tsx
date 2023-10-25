@@ -16,9 +16,8 @@ const { store } = window.api;
 interface Props extends WithTranslation {
   isDrawerOpen: boolean;
   setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  attributes: { [key: string]: { [key: string]: number } };
+  attributes: Attributes;
   filters: Filters;
-  sorting: Sorting;
   attributeMapping: TranslatedAttributes;
   t: typeof i18n.t;
 }

@@ -21,8 +21,8 @@ function applySearchString(searchString: string, todoObjects: TodoObject[]): Tod
     return Object.values(todoObjects)
       .flat()
       .filter((todoObject: TodoObject | null) =>
-        todoObject && todoObject.string.toLowerCase().includes(lowerSearchString)
-      );
+        todoObject && todoObject.string?.toLowerCase().includes(lowerSearchString)
+  );
   }
 }
 
