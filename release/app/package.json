@@ -24,8 +24,9 @@
   "main": "./dist/main/main.js",
   "scripts": {
     "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
-    "postinstall": "npm run rebuild && npm run link-modules",
-    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+    "postinstall": "yarn run rebuild && yarn run link-modules && yarn run update-version-numbers",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
+    "update-version-numbers": "node ../../.erb/scripts/update-version-numbers.js"
   },
   "dependencies": {
     "chokidar": "^3.5.3"

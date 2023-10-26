@@ -7,7 +7,7 @@ description: |
 
   All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
-  sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below.
+  sleek is available for Windows, MacOS and Linux, and in several languages.
 
 grade: stable
 confinement: strict

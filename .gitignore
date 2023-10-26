@@ -33,5 +33,3 @@ npm-debug.log.*
 *.drawio
 *.snap
 *FilterLang.js
-*.lock
-package-lock.json

@@ -7,7 +7,7 @@
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <developer_name>Robin Ahle</developer_name>
-  <content_rating type="oars-1.0"/>
+  <content_rating type="oars-1.1"/>
   <releases>
     <release version="2.0.0" date="2023-10-26"/>
   </releases>
@@ -24,29 +24,27 @@
   </recommends>
   <description>
     <p>sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.</p>
-    <p>All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.</p>
-    <p>sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below.</p>
+    <p>All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allows for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.</p>
+    <p>sleek is available for Windows, macOS and Linux, and in several languages.</p>
     <p>Features</p>
     <ul>
       <li>Uses existing todo.txt files or creates new ones</li>
-      <li>Add and search for todos by priorities, contexts, projects, due dates, creation dates, recurrences (repeating todos), threshold dates</li>
-      <li>Sort and group todos by priority, due and creation date, context and project or as they occur in the text file</li>
-      <li>Filter todos by context, project and priority</li>
-      <li>Find todos using full-text search compatible with todo.txt syntax</li>
-      <li>Inline autocomplete available</li>
-      <li>Dates and priorities can be selected by built-in picker elements</li>
-      <li>Navigable via keyboard shortcuts</li>
-      <li>Tabindex available</li>
-      <li>Options for due date reminders and notification badges</li>
-      <li>Easily toggle between dark and light mode</li>
-      <li>Compact view and zoom available</li>
-      <li>Completed todos can be shown, hidden and archived</li>
-      <li>Multi line todos can be created</li>
-      <li>Filters are sorted alphanummerically and can be renamed or deleted</li>
-      <li>Hyperlinks detected automatically</li>
       <li>File watcher scans todo.txt files for changes</li>
       <li>Simultaneously manage multiple todo.txt files</li>
-      <li>Language options: English, German, Italian, Spanish, French, Simplified Chinese, Brazilian Portugese, Japanese, Turkish, Hungarian, Czech, Polish, Russian</li>
+      <li>Add and search for todos by priority, contexts, projects, due date, creation date, completion date, recurrence (repeating todo), threshold dates (deferred todos), pomodoro intervals</li>
+      <li>Filter, sort, and group todos by all available attributes</li>
+      <li>Invert the sorting of each group</li>
+      <li>Find todos using a sophisticated advanced search based on the todo.txt syntax</li>
+      <li>Inline autocomplete available for adding contexts and projects</li>
+      <li>Multi-line and bulk todo creation</li>
+      <li>Due dates, threshold dates, recurrences, pomodoros and priorities can be selected by built-in picker elements</li>
+      <li>Speaking dates can be entered for due and threshold dates</li>
+      <li>Marking a recurring todo as complete, will create a new todo</li>
+      <li>Navigable via keyboard shortcuts</li>
+      <li>Due date notifications</li>
+      <li>Toggle between dark and light mode</li>
+      <li>Completed todos can be shown, hidden, and archived</li>
+      <li>Language options: English, German, Italian, Spanish, French, Simplified Chinese, Brazilian Portugese, Japanese, Turkish, Hungarian, Czech, Polish, Russian, Korean, Hindi</li>
     </ul>
   </description>
   <screenshots>
