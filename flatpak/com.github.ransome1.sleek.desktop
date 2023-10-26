@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=2.0.0
+Name=sleek
+Exec=sleek
+Type=Application
+Icon=com.github.ransome1.sleek
+Categories=Office
+Terminal=false
+Comment=Todo manager based on the todo.txt syntax for Linux, free and open-source (FOSS)

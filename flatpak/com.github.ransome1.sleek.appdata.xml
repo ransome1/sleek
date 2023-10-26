@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github.ransome1.sleek</id>
+  <name>sleek</name>
+  <summary>todo manager based on the todo.txt syntax for Linux, free and open-source (FOSS)</summary>
+  <launchable type="desktop-id">com.github.ransome1.sleek.desktop</launchable>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <developer_name>Robin Ahle</developer_name>
+  <content_rating type="oars-1.0"/>
+  <releases>
+    <release version="2.0.0" date="2023-10-26"/>
+  </releases>
+  <url type="homepage">https://github.com/ransome1/sleek</url>
+  <url type="contact">https://github.com/ransome1/sleek/issues</url>
+  <url type="bugtracker">https://github.com/ransome1/sleek/issues</url>
+  <url type="donation">https://github.com/sponsors/ransome1</url>
+  <url type="help">https://github.com/ransome1/sleek/wiki</url>
+  <recommends>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+    <control>gamepad</control>
+  </recommends>
+  <description>
+    <p>sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.</p>
+    <p>All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.</p>
+    <p>sleek is available for Windows, MacOS and Linux, and in several languages. For a detailed list of features, see below.</p>
+    <p>Features</p>
+    <ul>
+      <li>Uses existing todo.txt files or creates new ones</li>
+      <li>Add and search for todos by priorities, contexts, projects, due dates, creation dates, recurrences (repeating todos), threshold dates</li>
+      <li>Sort and group todos by priority, due and creation date, context and project or as they occur in the text file</li>
+      <li>Filter todos by context, project and priority</li>
+      <li>Find todos using full-text search compatible with todo.txt syntax</li>
+      <li>Inline autocomplete available</li>
+      <li>Dates and priorities can be selected by built-in picker elements</li>
+      <li>Navigable via keyboard shortcuts</li>
+      <li>Tabindex available</li>
+      <li>Options for due date reminders and notification badges</li>
+      <li>Easily toggle between dark and light mode</li>
+      <li>Compact view and zoom available</li>
+      <li>Completed todos can be shown, hidden and archived</li>
+      <li>Multi line todos can be created</li>
+      <li>Filters are sorted alphanummerically and can be renamed or deleted</li>
+      <li>Hyperlinks detected automatically</li>
+      <li>File watcher scans todo.txt files for changes</li>
+      <li>Simultaneously manage multiple todo.txt files</li>
+      <li>Language options: English, German, Italian, Spanish, French, Simplified Chinese, Brazilian Portugese, Japanese, Turkish, Hungarian, Czech, Polish, Russian</li>
+    </ul>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/00_todo_list.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/20_advanced_search.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/multiline_autocomplete_dark.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/recurrence_picker_dark.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/category_filtered_dark.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/date_picker.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/file_switcher.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/sort_by_projects.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/10_single_context_filtered_dark.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/compact_view_dark.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ransome1/sleek/master/assets/screenshots/linux/sort_by_due_date_dark.png</image>
+    </screenshot>
+  </screenshots>
+</component>
