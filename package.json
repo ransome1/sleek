@@ -156,7 +156,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "buildVersion": "27",
+    "buildVersion": "28",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [

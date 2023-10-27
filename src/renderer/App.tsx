@@ -211,6 +211,7 @@ const App = () => {
                 sorting={sorting}
                 setSorting={setSorting}
                 attributeMapping={attributeMapping}
+                searchFieldRef={searchFieldRef}
               />
             </>
           )}
@@ -230,6 +231,7 @@ const App = () => {
                   searchString={searchString}
                   setSearchString={setSearchString}
                   isSearchOpen={isSearchOpen}
+                  setIsSearchOpen={setIsSearchOpen}
                   setIsSearchOpen={setIsSearchOpen}
                   searchFieldRef={searchFieldRef}
                 />

@@ -18,8 +18,7 @@ const ToolBar: React.FC<Props> = ({
     setIsSearchOpen((prevIsSearchOpen) => !prevIsSearchOpen);
   };
 
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
       const isSearchFocused = document.activeElement === searchFieldRef.current;
       if ((event.metaKey || event.ctrlKey) && event.key === 'f' && isSearchOpen && !isSearchFocused) {
         event.preventDefault();

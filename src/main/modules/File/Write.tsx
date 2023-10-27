@@ -10,7 +10,7 @@ async function removeLineFromFile(id: number) {
   const files = configStorage.get('files') as File[];
   const activeFile = getActiveFile(files);
 
-  if (activeFile && activeFile.todoFilePath) { // Check if activeFile and todoFilePath are defined
+  if (activeFile && activeFile.todoFilePath) {
     lines.splice(id, 1);
     const modifiedContent = lines.join('\n');
 

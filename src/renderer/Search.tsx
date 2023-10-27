@@ -1,4 +1,4 @@
-import React, { useEffect, ChangeEvent } from 'react';
+import React, { useEffect, ChangeEvent, useCallback } from 'react';
 import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { withTranslation, WithTranslation } from 'react-i18next';
@@ -22,6 +22,7 @@ const Search: React.FC<Props> = ({
   searchString,
   setSearchString,
   isSearchOpen,
+  setIsSearchOpen,
   searchFieldRef,
   t,
 }) => {
@@ -43,11 +44,21 @@ const Search: React.FC<Props> = ({
     searchFieldRef.current?.focus();
   };
 
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    const isSearchFocused = document.activeElement === searchFieldRef.current;
+    if(isSearchFocused && event.key === 'Escape' && searchString) {
+      setSearchString('');
+    } else if(isSearchFocused && event.key === 'Escape' && !searchString) {
+      setIsSearchOpen(false);
+    } else if(searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+      ipcRenderer.send('writeTodoToFile', undefined, searchString);
+      setSearchString('');
+    }
+  });  
+
   useEffect(() => {
     if (searchString === null) return;
-
     let delayedSearch: NodeJS.Timeout;
-
     const handleSearch = () => {
       ipcRenderer.send('requestData', searchString);
     };
@@ -64,6 +75,13 @@ const Search: React.FC<Props> = ({
       searchFieldRef.current.focus();
     }
   }, [isSearchOpen, searchFieldRef]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   return (
     <>

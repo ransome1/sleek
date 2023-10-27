@@ -109,6 +109,14 @@ function handleChangeDoneFilePath(event: IpcMainEvent, index: number): void {
   }
 }
 
+function handleRemoveLineFromFile(event: IpcMainEvent, index: number): void {
+  try {
+    removeLineFromFile(index);
+  } catch (error: any) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
 function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
     clipboard.writeText(string);
@@ -138,7 +146,7 @@ function removeEventListeners(): void {
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
   ipcMain.off('revealFile', handleRevealFile);
   ipcMain.off('changeDoneFilePath', handleChangeDoneFilePath);
-  ipcMain.off('removeLineFromFile', removeLineFromFile);
+  ipcMain.off('removeLineFromFile', handleRemoveLineFromFile);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -158,4 +166,4 @@ ipcMain.on('droppedFile', handleDroppedFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
 ipcMain.on('revealFile', handleRevealFile);
 ipcMain.on('changeDoneFilePath', handleChangeDoneFilePath);
-ipcMain.on('removeLineFromFile', removeLineFromFile);
+ipcMain.on('removeLineFromFile', handleRemoveLineFromFile);

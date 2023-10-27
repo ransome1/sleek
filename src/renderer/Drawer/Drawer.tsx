@@ -19,6 +19,7 @@ interface Props extends WithTranslation {
   attributes: Attributes;
   filters: Filters;
   attributeMapping: TranslatedAttributes;
+  searchFieldRef: React.RefObject<HTMLInputElement>;
   t: typeof i18n.t;
 }
 
@@ -28,6 +29,7 @@ const DrawerComponent: React.FC<Props> = ({
   attributes,
   filters,
   attributeMapping,
+  searchFieldRef,
   t
 }) => {
   const [activeTab, setActiveTab] = useState<string>('attributes');
@@ -57,7 +59,8 @@ const DrawerComponent: React.FC<Props> = ({
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
+    const isSearchFocused = document.activeElement === searchFieldRef.current;
+    if (!isSearchFocused && event.key === 'Escape') {
       setIsDrawerOpen(false);
     }
   };
