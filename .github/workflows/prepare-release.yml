@@ -1,9 +1,19 @@
-name: Prepare release
+name: Prepare releases
 on:
   push:
     tags:
       - '*'
 jobs:
+  trigger-flathub_build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger Flathub build
+      uses: peter-evans/repository-dispatch@v2.1.2
+      with:
+        token: ${{ secrets.TRIGGER_FLATHUB_BUILD }}
+        repository: ransome1/com.github.ransome1.sleek
+        event-type: trigger-flathub-build
+        client-payload: '{"commit_id": "${{ github.sha }}"}'  
   macos:
     name: MacOS (Prepare release)
     runs-on: ${{ matrix.os }}
