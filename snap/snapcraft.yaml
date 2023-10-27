@@ -48,9 +48,9 @@ parts:
         export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
       fi
 
-      npm install electron-builder
-      npm install
-      npm run dir
+      node.yarn add electron-builder
+      node.yarn add
+      node.yarn run dir
 
       mv $SNAPCRAFT_PART_BUILD/release/build/linux-* \
         $SNAPCRAFT_PART_INSTALL/sleek
