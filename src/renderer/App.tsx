@@ -14,9 +14,10 @@ import ToolBar from './ToolBar';
 import ContextMenu from './ContextMenu';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from './LanguageSelector';
-import { Sorting, Headers, File, TodoObject, Attributes, Filters, TranslatedAttributes } from '../main/util';
+import { Sorting, Headers, File, TodoObject, Attributes, Filters, TranslatedAttributes, ContextMenuItem } from '../main/util';
 import Settings from './Settings';
 import { translatedAttributes } from './Shared';
+import Prompt from './Prompt';
 import './App.scss';
 
 const { ipcRenderer, store } = window.api;
@@ -43,9 +44,10 @@ const App = () => {
   const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
-  const [contextMenuItems, setContextMenuItems] = useState([]);
+  const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem | []>([]);
   const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
   const [textFieldValue, setTextFieldValue] = useState<string | null>(null);
+  const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
 
   const searchFieldRef = useRef(null);
 
@@ -94,6 +96,24 @@ const App = () => {
     const filePath = event.dataTransfer.files[0].path;
     if(typeof filePath === 'string') ipcRenderer.send('droppedFile', filePath);
   };
+
+  const handlePromptConfirm = (item: ContextMenuItem) => {
+    const { id, todoObject, index } = item;
+    switch (id) {
+      case 'delete':
+        ipcRenderer.send('removeLineFromFile', todoObject?.id);
+        break;
+      case 'removeFile':
+        ipcRenderer.send('removeFile', index);
+        break;
+      default:
+        setContextMenuItems(null);
+    }
+  };
+
+  const handlePromptClose = () => {
+    setPromptItem(null);
+  };  
 
   const handleDragOver = (event: Event) => {
     event.preventDefault();
@@ -147,6 +167,10 @@ const App = () => {
   useEffect(() => {
     store.set('isSearchOpen', isSearchOpen)
   }, [isSearchOpen]);
+
+  useEffect(() => {
+    setContextMenuItems(null);
+  }, [promptItem]);
 
   useEffect(() => {
     store.set('', isNavigationOpen)
@@ -255,6 +279,7 @@ const App = () => {
               contextMenuItems={contextMenuItems}
               setContextMenuItems={setContextMenuItems}
               setTextFieldValue={setTextFieldValue}
+              setPromptItem={setPromptItem}
             />
             <SplashScreen
               screen={splashScreen}
@@ -282,14 +307,17 @@ const App = () => {
           zoom={zoom}
           setZoom={setZoom}
         />
-        <ContextMenu
-          contextMenuPosition={contextMenuPosition}
-          setContextMenuPosition={setContextMenuPosition}
-          contextMenuItems={contextMenuItems}
-          setContextMenuItems={setContextMenuItems}
-          setSnackBarSeverity={setSnackBarSeverity}
-          setSnackBarContent={setSnackBarContent}
-        />
+        {contextMenuItems && (
+          <ContextMenu
+            contextMenuPosition={contextMenuPosition}
+            setContextMenuPosition={setContextMenuPosition}
+            contextMenuItems={contextMenuItems}
+            setContextMenuItems={setContextMenuItems}
+            setSnackBarSeverity={setSnackBarSeverity}
+            setSnackBarContent={setSnackBarContent}
+            setPromptItem={setPromptItem}
+          />
+        )}
         <Snackbar
           open={snackBarOpen}
           onClose={handleAlertClose}
@@ -305,6 +333,16 @@ const App = () => {
           setSnackBarSeverity={setSnackBarSeverity}
           setSnackBarContent={setSnackBarContent}
         />
+        {promptItem && (
+          <Prompt
+            open={true}
+            onClose={handlePromptClose}
+            onConfirm={() => handlePromptConfirm(promptItem)}
+            headline={promptItem.headline || ''}
+            text={promptItem.text || ''}
+            buttonText={promptItem.label}
+          />
+        )}
       </ThemeProvider>
     </I18nextProvider>
   );

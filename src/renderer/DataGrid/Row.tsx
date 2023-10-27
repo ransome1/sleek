@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Checkbox, ListItem } from '@mui/material';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
@@ -6,6 +6,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import Group from './Group';
 import Elements from './Elements';
+import { PromptItem, TodoObject, Filters } from '../../main/util';
 import { handleFilterSelect } from '../Shared';
 import './Row.scss';
 import { i18n } from '../LanguageSelector';
@@ -13,13 +14,14 @@ import { i18n } from '../LanguageSelector';
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  row: any;
-  filters: any;
+  row: TodoObject;
+  filters: Filters;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   setTodoObject: React.Dispatch<React.SetStateAction<any>>;
   setContextMenuPosition: React.Dispatch<React.SetStateAction<{ top: number; left: number } | null>>;
   setContextMenuItems: React.Dispatch<React.SetStateAction<any[]>>;
+  setPromptItem: PromptItem;
   t: typeof i18n.t;
 }
 
@@ -31,8 +33,17 @@ const Row: React.FC<Props> = ({
   setTodoObject,
   setContextMenuPosition,
   setContextMenuItems,
+  setPromptItem,
   t,
 }) => {
+  const itemDelete = {
+    id: 'delete',
+    todoObject: row,
+    headline: t('prompt.delete.headline'),
+    text: t('prompt.delete.text'),
+    label: t('delete'),
+  }
+
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
@@ -40,15 +51,9 @@ const Row: React.FC<Props> = ({
       {
         id: 'copy',
         todoObject: row,
-        label: t(`copy`),
+        label: t('copy'),
       },
-      {
-        id: 'delete',
-        todoObject: row,
-        headline: t(`prompt.delete.headline`),
-        text: t(`prompt.delete.text`),
-        label: t(`delete`),
-      },
+      itemDelete,
     ]);
   };
 
@@ -76,12 +81,14 @@ const Row: React.FC<Props> = ({
         clickedElement.tagName === 'SPAN' ||
         clickedElement.tagName === 'LI'
       ) {
-        if(row) {
+        if (row) {
           setTodoObject(row);
           setDialogOpen(true);
         }
         setTextFieldValue(row.string);
       }
+    } else if ((event.metaKey || event.ctrlKey) && (event.key === 'Delete' || event.key === 'Backspace')) {
+      setPromptItem(itemDelete);
     }
   };
 
@@ -101,34 +108,36 @@ const Row: React.FC<Props> = ({
   }
 
   return (
-    <ListItem
-      tabIndex={0}
-      key={row.id}
-      className="row"
-      data-complete={row.complete}
-      data-hidden={row.hidden}
-      onClick={handleRowClick}
-      onKeyDown={handleRowClick}
-      onContextMenu={handleContextMenu}
-      data-todotxt-attribute="priority"
-      data-todotxt-value={row.priority}
-    >
-      <Checkbox
-        icon={<CircleUnchecked />}
-        checkedIcon={<CircleChecked />}
+    <>
+      <ListItem
         tabIndex={0}
-        checked={row.complete}
-        onChange={handleCheckboxChange}
-      />
+        key={row.id}
+        className="row"
+        data-complete={row.complete}
+        data-hidden={row.hidden}
+        onClick={handleRowClick}
+        onKeyDown={handleRowClick}
+        onContextMenu={handleContextMenu}
+        data-todotxt-attribute="priority"
+        data-todotxt-value={row.priority}
+      >
+        <Checkbox
+          icon={<CircleUnchecked />}
+          checkedIcon={<CircleChecked />}
+          tabIndex={0}
+          checked={row.complete}
+          onChange={handleCheckboxChange}
+        />
 
-      {row.hidden && <VisibilityOffIcon />}
+        {row.hidden && <VisibilityOffIcon />}
 
-      <Elements
-        todoObject={row}
-        filters={filters}
-        handleButtonClick={handleButtonClick}
-      />
-    </ListItem>
+        <Elements
+          todoObject={row}
+          filters={filters}
+          handleButtonClick={handleButtonClick}
+        />
+      </ListItem>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, KeyboardEvent } from 'react';
 import { List } from '@mui/material';
 import Row from './Row';
-import { TodoObject, Attributes, Filters, ContextMenuItem } from '../../main/util';
+import { TodoObject, Attributes, Filters, ContextMenuItem, PromptItem } from '../../main/util';
 import './Grid.scss';
 
 interface TodoDataGridProps {
@@ -15,6 +15,7 @@ interface TodoDataGridProps {
   contextMenuItems: ContextMenuItem[];
   setContextMenuItems: (items: any[]) => void;
   setTodoObject: (todoObject: TodoObject) => void;
+  setPromptItem: PromptItem;
 }
 
 const TodoDataGrid: React.FC<TodoDataGridProps> = ({
@@ -28,6 +29,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({
    contextMenuItems,
    setContextMenuItems,
    setTodoObject,
+   setPromptItem,
  }) => {
   const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
@@ -99,6 +101,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({
           setContextMenuPosition={setContextMenuPosition}
           contextMenuItems={contextMenuItems}
           setContextMenuItems={setContextMenuItems}
+          setPromptItem={setPromptItem}
         />
       ))}
     </List>

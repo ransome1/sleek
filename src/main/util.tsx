@@ -32,6 +32,14 @@ export interface InputProps {
   onKeyDown: (event: React.KeyboardEvent) => void;
 }
 
+export interface PromptItem {
+    id: string,
+    todoObject: TodoObject,
+    headline: typeof i18n.t,
+    text: typeof i18n.t,
+    label: typeof i18n.t,
+  }
+
 export function resolveHtmlPath(htmlFileName: string): string {
   try {
     if (process.env.NODE_ENV === 'development') {
