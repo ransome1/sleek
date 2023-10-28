@@ -1,5 +1,5 @@
 name: sleek
-base: core18
+base: core20
 version: "2.0.0-dev19"
 summary: todo.txt manager for Linux, free and open-source (FOSS)
 description: |
@@ -15,9 +15,10 @@ icon: ./assets/icons/512x512.png
 license: MIT
 compression: lzo
 architectures:
-- build-on: amd64
-- build-on: arm64
-- build-on: armhf
+- build-on: [amd64]
+  run-on: [amd64]
+- build-on: [arm64]
+  run-on: [arm64]
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
@@ -26,9 +27,10 @@ apps:
       TMPDIR: $XDG_RUNTIME_DIR
       PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
       SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
-      GTK_USE_PORTALS: 1
-    extensions: [gnome-3-28]
+      GTK_USE_PORTAL: '1'
+    extensions: [gnome-3-38]
     plugs:
+    - desktop
     - home
     - browser-support
     - network
@@ -58,7 +60,7 @@ parts:
   cleanup:
     after: [ sleek ]
     plugin: nil
-    build-snaps: [ gnome-3-28-1804 ]
+    build-snaps: [ gnome-3-38-2004 ]
     override-prime: |
       cd sleek
       ls -l
@@ -67,7 +69,7 @@ parts:
       rm chrome-sandbox
       ls -l
       set -eux
-      for snap in "gnome-3-28-1804"; do  # List all content-snaps you're using here
+      for snap in "gnome-3-38-2004"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do
