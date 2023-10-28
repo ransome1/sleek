@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeTheme } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
@@ -96,7 +96,8 @@ const createWindow = async() => {
     });
   }
 
-  handleTheme();
+  const colorTheme = configStorage.get('colorTheme');
+  nativeTheme.themeSource = colorTheme;
 
   handleWindowSizeAndPosition();
 
