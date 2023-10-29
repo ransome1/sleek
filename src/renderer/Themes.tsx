@@ -26,6 +26,14 @@ const baseTheme: Theme = createTheme({
         },
       },
     },
+    MuiBadge: {
+      styleOverrides: {
+        root: {
+          border: 'none',
+          lineHeigh: '2em',
+        },
+      },
+    },
     MuiTabs: {
       styleOverrides: {
         root: {

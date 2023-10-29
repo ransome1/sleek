@@ -127,17 +127,20 @@ export interface Filter {
 }
 
 export interface Attribute {
-  [key: string]: number;
+  [key: string]: number | boolean;
 }
 
 export interface Attributes {
-  [key: string]: Attribute;
+  [key: string]: {
+    [key: string]: Attribute;
+  }
 }
 
 export type DateAttribute = {
   date: string | null;
   string: string | null;
   type: string | null;
+  notify: boolean | false;
 };
 
 export interface DateAttributes {

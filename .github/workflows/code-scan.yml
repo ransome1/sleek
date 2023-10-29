@@ -46,9 +46,9 @@ jobs:
       - name: Install dependencies
         run: npm install        
       - name: Build
-        run: npm run build
+        run: yarn run build
       - name: Run tests
-        run: npm run test
+        run: yarn run test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:

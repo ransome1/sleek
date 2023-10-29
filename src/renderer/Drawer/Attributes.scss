@@ -31,6 +31,9 @@
 			min-height: 3em;
 			padding: 0;
 			margin: 0;
+			.MuiBadge-badge {
+				background: red;
+			}			
 			&.Mui-expanded {
 				min-height: auto;
 			}

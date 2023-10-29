@@ -16,7 +16,7 @@ if (dependencies) {
     // because of a devDependency then that is okay. Warn when it is installed
     // because of a dependency
     const { dependencies: dependenciesObject } = JSON.parse(
-      execSync(`npm ls ${nativeDeps.join(' ')} --json`).toString()
+      execSync(`yarn ls ${nativeDeps.join(' ')} --json`).toString()
     );
     const rootDependencies = Object.keys(dependenciesObject);
     const filteredRootDependencies = rootDependencies.filter((rootDependency) =>

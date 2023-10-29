@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Button, Chip, Box } from '@mui/material';
+import { Button, Chip, Box, Badge } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { handleFilterSelect } from '../Shared';
 import { TodoObject, Filters } from '../../main/util';
@@ -47,11 +47,14 @@ const DatePickerInline: React.FC<Props> = ({
 
     const ButtonField = ({ date, ...props }) => {
       const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
+      const mustNotify = (type === 'due') ? !todoObject?.notify : true;
 
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel}>
-          <Chip onClick={() => handleFilterSelect(type, date, filters, false)} label={chipText} />
-          <Box onClick={() => setOpen?.((prev) => !prev)}>{date}</Box>
+          <Badge variant="dot" invisible={mustNotify}>
+            <Chip onClick={() => handleFilterSelect(type, date, filters, false)} label={chipText} />
+            <Box onClick={() => setOpen?.((prev) => !prev)}>{date}</Box>
+          </Badge>          
         </Button>
       );
     };

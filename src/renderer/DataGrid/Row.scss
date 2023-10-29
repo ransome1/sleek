@@ -10,6 +10,7 @@
   gap: 0.25em;
   button {
     height: 2em;
+    line-height: 2em;
     font-size: 0.9em;
     padding: 0;
     svg {
@@ -24,19 +25,16 @@
     .MuiChip-root {
       font-size: 1em;
       width: auto;
-      height: 100%;
-      background: $dark-grey;
+      height: 2em;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
       border-top-left-radius: $radius;
       border-bottom-left-radius: $radius;
-      color: white;
       margin: 0;
       .MuiChip-label {
         font-size: 1em;
         padding: 0;
         margin: 0;
-        
       }      
     }
     &.pomodoro {

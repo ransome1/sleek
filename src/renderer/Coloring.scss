@@ -8,6 +8,16 @@
       color: var(--color1);
     }
   }
+
+  .MuiBadge-root {
+    &.notify {
+      .MuiBadge-badge {
+        color: white;
+        background: #FF3860;
+      }
+    }
+  }
+
   button,
   button:hover {
     color: var(--color1);
@@ -15,12 +25,18 @@
     &:focus-visible {
       outline-color: var(--color1);
     }
+    .MuiChip-root {
+      color: white;
+      background: var(--color1);
+    }
   }
   .MuiBadge-badge {
     border-radius: 1em;
     color: var(--color2);
     background: var(--color1);
-    
+  }
+  .MuiBadge-dot {
+    background: #FF3860;
   }
   &.selected {
     button {
@@ -39,7 +55,6 @@
 *[data-todotxt-attribute="priority"] {
   --color1: white;
   button {
-
     &.Mui-disabled {
       color: white;
     }
@@ -129,6 +144,12 @@
   *[data-todotxt-attribute]:not([data-todotxt-attribute="priority"], [data-todotxt-attribute="projects"], [data-todotxt-attribute="contexts"], [data-todotxt-attribute^="pm"]) {
     --color1: #f0f0f0;
     --color2: #5a5a5a;
+    button {
+      .MuiChip-root {
+        
+        background: darken(#5a5a5a, 10%);
+      }      
+    }
     &.selected {
       button {
         background: darken(#5a5a5a, 10%);

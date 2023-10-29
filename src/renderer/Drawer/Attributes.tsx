@@ -31,6 +31,7 @@ const DrawerAttributes: React.FC<Props> = ({
    attributeMapping,
    t,
  }) => {
+  const mustNotify = (items) => items.some((item) => item.notify);
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const [settings, setSettings] = useState({
     accordionOpenState: store.get('accordionOpenState'),
@@ -102,7 +103,11 @@ const DrawerAttributes: React.FC<Props> = ({
               onChange={() => handleAccordionToggle(index)}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{attributeMapping[key]}</h3>
+                <Badge variant="dot" invisible={key === 'due' && mustNotify(Object.values(attributes[key])) ? false : true}>
+                  <h3>
+                    {attributeMapping[key]}
+                  </h3>
+                </Badge>
               </AccordionSummary>
               <AccordionDetails>
                 <Box>
@@ -111,7 +116,8 @@ const DrawerAttributes: React.FC<Props> = ({
                       (filter: any) => filter.value === value && filter.exclude
                     );
                     const selected = filters && filters[key]?.some((filter: any) => filter.value === value);
-                    const disabled = attributes[key][value] === 0;
+                    const disabled = attributes[key][value].count === 0;
+                    const notify = (key === 'due') ? attributes[key][value].notify : false;
 
                     return (
                       <Box
@@ -122,7 +128,7 @@ const DrawerAttributes: React.FC<Props> = ({
                           selected ? 'selected' : ''
                         } ${excluded ? 'excluded' : ''}`}
                       >
-                        <Badge badgeContent={attributes[key][value]}>
+                        <Badge badgeContent={attributes[key][value].count} className={notify ? 'notify' : null }>
                           <Button
                             className="attribute"
                             onClick={

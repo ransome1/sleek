@@ -23,6 +23,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
       const speakingDates: DateAttributes = extractSpeakingDates(body);
       const due = speakingDates['due:'] ? speakingDates['due:'].date : null;
       const dueString = speakingDates['due:'] ? speakingDates['due:'].string : null;
+      const notify = speakingDates['due:'] ? speakingDates['due:'].notify : false;
       const t = speakingDates['t:'] ? speakingDates['t:'].date : null;
       const tString = speakingDates['t:'] ? speakingDates['t:'].string : null;
       const extensions = JsTodoTxtObject.extensions();
@@ -43,6 +44,7 @@ function createTodoObjects(fileContent: string): TodoObject[] {
         projects: JsTodoTxtObject.projects(),
         due,
         dueString,
+        notify,
         t,
         tString,
         rec,

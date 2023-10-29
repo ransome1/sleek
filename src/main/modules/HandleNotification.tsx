@@ -29,6 +29,12 @@ function createSpeakingDifference(dueDate: Dayjs) {
   return 'Due';
 }
 
+export function mustNotify(date: Date): boolean {
+  const today = dayjs().startOf('day');
+  const notificationThreshold: number = configStorage.get('notificationThreshold');
+  return dayjs(date).isBefore(today.add(notificationThreshold, 'day')) || false;
+}
+
 export function handleNotification(id: number, due: string | null, body: string, badge: Badge) {
   const notificationAllowed = configStorage.get('notificationsAllowed');
 
@@ -38,7 +44,7 @@ export function handleNotification(id: number, due: string | null, body: string,
     const notificationThreshold: number = configStorage.get('notificationThreshold');
     const daysUntilDue: any = createSpeakingDifference(dueDate);
 
-    if (dueDate.isAfter(today.subtract(1, 'day')) && dueDate.isBefore(today.add(notificationThreshold, 'day'))) {
+    if (dueDate.isBefore(today.add(notificationThreshold, 'day'))) {
       badge.count += 1;
 
       if (!notifiedTodoObjects.has(id)) {

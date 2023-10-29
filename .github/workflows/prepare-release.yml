@@ -27,12 +27,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: npm
+          cache: yarn
       - name: Install and build
         run: |
-          npm install
-          npm run postinstall
-          npm run build
+          yarn
+          yarn run postinstall
+          yarn run build
       - name: Run Electron Builder
         uses: coparse-inc/action-electron-builder@v1.0.0
         env:
@@ -57,12 +57,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: npm
+          cache: yarn
       - name: Install and build
         run: |
-          npm install
-          npm run postinstall
-          npm run build
+          yarn
+          yarn run postinstall
+          yarn run build
       - name: Run Electron Builder
         uses: coparse-inc/action-electron-builder@v1.0.0
         with:
@@ -82,12 +82,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: npm
+          cache: yarn
       - name: Install and build
         run: |
-          npm install
-          npm run postinstall
-          npm run build
+          yarn
+          yarn run postinstall
+          yarn run build
       - name: Run Electron Builder
         uses: coparse-inc/action-electron-builder@v1.0.0
         with:

@@ -23,6 +23,7 @@ describe('extractSpeakingDates', () => {
       date: '2023-09-13',
       string: '2023-09-13',
       type: 'absolute',
+      notify: false,
     });
   });
 
@@ -33,6 +34,7 @@ describe('extractSpeakingDates', () => {
       date: formattedNextMonday,
       string: 'next Monday',
       type: 'relative',
+      notify: false,
     });
   });
 
@@ -43,6 +45,7 @@ describe('extractSpeakingDates', () => {
       date: '2012-01-15',
       string: 'Sunday, January 15th 2012',
       type: 'relative',
+      notify: false,
     });
   });  
 

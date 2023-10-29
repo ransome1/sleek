@@ -94,17 +94,22 @@ filterStorage.onDidChange('filters' as never, async () => {
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
+
+    const tray = configStorage.get('tray');
+
     createMenu(files).then(result => {
       console.log('config.ts:', result);
     }).catch(error => {
       console.error('config.ts:', error);
     });
 
-    createTray().then(result => {
-      console.log('config.ts:', result);
-    }).catch(error => {
-      console.error('config.ts:', error);
-    });
+    if(tray) {
+      createTray().then(result => {
+        console.log('config.ts:', result);
+      }).catch(error => {
+        console.error('config.ts:', error);
+      });
+    }
 
     mainWindow!.webContents.send('updateFiles', files);
   }
@@ -132,6 +137,11 @@ configStorage.onDidChange('showFileTabs', () => {
 
 configStorage.onDidChange('sorting', (sorting) => {
   handleConfigChange('sorting', sorting);
+});
+
+configStorage.onDidChange('notificationThreshold', async () => {
+  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
+  mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
 });
 
 configStorage.onDidChange('fileSorting', (fileSorting) => {
