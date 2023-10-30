@@ -20,6 +20,7 @@
   "settings.language": "Nyelv",
   "settings.notificationThreshold": "Értesítés küszöbérték",
   "settings.useMultilineForBulkTodoCreation": "Minden sor külön teendőelemet hoz létre a szövegmezőben",
+  "settings.matomo": "Matomo elemzés engedélyezése",
   "drawer.tabs.attributes": "Tulajdonságok",
   "drawer.tabs.filters": "Szűrők",
   "drawer.tabs.sorting": "Rendezés",

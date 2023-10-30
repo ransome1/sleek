@@ -20,6 +20,7 @@
   "settings.language": "Idioma",
   "settings.notificationThreshold": "Prog powiadomień",
   "settings.useMultilineForBulkTodoCreation": "Cada linha no campo de texto cria um item de tarefa separado",
+  "settings.matomo": "Permitir Análise do Matomo",
   "drawer.tabs.attributes": "Atributos",
   "drawer.tabs.filters": "Filtros",
   "drawer.tabs.sorting": "Ordenação",

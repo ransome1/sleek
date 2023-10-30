@@ -9,7 +9,7 @@ import { File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 import handleTheme from './modules/Theme';
 
-const userDataDirectory = path.join(app.getPath('userData'), 'userData' + app.getVersion());
+const userDataDirectory = path.join(app.getPath('userData'), 'userData');
 if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
 console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
@@ -58,6 +58,7 @@ const defaultConfigData = {
   zoom: 100,
   multilineTextField: false,
   useMultilineForBulkTodoCreation: false,
+  matomo: true,
 };
 
 const configPath = path.join(userDataDirectory, 'config.json');

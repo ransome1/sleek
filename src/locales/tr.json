@@ -20,6 +20,7 @@
   "settings.language": "Dil",
   "settings.notificationThreshold": "Bildirim Eşik Değeri",
   "settings.useMultilineForBulkTodoCreation": "Metin alanındaki her satır ayrı bir görev oluşturur",
+  "settings.matomo": "Matomo Analizine İzin Ver",
   "drawer.tabs.attributes": "Özellikler",
   "drawer.tabs.filters": "Filtreler",
   "drawer.tabs.sorting": "Sıralama",

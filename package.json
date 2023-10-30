@@ -9,6 +9,7 @@
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && yarn run build && electron-builder build --publish never",
     "dir": "ts-node ./.erb/scripts/clean.js dist && yarn run build && electron-builder --dir",
+    "mac": "ts-node ./.erb/scripts/clean.js dist && yarn run build && electron-builder build -m --arm64 --publish never",
     "mas": "ts-node ./.erb/scripts/clean.js dist && yarn run build && electron-builder build -m mas --universal --publish never",
     "masDev": "ts-node ./.erb/scripts/clean.js dist && yarn run build && electron-builder build -m 'mas-dev' --arm64 --publish never",
     "appimage": "ts-node ./.erb/scripts/clean.js dist && yarn run build && electron-builder build -l appimage --universal --publish never",
@@ -168,11 +169,7 @@
     "mac": {
       "appId": "com.todotxt.sleek",
       "target": {
-        "target": "default",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
+        "target": "default"
       },
       "icon": "assets/icons/icon.icns",
       "type": "distribution",
@@ -185,6 +182,7 @@
       "darkModeSupport": true
     },
     "dmg": {
+      "background": "assets/background.tiff",
       "contents": [
         {
           "x": 130,

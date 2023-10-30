@@ -20,6 +20,7 @@
   "settings.language": "Język",
   "settings.notificationThreshold": "Prog powiadomień",
   "settings.useMultilineForBulkTodoCreation": "Każdy wiersz w polu tekstowym tworzy oddzielną pozycję na liście zadań",
+  "settings.matomo": "Zezwalaj na analizę Matomo",
   "drawer.tabs.attributes": "Atrybuty",
   "drawer.tabs.filters": "Filtry",
   "drawer.tabs.sorting": "Sortowanie",

@@ -42,6 +42,7 @@ const Settings: React.FC<Props> = ({
     showFileTabs: store.get('showFileTabs'),
     colorTheme: store.get('colorTheme'),
     useMultilineForBulkTodoCreation: store.get('useMultilineForBulkTodoCreation'),
+    matomo: store.get('matomo'),
     notificationsAllowed: store.get('notificationsAllowed'),
     notificationThreshold: store.get('notificationThreshold'),
   });

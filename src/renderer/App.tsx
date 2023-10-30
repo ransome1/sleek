@@ -48,6 +48,7 @@ const App = () => {
   const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
   const [textFieldValue, setTextFieldValue] = useState<string | null>(null);
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
+  const [matomo, setMatomo] = useState<boolean>(store.get('matomo') || false);
 
   const searchFieldRef = useRef(null);
 
@@ -193,6 +194,17 @@ const App = () => {
     const adjustedFontSize = 16 * (zoom / 100);
     document.body.style.fontSize = `${adjustedFontSize}px`;
   }, [zoom]);
+
+  useEffect(() => {
+    if (matomo) {
+      var _mtm = window._mtm = window._mtm || [];
+      _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true;
+      g.src = 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
+      s.parentNode.insertBefore(g, s);
+    }
+  }, [matomo]);
 
   useEffect(() => {
     ipcRenderer.on('requestData', handleRequestedData);
