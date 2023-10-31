@@ -196,10 +196,15 @@ const App = () => {
   }, [zoom]);
 
   useEffect(() => {
-    if (matomo) {
+    const anonymousUserId = store.get('anonymousUserId');
+    if(anonymousUserId && matomo) {
       var _mtm = window._mtm = window._mtm || [];
       _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      if(anonymousUserId) _mtm.push({'anonymousUserId': anonymousUserId });
+      var 
+        d = document,
+        g = d.createElement('script'),
+        s = d.getElementsByTagName('script')[0];
       g.async = true;
       g.src = 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
       s.parentNode.insertBefore(g, s);

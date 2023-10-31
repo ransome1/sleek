@@ -8,6 +8,9 @@ import createTray from './modules/Tray';
 import { File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
 import handleTheme from './modules/Theme';
+import crypto from 'crypto';
+
+const anonymousUserId = crypto.randomUUID() || null;
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData');
 if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
@@ -62,7 +65,18 @@ const defaultConfigData = {
 };
 
 const configPath = path.join(userDataDirectory, 'config.json');
-const configStorage = new Store<ConfigData>({ cwd: userDataDirectory, name: 'config' });
+const configStorage = new Store<ConfigData>({
+  cwd: userDataDirectory,
+  name: 'config',
+  beforeEachMigration: (store, context) => {
+    console.log(`[config.json] migrating from ${context.fromVersion} → ${context.toVersion}`);
+  },  
+  migrations: {
+    '2.0.1': store => {
+      store.set('anonymousUserId', anonymousUserId);
+    },
+  }  
+});
 const filtersPath = path.join(userDataDirectory, 'filters.json');
 const filterStorage = new Store<{}>({ cwd: userDataDirectory, name: 'filters' });
 
