@@ -9,6 +9,8 @@ import createTray from './modules/Tray';
 import './modules/Ipc';
 import handleTheme from './modules/Theme';
 
+const environment = process.env.NODE_ENV;
+
 const files: File[] = (configStorage.get('files') as File[]) || [];
 
 let mainWindow: BrowserWindow | null = null;
@@ -78,7 +80,7 @@ const createWindow = async() => {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: app.isPackaged
+      preload: environment === 'production'
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.ts'),
     },
