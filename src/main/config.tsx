@@ -72,6 +72,9 @@ const configStorage = new Store<ConfigData>({
     '2.0.1': store => {
       store.set('anonymousUserId', anonymousUserId);
     },
+    '2.0.2': store => {
+      store.set('dueDateInTheFuture', true);
+    },
   }  
 });
 const filtersPath = path.join(userDataDirectory, 'filters.json');
