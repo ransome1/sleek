@@ -15,7 +15,7 @@
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
-    "mac": "cross-env NODE_ENV=production yarn run build && electron-builder build -m --arm64 --publish never",
+    "mac": "cross-env NODE_ENV=production yarn run build && electron-builder build -m --publish never",
     "mas": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas --universal --publish never",
     "dir": "cross-env NODE_ENV=production yarn run build && electron-builder --dir --publish never",
     "peggy": "peggy --format es --output ./src/main/modules/FilterLang/FilterLang.js ./src/main/modules/FilterLang/FilterLang.pegjs",
@@ -168,7 +168,10 @@
     "mac": {
       "appId": "com.todotxt.sleek",
       "target": {
-        "target": "default"
+        "target": "default",
+        "arch": [
+          "universal"
+        ]        
       },
       "icon": "assets/icons/icon.icns",
       "type": "distribution",
