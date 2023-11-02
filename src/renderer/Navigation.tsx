@@ -46,25 +46,25 @@ const NavigationComponent: React.FC<Props> = ({
         <Box>sleek</Box>
         {files.length > 0 && (
           <>
-            <Button onClick={() => setDialogOpen(true)}>
+            <Button onClick={() => setDialogOpen(true)} data-testid='navigation-button-add-todo'>
               <AddIcon />
             </Button>
-            <Button onClick={() => setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)} className={isDrawerOpen ? 'active' : ''}>
+            <Button onClick={() => setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)} className={isDrawerOpen ? 'active' : ''} data-testid='navigation-button-drawer'>
               <FilterAltIcon />
             </Button>
           </>
         )}
-        <Button onClick={() => ipcRenderer.send('openFile')}>
+        <Button onClick={() => ipcRenderer.send('openFile')} data-testid='navigation-button-open-file'>
           <FileOpenIcon />
         </Button>
-        <Button className='break' onClick={() => setIsSettingsOpen(true)}>
+        <Button className='break' onClick={() => setIsSettingsOpen(true)} data-testid='navigation-button-settings'>
           <SettingsIcon />
         </Button>
         <Button onClick={() => setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen)}>
           <KeyboardArrowLeftIcon />
         </Button>
       </Box>
-      <Button onClick={() => setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen)} className="showNavigation">
+      <Button onClick={() => setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen)} className='showNavigation' data-testid='navigation-button-hide-navigation'>
         <KeyboardArrowRightIcon />
       </Button>
     </>

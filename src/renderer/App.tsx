@@ -20,6 +20,7 @@ import { translatedAttributes } from './Shared';
 import Prompt from './Prompt';
 import './App.scss';
 
+const environment = process.env.NODE_ENV;
 const { ipcRenderer, store } = window.api;
 
 const App = () => {
@@ -197,6 +198,8 @@ const App = () => {
 
   useEffect(() => {
     const anonymousUserId = store.get('anonymousUserId');
+    const matomoContainer = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
+    
     if(anonymousUserId && matomo) {
       var _mtm = window._mtm = window._mtm || [];
       _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
@@ -206,7 +209,7 @@ const App = () => {
         g = d.createElement('script'),
         s = d.getElementsByTagName('script')[0];
       g.async = true;
-      g.src = 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
+      g.src = matomoContainer;
       s.parentNode.insertBefore(g, s);
     }
   }, [matomo]);
