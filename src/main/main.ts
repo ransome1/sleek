@@ -40,7 +40,7 @@ const handleMove = () => {
 
 const handleUnmaximize = () => {
   configStorage.set('windowMaximized', false);
-  handleWindowSizeAndPosition();
+  //handleWindowSizeAndPosition();
 }
 
 const handleMaximize = () => {
@@ -70,7 +70,7 @@ const handleWindowSizeAndPosition = () => {
       mainWindow?.setPosition(x, y);
     }
   }
-};
+}
 
 const createWindow = async() => {
   mainWindow = new BrowserWindow({
