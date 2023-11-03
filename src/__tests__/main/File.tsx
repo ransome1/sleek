@@ -1,12 +1,13 @@
+import path from 'path'
 import { configStorage } from '../../main/config';
 import { addFile, removeFile, setFile } from '../../main/modules/File/File';
 
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn().mockReturnValue([
-      { active: false, todoFileName: 'test1.txt', todoFilePath: '/path/to/test1.txt', todoFileBookmark: null, doneFilePath: '/path/to/done.txt', doneFileBookmark: null },
-      { active: true, todoFileName: 'test2.txt', todoFilePath: '/path/to/test2.txt', todoFileBookmark: null, doneFilePath: '/path/to/done.txt', doneFileBookmark: null },
-      { active: false, todoFileName: 'test3.txt', todoFilePath: '/path/to/test3.txt', todoFileBookmark: null, doneFilePath: '/path/to/done.txt', doneFileBookmark: null  },
+      { active: false, todoFileName: 'test1.txt', todoFilePath: path.join('/', 'path', 'to', 'test1.txt'), todoFileBookmark: null, doneFilePath: path.join('/', 'path', 'to', 'done.txt'), doneFileBookmark: null },
+      { active: true, todoFileName: 'test2.txt', todoFilePath: path.join('/', 'path', 'to', 'test2.txt'), todoFileBookmark: null, doneFilePath: path.join('/', 'path', 'to', 'done.txt'), doneFileBookmark: null },
+      { active: false, todoFileName: 'test3.txt', todoFilePath: path.join('/', 'path', 'to', 'test3.txt'), todoFileBookmark: null, doneFilePath: path.join('/', 'path', 'to', 'done.txt'), doneFileBookmark: null  },
     ]),
     set: jest.fn(),
   },
@@ -20,39 +21,39 @@ describe('File functions', () => {
   });
 
   test('addFile should add a new file to the config storage', async () => {
-    await addFile('/path/to/test4.txt', null);
+    await addFile(path.join('/', 'path', 'to', 'test4.txt'), null);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
         active: false,
         todoFileName: 'test1.txt',
-        todoFilePath: '/path/to/test1.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test1.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
       {
         active: false,
         todoFileName: 'test2.txt',
-        todoFilePath: '/path/to/test2.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test2.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
       {
         active: false,
         todoFileName: 'test3.txt',
-        todoFilePath: '/path/to/test3.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test3.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
       {
         active: true,
         todoFileName: 'test4.txt',
-        todoFilePath: '/path/to/test4.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test4.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
     ]);
@@ -64,25 +65,25 @@ describe('File functions', () => {
       {
         active: false,
         todoFileName: 'test1.txt',
-        todoFilePath: '/path/to/test1.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test1.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
       {
         active: false,
         todoFileName: 'test3.txt',
-        todoFilePath: '/path/to/test3.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test3.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
       {
         active: true,
         todoFileName: 'test4.txt',
-        todoFilePath: '/path/to/test4.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test4.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
     ]);
@@ -94,17 +95,17 @@ describe('File functions', () => {
       {
         active: true,
         todoFileName: 'test1.txt',
-        todoFilePath: '/path/to/test1.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test1.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
       {
         active: false,
         todoFileName: 'test3.txt',
-        todoFilePath: '/path/to/test3.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test3.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
     ]);
@@ -116,17 +117,17 @@ describe('File functions', () => {
       {
         active: false,
         todoFileName: 'test1.txt',
-        todoFilePath: '/path/to/test1.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test1.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
       {
         active: true,
         todoFileName: 'test3.txt',
-        todoFilePath: '/path/to/test3.txt',
+        todoFilePath: path.join('/', 'path', 'to', 'test3.txt'),
         todoFileBookmark: null,
-        doneFilePath: '/path/to/done.txt',
+        doneFilePath: path.join('/', 'path', 'to', 'done.txt'),
         doneFileBookmark: null
       },
     ]);
