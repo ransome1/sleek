@@ -7,7 +7,7 @@ jobs:
   snyk:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install dependencies
       run: npm install
     - name: Run Snyk to check for vulnerabilities
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: nodejsscan scan
       id: njsscan
       uses: ajinabraham/njsscan-action@master
@@ -63,7 +63,7 @@ jobs:
         language: [ 'javascript' ]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Set up Node 18
       uses: actions/setup-node@v3      
     - name: Initialize CodeQL
@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: codeql
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - uses: pixta-dev/repository-mirroring-action@v1
