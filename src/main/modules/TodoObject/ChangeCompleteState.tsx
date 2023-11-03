@@ -10,6 +10,16 @@ async function changeCompleteState(todoString: string, state: boolean): Promise<
     JsTodoTxtObject.setCreated(JsTodoTxtObject.created() ? JsTodoTxtObject.created() : new Date());
     JsTodoTxtObject.setCompleted(new Date());
 
+    const recurrence = JsTodoTxtObject?.extensions().find((item) => item.key === 'rec');
+    if (recurrence?.value) {
+      try {
+        const response = await createRecurringTodo(JsTodoTxtObject.toString(), recurrence.value);
+        console.log('changeCompleteState.ts:', response);
+      } catch (error: any) {
+        console.error(error);
+      }
+    }
+
     const currentPriority = JsTodoTxtObject.priority();
     if(currentPriority) {
       JsTodoTxtObject.setPriority(null)
@@ -19,16 +29,6 @@ async function changeCompleteState(todoString: string, state: boolean): Promise<
   } else {
     JsTodoTxtObject.setCompleted(null);
     restorePreviousPriority(JsTodoTxtObject);
-  }
-
-  const recurrence = JsTodoTxtObject?.extensions().find((item) => item.key === 'rec');
-  if (state && recurrence?.value) {
-    try {
-      const response = await createRecurringTodo(JsTodoTxtObject.toString(), recurrence.value);
-      console.log('changeCompleteState.ts:', response);
-    } catch (error: any) {
-      console.error(error);
-    }
   }
 
   const updatedTodoString = JsTodoTxtObject.toString();

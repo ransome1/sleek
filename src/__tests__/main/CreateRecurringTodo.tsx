@@ -86,16 +86,22 @@ describe('Create recurring todos', () => {
     expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Water plants @home +quick due:${dateInOneWeekString} t:${dateInOneWeekMinus10String} rec:1w`);
   });
 
-  test('Should add a new todo adding a strict recurrence of one day to due date and threshold date, while the todo initially only has a threshold date', async () => {
+  test('Should add a new todo adding a strict recurrence of one day to threshold date. No due date should be created.', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:+1d t:2023-09-19`, '1+d');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
-    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Line 1 rec:+1d t:2023-09-20 due:${dateTomorrowString}`);
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Line 1 rec:+1d t:2023-09-20`);
   });  
 
-  test('Should add a new todo and set the priority to the value of the pri extension', async () => {
+  test('Should add a new todo and preserve the priority in the pri extension, but should not set the priority (A) for the task.', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:1d pri:A`, '1d');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
-    expect(fileContent.split('\n').pop()).toEqual(`(A) ${dateTodayString} Line 1 rec:1d pri:A due:${dateTomorrowString}`);
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Line 1 rec:1d pri:A due:${dateTomorrowString}`);
+  });
+
+  test('Should add a new todo based on a daily recurrence and a threshold date set for today, without unwanted due date and priority labels', async () => {
+    const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} (A) Do something rec:d t:${dateTodayString} @SomeContext`, 'd');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} (A) Do something rec:d t:${dateTomorrowString} @SomeContext`);
   });
 
 });
