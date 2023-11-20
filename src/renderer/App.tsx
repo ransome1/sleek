@@ -262,7 +262,7 @@ const App = () => {
           <Box className="flexItems">
             {files?.length > 0 && (
             <>
-              {!isSearchOpen && showFileTabs ?
+              {showFileTabs ?
               <FileTabs
                 files={files}
                 setContextMenuPosition={setContextMenuPosition}

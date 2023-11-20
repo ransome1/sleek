@@ -90,7 +90,6 @@ const Search: React.FC<Props> = ({
           <TextField
             variant='outlined'
             placeholder={`${t('search.visibleTodos')} ${headers.visibleObjects}`}
-
             inputRef={searchFieldRef}
             value={searchString === null ? '' : searchString}
             onChange={handleInput}
