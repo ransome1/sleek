@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Menu, MenuItem, Button, Tooltip } from '@mui/material';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import { ContextMenuItem, PromptItem } from '../main/util';
@@ -18,7 +18,7 @@ interface Props {
 
 const { ipcRenderer } = window.api;
 
-const ContextMenu: React.FC<Props> = ({
+const ContextMenu: React.FC<Props> = memo(({
   contextMenuPosition,
   setContextMenuPosition,
   contextMenuItems,
@@ -90,6 +90,6 @@ const ContextMenu: React.FC<Props> = ({
       </Menu>
     </>
   );
-};
+});
 
 export default ContextMenu;

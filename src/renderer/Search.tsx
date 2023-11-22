@@ -1,4 +1,4 @@
-import React, { useEffect, ChangeEvent, useCallback } from 'react';
+import React, { useEffect, ChangeEvent, useCallback, memo } from 'react';
 import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { withTranslation, WithTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const Search: React.FC<Props> = ({
+const Search: React.FC<Props> = memo(({
   headers,
   searchString,
   setSearchString,
@@ -116,6 +116,6 @@ const Search: React.FC<Props> = ({
       )}
     </>
   );
-};
+});
 
 export default withTranslation()(Search);

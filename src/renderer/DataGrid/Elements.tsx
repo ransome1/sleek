@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Button, Chip } from '@mui/material';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg';
 import DatePickerInline from './DatePickerInline';
@@ -10,7 +10,7 @@ interface Props {
   handleButtonClick: (key: string, value: string) => void;
 }
 
-const Elements: React.FC<Props> = ({
+const Elements: React.FC<Props> = memo(({
   todoObject,
   filters,
   handleButtonClick
@@ -123,6 +123,6 @@ const Elements: React.FC<Props> = ({
     );
   });
   return <>{elements}</>;
-};
+});
 
 export default Elements;

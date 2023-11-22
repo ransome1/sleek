@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
@@ -20,7 +20,7 @@ interface Props {
   setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const NavigationComponent: React.FC<Props> = ({
+const NavigationComponent: React.FC<Props> = memo(({
   setIsSettingsOpen,
   isDrawerOpen,
   setIsDrawerOpen,
@@ -69,6 +69,6 @@ const NavigationComponent: React.FC<Props> = ({
       </Button>
     </>
   );
-};
+});
 
 export default NavigationComponent;

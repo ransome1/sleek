@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import {
   Box,
   FormControl,
@@ -27,7 +27,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const Settings: React.FC<Props> = ({
+const Settings: React.FC<Props> = memo(({
   isOpen,
   onClose,
   setAttributeMapping,
@@ -126,6 +126,6 @@ const Settings: React.FC<Props> = ({
       </Box>
     </Modal>
   );
-};
+});
 
 export default withTranslation()(Settings);

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import React, { useState, useRef, useEffect, KeyboardEvent, memo } from 'react';
 import { Drawer, Tabs, Tab, Box } from '@mui/material';
 import DrawerAttributes from './Attributes';
 import DrawerSorting from './Sorting/Sorting';
@@ -23,7 +23,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const DrawerComponent: React.FC<Props> = ({
+const DrawerComponent: React.FC<Props> = memo(({
   isDrawerOpen,
   setIsDrawerOpen,
   attributes,
@@ -108,6 +108,6 @@ const DrawerComponent: React.FC<Props> = ({
       )}
     </Drawer>
   );
-};
+});
 
 export default withTranslation()(DrawerComponent);

@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState, KeyboardEvent, memo } from 'react';
 import { List } from '@mui/material';
 import Row from './Row';
 import { TodoObject, Attributes, Filters, ContextMenuItem, PromptItem } from '../../main/util';
@@ -18,7 +18,7 @@ interface TodoDataGridProps {
   setPromptItem: PromptItem;
 }
 
-const TodoDataGrid: React.FC<TodoDataGridProps> = ({
+const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
    todoObjects,
    attributes,
    filters,
@@ -106,6 +106,6 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({
       ))}
     </List>
   );
-};
+});
 
 export default TodoDataGrid;

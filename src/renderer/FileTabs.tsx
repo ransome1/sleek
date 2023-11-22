@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Tab, Tabs } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { withTranslation, WithTranslation } from 'react-i18next';
@@ -15,7 +15,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const FileTabs: React.FC<Props> = ({
+const FileTabs: React.FC<Props> = memo(({
   files,
   setContextMenuPosition,
   setContextMenuItems,
@@ -86,6 +86,6 @@ const FileTabs: React.FC<Props> = ({
     ))}
     </Tabs>
   );
-};
+});
 
 export default withTranslation()(FileTabs);

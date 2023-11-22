@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { Button, Box } from '@mui/material';
 import DryCleaningIcon from '@mui/icons-material/DryCleaning';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
@@ -16,7 +16,7 @@ interface Props extends WithTranslation {
 
 const { ipcRenderer, store } = window.api;
 
-const SplashScreen: FC<Props> = ({
+const SplashScreen: FC<Props> = memo(({
   screen,
   setSearchString,
   setDialogOpen,
@@ -79,6 +79,6 @@ const SplashScreen: FC<Props> = ({
       )}
     </Box>
   );
-};
+});
 
 export default withTranslation()(SplashScreen);

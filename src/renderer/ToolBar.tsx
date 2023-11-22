@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, RefObject } from 'react';
+import React, { useEffect, useCallback, RefObject, memo } from 'react';
 import { Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import './ToolBar.scss';
@@ -9,7 +9,7 @@ interface Props {
   searchFieldRef: RefObject<HTMLInputElement>;
 }
 
-const ToolBar: React.FC<Props> = ({
+const ToolBar: React.FC<Props> = memo(({
   isSearchOpen,
   setIsSearchOpen,
   searchFieldRef
@@ -40,6 +40,6 @@ const ToolBar: React.FC<Props> = ({
       <SearchIcon className={isSearchOpen ? 'active' : ''} />
     </Box>
   );
-};
+});
 
 export default ToolBar;

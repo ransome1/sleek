@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ListItem, Box, Button, Divider } from '@mui/material';
 import { Filters, Filter } from '../../main/util';
 
@@ -9,7 +9,7 @@ interface Props {
   onClick: (key: string, value: string) => void;
 }
 
-const Group: React.FC<Props> = ({
+const Group: React.FC<Props> = memo(({
   value,
   group,
   filters,
@@ -43,6 +43,6 @@ const Group: React.FC<Props> = ({
       })}
     </ListItem>
   );
-};
+});
 
 export default Group;

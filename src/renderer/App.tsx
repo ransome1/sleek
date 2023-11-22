@@ -138,7 +138,7 @@ const App = () => {
   useEffect(() => {
     if(!headers) {
       return;
-    } else  if (headers.availableObjects === 0) {
+    } else if (headers.availableObjects === 0) {
       setSplashScreen('noTodosAvailable');
       setIsDrawerOpen(false);
     } else if (headers.visibleObjects === 0) {
@@ -198,10 +198,10 @@ const App = () => {
 
   useEffect(() => {
     const anonymousUserId = store.get('anonymousUserId');
-    const matomoContainer = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
     
     if(anonymousUserId && matomo) {
-      var _mtm = window._mtm = window._mtm || [];
+      const matomoContainer = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
+      const _mtm = window._mtm = window._mtm || [];
       _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
       if(anonymousUserId) _mtm.push({'anonymousUserId': anonymousUserId });
       var 

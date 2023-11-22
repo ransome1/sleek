@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
+import React, { useState, useEffect, useRef, KeyboardEvent, memo } from 'react';
 import {
   Accordion,
   AccordionSummary,
@@ -25,7 +25,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const DrawerAttributes: React.FC<Props> = ({
+const DrawerAttributes: React.FC<Props> = memo(({
    attributes,
    filters,
    attributeMapping,
@@ -163,6 +163,6 @@ const DrawerAttributes: React.FC<Props> = ({
       )}
     </Box>
   );
-};
+});
 
 export default withTranslation()(DrawerAttributes);

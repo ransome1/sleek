@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Checkbox, ListItem } from '@mui/material';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
@@ -25,7 +25,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const Row: React.FC<Props> = ({
+const Row: React.FC<Props> = memo(({
   row,
   filters,
   setDialogOpen,
@@ -139,6 +139,6 @@ const Row: React.FC<Props> = ({
       </ListItem>
     </>
   );
-};
+});
 
 export default withTranslation()(Row);

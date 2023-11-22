@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { Button, Dialog, DialogContent, DialogActions } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
@@ -26,7 +26,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const TodoDialog: React.FC<Props> = ({
+const TodoDialog: React.FC<Props> = memo(({
   dialogOpen,
   setDialogOpen,
   todoObject,
@@ -125,6 +125,6 @@ const TodoDialog: React.FC<Props> = ({
       </DialogActions>
     </Dialog>
   );
-};
+});
 
 export default withTranslation()(TodoDialog);
