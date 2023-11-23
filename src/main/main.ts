@@ -90,7 +90,9 @@ const createWindow = async() => {
     width: 1280,
     height: 1000,
     icon: getAssetPath('icons/512x512.png'),
+    autoHideMenuBar: true,
     webPreferences: {
+      spellcheck: false,
       contextIsolation: true,
       nodeIntegration: false,
       preload: environment === 'production'
