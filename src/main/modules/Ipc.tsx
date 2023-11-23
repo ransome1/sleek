@@ -3,7 +3,7 @@ import processDataRequest from './ProcessDataRequest';
 import { changeCompleteState } from './TodoObject/ChangeCompleteState';
 import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
 import archiveTodos from './File/Archive';
-import { configStorage, filterStorage } from '../config';
+import { configStorage, filterStorage, notifiedTodoObjectsStorage } from '../config';
 import { addFile, setFile, removeFile, revealFile } from './File/File';
 import { openFile, createFile, changeDoneFilePath } from './File/Dialog';
 
@@ -51,6 +51,15 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
   try {
     filterStorage.set('filters', value);
     console.log(`ipcEvents.ts: Filters saved`);
+  } catch (error: any) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): void {
+  try {
+    notifiedTodoObjectsStorage.set('notifiedTodoObjects', value);
+    console.log(`ipcEvents.ts: notifiedTodoObjects saved`);
   } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
@@ -134,6 +143,7 @@ function removeEventListeners(): void {
   ipcMain.off('storeGetConfig', handleStoreGetConfig);
   ipcMain.off('storeSetConfig', handleStoreSetConfig);
   ipcMain.off('storeSetFilters', handleStoreSetFilters);
+  ipcMain.off('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
   ipcMain.off('setFile', handleSetFile);
   ipcMain.off('removeFile', handleRemoveFile);
   ipcMain.off('openFile', openFile);
@@ -154,6 +164,7 @@ app.on('before-quit', removeEventListeners);
 ipcMain.on('storeGetConfig', handleStoreGetConfig);
 ipcMain.on('storeSetConfig', handleStoreSetConfig);
 ipcMain.on('storeSetFilters', handleStoreSetFilters);
+ipcMain.on('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
 ipcMain.on('setFile', handleSetFile);
 ipcMain.on('removeFile', handleRemoveFile);
 ipcMain.on('openFile', openFile);

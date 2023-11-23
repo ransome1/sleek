@@ -1,13 +1,12 @@
+import crypto from 'crypto';
 import { Notification } from 'electron';
-import { configStorage } from '../config';
+import { configStorage, notifiedTodoObjectsStorage } from '../config';
 import { Badge } from '../util';
 import dayjs, { Dayjs } from "dayjs";
 import isToday from 'dayjs/plugin/isToday';
 import isTomorrow from 'dayjs/plugin/isTomorrow';
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
-
-export const notifiedTodoObjects = new Set<number>();
 
 export const sendNotification = (title: string, body: string) => {
   const options = {
@@ -37,6 +36,7 @@ export function mustNotify(date: Date): boolean {
 
 export function handleNotification(id: number, due: string | null, body: string, badge: Badge) {
   const notificationAllowed = configStorage.get('notificationsAllowed');
+  const hash = crypto.createHash('sha256').update(body).digest('hex');
 
   if (notificationAllowed) {
     const today = dayjs().startOf('day');
@@ -47,9 +47,12 @@ export function handleNotification(id: number, due: string | null, body: string,
     if (dueDate.isBefore(today.add(notificationThreshold, 'day'))) {
       badge.count += 1;
 
-      if (!notifiedTodoObjects.has(id)) {
+      const notifiedTodoObjects = new Set<number>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
+
+      if (!notifiedTodoObjects.has(hash)) {
         sendNotification(daysUntilDue, body);
-        notifiedTodoObjects.add(id);
+        notifiedTodoObjects.add(hash);
+        notifiedTodoObjectsStorage.set('notifiedTodoObjects', Array.from(notifiedTodoObjects));
       }
     }
   }

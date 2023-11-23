@@ -85,6 +85,14 @@ if (!fs.existsSync(filtersPath)) {
   fs.writeFileSync(filtersPath, JSON.stringify(defaultFilterData));
 }
 
+const notifiedTodoObjectsPath = path.join(userDataDirectory, 'notifiedTodoObjects.json');
+const notifiedTodoObjectsStorage = new Store<{}>({ cwd: userDataDirectory, name: 'notifiedTodoObjects' });
+
+if (!fs.existsSync(notifiedTodoObjectsPath)) {
+  const defaultNotifiedTodoObjectsData = {};
+  fs.writeFileSync(notifiedTodoObjectsPath, JSON.stringify(defaultNotifiedTodoObjectsData));
+}
+
 if (!fs.existsSync(customStylesPath)) {
   fs.writeFileSync(customStylesPath, '');
 }
@@ -175,4 +183,4 @@ configStorage.onDidChange('tray', () => {
 
 nativeTheme.on('updated', handleTheme);
 
-export { configStorage, filterStorage };
+export { configStorage, filterStorage, notifiedTodoObjectsStorage };

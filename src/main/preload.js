@@ -11,6 +11,9 @@ contextBridge.exposeInMainWorld('api', {
     setFilters(value) {
       ipcRenderer.send('storeSetFilters', value);
     },
+    notifiedTodoObjects(value) {
+      ipcRenderer.send('storeSetNotifiedTodoObjects', value);
+    },
   },
   ipcRenderer: {
     send(channel, ...args) {
