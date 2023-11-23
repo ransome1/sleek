@@ -51,13 +51,15 @@ function createTray() {
     const menu = Menu.buildFromTemplate(createMenuTemplate(files));
 
     tray = new Tray(getAssetPath(`icons/tray/${iconName}`));
-    tray.on('click', () => {
-      handleCreateWindow();
-    });    
-    tray.on('right-click', () => {
-      tray.popUpContextMenu(menu);
-    });
-
+    tray.setToolTip('sleek');
+    tray
+      .on('click', () => {
+        handleCreateWindow();
+      })
+      .on('right-click', () => {
+        tray.popUpContextMenu(menu);
+      });
+      
     return Promise.resolve('Tray created');
   } catch (error: any) {
     console.error('Error creating tray:', error);

@@ -71,12 +71,12 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
       const scrollPos = list.scrollTop;
       const totalHeight = list.scrollHeight;
       const clientHeight = list.clientHeight;
-      if (totalHeight - scrollPos <= clientHeight * 2) {
-        const remainingRows: TodoObject[] | null = todoObjects?.slice(visibleRowCount, visibleRowCount + 20);
+      if (totalHeight - scrollPos <= clientHeight * 3) {
+        const remainingRows: TodoObject[] | null = todoObjects?.slice(visibleRowCount, visibleRowCount + 30);
         if (remainingRows?.length === 0) {
           setLoadMoreRows(false);
         } else {
-          setVisibleRowCount((prevVisibleRowCount) => prevVisibleRowCount + 20);
+          setVisibleRowCount((prevVisibleRowCount) => prevVisibleRowCount + 30);
         }
       }
     }
