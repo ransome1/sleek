@@ -47,9 +47,10 @@ function createTray() {
     }
 
     const files = configStorage.get('files') as File[] || [];
+    const iconName = process.platform === 'win32' ? 'tray.ico' : 'tray.png';
     const menu = Menu.buildFromTemplate(createMenuTemplate(files));
 
-    tray = new Tray(getAssetPath('icons/tray/tray.png'));
+    tray = new Tray(getAssetPath(`icons/tray/${iconName}`));
     tray.on('click', () => {
       handleCreateWindow();
     });    
