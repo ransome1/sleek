@@ -16,6 +16,20 @@ const files: File[] = (configStorage.get('files') as File[]) || [];
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
 
+const handleCreateWindow = () => {
+  if (mainWindow) {
+    mainWindow.show();
+  } else {
+    createWindow()
+      .then((result) => {
+        console.log('main.ts:', result);
+      })
+      .catch((error) => {
+        console.error('main.ts:', error);
+      });
+  }  
+}
+
 const handleClosed = () => {
   mainWindow = null;
   delete eventListeners.readyToShow;
@@ -40,7 +54,6 @@ const handleMove = () => {
 
 const handleUnmaximize = () => {
   configStorage.set('windowMaximized', false);
-  //handleWindowSizeAndPosition();
 }
 
 const handleMaximize = () => {
@@ -146,16 +159,6 @@ const handleBeforeQuit = () => {
   delete eventListeners.beforeQuit;
 }
 
-const handleActivate = () => {
-  if (mainWindow === null) {
-    createWindow().then(result => {
-      console.log('Main window created:', result);
-    }).catch(error => {
-      console.error('Error creating main window:', error);
-    });
-  }
-}
-
 app
   .on('window-all-closed', handleWindowAllClosed)
   .on('will-quit', handleWillQuit)
@@ -183,9 +186,9 @@ app
       console.error('main.ts:', error);
     });
 
-    app.on('activate', handleActivate);
-    eventListeners.activate = handleActivate;
+    app.on('activate', handleCreateWindow);
+    eventListeners.activate = handleCreateWindow;
   })
   .catch(console.error);
 
-export { mainWindow, createWindow };
+export { mainWindow, handleCreateWindow };

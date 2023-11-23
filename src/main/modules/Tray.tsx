@@ -1,5 +1,5 @@
 import { app, Menu, Tray } from 'electron';
-import { createWindow, mainWindow } from '../main';
+import { handleCreateWindow, mainWindow } from '../main';
 import { configStorage } from '../config';
 import { getAssetPath, File } from '../util';
 import { setFile } from './File/File';
@@ -11,17 +11,7 @@ function createMenuTemplate(files: File[]): Electron.MenuItemConstructorOptions[
     {
       label: 'Show sleek',
       click: () => {
-        if (mainWindow) {
-          mainWindow.show();
-        } else {
-          createWindow()
-            .then((result) => {
-              console.log('main.ts:', result);
-            })
-            .catch((error) => {
-              console.error('main.ts:', error);
-            });
-        }
+        handleCreateWindow();
       },
     },
     { type: 'separator' },
@@ -30,18 +20,8 @@ function createMenuTemplate(files: File[]): Electron.MenuItemConstructorOptions[
         label: file.todoFileName,
         accelerator: `CommandOrControl+${index + 1}`,
         click: () => {
-          if (mainWindow) {
-            mainWindow.show();
-          } else {
-            createWindow()
-              .then((result) => {
-                console.log('main.ts:', result);
-              })
-              .catch((error) => {
-                console.error('main.ts:', error);
-              });
-          }
           setFile(index);
+          handleCreateWindow();
         },
       }))
       : []),
@@ -70,7 +50,12 @@ function createTray() {
     const menu = Menu.buildFromTemplate(createMenuTemplate(files));
 
     tray = new Tray(getAssetPath('icons/tray/tray.png'));
-    tray.setContextMenu(menu);
+    tray.on('click', () => {
+      handleCreateWindow();
+    });    
+    tray.on('right-click', () => {
+      tray.popUpContextMenu(menu);
+    });
 
     return Promise.resolve('Tray created');
   } catch (error: any) {
