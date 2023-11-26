@@ -77,6 +77,7 @@ const configStorage = new Store<ConfigData>({
     },
   }  
 });
+
 const filtersPath = path.join(userDataDirectory, 'filters.json');
 const filterStorage = new Store<{}>({ cwd: userDataDirectory, name: 'filters' });
 
@@ -98,18 +99,18 @@ if (!fs.existsSync(customStylesPath)) {
 }
 
 const handleConfigChange = async (key: string, newValue: any) => {
-  // todo: what if search string was set previously? This would remove it
   const [todoObjects, attributes, headers, filters] = await processDataRequest('');
   mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
-  if (key === 'sorting') {
-    mainWindow!.webContents.send('updateSorting', newValue);
-  }
 };
 
-filterStorage.onDidChange('filters' as never, async () => {
-  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
-  mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
+filterStorage.onDidAnyChange((newValue, oldValue) => {
+  handleConfigChange();
 });
+
+configStorage.onDidAnyChange((newValue, oldValue) => {
+  handleConfigChange();
+});
+
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
@@ -134,37 +135,8 @@ configStorage.onDidChange('files', async (files: File[] | undefined) => {
   }
 });
 
-configStorage.onDidChange('showCompleted', () => {
-  handleConfigChange('showCompleted', configStorage.get('showCompleted'));
-});
-
-configStorage.onDidChange('showHidden', () => {
-  handleConfigChange('showHidden', configStorage.get('showHidden'));
-});
-
-configStorage.onDidChange('thresholdDateInTheFuture', () => {
-  handleConfigChange('thresholdDateInTheFuture', configStorage.get('thresholdDateInTheFuture'));
-});
-
-configStorage.onDidChange('dueDateInTheFuture', () => {
-  handleConfigChange('dueDateInTheFuture', configStorage.get('dueDateInTheFuture'));
-});
-
 configStorage.onDidChange('showFileTabs', () => {
   mainWindow!.webContents.send('setShowFileTabs');
-});
-
-configStorage.onDidChange('sorting', (sorting) => {
-  handleConfigChange('sorting', sorting);
-});
-
-configStorage.onDidChange('notificationThreshold', async () => {
-  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
-  mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
-});
-
-configStorage.onDidChange('fileSorting', (fileSorting) => {
-  handleConfigChange('fileSorting', fileSorting);
 });
 
 configStorage.onDidChange('colorTheme', (colorTheme) => {

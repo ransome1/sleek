@@ -23,6 +23,10 @@ jest.mock('electron', () => ({
 }));
 
 jest.mock('../../main/config', () => ({
+	notifiedTodoObjectsStorage: {
+		get: jest.fn(),
+		set: jest.fn(),
+	},
   configStorage: {
     get: jest.fn((key) => {
       if (key === 'notificationsAllowed') {

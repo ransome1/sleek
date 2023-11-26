@@ -47,7 +47,7 @@ export function handleNotification(id: number, due: string | null, body: string,
     if (dueDate.isBefore(today.add(notificationThreshold, 'day'))) {
       badge.count += 1;
 
-      const notifiedTodoObjects = new Set<number>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
+      const notifiedTodoObjects = new Set<string>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
 
       if (!notifiedTodoObjects.has(hash)) {
         sendNotification(daysUntilDue, body);

@@ -1,6 +1,6 @@
 import chokidar, { FSWatcher } from 'chokidar';
 import processDataRequest from '../ProcessDataRequest';
-import { mainWindow } from '../../main';
+import { mainWindow, eventListeners } from '../../main';
 import { configStorage } from '../../config';
 import { File } from '../../util';
 
@@ -41,6 +41,8 @@ function createFileWatcher(files: File[]): string {
       .on('ready', () => {
         console.log('FileWatcher.ts: Initial scan complete. Ready for changes');
       });
+
+    eventListeners.watcher = watcher;
 
     return 'File watchers created';
   } catch (error: any) {

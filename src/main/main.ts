@@ -10,8 +10,8 @@ import './modules/Ipc';
 import handleTheme from './modules/Theme';
 
 const environment = process.env.NODE_ENV;
-
 const files: File[] = (configStorage.get('files') as File[]) || [];
+let tray: boolean = configStorage.get('tray');
 
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
@@ -32,8 +32,19 @@ const handleCreateWindow = () => {
 
 const handleClosed = () => {
   mainWindow = null;
-  delete eventListeners.readyToShow;
-  delete eventListeners.closed;
+
+  delete eventListeners.handleReadyToShow;
+  delete eventListeners.handleClosed;
+  delete eventListeners.handleResize;
+  delete eventListeners.handleMove;
+  delete eventListeners.handleShow;
+  delete eventListeners.handleMaximize;
+  delete eventListeners.handleUnmaximize;
+  delete eventListeners.handleCreateWindow;
+  delete eventListeners.handleWindowAllClosed;
+  delete eventListeners.handleWillQuit;
+  delete eventListeners.handleBeforeQuit;
+  delete eventListeners.watcher;
 }
 
 const handleResize = () => {
@@ -127,6 +138,16 @@ const createWindow = async() => {
     .on('closed', handleClosed)
     .on('maximize', handleMaximize)
     .on('unmaximize', handleUnmaximize);
+
+  eventListeners
+    .handleReadyToShow = handleReadyToShow
+    .handleClosed = handleClosed
+    .handleResize = handleResize
+    .handleMove = handleMove
+    .handleShow = handleShow
+    .handleMaximize = handleMaximize
+    .handleUnmaximize = handleUnmaximize;
+
   return "Main window has been created successfully"
 }
 
@@ -142,7 +163,7 @@ const handleReadyToShow = async () => {
 }
 
 const handleWindowAllClosed = () => {
-  const tray: boolean = configStorage.get('tray');
+  tray = configStorage.get('tray');
   if (process.platform !== 'darwin' && !tray) {
     app.quit();
   } else if (process.platform === 'darwin' && tray) {
@@ -152,24 +173,16 @@ const handleWindowAllClosed = () => {
   }
 }
 
-const handleWillQuit = () => {
-  delete eventListeners.willQuit;
-}
-
 const handleBeforeQuit = () => {
   app.releaseSingleInstanceLock();
-  delete eventListeners.beforeQuit;
 }
 
 app
   .on('window-all-closed', handleWindowAllClosed)
-  .on('will-quit', handleWillQuit)
   .on('before-quit', handleBeforeQuit)
+  .on('activate', handleCreateWindow)
   .whenReady()
   .then(() => {
-    eventListeners.readyToShow = handleReadyToShow;
-    eventListeners.closed = handleClosed;
-
     createWindow().then(result => {
       console.log('main.ts:', result);
     }).catch(error => {
@@ -182,15 +195,20 @@ app
       console.error('main.ts:', error);
     });
 
-    createTray().then(result => {
-      console.log('main.ts:', result);
-    }).catch(error => {
-      console.error('main.ts:', error);
-    });
+    if(tray) {
+      createTray().then(result => {
+        console.log('main.ts:', result);
+      }).catch(error => {
+        console.error('main.ts:', error);
+      });
+    }
 
-    app.on('activate', handleCreateWindow);
-    eventListeners.activate = handleCreateWindow;
+    eventListeners
+      .handleCreateWindow = handleCreateWindow
+      .handleWindowAllClosed = handleWindowAllClosed
+      .handleBeforeQuit = handleBeforeQuit;
+
   })
   .catch(console.error);
 
-export { mainWindow, handleCreateWindow };
+export { mainWindow, handleCreateWindow, eventListeners };
