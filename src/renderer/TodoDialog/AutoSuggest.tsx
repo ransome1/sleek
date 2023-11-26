@@ -30,29 +30,22 @@ const AutoSuggest: React.FC<Props> = ({
    textFieldRef,
  }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(
-    -1
-  );
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1);
   const [prefix, setPrefix] = useState<string | null>(null);
-  const [matchPosition, setMatchPosition] = useState<{ start: number; end: number }>(
-    { start: -1, end: -1 }
-  );
-  const [multilineTextField, setMultilineTextField] = useState<boolean>(
-    store.get('multilineTextField')
-  );
+  const [matchPosition, setMatchPosition] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
+  const [multilineTextField, setMultilineTextField] = useState<boolean>(store.get('multilineTextField'));
 
   const handleSetMultilineTextField = () => {
     setMultilineTextField((prevMultilineTextField) => !prevMultilineTextField);
   };
 
   const handleSuggestionsFetchRequested = ({ value }: { value: string }) => {
+
     let content = value.replaceAll('\n', ' ').replaceAll(String.fromCharCode(16), ' ');
+    if (!content) return false;
 
-    if (!content) return;
     const cursorPosition = textFieldRef.current?.selectionStart;
-    if (!cursorPosition) return;
-
-    setSuggestions([]);
+    if (!cursorPosition) return false;
 
     let match;
     while ((match = regex.exec(content)) !== null) {
@@ -75,7 +68,6 @@ const AutoSuggest: React.FC<Props> = ({
     _event: React.SyntheticEvent,
     { suggestion }: { suggestion: string }
   ) => {
-
     if (!textFieldValue) return;
     const createNewValue = (string: string, a: number, b: number) => {
       return `${textFieldValue.slice(0, a)}${prefix}${string} ${textFieldValue.slice(
@@ -96,6 +88,13 @@ const AutoSuggest: React.FC<Props> = ({
     setTextFieldValue(newValue);
   };
 
+  const handleShouldRenderSuggestions = (value, reason) => {
+    if(reason === 'input-focused') {
+      return false;
+    }
+    return true;
+  }  
+
   const getSuggestions = (trigger: string, match: string): string[] => {
     if (trigger === '@') {
       setPrefix('@');
@@ -107,7 +106,7 @@ const AutoSuggest: React.FC<Props> = ({
     return [];
   };
 
-  const renderSuggestion = (
+  const handleRenderSuggestion = (
     suggestion: string,
     { isHighlighted }: { isHighlighted: boolean }
   ) => (
@@ -136,8 +135,8 @@ const AutoSuggest: React.FC<Props> = ({
     string: string
   ) => {
     if (suggestions.length > 0) {
-      if (event.key === 'Enter') {
-        if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
+      if (suggestions.length === 1 || event.key === 'Enter') {
+        if (selectedSuggestionIndex !== -1) {
           event.stopPropagation();
           const selectedSuggestion = suggestions[selectedSuggestionIndex];
           handleSuggestionSelected(null, { suggestion: selectedSuggestion });
@@ -161,6 +160,12 @@ const AutoSuggest: React.FC<Props> = ({
     }
   };
 
+  const handleSuggestionHighlighted = (suggestion) => {
+    if(suggestions.length === 1) {
+      handleSuggestionSelected(null, { suggestion: suggestions[0] });
+    }
+  }
+
   const value = () => {
     return multilineTextField
       ? textFieldValue.replaceAll(String.fromCharCode(16), '\n')
@@ -172,8 +177,7 @@ const AutoSuggest: React.FC<Props> = ({
     value: value(),
     onChange: handleChange,
     inputRef: textFieldRef,
-    onKeyDown: (event: React.KeyboardEvent) =>
-      handleKeyDown(event, todoObject?.id, textFieldValue),
+    onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, todoObject?.id, textFieldValue),
   };
 
   useEffect(() => {
@@ -201,11 +205,16 @@ const AutoSuggest: React.FC<Props> = ({
           </Box>
         )}
         suggestions={suggestions}
+
+        shouldRenderSuggestions={handleShouldRenderSuggestions}
+        
+
         onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
         onSuggestionsClearRequested={handleSuggestionsClearRequested}
-        getSuggestionValue={(suggestion: any) => suggestion}
-        renderSuggestion={renderSuggestion}
+        getSuggestionValue={(suggestion: string) => suggestion}
+        renderSuggestion={handleRenderSuggestion}
         onSuggestionSelected={handleSuggestionSelected}
+        onSuggestionHighlighted={handleSuggestionHighlighted}
         inputProps={inputProps}
       />
       <InputAdornment className="resize" position="end">

@@ -98,9 +98,12 @@ if (!fs.existsSync(customStylesPath)) {
   fs.writeFileSync(customStylesPath, '');
 }
 
-const handleConfigChange = async (key: string, newValue: any) => {
+const handleConfigChange = async () => {
+  // TODO: If there was a search string before it will be ignored here, needs fix
   const [todoObjects, attributes, headers, filters] = await processDataRequest('');
-  mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
+  if (todoObjects) {
+    mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
+  }
 };
 
 filterStorage.onDidAnyChange((newValue, oldValue) => {
@@ -110,7 +113,6 @@ filterStorage.onDidAnyChange((newValue, oldValue) => {
 configStorage.onDidAnyChange((newValue, oldValue) => {
   handleConfigChange();
 });
-
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
