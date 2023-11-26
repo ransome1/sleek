@@ -89,7 +89,7 @@ const createWindow = async() => {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
-    icon: getAssetPath('icons/512x512.png'),
+    icon: process.platform === 'win32' ? getAssetPath('icons/sleek.ico') : getAssetPath('icons/512x512.png'),
     autoHideMenuBar: true,
     webPreferences: {
       spellcheck: false,
