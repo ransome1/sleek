@@ -3,7 +3,7 @@
   "delete": "删除",
   "cancel": "取消",
   "fileTabs.changeLocation": "更改 done.txt 文件位置",
-  "fileTabs.revealFile": "在资源管理器中显示",
+  "fileTabs.revealFile": "在文件管理器中显示",
   "fileTabs.removeFileHeadline": "从 sleek 中删除文件？",
   "fileTabs.removeFileText": "它不会从您的硬盘驱动器中删除。",
   "fileTabs.removeFileLabel": "删除",

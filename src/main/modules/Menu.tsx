@@ -35,12 +35,16 @@ function createMenu(files: File[]) {
               mainWindow!.webContents.send('setIsSettingsOpen');
             },
           },
-          { type: 'separator' },
-          {
-            label: 'Hide',
-            accelerator: isMac ? 'Cmd+H' : 'Win+D',
-            role: 'hide',
-          },
+          ...(isMac
+          ? [
+              { type: 'separator' },
+              {
+                label: 'Hide',
+                accelerator: 'Cmd+H',
+                role: 'hide',
+              },
+            ]
+          : []),
           { type: 'separator' },
           {
             label: 'Quit',

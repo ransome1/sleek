@@ -3,7 +3,7 @@
   "delete": "削除",
   "cancel": "キャンセル",
   "fileTabs.changeLocation": "done.txt ファイルの場所を変更",
-  "fileTabs.revealFile": "Finder で表示",
+  "fileTabs.revealFile": "ファイルマネージャーで表示",
   "fileTabs.removeFileHeadline": "sleek からファイルを削除しますか？",
   "fileTabs.removeFileText": "ハードディスクからは削除されません。",
   "fileTabs.removeFileLabel": "削除",

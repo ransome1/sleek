@@ -3,7 +3,7 @@
   "delete": "Supprimer",
   "cancel": "Annuler",
   "fileTabs.changeLocation": "Changer l'emplacement du fichier done.txt",
-  "fileTabs.revealFile": "Révéler dans le Finder",
+  "fileTabs.revealFile": "Révéler dans le gestionnaire de fichiers",
   "fileTabs.removeFileHeadline": "Supprimer le fichier de sleek?",
   "fileTabs.removeFileText": "Il ne sera pas supprimé de votre disque dur.",
   "fileTabs.removeFileLabel": "Supprimer",

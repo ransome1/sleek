@@ -3,7 +3,7 @@
   "delete": "Sil",
   "cancel": "İptal",
   "fileTabs.changeLocation": "done.txt dosyasının konumunu değiştir",
-  "fileTabs.revealFile": "Finder'da Göster",
+  "fileTabs.revealFile": "Dosya yöneticisinde göster",
   "fileTabs.removeFileHeadline": "Dosyayı sleek'ten kaldırmak istiyor musunuz?",
   "fileTabs.removeFileText": "Sabit diskinizden silinmeyecektir.",
   "fileTabs.removeFileLabel": "Kaldır",

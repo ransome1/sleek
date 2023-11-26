@@ -3,7 +3,7 @@
   "delete": "Удалить",
   "cancel": "Отменить",
   "fileTabs.changeLocation": "Изменить местоположение файла done.txt",
-  "fileTabs.revealFile": "Показать в Finder",
+  "fileTabs.revealFile": "Показать в файловом менеджере",
   "fileTabs.removeFileHeadline": "Удалить файл из sleek?",
   "fileTabs.removeFileText": "Он не будет удален с вашего жесткого диска.",
   "fileTabs.removeFileLabel": "Удалить",
