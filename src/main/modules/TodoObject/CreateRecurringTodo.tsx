@@ -1,7 +1,6 @@
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 import { writeTodoObjectToFile } from '../File/Write';
-import restorePreviousPriority from './RestorePreviousPriority';
 import { configStorage } from '../../config';
 
 enum RecurrenceInterval {
@@ -53,8 +52,6 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       JsTodoTxtObject.setCreated(null);
     }
 
-    restorePreviousPriority(JsTodoTxtObject);
-
     if (recurrence && completedDate) {
       const strictRecurrence: boolean = recurrence.startsWith('+');
       const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
@@ -67,7 +64,10 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       const newThresholdDate = strictRecurrence
         ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
         : dayjs(newDueDate).subtract(daysBetween, 'day').toDate();
-      if(completedDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
+
+      // If the user only uses threshold date and no due date, the recurrence should not create a due date:
+      const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
+      if(completedDate && !recurrenceOnlyForThresholdDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
       if(oldThresholdDate) JsTodoTxtObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
       JsTodoTxtObject.setComplete(false);
       JsTodoTxtObject.setCompleted(null);
