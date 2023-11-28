@@ -50,6 +50,8 @@ const App = () => {
   const [textFieldValue, setTextFieldValue] = useState<string | null>(null);
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [matomo, setMatomo] = useState<boolean>(store.get('matomo') || false);
+  const [showPromptArchive, setShowPromptArchive] = useState<boolean>(false);
+  const [showPromptDoneFile, setShowPromptDoneFile] = useState<number>(false);
 
   const searchFieldRef = useRef(null);
 
@@ -175,7 +177,7 @@ const App = () => {
   }, [promptItem]);
 
   useEffect(() => {
-    store.set('', isNavigationOpen)
+    store.set('isNavigationOpen', isNavigationOpen)
   }, [isNavigationOpen]);
 
   useEffect(() => {
@@ -244,6 +246,7 @@ const App = () => {
             setIsNavigationOpen={setIsNavigationOpen}
             setIsSettingsOpen={setIsSettingsOpen}
             setTodoObject={setTodoObject}
+            setShowPromptArchive={setShowPromptArchive}
           />
           {files?.length > 0 && (
             <>
@@ -336,6 +339,7 @@ const App = () => {
             setSnackBarSeverity={setSnackBarSeverity}
             setSnackBarContent={setSnackBarContent}
             setPromptItem={setPromptItem}
+            setShowPromptDoneFile={setShowPromptDoneFile}
           />
         )}
         <Snackbar
@@ -352,6 +356,10 @@ const App = () => {
         <Archive
           setSnackBarSeverity={setSnackBarSeverity}
           setSnackBarContent={setSnackBarContent}
+          showPromptArchive={showPromptArchive}
+          setShowPromptArchive={setShowPromptArchive}
+          showPromptDoneFile={showPromptDoneFile}
+          setShowPromptDoneFile={setShowPromptDoneFile}
         />
         {promptItem && (
           <Prompt
@@ -360,7 +368,7 @@ const App = () => {
             onConfirm={() => handlePromptConfirm(promptItem)}
             headline={promptItem.headline || ''}
             text={promptItem.text || ''}
-            buttonText={promptItem.label}
+            confirmButton={promptItem.label}
           />
         )}
       </ThemeProvider>

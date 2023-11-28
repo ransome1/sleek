@@ -2,7 +2,9 @@
   "copy": "Copy",
   "delete": "Delete",
   "cancel": "Cancel",
-  "fileTabs.changeLocation": "Change location of done.txt file",
+  "openFile": "Open file",
+  "createFile": "Create file",
+  "fileTabs.changeLocation": "Change file for archiving",
   "fileTabs.revealFile": "Reveal in file manager",
   "fileTabs.removeFileHeadline": "Remove file from sleek?",
   "fileTabs.removeFileText": "It will not be deleted from your hard drive.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Creation date",
   "shared.attributeMapping.completed": "Completion date",
   "splashscreen.noFiles.text": "Drop your todo.txt file here or use the buttons",
-  "splashscreen.noFiles.open": "Open todo.txt file",
-  "splashscreen.noFiles.create": "Create todo.txt file",
   "splashscreen.noTodosAvailable.text": "No todos in this file",
   "splashscreen.noTodosAvailable.create": "Create a todo",
   "splashscreen.noTodosVisible.text": "No results visible.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Delete todo?",
   "prompt.delete.text": "The todo will be permanently removed from the file",
   "prompt.archive.headline": "Archive completed todos?",
-  "prompt.archive.text": "This will move all completed todos to your specified done file",
-  "prompt.archive.button": "Archive"
+  "prompt.archive.text": "This will move all completed todos to your specified archiving file",
+  "prompt.archive.button": "Archive",
+  "prompt.archive.changeFile.headline": "Choose a File for Archiving",
+  "prompt.archive.changeFile.text": "To archive completed todos, you need to choose an archive file first"
 }

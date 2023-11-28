@@ -5,8 +5,9 @@ import { configStorage } from '../../config';
 import { writeStringToFile } from './Write';
 import { createTodoObjects } from '../TodoObject/CreateTodoObjects';
 
-async function extractTodosFromFile(filePath: string, complete: boolean): Promise<string[]> {
+async function extractTodosFromFile(filePath: string | null, complete: boolean): Promise<string[]> {
   try {
+    if(!filePath) throw new Error;
     const content = await fs.readFile(filePath, 'utf8');
     const todoObjects = createTodoObjects(content);
     const validTodoStrings = todoObjects
@@ -29,8 +30,12 @@ async function archiveTodos(): Promise<void> {
     }
     const todoFilePath = activeFile.todoFilePath;
     const doneFilePath = activeFile.doneFilePath;
+
+    if(!doneFilePath) return;
+    
     const completedTodos = await extractTodosFromFile(todoFilePath, true);
     const uncompletedTodos = await extractTodosFromFile(todoFilePath, false);
+
     const todosFromDoneFile = await extractTodosFromFile(doneFilePath, true);
     const stringDoneFile = todosFromDoneFile.length === 0 ? completedTodos.join('\n') : todosFromDoneFile.join('\n') + '\n' + completedTodos.join('\n');
     const stringTodoFile = uncompletedTodos.join('\n');

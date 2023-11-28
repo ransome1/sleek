@@ -2,7 +2,9 @@
   "copy": "Copiar",
   "delete": "Eliminar",
   "cancel": "Cancelar",
-  "fileTabs.changeLocation": "Cambiar la ubicación del archivo done.txt",
+  "openFile": "Abrir archivo",
+  "createFile": "Crear archivo",
+  "fileTabs.changeLocation": "Cambiar archivo para archivar",
   "fileTabs.revealFile": "Mostrar en el administrador de archivos",
   "fileTabs.removeFileHeadline": "¿Eliminar archivo de sleek?",
   "fileTabs.removeFileText": "No se eliminará de su disco duro.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Fecha de creación",
   "shared.attributeMapping.completed": "Fecha de finalización",
   "splashscreen.noFiles.text": "Arrastre su archivo todo.txt aquí o use los botones",
-  "splashscreen.noFiles.open": "Abrir archivo todo.txt",
-  "splashscreen.noFiles.create": "Crear archivo todo.txt",
   "splashscreen.noTodosAvailable.text": "No hay tareas en este archivo",
   "splashscreen.noTodosAvailable.create": "Crear una tarea",
   "splashscreen.noTodosVisible.text": "No se ven resultados.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "¿Eliminar tarea?",
   "prompt.delete.text": "La tarea se eliminará permanentemente del archivo",
   "prompt.archive.headline": "¿Archivar tareas completadas?",
-  "prompt.archive.text": "Esto moverá todas las tareas completadas a su archivo done especificado",
-  "prompt.archive.button": "Archivar"
+  "prompt.archive.text": "Esto moverá todas las tareas completadas a tu archivo de archivado especificado",
+  "prompt.archive.button": "Archivar",
+  "prompt.archive.changeFile.headline": "Selecciona un archivo para archivar",
+  "prompt.archive.changeFile.text": "Para archivar tareas completadas, primero debes elegir un archivo de archivo."
 }

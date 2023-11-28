@@ -2,7 +2,9 @@
   "copy": "Másolás",
   "delete": "Törlés",
   "cancel": "Mégse",
-  "fileTabs.changeLocation": "Fájl done.txt helyének megváltoztatása",
+  "openFile": "Fájl megnyitása",
+  "createFile": "Fájl létrehozása",
+  "fileTabs.changeLocation": "Fájl megváltoztatása az archiváláshoz",
   "fileTabs.revealFile": "Megmutatás a fájlkezelőben",
   "fileTabs.removeFileHeadline": "Fájl eltávolítása a sleek?",
   "fileTabs.removeFileText": "Nem kerül törlésre a merevlemezről.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Létrehozás dátuma",
   "shared.attributeMapping.completed": "Befejezés dátuma",
   "splashscreen.noFiles.text": "Húzza ide a todo.txt fájlt, vagy használja a gombokat",
-  "splashscreen.noFiles.open": "Todo.txt fájl megnyitása",
-  "splashscreen.noFiles.create": "Todo.txt fájl létrehozása",
   "splashscreen.noTodosAvailable.text": "Nincsenek feladatok ebben a fájlban",
   "splashscreen.noTodosAvailable.create": "Feladat létrehozása",
   "splashscreen.noTodosVisible.text": "Nincs látható eredmény.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Feladat törlése?",
   "prompt.delete.text": "A feladat véglegesen törlődik a fájlból",
   "prompt.archive.headline": "Befejezett feladatok archiválása?",
-  "prompt.archive.text": "Ez az összes befejezett feladatot áthelyezi a meghatározott done fájlba",
-  "prompt.archive.button": "Archiválás"
+  "prompt.archive.text": "Ez az összes befejezett teendőt a megadott archiválási fájlba fogja áthelyezni",
+  "prompt.archive.button": "Archiválás",
+  "prompt.archive.changeFile.headline": "Válassz fájlt az archiváláshoz",
+  "prompt.archive.changeFile.text": "A befejezett teendők archiválásához először válaszd ki az archív fájlt."
 }

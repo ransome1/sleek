@@ -2,7 +2,9 @@
   "copy": "Kopiuj",
   "delete": "Usuń",
   "cancel": "Anuluj",
-  "fileTabs.changeLocation": "Zmień lokalizację pliku done.txt",
+  "openFile": "Otwórz plik",
+  "createFile": "Utwórz plik",
+  "fileTabs.changeLocation": "Zmień plik do archiwizacji",
   "fileTabs.revealFile": "Pokaż w menedżerze plików",
   "fileTabs.removeFileHeadline": "Usunąć plik z sleek?",
   "fileTabs.removeFileText": "Nie zostanie usunięty z dysku twardego.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Data utworzenia",
   "shared.attributeMapping.completed": "Data ukończenia",
   "splashscreen.noFiles.text": "Przeciągnij tutaj plik todo.txt lub użyj przycisków",
-  "splashscreen.noFiles.open": "Otwórz plik todo.txt",
-  "splashscreen.noFiles.create": "Utwórz plik todo.txt",
   "splashscreen.noTodosAvailable.text": "Brak zadań w tym pliku",
   "splashscreen.noTodosAvailable.create": "Utwórz zadanie",
   "splashscreen.noTodosVisible.text": "Brak widocznych wyników.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Usunąć zadanie?",
   "prompt.delete.text": "Zadanie zostanie trwale usunięte z pliku",
   "prompt.archive.headline": "Zarchiwizować ukończone zadania?",
-  "prompt.archive.text": "To przeniesie wszystkie ukończone zadania do wskazanego pliku done",
-  "prompt.archive.button": "Archiwizuj"
+  "prompt.archive.text": "To spowoduje przeniesienie wszystkich ukończonych zadań do określonego pliku archiwizacji",
+  "prompt.archive.button": "Archiwizuj",
+  "prompt.archive.changeFile.headline": "Wybierz plik do archiwizacji",
+  "prompt.archive.changeFile.text": "Aby zarchiwizować ukończone zadania, musisz najpierw wybrać plik archiwizacyjny."
 }

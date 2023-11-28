@@ -2,7 +2,9 @@
   "copy": "Kopírovat",
   "delete": "Smazat",
   "cancel": "Zrušit",
-  "fileTabs.changeLocation": "Změnit umístění souboru done.txt",
+  "openFile": "Otevřít soubor",
+  "createFile": "Vytvořit soubor",
+  "fileTabs.changeLocation": "Změnit soubor pro archivaci",
   "fileTabs.revealFile": "Zobrazit v správci souborů",
   "fileTabs.removeFileHeadline": "Odstranit soubor ze sleek?",
   "fileTabs.removeFileText": "Nebude smazán z pevného disku.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Datum vytvoření",
   "shared.attributeMapping.completed": "Datum dokončení",
   "splashscreen.noFiles.text": "Přetáhněte sem soubor todo.txt nebo použijte tlačítka",
-  "splashscreen.noFiles.open": "Otevřít soubor todo.txt",
-  "splashscreen.noFiles.create": "Vytvořit soubor todo.txt",
   "splashscreen.noTodosAvailable.text": "V tomto souboru nejsou žádné úkoly",
   "splashscreen.noTodosAvailable.create": "Vytvořit úkol",
   "splashscreen.noTodosVisible.text": "Žádné výsledky nejsou viditelné.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Smazat úkol?",
   "prompt.delete.text": "Úkol bude trvale odstraněn ze souboru",
   "prompt.archive.headline": "Archivovat dokončené úkoly?",
-  "prompt.archive.text": "Tímto se přesunou všechny dokončené úkoly do vašeho určeného souboru done",
-  "prompt.archive.button": "Archivovat"
+  "prompt.archive.text": "Tímto se přesunou všechny dokončené úkoly do vašeho určeného archivačního souboru",
+  "prompt.archive.button": "Archivovat",
+  "prompt.archive.changeFile.headline": "Vyberte soubor pro archivaci",
+  "prompt.archive.changeFile.text": "Pro archivaci dokončených úkolů je nutné nejprve vybrat archivační soubor."
 }

@@ -2,7 +2,9 @@
   "copy": "コピー",
   "delete": "削除",
   "cancel": "キャンセル",
-  "fileTabs.changeLocation": "done.txt ファイルの場所を変更",
+  "openFile": "ファイルを開く",
+  "createFile": "ファイルを作成",
+  "fileTabs.changeLocation": "アーカイブ用のファイルを変更",
   "fileTabs.revealFile": "ファイルマネージャーで表示",
   "fileTabs.removeFileHeadline": "sleek からファイルを削除しますか？",
   "fileTabs.removeFileText": "ハードディスクからは削除されません。",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "作成日",
   "shared.attributeMapping.completed": "完了日",
   "splashscreen.noFiles.text": "todo.txt ファイルをここにドラッグ＆ドロップするか、ボタンを使用してください",
-  "splashscreen.noFiles.open": "todo.txt ファイルを開く",
-  "splashscreen.noFiles.create": "todo.txt ファイルを作成",
   "splashscreen.noTodosAvailable.text": "このファイルにはタスクがありません",
   "splashscreen.noTodosAvailable.create": "タスクを作成",
   "splashscreen.noTodosVisible.text": "表示できる結果はありません。",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "タスクを削除しますか？",
   "prompt.delete.text": "タスクはファイルから永久に削除されます",
   "prompt.archive.headline": "完了したタスクをアーカイブしますか？",
-  "prompt.archive.text": "これにより、すべての完了したタスクが指定した done ファイルに移動されます",
-  "prompt.archive.button": "アーカイブ"
+  "prompt.archive.text": "これにより、すべての完了したタスクが指定されたアーカイブファイルに移動されます",
+  "prompt.archive.button": "アーカイブ",
+  "prompt.archive.changeFile.headline": "アーカイブ用のファイルを選択",
+  "prompt.archive.changeFile.text": "完了したタスクをアーカイブするには、まずアーカイブ用のファイルを選択する必要があります。"
 }

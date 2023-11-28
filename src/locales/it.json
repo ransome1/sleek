@@ -2,7 +2,9 @@
   "copy": "Copia",
   "delete": "Elimina",
   "cancel": "Annulla",
-  "fileTabs.changeLocation": "Cambia posizione del file done.txt",
+  "openFile": "Apri file",
+  "createFile": "Crea file",
+  "fileTabs.changeLocation": "Cambia file per l'archiviazione",
   "fileTabs.revealFile": "Mostra nel gestore di file",
   "fileTabs.removeFileHeadline": "Rimuovi il file da sleek?",
   "fileTabs.removeFileText": "Non verrà eliminato dal tuo disco rigido.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Data di creazione",
   "shared.attributeMapping.completed": "Data di completamento",
   "splashscreen.noFiles.text": "Trascina il tuo file todo.txt qui o usa i pulsanti",
-  "splashscreen.noFiles.open": "Apri file todo.txt",
-  "splashscreen.noFiles.create": "Crea file todo.txt",
   "splashscreen.noTodosAvailable.text": "Nessun compito in questo file",
   "splashscreen.noTodosAvailable.create": "Crea un compito",
   "splashscreen.noTodosVisible.text": "Nessun risultato visibile.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Eliminare il compito?",
   "prompt.delete.text": "Il compito verrà eliminato definitivamente dal file",
   "prompt.archive.headline": "Archiviare i compiti completati?",
-  "prompt.archive.text": "Ciò sposterà tutti i compiti completati nel tuo file done specificato",
-  "prompt.archive.button": "Archivia"
+  "prompt.archive.text": "Questo sposterà tutti i compiti completati nel tuo file di archiviazione specificato",
+  "prompt.archive.button": "Archivia",
+  "prompt.archive.changeFile.headline": "Scegli un file da archiviare",
+  "prompt.archive.changeFile.text": "Per archiviare i compiti completati, devi prima scegliere un file di archiviazione."
 }

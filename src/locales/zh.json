@@ -2,7 +2,9 @@
   "copy": "复制",
   "delete": "删除",
   "cancel": "取消",
-  "fileTabs.changeLocation": "更改 done.txt 文件位置",
+  "openFile": "打开 文件",
+  "createFile": "创建 文件",
+  "fileTabs.changeLocation": "更改文件以进行归档",
   "fileTabs.revealFile": "在文件管理器中显示",
   "fileTabs.removeFileHeadline": "从 sleek 中删除文件？",
   "fileTabs.removeFileText": "它不会从您的硬盘驱动器中删除。",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "创建日期",
   "shared.attributeMapping.completed": "完成日期",
   "splashscreen.noFiles.text": "将您的 todo.txt 文件拖到此处或使用按钮",
-  "splashscreen.noFiles.open": "打开 todo.txt 文件",
-  "splashscreen.noFiles.create": "创建 todo.txt 文件",
   "splashscreen.noTodosAvailable.text": "此文件中没有任务",
   "splashscreen.noTodosAvailable.create": "创建任务",
   "splashscreen.noTodosVisible.text": "没有可见的结果。",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "删除任务？",
   "prompt.delete.text": "任务将永久从文件中删除",
   "prompt.archive.headline": "归档已完成的任务？",
-  "prompt.archive.text": "这将将所有已完成的任务移动到指定的已完成文件",
-  "prompt.archive.button": "归档"
+  "prompt.archive.text": "这将把所有已完成的待办事项移动到您指定的归档文件中",
+  "prompt.archive.button": "归档",
+  "prompt.archive.changeFile.headline": "选择一个文件进行归档",
+  "prompt.archive.changeFile.text": "要归档已完成的任务，您需要首先选择一个归档文件。"
 }

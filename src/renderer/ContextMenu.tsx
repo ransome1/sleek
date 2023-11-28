@@ -14,6 +14,7 @@ interface Props {
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
+  setShowPromptDoneFile: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const { ipcRenderer } = window.api;
@@ -26,6 +27,7 @@ const ContextMenu: React.FC<Props> = memo(({
   setSnackBarSeverity,
   setSnackBarContent,
   setPromptItem,
+  setShowPromptDoneFile,
 }) => {
   const handleContextMenuClick = (item: ContextMenuItem) => {
     const { id, todoObject, index} = item;
@@ -50,7 +52,8 @@ const ContextMenu: React.FC<Props> = memo(({
   };
 
   const handleChangeDoneFilePath = (index: number | undefined) => {
-    ipcRenderer.send('changeDoneFilePath', index);
+    //ipcRenderer.send('changeDoneFilePath', index);
+    setShowPromptDoneFile(true);
   };
 
   const handleSaveToClipboard = function (response: Error | string) {

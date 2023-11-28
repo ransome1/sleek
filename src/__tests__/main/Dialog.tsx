@@ -47,7 +47,7 @@ describe('openFile', () => {
   });	
 
   it('should call addFile when a file is selected', async () => {
-    await openFile();
+    await openFile(false);
 
     expect(dialog.showOpenDialog).toHaveBeenCalledWith({
       properties: ['openFile'],
@@ -65,7 +65,7 @@ describe('openFile', () => {
       securityScopedBookmarks: true,
     });
 
-    await openFile();
+    await openFile(false);
 
     expect(addFile).not.toHaveBeenCalled();
   });
@@ -83,7 +83,7 @@ describe('createFile', () => {
       securityScopedBookmarks: true,
     });
 
-    await createFile();
+    await createFile(false);
 
     expect(dialog.showSaveDialog).toHaveBeenCalledWith({
       defaultPath: expect.any(String),
@@ -102,7 +102,7 @@ describe('createFile', () => {
       securityScopedBookmarks: true,
     });
 
-    await createFile();
+    await createFile(false);
 
     expect(addFile).not.toHaveBeenCalled();
   });

@@ -66,7 +66,7 @@ export interface File {
   todoFileName: string;
   todoFilePath: string;
   todoFileBookmark: string | null;
-  doneFilePath: string;
+  doneFilePath: string | null;
   doneFileBookmark: string | null;
 }
 

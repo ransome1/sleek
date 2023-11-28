@@ -32,11 +32,11 @@ const SplashScreen: FC<Props> = memo(({
   };
 
   const handleOpenFile = () => {
-    ipcRenderer.send('openFile');
+    ipcRenderer.send('openFile', false);
   };
 
   const handleCreateFile = () => {
-    ipcRenderer.send('createFile');
+    ipcRenderer.send('createFile', false);
   };
 
   return (
@@ -69,10 +69,10 @@ const SplashScreen: FC<Props> = memo(({
           <p>{t('splashscreen.noFiles.text')}</p>
           <Box className="buttons">
             <Button variant='contained' onClick={handleOpenFile}>
-              {t('splashscreen.noFiles.open')}
+              {t('openFile')}
             </Button>
             <Button variant='contained' onClick={handleCreateFile}>
-              {t('splashscreen.noFiles.create')}
+              {t('createFile')}
             </Button>
           </Box>
         </Box>

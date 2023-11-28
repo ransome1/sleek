@@ -2,7 +2,9 @@
   "copy": "Copiar",
   "delete": "Eliminar",
   "cancel": "Cancelar",
-  "fileTabs.changeLocation": "Alterar localização do ficheiro done.txt",
+  "openFile": "Abrir ficheiro",
+  "createFile": "Criar ficheiro",
+  "fileTabs.changeLocation": "Alterar arquivo para arquivamento",
   "fileTabs.revealFile": "Revelar no gerenciador de arquivos",
   "fileTabs.removeFileHeadline": "Remover ficheiro do sleek?",
   "fileTabs.removeFileText": "Não será eliminado do seu disco rígido.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Data de criação",
   "shared.attributeMapping.completed": "Data de conclusão",
   "splashscreen.noFiles.text": "Arraste o seu ficheiro todo.txt para aqui ou utilize os botões",
-  "splashscreen.noFiles.open": "Abrir ficheiro todo.txt",
-  "splashscreen.noFiles.create": "Criar ficheiro todo.txt",
   "splashscreen.noTodosAvailable.text": "Sem tarefas neste ficheiro",
   "splashscreen.noTodosAvailable.create": "Criar uma tarefa",
   "splashscreen.noTodosVisible.text": "Sem resultados visíveis.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Eliminar tarefa?",
   "prompt.delete.text": "A tarefa será eliminada permanentemente do ficheiro",
   "prompt.archive.headline": "Arquivar tarefas concluídas?",
-  "prompt.archive.text": "Isto moverá todas as tarefas concluídas para o seu ficheiro de conclusões especificado",
-  "prompt.archive.button": "Arquivar"
+  "prompt.archive.text": "Isso moverá todas as tarefas concluídas para o seu arquivo de arquivamento especificado",
+  "prompt.archive.button": "Arquivar",
+  "prompt.archive.changeFile.headline": "Escolha um arquivo para arquivar",
+  "prompt.archive.changeFile.text": "Para arquivar tarefas concluídas, é necessário escolher um arquivo de arquivamento primeiro."
 }

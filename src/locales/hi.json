@@ -2,7 +2,9 @@
   "copy": "कॉपी करें",
   "delete": "हटाएं",
   "cancel": "रद्द करें",
-  "fileTabs.changeLocation": "done.txt फ़ाइल का स्थान बदलें",
+  "openFile": "फ़ाइल खोलें",
+  "createFile": "फ़ाइल बनाएं",
+  "fileTabs.changeLocation": "आर्काइव के लिए फ़ाइल बदलें",
   "fileTabs.revealFile": "फ़ाइल प्रबंधक में दिखाएँ",
   "fileTabs.removeFileHeadline": "sleek से फ़ाइल हटाएं?",
   "fileTabs.removeFileText": "यह आपके हार्ड ड्राइव से हटाएं नहीं होगा।",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "निर्माण तिथि",
   "shared.attributeMapping.completed": "पूर्ण तिथि",
   "splashscreen.noFiles.text": "अपनी todo.txt फ़ाइल यहाँ ड्रैग करें या बटन का उपयोग करें",
-  "splashscreen.noFiles.open": "todo.txt फ़ाइल खोलें",
-  "splashscreen.noFiles.create": "todo.txt फ़ाइल बनाएं",
   "splashscreen.noTodosAvailable.text": "इस फ़ाइल में कोई कार्य नहीं हैं",
   "splashscreen.noTodosAvailable.create": "कार्य बनाएं",
   "splashscreen.noTodosVisible.text": "कोई दिखाई देने वाला परिणाम नहीं है।",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "कार्य हटाएं?",
   "prompt.delete.text": "कार्य फ़ाइल से स्थायी रूप से हटा दिया जाएगा",
   "prompt.archive.headline": "पूर्ण किए गए कार्यों को संग्रहित करें?",
-  "prompt.archive.text": "यह सभी पूर्ण किए गए कार्यों को आपके निर्दिष्ट संपन्न फ़ाइल में ले जाएगा",
-  "prompt.archive.button": "संग्रहित करें"
+  "prompt.archive.text": "इससे सभी पूर्ण हुई कार्यों को आपके निर्दिष्ट आर्काइव फ़ाइल में मूव किया जाएगा",
+  "prompt.archive.button": "संग्रहित करें",
+  "prompt.archive.changeFile.headline": "आर्काइव के लिए एक फ़ाइल चुनें",
+  "prompt.archive.changeFile.text": "पूर्ण हुए कार्यों को आर्काइव करने के लिए, आपको पहले एक आर्काइव फ़ाइल चुननी होगी।"
 }

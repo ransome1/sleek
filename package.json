@@ -18,6 +18,7 @@
     "test": "jest",
     "mac": "cross-env NODE_ENV=production yarn run build && electron-builder build -m --publish never",
     "mas": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas --universal --publish never",
+    "masDev": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas-dev --universal --publish never",
     "dir": "cross-env NODE_ENV=production yarn run build && electron-builder --dir --publish never",
     "peggy": "peggy --format es --output ./src/main/modules/FilterLang/FilterLang.js ./src/main/modules/FilterLang/FilterLang.pegjs",
     "depcheck": "depcheck"

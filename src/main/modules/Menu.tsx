@@ -61,13 +61,17 @@ function createMenu(files: File[]) {
         submenu: [
           { type: 'separator' },
           {
-            label: 'Open todo.txt file',
+            label: 'Open file',
             accelerator: 'CmdOrCtrl+O',
-            click: openFile,
+            click: () => {
+              openFile(false);
+            },
           },
           {
-            label: 'Create todo.txt file',
-            click: createFile,
+            label: 'Create file',
+            click: () => {
+              createFile(false);
+            },
           },
           { type: 'separator' },
           ...(files?.length > 0

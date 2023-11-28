@@ -2,7 +2,9 @@
   "copy": "Копировать",
   "delete": "Удалить",
   "cancel": "Отменить",
-  "fileTabs.changeLocation": "Изменить местоположение файла done.txt",
+  "openFile": "Открыть файл",
+  "createFile": "Создать файл",
+  "fileTabs.changeLocation": "Изменить файл для архивации",
   "fileTabs.revealFile": "Показать в файловом менеджере",
   "fileTabs.removeFileHeadline": "Удалить файл из sleek?",
   "fileTabs.removeFileText": "Он не будет удален с вашего жесткого диска.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Дата создания",
   "shared.attributeMapping.completed": "Дата завершения",
   "splashscreen.noFiles.text": "Перетащите ваш файл todo.txt сюда или используйте кнопки",
-  "splashscreen.noFiles.open": "Открыть файл todo.txt",
-  "splashscreen.noFiles.create": "Создать файл todo.txt",
   "splashscreen.noTodosAvailable.text": "Нет задач в этом файле",
   "splashscreen.noTodosAvailable.create": "Создать задачу",
   "splashscreen.noTodosVisible.text": "Нет видимых результатов.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Удалить задачу?",
   "prompt.delete.text": "Задача будет удалена навсегда из файла",
   "prompt.archive.headline": "Архивировать завершенные задачи?",
-  "prompt.archive.text": "Это переместит все завершенные задачи в указанный файл done",
-  "prompt.archive.button": "Архивировать"
+  "prompt.archive.text": "Это переместит все завершенные задачи в указанный вами файл архивации",
+  "prompt.archive.button": "Архивировать",
+  "prompt.archive.changeFile.headline": "Выберите файл для архивации",
+  "prompt.archive.changeFile.text": "Чтобы архивировать завершенные задачи, сначала выберите файл для архивации."
 }

@@ -51,4 +51,4 @@ function createFileWatcher(files: File[]): string {
   }
 }
 
-export default createFileWatcher;
+export { createFileWatcher, watcher };

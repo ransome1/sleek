@@ -3,6 +3,7 @@ import { configStorage } from '../../config';
 import createFileWatcher from './Watcher';
 import path from 'path';
 import { File } from '../../util';
+import { mainWindow } from '../../main';
 
 function addFile(filePath: string, bookmark: string | null) {
   try {
@@ -17,7 +18,7 @@ function addFile(filePath: string, bookmark: string | null) {
         todoFileName: path.basename(filePath),
         todoFilePath: filePath,
         todoFileBookmark: bookmark,
-        doneFilePath: path.join(path.dirname(filePath), 'done.txt'),
+        doneFilePath: null,
         doneFileBookmark: null
       });
     } else {
@@ -29,6 +30,28 @@ function addFile(filePath: string, bookmark: string | null) {
     createFileWatcher(files);
 
     console.info('File.ts: File added, restarting file watchers');
+  } catch (error: any) {
+    console.error('File.ts:', error);
+    throw error;
+  }
+}
+
+function addDoneFile(filePath: string, bookmark: string | null) {
+  try {
+    const files: File[] = configStorage.get('files') || [];
+    const activeIndex: number = files.findIndex((file) => file.active);
+
+    if(activeIndex === -1) return false;
+
+    files[activeIndex].doneFilePath = filePath;
+    files[activeIndex].doneFileBookmark = bookmark;
+
+    configStorage.set('files', files);
+
+    mainWindow!.webContents.send('archiveTodos');
+
+    console.info(`File.ts: Done file added for ${files[activeIndex].todoFileName}`);
+
   } catch (error: any) {
     console.error('File.ts:', error);
     throw error;
@@ -98,4 +121,4 @@ function revealFile(index: number): void {
   }
 }
 
-export { setFile, removeFile, addFile, revealFile };
+export { setFile, removeFile, addFile, addDoneFile, revealFile };

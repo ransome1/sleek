@@ -5,7 +5,7 @@ import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
 import archiveTodos from './File/Archive';
 import { configStorage, filterStorage, notifiedTodoObjectsStorage } from '../config';
 import { addFile, setFile, removeFile, revealFile } from './File/File';
-import { openFile, createFile, changeDoneFilePath } from './File/Dialog';
+import { openFile, createFile } from './File/Dialog';
 
 async function handleDataRequest(event: IpcMainEvent, searchString: string): Promise<void> {
   const [todoObjects, attributes, headers, filters] = await processDataRequest(searchString);
@@ -110,6 +110,22 @@ function handleRevealFile(event: IpcMainEvent, index: number): void {
   }
 }
 
+function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): void {
+  try {
+    openFile(setDoneFile);
+  } catch (error: any) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
+function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): void {
+  try {
+    createFile(setDoneFile);
+  } catch (error: any) {
+    console.error('ipcEvents.ts:', error);
+  }
+}
+
 function handleChangeDoneFilePath(event: IpcMainEvent, index: number): void {
   try {
     changeDoneFilePath(index);
@@ -146,8 +162,8 @@ function removeEventListeners(): void {
   ipcMain.off('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
   ipcMain.off('setFile', handleSetFile);
   ipcMain.off('removeFile', handleRemoveFile);
-  ipcMain.off('openFile', openFile);
-  ipcMain.off('createFile', createFile);
+  ipcMain.off('openFile', handleOpenFile);
+  ipcMain.off('createFile', handleCreateFile);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', archiveTodos);
@@ -167,8 +183,8 @@ ipcMain.on('storeSetFilters', handleStoreSetFilters);
 ipcMain.on('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
 ipcMain.on('setFile', handleSetFile);
 ipcMain.on('removeFile', handleRemoveFile);
-ipcMain.on('openFile', openFile);
-ipcMain.on('createFile', createFile);
+ipcMain.on('openFile', handleOpenFile);
+ipcMain.on('createFile', handleCreateFile);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', archiveTodos);

@@ -4,7 +4,7 @@ import fs from 'fs';
 import { configStorage } from './config';
 import createMenu from './modules/Menu';
 import { resolveHtmlPath, getAssetPath, File } from './util';
-import createFileWatcher from './modules/File/Watcher';
+import { createFileWatcher, watcher } from './modules/File/Watcher';
 import createTray from './modules/Tray';
 import './modules/Ipc';
 import handleTheme from './modules/Theme';
@@ -30,9 +30,11 @@ const handleCreateWindow = () => {
   }  
 }
 
-const handleClosed = () => {
+const handleClosed = async () => {
+  if(watcher) await watcher.close();
+  
   mainWindow = null;
-
+  
   delete eventListeners.handleReadyToShow;
   delete eventListeners.handleClosed;
   delete eventListeners.handleResize;

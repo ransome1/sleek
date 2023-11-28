@@ -2,7 +2,9 @@
   "copy": "Kopyala",
   "delete": "Sil",
   "cancel": "İptal",
-  "fileTabs.changeLocation": "done.txt dosyasının konumunu değiştir",
+  "openFile": "Dosyasını aç",
+  "createFile": "Dosyası oluştur",
+  "fileTabs.changeLocation": "Arşivleme için dosya değiştir",
   "fileTabs.revealFile": "Dosya yöneticisinde göster",
   "fileTabs.removeFileHeadline": "Dosyayı sleek'ten kaldırmak istiyor musunuz?",
   "fileTabs.removeFileText": "Sabit diskinizden silinmeyecektir.",
@@ -40,8 +42,6 @@
   "shared.attributeMapping.created": "Oluşturma tarihi",
   "shared.attributeMapping.completed": "Tamamlanma tarihi",
   "splashscreen.noFiles.text": "Todo.txt dosyanızı buraya sürükleyin veya düğmeleri kullanın",
-  "splashscreen.noFiles.open": "Todo.txt dosyasını aç",
-  "splashscreen.noFiles.create": "Todo.txt dosyası oluştur",
   "splashscreen.noTodosAvailable.text": "Bu dosyada görev yok",
   "splashscreen.noTodosAvailable.create": "Görev oluştur",
   "splashscreen.noTodosVisible.text": "Görünen sonuç yok.",
@@ -66,6 +66,8 @@
   "prompt.delete.headline": "Görevi silmek istiyor musunuz?",
   "prompt.delete.text": "Görev dosyadan kalıcı olarak silinecektir",
   "prompt.archive.headline": "Tamamlanan görevleri arşivlemek istiyor musunuz?",
-  "prompt.archive.text": "Bu, tüm tamamlanan görevleri belirttiğiniz tamamlandı dosyasına taşıyacaktır",
-  "prompt.archive.button": "Arşivle"
+  "prompt.archive.text": "Bu, tüm tamamlanan görevleri belirttiğiniz arşiv dosyanıza taşıyacaktır",
+  "prompt.archive.button": "Arşivle",
+  "prompt.archive.changeFile.headline": "Arşivlemek için bir dosya seçin",
+  "prompt.archive.changeFile.text": "Tamamlanan görevleri arşivlemek için önce bir arşiv dosyası seçmeniz gerekiyor."
 }
