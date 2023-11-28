@@ -171,7 +171,6 @@ function removeEventListeners(): void {
   ipcMain.off('droppedFile', handleDroppedFile);
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
   ipcMain.off('revealFile', handleRevealFile);
-  ipcMain.off('changeDoneFilePath', handleChangeDoneFilePath);
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile);
 }
 
@@ -192,5 +191,4 @@ ipcMain.on('addFile', handleAddFile);
 ipcMain.on('droppedFile', handleDroppedFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
 ipcMain.on('revealFile', handleRevealFile);
-ipcMain.on('changeDoneFilePath', handleChangeDoneFilePath);
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile);

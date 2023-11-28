@@ -1,6 +1,6 @@
 import { shell } from 'electron';
 import { configStorage } from '../../config';
-import createFileWatcher from './Watcher';
+import { createFileWatcher } from './Watcher';
 import path from 'path';
 import { File } from '../../util';
 import { mainWindow } from '../../main';

@@ -5,8 +5,10 @@ import { Badge } from '../util';
 import dayjs, { Dayjs } from "dayjs";
 import isToday from 'dayjs/plugin/isToday';
 import isTomorrow from 'dayjs/plugin/isTomorrow';
+import isBetween from 'dayjs/plugin/isBetween';
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
+dayjs.extend(isBetween);
 
 export const sendNotification = (title: string, body: string) => {
   const options = {
@@ -36,7 +38,9 @@ export function mustNotify(date: Date): boolean {
 
 export function handleNotification(id: number, due: string | null, body: string, badge: Badge) {
   const notificationAllowed = configStorage.get('notificationsAllowed');
-  const hash = crypto.createHash('sha256').update(body).digest('hex');
+
+  const today = dayjs().startOf('day').format('YYYY-MM-DD');
+  const hash = today + crypto.createHash('sha256').update(body).digest('hex');
 
   if (notificationAllowed) {
     const today = dayjs().startOf('day');
@@ -44,7 +48,7 @@ export function handleNotification(id: number, due: string | null, body: string,
     const notificationThreshold: number = configStorage.get('notificationThreshold');
     const daysUntilDue: any = createSpeakingDifference(dueDate);
 
-    if (dueDate.isBefore(today.add(notificationThreshold, 'day'))) {
+    if (dueDate.isToday() || dueDate.isBetween(today, today.add(notificationThreshold, 'day'))) {
       badge.count += 1;
 
       const notifiedTodoObjects = new Set<string>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
