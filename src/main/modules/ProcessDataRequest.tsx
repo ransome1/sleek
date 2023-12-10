@@ -1,16 +1,18 @@
 import { app } from 'electron';
 import fs from 'fs';
 import { getActiveFile } from './File/Active';
+import { extractTodosFromFile } from './File/Archive';
 import { configStorage, filterStorage } from '../config';
 import { applyFilters } from './Filters';
 import { updateAttributes, attributes } from './Attributes';
 import { createTodoObjects } from './TodoObject/CreateTodoObjects';
 import { File, RequestedData, Headers, Sorting, TodoObject } from '../util';
-import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString, handleTodoObjectsDates } from './TodoObject/ProcessTodoObjects';
+import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, countCompletedTodoObjects, applySearchString, handleTodoObjectsDates } from './TodoObject/ProcessTodoObjects';
 
 const headers: Headers = {
   availableObjects: 0,
   visibleObjects: 0,
+  completedTodoObjects: 0,
 };
 
 let stopAccessingSecurityScopedResource;
@@ -24,9 +26,6 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
       return Promise.resolve([]);
     }
 
-    const securityScopedBookmark = file.todoFileBookmark;
-    if(securityScopedBookmark) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(securityScopedBookmark);
-
     const sorting: Sorting[] = configStorage.get('sorting');
     const showCompleted: boolean = configStorage.get('showCompleted');
     const showHidden: boolean = configStorage.get('showHidden');
@@ -34,7 +33,16 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     const filters: object = filterStorage.get('filters');
     const thresholdDateInTheFuture: boolean = configStorage.get('thresholdDateInTheFuture');
     const dueDateInTheFuture: boolean = configStorage.get('dueDateInTheFuture');
+
+    const bookmark = file.todoFileBookmark;
+    
+    let stopAccessingSecurityScopedResource;
+    if (bookmark) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);
+
     const fileContent = await fs.promises.readFile(file.todoFilePath, 'utf8');
+
+    if (bookmark) stopAccessingSecurityScopedResource();
+    
     let todoObjects: TodoObject[];
 
     todoObjects = createTodoObjects(fileContent);
@@ -42,6 +50,8 @@ async function processDataRequest(searchString: string): Promise<RequestedData[]
     if(!thresholdDateInTheFuture || !dueDateInTheFuture) todoObjects = handleTodoObjectsDates(todoObjects, dueDateInTheFuture, thresholdDateInTheFuture);
 
     headers.availableObjects = countTodoObjects(todoObjects);
+
+    headers.completedTodoObjects = countCompletedTodoObjects(todoObjects);
 
     todoObjects = handleCompletedTodoObjects(todoObjects, showCompleted);
 

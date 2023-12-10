@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Преобразовать относительные даты в абсолютные",
   "settings.notificationsAllowed": "Отправлять уведомления",
   "settings.showFileTabs": "Показать вкладки файлов",
-  "settings.tray": "Свернуть в лоток",
+  "settings.tray": "Свернуть в трей вместо закрытия приложения",
   "settings.colorTheme": "Тема",
   "settings.system": "Следовать системе",
   "settings.light": "Светлая",

@@ -6,8 +6,10 @@ jest.mock('../../main/config', () => ({
       {
         active: true,
         path: './src/__tests__/__mock__',
-        todoFile: 'recurrence.txt',
-        doneFile: 'done.txt',
+        todoFilePath: 'recurrence.txt',
+        todoFileBookmark: null,
+        doneFilePath: 'done.txt',
+        doneFileBookmark: null,
       },
     ]),
   },

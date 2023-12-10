@@ -10,6 +10,18 @@ jest.mock('../../main/main', () => ({
   },
 }));
 
+jest.mock('../../main/modules/File/Watcher', () => ({
+  createFileWatcher: jest.fn(),
+}));
+
+jest.mock('../../main/modules/Tray', () => ({
+  createTray: jest.fn(),
+}));
+
+jest.mock('../../main/modules/Menu', () => ({
+  createMenu: jest.fn(),
+}));
+
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn().mockReturnValue([
@@ -20,8 +32,6 @@ jest.mock('../../main/config', () => ({
     set: jest.fn(),
   },
 }));
-
-jest.mock('../../main/modules/File/Watcher', () => jest.fn());
 
 describe('File functions', () => {
   beforeEach(() => {

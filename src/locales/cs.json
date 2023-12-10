@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Převést relativní data na absolutní data",
   "settings.notificationsAllowed": "Odeslat oznámení",
   "settings.showFileTabs": "Zobrazit záložky souborů",
-  "settings.tray": "Minimalizovat do oznamovací oblasti",
+  "settings.tray": "Minimalizovat do oznamovací oblasti místo ukončení aplikace",
   "settings.colorTheme": "Téma",
   "settings.system": "Sledovat systém",
   "settings.light": "Světlé",

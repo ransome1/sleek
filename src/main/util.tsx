@@ -35,9 +35,9 @@ export interface InputProps {
 export interface PromptItem {
     id: string,
     todoObject: TodoObject,
-    headline: typeof i18n.t,
-    text: typeof i18n.t,
-    label: typeof i18n.t,
+    headline: string,
+    text: string,
+    label: string,
   }
 
 export function resolveHtmlPath(htmlFileName: string): string {
@@ -62,9 +62,9 @@ export interface Settings {
 }
 
 export interface File {
-  active: boolean;
-  todoFileName: string;
-  todoFilePath: string;
+  active: boolean | null;
+  todoFileName: string | null;
+  todoFilePath: string | null;
   todoFileBookmark: string | null;
   doneFilePath: string | null;
   doneFileBookmark: string | null;

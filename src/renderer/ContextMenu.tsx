@@ -30,7 +30,7 @@ const ContextMenu: React.FC<Props> = memo(({
   setShowPromptDoneFile,
 }) => {
   const handleContextMenuClick = (item: ContextMenuItem) => {
-    const { id, todoObject, index} = item;
+    const { id, todoObject, pathToReveal} = item;
     switch (id) {
       case 'delete':
         setPromptItem(item);
@@ -42,9 +42,9 @@ const ContextMenu: React.FC<Props> = memo(({
       case 'removeFile':
         setPromptItem(item);
         break;
-      case 'revealFile':
+      case 'revealInFileManager':
         setContextMenuItems(null);
-        ipcRenderer.send('revealFile', index);
+        ipcRenderer.send('revealInFileManager', pathToReveal);
         break;
       default:
         setContextMenuItems(null);
@@ -52,7 +52,6 @@ const ContextMenu: React.FC<Props> = memo(({
   };
 
   const handleChangeDoneFilePath = (index: number | undefined) => {
-    //ipcRenderer.send('changeDoneFilePath', index);
     setShowPromptDoneFile(true);
   };
 

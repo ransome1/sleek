@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Tab, Tabs } from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { File } from '../main/util';
 import './FileTabs.scss';
@@ -32,9 +32,9 @@ const FileTabs: React.FC<Props> = memo(({
         doneFilePath: files[index].doneFilePath,
       },
       {
-        id: 'revealFile',
+        id: 'revealInFileManager',
         label: t('fileTabs.revealFile'),
-        index: index,
+        pathToReveal: files[index].todoFilePath,
       },
       {
         id: 'removeFile',
@@ -71,7 +71,7 @@ const FileTabs: React.FC<Props> = memo(({
           tabIndex={0}
           onContextMenu={(event) => handleContextMenu(event, index)}
           icon={
-            <CancelIcon
+            <MoreVertIcon
               onClick={(event) => {
                 event.stopPropagation();
                 handleContextMenu(event, index);

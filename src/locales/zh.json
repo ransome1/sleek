@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "将相对日期转换为绝对日期",
   "settings.notificationsAllowed": "发送通知",
   "settings.showFileTabs": "显示文件选项卡",
-  "settings.tray": "最小化到系统托盘",
+  "settings.tray": "最小化到托盘而不是退出应用程序",
   "settings.colorTheme": "主题",
   "settings.system": "跟随系统",
   "settings.light": "明亮",

@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Konwertuj daty względne na daty bezwzględne",
   "settings.notificationsAllowed": "Wysyłaj powiadomienia",
   "settings.showFileTabs": "Pokaż karty plików",
-  "settings.tray": "Minimalizuj do zasobnika",
+  "settings.tray": "Minimalizuj do zasobnika zamiast zamykania aplikacji",
   "settings.colorTheme": "Motyw kolorystyczny",
   "settings.system": "Zastosuj motyw systemowy",
   "settings.light": "Jasny",

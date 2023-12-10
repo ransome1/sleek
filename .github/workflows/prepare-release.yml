@@ -34,12 +34,14 @@ jobs:
           yarn --network-timeout 100000
           yarn run build
       - name: Run Electron Builder
-        uses: coparse-inc/action-electron-builder@v1.0.0
+        uses: samuelmeuli/action-electron-builder@v1
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASS }}
+          APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
         with:
           max_attempts: 5
           github_token: ${{ secrets.github_token }}

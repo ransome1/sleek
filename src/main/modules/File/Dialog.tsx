@@ -41,24 +41,27 @@ async function openFile(setDoneFile: boolean): Promise<void> {
 
 async function createFile(setDoneFile: boolean): Promise<void> {
   try {
+    const defaultFileName = setDoneFile ? 'done.txt' : 'todo.txt';
+
     const result: SaveDialogReturnValue = await dialog.showSaveDialog({
-      defaultPath: path.join(app.getPath('documents'), 'todo.txt'),
+      defaultPath: path.join(app.getPath('documents'), defaultFileName),
       filters: dialogFilters,
       securityScopedBookmarks: true,
     });
+
     if (!result.canceled && result.filePath) {
       const filePath: string = result.filePath;
-      
       const securityScopedBookmark: string | null = result.bookmark || null;
 
       await fs.writeFile(filePath, '');
 
-      if(setDoneFile) {
+      if (setDoneFile) {
         addDoneFile(filePath, securityScopedBookmark);
       } else {
         addFile(filePath, securityScopedBookmark);
       }
     }
+
     return;
   } catch (error: any) {
     console.error('FileDialog.ts:', error);

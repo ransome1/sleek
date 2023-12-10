@@ -50,8 +50,8 @@ const App = () => {
   const [textFieldValue, setTextFieldValue] = useState<string | null>(null);
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [matomo, setMatomo] = useState<boolean>(store.get('matomo') || false);
-  const [showPromptArchive, setShowPromptArchive] = useState<boolean>(false);
-  const [showPromptDoneFile, setShowPromptDoneFile] = useState<number>(false);
+  const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
+  const [showPromptDoneFile, setShowPromptDoneFile] = useState<boolean>(false);
 
   const searchFieldRef = useRef(null);
 
@@ -128,6 +128,13 @@ const App = () => {
     setSnackBarOpen(false);
   };
 
+  const handleError = (response: any) => {
+    if (response instanceof Error) {
+      setSnackBarSeverity('error');
+      setSnackBarContent(response.message);
+    }
+  };  
+
   const handleWriteTodoToFile = (response: any) => {
     if (response instanceof Error) {
       setSnackBarSeverity('error');
@@ -164,9 +171,9 @@ const App = () => {
     store.set('sorting', sorting)
   }, [sorting]);
 
-  useEffect(() => {
-    store.set('isDrawerOpen', isDrawerOpen)
-  }, [isDrawerOpen]);
+  // useEffect(() => {
+  //   store.set('isDrawerOpen', isDrawerOpen)
+  // }, [isDrawerOpen]);
 
   useEffect(() => {
     store.set('isSearchOpen', isSearchOpen)
@@ -228,6 +235,7 @@ const App = () => {
     ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
     ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
     ipcRenderer.on('droppedFile', handleWriteTodoToFile);
+    ipcRenderer.on('handleError', handleError);
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
   }, []);
@@ -246,7 +254,8 @@ const App = () => {
             setIsNavigationOpen={setIsNavigationOpen}
             setIsSettingsOpen={setIsSettingsOpen}
             setTodoObject={setTodoObject}
-            setShowPromptArchive={setShowPromptArchive}
+            setTriggerArchiving={setTriggerArchiving}
+            headers={headers}
           />
           {files?.length > 0 && (
             <>
@@ -353,14 +362,17 @@ const App = () => {
             {snackBarContent}
           </Alert>
         </Snackbar>
-        <Archive
-          setSnackBarSeverity={setSnackBarSeverity}
-          setSnackBarContent={setSnackBarContent}
-          showPromptArchive={showPromptArchive}
-          setShowPromptArchive={setShowPromptArchive}
-          showPromptDoneFile={showPromptDoneFile}
-          setShowPromptDoneFile={setShowPromptDoneFile}
-        />
+        {files?.length > 0 && (
+          <Archive
+            setSnackBarSeverity={setSnackBarSeverity}
+            setSnackBarContent={setSnackBarContent}
+            triggerArchiving={triggerArchiving}
+            setTriggerArchiving={setTriggerArchiving}
+            showPromptDoneFile={showPromptDoneFile}
+            setShowPromptDoneFile={setShowPromptDoneFile}
+            headers={headers}
+          />
+        )}
         {promptItem && (
           <Prompt
             open={true}

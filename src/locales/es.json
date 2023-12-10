@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Convertir fechas relativas a fechas absolutas",
   "settings.notificationsAllowed": "Enviar notificaciones",
   "settings.showFileTabs": "Mostrar pestañas de archivo",
-  "settings.tray": "Minimizar a la bandeja",
+  "settings.tray": "Minimizar a la bandeja en lugar de cerrar la aplicación",
   "settings.colorTheme": "Tema",
   "settings.system": "Seguir el sistema",
   "settings.light": "Claro",

@@ -1,15 +1,21 @@
+import { shell } from 'electron';
 import { ipcMain, app, IpcMainEvent, clipboard } from 'electron';
 import processDataRequest from './ProcessDataRequest';
 import { changeCompleteState } from './TodoObject/ChangeCompleteState';
 import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
 import archiveTodos from './File/Archive';
 import { configStorage, filterStorage, notifiedTodoObjectsStorage } from '../config';
-import { addFile, setFile, removeFile, revealFile } from './File/File';
+import { mainWindow } from '../main';
+import { addFile, setFile, removeFile } from './File/File';
 import { openFile, createFile } from './File/Dialog';
 
 async function handleDataRequest(event: IpcMainEvent, searchString: string): Promise<void> {
-  const [todoObjects, attributes, headers, filters] = await processDataRequest(searchString);
-  event.reply('requestData', todoObjects, attributes, headers, filters);
+  try {
+    const [todoObjects, attributes, headers, filters] = await processDataRequest(searchString);
+    event.reply('requestData', todoObjects, attributes, headers, filters);
+  } catch(error) {
+    event.reply('handleError', error);
+  }
 }
 
 async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string | null, state: boolean | undefined): Promise<void> {
@@ -102,9 +108,9 @@ function handleDroppedFile(event: IpcMainEvent, index: number): void {
   }
 }
 
-function handleRevealFile(event: IpcMainEvent, index: number): void {
+function handleRevealInFileManager(event: IpcMainEvent, pathToReveal: string): void {
   try {
-    revealFile(index);
+    shell.showItemInFolder(pathToReveal);
   } catch (error: any) {
     console.error('ipcEvents.ts:', error);
   }
@@ -170,7 +176,7 @@ function removeEventListeners(): void {
   ipcMain.off('addFile', handleAddFile);
   ipcMain.off('droppedFile', handleDroppedFile);
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
-  ipcMain.off('revealFile', handleRevealFile);
+  ipcMain.off('revealInFileManager', handleRevealInFileManager);
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile);
 }
 
@@ -190,5 +196,5 @@ ipcMain.on('archiveTodos', archiveTodos);
 ipcMain.on('addFile', handleAddFile);
 ipcMain.on('droppedFile', handleDroppedFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
-ipcMain.on('revealFile', handleRevealFile);
+ipcMain.on('revealInFileManager', handleRevealInFileManager);
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile);

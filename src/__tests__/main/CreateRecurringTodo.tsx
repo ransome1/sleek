@@ -16,7 +16,9 @@ jest.mock('../../main/config', () => ({
         active: true,
         todoFileName: 'recurrence.txt',
         todoFilePath: './src/__tests__/__mock__/recurrence.txt',
+        todoFileBookmark: null,
         doneFilePath: './src/__tests__/__mock__/done.txt',
+        doneFileBookmark: null
       },
     ]),
   },

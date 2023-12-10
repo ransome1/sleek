@@ -10,6 +10,13 @@ function countTodoObjects(todoObjects: TodoObject[]): number {
   return count.length;
 }
 
+function countCompletedTodoObjects(todoObjects: TodoObject[]): number {
+  const count = todoObjects.filter((object: TodoObject) => {
+    return object.complete;
+  });
+  return count.length;
+}
+
 function applySearchString(searchString: string, todoObjects: TodoObject[]): TodoObject[] {
   try {
     const query = FilterLang.parse(searchString);
@@ -144,5 +151,6 @@ export {
   countTodoObjects,
   applySearchString,
   handleCompletedTodoObjects,
-  handleTodoObjectsDates
+  handleTodoObjectsDates,
+  countCompletedTodoObjects
 };

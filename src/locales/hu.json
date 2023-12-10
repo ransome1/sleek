@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Relatív dátumok konvertálása abszolút dátumokká",
   "settings.notificationsAllowed": "Értesítések küldése",
   "settings.showFileTabs": "Fájl lapok megjelenítése",
-  "settings.tray": "Minimálás a tálcára",
+  "settings.tray": "Kisiklik az értesítési területre az alkalmazás bezárása helyett",
   "settings.colorTheme": "Téma",
   "settings.system": "Kövesse a rendszert",
   "settings.light": "Világos",

@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Convertir les dates relatives en dates absolues",
   "settings.notificationsAllowed": "Envoyer des notifications",
   "settings.showFileTabs": "Afficher les onglets de fichier",
-  "settings.tray": "Réduire dans la zone de notification",
+  "settings.tray": "Minimiser dans la zone de notification au lieu de quitter l'application",
   "settings.colorTheme": "Thème",
   "settings.system": "Suivre le système",
   "settings.light": "Clair",

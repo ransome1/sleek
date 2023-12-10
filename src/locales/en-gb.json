@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Convert relative dates to absolute dates",
   "settings.notificationsAllowed": "Send notifications",
   "settings.showFileTabs": "Show file tabs",
-  "settings.tray": "Minimize to tray",
+  "settings.tray": "Minimize to tray instead of quitting application",
   "settings.colorTheme": "Theme",
   "settings.system": "Follow system",
   "settings.light": "Light",

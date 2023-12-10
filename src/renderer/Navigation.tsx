@@ -7,7 +7,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Box } from '@mui/material';
-import { File } from '../main/util';
+import { File, Headers } from '../main/util';
 import './Navigation.scss';
 
 const { ipcRenderer } = window.api;
@@ -19,7 +19,8 @@ interface Props {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   files: File[];
   setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowPromptArchive: React.Dispatch<React.SetStateAction<boolean>>;
+  setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
+  headers: Headers;
 }
 
 const NavigationComponent: React.FC<Props> = memo(({
@@ -29,7 +30,8 @@ const NavigationComponent: React.FC<Props> = memo(({
   setDialogOpen,
   files,
   setIsNavigationOpen,
-  setShowPromptArchive,
+  setTriggerArchiving,
+  headers,
 }) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -47,7 +49,7 @@ const NavigationComponent: React.FC<Props> = memo(({
     <>
       <Box id='navigation'>
         <Box>sleek</Box>
-        {files.length > 0 && (
+        {files?.length > 0 && (
           <>
             <Button onClick={() => setDialogOpen(true)} data-testid='navigation-button-add-todo'>
               <AddIcon />
@@ -55,9 +57,13 @@ const NavigationComponent: React.FC<Props> = memo(({
             <Button onClick={() => setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)} className={isDrawerOpen ? 'active' : ''} data-testid='navigation-button-drawer'>
               <FilterAltIcon />
             </Button>
-            <Button onClick={() => setShowPromptArchive(true)} data-testid='navigation-button-archiving'>
-              <InventoryIcon />
-            </Button>
+            {headers?.completedTodoObjects > 0 && (
+              <>
+                <Button onClick={() => setTriggerArchiving(true)} data-testid='navigation-button-archiving'>
+                  <InventoryIcon />
+                </Button>
+              </>
+            )}
           </>
         )}
         <Button onClick={() => ipcRenderer.send('openFile', false)} data-testid='navigation-button-open-file'>

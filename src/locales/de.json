@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "Relative Daten in absolute Daten umwandeln",
   "settings.notificationsAllowed": "Benachrichtigungen senden",
   "settings.showFileTabs": "Datei-Tabs anzeigen",
-  "settings.tray": "In die Taskleiste minimieren",
+  "settings.tray": "In Tray-Leiste minimieren anstatt die Anwendung zu beenden",
   "settings.colorTheme": "Design",
   "settings.system": "System folgen",
   "settings.light": "Hell",

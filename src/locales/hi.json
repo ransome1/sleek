@@ -14,7 +14,7 @@
   "settings.convertRelativeToAbsoluteDates": "सांख्यिक तिथियों को पूर्ण तिथियों में परिवर्तित करें",
   "settings.notificationsAllowed": "सूचनाएँ भेजें",
   "settings.showFileTabs": "फ़ाइल टैब दिखाएं",
-  "settings.tray": "सिस्टम ट्रे में मिनिमाइज़ करें",
+  "settings.tray": "एप्लिकेशन को बंद करने के बजाय ट्रे में कम करें",
   "settings.colorTheme": "थीम",
   "settings.system": "सिस्टम का पालन करें",
   "settings.light": "रोशनी",

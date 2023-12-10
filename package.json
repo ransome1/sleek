@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.3-rc.3",
+  "version": "2.0.3-rc.5",
   "main": "./src/main/main.ts",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -18,7 +18,7 @@
     "test": "jest",
     "mac": "cross-env NODE_ENV=production yarn run build && electron-builder build -m --publish never",
     "mas": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas --universal --publish never",
-    "masDev": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas-dev --universal --publish never",
+    "masdev": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas-dev --universal --publish never",
     "dir": "cross-env NODE_ENV=production yarn run build && electron-builder --dir --publish never",
     "peggy": "peggy --format es --output ./src/main/modules/FilterLang/FilterLang.js ./src/main/modules/FilterLang/FilterLang.pegjs",
     "depcheck": "depcheck"
@@ -104,7 +104,6 @@
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.2.4",
     "@types/react-test-renderer": "^18.0.0",
-    "@types/terser-webpack-plugin": "^5.0.4",
     "@types/webpack-bundle-analyzer": "^4.6.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
@@ -158,7 +157,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "buildVersion": "30",
+    "buildVersion": "31",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -166,7 +165,6 @@
       "node_modules",
       "package.json"
     ],
-    "afterSign": ".erb/scripts/notarize.js",
     "mac": {
       "appId": "com.todotxt.sleek",
       "target": {
@@ -183,7 +181,10 @@
       "gatekeeperAssess": false,
       "category": "public.app-category.productivity",
       "artifactName": "${productName}-${version}-mac.${ext}",
-      "darkModeSupport": true
+      "darkModeSupport": true,
+      "notarize": {
+        "teamId": "8QSR3UZXP8"
+      }
     },
     "dmg": {
       "background": "assets/background.tiff",

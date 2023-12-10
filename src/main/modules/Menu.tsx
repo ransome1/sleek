@@ -17,15 +17,23 @@ function createMenu(files: File[]) {
         submenu: [
           {
             label: 'About',
-            click: () => {
-              const options: Electron.MessageBoxOptions = {
+            click: async () => {
+              const options = {
                 type: 'info',
                 title: 'About sleek',
                 message: `sleek v${app.getVersion()}`,
                 detail: description,
-                buttons: ['OK'],
+                buttons: [
+                  'Close',
+                  'Reveal configuration folder',
+                ],
               };
-              dialog?.showMessageBox(options);
+
+              const buttonClicked = await dialog.showMessageBox(options);
+              if (buttonClicked.response === 1) {
+                const pathToReveal = app.getPath('userData');
+                shell.showItemInFolder(pathToReveal);
+              }
             },
           },
           {
@@ -165,7 +173,7 @@ function createMenu(files: File[]) {
             label: 'Archive completed todos',
             accelerator: 'Ctrl+Alt+A',
             click: () => {
-              mainWindow!.webContents.send('archiveTodos');
+              mainWindow!.webContents.send('triggerArchiving');
             },
           },
           {

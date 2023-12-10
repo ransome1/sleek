@@ -3,7 +3,6 @@ import path from 'path';
 import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
-import createMenu from './modules/Menu';
 import createTray from './modules/Tray';
 import { File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest';
@@ -116,23 +115,6 @@ configStorage.onDidAnyChange((newValue, oldValue) => {
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
   if (files) {
-
-    const tray = configStorage.get('tray');
-
-    createMenu(files).then(result => {
-      console.log('config.ts:', result);
-    }).catch(error => {
-      console.error('config.ts:', error);
-    });
-
-    if(tray) {
-      createTray().then(result => {
-        console.log('config.ts:', result);
-      }).catch(error => {
-        console.error('config.ts:', error);
-      });
-    }
-
     mainWindow!.webContents.send('updateFiles', files);
   }
 });

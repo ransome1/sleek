@@ -17,7 +17,7 @@ function createMenuTemplate(files: File[]): Electron.MenuItemConstructorOptions[
     { type: 'separator' },
     ...(files?.length > 0
       ? files.map((file: File, index: number) => ({
-        label: file.todoFileName,
+        label: file.todoFileName!,
         accelerator: `CommandOrControl+${index + 1}`,
         click: () => {
           setFile(index);
@@ -52,13 +52,7 @@ function createTray() {
 
     tray = new Tray(getAssetPath(`icons/tray/${iconName}`));
     tray.setToolTip('sleek');
-    tray
-      .on('click', () => {
-        handleCreateWindow();
-      })
-      .on('right-click', () => {
-        tray.popUpContextMenu(menu);
-      });
+    tray.setContextMenu(menu);
       
     return Promise.resolve('Tray created');
   } catch (error: any) {

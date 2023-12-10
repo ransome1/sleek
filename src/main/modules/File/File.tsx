@@ -1,6 +1,7 @@
-import { shell } from 'electron';
 import { configStorage } from '../../config';
 import { createFileWatcher } from './Watcher';
+import createTray from '../Tray';
+import createMenu from '../Menu';
 import path from 'path';
 import { File } from '../../util';
 import { mainWindow } from '../../main';
@@ -29,6 +30,21 @@ function addFile(filePath: string, bookmark: string | null) {
 
     createFileWatcher(files);
 
+    createMenu(files).then(result => {
+      console.log('config.ts:', result);
+    }).catch(error => {
+      console.error('config.ts:', error);
+    });
+
+    const tray = configStorage.get('tray');
+    if(tray) {
+      createTray().then(result => {
+        console.log('config.ts:', result);
+      }).catch(error => {
+        console.error('config.ts:', error);
+      });
+    }    
+
     console.info('File.ts: File added, restarting file watchers');
   } catch (error: any) {
     console.error('File.ts:', error);
@@ -48,7 +64,7 @@ function addDoneFile(filePath: string, bookmark: string | null) {
 
     configStorage.set('files', files);
 
-    mainWindow!.webContents.send('archiveTodos');
+    mainWindow!.webContents.send('triggerArchiving');
 
     console.info(`File.ts: Done file added for ${files[activeIndex].todoFileName}`);
 
@@ -75,6 +91,21 @@ async function removeFile(index: number): Promise<void> {
 
     configStorage.set('files', files);
 
+    createMenu(files).then(result => {
+      console.log('config.ts:', result);
+    }).catch(error => {
+      console.error('config.ts:', error);
+    });    
+
+    const tray = configStorage.get('tray');
+    if(tray) {
+      createTray().then(result => {
+        console.log('config.ts:', result);
+      }).catch(error => {
+        console.error('config.ts:', error);
+      });
+    }    
+
     console.info('File.ts: File removed, restarting file watchers');
 
     return;
@@ -96,29 +127,12 @@ function setFile(index: number): void {
 
     files[index].active = true;
 
-    configStorage.set('files', files);
-
-    return;
+    configStorage.set('files', files); 
+    
   } catch (error: any) {
     console.error('File.ts:', error);
     throw error;
   }
 }
 
-function revealFile(index: number): void {
-  try {
-    const files: File[] = configStorage.get('files') as File[];
-    const fileToReveal = files[index].todoFilePath;
-
-    if(fileToReveal) {
-      shell.showItemInFolder(fileToReveal);
-      console.info('File.ts: File revealed in file manager');
-    }
-    return;
-  } catch (error: any) {
-    console.error('File.ts:', error);
-    throw error;
-  }
-}
-
-export { setFile, removeFile, addFile, addDoneFile, revealFile };
+export { setFile, removeFile, addFile, addDoneFile };
