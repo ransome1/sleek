@@ -1,5 +1,6 @@
 import { app, Menu, dialog, shell } from 'electron';
 import { setFile } from './File/File';
+import { getActiveFile } from './File/Active'; 
 import { mainWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { configStorage, filterStorage } from '../config';
@@ -93,7 +94,7 @@ function createMenu(files: File[]) {
             : []),
           { type: 'separator' },
           {
-            label: 'Close Window',
+            label: 'Close window',
             accelerator: 'CmdOrCtrl+W',
             role: 'close',
           },
