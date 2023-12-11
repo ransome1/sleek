@@ -85,11 +85,11 @@ describe('Create recurring todos', () => {
   test('Should add a new todo adding a non-strict recurrence of one week to due date and threshold date', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Water plants @home +quick due:2021-07-19 t:2021-07-09 rec:1w`, '1w');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
-    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Water plants @home +quick due:${dateInOneWeekString} t:${dateInOneWeekMinus10String} rec:1w`);
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Water plants @home +quick due:${dateInOneWeekString} t:${dateInOneWeekString} rec:1w`);
   });
 
   test('Should add a new todo adding a strict recurrence of one day to threshold date. No due date should be created.', async () => {
-    const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:+1d t:2023-09-19`, '1+d');
+    const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Line 1 rec:+1d t:2023-09-19`, '+1d');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
     expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Line 1 rec:+1d t:2023-09-20`);
   });  

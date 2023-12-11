@@ -63,7 +63,7 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
         : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
       const newThresholdDate = strictRecurrence
         ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
-        : dayjs(newDueDate).subtract(daysBetween, 'day').toDate();
+        : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
 
       // If the user only uses threshold date and no due date, the recurrence should not create a due date:
       const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
