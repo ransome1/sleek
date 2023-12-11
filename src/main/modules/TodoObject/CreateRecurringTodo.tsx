@@ -53,7 +53,9 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
     }
 
     if (recurrence && completedDate) {
+      console.log(recurrence);
       const strictRecurrence: boolean = recurrence.startsWith('+');
+      console.log(strictRecurrence);
       const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
       const oldDueDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 'due')?.value;
       const oldThresholdDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 't')?.value;
@@ -61,9 +63,10 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
       const newDueDate = strictRecurrence
         ? addRecurrenceToDate(dayjs(oldDueDate).toDate(), recurrenceInterval)
         : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
+      console.log(addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval));
       const newThresholdDate = strictRecurrence
         ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
-        : dayjs(newDueDate).subtract(daysBetween, 'day').toDate();
+        : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
 
       // If the user only uses threshold date and no due date, the recurrence should not create a due date:
       const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
