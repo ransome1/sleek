@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { createTodoObjects } from '../../main/modules/TodoObject/CreateTodoObjects';
+import { createTodoObjects } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { configStorage } from '../../main/config';
 
 const dateTodayString: string = dayjs(new Date()).format('YYYY-MM-DD');
@@ -17,7 +17,6 @@ jest.mock('../../main/config', () => ({
 }));
 
 const fileContent = `(B) Test +project @context todo 1 due:2023-12-31 t:2024-03-24 h:1 test @anotherContext pm:4 and a strict rec:+2w\nx 2023-07-23 2023-07-21 Test todo 2\nTest todo 3 due:end of the year\nTest todo 4 t:first day of next year`;
-const todoObjects = createTodoObjects(fileContent);
 
 describe('Create todo objects', () => {
 
@@ -25,11 +24,13 @@ describe('Create todo objects', () => {
     jest.clearAllMocks();
   });
 
-  test('should create 4 todo objects', () => {
+  test('should create 4 todo objects', async () => {
+    const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects).toHaveLength(4);
   });
   
-  test('should create a todo object', () => {
+  test('should create a todo object', async () => {
+    const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[0]).toEqual({
       id: 0,
       body: 'Test +project @context todo 1 due:2023-12-31 t:2024-03-24 h:1 test @anotherContext pm:4 and a strict rec:+2w',
@@ -51,7 +52,8 @@ describe('Create todo objects', () => {
     });
   });
 
-  test('should create a finished todo object', () => {
+  test('should create a finished todo object', async () => {
+    const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[1]).toEqual({
       id: 1,
       body: 'Test todo 2',
@@ -73,7 +75,8 @@ describe('Create todo objects', () => {
     });
   });
 
-  test('should create a todo object with speaking due date', () => {
+  test('should create a todo object with speaking due date', async () => {
+    const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[2]).toEqual({
       id: 2,
       body: 'Test todo 3 due:end of the year',
@@ -95,7 +98,8 @@ describe('Create todo objects', () => {
     });    
   });
 
-  test('should create a todo object with speaking t date', () => {
+  test('should create a todo object with speaking t date', async () => {
+    const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[3]).toEqual({
       id: 3,
       body: 'Test todo 4 t:first day of next year',

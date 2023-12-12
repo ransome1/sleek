@@ -1,18 +1,13 @@
-import { TodoObject, Filters, Filter } from '../util';
+import { TodoObject, Filters, Filter } from '../../util';
 
 function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
-  if (!filters || Object.keys(filters).length === 0) {
-    return todoObjects;
-  }
-
   return todoObjects.filter((todoObject: TodoObject) => {
-    return Object.entries(filters).every(([key, filterArray]) => {
-      if (!filterArray?.length) {
+    return Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {
+      if (filterArray.length === 0) {
         return true;
       }
 
       const attributeValues: any = ['due', 't'].includes(key) ? todoObject[key as keyof TodoObject] : todoObject[key as keyof TodoObject];
-
       return filterArray.every(({ value, exclude }: Filter) => {
         if (
           attributeValues === undefined ||
@@ -21,9 +16,7 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoO
         ) {
           return exclude;
         }
-
         const hasMatchingValue = attributeValues.includes(value);
-
         return exclude ? !hasMatchingValue : hasMatchingValue;
       });
     });

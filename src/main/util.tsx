@@ -62,9 +62,9 @@ export interface Settings {
 }
 
 export interface File {
-  active: boolean | null;
-  todoFileName: string | null;
-  todoFilePath: string | null;
+  active: boolean;
+  todoFileName: string;
+  todoFilePath: string;
   todoFileBookmark: string | null;
   doneFilePath: string | null;
   doneFileBookmark: string | null;

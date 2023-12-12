@@ -1,12 +1,9 @@
 import { File } from '../../util';
+import { configStorage } from '../../config';
 
-export function getActiveFile(files: File[]): File | null {
-  try {
-    if (files.length === 0) return null;
-    const activeIndex = files.findIndex((file) => file.active);
-    return files[activeIndex] || null;
-  } catch (error: any) {
-    console.error('File.ts:', error);
-    return null;
-  }
+export function getActiveFile(): File | null {
+  const files: File[] = configStorage.get('files');
+  if (files.length === 0) return null;
+  const activeIndex = files.findIndex((file) => file.active);
+  return files[activeIndex];
 }

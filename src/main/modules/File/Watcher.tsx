@@ -1,5 +1,5 @@
 import chokidar, { FSWatcher } from 'chokidar';
-import processDataRequest from '../ProcessDataRequest';
+import processDataRequest from '../ProcessDataRequest/ProcessDataRequest';
 import { mainWindow, eventListeners } from '../../main';
 import { configStorage } from '../../config';
 import { File } from '../../util';

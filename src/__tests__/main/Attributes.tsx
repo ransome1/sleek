@@ -34,7 +34,7 @@ describe('Set of filters must create a respective set of attributes and its coun
       created: { '2026-01-01': { count: 2, notify: false} },
       completed: {},
     };
-    await updateAttributes(todoObjects, sorting, true);
+    await updateAttributes(todoObjects, sorting, false);
     expect(attributes).toEqual(expectedAttributes);
   });
 

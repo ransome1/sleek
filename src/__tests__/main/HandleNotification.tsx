@@ -1,6 +1,6 @@
 import { handleNotification, sendNotification } from '../../main/modules/HandleNotification';
 import { configStorage } from '../../main/config';
-import { badge } from '../../main/modules/TodoObject/CreateTodoObjects';
+import { badge } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { Notification } from 'electron';
 import dayjs from 'dayjs';
 
@@ -10,7 +10,7 @@ const dateTomorrowString = dateToday.add(1, 'day').format('YYYY-MM-DD');
 const dateInSevenDaysString = dateToday.add(7, 'day').format('YYYY-MM-DD');
 const dateInTwentyDaysString = dateToday.add(20, 'day').format('YYYY-MM-DD');
 
-jest.mock('../../main/modules/TodoObject/CreateTodoObjects', () => ({
+jest.mock('../../main/modules/ProcessDataRequest/CreateTodoObjects', () => ({
   badge: {
     count: 0,
   },

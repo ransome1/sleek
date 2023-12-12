@@ -36,29 +36,22 @@ function createMenuTemplate(files: File[]): Electron.MenuItemConstructorOptions[
 }
 
 function createTray() {
-  try {
-    const isTray = configStorage.get('tray');
+  const isTray = configStorage.get('tray');
 
-    tray?.destroy();
+  tray?.destroy();
 
-    if (!isTray) {
-      app.dock?.show();
-      return Promise.resolve('Tray not shown');
-    }
-
-    const files = configStorage.get('files') as File[] || [];
-    const iconName = process.platform === 'win32' ? 'tray.ico' : 'tray.png';
-    const menu = Menu.buildFromTemplate(createMenuTemplate(files));
-
-    tray = new Tray(getAssetPath(`icons/tray/${iconName}`));
-    tray.setToolTip('sleek');
-    tray.setContextMenu(menu);
-      
-    return Promise.resolve('Tray created');
-  } catch (error: any) {
-    console.error('Error creating tray:', error);
-    return Promise.reject(error);
+  if (!isTray) {
+    app.dock?.show();
+    return Promise.resolve('Tray not shown');
   }
+
+  const files = configStorage.get('files') as File[] || [];
+  const iconName = process.platform === 'win32' ? 'tray.ico' : 'tray.png';
+  const menu = Menu.buildFromTemplate(createMenuTemplate(files));
+
+  tray = new Tray(getAssetPath(`icons/tray/${iconName}`));
+  tray.setToolTip('sleek');
+  tray.setContextMenu(menu);
 }
 
-export default createTray;
+export { createTray };

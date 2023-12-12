@@ -13,7 +13,7 @@ let attributes: Attributes = {
 };
 
 function incrementCount(countObject: any, key: any | null, notify: boolean): void {
-  if (key) {
+  if(key) {
     let previousCount: number = parseInt(countObject[key]?.count) || 0;
     countObject[key] = {
       count: previousCount + 1,

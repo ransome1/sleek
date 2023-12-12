@@ -2,10 +2,10 @@ import { app, BrowserWindow, nativeTheme } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
-import createMenu from './modules/Menu';
+import { createMenu } from './modules/Menu';
 import { resolveHtmlPath, getAssetPath, File } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
-import createTray from './modules/Tray';
+import { createTray } from './modules/Tray';
 import './modules/Ipc';
 import handleTheme from './modules/Theme';
 
@@ -20,13 +20,7 @@ const handleCreateWindow = () => {
   if (mainWindow) {
     mainWindow.show();
   } else {
-    createWindow()
-      .then((result) => {
-        console.log('main.ts:', result);
-      })
-      .catch((error) => {
-        console.error('main.ts:', error);
-      });
+    createWindow();
   }  
 }
 
@@ -185,24 +179,12 @@ app
   .on('activate', handleCreateWindow)
   .whenReady()
   .then(() => {
-    createWindow().then(result => {
-      console.log('main.ts:', result);
-    }).catch(error => {
-      console.error('main.ts:', error);
-    });
+    createWindow();
 
-    createMenu(files).then(result => {
-      console.log('main.ts:', result);
-    }).catch(error => {
-      console.error('main.ts:', error);
-    });
+    createMenu(files);
 
     if(tray) {
-      createTray().then(result => {
-        console.log('main.ts:', result);
-      }).catch(error => {
-        console.error('main.ts:', error);
-      });
+      createTray();
     }
 
     eventListeners

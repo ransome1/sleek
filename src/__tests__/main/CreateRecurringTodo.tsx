@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import { writeTodoObjectToFile } from '../../main/modules/File/Write';
-import { createRecurringTodo } from '../../main/modules/TodoObject/CreateRecurringTodo';
+import { createRecurringTodo } from '../../main/modules/ProcessDataRequest/CreateRecurringTodo';
 import { getActiveFile } from '../../main/modules/File/Active';
-import { lines } from '../../main/modules/TodoObject/CreateTodoObjects';
+import { lines } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import dayjs from 'dayjs';
 
-jest.mock('../../main/modules/TodoObject/CreateTodoObjects', () => ({
+jest.mock('../../main/modules/ProcessDataRequest/CreateTodoObjects', () => ({
   lines: [''],
 }));
 

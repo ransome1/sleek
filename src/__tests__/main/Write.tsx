@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import { writeTodoObjectToFile, removeLineFromFile } from '../../main/modules/File/Write';
-import { lines } from '../../main/modules/TodoObject/CreateTodoObjects';
+import { lines } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { configStorage } from '../../main/config';
 import dayjs from 'dayjs';
 
@@ -29,7 +29,7 @@ jest.mock('../../main/config', () => ({
   },
 }));
 
-jest.mock('../../main/modules/TodoObject/CreateTodoObjects', () => ({
+jest.mock('../../main/modules/ProcessDataRequest/CreateTodoObjects', () => ({
   lines: ['Line 1', 'Line 2', 'Line 3'],
 }));
 

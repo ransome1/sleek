@@ -1,6 +1,5 @@
 import { app, Menu, dialog, shell } from 'electron';
 import { setFile } from './File/File';
-import { getActiveFile } from './File/Active'; 
 import { mainWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { configStorage, filterStorage } from '../config';
@@ -11,242 +10,237 @@ const isMac: boolean = process.platform === 'darwin';
 const description = appPackage.description;
 
 function createMenu(files: File[]) {
-  try {
-    const template: Electron.MenuItemConstructorOptions[] = [
-      {
-        label: 'sleek',
-        submenu: [
-          {
-            label: 'About',
-            click: async () => {
-              const options = {
-                type: 'info',
-                title: 'About sleek',
-                message: `sleek v${app.getVersion()}`,
-                detail: description,
-                buttons: [
-                  'Close',
-                  'Reveal configuration folder',
-                ],
-              };
+  const template: Electron.MenuItemConstructorOptions[] = [
+    {
+      label: 'sleek',
+      submenu: [
+        {
+          label: 'About',
+          click: async () => {
+            const options = {
+              type: 'info',
+              title: 'About sleek',
+              message: `sleek v${app.getVersion()}`,
+              detail: description,
+              buttons: [
+                'Close',
+                'Reveal configuration folder',
+              ],
+            };
 
-              const buttonClicked = await dialog.showMessageBox(options);
-              if (buttonClicked.response === 1) {
-                const pathToReveal = app.getPath('userData');
-                shell.showItemInFolder(pathToReveal);
-              }
-            },
+            const buttonClicked = await dialog.showMessageBox(options);
+            if (buttonClicked.response === 1) {
+              const pathToReveal = app.getPath('userData');
+              shell.showItemInFolder(pathToReveal);
+            }
           },
-          {
-            label: 'Settings',
-            accelerator: 'CmdOrCtrl+,',
-            click: () => {
-              mainWindow!.webContents.send('setIsSettingsOpen');
-            },
+        },
+        {
+          label: 'Settings',
+          accelerator: 'CmdOrCtrl+,',
+          click: () => {
+            mainWindow!.webContents.send('setIsSettingsOpen');
           },
-          ...(isMac
-          ? [
-              { type: 'separator' },
-              {
-                label: 'Hide',
-                accelerator: 'Cmd+H',
-                role: 'hide',
+        },
+        ...(isMac
+        ? [
+            { type: 'separator' },
+            {
+              label: 'Hide',
+              accelerator: 'Cmd+H',
+              role: 'hide',
+            },
+          ]
+        : []),
+        { type: 'separator' },
+        {
+          label: 'Quit',
+          accelerator: 'CmdOrCtrl+Q',
+          click: () => {
+            app.quit();
+          },
+        },
+      ],
+    },
+    {
+      id: 'fileMenu',
+      label: 'File',
+      submenu: [
+        { type: 'separator' },
+        {
+          label: 'Open file',
+          accelerator: 'CmdOrCtrl+O',
+          click: () => {
+            openFile(false);
+          },
+        },
+        {
+          label: 'Create file',
+          click: () => {
+            createFile(false);
+          },
+        },
+        { type: 'separator' },
+        ...(files?.length > 0
+          ? files.map((file: File, index: number) => ({
+              label: file.todoFileName,
+              accelerator: `CommandOrControl+${index + 1}`,
+              click: () => {
+                setFile(index);
               },
-            ]
+            }))
           : []),
-          { type: 'separator' },
-          {
-            label: 'Quit',
-            accelerator: 'CmdOrCtrl+Q',
-            click: () => {
-              app.quit();
-            },
+        { type: 'separator' },
+        {
+          label: 'Close window',
+          accelerator: 'CmdOrCtrl+W',
+          role: 'close',
+        },
+      ],
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'selectAll' },
+      ],
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Toggle drawer',
+          accelerator: 'CmdOrCtrl+B',
+          click: () => {
+            mainWindow!.webContents.send('setIsDrawerOpen');
           },
-        ],
-      },
-      {
-        id: 'fileMenu',
-        label: 'File',
-        submenu: [
-          { type: 'separator' },
-          {
-            label: 'Open file',
-            accelerator: 'CmdOrCtrl+O',
-            click: () => {
-              openFile(false);
-            },
+        },
+        {
+          label: 'Toggle navigation',
+          accelerator: 'Ctrl+Alt+H',
+          click: () => {
+            mainWindow!.webContents.send('setIsNavigationOpen');
           },
-          {
-            label: 'Create file',
-            click: () => {
-              createFile(false);
-            },
+        },
+        {
+          label: 'Toggle file tabs',
+          click: () => {
+            mainWindow!.webContents.send('setShowFileTabs');
           },
-          { type: 'separator' },
-          ...(files?.length > 0
-            ? files.map((file: File, index: number) => ({
-                label: file.todoFileName,
-                accelerator: `CommandOrControl+${index + 1}`,
-                click: () => {
-                  setFile(index);
-                },
-              }))
-            : []),
-          { type: 'separator' },
-          {
-            label: 'Close window',
-            accelerator: 'CmdOrCtrl+W',
-            role: 'close',
+        },
+        {
+          label: 'Toggle theme',
+          accelerator: 'Ctrl+Alt+D',
+          click: () => {
+            const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
+            configStorage.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
           },
-        ],
-      },
-      {
-        label: 'Edit',
-        submenu: [
-          { role: 'undo' },
-          { role: 'redo' },
-          { type: 'separator' },
-          { role: 'cut' },
-          { role: 'copy' },
-          { role: 'paste' },
-          { role: 'selectAll' },
-        ],
-      },
-      {
-        label: 'View',
-        submenu: [
-          {
-            label: 'Toggle drawer',
-            accelerator: 'CmdOrCtrl+B',
-            click: () => {
-              mainWindow!.webContents.send('setIsDrawerOpen');
-            },
+        },
+      ],
+    },
+    {
+      label: 'Todos',
+      submenu: [
+        {
+          label: 'Find',
+          accelerator: 'CmdOrCtrl+F',
+          click: () => {
+            mainWindow!.webContents.send('setIsSearchOpen');
           },
-          {
-            label: 'Toggle navigation',
-            accelerator: 'Ctrl+Alt+H',
-            click: () => {
-              mainWindow!.webContents.send('setIsNavigationOpen');
-            },
+        },
+        {
+          label: 'Toggle completed',
+          accelerator: 'Ctrl+H',
+          click: async () => {
+            const showCompleted = configStorage.get('showCompleted');
+            configStorage.set('showCompleted', !showCompleted);
           },
-          {
-            label: 'Toggle file tabs',
-            click: () => {
-              mainWindow!.webContents.send('setShowFileTabs');
-            },
+        },
+        {
+          label: 'Reset search and filters',
+          accelerator: 'Ctrl+0',
+          click: async () => {
+            filterStorage.set('filters', {});
           },
-          {
-            label: 'Toggle theme',
-            accelerator: 'Ctrl+Alt+D',
-            click: () => {
-              const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
-              configStorage.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
-            },
+        },
+        {
+          label: 'Archive completed todos',
+          accelerator: 'Ctrl+Alt+A',
+          click: () => {
+            mainWindow!.webContents.send('triggerArchiving');
           },
-        ],
-      },
-      {
-        label: 'Todos',
-        submenu: [
-          {
-            label: 'Find',
-            accelerator: 'CmdOrCtrl+F',
-            click: () => {
-              mainWindow!.webContents.send('setIsSearchOpen');
-            },
+        },
+        {
+          role: 'reload',
+          visible: false,
+        },
+      ],
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'sleek wiki',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/wiki');
           },
-          {
-            label: 'Toggle completed',
-            accelerator: 'Ctrl+H',
-            click: async () => {
-              const showCompleted = configStorage.get('showCompleted');
-              configStorage.set('showCompleted', !showCompleted);
-            },
+        },
+        {
+          label: 'Report bugs',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/issues');
           },
-          {
-            label: 'Reset search and filters',
-            accelerator: 'Ctrl+0',
-            click: async () => {
-              filterStorage.set('filters', {});
-            },
+        },
+        {
+          label: 'Discuss new or existing features',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/discussions');
           },
-          {
-            label: 'Archive completed todos',
-            accelerator: 'Ctrl+Alt+A',
-            click: () => {
-              mainWindow!.webContents.send('triggerArchiving');
-            },
+        },
+        {
+          label: 'Contributing',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
           },
-          {
-            role: 'reload',
-            visible: false,
+        },
+        {
+          label: 'Keyboard shortcuts',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
           },
-        ],
-      },
-      {
-        label: 'Help',
-        submenu: [
-          {
-            label: 'sleek wiki',
-            click: () => {
-              shell?.openExternal('https://github.com/ransome1/sleek/wiki');
-            },
+        },
+        {
+          label: 'Privacy policy',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
           },
-          {
-            label: 'Report bugs',
-            click: () => {
-              shell?.openExternal('https://github.com/ransome1/sleek/issues');
-            },
+        },
+        {
+          label: 'Sponsoring',
+          click: () => {
+            shell?.openExternal('https://github.com/sponsors/ransome1');
           },
-          {
-            label: 'Discuss new or existing features',
-            click: () => {
-              shell?.openExternal('https://github.com/ransome1/sleek/discussions');
-            },
+        },
+        {
+          label: 'sleek on GitHub',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/');
           },
-          {
-            label: 'Contributing',
-            click: () => {
-              shell?.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
-            },
-          },
-          {
-            label: 'Keyboard shortcuts',
-            click: () => {
-              shell?.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
-            },
-          },
-          {
-            label: 'Privacy policy',
-            click: () => {
-              shell?.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
-            },
-          },
-          {
-            label: 'Sponsoring',
-            click: () => {
-              shell?.openExternal('https://github.com/sponsors/ransome1');
-            },
-          },
-          {
-            label: 'sleek on GitHub',
-            click: () => {
-              shell?.openExternal('https://github.com/ransome1/sleek/');
-            },
-          },
-          {
-            role: 'toggleDevTools',
-            label: 'Developer tools'
-          },
-        ],
-      },
-    ];
-
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-    return Promise.resolve('Menu created');
-  } catch(error) {
-    return Promise.reject(error);
-  }
+        },
+        {
+          role: 'toggleDevTools',
+          label: 'Developer tools'
+        },
+      ],
+    },
+  ];
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 }
 
-export default createMenu;
+export { createMenu };

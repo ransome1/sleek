@@ -1,4 +1,4 @@
-import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/TodoObject/ProcessTodoObjects';
+import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/ProcessDataRequest/ProcessTodoObjects';
 
 jest.mock('../../main/config', () => ({
   configStorage: {
@@ -178,8 +178,8 @@ describe('Process todo.txt objects', () => {
     });    
 
     test('Objects are counted correctly', () => {
-        const count: number = countTodoObjects(todoObjects);
-        expect(count).toEqual(7);
+        const count: number = countTodoObjects(todoObjects, true);
+        expect(count).toEqual(1);
     });
 
     test('Search for "test3" result in 1 found object', () => {

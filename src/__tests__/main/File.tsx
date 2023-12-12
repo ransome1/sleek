@@ -1,5 +1,6 @@
 import path from 'path'
 import { configStorage } from '../../main/config';
+import { createMenu } from '../../main/modules/Menu';
 import { addFile, removeFile, setFile } from '../../main/modules/File/File';
 
 jest.mock('../../main/main', () => ({
@@ -38,8 +39,8 @@ describe('File functions', () => {
     jest.clearAllMocks();
   });
 
-  test('addFile should add a new file to the config storage', async () => {
-    await addFile(path.join('/', 'path', 'to', 'test4.txt'), null);
+  test('addFile should add a new file to the config storage', () => {
+    addFile(path.join('/', 'path', 'to', 'test4.txt'), null);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
@@ -76,8 +77,9 @@ describe('File functions', () => {
       },
     ]);
   });
-  test('removeFile should remove a file from the config storage, the active file stays unchanged', async () => {
-    await removeFile(1);
+  
+  test('removeFile should remove a file from the config storage, the active file stays unchanged', () => {
+    removeFile(1);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
@@ -106,8 +108,9 @@ describe('File functions', () => {
       },
     ]);
   });
-  test('removeFile should remove the active file from the config storage, a new active file is defined', async () => {
-    await removeFile(2);
+
+  test('removeFile should remove the active file from the config storage, a new active file is defined', () => {
+    removeFile(2);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {
@@ -128,8 +131,9 @@ describe('File functions', () => {
       },
     ]);
   });
-  test('setFile should set a file as active in the config storage', async () => {
-    await setFile(1);
+
+  test('setFile should set a file as active in the config storage', () => {
+    setFile(1);
     expect(configStorage.set).toHaveBeenCalledTimes(1);
     expect(configStorage.set).toHaveBeenCalledWith('files', [
       {

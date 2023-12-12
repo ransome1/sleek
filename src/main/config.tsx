@@ -3,9 +3,9 @@ import path from 'path';
 import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
-import createTray from './modules/Tray';
+import { createTray } from './modules/Tray';
 import { File, ConfigData } from './util';
-import processDataRequest from './modules/ProcessDataRequest';
+import processDataRequest from './modules/ProcessDataRequest/ProcessDataRequest';
 import handleTheme from './modules/Theme';
 import crypto from 'crypto';
 
@@ -130,11 +130,7 @@ configStorage.onDidChange('colorTheme', (colorTheme) => {
 });
 
 configStorage.onDidChange('tray', () => {
-  createTray().then(result => {
-    console.log('config.ts:', result);
-  }).catch(error => {
-    console.error('config.ts:', error);
-  });
+  createTray();
 });
 
 nativeTheme.on('updated', handleTheme);
