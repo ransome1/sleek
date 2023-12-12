@@ -8,29 +8,26 @@ labels: 'bug'
 
 ## Bug Report
 
-**IMPORTANT:**
-Please follow this template strictly when reporting bugs. Providing detailed and accurate information helps the development team to understand and address the issue effectively.
+### Important ###
+Please follow this template strictly when reporting bugs. 
 
-**App Version:** [Enter app version here]
+**App Version:** [_Enter app version here_]
 
-**Platform:** [Windows / macOS / Linux]
+**Platform:** [_Windows / macOS / Linux_]
 
-**Installation Method:** [App Store / Direct Download / Other]
+**Installation Method:** [_App Store / Direct Download / Other_]
 
 **Bug Description:**
-[Provide a clear and concise description of the bug you encountered.]
+[_Provide a clear and concise description of the bug you encountered._]
 
 **Steps to Reproduce:**
-1. [List the steps to reproduce the bug. Be as specific as possible.]
+1. [_List the steps to reproduce the bug. Be as specific as possible._]
 
 **Expected Behavior:**
-[Explain what you expected to happen.]
+[_Explain what you expected to happen._]
 
 **Actual Behavior:**
-[Explain what actually happened.]
-
-**Additional Information:**
-- [Include any additional information that might be relevant to the bug, such as error messages or console logs.]
+[_Explain what actually happened._]
 
 **Screenshots:**
-[If applicable, include screenshots that demonstrate the bug.]
+[_If applicable, include screenshots that demonstrate the bug._]

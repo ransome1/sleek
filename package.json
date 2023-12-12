@@ -20,7 +20,7 @@
     "mas": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas --universal --publish never",
     "masdev": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas-dev --universal --publish never",
     "dir": "cross-env NODE_ENV=production yarn run build && electron-builder --dir --publish never",
-    "peggy": "peggy --format es --output ./src/main/modules/FilterLang/FilterLang.js ./src/main/modules/FilterLang/FilterLang.pegjs",
+    "peggy": "peggy --format es --output ./src/main/modules/Filters/FilterLang.js ./src/main/modules/Filters/FilterLang.pegjs",
     "depcheck": "depcheck"
   },
   "browserslist": [],
