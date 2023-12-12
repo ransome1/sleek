@@ -151,7 +151,7 @@ const handleReadyToShow = async () => {
   try {
     if(files && Object.keys(files)?.length > 0) {
       const response = createFileWatcher(files);
-      console.log('main.ts:', response);
+      console.log(response);
     }
   } catch (error: any) {
     console.log(error);

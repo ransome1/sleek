@@ -114,8 +114,8 @@ configStorage.onDidAnyChange((newValue, oldValue) => {
 });
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
-  if (files) {
-    mainWindow!.webContents.send('updateFiles', files);
+  if(files && mainWindow) {
+    mainWindow.webContents.send('updateFiles', files);
   }
 });
 

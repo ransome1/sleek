@@ -1,5 +1,5 @@
 import { app, Menu, Tray } from 'electron';
-import { handleCreateWindow, mainWindow } from '../main';
+import { handleCreateWindow } from '../main';
 import { configStorage } from '../config';
 import { getAssetPath, File } from '../util';
 import { setFile } from './File/File';
@@ -52,6 +52,9 @@ function createTray() {
   tray = new Tray(getAssetPath(`icons/tray/${iconName}`));
   tray.setToolTip('sleek');
   tray.setContextMenu(menu);
+  tray.on('click', () => {
+    handleCreateWindow();
+  });  
 }
 
 export { createTray };
