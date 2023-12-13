@@ -42,43 +42,41 @@ const addRecurrenceToDate = (date: Date, recurrence: string): Date => {
   }
 };
 
-const createRecurringTodo = async (string: string, recurrence: string): Promise<string> => {
-  try {
-    const JsTodoTxtObject = new Item(string);
-    const completedDate = JsTodoTxtObject.completed();
-    const appendCreationDate = configStorage.get('appendCreationDate');
+const createRecurringTodo = async (todoString: string, recurrence: string): string => {
+  const JsTodoTxtObject = new Item(todoString);
+  const completedDate = JsTodoTxtObject.completed();
+  const createdDate = JsTodoTxtObject.created();
+  const appendCreationDate = configStorage.get('appendCreationDate');
 
-    if(!appendCreationDate) {
-      JsTodoTxtObject.setCreated(null);
-    }
-
-    if (recurrence && completedDate) {
-      const strictRecurrence: boolean = recurrence.startsWith('+');
-      const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
-      const oldDueDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 'due')?.value;
-      const oldThresholdDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 't')?.value;
-      const daysBetween = dayjs(oldDueDate, 'YYYY-MM-DD').diff(oldThresholdDate, 'day');
-      const newDueDate = strictRecurrence
-        ? addRecurrenceToDate(dayjs(oldDueDate).toDate(), recurrenceInterval)
-        : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
-      const newThresholdDate = strictRecurrence
-        ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
-        : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
-
-      // If the user only uses threshold date and no due date, the recurrence should not create a due date:
-      const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
-      if(completedDate && !recurrenceOnlyForThresholdDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
-      if(oldThresholdDate) JsTodoTxtObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
-      JsTodoTxtObject.setComplete(false);
-      JsTodoTxtObject.setCompleted(null);
-
-      await writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
-      return 'Recurring todo created';
-    }
-    return 'No recurring todo created';
-  } catch (error: any) {
-    return Promise.reject(error);
+  if(appendCreationDate) {
+    JsTodoTxtObject.setCreated(dayjs().format('YYYY-MM-DD'));
   }
+
+  if (recurrence) {
+    const strictRecurrence: boolean = recurrence.startsWith('+');
+    const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
+    const oldDueDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 'due')?.value;
+    const oldThresholdDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 't')?.value;
+    const daysBetween = dayjs(oldDueDate, 'YYYY-MM-DD').diff(oldThresholdDate, 'day');
+    
+    const newDueDate = strictRecurrence
+      ? addRecurrenceToDate(dayjs(oldDueDate).toDate(), recurrenceInterval)
+      : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
+    const newThresholdDate = strictRecurrence
+      ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
+      : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
+
+    // If the user only uses threshold date and no due date, the recurrence should not create a due date:
+    const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
+    if(completedDate && !recurrenceOnlyForThresholdDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
+    if(oldThresholdDate) JsTodoTxtObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
+    JsTodoTxtObject.setComplete(false);
+    JsTodoTxtObject.setCompleted(null);
+
+    writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
+    return 'Recurring todo created';
+  }
+  return 'No recurring todo created';
 };
 
 export { createRecurringTodo, addRecurrenceToDate };
