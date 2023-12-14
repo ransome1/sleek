@@ -98,10 +98,14 @@ if (!fs.existsSync(customStylesPath)) {
 }
 
 const handleConfigChange = async () => {
-  // TODO: If there was a search string before it will be ignored here, needs fix
-  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
-  if (todoObjects) {
-    mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
+  try {
+    // TODO: If there was a search string before it will be ignored here, needs fix
+    const [todoObjects, attributes, headers, filters] = await processDataRequest('');
+    if (todoObjects) {
+      mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
+    }
+  } catch(error) {
+    console.error(error);
   }
 };
 

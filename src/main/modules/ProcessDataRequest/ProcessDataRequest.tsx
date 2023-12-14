@@ -18,6 +18,9 @@ const headers: Headers = {
 async function processDataRequest(searchString: string): RequestedData[] { 
   const files: File[] = configStorage.get('files');
   const activeFile: File | null = getActiveFile(files);
+
+  if(!activeFile) return []
+
   const sorting: Sorting[] = configStorage.get('sorting');
   const showHidden: boolean = configStorage.get('showHidden');
   const fileSorting: boolean = configStorage.get('fileSorting');

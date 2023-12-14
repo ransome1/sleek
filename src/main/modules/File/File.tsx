@@ -12,8 +12,9 @@ let stopAccessingSecurityScopedResource: any;
 
 async function readFileContent(filePath: string, bookmark: string | null) {
   
-  if (filePath === null) {
-    throw new Error('No path has been passed');
+  if (!filePath) {
+    return null;
+    //throw new Error('No path has been passed');
   }
 
   if(bookmark) app.startAccessingSecurityScopedResource(bookmark)
