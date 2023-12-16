@@ -45,13 +45,13 @@ const DrawerAttributes: React.FC<Props> = memo(({
   };
 
   const handleCtrlCmdDown = (event: KeyboardEvent) => {
-    if (event.ctrlKey || event.metaKey) {
+    if(event.ctrlKey || event.metaKey) {
       setIsCtrlKeyPressed(true);
     }
   };
 
   const handleCtrlCmdUp = (event: KeyboardEvent) => {
-    if (!event.ctrlKey && !event.metaKey) {
+    if(!event.ctrlKey && !event.metaKey) {
       setIsCtrlKeyPressed(false);
     }
   };
@@ -70,7 +70,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
 
   useEffect(() => {
     const handleFocusFirstTabbableElement = () => {
-      if (firstTabbableElementRef.current) {
+      if(firstTabbableElementRef.current) {
         firstTabbableElementRef.current.focus();
       }
     };

@@ -33,7 +33,7 @@ const Search: React.FC<Props> = memo(({
   };
 
   const handleAddTodo = () => {
-    if (searchString) {
+    if(searchString) {
       ipcRenderer.send('writeTodoToFile', undefined, searchString);
       setSearchString('');
       searchFieldRef.current?.focus();
@@ -58,7 +58,7 @@ const Search: React.FC<Props> = memo(({
   });  
 
   useEffect(() => {
-    if (searchString === null) return;
+    if(searchString === null) return;
     let delayedSearch: NodeJS.Timeout;
     const handleSearch = () => {
       ipcRenderer.send('requestData', searchString);
@@ -72,7 +72,7 @@ const Search: React.FC<Props> = memo(({
   }, [searchString]);
 
   useEffect(() => {
-    if (isSearchOpen && searchFieldRef.current) {
+    if(isSearchOpen && searchFieldRef.current) {
       searchFieldRef.current.focus();
     }
   }, [isSearchOpen, searchFieldRef]);

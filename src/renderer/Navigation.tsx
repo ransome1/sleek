@@ -35,7 +35,7 @@ const NavigationComponent: React.FC<Props> = memo(({
 }) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (files.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
+      if(files.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
         setDialogOpen(true);
       }
     };

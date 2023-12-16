@@ -12,14 +12,14 @@ let stopAccessingSecurityScopedResource: any;
 async function removeLineFromFile(id: number) {
   const activeFile: File | null = getActiveFile();
 
-  if (activeFile === null) {
+  if(activeFile === null) {
     throw new Error('No active file defined');
   }
 
   const bookmark = activeFile.todoFileBookmark;
   const todoFilePath = activeFile.todoFilePath;
 
-  if (activeFile === null) {
+  if(activeFile === null) {
     throw new Error('Todo file is not defined');
   }
 
@@ -43,20 +43,20 @@ async function writeTodoObjectToFile(id: number, inputString: string): Promise<s
   const content = (multilineTextField && useMultilineForBulkTodoCreation) ? inputString : inputString.replaceAll(/\n/g, String.fromCharCode(16));
   const linesToWrite = content.split('\n').filter(line => line.trim() !== '');
 
-  if (linesToWrite.length === 0 && id < 1) {
+  if(linesToWrite.length === 0 && id < 1) {
     throw new Error("No string provided, won't write empty todo to file");
   } else {
-    if (convertRelativeToAbsoluteDates) {
+    if(convertRelativeToAbsoluteDates) {
       for (let i = 0; i < linesToWrite.length; i++) {
         linesToWrite[i] = replaceSpeakingDatesWithAbsoluteDates(linesToWrite[i]);
       }
     }
-    if (id >= 0) {
+    if(id >= 0) {
       lines[id] = linesToWrite.join('\n');
     } else {
       for (let i = 0; i < linesToWrite.length; i++) {
         const JsTodoTxtObject = new Item(linesToWrite[i]);
-        if (appendCreationDate && !JsTodoTxtObject.created()) {
+        if(appendCreationDate && !JsTodoTxtObject.created()) {
           JsTodoTxtObject.setCreated(new Date());
         }
         lines.push(JsTodoTxtObject.toString());
@@ -74,17 +74,17 @@ async function writeTodoObjectToFile(id: number, inputString: string): Promise<s
   const todoFileBookmark = activeFile.todoFileBookmark;
   const todoFilePath = activeFile.todoFilePath;
 
-  if (!todoFilePath) {
+  if(!todoFilePath) {
     throw new Error('No active file found');
   }  
 
-  if (todoFileBookmark) {
+  if(todoFileBookmark) {
     app.startAccessingSecurityScopedResource(todoFileBookmark);
   }
 
   await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
 
-  if (id) {
+  if(id) {
     return `Line ${id + 1} overwritten successfully`;
   } else {
     return `New todo added successfully`;

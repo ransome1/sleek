@@ -13,10 +13,10 @@ function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const speakingDates: DateAttributes = extractSpeakingDates(string);
   const due: DateAttribute = speakingDates['due:'];
   const t: DateAttribute = speakingDates['t:'];
-  if (due.date) {
+  if(due.date) {
     string = string.replace(due.string!, due.date);
   }
-  if (t.date) {
+  if(t.date) {
     string = string.replace(t.string!, t.date);
   }
   return string;
@@ -29,16 +29,16 @@ function processDateWithSugar(string: string, type: string): DateAttribute | nul
   let lastMatch = null;
 
   while (index < array.length) {
-    if (array[index]) combinedValue += array[index] + ' ';
+    if(array[index]) combinedValue += array[index] + ' ';
     const sugarDate = Sugar.Date.create(combinedValue, {future: true});
-    if (Sugar.Date.isValid(sugarDate) && type === 'absolute') {
+    if(Sugar.Date.isValid(sugarDate) && type === 'absolute') {
       lastMatch = {
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
         string: combinedValue.slice(0, -1),
         type: type,
         notify: mustNotify(sugarDate),
       };
-    } else if (Sugar.Date.isValid(sugarDate) && type === 'relative') {
+    } else if(Sugar.Date.isValid(sugarDate) && type === 'relative') {
       lastMatch = {
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
         string: combinedValue.slice(0, -1),

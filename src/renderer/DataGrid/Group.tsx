@@ -20,7 +20,7 @@ const Group: React.FC<Props> = memo(({
   return (
     <ListItem className="row group">
       {values.map((value, index) => {
-        if (!value) {
+        if(!value) {
           return <Divider key={index} />;
         }
 

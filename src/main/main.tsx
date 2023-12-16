@@ -3,21 +3,20 @@ import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
 import { createMenu } from './modules/Menu';
+import handleTheme from './modules/Theme';
 import { resolveHtmlPath, getAssetPath, File } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
 import { createTray } from './modules/Tray';
 import './modules/Ipc';
-import handleTheme from './modules/Theme';
 
 const environment = process.env.NODE_ENV;
 const files: File[] = (configStorage.get('files') as File[]) || [];
 let tray: boolean = configStorage.get('tray');
-
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
 
 const handleCreateWindow = () => {
-  if (mainWindow) {
+  if(mainWindow) {
     mainWindow.show();
   } else {
     createWindow();
@@ -44,7 +43,7 @@ const handleClosed = async () => {
 }
 
 const handleResize = () => {
-  if (mainWindow) {
+  if(mainWindow) {
     const { width, height } = mainWindow?.getBounds();
     configStorage.set('windowDimensions', { width, height });
     configStorage.set('windowMaximized', false);
@@ -52,7 +51,7 @@ const handleResize = () => {
 }
 
 const handleMove = () => {
-  if (mainWindow) {
+  if(mainWindow) {
     const { x, y } = mainWindow?.getBounds();
     configStorage.set('windowPosition', { x, y });
     configStorage.set('windowMaximized', false);
@@ -80,12 +79,12 @@ const handleWindowSizeAndPosition = () => {
 
   const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
 
-  if (windowDimensions) {
+  if(windowDimensions) {
     const { width, height } = windowDimensions;
     mainWindow?.setSize(width, height);
 
     const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
-    if (windowPosition) {
+    if(windowPosition) {
       const { x, y } = windowPosition;
       mainWindow?.setPosition(x, y);
     }
@@ -111,7 +110,7 @@ const createWindow = async() => {
   const customStylesPath: string = configStorage.get('customStylesPath');
   if(customStylesPath) {
     fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
-      if (!error) {
+      if(!error) {
         mainWindow?.webContents.insertCSS(data);
         console.error('Styles injected found in CSS file:', customStylesPath);
       } else {
@@ -120,10 +119,9 @@ const createWindow = async() => {
     });
   }
 
-  const colorTheme = configStorage.get('colorTheme');
-  nativeTheme.themeSource = colorTheme;
-
   handleWindowSizeAndPosition();
+
+  handleTheme();
 
   mainWindow?.loadURL(resolveHtmlPath('index.html'));
   mainWindow
@@ -143,26 +141,19 @@ const createWindow = async() => {
     .handleShow = handleShow
     .handleMaximize = handleMaximize
     .handleUnmaximize = handleUnmaximize;
-
-  return "Main window has been created successfully"
 }
 
 const handleReadyToShow = async () => {
-  try {
-    if(files && Object.keys(files)?.length > 0) {
-      const response = createFileWatcher(files);
-      console.log(response);
-    }
-  } catch (error: any) {
-    console.log(error);
+  if(files && Object.keys(files)?.length > 0) {
+    createFileWatcher(files);
   }
 }
 
 const handleWindowAllClosed = () => {
   tray = configStorage.get('tray');
-  if (process.platform !== 'darwin' && !tray) {
+  if(process.platform !== 'darwin' && !tray) {
     app.quit();
-  } else if (process.platform === 'darwin' && tray) {
+  } else if(process.platform === 'darwin' && tray) {
     app.dock?.hide();
   } else {
     mainWindow?.hide();
@@ -179,6 +170,7 @@ app
   .on('activate', handleCreateWindow)
   .whenReady()
   .then(() => {
+
     createWindow();
 
     createMenu(files);

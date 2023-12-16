@@ -3,6 +3,7 @@ import path from 'path';
 import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
+import { createFileWatcher } from './modules/File/Watcher';
 import { createTray } from './modules/Tray';
 import { File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest/ProcessDataRequest';
@@ -12,7 +13,7 @@ import crypto from 'crypto';
 const anonymousUserId = crypto.randomUUID() || null;
 
 const userDataDirectory = path.join(app.getPath('userData'), 'userData');
-if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
+if(!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
 console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
 const customStylesPath = path.join(userDataDirectory, 'customStyles.css');
@@ -80,7 +81,7 @@ const configStorage = new Store<ConfigData>({
 const filtersPath = path.join(userDataDirectory, 'filters.json');
 const filterStorage = new Store<{}>({ cwd: userDataDirectory, name: 'filters' });
 
-if (!fs.existsSync(filtersPath)) {
+if(!fs.existsSync(filtersPath)) {
   const defaultFilterData = {};
   fs.writeFileSync(filtersPath, JSON.stringify(defaultFilterData));
 }
@@ -88,24 +89,19 @@ if (!fs.existsSync(filtersPath)) {
 const notifiedTodoObjectsPath = path.join(userDataDirectory, 'notifiedTodoObjects.json');
 const notifiedTodoObjectsStorage = new Store<{}>({ cwd: userDataDirectory, name: 'notifiedTodoObjects' });
 
-if (!fs.existsSync(notifiedTodoObjectsPath)) {
+if(!fs.existsSync(notifiedTodoObjectsPath)) {
   const defaultNotifiedTodoObjectsData = {};
   fs.writeFileSync(notifiedTodoObjectsPath, JSON.stringify(defaultNotifiedTodoObjectsData));
 }
 
-if (!fs.existsSync(customStylesPath)) {
+if(!fs.existsSync(customStylesPath)) {
   fs.writeFileSync(customStylesPath, '');
 }
 
 const handleConfigChange = async () => {
-  try {
-    // TODO: If there was a search string before it will be ignored here, needs fix
-    const [todoObjects, attributes, headers, filters] = await processDataRequest('');
-    if (todoObjects) {
-      mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
-    }
-  } catch(error) {
-    console.error(error);
+  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
+  if(todoObjects) {
+    mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
   }
 };
 
@@ -114,13 +110,22 @@ filterStorage.onDidAnyChange((newValue, oldValue) => {
 });
 
 configStorage.onDidAnyChange((newValue, oldValue) => {
-  handleConfigChange();
+  try {
+    handleConfigChange();
+  } catch(error) {
+    console.error(error);
+  }
 });
 
 configStorage.onDidChange('files', async (files: File[] | undefined) => {
-  if(files && mainWindow) {
-    mainWindow.webContents.send('updateFiles', files);
-  }
+  try {
+    if(files && mainWindow) {
+      createFileWatcher(files);
+      mainWindow.webContents.send('updateFiles', files);
+    }
+  } catch(error) {
+    console.error(error);
+  }  
 });
 
 configStorage.onDidChange('showFileTabs', () => {
@@ -128,13 +133,17 @@ configStorage.onDidChange('showFileTabs', () => {
 });
 
 configStorage.onDidChange('colorTheme', (colorTheme) => {
-  if (colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
+  if(colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
     nativeTheme.themeSource = colorTheme;
   }
 });
 
 configStorage.onDidChange('tray', () => {
-  createTray();
+  try {
+    createTray();
+  } catch(error) {
+    console.error(error);
+  }
 });
 
 nativeTheme.on('updated', handleTheme);

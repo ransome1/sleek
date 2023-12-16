@@ -16,7 +16,7 @@ const addBusinessDays = (date: Date, days: number): Date => {
   let remainingDays = days;
   while (remainingDays > 0) {
     result.setDate(result.getDate() + 1);
-    if (result.getDay() !== 0 && result.getDay() !== 6) {
+    if(result.getDay() !== 0 && result.getDay() !== 6) {
       remainingDays--;
     }
   }
@@ -42,38 +42,41 @@ const addRecurrenceToDate = (date: Date, recurrence: string): Date => {
   }
 };
 
-const createRecurringTodo = async (todoString: string, recurrence: string): string => {
+const createRecurringTodo = async (todoString: string, recurrence: string): Promise<string> => {
   const JsTodoTxtObject = new Item(todoString);
-  const completedDate = JsTodoTxtObject.completed();
-  const createdDate = JsTodoTxtObject.created();
+  const creationDate = new Date();
   const appendCreationDate = configStorage.get('appendCreationDate');
 
-  if(appendCreationDate) {
-    JsTodoTxtObject.setCreated(dayjs().format('YYYY-MM-DD'));
-  }
+  JsTodoTxtObject.setCreated(creationDate);
 
-  if (recurrence) {
+  if(recurrence) {
     const strictRecurrence: boolean = recurrence.startsWith('+');
     const recurrenceInterval: any = strictRecurrence ? recurrence.slice(1) : recurrence;
     const oldDueDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 'due')?.value;
     const oldThresholdDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 't')?.value;
-    const daysBetween = dayjs(oldDueDate, 'YYYY-MM-DD').diff(oldThresholdDate, 'day');
+    const daysBetween: number = (oldDueDate && oldThresholdDate) ? dayjs(oldDueDate, 'YYYY-MM-DD').diff(oldThresholdDate, 'day') : 0
     
     const newDueDate = strictRecurrence
       ? addRecurrenceToDate(dayjs(oldDueDate).toDate(), recurrenceInterval)
-      : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
+      : addRecurrenceToDate(dayjs(creationDate).toDate(), recurrenceInterval);
+  
     const newThresholdDate = strictRecurrence
       ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
-      : addRecurrenceToDate(dayjs(completedDate).toDate(), recurrenceInterval);
+      : daysBetween > 0
+        ? dayjs(newDueDate).subtract(daysBetween, 'day').toDate()
+        : addRecurrenceToDate(dayjs(creationDate).toDate(), recurrenceInterval);
 
     // If the user only uses threshold date and no due date, the recurrence should not create a due date:
     const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
-    if(completedDate && !recurrenceOnlyForThresholdDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
+    
+    if(creationDate && !recurrenceOnlyForThresholdDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
     if(oldThresholdDate) JsTodoTxtObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
+
     JsTodoTxtObject.setComplete(false);
     JsTodoTxtObject.setCompleted(null);
 
     writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
+
     return 'Recurring todo created';
   }
   return 'No recurring todo created';

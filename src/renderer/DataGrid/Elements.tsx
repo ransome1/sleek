@@ -74,7 +74,7 @@ const Elements: React.FC<Props> = memo(({
     let substrings = [];
     let index = 0;
 
-    if (body) {
+    if(body) {
       while (body.length > 0) {
         let matched = false;
 
@@ -83,7 +83,7 @@ const Elements: React.FC<Props> = memo(({
           const regex = new RegExp(`^(${expression.pattern.source})`);
           const match = body.match(regex);
 
-          if (match) {
+          if(match) {
             matched = true;
             const value = match[0].substring(expression.key?.length ?? 0);
             if(value) substrings.push({ type: expression.type, value: value, key: expression.key, index: index });
@@ -92,7 +92,7 @@ const Elements: React.FC<Props> = memo(({
           }
         }
 
-        if (!matched) {
+        if(!matched) {
           const nextSpaceIndex = body.indexOf(' ');
           const endOfWordIndex = nextSpaceIndex !== -1 ? nextSpaceIndex : body.length;
           const value = body.substring(0, endOfWordIndex);

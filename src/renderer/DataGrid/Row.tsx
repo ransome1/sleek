@@ -69,25 +69,25 @@ const Row: React.FC<Props> = memo(({
 
   const handleRowClick = (event: React.KeyboardEvent | React.MouseEvent) => {
     const clickedElement = event.target as HTMLElement;
-    if ((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
-      if (
+    if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+      if(
         clickedElement.classList.contains('MuiChip-label') ||
         clickedElement.closest('.MuiChip-label')
       ) {
         return;
       }
 
-      if (
+      if(
         clickedElement.tagName === 'SPAN' ||
         clickedElement.tagName === 'LI'
       ) {
-        if (row) {
+        if(row) {
           setTodoObject(row);
           setDialogOpen(true);
         }
         setTextFieldValue(row.string);
       }
-    } else if ((event.metaKey || event.ctrlKey) && (event.key === 'Delete' || event.key === 'Backspace')) {
+    } else if((event.metaKey || event.ctrlKey) && (event.key === 'Delete' || event.key === 'Backspace')) {
       setPromptItem(itemDelete);
     }
   };
@@ -96,7 +96,7 @@ const Row: React.FC<Props> = memo(({
     handleFilterSelect(key, value, filters, false);
   };
 
-  if (row.group) {
+  if(row.group) {
     return (
       <Group
         value={row.value}

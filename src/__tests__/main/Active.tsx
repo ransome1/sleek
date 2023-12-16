@@ -4,7 +4,7 @@ import { File } from '../../main/util';
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn((key) => {
-      if (key === 'files') {
+      if(key === 'files') {
         return [
           {
             active: false,

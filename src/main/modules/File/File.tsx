@@ -1,7 +1,6 @@
 import fs from 'fs';
 import { app } from 'electron';
 import { configStorage } from '../../config';
-import { createFileWatcher } from './Watcher';
 import { createTray } from '../Tray';
 import { createMenu } from '../Menu';
 import path from 'path';
@@ -12,9 +11,8 @@ let stopAccessingSecurityScopedResource: any;
 
 async function readFileContent(filePath: string, bookmark: string | null) {
   
-  if (!filePath) {
+  if(!filePath) {
     return null;
-    //throw new Error('No path has been passed');
   }
 
   if(bookmark) app.startAccessingSecurityScopedResource(bookmark)
@@ -32,7 +30,7 @@ function addFile(filePath: string, bookmark: string | null) {
 
   files.forEach((file) => (file.active = false));
 
-  if (existingFileIndex === -1) {
+  if(existingFileIndex === -1) {
     files.push({
       active: true,
       todoFileName: path.basename(filePath),
@@ -46,8 +44,6 @@ function addFile(filePath: string, bookmark: string | null) {
   }
 
   configStorage.set('files', files);
-
-  createFileWatcher(files);
 
   createMenu(files);
 
@@ -71,8 +67,6 @@ function addDoneFile(filePath: string, bookmark: string | null) {
   configStorage.set('files', files);
 
   mainWindow!.webContents.send('triggerArchiving');
-
-  console.info(`File.ts: Done file added for ${files[activeIndex].todoFileName}`);
 }
 
 async function removeFile(index: number) {
@@ -81,9 +75,9 @@ async function removeFile(index: number) {
   files.splice(index, 1);
   const activeIndex: number = files.findIndex((file) => file.active);
 
-  if (files.length > 0 && activeIndex === -1) {
+  if(files.length > 0 && activeIndex === -1) {
     files[0].active = true;
-  } else if (activeIndex !== -1) {
+  } else if(activeIndex !== -1) {
     files[activeIndex].active = true;
   } else {
     files = [];
@@ -97,15 +91,14 @@ async function removeFile(index: number) {
 
   if(tray) {
     createTray();
-  }    
-
-  console.info('File.ts: File removed, restarting file watchers');
+  }
+  return 'File removed';
 }
 
 function setFile(index: number) {
   const files: File[] = configStorage.get('files');
 
-  if (files.length > 0) {
+  if(files.length > 0) {
     files.forEach((file) => {
       file.active = false;
     });
@@ -114,6 +107,8 @@ function setFile(index: number) {
   files[index].active = true;
 
   configStorage.set('files', files); 
+
+  return 'File changed';
 }
 
 export { setFile, removeFile, addFile, addDoneFile, readFileContent };

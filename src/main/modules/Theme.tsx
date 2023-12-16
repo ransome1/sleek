@@ -6,11 +6,11 @@ function handleTheme() {
   const colorTheme: string = configStorage.get('colorTheme');
   let shouldUseDarkColors: boolean;
 
-  if (colorTheme === 'system') {
+  if(colorTheme === 'system') {
     shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
-  } else if (colorTheme === 'dark') {
+  } else if(colorTheme === 'dark') {
     shouldUseDarkColors = true;
-  } else if (colorTheme === 'light') {
+  } else if(colorTheme === 'light') {
     shouldUseDarkColors = false;
   } else {
     shouldUseDarkColors = false;

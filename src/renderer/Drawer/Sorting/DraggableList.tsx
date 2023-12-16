@@ -28,7 +28,7 @@ const DraggableList: React.FC<Props> = ({
   };
 
   const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
+    if(!result.destination) return;
     const updatedSorting = reorder(settings.sorting, result.source.index, result.destination.index);
     store.set('sorting', updatedSorting);
     setSettings((prevSettings) => ({

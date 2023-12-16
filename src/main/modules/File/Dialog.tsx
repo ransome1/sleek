@@ -23,7 +23,7 @@ async function openFile(setDoneFile: boolean): Promise<void> {
       filters: dialogFilters,
       securityScopedBookmarks: true,
     });
-    if (!result.canceled && result.filePaths.length > 0) {
+    if(!result.canceled && result.filePaths.length > 0) {
       const filePath: string = result.filePaths[0];
       const securityScopedBookmark: string | null = result.bookmarks?.[0] || null;
 
@@ -49,13 +49,13 @@ async function createFile(setDoneFile: boolean): Promise<void> {
       securityScopedBookmarks: true,
     });
 
-    if (!result.canceled && result.filePath) {
+    if(!result.canceled && result.filePath) {
       const filePath: string = result.filePath;
       const securityScopedBookmark: string | null = result.bookmark || null;
 
       await fs.writeFile(filePath, '');
 
-      if (setDoneFile) {
+      if(setDoneFile) {
         addDoneFile(filePath, securityScopedBookmark);
       } else {
         addFile(filePath, securityScopedBookmark);

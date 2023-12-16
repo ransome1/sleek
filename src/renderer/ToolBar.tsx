@@ -20,7 +20,7 @@ const ToolBar: React.FC<Props> = memo(({
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
       const isSearchFocused = document.activeElement === searchFieldRef.current;
-      if ((event.metaKey || event.ctrlKey) && event.key === 'f' && isSearchOpen && !isSearchFocused) {
+      if((event.metaKey || event.ctrlKey) && event.key === 'f' && isSearchOpen && !isSearchFocused) {
         event.preventDefault();
         searchFieldRef.current?.focus();
       }

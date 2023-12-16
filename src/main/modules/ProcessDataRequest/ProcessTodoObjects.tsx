@@ -30,7 +30,7 @@ function applySearchString(searchString: string, todoObjects: TodoObject[]): Tod
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
   const showCompleted: boolean = configStorage.get('showCompleted');
   return todoObjects.filter((todoObject: TodoObject) => {
-    if (showCompleted) {
+    if(showCompleted) {
       return true;
     } else {
       return !todoObject.complete;
@@ -69,7 +69,7 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
     function sortObjectsBySorting(a: any, b: any): number {
       for (const { value, invert } of sorting) {
         const compareResult = compareValues(a[value], b[value], invert);
-        if (compareResult !== 0) {
+        if(compareResult !== 0) {
           return compareResult;
         }
       }
@@ -81,7 +81,7 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
 
       for (const obj of objects) {
         const groupKey = obj[key] || '';
-        if (!grouped[groupKey]) {
+        if(!grouped[groupKey]) {
           grouped[groupKey] = [];
         }
         grouped[groupKey].push(obj);
@@ -90,7 +90,7 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
     }
 
     function sortAndGroupObjects(objects: any[], sortIndex: number, sorting: Sorting[]): any {
-      if (sortIndex >= sorting.length) {
+      if(sortIndex >= sorting.length) {
         return objects;
       }
 
@@ -98,7 +98,7 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
       const grouped = groupObjectsByKey(objects, value);
       const sortedKeys = Object.keys(grouped);
 
-      if (sortedKeys.includes('')) {
+      if(sortedKeys.includes('')) {
         sortedKeys.splice(sortedKeys.indexOf(''), 1);
         sortedKeys.push('');
       }
@@ -118,19 +118,19 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
 function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string): any {
   const flattenedObjects = [];
   const flatten = (todoObject: any, sortingKey: string) => {
-    if (typeof todoObject === 'object' && todoObject !== null) {
-      if ('id' in todoObject) {
+    if(typeof todoObject === 'object' && todoObject !== null) {
+      if('id' in todoObject) {
         flattenedObjects.push(todoObject);
       }
       for (const key in todoObject) {
-        if (key !== sortingKey && typeof todoObject[key] === 'object') {
+        if(key !== sortingKey && typeof todoObject[key] === 'object') {
           flatten(todoObject[key], sortingKey);
         }
       }
     }
   }
   for (const key in todoObjects) {
-    if (topLevelGroup) {
+    if(topLevelGroup) {
       flattenedObjects.push({
         group: topLevelGroup,
         value: key,

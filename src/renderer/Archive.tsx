@@ -67,11 +67,11 @@ const Archive: React.FC<Props> = ({
     }; 
 
     const handleArchivingResult = (response: string | Error) => {
-      if (typeof response === 'string') {
+      if(typeof response === 'string') {
         setSnackBarSeverity('success');
         setSnackBarContent(response);
         setShowPromptArchive(false);
-      } else if (response instanceof Error) {
+      } else if(response instanceof Error) {
         setSnackBarSeverity('error');
         setSnackBarContent(response.message);
         setShowPromptArchive(false);

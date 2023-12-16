@@ -33,7 +33,7 @@ const RecurrencePicker: React.FC<Props> = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement> | undefined, recurrence: string) => {
     // TODO: solves a problem but creates another one: If a task is empty, no recurrence can be added
-    if (Number(recurrence) === 0 || !textFieldValue) return false;
+    if(Number(recurrence) === 0 || !textFieldValue) return false;
 
     const JsTodoTxtObject = new Item(textFieldValue || '');
     JsTodoTxtObject.setExtension('rec', recurrence);
@@ -42,28 +42,28 @@ const RecurrencePicker: React.FC<Props> = ({
 
     setRecurrence(recurrence);
 
-    if (recurrenceFieldRef.current) {
+    if(recurrenceFieldRef.current) {
       recurrenceFieldRef.current.value = recurrence;
     }
   };
 
   const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!amount) setAmount('1');
+    if(!amount) setAmount('1');
     setInterval(event.target.value);
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!interval) setInterval('d');
+    if(!interval) setInterval('d');
     setAmount(event.target.value);
   };
 
   const handleStrictRecurrenceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!recurrence) return;
+    if(!recurrence) return;
     setStrictRecurrence(event.target.checked);
   };
 
   useEffect(() => {
-    if (amount !== null && interval !== null) {
+    if(amount !== null && interval !== null) {
       const updatedValue = strictRecurrence ? '+' + amount + interval : amount + interval;
       handleChange(undefined, updatedValue);
     }
@@ -71,20 +71,20 @@ const RecurrencePicker: React.FC<Props> = ({
 
   useEffect(() => {
     const handleEnterKeyPress = (event: KeyboardEvent) => {
-      if (event.key === 'Enter') {
+      if(event.key === 'Enter') {
         event.preventDefault();
-        if (recurrenceFieldRef.current) {
+        if(recurrenceFieldRef.current) {
           recurrenceFieldRef.current.click();
         }
       }
     };
 
-    if (recurrenceFieldRef.current) {
+    if(recurrenceFieldRef.current) {
       recurrenceFieldRef.current.addEventListener('keydown', handleEnterKeyPress);
     }
 
     return () => {
-      if (recurrenceFieldRef.current) {
+      if(recurrenceFieldRef.current) {
         recurrenceFieldRef.current.removeEventListener('keydown', handleEnterKeyPress);
       }
     };

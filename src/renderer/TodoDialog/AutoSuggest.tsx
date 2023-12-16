@@ -42,10 +42,10 @@ const AutoSuggest: React.FC<Props> = ({
   const handleSuggestionsFetchRequested = ({ value }: { value: string }) => {
 
     let content = value.replaceAll('\n', ' ').replaceAll(String.fromCharCode(16), ' ');
-    if (!content) return false;
+    if(!content) return false;
 
     const cursorPosition = textFieldRef.current?.selectionStart;
-    if (!cursorPosition) return false;
+    if(!cursorPosition) return false;
 
     let match;
     while ((match = regex.exec(content)) !== null) {
@@ -53,7 +53,7 @@ const AutoSuggest: React.FC<Props> = ({
       const matchStart = match.index;
       const matchEnd = matchStart + matchValue.length;
 
-      if (cursorPosition >= matchStart && cursorPosition <= matchEnd) {
+      if(cursorPosition >= matchStart && cursorPosition <= matchEnd) {
         const suggestions = getSuggestions(
           matchValue.substring(0, 1),
           matchValue.substring(1)
@@ -68,7 +68,7 @@ const AutoSuggest: React.FC<Props> = ({
     _event: React.SyntheticEvent,
     { suggestion }: { suggestion: string }
   ) => {
-    if (!textFieldValue) return;
+    if(!textFieldValue) return;
     const createNewValue = (string: string, a: number, b: number) => {
       return `${textFieldValue.slice(0, a)}${prefix}${string} ${textFieldValue.slice(
         b + 1
@@ -96,10 +96,10 @@ const AutoSuggest: React.FC<Props> = ({
   }  
 
   const getSuggestions = (trigger: string, match: string): string[] => {
-    if (trigger === '@') {
+    if(trigger === '@') {
       setPrefix('@');
       return Object.keys(attributes?.contexts).filter((key) => key.includes(match));
-    } else if (trigger === '+') {
+    } else if(trigger === '+') {
       setPrefix('+');
       return Object.keys(attributes?.projects).filter((key) => key.includes(match));
     }
@@ -134,25 +134,25 @@ const AutoSuggest: React.FC<Props> = ({
     id: string,
     string: string
   ) => {
-    if (suggestions.length > 0) {
-      if (suggestions.length === 1 || event.key === 'Enter') {
-        if (selectedSuggestionIndex !== -1) {
+    if(suggestions.length > 0) {
+      if(suggestions.length === 1 || event.key === 'Enter') {
+        if(selectedSuggestionIndex !== -1) {
           event.stopPropagation();
           const selectedSuggestion = suggestions[selectedSuggestionIndex];
           handleSuggestionSelected(null, { suggestion: selectedSuggestion });
         }
-      } else if (event.key === 'Escape') {
+      } else if(event.key === 'Escape') {
         event.stopPropagation();
         handleSuggestionsClearRequested();
       }
     } else {
-      if (
+      if(
         (multilineTextField && (event.metaKey || event.ctrlKey) && event.key === 'Enter') ||
         (!multilineTextField && event.key === 'Enter')
       ) {
         event.stopPropagation();
         handleAdd(id, string);
-      } else if (event.key === 'Escape') {
+      } else if(event.key === 'Escape') {
         event.stopPropagation();
         setDialogOpen(false);
         handleSuggestionsClearRequested();

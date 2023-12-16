@@ -73,19 +73,19 @@ describe('Create recurring todos', () => {
   test('Should add a new todo with due date set to next possible business day, based off a todo which already contains a due date', async () => {
     const recurringTodo = await createRecurringTodo(`x 2023-07-21 2023-07-21 Line 1 due:2023-07-21 rec:+1b`, '+1b');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
-    expect(fileContent.split('\n').pop()).toEqual('2023-07-21 Line 1 due:2023-07-24 rec:+1b');
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Line 1 due:2023-07-24 rec:+1b`);
   });
 
   test('Should add a new todo adding a strict recurrence of one year to due date and threshold date', async () => {
     const recurringTodo = await createRecurringTodo(`x 2021-01-01 2021-01-01 taxes are due in one year t:2021-03-30 due:2021-04-30 rec:+1y`, '+1y');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
-    expect(fileContent.split('\n').pop()).toEqual('2021-01-01 taxes are due in one year t:2022-03-30 due:2022-04-30 rec:+1y');
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} taxes are due in one year t:2022-03-30 due:2022-04-30 rec:+1y`);
   });
 
   test('Should add a new todo adding a non-strict recurrence of one week to due date and threshold date', async () => {
     const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Water plants @home +quick due:2021-07-19 t:2021-07-09 rec:1w`, '1w');
     const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
-    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Water plants @home +quick due:${dateInOneWeekString} t:${dateInOneWeekString} rec:1w`);
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Water plants @home +quick due:${dateInOneWeekString} t:${dateInOneWeekMinus10String} rec:1w`);
   });
 
   test('Should add a new todo adding a strict recurrence of one day to threshold date. No due date should be created.', async () => {

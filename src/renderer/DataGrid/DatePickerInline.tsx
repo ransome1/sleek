@@ -26,11 +26,11 @@ const DatePickerInline: React.FC<Props> = ({
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
 
   const handleChange = (updatedDate: dayjs.Dayjs | null) => {
-    if (!updatedDate || !dayjs(updatedDate).isValid()) return;
+    if(!updatedDate || !dayjs(updatedDate).isValid()) return;
 
     const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
 
-    if (todoObject?.dueString) {
+    if(todoObject?.dueString) {
       const stringToReplace = ` ${type}:${todoObject.dueString}`;
       todoObject.string = todoObject.string.replace(stringToReplace, '');
     }

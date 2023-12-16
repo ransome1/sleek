@@ -75,11 +75,11 @@ thresholdComparison
 
 dateExpr
     = left:dateLiteral _ op:dateOp _ count:number unit:[dbwmy]  {
-        if (count.length == 0) {
+        if(count.length == 0) {
             /* empty count string means default "1" value */
             count = 1;
         }
-        if (op == "-") {
+        if(op == "-") {
             count = count * -1;
         }
         // we do our date math with the same code as we use for

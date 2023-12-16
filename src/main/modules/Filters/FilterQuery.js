@@ -6,7 +6,7 @@
 import dayjs from 'dayjs';
 
 function runQuery(todoObject, compiledQuery) {
-  if (!compiledQuery) {
+  if(!compiledQuery) {
     return true;  // a null query matches everything
   }
   let stack = [];
@@ -21,7 +21,7 @@ function runQuery(todoObject, compiledQuery) {
         stack.push(todoObject.priority);
         break;
       case "due":
-        if (todoObject.due) {
+        if(todoObject.due) {
           // normalize date to have time of midnight in local zone
           // we represent dates as millisec from epoch to simplify comparison
           let d = dayjs(todoObject.due).toDate();
@@ -33,7 +33,7 @@ function runQuery(todoObject, compiledQuery) {
       case "duestr":
         // match next value (a string) as prefix of ISO date string of due date
         next = q.shift(); // the string to compare
-        if (todoObject.dueString) {
+        if(todoObject.dueString) {
           // normalize date to have time of midnight in local zone
           // we represent dates as millisec from epoch to simplify comparison
           let d = dayjs(todoObject.dueString).toDate();
@@ -44,7 +44,7 @@ function runQuery(todoObject, compiledQuery) {
         }
         break;
       case "threshold":
-        if (todoObject.t) {
+        if(todoObject.t) {
           // normalize date to have time of midnight in local zone
           // we represent dates as millisec from epoch to simplify comparison
           let d = dayjs(todoObject.t).toDate();
@@ -56,7 +56,7 @@ function runQuery(todoObject, compiledQuery) {
       case "tstr":
         // match next value (a string) as prefix of ISO date string of threshold date
         next = q.shift(); // the string to compare
-        if (todoObject.tString) {
+        if(todoObject.tString) {
           // normalize date to have time of midnight in local zone
           // we represent dates as millisec from epoch to simplify comparison
           let d = dayjs(todoObject.tString).toDate();
@@ -109,9 +109,9 @@ function runQuery(todoObject, compiledQuery) {
         break;
       case "++":
         next = q.shift();
-        if (next == "*") {
+        if(next == "*") {
           stack.push(todoObject.projects ? true : false);
-        } else if (next.startsWith('"')) {
+        } else if(next.startsWith('"')) {
           stack.push(todoObject.projects && todoObject.projects.includes(next.slice(1,-1)));
         } else {
           // case-insensitive match for next as a substring of the project name
@@ -123,9 +123,9 @@ function runQuery(todoObject, compiledQuery) {
         break;
       case "@@":
         next = q.shift();
-        if (next == "*") {
+        if(next == "*") {
           stack.push(todoObject.contexts ? true : false);
-        } else if (next.startsWith('"')) {
+        } else if(next.startsWith('"')) {
           stack.push(todoObject.contexts && todoObject.contexts.includes(next.slice(1,-1)));
         } else {
           // case-insensitive match for next as a substring of the context name

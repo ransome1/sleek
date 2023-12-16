@@ -105,7 +105,7 @@ const LanguageSelector: React.FC<Props> = ({
 	const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
 	const [selectedLanguage, setSelectedLanguage] = useState<string>(() => {
 		const storedLanguage = store.get('language') || navigator.language;
-		if (supportedLanguages && supportedLanguages.includes(storedLanguage)) {
+		if(supportedLanguages && supportedLanguages.includes(storedLanguage)) {
 			return storedLanguage;
 		}
 		return 'en';

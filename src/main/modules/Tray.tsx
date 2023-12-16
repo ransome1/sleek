@@ -40,7 +40,7 @@ function createTray() {
 
   tray?.destroy();
 
-  if (!isTray) {
+  if(!isTray) {
     app.dock?.show();
     return Promise.resolve('Tray not shown');
   }

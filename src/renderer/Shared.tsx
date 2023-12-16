@@ -8,13 +8,13 @@ export const handleFilterSelect = (key: string, value: string | string[], filter
     const updatedFilters: Filters = { ...filters };
     const filterList: Filter[] = updatedFilters[key] || [];
 
-    if (typeof value === 'string') {
+    if(typeof value === 'string') {
       const values = value.split(',');
       values.forEach((singleValue) => {
         const filterIndex: number = filterList.findIndex((filter) => filter.value === singleValue);
-        if (filterIndex !== -1) {
+        if(filterIndex !== -1) {
           filterList.splice(filterIndex, 1);
-          if (isCtrlKeyPressed) {
+          if(isCtrlKeyPressed) {
             filterList.push({ value: singleValue, exclude: true });
           }
         } else {
@@ -23,9 +23,9 @@ export const handleFilterSelect = (key: string, value: string | string[], filter
       });
     } else {
       const filterIndex = filterList.findIndex((filter: Filter) => filter.value === value);
-      if (filterIndex !== -1) {
+      if(filterIndex !== -1) {
         filterList.splice(filterIndex, 1);
-        if (isCtrlKeyPressed) {
+        if(isCtrlKeyPressed) {
           filterList.push({ value, exclude: true });
         }
       } else {
@@ -54,7 +54,7 @@ export const translatedAttributes = (t: typeof i18n.t) => ({
 
 export const handleSettingChange = (name: keyof typeof Settings, setSettings: React.Dispatch<React.SetStateAction<any>>) => (event: React.ChangeEvent<any>) => {
   try {
-    if (typeof event.target.checked === 'boolean') {
+    if(typeof event.target.checked === 'boolean') {
       const checked = event.target.checked;
       store.set(name, checked);
       setSettings((prevSettings) => ({

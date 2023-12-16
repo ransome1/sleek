@@ -28,7 +28,7 @@ const DatePickerComponent: React.FC<Props> = ({
   const initialDate: dayjs.Dayjs | null = todoObject && todoObject[type] && !!todoObject[type] && dayjs(todoObject[type]).isValid() ? dayjs(todoObject[type]) : null;
 
   const handleChange = (updatedDate: dayjs.Dayjs | null) => {
-    if (!updatedDate || !dayjs(updatedDate).isValid()) return;
+    if(!updatedDate || !dayjs(updatedDate).isValid()) return;
 
     const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
 

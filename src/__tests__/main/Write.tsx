@@ -13,15 +13,15 @@ jest.mock('../../main/main', () => ({
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn((key) => {
-      if (key === 'files') {
+      if(key === 'files') {
         return [
           { active: false, todoFileName: 'test1.txt', todoFilePath: './src/__tests__/__mock__/test1.txt', todoFileBookmark: null, doneFile: 'done.txt', doneFileBookmark: null },
           { active: true, todoFileName: 'test.txt', todoFilePath: './src/__tests__/__mock__/test.txt', todoFileBookmark: null, doneFile: 'done.txt', doneFileBookmark: null },
           { active: false, todoFileName: 'test3.txt', todoFilePath: './src/__tests__/__mock__/test3.txt', todoFileBookmark: null, doneFile: 'done.txt', doneFileBookmark: null },
         ];
-      } else if (key === 'appendCreationDate') {
+      } else if(key === 'appendCreationDate') {
         return false;
-      } else if (key === 'convertRelativeToAbsoluteDates') {
+      } else if(key === 'convertRelativeToAbsoluteDates') {
         return true;
       }
     }),
@@ -52,7 +52,7 @@ describe('Writing to file', () => {
   test('should write a new line when id is not provided and append a creation date', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if (key === 'appendCreationDate') {
+      if(key === 'appendCreationDate') {
         return true;
       }
       return originalGet.call(configStorage, key);
@@ -72,7 +72,7 @@ describe('Writing to file', () => {
   test('should overwrite a line when id is provided and NOT convert a relative (speaking) date to an absolute date', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if (key === 'convertRelativeToAbsoluteDates') {
+      if(key === 'convertRelativeToAbsoluteDates') {
         return false;
       }
       return originalGet.call(configStorage, key);
@@ -98,9 +98,9 @@ describe('Writing to file', () => {
   test('should append 3 new lines at the end of the file', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if (key === 'multilineTextField') {
+      if(key === 'multilineTextField') {
         return true;
-      } else if (key === 'useMultilineForBulkTodoCreation') {
+      } else if(key === 'useMultilineForBulkTodoCreation') {
         return true;
       }
       return originalGet.call(configStorage, key);
@@ -117,9 +117,9 @@ describe('Writing to file', () => {
   test('should update a specific line and append 2 lines to the updated line', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if (key === 'multilineTextField') {
+      if(key === 'multilineTextField') {
         return true;
-      } else if (key === 'useMultilineForBulkTodoCreation') {
+      } else if(key === 'useMultilineForBulkTodoCreation') {
         return true;
       }
       return originalGet.call(configStorage, key);
@@ -136,9 +136,9 @@ describe('Writing to file', () => {
   test('should append a multi line todo', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if (key === 'multilineTextField') {
+      if(key === 'multilineTextField') {
         return true;
-      } else if (key === 'useMultilineForBulkTodoCreation') {
+      } else if(key === 'useMultilineForBulkTodoCreation') {
         return false;
       }
       return originalGet.call(configStorage, key);
@@ -155,9 +155,9 @@ describe('Writing to file', () => {
   test('should update line with a multi line todo', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if (key === 'multilineTextField') {
+      if(key === 'multilineTextField') {
         return true;
-      } else if (key === 'useMultilineForBulkTodoCreation') {
+      } else if(key === 'useMultilineForBulkTodoCreation') {
         return false;
       }
       return originalGet.call(configStorage, key);

@@ -129,14 +129,14 @@ const App = () => {
   };
 
   const handleError = (response: any) => {
-    if (response instanceof Error) {
+    if(response instanceof Error) {
       setSnackBarSeverity('error');
       setSnackBarContent(response.message);
     }
   };  
 
   const handleWriteTodoToFile = (response: any) => {
-    if (response instanceof Error) {
+    if(response instanceof Error) {
       setSnackBarSeverity('error');
       setSnackBarContent(response.message);
     } else {
@@ -147,10 +147,10 @@ const App = () => {
   useEffect(() => {
     if(!headers) {
       return;
-    } else if (headers.availableObjects === 0) {
+    } else if(headers.availableObjects === 0) {
       setSplashScreen('noTodosAvailable');
       setIsDrawerOpen(false);
-    } else if (headers.visibleObjects === 0) {
+    } else if(headers.visibleObjects === 0) {
       setSplashScreen('noTodosVisible');
     } else {
       setSplashScreen(null);

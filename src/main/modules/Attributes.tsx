@@ -31,15 +31,15 @@ function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: 
       const value = todoObject[key as keyof TodoObject];
       const notify: boolean = (key === 'due') ? !!todoObject?.notify : false;
 
-      if (Array.isArray(value)) {
+      if(Array.isArray(value)) {
         value.forEach((element) => {
-          if (element !== null) {
+          if(element !== null) {
             const attributeKey = element as keyof Attribute;
             incrementCount(attributes[key], attributeKey, notify);
           }
         });
       } else {
-        if (value !== null) {
+        if(value !== null) {
           incrementCount(attributes[key], value, notify);
         }
       }

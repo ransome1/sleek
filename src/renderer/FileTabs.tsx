@@ -46,13 +46,13 @@ const FileTabs: React.FC<Props> = memo(({
     ]);
   };
 
-  if (!files || files.length === 0) return null;
+  if(!files || files.length === 0) return null;
 
   const index = files.findIndex((file) => file.active);
   const [fileTab, setFileTab] = useState<number>(index !== -1 ? index : 0);
 
   const handleChange = (event: React.SyntheticEvent, index: number) => {
-    if (index < 0 || index > 9) return false;
+    if(index < 0 || index > 9) return false;
     setFileTab(index);
     ipcRenderer.send('setFile', index);
   };

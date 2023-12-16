@@ -22,7 +22,7 @@ async function handleDataRequest(event: IpcMainEvent, searchString: string): Pro
 async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string | null, state: boolean | undefined): Promise<void> {
   try {
     let updatedString: string | null = string;
-    if (state !== undefined && id >= 0) updatedString = await changeCompleteState(string, state)
+    if(state !== undefined && id >= 0) updatedString = changeCompleteState(string, state)
     const response = await writeTodoObjectToFile(id, updatedString);
     event.reply('writeTodoToFile', response);
   } catch(error) {
@@ -159,7 +159,7 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
 
     clipboard.writeText(string);
     
-    if (clipboard.readText() === string) {
+    if(clipboard.readText() === string) {
       event.reply('saveToClipboard', 'Copied to clipboard: ' + string);
     } else {
       throw('Failed to copy to clipboard');

@@ -10,7 +10,7 @@ dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(isBetween);
 
-export const sendNotification = (title: string, body: string) => {
+function sendNotification(title: string, body: string) {
   const options = {
     title,
     body,
@@ -18,31 +18,31 @@ export const sendNotification = (title: string, body: string) => {
   };
   const notification = new Notification(options);
   notification.show();
-};
+}
 
 function createSpeakingDifference(dueDate: Dayjs) {
   const today = dayjs();
   const daysUntilDue: number = dueDate.diff(today, 'day') + 1;
-  if (dayjs(dueDate).isToday()) return 'Due today';
-  if (dayjs(dueDate).isTomorrow()) return 'Due tomorrow';
-  if (daysUntilDue > 1) return `Due in ${daysUntilDue} days`;
+  if(dayjs(dueDate).isToday()) return 'Due today';
+  if(dayjs(dueDate).isTomorrow()) return 'Due tomorrow';
+  if(daysUntilDue > 1) return `Due in ${daysUntilDue} days`;
   return 'Due';
 }
 
-export function handleNotification(id: number, due: string | null, body: string, badge: Badge) {
+function handleNotification(id: number, due: string | null, body: string, badge: Badge) {
   let result;
   const notificationAllowed = configStorage.get('notificationsAllowed');
   const today = dayjs().startOf('day').format('YYYY-MM-DD');
   const hash = today + crypto.createHash('sha256').update(body).digest('hex');
-  if (notificationAllowed) {
+  if(notificationAllowed) {
     const today = dayjs().startOf('day');
     const dueDate = dayjs(due, 'YYYY-MM-DD');
     const notificationThreshold: number = configStorage.get('notificationThreshold');
     const daysUntilDue: any = createSpeakingDifference(dueDate);
-    if (dueDate.isToday() || dueDate.isBetween(today, today.add(notificationThreshold, 'day'))) {
+    if(dueDate.isToday() || dueDate.isBetween(today, today.add(notificationThreshold, 'day'))) {
       badge.count += 1;
       const notifiedTodoObjects = new Set<string>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
-      if (!notifiedTodoObjects.has(hash)) {
+      if(!notifiedTodoObjects.has(hash)) {
         result = sendNotification(daysUntilDue, body);
         notifiedTodoObjects.add(hash);
         notifiedTodoObjectsStorage.set('notifiedTodoObjects', Array.from(notifiedTodoObjects));
@@ -50,3 +50,5 @@ export function handleNotification(id: number, due: string | null, body: string,
     }
   }
 }
+
+export { sendNotification, handleNotification }

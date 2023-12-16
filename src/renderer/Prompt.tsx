@@ -32,7 +32,7 @@ const Prompt: React.FC<Props> = ({
 }) => {
   const handleConfirm = (allow: boolean) => {
     onClose();
-    if (allow) {
+    if(allow) {
       onConfirm();
     }
   };  

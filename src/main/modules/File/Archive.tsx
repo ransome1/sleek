@@ -10,34 +10,29 @@ import { File } from '../../util';
 let stopAccessingSecurityScopedResource: any;
 
 async function extractTodoStringsFromFile(filePath: string, complete: boolean | null, bookmark: string | null): Promise<string[]> {
-  try {
+  if(bookmark) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);
+  
+  const content = await fs.readFile(filePath, 'utf8');
 
-    if (bookmark) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);
-    
-    const content = await fs.readFile(filePath, 'utf8');
+  if(bookmark) stopAccessingSecurityScopedResource();
 
-    if (bookmark) stopAccessingSecurityScopedResource();
+  const todoObjects = await createTodoObjects(content);
 
-    const todoObjects = await createTodoObjects(content);
+  const validTodoStrings = todoObjects
+    .filter((todoObject) => todoObject && (complete === null || todoObject.complete === complete))
+    .map((todoObject) => (todoObject?.string ?? '').toString());
 
-    const validTodoStrings = todoObjects
-      .filter((todoObject) => todoObject && (complete === null || todoObject.complete === complete))
-      .map((todoObject) => (todoObject?.string ?? '').toString());
-
-    return Promise.resolve(validTodoStrings);
-  } catch (error: any) {
-    return Promise.reject(error);
-  }
+  return validTodoStrings;
 }
 
 async function archiveTodos(): Promise<string> {
   const activeFile: File | null = getActiveFile();
 
-  if (activeFile === null) {
+  if(activeFile === null) {
     throw new Error('No active file defined');
   }
 
-  if (activeFile.doneFilePath === null) {
+  if(activeFile.doneFilePath === null) {
     throw new Error('Archiving file is not defined');
   }
   

@@ -29,7 +29,7 @@ function createMenu(files: File[]) {
             };
 
             const buttonClicked = await dialog.showMessageBox(options);
-            if (buttonClicked.response === 1) {
+            if(buttonClicked.response === 1) {
               const pathToReveal = app.getPath('userData');
               shell.showItemInFolder(pathToReveal);
             }

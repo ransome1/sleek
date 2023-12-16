@@ -18,7 +18,7 @@ jest.mock('../../main/main', () => ({
 jest.mock('../../main/config', () => ({
   configStorage: {
     get: jest.fn((key) => {
-      if (key === 'files') {
+      if(key === 'files') {
         return [
           { active: false, todoFilePath: './src/__tests__/__mock__/test1.txt', todoFileName: 'test1.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },
           { active: true, todoFilePath: './src/__tests__/__mock__/archiving.txt', todoFileName: 'archiving.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },

@@ -60,13 +60,13 @@ const DrawerComponent: React.FC<Props> = memo(({
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const isSearchFocused = document.activeElement === searchFieldRef.current;
-    if (!isSearchFocused && event.key === 'Escape') {
+    if(!isSearchFocused && event.key === 'Escape') {
       setIsDrawerOpen(false);
     }
   };
 
   useEffect(() => {
-    if (isDrawerOpen) {
+    if(isDrawerOpen) {
       document.addEventListener('keydown', handleKeyDown);
     } else {
       document.removeEventListener('keydown', handleKeyDown);

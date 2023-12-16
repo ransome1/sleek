@@ -35,31 +35,31 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
   const [loadMoreRows, setLoadMoreRows] = useState(true);
 
   const handleKeyUp = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowDown') {
+    if(event.key === 'ArrowDown') {
       const listItems = document.querySelectorAll('li:not(.group)');
       const currentIndex = Array.from(listItems).indexOf(document.activeElement);
       const nextIndex = currentIndex + 1;
       const nextElement = listItems[nextIndex];
-      if (nextElement) {
+      if(nextElement) {
         nextElement.focus();
       }
-    } else if (event.key === 'ArrowUp') {
+    } else if(event.key === 'ArrowUp') {
       const listItems = document.querySelectorAll('li:not(.group)');
       const currentIndex = Array.from(listItems).indexOf(document.activeElement);
       const prevIndex = currentIndex - 1;
       const prevElement = listItems[prevIndex];
-      if (prevElement) {
+      if(prevElement) {
         prevElement.focus();
       }
-    } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-      if (!event.target.closest('li')) return;
+    } else if(event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+      if(!event.target.closest('li')) return;
       const rowItems = event.target.closest('li').querySelectorAll(
         'button, input, select, a[href], [tabindex]:not([tabindex="-1"])'
       );
       const currentIndex = Array.from(rowItems).indexOf(document.activeElement);
       const nextIndex = event.key === 'ArrowRight' ? currentIndex + 1 : currentIndex - 1;
       const nextElement = rowItems[nextIndex];
-      if (nextElement) {
+      if(nextElement) {
         nextElement.focus();
       }
     }
@@ -67,13 +67,13 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
 
   const handleScroll = () => {
     const list = document.getElementById('dataGrid');
-    if (list && loadMoreRows) {
+    if(list && loadMoreRows) {
       const scrollPos = list.scrollTop;
       const totalHeight = list.scrollHeight;
       const clientHeight = list.clientHeight;
-      if (totalHeight - scrollPos <= clientHeight * 3) {
+      if(totalHeight - scrollPos <= clientHeight * 3) {
         const remainingRows: TodoObject[] | null = todoObjects?.slice(visibleRowCount, visibleRowCount + 30);
-        if (remainingRows?.length === 0) {
+        if(remainingRows?.length === 0) {
           setLoadMoreRows(false);
         } else {
           setVisibleRowCount((prevVisibleRowCount) => prevVisibleRowCount + 30);
@@ -82,7 +82,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
     }
   };
 
-  if (!todoObjects || Object.keys(todoObjects).length === 0) return null;
+  if(!todoObjects || Object.keys(todoObjects).length === 0) return null;
 
   const rows = todoObjects.slice(0, visibleRowCount);
 

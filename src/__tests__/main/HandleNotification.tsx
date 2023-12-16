@@ -1,4 +1,4 @@
-import { handleNotification, sendNotification } from '../../main/modules/HandleNotification';
+import { handleNotification, sendNotification } from '../../main/modules/Notifications';
 import { configStorage } from '../../main/config';
 import { badge } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { Notification } from 'electron';
@@ -29,9 +29,9 @@ jest.mock('../../main/config', () => ({
 	},
   configStorage: {
     get: jest.fn((key) => {
-      if (key === 'notificationsAllowed') {
+      if(key === 'notificationsAllowed') {
         return true;
-      } else if (key === 'notificationThreshold') {
+      } else if(key === 'notificationThreshold') {
         return 10;
       }
     }),
@@ -70,7 +70,7 @@ describe('Notifications', () => {
 
 	test('should NOT handle notification when not allowed', () => {
 	  const configStorageGetMock = jest.fn((key) => {
-	    if (key === 'notificationsAllowed') {
+	    if(key === 'notificationsAllowed') {
 	      return false;
 	    }
 	  });

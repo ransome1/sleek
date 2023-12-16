@@ -2,7 +2,7 @@ import { Item } from 'jstodotxt';
 import { createRecurringTodo } from './CreateRecurringTodo';
 import restorePreviousPriority from './RestorePreviousPriority';
 
-function changeCompleteState(todoString: string, state: boolean): Promise<string | null> {
+function changeCompleteState(todoString: string, state: boolean): string {
   const JsTodoTxtObject = new Item(todoString);
   JsTodoTxtObject.setComplete(state);
 
@@ -11,7 +11,7 @@ function changeCompleteState(todoString: string, state: boolean): Promise<string
     JsTodoTxtObject.setCompleted(new Date());
 
     const recurrence = JsTodoTxtObject?.extensions().find((item) => item.key === 'rec');
-    if (recurrence?.value) {
+    if(recurrence?.value) {
       createRecurringTodo(JsTodoTxtObject.toString(), recurrence.value);
     }
 
