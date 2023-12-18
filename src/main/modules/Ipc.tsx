@@ -5,30 +5,28 @@ import { changeCompleteState } from './ProcessDataRequest/ChangeCompleteState';
 import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
 import archiveTodos from './File/Archive';
 import { configStorage, filterStorage, notifiedTodoObjectsStorage } from '../config';
-import { mainWindow } from '../main';
 import { addFile, setFile, removeFile } from './File/File';
 import { openFile, createFile } from './File/Dialog';
 
 async function handleDataRequest(event: IpcMainEvent, searchString: string): Promise<void> {
   try {
-    const [todoObjects, attributes, headers, filters] = await processDataRequest(searchString);
-    event.reply('requestData', todoObjects, attributes, headers, filters);
+    await processDataRequest(searchString)
   } catch(error) {
     console.error(error);
     event.reply('handleError', error);
   }
 }
 
-async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string | null, state: boolean | undefined): Promise<void> {
+async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean): Promise<void> {
   try {
     let updatedString: string | null = string;
-    if(state !== undefined && id >= 0) updatedString = changeCompleteState(string, state)
+    if(state !== undefined && id >= 0) updatedString = await changeCompleteState(string, state)
     const response = await writeTodoObjectToFile(id, updatedString);
     event.reply('writeTodoToFile', response);
   } catch(error) {
     console.error(error);
     event.reply('handleError', error);
-  }  
+  }
 }
 
 function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
@@ -89,19 +87,18 @@ function handleRemoveFile(event: IpcMainEvent, index: number): void {
   }
 }
 
-function handleAddFile(event: IpcMainEvent, index: number): void {
+function handleAddFile(event: IpcMainEvent, filePath: string): void {
   try {
-    addFile(index);
+    addFile(filePath, null);
   } catch (error: any) {
     console.error(error);
     event.reply('handleError', error);
   }
 }
 
-async function handleDroppedFile(event: IpcMainEvent, index: number): void {
+async function handleDroppedFile(event: IpcMainEvent, filePath: string): Promise<void> {
   try {
-    if(process.mas) throw new Error('This release does not support the drag and drop function, please use the file dialog')
-    await addFile(index);
+    addFile(filePath, null);
   } catch (error: any) {
     console.error(error);
     event.reply('droppedFile', error);
@@ -117,34 +114,34 @@ function handleRevealInFileManager(event: IpcMainEvent, pathToReveal: string): v
   }
 }
 
-function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): void {
+async function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): Promise<void> {
   try {
-    openFile(setDoneFile);
+    await openFile(setDoneFile);
   } catch (error: any) {
     console.error(error);
     event.reply('handleError', error);
   }
 }
 
-function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): void {
+async function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): Promise<void> {
   try {
-    createFile(setDoneFile);
+    await createFile(setDoneFile);
   } catch (error: any) {
     console.error(error);
     event.reply('handleError', error);
   }
 }
 
-function handleRemoveLineFromFile(event: IpcMainEvent, index: number): void {
+async function handleRemoveLineFromFile(event: IpcMainEvent, index: number): Promise<void> {
   try {
-    removeLineFromFile(index);
+    await removeLineFromFile(index);
   } catch (error: any) {
     console.error(error);
     event.reply('handleError', error);
   }
 }
 
-async function handleArchiveTodos(event: IpcMainEvent): void {
+async function handleArchiveTodos(event: IpcMainEvent): Promise<void> {
   try {
     const archivingResult = await archiveTodos();
     event.reply('ArchivingResult', archivingResult);
@@ -158,12 +155,9 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
 
     clipboard.writeText(string);
-    
-    if(clipboard.readText() === string) {
-      event.reply('saveToClipboard', 'Copied to clipboard: ' + string);
-    } else {
-      throw('Failed to copy to clipboard');
-    }
+
+    event.reply('saveToClipboard', 'Copied to clipboard: ' + string);
+
   } catch (error: any) {
     console.error(error);
     event.reply('saveToClipboard', error);

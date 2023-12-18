@@ -1,11 +1,10 @@
 import React, { useState, KeyboardEvent, memo } from 'react';
 import { List } from '@mui/material';
 import Row from './Row';
-import { TodoObject, Attributes, Filters, ContextMenuItem, PromptItem } from '../../main/util';
 import './Grid.scss';
 
 interface TodoDataGridProps {
-  todoObjects: TodoObject[] | null;
+  flattenedTodoObjects: TodoObject[] | null;
   attributes: Attributes | null;
   filters: Filters | null;
   setDialogOpen: (open: boolean) => void;
@@ -19,7 +18,7 @@ interface TodoDataGridProps {
 }
 
 const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
-   todoObjects,
+   flattenedTodoObjects,
    attributes,
    filters,
    setDialogOpen,
@@ -72,7 +71,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
       const totalHeight = list.scrollHeight;
       const clientHeight = list.clientHeight;
       if(totalHeight - scrollPos <= clientHeight * 3) {
-        const remainingRows: TodoObject[] | null = todoObjects?.slice(visibleRowCount, visibleRowCount + 30);
+        const remainingRows: TodoObject[] | null = flattenedTodoObjects?.slice(visibleRowCount, visibleRowCount + 30);
         if(remainingRows?.length === 0) {
           setLoadMoreRows(false);
         } else {
@@ -82,9 +81,9 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
     }
   };
 
-  if(!todoObjects || Object.keys(todoObjects).length === 0) return null;
+  if(!flattenedTodoObjects || Object.keys(flattenedTodoObjects).length === 0) return null;
 
-  const rows = todoObjects.slice(0, visibleRowCount);
+  const rows = flattenedTodoObjects.slice(0, visibleRowCount);
 
   return (
     <List id="dataGrid" onScroll={handleScroll} onKeyUp={handleKeyUp}>

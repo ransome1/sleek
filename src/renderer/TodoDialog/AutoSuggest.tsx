@@ -4,11 +4,10 @@ import { Box, Button, IconButton, InputAdornment, TextField } from '@mui/materia
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import './AutoSuggest.scss';
-import { Attributes, TodoObject, InputProps } from '../../main/util';
 
 const { store } = window.api;
 
-const regex = /(?<=^| )[\+@][^ ]*/g;
+const regex = /(?<=^| )[+@][^ ]*/g;
 
 interface Props {
   setDialogOpen: (open: boolean) => void;
@@ -88,12 +87,9 @@ const AutoSuggest: React.FC<Props> = ({
     setTextFieldValue(newValue);
   };
 
-  const handleShouldRenderSuggestions = (value, reason) => {
-    if(reason === 'input-focused') {
-      return false;
-    }
-    return true;
-  }  
+  const handleShouldRenderSuggestions = (reason: string) => {
+    return reason !== 'input-focused';
+  }
 
   const getSuggestions = (trigger: string, match: string): string[] => {
     if(trigger === '@') {
@@ -160,7 +156,7 @@ const AutoSuggest: React.FC<Props> = ({
     }
   };
 
-  const handleSuggestionHighlighted = (suggestion) => {
+  const handleSuggestionHighlighted = () => {
     if(suggestions.length === 1) {
       handleSuggestionSelected(null, { suggestion: suggestions[0] });
     }
@@ -207,7 +203,7 @@ const AutoSuggest: React.FC<Props> = ({
         suggestions={suggestions}
 
         shouldRenderSuggestions={handleShouldRenderSuggestions}
-        
+
 
         onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
         onSuggestionsClearRequested={handleSuggestionsClearRequested}

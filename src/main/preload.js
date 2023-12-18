@@ -31,8 +31,5 @@ contextBridge.exposeInMainWorld('api', {
       const subscription = (_event, ...args) => func(...args);
       ipcRenderer.removeListener(channel, subscription);
     },
-    once(channel, func) {
-      ipcRenderer.once(channel, (_event, ...args) => func(...args));
-    },
   },
 });

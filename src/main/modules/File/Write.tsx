@@ -4,24 +4,17 @@ import { Item } from 'jstodotxt';
 import { lines } from '../ProcessDataRequest/CreateTodoObjects';
 import { getActiveFile } from './Active';
 import { configStorage } from '../../config';
-import { File } from '../../util';
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date';
 
 let stopAccessingSecurityScopedResource: any;
 
-async function removeLineFromFile(id: number) {
-  const activeFile: File | null = getActiveFile();
-
-  if(activeFile === null) {
-    throw new Error('No active file defined');
+async function removeLineFromFile(id: number): Promise<string> {
+  const activeFile: FileObject | null = getActiveFile();
+  if(!activeFile) {
+    throw new Error('No active file');
   }
-
   const bookmark = activeFile.todoFileBookmark;
   const todoFilePath = activeFile.todoFilePath;
-
-  if(activeFile === null) {
-    throw new Error('Todo file is not defined');
-  }
 
   lines.splice(id, 1);
   const modifiedContent = lines.join('\n');
@@ -35,7 +28,7 @@ async function removeLineFromFile(id: number) {
   return `Line ${id} removed from file`;
 }
 
-async function writeTodoObjectToFile(id: number, inputString: string): Promise<string> {
+async function writeTodoObjectToFile(id: number, inputString: string): Promise<void> {
   const multilineTextField: boolean = configStorage.get('multilineTextField');
   const useMultilineForBulkTodoCreation: boolean = configStorage.get('useMultilineForBulkTodoCreation');
   const convertRelativeToAbsoluteDates = configStorage.get('convertRelativeToAbsoluteDates');
@@ -65,7 +58,7 @@ async function writeTodoObjectToFile(id: number, inputString: string): Promise<s
   }
 
   const modifiedContent: string = lines.join('\n');
-  const activeFile: File | null = getActiveFile();
+  const activeFile: FileObject | null = getActiveFile();
 
   if(activeFile === null) {
     throw new Error('Todo file is not defined');
@@ -76,19 +69,13 @@ async function writeTodoObjectToFile(id: number, inputString: string): Promise<s
 
   if(!todoFilePath) {
     throw new Error('No active file found');
-  }  
+  }
 
   if(todoFileBookmark) {
     app.startAccessingSecurityScopedResource(todoFileBookmark);
   }
 
   await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
-
-  if(id) {
-    return `Line ${id + 1} overwritten successfully`;
-  } else {
-    return `New todo added successfully`;
-  }
 }
 
 async function replaceFileContent(string: string, filePath: string) {

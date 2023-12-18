@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import { Checkbox, ListItem } from '@mui/material';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
@@ -6,7 +6,6 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import Group from './Group';
 import Elements from './Elements';
-import { PromptItem, TodoObject, Filters } from '../../main/util';
 import { handleFilterSelect } from '../Shared';
 import './Row.scss';
 import { i18n } from '../LanguageSelector';
@@ -44,15 +43,17 @@ const Row: React.FC<Props> = memo(({
     label: t('delete'),
   }
 
+  const itemCopy = {
+    id: 'copy',
+    todoObject: row,
+    label: t('copy'),
+  }
+
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
     setContextMenuItems([
-      {
-        id: 'copy',
-        todoObject: row,
-        label: t('copy'),
-      },
+      itemCopy,
       itemDelete,
     ]);
   };

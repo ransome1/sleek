@@ -1,5 +1,4 @@
 import { getActiveFile } from '../../main/modules/File/Active';
-import { File } from '../../main/util';
 
 jest.mock('../../main/config', () => ({
   configStorage: {

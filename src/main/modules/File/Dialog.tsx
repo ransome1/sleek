@@ -1,9 +1,7 @@
 import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron';
 import path from 'path';
 import fs from 'fs/promises';
-import { configStorage } from '../../config';
 import { addFile, addDoneFile } from './File';
-import { File } from '../../util';
 
 const dialogFilters = [
   {

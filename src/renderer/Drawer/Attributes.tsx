@@ -11,7 +11,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AirIcon from '@mui/icons-material/Air';
 import { handleFilterSelect } from '../Shared';
-import { Attributes, Filters } from '../../main/util';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
 import './Attributes.scss';
@@ -50,10 +49,8 @@ const DrawerAttributes: React.FC<Props> = memo(({
     }
   };
 
-  const handleCtrlCmdUp = (event: KeyboardEvent) => {
-    if(!event.ctrlKey && !event.metaKey) {
-      setIsCtrlKeyPressed(false);
-    }
+  const handleCtrlCmdUp = () => {
+    setIsCtrlKeyPressed(false);
   };
 
   const handleAccordionToggle = (index: number) => {
@@ -79,9 +76,11 @@ const DrawerAttributes: React.FC<Props> = memo(({
 
     document.addEventListener('keydown', handleCtrlCmdDown);
     document.addEventListener('keyup', handleCtrlCmdUp);
+    window.addEventListener('focus', handleCtrlCmdUp);
     return () => {
       document.removeEventListener('keydown', handleCtrlCmdDown);
       document.removeEventListener('keyup', handleCtrlCmdUp);
+      window.removeEventListener('focus', handleCtrlCmdUp);
     };
   }, []);
 
@@ -103,7 +102,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
               onChange={() => handleAccordionToggle(index)}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Badge variant="dot" invisible={key === 'due' && mustNotify(Object.values(attributes[key])) ? false : true}>
+                <Badge variant="dot" invisible={!(key === 'due' && mustNotify(Object.values(attributes[key])))}>
                   <h3>
                     {attributeMapping[key]}
                   </h3>

@@ -1,4 +1,4 @@
-import { handleNotification, sendNotification } from '../../main/modules/Notifications';
+import { handleNotification } from '../../main/modules/Notifications';
 import { configStorage } from '../../main/config';
 import { badge } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { Notification } from 'electron';
@@ -45,28 +45,28 @@ describe('Notifications', () => {
 	});
 
 	test('should push notification for a todo due today', () => {
-		handleNotification(1, dateTodayString, 'Sample todo due:today', badge);
+		handleNotification(dateTodayString, 'Sample todo due:today', badge);
 		expect(Notification).toHaveBeenCalledWith({ title: 'Due today', body: 'Sample todo due:today', silent: false });
 		expect(badge.count).toBe(1);
 	});
 
 	test('should push notification for a todo due tomorrow', () => {
-		handleNotification(2, dateTomorrowString, 'Sample todo due:tomorrow', badge);
+		handleNotification(dateTomorrowString, 'Sample todo due:tomorrow', badge);
 		expect(Notification).toHaveBeenCalledWith({ title: 'Due tomorrow', body: 'Sample todo due:tomorrow', silent: false });
 		expect(badge.count).toBe(2);
 	});
 
 	test('should push notification for a todo due in 7 days', () => {
-		handleNotification(3, dateInSevenDaysString, 'Sample todo due:in 7 days', badge);
+		handleNotification(dateInSevenDaysString, 'Sample todo due:in 7 days', badge);
 		expect(Notification).toHaveBeenCalledWith({ title: 'Due in 7 days', body: 'Sample todo due:in 7 days', silent: false });
 		expect(badge.count).toBe(3);
 	});
 
 	test('should NOT push notification for a todo due in 20 days', () => {
-		handleNotification(4, dateInTwentyDaysString, 'Sample todo due:in 20 days', badge);
+		handleNotification(dateInTwentyDaysString, 'Sample todo due:in 20 days', badge);
 		expect(Notification).not.toHaveBeenCalled();
 		expect(badge.count).toBe(3);
-	});    
+	});
 
 	test('should NOT handle notification when not allowed', () => {
 	  const configStorageGetMock = jest.fn((key) => {
@@ -75,7 +75,7 @@ describe('Notifications', () => {
 	    }
 	  });
 	  configStorage.get = configStorageGetMock;
-	  handleNotification(5, '2023-10-20', 'Sample todo', badge);
+	  handleNotification('2023-10-20', 'Sample todo', badge);
 	  expect(configStorageGetMock).toHaveBeenCalledWith('notificationsAllowed');
 	  expect(Notification).not.toHaveBeenCalled();
 	  expect(badge.count).toBe(3);

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { memo } from 'react';
 import { Menu, MenuItem, Button, Tooltip } from '@mui/material';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
-import { ContextMenuItem, PromptItem } from '../main/util';
 
 interface Props {
   contextMenuPosition: {
@@ -54,19 +53,6 @@ const ContextMenu: React.FC<Props> = memo(({
   const handleChangeDoneFilePath = (index: number | undefined) => {
     setShowPromptDoneFile(true);
   };
-
-  const handleSaveToClipboard = function (response: Error | string) {
-    const severity = response instanceof Error ? 'error' : 'success';
-    setSnackBarSeverity(severity);
-    setSnackBarContent(response instanceof Error ? response.message : response);
-  };
-
-  useEffect(() => {
-    const saveToClipboardListener = (response: Error | string) => {
-      handleSaveToClipboard(response);
-    };
-    ipcRenderer.on('saveToClipboard', saveToClipboardListener);
-  }, []);
 
   return (
     <>

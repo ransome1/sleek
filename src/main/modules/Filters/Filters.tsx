@@ -1,5 +1,3 @@
-import { TodoObject, Filters, Filter } from '../../util';
-
 function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
   return todoObjects.filter((todoObject: TodoObject) => {
     return Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {

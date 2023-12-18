@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { Sorting, TodoObject } from '../../util';
 import * as FilterLang from '../Filters/FilterLang.js';
 import { runQuery } from '../Filters/FilterQuery.js';
 import { configStorage } from '../../config';
@@ -49,7 +48,8 @@ function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
   const thresholdDateInTheFuture: boolean = configStorage.get('thresholdDateInTheFuture');
   const dueDateInTheFuture: boolean = configStorage.get('dueDateInTheFuture');
-  const updatedTodoObjects = todoObjects.flat().filter((todoObject) => {
+
+  return todoObjects.flat().filter((todoObject) => {
     const tDate = dayjs(todoObject?.t);
     const dueDate = dayjs(todoObject?.due);
     if(!dueDateInTheFuture && dueDate && dueDate.isAfter(dayjs())) {
@@ -57,7 +57,6 @@ function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
     }
     return !(!thresholdDateInTheFuture && tDate && tDate.isAfter(dayjs()));
   });
-  return updatedTodoObjects;
 }
 
 function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]): TodoObject[] {

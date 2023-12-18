@@ -4,13 +4,11 @@ import { configStorage } from '../../config';
 import { createTray } from '../Tray';
 import { createMenu } from '../Menu';
 import path from 'path';
-import { File } from '../../util';
 import { mainWindow } from '../../main';
 
 let stopAccessingSecurityScopedResource: any;
 
 async function readFileContent(filePath: string, bookmark: string | null) {
-  
   if(!filePath) {
     return null;
   }
@@ -18,14 +16,16 @@ async function readFileContent(filePath: string, bookmark: string | null) {
   if(bookmark) app.startAccessingSecurityScopedResource(bookmark)
 
   const fileContent = await fs.promises.readFile(filePath, 'utf8');
-  
+
   if(bookmark) stopAccessingSecurityScopedResource()
 
   return fileContent;
 }
 
 function addFile(filePath: string, bookmark: string | null) {
-  const files: File[] = configStorage.get('files');
+  if(process.mas) throw new Error('This release does not support the drag and drop function, please use the file dialog');
+
+  const files: FileObject[] = configStorage.get('files');
   const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath);
 
   files.forEach((file) => (file.active = false));
@@ -56,7 +56,7 @@ function addFile(filePath: string, bookmark: string | null) {
 }
 
 function addDoneFile(filePath: string, bookmark: string | null) {
-  const files: File[] = configStorage.get('files');
+  const files: FileObject[] = configStorage.get('files');
   const activeIndex: number = files.findIndex((file) => file.active);
 
   if(activeIndex === -1) return false;
@@ -69,8 +69,8 @@ function addDoneFile(filePath: string, bookmark: string | null) {
   mainWindow!.webContents.send('triggerArchiving');
 }
 
-async function removeFile(index: number) {
-  let files: File[] = configStorage.get('files');
+function removeFile(index: number) {
+  let files: FileObject[] = configStorage.get('files');
 
   files.splice(index, 1);
   const activeIndex: number = files.findIndex((file) => file.active);
@@ -96,7 +96,7 @@ async function removeFile(index: number) {
 }
 
 function setFile(index: number) {
-  const files: File[] = configStorage.get('files');
+  const files: FileObject[] = configStorage.get('files');
 
   if(files.length > 0) {
     files.forEach((file) => {
@@ -106,7 +106,7 @@ function setFile(index: number) {
 
   files[index].active = true;
 
-  configStorage.set('files', files); 
+  configStorage.set('files', files);
 
   return 'File changed';
 }

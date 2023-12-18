@@ -3,7 +3,6 @@ import DraggableListItem from './DraggableListItem';
 import { Box } from '@mui/material';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import './DraggableList.scss';
-import { TranslatedAttributes } from '../../../main/util';
 
 const { store } = window.api;
 
@@ -15,7 +14,7 @@ interface Props {
   attributeMapping: TranslatedAttributes;
 }
 
-const DraggableList: React.FC<Props> = ({ 
+const DraggableList: React.FC<Props> = ({
   attributeMapping
 }) => {
   const [settings, setSettings] = useState<Settings>({ sorting: store.get('sorting') });

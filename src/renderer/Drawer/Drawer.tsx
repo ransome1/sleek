@@ -9,7 +9,6 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import './Drawer.scss';
 import { i18n } from '../LanguageSelector';
-import { Attributes, Sorting, TranslatedAttributes, Filters } from '../../main/util';
 
 const { store } = window.api;
 

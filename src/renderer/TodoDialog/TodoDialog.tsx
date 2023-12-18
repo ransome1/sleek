@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useRef, memo } from 'react';
 import { Button, Dialog, DialogContent, DialogActions } from '@mui/material';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
@@ -6,7 +6,6 @@ import DatePicker from './DatePicker';
 import PomodoroPicker from './PomodoroPicker';
 import RecurrencePicker from './RecurrencePicker';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { TodoObject, Attributes } from '../../main/util';
 import './TodoDialog.scss';
 import { i18n } from '../LanguageSelector';
 
@@ -15,14 +14,13 @@ const { ipcRenderer, store } = window.api;
 interface Props extends WithTranslation {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  todoObject: TodoObject | null;
-  setTodoObject: React.Dispatch<React.SetStateAction<boolean>>;
+  todoObject: TodoObject;
   attributes: Attributes | null;
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
   shouldUseDarkColors: boolean;
   textFieldValue: string,
-  setTextFieldValue: React.Dispatch<React.SetStateAction<boolean>>,
+  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>,
   t: typeof i18n.t;
 }
 
@@ -30,7 +28,6 @@ const TodoDialog: React.FC<Props> = memo(({
   dialogOpen,
   setDialogOpen,
   todoObject,
-  setTodoObject,
   attributes,
   setSnackBarSeverity,
   setSnackBarContent,
@@ -47,36 +44,21 @@ const TodoDialog: React.FC<Props> = memo(({
 
   const handleAdd = (id: number, string: string) => {
     try {
-      if(string === '') {
+      if(string) {
+        ipcRenderer.send('writeTodoToFile', id, string);
+      } else {
         setSnackBarSeverity('info');
         setSnackBarContent(t('todoDialog.snackbar.emptyInput'));
-      } else {
-        ipcRenderer.send('writeTodoToFile', id, string);
       }
     } catch (error: any) {
       console.error(error.message);
     }
   };
 
-  const handleClose = () => {
-    try {
-      setDialogOpen(false);
-    } catch (error: any) {
-      console.error(error.message);
-    }
-  };
-
-  useEffect(() => {
-    if(!dialogOpen) {
-      setTodoObject(null);
-    }
-  }, [dialogOpen]);
-
   return (
     <Dialog
       id="TodoDialog"
       open={dialogOpen}
-      onClose={handleClose}
       className={shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}
     >
       <DialogContent>

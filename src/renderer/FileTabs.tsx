@@ -2,14 +2,13 @@ import React, { useState, useEffect, memo } from 'react';
 import { Tab, Tabs } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { File } from '../main/util';
 import './FileTabs.scss';
 import { i18n } from './LanguageSelector';
 
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  files: File[];
+  files: FileObject[];
   setContextMenuPosition: (position: { top: number; left: number }) => void;
   setContextMenuItems: (items: any[]) => void;
   t: typeof i18n.t;

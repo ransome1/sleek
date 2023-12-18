@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { ListItem, Box, Button, Divider } from '@mui/material';
-import { Filters, Filter } from '../../main/util';
 
 interface Props {
   value: string;

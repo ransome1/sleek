@@ -5,7 +5,6 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import DraggableList from './DraggableList';
 import './Sorting.scss';
 import { i18n } from '../../LanguageSelector';
-import { TranslatedAttributes } from '../../../main/util';
 
 const { store } = window.api;
 

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FormControl, TextField } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg'
-import { TodoObject } from '../../main/util'
 import './PomodoroPicker.scss';
 
 interface Props {

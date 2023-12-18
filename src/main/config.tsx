@@ -5,7 +5,6 @@ import fs from 'fs';
 import { mainWindow } from './main';
 import { createFileWatcher } from './modules/File/Watcher';
 import { createTray } from './modules/Tray';
-import { File, ConfigData } from './util';
 import processDataRequest from './modules/ProcessDataRequest/ProcessDataRequest';
 import handleTheme from './modules/Theme';
 import crypto from 'crypto';
@@ -17,13 +16,13 @@ if(!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
 console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
 const customStylesPath = path.join(userDataDirectory, 'customStyles.css');
-const configPath = path.join(userDataDirectory, 'config.json');
+
 const configStorage = new Store<ConfigData>({
   cwd: userDataDirectory,
   name: 'config',
-  beforeEachMigration: (store, context) => {
+  beforeEachMigration: context => {
     console.log(`[config.json] migrating from ${context.fromVersion} → ${context.toVersion}`);
-  },  
+  },
   migrations: {
     '2.0.0': store => {
       store.set('sorting', [
@@ -75,7 +74,7 @@ const configStorage = new Store<ConfigData>({
     '2.0.2': store => {
       store.set('dueDateInTheFuture', true);
     },
-  }  
+  }
 });
 
 const filtersPath = path.join(userDataDirectory, 'filters.json');
@@ -98,26 +97,23 @@ if(!fs.existsSync(customStylesPath)) {
   fs.writeFileSync(customStylesPath, '');
 }
 
-const handleConfigChange = async () => {
-  const [todoObjects, attributes, headers, filters] = await processDataRequest('');
-  if(todoObjects) {
-    mainWindow!.webContents.send('requestData', todoObjects, attributes, headers, filters);
-  }
-};
-
-filterStorage.onDidAnyChange((newValue, oldValue) => {
-  handleConfigChange();
-});
-
-configStorage.onDidAnyChange((newValue, oldValue) => {
+filterStorage.onDidAnyChange(async () => {
   try {
-    handleConfigChange();
+    await processDataRequest('')
   } catch(error) {
     console.error(error);
   }
 });
 
-configStorage.onDidChange('files', async (files: File[] | undefined) => {
+configStorage.onDidAnyChange(async () => {
+  try {
+    await processDataRequest('')
+  } catch(error) {
+    console.error(error);
+  }
+});
+
+configStorage.onDidChange('files', async (files: FileObject[] | undefined) => {
   try {
     if(files && mainWindow) {
       createFileWatcher(files);
@@ -125,7 +121,11 @@ configStorage.onDidChange('files', async (files: File[] | undefined) => {
     }
   } catch(error) {
     console.error(error);
-  }  
+  }
+});
+
+configStorage.onDidChange('matomo', (matomo) => {
+  mainWindow!.webContents.send('matomo', matomo);
 });
 
 configStorage.onDidChange('showFileTabs', () => {

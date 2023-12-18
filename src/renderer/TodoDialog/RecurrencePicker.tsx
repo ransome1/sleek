@@ -5,7 +5,6 @@ import Popover from '@mui/material/Popover';
 import { Item } from 'jstodotxt';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
-import { TodoObject } from '../../main/util';
 import './RecurrencePicker.scss';
 
 interface Props extends WithTranslation {

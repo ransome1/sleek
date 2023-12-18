@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { Notification } from 'electron';
 import { configStorage, notifiedTodoObjectsStorage } from '../config';
-import { Badge } from '../util';
 import dayjs, { Dayjs } from "dayjs";
 import isToday from 'dayjs/plugin/isToday';
 import isTomorrow from 'dayjs/plugin/isTomorrow';
@@ -29,8 +28,7 @@ function createSpeakingDifference(dueDate: Dayjs) {
   return 'Due';
 }
 
-function handleNotification(id: number, due: string | null, body: string, badge: Badge) {
-  let result;
+function handleNotification(due: string | null, body: string, badge: Badge) {
   const notificationAllowed = configStorage.get('notificationsAllowed');
   const today = dayjs().startOf('day').format('YYYY-MM-DD');
   const hash = today + crypto.createHash('sha256').update(body).digest('hex');
@@ -43,7 +41,7 @@ function handleNotification(id: number, due: string | null, body: string, badge:
       badge.count += 1;
       const notifiedTodoObjects = new Set<string>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
       if(!notifiedTodoObjects.has(hash)) {
-        result = sendNotification(daysUntilDue, body);
+        sendNotification(daysUntilDue, body);
         notifiedTodoObjects.add(hash);
         notifiedTodoObjectsStorage.set('notifiedTodoObjects', Array.from(notifiedTodoObjects));
       }

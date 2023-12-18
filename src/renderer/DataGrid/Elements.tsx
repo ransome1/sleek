@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { Box, Button, Chip } from '@mui/material';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg';
 import DatePickerInline from './DatePickerInline';
-import { TodoObject, Filters, Filter, Element } from '../../main/util';
 
 interface Props {
   todoObject: TodoObject;
@@ -105,7 +104,7 @@ const Elements: React.FC<Props> = memo(({
     return substrings;
   };
 
-  const elements = matches().map((element: Element, index) => {
+  const elements = matches().map((element: ElementObject, index) => {
     const selected = filters && element.type !== null && (filters[element.type as keyof Filters] || []).some(
       (filter: Filter) => filter.value === element.value
     );

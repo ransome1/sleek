@@ -1,5 +1,4 @@
 import { attributes, updateAttributes } from '../../main/modules/Attributes';
-import { Attributes } from '../../main/util';
 
 const todoObjects = [
   { id: 1, created: null, priority: 'A', projects: ['Project 1'], contexts: ['Context 1'], due: '2023-01-01', dueString: '2023-01-01', complete: false, completed: null, t: '2024-02-01', tString: '2024-02-01', rec: null, pm: null, body: null, hidden: false, string: '', notify: false, },
@@ -10,7 +9,7 @@ const todoObjects = [
 
 describe('Set of filters must create a respective set of attributes and its counts', () => {
   test('Should create attributes based on todo objects', async () => {
-    
+
     const sorting = [
       { id: '1', value: 'priority', invert: false },
       { id: '2', value: 'projects', invert: false },

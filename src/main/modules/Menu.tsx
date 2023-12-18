@@ -3,13 +3,12 @@ import { setFile } from './File/File';
 import { mainWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { configStorage, filterStorage } from '../config';
-import { File } from '../util';
 import appPackage from '../../../release/app/package.json';
 
 const isMac: boolean = process.platform === 'darwin';
 const description = appPackage.description;
 
-function createMenu(files: File[]) {
+function createMenu(files: FileObject[]) {
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'sleek',
@@ -70,19 +69,19 @@ function createMenu(files: File[]) {
         {
           label: 'Open file',
           accelerator: 'CmdOrCtrl+O',
-          click: () => {
-            openFile(false);
+          click: async () => {
+            await openFile(false);
           },
         },
         {
           label: 'Create file',
-          click: () => {
-            createFile(false);
+          click: async () => {
+            await createFile(false);
           },
         },
         { type: 'separator' },
         ...(files?.length > 0
-          ? files.map((file: File, index: number) => ({
+          ? files.map((file: FileObject, index: number) => ({
               label: file.todoFileName,
               accelerator: `CommandOrControl+${index + 1}`,
               click: () => {

@@ -1,5 +1,5 @@
-import { Filter, Filters, Settings } from '../main/util';
 import { i18n } from './LanguageSelector';
+import React from 'react';
 
 const { ipcRenderer, store } = window.api;
 

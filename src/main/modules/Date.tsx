@@ -1,6 +1,5 @@
 import Sugar from 'sugar';
 import dayjs from 'dayjs';
-import { DateAttribute, DateAttributes } from '../util';
 import { configStorage } from '../config';
 
 function mustNotify(date: Date): boolean {

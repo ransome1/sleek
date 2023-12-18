@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../LanguageSelector';
-import { TodoObject } from '../../main/util';
 import './PriorityPicker.scss';
 
 const alphabetArray = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));

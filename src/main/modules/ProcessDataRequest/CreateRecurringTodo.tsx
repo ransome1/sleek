@@ -1,7 +1,6 @@
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 import { writeTodoObjectToFile } from '../File/Write';
-import { configStorage } from '../../config';
 
 enum RecurrenceInterval {
   Daily = 'd',
@@ -45,7 +44,6 @@ const addRecurrenceToDate = (date: Date, recurrence: string): Date => {
 const createRecurringTodo = async (todoString: string, recurrence: string): Promise<string> => {
   const JsTodoTxtObject = new Item(todoString);
   const creationDate = new Date();
-  const appendCreationDate = configStorage.get('appendCreationDate');
 
   JsTodoTxtObject.setCreated(creationDate);
 
@@ -55,11 +53,11 @@ const createRecurringTodo = async (todoString: string, recurrence: string): Prom
     const oldDueDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 'due')?.value;
     const oldThresholdDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 't')?.value;
     const daysBetween: number = (oldDueDate && oldThresholdDate) ? dayjs(oldDueDate, 'YYYY-MM-DD').diff(oldThresholdDate, 'day') : 0
-    
+
     const newDueDate = strictRecurrence
       ? addRecurrenceToDate(dayjs(oldDueDate).toDate(), recurrenceInterval)
       : addRecurrenceToDate(dayjs(creationDate).toDate(), recurrenceInterval);
-  
+
     const newThresholdDate = strictRecurrence
       ? addRecurrenceToDate(dayjs(oldThresholdDate).toDate(), recurrenceInterval)
       : daysBetween > 0
@@ -68,14 +66,14 @@ const createRecurringTodo = async (todoString: string, recurrence: string): Prom
 
     // If the user only uses threshold date and no due date, the recurrence should not create a due date:
     const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
-    
+
     if(creationDate && !recurrenceOnlyForThresholdDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
     if(oldThresholdDate) JsTodoTxtObject.setExtension('t', dayjs(newThresholdDate).format('YYYY-MM-DD'));
 
     JsTodoTxtObject.setComplete(false);
     JsTodoTxtObject.setCompleted(null);
 
-    writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
+    await writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
 
     return 'Recurring todo created';
   }

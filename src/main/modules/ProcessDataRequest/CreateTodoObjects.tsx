@@ -2,13 +2,16 @@ import { app } from 'electron';
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 import { handleNotification } from '../Notifications';
-import { TodoObject, DateAttributes, Badge } from '../../util';
 import { extractSpeakingDates } from '../Date';
 
 let lines: string[];
 export const badge: Badge = { count: 0 };
 
-async function createTodoObjects(fileContent: string): Promise<TodoObject[]> {
+async function createTodoObjects(fileContent: string | null): Promise<TodoObject[] | []> {
+  if(!fileContent) {
+    lines = [];
+    return [];
+  }
   badge.count = 0;
   lines = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
   const items: Item[] = lines.map(line => new Item(line.replaceAll(String.fromCharCode(16), ' ')));
@@ -49,7 +52,7 @@ async function createTodoObjects(fileContent: string): Promise<TodoObject[]> {
     };
 
     if(due && !todoObject.complete) {
-      handleNotification(i, due, body, badge);
+      handleNotification(due, body, badge);
     }
 
     return todoObject;

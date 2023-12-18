@@ -4,7 +4,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button, Chip, Box, Badge } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { handleFilterSelect } from '../Shared';
-import { TodoObject, Filters } from '../../main/util';
 import dayjs from 'dayjs';
 
 const { ipcRenderer, store } = window.api;
@@ -54,7 +53,7 @@ const DatePickerInline: React.FC<Props> = ({
           <Badge variant="dot" invisible={mustNotify}>
             <Chip onClick={() => handleFilterSelect(type, date, filters, false)} label={chipText} />
             <Box onClick={() => setOpen?.((prev) => !prev)}>{date}</Box>
-          </Badge>          
+          </Badge>
         </Button>
       );
     };

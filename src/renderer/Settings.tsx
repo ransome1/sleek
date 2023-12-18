@@ -13,7 +13,6 @@ import {
 import { withTranslation, WithTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';
 import { handleSettingChange } from './Shared';
-import { Attribute } from '../main/util';
 import './Settings.scss';
 
 const { store } = window.api;

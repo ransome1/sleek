@@ -1,16 +1,16 @@
-import { app, BrowserWindow, nativeTheme } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
 import { createMenu } from './modules/Menu';
 import handleTheme from './modules/Theme';
-import { resolveHtmlPath, getAssetPath, File } from './util';
+import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
 import { createTray } from './modules/Tray';
 import './modules/Ipc';
 
-const environment = process.env.NODE_ENV;
-const files: File[] = (configStorage.get('files') as File[]) || [];
+const environment: string | undefined = process.env.NODE_ENV;
+const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
 let tray: boolean = configStorage.get('tray');
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any> = {};
@@ -20,14 +20,14 @@ const handleCreateWindow = () => {
     mainWindow.show();
   } else {
     createWindow();
-  }  
+  }
 }
 
 const handleClosed = async () => {
   if(watcher) await watcher.close();
-  
+
   mainWindow = null;
-  
+
   delete eventListeners.handleReadyToShow;
   delete eventListeners.handleClosed;
   delete eventListeners.handleResize;
@@ -43,19 +43,19 @@ const handleClosed = async () => {
 }
 
 const handleResize = () => {
-  if(mainWindow) {
-    const { width, height } = mainWindow?.getBounds();
-    configStorage.set('windowDimensions', { width, height });
-    configStorage.set('windowMaximized', false);
-  }
+  const rectangle = mainWindow?.getBounds() as WindowRectangle;
+  const width = rectangle.width;
+  const height = rectangle.height;
+  configStorage.set('windowDimensions', { width, height });
+  configStorage.set('windowMaximized', false);
 }
 
 const handleMove = () => {
-  if(mainWindow) {
-    const { x, y } = mainWindow?.getBounds();
-    configStorage.set('windowPosition', { x, y });
-    configStorage.set('windowMaximized', false);
-  }
+  const rectangle = mainWindow?.getBounds() as WindowRectangle;
+  const x = rectangle.x;
+  const y = rectangle.y;
+  configStorage.set('windowPosition', { x, y });
+  configStorage.set('windowMaximized', false);
 }
 
 const handleUnmaximize = () => {
@@ -74,7 +74,7 @@ const handleWindowSizeAndPosition = () => {
   const isMaximized = configStorage.get('windowMaximized');
   if(isMaximized) {
     mainWindow?.maximize();
-    return false;
+    return;
   }
 
   const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
@@ -91,7 +91,7 @@ const handleWindowSizeAndPosition = () => {
   }
 }
 
-const createWindow = async() => {
+const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,

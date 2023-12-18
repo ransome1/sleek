@@ -1,5 +1,3 @@
-import { Attributes, Attribute, TodoObject, Sorting } from '../util';
-
 let attributes: Attributes = {
   priority: {},
   projects: {},

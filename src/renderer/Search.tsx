@@ -3,13 +3,12 @@ import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from './LanguageSelector';
-import { Headers } from '../main/util';
 import './Search.scss';
 
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  headers: Headers;
+  headers: HeadersObject;
   searchString: string | null;
   setSearchString: (searchString: string) => void;
   isSearchOpen: boolean;
@@ -55,7 +54,7 @@ const Search: React.FC<Props> = memo(({
       ipcRenderer.send('writeTodoToFile', undefined, searchString);
       setSearchString('');
     }
-  });  
+  });
 
   useEffect(() => {
     if(searchString === null) return;

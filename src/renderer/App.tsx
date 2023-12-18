@@ -14,7 +14,6 @@ import ToolBar from './ToolBar';
 import ContextMenu from './ContextMenu';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from './LanguageSelector';
-import { Sorting, Headers, File, TodoObject, Attributes, Filters, TranslatedAttributes, ContextMenuItem } from '../main/util';
 import Settings from './Settings';
 import { translatedAttributes } from './Shared';
 import Prompt from './Prompt';
@@ -24,7 +23,7 @@ const environment = process.env.NODE_ENV;
 const { ipcRenderer, store } = window.api;
 
 const App = () => {
-  const [files, setFiles] = useState<File[]>(store.get('files') || null);
+  const [files, setFiles] = useState<FileObject[]>(store.get('files') || null);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(store.get('isDrawerOpen') || false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(store.get('isSearchOpen') || false);
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
@@ -33,9 +32,9 @@ const App = () => {
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>('');
-  const [todoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
-  const [todoObject, setTodoObject] = useState<TodoObject | null>();
-  const [headers, setHeaders] = useState<Headers | null>();
+  const [flattenedTodoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
+  const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
+  const [headers, setHeaders] = useState<Headers | null>(null);
   const [filters, setFilters] = useState<Filters | null>(null);
   const [attributes, setAttributes] = useState<Attributes | null>(null);
   const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
@@ -45,25 +44,24 @@ const App = () => {
   const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
-  const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem | []>([]);
+  const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem | null>(null);
   const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
   const [textFieldValue, setTextFieldValue] = useState<string | null>(null);
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
-  const [matomo, setMatomo] = useState<boolean>(store.get('matomo') || false);
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
   const [showPromptDoneFile, setShowPromptDoneFile] = useState<boolean>(false);
-
+  const [matomo, setMatomo] = useState<boolean>(store.get('matomo') || false);
   const searchFieldRef = useRef(null);
 
-  const handleRequestedData = (todoObjects: TodoObject[], attributes: Attributes, headers: Headers, filters: Filters) => {
-    if(headers) setHeaders(headers);
-    if(attributes) setAttributes(attributes);
-    if(filters) setFilters(filters);
-    if(todoObjects) setTodoObjects(todoObjects);
+  const handleRequestedData = (requestedData: RequestedData) => {
+    if(requestedData?.headers) setHeaders(requestedData.headers);
+    if(requestedData?.attributes) setAttributes(requestedData.attributes);
+    if(requestedData?.filters) setFilters(requestedData.filters);
+    if(requestedData?.flattenedTodoObjects) setTodoObjects(requestedData.flattenedTodoObjects);
     setSplashScreen(null);
   };
 
-  const handleUpdateFiles = (files: File[]) => {
+  const handleUpdateFiles = (files: FileObject[]) => {
     setFiles(files);
   };
 
@@ -117,7 +115,7 @@ const App = () => {
 
   const handlePromptClose = () => {
     setPromptItem(null);
-  };  
+  };
 
   const handleDragOver = (event: Event) => {
     event.preventDefault();
@@ -128,17 +126,15 @@ const App = () => {
     setSnackBarOpen(false);
   };
 
-  const handleError = (response: any) => {
-    if(response instanceof Error) {
-      setSnackBarSeverity('error');
-      setSnackBarContent(response.message);
-    }
-  };  
+  const handleResponse = function (response: Error | string) {
+    const severity = response instanceof Error ? 'error' : 'success';
+    setSnackBarSeverity(severity);
+    setSnackBarContent(response instanceof Error ? response.message : response);
+  };
 
-  const handleWriteTodoToFile = (response: any) => {
+  const handleWriteTodoToFile = function (response: Error | string) {
     if(response instanceof Error) {
-      setSnackBarSeverity('error');
-      setSnackBarContent(response.message);
+      handleResponse(response);
     } else {
       setDialogOpen(false);
     }
@@ -170,10 +166,6 @@ const App = () => {
   useEffect(() => {
     store.set('sorting', sorting)
   }, [sorting]);
-
-  // useEffect(() => {
-  //   store.set('isDrawerOpen', isDrawerOpen)
-  // }, [isDrawerOpen]);
 
   useEffect(() => {
     store.set('isSearchOpen', isSearchOpen)
@@ -207,13 +199,12 @@ const App = () => {
 
   useEffect(() => {
     const anonymousUserId = store.get('anonymousUserId');
-    
-    if(anonymousUserId && matomo) {
-      const matomoContainer = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
+    if(matomo && anonymousUserId) {
+      const matomoContainer: string = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
       const _mtm = window._mtm = window._mtm || [];
       _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
       if(anonymousUserId) _mtm.push({'anonymousUserId': anonymousUserId });
-      var 
+      const
         d = document,
         g = d.createElement('script'),
         s = d.getElementsByTagName('script')[0];
@@ -233,11 +224,35 @@ const App = () => {
     ipcRenderer.on('setShowFileTabs', handleSetShowFileTabs);
     ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
     ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
+    ipcRenderer.on('matomo', (result) => setMatomo(result));
     ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
-    ipcRenderer.on('droppedFile', handleWriteTodoToFile);
-    ipcRenderer.on('handleError', handleError);
+    ipcRenderer.on('droppedFile', handleResponse);
+    ipcRenderer.on('handleError', handleResponse);
+    ipcRenderer.on('saveToClipboard', handleResponse);
+    ipcRenderer.on('triggerArchiving', () => setTriggerArchiving(true));
+    ipcRenderer.on('ArchivingResult', handleResponse);
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
+    return () => {
+    ipcRenderer.off('requestData', handleRequestedData);
+    ipcRenderer.off('updateFiles', handleUpdateFiles);
+    ipcRenderer.off('updateSorting', handleUpdateSorting);
+    ipcRenderer.off('setIsSearchOpen', handleSetIsSearchOpen);
+    ipcRenderer.off('setIsNavigationOpen', handleSetIsNavigationOpen);
+    ipcRenderer.off('setShouldUseDarkColors', handleSetShouldUseDarkColors);
+    ipcRenderer.off('setShowFileTabs', handleSetShowFileTabs);
+    ipcRenderer.off('setIsDrawerOpen', handleSetIsDrawerOpen);
+    ipcRenderer.off('setIsSettingsOpen', handleSetIsSettingsOpen);
+    ipcRenderer.off('matomo', (result: boolean) => setMatomo(result));
+    ipcRenderer.off('writeTodoToFile', handleWriteTodoToFile);
+    ipcRenderer.off('droppedFile', handleResponse);
+    ipcRenderer.off('handleError', handleResponse);
+    ipcRenderer.off('saveToClipboard', handleResponse);
+    ipcRenderer.off('triggerArchiving', () => setTriggerArchiving(true));
+    ipcRenderer.off('ArchivingResult', handleResponse);
+      window.removeEventListener('drop', handleDrop);
+      window.removeEventListener('dragover', handleDragOver);
+    };
   }, []);
 
   return (
@@ -288,7 +303,6 @@ const App = () => {
                   setSearchString={setSearchString}
                   isSearchOpen={isSearchOpen}
                   setIsSearchOpen={setIsSearchOpen}
-                  setIsSearchOpen={setIsSearchOpen}
                   searchFieldRef={searchFieldRef}
                 />
                 <ToolBar
@@ -301,7 +315,7 @@ const App = () => {
             </>
             )}
             <TodoDataGrid
-              todoObjects={todoObjects}
+              flattenedTodoObjects={flattenedTodoObjects}
               setTodoObject={setTodoObject}
               attributes={attributes}
               filters={filters}

@@ -30,7 +30,7 @@ const baseTheme: Theme = createTheme({
       styleOverrides: {
         root: {
           border: 'none',
-          lineHeigh: '2em',
+          lineHeight: '2em',
         },
       },
     },

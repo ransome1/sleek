@@ -7,7 +7,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Box } from '@mui/material';
-import { File, Headers } from '../main/util';
 import './Navigation.scss';
 
 const { ipcRenderer } = window.api;
@@ -17,10 +16,10 @@ interface Props {
   isDrawerOpen: boolean;
   setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  files: File[];
+  files: FileObject[];
   setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
-  headers: Headers;
+  headers: HeadersObject;
 }
 
 const NavigationComponent: React.FC<Props> = memo(({

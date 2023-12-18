@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { handleSettingChange } from '../Shared';
-import { Settings } from '../../main/util';
 import './Filters.scss';
 import { i18n } from '../LanguageSelector';
 
@@ -12,7 +11,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const DrawerFilters: React.FC<Props> = ({ 
+const DrawerFilters: React.FC<Props> = ({
   t
 }) => {
   const [settings, setSettings] = useState<Settings>({
