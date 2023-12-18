@@ -17,7 +17,6 @@ function createMenu(files: FileObject[]) {
           label: 'About',
           click: async () => {
             const options = {
-              type: 'info',
               title: 'About sleek',
               message: `sleek v${app.getVersion()}`,
               detail: description,

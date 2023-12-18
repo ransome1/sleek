@@ -9,11 +9,12 @@ const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
   headers: HeadersObject;
-  searchString: string | null;
+  searchString: string;
   setSearchString: (searchString: string) => void;
   isSearchOpen: boolean;
   setIsSearchOpen: (isSearchOpen: boolean) => void;
   searchFieldRef: React.RefObject<HTMLInputElement>;
+  setTextFieldValue: React.RefObject<string>;
   t: typeof i18n.t;
 }
 
@@ -24,11 +25,11 @@ const Search: React.FC<Props> = memo(({
   isSearchOpen,
   setIsSearchOpen,
   searchFieldRef,
+  setTextFieldValue,
   t,
 }) => {
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    const searchString = event.target.value;
-    setSearchString(searchString);
+    setSearchString(event.target.value);
   };
 
   const handleAddTodo = () => {
@@ -57,13 +58,14 @@ const Search: React.FC<Props> = memo(({
   });
 
   useEffect(() => {
-    if(searchString === null) return;
-    let delayedSearch: NodeJS.Timeout;
+
+    if(!searchString) setTextFieldValue('')
+
     const handleSearch = () => {
       ipcRenderer.send('requestData', searchString);
     };
 
-    delayedSearch = setTimeout(handleSearch, 200);
+    const delayedSearch: NodeJS.Timeout = setTimeout(handleSearch, 200);
 
     return () => {
       clearTimeout(delayedSearch);
@@ -91,7 +93,7 @@ const Search: React.FC<Props> = memo(({
             variant='outlined'
             placeholder={`${t('search.visibleTodos')} ${headers.visibleObjects}`}
             inputRef={searchFieldRef}
-            value={searchString === null ? '' : searchString}
+            value={searchString}
             onChange={handleInput}
             InputProps={{
               endAdornment: (

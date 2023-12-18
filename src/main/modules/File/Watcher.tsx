@@ -23,8 +23,7 @@ function createFileWatcher(files: FileObject[]): void {
     })
     .on('change', async (file) => {
       console.log(`File ${file} has been changed`);
-
-      await processDataRequest('');
+      await processDataRequest();
     })
     .on('unlink', (file) => {
       console.log(`FileWatcher.ts: FileObject ${file} has been unlinked`);

@@ -99,7 +99,7 @@ if(!fs.existsSync(customStylesPath)) {
 
 filterStorage.onDidAnyChange(async () => {
   try {
-    await processDataRequest('')
+    await processDataRequest()
   } catch(error) {
     console.error(error);
   }
@@ -107,7 +107,7 @@ filterStorage.onDidAnyChange(async () => {
 
 configStorage.onDidAnyChange(async () => {
   try {
-    await processDataRequest('')
+    await processDataRequest()
   } catch(error) {
     console.error(error);
   }

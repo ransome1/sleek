@@ -34,7 +34,7 @@ const App = () => {
   const [searchString, setSearchString] = useState<string>('');
   const [flattenedTodoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
   const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
-  const [headers, setHeaders] = useState<Headers | null>(null);
+  const [headers, setHeaders] = useState<HeadersObject | null>(null);
   const [filters, setFilters] = useState<Filters | null>(null);
   const [attributes, setAttributes] = useState<Attributes | null>(null);
   const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
@@ -304,6 +304,7 @@ const App = () => {
                   isSearchOpen={isSearchOpen}
                   setIsSearchOpen={setIsSearchOpen}
                   searchFieldRef={searchFieldRef}
+                  setTextFieldValue={setTextFieldValue}
                 />
                 <ToolBar
                   isSearchOpen={isSearchOpen}

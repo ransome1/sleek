@@ -13,7 +13,16 @@ const headers: HeadersObject = {
   completedTodoObjects: 0,
 };
 
-async function processDataRequest(searchString: string): Promise<void> {
+let searchString;
+
+async function processDataRequest(search: string): Promise<void> {
+  
+  if(search) {
+    searchString = search;
+  } else if(search === '') {
+    searchString = '';
+  }
+
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
     throw new Error('No active file');
