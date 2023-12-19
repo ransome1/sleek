@@ -106,4 +106,22 @@ describe('Create recurring todos', () => {
     expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} (A) Do something rec:d t:${dateTomorrowString} @SomeContext`);
   });
 
+  test('Should add a new todo based on a zero daily recurrence and no due date and no threshold date are set', async () => {
+    const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Do something rec:0d`, '0d');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Do something rec:0d`);
+  });
+
+  test('Should add a new todo based on a zero daily recurrence and a due date of today is set', async () => {
+    const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Do something rec:0d due:1999-11-11`, '0d');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Do something rec:0d due:${dateTodayString}`);
+  });
+
+  test('Should add a new todo based on a zero daily recurrence and a due date and a threshold date of today are set', async () => {
+    const recurringTodo = await createRecurringTodo(`x ${dateTodayString} ${dateTodayString} Do something rec:0d due:1999-11-11 t:2010-03-05`, '0d');
+    const fileContent = await fs.readFile('./src/__tests__/__mock__/recurrence.txt', 'utf8');
+    expect(fileContent.split('\n').pop()).toEqual(`${dateTodayString} Do something rec:0d due:${dateTodayString} t:${dateTodayString}`);
+  });
+
 });

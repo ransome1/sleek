@@ -65,7 +65,10 @@ jobs:
           yarn --network-timeout 100000
           yarn run build
       - name: Run Electron Builder
-        uses: coparse-inc/action-electron-builder@v1.0.0
+        uses: samuelmeuli/action-electron-builder@v1
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         with:
           max_attempts: 5
           github_token: ${{ secrets.github_token }}
@@ -89,7 +92,7 @@ jobs:
           yarn --network-timeout 100000
           yarn run build
       - name: Run Electron Builder
-        uses: coparse-inc/action-electron-builder@v1.0.0
+        uses: samuelmeuli/action-electron-builder@v1
         with:
           max_attempts: 5
           github_token: ${{ secrets.github_token }}
