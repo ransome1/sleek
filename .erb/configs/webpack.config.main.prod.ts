@@ -35,6 +35,10 @@ const configuration: webpack.Configuration = {
     },
   },
 
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+
   optimization: {
     minimizer: [
       new TerserPlugin({

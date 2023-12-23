@@ -98,9 +98,7 @@ describe('Writing to file', () => {
   test('should append 3 new lines at the end of the file', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if(key === 'multilineTextField') {
-        return true;
-      } else if(key === 'useMultilineForBulkTodoCreation') {
+      if(key === 'bulkTodoCreation') {
         return true;
       }
       return originalGet.call(configStorage, key);
@@ -117,9 +115,7 @@ describe('Writing to file', () => {
   test('should update a specific line and append 2 lines to the updated line', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if(key === 'multilineTextField') {
-        return true;
-      } else if(key === 'useMultilineForBulkTodoCreation') {
+      if(key === 'bulkTodoCreation') {
         return true;
       }
       return originalGet.call(configStorage, key);
@@ -136,9 +132,7 @@ describe('Writing to file', () => {
   test('should append a multi line todo', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if(key === 'multilineTextField') {
-        return true;
-      } else if(key === 'useMultilineForBulkTodoCreation') {
+      if(key === 'bulkTodoCreation') {
         return false;
       }
       return originalGet.call(configStorage, key);
@@ -155,9 +149,7 @@ describe('Writing to file', () => {
   test('should update line with a multi line todo', async () => {
     const originalGet = configStorage.get;
     configStorage.get = (key: string) => {
-      if(key === 'multilineTextField') {
-        return true;
-      } else if(key === 'useMultilineForBulkTodoCreation') {
+      if(key === 'bulkTodoCreation') {
         return false;
       }
       return originalGet.call(configStorage, key);

@@ -49,9 +49,9 @@ const createRecurringTodo = async (todoString: string, recurrence: string): Prom
   if(recurrence) {
     const strictRecurrence: boolean = recurrence.startsWith('+');
     
-    const temp: any = strictRecurrence ? recurrence.slice(1) : recurrence;
-    const recurrenceInterval = temp.slice(-1) as RecurrenceInterval;
-    const recurrenceValue = parseInt(temp.slice(0, -1));
+    const updatedRecurrence: any = strictRecurrence ? recurrence.slice(1) : recurrence;
+    const recurrenceInterval = updatedRecurrence.slice(-1) as RecurrenceInterval;
+    const recurrenceValue = parseInt(updatedRecurrence.slice(0, -1));
     
     const oldDueDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 'due')?.value;
     const oldThresholdDate: any = JsTodoTxtObject?.extensions()?.find((item) => item.key === 't')?.value;

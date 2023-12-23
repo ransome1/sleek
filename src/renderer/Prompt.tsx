@@ -44,8 +44,8 @@ const Prompt: React.FC<Props> = ({
       <DialogActions>
 
         <Button onClick={() => handleConfirm(false)}>{t('cancel')}</Button>
-        {button1 && <Button onClick={() => onButton1(true)}>{button1}</Button>}
-        {button2 && <Button onClick={() => onButton2(true)}>{button2}</Button>}
+        {button1 && <Button onClick={() => onButton1()}>{button1}</Button>}
+        {button2 && <Button onClick={() => onButton2()}>{button2}</Button>}
         {confirmButton && <Button onClick={() => handleConfirm(true)}>{confirmButton}</Button>}
         
       </DialogActions>

@@ -28,12 +28,23 @@ async function removeLineFromFile(id: number): Promise<string> {
   return `Line ${id} removed from file`;
 }
 
-async function writeTodoObjectToFile(id: number, inputString: string): Promise<void> {
-  const multilineTextField: boolean = configStorage.get('multilineTextField');
-  const useMultilineForBulkTodoCreation: boolean = configStorage.get('useMultilineForBulkTodoCreation');
+async function writeTodoObjectToFile(id: number, string: string): Promise<void> {
+  const activeFile: FileObject | null = getActiveFile();
+  if(!activeFile) {
+    throw new Error('Todo file is not defined');
+  }
+  const bookmark = activeFile.todoFileBookmark;
+  const todoFilePath = activeFile.todoFilePath;
+
+  const bulkTodoCreation: boolean = configStorage.get('bulkTodoCreation');
   const convertRelativeToAbsoluteDates = configStorage.get('convertRelativeToAbsoluteDates');
   const appendCreationDate = configStorage.get('appendCreationDate');
-  const content = (multilineTextField && useMultilineForBulkTodoCreation) ? inputString : inputString.replaceAll(/\n/g, String.fromCharCode(16));
+  
+  const content = 
+    (bulkTodoCreation) 
+      ? string.replaceAll(String.fromCharCode(16), '\n') 
+      : string.replaceAll(/\n/g, String.fromCharCode(16));
+
   const linesToWrite = content.split('\n').filter(line => line.trim() !== '');
 
   if(linesToWrite.length === 0 && id < 1) {
@@ -57,25 +68,11 @@ async function writeTodoObjectToFile(id: number, inputString: string): Promise<v
     }
   }
 
-  const modifiedContent: string = lines.join('\n');
-  const activeFile: FileObject | null = getActiveFile();
+  if(bookmark) app.startAccessingSecurityScopedResource(bookmark)
 
-  if(activeFile === null) {
-    throw new Error('Todo file is not defined');
-  }
+  await fs.writeFile(todoFilePath, lines.join('\n'), 'utf8');
 
-  const todoFileBookmark = activeFile.todoFileBookmark;
-  const todoFilePath = activeFile.todoFilePath;
-
-  if(!todoFilePath) {
-    throw new Error('No active file found');
-  }
-
-  if(todoFileBookmark) {
-    app.startAccessingSecurityScopedResource(todoFileBookmark);
-  }
-
-  await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
+  if(bookmark) stopAccessingSecurityScopedResource()
 }
 
 async function replaceFileContent(string: string, filePath: string) {

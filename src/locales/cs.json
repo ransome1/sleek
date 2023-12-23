@@ -21,7 +21,7 @@
   "settings.dark": "Tmavé",
   "settings.language": "Jazyk",
   "settings.notificationThreshold": "Hranice oznámení",
-  "settings.useMultilineForBulkTodoCreation": "Každý řádek v textovém poli vytvoří samostatnou položku úkolu",
+  "settings.bulkTodoCreation": "Každý řádek v textovém poli vytvoří samostatnou položku úkolu",
   "settings.matomo": "Povolit analýzu Matomo",
   "drawer.tabs.attributes": "Atributy",
   "drawer.tabs.filters": "Filtry",

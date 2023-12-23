@@ -21,7 +21,7 @@
   "settings.dark": "Dark",
   "settings.language": "Language",
   "settings.notificationThreshold": "Notification threshold",
-  "settings.useMultilineForBulkTodoCreation": "Each row in the text field creates a separate to-do item",
+  "settings.bulkTodoCreation": "Each row in the text field creates a separate to-do item",
   "settings.matomo": "Allow Matomo Analysis",
   "drawer.tabs.attributes": "Attributes",
   "drawer.tabs.filters": "Filters",

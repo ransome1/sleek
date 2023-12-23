@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { Box, Button, IconButton, InputAdornment, TextField } from '@mui/material';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import { Box, Button, TextField } from '@mui/material';
 import './AutoSuggest.scss';
 
-const { store } = window.api;
+const { ipcRenderer} = window.api;
 
-const regex = /(?<=^| )[+@][^ ]*/g;
+const regex: RegExp = /(?<=^| )[+@][^ ]*/g;
 
 interface Props {
   setDialogOpen: (open: boolean) => void;
@@ -15,7 +13,6 @@ interface Props {
   setTextFieldValue: (value: string) => void;
   attributes: Attributes | null;
   handleAdd: (id: number, string: string) => void;
-  todoObject: TodoObject | null;
   textFieldRef: React.RefObject<HTMLInputElement>;
 }
 
@@ -25,22 +22,18 @@ const AutoSuggest: React.FC<Props> = ({
    setTextFieldValue,
    attributes,
    handleAdd,
-   todoObject,
    textFieldRef,
  }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1);
   const [prefix, setPrefix] = useState<string | null>(null);
   const [matchPosition, setMatchPosition] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
-  const [multilineTextField, setMultilineTextField] = useState<boolean>(store.get('multilineTextField'));
-
-  const handleSetMultilineTextField = () => {
-    setMultilineTextField((prevMultilineTextField) => !prevMultilineTextField);
-  };
 
   const handleSuggestionsFetchRequested = ({ value }: { value: string }) => {
-
-    let content = value.replaceAll('\n', ' ').replaceAll(String.fromCharCode(16), ' ');
+    let content = 
+      value
+        .replaceAll(/\n/g, ' ')
+        .replaceAll(String.fromCharCode(16), ' ');
     if(!content) return false;
 
     const cursorPosition = textFieldRef.current?.selectionStart;
@@ -63,28 +56,13 @@ const AutoSuggest: React.FC<Props> = ({
     }
   };
 
-  const handleSuggestionSelected = (
-    _event: React.SyntheticEvent,
-    { suggestion }: { suggestion: string }
-  ) => {
-    if(!textFieldValue) return;
-    const createNewValue = (string: string, a: number, b: number) => {
-      return `${textFieldValue.slice(0, a)}${prefix}${string} ${textFieldValue.slice(
-        b + 1
-      )}`;
-    };
-    const newValue = createNewValue(
-      suggestion,
-      matchPosition.start,
-      matchPosition.end
-    );
-    setTextFieldValue(newValue);
+  const handleSuggestionSelected = (_event: React.SyntheticEvent, { suggestion }: { suggestion: string }) => {
+    if(!textFieldValue || !matchPosition) return;
+    const appendix = (textFieldValue.charAt(matchPosition.end) === '\n') ? '\n': ' ';
+    const updatedValue = `${textFieldValue.slice(0, matchPosition.start)}${prefix}${suggestion}${appendix}${textFieldValue.slice(matchPosition.end + 1)}`;
     setSuggestions([]);
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setTextFieldValue(newValue);
+    setMatchPosition(null);
+    setTextFieldValue(updatedValue);
   };
 
   const handleShouldRenderSuggestions = (reason: string) => {
@@ -102,15 +80,10 @@ const AutoSuggest: React.FC<Props> = ({
     return [];
   };
 
-  const handleRenderSuggestion = (
-    suggestion: string,
-    { isHighlighted }: { isHighlighted: boolean }
-  ) => (
+  const handleRenderSuggestion = (suggestion: string, { isHighlighted }: { isHighlighted: boolean }) => (
     <Box
       data-todotxt-attribute={prefix === '+' ? 'projects' : prefix === '@' ? 'contexts' : ''}
-      onClick={() =>
-        setSelectedSuggestionIndex(isHighlighted ? suggestions.indexOf(suggestion) : -1)
-      }
+      onClick={() => setSelectedSuggestionIndex(isHighlighted ? suggestions.indexOf(suggestion) : -1)}
       className={isHighlighted ? 'selected' : ''}
     >
       <Button key={suggestion}>{suggestion}</Button>
@@ -121,15 +94,16 @@ const AutoSuggest: React.FC<Props> = ({
     setSuggestions([]);
   };
 
-  const containerStyle = {
-    width: textFieldRef?.current?.offsetWidth || 'auto',
-  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      ipcRenderer.send('createTodoObject', event.target.value);
+      setTextFieldValue(event.target.value);
+    } catch(error) {
+      console.error(error);
+    }
+  };  
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent,
-    id: string,
-    string: string
-  ) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if(suggestions.length > 0) {
       if(suggestions.length === 1 || event.key === 'Enter') {
         if(selectedSuggestionIndex !== -1) {
@@ -142,12 +116,9 @@ const AutoSuggest: React.FC<Props> = ({
         handleSuggestionsClearRequested();
       }
     } else {
-      if(
-        (multilineTextField && (event.metaKey || event.ctrlKey) && event.key === 'Enter') ||
-        (!multilineTextField && event.key === 'Enter')
-      ) {
+      if((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
         event.stopPropagation();
-        handleAdd(id, string);
+        handleAdd();
       } else if(event.key === 'Escape') {
         event.stopPropagation();
         setDialogOpen(false);
@@ -162,49 +133,35 @@ const AutoSuggest: React.FC<Props> = ({
     }
   }
 
-  const value = () => {
-    return multilineTextField
-      ? textFieldValue.replaceAll(String.fromCharCode(16), '\n')
-      : textFieldValue.replaceAll('\n', String.fromCharCode(16));
-  };
-
   const inputProps: InputProps = {
     placeholder: `(A) text +project @context due:2020-12-12 t:2021-01-10 rec:d pm:1`,
-    value: value(),
+    value: (textFieldValue) ? textFieldValue.replaceAll(String.fromCharCode(16), '\n') : '',
     onChange: handleChange,
     inputRef: textFieldRef,
-    onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, todoObject?.id, textFieldValue),
+    onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, textFieldValue),
+  };
+
+  const containerStyle = {
+    width: textFieldRef?.current?.offsetWidth || 'auto',
   };
 
   useEffect(() => {
-    store.set('multilineTextField', multilineTextField);
     textFieldRef.current?.focus();
-  }, [multilineTextField]);
-
-  useEffect(() => {
-    textFieldRef.current?.focus();
-  }, [textFieldValue]);
+  }, []);
 
   return (
     <>
       <Autosuggest
-        renderInputComponent={(inputProps: InputProps) =>
-          multilineTextField ? (
-            <TextField {...inputProps} multiline className="input" />
-          ) : (
-            <TextField {...inputProps} className="input" />
-          )
-        }
+        renderInputComponent={(inputProps: InputProps) => (
+          <TextField {...inputProps} multiline className="input" />
+        )}
         renderSuggestionsContainer={({ containerProps, children }) => (
           <Box {...containerProps} style={containerStyle}>
             {children}
           </Box>
         )}
         suggestions={suggestions}
-
         shouldRenderSuggestions={handleShouldRenderSuggestions}
-
-
         onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
         onSuggestionsClearRequested={handleSuggestionsClearRequested}
         getSuggestionValue={(suggestion: string) => suggestion}
@@ -213,11 +170,6 @@ const AutoSuggest: React.FC<Props> = ({
         onSuggestionHighlighted={handleSuggestionHighlighted}
         inputProps={inputProps}
       />
-      <InputAdornment className="resize" position="end">
-        <IconButton onClick={handleSetMultilineTextField}>
-          {multilineTextField ? <CloseFullscreenIcon /> : <OpenInFullIcon />}
-        </IconButton>
-      </InputAdornment>
     </>
   );
 };

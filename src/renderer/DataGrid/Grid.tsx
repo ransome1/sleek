@@ -8,7 +8,6 @@ interface TodoDataGridProps {
   attributes: Attributes | null;
   filters: Filters | null;
   setDialogOpen: (open: boolean) => void;
-  setTextFieldValue: (value: string) => void;
   contextMenuPosition: { top: number; left: number } | null;
   setContextMenuPosition: (position: { top: number; left: number } | null) => void;
   contextMenuItems: ContextMenuItem[];
@@ -22,7 +21,6 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
    attributes,
    filters,
    setDialogOpen,
-   setTextFieldValue,
    contextMenuPosition,
    setContextMenuPosition,
    contextMenuItems,
@@ -95,7 +93,6 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
           setTodoObject={setTodoObject}
           filters={filters}
           setDialogOpen={setDialogOpen}
-          setTextFieldValue={setTextFieldValue}
           contextMenuPosition={contextMenuPosition}
           setContextMenuPosition={setContextMenuPosition}
           contextMenuItems={contextMenuItems}

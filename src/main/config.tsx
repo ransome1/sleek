@@ -74,6 +74,12 @@ const configStorage = new Store<ConfigData>({
     '2.0.2': store => {
       store.set('dueDateInTheFuture', true);
     },
+    '2.0.4': store => {
+      store.delete('multilineTextField');
+      store.delete('isDrawerOpen');
+      store.delete('useMultilineForBulkTodoCreation');
+      store.set('bulkTodoCreation', false);
+    },
   }
 });
 

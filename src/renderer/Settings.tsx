@@ -23,6 +23,8 @@ interface Props extends WithTranslation {
   setAttributeMapping: React.Dispatch<React.SetStateAction<Attribute>>;
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
+  selectedLanguage: string;
+  setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
   t: typeof i18n.t;
 }
 
@@ -32,6 +34,8 @@ const Settings: React.FC<Props> = memo(({
   setAttributeMapping,
   zoom,
   setZoom,
+  selectedLanguage,
+  setSelectedLanguage,
   t,
 }) => {
   const [settings, setSettings] = useState({
@@ -40,7 +44,7 @@ const Settings: React.FC<Props> = memo(({
     tray: store.get('tray'),
     showFileTabs: store.get('showFileTabs'),
     colorTheme: store.get('colorTheme'),
-    useMultilineForBulkTodoCreation: store.get('useMultilineForBulkTodoCreation'),
+    bulkTodoCreation: store.get('bulkTodoCreation'),
     matomo: store.get('matomo'),
     notificationsAllowed: store.get('notificationsAllowed'),
     notificationThreshold: store.get('notificationThreshold'),
@@ -121,7 +125,11 @@ const Settings: React.FC<Props> = memo(({
             ))}
           </Select>
         </FormControl>
-        <LanguageSelector setAttributeMapping={setAttributeMapping} />
+        <LanguageSelector
+          setAttributeMapping={setAttributeMapping}
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
+          />
       </Box>
     </Modal>
   );

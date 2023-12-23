@@ -9,6 +9,10 @@ const isMac: boolean = process.platform === 'darwin';
 const description = appPackage.description;
 
 function createMenu(files: FileObject[]) {
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'sleek',

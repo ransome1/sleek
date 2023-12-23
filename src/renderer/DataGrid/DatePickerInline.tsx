@@ -9,36 +9,37 @@ import dayjs from 'dayjs';
 const { ipcRenderer, store } = window.api;
 
 interface Props {
-  type: string,
-  todoObject: TodoObject,
-  date: Date,
-  filters: Filters
+  type: string;
+  todoObject: TodoObject;
+  date: Date;
+  filters: Filters;
+  selectedLanguage: string;
 }
 
 const DatePickerInline: React.FC<Props> = ({
   type,
   todoObject,
   date,
-  filters
+  filters,
+  selectedLanguage,
 }) => {
 	const [open, setOpen] = useState(false);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
 
-  const handleChange = (updatedDate: dayjs.Dayjs | null) => {
-    if(!updatedDate || !dayjs(updatedDate).isValid()) return;
+  const handleChange = (date: dayjs.Dayjs | null) => {
+    if(!date || !dayjs(date).isValid() || !todoObject.id) return;
+    const validDate = dayjs(date).format('YYYY-MM-DD');
 
-    const formattedDate = dayjs(updatedDate).format('YYYY-MM-DD');
+    const string = todoObject.string.replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
 
-    if(todoObject?.dueString) {
-      const stringToReplace = ` ${type}:${todoObject.dueString}`;
-      todoObject.string = todoObject.string.replace(stringToReplace, '');
-    }
+    const JsTodoTxtObject = new Item(string);
+    JsTodoTxtObject.setExtension(type, validDate);
 
-    const JsTodoTxtObject = new Item(todoObject.string);
-    JsTodoTxtObject.setExtension(type, formattedDate);
+    const updatedString = JsTodoTxtObject.toString().replaceAll(` ${String.fromCharCode(16)} `, String.fromCharCode(16))
+
+    ipcRenderer.send('writeTodoToFile', todoObject.id, updatedString);
 
     setOpen(false);
-    ipcRenderer.send('writeTodoToFile', todoObject.id, JsTodoTxtObject.toString());
   };
 
   const DatePickerInline = ({ date, ...props }) => {
@@ -70,8 +71,6 @@ const DatePickerInline: React.FC<Props> = ({
       />
     );
   };
-
-  const selectedLanguage = store.get('language');
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={selectedLanguage}>

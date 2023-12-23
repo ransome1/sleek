@@ -20,6 +20,8 @@ interface Props {
   setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
   headers: HeadersObject;
+  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject>>;
+  setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject>>;
 }
 
 const NavigationComponent: React.FC<Props> = memo(({
@@ -31,11 +33,20 @@ const NavigationComponent: React.FC<Props> = memo(({
   setIsNavigationOpen,
   setTriggerArchiving,
   headers,
+  setTodoObject,
+  setAttributeFields
 }) => {
+
+  const handleOpen = () => {
+    setTodoObject(null);
+    setDialogOpen(true);
+    setAttributeFields(null);
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if(files.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
-        setDialogOpen(true);
+        handleOpen();
       }
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -50,7 +61,7 @@ const NavigationComponent: React.FC<Props> = memo(({
         <Box>sleek</Box>
         {files?.length > 0 && (
           <>
-            <Button onClick={() => setDialogOpen(true)} data-testid='navigation-button-add-todo'>
+            <Button onClick={() => handleOpen()} data-testid='navigation-button-add-todo'>
               <AddIcon />
             </Button>
             <Button onClick={() => setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)} className={isDrawerOpen ? 'active' : ''} data-testid='navigation-button-drawer'>

@@ -21,7 +21,7 @@
   "settings.dark": "Oscuro",
   "settings.language": "Idioma",
   "settings.notificationThreshold": "Umbral de notificación",
-  "settings.useMultilineForBulkTodoCreation": "Cada línea en el campo de texto crea un elemento de tarea separado",
+  "settings.bulkTodoCreation": "Cada línea en el campo de texto crea un elemento de tarea separado",
   "settings.matomo": "Permitir análisis de Matomo",
   "drawer.tabs.attributes": "Atributos",
   "drawer.tabs.filters": "Filtros",

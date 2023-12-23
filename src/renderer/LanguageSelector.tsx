@@ -97,19 +97,16 @@ const friendlyLanguageName: Record<string, string> = {
 
 interface Props {
 	setAttributeMapping: (attributes: Record<string, string>) => void;
+	selectedLanguage: string;
+	setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const LanguageSelector: React.FC<Props> = ({ 
-	setAttributeMapping
+	setAttributeMapping,
+	selectedLanguage,
+  	setSelectedLanguage,
 }) => {
 	const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
-	const [selectedLanguage, setSelectedLanguage] = useState<string>(() => {
-		const storedLanguage = store.get('language') || navigator.language;
-		if(supportedLanguages && supportedLanguages.includes(storedLanguage)) {
-			return storedLanguage;
-		}
-		return 'en';
-	});
 
 	const changeLanguage = (event: React.ChangeEvent<{ value: string }>) => {
 		const language = event.target.value;

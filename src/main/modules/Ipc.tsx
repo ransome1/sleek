@@ -7,10 +7,21 @@ import archiveTodos from './File/Archive';
 import { configStorage, filterStorage, notifiedTodoObjectsStorage } from '../config';
 import { addFile, setFile, removeFile } from './File/File';
 import { openFile, createFile } from './File/Dialog';
+import { createTodoObject } from './ProcessDataRequest/CreateTodoObjects';
 
 async function handleDataRequest(event: IpcMainEvent, searchString: string): Promise<void> {
   try {
     await processDataRequest(searchString)
+  } catch(error) {
+    console.error(error);
+    event.reply('handleError', error);
+  }
+}
+
+async function handleCreateTodoObject(event: IpcMainEvent, string: string, index: number, refreshTextField: boolean): Promise<void> {
+  try {
+    const todoObject = await createTodoObject(string, index);
+    event.reply('createTodoObject', todoObject, refreshTextField);
   } catch(error) {
     console.error(error);
     event.reply('handleError', error);
@@ -173,6 +184,7 @@ function removeEventListeners(): void {
   ipcMain.off('removeFile', handleRemoveFile);
   ipcMain.off('openFile', handleOpenFile);
   ipcMain.off('createFile', handleCreateFile);
+  ipcMain.off('createTodoObject', handleCreateTodoObject);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', handleArchiveTodos);
@@ -193,6 +205,7 @@ ipcMain.on('setFile', handleSetFile);
 ipcMain.on('removeFile', handleRemoveFile);
 ipcMain.on('openFile', handleOpenFile);
 ipcMain.on('createFile', handleCreateFile);
+ipcMain.on('createTodoObject', handleCreateTodoObject);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', handleArchiveTodos);

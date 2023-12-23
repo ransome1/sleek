@@ -21,7 +21,7 @@
   "settings.dark": "Scuro",
   "settings.language": "Lingua",
   "settings.notificationThreshold": "Soglia di notifica",
-  "settings.useMultilineForBulkTodoCreation": "Ogni riga nel campo di testo crea un'attività separata",
+  "settings.bulkTodoCreation": "Ogni riga nel campo di testo crea un'attività separata",
   "settings.matomo": "Consenti l'analisi di Matomo",
   "drawer.tabs.attributes": "Attributi",
   "drawer.tabs.filters": "Filtri",

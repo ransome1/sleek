@@ -21,7 +21,7 @@
   "settings.dark": "Темная",
   "settings.language": "Язык",
   "settings.notificationThreshold": "Порог уведомлений",
-  "settings.useMultilineForBulkTodoCreation": "Каждая строка в текстовом поле создает отдельную задачу",
+  "settings.bulkTodoCreation": "Каждая строка в текстовом поле создает отдельную задачу",
   "settings.matomo": "Разрешить анализ Matomo",
   "drawer.tabs.attributes": "Атрибуты",
   "drawer.tabs.filters": "Фильтры",

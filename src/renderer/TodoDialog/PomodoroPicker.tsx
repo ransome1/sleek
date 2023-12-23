@@ -1,28 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FormControl, TextField } from '@mui/material';
 import { Item } from 'jstodotxt';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg'
 import './PomodoroPicker.scss';
 
 interface Props {
-  todoObject: TodoObject | null;
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   textFieldValue: string;
+  pomodoro: number;
+  setPomodoro: React.Dispatch<React.SetStateAction<number>>;
 }
 
+const { ipcRenderer } = window.api;
+
 const PomodoroPicker: React.FC<Props> = ({
-  todoObject,
   setTextFieldValue,
-  textFieldValue
+  textFieldValue,
+  pomodoro,
 }) => {
-  const [pomodoro, setPomodoro] = useState<number | null>(todoObject?.pm || 0);
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedPomodoro = event.target.value;
-    let string = textFieldValue.replaceAll('\n', ` ${String.fromCharCode(16)}`);
-    const JsTodoTxtObject = new Item(string);
-    JsTodoTxtObject.setExtension('pm', updatedPomodoro);
-    setTextFieldValue(JsTodoTxtObject.toString());
-    setPomodoro(updatedPomodoro);
+    try {
+      const string = textFieldValue.replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
+      const JsTodoTxtObject = new Item(string);
+      JsTodoTxtObject.setExtension('pm', event.target.value);
+      const updatedString = JsTodoTxtObject.toString().replaceAll(` ${String.fromCharCode(16)} `, String.fromCharCode(16))
+      setTextFieldValue(updatedString);
+      ipcRenderer.send('createTodoObject', updatedString);
+    } catch(error) {
+      console.error(error);
+    }
   };
 
   return (

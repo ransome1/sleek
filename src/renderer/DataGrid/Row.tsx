@@ -16,7 +16,6 @@ interface Props extends WithTranslation {
   row: TodoObject;
   filters: Filters;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   setTodoObject: React.Dispatch<React.SetStateAction<any>>;
   setContextMenuPosition: React.Dispatch<React.SetStateAction<{ top: number; left: number } | null>>;
   setContextMenuItems: React.Dispatch<React.SetStateAction<any[]>>;
@@ -28,7 +27,6 @@ const Row: React.FC<Props> = memo(({
   row,
   filters,
   setDialogOpen,
-  setTextFieldValue,
   setTodoObject,
   setContextMenuPosition,
   setContextMenuItems,
@@ -52,20 +50,11 @@ const Row: React.FC<Props> = memo(({
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
-    setContextMenuItems([
-      itemCopy,
-      itemDelete,
-    ]);
+    setContextMenuItems([itemCopy, itemDelete]);
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    ipcRenderer.send(
-      'writeTodoToFile',
-      row.id,
-      row.string,
-      event.target.checked,
-      false
-    );
+    ipcRenderer.send('writeTodoToFile', row.id, row.string, event.target.checked, false);
   };
 
   const handleRowClick = (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -86,7 +75,6 @@ const Row: React.FC<Props> = memo(({
           setTodoObject(row);
           setDialogOpen(true);
         }
-        setTextFieldValue(row.string);
       }
     } else if((event.metaKey || event.ctrlKey) && (event.key === 'Delete' || event.key === 'Backspace')) {
       setPromptItem(itemDelete);

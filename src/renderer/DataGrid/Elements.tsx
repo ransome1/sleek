@@ -78,7 +78,6 @@ const Elements: React.FC<Props> = memo(({
         let matched = false;
 
         for (const expression of expressions) {
-
           const regex = new RegExp(`^(${expression.pattern.source})`);
           const match = body.match(regex);
 

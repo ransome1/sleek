@@ -34,6 +34,7 @@ const App = () => {
   const [searchString, setSearchString] = useState<string>('');
   const [flattenedTodoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
   const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
+  const [attributeFields, setAttributeFields] = useState<TodoObject | null>(null);
   const [headers, setHeaders] = useState<HeadersObject | null>(null);
   const [filters, setFilters] = useState<Filters | null>(null);
   const [attributes, setAttributes] = useState<Attributes | null>(null);
@@ -46,11 +47,20 @@ const App = () => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem | null>(null);
   const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
-  const [textFieldValue, setTextFieldValue] = useState<string | null>(null);
+  const [textFieldValue, setTextFieldValue] = useState<string | ''>('');
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
   const [showPromptDoneFile, setShowPromptDoneFile] = useState<boolean>(false);
   const [matomo, setMatomo] = useState<boolean>(store.get('matomo') || false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(() => {
+    const storedLanguage = store.get('language') || navigator.language;
+    const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
+    if(supportedLanguages && supportedLanguages.includes(storedLanguage)) {
+      return storedLanguage;
+    }
+    return 'en';
+  });
+  
   const searchFieldRef = useRef(null);
 
   const handleRequestedData = (requestedData: RequestedData) => {
@@ -185,13 +195,6 @@ const App = () => {
   }, [snackBarContent]);
 
   useEffect(() => {
-    if(!dialogOpen) {
-      setTodoObject(null);
-      setTextFieldValue('');
-    }
-  }, [dialogOpen]);
-
-  useEffect(() => {
     store.set('zoom', zoom);
     const adjustedFontSize = 16 * (zoom / 100);
     document.body.style.fontSize = `${adjustedFontSize}px`;
@@ -210,7 +213,7 @@ const App = () => {
         s = d.getElementsByTagName('script')[0];
       g.async = true;
       g.src = matomoContainer;
-      s.parentNode.insertBefore(g, s);
+      s.parentNode?.insertBefore(g, s);
     }
   }, [matomo]);
 
@@ -231,6 +234,7 @@ const App = () => {
     ipcRenderer.on('saveToClipboard', handleResponse);
     ipcRenderer.on('triggerArchiving', () => setTriggerArchiving(true));
     ipcRenderer.on('ArchivingResult', handleResponse);
+    ipcRenderer.on('createTodoObject', (todoObject: TodoObject) => setAttributeFields(todoObject));
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
     return () => {
@@ -250,6 +254,7 @@ const App = () => {
     ipcRenderer.off('saveToClipboard', handleResponse);
     ipcRenderer.off('triggerArchiving', () => setTriggerArchiving(true));
     ipcRenderer.off('ArchivingResult', handleResponse);
+    ipcRenderer.off('createTodoObject', (todoObject: TodoObject) => setAttributeFields(todoObject));
       window.removeEventListener('drop', handleDrop);
       window.removeEventListener('dragover', handleDragOver);
     };
@@ -271,6 +276,7 @@ const App = () => {
             setTodoObject={setTodoObject}
             setTriggerArchiving={setTriggerArchiving}
             headers={headers}
+            setAttributeFields={setAttributeFields}
           />
           {files?.length > 0 && (
             <>
@@ -325,7 +331,6 @@ const App = () => {
               setContextMenuPosition={setContextMenuPosition}
               contextMenuItems={contextMenuItems}
               setContextMenuItems={setContextMenuItems}
-              setTextFieldValue={setTextFieldValue}
               setPromptItem={setPromptItem}
             />
             <SplashScreen
@@ -335,24 +340,31 @@ const App = () => {
             />
           </Box>
         </Box>
-        <TodoDialog
-          todoObject={todoObject}
-          setTodoObject={setTodoObject}
-          dialogOpen={dialogOpen}
-          setDialogOpen={setDialogOpen}
-          attributes={attributes}
-          setSnackBarSeverity={setSnackBarSeverity}
-          setSnackBarContent={setSnackBarContent}
-          textFieldValue={textFieldValue}
-          setTextFieldValue={setTextFieldValue}
-          shouldUseDarkColors={shouldUseDarkColors}
-        />
+        {dialogOpen ? (
+          <TodoDialog
+            todoObject={todoObject}
+            setTodoObject={setTodoObject}
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+            attributes={attributes}
+            attributeFields={attributeFields}
+            setAttributeFields={setAttributeFields}
+            setSnackBarSeverity={setSnackBarSeverity}
+            setSnackBarContent={setSnackBarContent}
+            textFieldValue={textFieldValue}
+            setTextFieldValue={setTextFieldValue}
+            shouldUseDarkColors={shouldUseDarkColors}
+            selectedLanguage={selectedLanguage}
+          />
+        ) : null}
         <Settings
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           setAttributeMapping={setAttributeMapping}
           zoom={zoom}
           setZoom={setZoom}
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
         />
         {contextMenuItems && (
           <ContextMenu
