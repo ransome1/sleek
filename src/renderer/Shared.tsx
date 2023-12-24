@@ -1,4 +1,4 @@
-import { i18n } from './LanguageSelector';
+import { i18n } from './Settings/LanguageSelector';
 import React from 'react';
 
 const { ipcRenderer, store } = window.api;

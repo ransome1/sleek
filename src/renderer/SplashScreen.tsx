@@ -5,7 +5,7 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import './SplashScreen.scss';
-import { i18n } from './LanguageSelector';
+import { i18n } from './Settings/LanguageSelector';
 
 interface Props extends WithTranslation {
   screen: 'noTodosVisible' | 'noTodosAvailable' | 'noFiles' | null;

@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.4-rc.4",
+  "version": "2.0.4",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -70,7 +70,7 @@
     }
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.0",
@@ -86,7 +86,7 @@
     "react-autosuggest": "^10.1.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
-    "react-i18next": "^13.2.2",
+    "react-i18next": "^14.0.0",
     "sugar": "^2.0.6"
   },
   "devDependencies": {
@@ -103,14 +103,14 @@
     "@types/react-dom": "^18.2.4",
     "@types/react-test-renderer": "^18.0.0",
     "@types/webpack-bundle-analyzer": "^4.6.0",
-    "chalk": "^4.1.2",
+    "chalk": "^4.0.0",
     "concurrently": "^8.1.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
     "css-minimizer-webpack-plugin": "^5.0.0",
     "depcheck": "^1.4.7",
     "detect-port": "^1.5.1",
-    "electron": "^27.1.3",
+    "electron": "^27.0.0",
     "electron-builder": "^24.2.1",
     "electron-devtools-installer": "^3.2.0",
     "electronmon": "^2.0.2",

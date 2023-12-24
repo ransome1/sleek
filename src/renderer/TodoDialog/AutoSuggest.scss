@@ -1,6 +1,8 @@
 @import "../Variables.scss";
 
 .react-autosuggest__suggestions-container--open {
+	display: flex;
+	
 	max-height: 20em;
 	min-height: 5em;
 	overflow-y: auto;

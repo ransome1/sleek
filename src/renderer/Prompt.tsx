@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { i18n } from './LanguageSelector';
+import { i18n } from './Settings/LanguageSelector';
 
 interface Props extends WithTranslation {
   open: boolean;

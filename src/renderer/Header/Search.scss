@@ -1,4 +1,4 @@
-@import "Variables.scss";
+@import "../Variables.scss";
 
 #Search {
 	height: 3em;
@@ -23,7 +23,7 @@
 				background: $dark-grey;
 			}
 			.MuiButtonBase-root.Mui-focusVisible {
-				background: $links;
+				background: $blue;
 			}
 			button.xClick {
 				padding: $radius;
@@ -37,11 +37,11 @@
 			}
 			button.xClick:focus-visible {
 				svg {
-					color: $links;
+					color: $blue;
 				}
 			}
 			button.xClick:focus {
-				color: $links;
+				color: $blue;
 				outline: none;
 			}					
 		}

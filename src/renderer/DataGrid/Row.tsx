@@ -8,7 +8,7 @@ import Group from './Group';
 import Elements from './Elements';
 import { handleFilterSelect } from '../Shared';
 import './Row.scss';
-import { i18n } from '../LanguageSelector';
+import { i18n } from '../Settings/LanguageSelector';
 
 const { ipcRenderer } = window.api;
 

@@ -17,11 +17,11 @@ interface Props {
   setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   files: FileObject[];
+  isNavigationOpen: boolean;
   setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
-  headers: HeadersObject;
-  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject>>;
-  setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject>>;
+  headers: HeadersObject | null;
+  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
 }
 
 const NavigationComponent: React.FC<Props> = memo(({
@@ -34,13 +34,11 @@ const NavigationComponent: React.FC<Props> = memo(({
   setTriggerArchiving,
   headers,
   setTodoObject,
-  setAttributeFields
 }) => {
 
   const handleOpen = () => {
     setTodoObject(null);
     setDialogOpen(true);
-    setAttributeFields(null);
   };
 
   useEffect(() => {
@@ -67,7 +65,7 @@ const NavigationComponent: React.FC<Props> = memo(({
             <Button onClick={() => setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)} className={isDrawerOpen ? 'active' : ''} data-testid='navigation-button-drawer'>
               <FilterAltIcon />
             </Button>
-            {headers?.completedTodoObjects > 0 && (
+            {headers && headers.completedTodoObjects > 0 && (
               <>
                 <Button onClick={() => setTriggerArchiving(true)} data-testid='navigation-button-archiving'>
                   <InventoryIcon />

@@ -4,17 +4,17 @@ import { CssBaseline, Snackbar, Alert, Box } from '@mui/material';
 import NavigationComponent from './Navigation';
 import TodoDataGrid from './DataGrid/Grid';
 import SplashScreen from './SplashScreen';
-import FileTabs from './FileTabs';
+import FileTabs from './Header/FileTabs';
 import { darkTheme, lightTheme } from './Themes';
 import DrawerComponent from './Drawer/Drawer';
-import Search from './Search';
+import Search from './Header/Search';
 import TodoDialog from './TodoDialog/TodoDialog';
 import Archive from './Archive';
-import ToolBar from './ToolBar';
+import ToolBar from './Header/ToolBar';
 import ContextMenu from './ContextMenu';
 import { I18nextProvider } from 'react-i18next';
-import { i18n } from './LanguageSelector';
-import Settings from './Settings';
+import { i18n } from './Settings/LanguageSelector';
+import Settings from './Settings/Settings';
 import { translatedAttributes } from './Shared';
 import Prompt from './Prompt';
 import './App.scss';
@@ -142,13 +142,11 @@ const App = () => {
     setSnackBarContent(response instanceof Error ? response.message : response);
   };
 
-  const handleWriteTodoToFile = function (response: Error | string) {
-    if(response instanceof Error) {
-      handleResponse(response);
-    } else {
-      setDialogOpen(false);
+  const handleCreateTodoObject = (todoObject: TodoObject) => {
+    if(todoObject) {
+      setAttributeFields(todoObject);
     }
-  };
+  };  
 
   useEffect(() => {
     if(!headers) {
@@ -217,6 +215,10 @@ const App = () => {
     }
   }, [matomo]);
 
+  const handleDisplayLoadTime = (loadTime) => {
+    console.log(`App took ${loadTime}ms to load completely`)
+  };
+
   useEffect(() => {
     ipcRenderer.on('requestData', handleRequestedData);
     ipcRenderer.on('updateFiles', handleUpdateFiles);
@@ -228,33 +230,35 @@ const App = () => {
     ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
     ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
     ipcRenderer.on('matomo', (result) => setMatomo(result));
-    ipcRenderer.on('writeTodoToFile', handleWriteTodoToFile);
+    ipcRenderer.on('writeTodoToFile', handleResponse);
     ipcRenderer.on('droppedFile', handleResponse);
     ipcRenderer.on('handleError', handleResponse);
     ipcRenderer.on('saveToClipboard', handleResponse);
     ipcRenderer.on('triggerArchiving', () => setTriggerArchiving(true));
     ipcRenderer.on('ArchivingResult', handleResponse);
-    ipcRenderer.on('createTodoObject', (todoObject: TodoObject) => setAttributeFields(todoObject));
+    ipcRenderer.on('createTodoObject', handleCreateTodoObject);
+    ipcRenderer.on('displayLoadTime', handleDisplayLoadTime);
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
     return () => {
-    ipcRenderer.off('requestData', handleRequestedData);
-    ipcRenderer.off('updateFiles', handleUpdateFiles);
-    ipcRenderer.off('updateSorting', handleUpdateSorting);
-    ipcRenderer.off('setIsSearchOpen', handleSetIsSearchOpen);
-    ipcRenderer.off('setIsNavigationOpen', handleSetIsNavigationOpen);
-    ipcRenderer.off('setShouldUseDarkColors', handleSetShouldUseDarkColors);
-    ipcRenderer.off('setShowFileTabs', handleSetShowFileTabs);
-    ipcRenderer.off('setIsDrawerOpen', handleSetIsDrawerOpen);
-    ipcRenderer.off('setIsSettingsOpen', handleSetIsSettingsOpen);
-    ipcRenderer.off('matomo', (result: boolean) => setMatomo(result));
-    ipcRenderer.off('writeTodoToFile', handleWriteTodoToFile);
-    ipcRenderer.off('droppedFile', handleResponse);
-    ipcRenderer.off('handleError', handleResponse);
-    ipcRenderer.off('saveToClipboard', handleResponse);
-    ipcRenderer.off('triggerArchiving', () => setTriggerArchiving(true));
-    ipcRenderer.off('ArchivingResult', handleResponse);
-    ipcRenderer.off('createTodoObject', (todoObject: TodoObject) => setAttributeFields(todoObject));
+      ipcRenderer.off('requestData', handleRequestedData);
+      ipcRenderer.off('updateFiles', handleUpdateFiles);
+      ipcRenderer.off('updateSorting', handleUpdateSorting);
+      ipcRenderer.off('setIsSearchOpen', handleSetIsSearchOpen);
+      ipcRenderer.off('setIsNavigationOpen', handleSetIsNavigationOpen);
+      ipcRenderer.off('setShouldUseDarkColors', handleSetShouldUseDarkColors);
+      ipcRenderer.off('setShowFileTabs', handleSetShowFileTabs);
+      ipcRenderer.off('setIsDrawerOpen', handleSetIsDrawerOpen);
+      ipcRenderer.off('setIsSettingsOpen', handleSetIsSettingsOpen);
+      ipcRenderer.off('matomo', (result: boolean) => setMatomo(result));
+      ipcRenderer.off('writeTodoToFile', handleResponse);
+      ipcRenderer.off('droppedFile', handleResponse);
+      ipcRenderer.off('handleError', handleResponse);
+      ipcRenderer.off('saveToClipboard', handleResponse);
+      ipcRenderer.off('triggerArchiving', () => setTriggerArchiving(true));
+      ipcRenderer.off('ArchivingResult', handleResponse);
+      ipcRenderer.off('createTodoObject', handleCreateTodoObject);
+      ipcRenderer.off('displayLoadTime', handleDisplayLoadTime);
       window.removeEventListener('drop', handleDrop);
       window.removeEventListener('dragover', handleDragOver);
     };
@@ -276,7 +280,6 @@ const App = () => {
             setTodoObject={setTodoObject}
             setTriggerArchiving={setTriggerArchiving}
             headers={headers}
-            setAttributeFields={setAttributeFields}
           />
           {files?.length > 0 && (
             <>

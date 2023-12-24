@@ -18,10 +18,10 @@ async function handleDataRequest(event: IpcMainEvent, searchString: string): Pro
   }
 }
 
-async function handleCreateTodoObject(event: IpcMainEvent, string: string, index: number, refreshTextField: boolean): Promise<void> {
+async function handleCreateTodoObject(event: IpcMainEvent, string: string, index: number): Promise<void> {
   try {
-    const todoObject = await createTodoObject(string, index);
-    event.reply('createTodoObject', todoObject, refreshTextField);
+    const todoObject = createTodoObject(string, index);
+    event.reply('createTodoObject', todoObject);
   } catch(error) {
     console.error(error);
     event.reply('handleError', error);

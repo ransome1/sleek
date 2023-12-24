@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import Prompt from './Prompt';
-import { i18n } from './LanguageSelector';
+import { i18n } from './Settings/LanguageSelector';
 
 const { ipcRenderer, store } = window.api;
 
@@ -17,8 +17,6 @@ interface Props extends WithTranslation {
 }
 
 const Archive: React.FC<Props> = ({
-    setSnackBarContent,
-    setSnackBarSeverity,
     triggerArchiving,
     setTriggerArchiving,
     showPromptDoneFile,
@@ -43,7 +41,7 @@ const Archive: React.FC<Props> = ({
   useEffect(() => {
     if(triggerArchiving) {
       const files = store.get('files')
-      const index = files.findIndex((file) => file.active);
+      const index = files.findIndex((file: FileObject) => file.active);
       const doneFilePath = files[index]?.doneFilePath;
 
       if(doneFilePath && headers?.completedTodoObjects > 0) {

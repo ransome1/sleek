@@ -1,4 +1,4 @@
-import archiveTodos from '../../main/modules/File/Archive';
+import archiveTodos from '../../main/Modules/File/Archive';
 import fs from 'fs/promises';
 
 jest.mock('electron', () => ({

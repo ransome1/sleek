@@ -3,7 +3,7 @@ import { Tab, Tabs } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import './FileTabs.scss';
-import { i18n } from './LanguageSelector';
+import { i18n } from '../Settings/LanguageSelector';
 
 const { ipcRenderer } = window.api;
 
@@ -20,7 +20,7 @@ const FileTabs: React.FC<Props> = memo(({
   setContextMenuItems,
   t,
 }) => {
-  const handleContextMenu = (event: React.MouseEvent<HTMLElement>, index: number) => {
+  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement, MouseEvent> | React.MouseEvent<SVGSVGElement, MouseEvent>, index: number) => {
     event.preventDefault();
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
     setContextMenuItems([
@@ -50,7 +50,7 @@ const FileTabs: React.FC<Props> = memo(({
   const index = files.findIndex((file) => file.active);
   const [fileTab, setFileTab] = useState<number>(index !== -1 ? index : 0);
 
-  const handleChange = (event: React.SyntheticEvent, index: number) => {
+  const handleChange = (_event: React.SyntheticEvent, index: number) => {
     if(index < 0 || index > 9) return false;
     setFileTab(index);
     ipcRenderer.send('setFile', index);

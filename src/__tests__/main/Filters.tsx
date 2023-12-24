@@ -1,4 +1,4 @@
-import { applyFilters } from '../../main/modules/Filters/Filters';
+import { applyFilters } from '../../main/Modules/Filters/Filters';
 
 describe('Should filter todos based on passed filters', () => {
   const todoObjects = [

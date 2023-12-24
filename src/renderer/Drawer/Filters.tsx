@@ -3,7 +3,7 @@ import { Box, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { handleSettingChange } from '../Shared';
 import './Filters.scss';
-import { i18n } from '../LanguageSelector';
+import { i18n } from '../Settings/LanguageSelector';
 
 const { store } = window.api;
 

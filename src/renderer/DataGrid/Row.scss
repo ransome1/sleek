@@ -19,17 +19,13 @@
       margin: 0 0 0 0.5em;
     }
     div {
-      text-wrap: nowrap;
       padding: 0 0.5em;
     }
     .MuiChip-root {
       font-size: 1em;
       width: auto;
       height: 2em;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      border-top-left-radius: $radius;
-      border-bottom-left-radius: $radius;
+      border-radius: $radius 0 0 $radius;
       margin: 0;
       .MuiChip-label {
         font-size: 1em;

@@ -2,51 +2,41 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FormControl, TextField, FormControlLabel, Radio, RadioGroup, Checkbox } from '@mui/material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
-import { Item } from 'jstodotxt';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { i18n } from '../LanguageSelector';
+import { i18n } from '../Settings/LanguageSelector';
 import './RecurrencePicker.scss';
-
-const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
   recurrence: string;
-  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
-  textFieldValue: string;
+  refreshTextFieldValue: (type: string, value: any) => void;
   t: typeof i18n.t;
 }
 
-const getInterval = (recurrence) => {
+const getInterval = (recurrence: string) => {
   return recurrence && recurrence.startsWith('+') ? recurrence.slice(2, 3) : recurrence ? recurrence.slice(1, 2) : null;
 }
 
-const getAmount = (recurrence) => {
+const getAmount = (recurrence: string) => {
   return recurrence && recurrence.startsWith('+') ? recurrence.slice(1, 2) : recurrence ? recurrence.slice(0, 1) : null;
 }
 
-const getStrictIndicator = (recurrence) => {
+const getStrictIndicator = (recurrence: string) => {
   return recurrence ? recurrence.startsWith('+') : false;
 }
 
 const RecurrencePicker: React.FC<Props> = ({
   recurrence,
-  setTextFieldValue,
-  textFieldValue,
+  refreshTextFieldValue,
   t
 }) => {
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null);
-  const [strictRecurrence, setStrictRecurrence] = useState<boolean>(getStrictIndicator(recurrence));
-  const [interval, setInterval] = useState<string | null>(getInterval(recurrence));
-  const [amount, setAmount] = useState<string | null>(getAmount(recurrence));
+  const [strictRecurrence, setStrictRecurrence] = useState<boolean | null>(null);
+  const [interval, setInterval] = useState<string | null>(null);
+  const [amount, setAmount] = useState<string | null>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | undefined, updatedRecurrence: string) => {
+  const handleChange = (_event: React.ChangeEvent<HTMLInputElement> | undefined, recurrence: string) => {
     try {
-      const string = textFieldValue.replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
-      const JsTodoTxtObject = new Item(string);
-      JsTodoTxtObject.setExtension('rec', updatedRecurrence);
-      const updatedString = JsTodoTxtObject.toString().replaceAll(` ${String.fromCharCode(16)} `, String.fromCharCode(16))
-      setTextFieldValue(updatedString);
-      ipcRenderer.send('createTodoObject', updatedString);
+      refreshTextFieldValue('rec', recurrence);
     } catch(error) {
       console.error(error);
     }
@@ -68,7 +58,7 @@ const RecurrencePicker: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if(amount !== null && interval !== null) {
+    if(amount && interval) {
       const updatedValue = strictRecurrence ? '+' + amount + interval : amount + interval;
       handleChange(undefined, updatedValue);
     }
@@ -130,13 +120,14 @@ const RecurrencePicker: React.FC<Props> = ({
           >
             <FormControl>
               <TextField
+                autoFocus={true}
                 label={t('todoDialog.recurrencePicker.every')}
                 type="number"
                 onChange={handleAmountChange}
                 defaultValue={amount || '1'}
                 className="recurrencePickerPopupInput"
                 inputProps={{
-                  min: 1,
+                  min: 0,
                 }}
                 InputLabelProps={{
                   shrink: true,

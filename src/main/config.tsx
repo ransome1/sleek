@@ -3,10 +3,10 @@ import path from 'path';
 import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
-import { createFileWatcher } from './modules/File/Watcher';
-import { createTray } from './modules/Tray';
-import processDataRequest from './modules/ProcessDataRequest/ProcessDataRequest';
-import handleTheme from './modules/Theme';
+import { createFileWatcher } from './Modules/File/Watcher';
+import { createTray } from './Modules/Tray';
+import processDataRequest from './Modules/ProcessDataRequest/ProcessDataRequest';
+import handleTheme from './Modules/Theme';
 import crypto from 'crypto';
 
 const anonymousUserId = crypto.randomUUID() || null;

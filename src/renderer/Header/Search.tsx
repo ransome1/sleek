@@ -2,7 +2,7 @@ import React, { useEffect, ChangeEvent, useCallback, memo } from 'react';
 import { TextField, InputAdornment, Button, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { i18n } from './LanguageSelector';
+import { i18n } from '../Settings/LanguageSelector';
 import './Search.scss';
 
 const { ipcRenderer } = window.api;
@@ -14,7 +14,6 @@ interface Props extends WithTranslation {
   isSearchOpen: boolean;
   setIsSearchOpen: (isSearchOpen: boolean) => void;
   searchFieldRef: React.RefObject<HTMLInputElement>;
-  setTextFieldValue: React.RefObject<string>;
   t: typeof i18n.t;
 }
 
@@ -25,7 +24,6 @@ const Search: React.FC<Props> = memo(({
   isSearchOpen,
   setIsSearchOpen,
   searchFieldRef,
-  setTextFieldValue,
   t,
 }) => {
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -47,20 +45,17 @@ const Search: React.FC<Props> = memo(({
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     const isSearchFocused = document.activeElement === searchFieldRef.current;
-    if(isSearchFocused && event.key === 'Escape' && searchString) {
+    if (isSearchFocused && event.key === 'Escape' && searchString) {
       setSearchString('');
-    } else if(isSearchFocused && event.key === 'Escape' && !searchString) {
+    } else if (isSearchFocused && event.key === 'Escape' && !searchString) {
       setIsSearchOpen(false);
-    } else if(searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+    } else if (searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
       ipcRenderer.send('writeTodoToFile', undefined, searchString);
       setSearchString('');
     }
-  });
+  }, [searchFieldRef, searchString, setIsSearchOpen, ipcRenderer]);
 
   useEffect(() => {
-
-    if(!searchString) setTextFieldValue('')
-
     const handleSearch = () => {
       ipcRenderer.send('requestData', searchString);
     };

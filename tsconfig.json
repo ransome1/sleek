@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "outDir": ".erb/dll",
+    "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+  "exclude": ["__tests__", "release/build", "release/app/dist", ".erb/dll"]
 }

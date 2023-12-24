@@ -12,7 +12,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AirIcon from '@mui/icons-material/Air';
 import { handleFilterSelect } from '../Shared';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { i18n } from '../LanguageSelector';
+import { i18n } from '../Settings/LanguageSelector';
 import './Attributes.scss';
 
 const { store } = window.api;

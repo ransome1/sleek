@@ -2,12 +2,12 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
-import { createMenu } from './modules/Menu';
-import handleTheme from './modules/Theme';
+import { createMenu } from './Modules/Menu';
+import handleTheme from './Modules/Theme';
 import { getAssetPath, resolveHtmlPath } from './util';
-import { createFileWatcher, watcher } from './modules/File/Watcher';
-import { createTray } from './modules/Tray';
-import './modules/Ipc';
+import { createFileWatcher, watcher } from './Modules/File/Watcher';
+import { createTray } from './Modules/Tray';
+import './Modules/Ipc';
 
 const environment: string | undefined = process.env.NODE_ENV;
 const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
@@ -19,7 +19,7 @@ const handleCreateWindow = () => {
   if(mainWindow) {
     mainWindow.show();
   } else {
-    createWindow();
+    createMainWindow();
   }
 }
 
@@ -91,7 +91,9 @@ const handleWindowSizeAndPosition = () => {
   }
 }
 
-const createWindow = () => {
+const createMainWindow = () => {
+  const startTime = performance.now();
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
@@ -107,23 +109,16 @@ const createWindow = () => {
     },
   });
 
-  const customStylesPath: string = configStorage.get('customStylesPath');
-  if(customStylesPath) {
-    fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
-      if(!error) {
-        mainWindow?.webContents.insertCSS(data);
-        console.error('Styles injected found in CSS file:', customStylesPath);
-      } else {
-        console.error('Error reading the CSS file:', error);
-      }
-    });
+  if (environment === 'development') {
+    mainWindow.webContents.openDevTools();
   }
+
+  mainWindow?.loadURL(resolveHtmlPath('index.html'));
 
   handleWindowSizeAndPosition();
 
   handleTheme();
 
-  mainWindow?.loadURL(resolveHtmlPath('index.html'));
   mainWindow
     .on('ready-to-show', handleReadyToShow)
     .on('resize', handleResize)
@@ -141,6 +136,18 @@ const createWindow = () => {
     .handleShow = handleShow
     .handleMaximize = handleMaximize
     .handleUnmaximize = handleUnmaximize;
+
+  const customStylesPath: string = configStorage.get('customStylesPath');
+  if(customStylesPath) {
+    fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
+      if(!error) {
+        mainWindow?.webContents.insertCSS(data);
+        console.error('Styles injected found in CSS file:', customStylesPath);
+      } else {
+        console.error('Error reading the CSS file:', error);
+      }
+    });
+  }
 }
 
 const handleReadyToShow = async () => {
@@ -171,7 +178,7 @@ app
   .whenReady()
   .then(() => {
 
-    createWindow();
+    createMainWindow();
 
     createMenu(files);
 

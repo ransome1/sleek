@@ -2,6 +2,9 @@
 
 .datePicker {
 	width: 11em;
+	.Mui-focusVisible {
+		color: $blue;
+	}
 }
 
 .MuiPickersLayout-root {

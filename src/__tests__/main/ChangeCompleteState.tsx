@@ -1,10 +1,10 @@
-import { changeCompleteState } from '../../main/modules/ProcessDataRequest/ChangeCompleteState';
+import { changeCompleteState } from '../../main/Modules/ProcessDataRequest/ChangeCompleteState';
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 
 const date: string = dayjs(new Date()).format('YYYY-MM-DD');
 
-jest.mock('../../main/modules/ProcessDataRequest/CreateRecurringTodo', () => ({
+jest.mock('../../main/Modules/ProcessDataRequest/CreateRecurringTodo', () => ({
   createRecurringTodo: jest.fn(),
 }));
 

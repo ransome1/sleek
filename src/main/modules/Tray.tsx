@@ -42,6 +42,7 @@ function createTray() {
 
   if(!isTray) {
     app.dock?.show();
+    return;
   }
 
   const files: FileObject[] = configStorage.get('files') as FileObject[] || [];

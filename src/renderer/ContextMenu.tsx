@@ -7,11 +7,8 @@ interface Props {
     top: number;
     left: number;
   } | null;
-  setContextMenuPosition: (position: { top: number; left: number } | null) => void;
   contextMenuItems: ContextMenuItem[];
-  setContextMenuItems: React.Dispatch<React.SetStateAction<ContextMenuItem[]>>;
-  setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
-  setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
+  setContextMenuItems: React.Dispatch<React.SetStateAction<ContextMenuItem[] | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
   setShowPromptDoneFile: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -20,11 +17,8 @@ const { ipcRenderer } = window.api;
 
 const ContextMenu: React.FC<Props> = memo(({
   contextMenuPosition,
-  setContextMenuPosition,
   contextMenuItems,
   setContextMenuItems,
-  setSnackBarSeverity,
-  setSnackBarContent,
   setPromptItem,
   setShowPromptDoneFile,
 }) => {
@@ -50,7 +44,7 @@ const ContextMenu: React.FC<Props> = memo(({
     }
   };
 
-  const handleChangeDoneFilePath = (index: number | undefined) => {
+  const handleChangeDoneFilePath = () => {
     setShowPromptDoneFile(true);
   };
 
@@ -66,7 +60,7 @@ const ContextMenu: React.FC<Props> = memo(({
           <MenuItem key={item.id} onClick={() => handleContextMenuClick(item)}>
             {item.id === 'changeDoneFilePath' ? (
               <Tooltip placement='right' arrow title={item.doneFilePath || ''}>
-                <Button onClick={() => handleChangeDoneFilePath(item.index)} startIcon={<FileOpenIcon />}>
+                <Button onClick={() => handleChangeDoneFilePath()} startIcon={<FileOpenIcon />}>
                   {item.label}
                 </Button>
               </Tooltip>

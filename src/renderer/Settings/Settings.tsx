@@ -1,18 +1,8 @@
 import React, { useState, memo } from 'react';
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-  Switch,
-  Slider,
-} from '@mui/material';
+import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, Switch, Slider } from '@mui/material';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';
-import { handleSettingChange } from './Shared';
+import { handleSettingChange } from '../Shared';
 import './Settings.scss';
 
 const { store } = window.api;

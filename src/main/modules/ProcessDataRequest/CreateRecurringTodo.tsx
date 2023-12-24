@@ -40,8 +40,11 @@ const addRecurrenceToDate = (date: Date, recurrenceInterval: string, recurrenceV
   }
 };
 
-const createRecurringTodo = async (todoString: string, recurrence: string): Promise<string> => {
-  const JsTodoTxtObject = new Item(todoString);
+const createRecurringTodo = async (string: string, recurrence: string): Promise<string> => {
+
+  let updatedString = (string || '').replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
+  
+  const JsTodoTxtObject = new Item(updatedString);
   const creationDate = new Date();
 
   JsTodoTxtObject.setCreated(creationDate);
@@ -78,6 +81,8 @@ const createRecurringTodo = async (todoString: string, recurrence: string): Prom
 
     JsTodoTxtObject.setComplete(false);
     JsTodoTxtObject.setCompleted(null);
+
+    updatedString = JsTodoTxtObject.toString().replaceAll(` ${String.fromCharCode(16)} `, String.fromCharCode(16));
 
     await writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
 

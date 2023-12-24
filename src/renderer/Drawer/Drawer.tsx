@@ -8,16 +8,16 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import TuneIcon from '@mui/icons-material/Tune';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import './Drawer.scss';
-import { i18n } from '../LanguageSelector';
+import { i18n } from '../Settings/LanguageSelector';
 
 const { store } = window.api;
 
 interface Props extends WithTranslation {
   isDrawerOpen: boolean;
   setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  attributes: Attributes;
-  filters: Filters;
-  attributeMapping: TranslatedAttributes;
+  attributes: Attributes | null;
+  filters: Filters | null;
+  attributeMapping: TranslatedAttributes | null;
   searchFieldRef: React.RefObject<HTMLInputElement>;
   t: typeof i18n.t;
 }

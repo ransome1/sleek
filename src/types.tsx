@@ -27,6 +27,7 @@ declare global {
     doneFilePath?: string;
     headline?: string;
     text?: string;
+    pathToReveal?: string;
   }
 
   interface WindowRectangle {
@@ -53,6 +54,11 @@ declare global {
     }
 
   interface Settings {
+    sorting: any;
+    showCompleted: boolean;
+    showHidden: boolean;
+    thresholdDateInTheFuture: boolean;
+    dueDateInTheFuture: boolean;
     showCompleted: boolean;
     showHidden: boolean;
     thresholdDateInTheFuture: boolean;

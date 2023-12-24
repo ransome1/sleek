@@ -1,6 +1,6 @@
 import { dialog } from 'electron';
-import { openFile, createFile } from '../../main/modules/File/Dialog';
-import { addFile } from '../../main/modules/File/File';
+import { openFile, createFile } from '../../main/Modules/File/Dialog';
+import { addFile } from '../../main/Modules/File/File';
 import { configStorage } from '../../main/config';
 import fs from 'fs/promises';
 
@@ -33,7 +33,7 @@ jest.mock('../../main/config', () => ({
   },
 }));
 
-jest.mock('../../main/modules/File/File', () => ({
+jest.mock('../../main/Modules/File/File', () => ({
   addFile: jest.fn(),
 }));
 

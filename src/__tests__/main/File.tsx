@@ -1,7 +1,7 @@
 import path from 'path'
 import { configStorage } from '../../main/config';
-import { createMenu } from '../../main/modules/Menu';
-import { addFile, removeFile, setFile } from '../../main/modules/File/File';
+import { createMenu } from '../../main/Modules/Menu';
+import { addFile, removeFile, setFile } from '../../main/Modules/File/File';
 
 jest.mock('../../main/main', () => ({
   mainWindow: {
@@ -11,15 +11,15 @@ jest.mock('../../main/main', () => ({
   },
 }));
 
-jest.mock('../../main/modules/File/Watcher', () => ({
+jest.mock('../../main/Modules/File/Watcher', () => ({
   createFileWatcher: jest.fn(),
 }));
 
-jest.mock('../../main/modules/Tray', () => ({
+jest.mock('../../main/Modules/Tray', () => ({
   createTray: jest.fn(),
 }));
 
-jest.mock('../../main/modules/Menu', () => ({
+jest.mock('../../main/Modules/Menu', () => ({
   createMenu: jest.fn(),
 }));
 

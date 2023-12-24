@@ -1,4 +1,4 @@
-@import "Variables.scss";
+@import "../Variables.scss";
 
 #ToolBar {
 	width: 3em;
@@ -16,11 +16,11 @@
 		font-size: 1.85em;
 		color: $dark-grey;
 		&.active {
-			color: $links;
+			color: $blue;
 		}
 	}
 	& svg:hover {
-		color: $links;
+		color: $blue;
 	}
 }
 
@@ -29,11 +29,11 @@
 		svg {
 			color: $mid-grey;
 			&.active {
-				color: $links;
+				color: $blue;
 			}			
 		}
 		& svg:hover {
-			color: $links;
+			color: $blue;
 		}
 	}
 }

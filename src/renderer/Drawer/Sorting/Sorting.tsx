@@ -4,7 +4,7 @@ import { handleSettingChange } from '../../Shared';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import DraggableList from './DraggableList';
 import './Sorting.scss';
-import { i18n } from '../../LanguageSelector';
+import { i18n } from '../../Settings/LanguageSelector';
 
 const { store } = window.api;
 
