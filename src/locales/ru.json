@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "Порог уведомлений",
   "settings.bulkTodoCreation": "Каждая строка в текстовом поле создает отдельную задачу",
   "settings.matomo": "Разрешить анализ Matomo",
+  "settings.zoom": "Масштаб",
   "drawer.tabs.attributes": "Атрибуты",
   "drawer.tabs.filters": "Фильтры",
   "drawer.tabs.sorting": "Сортировка",

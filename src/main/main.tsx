@@ -2,12 +2,12 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
-import { createMenu } from './Modules/Menu';
-import handleTheme from './Modules/Theme';
+import { createMenu } from './modules/Menu';
+import handleTheme from './modules/Theme';
 import { getAssetPath, resolveHtmlPath } from './util';
-import { createFileWatcher, watcher } from './Modules/File/Watcher';
-import { createTray } from './Modules/Tray';
-import './Modules/Ipc';
+import { createFileWatcher, watcher } from './modules/File/Watcher';
+import { createTray } from './modules/Tray';
+import './modules/Ipc';
 
 const environment: string | undefined = process.env.NODE_ENV;
 const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];

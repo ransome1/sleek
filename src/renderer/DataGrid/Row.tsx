@@ -20,6 +20,7 @@ interface Props extends WithTranslation {
   setContextMenuPosition: React.Dispatch<React.SetStateAction<{ top: number; left: number } | null>>;
   setContextMenuItems: React.Dispatch<React.SetStateAction<any[]>>;
   setPromptItem: PromptItem;
+  settings: Settings,
   t: typeof i18n.t;
 }
 
@@ -31,6 +32,7 @@ const Row: React.FC<Props> = memo(({
   setContextMenuPosition,
   setContextMenuItems,
   setPromptItem,
+  settings,
   t,
 }) => {
   const itemDelete = {
@@ -124,6 +126,7 @@ const Row: React.FC<Props> = memo(({
           todoObject={row}
           filters={filters}
           handleButtonClick={handleButtonClick}
+          settings={settings}
         />
       </ListItem>
     </>

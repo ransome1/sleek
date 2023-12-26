@@ -1,50 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, FormGroup, FormControlLabel, Switch, Divider } from '@mui/material';
-import { handleSettingChange } from '../../Shared';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import DraggableList from './DraggableList';
-import './Sorting.scss';
 import { i18n } from '../../Settings/LanguageSelector';
+import './Sorting.scss';
 
 const { store } = window.api;
 
-interface Settings {
-	fileSorting: boolean;
-}
-
 interface Props extends WithTranslation {
-	attributeMapping: TranslatedAttributes;
+	settings: Settings;
+	attributeMapping;
 	t: typeof i18n.t;
 }
 
+const visibleSettings = {
+  fileSorting: {
+    style: 'toggle',
+  },
+};
+
 const DrawerSorting: React.FC<Props> = ({
+	settings,
 	attributeMapping,
 	t
 }) => {
-	const [settings, setSettings] = useState<Settings>({
-		fileSorting: store.get('fileSorting'),
-	});
-
 	return (
 		<Box id='Sorting'>
 			<FormGroup>
-				{Object.entries(settings).map(([settingName, value]) => (
-					<FormControlLabel
-						key={settingName}
-						control={
-							<Switch
-								checked={value}
-								onChange={handleSettingChange(settingName, setSettings)}
-								name={settingName}
-							/>
-						}
-						label={t(`drawer.sorting.${settingName}`)}
-					/>
-				))}
+				{Object.entries(visibleSettings).map(([settingName, settingValue]) => (
+		          settingValue.style === 'toggle' ? (
+		            <FormControlLabel
+		              key={settingName}
+		              control={
+		                <Switch
+		                  checked={settings[settingName]}
+		                  onChange={(event) => store.set(settingName, event.target.checked)}
+		                  name={settingName}
+		                />
+		              }
+		              label={t(`drawer.sorting.${settingName}`)}
+		            />
+		          ) : null
+		        ))}
 			</FormGroup>
 			<Divider />
 			{!settings.fileSorting && (
-				<DraggableList attributeMapping={attributeMapping} />
+				<DraggableList settings={settings} attributeMapping={attributeMapping} />
 			)}
 		</Box>
 	);

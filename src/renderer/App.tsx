@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
+import IpcComponent from './Ipc';
+import MatomoComponent from './Matomo';
 import { CssBaseline, Snackbar, Alert, Box } from '@mui/material';
 import NavigationComponent from './Navigation';
 import TodoDataGrid from './DataGrid/Grid';
@@ -15,145 +17,42 @@ import ContextMenu from './ContextMenu';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from './Settings/LanguageSelector';
 import Settings from './Settings/Settings';
-import { translatedAttributes } from './Shared';
 import Prompt from './Prompt';
+import { translatedAttributes } from './Shared';
 import './App.scss';
 
-const environment = process.env.NODE_ENV;
 const { ipcRenderer, store } = window.api;
 
 const App = () => {
-  const [files, setFiles] = useState<FileObject[]>(store.get('files') || null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(store.get('isDrawerOpen') || false);
-  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(store.get('isSearchOpen') || false);
+  const [settings, setSettings] = useState(store.get());
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>('');
-  const [flattenedTodoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
+  const [todoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
   const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
   const [attributeFields, setAttributeFields] = useState<TodoObject | null>(null);
   const [headers, setHeaders] = useState<HeadersObject | null>(null);
   const [filters, setFilters] = useState<Filters | null>(null);
   const [attributes, setAttributes] = useState<Attributes | null>(null);
-  const [sorting, setSorting] = useState<Sorting>(store.get('sorting') || null);
-  const [zoom, setZoom] = useState<number>(store.get('zoom') || 100);
-  const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(store.get('isNavigationOpen'));
-  const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(store.get('shouldUseDarkColors') || false);
-  const [showFileTabs, setShowFileTabs] = useState<boolean>(store.get('showFileTabs'));
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem | null>(null);
-  const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
   const [textFieldValue, setTextFieldValue] = useState<string | ''>('');
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
   const [showPromptDoneFile, setShowPromptDoneFile] = useState<boolean>(false);
-  const [matomo, setMatomo] = useState<boolean>(store.get('matomo') || false);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(() => {
-    const storedLanguage = store.get('language') || navigator.language;
-    const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
-    if(supportedLanguages && supportedLanguages.includes(storedLanguage)) {
-      return storedLanguage;
-    }
-    return 'en';
-  });
-  
   const searchFieldRef = useRef(null);
 
-  const handleRequestedData = (requestedData: RequestedData) => {
-    if(requestedData?.headers) setHeaders(requestedData.headers);
-    if(requestedData?.attributes) setAttributes(requestedData.attributes);
-    if(requestedData?.filters) setFilters(requestedData.filters);
-    if(requestedData?.flattenedTodoObjects) setTodoObjects(requestedData.flattenedTodoObjects);
-    setSplashScreen(null);
-  };
-
-  const handleUpdateFiles = (files: FileObject[]) => {
-    setFiles(files);
-  };
-
-  const handleUpdateSorting = (sorting: Sorting) => {
-    setSorting(sorting)
-  };
-
-  const handleSetIsSearchOpen = () => {
-    setIsSearchOpen(prevIsSearchOpen => !prevIsSearchOpen);
-  };
-
-  const handleSetIsNavigationOpen = () => {
-    setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen);
-  };
-
-  const handleSetShouldUseDarkColors = (shouldUseDarkColors: boolean) => {
-    setShouldUseDarkColors(shouldUseDarkColors);
-  };
-
-  const handleSetShowFileTabs = () => {
-    setShowFileTabs(prevShowFileTabs => !prevShowFileTabs);
-  };
-
-  const handleSetIsDrawerOpen = () => {
-    setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen);
-  };
-
-  const handleSetIsSettingsOpen = () => {
-    setIsSettingsOpen(prevIsSettingsOpen => !prevIsSettingsOpen);
-  };
-
-  const handleDrop = (event: any) => {
-    event.preventDefault();
-    const filePath = event.dataTransfer.files[0].path;
-    if(typeof filePath === 'string') ipcRenderer.send('droppedFile', filePath);
-  };
-
-  const handlePromptConfirm = (item: ContextMenuItem) => {
-    const { id, todoObject, index } = item;
-    switch (id) {
-      case 'delete':
-        ipcRenderer.send('removeLineFromFile', todoObject?.id);
-        break;
-      case 'removeFile':
-        ipcRenderer.send('removeFile', index);
-        break;
-      default:
-        setContextMenuItems(null);
-    }
-  };
-
-  const handlePromptClose = () => {
-    setPromptItem(null);
-  };
-
-  const handleDragOver = (event: Event) => {
-    event.preventDefault();
-  };
-
-  const handleAlertClose = () => {
-    setSnackBarContent(null);
-    setSnackBarOpen(false);
-  };
-
-  const handleResponse = function (response: Error | string) {
-    const severity = response instanceof Error ? 'error' : 'success';
-    setSnackBarSeverity(severity);
-    setSnackBarContent(response instanceof Error ? response.message : response);
-  };
-
-  const handleCreateTodoObject = (todoObject: TodoObject) => {
-    if(todoObject) {
-      setAttributeFields(todoObject);
-    }
-  };  
+  const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
 
   useEffect(() => {
     if(!headers) {
       return;
     } else if(headers.availableObjects === 0) {
       setSplashScreen('noTodosAvailable');
-      setIsDrawerOpen(false);
     } else if(headers.visibleObjects === 0) {
       setSplashScreen('noTodosVisible');
     } else {
@@ -162,259 +61,184 @@ const App = () => {
   }, [headers]);
 
   useEffect(() => {
-    if(files === null || files?.length === 0) {
+    if(settings.files?.length === 0) {
       setTodoObjects(null);
       setHeaders(null);
       setSplashScreen('noFiles');
     } else {
       ipcRenderer.send('requestData');
     }
-  }, [files]);
+  }, [settings.files]);
 
   useEffect(() => {
-    store.set('sorting', sorting)
-  }, [sorting]);
-
-  useEffect(() => {
-    store.set('isSearchOpen', isSearchOpen)
-  }, [isSearchOpen]);
-
-  useEffect(() => {
-    setContextMenuItems(null);
-  }, [promptItem]);
-
-  useEffect(() => {
-    store.set('isNavigationOpen', isNavigationOpen)
-  }, [isNavigationOpen]);
-
-  useEffect(() => {
-    if(!snackBarContent) return;
-    setSnackBarOpen(true);
+    if(!snackBarContent) {
+      setSnackBarOpen(false);
+    } else {
+      setSnackBarOpen(true);
+    }
   }, [snackBarContent]);
 
-  useEffect(() => {
-    store.set('zoom', zoom);
-    const adjustedFontSize = 16 * (zoom / 100);
-    document.body.style.fontSize = `${adjustedFontSize}px`;
-  }, [zoom]);
-
-  useEffect(() => {
-    const anonymousUserId = store.get('anonymousUserId');
-    if(matomo && anonymousUserId) {
-      const matomoContainer: string = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
-      const _mtm = window._mtm = window._mtm || [];
-      _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-      if(anonymousUserId) _mtm.push({'anonymousUserId': anonymousUserId });
-      const
-        d = document,
-        g = d.createElement('script'),
-        s = d.getElementsByTagName('script')[0];
-      g.async = true;
-      g.src = matomoContainer;
-      s.parentNode?.insertBefore(g, s);
-    }
-  }, [matomo]);
-
-  const handleDisplayLoadTime = (loadTime) => {
-    console.log(`App took ${loadTime}ms to load completely`)
-  };
-
-  useEffect(() => {
-    ipcRenderer.on('requestData', handleRequestedData);
-    ipcRenderer.on('updateFiles', handleUpdateFiles);
-    ipcRenderer.on('updateSorting', handleUpdateSorting);
-    ipcRenderer.on('setIsSearchOpen', handleSetIsSearchOpen);
-    ipcRenderer.on('setIsNavigationOpen', handleSetIsNavigationOpen);
-    ipcRenderer.on('setShouldUseDarkColors', handleSetShouldUseDarkColors);
-    ipcRenderer.on('setShowFileTabs', handleSetShowFileTabs);
-    ipcRenderer.on('setIsDrawerOpen', handleSetIsDrawerOpen);
-    ipcRenderer.on('setIsSettingsOpen', handleSetIsSettingsOpen);
-    ipcRenderer.on('matomo', (result) => setMatomo(result));
-    ipcRenderer.on('writeTodoToFile', handleResponse);
-    ipcRenderer.on('droppedFile', handleResponse);
-    ipcRenderer.on('handleError', handleResponse);
-    ipcRenderer.on('saveToClipboard', handleResponse);
-    ipcRenderer.on('triggerArchiving', () => setTriggerArchiving(true));
-    ipcRenderer.on('ArchivingResult', handleResponse);
-    ipcRenderer.on('createTodoObject', handleCreateTodoObject);
-    ipcRenderer.on('displayLoadTime', handleDisplayLoadTime);
-    window.addEventListener('drop', handleDrop);
-    window.addEventListener('dragover', handleDragOver);
-    return () => {
-      ipcRenderer.off('requestData', handleRequestedData);
-      ipcRenderer.off('updateFiles', handleUpdateFiles);
-      ipcRenderer.off('updateSorting', handleUpdateSorting);
-      ipcRenderer.off('setIsSearchOpen', handleSetIsSearchOpen);
-      ipcRenderer.off('setIsNavigationOpen', handleSetIsNavigationOpen);
-      ipcRenderer.off('setShouldUseDarkColors', handleSetShouldUseDarkColors);
-      ipcRenderer.off('setShowFileTabs', handleSetShowFileTabs);
-      ipcRenderer.off('setIsDrawerOpen', handleSetIsDrawerOpen);
-      ipcRenderer.off('setIsSettingsOpen', handleSetIsSettingsOpen);
-      ipcRenderer.off('matomo', (result: boolean) => setMatomo(result));
-      ipcRenderer.off('writeTodoToFile', handleResponse);
-      ipcRenderer.off('droppedFile', handleResponse);
-      ipcRenderer.off('handleError', handleResponse);
-      ipcRenderer.off('saveToClipboard', handleResponse);
-      ipcRenderer.off('triggerArchiving', () => setTriggerArchiving(true));
-      ipcRenderer.off('ArchivingResult', handleResponse);
-      ipcRenderer.off('createTodoObject', handleCreateTodoObject);
-      ipcRenderer.off('displayLoadTime', handleDisplayLoadTime);
-      window.removeEventListener('drop', handleDrop);
-      window.removeEventListener('dragover', handleDragOver);
-    };
-  }, []);
-
   return (
-    <I18nextProvider i18n={i18n}>
-      <ThemeProvider theme={shouldUseDarkColors ? darkTheme : lightTheme}>
-        <CssBaseline />
-        <Box className={`flexContainer ${isNavigationOpen ? '' : 'hideNavigation'} ${shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}>
-          <NavigationComponent
-            isDrawerOpen={isDrawerOpen}
-            setIsDrawerOpen={setIsDrawerOpen}
-            setDialogOpen={setDialogOpen}
-            files={files}
-            isNavigationOpen={isNavigationOpen}
-            setIsNavigationOpen={setIsNavigationOpen}
-            setIsSettingsOpen={setIsSettingsOpen}
-            setTodoObject={setTodoObject}
-            setTriggerArchiving={setTriggerArchiving}
-            headers={headers}
-          />
-          {files?.length > 0 && (
-            <>
+    <>
+      <IpcComponent
+        setHeaders={setHeaders}
+        setAttributes={setAttributes}
+        setFilters={setFilters}
+        setTodoObjects={setTodoObjects}
+        setTodoObject={setTodoObject}
+        setAttributeFields={setAttributeFields}
+        setSnackBarSeverity={setSnackBarSeverity}
+        setSnackBarContent={setSnackBarContent}
+        setSettings={setSettings}
+        setTriggerArchiving={setTriggerArchiving}
+        setSplashScreen={setSplashScreen}
+        setIsSettingsOpen={setIsSettingsOpen}
+      />
+      <MatomoComponent
+        settings={settings}
+      />      
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={settings.shouldUseDarkColors ? darkTheme : lightTheme}>
+          <CssBaseline />
+          <Box className={`flexContainer ${settings.isNavigationOpen ? '' : 'hideNavigation'} ${settings.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}>
+            <NavigationComponent
+              setDialogOpen={setDialogOpen}
+              settings={settings}
+              setSettings={setSettings}
+              setIsSettingsOpen={setIsSettingsOpen}
+              setTodoObject={setTodoObject}
+              setTriggerArchiving={setTriggerArchiving}
+              headers={headers}
+            />
+            {settings.files?.length > 0 && (
               <DrawerComponent
-                isDrawerOpen={isDrawerOpen}
-                setIsDrawerOpen={setIsDrawerOpen}
+                settings={settings}
+                setSettings={setSettings}
                 attributes={attributes}
                 filters={filters}
-                sorting={sorting}
-                setSorting={setSorting}
-                attributeMapping={attributeMapping}
                 searchFieldRef={searchFieldRef}
+                attributeMapping={attributeMapping}
               />
-            </>
-          )}
-          <Box className="flexItems">
-            {files?.length > 0 && (
-            <>
-              {showFileTabs ?
-              <FileTabs
-                files={files}
-                setContextMenuPosition={setContextMenuPosition}
-                setContextMenuItems={setContextMenuItems}
-               /> : null}
-              {headers?.availableObjects > 0 ?
-              <>
-                <Search
-                  headers={headers}
-                  searchString={searchString}
-                  setSearchString={setSearchString}
-                  isSearchOpen={isSearchOpen}
-                  setIsSearchOpen={setIsSearchOpen}
-                  searchFieldRef={searchFieldRef}
-                  setTextFieldValue={setTextFieldValue}
-                />
-                <ToolBar
-                  isSearchOpen={isSearchOpen}
-                  setIsSearchOpen={setIsSearchOpen}
-                  searchFieldRef={searchFieldRef}
-                />
-              </>
-              : null }
-            </>
             )}
-            <TodoDataGrid
-              flattenedTodoObjects={flattenedTodoObjects}
+            <Box className="flexItems">
+              {settings.files?.length > 0 && (
+              <>
+                {settings.showFileTabs ?
+                <FileTabs
+                  settings={settings}
+                  setContextMenuPosition={setContextMenuPosition}
+                  setContextMenuItems={setContextMenuItems}
+                 /> : null}
+                {headers?.availableObjects > 0 ?
+                <>
+                  <Search
+                    headers={headers}
+                    searchString={searchString}
+                    setSearchString={setSearchString}
+                    settings={settings}
+                    
+                    searchFieldRef={searchFieldRef}
+                    setTextFieldValue={setTextFieldValue}
+                  />
+                  <ToolBar
+                    settings={settings}
+                    searchFieldRef={searchFieldRef}
+                  />
+                </>
+                : null }
+              </>
+              )}
+              <TodoDataGrid
+                todoObjects={todoObjects}
+                setTodoObject={setTodoObject}
+                attributes={attributes}
+                filters={filters}
+                setDialogOpen={setDialogOpen}
+                contextMenuPosition={contextMenuPosition}
+                setContextMenuPosition={setContextMenuPosition}
+                contextMenuItems={contextMenuItems}
+                setContextMenuItems={setContextMenuItems}
+                setPromptItem={setPromptItem}
+                settings={settings}
+              />
+              <SplashScreen
+                screen={splashScreen}
+                setDialogOpen={setDialogOpen}
+                setSearchString={setSearchString}
+              />
+            </Box>
+          </Box>
+          {dialogOpen ? (
+            <TodoDialog
+              todoObject={todoObject}
               setTodoObject={setTodoObject}
-              attributes={attributes}
-              filters={filters}
+              dialogOpen={dialogOpen}
               setDialogOpen={setDialogOpen}
+              attributes={attributes}
+              attributeFields={attributeFields}
+              setAttributeFields={setAttributeFields}
+              setSnackBarSeverity={setSnackBarSeverity}
+              setSnackBarContent={setSnackBarContent}
+              textFieldValue={textFieldValue}
+              setTextFieldValue={setTextFieldValue}
+              settings={settings}
+            />
+          ) : null}
+          <Settings
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+            settings={settings}
+            attributeMapping={attributeMapping}
+          />
+          {contextMenuItems && (
+            <ContextMenu
               contextMenuPosition={contextMenuPosition}
               setContextMenuPosition={setContextMenuPosition}
               contextMenuItems={contextMenuItems}
               setContextMenuItems={setContextMenuItems}
+              setSnackBarSeverity={setSnackBarSeverity}
+              setSnackBarContent={setSnackBarContent}
               setPromptItem={setPromptItem}
+              setShowPromptDoneFile={setShowPromptDoneFile}
             />
-            <SplashScreen
-              screen={splashScreen}
-              setDialogOpen={setDialogOpen}
-              setSearchString={setSearchString}
-            />
-          </Box>
-        </Box>
-        {dialogOpen ? (
-          <TodoDialog
-            todoObject={todoObject}
-            setTodoObject={setTodoObject}
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-            attributes={attributes}
-            attributeFields={attributeFields}
-            setAttributeFields={setAttributeFields}
-            setSnackBarSeverity={setSnackBarSeverity}
-            setSnackBarContent={setSnackBarContent}
-            textFieldValue={textFieldValue}
-            setTextFieldValue={setTextFieldValue}
-            shouldUseDarkColors={shouldUseDarkColors}
-            selectedLanguage={selectedLanguage}
-          />
-        ) : null}
-        <Settings
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          setAttributeMapping={setAttributeMapping}
-          zoom={zoom}
-          setZoom={setZoom}
-          selectedLanguage={selectedLanguage}
-          setSelectedLanguage={setSelectedLanguage}
-        />
-        {contextMenuItems && (
-          <ContextMenu
-            contextMenuPosition={contextMenuPosition}
-            setContextMenuPosition={setContextMenuPosition}
-            contextMenuItems={contextMenuItems}
-            setContextMenuItems={setContextMenuItems}
-            setSnackBarSeverity={setSnackBarSeverity}
-            setSnackBarContent={setSnackBarContent}
-            setPromptItem={setPromptItem}
-            setShowPromptDoneFile={setShowPromptDoneFile}
-          />
-        )}
-        <Snackbar
-          open={snackBarOpen}
-          onClose={handleAlertClose}
-          autoHideDuration={3000}
-        >
-          <Alert
-            severity={snackBarSeverity}
+          )}
+          <Snackbar
+            open={snackBarOpen}
+            onClose={() => setSnackBarContent(null)}
+            autoHideDuration={3000}
           >
-            {snackBarContent}
-          </Alert>
-        </Snackbar>
-        {files?.length > 0 && (
-          <Archive
-            setSnackBarSeverity={setSnackBarSeverity}
-            setSnackBarContent={setSnackBarContent}
-            triggerArchiving={triggerArchiving}
-            setTriggerArchiving={setTriggerArchiving}
-            showPromptDoneFile={showPromptDoneFile}
-            setShowPromptDoneFile={setShowPromptDoneFile}
-            headers={headers}
-          />
-        )}
-        {promptItem && (
-          <Prompt
-            open={true}
-            onClose={handlePromptClose}
-            onConfirm={() => handlePromptConfirm(promptItem)}
-            headline={promptItem.headline || ''}
-            text={promptItem.text || ''}
-            confirmButton={promptItem.label}
-          />
-        )}
-      </ThemeProvider>
-    </I18nextProvider>
+            <Alert
+              severity={snackBarSeverity}
+            >
+              {snackBarContent}
+            </Alert>
+          </Snackbar>
+          {settings.files?.length > 0 && (
+            <Archive
+              setSnackBarSeverity={setSnackBarSeverity}
+              setSnackBarContent={setSnackBarContent}
+              triggerArchiving={triggerArchiving}
+              settings={settings}
+              setTriggerArchiving={setTriggerArchiving}
+              showPromptDoneFile={showPromptDoneFile}
+              setShowPromptDoneFile={setShowPromptDoneFile}
+              headers={headers}
+            />
+          )}
+          {promptItem && (
+            <Prompt
+              open={true}
+              onClose={() => setPromptItem(null)}
+              promptItem={promptItem}
+              setContextMenuItems={setContextMenuItems}
+              headline={promptItem.headline || ''}
+              text={promptItem.text || ''}
+              confirmButton={promptItem.label}
+            />
+          )}
+        </ThemeProvider>
+      </I18nextProvider>
+    </>
   );
 };
 

@@ -7,20 +7,18 @@ import './DraggableListItem.scss';
 
 const { store } = window.api;
 
-type DraggableListItem = {
+type Props = {
   item: Sorting;
   index: number;
   settings: Settings;
-  setSettings: any;
   attributeMapping: TranslatedAttributes;
 };
 
-const DraggableListItem: React.FC<DraggableListItem> = ({
+const DraggableListItem: React.FC<Props> = ({
   item,
   index,
   settings,
-  setSettings,
-  attributeMapping
+  attributeMapping,
 }) => {
   const handleButtonClick = () => {
     const updatedSorting = settings.sorting.map((sortingItem) => {
@@ -30,10 +28,6 @@ const DraggableListItem: React.FC<DraggableListItem> = ({
       return sortingItem;
     });
     store.set('sorting', updatedSorting);
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      sorting: updatedSorting,
-    }));
   };
 
   return (

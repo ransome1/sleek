@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "Benachrichtigungsschwelle",
   "settings.bulkTodoCreation": "Jede Zeile im Textfeld erstellt eine separate Todo",
   "settings.matomo": "Matomo-Analyse erlauben",
+  "settings.zoom": "Vergrößerung",
   "drawer.tabs.attributes": "Attribute",
   "drawer.tabs.filters": "Filter",
   "drawer.tabs.sorting": "Sortierung",

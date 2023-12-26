@@ -1,4 +1,4 @@
-import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/Modules/ProcessDataRequest/ProcessTodoObjects';
+import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/ProcessDataRequest/ProcessTodoObjects';
 
 jest.mock('../../main/config', () => ({
   configStorage: {

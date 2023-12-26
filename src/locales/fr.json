@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "Umbral de notificación",
   "settings.bulkTodoCreation": "Chaque ligne dans le champ de texte crée un élément de tâche séparé",
   "settings.matomo": "Autoriser l'analyse Matomo",
+  "settings.zoom": "Zoom",
   "drawer.tabs.attributes": "Attributs",
   "drawer.tabs.filters": "Filtres",
   "drawer.tabs.sorting": "Tri",

@@ -5,7 +5,6 @@ import { configStorage } from '../config';
 function handleTheme() {
   const colorTheme: string = configStorage.get('colorTheme');
   let shouldUseDarkColors: boolean;
-
   if(colorTheme === 'system') {
     shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
   } else if(colorTheme === 'dark') {
@@ -15,10 +14,7 @@ function handleTheme() {
   } else {
     shouldUseDarkColors = false;
   }
-
   configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
-
-  mainWindow!.webContents.send('setShouldUseDarkColors', shouldUseDarkColors);
 }
 
 export default handleTheme;

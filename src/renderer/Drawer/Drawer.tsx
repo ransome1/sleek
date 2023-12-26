@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, KeyboardEvent, memo } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import { Drawer, Tabs, Tab, Box } from '@mui/material';
 import DrawerAttributes from './Attributes';
 import DrawerSorting from './Sorting/Sorting';
@@ -7,28 +7,26 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import TuneIcon from '@mui/icons-material/Tune';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import './Drawer.scss';
 import { i18n } from '../Settings/LanguageSelector';
+import './Drawer.scss';
 
 const { store } = window.api;
 
 interface Props extends WithTranslation {
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  settings: Settings;
   attributes: Attributes | null;
   filters: Filters | null;
-  attributeMapping: TranslatedAttributes | null;
   searchFieldRef: React.RefObject<HTMLInputElement>;
+  attributeMapping;
   t: typeof i18n.t;
 }
 
 const DrawerComponent: React.FC<Props> = memo(({
-  isDrawerOpen,
-  setIsDrawerOpen,
+  settings,
   attributes,
   filters,
-  attributeMapping,
   searchFieldRef,
+  attributeMapping,
   t
 }) => {
   const [activeTab, setActiveTab] = useState<string>('attributes');
@@ -60,20 +58,20 @@ const DrawerComponent: React.FC<Props> = memo(({
   const handleKeyDown = (event: KeyboardEvent) => {
     const isSearchFocused = document.activeElement === searchFieldRef.current;
     if(!isSearchFocused && event.key === 'Escape') {
-      setIsDrawerOpen(false);
+      store.set('isDrawerOpen', false);
     }
   };
 
   useEffect(() => {
-    if(isDrawerOpen) {
-      document.addEventListener('keydown', handleKeyDown);
+    if(settings.isDrawerOpen) {
+      document.addEventListener('keydown', (event) => handleKeyDown(event));
     } else {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', (event) => handleKeyDown(event));
     }
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', (event) => handleKeyDown(event));
     };
-  }, [isDrawerOpen]);
+  }, [settings.isDrawerOpen]);
 
   useEffect(() => {
     store.set('drawerWidth', drawerWidth);
@@ -83,8 +81,8 @@ const DrawerComponent: React.FC<Props> = memo(({
     <Drawer
       ref={containerRef}
       variant="persistent"
-      open={isDrawerOpen}
-      className={`Drawer ${isDrawerOpen ? 'open' : ''}`}
+      open={settings.isDrawerOpen}
+      className={`Drawer ${settings.isDrawerOpen ? 'open' : ''}`}
       style={{ width: drawerWidth, marginLeft: -drawerWidth }}
     >
       <Box className="drawerHandle" onMouseDown={handleMouseDown} />
@@ -93,17 +91,17 @@ const DrawerComponent: React.FC<Props> = memo(({
         <Tab tabIndex={0} label={t('drawer.tabs.filters')} value="filters" icon={<TuneIcon />} />
         <Tab tabIndex={0} label={t('drawer.tabs.sorting')} value="sorting" icon={<FilterListIcon />} />
       </Tabs>
-      {isDrawerOpen && activeTab === 'attributes' && (
+      {settings.isDrawerOpen && activeTab === 'attributes' && (
         <DrawerAttributes
-          isDrawerOpen={isDrawerOpen}
+          isDrawerOpen={settings.isDrawerOpen}
           attributes={attributes}
-          filters={filters}
           attributeMapping={attributeMapping}
+          filters={filters}
         />
       )}
-      {isDrawerOpen && activeTab === 'filters' && <DrawerFilters />}
-      {isDrawerOpen && activeTab === 'sorting' && (
-        <DrawerSorting attributeMapping={attributeMapping}/>
+      {settings.isDrawerOpen && activeTab === 'filters' && <DrawerFilters settings={settings} />}
+      {settings.isDrawerOpen && activeTab === 'sorting' && (
+        <DrawerSorting attributeMapping={attributeMapping} settings={settings} />
       )}
     </Drawer>
   );

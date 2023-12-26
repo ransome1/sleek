@@ -1,6 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Button, Dialog, DialogContent, DialogActions } from '@mui/material';
-import { Item } from 'jstodotxt';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import AutoSuggest from './AutoSuggest';
@@ -24,10 +23,9 @@ interface Props extends WithTranslation {
   setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject>>;
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
-  shouldUseDarkColors: boolean;
   textFieldValue: string,
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>,
-  selectedLanguage: React.Dispatch<React.SetStateAction<string>>,
+  settings: Settings,
   t: typeof i18n.t;
 }
 
@@ -41,10 +39,9 @@ const TodoDialog: React.FC<Props> = memo(({
   setAttributeFields,
   setSnackBarSeverity,
   setSnackBarContent,
-  shouldUseDarkColors,
   textFieldValue,
   setTextFieldValue,
-  selectedLanguage,
+  settings,
   t
 }) => {
   const bulkTodoCreation = store.get('bulkTodoCreation');
@@ -78,35 +75,36 @@ const TodoDialog: React.FC<Props> = memo(({
     setDialogOpen(false);
   };
 
-  const refreshTextFieldValue = (type, value) => {
-    let updatedString = (textFieldValue || '').replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
-    const JsTodoTxtObject = new Item(updatedString);
-    if (type === 'priority') {
-      JsTodoTxtObject.setPriority(value);
-    } else {
-      JsTodoTxtObject.setExtension(type, value);
-    }
-    updatedString = JsTodoTxtObject.toString().replaceAll(` ${String.fromCharCode(16)} `, String.fromCharCode(16));
-    setTextFieldValue(updatedString);
-  };
-
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: any) => {
     if(event.metaKey && event.key === 'Enter') {
       event.preventDefault();
       handleAdd();
     }
   };
 
+  const updateAttributeFields = (todoObject: TodoObject) => {
+    if(todoObject) {
+      setPriority(todoObject?.priority || '-');
+      setDueDate(todoObject?.due || null);
+      setThresholdDate(todoObject?.t || null);
+      setRecurrence(todoObject?.rec || null);
+      setPomodoro(todoObject?.pm || 0);
+    }
+  }
+
   useEffect(() => {
-    if(textFieldValue) ipcRenderer.send('createTodoObject', textFieldValue)
+    setTextFieldValue(todoObject?.string || '');
+    updateAttributeFields(todoObject);
+  }, [todoObject]);
+
+  useEffect(() => {
+    if(textFieldValue) ipcRenderer.send('updateAttributeFields', todoObject?.id, textFieldValue)
   }, [textFieldValue]);
 
   useEffect(() => {
-      setPriority(attributeFields?.priority || '-');
-      setDueDate(attributeFields?.due || null);
-      setThresholdDate(attributeFields?.t || null);
-      setRecurrence(attributeFields?.rec || null);
-      setPomodoro(attributeFields?.pm || 0);
+    if(attributeFields) {
+      updateAttributeFields(attributeFields);
+    }
   }, [attributeFields]);
 
   useEffect(() => {
@@ -120,7 +118,7 @@ const TodoDialog: React.FC<Props> = memo(({
       id="TodoDialog"
       open={dialogOpen}
       onClose={handleClose}
-      className={shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}
+      className={settings.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}
       onKeyDown={handleKeyDown}
     >
       <DialogContent>
@@ -134,25 +132,30 @@ const TodoDialog: React.FC<Props> = memo(({
         />
         <PriorityPicker
           priority={priority}
-          refreshTextFieldValue={refreshTextFieldValue}
+          textFieldValue={textFieldValue}
+          todoObject={todoObject}
         />
         <DueDatePicker
           dueDate={dueDate}
-          selectedLanguage={selectedLanguage}
-          refreshTextFieldValue={refreshTextFieldValue}
+          settings={settings}
+          textFieldValue={textFieldValue}
+          todoObject={todoObject}
         />
         <ThresholdDatePicker
           thresholdDate={thresholdDate}
-          selectedLanguage={selectedLanguage}
-          refreshTextFieldValue={refreshTextFieldValue}
+          settings={settings}
+          textFieldValue={textFieldValue}
+          todoObject={todoObject}
         />
         <RecurrencePicker
           recurrence={recurrence}
-          refreshTextFieldValue={refreshTextFieldValue}
+          textFieldValue={textFieldValue}
+          todoObject={todoObject}
         />
         <PomodoroPicker
           pomodoro={pomodoro}
-          refreshTextFieldValue={refreshTextFieldValue}
+          textFieldValue={textFieldValue}
+          todoObject={todoObject}
         />
       </DialogContent>
       <DialogActions>

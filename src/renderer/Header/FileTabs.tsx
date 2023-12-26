@@ -8,14 +8,14 @@ import { i18n } from '../Settings/LanguageSelector';
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  files: FileObject[];
+  settings: Settings;
   setContextMenuPosition: (position: { top: number; left: number }) => void;
   setContextMenuItems: (items: any[]) => void;
   t: typeof i18n.t;
 }
 
 const FileTabs: React.FC<Props> = memo(({
-  files,
+  settings,
   setContextMenuPosition,
   setContextMenuItems,
   t,
@@ -28,12 +28,12 @@ const FileTabs: React.FC<Props> = memo(({
         id: 'changeDoneFilePath',
         label: t('fileTabs.changeLocation'),
         index: index,
-        doneFilePath: files[index].doneFilePath,
+        doneFilePath: settings.files[index].doneFilePath,
       },
       {
         id: 'revealInFileManager',
         label: t('fileTabs.revealFile'),
-        pathToReveal: files[index].todoFilePath,
+        pathToReveal: settings.files[index].todoFilePath,
       },
       {
         id: 'removeFile',
@@ -45,9 +45,7 @@ const FileTabs: React.FC<Props> = memo(({
     ]);
   };
 
-  if(!files || files.length === 0) return null;
-
-  const index = files.findIndex((file) => file.active);
+  const index = settings.files.findIndex((file) => file.active);
   const [fileTab, setFileTab] = useState<number>(index !== -1 ? index : 0);
 
   const handleChange = (_event: React.SyntheticEvent, index: number) => {
@@ -62,7 +60,7 @@ const FileTabs: React.FC<Props> = memo(({
 
   return (
     <Tabs value={fileTab} id="fileTabs" onChange={handleChange}>
-    {files.map((file, index) => (
+    {settings.files.map((file, index) => (
       file ? (
         <Tab
           key={index}

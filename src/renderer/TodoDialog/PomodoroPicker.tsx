@@ -3,19 +3,23 @@ import { FormControl, TextField } from '@mui/material';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg'
 import './PomodoroPicker.scss';
 
+const { ipcRenderer } = window.api;
+
 interface Props {
   pomodoro: number;
-  refreshTextFieldValue: (type: string, value: any) => void;
+  textFieldValue: string;
+  todoObject: TodoObject;
 }
 
 const PomodoroPicker: React.FC<Props> = ({
   pomodoro,
-  refreshTextFieldValue,
+  textFieldValue,
+  todoObject,
 }) => {
   
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      refreshTextFieldValue('pm', event.target.value);
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'pm', event.target.value);
     } catch(error) {
       console.error(error);
     }

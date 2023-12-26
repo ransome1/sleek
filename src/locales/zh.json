@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "通知阈值",
   "settings.bulkTodoCreation": "文本字段中的每一行都创建一个单独的待办事项",
   "settings.matomo": "允许Matomo分析",
+  "settings.zoom": "缩放",
   "drawer.tabs.attributes": "属性",
   "drawer.tabs.filters": "过滤器",
   "drawer.tabs.sorting": "排序",

@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "Bildirim Eşik Değeri",
   "settings.bulkTodoCreation": "Metin alanındaki her satır ayrı bir görev oluşturur",
   "settings.matomo": "Matomo Analizine İzin Ver",
+  "settings.zoom": "Yakınlaştırma",
   "drawer.tabs.attributes": "Özellikler",
   "drawer.tabs.filters": "Filtreler",
   "drawer.tabs.sorting": "Sıralama",

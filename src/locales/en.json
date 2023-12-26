@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "Notification threshold",
   "settings.bulkTodoCreation": "Each row in the text field creates a separate to-do item",
   "settings.matomo": "Allow Matomo Analysis",
+  "settings.zoom": "Zoom",
   "drawer.tabs.attributes": "Attributes",
   "drawer.tabs.filters": "Filters",
   "drawer.tabs.sorting": "Sorting",

@@ -7,12 +7,14 @@ interface Props {
   todoObject: TodoObject;
   filters: Filters;
   handleButtonClick: (key: string, value: string) => void;
+  settings: Settings;
 }
 
 const Elements: React.FC<Props> = memo(({
   todoObject,
   filters,
-  handleButtonClick
+  handleButtonClick,
+  settings,
 }) => {
   const replacements: {
     [key: string]: (value: string, type: string) => React.ReactNode;
@@ -23,6 +25,7 @@ const Elements: React.FC<Props> = memo(({
         todoObject={todoObject}
         date={todoObject.due}
         filters={filters}
+        settings={settings}
       />
     ),
     t: (value, type) => (
@@ -31,6 +34,7 @@ const Elements: React.FC<Props> = memo(({
         todoObject={todoObject}
         date={todoObject.t}
         filters={filters}
+        settings={settings}
       />
     ),
     contexts: (value, type) => (

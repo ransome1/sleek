@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "Soglia di notifica",
   "settings.bulkTodoCreation": "Ogni riga nel campo di testo crea un'attività separata",
   "settings.matomo": "Consenti l'analisi di Matomo",
+  "settings.zoom": "Zoom",
   "drawer.tabs.attributes": "Attributi",
   "drawer.tabs.filters": "Filtri",
   "drawer.tabs.sorting": "Ordinamento",

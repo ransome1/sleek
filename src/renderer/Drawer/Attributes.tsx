@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, KeyboardEvent, memo } from 'react';
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Box,
-  Button,
-  Badge,
-} from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Button, Badge } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AirIcon from '@mui/icons-material/Air';
@@ -19,15 +12,15 @@ const { store } = window.api;
 
 interface Props extends WithTranslation {
   attributes: Attributes | null;
+  attributeMapping;
   filters: Filters | null;
-  attributeMapping: { [key: string]: string };
   t: typeof i18n.t;
 }
 
 const DrawerAttributes: React.FC<Props> = memo(({
    attributes,
-   filters,
    attributeMapping,
+   filters,
    t,
  }) => {
   const mustNotify = (items) => items.some((item) => item.notify);

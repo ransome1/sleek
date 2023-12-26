@@ -9,10 +9,6 @@ const isMac: boolean = process.platform === 'darwin';
 const description = appPackage.description;
 
 function createMenu(files: FileObject[]) {
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'sleek',
@@ -41,7 +37,7 @@ function createMenu(files: FileObject[]) {
           label: 'Settings',
           accelerator: 'CmdOrCtrl+,',
           click: () => {
-            mainWindow!.webContents.send('setIsSettingsOpen');
+            mainWindow!.webContents.send('isSettingsOpen', true);
           },
         },
         ...(isMac
@@ -119,20 +115,23 @@ function createMenu(files: FileObject[]) {
           label: 'Toggle drawer',
           accelerator: 'CmdOrCtrl+B',
           click: () => {
-            mainWindow!.webContents.send('setIsDrawerOpen');
+            const isDrawerOpen = configStorage.get('isDrawerOpen');
+            configStorage.set('isDrawerOpen', !isDrawerOpen);
           },
         },
         {
           label: 'Toggle navigation',
           accelerator: 'Ctrl+Alt+H',
           click: () => {
-            mainWindow!.webContents.send('setIsNavigationOpen');
+            const isNavigationOpen = configStorage.get('isNavigationOpen');
+            configStorage.set('isNavigationOpen', !isNavigationOpen);
           },
         },
         {
           label: 'Toggle file tabs',
           click: () => {
-            mainWindow!.webContents.send('setShowFileTabs');
+            const showFileTabs = configStorage.get('showFileTabs');
+            configStorage.set('showFileTabs', !showFileTabs);
           },
         },
         {
@@ -152,7 +151,8 @@ function createMenu(files: FileObject[]) {
           label: 'Find',
           accelerator: 'CmdOrCtrl+F',
           click: () => {
-            mainWindow!.webContents.send('setIsSearchOpen');
+            const isSearchOpen = configStorage.get('isSearchOpen');
+            configStorage.set('isSearchOpen', !isSearchOpen);
           },
         },
         {
@@ -164,7 +164,7 @@ function createMenu(files: FileObject[]) {
           },
         },
         {
-          label: 'Reset search and filters',
+          label: 'Reset filters',
           accelerator: 'Ctrl+0',
           click: async () => {
             filterStorage.set('filters', {});

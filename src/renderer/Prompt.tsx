@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from './Settings/LanguageSelector';
 
+const { ipcRenderer } = window.api;
+
 interface Props extends WithTranslation {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  promptItem: PromptItem;
+  setContextMenuItems: React.Dispatch<React.SetStateAction<ContextMenuItem>>;
   headline?: string;
   text?: string;
   confirmButton?: string;
@@ -20,7 +23,8 @@ interface Props extends WithTranslation {
 const Prompt: React.FC<Props> = ({
   open,
   onClose,
-  onConfirm,
+  promptItem,
+  setContextMenuItems,
   headline,
   text,
   confirmButton,
@@ -33,9 +37,25 @@ const Prompt: React.FC<Props> = ({
   const handleConfirm = (allow: boolean) => {
     onClose();
     if(allow) {
-      onConfirm();
+      const { id, todoObject, index } = promptItem;
+      switch (id) {
+        case 'delete':
+          ipcRenderer.send('removeLineFromFile', todoObject?.id);
+          break;
+        case 'removeFile':
+          ipcRenderer.send('removeFile', index);
+          break;
+        default:
+          setContextMenuItems(null);
+      }
     }
-  };  
+  }; 
+
+  useEffect(() => {
+    if(promptItem) {
+      setContextMenuItems(null);  
+    }
+  }, [promptItem]);
 
   return (
     <Dialog open={open} onClose={onClose}>

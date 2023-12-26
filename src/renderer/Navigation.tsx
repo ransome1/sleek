@@ -9,16 +9,12 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Box } from '@mui/material';
 import './Navigation.scss';
 
-const { ipcRenderer } = window.api;
+const { ipcRenderer, store } = window.api;
 
 interface Props {
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  files: FileObject[];
-  isNavigationOpen: boolean;
-  setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  settings: Settings;
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
   headers: HeadersObject | null;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
@@ -26,11 +22,8 @@ interface Props {
 
 const NavigationComponent: React.FC<Props> = memo(({
   setIsSettingsOpen,
-  isDrawerOpen,
-  setIsDrawerOpen,
   setDialogOpen,
-  files,
-  setIsNavigationOpen,
+  settings,
   setTriggerArchiving,
   headers,
   setTodoObject,
@@ -43,7 +36,7 @@ const NavigationComponent: React.FC<Props> = memo(({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if(files.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
+      if(settings.files?.length > 0 && (event.metaKey || event.ctrlKey) && event.key === 'n') {
         handleOpen();
       }
     };
@@ -51,18 +44,18 @@ const NavigationComponent: React.FC<Props> = memo(({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [files]);
+  }, [settings.files]);
 
   return (
     <>
       <Box id='navigation'>
         <Box>sleek</Box>
-        {files?.length > 0 && (
+        {settings.files?.length > 0 && (
           <>
             <Button onClick={() => handleOpen()} data-testid='navigation-button-add-todo'>
               <AddIcon />
             </Button>
-            <Button onClick={() => setIsDrawerOpen(prevIsDrawerOpen => !prevIsDrawerOpen)} className={isDrawerOpen ? 'active' : ''} data-testid='navigation-button-drawer'>
+            <Button onClick={() => store.set('isDrawerOpen', !settings.isDrawerOpen)} className={settings.isDrawerOpen ? 'active' : ''} data-testid='navigation-button-drawer'>
               <FilterAltIcon />
             </Button>
             {headers && headers.completedTodoObjects > 0 && (
@@ -80,11 +73,11 @@ const NavigationComponent: React.FC<Props> = memo(({
         <Button className='break' onClick={() => setIsSettingsOpen(true)} data-testid='navigation-button-settings'>
           <SettingsIcon />
         </Button>
-        <Button onClick={() => setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen)}>
+        <Button onClick={() => store.set('isNavigationOpen', false)}>
           <KeyboardArrowLeftIcon />
         </Button>
       </Box>
-      <Button onClick={() => setIsNavigationOpen(prevIsNavigationOpen => !prevIsNavigationOpen)} className='showNavigation' data-testid='navigation-button-hide-navigation'>
+      <Button onClick={() => store.set('isNavigationOpen', true)} className='showNavigation' data-testid='navigation-button-hide-navigation'>
         <KeyboardArrowRightIcon />
       </Button>
     </>

@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "알림 임계값",
   "settings.bulkTodoCreation": "텍스트 필드의 각 줄은 별도의 할 일 항목을 생성합니다",
   "settings.matomo": "Matomo 분석 허용",
+  "settings.zoom": "줌",
   "drawer.tabs.attributes": "속성",
   "drawer.tabs.filters": "필터",
   "drawer.tabs.sorting": "정렬",

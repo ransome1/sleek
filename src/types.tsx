@@ -59,10 +59,14 @@ declare global {
     showHidden: boolean;
     thresholdDateInTheFuture: boolean;
     dueDateInTheFuture: boolean;
-    showCompleted: boolean;
-    showHidden: boolean;
-    thresholdDateInTheFuture: boolean;
-    dueDateInTheFuture: boolean;
+    isNavigationOpen: boolean;
+    isDrawerOpen: boolean;
+    matomo: boolean;
+    files: FileObject[];
+    shouldUseDarkColors: boolean;
+    language: string;
+    isSearchOpen: boolean;
+    fileSorting: boolean;
   }
 
   interface FileObject {

@@ -6,30 +6,34 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import './DatePicker.scss';
 
+const { ipcRenderer } = window.api;
+
 interface Props extends WithTranslation {
   thresholdDate: string;
-  selectedLanguage: string;
-  refreshTextFieldValue: (type: string, value: any) => void;
+  settings: Settings;
+  textFieldValue: string;
+  todoObject: TodoObject;
   t: typeof i18n.t;
 }
 
 const ThresholdDatePickerComponent: React.FC<Props> = ({
   thresholdDate,
-  selectedLanguage,
-  refreshTextFieldValue,
+  settings,
+  textFieldValue,
+  todoObject,
   t,
 }) => {
   
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
-      refreshTextFieldValue('t', dayjs(date).format('YYYY-MM-DD'));
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 't', dayjs(date).format('YYYY-MM-DD'));
     } catch(error) {
       console.error(error);
     }
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={selectedLanguage}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={settings.language}>
       <DatePicker
         className="datePicker"
         format="YYYY-MM-DD"

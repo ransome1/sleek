@@ -8,9 +8,18 @@ import dayjs from 'dayjs';
 let lines: string[];
 export const badge: Badge = { count: 0 };
 
-function createTodoObject(string: string, index: number): TodoObject {
+function createTodoObject(index: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
   const content = string.replaceAll(/[\x10\r\n]/g, ' ');
   const JsTodoTxtObject = new Item(content);
+
+  if(attributeType && attributeValue) {
+    if(attributeType === 'priority') {
+      JsTodoTxtObject.setPriority(attributeValue);
+    } else {
+      JsTodoTxtObject.setExtension(attributeType, attributeValue);
+    }
+  }
+
   const body = JsTodoTxtObject.body();
   const speakingDates: DateAttributes = extractSpeakingDates(body);
   const due = speakingDates['due:']?.date || null;
@@ -41,7 +50,7 @@ function createTodoObject(string: string, index: number): TodoObject {
     rec,
     hidden,
     pm,
-    string: string,
+    string: JsTodoTxtObject.toString(),
   };
 }
 
@@ -54,7 +63,7 @@ async function createTodoObjects(fileContent: string | null): Promise<TodoObject
   lines = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
   
   const todoObjects: TodoObject[] = await Promise.all(lines.map(async (line, i) => {
-    const todoObject: TodoObject = await createTodoObject(line, i);
+    const todoObject: TodoObject = await createTodoObject(i, line);
     if(todoObject.due && todoObject.body && !todoObject.complete) {
       handleNotification(todoObject.due, todoObject.body, badge);
     }

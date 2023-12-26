@@ -14,18 +14,28 @@ async function handleDataRequest(event: IpcMainEvent, searchString: string): Pro
     await processDataRequest(searchString)
   } catch(error) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
-async function handleCreateTodoObject(event: IpcMainEvent, string: string, index: number): Promise<void> {
+async function handleUpdateAttributeFields(event: IpcMainEvent, index: number, string: string): Promise<void> {
   try {
-    const todoObject = createTodoObject(string, index);
-    event.reply('createTodoObject', todoObject);
+    const todoObject = createTodoObject(index, string);
+    event.reply('updateAttributeFields', todoObject);
   } catch(error) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
+}
+
+function handleUpdateTodoObject(event: IpcMainEvent, index, string, attributeType, attributeValue): Promise<void> {
+ try {
+    const todoObject = createTodoObject(index, string, attributeType, attributeValue);
+    event.reply('updateTodoObject', todoObject);
+  } catch(error) {
+    console.error(error);
+    event.reply('responseFromMainProcess', error);
+  } 
 }
 
 async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean): Promise<void> {
@@ -36,7 +46,7 @@ async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: st
     event.reply('writeTodoToFile', response);
   } catch(error) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -45,7 +55,7 @@ function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
     event.returnValue = configStorage.get(value);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -56,7 +66,7 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
     console.log(`Set ${key} to ${value}`);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -66,7 +76,7 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
     console.log(`Filters saved`);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -76,7 +86,7 @@ function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): voi
     console.log(`notifiedTodoObjects saved`);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -85,7 +95,7 @@ function handleSetFile(event: IpcMainEvent, index: number): void {
     setFile(index);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -94,7 +104,7 @@ function handleRemoveFile(event: IpcMainEvent, index: number): void {
     removeFile(index);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -103,7 +113,7 @@ function handleAddFile(event: IpcMainEvent, filePath: string): void {
     addFile(filePath, null);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -121,7 +131,7 @@ function handleRevealInFileManager(event: IpcMainEvent, pathToReveal: string): v
     shell.showItemInFolder(pathToReveal);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -130,7 +140,7 @@ async function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): Promis
     await openFile(setDoneFile);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -139,7 +149,7 @@ async function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): Prom
     await createFile(setDoneFile);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -148,27 +158,24 @@ async function handleRemoveLineFromFile(event: IpcMainEvent, index: number): Pro
     await removeLineFromFile(index);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
 async function handleArchiveTodos(event: IpcMainEvent): Promise<void> {
   try {
     const archivingResult = await archiveTodos();
-    event.reply('ArchivingResult', archivingResult);
+    event.reply('responseFromMainProcess', archivingResult);
   } catch (error: any) {
     console.error(error);
-    event.reply('handleError', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
 function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
-
     clipboard.writeText(string);
-
     event.reply('saveToClipboard', 'Copied to clipboard: ' + string);
-
   } catch (error: any) {
     console.error(error);
     event.reply('saveToClipboard', error);
@@ -184,7 +191,7 @@ function removeEventListeners(): void {
   ipcMain.off('removeFile', handleRemoveFile);
   ipcMain.off('openFile', handleOpenFile);
   ipcMain.off('createFile', handleCreateFile);
-  ipcMain.off('createTodoObject', handleCreateTodoObject);
+  ipcMain.off('updateAttributeFields', handleUpdateAttributeFields);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', handleArchiveTodos);
@@ -193,6 +200,7 @@ function removeEventListeners(): void {
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
   ipcMain.off('revealInFileManager', handleRevealInFileManager);
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile);
+  ipcMain.off('updateTodoObject', handleUpdateTodoObject);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -205,7 +213,7 @@ ipcMain.on('setFile', handleSetFile);
 ipcMain.on('removeFile', handleRemoveFile);
 ipcMain.on('openFile', handleOpenFile);
 ipcMain.on('createFile', handleCreateFile);
-ipcMain.on('createTodoObject', handleCreateTodoObject);
+ipcMain.on('updateAttributeFields', handleUpdateAttributeFields);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', handleArchiveTodos);
@@ -214,3 +222,5 @@ ipcMain.on('droppedFile', handleDroppedFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
 ipcMain.on('revealInFileManager', handleRevealInFileManager);
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile);
+ipcMain.on('updateTodoObject', handleUpdateTodoObject);
+

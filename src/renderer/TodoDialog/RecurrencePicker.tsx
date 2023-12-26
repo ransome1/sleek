@@ -6,11 +6,7 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import './RecurrencePicker.scss';
 
-interface Props extends WithTranslation {
-  recurrence: string;
-  refreshTextFieldValue: (type: string, value: any) => void;
-  t: typeof i18n.t;
-}
+const { ipcRenderer } = window.api;
 
 const getInterval = (recurrence: string) => {
   return recurrence && recurrence.startsWith('+') ? recurrence.slice(2, 3) : recurrence ? recurrence.slice(1, 2) : null;
@@ -24,9 +20,17 @@ const getStrictIndicator = (recurrence: string) => {
   return recurrence ? recurrence.startsWith('+') : false;
 }
 
+interface Props extends WithTranslation {
+  recurrence: string;
+  textFieldValue: string;
+  todoObject: TodoObject;
+  t: typeof i18n.t;
+}
+
 const RecurrencePicker: React.FC<Props> = ({
   recurrence,
-  refreshTextFieldValue,
+  textFieldValue,
+  todoObject,
   t
 }) => {
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null);
@@ -36,7 +40,7 @@ const RecurrencePicker: React.FC<Props> = ({
 
   const handleChange = (_event: React.ChangeEvent<HTMLInputElement> | undefined, recurrence: string) => {
     try {
-      refreshTextFieldValue('rec', recurrence);
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'rec', recurrence);
     } catch(error) {
       console.error(error);
     }

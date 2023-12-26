@@ -3,13 +3,14 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import Prompt from './Prompt';
 import { i18n } from './Settings/LanguageSelector';
 
-const { ipcRenderer, store } = window.api;
+const { ipcRenderer} = window.api;
 
 interface Props extends WithTranslation {
   setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
   triggerArchiving: boolean;
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
+  settings: Settings,
   showPromptDoneFile: boolean;
   setShowPromptDoneFile: React.Dispatch<React.SetStateAction<boolean>>;
   headers: HeadersObject;
@@ -19,6 +20,7 @@ interface Props extends WithTranslation {
 const Archive: React.FC<Props> = ({
     triggerArchiving,
     setTriggerArchiving,
+    settings,
     showPromptDoneFile,
     setShowPromptDoneFile,
     headers,
@@ -40,9 +42,8 @@ const Archive: React.FC<Props> = ({
 
   useEffect(() => {
     if(triggerArchiving) {
-      const files = store.get('files')
-      const index = files.findIndex((file: FileObject) => file.active);
-      const doneFilePath = files[index]?.doneFilePath;
+      const index = settings.files.findIndex((file: FileObject) => file.active);
+      const doneFilePath = settings.files[index]?.doneFilePath;
 
       if(doneFilePath && headers?.completedTodoObjects > 0) {
         setShowPromptDoneFile(false);

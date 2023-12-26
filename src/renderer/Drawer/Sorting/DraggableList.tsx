@@ -6,19 +6,15 @@ import './DraggableList.scss';
 
 const { store } = window.api;
 
-interface Settings {
-  sorting: string[];
-}
-
-interface Props {
+type Props = {
+  settings: Settings;
   attributeMapping: TranslatedAttributes;
-}
+};
 
 const DraggableList: React.FC<Props> = ({
-  attributeMapping
+  settings,
+  attributeMapping,
 }) => {
-  const [settings, setSettings] = useState<Settings>({ sorting: store.get('sorting') });
-
   const reorder = (list: string[], startIndex: number, endIndex: number): string[] => {
     const result = Array.from(list); // Use Array.from instead of Array, from
     const [removed] = result.splice(startIndex, 1);
@@ -30,10 +26,6 @@ const DraggableList: React.FC<Props> = ({
     if(!result.destination) return;
     const updatedSorting = reorder(settings.sorting, result.source.index, result.destination.index);
     store.set('sorting', updatedSorting);
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      sorting: updatedSorting,
-    }));
   };
 
   return (
@@ -47,7 +39,6 @@ const DraggableList: React.FC<Props> = ({
                 index={index}
                 key={item.id}
                 settings={settings}
-                setSettings={setSettings}
                 attributeMapping={attributeMapping}
               />
             ))}

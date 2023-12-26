@@ -3,10 +3,10 @@ import path from 'path';
 import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
-import { createFileWatcher } from './Modules/File/Watcher';
-import { createTray } from './Modules/Tray';
-import processDataRequest from './Modules/ProcessDataRequest/ProcessDataRequest';
-import handleTheme from './Modules/Theme';
+import { createFileWatcher } from './modules/File/Watcher';
+import { createTray } from './modules/Tray';
+import processDataRequest from './modules/ProcessDataRequest/ProcessDataRequest';
+import handleTheme from './modules/Theme';
 import crypto from 'crypto';
 
 const anonymousUserId = crypto.randomUUID() || null;
@@ -105,15 +105,16 @@ if(!fs.existsSync(customStylesPath)) {
 
 filterStorage.onDidAnyChange(async () => {
   try {
-    await processDataRequest()
+    await processDataRequest();
   } catch(error) {
     console.error(error);
   }
 });
 
-configStorage.onDidAnyChange(async () => {
+configStorage.onDidAnyChange(async(settings) => {
   try {
-    await processDataRequest()
+    await processDataRequest();
+    mainWindow!.webContents.send('settingsChanged', settings);
   } catch(error) {
     console.error(error);
   }
@@ -121,21 +122,12 @@ configStorage.onDidAnyChange(async () => {
 
 configStorage.onDidChange('files', async (files: FileObject[] | undefined) => {
   try {
-    if(files && mainWindow) {
+    if(files) {
       createFileWatcher(files);
-      mainWindow.webContents.send('updateFiles', files);
     }
   } catch(error) {
     console.error(error);
   }
-});
-
-configStorage.onDidChange('matomo', (matomo) => {
-  mainWindow!.webContents.send('matomo', matomo);
-});
-
-configStorage.onDidChange('showFileTabs', () => {
-  mainWindow!.webContents.send('setShowFileTabs');
 });
 
 configStorage.onDidChange('colorTheme', (colorTheme) => {

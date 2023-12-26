@@ -23,6 +23,7 @@
   "settings.notificationThreshold": "Prog powiadomień",
   "settings.bulkTodoCreation": "Cada linha no campo de texto cria um item de tarefa separado",
   "settings.matomo": "Permitir Análise do Matomo",
+  "settings.zoom": "Zoom",
   "drawer.tabs.attributes": "Atributos",
   "drawer.tabs.filters": "Filtros",
   "drawer.tabs.sorting": "Ordenação",

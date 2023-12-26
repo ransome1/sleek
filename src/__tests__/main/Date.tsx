@@ -1,7 +1,7 @@
-import { extractSpeakingDates, replaceSpeakingDatesWithAbsoluteDates } from '../../main/Modules/Date';
+import { extractSpeakingDates, replaceSpeakingDatesWithAbsoluteDates } from '../../main/modules/Date';
 import dayjs from 'dayjs';
 
-jest.mock('../../main/Modules/File/Write', () => ({
+jest.mock('../../main/modules/File/Write', () => ({
   writeTodoObjectToFile: jest.fn(),
 }));
 

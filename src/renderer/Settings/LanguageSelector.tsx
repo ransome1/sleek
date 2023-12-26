@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { translatedAttributes } from '../Shared';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import de from '../../locales/de.json';
@@ -54,9 +53,8 @@ const options: i18n.InitOptions = {
 		ko: { translation: ko },
 		hi: { translation: hi },
 	},
-	lng: store.get('language') || navigator.language,
 	fallbackLng: 'en',
-	supportedLngs: ['de', 'en', 'en-gb', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
+	supportedLngs: ['de', 'en', 'en-GB', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
 	interpolation: {
 		escapeValue: false,
 	},
@@ -67,6 +65,9 @@ i18n
 	.use(initReactI18next)
 	.init(options)
 	.then(() => {
+		if(!store.get('language')) {
+			store.set('language', navigator.language);
+		}
 		// TODO: check if this is still working
 		i18n.on('missingKey', (key: string) => {
 			console.warn(`Missing translation key: ${key}`);
@@ -79,7 +80,7 @@ i18n
 const friendlyLanguageName: Record<string, string> = {
 	de: 'Deutsch',
 	en: 'English',
-	'en-gb': 'English (UK)',
+	'en-GB': 'English (UK)',
 	it: 'Italiano',
 	es: 'Español',
 	fr: 'Français',
@@ -96,33 +97,31 @@ const friendlyLanguageName: Record<string, string> = {
 };
 
 interface Props {
-	setAttributeMapping: (attributes: Record<string, string>) => void;
-	selectedLanguage: string;
-	setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
+	settings: Settings;
+	attributeMapping;
 }
 
-const LanguageSelector: React.FC<Props> = ({ 
-	setAttributeMapping,
-	selectedLanguage,
-  	setSelectedLanguage,
+const LanguageSelector: React.FC<Props> = ({
+  	settings,
+  	attributeMapping,
 }) => {
 	const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
 
 	const changeLanguage = (event: React.ChangeEvent<{ value: string }>) => {
 		const language = event.target.value;
-		setSelectedLanguage(language);
+		store.set('language', language);
 	};
 
 	useEffect(() => {
-		i18n.changeLanguage(selectedLanguage)
-			.then(() => {
-				store.set('language', selectedLanguage);
-				setAttributeMapping(translatedAttributes(i18n.t));
-			})
+		i18n.changeLanguage(settings.language)
+		.then(() => {
+			store.set('language', settings.language);
+			//setAttributeMapping(attributeMapping(i18n.t));
+		})
 			.catch((error) => {
-				console.error('Error loading translation:', error);
-			});
-	}, [selectedLanguage, setAttributeMapping]);
+			console.error('Error loading translation:', error);
+		});
+	}, [settings.language]);
 
 	return (
 		<FormControl>
@@ -131,9 +130,9 @@ const LanguageSelector: React.FC<Props> = ({
 				labelId='language'
 				id='language'
 				label='Language'
-				value={selectedLanguage}
+				value={settings.language || navigator.language}
 				name='language'
-				onChange={changeLanguage}
+				onChange={(event) => changeLanguage(event)}
 			>
 				{Array.isArray(supportedLanguages) ? (
 					supportedLanguages.map((languageCode: string) => (

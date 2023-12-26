@@ -4,24 +4,27 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import './PriorityPicker.scss';
 
+const { ipcRenderer } = window.api;
 const alphabetArray = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
 const priorities = [{ value: '-', label: '-' }, ...alphabetArray.map((letter) => ({ value: letter, label: letter }))];
 
 interface Props extends WithTranslation {
   priority: string;
-  refreshTextFieldValue: (type: string, value: any) => void;
+  textFieldValue: string;
+  todoObject: TodoObject;
   t: typeof i18n.t;
 }
 
 const PriorityPicker: React.FC<Props> = ({
   priority,
-  refreshTextFieldValue,
+  textFieldValue,
+  todoObject,
   t,
 }: Props) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      refreshTextFieldValue('priority', event.target.value);
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'priority', event.target.value);
     } catch(error) {
       console.error(error);
     }

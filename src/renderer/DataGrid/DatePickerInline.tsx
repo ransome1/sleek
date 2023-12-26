@@ -6,14 +6,14 @@ import { Item } from 'jstodotxt';
 import { handleFilterSelect } from '../Shared';
 import dayjs from 'dayjs';
 
-const { ipcRenderer, store } = window.api;
+const { ipcRenderer } = window.api;
 
 interface Props {
   type: string;
   todoObject: TodoObject;
   date: Date;
   filters: Filters;
-  selectedLanguage: string;
+  settings: Settings;
 }
 
 const DatePickerInline: React.FC<Props> = ({
@@ -21,7 +21,7 @@ const DatePickerInline: React.FC<Props> = ({
   todoObject,
   date,
   filters,
-  selectedLanguage,
+  settings,
 }) => {
 	const [open, setOpen] = useState(false);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
@@ -73,7 +73,7 @@ const DatePickerInline: React.FC<Props> = ({
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={selectedLanguage}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={settings.language}>
       <DatePickerInline
         onChange={handleChange}
         date={date}

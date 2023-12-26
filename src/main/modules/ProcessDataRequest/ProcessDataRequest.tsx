@@ -25,7 +25,7 @@ async function processDataRequest(search: string): Promise<void> {
 
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
-    throw new Error('No active file');
+    return;
   }
   const sorting: Sorting[] = configStorage.get('sorting');
   const showHidden: boolean = configStorage.get('showHidden');
@@ -52,14 +52,14 @@ async function processDataRequest(search: string): Promise<void> {
   let flattenedTodoObjects: TodoObject[];
 
   if(fileSorting) {
-    flattenedTodoObjects = flattenTodoObjects(todoObjects, '');
+    todoObjects = flattenTodoObjects(todoObjects, '');
   } else {
     const sortedAndGroupedTodos: TodoObject[] = sortAndGroupTodoObjects(todoObjects, sorting);
-    flattenedTodoObjects = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
+    todoObjects = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
   }
 
   const requestedData: RequestedData = {
-      flattenedTodoObjects,
+      todoObjects,
       attributes,
       headers,
       filters,

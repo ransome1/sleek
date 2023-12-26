@@ -6,30 +6,34 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import './DatePicker.scss';
 
+const { ipcRenderer } = window.api;
+
 interface Props extends WithTranslation {
   dueDate: string;
-  selectedLanguage: string;
-  refreshTextFieldValue: (type: string, value: any) => void;
+  settings: Settings;
+  textFieldValue: string;
+  todoObject: TodoObject;
   t: typeof i18n.t;
 }
 
 const DueDatePickerComponent: React.FC<Props> = ({
   dueDate,
-  selectedLanguage,
-  refreshTextFieldValue,
+  settings,
+  textFieldValue,
+  todoObject,
   t,
 }) => {
   
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
-      refreshTextFieldValue('due', dayjs(date).format('YYYY-MM-DD'));
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'due', dayjs(date).format('YYYY-MM-DD'));
     } catch(error) {
       console.error(error);
     }
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={selectedLanguage}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={settings.language}>
       <DatePicker
         className="datePicker"
         format="YYYY-MM-DD"

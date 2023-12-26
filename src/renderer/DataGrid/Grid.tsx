@@ -4,7 +4,7 @@ import Row from './Row';
 import './Grid.scss';
 
 interface TodoDataGridProps {
-  flattenedTodoObjects: TodoObject[] | null;
+  todoObjects: TodoObject[] | null;
   attributes: Attributes | null;
   filters: Filters | null;
   setDialogOpen: (open: boolean) => void;
@@ -14,19 +14,21 @@ interface TodoDataGridProps {
   setContextMenuItems: (items: any[]) => void;
   setTodoObject: (todoObject: TodoObject) => void;
   setPromptItem: PromptItem;
+  settings: Settings;
 }
 
 const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
-   flattenedTodoObjects,
-   attributes,
-   filters,
-   setDialogOpen,
-   contextMenuPosition,
-   setContextMenuPosition,
-   contextMenuItems,
-   setContextMenuItems,
-   setTodoObject,
-   setPromptItem,
+  todoObjects,
+  attributes,
+  filters,
+  setDialogOpen,
+  contextMenuPosition,
+  setContextMenuPosition,
+  contextMenuItems,
+  setContextMenuItems,
+  setTodoObject,
+  setPromptItem,
+  settings,
  }) => {
   const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
@@ -69,7 +71,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
       const totalHeight = list.scrollHeight;
       const clientHeight = list.clientHeight;
       if(totalHeight - scrollPos <= clientHeight * 3) {
-        const remainingRows: TodoObject[] | null = flattenedTodoObjects?.slice(visibleRowCount, visibleRowCount + 30);
+        const remainingRows: TodoObject[] | null = todoObjects?.slice(visibleRowCount, visibleRowCount + 30);
         if(remainingRows?.length === 0) {
           setLoadMoreRows(false);
         } else {
@@ -79,9 +81,9 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
     }
   };
 
-  if(!flattenedTodoObjects || Object.keys(flattenedTodoObjects).length === 0) return null;
+  if(!todoObjects || Object.keys(todoObjects).length === 0) return null;
 
-  const rows = flattenedTodoObjects.slice(0, visibleRowCount);
+  const rows = todoObjects.slice(0, visibleRowCount);
 
   return (
     <List id="dataGrid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
@@ -98,6 +100,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
           contextMenuItems={contextMenuItems}
           setContextMenuItems={setContextMenuItems}
           setPromptItem={setPromptItem}
+          settings={settings}
         />
       ))}
     </List>

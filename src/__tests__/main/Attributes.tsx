@@ -1,4 +1,4 @@
-import { attributes, updateAttributes } from '../../main/Modules/Attributes';
+import { attributes, updateAttributes } from '../../main/modules/Attributes';
 
 const todoObjects = [
   { id: 1, created: null, priority: 'A', projects: ['Project 1'], contexts: ['Context 1'], due: '2023-01-01', dueString: '2023-01-01', complete: false, completed: null, t: '2024-02-01', tString: '2024-02-01', rec: null, pm: null, body: null, hidden: false, string: '', notify: false, },

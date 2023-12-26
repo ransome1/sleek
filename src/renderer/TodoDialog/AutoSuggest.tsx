@@ -16,7 +16,6 @@ const AutoSuggest: React.FC<Props> = ({
    textFieldValue,
    setTextFieldValue,
    attributes,
-   handleAdd,
  }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [prefix, setPrefix] = useState<string | null>(null);
