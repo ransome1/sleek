@@ -17,9 +17,6 @@ interface Props extends WithTranslation {
   filters: Filters;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTodoObject: React.Dispatch<React.SetStateAction<any>>;
-  setContextMenuPosition: React.Dispatch<React.SetStateAction<{ top: number; left: number } | null>>;
-  setContextMenuItems: React.Dispatch<React.SetStateAction<any[]>>;
-  setPromptItem: PromptItem;
   settings: Settings,
   t: typeof i18n.t;
 }
@@ -29,30 +26,44 @@ const Row: React.FC<Props> = memo(({
   filters,
   setDialogOpen,
   setTodoObject,
-  setContextMenuPosition,
   setContextMenuItems,
-  setPromptItem,
   settings,
   t,
 }) => {
-  const itemDelete = {
-    id: 'delete',
-    todoObject: row,
-    headline: t('prompt.delete.headline'),
-    text: t('prompt.delete.text'),
-    label: t('delete'),
-  }
-
-  const itemCopy = {
-    id: 'copy',
-    todoObject: row,
-    label: t('copy'),
-  }
 
   const handleContextMenu = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setContextMenuPosition({ top: event.clientY, left: event.clientX });
-    setContextMenuItems([itemCopy, itemDelete]);
+
+    const confirmDelete = () => {
+      if(row) ipcRenderer.send('removeLineFromFile', row?.id);
+    };
+
+    const saveToClipboard = () => {
+      if(row) ipcRenderer.send('saveToClipboard', row?.string);
+    };
+
+    const contextMenuItems = [
+      {
+        id: 'copy',
+        label: t('copy'),
+        function: saveToClipboard,
+      },
+      {
+        id: 'delete',
+        label: t('delete'),
+        promptItem: {
+          id: 'delete',
+          headline: t('prompt.delete.headline'),
+          text: t('prompt.delete.text'),
+          button1: t('delete'),
+          onButton1: confirmDelete,
+        }
+      }
+    ]
+
+    setContextMenuItems({
+      event: event,
+      items: contextMenuItems
+    });
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {

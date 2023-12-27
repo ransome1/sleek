@@ -66,7 +66,7 @@ function addDoneFile(filePath: string, bookmark: string | null) {
 
   configStorage.set('files', files);
 
-  mainWindow!.webContents.send('triggerArchiving');
+  mainWindow!.webContents.send('triggerArchiving', true);
 }
 
 function removeFile(index: number) {

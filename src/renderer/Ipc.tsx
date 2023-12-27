@@ -69,7 +69,6 @@ const IpcComponent: React.FC<Props> = ({
     ipcRenderer.on('responseFromMainProcess', handleResponse);
     ipcRenderer.on('settingsChanged', (settings) => setSettings(settings));
     ipcRenderer.on('isSettingsOpen', (isSettingsOpen) => setIsSettingsOpen(isSettingsOpen));
-    ipcRenderer.on('triggerArchiving', () => setTriggerArchiving(true));
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
     return () => {
@@ -79,7 +78,6 @@ const IpcComponent: React.FC<Props> = ({
       ipcRenderer.off('responseFromMainProcess', handleResponse);
       ipcRenderer.off('settingsChanged', (settings) => setSettings(settings));
       ipcRenderer.off('isSettingsOpen', (isSettingsOpen) => setIsSettingsOpen(isSettingsOpen));
-      ipcRenderer.off('triggerArchiving', () => setTriggerArchiving(true));
       window.removeEventListener('drop', handleDrop);
       window.removeEventListener('dragover', handleDragOver);
     };

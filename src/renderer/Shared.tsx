@@ -33,20 +33,7 @@ export const handleFilterSelect = (key: string, value: string | string[], filter
     }
     updatedFilters[key] = filterList;
     store.setFilters(updatedFilters);
-    ipcRenderer.send('requestData');
   } catch (error: any) {
     console.error(error);
   }
 };
-
-export const translatedAttributes = (t: typeof i18n.t) => ({
-  t: t('shared.attributeMapping.t'),
-  due: t('shared.attributeMapping.due'),
-  projects: t('shared.attributeMapping.projects'),
-  contexts: t('shared.attributeMapping.contexts'),
-  priority: t('shared.attributeMapping.priority'),
-  rec: t('shared.attributeMapping.rec'),
-  pm: t('shared.attributeMapping.pm'),
-  created: t('shared.attributeMapping.created'),
-  completed: t('shared.attributeMapping.completed'),
-});

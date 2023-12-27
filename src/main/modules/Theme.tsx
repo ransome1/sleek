@@ -14,6 +14,7 @@ function handleTheme() {
   } else {
     shouldUseDarkColors = false;
   }
+  nativeTheme.themeSource = colorTheme;
   configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
 }
 

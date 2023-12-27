@@ -18,10 +18,21 @@ import { I18nextProvider } from 'react-i18next';
 import { i18n } from './Settings/LanguageSelector';
 import Settings from './Settings/Settings';
 import Prompt from './Prompt';
-import { translatedAttributes } from './Shared';
 import './App.scss';
 
 const { ipcRenderer, store } = window.api;
+
+const translatedAttributes = (t: typeof i18n.t) => ({
+  t: t('shared.attributeMapping.t'),
+  due: t('shared.attributeMapping.due'),
+  projects: t('shared.attributeMapping.projects'),
+  contexts: t('shared.attributeMapping.contexts'),
+  priority: t('shared.attributeMapping.priority'),
+  rec: t('shared.attributeMapping.rec'),
+  pm: t('shared.attributeMapping.pm'),
+  created: t('shared.attributeMapping.created'),
+  completed: t('shared.attributeMapping.completed'),
+});
 
 const App = () => {
   const [settings, setSettings] = useState(store.get());
@@ -38,7 +49,6 @@ const App = () => {
   const [filters, setFilters] = useState<Filters | null>(null);
   const [attributes, setAttributes] = useState<Attributes | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem | null>(null);
   const [textFieldValue, setTextFieldValue] = useState<string | ''>('');
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
@@ -65,18 +75,16 @@ const App = () => {
       setTodoObjects(null);
       setHeaders(null);
       setSplashScreen('noFiles');
-    } else {
-      ipcRenderer.send('requestData');
     }
   }, [settings.files]);
 
   useEffect(() => {
-    if(!snackBarContent) {
-      setSnackBarOpen(false);
-    } else {
-      setSnackBarOpen(true);
-    }
+    setSnackBarOpen((!snackBarContent) ? false : true);
   }, [snackBarContent]);
+
+  useEffect(() => {
+    ipcRenderer.send('requestData');
+  }, []);
 
   return (
     <>
@@ -126,7 +134,6 @@ const App = () => {
                 {settings.showFileTabs ?
                 <FileTabs
                   settings={settings}
-                  setContextMenuPosition={setContextMenuPosition}
                   setContextMenuItems={setContextMenuItems}
                  /> : null}
                 {headers?.availableObjects > 0 ?
@@ -154,8 +161,6 @@ const App = () => {
                 attributes={attributes}
                 filters={filters}
                 setDialogOpen={setDialogOpen}
-                contextMenuPosition={contextMenuPosition}
-                setContextMenuPosition={setContextMenuPosition}
                 contextMenuItems={contextMenuItems}
                 setContextMenuItems={setContextMenuItems}
                 setPromptItem={setPromptItem}
@@ -192,14 +197,9 @@ const App = () => {
           />
           {contextMenuItems && (
             <ContextMenu
-              contextMenuPosition={contextMenuPosition}
-              setContextMenuPosition={setContextMenuPosition}
               contextMenuItems={contextMenuItems}
               setContextMenuItems={setContextMenuItems}
-              setSnackBarSeverity={setSnackBarSeverity}
-              setSnackBarContent={setSnackBarContent}
               setPromptItem={setPromptItem}
-              setShowPromptDoneFile={setShowPromptDoneFile}
             />
           )}
           <Snackbar
@@ -207,21 +207,16 @@ const App = () => {
             onClose={() => setSnackBarContent(null)}
             autoHideDuration={3000}
           >
-            <Alert
-              severity={snackBarSeverity}
-            >
+            <Alert severity={snackBarSeverity}>
               {snackBarContent}
             </Alert>
           </Snackbar>
           {settings.files?.length > 0 && (
             <Archive
-              setSnackBarSeverity={setSnackBarSeverity}
-              setSnackBarContent={setSnackBarContent}
               triggerArchiving={triggerArchiving}
-              settings={settings}
               setTriggerArchiving={setTriggerArchiving}
-              showPromptDoneFile={showPromptDoneFile}
-              setShowPromptDoneFile={setShowPromptDoneFile}
+              settings={settings}
+              setPromptItem={setPromptItem}
               headers={headers}
             />
           )}
@@ -230,10 +225,8 @@ const App = () => {
               open={true}
               onClose={() => setPromptItem(null)}
               promptItem={promptItem}
+              setPromptItem={setPromptItem}
               setContextMenuItems={setContextMenuItems}
-              headline={promptItem.headline || ''}
-              text={promptItem.text || ''}
-              confirmButton={promptItem.label}
             />
           )}
         </ThemeProvider>

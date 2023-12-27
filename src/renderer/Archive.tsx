@@ -6,13 +6,10 @@ import { i18n } from './Settings/LanguageSelector';
 const { ipcRenderer} = window.api;
 
 interface Props extends WithTranslation {
-  setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
-  setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
   triggerArchiving: boolean;
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
   settings: Settings,
-  showPromptDoneFile: boolean;
-  setShowPromptDoneFile: React.Dispatch<React.SetStateAction<boolean>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
   headers: HeadersObject;
   t: typeof i18n.t;
 }
@@ -21,14 +18,16 @@ const Archive: React.FC<Props> = ({
     triggerArchiving,
     setTriggerArchiving,
     settings,
-    showPromptDoneFile,
-    setShowPromptDoneFile,
+    setPromptItem,
     headers,
     t
 }) => {
-  const [showPromptArchive, setShowPromptArchive] = useState<boolean>(false);
 
-  const handlePromptArchiveConfirm = () => {
+  const handleTriggerArchiving = (doneFileAvailable) => {
+    setPromptItem((doneFileAvailable) ? promptItemArchiving : promptItemChooseChangeFile);
+  };
+
+  const handleArchiveConfirm = () => {
     ipcRenderer.send('archiveTodos');
   };
 
@@ -40,47 +39,32 @@ const Archive: React.FC<Props> = ({
     ipcRenderer.send('createFile', true);
   };
 
+  const promptItemArchiving = {
+    id: 'delete',
+    headline: t('prompt.archive.headline'),
+    text: t('prompt.archive.text'),
+    button1: t('prompt.archive.button'),
+    onButton1: handleArchiveConfirm,
+  }
+
+  const promptItemChooseChangeFile = {
+    id: 'delete',
+    headline: t('prompt.archive.changeFile.headline'),
+    text: t('prompt.archive.changeFile.text'),
+    button1: t('openFile'),
+    onButton1: handleOpenDoneFile,
+    button2: t('createFile'),
+    onButton2: handleCreateDoneFile,
+  }
+
   useEffect(() => {
-    if(triggerArchiving) {
-      const index = settings.files.findIndex((file: FileObject) => file.active);
-      const doneFilePath = settings.files[index]?.doneFilePath;
+    ipcRenderer.on('triggerArchiving', handleTriggerArchiving);
+    return () => {
+      ipcRenderer.off('triggerArchiving', handleTriggerArchiving);
+    };
+  }, []);
 
-      if(doneFilePath && headers?.completedTodoObjects > 0) {
-        setShowPromptDoneFile(false);
-        setShowPromptArchive(true);
-      } else if(!doneFilePath) {
-        setShowPromptArchive(false);
-        setShowPromptDoneFile(true);
-      } else {
-        setShowPromptArchive(false);
-        setShowPromptDoneFile(false);
-      }
-      setTriggerArchiving(false);
-    }
-  }, [triggerArchiving]);
-
-  return (
-    <>
-      <Prompt
-        open={showPromptDoneFile}
-        onClose={() => setShowPromptDoneFile(false)}
-        headline={t('prompt.archive.changeFile.headline')}
-        text={t('prompt.archive.changeFile.text')}
-        button1={t('openFile')}
-        onButton1={handleOpenDoneFile}
-        button2={t('createFile')}
-        onButton2={handleCreateDoneFile}
-      />
-      <Prompt
-        open={showPromptArchive}
-        onClose={() => setShowPromptArchive(false)}
-        headline={t('prompt.archive.headline')}
-        text={t('prompt.archive.text')}
-        confirmButton={t('prompt.archive.button')}
-        onConfirm={handlePromptArchiveConfirm}
-      />
-    </>
-  );
+  return (<></>);
 };
 
 export default withTranslation()(Archive);

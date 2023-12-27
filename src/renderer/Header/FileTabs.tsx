@@ -20,29 +20,46 @@ const FileTabs: React.FC<Props> = memo(({
   setContextMenuItems,
   t,
 }) => {
-  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement, MouseEvent> | React.MouseEvent<SVGSVGElement, MouseEvent>, index: number) => {
-    event.preventDefault();
-    setContextMenuPosition({ top: event.clientY, left: event.clientX });
-    setContextMenuItems([
+
+  const handleContextMenu = (event: React.MouseEvent, index: number) => {
+    const revealFile = (index) => {
+      const file = settings.files[index];
+      if(file) ipcRenderer.send('revealInFileManager', file.todoFilePath);
+    };
+
+    const removeFile = (index) => {
+      if(index >= 0) ipcRenderer.send('removeFile', index);
+    };
+
+    const contextMenuItems = [
       {
-        id: 'changeDoneFilePath',
+        id: 'changeLocation',
         label: t('fileTabs.changeLocation'),
         index: index,
         doneFilePath: settings.files[index].doneFilePath,
       },
       {
-        id: 'revealInFileManager',
+        id: 'revealFile',
         label: t('fileTabs.revealFile'),
-        pathToReveal: settings.files[index].todoFilePath,
+        function: () => revealFile(index),
       },
       {
         id: 'removeFile',
-        headline: t('fileTabs.removeFileHeadline'),
-        text: t('fileTabs.removeFileText'),
         label: t('fileTabs.removeFileLabel'),
-        index: index,
+        promptItem: {
+          headline: t('fileTabs.removeFileHeadline'),
+          text: t('fileTabs.removeFileText'),
+          button1: t('fileTabs.removeFileLabel'),
+          onButton1: () => removeFile(index),
+        },
       },
-    ]);
+    ];
+
+    setContextMenuItems({
+      event: event,
+      index: index,
+      items: contextMenuItems,
+    });
   };
 
   const index = settings.files.findIndex((file) => file.active);

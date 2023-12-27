@@ -73,7 +73,6 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
 function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
   try {
     filterStorage.set('filters', value);
-    console.log(`Filters saved`);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
@@ -83,7 +82,6 @@ function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
 function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): void {
   try {
     notifiedTodoObjectsStorage.set('notifiedTodoObjects', value);
-    console.log(`notifiedTodoObjects saved`);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
@@ -122,7 +120,7 @@ async function handleDroppedFile(event: IpcMainEvent, filePath: string): Promise
     addFile(filePath, null);
   } catch (error: any) {
     console.error(error);
-    event.reply('droppedFile', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 
@@ -175,10 +173,10 @@ async function handleArchiveTodos(event: IpcMainEvent): Promise<void> {
 function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
     clipboard.writeText(string);
-    event.reply('saveToClipboard', 'Copied to clipboard: ' + string);
+    event.reply('responseFromMainProcess', 'Copied to clipboard: ' + string);
   } catch (error: any) {
     console.error(error);
-    event.reply('saveToClipboard', error);
+    event.reply('responseFromMainProcess', error);
   }
 }
 

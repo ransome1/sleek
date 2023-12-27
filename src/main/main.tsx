@@ -151,7 +151,7 @@ const createMainWindow = () => {
 }
 
 const handleReadyToShow = async () => {
-  if(files && Object.keys(files)?.length > 0) {
+  if(files?.length > 0) {
     createFileWatcher(files);
   }
 }

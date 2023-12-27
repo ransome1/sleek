@@ -156,6 +156,17 @@
           "universal"
         ]
       },
+      "fileAssociations": [
+        {
+          "ext": [
+            "txt",
+            "md"
+          ],
+          "role": "Editor",
+          "isPackage": false,
+          "rank": "Owner"
+        }
+      ],   
       "icon": "assets/icons/icon.icns",
       "type": "distribution",
       "hardenedRuntime": true,
