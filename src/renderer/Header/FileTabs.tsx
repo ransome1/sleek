@@ -9,56 +9,72 @@ const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
   settings: Settings;
-  setContextMenuPosition: (position: { top: number; left: number }) => void;
-  setContextMenuItems: (items: any[]) => void;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   t: typeof i18n.t;
 }
 
 const FileTabs: React.FC<Props> = memo(({
   settings,
-  setContextMenuPosition,
-  setContextMenuItems,
+  setContextMenu,
   t,
 }) => {
 
   const handleContextMenu = (event: React.MouseEvent, index: number) => {
-    const revealFile = (index) => {
-      const file = settings.files[index];
-      if(file) ipcRenderer.send('revealInFileManager', file.todoFilePath);
+    const fileObject = settings.files[index];
+
+    const handleOpenDoneFile = () => {
+      ipcRenderer.send('openFile', true);
     };
 
-    const removeFile = (index) => {
+    const handleCreateDoneFile = () => {
+      ipcRenderer.send('createFile', true);
+    };
+
+    const handleRevealFile = (path: string | null) => {
+      if(path) ipcRenderer.send('revealInFileManager', path);
+    };
+
+    const handleRemoveFile = (index: number) => {
       if(index >= 0) ipcRenderer.send('removeFile', index);
     };
 
-    const contextMenuItems = [
-      {
-        id: 'changeLocation',
-        label: t('fileTabs.changeLocation'),
-        index: index,
-        doneFilePath: settings.files[index].doneFilePath,
-      },
-      {
-        id: 'revealFile',
-        label: t('fileTabs.revealFile'),
-        function: () => revealFile(index),
-      },
-      {
-        id: 'removeFile',
-        label: t('fileTabs.removeFileLabel'),
-        promptItem: {
-          headline: t('fileTabs.removeFileHeadline'),
-          text: t('fileTabs.removeFileText'),
-          button1: t('fileTabs.removeFileLabel'),
-          onButton1: () => removeFile(index),
-        },
-      },
-    ];
-
-    setContextMenuItems({
+    setContextMenu({
       event: event,
-      index: index,
-      items: contextMenuItems,
+      items: [
+        {
+          id: 'changeLocation',
+          label: t('fileTabs.changeLocation'),
+          promptItem: {
+            id: 'changeFile',
+            headline: t('prompt.archive.changeFile.headline'),
+            text: t('prompt.archive.changeFile.text'),
+            button1: t('openFile'),
+            onButton1: handleOpenDoneFile,
+            button2: t('createFile'),
+            onButton2: handleCreateDoneFile,
+          },
+        },
+        fileObject.todoFilePath && {
+          id: 'revealFile',
+          label: t('fileTabs.revealTodoFile'),
+          function: () => handleRevealFile(fileObject.todoFilePath),
+        },
+        fileObject.doneFilePath && {
+          id: 'revealArchivingFile',
+          label: t('fileTabs.revealArchivingFile'),
+          function: () => handleRevealFile(fileObject.doneFilePath),
+        },      
+        {
+          id: 'removeFile',
+          label: t('fileTabs.removeFileLabel'),
+          promptItem: {
+            headline: t('fileTabs.removeFileHeadline'),
+            text: t('fileTabs.removeFileText'),
+            button1: t('fileTabs.removeFileLabel'),
+            onButton1: () => handleRemoveFile(index),
+          },
+        },
+      ].filter(Boolean)
     });
   };
 

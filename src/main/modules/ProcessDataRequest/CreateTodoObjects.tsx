@@ -2,7 +2,6 @@ import { app } from 'electron';
 import { Item } from 'jstodotxt';
 import { handleNotification } from '../Notifications';
 import { extractSpeakingDates } from '../Date';
-import { configStorage } from '../../config';
 import dayjs from 'dayjs';
 
 let lines: string[];
@@ -29,7 +28,7 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   const tString = speakingDates['t:']?.string || null;
   const extensions = JsTodoTxtObject.extensions();
   const hidden = extensions.some(extension => extension.key === 'h' && extension.value === '1');
-  const pm = extensions.find(extension => extension.key === 'pm')?.value || null;
+  const pm: string | number | null = extensions.find(extension => extension.key === 'pm')?.value || null;
   const rec = extensions.find(extension => extension.key === 'rec')?.value || null;
   const creation = dayjs(JsTodoTxtObject.created()).isValid() ? dayjs(JsTodoTxtObject.created()).format('YYYY-MM-DD') : null;
   const completed = dayjs(JsTodoTxtObject.completed()).isValid() ? dayjs(JsTodoTxtObject.completed()).format('YYYY-MM-DD') : null;

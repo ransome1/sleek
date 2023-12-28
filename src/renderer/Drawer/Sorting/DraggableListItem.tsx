@@ -21,7 +21,7 @@ const DraggableListItem: React.FC<Props> = ({
   attributeMapping,
 }) => {
   const handleButtonClick = () => {
-    const updatedSorting = settings.sorting.map((sortingItem) => {
+    const updatedSorting = settings.sorting.map((sortingItem: Sorting) => {
       if(sortingItem.id === item.id) {
         return { ...sortingItem, invert: !item.invert };
       }

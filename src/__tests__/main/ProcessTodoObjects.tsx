@@ -169,8 +169,6 @@ const todoObjects: any =
   }  
 ];
 
-let groupedTodoObjects: any;
-
 describe('Process todo.txt objects', () => {
 
     beforeEach(() => {

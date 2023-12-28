@@ -1,6 +1,5 @@
 import path from 'path'
 import { configStorage } from '../../main/config';
-import { createMenu } from '../../main/modules/Menu';
 import { addFile, removeFile, setFile } from '../../main/modules/File/File';
 
 jest.mock('../../main/main', () => ({

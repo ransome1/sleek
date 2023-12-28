@@ -6,6 +6,7 @@ import { createMenu } from './modules/Menu';
 import handleTheme from './modules/Theme';
 import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
+import { addFile } from './modules/File/File';
 import { createTray } from './modules/Tray';
 import './modules/Ipc';
 
@@ -92,8 +93,6 @@ const handleWindowSizeAndPosition = () => {
 }
 
 const createMainWindow = () => {
-  const startTime = performance.now();
-
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
@@ -171,10 +170,15 @@ const handleBeforeQuit = () => {
   app.releaseSingleInstanceLock();
 }
 
+const handleOpenFile = (event, path) => {
+  if(path) addFile(path, null);
+};
+
 app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
   .on('activate', handleCreateWindow)
+  .on('open-file', handleOpenFile)
   .whenReady()
   .then(() => {
 

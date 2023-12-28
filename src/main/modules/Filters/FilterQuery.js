@@ -80,12 +80,12 @@ function runQuery(todoObject, compiledQuery) {
       case "==":
         operand2 = stack.pop();
         operand1 = stack.pop();
-        stack.push(operand1 == operand2);
+        stack.push(operand1 === operand2);
         break;
       case "!=":
         operand2 = stack.pop();
         operand1 = stack.pop();
-        stack.push(operand1 != operand2);
+        stack.push(operand1 !== operand2);
         break;
       case "<":
         operand2 = stack.pop();
@@ -109,7 +109,7 @@ function runQuery(todoObject, compiledQuery) {
         break;
       case "++":
         next = q.shift();
-        if(next == "*") {
+        if(next === "*") {
           stack.push(todoObject.projects ? true : false);
         } else if(next.startsWith('"')) {
           stack.push(todoObject.projects && todoObject.projects.includes(next.slice(1,-1)));
@@ -123,7 +123,7 @@ function runQuery(todoObject, compiledQuery) {
         break;
       case "@@":
         next = q.shift();
-        if(next == "*") {
+        if(next === "*") {
           stack.push(todoObject.contexts ? true : false);
         } else if(next.startsWith('"')) {
           stack.push(todoObject.contexts && todoObject.contexts.includes(next.slice(1,-1)));

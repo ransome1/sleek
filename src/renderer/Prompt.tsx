@@ -3,14 +3,12 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from './Settings/LanguageSelector';
 
-const { ipcRenderer } = window.api;
-
 interface Props extends WithTranslation {
   open: boolean;
   onClose: () => void;
-  promptItem: PromptItem;
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
-  setContextMenuItems: React.Dispatch<React.SetStateAction<ContextMenuItem>>;
+  promptItem: PromptItem | null;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   t: typeof i18n.t;
 }
 
@@ -19,18 +17,18 @@ const Prompt: React.FC<Props> = ({
   onClose,
   promptItem,
   setPromptItem,
-  setContextMenuItems,
+  setContextMenu,
   t
 }) => {
 
-  const onClick = (functionToExecute) => {
+  const onClick = (functionToExecute: Function) => {
     functionToExecute();
     setPromptItem(null);
   };
 
   useEffect(() => {
     if(promptItem) {
-      setContextMenuItems(null);
+      setContextMenu(null);
     }
   }, [promptItem]);
 
@@ -43,7 +41,7 @@ const Prompt: React.FC<Props> = ({
         <Button onClick={onClose}>{t('cancel')}</Button>
         {promptItem?.button1 && <Button onClick={() => onClick(promptItem.onButton1)}>{promptItem.button1}</Button>}
         {promptItem?.button2 && <Button onClick={() => onClick(promptItem.onButton2)}>{promptItem.button2}</Button>}
-        
+
       </DialogActions>
     </Dialog>
   );

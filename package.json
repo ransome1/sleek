@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.4",
+  "version": "2.0.4-rc.5",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -97,6 +97,7 @@
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.0.0",
+    "@types/react-autosuggest": "^10.1.10",
     "@types/jest": "^29.5.2",
     "@types/node": "20.10.5",
     "@types/react": "^18.2.8",
@@ -110,7 +111,7 @@
     "css-minimizer-webpack-plugin": "^5.0.0",
     "depcheck": "^1.4.7",
     "detect-port": "^1.5.1",
-    "electron": "^27.0.0",
+    "electron": "27.2.0",
     "electron-builder": "^24.2.1",
     "electron-devtools-installer": "^3.2.0",
     "electronmon": "^2.0.2",
@@ -166,7 +167,7 @@
           "isPackage": false,
           "rank": "Owner"
         }
-      ],   
+      ],
       "icon": "assets/icons/icon.icns",
       "type": "distribution",
       "hardenedRuntime": true,

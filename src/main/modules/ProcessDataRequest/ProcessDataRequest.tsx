@@ -13,9 +13,9 @@ const headers: HeadersObject = {
   completedTodoObjects: 0,
 };
 
-let searchString;
+let searchString: string;
 
-async function processDataRequest(search: string): Promise<void> {
+async function processDataRequest(search?: string): Promise<void> {
   
   if(search) {
     searchString = search;
@@ -48,8 +48,6 @@ async function processDataRequest(search: string): Promise<void> {
   headers.visibleObjects = countTodoObjects(todoObjects, false);
 
   updateAttributes(todoObjects, sorting, false);
-
-  let flattenedTodoObjects: TodoObject[];
 
   if(fileSorting) {
     todoObjects = flattenTodoObjects(todoObjects, '');

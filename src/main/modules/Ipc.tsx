@@ -3,7 +3,7 @@ import { ipcMain, app, IpcMainEvent, clipboard } from 'electron';
 import processDataRequest from './ProcessDataRequest/ProcessDataRequest';
 import { changeCompleteState } from './ProcessDataRequest/ChangeCompleteState';
 import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
-import archiveTodos from './File/Archive';
+import { archiveTodos, handleRequestArchive } from './File/Archive';
 import { configStorage, filterStorage, notifiedTodoObjectsStorage } from '../config';
 import { addFile, setFile, removeFile } from './File/File';
 import { openFile, createFile } from './File/Dialog';
@@ -28,7 +28,7 @@ async function handleUpdateAttributeFields(event: IpcMainEvent, index: number, s
   }
 }
 
-function handleUpdateTodoObject(event: IpcMainEvent, index, string, attributeType, attributeValue): Promise<void> {
+function handleUpdateTodoObject(event: IpcMainEvent, index: number, string: string, attributeType: string, attributeValue: string): void {
  try {
     const todoObject = createTodoObject(index, string, attributeType, attributeValue);
     event.reply('updateTodoObject', todoObject);
@@ -115,7 +115,7 @@ function handleAddFile(event: IpcMainEvent, filePath: string): void {
   }
 }
 
-async function handleDroppedFile(event: IpcMainEvent, filePath: string): Promise<void> {
+function handleDroppedFile(event: IpcMainEvent, filePath: string): void {
   try {
     addFile(filePath, null);
   } catch (error: any) {
@@ -199,6 +199,7 @@ function removeEventListeners(): void {
   ipcMain.off('revealInFileManager', handleRevealInFileManager);
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile);
   ipcMain.off('updateTodoObject', handleUpdateTodoObject);
+  ipcMain.off('requestArchive', handleRequestArchive);
 }
 
 app.on('before-quit', removeEventListeners);
@@ -221,4 +222,4 @@ ipcMain.on('saveToClipboard', handleSaveToClipboard);
 ipcMain.on('revealInFileManager', handleRevealInFileManager);
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile);
 ipcMain.on('updateTodoObject', handleUpdateTodoObject);
-
+ipcMain.on('requestArchive', handleRequestArchive);

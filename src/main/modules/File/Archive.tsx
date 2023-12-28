@@ -2,9 +2,15 @@ import { app } from 'electron';
 import fs from 'fs/promises';
 import { getActiveFile } from './Active';
 import { replaceFileContent } from './Write';
+import { mainWindow } from '../../main';
 import { createTodoObjects } from '../ProcessDataRequest/CreateTodoObjects';
 
 let stopAccessingSecurityScopedResource: any;
+
+function handleRequestArchive(): void {
+  const activeFile = getActiveFile();
+  mainWindow!.webContents.send('triggerArchiving', Boolean(activeFile?.doneFilePath));
+}
 
 async function extractTodoStringsFromFile(filePath: string, complete: boolean | null, bookmark: string | null): Promise<string[]> {
   if(bookmark) stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);
@@ -24,17 +30,17 @@ async function archiveTodos(): Promise<string> {
   const activeFile: FileObject | null = getActiveFile();
 
   if(activeFile === null) {
-    throw new Error('No active file defined');
+    return 'No active file defined';
   }
 
   if(activeFile.doneFilePath === null) {
-    throw new Error('Archiving file is not defined');
+    return 'Archiving file is not defined';
   }
 
   const completedTodos = await extractTodoStringsFromFile(activeFile.todoFilePath, true, activeFile.todoFileBookmark);
 
   if(completedTodos.length === 0) {
-    throw new Error(`No completed todos found`);
+    return 'No completed todos found';
   }
 
   const uncompletedTodos = await extractTodoStringsFromFile(activeFile.todoFilePath, false, activeFile.todoFileBookmark);
@@ -49,4 +55,4 @@ async function archiveTodos(): Promise<string> {
   return 'Successfully archived';
 }
 
-export default archiveTodos;
+export { archiveTodos, handleRequestArchive };

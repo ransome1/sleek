@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import Prompt from './Prompt';
 import { i18n } from './Settings/LanguageSelector';
 
 const { ipcRenderer} = window.api;
@@ -9,21 +8,18 @@ interface Props extends WithTranslation {
   triggerArchiving: boolean;
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
   settings: Settings,
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
-  headers: HeadersObject;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+  headers: HeadersObject | null;
   t: typeof i18n.t;
 }
 
 const Archive: React.FC<Props> = ({
     triggerArchiving,
-    setTriggerArchiving,
-    settings,
     setPromptItem,
-    headers,
     t
 }) => {
 
-  const handleTriggerArchiving = (doneFileAvailable) => {
+  const handleTriggerArchiving = (doneFileAvailable: boolean) => {
     setPromptItem((doneFileAvailable) ? promptItemArchiving : promptItemChooseChangeFile);
   };
 
@@ -40,7 +36,7 @@ const Archive: React.FC<Props> = ({
   };
 
   const promptItemArchiving = {
-    id: 'delete',
+    id: 'archive',
     headline: t('prompt.archive.headline'),
     text: t('prompt.archive.text'),
     button1: t('prompt.archive.button'),
@@ -48,7 +44,7 @@ const Archive: React.FC<Props> = ({
   }
 
   const promptItemChooseChangeFile = {
-    id: 'delete',
+    id: 'changeFile',
     headline: t('prompt.archive.changeFile.headline'),
     text: t('prompt.archive.changeFile.text'),
     button1: t('openFile'),
@@ -56,6 +52,12 @@ const Archive: React.FC<Props> = ({
     button2: t('createFile'),
     onButton2: handleCreateDoneFile,
   }
+
+  useEffect(() => {
+    if(triggerArchiving) {
+      setPromptItem(null)
+    }
+  }, [triggerArchiving]);
 
   useEffect(() => {
     ipcRenderer.on('triggerArchiving', handleTriggerArchiving);

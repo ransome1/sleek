@@ -9,10 +9,10 @@ import './DatePicker.scss';
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  dueDate: string;
+  dueDate: string | null;
   settings: Settings;
   textFieldValue: string;
-  todoObject: TodoObject;
+  todoObject: TodoObject | null;
   t: typeof i18n.t;
 }
 

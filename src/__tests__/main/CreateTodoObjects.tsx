@@ -1,8 +1,4 @@
-import dayjs from 'dayjs';
 import { createTodoObjects } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
-import { configStorage } from '../../main/config';
-
-const dateTodayString: string = dayjs(new Date()).format('YYYY-MM-DD');
 
 jest.mock('electron', () => ({
   app: {

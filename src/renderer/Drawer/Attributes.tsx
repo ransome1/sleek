@@ -12,7 +12,7 @@ const { store } = window.api;
 
 interface Props extends WithTranslation {
   attributes: Attributes | null;
-  attributeMapping;
+  attributeMapping: TranslatedAttributes;
   filters: Filters | null;
   t: typeof i18n.t;
 }
@@ -23,7 +23,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
    filters,
    t,
  }) => {
-  const mustNotify = (items) => items.some((item) => item.notify);
+  const mustNotify = (todoObjects: TodoObject[]) => todoObjects.some((todoObject) => todoObject.notify);
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const [settings, setSettings] = useState({
     accordionOpenState: store.get('accordionOpenState'),

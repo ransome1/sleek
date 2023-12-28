@@ -1,5 +1,4 @@
 import { nativeTheme } from 'electron';
-import { mainWindow } from '../main';
 import { configStorage } from '../config';
 
 function handleTheme() {
@@ -14,7 +13,6 @@ function handleTheme() {
   } else {
     shouldUseDarkColors = false;
   }
-  nativeTheme.themeSource = colorTheme;
   configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
 }
 

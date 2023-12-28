@@ -7,9 +7,8 @@ const regex: RegExp = /(?<=^| )[+@][^ ]*/g;
 
 interface Props {
   textFieldValue: string;
-  setTextFieldValue: (value: string) => void;
+  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   attributes: Attributes | null;
-  handleAdd: (id: number, string: string) => void;
 }
 
 const AutoSuggest: React.FC<Props> = ({
@@ -19,8 +18,8 @@ const AutoSuggest: React.FC<Props> = ({
  }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [prefix, setPrefix] = useState<string | null>(null);
-  const [matchPosition, setMatchPosition] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
-  const textFieldRef = useRef(null);
+  const [matchPosition, setMatchPosition] = useState<{ start: number; end: number } | null>({ start: -1, end: -1 });
+  const textFieldRef = useRef<HTMLInputElement>(null);
 
   const handleSuggestionsFetchRequested = ({ value }: { value: string }) => {
     let content = 
@@ -38,7 +37,7 @@ const AutoSuggest: React.FC<Props> = ({
       const matchValue = match[0];
       const matchStart = match.index;
       const matchEnd = matchStart + matchValue.length;
-      if(cursorPosition >= matchStart && cursorPosition <= matchEnd) {
+      if(cursorPosition && cursorPosition >= matchStart && cursorPosition <= matchEnd) {
         const suggestions = getSuggestions(
           matchValue.substring(0, 1),
           matchValue.substring(1)
@@ -69,6 +68,8 @@ const AutoSuggest: React.FC<Props> = ({
     } else if(trigger === '+') {
       setPrefix('+');
       return Object.keys(attributes?.projects).filter((key) => key.includes(match));
+    } else {
+      return;
     }
   };
 
@@ -85,7 +86,7 @@ const AutoSuggest: React.FC<Props> = ({
     setSuggestions([]);
   };
 
-  const handleChange = (event, { method }) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, { method }) => {
     try {
       if(method === 'type') {
         setTextFieldValue(event.target.value);
@@ -96,7 +97,7 @@ const AutoSuggest: React.FC<Props> = ({
     }
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     try {
       if(suggestions.length > 0 && event.key === 'Tab') {
         event.preventDefault();
@@ -115,16 +116,16 @@ const AutoSuggest: React.FC<Props> = ({
     }
   }
 
-  const inputProps: InputProps = {
+  const inputProps = {
     placeholder: `(A) text +project @context due:2020-12-12 t:2021-01-10 rec:d pm:1`,
     value: (textFieldValue) ? textFieldValue.replaceAll(String.fromCharCode(16), '\n') : '',
-    onChange: handleChange,
     inputRef: textFieldRef,
+    onChange: handleChange,
     onKeyDown: handleKeyDown,
   };
 
   const containerStyle = {
-    width: textFieldRef?.current?.offsetWidth +28 || 'auto',
+    width: textFieldRef.current?.offsetWidth + 28 || 'auto',
   };
 
   useEffect(() => {
@@ -134,7 +135,7 @@ const AutoSuggest: React.FC<Props> = ({
   return (
     <>
       <Autosuggest
-        renderInputComponent={(inputProps: InputProps) => (
+        renderInputComponent={(inputProps) => (
           <TextField {...inputProps} multiline className="input" />
         )}
         renderSuggestionsContainer={({ containerProps, children }) => (

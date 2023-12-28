@@ -5,7 +5,7 @@ import DatePickerInline from './DatePickerInline';
 
 interface Props {
   todoObject: TodoObject;
-  filters: Filters;
+  filters: Filters | null;
   handleButtonClick: (key: string, value: string) => void;
   settings: Settings;
 }
@@ -59,7 +59,7 @@ const Elements: React.FC<Props> = memo(({
         <Box>{value}</Box>
       </Button>
     ),
-    hidden: () => null,
+    hidden: () => null as React.ReactNode,
   };
 
   const matches = () => {
@@ -73,7 +73,8 @@ const Elements: React.FC<Props> = memo(({
       { pattern: /rec:([^ ]+)/, type: 'rec', key: 'rec:' },
     ];
 
-    let body = todoObject.body?.replaceAll(String.fromCharCode(16), ' ') ?? '';
+    //let body = todoObject.body?.replaceAll(String.fromCharCode(16), ' ') ?? '';
+    let body = todoObject.body;
     let substrings = [];
     let index = 0;
 

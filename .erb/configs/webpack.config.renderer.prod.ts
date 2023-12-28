@@ -39,7 +39,7 @@ const configuration: webpack.Configuration = {
   module: {
     rules: [
       {
-        test: /\.s?(a|c)ss$/,
+        test: /\.s?([ac])ss$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -52,12 +52,12 @@ const configuration: webpack.Configuration = {
           },
           'sass-loader',
         ],
-        include: /\.module\.s?(c|a)ss$/,
+        include: /\.module\.s?([ca])ss$/,
       },
       {
-        test: /\.s?(a|c)ss$/,
+        test: /\.s?([ac])ss$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-        exclude: /\.module\.s?(c|a)ss$/,
+        exclude: /\.module\.s?([ca])ss$/,
       },
       // Fonts
       {

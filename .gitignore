@@ -34,3 +34,4 @@ npm-debug.log.*
 *.snap
 *FilterLang.js
 *package-lock.json
+*qodana*

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Button, Dialog, DialogContent, DialogActions } from '@mui/material';
+import { Button, Dialog, DialogContent, DialogActions, AlertColor } from '@mui/material';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import dayjs from 'dayjs';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
 import DueDatePicker from './DueDatePicker';
@@ -11,18 +10,18 @@ import RecurrencePicker from './RecurrencePicker';
 import { i18n } from '../Settings/LanguageSelector';
 import './TodoDialog.scss';
 
-const { ipcRenderer, store } = window.api;
+const { ipcRenderer} = window.api;
 
 interface Props extends WithTranslation {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  todoObject: TodoObject;
-  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject>>;
+  todoObject: TodoObject | null;
+  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   attributes: Attributes | null;
-  attributeFields: TodoObject;
-  setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject>>;
-  setSnackBarSeverity: React.Dispatch<React.SetStateAction<string>>;
-  setSnackBarContent: React.Dispatch<React.SetStateAction<string>>;
+  attributeFields: TodoObject | null;
+  setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>;
+  setSnackBarSeverity: React.Dispatch<React.SetStateAction<AlertColor | undefined>>;
+  setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
   textFieldValue: string,
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>,
   settings: Settings,
@@ -44,13 +43,12 @@ const TodoDialog: React.FC<Props> = memo(({
   settings,
   t
 }) => {
-  const bulkTodoCreation = store.get('bulkTodoCreation');
   const numRowsWithContent = textFieldValue?.split('\n').filter(line => line.trim() !== '').length;
   const [priority, setPriority] = useState<string>('-');
-  const [dueDate, setDueDate] = useState<dayjs.Dayjs | null>(null);
-  const [thresholdDate, setThresholdDate] = useState<dayjs.Dayjs | null>(null);
+  const [dueDate, setDueDate] = useState<string | null>(null);
+  const [thresholdDate, setThresholdDate] = useState<string | null>(null);
   const [recurrence, setRecurrence] = useState<string | null>(null);
-  const [pomodoro, setPomodoro] = useState<number>(0);
+  const [pomodoro, setPomodoro] = useState<number | string>(0);
 
   const handleAdd = () => {
     try {
@@ -82,7 +80,7 @@ const TodoDialog: React.FC<Props> = memo(({
     }
   };
 
-  const updateAttributeFields = (todoObject: TodoObject) => {
+  const updateAttributeFields = (todoObject: TodoObject | null) => {
     if(todoObject) {
       setPriority(todoObject?.priority || '-');
       setDueDate(todoObject?.due || null);
@@ -123,12 +121,9 @@ const TodoDialog: React.FC<Props> = memo(({
     >
       <DialogContent>
         <AutoSuggest
-          attributes={attributes}
           textFieldValue={textFieldValue}
           setTextFieldValue={setTextFieldValue}
-          setDialogOpen={setDialogOpen}
-          handleAdd={handleAdd}
-          todoObject={todoObject}
+          attributes={attributes}
         />
         <PriorityPicker
           priority={priority}
@@ -161,7 +156,11 @@ const TodoDialog: React.FC<Props> = memo(({
       <DialogActions>
         <Button onClick={handleClose}>{t('todoDialog.footer.cancel')}</Button>
         <Button onClick={handleAdd}>
-          {todoObject?.id >= 0 ? t('todoDialog.footer.update') : (bulkTodoCreation ? `${t('todoDialog.footer.add')} (${numRowsWithContent || 0})` : `${t('todoDialog.footer.add')}`)}
+          {todoObject?.id ?? -1 >= 0
+            ? t('todoDialog.footer.update')
+            : settings.bulkTodoCreation
+              ? `${t('todoDialog.footer.add')} (${numRowsWithContent || 0})`
+              : `${t('todoDialog.footer.add')}`}
         </Button>
       </DialogActions>
     </Dialog>

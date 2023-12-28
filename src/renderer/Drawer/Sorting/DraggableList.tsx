@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DraggableListItem from './DraggableListItem';
 import { Box } from '@mui/material';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';

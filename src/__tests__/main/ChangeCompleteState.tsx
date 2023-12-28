@@ -1,5 +1,4 @@
 import { changeCompleteState } from '../../main/modules/ProcessDataRequest/ChangeCompleteState';
-import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
 
 const date: string = dayjs(new Date()).format('YYYY-MM-DD');

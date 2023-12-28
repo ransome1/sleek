@@ -15,7 +15,6 @@ interface Props {
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   settings: Settings;
-  setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
   headers: HeadersObject | null;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
 }
@@ -24,7 +23,6 @@ const NavigationComponent: React.FC<Props> = memo(({
   setIsSettingsOpen,
   setDialogOpen,
   settings,
-  setTriggerArchiving,
   headers,
   setTodoObject,
 }) => {
@@ -60,7 +58,7 @@ const NavigationComponent: React.FC<Props> = memo(({
             </Button>
             {headers && headers.completedTodoObjects > 0 && (
               <>
-                <Button onClick={() => setTriggerArchiving(true)} data-testid='navigation-button-archiving'>
+                <Button onClick={() => ipcRenderer.send('requestArchive')} data-testid='navigation-button-archiving'>
                   <InventoryIcon />
                 </Button>
               </>

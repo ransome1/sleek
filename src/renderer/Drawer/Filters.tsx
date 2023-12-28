@@ -39,7 +39,7 @@ const DrawerFilters: React.FC<Props> = ({
               key={settingName}
               control={
                 <Switch
-                  checked={settings[settingName]}
+                  checked={settings[settingName as keyof Settings]}
                   onChange={(event) => store.set(settingName, event.target.checked)}
                   name={settingName}
                 />

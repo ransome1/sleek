@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
+import { AlertColor } from '@mui/material';
 
 const { ipcRenderer} = window.api;
 
 interface Props {
-  setHeaders;
-  setAttributes;
-  setFilters;
-  setTodoObjects;
-  setTodoObject;
-  setAttributeFields;
-  setSnackBarSeverity;
-  setSnackBarContent;
-  setSettings;
-  setTriggerArchiving;
-  setSplashScreen;
-  setIsSettingsOpen;
+  setHeaders: React.Dispatch<React.SetStateAction<HeadersObject | null>>;
+  setAttributes: React.Dispatch<React.SetStateAction<Attributes | null>>;
+  setFilters: React.Dispatch<React.SetStateAction<Filters | null>>;
+  setTodoObjects: React.Dispatch<React.SetStateAction<TodoObject[] | null>>;
+  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
+  setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>;
+  setSnackBarSeverity: React.Dispatch<React.SetStateAction<AlertColor | undefined>>;
+  setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
+  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
+  setSplashScreen: React.Dispatch<React.SetStateAction<string | null>>;
+  setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const IpcComponent: React.FC<Props> = ({
@@ -27,7 +27,6 @@ const IpcComponent: React.FC<Props> = ({
   setSnackBarSeverity,
   setSnackBarContent,
   setSettings,
-  setTriggerArchiving,
   setSplashScreen,
   setIsSettingsOpen,
 }) => {
@@ -65,19 +64,19 @@ const IpcComponent: React.FC<Props> = ({
   useEffect(() => {
     ipcRenderer.on('requestData', handleRequestedData);
     ipcRenderer.on('updateAttributeFields', handleUpdateAttributeFields);
-    ipcRenderer.on('updateTodoObject', (todoObject) => setTodoObject(todoObject));
+    ipcRenderer.on('updateTodoObject', (todoObject: TodoObject) => setTodoObject(todoObject));
     ipcRenderer.on('responseFromMainProcess', handleResponse);
-    ipcRenderer.on('settingsChanged', (settings) => setSettings(settings));
-    ipcRenderer.on('isSettingsOpen', (isSettingsOpen) => setIsSettingsOpen(isSettingsOpen));
+    ipcRenderer.on('settingsChanged', (settings: Settings) => setSettings(settings));
+    ipcRenderer.on('isSettingsOpen', (isSettingsOpen: boolean) => setIsSettingsOpen(isSettingsOpen));
     window.addEventListener('drop', handleDrop);
     window.addEventListener('dragover', handleDragOver);
     return () => {
       ipcRenderer.off('requestData', handleRequestedData);
       ipcRenderer.off('updateAttributeFields', handleUpdateAttributeFields);
-      ipcRenderer.off('updateTodoObject', (todoObject) => setTodoObject(todoObject));
+      ipcRenderer.off('updateTodoObject', (todoObject: TodoObject) => setTodoObject(todoObject));
       ipcRenderer.off('responseFromMainProcess', handleResponse);
-      ipcRenderer.off('settingsChanged', (settings) => setSettings(settings));
-      ipcRenderer.off('isSettingsOpen', (isSettingsOpen) => setIsSettingsOpen(isSettingsOpen));
+      ipcRenderer.off('settingsChanged', (settings: Settings) => setSettings(settings));
+      ipcRenderer.off('isSettingsOpen', (isSettingsOpen: boolean) => setIsSettingsOpen(isSettingsOpen));
       window.removeEventListener('drop', handleDrop);
       window.removeEventListener('dragover', handleDragOver);
     };

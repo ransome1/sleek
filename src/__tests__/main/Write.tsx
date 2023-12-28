@@ -1,6 +1,5 @@
 import fs from 'fs/promises';
 import { writeTodoObjectToFile, removeLineFromFile } from '../../main/modules/File/Write';
-import { lines } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { configStorage } from '../../main/config';
 import dayjs from 'dayjs';
 

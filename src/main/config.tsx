@@ -9,15 +9,19 @@ import processDataRequest from './modules/ProcessDataRequest/ProcessDataRequest'
 import handleTheme from './modules/Theme';
 import crypto from 'crypto';
 
-const anonymousUserId = crypto.randomUUID() || null;
+Store.initRenderer();
 
-const userDataDirectory = path.join(app.getPath('userData'), 'userData');
+const anonymousUserId: string = crypto.randomUUID() || null;
+
+const userDataDirectory: string = path.join(app.getPath('userData'), 'userData');
+
 if(!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
+
 console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
-const customStylesPath = path.join(userDataDirectory, 'customStyles.css');
+const customStylesPath: string = path.join(userDataDirectory, 'customStyles.css');
 
-const configStorage = new Store<ConfigData>({
+const configStorage: Store<Settings> = new Store<Settings>({
   cwd: userDataDirectory,
   name: 'config',
   beforeEachMigration: context => {

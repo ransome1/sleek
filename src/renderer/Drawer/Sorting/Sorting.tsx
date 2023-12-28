@@ -9,7 +9,7 @@ const { store } = window.api;
 
 interface Props extends WithTranslation {
 	settings: Settings;
-	attributeMapping;
+	attributeMapping: TranslatedAttributes;
 	t: typeof i18n.t;
 }
 
@@ -33,7 +33,7 @@ const DrawerSorting: React.FC<Props> = ({
 		              key={settingName}
 		              control={
 		                <Switch
-		                  checked={settings[settingName]}
+		                  checked={settings[settingName as keyof Settings]}
 		                  onChange={(event) => store.set(settingName, event.target.checked)}
 		                  name={settingName}
 		                />

@@ -11,7 +11,7 @@ const { ipcRenderer } = window.api;
 interface Props {
   type: string;
   todoObject: TodoObject;
-  date: Date;
+  date: string | null;
   filters: Filters;
   settings: Settings;
 }
@@ -30,7 +30,7 @@ const DatePickerInline: React.FC<Props> = ({
     if(!date || !dayjs(date).isValid() || !todoObject.id) return;
     const validDate = dayjs(date).format('YYYY-MM-DD');
 
-    const string = todoObject.string.replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
+    const string: string = todoObject?.string?.replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `) || '';
 
     const JsTodoTxtObject = new Item(string);
     JsTodoTxtObject.setExtension(type, validDate);
@@ -42,10 +42,10 @@ const DatePickerInline: React.FC<Props> = ({
     setOpen(false);
   };
 
-  const DatePickerInline = ({ date, ...props }) => {
+  const DatePickerInline = ({ ...props }) => {
     const parsedDate = dayjs(date);
 
-    const ButtonField = ({ date, ...props }) => {
+    const ButtonField = ({ ...props }) => {
       const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
 

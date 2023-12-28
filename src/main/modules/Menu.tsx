@@ -2,7 +2,7 @@ import { app, Menu, dialog, shell } from 'electron';
 import { setFile } from './File/File';
 import { mainWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
-import { getActiveFile } from './File/Active';
+import { handleRequestArchive } from './File/Archive';
 import { configStorage, filterStorage } from '../config';
 import appPackage from '../../../release/app/package.json';
 
@@ -48,7 +48,7 @@ function createMenu(files: FileObject[]) {
               label: 'Hide',
               accelerator: 'Cmd+H',
               role: 'hide',
-            },
+            }
           ]
         : []),
         { type: 'separator' },
@@ -175,8 +175,7 @@ function createMenu(files: FileObject[]) {
           label: 'Archive completed todos',
           accelerator: 'Ctrl+Alt+A',
           click: () => {
-            const activeFile = getActiveFile();
-            mainWindow!.webContents.send('triggerArchiving', Boolean(activeFile?.doneFilePath));
+            handleRequestArchive();
           },
         },
         {

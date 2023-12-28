@@ -8,10 +8,10 @@ import './Search.scss';
 const { ipcRenderer, store } = window.api;
 
 interface Props extends WithTranslation {
-  headers: HeadersObject;
+  headers: HeadersObject | null;
   settings: Settings,
   searchString: string;
-  setSearchString: (searchString: string) => void;
+  setSearchString: React.Dispatch<React.SetStateAction<string>>;
   searchFieldRef: React.RefObject<HTMLInputElement>;
   t: typeof i18n.t;
 }
@@ -80,7 +80,7 @@ const Search: React.FC<Props> = memo(({
         <Box id='Search' className={settings.isSearchOpen ? 'active' : ''}>
           <TextField
             variant='outlined'
-            placeholder={`${t('search.visibleTodos')} ${headers.visibleObjects}`}
+            placeholder={`${t('search.visibleTodos')} ${headers?.visibleObjects}`}
             inputRef={searchFieldRef}
             value={searchString}
             onChange={handleInput}

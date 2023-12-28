@@ -6,9 +6,9 @@ import './PomodoroPicker.scss';
 const { ipcRenderer } = window.api;
 
 interface Props {
-  pomodoro: number;
+  pomodoro: number | string;
   textFieldValue: string;
-  todoObject: TodoObject;
+  todoObject: TodoObject | null;
 }
 
 const PomodoroPicker: React.FC<Props> = ({

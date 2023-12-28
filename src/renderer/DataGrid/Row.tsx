@@ -13,64 +13,64 @@ import { i18n } from '../Settings/LanguageSelector';
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  row: TodoObject;
-  filters: Filters;
+  todoObject: TodoObject;
+  filters: Filters | null;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setTodoObject: React.Dispatch<React.SetStateAction<any>>;
+  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: Settings,
   t: typeof i18n.t;
 }
 
 const Row: React.FC<Props> = memo(({
-  row,
+  todoObject,
   filters,
   setDialogOpen,
   setTodoObject,
-  setContextMenuItems,
+  setContextMenu,
+  setPromptItem,
   settings,
   t,
 }) => {
 
+  const handleConfirmDelete = () => {
+    if(todoObject) ipcRenderer.send('removeLineFromFile', todoObject?.id);
+  };
+
+  const handleSaveToClipboard = () => {
+    if(todoObject) ipcRenderer.send('saveToClipboard', todoObject?.string);
+  };
+
   const handleContextMenu = (event: React.MouseEvent) => {
-
-    const confirmDelete = () => {
-      if(row) ipcRenderer.send('removeLineFromFile', row?.id);
-    };
-
-    const saveToClipboard = () => {
-      if(row) ipcRenderer.send('saveToClipboard', row?.string);
-    };
-
-    const contextMenuItems = [
-      {
-        id: 'copy',
-        label: t('copy'),
-        function: saveToClipboard,
-      },
-      {
-        id: 'delete',
-        label: t('delete'),
-        promptItem: {
-          id: 'delete',
-          headline: t('prompt.delete.headline'),
-          text: t('prompt.delete.text'),
-          button1: t('delete'),
-          onButton1: confirmDelete,
-        }
-      }
-    ]
-
-    setContextMenuItems({
+    setContextMenu({
       event: event,
-      items: contextMenuItems
+      items: [
+        {
+          id: 'copy',
+          label: t('copy'),
+          function: handleSaveToClipboard,
+        },
+        {
+          id: 'delete',
+          label: t('delete'),
+          promptItem: {
+            id: 'delete',
+            headline: t('prompt.delete.headline'),
+            text: t('prompt.delete.text'),
+            button1: t('delete'),
+            onButton1: handleConfirmDelete,
+          }
+        }
+      ]
     });
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    ipcRenderer.send('writeTodoToFile', row.id, row.string, event.target.checked, false);
+    ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, event.target.checked, false);
   };
 
-  const handleRowClick = (event: React.KeyboardEvent | React.MouseEvent) => {
+  const handleRowClick = (event: KeyboardEvent | MouseEvent) => {
     const clickedElement = event.target as HTMLElement;
     if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if(
@@ -84,13 +84,21 @@ const Row: React.FC<Props> = memo(({
         clickedElement.tagName === 'SPAN' ||
         clickedElement.tagName === 'LI'
       ) {
-        if(row) {
-          setTodoObject(row);
+        if(todoObject) {
+          setTodoObject(todoObject);
           setDialogOpen(true);
         }
       }
     } else if((event.metaKey || event.ctrlKey) && (event.key === 'Delete' || event.key === 'Backspace')) {
-      setPromptItem(itemDelete);
+      setPromptItem({
+        id: 'delete',
+        headline: t('prompt.delete.headline'),
+        text: t('prompt.delete.text'),
+        button1: t('delete'),
+        onButton1: handleConfirmDelete,
+      });
+    } else if((event.metaKey || event.ctrlKey) && (event.key === 'c')) {
+      handleSaveToClipboard();
     }
   };
 
@@ -98,11 +106,11 @@ const Row: React.FC<Props> = memo(({
     handleFilterSelect(key, value, filters, false);
   };
 
-  if(row.group) {
+  if(todoObject.group) {
     return (
       <Group
-        value={row.value}
-        group={row.group}
+        value={todoObject.value}
+        group={todoObject.group}
         filters={filters}
         onClick={handleButtonClick}
       />
@@ -113,28 +121,28 @@ const Row: React.FC<Props> = memo(({
     <>
       <ListItem
         tabIndex={0}
-        key={row.id}
+        key={todoObject.id}
         className="row"
-        data-complete={row.complete}
-        data-hidden={row.hidden}
-        onClick={handleRowClick}
+        data-complete={todoObject.complete}
+        data-hidden={todoObject.hidden}
+        onClick={(event) => handleRowClick(event)}
         onKeyDown={handleRowClick}
         onContextMenu={handleContextMenu}
         data-todotxt-attribute="priority"
-        data-todotxt-value={row.priority}
+        data-todotxt-value={todoObject.priority}
       >
         <Checkbox
           icon={<CircleUnchecked />}
           checkedIcon={<CircleChecked />}
           tabIndex={0}
-          checked={row.complete}
+          checked={todoObject.complete}
           onChange={handleCheckboxChange}
         />
 
-        {row.hidden && <VisibilityOffIcon />}
+        {todoObject.hidden && <VisibilityOffIcon />}
 
         <Elements
-          todoObject={row}
+          todoObject={todoObject}
           filters={filters}
           handleButtonClick={handleButtonClick}
           settings={settings}

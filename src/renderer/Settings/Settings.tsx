@@ -10,11 +10,11 @@ interface Props extends WithTranslation {
   isOpen: boolean;
   onClose: () => void;
   settings: Settings;
-  attributeMapping;
+  attributeMapping: TranslatedAttributes;
   t: typeof i18n.t;
 }
 
-const visibleSettings = {
+const visibleSettings: VisibleSettings = {
   appendCreationDate: {
     style: 'toggle',
   },
@@ -60,7 +60,6 @@ const Settings: React.FC<Props> = memo(({
   isOpen,
   onClose,
   settings,
-  attributeMapping,
   t,
 }) => {
 
@@ -79,7 +78,7 @@ const Settings: React.FC<Props> = memo(({
               key={settingName}
               control={
                 <Switch
-                  checked={settings[settingName]}
+                  checked={settings[settingName as keyof Settings]}
                   onChange={(event) => store.set(settingName, event.target.checked)}
                   name={settingName}
                 />
@@ -93,10 +92,10 @@ const Settings: React.FC<Props> = memo(({
                 <Select
                   className={settingName}
                   label={t(`settings.${settingName}`)}
-                  value={settings[settingName]}
+                  value={settings[settingName as keyof Settings]}
                   onChange={(event) => store.set(settingName, event.target.value)}
                 >
-                  {settingValue.values.map((value) => (
+                  {settingValue?.values?.map((value) => (
                     <MenuItem key={value} value={value}>
                       {t(`settings.${value}`)}
                     </MenuItem>
@@ -109,22 +108,28 @@ const Settings: React.FC<Props> = memo(({
                   {t(`settings.${settingName}`)}
                   <Slider
                     id={settingName}
-                    value={settings[settingName]}
+                    value={settings[settingName as keyof Settings]}
                     step={settingValue.step}
                     valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => `${value}${settingValue.unit}`}
+                    valueLabelFormat={(value: number): string => `${value}${settingValue.unit}`}
                     min={settingValue.min}
                     max={settingValue.max}
-                    onChange={(event) => store.set(settingName, event.target.value)}
+                    onChange={(event: Event, value: number | number[]) => {
+                      event.preventDefault();
+                      if (typeof value === 'number') {
+                        store.set(settingName, value);
+                      }
+                    }}
                   />
+
                 </FormControl>
+
               ) : null
             )
           )
         ))}
         <LanguageSelector
           settings={settings}
-          attributeMapping={attributeMapping}
         />
       </Box>
     </Modal>

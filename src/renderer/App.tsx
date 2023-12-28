@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import IpcComponent from './Ipc';
 import MatomoComponent from './Matomo';
-import { CssBaseline, Snackbar, Alert, Box } from '@mui/material';
+import { CssBaseline, Snackbar, Alert, Box, AlertColor } from '@mui/material';
 import NavigationComponent from './Navigation';
 import TodoDataGrid from './DataGrid/Grid';
 import SplashScreen from './SplashScreen';
@@ -35,52 +35,41 @@ const translatedAttributes = (t: typeof i18n.t) => ({
 });
 
 const App = () => {
-  const [settings, setSettings] = useState(store.get());
+  const [settings, setSettings] = useState<Settings>(store.get());
   const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
-  const [snackBarSeverity, setSnackBarSeverity] = useState<string | null>(null);
+  const [snackBarSeverity, setSnackBarSeverity] = useState<AlertColor | undefined>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>('');
   const [todoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
   const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
   const [attributeFields, setAttributeFields] = useState<TodoObject | null>(null);
   const [headers, setHeaders] = useState<HeadersObject | null>(null);
-  const [filters, setFilters] = useState<Filters | null>(null);
+  const [filters, setFilters] = useState<Filters | null>([]);
   const [attributes, setAttributes] = useState<Attributes | null>(null);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem | null>(null);
-  const [textFieldValue, setTextFieldValue] = useState<string | ''>('');
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null);
+  const [textFieldValue, setTextFieldValue] = useState<string>('');
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
-  const [showPromptDoneFile, setShowPromptDoneFile] = useState<boolean>(false);
-  const searchFieldRef = useRef(null);
-
-  const [attributeMapping, setAttributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
-
-  useEffect(() => {
-    if(!headers) {
-      return;
-    } else if(headers.availableObjects === 0) {
-      setSplashScreen('noTodosAvailable');
-    } else if(headers.visibleObjects === 0) {
-      setSplashScreen('noTodosVisible');
-    } else {
-      setSplashScreen(null);
-    }
-  }, [headers]);
+  const searchFieldRef = useRef<HTMLInputElement>(null);
+  const [attributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
+  const [visibleRowCount, setVisibleRowCount] = useState(30);
+  const [loadMoreRows, setLoadMoreRows] = useState(true);
 
   useEffect(() => {
+    setSnackBarOpen(Boolean(snackBarContent));
+  }, [snackBarContent]);
+
+  useEffect(() => {
+    setVisibleRowCount(30);
+    setLoadMoreRows(true);
     if(settings.files?.length === 0) {
-      setTodoObjects(null);
-      setHeaders(null);
       setSplashScreen('noFiles');
+      setTodoObjects(null);
     }
   }, [settings.files]);
-
-  useEffect(() => {
-    setSnackBarOpen((!snackBarContent) ? false : true);
-  }, [snackBarContent]);
 
   useEffect(() => {
     ipcRenderer.send('requestData');
@@ -98,30 +87,26 @@ const App = () => {
         setSnackBarSeverity={setSnackBarSeverity}
         setSnackBarContent={setSnackBarContent}
         setSettings={setSettings}
-        setTriggerArchiving={setTriggerArchiving}
         setSplashScreen={setSplashScreen}
         setIsSettingsOpen={setIsSettingsOpen}
       />
       <MatomoComponent
         settings={settings}
-      />      
+      />
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={settings.shouldUseDarkColors ? darkTheme : lightTheme}>
+        <ThemeProvider theme={settings?.shouldUseDarkColors ? darkTheme : lightTheme}>
           <CssBaseline />
-          <Box className={`flexContainer ${settings.isNavigationOpen ? '' : 'hideNavigation'} ${settings.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}>
+          <Box className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings?.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}>
             <NavigationComponent
               setDialogOpen={setDialogOpen}
               settings={settings}
-              setSettings={setSettings}
               setIsSettingsOpen={setIsSettingsOpen}
               setTodoObject={setTodoObject}
-              setTriggerArchiving={setTriggerArchiving}
               headers={headers}
             />
-            {settings.files?.length > 0 && (
+            {settings?.files?.length > 0 && (
               <DrawerComponent
                 settings={settings}
-                setSettings={setSettings}
                 attributes={attributes}
                 filters={filters}
                 searchFieldRef={searchFieldRef}
@@ -134,18 +119,16 @@ const App = () => {
                 {settings.showFileTabs ?
                 <FileTabs
                   settings={settings}
-                  setContextMenuItems={setContextMenuItems}
+                  setContextMenu={setContextMenu}
                  /> : null}
-                {headers?.availableObjects > 0 ?
+                {headers && headers.availableObjects > 0 ?
                 <>
                   <Search
                     headers={headers}
                     searchString={searchString}
                     setSearchString={setSearchString}
                     settings={settings}
-                    
                     searchFieldRef={searchFieldRef}
-                    setTextFieldValue={setTextFieldValue}
                   />
                   <ToolBar
                     settings={settings}
@@ -155,21 +138,31 @@ const App = () => {
                 : null }
               </>
               )}
-              <TodoDataGrid
-                todoObjects={todoObjects}
-                setTodoObject={setTodoObject}
-                attributes={attributes}
-                filters={filters}
-                setDialogOpen={setDialogOpen}
-                contextMenuItems={contextMenuItems}
-                setContextMenuItems={setContextMenuItems}
-                setPromptItem={setPromptItem}
-                settings={settings}
-              />
+              {todoObjects?.length > 0 && (
+                <>
+                  <TodoDataGrid
+                    todoObjects={todoObjects}
+                    setTodoObject={setTodoObject}
+                    attributes={attributes}
+                    filters={filters}
+                    setDialogOpen={setDialogOpen}
+                    setContextMenu={setContextMenu}
+                    setPromptItem={setPromptItem}
+                    settings={settings}
+                    visibleRowCount={visibleRowCount}
+                    setVisibleRowCount={setVisibleRowCount}
+                    loadMoreRows={loadMoreRows}
+                    setLoadMoreRows={setLoadMoreRows}
+                  />
+                </>
+              )}
               <SplashScreen
-                screen={splashScreen}
+                splashScreen={splashScreen}
                 setDialogOpen={setDialogOpen}
                 setSearchString={setSearchString}
+                setSplashScreen={setSplashScreen}
+                setTodoObjects={setTodoObjects}
+                headers={headers}
               />
             </Box>
           </Box>
@@ -195,10 +188,10 @@ const App = () => {
             settings={settings}
             attributeMapping={attributeMapping}
           />
-          {contextMenuItems && (
+          {contextMenu && (
             <ContextMenu
-              contextMenuItems={contextMenuItems}
-              setContextMenuItems={setContextMenuItems}
+              contextMenu={contextMenu}
+              setContextMenu={setContextMenu}
               setPromptItem={setPromptItem}
             />
           )}
@@ -211,7 +204,7 @@ const App = () => {
               {snackBarContent}
             </Alert>
           </Snackbar>
-          {settings.files?.length > 0 && (
+          {settings?.files?.length > 0 && (
             <Archive
               triggerArchiving={triggerArchiving}
               setTriggerArchiving={setTriggerArchiving}
@@ -226,7 +219,7 @@ const App = () => {
               onClose={() => setPromptItem(null)}
               promptItem={promptItem}
               setPromptItem={setPromptItem}
-              setContextMenuItems={setContextMenuItems}
+              setContextMenu={setContextMenu}
             />
           )}
         </ThemeProvider>

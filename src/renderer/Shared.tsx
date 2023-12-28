@@ -1,8 +1,6 @@
-import { i18n } from './Settings/LanguageSelector';
+const { store } = window.api;
 
-const { ipcRenderer, store } = window.api;
-
-export const handleFilterSelect = (key: string, value: string | string[], filters: Filters, isCtrlKeyPressed: boolean) => {
+export const handleFilterSelect = (key: string, value: string | string[] | null, filters: Filters | null, isCtrlKeyPressed: boolean) => {
   try {
     const updatedFilters: Filters = { ...filters };
     const filterList: Filter[] = updatedFilters[key] || [];

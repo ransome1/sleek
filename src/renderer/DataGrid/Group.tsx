@@ -4,8 +4,8 @@ import { ListItem, Box, Button, Divider } from '@mui/material';
 interface Props {
   value: string;
   group: string;
-  filters: Filters;
-  onClick: (key: string, value: string) => void;
+  filters: Filters | null;
+  onClick: Function;
 }
 
 const Group: React.FC<Props> = memo(({

@@ -23,7 +23,7 @@ async function readFileContent(filePath: string, bookmark: string | null) {
 }
 
 function addFile(filePath: string, bookmark: string | null) {
-  if(process.mas) throw new Error('This release does not support the drag and drop function, please use the file dialog');
+  if(process.mas && !bookmark) throw new Error('The Mac App Store release requires you to open files using the file dialog');
 
   const files: FileObject[] = configStorage.get('files');
   const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath);

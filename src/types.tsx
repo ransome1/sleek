@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 
 declare global {
   interface Window {
@@ -16,18 +16,17 @@ declare global {
       };
     };
   }
+  
+  interface ContextMenu {
+    event: MouseEvent;
+    items: ContextMenuItem[];
+  }
+
   interface ContextMenuItem {
     id: string;
     label: string;
-    todoObject?: {
-      id: string;
-      string: string;
-    };
-    index?: number;
-    doneFilePath?: string;
-    headline?: string;
-    text?: string;
-    pathToReveal?: string;
+    promptItem?: PromptItem;
+    function?: Function;
   }
 
   interface WindowRectangle {
@@ -40,21 +39,23 @@ declare global {
   interface InputProps {
     placeholder: string;
     value: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: Function;
     inputRef: React.RefObject<HTMLInputElement>;
-    onKeyDown: (event: React.KeyboardEvent) => void;
+    onKeyDown: Function;
   }
 
   interface PromptItem {
       id: string,
-      todoObject: TodoObject,
-      headline: string,
-      text: string,
-      label: string,
+      headline?: string,
+      text?: string,
+      button1?: string,
+      onButton1?: Function,
+      button2?: string,
+      onButton2?: Function,
     }
 
   interface Settings {
-    sorting: any;
+    sorting: Sorting;
     showCompleted: boolean;
     showHidden: boolean;
     thresholdDateInTheFuture: boolean;
@@ -67,7 +68,25 @@ declare global {
     language: string;
     isSearchOpen: boolean;
     fileSorting: boolean;
+    zoom: number;
+    showFileTabs: boolean;
+    appendCreationDate: boolean;
+    windowMaximized: boolean;
+    convertRelativeToAbsoluteDates: boolean;
+    colorTheme: string;
+    notificationsAllowed: boolean;
+    notificationThreshold: number;
+    tray: boolean;
+    anonymousUserId: string;
+    bulkTodoCreation: boolean;
+    drawerWidth: number;
+    fromVersion: string;
+    toVersion: string;
   }
+
+  // interface ConfigData {
+  //   [key: string]: any;
+  // }
 
   interface FileObject {
     active: boolean;
@@ -93,7 +112,7 @@ declare global {
     tString: string | null;
     rec: string | null;
     hidden: boolean;
-    pm: string | null;
+    pm: number | string | null;
     string: string | null;
     [key: string]: string | string[] | number | boolean | null;
   }
@@ -108,6 +127,7 @@ declare global {
     pm: string;
     created: string;
     completed: string;
+    [key: string]: any;
   }
 
   interface Sorting {
@@ -127,6 +147,7 @@ declare global {
     tString?: Filter[];
     created?: Filter[];
     completed?: Filter[];
+    [key: string]: any;
   }
 
   interface Filter {
@@ -176,31 +197,23 @@ declare global {
     index: number;
   };
 
-  interface ConfigData {
-    files: FileObject[];
-    sorting: Sorting[];
-    appendCreationDate: boolean;
-    showCompleted: boolean;
-    showHidden: boolean;
-    windowMaximized: boolean;
-    fileSorting: boolean;
-    accordionOpenState: boolean[];
-    convertRelativeToAbsoluteDates: boolean;
-    thresholdDateInTheFuture: boolean;
-    dueDateInTheFuture: boolean;
-    showFileTabs: boolean;
-    colorTheme: string;
-    tray: boolean;
-    fromVersion: string;
-    toVersion: string;
-  }
-
   interface RequestedData {
-    flattenedTodoObjects: TodoObject[],
+    todoObjects: TodoObject[],
     attributes: Attributes,
     headers: HeadersObject,
     filters: Filters,
   }
+
+  type VisibleSetting = {
+    style: 'toggle' | 'slider' | 'select';
+    min?: number;
+    max?: number;
+    unit?: string;
+    step?: number;
+    values?: string[];
+  };
+
+  type VisibleSettings = Record<string, VisibleSetting>;
 
 }
 

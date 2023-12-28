@@ -16,7 +16,7 @@ function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOp
     },
     { type: 'separator' },
     ...(files?.length > 0
-      ? files.map((file: File, index: number) => ({
+      ? files.map((file: FileObject, index: number) => ({
         label: file.todoFileName!,
         accelerator: `CommandOrControl+${index + 1}`,
         click: () => {

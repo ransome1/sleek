@@ -1,65 +1,35 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Menu, MenuItem, Button, Tooltip } from '@mui/material';
-import FileOpenIcon from '@mui/icons-material/FileOpen';
+import React, { memo } from 'react';
+import { Menu, MenuItem } from '@mui/material';
 
 interface Props {
-  contextMenuItems: ContextMenuItem[];
-  setContextMenuItems: React.Dispatch<React.SetStateAction<ContextMenuItem[] | null>>;
-  setPromptItem;
+  contextMenu: ContextMenu;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
-const { ipcRenderer } = window.api;
-
 const ContextMenu: React.FC<Props> = memo(({
-  contextMenuItems,
-  setContextMenuItems,
+  contextMenu,
+  setContextMenu,
   setPromptItem,
 }) => {
-  //const [contextMenuPosition, setContextMenuPosition] = useState(null);
-  // const handleContextMenuClick = (item: ContextMenuItem) => {
-  //   const { id, todoObject, pathToReveal} = item;
-  //   switch (id) {
-  //     case 'delete':
-  //       setPromptItem(item);
-  //       break;
-  //     case 'copy':
-  //       setContextMenuItems(null);
-  //       ipcRenderer.send('saveToClipboard', todoObject?.string);
-  //       break;
-  //     case 'removeFile':
-  //       setPromptItem(item);
-  //       break;
-  //     case 'revealInFileManager':
-  //       setContextMenuItems(null);
-  //       ipcRenderer.send('revealInFileManager', pathToReveal);
-  //       break;
-  //     default:
-  //       setContextMenuItems(null);
-  //   }
-  // };
-
-  // const handleChangeDoneFilePath = () => {
-  //   setShowPromptDoneFile(true);
-  // };
-
-  const onClick = (contextMenuItem) => {
+  const onClick = (contextMenuItem: ContextMenuItem) => {
     if(contextMenuItem.promptItem) {
       setPromptItem(contextMenuItem.promptItem);
     } else if(contextMenuItem.function) {
       contextMenuItem.function();
-      setContextMenuItems(null);
+      setContextMenu(null);
     }
   };
 
   return (
     <>
       <Menu
-        open={Boolean(contextMenuItems)}
-        onClose={() => setContextMenuItems(null)}
+        open={Boolean(contextMenu)}
+        onClose={() => setContextMenu(null)}
         anchorReference="anchorPosition"
-        anchorPosition={{ top: contextMenuItems.event.clientY, left: contextMenuItems.event.clientX }}
+        anchorPosition={{ top: contextMenu.event.clientY, left: contextMenu.event.clientX }}
       >
-        {contextMenuItems && contextMenuItems.items.map((contextMenuItem) => (
+        {contextMenu && contextMenu.items.map((contextMenuItem: ContextMenuItem) => (
           <MenuItem key={contextMenuItem.id} onClick={() => onClick(contextMenuItem)}>
             {contextMenuItem.label}
           </MenuItem>

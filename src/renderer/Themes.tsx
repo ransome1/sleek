@@ -130,13 +130,6 @@ const darkTheme: Theme = createTheme({
   },
   components: {
     ...baseTheme.components,
-    MuiBox: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#ebebeb',
-        },
-      },
-    },
     MuiDrawer: {
       styleOverrides: {
         paper: {
