@@ -8,7 +8,7 @@ import ThresholdDatePicker from './ThresholdDatePicker';
 import PomodoroPicker from './PomodoroPicker';
 import RecurrencePicker from './RecurrencePicker';
 import { i18n } from '../Settings/LanguageSelector';
-import './TodoDialog.scss';
+import './Dialog.scss';
 
 const { ipcRenderer} = window.api;
 
@@ -28,7 +28,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const TodoDialog: React.FC<Props> = memo(({
+const DialogComponent: React.FC<Props> = memo(({
   dialogOpen,
   setDialogOpen,
   todoObject,
@@ -91,7 +91,8 @@ const TodoDialog: React.FC<Props> = memo(({
   }
 
   useEffect(() => {
-    setTextFieldValue(todoObject?.string || '');
+    const updatedValue = todoObject?.string.replaceAll(String.fromCharCode(16), '\n') || '';
+    setTextFieldValue(updatedValue);
     updateAttributeFields(todoObject);
   }, [todoObject]);
 
@@ -113,7 +114,7 @@ const TodoDialog: React.FC<Props> = memo(({
 
   return (
     <Dialog
-      id="TodoDialog"
+      id="DialogComponent"
       open={dialogOpen}
       onClose={handleClose}
       className={settings.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}
@@ -156,7 +157,7 @@ const TodoDialog: React.FC<Props> = memo(({
       <DialogActions>
         <Button onClick={handleClose}>{t('todoDialog.footer.cancel')}</Button>
         <Button onClick={handleAdd}>
-          {todoObject?.id ?? -1 >= 0
+          {todoObject && todoObject.id >= 0
             ? t('todoDialog.footer.update')
             : settings.bulkTodoCreation
               ? `${t('todoDialog.footer.add')} (${numRowsWithContent || 0})`
@@ -167,4 +168,4 @@ const TodoDialog: React.FC<Props> = memo(({
   );
 });
 
-export default withTranslation()(TodoDialog);
+export default withTranslation()(DialogComponent);

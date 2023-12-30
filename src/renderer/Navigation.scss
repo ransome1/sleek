@@ -1,5 +1,10 @@
 @import "Variables.scss";
 
+.hideNavigation #navigation button.showNavigation {
+  min-width: 2.5em;
+  display: flex;
+  border-top-right-radius: $radius;
+}
 #navigation {
   width: 5em;
   position: fixed;
@@ -17,6 +22,24 @@
     text-align: center;
     color: white;
     background: linear-gradient(0.33turn, #1b5551, #813e93);
+  }
+  button.showNavigation {
+    width: 2.5em;
+    height: 5em;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: none;
+    background: white;
+    color: $dark-grey;
+    z-index: 10;
+    transition: width 0.3s ease;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    &:hover {
+      width: 5em;
+    }
   }
   button {
     border-radius: 0;

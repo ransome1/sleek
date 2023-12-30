@@ -24,13 +24,18 @@ const ContextMenu: React.FC<Props> = memo(({
   return (
     <>
       <Menu
+        id="contextMenu"
         open={Boolean(contextMenu)}
         onClose={() => setContextMenu(null)}
         anchorReference="anchorPosition"
         anchorPosition={{ top: contextMenu.event.clientY, left: contextMenu.event.clientX }}
       >
         {contextMenu && contextMenu.items.map((contextMenuItem: ContextMenuItem) => (
-          <MenuItem key={contextMenuItem.id} onClick={() => onClick(contextMenuItem)}>
+          <MenuItem 
+            key={contextMenuItem.id}
+            data-testid={`contextMenu-item-${contextMenuItem.id}`}
+            onClick={() => onClick(contextMenuItem)}
+          >
             {contextMenuItem.label}
           </MenuItem>
         ))}

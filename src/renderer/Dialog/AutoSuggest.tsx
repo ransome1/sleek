@@ -78,7 +78,7 @@ const AutoSuggest: React.FC<Props> = ({
       data-todotxt-attribute={prefix === '+' ? 'projects' : prefix === '@' ? 'contexts' : ''}
       className={isHighlighted ? 'selected' : ''}
     >
-      <Button key={suggestion}>{suggestion}</Button>
+      <Button key={suggestion} data-testid={`dialog-autosuggest-button-${prefix === '+' ? 'project' : prefix === '@' ? 'context' : ''}`}>{suggestion}</Button>
     </Box>
   );
 

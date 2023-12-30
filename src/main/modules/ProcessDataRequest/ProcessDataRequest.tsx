@@ -16,12 +16,7 @@ const headers: HeadersObject = {
 let searchString: string;
 
 async function processDataRequest(search?: string): Promise<void> {
-  
-  if(search) {
-    searchString = search;
-  } else if(search === '') {
-    searchString = '';
-  }
+  searchString = search || '';
 
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
@@ -31,9 +26,9 @@ async function processDataRequest(search?: string): Promise<void> {
   const showHidden: boolean = configStorage.get('showHidden');
   const fileSorting: boolean = configStorage.get('fileSorting');
   const filters: Filters = filterStorage.get('filters');
+
   const fileContent = await readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
   let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);
-
   todoObjects = handleTodoObjectsDates(todoObjects);
   headers.availableObjects = countTodoObjects(todoObjects, false);
   headers.completedTodoObjects = countTodoObjects(todoObjects, true);
@@ -57,10 +52,10 @@ async function processDataRequest(search?: string): Promise<void> {
   }
 
   const requestedData: RequestedData = {
-      todoObjects,
-      attributes,
-      headers,
-      filters,
+    todoObjects,
+    attributes,
+    headers,
+    filters,
   };
 
   mainWindow!.webContents.send('requestData', requestedData);

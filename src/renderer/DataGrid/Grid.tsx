@@ -34,7 +34,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
  }) => {
 
   const list = document.getElementById('dataGrid');
-  const totalRowCount = todoObjects?.length;
+  const totalRowCount = todoObjects?.length || 0;
 
   const handleKeyUp = (event: KeyboardEvent) => {
     if(event.key === 'ArrowDown') {

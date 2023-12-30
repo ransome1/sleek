@@ -55,7 +55,7 @@ declare global {
     }
 
   interface Settings {
-    sorting: Sorting;
+    sorting: Sorting[];
     showCompleted: boolean;
     showHidden: boolean;
     thresholdDateInTheFuture: boolean;
@@ -82,11 +82,8 @@ declare global {
     drawerWidth: number;
     fromVersion: string;
     toVersion: string;
+    __internal__: { migrations: { version: string }};
   }
-
-  // interface ConfigData {
-  //   [key: string]: any;
-  // }
 
   interface FileObject {
     active: boolean;
@@ -134,6 +131,7 @@ declare global {
     id: string;
     value: string;
     invert: boolean;
+    [key: string]: any;
   }
 
   interface Filters {

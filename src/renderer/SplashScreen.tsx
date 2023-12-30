@@ -11,9 +11,8 @@ interface Props extends WithTranslation {
   splashScreen: string | null;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSplashScreen: React.Dispatch<React.SetStateAction<string>>;
-  setTodoObjects: React.Dispatch<React.SetStateAction<TodoObject[] | null>>;
-  headers: HeadersObject;
+  setSplashScreen: React.Dispatch<React.SetStateAction<string | null>>;
+  headers: HeadersObject | null;
   t: typeof i18n.t;
 }
 
@@ -24,7 +23,6 @@ const SplashScreen: FC<Props> = memo(({
   setSearchString,
   setDialogOpen,
   setSplashScreen,
-  setTodoObjects,
   headers,
   t,
 }) => {
@@ -65,7 +63,7 @@ const SplashScreen: FC<Props> = memo(({
           <DryCleaningIcon />
           <p>{t('splashscreen.noTodosVisible.text')}</p>
           <Box className="buttons">
-            <Button variant='contained' onClick={handleReset}>
+            <Button variant='contained' onClick={handleReset} data-testid={`splashcreen-button-reset-filters`}>
               {t('splashscreen.noTodosVisible.reset')}
             </Button>
           </Box>
@@ -76,7 +74,7 @@ const SplashScreen: FC<Props> = memo(({
           <BeachAccessIcon />
           <p>{t('splashscreen.noTodosAvailable.text')}</p>
           <Box className="buttons">
-            <Button variant='contained' onClick={handleCreateTodo}>
+            <Button variant='contained' onClick={handleCreateTodo} data-testid={`splashcreen-button-create-todo`}>
               {t('splashscreen.noTodosAvailable.create')}
             </Button>
           </Box>
@@ -87,10 +85,10 @@ const SplashScreen: FC<Props> = memo(({
           <SaveAltIcon />
           <p>{t('splashscreen.noFiles.text')}</p>
           <Box className="buttons">
-            <Button variant='contained' onClick={handleOpenFile}>
+            <Button variant='contained' onClick={handleOpenFile}  data-testid={`splashcreen-button-open-file`}>
               {t('openFile')}
             </Button>
-            <Button variant='contained' onClick={handleCreateFile}>
+            <Button variant='contained' onClick={handleCreateFile} data-testid={`splashcreen-button-create-file`}>
               {t('createFile')}
             </Button>
           </Box>

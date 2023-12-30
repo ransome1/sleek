@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, RefObject, memo } from 'react';
 import { Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import './ToolBar.scss';
+import './HeaderComponent.scss';
 
 interface Props {
   settings: Settings;
@@ -10,7 +10,7 @@ interface Props {
 
 const { store } = window.api;
 
-const ToolBar: React.FC<Props> = memo(({ 
+const HeaderComponent: React.FC<Props> = memo(({ 
   settings,
   searchFieldRef
 }) => {
@@ -45,4 +45,4 @@ const ToolBar: React.FC<Props> = memo(({
   );
 });
 
-export default ToolBar;
+export default HeaderComponent;

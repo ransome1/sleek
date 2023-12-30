@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeTheme } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
@@ -13,8 +13,9 @@ import './modules/Ipc';
 const environment: string | undefined = process.env.NODE_ENV;
 const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
 let tray: boolean = configStorage.get('tray');
+const colorTheme = configStorage.get('colorTheme');
 let mainWindow: BrowserWindow | null = null;
-let eventListeners: Record<string, any> = {};
+let eventListeners: Record<string, any | undefined> = {};
 
 const handleCreateWindow = () => {
   if(mainWindow) {
@@ -29,18 +30,18 @@ const handleClosed = async () => {
 
   mainWindow = null;
 
-  delete eventListeners.handleReadyToShow;
-  delete eventListeners.handleClosed;
-  delete eventListeners.handleResize;
-  delete eventListeners.handleMove;
-  delete eventListeners.handleShow;
-  delete eventListeners.handleMaximize;
-  delete eventListeners.handleUnmaximize;
-  delete eventListeners.handleCreateWindow;
-  delete eventListeners.handleWindowAllClosed;
-  delete eventListeners.handleWillQuit;
-  delete eventListeners.handleBeforeQuit;
-  delete eventListeners.watcher;
+  eventListeners.handleReadyToShow = undefined;
+  eventListeners.handleClosed = undefined;
+  eventListeners.handleResize = undefined;
+  eventListeners.handleMove = undefined;
+  eventListeners.handleShow = undefined;
+  eventListeners.handleMaximize = undefined;
+  eventListeners.handleUnmaximize = undefined;
+  eventListeners.handleCreateWindow = undefined;
+  eventListeners.handleWindowAllClosed = undefined;
+  eventListeners.handleWillQuit = undefined;
+  eventListeners.handleBeforeQuit = undefined;
+  eventListeners.watcher = undefined;
 }
 
 const handleResize = () => {
@@ -112,11 +113,11 @@ const createMainWindow = () => {
     mainWindow.webContents.openDevTools();
   }
 
+  handleWindowSizeAndPosition();  
+
+  nativeTheme.themeSource = colorTheme;
+
   mainWindow?.loadURL(resolveHtmlPath('index.html'));
-
-  handleWindowSizeAndPosition();
-
-  handleTheme();
 
   mainWindow
     .on('ready-to-show', handleReadyToShow)
@@ -127,14 +128,13 @@ const createMainWindow = () => {
     .on('maximize', handleMaximize)
     .on('unmaximize', handleUnmaximize);
 
-  eventListeners
-    .handleReadyToShow = handleReadyToShow
-    .handleClosed = handleClosed
-    .handleResize = handleResize
-    .handleMove = handleMove
-    .handleShow = handleShow
-    .handleMaximize = handleMaximize
-    .handleUnmaximize = handleUnmaximize;
+  eventListeners.handleReadyToShow = handleReadyToShow
+  eventListeners.handleClosed = handleClosed
+  eventListeners.handleResize = handleResize
+  eventListeners.handleMove = handleMove
+  eventListeners.handleShow = handleShow
+  eventListeners.handleMaximize = handleMaximize
+  eventListeners.handleUnmaximize = handleUnmaximize;
 
   const customStylesPath: string = configStorage.get('customStylesPath');
   if(customStylesPath) {
@@ -170,7 +170,7 @@ const handleBeforeQuit = () => {
   app.releaseSingleInstanceLock();
 }
 
-const handleOpenFile = (event, path) => {
+const handleOpenFile = (path: string) => {
   if(path) addFile(path, null);
 };
 
@@ -178,7 +178,7 @@ app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
   .on('activate', handleCreateWindow)
-  .on('open-file', handleOpenFile)
+  .on('open-file', () => handleOpenFile(path))
   .whenReady()
   .then(() => {
 
@@ -190,10 +190,9 @@ app
       createTray();
     }
 
-    eventListeners
-      .handleCreateWindow = handleCreateWindow
-      .handleWindowAllClosed = handleWindowAllClosed
-      .handleBeforeQuit = handleBeforeQuit;
+    eventListeners.handleCreateWindow = handleCreateWindow
+    eventListeners.handleWindowAllClosed = handleWindowAllClosed
+    eventListeners.handleBeforeQuit = handleBeforeQuit;
 
   })
   .catch(console.error);

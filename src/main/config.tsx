@@ -124,7 +124,7 @@ configStorage.onDidAnyChange(async(settings) => {
   }
 });
 
-configStorage.onDidChange('files', async (files: FileObject[] | undefined) => {
+configStorage.onDidChange('files', (files: FileObject[] | null) => {
   try {
     if(files) {
       createFileWatcher(files);

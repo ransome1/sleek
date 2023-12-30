@@ -22,12 +22,12 @@ async function openFile(setDoneFile: boolean): Promise<void> {
   });
   if(!result.canceled && result.filePaths.length > 0) {
     const filePath: string = result.filePaths[0];
-    const securityScopedBookmark: string | null = result.bookmarks?.[0] || null;
+    const bookmark: string | null = result.bookmarks?.[0] || null;
 
     if(setDoneFile) {
-      addDoneFile(filePath, securityScopedBookmark);
+      addDoneFile(filePath, bookmark);
     } else {
-      addFile(filePath, securityScopedBookmark);
+      addFile(filePath, bookmark);
     }
   }
   return;
@@ -44,17 +44,22 @@ async function createFile(setDoneFile: boolean): Promise<void> {
 
   if(!result.canceled && result.filePath) {
     const filePath: string = result.filePath;
-    const securityScopedBookmark: string | null = result.bookmark || null;
+    const bookmark: string | null = result.bookmark || null;
 
-    await fs.writeFile(filePath, '');
+    if(process.mas && bookmark) {
+      const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
+      await fs.writeFile(filePath, '');
+      stopAccessingSecurityScopedResource()
+    } else {
+      await fs.writeFile(filePath, '');
+    }
 
     if(setDoneFile) {
-      addDoneFile(filePath, securityScopedBookmark);
+      addDoneFile(filePath, bookmark);
     } else {
-      addFile(filePath, securityScopedBookmark);
+      addFile(filePath, bookmark);
     }
   }
-
   return;
 }
 

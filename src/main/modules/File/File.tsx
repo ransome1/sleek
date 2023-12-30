@@ -6,19 +6,20 @@ import { createMenu } from '../Menu';
 import path from 'path';
 import { mainWindow } from '../../main';
 
-let stopAccessingSecurityScopedResource: any;
-
-async function readFileContent(filePath: string, bookmark: string | null) {
+async function readFileContent(filePath: string, bookmark: string | null): Promise<string | null> {
   if(!filePath) {
     return null;
   }
 
-  if(bookmark) app.startAccessingSecurityScopedResource(bookmark)
+  let fileContent;
 
-  const fileContent = await fs.promises.readFile(filePath, 'utf8');
-
-  if(bookmark) stopAccessingSecurityScopedResource()
-
+  if(process.mas && bookmark) {
+    const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
+    fileContent = await fs.promises.readFile(filePath, 'utf8');
+    stopAccessingSecurityScopedResource()
+  } else {
+    fileContent = await fs.promises.readFile(filePath, 'utf8');
+  }
   return fileContent;
 }
 

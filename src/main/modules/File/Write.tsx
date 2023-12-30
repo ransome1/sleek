@@ -6,8 +6,6 @@ import { getActiveFile } from './Active';
 import { configStorage } from '../../config';
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date';
 
-let stopAccessingSecurityScopedResource: any;
-
 async function removeLineFromFile(id: number): Promise<string> {
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
@@ -19,11 +17,13 @@ async function removeLineFromFile(id: number): Promise<string> {
   lines.splice(id, 1);
   const modifiedContent = lines.join('\n');
 
-  if(bookmark) app.startAccessingSecurityScopedResource(bookmark)
-
-  await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
-
-  if(bookmark) stopAccessingSecurityScopedResource()
+  if(process.mas && bookmark) {
+    const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
+    await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
+    stopAccessingSecurityScopedResource()
+  } else {
+    await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
+  }
 
   return `Line ${id} removed from file`;
 }
@@ -68,11 +68,13 @@ async function writeTodoObjectToFile(id: number, string: string): Promise<void> 
     }
   }
 
-  if(bookmark) app.startAccessingSecurityScopedResource(bookmark)
-
-  await fs.writeFile(todoFilePath, lines.join('\n'), 'utf8');
-
-  if(bookmark) stopAccessingSecurityScopedResource()
+  if(process.mas && bookmark) {
+    const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
+    await fs.writeFile(todoFilePath, lines.join('\n'), 'utf8');
+    stopAccessingSecurityScopedResource()
+  } else {
+    await fs.writeFile(todoFilePath, lines.join('\n'), 'utf8');
+  }
 }
 
 async function replaceFileContent(string: string, filePath: string) {

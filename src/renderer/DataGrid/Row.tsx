@@ -70,7 +70,7 @@ const Row: React.FC<Props> = memo(({
     ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, event.target.checked, false);
   };
 
-  const handleRowClick = (event: KeyboardEvent | MouseEvent) => {
+  const handleRowClick = (event: KeyboardEvent) => {
     const clickedElement = event.target as HTMLElement;
     if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if(
@@ -125,7 +125,7 @@ const Row: React.FC<Props> = memo(({
         className="row"
         data-complete={todoObject.complete}
         data-hidden={todoObject.hidden}
-        onClick={(event) => handleRowClick(event)}
+        onClick={handleRowClick}
         onKeyDown={handleRowClick}
         onContextMenu={handleContextMenu}
         data-todotxt-attribute="priority"

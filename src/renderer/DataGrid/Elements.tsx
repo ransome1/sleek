@@ -38,25 +38,25 @@ const Elements: React.FC<Props> = memo(({
       />
     ),
     contexts: (value, type) => (
-      <Button onClick={() => handleButtonClick(type, value)}>
-        <Box>{value}</Box>
+      <Button className='contexts' onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
+        {value}
       </Button>
     ),
     projects: (value, type) => (
-      <Button onClick={() => handleButtonClick(type, value)}>
-        <Box>{value}</Box>
+      <Button onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
+        {value}
       </Button>
     ),
     rec: (value, type) => (
-      <Button onClick={() => handleButtonClick(type, value)}>
+      <Button onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
         <Chip label="rec:" />
-        <Box>{value}</Box>
+        {value}
       </Button>
     ),
     pm: (value, type) => (
-      <Button className='pomodoro' onClick={() => handleButtonClick(type, value)}>
+      <Button className='pomodoro' onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
         <TomatoIconDuo />
-        <Box>{value}</Box>
+        {value}
       </Button>
     ),
     hidden: () => null as React.ReactNode,
@@ -73,7 +73,6 @@ const Elements: React.FC<Props> = memo(({
       { pattern: /rec:([^ ]+)/, type: 'rec', key: 'rec:' },
     ];
 
-    //let body = todoObject.body?.replaceAll(String.fromCharCode(16), ' ') ?? '';
     let body = todoObject.body;
     let substrings = [];
     let index = 0;
@@ -116,7 +115,7 @@ const Elements: React.FC<Props> = memo(({
     return (
       <Box
         key={index}
-        className={selected ? 'selected' : ''}
+        className={selected ? 'filter selected' : 'filter'}
         data-todotxt-attribute={element.type}
       >
         {replacements[element.type]

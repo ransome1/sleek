@@ -11,6 +11,7 @@ import './Attributes.scss';
 const { store } = window.api;
 
 interface Props extends WithTranslation {
+  settings: Settings;
   attributes: Attributes | null;
   attributeMapping: TranslatedAttributes;
   filters: Filters | null;
@@ -18,18 +19,14 @@ interface Props extends WithTranslation {
 }
 
 const DrawerAttributes: React.FC<Props> = memo(({
-   attributes,
-   attributeMapping,
-   filters,
-   t,
+    settings,
+    attributes,
+    attributeMapping,
+    filters,
+    t,
  }) => {
-  const mustNotify = (todoObjects: TodoObject[]) => todoObjects.some((todoObject) => todoObject.notify);
+  const mustNotify: boolean = (todoObjects: TodoObject[]) => todoObjects.some((todoObject) => todoObject.notify);
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
-  const [settings, setSettings] = useState({
-    accordionOpenState: store.get('accordionOpenState'),
-    isDrawerOpen: store.get('isDrawerOpen'),
-  });
-
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
 
   const isAttributesEmpty = (attributes: Attributes | null) => {
@@ -47,16 +44,10 @@ const DrawerAttributes: React.FC<Props> = memo(({
   };
 
   const handleAccordionToggle = (index: number) => {
-    setSettings((prevState) => {
-      const updatedAccordionOpenState = [...prevState.accordionOpenState];
-      updatedAccordionOpenState[index] = !updatedAccordionOpenState[index];
-      return { ...prevState, accordionOpenState: updatedAccordionOpenState };
-    });
+    const updatedAccordionOpenState = settings.accordionOpenState;
+    updatedAccordionOpenState[index] = !updatedAccordionOpenState[index];
+    store.set('accordionOpenState', updatedAccordionOpenState);
   };
-
-  useEffect(() => {
-    store.set('accordionOpenState', settings.accordionOpenState);
-  }, [settings.accordionOpenState]);
 
   useEffect(() => {
     const handleFocusFirstTabbableElement = () => {
@@ -110,7 +101,6 @@ const DrawerAttributes: React.FC<Props> = memo(({
                     const selected = filters && filters[key]?.some((filter: any) => filter.value === value);
                     const disabled = attributes[key][value].count === 0;
                     const notify = (key === 'due') ? attributes[key][value].notify : false;
-
                     return (
                       <Box
                         key={`${key}-${value}-${childIndex}`}
@@ -123,6 +113,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
                         <Badge badgeContent={attributes[key][value].count} className={notify ? 'notify' : null }>
                           <Button
                             className="attribute"
+                            data-testid={`drawer-button-${key}`}
                             onClick={
                               disabled
                                 ? undefined
@@ -138,6 +129,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
                           <Box
                             data-todotxt-attribute={key}
                             data-todotxt-value={value}
+                            data-testid={`drawer-button-exclude-${key}`}
                             className="overlay"
                             onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
                           >

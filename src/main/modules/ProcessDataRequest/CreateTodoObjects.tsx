@@ -8,8 +8,9 @@ let lines: string[];
 export const badge: Badge = { count: 0 };
 
 function createTodoObject(index: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
-  const content = string.replaceAll(/[\x10\r\n]/g, ' ');
-  const JsTodoTxtObject = new Item(content);
+  let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ');
+  
+  let JsTodoTxtObject = new Item(content);
 
   if(attributeType && attributeValue) {
     if(attributeType === 'priority') {
@@ -19,7 +20,9 @@ function createTodoObject(index: number, string: string, attributeType?: string,
     }
   }
 
-  const body = JsTodoTxtObject.body();
+  content = JsTodoTxtObject.toString().replaceAll(' [LB] ', String.fromCharCode(16));
+
+  const body = JsTodoTxtObject.body().replaceAll(' [LB] ', ' ');
   const speakingDates: DateAttributes = extractSpeakingDates(body);
   const due = speakingDates['due:']?.date || null;
   const dueString = speakingDates['due:']?.string || null;
@@ -49,7 +52,7 @@ function createTodoObject(index: number, string: string, attributeType?: string,
     rec,
     hidden,
     pm,
-    string: JsTodoTxtObject.toString(),
+    string: content,
   };
 }
 
@@ -61,8 +64,8 @@ async function createTodoObjects(fileContent: string | null): Promise<TodoObject
   badge.count = 0;
   lines = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
   
-  const todoObjects: TodoObject[] = await Promise.all(lines.map(async (line, i) => {
-    const todoObject: TodoObject = await createTodoObject(i, line);
+  const todoObjects: TodoObject[] = await Promise.all(lines.map((line, i) => {
+    const todoObject: TodoObject = createTodoObject(i, line);
     if(todoObject.due && todoObject.body && !todoObject.complete) {
       handleNotification(todoObject.due, todoObject.body, badge);
     }

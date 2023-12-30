@@ -79,6 +79,7 @@ const DrawerComponent: React.FC<Props> = memo(({
 
   return (
     <Drawer
+      id="drawer"
       ref={containerRef}
       variant="persistent"
       open={settings.isDrawerOpen}
@@ -87,12 +88,13 @@ const DrawerComponent: React.FC<Props> = memo(({
     >
       <Box className="drawerHandle" onMouseDown={handleMouseDown} />
       <Tabs className="tabs" centered value={activeTab} onChange={handleTabChange}>
-        <Tab tabIndex={0} label={t('drawer.tabs.attributes')} value="attributes" icon={<FilterAltIcon />} />
-        <Tab tabIndex={0} label={t('drawer.tabs.filters')} value="filters" icon={<TuneIcon />} />
-        <Tab tabIndex={0} label={t('drawer.tabs.sorting')} value="sorting" icon={<FilterListIcon />} />
+        <Tab tabIndex={0} label={t('drawer.tabs.attributes')} value="attributes" icon={<FilterAltIcon />} data-testid={'drawer-tab-attributes'} />
+        <Tab tabIndex={0} label={t('drawer.tabs.filters')} value="filters" icon={<TuneIcon />} data-testid={'drawer-tab-filters'} />
+        <Tab tabIndex={0} label={t('drawer.tabs.sorting')} value="sorting" icon={<FilterListIcon />} data-testid={'drawer-tab-sorting'} />
       </Tabs>
       {settings.isDrawerOpen && activeTab === 'attributes' && (
         <DrawerAttributes
+          settings={settings}
           attributes={attributes}
           attributeMapping={attributeMapping}
           filters={filters}

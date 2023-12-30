@@ -100,8 +100,12 @@ const FileTabs: React.FC<Props> = memo(({
           label={file.todoFileName}
           tabIndex={0}
           onContextMenu={(event) => handleContextMenu(event, index)}
+          data-testid={`filetabs-tab-${index}`}
+          className={file.active ? 'active-tab' : ''}
+          value={index}
           icon={
             <MoreVertIcon
+              data-testid={`filetabs-tab-${index}-icon`}
               onClick={(event) => {
                 event.stopPropagation();
                 handleContextMenu(event, index);
@@ -109,8 +113,6 @@ const FileTabs: React.FC<Props> = memo(({
               role="button"
             />
           }
-          className={file.active ? 'active-tab' : ''}
-          value={index}
         />
       ) : null
     ))}

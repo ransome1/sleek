@@ -10,9 +10,9 @@ import FileTabs from './Header/FileTabs';
 import { darkTheme, lightTheme } from './Themes';
 import DrawerComponent from './Drawer/Drawer';
 import Search from './Header/Search';
-import TodoDialog from './TodoDialog/TodoDialog';
+import DialogComponent from './Dialog/Dialog';
 import Archive from './Archive';
-import ToolBar from './Header/ToolBar';
+import HeaderComponent from './Header/HeaderComponent';
 import ContextMenu from './ContextMenu';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from './Settings/LanguageSelector';
@@ -130,7 +130,7 @@ const App = () => {
                     settings={settings}
                     searchFieldRef={searchFieldRef}
                   />
-                  <ToolBar
+                  <HeaderComponent
                     settings={settings}
                     searchFieldRef={searchFieldRef}
                   />
@@ -138,7 +138,7 @@ const App = () => {
                 : null }
               </>
               )}
-              {todoObjects?.length > 0 && (
+              {todoObjects && todoObjects.length > 0 && (
                 <>
                   <TodoDataGrid
                     todoObjects={todoObjects}
@@ -161,13 +161,12 @@ const App = () => {
                 setDialogOpen={setDialogOpen}
                 setSearchString={setSearchString}
                 setSplashScreen={setSplashScreen}
-                setTodoObjects={setTodoObjects}
                 headers={headers}
               />
             </Box>
           </Box>
           {dialogOpen ? (
-            <TodoDialog
+            <DialogComponent
               todoObject={todoObject}
               setTodoObject={setTodoObject}
               dialogOpen={dialogOpen}

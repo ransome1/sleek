@@ -12,29 +12,26 @@
     height: 2em;
     line-height: 2em;
     font-size: 0.9em;
-    padding: 0;
+    padding: 0 0.5em;
     svg {
       width: 1em;
       height: 1em;
       margin: 0 0 0 0.5em;
-    }
-    div {
-      padding: 0 0.5em;
     }
     .MuiChip-root {
       font-size: 1em;
       width: auto;
       height: 2em;
       border-radius: $radius 0 0 $radius;
-      margin: 0;
+      margin-left: -0.5em;
+      margin-right: 0.5em;
       .MuiChip-label {
         font-size: 1em;
-        padding: 0;
+        padding: 0 0.5em;
         margin: 0;
       }      
     }
     &.pomodoro {
-      padding: 0;
       svg {
         font-size: 1.5em;
       }

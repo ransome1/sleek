@@ -69,7 +69,7 @@ const Settings: React.FC<Props> = memo(({
   }, [settings.zoom]);
 
   return (
-    <Modal open={isOpen} onClose={onClose} aria-labelledby='settings-modal-title'>
+    <Modal id='settings' open={isOpen} onClose={onClose} aria-labelledby='settings-modal-title'>
       <Box className='Modal' bgcolor='background.paper'>
         <h3>{t('settings.headline')}</h3>
         {Object.entries(visibleSettings).map(([settingName, settingValue]) => (
@@ -78,6 +78,7 @@ const Settings: React.FC<Props> = memo(({
               key={settingName}
               control={
                 <Switch
+                  data-testid={`setting-toggle-${settingName}`}
                   checked={settings[settingName as keyof Settings]}
                   onChange={(event) => store.set(settingName, event.target.checked)}
                   name={settingName}
@@ -87,9 +88,13 @@ const Settings: React.FC<Props> = memo(({
             />
           ) : (
             settingValue.style === 'select' ? (
-              <FormControl key={settingName}>
+              <FormControl 
+                key={settingName}
+              >
                 <InputLabel>{t(`settings.${settingName}`)}</InputLabel>
                 <Select
+                  id={`settings-${settingName}`}
+                  data-testid={`setting-select-${settingName}`}
                   className={settingName}
                   label={t(`settings.${settingName}`)}
                   value={settings[settingName as keyof Settings]}
@@ -108,6 +113,7 @@ const Settings: React.FC<Props> = memo(({
                   {t(`settings.${settingName}`)}
                   <Slider
                     id={settingName}
+                    data-testid={`setting-slider-${settingName}`}
                     value={settings[settingName as keyof Settings]}
                     step={settingValue.step}
                     valueLabelDisplay="auto"

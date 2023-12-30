@@ -53,12 +53,12 @@ const NavigationComponent: React.FC<Props> = memo(({
             <Button onClick={() => handleOpen()} data-testid='navigation-button-add-todo'>
               <AddIcon />
             </Button>
-            <Button onClick={() => store.set('isDrawerOpen', !settings.isDrawerOpen)} className={settings.isDrawerOpen ? 'active' : ''} data-testid='navigation-button-drawer'>
+            <Button onClick={() => store.set('isDrawerOpen', !settings.isDrawerOpen)} className={settings.isDrawerOpen ? 'active' : ''} data-testid='navigation-button-toggle-drawer'>
               <FilterAltIcon />
             </Button>
             {headers && headers.completedTodoObjects > 0 && (
               <>
-                <Button onClick={() => ipcRenderer.send('requestArchive')} data-testid='navigation-button-archiving'>
+                <Button onClick={() => ipcRenderer.send('requestArchive')} data-testid='navigation-button-archive-todos'>
                   <InventoryIcon />
                 </Button>
               </>
@@ -68,16 +68,17 @@ const NavigationComponent: React.FC<Props> = memo(({
         <Button onClick={() => ipcRenderer.send('openFile', false)} data-testid='navigation-button-open-file'>
           <FileOpenIcon />
         </Button>
-        <Button className='break' onClick={() => setIsSettingsOpen(true)} data-testid='navigation-button-settings'>
+        <Button className='break' onClick={() => setIsSettingsOpen(true)} data-testid='navigation-button-show-settings'>
           <SettingsIcon />
         </Button>
-        <Button onClick={() => store.set('isNavigationOpen', false)}>
+        <Button onClick={() => store.set('isNavigationOpen', false)} data-testid='navigation-button-hide-navigation'>
           <KeyboardArrowLeftIcon />
         </Button>
-      </Box>
-      <Button onClick={() => store.set('isNavigationOpen', true)} className='showNavigation' data-testid='navigation-button-hide-navigation'>
+        <Button onClick={() => store.set('isNavigationOpen', true)} className='showNavigation' data-testid='navigation-button-show-navigation'>
         <KeyboardArrowRightIcon />
       </Button>
+      </Box>
+      
     </>
   );
 });

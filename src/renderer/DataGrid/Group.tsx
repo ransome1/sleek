@@ -30,11 +30,11 @@ const Group: React.FC<Props> = memo(({
         return (
           <Box
             key={index}
-            className={selected ? 'selected' : ''}
+            className={selected ? 'selected filter' : 'filter'}
             data-todotxt-attribute={group}
             data-todotxt-value={value}
           >
-            <Button className='attribute' onClick={() => onClick(group, value.trim())}>
+            <Button className='attribute' onClick={() => onClick(group, value.trim())} data-testid={`datagrid-button-${group}`}>
               {value.trim()}
             </Button>
           </Box>

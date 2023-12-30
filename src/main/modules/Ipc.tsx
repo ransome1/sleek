@@ -18,7 +18,7 @@ async function handleDataRequest(event: IpcMainEvent, searchString: string): Pro
   }
 }
 
-async function handleUpdateAttributeFields(event: IpcMainEvent, index: number, string: string): Promise<void> {
+function handleUpdateAttributeFields(event: IpcMainEvent, index: number, string: string): void {
   try {
     const todoObject = createTodoObject(index, string);
     event.reply('updateAttributeFields', todoObject);
@@ -61,7 +61,6 @@ function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
 
 function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
   try {
-    if(!key) return false;
     configStorage.set(key, value);
     console.log(`Set ${key} to ${value}`);
   } catch (error: any) {
@@ -202,7 +201,7 @@ function removeEventListeners(): void {
   ipcMain.off('requestArchive', handleRequestArchive);
 }
 
-app.on('before-quit', removeEventListeners);
+app.on('before-quit', () => removeEventListeners);
 
 ipcMain.on('storeGetConfig', handleStoreGetConfig);
 ipcMain.on('storeSetConfig', handleStoreSetConfig);
