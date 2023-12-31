@@ -3,8 +3,7 @@ import { Button, Dialog, DialogContent, DialogActions, AlertColor } from '@mui/m
 import { withTranslation, WithTranslation } from 'react-i18next';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
-import DueDatePicker from './DueDatePicker';
-import ThresholdDatePicker from './ThresholdDatePicker';
+import DatePicker from './DatePicker';
 import PomodoroPicker from './PomodoroPicker';
 import RecurrencePicker from './RecurrencePicker';
 import { i18n } from '../Settings/LanguageSelector';
@@ -131,14 +130,16 @@ const DialogComponent: React.FC<Props> = memo(({
           textFieldValue={textFieldValue}
           todoObject={todoObject}
         />
-        <DueDatePicker
-          dueDate={dueDate}
+        <DatePicker
+          date={dueDate}
+          type="due"
           settings={settings}
           textFieldValue={textFieldValue}
           todoObject={todoObject}
         />
-        <ThresholdDatePicker
-          thresholdDate={thresholdDate}
+        <DatePicker
+          date={thresholdDate}
+          type="t"
           settings={settings}
           textFieldValue={textFieldValue}
           todoObject={todoObject}
@@ -155,8 +156,16 @@ const DialogComponent: React.FC<Props> = memo(({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>{t('todoDialog.footer.cancel')}</Button>
-        <Button onClick={handleAdd}>
+        <Button 
+          onClick={handleClose}
+          data-testid="dialog-button-cancel"
+        >
+          {t('todoDialog.footer.cancel')}
+        </Button>
+        <Button 
+          onClick={handleAdd}
+          data-testid="dialog-button-add-update"
+        >
           {todoObject && todoObject.id >= 0
             ? t('todoDialog.footer.update')
             : settings.bulkTodoCreation

@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Cancelar",
   "todoDialog.snackbar.emptyInput": "Por favor, insira algo no campo de texto",
   "todoDialog.priorityPicker.label": "Prioridade",
-  "todoDialog.datePicker.threshold": "Data de limite",
+  "todoDialog.datePicker.t": "Data de limite",
   "todoDialog.datePicker.due": "Data de vencimento",
   "todoDialog.recurrencePicker.label": "Recorrência",
   "todoDialog.recurrencePicker.every": "Cada",

@@ -8,6 +8,7 @@ let watcher: FSWatcher | null = null;
 function createFileWatcher(files: FileObject[]): void {
   if(watcher) {
     watcher?.close();
+    console.log(`Destroyed old file watcher`);
   }
 
   watcher = chokidar.watch(files.map((file) => file.todoFilePath), {
@@ -19,23 +20,20 @@ function createFileWatcher(files: FileObject[]): void {
 
   watcher
     .on('add', (file) => {
-      console.log(`FileWatcher.ts: New file added: ${file}`);
+      console.log(`Watching new file: ${file}`);
     })
     .on('change', async (file) => {
       try {
         await processDataRequest();
-        console.log(`File ${file} has been changed`);
+        console.log(`${file} has been changed`);
       } catch(error) {
         console.error(error.message);
       }
     })
     .on('unlink', (file) => {
-      console.log(`FileWatcher.ts: FileObject ${file} has been unlinked`);
+      console.log(`Unlinked file: ${file}`);
       const updatedFiles = files.filter((item) => item.todoFilePath !== file);
       configStorage.set('files', updatedFiles);
-    })
-    .on('ready', () => {
-      console.log('FileWatcher.ts: Initial scan complete. Ready for changes');
     });
 
   eventListeners.watcher = watcher;

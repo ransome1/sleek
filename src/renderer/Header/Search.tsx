@@ -84,16 +84,23 @@ const Search: React.FC<Props> = memo(({
             inputRef={searchFieldRef}
             value={searchString}
             onChange={handleInput}
+            data-testid="header-search-textfield"
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
                   {searchString && searchString.length > 0 && (
-                    <Button onClick={handleAddTodo}>{t('search.addAsTodo')}</Button>
+                    <Button 
+                      onClick={handleAddTodo}
+                      data-testid="header-search-textfield-add-todo"
+                    >
+                      {t('search.addAsTodo')}
+                    </Button>
                   )}
                   {searchString && searchString.length > 0 && (
                     <button
                       tabIndex={0}
                       className='xClick'
+                      data-testid="header-search-textfield-empty"
                       onClick={handleXClick}
                     >
                       <CancelIcon />

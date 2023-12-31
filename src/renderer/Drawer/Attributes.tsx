@@ -85,9 +85,11 @@ const DrawerAttributes: React.FC<Props> = memo(({
               expanded={settings.accordionOpenState[index]}
               onChange={() => handleAccordionToggle(index)}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary 
+                expandIcon={<ExpandMoreIcon />}
+              >
                 <Badge variant="dot" invisible={!(key === 'due' && mustNotify(Object.values(attributes[key])))}>
-                  <h3>
+                  <h3 data-testid={`drawer-attributes-accordion-${key}`}>
                     {attributeMapping[key]}
                   </h3>
                 </Badge>

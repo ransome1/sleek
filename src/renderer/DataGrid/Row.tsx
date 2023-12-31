@@ -13,6 +13,7 @@ import { i18n } from '../Settings/LanguageSelector';
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
+  key: number;
   todoObject: TodoObject;
   filters: Filters | null;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,6 +25,7 @@ interface Props extends WithTranslation {
 }
 
 const Row: React.FC<Props> = memo(({
+  key,
   todoObject,
   filters,
   setDialogOpen,
@@ -73,21 +75,12 @@ const Row: React.FC<Props> = memo(({
   const handleRowClick = (event: KeyboardEvent) => {
     const clickedElement = event.target as HTMLElement;
     if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
-      if(
-        clickedElement.classList.contains('MuiChip-label') ||
-        clickedElement.closest('.MuiChip-label')
-      ) {
+      if(clickedElement.classList.contains('MuiChip-label') || clickedElement.closest('.MuiChip-label')) {
         return;
-      }
-
-      if(
-        clickedElement.tagName === 'SPAN' ||
-        clickedElement.tagName === 'LI'
-      ) {
-        if(todoObject) {
-          setTodoObject(todoObject);
-          setDialogOpen(true);
-        }
+      } else if(todoObject && (clickedElement.tagName === 'SPAN' || clickedElement.tagName === 'LI')) {
+        event.preventDefault();
+        setTodoObject(todoObject);
+        setDialogOpen(true);
       }
     } else if((event.metaKey || event.ctrlKey) && (event.key === 'Delete' || event.key === 'Backspace')) {
       setPromptItem({
@@ -130,6 +123,7 @@ const Row: React.FC<Props> = memo(({
         onContextMenu={handleContextMenu}
         data-todotxt-attribute="priority"
         data-todotxt-value={todoObject.priority}
+        data-testid={`datagrid-row`}
       >
         <Checkbox
           icon={<CircleUnchecked />}
@@ -137,6 +131,7 @@ const Row: React.FC<Props> = memo(({
           tabIndex={0}
           checked={todoObject.complete}
           onChange={handleCheckboxChange}
+          inputProps={{'data-testid': 'datagrid-checkbox'}}
         />
 
         {todoObject.hidden && <VisibilityOffIcon />}

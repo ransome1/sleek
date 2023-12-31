@@ -38,10 +38,11 @@ const DraggableListItem: React.FC<Props> = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className={snapshot.isDragging ? 'draggingListItem' : ''}
+          data-testid={`drawer-sorting-draggable-list-item-${item.value}`}
         >
           <Box><DragHandleIcon /></Box>
           {attributeMapping[item.value]}
-          <Button onClick={handleButtonClick}>
+          <Button onClick={handleButtonClick} data-testid={`drawer-sorting-draggable-list-item-${item.value}-invert`}>
             {!item.invert && <SortIcon className='invert' />}
             {item.invert && <SortIcon />}
           </Button>

@@ -11,9 +11,11 @@ import crypto from 'crypto';
 
 Store.initRenderer();
 
+const environment: string | undefined = process.env.NODE_ENV;
+
 const anonymousUserId: string = crypto.randomUUID() || null;
 
-const userDataDirectory: string = path.join(app.getPath('userData'), 'userData');
+const userDataDirectory: string = (environment === 'development') ? path.join(app.getPath('userData'), 'userData-Development') : path.join(app.getPath('userData'), 'userData');
 
 if(!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
 

@@ -106,6 +106,7 @@ const RecurrencePicker: React.FC<Props> = ({
             onChange={() => handleChange(recurrence)}
             value={recurrence || '-'}
             inputRef={recurrenceFieldRef}
+            data-testid="dialog--picker-recurrence"
             InputLabelProps={{
               shrink: true,
             }}

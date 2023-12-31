@@ -38,12 +38,20 @@ function handleUpdateTodoObject(event: IpcMainEvent, index: number, string: stri
   } 
 }
 
-async function handleWriteTodoToFile(event: IpcMainEvent, id: number, string: string, state: boolean): Promise<void> {
+async function handleWriteTodoToFile(event: IpcMainEvent, index: number, string: string, state: boolean, attributeType: string, attributeValue: string): Promise<void> {
   try {
-    let updatedString: string | null = string;
-    if(state !== undefined && id >= 0) updatedString = await changeCompleteState(string, state)
-    const response = await writeTodoObjectToFile(id, updatedString);
-    event.reply('writeTodoToFile', response);
+    let todoObject;
+    if(attributeType && attributeValue) {
+      todoObject = createTodoObject(index, string, attributeType, attributeValue);
+      const response = await writeTodoObjectToFile(index, todoObject.string);
+      event.reply('writeTodoToFile', response);
+      return;
+    } else {
+      let updatedString: string | null = string;
+      if(state !== undefined && index >= 0) updatedString = await changeCompleteState(string, state)
+      const response = await writeTodoObjectToFile(index, updatedString);
+      event.reply('writeTodoToFile', response);
+    }
   } catch(error) {
     console.error(error);
     event.reply('responseFromMainProcess', error);

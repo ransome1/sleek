@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "キャンセル",
   "todoDialog.snackbar.emptyInput": "テキストフィールドに何かを入力してください",
   "todoDialog.priorityPicker.label": "優先度",
-  "todoDialog.datePicker.threshold": "期限日",
+  "todoDialog.datePicker.t": "期限日",
   "todoDialog.datePicker.due": "期日",
   "todoDialog.recurrencePicker.label": "繰り返し",
   "todoDialog.recurrencePicker.every": "すべての",

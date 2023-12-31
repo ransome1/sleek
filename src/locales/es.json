@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Cancelar",
   "todoDialog.snackbar.emptyInput": "Por favor, ingrese algo en el campo de texto",
   "todoDialog.priorityPicker.label": "Prioridad",
-  "todoDialog.datePicker.threshold": "Fecha umbral",
+  "todoDialog.datePicker.t": "Fecha umbral",
   "todoDialog.datePicker.due": "Fecha de vencimiento",
   "todoDialog.recurrencePicker.label": "Recurrencia",
   "todoDialog.recurrencePicker.every": "Cada",

@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "İptal",
   "todoDialog.snackbar.emptyInput": "Lütfen metin alanına bir şeyler yazın",
   "todoDialog.priorityPicker.label": "Öncelik",
-  "todoDialog.datePicker.threshold": "Eşik",
+  "todoDialog.datePicker.t": "Eşik",
   "todoDialog.datePicker.due": "Bitiş",
   "todoDialog.recurrencePicker.label": "Tekrarlama",
   "todoDialog.recurrencePicker.every": "Her",

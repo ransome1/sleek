@@ -89,7 +89,6 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
       {visibleTodoObjects?.map((row, index) => (
         <Row
           key={index}
-          attributes={attributes}
           todoObject={row}
           filters={filters}
           setTodoObject={setTodoObject}

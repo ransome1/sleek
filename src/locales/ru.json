@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Отменить",
   "todoDialog.snackbar.emptyInput": "Пожалуйста, введите что-то в текстовое поле",
   "todoDialog.priorityPicker.label": "Приоритет",
-  "todoDialog.datePicker.threshold": "Дата порога",
+  "todoDialog.datePicker.t": "Дата порога",
   "todoDialog.datePicker.due": "Дата выполнения",
   "todoDialog.recurrencePicker.label": "Повтор",
   "todoDialog.recurrencePicker.every": "Каждый",

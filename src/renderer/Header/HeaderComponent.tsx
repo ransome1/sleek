@@ -40,7 +40,10 @@ const HeaderComponent: React.FC<Props> = memo(({
 
   return (
     <Box id='ToolBar' onClick={handleOnClick}>
-      <SearchIcon className={settings.isSearchOpen ? 'active' : ''} />
+      <SearchIcon 
+        className={settings.isSearchOpen ? 'active' : ''}
+        data-testid={"header-search-icon"}
+      />
     </Box>
   );
 });

@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "रद्द करें",
   "todoDialog.snackbar.emptyInput": "कृपया पाठ फ़ील्ड में कुछ डालें",
   "todoDialog.priorityPicker.label": "प्राथमिकता",
-  "todoDialog.datePicker.threshold": "सीमा",
+  "todoDialog.datePicker.t": "सीमा",
   "todoDialog.datePicker.due": "देय",
   "todoDialog.recurrencePicker.label": "पुनरावृत्ति",
   "todoDialog.recurrencePicker.every": "हर",

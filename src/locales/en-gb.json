@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Cancel",
   "todoDialog.snackbar.emptyInput": "Please enter something into the text field",
   "todoDialog.priorityPicker.label": "Priority",
-  "todoDialog.datePicker.threshold": "Threshold",
+  "todoDialog.datePicker.t": "Threshold",
   "todoDialog.datePicker.due": "Due",
   "todoDialog.recurrencePicker.label": "Recurrence",
   "todoDialog.recurrencePicker.every": "Every",

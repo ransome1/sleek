@@ -38,9 +38,14 @@ const Prompt: React.FC<Props> = ({
       {promptItem?.text && <DialogContent><p>{promptItem.text}</p></DialogContent>}
       <DialogActions>
 
-        <Button onClick={onClose}>{t('cancel')}</Button>
-        {promptItem?.button1 && <Button onClick={() => onClick(promptItem.onButton1)}>{promptItem.button1}</Button>}
-        {promptItem?.button2 && <Button onClick={() => onClick(promptItem.onButton2)}>{promptItem.button2}</Button>}
+        <Button 
+          onClick={onClose}
+          data-testid="prompt-button-cancel"
+        >
+          {t('cancel')}
+        </Button>
+        {promptItem?.button1 && <Button onClick={() => onClick(promptItem.onButton1)} data-testid="prompt-button-button1">{promptItem.button1}</Button>}
+        {promptItem?.button2 && <Button onClick={() => onClick(promptItem.onButton2)} data-testid="prompt-button-button2">{promptItem.button2}</Button>}
 
       </DialogActions>
     </Dialog>

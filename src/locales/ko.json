@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "취소",
   "todoDialog.snackbar.emptyInput": "텍스트 필드에 내용을 입력하세요",
   "todoDialog.priorityPicker.label": "우선 순위",
-  "todoDialog.datePicker.threshold": "임계",
+  "todoDialog.datePicker.t": "임계",
   "todoDialog.datePicker.due": "마감",
   "todoDialog.recurrencePicker.label": "반복",
   "todoDialog.recurrencePicker.every": "마다",

@@ -9,15 +9,16 @@ import './DatePicker.scss';
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  thresholdDate: string | null;
+  date: string | null;
   settings: Settings;
   textFieldValue: string;
   todoObject: TodoObject | null;
   t: typeof i18n.t;
 }
 
-const ThresholdDatePickerComponent: React.FC<Props> = ({
-  thresholdDate,
+const DatePickerComponent: React.FC<Props> = ({
+  date,
+  type,
   settings,
   textFieldValue,
   todoObject,
@@ -26,7 +27,7 @@ const ThresholdDatePickerComponent: React.FC<Props> = ({
   
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
-      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 't', dayjs(date).format('YYYY-MM-DD'));
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, dayjs(date).format('YYYY-MM-DD'));
     } catch(error) {
       console.error(error);
     }
@@ -37,12 +38,14 @@ const ThresholdDatePickerComponent: React.FC<Props> = ({
       <DatePicker
         className="datePicker"
         format="YYYY-MM-DD"
-        label={t('todoDialog.datePicker.threshold')}
-        value={thresholdDate ? dayjs(thresholdDate) : null}
+        label={t(`todoDialog.datePicker.${type}`)}
+        value={date ? dayjs(date) : null}
         onChange={(date) => handleChange(date)}
+        data-testid={`data-testid=dialog-picker-date-${type}`}
+        InputProps={{"data-testid": `dialog-picker-date-${type}`}}
       />
     </LocalizationProvider>
   );
 };
 
-export default withTranslation()(ThresholdDatePickerComponent);
+export default withTranslation()(DatePickerComponent);

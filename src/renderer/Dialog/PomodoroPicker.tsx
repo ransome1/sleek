@@ -33,6 +33,7 @@ const PomodoroPicker: React.FC<Props> = ({
           type="number"
           onChange={handleChange}
           value={pomodoro}
+          data-testid="dialog-picker-pomodoro"
           inputProps={{
             min: 0,
           }}

@@ -34,11 +34,11 @@ const PriorityPicker: React.FC<Props> = ({
     <FormControl id="priorityPicker" className="priorityPicker">
       <InputLabel>{t('todoDialog.priorityPicker.label')}</InputLabel>
       <Select
-        labelId="priorityPicker"
         id="priorityPicker"
         label={t('todoDialog.priorityPicker.label')}
         value={priority}
         onChange={(event: SelectChangeEvent) => handleChange(event)}
+        data-testid="dialog-picker-priority"
       >
         {priorities.map((priorityOption) => (
           <MenuItem key={priorityOption.value} value={priorityOption.value}>

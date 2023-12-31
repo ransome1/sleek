@@ -199,7 +199,10 @@ const App = () => {
             onClose={() => setSnackBarContent(null)}
             autoHideDuration={3000}
           >
-            <Alert severity={snackBarSeverity}>
+            <Alert 
+              severity={snackBarSeverity}
+              data-testid={`snackbar-${snackBarSeverity}`}
+            >
               {snackBarContent}
             </Alert>
           </Snackbar>

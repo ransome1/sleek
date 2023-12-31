@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Mégse",
   "todoDialog.snackbar.emptyInput": "Kérjük, írjon be valamit a szövegmezőbe",
   "todoDialog.priorityPicker.label": "Prioritás",
-  "todoDialog.datePicker.threshold": "Hátralévő dátum",
+  "todoDialog.datePicker.t": "Hátralévő dátum",
   "todoDialog.datePicker.due": "Határidő",
   "todoDialog.recurrencePicker.label": "Ismétlés",
   "todoDialog.recurrencePicker.every": "Minden",

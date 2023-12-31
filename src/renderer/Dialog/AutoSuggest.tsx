@@ -122,6 +122,7 @@ const AutoSuggest: React.FC<Props> = ({
     inputRef: textFieldRef,
     onChange: handleChange,
     onKeyDown: handleKeyDown,
+    'test-id': 'dialog-autosuggest-textfield',
   };
 
   const containerStyle = {

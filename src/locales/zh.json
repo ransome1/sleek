@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "取消",
   "todoDialog.snackbar.emptyInput": "请在文本字段中输入内容",
   "todoDialog.priorityPicker.label": "优先级",
-  "todoDialog.datePicker.threshold": "阈值",
+  "todoDialog.datePicker.t": "阈值",
   "todoDialog.datePicker.due": "截止",
   "todoDialog.recurrencePicker.label": "重复",
   "todoDialog.recurrencePicker.every": "每",

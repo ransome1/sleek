@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Anuluj",
   "todoDialog.snackbar.emptyInput": "Proszę wprowadzić coś do pola tekstowego",
   "todoDialog.priorityPicker.label": "Priorytet",
-  "todoDialog.datePicker.threshold": "Data progowa",
+  "todoDialog.datePicker.t": "Data progowa",
   "todoDialog.datePicker.due": "Termin",
   "todoDialog.recurrencePicker.label": "Powtarzalność",
   "todoDialog.recurrencePicker.every": "Co",

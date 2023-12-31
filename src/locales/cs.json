@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Zrušit",
   "todoDialog.snackbar.emptyInput": "Zadejte prosím něco do textového pole",
   "todoDialog.priorityPicker.label": "Priorita",
-  "todoDialog.datePicker.threshold": "Termín",
+  "todoDialog.datePicker.t": "Termín",
   "todoDialog.datePicker.due": "Termín splnění",
   "todoDialog.recurrencePicker.label": "Opakování",
   "todoDialog.recurrencePicker.every": "Každý",

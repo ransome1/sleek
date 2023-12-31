@@ -55,7 +55,7 @@
   "todoDialog.footer.cancel": "Abbrechen",
   "todoDialog.snackbar.emptyInput": "Bitte geben Sie etwas in das Textfeld ein",
   "todoDialog.priorityPicker.label": "Priorität",
-  "todoDialog.datePicker.threshold": "Schwellenwert",
+  "todoDialog.datePicker.t": "Schwellenwert",
   "todoDialog.datePicker.due": "Fälligkeitsdatum",
   "todoDialog.recurrencePicker.label": "Wiederholung",
   "todoDialog.recurrencePicker.every": "Jeden",

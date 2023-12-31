@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button, Chip, Box, Badge } from '@mui/material';
@@ -27,38 +27,45 @@ const DatePickerInline: React.FC<Props> = ({
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
 
   const handleChange = (date: dayjs.Dayjs | null) => {
-    if(!date || !dayjs(date).isValid() || !todoObject.id) return;
-    const validDate = dayjs(date).format('YYYY-MM-DD');
+    try {
+      ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, false, type, dayjs(date).format('YYYY-MM-DD'));
+    } catch(error) {
+      console.error(error);
+    }
+  };
 
-    const string: string = todoObject?.string?.replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `) || '';
-
-    const JsTodoTxtObject = new Item(string);
-    JsTodoTxtObject.setExtension(type, validDate);
-
-    const updatedString = JsTodoTxtObject.toString().replaceAll(` ${String.fromCharCode(16)} `, String.fromCharCode(16))
-
-    ipcRenderer.send('writeTodoToFile', todoObject.id, updatedString);
-
-    setOpen(false);
+  const handleClick = (event) => {
+    event.preventDefault();
+    if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+      setOpen?.((prev) => !prev)
+    }
   };
 
   const DatePickerInline = ({ ...props }) => {
-    const parsedDate = dayjs(date);
-
     const ButtonField = ({ ...props }) => {
       const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
-
       return (
-        <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel}>
+        <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
           <Badge variant="dot" invisible={mustNotify}>
-            <Chip onClick={() => handleFilterSelect(type, date, filters, false)} label={chipText} />
-            <Box onClick={() => setOpen?.((prev) => !prev)}>{date}</Box>
+            <Chip
+              onClick={() => handleFilterSelect(type, date, filters, false)}
+              label={chipText}
+              data-testid={`datagrid-button-${type}`}
+              tabIndex={0}
+            />
+            <Box
+              onClick={handleClick}
+              onKeyDown={handleClick}
+              data-testid={`datagrid-picker-date-${type}`}
+              tabIndex={0}
+            >
+              {date}
+            </Box>
           </Badge>
         </Button>
       );
     };
-
     return (
       <DatePicker
         slots={{ field: ButtonField, ...props.slots }}
@@ -67,7 +74,7 @@ const DatePickerInline: React.FC<Props> = ({
         open={open}
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
-        value={parsedDate}
+        value={dayjs(date)}
       />
     );
   };
