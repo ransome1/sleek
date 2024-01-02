@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button, Chip, Box, Badge } from '@mui/material';
-import { Item } from 'jstodotxt';
 import { handleFilterSelect } from '../Shared';
 import dayjs from 'dayjs';
 
@@ -29,7 +28,7 @@ const DatePickerInline: React.FC<Props> = ({
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
       ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, false, type, dayjs(date).format('YYYY-MM-DD'));
-    } catch(error) {
+    } catch(error: any) {
       console.error(error);
     }
   };
@@ -43,7 +42,7 @@ const DatePickerInline: React.FC<Props> = ({
 
   const DatePickerInline = ({ ...props }) => {
     const ButtonField = ({ ...props }) => {
-      const { setOpen, disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
+      const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>

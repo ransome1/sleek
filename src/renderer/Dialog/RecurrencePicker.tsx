@@ -42,7 +42,7 @@ const RecurrencePicker: React.FC<Props> = ({
     try {
       event?.preventDefault();
       ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'rec', recurrence);
-    } catch(error) {
+    } catch(error: any) {
       console.error(error);
     }
   };

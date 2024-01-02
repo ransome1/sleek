@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import { configStorage } from './config';
 import { createMenu } from './modules/Menu';
-import handleTheme from './modules/Theme';
 import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
 import { addFile } from './modules/File/File';

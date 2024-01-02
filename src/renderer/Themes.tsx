@@ -1,6 +1,11 @@
 import { createTheme, Theme } from '@mui/material/styles';
 
+const { store } = window.api;
+
+const disableAnimations = store.get('disableAnimations');
+
 const baseTheme: Theme = createTheme({
+  ...(disableAnimations && { transitions: { create: () => 'none' } }),
   shape: {
     borderRadius: '0.65em'
   },

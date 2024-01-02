@@ -83,7 +83,7 @@ const DrawerComponent: React.FC<Props> = memo(({
       ref={containerRef}
       variant="persistent"
       open={settings.isDrawerOpen}
-      className={`Drawer ${settings.isDrawerOpen ? 'open' : ''}`}
+      className={`${settings.isDrawerOpen ? 'open' : ''}`}
       style={{ width: drawerWidth, marginLeft: -drawerWidth }}
     >
       <Box className="drawerHandle" onMouseDown={handleMouseDown} />

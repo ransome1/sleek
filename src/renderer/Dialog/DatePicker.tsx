@@ -28,7 +28,7 @@ const DatePickerComponent: React.FC<Props> = ({
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
       ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, dayjs(date).format('YYYY-MM-DD'));
-    } catch(error) {
+    } catch(error: any) {
       console.error(error);
     }
   };

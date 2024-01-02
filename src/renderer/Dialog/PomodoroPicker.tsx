@@ -20,7 +20,7 @@ const PomodoroPicker: React.FC<Props> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'pm', event.target.value);
-    } catch(error) {
+    } catch(error: any) {
       console.error(error);
     }
   };

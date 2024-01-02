@@ -13,7 +13,6 @@ import { i18n } from '../Settings/LanguageSelector';
 const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
-  key: number;
   todoObject: TodoObject;
   filters: Filters | null;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +24,6 @@ interface Props extends WithTranslation {
 }
 
 const Row: React.FC<Props> = memo(({
-  key,
   todoObject,
   filters,
   setDialogOpen,

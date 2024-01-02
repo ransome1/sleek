@@ -5,6 +5,14 @@
   display: flex;
   border-top-right-radius: $radius;
 }
+
+.disableAnimations #navigation {
+  transition: none;
+  button.showNavigation {
+    transition: none;
+  }
+}
+
 #navigation {
   width: 5em;
   position: fixed;

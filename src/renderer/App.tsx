@@ -96,7 +96,7 @@ const App = () => {
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={settings?.shouldUseDarkColors ? darkTheme : lightTheme}>
           <CssBaseline />
-          <Box className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings?.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}`}>
+          <Box className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings?.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'} ${settings.disableAnimations ? 'disableAnimations' : ''}`}>
             <NavigationComponent
               setDialogOpen={setDialogOpen}
               settings={settings}

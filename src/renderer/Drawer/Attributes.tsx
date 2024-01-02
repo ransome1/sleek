@@ -39,7 +39,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
     }
   };
 
-  const handleCtrlCmdUp = () => {
+  const handleCtrlCmdUp = (event) => {
     setIsCtrlKeyPressed(false);
   };
 
@@ -58,13 +58,13 @@ const DrawerAttributes: React.FC<Props> = memo(({
 
     handleFocusFirstTabbableElement();
 
-    document.addEventListener('keydown', handleCtrlCmdDown);
-    document.addEventListener('keyup', handleCtrlCmdUp);
-    window.addEventListener('focus', handleCtrlCmdUp);
+    document.addEventListener('keydown', (event) => handleCtrlCmdDown(event));
+    document.addEventListener('keyup', (event) => handleCtrlCmdUp(event));
+    window.addEventListener('focus', (event) => handleCtrlCmdUp(event));
     return () => {
-      document.removeEventListener('keydown', handleCtrlCmdDown);
-      document.removeEventListener('keyup', handleCtrlCmdUp);
-      window.removeEventListener('focus', handleCtrlCmdUp);
+      document.removeEventListener('keydown', () => handleCtrlCmdDown);
+      document.removeEventListener('keyup', () => handleCtrlCmdUp);
+      window.removeEventListener('focus', () => handleCtrlCmdUp);
     };
   }, []);
 
@@ -96,7 +96,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
               </AccordionSummary>
               <AccordionDetails>
                 <Box>
-                  {Object.keys(attributes[key]).map((value, childIndex) => {
+                  {attributes && Object.keys(attributes[key]).map((value, childIndex) => {
                     const excluded = filters && filters[key]?.some(
                       (filter: any) => filter.value === value && filter.exclude
                     );

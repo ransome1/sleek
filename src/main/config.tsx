@@ -85,6 +85,7 @@ const configStorage: Store<Settings> = new Store<Settings>({
       store.delete('isDrawerOpen');
       store.delete('useMultilineForBulkTodoCreation');
       store.set('bulkTodoCreation', false);
+      store.set('disableAnimations', false);
     },
   }
 });
@@ -112,7 +113,7 @@ if(!fs.existsSync(customStylesPath)) {
 filterStorage.onDidAnyChange(async () => {
   try {
     await processDataRequest();
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
   }
 });
@@ -121,7 +122,7 @@ configStorage.onDidAnyChange(async(settings) => {
   try {
     await processDataRequest();
     mainWindow!.webContents.send('settingsChanged', settings);
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
   }
 });
@@ -131,7 +132,7 @@ configStorage.onDidChange('files', (files: FileObject[] | null) => {
     if(files) {
       createFileWatcher(files);
     }
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
   }
 });
@@ -145,7 +146,7 @@ configStorage.onDidChange('colorTheme', (colorTheme) => {
 configStorage.onDidChange('tray', () => {
   try {
     createTray();
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
   }
 });

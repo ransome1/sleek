@@ -1,6 +1,6 @@
 @import "../Variables.scss";
 
-.Drawer {
+#drawer {
 	height: 100vh;
 	padding: 0;
 	transition: margin-left 0.3s ease;
@@ -33,4 +33,8 @@
 		min-width: 19em;
 		margin-left: 0!important;
 	}
+}
+
+.disableAnimations #drawer {
+	transition: none;
 }

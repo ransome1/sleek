@@ -82,6 +82,7 @@ declare global {
     drawerWidth: number;
     fromVersion: string;
     toVersion: string;
+    accordionOpenState: boolean;
     __internal__: { migrations: { version: string }};
   }
 

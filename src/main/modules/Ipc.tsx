@@ -12,7 +12,7 @@ import { createTodoObject } from './ProcessDataRequest/CreateTodoObjects';
 async function handleDataRequest(event: IpcMainEvent, searchString: string): Promise<void> {
   try {
     await processDataRequest(searchString)
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
   }
@@ -22,7 +22,7 @@ function handleUpdateAttributeFields(event: IpcMainEvent, index: number, string:
   try {
     const todoObject = createTodoObject(index, string);
     event.reply('updateAttributeFields', todoObject);
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
   }
@@ -32,7 +32,7 @@ function handleUpdateTodoObject(event: IpcMainEvent, index: number, string: stri
  try {
     const todoObject = createTodoObject(index, string, attributeType, attributeValue);
     event.reply('updateTodoObject', todoObject);
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
   } 
@@ -52,7 +52,7 @@ async function handleWriteTodoToFile(event: IpcMainEvent, index: number, string:
       const response = await writeTodoObjectToFile(index, updatedString);
       event.reply('writeTodoToFile', response);
     }
-  } catch(error) {
+  } catch(error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
   }

@@ -25,7 +25,7 @@ const PriorityPicker: React.FC<Props> = ({
   const handleChange = (event: SelectChangeEvent) => {
     try {
       ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'priority', event.target.value);
-    } catch(error) {
+    } catch(error: any) {
       console.error(error);
     }
   };

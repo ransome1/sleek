@@ -92,7 +92,7 @@ const AutoSuggest: React.FC<Props> = ({
         setTextFieldValue(event.target.value);
         setSuggestions([]);
       }
-    } catch(error) {
+    } catch(error: any) {
       console.error(error);
     }
   };
@@ -105,7 +105,7 @@ const AutoSuggest: React.FC<Props> = ({
         event.stopPropagation();
         setSuggestions([]);
       }
-    } catch(error) {
+    } catch(error: any) {
       console.error(error);
     }
   };

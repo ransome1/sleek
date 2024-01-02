@@ -26,7 +26,7 @@ function createFileWatcher(files: FileObject[]): void {
       try {
         await processDataRequest();
         console.log(`${file} has been changed`);
-      } catch(error) {
+      } catch(error: any) {
         console.error(error.message);
       }
     })

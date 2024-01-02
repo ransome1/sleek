@@ -5,7 +5,6 @@ import './Grid.scss';
 
 interface TodoDataGridProps {
   todoObjects: TodoObject[] | null;
-  attributes: Attributes | null;
   filters: Filters | null;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
@@ -20,7 +19,6 @@ interface TodoDataGridProps {
 
 const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
   todoObjects,
-  attributes,
   filters,
   setDialogOpen,
   setContextMenu,
