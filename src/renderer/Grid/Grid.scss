@@ -1,6 +1,6 @@
 @import "../Variables.scss";
 
-#dataGrid {
+#grid {
   padding: 1em;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -16,7 +16,7 @@
 }
 
 .darkTheme {
-  #dataGrid {
+  #grid {
     &::-webkit-scrollbar-thumb:window-inactive,
     &::-webkit-scrollbar-thumb {
       background: $dark-grey;

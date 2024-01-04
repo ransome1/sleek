@@ -18,12 +18,10 @@ body {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-
   code {
     background: $lighter-grey;
     color: $mid-grey;
   }
-
   #root {
     .flexContainer {
       display: flex;
@@ -40,7 +38,6 @@ body {
         display: flex;
         flex-direction: column;
       }
-      
       &.hideNavigation {
         transition: margin-left 0.3s ease;
         margin-left: 0;        

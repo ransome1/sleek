@@ -1,6 +1,6 @@
 import { shell } from 'electron';
 import { ipcMain, app, IpcMainEvent, clipboard } from 'electron';
-import processDataRequest from './ProcessDataRequest/ProcessDataRequest';
+import { processDataRequest } from './ProcessDataRequest/ProcessDataRequest';
 import { changeCompleteState } from './ProcessDataRequest/ChangeCompleteState';
 import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
 import { archiveTodos, handleRequestArchive } from './File/Archive';

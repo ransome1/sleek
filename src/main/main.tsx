@@ -10,9 +10,6 @@ import { createTray } from './modules/Tray';
 import './modules/Ipc';
 
 const environment: string | undefined = process.env.NODE_ENV;
-const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
-let tray: boolean = configStorage.get('tray');
-const colorTheme = configStorage.get('colorTheme');
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any | undefined> = {};
 
@@ -24,7 +21,7 @@ const handleCreateWindow = () => {
   }
 }
 
-const handleClosed = async () => {
+const handleClosed = async (event) => {
   if(watcher) await watcher.close();
 
   mainWindow = null;
@@ -93,9 +90,15 @@ const handleWindowSizeAndPosition = () => {
 }
 
 const createMainWindow = () => {
+  const colorTheme = configStorage.get('colorTheme');
+  const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
+  const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
+  const tray = configStorage.get('tray');
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
+    backgroundColor: (shouldUseDarkColors) ? '#212224' : '#fff',
     icon: process.platform === 'win32' ? getAssetPath('icons/sleek.ico') : getAssetPath('icons/512x512.png'),
     autoHideMenuBar: true,
     webPreferences: {
@@ -108,15 +111,11 @@ const createMainWindow = () => {
     },
   });
 
-  if (environment === 'development') {
-    mainWindow.webContents.openDevTools();
-  }
+  mainWindow?.loadURL(resolveHtmlPath('index.html'));
 
   handleWindowSizeAndPosition();  
 
   nativeTheme.themeSource = colorTheme;
-
-  mainWindow?.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow
     .on('ready-to-show', handleReadyToShow)
@@ -135,6 +134,16 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize;
 
+  createMenu(files);
+
+  if(tray) {
+    createTray();
+  }
+
+  if (environment === 'development') {
+    mainWindow.webContents.openDevTools();
+  }
+
   const customStylesPath: string = configStorage.get('customStylesPath');
   if(customStylesPath) {
     fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
@@ -149,16 +158,17 @@ const createMainWindow = () => {
 }
 
 const handleReadyToShow = async () => {
+  const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
   if(files?.length > 0) {
     createFileWatcher(files);
   }
 }
 
 const handleWindowAllClosed = () => {
-  tray = configStorage.get('tray');
+  const tray = configStorage.get('tray');
   if(process.platform !== 'darwin' && !tray) {
     app.quit();
-  } else if(process.platform === 'darwin' && tray) {
+  } else if(!process.mas && process.platform === 'darwin' && tray) {
     app.dock?.hide();
   } else {
     mainWindow?.hide();
@@ -182,12 +192,6 @@ app
   .then(() => {
 
     createMainWindow();
-
-    createMenu(files);
-
-    if(tray) {
-      createTray();
-    }
 
     eventListeners.handleCreateWindow = handleCreateWindow
     eventListeners.handleWindowAllClosed = handleWindowAllClosed

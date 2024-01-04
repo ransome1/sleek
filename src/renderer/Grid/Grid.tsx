@@ -3,7 +3,7 @@ import { List } from '@mui/material';
 import Row from './Row';
 import './Grid.scss';
 
-interface TodoDataGridProps {
+interface GridComponentProps {
   todoObjects: TodoObject[] | null;
   filters: Filters | null;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,7 +17,7 @@ interface TodoDataGridProps {
   setLoadMoreRows: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
+const GridComponent: React.FC<GridProps> = memo(({
   todoObjects,
   filters,
   setDialogOpen,
@@ -31,7 +31,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
   setLoadMoreRows,
  }) => {
 
-  const list = document.getElementById('dataGrid');
+  const list = document.getElementById('grid');
   const totalRowCount = todoObjects?.length || 0;
 
   const handleKeyUp = (event: KeyboardEvent) => {
@@ -83,7 +83,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
   const visibleTodoObjects = todoObjects?.slice(0, visibleRowCount);
 
   return (
-    <List id="dataGrid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
+    <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
       {visibleTodoObjects?.map((row, index) => (
         <Row
           key={index}
@@ -100,4 +100,4 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = memo(({
   );
 });
 
-export default TodoDataGrid;
+export default GridComponent;

@@ -11,12 +11,18 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ');
   
   let JsTodoTxtObject = new Item(content);
+  const extensions = JsTodoTxtObject.extensions();
 
-  if(attributeType && attributeValue) {
+  if(attributeType) {
     if(attributeType === 'priority') {
-      JsTodoTxtObject.setPriority(attributeValue);
+      const value = (attributeValue === '-') ? null : attributeValue;
+      JsTodoTxtObject.setPriority(value);
     } else {
-      JsTodoTxtObject.setExtension(attributeType, attributeValue);
+      if(!attributeValue) {
+        JsTodoTxtObject.removeExtension(attributeType);
+      } else {
+        JsTodoTxtObject.setExtension(attributeType, attributeValue);
+      }
     }
   }
 
@@ -29,7 +35,7 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   const notify = speakingDates['due:']?.notify || false;
   const t = speakingDates['t:']?.date || null;
   const tString = speakingDates['t:']?.string || null;
-  const extensions = JsTodoTxtObject.extensions();
+  
   const hidden = extensions.some(extension => extension.key === 'h' && extension.value === '1');
   const pm: string | number | null = extensions.find(extension => extension.key === 'pm')?.value || null;
   const rec = extensions.find(extension => extension.key === 'rec')?.value || null;

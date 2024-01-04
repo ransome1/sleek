@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -19,7 +19,7 @@
     "url": "https://github.com/ransome1/sleek.git"
   },
   "author": "Robin Ahle <ransome@mailbox.org>",
-  "copyright": "Copyright © 2023 ${author}",
+  "copyright": "Copyright © 2024 ${author}",
   "license": "MIT",
   "main": "./dist/main/main.js",
   "scripts": {

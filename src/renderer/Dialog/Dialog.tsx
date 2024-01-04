@@ -73,7 +73,7 @@ const DialogComponent: React.FC<Props> = memo(({
   };
 
   const handleKeyDown = (event: any) => {
-    if(event.metaKey && event.key === 'Enter') {
+    if((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
       event.preventDefault();
       handleAdd();
     }

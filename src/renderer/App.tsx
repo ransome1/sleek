@@ -4,7 +4,7 @@ import IpcComponent from './Ipc';
 import MatomoComponent from './Matomo';
 import { CssBaseline, Snackbar, Alert, Box, AlertColor } from '@mui/material';
 import NavigationComponent from './Navigation';
-import TodoDataGrid from './DataGrid/Grid';
+import GridComponent from './Grid/Grid';
 import SplashScreen from './SplashScreen';
 import FileTabs from './Header/FileTabs';
 import { darkTheme, lightTheme } from './Themes';
@@ -140,7 +140,7 @@ const App = () => {
               )}
               {todoObjects && todoObjects.length > 0 && (
                 <>
-                  <TodoDataGrid
+                  <GridComponent
                     todoObjects={todoObjects}
                     setTodoObject={setTodoObject}
                     attributes={attributes}

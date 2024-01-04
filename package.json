@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -141,7 +141,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "buildVersion": "31",
+    "buildVersion": "34",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -210,7 +210,8 @@
       "target": [
         "zip",
         "portable",
-        "nsis"
+        "nsis",
+        "appx"
       ],
       "icon": "assets/icons/sleek.ico",
       "artifactName": "${productName}-${version}-win.${ext}"

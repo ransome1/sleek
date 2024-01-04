@@ -1,5 +1,6 @@
 import React, { useEffect, memo } from 'react';
-import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, Switch, Slider } from '@mui/material';
+import { Link, Badge, Box, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, Switch, Slider } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';
 import './Settings.scss';
@@ -35,6 +36,7 @@ const visibleSettings: VisibleSettings = {
   },
   notificationsAllowed: {
     style: 'toggle',
+    help: 'https://github.com/ransome1/sleek/wiki/Notifications-and-badges',
   },
   notificationThreshold: {
     style: 'slider',
@@ -42,6 +44,7 @@ const visibleSettings: VisibleSettings = {
     max: 10,
     unit: ' days',
     step: 1,
+    help: 'https://github.com/ransome1/sleek/wiki/Notifications-and-badges',
   },
   zoom: {
     style: 'slider',
@@ -84,7 +87,19 @@ const Settings: React.FC<Props> = memo(({
                   name={settingName}
                 />
               }
-              label={t(`settings.${settingName}`)}
+              label={
+                settingValue.help ? (
+                  <Badge badgeContent={
+                    <Link target='_blank' href={`${settingValue.help}`}>
+                      <HelpIcon />
+                    </Link>
+                  }>
+                    {t(`settings.${settingName}`)}
+                  </Badge>
+                ) : (
+                  t(`settings.${settingName}`)
+                )
+              }
             />
           ) : (
             settingValue.style === 'select' ? (

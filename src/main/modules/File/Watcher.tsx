@@ -1,5 +1,5 @@
 import chokidar, { FSWatcher } from 'chokidar';
-import processDataRequest from '../ProcessDataRequest/ProcessDataRequest';
+import { processDataRequest, searchString } from '../ProcessDataRequest/ProcessDataRequest';
 import { configStorage } from '../../config';
 import { eventListeners } from '../../main';
 
@@ -24,7 +24,7 @@ function createFileWatcher(files: FileObject[]): void {
     })
     .on('change', async (file) => {
       try {
-        await processDataRequest();
+        await processDataRequest(searchString);
         console.log(`${file} has been changed`);
       } catch(error: any) {
         console.error(error.message);

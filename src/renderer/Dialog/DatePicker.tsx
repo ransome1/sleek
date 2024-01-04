@@ -27,7 +27,8 @@ const DatePickerComponent: React.FC<Props> = ({
   
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
-      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, dayjs(date).format('YYYY-MM-DD'));
+      const dateString = (date) ? dayjs(date).format('YYYY-MM-DD') : null;
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, dateString);
     } catch(error: any) {
       console.error(error);
     }
@@ -41,8 +42,11 @@ const DatePickerComponent: React.FC<Props> = ({
         label={t(`todoDialog.datePicker.${type}`)}
         value={date ? dayjs(date) : null}
         onChange={(date) => handleChange(date)}
-        data-testid={`data-testid=dialog-picker-date-${type}`}
-        InputProps={{"data-testid": `dialog-picker-date-${type}`}}
+        // data-testid={`dialog-picker-date-${type}`}
+        // InputProps={{ 'data-testid': `dialog-picker-date-${type}` }}
+        slotProps={{
+          field: { clearable: true, onClear: () => handleChange(null) },
+        }}
       />
     </LocalizationProvider>
   );

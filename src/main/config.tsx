@@ -5,7 +5,7 @@ import fs from 'fs';
 import { mainWindow } from './main';
 import { createFileWatcher } from './modules/File/Watcher';
 import { createTray } from './modules/Tray';
-import processDataRequest from './modules/ProcessDataRequest/ProcessDataRequest';
+import { processDataRequest, searchString } from './modules/ProcessDataRequest/ProcessDataRequest';
 import handleTheme from './modules/Theme';
 import crypto from 'crypto';
 
@@ -112,7 +112,7 @@ if(!fs.existsSync(customStylesPath)) {
 
 filterStorage.onDidAnyChange(async () => {
   try {
-    await processDataRequest();
+    await processDataRequest(searchString);
   } catch(error: any) {
     console.error(error);
   }
@@ -120,7 +120,7 @@ filterStorage.onDidAnyChange(async () => {
 
 configStorage.onDidAnyChange(async(settings) => {
   try {
-    await processDataRequest();
+    await processDataRequest(searchString);
     mainWindow!.webContents.send('settingsChanged', settings);
   } catch(error: any) {
     console.error(error);

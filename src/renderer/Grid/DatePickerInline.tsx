@@ -67,7 +67,10 @@ const DatePickerInline: React.FC<Props> = ({
     };
     return (
       <DatePicker
-        slots={{ field: ButtonField, ...props.slots }}
+        slots={{ 
+          field: ButtonField,
+          ...props.slots
+        }}
         slotProps={{ field: { setOpen, date } }}
         {...props}
         open={open}

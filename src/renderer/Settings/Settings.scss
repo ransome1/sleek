@@ -23,4 +23,12 @@
   .MuiSelect-select {
     min-width: 9em;
   }
+  .MuiBadge-badge {
+    top: 0.3em;
+    right: -0.3em;
+    svg {
+      font-size: 1.2em;
+      color: $blue;
+    }
+  }
 }

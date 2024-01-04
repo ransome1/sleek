@@ -61,4 +61,4 @@ async function processDataRequest(search?: string): Promise<void> {
   mainWindow!.webContents.send('requestData', requestedData);
 }
 
-export default processDataRequest;
+export { processDataRequest, searchString };

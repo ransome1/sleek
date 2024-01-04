@@ -4,6 +4,7 @@ import { mainWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { handleRequestArchive } from './File/Archive';
 import { configStorage, filterStorage } from '../config';
+import { isCyrillic } from '../util';
 import appPackage from '../../../release/app/package.json';
 
 const isMac: boolean = process.platform === 'darwin';
@@ -149,6 +150,13 @@ function createMenu(files: FileObject[]) {
       label: 'Todos',
       submenu: [
         {
+          label: 'Add new todo',
+          accelerator: 'CmdOrCtrl+N',
+          click: () => {
+            mainWindow!.webContents.send('isDialogOpen');
+          },
+        },
+        {
           label: 'Find',
           accelerator: 'CmdOrCtrl+F',
           click: () => {
@@ -166,7 +174,7 @@ function createMenu(files: FileObject[]) {
         },
         {
           label: 'Reset filters',
-          accelerator: 'Ctrl+0',
+          accelerator: 'CmdOrCtrl+0',
           click: async () => {
             filterStorage.set('filters', {});
           },
