@@ -35,8 +35,3 @@ export const handleFilterSelect = (key: string, value: string | string[] | null,
     console.error(error);
   }
 };
-
-export const isCyrillic = () => {
-  const locale = navigator.language;
-  return locale.includes('ru') || locale.includes('bg') || locale.includes('sr') || locale.includes('uk') || locale.includes('be') || locale.includes('mk') || locale.includes('ky') || locale.includes('kk') || locale.includes('mn') || locale.includes('tg') || locale.includes('tt') || locale.includes('uz');
-};

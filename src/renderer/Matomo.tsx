@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 
-interface Props {
+interface MatomoComponentProps {
   settings: Settings;
 }
 
 const environment = process.env.NODE_ENV;
 
-const MatomoComponent: React.FC<Props> = ({
+const MatomoComponent: React.FC<MatomoComponentProps> = ({
   settings,
 }) => {
   useEffect(() => {

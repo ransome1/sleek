@@ -83,6 +83,7 @@ declare global {
     fromVersion: string;
     toVersion: string;
     accordionOpenState: boolean;
+    disableAnimations: boolean;
     __internal__: { migrations: { version: string }};
   }
 

@@ -108,17 +108,8 @@ const LanguageSelector: React.FC<Props> = ({
 	const changeLanguage = (event: SelectChangeEvent) => {
 		const language = event.target.value;
 		store.set('language', language);
+		i18n.changeLanguage(language);
 	};
-
-	useEffect(() => {
-		i18n.changeLanguage(settings.language)
-		.then(() => {
-			store.set('language', settings.language);
-		})
-			.catch((error) => {
-			console.error('Error loading translation:', error);
-		});
-	}, [settings.language]);
 
 	return (
 		<FormControl>
@@ -127,6 +118,7 @@ const LanguageSelector: React.FC<Props> = ({
 				labelId='language'
 				id='language'
 				label='Language'
+				data-testid={'setting-select-language'}
 				value={settings.language || navigator.language}
 				name='language'
 				onChange={(event: SelectChangeEvent) => changeLanguage(event)}

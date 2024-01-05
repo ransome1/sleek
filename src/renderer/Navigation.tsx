@@ -7,7 +7,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Box } from '@mui/material';
-import { isCyrillic } from './Shared';
 import './Navigation.scss';
 
 const { ipcRenderer, store } = window.api;
@@ -36,17 +35,17 @@ const NavigationComponent: React.FC<Props> = memo(({
   };
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if(event.ctrlKey & event.key === 'т') {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if(event.ctrlKey && event.key === 'т') {
         handleOpen();
       }
     };
 
     ipcRenderer.on('isDialogOpen', handleOpen);
-    if(isCyrillic()) document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
       ipcRenderer.off('isDialogOpen', handleOpen);
-      if(isCyrillic()) document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('keydown', handleKeyDown)
     };
   }, []);
 

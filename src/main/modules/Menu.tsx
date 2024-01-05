@@ -4,7 +4,6 @@ import { mainWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { handleRequestArchive } from './File/Archive';
 import { configStorage, filterStorage } from '../config';
-import { isCyrillic } from '../util';
 import appPackage from '../../../release/app/package.json';
 
 const isMac: boolean = process.platform === 'darwin';

@@ -118,7 +118,7 @@ const Elements: React.FC<Props> = memo(({
         className={selected ? 'filter selected' : 'filter'}
         data-todotxt-attribute={element.type}
       >
-        {replacements[element.type]
+        {element.type && element.value && replacements[element.type]
           ? replacements[element.type](element.value, element.type)
           : element.value ? <span>{element.value}</span> : null}
       </Box>

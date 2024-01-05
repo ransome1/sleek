@@ -17,7 +17,7 @@ interface GridComponentProps {
   setLoadMoreRows: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const GridComponent: React.FC<GridProps> = memo(({
+const GridComponent: React.FC<GridComponentProps> = memo(({
   todoObjects,
   filters,
   setDialogOpen,

@@ -11,7 +11,7 @@ interface Props {
   type: string;
   todoObject: TodoObject;
   date: string | null;
-  filters: Filters;
+  filters: Filters | null;
   settings: Settings;
 }
 
@@ -33,9 +33,14 @@ const DatePickerInline: React.FC<Props> = ({
     }
   };
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent) => {
     event.preventDefault();
-    if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+    setOpen?.((prev) => !prev)
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    event.preventDefault();
+    if(event.key === 'Enter') {
       setOpen?.((prev) => !prev)
     }
   };
@@ -54,8 +59,8 @@ const DatePickerInline: React.FC<Props> = ({
               tabIndex={0}
             />
             <Box
-              onClick={handleClick}
-              onKeyDown={handleClick}
+              onClick={(event) => handleClick(event)}
+              onKeyDown={(event) => handleKeyDown(event)}
               data-testid={`datagrid-picker-date-${type}`}
               tabIndex={0}
             >

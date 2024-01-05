@@ -10,6 +10,7 @@ const { ipcRenderer } = window.api;
 
 interface Props extends WithTranslation {
   date: string | null;
+  type: string;
   settings: Settings;
   textFieldValue: string;
   todoObject: TodoObject | null;

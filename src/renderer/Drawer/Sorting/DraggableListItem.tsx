@@ -5,15 +5,15 @@ import SortIcon from '@mui/icons-material/Sort';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import './DraggableListItem.scss';
 
-type Props = {
+type DraggableListItemProps = {
   item: Sorting;
   index: number;
   settings: Settings;
   attributeMapping: TranslatedAttributes;
-  setAccordionOrder: React.Dispatch<React.SetStateAction<Sorting>>;
+  setAccordionOrder: React.Dispatch<React.SetStateAction<Sorting[]>>;
 };
 
-const DraggableListItem: React.FC<Props> = ({
+const DraggableListItem: React.FC<DraggableListItemProps> = ({
   item,
   index,
   settings,

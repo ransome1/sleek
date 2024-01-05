@@ -90,9 +90,11 @@ const DialogComponent: React.FC<Props> = memo(({
   }
 
   useEffect(() => {
-    const updatedValue = todoObject?.string.replaceAll(String.fromCharCode(16), '\n') || '';
-    setTextFieldValue(updatedValue);
-    updateAttributeFields(todoObject);
+    if(todoObject) {
+      const updatedValue = todoObject.string?.replaceAll(String.fromCharCode(16), '\n') || '';
+      setTextFieldValue(updatedValue);
+      updateAttributeFields(todoObject);
+    }
   }, [todoObject]);
 
   useEffect(() => {

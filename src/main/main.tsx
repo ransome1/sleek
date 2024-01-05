@@ -21,7 +21,7 @@ const handleCreateWindow = () => {
   }
 }
 
-const handleClosed = async (event) => {
+const handleClosed = async () => {
   if(watcher) await watcher.close();
 
   mainWindow = null;
