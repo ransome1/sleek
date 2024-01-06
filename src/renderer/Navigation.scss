@@ -6,6 +6,7 @@
   border-top-right-radius: $radius;
 }
 
+.disableAnimations.hideNavigation #navigation,
 .disableAnimations #navigation {
   transition: none;
   button.showNavigation {

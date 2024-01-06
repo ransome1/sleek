@@ -6,14 +6,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import './DatePicker.scss';
 
-const { ipcRenderer } = window.api;
-
 interface Props extends WithTranslation {
   date: string | null;
   type: string;
   settings: Settings;
-  textFieldValue: string;
-  todoObject: TodoObject | null;
+  handleChange: function;
   t: typeof i18n.t;
 }
 
@@ -21,20 +18,9 @@ const DatePickerComponent: React.FC<Props> = ({
   date,
   type,
   settings,
-  textFieldValue,
-  todoObject,
+  handleChange,
   t,
 }) => {
-  
-  const handleChange = (date: dayjs.Dayjs | null) => {
-    try {
-      const dateString = (date) ? dayjs(date).format('YYYY-MM-DD') : null;
-      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, dateString);
-    } catch(error: any) {
-      console.error(error);
-    }
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={settings.language}>
       <DatePicker
@@ -42,7 +28,7 @@ const DatePickerComponent: React.FC<Props> = ({
         format="YYYY-MM-DD"
         label={t(`todoDialog.datePicker.${type}`)}
         value={date ? dayjs(date) : null}
-        onChange={(date) => handleChange(date)}
+        onChange={(date) => handleChange(type, date)}
         // data-testid={`dialog-picker-date-${type}`}
         // InputProps={{ 'data-testid': `dialog-picker-date-${type}` }}
         slotProps={{

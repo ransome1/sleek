@@ -12,7 +12,7 @@ const MatomoComponent: React.FC<MatomoComponentProps> = ({
   useEffect(() => {
     const anonymousUserId = (environment === 'development') ? 'Dev' : settings.anonymousUserId;
     if(anonymousUserId) {
-      const matomoContainer: string = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
+      const matomoContainer: string = (environment === 'development') ? 'https://www.datenkrake.eu/matomo5/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo5/js/container_WVsEueTV.js';
       const _mtm = window._mtm = window._mtm || [];
       const _paq = window._paq || [];
       

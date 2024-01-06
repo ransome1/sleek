@@ -27,7 +27,6 @@ body {
       display: flex;
       flex-direction: row;
       margin-left: 5em;
-      transition: margin-left 0.3s ease;
       header {
         height: 2.5em;
         display: flex;
@@ -44,6 +43,9 @@ body {
         #navigation {
           left: -5em;
         }
+      }
+      &.hideNavigation.disableAnimations {
+        transition: none;
       }
       &.darkTheme {
         button.showNavigation {

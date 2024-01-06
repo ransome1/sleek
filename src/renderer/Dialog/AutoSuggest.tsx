@@ -124,11 +124,6 @@ const AutoSuggest: React.FC<Props> = ({
     onKeyDown: handleKeyDown,
     'test-id': 'dialog-autosuggest-textfield',
   };
-
-  const containerStyle = {
-    width: textFieldRef.current?.offsetWidth + 28 || 'auto',
-  };
-
   useEffect(() => {
     textFieldRef.current?.focus();
   }, [textFieldRef]);
@@ -140,7 +135,7 @@ const AutoSuggest: React.FC<Props> = ({
           <TextField {...inputProps} multiline className="input" />
         )}
         renderSuggestionsContainer={({ containerProps, children }) => (
-          <Box {...containerProps} style={containerStyle}>
+          <Box {...containerProps} style={{ width: textFieldRef.current?.offsetWidth ? textFieldRef.current.offsetWidth + 28 : 'auto' }}>
             {children}
           </Box>
         )}

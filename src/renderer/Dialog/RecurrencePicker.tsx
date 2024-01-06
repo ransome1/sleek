@@ -6,46 +6,21 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import './RecurrencePicker.scss';
 
-const { ipcRenderer } = window.api;
-
-const getInterval = (recurrence: string | null) => {
-  return recurrence && recurrence.startsWith('+') ? recurrence.slice(2, 3) : recurrence ? recurrence.slice(1, 2) : null;
-}
-
-const getAmount = (recurrence: string | null) => {
-  return recurrence && recurrence.startsWith('+') ? recurrence.slice(1, 2) : recurrence ? recurrence.slice(0, 1) : null;
-}
-
-const getStrictIndicator = (recurrence: string | null) => {
-  return recurrence ? recurrence.startsWith('+') : false;
-}
-
-interface Props extends WithTranslation {
+interface RecurrencePickerProps extends WithTranslation {
   recurrence: string | null;
-  textFieldValue: string;
-  todoObject: TodoObject | null;
+  handleChange: function;
   t: typeof i18n.t;
 }
 
-const RecurrencePicker: React.FC<Props> = ({
+const RecurrencePicker: React.FC<RecurrencePickerProps> = ({
   recurrence,
-  textFieldValue,
-  todoObject,
+  handleChange,
   t
 }) => {
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null);
   const [strictRecurrence, setStrictRecurrence] = useState<boolean>(false);
   const [interval, setInterval] = useState<string | null>(null);
   const [amount, setAmount] = useState<string | null>(null);
-
-  const handleChange = (recurrence: string | null, event?: React.ChangeEvent<HTMLInputElement> | undefined) => {
-    try {
-      event?.preventDefault();
-      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, 'rec', recurrence);
-    } catch(error: any) {
-      console.error(error);
-    }
-  };
 
   const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if(!amount) setAmount('1');
@@ -65,11 +40,20 @@ const RecurrencePicker: React.FC<Props> = ({
   useEffect(() => {
     if(amount && interval) {
       const updatedValue = strictRecurrence ? '+' + amount + interval : amount + interval;
-      handleChange(updatedValue);
+      handleChange('rec', updatedValue);
     }
   }, [interval, amount, strictRecurrence]);
 
   useEffect(() => {
+    const getInterval = (recurrence: string | null) => {
+      return recurrence && recurrence.startsWith('+') ? recurrence.slice(2, 3) : recurrence ? recurrence.slice(1, 2) : null;
+    }
+    const getAmount = (recurrence: string | null) => {
+      return recurrence && recurrence.startsWith('+') ? recurrence.slice(1, 2) : recurrence ? recurrence.slice(0, 1) : null;
+    }
+    const getStrictIndicator = (recurrence: string | null) => {
+      return recurrence ? recurrence.startsWith('+') : false;
+    }
     setStrictRecurrence(getStrictIndicator(recurrence));
     setInterval(getInterval(recurrence));
     setAmount(getAmount(recurrence));
@@ -103,7 +87,7 @@ const RecurrencePicker: React.FC<Props> = ({
           <TextField
             label={t('todoDialog.recurrencePicker.label')}
             className="recurrencePicker"
-            onChange={() => handleChange(recurrence)}
+            onChange={() => handleChange('rec', recurrence)}
             value={recurrence || '-'}
             inputRef={recurrenceFieldRef}
             data-testid="dialog--picker-recurrence"

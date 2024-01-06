@@ -1,6 +1,6 @@
 import { app, Menu, dialog, shell } from 'electron';
 import { setFile } from './File/File';
-import { mainWindow } from '../main';
+import { mainWindow, handleCreateWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { handleRequestArchive } from './File/Archive';
 import { configStorage, filterStorage } from '../config';
@@ -88,13 +88,7 @@ function createMenu(files: FileObject[]) {
                 setFile(index);
               },
             }))
-          : []),
-        { type: 'separator' },
-        {
-          label: 'Close window',
-          accelerator: 'CmdOrCtrl+W',
-          role: 'close',
-        },
+          : [])
       ],
     },
     {
@@ -112,7 +106,8 @@ function createMenu(files: FileObject[]) {
     {
       label: 'View',
       submenu: [
-        {
+      ...(files?.length > 0
+      ? [{
           label: 'Toggle drawer',
           accelerator: 'CmdOrCtrl+B',
           click: () => {
@@ -121,18 +116,19 @@ function createMenu(files: FileObject[]) {
           },
         },
         {
+          label: 'Toggle file tabs',
+          click: () => {
+            const showFileTabs = configStorage.get('showFileTabs');
+            configStorage.set('showFileTabs', !showFileTabs);
+          },
+        }]
+        : []),
+        {
           label: 'Toggle navigation',
           accelerator: 'Ctrl+Alt+H',
           click: () => {
             const isNavigationOpen = configStorage.get('isNavigationOpen');
             configStorage.set('isNavigationOpen', !isNavigationOpen);
-          },
-        },
-        {
-          label: 'Toggle file tabs',
-          click: () => {
-            const showFileTabs = configStorage.get('showFileTabs');
-            configStorage.set('showFileTabs', !showFileTabs);
           },
         },
         {
@@ -145,51 +141,70 @@ function createMenu(files: FileObject[]) {
         },
       ],
     },
+    ...(files?.length > 0
+      ? [{
+          label: 'Todos',
+          submenu: [
+            {
+              label: 'Add new todo',
+              accelerator: 'CmdOrCtrl+N',
+              click: () => {
+                mainWindow?.webContents.send('isDialogOpen');
+              },
+            },
+            {
+              label: 'Find',
+              accelerator: 'CmdOrCtrl+F',
+              click: () => {
+                const isSearchOpen = configStorage.get('isSearchOpen');
+                configStorage.set('isSearchOpen', !isSearchOpen);
+              },
+            },
+            {
+              label: 'Toggle completed',
+              accelerator: 'Ctrl+H',
+              click: async () => {
+                const showCompleted = configStorage.get('showCompleted');
+                configStorage.set('showCompleted', !showCompleted);
+              },
+            },
+            {
+              label: 'Reset filters',
+              accelerator: 'CmdOrCtrl+0',
+              click: async () => {
+                filterStorage.set('filters', {});
+              },
+            },
+            {
+              label: 'Archive completed todos',
+              accelerator: 'Ctrl+Alt+A',
+              click: () => {
+                handleRequestArchive();
+              },
+            },
+            {
+              role: 'reload',
+              visible: false,
+            },
+          ],
+        }]
+    : []),
     {
-      label: 'Todos',
+      label: 'Window',
       submenu: [
         {
-          label: 'Add new todo',
-          accelerator: 'CmdOrCtrl+N',
+          label: 'Close window',
+          accelerator: 'CmdOrCtrl+W',
+          role: 'close',
+        },
+        { type: 'separator' },
+        {
+          label: 'sleek',
           click: () => {
-            mainWindow!.webContents.send('isDialogOpen');
-          },
-        },
-        {
-          label: 'Find',
-          accelerator: 'CmdOrCtrl+F',
-          click: () => {
-            const isSearchOpen = configStorage.get('isSearchOpen');
-            configStorage.set('isSearchOpen', !isSearchOpen);
-          },
-        },
-        {
-          label: 'Toggle completed',
-          accelerator: 'Ctrl+H',
-          click: async () => {
-            const showCompleted = configStorage.get('showCompleted');
-            configStorage.set('showCompleted', !showCompleted);
-          },
-        },
-        {
-          label: 'Reset filters',
-          accelerator: 'CmdOrCtrl+0',
-          click: async () => {
-            filterStorage.set('filters', {});
-          },
-        },
-        {
-          label: 'Archive completed todos',
-          accelerator: 'Ctrl+Alt+A',
-          click: () => {
-            handleRequestArchive();
-          },
-        },
-        {
-          role: 'reload',
-          visible: false,
-        },
-      ],
+            handleCreateWindow();
+          }
+        }
+      ]
     },
     {
       label: 'Help',

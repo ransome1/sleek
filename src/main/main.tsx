@@ -168,7 +168,7 @@ const handleWindowAllClosed = () => {
   const tray = configStorage.get('tray');
   if(process.platform !== 'darwin' && !tray) {
     app.quit();
-  } else if(!process.mas && process.platform === 'darwin' && tray) {
+  } else if(process.platform === 'darwin' && tray) {
     app.dock?.hide();
   } else {
     mainWindow?.hide();

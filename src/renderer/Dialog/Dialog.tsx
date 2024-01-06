@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Button, Dialog, DialogContent, DialogActions, AlertColor } from '@mui/material';
 import { withTranslation, WithTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 import AutoSuggest from './AutoSuggest';
 import PriorityPicker from './PriorityPicker';
 import DatePicker from './DatePicker';
@@ -87,7 +88,23 @@ const DialogComponent: React.FC<Props> = memo(({
       setRecurrence(todoObject?.rec || null);
       setPomodoro(todoObject?.pm || 0);
     }
-  }
+  };
+
+  const handleChange = (type: string, value: string) => {
+    try {
+      let updatedValue;
+      if(type === 'due' || type === 't') {
+        updatedValue = (value) ? dayjs(value).format('YYYY-MM-DD') : null;
+      } else if(type === 'pm') {
+        updatedValue = (value === '0') ? null : value;
+      } else {
+        updatedValue = value;
+      }
+      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, updatedValue);
+    } catch(error: any) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if(todoObject) {
@@ -129,32 +146,27 @@ const DialogComponent: React.FC<Props> = memo(({
         />
         <PriorityPicker
           priority={priority}
-          textFieldValue={textFieldValue}
-          todoObject={todoObject}
+          handleChange={handleChange}
         />
         <DatePicker
           date={dueDate}
           type="due"
           settings={settings}
-          textFieldValue={textFieldValue}
-          todoObject={todoObject}
+          handleChange={handleChange}
         />
         <DatePicker
           date={thresholdDate}
           type="t"
           settings={settings}
-          textFieldValue={textFieldValue}
-          todoObject={todoObject}
+          handleChange={handleChange}
         />
         <RecurrencePicker
           recurrence={recurrence}
-          textFieldValue={textFieldValue}
-          todoObject={todoObject}
+          handleChange={handleChange}
         />
         <PomodoroPicker
           pomodoro={pomodoro}
-          textFieldValue={textFieldValue}
-          todoObject={todoObject}
+          handleChange={handleChange}
         />
       </DialogContent>
       <DialogActions>
