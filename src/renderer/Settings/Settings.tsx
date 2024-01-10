@@ -1,3 +1,4 @@
+import { shell } from 'electron';
 import React, { useEffect, memo } from 'react';
 import { Link, Badge, Box, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, Switch, Slider } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
@@ -5,15 +6,7 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';
 import './Settings.scss';
 
-const { store } = window.api;
-
-interface Props extends WithTranslation {
-  isOpen: boolean;
-  onClose: () => void;
-  settings: Settings;
-  attributeMapping: TranslatedAttributes;
-  t: typeof i18n.t;
-}
+const { store, ipcRenderer } = window.api;
 
 const visibleSettings: VisibleSettings = {
   appendCreationDate: {
@@ -30,13 +23,17 @@ const visibleSettings: VisibleSettings = {
   },
   bulkTodoCreation: {
     style: 'toggle',
+    help: 'https://github.com/ransome1/sleek/wiki/Multi%E2%80%90line-text-field#bulk-todo-creation',
   },
   matomo: {
+    style: 'toggle',
+    help: 'https://github.com/ransome1/sleek/blob/main/PRIVACY.md',
+  },
+  disableAnimations: {
     style: 'toggle',
   },
   notificationsAllowed: {
     style: 'toggle',
-    help: 'https://github.com/ransome1/sleek/wiki/Notifications-and-badges',
   },
   notificationThreshold: {
     style: 'slider',
@@ -44,7 +41,7 @@ const visibleSettings: VisibleSettings = {
     max: 10,
     unit: ' days',
     step: 1,
-    help: 'https://github.com/ransome1/sleek/wiki/Notifications-and-badges',
+    help: 'https://github.com/ransome1/sleek/wiki/Notifications-and-badges#notification-threshold',
   },
   zoom: {
     style: 'slider',
@@ -59,13 +56,20 @@ const visibleSettings: VisibleSettings = {
   },
 };
 
-const Settings: React.FC<Props> = memo(({
+interface SettingsProps extends WithTranslation {
+  isOpen: boolean;
+  onClose: () => void;
+  settings: Settings;
+  t: typeof i18n.t;
+}
+
+const Settings: React.FC<SettingsProps> = memo(({
   isOpen,
   onClose,
   settings,
   t,
 }) => {
-
+  
   useEffect(() => {
     const adjustedFontSize = 16 * (settings.zoom / 100);
     document.body.style.fontSize = `${adjustedFontSize}px`;
@@ -89,16 +93,13 @@ const Settings: React.FC<Props> = memo(({
               }
               label={
                 settingValue.help ? (
-                  <Badge badgeContent={
-                    <Link target='_blank' href={`${settingValue.help}`}>
+                  <>
+                    {t(`settings.${settingName}`)}
+                    <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
                       <HelpIcon />
                     </Link>
-                  }>
-                    {t(`settings.${settingName}`)}
-                  </Badge>
-                ) : (
-                  t(`settings.${settingName}`)
-                )
+                  </>
+                ) : t(`settings.${settingName}`)
               }
             />
           ) : (
@@ -107,6 +108,14 @@ const Settings: React.FC<Props> = memo(({
                 key={settingName}
               >
                 <InputLabel>{t(`settings.${settingName}`)}</InputLabel>
+                {settingValue.help && (
+                  <Badge badgeContent={
+                    <Link target='_blank' href={`${settingValue.help}`}>
+                      <HelpIcon />
+                    </Link>
+                  }>
+                  </Badge>
+                )}
                 <Select
                   id={`settings-${settingName}`}
                   data-testid={`setting-select-${settingName}`}
@@ -124,8 +133,17 @@ const Settings: React.FC<Props> = memo(({
               </FormControl>
             ) : (
               settingValue.style === 'slider' ? (
-                <FormControl key={settingName} sx={{ width: 300, clear: 'both' }}>
-                  {t(`settings.${settingName}`)}
+                <FormControl key={settingName} sx={{ clear: 'both' }}>
+                  <label>
+                    {t(`settings.${settingName}`)}
+                    {settingValue.help ? (
+                      <>
+                        <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
+                          <HelpIcon />
+                        </Link>
+                      </>
+                    ) : null}
+                  </label>
                   <Slider
                     id={settingName}
                     data-testid={`setting-slider-${settingName}`}
@@ -133,6 +151,19 @@ const Settings: React.FC<Props> = memo(({
                     step={settingValue.step}
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value: number): string => `${value}${settingValue.unit}`}
+                    label={
+                      settingValue.help ? (
+                        <Badge badgeContent={
+                          <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
+                            <HelpIcon />
+                          </Link>
+                        }>
+                          {t(`settings.${settingName}`)}
+                        </Badge>
+                      ) : (
+                        t(`settings.${settingName}`)
+                      )
+                    }
                     min={settingValue.min}
                     max={settingValue.max}
                     onChange={(event: Event, value: number | number[]) => {
@@ -142,9 +173,7 @@ const Settings: React.FC<Props> = memo(({
                       }
                     }}
                   />
-
                 </FormControl>
-
               ) : null
             )
           )

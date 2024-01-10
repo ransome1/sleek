@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -68,7 +68,6 @@ i18n
 		if(!store.get('language')) {
 			store.set('language', navigator.language.toLowerCase());
 		}
-		// TODO: check if this is still working
 		i18n.on('missingKey', (key: string) => {
 			console.warn(`Missing translation key: ${key}`);
 		});
@@ -96,20 +95,14 @@ const friendlyLanguageName: Record<string, string> = {
 	hi: 'हिन्दी',
 };
 
-interface Props {
+interface LanguageSelectorProps {
 	settings: Settings;
 }
 
-const LanguageSelector: React.FC<Props> = ({
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   	settings,
 }) => {
 	const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs;
-
-	const changeLanguage = (event: SelectChangeEvent) => {
-		const language = event.target.value;
-		store.set('language', language);
-		i18n.changeLanguage(language);
-	};
 
 	return (
 		<FormControl>
@@ -121,7 +114,7 @@ const LanguageSelector: React.FC<Props> = ({
 				data-testid={'setting-select-language'}
 				value={settings.language || navigator.language}
 				name='language'
-				onChange={(event: SelectChangeEvent) => changeLanguage(event)}
+				onChange={(event: SelectChangeEvent) => store.set('language', event.target.value)}
 			>
 				{Array.isArray(supportedLanguages) ? (
 					supportedLanguages.map((languageCode: string) => (

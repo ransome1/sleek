@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import IpcComponent from './Ipc';
+import IpcComponent from './IpcRenderer';
 import MatomoComponent from './Matomo';
 import { CssBaseline, Snackbar, Alert, Box, AlertColor } from '@mui/material';
 import NavigationComponent from './Navigation';
@@ -12,7 +12,7 @@ import DrawerComponent from './Drawer/Drawer';
 import Search from './Header/Search';
 import DialogComponent from './Dialog/Dialog';
 import Archive from './Archive';
-import HeaderComponent from './Header/HeaderComponent';
+import HeaderComponent from './Header/Header';
 import ContextMenu from './ContextMenu';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from './Settings/LanguageSelector';
@@ -71,6 +71,10 @@ const App = () => {
     }
   }, [settings.files]);
 
+  useEffect( () =>  {
+    i18n.changeLanguage(settings.language);
+  }, [settings.language]);  
+
   useEffect(() => {
     ipcRenderer.send('requestData');
   }, []);
@@ -90,9 +94,11 @@ const App = () => {
         setSplashScreen={setSplashScreen}
         setIsSettingsOpen={setIsSettingsOpen}
       />
-      <MatomoComponent
-        settings={settings}
-      />
+      {settings.matomo && (
+        <MatomoComponent
+          settings={settings}
+        />
+      )}
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={settings?.shouldUseDarkColors ? darkTheme : lightTheme}>
           <CssBaseline />
@@ -185,7 +191,6 @@ const App = () => {
             isOpen={isSettingsOpen}
             onClose={() => setIsSettingsOpen(false)}
             settings={settings}
-            attributeMapping={attributeMapping}
           />
           {contextMenu && (
             <ContextMenu

@@ -5,7 +5,7 @@ import './PomodoroPicker.scss';
 
 interface PomodoroPickerProps {
   pomodoro: number | string;
-  handleChange: function;
+  handleChange: Function;
 }
 
 const PomodoroPicker: React.FC<PomodoroPickerProps> = ({

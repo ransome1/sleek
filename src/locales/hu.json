@@ -25,6 +25,7 @@
   "settings.bulkTodoCreation": "Minden sor külön teendőelemet hoz létre a szövegmezőben",
   "settings.matomo": "Matomo elemzés engedélyezése",
   "settings.zoom": "Nagyítás",
+  "settings.disableAnimations": "Animációk kikapcsolása",
   "drawer.tabs.attributes": "Tulajdonságok",
   "drawer.tabs.filters": "Szűrők",
   "drawer.tabs.sorting": "Rendezés",

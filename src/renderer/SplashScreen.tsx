@@ -44,7 +44,6 @@ const SplashScreen: FC<Props> = memo(({
   };
 
   useEffect(() => {
-
     if(!headers) {
       return;
     } else if(headers.availableObjects === 0) {      

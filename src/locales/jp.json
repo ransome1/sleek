@@ -25,6 +25,7 @@
   "settings.bulkTodoCreation": "テキストフィールド内の各行は別々のタスクを作成します",
   "settings.matomo": "Matomoの分析を許可",
   "settings.zoom": "ズーム",
+  "settings.disableAnimations": "アニメーションを無効にする",
   "drawer.tabs.attributes": "属性",
   "drawer.tabs.filters": "フィルター",
   "drawer.tabs.sorting": "ソート",

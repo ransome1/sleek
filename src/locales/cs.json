@@ -25,6 +25,7 @@
   "settings.bulkTodoCreation": "Každý řádek v textovém poli vytvoří samostatnou položku úkolu",
   "settings.matomo": "Povolit analýzu Matomo",
   "settings.zoom": "Přiblížení",
+  "settings.disableAnimations": "Vypnout animace",
   "drawer.tabs.attributes": "Atributy",
   "drawer.tabs.filters": "Filtry",
   "drawer.tabs.sorting": "Řazení",

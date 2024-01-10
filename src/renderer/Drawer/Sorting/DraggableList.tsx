@@ -6,12 +6,12 @@ import './DraggableList.scss';
 
 const { store } = window.api;
 
-type Props = {
+type DraggableListProps = {
   settings: Settings;
   attributeMapping: TranslatedAttributes;
 };
 
-const DraggableList: React.FC<Props> = ({
+const DraggableList: React.FC<DraggableListProps> = ({
   settings,
   attributeMapping,
 }) => {

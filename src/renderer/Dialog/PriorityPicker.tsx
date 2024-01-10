@@ -9,7 +9,7 @@ const priorities = [{ value: '-', label: '-' }, ...alphabetArray.map((letter) =>
 
 interface PriorityPickerProps extends WithTranslation {
   priority: string;
-  handleChange: function;
+  handleChange: Function;
   t: typeof i18n.t;
 }
 

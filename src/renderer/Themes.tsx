@@ -31,6 +31,17 @@ const baseTheme: Theme = createTheme({
         },
       },
     },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          'svg': {
+            fontSize: '1em',
+            color: '#1976d2',
+            marginLeft: '0.3em',
+          },
+        },
+      },
+    },
     MuiBadge: {
       styleOverrides: {
         root: {

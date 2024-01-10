@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, RefObject, memo } from 'react';
 import { Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import './HeaderComponent.scss';
+import './Header.scss';
 
 interface Props {
   settings: Settings;

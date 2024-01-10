@@ -1,13 +1,13 @@
 import React, { memo } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 
-interface Props {
+interface ContextMenuProps {
   contextMenu: ContextMenu;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
-const ContextMenu: React.FC<Props> = memo(({
+const ContextMenu: React.FC<ContextMenuProps> = memo(({
   contextMenu,
   setContextMenu,
   setPromptItem,

@@ -8,7 +8,7 @@ import './RecurrencePicker.scss';
 
 interface RecurrencePickerProps extends WithTranslation {
   recurrence: string | null;
-  handleChange: function;
+  handleChange: Function;
   t: typeof i18n.t;
 }
 

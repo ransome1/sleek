@@ -10,7 +10,7 @@ interface Props extends WithTranslation {
   date: string | null;
   type: string;
   settings: Settings;
-  handleChange: function;
+  handleChange: Function;
   t: typeof i18n.t;
 }
 

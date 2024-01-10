@@ -25,6 +25,7 @@
   "settings.bulkTodoCreation": "Each row in the text field creates a separate to-do item",
   "settings.matomo": "Allow Matomo Analysis",
   "settings.zoom": "Zoom",
+  "settings.disableAnimations": "Disable animations1",
   "drawer.tabs.attributes": "Attributes",
   "drawer.tabs.filters": "Filters",
   "drawer.tabs.sorting": "Sorting",

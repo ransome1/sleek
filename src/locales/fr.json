@@ -25,6 +25,7 @@
   "settings.bulkTodoCreation": "Chaque ligne dans le champ de texte crée un élément de tâche séparé",
   "settings.matomo": "Autoriser l'analyse Matomo",
   "settings.zoom": "Zoom",
+  "settings.disableAnimations": "Désactiver les animations",
   "drawer.tabs.attributes": "Attributs",
   "drawer.tabs.filters": "Filtres",
   "drawer.tabs.sorting": "Tri",

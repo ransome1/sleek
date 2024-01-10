@@ -5,13 +5,13 @@ import './AutoSuggest.scss';
 
 const regex: RegExp = /(?<=^| )[+@][^ ]*/g;
 
-interface Props {
+interface AutoSuggestProps {
   textFieldValue: string;
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   attributes: Attributes | null;
 }
 
-const AutoSuggest: React.FC<Props> = ({
+const AutoSuggest: React.FC<AutoSuggestProps> = ({
    textFieldValue,
    setTextFieldValue,
    attributes,

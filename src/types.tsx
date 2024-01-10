@@ -82,7 +82,7 @@ declare global {
     drawerWidth: number;
     fromVersion: string;
     toVersion: string;
-    accordionOpenState: boolean;
+    accordionOpenState: boolean[];
     disableAnimations: boolean;
     __internal__: { migrations: { version: string }};
   }
@@ -211,10 +211,10 @@ declare global {
     unit?: string;
     step?: number;
     values?: string[];
+    help?: string;
   };
 
   type VisibleSettings = Record<string, VisibleSetting>;
-
 }
 
 export {};

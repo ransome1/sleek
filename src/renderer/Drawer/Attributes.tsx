@@ -39,7 +39,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
     }
   };
 
-  const handleCtrlCmdUp = (event) => {
+  const handleCtrlCmdUp = () => {
     setIsCtrlKeyPressed(false);
   };
 

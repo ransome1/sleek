@@ -7,7 +7,7 @@ import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
 import { addFile } from './modules/File/File';
 import { createTray } from './modules/Tray';
-import './modules/Ipc';
+import './modules/IpcMain';
 
 const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
@@ -23,9 +23,7 @@ const handleCreateWindow = () => {
 
 const handleClosed = async () => {
   if(watcher) await watcher.close();
-
   mainWindow = null;
-
   eventListeners.handleReadyToShow = undefined;
   eventListeners.handleClosed = undefined;
   eventListeners.handleResize = undefined;
@@ -90,10 +88,10 @@ const handleWindowSizeAndPosition = () => {
 }
 
 const createMainWindow = () => {
-  const colorTheme = configStorage.get('colorTheme');
-  const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
+  const colorTheme: string = configStorage.get('colorTheme');
+  const shouldUseDarkColors: boolean = configStorage.get('shouldUseDarkColors');
   const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
-  const tray = configStorage.get('tray');
+  const tray: boolean = configStorage.get('tray');
 
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -190,12 +188,11 @@ app
   .on('open-file', () => handleOpenFile(path))
   .whenReady()
   .then(() => {
-
     createMainWindow();
-
     eventListeners.handleCreateWindow = handleCreateWindow
     eventListeners.handleWindowAllClosed = handleWindowAllClosed
     eventListeners.handleBeforeQuit = handleBeforeQuit;
+    eventListeners.handleOpenFile = handleOpenFile;
 
   })
   .catch(console.error);

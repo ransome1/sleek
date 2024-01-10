@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, FormGroup, FormControlLabel, Switch } from '@mui/material';
+import { Link, Box, FormGroup, FormControlLabel, Switch } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import './Filters.scss';
 import { i18n } from '../Settings/LanguageSelector';
+import './Filters.scss';
 
-const { store } = window.api;
+const { store, ipcRenderer } = window.api;
 
 const visibleSettings = {
   showCompleted: {
@@ -12,6 +13,7 @@ const visibleSettings = {
   },
   showHidden: {
     style: 'toggle',
+    help: 'https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)',
   },
   thresholdDateInTheFuture: {
     style: 'toggle',
@@ -44,7 +46,16 @@ const DrawerFilters: React.FC<Props> = ({
                   name={settingName}
                 />
               }
-              label={t(`drawer.filters.${settingName}`)}
+              label={
+                settingValue.help ? (
+                  <>
+                    {t(`drawer.filters.${settingName}`)}
+                    <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
+                      <HelpIcon />
+                    </Link>
+                  </>
+                ) : t(`drawer.filters.${settingName}`)
+              }
             />
           ) : null
         ))}

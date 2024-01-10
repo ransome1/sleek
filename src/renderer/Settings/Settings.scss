@@ -5,7 +5,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 44em;
+  width: 35em;
   max-width: 90vw;
   max-height: 90vh;
   overflow: auto;
@@ -13,22 +13,11 @@
   padding: 1em 2em 2em 2em;
   display: flex;
   flex-direction: column;
+  .MuiInputBase-root {
+    width: 100%;
+  }
   .MuiFormControl-root {
-    width: 50%;
     margin: 1em 0 0 0;
-  }
-  .MuiFormControlLabel-root {
-    display: block;
-  }
-  .MuiSelect-select {
-    min-width: 9em;
-  }
-  .MuiBadge-badge {
-    top: 0.3em;
-    right: -0.3em;
-    svg {
-      font-size: 1em;
-      color: $blue;
-    }
+    
   }
 }

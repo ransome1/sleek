@@ -187,6 +187,17 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   }
 }
 
+function handleOpenInBrowser(event: IpcMainEvent, url: string): void {
+  try {
+    if(url) {
+      shell?.openExternal(url);
+    }
+  } catch (error: any) {
+    console.error(error);
+    event.reply('responseFromMainProcess', error);
+  }
+}
+
 function removeEventListeners(): void {
   ipcMain.off('storeGetConfig', handleStoreGetConfig);
   ipcMain.off('storeSetConfig', handleStoreSetConfig);
@@ -197,6 +208,7 @@ function removeEventListeners(): void {
   ipcMain.off('openFile', handleOpenFile);
   ipcMain.off('createFile', handleCreateFile);
   ipcMain.off('updateAttributeFields', handleUpdateAttributeFields);
+  ipcMain.off('openInBrowser', handleOpenInBrowser);
   ipcMain.off('requestData', handleDataRequest);
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile);
   ipcMain.off('archiveTodos', handleArchiveTodos);
@@ -220,6 +232,7 @@ ipcMain.on('removeFile', handleRemoveFile);
 ipcMain.on('openFile', handleOpenFile);
 ipcMain.on('createFile', handleCreateFile);
 ipcMain.on('updateAttributeFields', handleUpdateAttributeFields);
+ipcMain.on('openInBrowser', handleOpenInBrowser);
 ipcMain.on('requestData', handleDataRequest);
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile);
 ipcMain.on('archiveTodos', handleArchiveTodos);

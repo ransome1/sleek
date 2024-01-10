@@ -25,6 +25,7 @@
   "settings.bulkTodoCreation": "Jede Zeile im Textfeld erstellt eine separate Todo",
   "settings.matomo": "Matomo-Analyse erlauben",
   "settings.zoom": "Vergrößerung",
+  "settings.disableAnimations": "Animationen deaktivieren",
   "drawer.tabs.attributes": "Attribute",
   "drawer.tabs.filters": "Filter",
   "drawer.tabs.sorting": "Sortierung",
