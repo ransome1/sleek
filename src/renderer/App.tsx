@@ -36,7 +36,6 @@ const translatedAttributes = (t: typeof i18n.t) => ({
 
 const App = () => {
   const [settings, setSettings] = useState<Settings>(store.get());
-  const [splashScreen, setSplashScreen] = useState<string | null>(null);
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<AlertColor | undefined>();
@@ -66,7 +65,6 @@ const App = () => {
     setVisibleRowCount(30);
     setLoadMoreRows(true);
     if(settings.files?.length === 0) {
-      setSplashScreen('noFiles');
       setTodoObjects(null);
     }
   }, [settings.files]);
@@ -91,7 +89,6 @@ const App = () => {
         setSnackBarSeverity={setSnackBarSeverity}
         setSnackBarContent={setSnackBarContent}
         setSettings={setSettings}
-        setSplashScreen={setSplashScreen}
         setIsSettingsOpen={setIsSettingsOpen}
       />
       {settings.matomo && (
@@ -163,11 +160,10 @@ const App = () => {
                 </>
               )}
               <SplashScreen
-                splashScreen={splashScreen}
                 setDialogOpen={setDialogOpen}
                 setSearchString={setSearchString}
-                setSplashScreen={setSplashScreen}
                 headers={headers}
+                settings={settings}
               />
             </Box>
           </Box>

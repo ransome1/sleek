@@ -13,7 +13,6 @@ interface Props {
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<AlertColor | undefined>>;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
-  setSplashScreen: React.Dispatch<React.SetStateAction<string | null>>;
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -27,7 +26,6 @@ const IpcComponent: React.FC<Props> = ({
   setSnackBarSeverity,
   setSnackBarContent,
   setSettings,
-  setSplashScreen,
   setIsSettingsOpen,
 }) => {
 
@@ -36,7 +34,6 @@ const IpcComponent: React.FC<Props> = ({
     if(requestedData?.attributes) setAttributes(requestedData.attributes);
     if(requestedData?.filters) setFilters(requestedData.filters);
     if(requestedData?.todoObjects) setTodoObjects(requestedData.todoObjects);
-    setSplashScreen(null);
   };
 
   const handleUpdateAttributeFields = (todoObject: TodoObject) => {

@@ -7,23 +7,21 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import './SplashScreen.scss';
 import { i18n } from './Settings/LanguageSelector';
 
-interface Props extends WithTranslation {
-  splashScreen: string | null;
+interface SplashScreenProps extends WithTranslation {
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSplashScreen: React.Dispatch<React.SetStateAction<string | null>>;
   headers: HeadersObject | null;
+  settings: Settings;
   t: typeof i18n.t;
 }
 
 const { ipcRenderer, store } = window.api;
 
-const SplashScreen: FC<Props> = memo(({
-  splashScreen,
+const SplashScreen: FC<SplashScreenProps> = memo(({
   setSearchString,
   setDialogOpen,
-  setSplashScreen,
   headers,
+  settings,
   t,
 }) => {
   const handleCreateTodo = () => {
@@ -43,21 +41,9 @@ const SplashScreen: FC<Props> = memo(({
     ipcRenderer.send('createFile', false);
   };
 
-  useEffect(() => {
-    if(!headers) {
-      return;
-    } else if(headers.availableObjects === 0) {      
-      if(splashScreen !== 'noTodosAvailable') setSplashScreen('noTodosAvailable')
-    } else if(headers.visibleObjects === 0) {
-      if(splashScreen !== 'noTodosVisible') setSplashScreen('noTodosVisible');
-    } else {
-      setSplashScreen(null);
-    }
-  }, [headers]);
-
   return (
     <Box id='splashScreen'>
-      {splashScreen === 'noTodosVisible' && (
+      {settings.files?.length > 0 && headers?.visibleObjects === 0 && headers?.availableObjects > 0 && (
         <>
           <DryCleaningIcon />
           <p>{t('splashscreen.noTodosVisible.text')}</p>
@@ -68,7 +54,7 @@ const SplashScreen: FC<Props> = memo(({
           </Box>
         </>
       )}
-      {splashScreen === 'noTodosAvailable' && (
+      {settings.files?.length > 0 && headers?.availableObjects === 0 && (
         <>
           <BeachAccessIcon />
           <p>{t('splashscreen.noTodosAvailable.text')}</p>
@@ -79,7 +65,7 @@ const SplashScreen: FC<Props> = memo(({
           </Box>
         </>
       )}
-      {splashScreen === 'noFiles' && (
+      {settings.files?.length === 0 && (
         <Box className="fileDropZone">
           <SaveAltIcon />
           <p>{t('splashscreen.noFiles.text')}</p>
