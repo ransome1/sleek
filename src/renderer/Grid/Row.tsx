@@ -70,7 +70,7 @@ const Row: React.FC<Props> = memo(({
     ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, event.target.checked, false);
   };
 
-  const handleRowClick = (event: KeyboardEvent) => {
+  const handleRowClick = (event: React.KeyboardEvent | React.MouseEvent) => {
     const clickedElement = event.target as HTMLElement;
     if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if(clickedElement.classList.contains('MuiChip-label') || clickedElement.closest('.MuiChip-label')) {
@@ -100,7 +100,7 @@ const Row: React.FC<Props> = memo(({
   if(todoObject.group) {
     return (
       <Group
-        value={todoObject.value}
+        value={(todoObject.value) ? todoObject.value : ''}
         group={todoObject.group}
         filters={filters}
         onClick={handleButtonClick}
@@ -116,8 +116,8 @@ const Row: React.FC<Props> = memo(({
         className="row"
         data-complete={todoObject.complete}
         data-hidden={todoObject.hidden}
-        onClick={handleRowClick}
-        onKeyDown={handleRowClick}
+        onClick={(event) => handleRowClick(event)}
+        onKeyDown={(event) => handleRowClick(event)}
         onContextMenu={handleContextMenu}
         data-todotxt-attribute="priority"
         data-todotxt-value={todoObject.priority}

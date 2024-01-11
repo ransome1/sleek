@@ -1,14 +1,14 @@
 import React, { memo } from 'react';
 import { ListItem, Box, Button, Divider } from '@mui/material';
 
-interface Props {
+interface GroupProps {
   value: string;
   group: string;
   filters: Filters | null;
   onClick: Function;
 }
 
-const Group: React.FC<Props> = memo(({
+const Group: React.FC<GroupProps> = memo(({
   value,
   group,
   filters,

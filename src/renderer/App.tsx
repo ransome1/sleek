@@ -146,7 +146,6 @@ const App = () => {
                   <GridComponent
                     todoObjects={todoObjects}
                     setTodoObject={setTodoObject}
-                    attributes={attributes}
                     filters={filters}
                     setDialogOpen={setDialogOpen}
                     setContextMenu={setContextMenu}

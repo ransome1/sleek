@@ -7,13 +7,13 @@ import { i18n } from '../Settings/LanguageSelector';
 
 const { ipcRenderer } = window.api;
 
-interface Props extends WithTranslation {
+interface FileTabsProps extends WithTranslation {
   settings: Settings;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   t: typeof i18n.t;
 }
 
-const FileTabs: React.FC<Props> = memo(({
+const FileTabs: React.FC<FileTabsProps> = memo(({
   settings,
   setContextMenu,
   t,

@@ -1,4 +1,3 @@
-import { shell } from 'electron';
 import React, { useEffect, memo } from 'react';
 import { Link, Badge, Box, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, Switch, Slider } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';

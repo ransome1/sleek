@@ -1,3 +1,3 @@
 # Contribution Guidelines
 
-Please find sleek's contribution guidelines here: https://github.com/ransome1/sleek/wiki/Contributing
+Click here to see sleek's [contributing guidelines](https://github.com/ransome1/sleek/wiki/Contributing-Guidelines).

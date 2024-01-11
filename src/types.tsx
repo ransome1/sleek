@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import { MouseEvent } from 'react';
 
 declare global {
   interface Window {
@@ -36,23 +36,15 @@ declare global {
     height: number;
   }
 
-  interface InputProps {
-    placeholder: string;
-    value: string;
-    onChange: Function;
-    inputRef: React.RefObject<HTMLInputElement>;
-    onKeyDown: Function;
-  }
-
   interface PromptItem {
-      id: string,
-      headline?: string,
-      text?: string,
-      button1?: string,
-      onButton1?: Function,
-      button2?: string,
-      onButton2?: Function,
-    }
+    id: string,
+    headline?: string,
+    text?: string,
+    button1?: string,
+    onButton1?: Function,
+    button2?: string,
+    onButton2?: Function,
+  }
 
   interface Settings {
     sorting: Sorting[];
@@ -90,9 +82,9 @@ declare global {
   interface FileObject {
     active: boolean;
     todoFileName: string;
-    todoFilePath: string;
+    todoFilePath: PlatformPath;
     todoFileBookmark: string | null;
-    doneFilePath: string | null;
+    doneFilePath: PlatformPath | null;
     doneFileBookmark: string | null;
   }
 
@@ -113,7 +105,9 @@ declare global {
     hidden: boolean;
     pm: number | string | null;
     string: string | null;
-    [key: string]: string | string[] | number | boolean | null;
+    group?: string;
+    value?: string;
+    notify?: boolean;
   }
 
   interface TranslatedAttributes {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, KeyboardEvent, memo } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Box, Button, Badge } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -25,7 +25,8 @@ const DrawerAttributes: React.FC<Props> = memo(({
     filters,
     t,
  }) => {
-  const mustNotify: boolean = (todoObjects: TodoObject[]) => todoObjects.some((todoObject) => todoObject.notify);
+  const mustNotify = (attributes: Attribute[]) => attributes.some((attribute) => attribute.notify);
+
   const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,7 +34,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
     return !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
   };
 
-  const handleCtrlCmdDown = (event: KeyboardEvent) => {
+  const handleCtrlCmdDown = (event: globalThis.KeyboardEvent) => {
     if(event.ctrlKey || event.metaKey) {
       setIsCtrlKeyPressed(true);
     }
@@ -59,12 +60,12 @@ const DrawerAttributes: React.FC<Props> = memo(({
     handleFocusFirstTabbableElement();
 
     document.addEventListener('keydown', (event) => handleCtrlCmdDown(event));
-    document.addEventListener('keyup', (event) => handleCtrlCmdUp(event));
-    window.addEventListener('focus', (event) => handleCtrlCmdUp(event));
+    document.addEventListener('keyup', handleCtrlCmdUp);
+    window.addEventListener('focus', handleCtrlCmdUp);
     return () => {
-      document.removeEventListener('keydown', () => handleCtrlCmdDown);
-      document.removeEventListener('keyup', () => handleCtrlCmdUp);
-      window.removeEventListener('focus', () => handleCtrlCmdUp);
+      document.removeEventListener('keydown', handleCtrlCmdDown);
+      document.removeEventListener('keyup', handleCtrlCmdUp);
+      window.removeEventListener('focus', handleCtrlCmdUp);
     };
   }, []);
 

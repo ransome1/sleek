@@ -17,17 +17,19 @@ jest.mock('../../main/main', () => ({
 
 jest.mock('../../main/config', () => ({
   configStorage: {
-    get: jest.fn((key) => {
-      if(key === 'files') {
-        return [
-          { active: false, todoFilePath: './src/__tests__/__mock__/test1.txt', todoFileName: 'test1.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },
-          { active: true, todoFilePath: './src/__tests__/__mock__/archiving.txt', todoFileName: 'archiving.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },
-          { active: false, todoFilePath: './src/__tests__/__mock__/test3.txt', todoFileName: 'test3.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },
-        ];
-      }
+    get: jest.fn(() => {
+      return [
+        { active: false, todoFilePath: './src/__tests__/__mock__/test1.txt', todoFileName: 'test1.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },
+        { active: true, todoFilePath: './src/__tests__/__mock__/archiving.txt', todoFileName: 'archiving.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },
+        { active: false, todoFilePath: './src/__tests__/__mock__/test3.txt', todoFileName: 'test3.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },
+      ];
     }),
     set: jest.fn(),
   },
+}));
+
+jest.mock('../../main/modules/Menu', () => ({
+  createMenu: jest.fn(),
 }));
 
 describe('Archiving', () => {

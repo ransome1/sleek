@@ -69,7 +69,7 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
       setPrefix('+');
       return Object.keys(attributes?.projects).filter((key) => key.includes(match));
     } else {
-      return;
+      return [];
     }
   };
 

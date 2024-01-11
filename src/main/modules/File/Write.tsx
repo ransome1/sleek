@@ -77,8 +77,4 @@ async function writeTodoObjectToFile(id: number, string: string): Promise<void> 
   }
 }
 
-async function replaceFileContent(string: string, filePath: string) {
-  await fs.writeFile(filePath, string, 'utf8');
-}
-
-export { writeTodoObjectToFile, replaceFileContent, removeLineFromFile };
+export { writeTodoObjectToFile, removeLineFromFile };

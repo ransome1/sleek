@@ -13,6 +13,7 @@ function createMenu(files: FileObject[]) {
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'sleek',
+      type: 'submenu',
       submenu: [
         {
           label: 'About',
@@ -26,7 +27,6 @@ function createMenu(files: FileObject[]) {
                 'Reveal configuration folder',
               ],
             };
-
             const buttonClicked = await dialog.showMessageBox(options);
             if(buttonClicked.response === 1) {
               const pathToReveal = app.getPath('userData');
@@ -45,7 +45,6 @@ function createMenu(files: FileObject[]) {
         ? [
             { type: 'separator' },
             {
-              label: 'Hide',
               accelerator: 'Cmd+H',
               role: 'hide',
             }
@@ -53,11 +52,8 @@ function createMenu(files: FileObject[]) {
         : []),
         { type: 'separator' },
         {
-          label: 'Quit',
-          accelerator: 'CmdOrCtrl+Q',
-          click: () => {
-            app.quit();
-          },
+          role: 'quit',
+          accelerator: 'CmdOrCtrl+Q'
         },
       ],
     },
@@ -92,16 +88,7 @@ function createMenu(files: FileObject[]) {
       ],
     },
     {
-      label: 'Edit',
-      submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        { role: 'selectAll' },
-      ],
+      role: 'editMenu'
     },
     {
       label: 'View',
@@ -182,24 +169,19 @@ function createMenu(files: FileObject[]) {
                 handleRequestArchive();
               },
             },
-            {
-              role: 'reload',
-              visible: false,
-            },
           ],
         }]
     : []),
     {
-      label: 'Window',
+      role: 'window',
       submenu: [
         {
           label: 'Close window',
           accelerator: 'CmdOrCtrl+W',
           role: 'close',
         },
-        { type: 'separator' },
         {
-          label: 'sleek',
+          label: 'Open window',
           click: () => {
             handleCreateWindow();
           }
@@ -260,6 +242,9 @@ function createMenu(files: FileObject[]) {
         {
           role: 'toggleDevTools',
           label: 'Developer tools'
+        },
+        {
+          role: 'reload',
         },
       ],
     },

@@ -1,4 +1,4 @@
-import React, { useEffect, FC, memo } from 'react';
+import React, { FC, memo } from 'react';
 import { Button, Box } from '@mui/material';
 import DryCleaningIcon from '@mui/icons-material/DryCleaning';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
