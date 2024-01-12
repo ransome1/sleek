@@ -24,7 +24,6 @@ const handleCreateWindow = () => {
 const handleClosed = async () => {
   if(watcher) await watcher.close();
   mainWindow = null;
-  eventListeners.handleReadyToShow = undefined;
   eventListeners.handleClosed = undefined;
   eventListeners.handleResize = undefined;
   eventListeners.handleMove = undefined;
@@ -88,11 +87,7 @@ const handleWindowSizeAndPosition = () => {
 }
 
 const createMainWindow = () => {
-  const colorTheme = configStorage.get('colorTheme');
   const shouldUseDarkColors: boolean = configStorage.get('shouldUseDarkColors');
-  const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
-  const tray: boolean = configStorage.get('tray');
-
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
@@ -111,12 +106,18 @@ const createMainWindow = () => {
 
   mainWindow?.loadURL(resolveHtmlPath('index.html'));
 
+  const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
+  if(files) {
+    createFileWatcher(files);  
+  }
+  createMenu(files);
+
   handleWindowSizeAndPosition();  
 
+  const colorTheme = configStorage.get('colorTheme');
   nativeTheme.themeSource = colorTheme;
 
   mainWindow
-    .on('ready-to-show', handleReadyToShow)
     .on('resize', handleResize)
     .on('move', handleMove)
     .on('show', handleShow)
@@ -124,7 +125,6 @@ const createMainWindow = () => {
     .on('maximize', handleMaximize)
     .on('unmaximize', handleUnmaximize);
 
-  eventListeners.handleReadyToShow = handleReadyToShow
   eventListeners.handleClosed = handleClosed
   eventListeners.handleResize = handleResize
   eventListeners.handleMove = handleMove
@@ -132,8 +132,7 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize;
 
-  createMenu(files);
-
+  const tray: boolean = configStorage.get('tray');
   if(tray) {
     createTray();
   }
@@ -152,13 +151,6 @@ const createMainWindow = () => {
         console.error('Error reading the CSS file:', error);
       }
     });
-  }
-}
-
-const handleReadyToShow = async () => {
-  const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
-  if(files?.length > 0) {
-    createFileWatcher(files);
   }
 }
 
@@ -182,19 +174,19 @@ const handleOpenFile = (path: string) => {
 };
 
 app
+  .whenReady().then(() => {
+    createMainWindow();
+    eventListeners.handleCreateWindow = handleCreateWindow;
+    eventListeners.handleWindowAllClosed = handleWindowAllClosed;
+    eventListeners.handleBeforeQuit = handleBeforeQuit;
+    eventListeners.handleOpenFile = handleOpenFile;
+  })
+  .catch(console.error);
+
+app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
   .on('activate', handleCreateWindow)
-  .on('open-file', () => handleOpenFile(path))
-  .whenReady()
-  .then(() => {
-    createMainWindow();
-    eventListeners.handleCreateWindow = handleCreateWindow
-    eventListeners.handleWindowAllClosed = handleWindowAllClosed
-    eventListeners.handleBeforeQuit = handleBeforeQuit;
-    eventListeners.handleOpenFile = handleOpenFile;
-
-  })
-  .catch(console.error);
+  .on('open-file', () => handleOpenFile(path));
 
 export { mainWindow, handleCreateWindow, eventListeners };

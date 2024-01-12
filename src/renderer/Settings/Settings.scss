@@ -13,6 +13,9 @@
   padding: 1em 2em 2em 2em;
   display: flex;
   flex-direction: column;
+  .MuiLink-root {
+    cursor: pointer;
+  }
   .MuiInputBase-root {
     width: 100%;
   }

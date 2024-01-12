@@ -55,8 +55,8 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
     const appendix = (textFieldValue.charAt(matchPosition.end) === '\n') ? '\n': ' ';
     const updatedValue = `${textFieldValue.slice(0, matchPosition.start)}${prefix}${suggestion}${appendix}${textFieldValue.slice(matchPosition.end + 1)}`;
     setSuggestions([]);
-    setMatchPosition(null);
     setTextFieldValue(updatedValue);
+    setMatchPosition(null);
   };
 
   const handleShouldRenderSuggestions = (reason: string) => {
@@ -103,6 +103,14 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
     try {
       if(suggestions.length > 0 && event.key === 'Tab') {
         event.preventDefault();
+        if(suggestions.length === 1) {
+          handleSuggestionSelected(null, { suggestion: suggestions[0] });
+        }
+      } else if(suggestions.length > 0 && event.key === 'ArrowDown') {
+        event.stopPropagation();
+        if(suggestions.length === 1) {
+          handleSuggestionSelected(null, { suggestion: suggestions[0] });
+        }
       } else if(suggestions.length > 0 && event.key === 'Escape') {
         event.stopPropagation();
         setSuggestions([]);
@@ -111,12 +119,6 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
       console.error(error);
     }
   };
-
-  const handleSuggestionHighlighted = () => {
-    if(suggestions.length === 1) {
-      handleSuggestionSelected(null, { suggestion: suggestions[0] });
-    }
-  }
 
   const inputProps = {
     placeholder: `(A) text +project @context due:2020-12-12 t:2021-01-10 rec:d pm:1`,
@@ -148,8 +150,9 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
         getSuggestionValue={(suggestion: string) => suggestion}
         renderSuggestion={handleRenderSuggestion}
         onSuggestionSelected={handleSuggestionSelected}
-        onSuggestionHighlighted={handleSuggestionHighlighted}
+        //onSuggestionHighlighted={handleSuggestionHighlighted}
         inputProps={inputProps}
+        focusInputOnSuggestionClick={true}
       />
     </>
   );

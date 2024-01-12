@@ -65,6 +65,18 @@ const visibleSettings: VisibleSettings = {
   },
 };
 
+const handleHelpClick = (event, url) => {
+  event.preventDefault();
+  event.stopPropagation();
+  if(url) {
+    ipcRenderer.send('openInBrowser', url)
+  }
+};
+
+const handleChange = (event, settingName, value) => {
+  store.set(settingName, value);
+};
+
 interface SettingsProps extends WithTranslation {
   isOpen: boolean;
   onClose: () => void;
@@ -96,7 +108,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
                   checked={settings[settingName as keyof Settings]}
-                  onChange={(event) => store.set(settingName, event.target.checked)}
+                  onChange={(event) => handleChange(event, settingName, event.target.checked)}
                   name={settingName}
                 />
               }
@@ -104,7 +116,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                 settingValue.help ? (
                   <>
                     {t(`settings.${settingName}`)}
-                    <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
+                    <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   </>
@@ -119,7 +131,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                 <InputLabel>{t(`settings.${settingName}`)}</InputLabel>
                 {settingValue.help && (
                   <Badge badgeContent={
-                    <Link target='_blank' href={`${settingValue.help}`}>
+                    <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   }>
@@ -131,7 +143,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                   className={settingName}
                   label={t(`settings.${settingName}`)}
                   value={settings[settingName as keyof Settings]}
-                  onChange={(event) => store.set(settingName, event.target.value)}
+                  onChange={(event) => handleChange(event, settingName, event.target.value)}
                 >
                   {settingValue?.values?.map((value) => (
                     <MenuItem key={value} value={value}>
@@ -147,7 +159,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                     {t(`settings.${settingName}`)}
                     {settingValue.help ? (
                       <>
-                        <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
+                        <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
                           <HelpIcon />
                         </Link>
                       </>
@@ -163,7 +175,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                     label={
                       settingValue.help ? (
                         <Badge badgeContent={
-                          <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
+                          <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
                             <HelpIcon />
                           </Link>
                         }>
@@ -175,12 +187,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                     }
                     min={settingValue.min}
                     max={settingValue.max}
-                    onChange={(event: Event, value: number | number[]) => {
-                      event.preventDefault();
-                      if (typeof value === 'number') {
-                        store.set(settingName, value);
-                      }
-                    }}
+                    onChange={(event: Event, value: number | number[]) => handleChange(event, settingName, value)}
                   />
                 </FormControl>
               ) : null

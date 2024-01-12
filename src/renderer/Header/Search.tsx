@@ -32,7 +32,7 @@ const Search: React.FC<Props> = memo(({
   };
 
   const handleAddTodo = () => {
-    if(searchString && document.activeElement === searchFieldRef.current) {
+    if(searchString) {
       ipcRenderer.send('writeTodoToFile', -1, searchString);
     }
   };

@@ -15,7 +15,6 @@ const MatomoComponent: React.FC<MatomoComponentProps> = ({
       const matomoContainer: string = (environment === 'development') ? 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV_dev_a003c77410fd43f247329b3b.js' : 'https://www.datenkrake.eu/matomo/js/container_WVsEueTV.js';
       const _mtm = window._mtm = window._mtm || [];
       const _paq = window._paq || [];
-      
       _mtm.push({
         'mtm.startTime': (new Date().getTime()),
         'event': 'mtm.Start',
@@ -23,7 +22,6 @@ const MatomoComponent: React.FC<MatomoComponentProps> = ({
         'version': settings.__internal__.migrations.version,
       });
       _paq.push((settings.matomo) ? ['forgetUserOptOut'] : ['optUserOut']);
-      
       const
         d = document,
         g = d.createElement('script'),
