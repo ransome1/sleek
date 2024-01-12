@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { Drawer, Tabs, Tab, Box } from '@mui/material';
+import Drawer from '@mui/material/Drawer';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 import DrawerAttributes from './Attributes';
 import DrawerSorting from './Sorting/Sorting';
 import DrawerFilters from './Filters';

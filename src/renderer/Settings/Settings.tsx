@@ -1,5 +1,15 @@
 import React, { useEffect, memo } from 'react';
-import { Link, Badge, Box, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, Switch, Slider } from '@mui/material';
+import Link from '@mui/material/Link';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Modal from '@mui/material/Modal';
+import Select from '@mui/material/Select';
+import Switch from '@mui/material/Switch';
+import Slider from '@mui/material/Slider';
 import HelpIcon from '@mui/icons-material/Help';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';

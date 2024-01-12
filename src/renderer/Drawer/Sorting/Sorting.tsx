@@ -1,5 +1,9 @@
 import React from 'react';
-import { Box, FormGroup, FormControlLabel, Switch, Divider } from '@mui/material';
+import Box from '@mui/material/Box';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import DraggableList from './DraggableList';
 import { i18n } from '../../Settings/LanguageSelector';

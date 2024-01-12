@@ -1,5 +1,9 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Button, Dialog, DialogContent, DialogActions, AlertColor } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import AlertColor from '@mui/material/AlertColor';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import AutoSuggest from './AutoSuggest';

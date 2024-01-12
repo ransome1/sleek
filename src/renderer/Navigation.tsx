@@ -6,7 +6,8 @@ import FileOpenIcon from '@mui/icons-material/FileOpen';
 import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { Button, Box } from '@mui/material';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import './Navigation.scss';
 
 const { ipcRenderer, store } = window.api;

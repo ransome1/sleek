@@ -1,5 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Tab, Tabs } from '@mui/material';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import './FileTabs.scss';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormControl, TextField } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg'
 import './PomodoroPicker.scss';
 

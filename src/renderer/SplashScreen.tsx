@@ -1,5 +1,6 @@
 import React, { FC, memo } from 'react';
-import { Button, Box } from '@mui/material';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import DryCleaningIcon from '@mui/icons-material/DryCleaning';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';

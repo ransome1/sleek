@@ -40,10 +40,10 @@ function handleUpdateTodoObject(event: IpcMainEvent, index: number, string: stri
 
 async function handleWriteTodoToFile(event: IpcMainEvent, index: number, string: string, state: boolean, attributeType: string, attributeValue: string): Promise<void> {
   try {
-    console.log(string)
     let todoObject;
     if(attributeType && attributeValue) {
       todoObject = createTodoObject(index, string, attributeType, attributeValue);
+      if(!todoObject.string) return;
       const response = await writeTodoObjectToFile(index, todoObject.string);
       event.reply('writeTodoToFile', response);
       return;

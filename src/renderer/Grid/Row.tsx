@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
-import { Checkbox, ListItem } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import ListItem from '@mui/material/ListItem';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';

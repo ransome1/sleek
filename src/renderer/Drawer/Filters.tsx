@@ -1,5 +1,9 @@
 import React from 'react';
-import { Link, Box, FormGroup, FormControlLabel, Switch } from '@mui/material';
+import Link from '@mui/material/Link';
+import Box from '@mui/material/Box';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import HelpIcon from '@mui/icons-material/Help';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';

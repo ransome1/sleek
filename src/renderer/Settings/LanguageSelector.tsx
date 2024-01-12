@@ -1,5 +1,9 @@
 import React from 'react';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import SelectChangeEvent from '@mui/material/SelectChangeEvent';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import de from '../../locales/de.json';

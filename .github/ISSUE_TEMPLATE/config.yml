@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Get help in GitHub Discussions
+    url: https://github.com/ransome1/sleek/discussions
+    about: Have a question? Not sure if your issue affects everyone reproducibly? The quickest way to get help is on GitHub Discussions!
+  - name: New issue on ransome1/sleek
+    url: https://github.com/ransome1/sleek/issues/new/choose
+    about: Having an issue with `sleek` that has not been reported yet? Report it to ransome1/sleek
+  - name: Ideas for a new feature
+    url: https://github.com/ransome1/sleek/wiki/Contributing-Guidelines
+    about: If you have an idea for a new feature, here's how to add it to sleek

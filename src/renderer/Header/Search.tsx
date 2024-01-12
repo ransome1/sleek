@@ -1,5 +1,8 @@
 import React, { useEffect, ChangeEvent, useCallback, memo } from 'react';
-import { TextField, InputAdornment, Button, Box } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';

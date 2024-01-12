@@ -1,5 +1,5 @@
 import React, { KeyboardEvent, memo } from 'react';
-import { List } from '@mui/material';
+import List from '@mui/material/List';
 import Row from './Row';
 import './Grid.scss';
 

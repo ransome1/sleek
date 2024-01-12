@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DraggableListItem from './DraggableListItem';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import './DraggableList.scss';
 

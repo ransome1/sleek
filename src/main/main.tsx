@@ -88,7 +88,7 @@ const handleWindowSizeAndPosition = () => {
 }
 
 const createMainWindow = () => {
-  const colorTheme: string = configStorage.get('colorTheme');
+  const colorTheme = configStorage.get('colorTheme');
   const shouldUseDarkColors: boolean = configStorage.get('shouldUseDarkColors');
   const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
   const tray: boolean = configStorage.get('tray');

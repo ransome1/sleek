@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Box, Button, Badge } from '@mui/material';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Badge from '@mui/material/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AirIcon from '@mui/icons-material/Air';

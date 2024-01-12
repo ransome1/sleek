@@ -3,6 +3,7 @@ import { MouseEvent } from 'react';
 declare global {
   interface Window {
     _mtm?: any[];
+    _paq?: any[];
     api: {
       store: {
         get: (key: string) => any;
@@ -65,7 +66,7 @@ declare global {
     appendCreationDate: boolean;
     windowMaximized: boolean;
     convertRelativeToAbsoluteDates: boolean;
-    colorTheme: string;
+    colorTheme: 'light' | 'dark' | 'system';
     notificationsAllowed: boolean;
     notificationThreshold: number;
     tray: boolean;
@@ -82,9 +83,9 @@ declare global {
   interface FileObject {
     active: boolean;
     todoFileName: string;
-    todoFilePath: PlatformPath;
+    todoFilePath: string;
     todoFileBookmark: string | null;
-    doneFilePath: PlatformPath | null;
+    doneFilePath: string | null;
     doneFileBookmark: string | null;
   }
 

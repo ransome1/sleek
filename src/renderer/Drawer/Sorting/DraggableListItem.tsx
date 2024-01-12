@@ -1,6 +1,8 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { ListItem, Button, Box } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import SortIcon from '@mui/icons-material/Sort';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import './DraggableListItem.scss';
