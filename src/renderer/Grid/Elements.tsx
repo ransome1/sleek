@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg';
@@ -115,7 +114,7 @@ const Elements: React.FC<ElementsProps> = memo(({
     );
 
     return (
-      <Box
+      <div
         key={index}
         className={selected ? 'filter selected' : 'filter'}
         data-todotxt-attribute={element.type}
@@ -123,7 +122,7 @@ const Elements: React.FC<ElementsProps> = memo(({
         {element.type && element.value && replacements[element.type]
           ? replacements[element.type](element.value, element.type)
           : element.value ? <span>{element.value}</span> : null}
-      </Box>
+      </div>
     );
   });
   return <>{elements}</>;

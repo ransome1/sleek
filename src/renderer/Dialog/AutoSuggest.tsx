@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import './AutoSuggest.scss';
@@ -76,12 +75,12 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
   };
 
   const handleRenderSuggestion = (suggestion: string, { isHighlighted }: { isHighlighted: boolean }) => (
-    <Box
+    <div
       data-todotxt-attribute={prefix === '+' ? 'projects' : prefix === '@' ? 'contexts' : ''}
       className={isHighlighted ? 'selected' : ''}
     >
       <Button key={suggestion} data-testid={`dialog-autosuggest-button-${prefix === '+' ? 'project' : prefix === '@' ? 'context' : ''}`}>{suggestion}</Button>
-    </Box>
+    </div>
   );
 
   const handleSuggestionsClearRequested = () => {
@@ -139,9 +138,9 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
           <TextField {...inputProps} multiline className="input" />
         )}
         renderSuggestionsContainer={({ containerProps, children }) => (
-          <Box {...containerProps} style={{ width: textFieldRef.current?.offsetWidth ? textFieldRef.current.offsetWidth + 28 : 'auto' }}>
+          <div {...containerProps} style={{ width: textFieldRef.current?.offsetWidth ? textFieldRef.current.offsetWidth + 28 : 'auto' }}>
             {children}
-          </Box>
+          </div>
         )}
         suggestions={suggestions}
         shouldRenderSuggestions={handleShouldRenderSuggestions}

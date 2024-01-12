@@ -153,6 +153,15 @@ const darkTheme: Theme = createTheme({
         },
       },
     },
+    MuiModal: {
+      styleOverrides: {
+        root: {
+          '.modal': {
+            background: '#3B3B3B',
+          }
+        },
+      },
+    },
     MuiListItem: {
       styleOverrides: {
         root: {
@@ -279,6 +288,15 @@ const lightTheme: Theme = createTheme({
         paper: {
           border: 'none',
           backgroundColor: '#ebebeb',
+        },
+      },
+    },
+    MuiModal: {
+      styleOverrides: {
+        root: {
+          '.modal': {
+            background: '#fff',
+          }
         },
       },
     },

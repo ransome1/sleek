@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, memo } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Badge from '@mui/material/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -75,13 +74,13 @@ const DrawerAttributes: React.FC<Props> = memo(({
   }, []);
 
   return (
-    <Box id="Attributes" ref={firstTabbableElementRef}>
+    <div id="Attributes" ref={firstTabbableElementRef}>
       {isAttributesEmpty(attributes) ? (
-        <Box className="placeholder">
+        <div className="placeholder">
           <AirIcon />
           <br />
           {t(`drawer.attributes.noAttributesAvailable`)}
-        </Box>
+        </div>
       ) : (
         Object.keys(attributes).map((key, index) =>
           Object.keys(attributes[key]).length > 0 ? (
@@ -101,7 +100,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
                 </Badge>
               </AccordionSummary>
               <AccordionDetails>
-                <Box>
+                
                   {attributes && Object.keys(attributes[key]).map((value, childIndex) => {
                     const excluded = filters && filters[key]?.some(
                       (filter: any) => filter.value === value && filter.exclude
@@ -110,7 +109,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
                     const disabled = attributes[key][value].count === 0;
                     const notify = (key === 'due') ? attributes[key][value].notify : false;
                     return (
-                      <Box
+                      <div
                         key={`${key}-${value}-${childIndex}`}
                         data-todotxt-attribute={key}
                         data-todotxt-value={value}
@@ -134,7 +133,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
                           </Button>
                         </Badge>
                         {(isCtrlKeyPressed || excluded) && (
-                          <Box
+                          <div
                             data-todotxt-attribute={key}
                             data-todotxt-value={value}
                             data-testid={`drawer-button-exclude-${key}`}
@@ -142,18 +141,18 @@ const DrawerAttributes: React.FC<Props> = memo(({
                             onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
                           >
                             <VisibilityOffIcon />
-                          </Box>
+                          </div>
                         )}
-                      </Box>
+                      </div>
                     );
                   })}
-                </Box>
+                
               </AccordionDetails>
             </Accordion>
           ) : null
         )
       )}
-    </Box>
+    </div>
   );
 });
 

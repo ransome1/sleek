@@ -25,6 +25,9 @@
 		}
 		.MuiAccordionDetails-root {
 			padding: 0.5em 0;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.3em;
 		}
 		.MuiAccordionSummary-root {
 			height: 3em;
@@ -37,11 +40,6 @@
 			&.Mui-expanded {
 				min-height: auto;
 			}
-		}
-		.MuiBox-root {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.3em;
 		}
 		&:before {
 			display: none;

@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import ListItem from '@mui/material/ListItem';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 
@@ -31,7 +30,7 @@ const Group: React.FC<GroupProps> = memo(({
         );
 
         return (
-          <Box
+          <div
             key={index}
             className={selected ? 'selected filter' : 'filter'}
             data-todotxt-attribute={group}
@@ -40,7 +39,7 @@ const Group: React.FC<GroupProps> = memo(({
             <Button className='attribute' onClick={() => onClick(group, value.trim())} data-testid={`datagrid-button-${group}`}>
               {value.trim()}
             </Button>
-          </Box>
+          </div>
         );
       })}
     </ListItem>

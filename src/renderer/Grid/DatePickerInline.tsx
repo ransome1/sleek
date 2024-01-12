@@ -3,7 +3,6 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import { handleFilterSelect } from '../Shared';
 import dayjs from 'dayjs';
@@ -61,14 +60,14 @@ const DatePickerInline: React.FC<Props> = ({
               data-testid={`datagrid-button-${type}`}
               tabIndex={0}
             />
-            <Box
+            <div
               onClick={(event) => handleClick(event)}
               onKeyDown={(event) => handleKeyDown(event)}
               data-testid={`datagrid-picker-date-${type}`}
               tabIndex={0}
             >
               {date}
-            </Box>
+            </div>
           </Badge>
         </Button>
       );

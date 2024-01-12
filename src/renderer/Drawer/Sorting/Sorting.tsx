@@ -1,5 +1,4 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -29,7 +28,7 @@ const DrawerSorting: React.FC<Props> = ({
 	t
 }) => {
 	return (
-		<Box id='Sorting'>
+		<div id='Sorting'>
 			<FormGroup>
 				{Object.entries(visibleSettings).map(([settingName, settingValue]) => (
 		          settingValue.style === 'toggle' ? (
@@ -51,7 +50,7 @@ const DrawerSorting: React.FC<Props> = ({
 			{!settings.fileSorting && (
 				<DraggableList settings={settings} attributeMapping={attributeMapping} />
 			)}
-		</Box>
+		</div>
 	);
 };
 

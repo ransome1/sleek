@@ -1,7 +1,6 @@
 import React, { useEffect, memo } from 'react';
 import Link from '@mui/material/Link';
 import Badge from '@mui/material/Badge';
-import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputLabel from '@mui/material/InputLabel';
@@ -98,7 +97,7 @@ const Settings: React.FC<SettingsProps> = memo(({
 
   return (
     <Modal id='settings' open={isOpen} onClose={onClose} aria-labelledby='settings-modal-title'>
-      <Box className='Modal' bgcolor='background.paper'>
+      <div className='modal'>
         <h3>{t('settings.headline')}</h3>
         {Object.entries(visibleSettings).map(([settingName, settingValue]) => (
           settingValue.style === 'toggle' ? (
@@ -197,7 +196,7 @@ const Settings: React.FC<SettingsProps> = memo(({
         <LanguageSelector
           settings={settings}
         />
-      </Box>
+      </div>
     </Modal>
   );
 });

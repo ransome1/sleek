@@ -2,7 +2,6 @@ import React, { useEffect, ChangeEvent, useCallback, memo } from 'react';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
@@ -80,7 +79,7 @@ const Search: React.FC<Props> = memo(({
   return (
     <>
       {settings.isSearchOpen && (
-        <Box id='Search' className={settings.isSearchOpen ? 'active' : ''}>
+        <div id='Search' className={settings.isSearchOpen ? 'active' : ''}>
           <TextField
             variant='outlined'
             placeholder={`${t('search.visibleTodos')} ${headers?.visibleObjects}`}
@@ -113,7 +112,7 @@ const Search: React.FC<Props> = memo(({
               ),
             }}
           />
-        </Box>
+        </div>
       )}
     </>
   );

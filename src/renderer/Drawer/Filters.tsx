@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -27,6 +26,18 @@ const visibleSettings = {
   },
 };
 
+const handleHelpClick = (event, url) => {
+  event.preventDefault();
+  event.stopPropagation();
+  if(url) {
+    ipcRenderer.send('openInBrowser', url)
+  }
+};
+
+const handleChange = (event, settingName, value) => {
+  store.set(settingName, value);
+};
+
 interface Props extends WithTranslation {
   settings: Settings;
   t: typeof i18n.t;
@@ -37,7 +48,7 @@ const DrawerFilters: React.FC<Props> = ({
   t
 }) => {
   return (
-    <Box id="Filters">
+    <div id="Filters">
       <FormGroup>
         {Object.entries(visibleSettings).map(([settingName, settingValue]) => (
           settingValue.style === 'toggle' ? (
@@ -45,8 +56,9 @@ const DrawerFilters: React.FC<Props> = ({
               key={settingName}
               control={
                 <Switch
+                  data-testid={`setting-toggle-${settingName}`}
                   checked={settings[settingName as keyof Settings]}
-                  onChange={(event) => store.set(settingName, event.target.checked)}
+                  onChange={(event) => handleChange(event, settingName, event.target.checked)}
                   name={settingName}
                 />
               }
@@ -54,7 +66,7 @@ const DrawerFilters: React.FC<Props> = ({
                 settingValue.help ? (
                   <>
                     {t(`drawer.filters.${settingName}`)}
-                    <Link onClick={() => ipcRenderer.send('openInBrowser', settingValue.help)}>
+                    <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   </>
@@ -64,7 +76,7 @@ const DrawerFilters: React.FC<Props> = ({
           ) : null
         ))}
       </FormGroup>
-    </Box>
+    </div>
   );
 };
 

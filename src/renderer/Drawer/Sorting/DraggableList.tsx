@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import DraggableListItem from './DraggableListItem';
-import Box from '@mui/material/Box';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import './DraggableList.scss';
 
@@ -37,7 +36,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable-list">
         {(provided: any) => (
-          <Box ref={provided.innerRef} {...provided.droppableProps}>
+          <div ref={provided.innerRef} {...provided.droppableProps}>
             {accordionOrder.map((item: Sorting, index: number) => (
               <DraggableListItem
                 item={item}
@@ -49,7 +48,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
               />
             ))}
             {provided.placeholder}
-          </Box>
+          </div>
         )}
       </Droppable>
     </DragDropContext>

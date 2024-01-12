@@ -8,11 +8,8 @@
 		margin: 0;
 	}
 	li {
-		padding: 0 0.5em 0 0;
+		padding: 0.25em 1em;
 		border-bottom: 1px dashed $mid-grey;
-		.MuiBox-root {
-			padding: 0.5em 1em;
-		}
 		& > *:not(:last-child) {
 			margin-right: 1em;
 		}

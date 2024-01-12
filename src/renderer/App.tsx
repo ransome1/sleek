@@ -4,9 +4,7 @@ import IpcComponent from './IpcRenderer';
 import MatomoComponent from './Matomo';
 import CssBaseline from '@mui/material/CssBaseline';
 import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import AlertColor from '@mui/material/AlertColor';
+import Alert, { AlertColor } from '@mui/material/Alert';
 import NavigationComponent from './Navigation';
 import GridComponent from './Grid/Grid';
 import SplashScreen from './SplashScreen';
@@ -103,7 +101,7 @@ const App = () => {
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={settings?.shouldUseDarkColors ? darkTheme : lightTheme}>
           <CssBaseline />
-          <Box className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings?.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'} ${settings.disableAnimations ? 'disableAnimations' : ''}`}>
+          <div className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings?.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'} ${settings.disableAnimations ? 'disableAnimations' : ''}`}>
             <NavigationComponent
               setDialogOpen={setDialogOpen}
               settings={settings}
@@ -120,7 +118,7 @@ const App = () => {
                 attributeMapping={attributeMapping}
               />
             )}
-            <Box className="flexItems">
+            <div className="flexItems">
               {settings.files?.length > 0 && (
               <>
                 {settings.showFileTabs ?
@@ -168,8 +166,8 @@ const App = () => {
                 headers={headers}
                 settings={settings}
               />
-            </Box>
-          </Box>
+            </div>
+          </div>
           {dialogOpen ? (
             <DialogComponent
               todoObject={todoObject}

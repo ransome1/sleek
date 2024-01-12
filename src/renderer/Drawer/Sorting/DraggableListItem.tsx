@@ -2,7 +2,6 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import SortIcon from '@mui/icons-material/Sort';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import './DraggableListItem.scss';
@@ -42,7 +41,7 @@ const DraggableListItem: React.FC<DraggableListItemProps> = ({
           className={snapshot.isDragging ? 'draggingListItem' : ''}
           data-testid={`drawer-sorting-draggable-list-item-${item.value}`}
         >
-          <Box><DragHandleIcon /></Box>
+          <div><DragHandleIcon /></div>
           {attributeMapping[item.value]}
           <Button onClick={handleButtonClick} data-testid={`drawer-sorting-draggable-list-item-${item.value}-invert`}>
             {!item.invert && <SortIcon className='invert' />}

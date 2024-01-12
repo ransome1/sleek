@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import AlertColor from '@mui/material/AlertColor';
+import { AlertColor } from '@mui/material/Alert';
 
 const { ipcRenderer} = window.api;
 

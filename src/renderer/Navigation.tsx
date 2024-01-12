@@ -7,7 +7,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import './Navigation.scss';
 
 const { ipcRenderer, store } = window.api;
@@ -52,8 +51,8 @@ const NavigationComponent: React.FC<Props> = memo(({
 
   return (
     <>
-      <Box id='navigation'>
-        <Box>sleek</Box>
+      <div id='navigation'>
+        <div>sleek</div>
         {settings.files?.length > 0 && (
           <>
             <Button onClick={() => handleOpen()} data-testid='navigation-button-add-todo'>
@@ -83,7 +82,7 @@ const NavigationComponent: React.FC<Props> = memo(({
         <Button onClick={() => store.set('isNavigationOpen', true)} className='showNavigation' data-testid='navigation-button-show-navigation'>
         <KeyboardArrowRightIcon />
       </Button>
-      </Box>
+      </div>
       
     </>
   );

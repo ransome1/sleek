@@ -1,5 +1,4 @@
 import React, { useEffect, useCallback, RefObject, memo } from 'react';
-import Box from '@mui/material/Box';
 import SearchIcon from '@mui/icons-material/Search';
 import './Header.scss';
 
@@ -39,12 +38,12 @@ const HeaderComponent: React.FC<Props> = memo(({
   }, [handleKeyDown]);
 
   return (
-    <Box id='ToolBar' onClick={handleOnClick}>
+    <div id='ToolBar' onClick={handleOnClick}>
       <SearchIcon 
         className={settings.isSearchOpen ? 'active' : ''}
         data-testid={"header-search-icon"}
       />
-    </Box>
+    </div>
   );
 });
 
