@@ -78,9 +78,18 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
   }
 }
 
-function handleStoreSetFilters(event: IpcMainEvent, value: any): void {
+function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): void {
   try {
-    filterStorage.set('filters', value);
+    filterStorage.set(key, value);
+  } catch (error: any) {
+    console.error(error);
+    event.reply('responseFromMainProcess', error);
+  }
+}
+
+function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
+  try {
+    event.returnValue = filterStorage.get(value);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
@@ -203,6 +212,9 @@ function removeEventListeners(): void {
   ipcMain.off('storeGetConfig', handleStoreGetConfig);
   ipcMain.off('storeSetConfig', handleStoreSetConfig);
   ipcMain.off('storeSetFilters', handleStoreSetFilters);
+
+  ipcMain.off('storeGetFilters', handleStoreGetFilters);
+
   ipcMain.off('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
   ipcMain.off('setFile', handleSetFile);
   ipcMain.off('removeFile', handleRemoveFile);
@@ -227,6 +239,9 @@ app.on('before-quit', () => removeEventListeners);
 ipcMain.on('storeGetConfig', handleStoreGetConfig);
 ipcMain.on('storeSetConfig', handleStoreSetConfig);
 ipcMain.on('storeSetFilters', handleStoreSetFilters);
+
+ipcMain.on('storeGetFilters', handleStoreGetFilters);
+
 ipcMain.on('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
 ipcMain.on('setFile', handleSetFile);
 ipcMain.on('removeFile', handleRemoveFile);

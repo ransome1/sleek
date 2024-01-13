@@ -25,7 +25,7 @@ async function processDataRequest(search?: string): Promise<void> {
   const sorting: Sorting[] = configStorage.get('sorting');
   const showHidden: boolean = configStorage.get('showHidden');
   const fileSorting: boolean = configStorage.get('fileSorting');
-  const filters: Filters = filterStorage.get('filters');
+  const filters: Filters = filterStorage.get('attributes');
 
   const fileContent = await readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
   let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);

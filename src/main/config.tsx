@@ -91,11 +91,12 @@ const configStorage: Store<Settings> = new Store<Settings>({
 });
 
 const filtersPath = path.join(userDataDirectory, 'filters.json');
-const filterStorage = new Store<{}>({ cwd: userDataDirectory, name: 'filters' });
+const filterStorage = new Store<Filters>({ cwd: userDataDirectory, name: 'filters' });
 
-if(!fs.existsSync(filtersPath)) {
-  const defaultFilterData = {};
-  fs.writeFileSync(filtersPath, JSON.stringify(defaultFilterData));
+if(!filterStorage.has('search')) {
+  filterStorage.set('search', []);
+} else if(!filterStorage.has('attributes')) {
+  filterStorage.set('attributes', {});
 }
 
 const notifiedTodoObjectsPath = path.join(userDataDirectory, 'notifiedTodoObjects.json');

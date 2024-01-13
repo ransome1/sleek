@@ -31,6 +31,13 @@ const baseTheme: Theme = createTheme({
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: '#ebebeb',
+        }
+      }
+    },
     MuiLink: {
       styleOverrides: {
         root: {
@@ -152,6 +159,13 @@ const darkTheme: Theme = createTheme({
           border: 'none',
         },
       },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: '#212224',
+        }
+      }
     },
     MuiModal: {
       styleOverrides: {

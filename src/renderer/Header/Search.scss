@@ -1,49 +1,30 @@
 @import "../Variables.scss";
 
 #Search {
-	height: 3em;
-	min-height: 3em;
 	display: flex;
-	overflow: hidden;
-	.MuiTextField-root {
+	position: relative;
+	margin-bottom: 0.25em;
+	.MuiButton-root {
+		position: absolute;
+		top: 0.5em;
+		right: 3.5em;
+	}
+	.MuiAutocomplete-root {
 		flex-direction: row;
 		flex: 1;
-		margin: 0.25em 1em;
-		.MuiInputBase-root {
-			flex: 1;
-			padding-right: 3em;
-			.MuiInputBase-input {
-				height: 100%;
-				padding: 0;
-				margin: 1em;
-			}
-			.MuiButtonBase-root {
-				font-size: 0.9em;
-				padding: 0.2em 0.5em;
-				background: $dark-grey;
-			}
-			.MuiButtonBase-root.Mui-focusVisible {
-				background: $blue;
-			}
-			button.xClick {
-				padding: $radius;
-				cursor: pointer;
-				border: none;
-				outline: none;
-				background: transparent;
-				svg {
-					color: $dark-grey;
-				}
-			}
-			button.xClick:focus-visible {
-				svg {
-					color: $blue;
-				}
-			}
-			button.xClick:focus {
+		margin: 0 1em 0.25em 1em;
+	}
+}
+
+.MuiAutocomplete-popper {
+	.MuiPaper-root {
+		margin-top: 0.125em;
+		box-shadow: none;
+		.MuiAutocomplete-listbox {
+			svg {
 				color: $blue;
-				outline: none;
-			}					
+				margin-right: 0.5em;
+			} 
 		}
 	}
 }

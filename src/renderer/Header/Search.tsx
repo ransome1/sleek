@@ -1,15 +1,18 @@
-import React, { useEffect, ChangeEvent, useCallback, memo } from 'react';
+import React, { useState, useEffect, ChangeEvent, useCallback, memo } from 'react';
 import TextField from '@mui/material/TextField';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import CancelIcon from '@mui/icons-material/Cancel';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import './Search.scss';
 
 const { ipcRenderer, store } = window.api;
 
-interface Props extends WithTranslation {
+interface SearchProps extends WithTranslation {
   headers: HeadersObject | null;
   settings: Settings,
   searchString: string;
@@ -18,7 +21,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const Search: React.FC<Props> = memo(({
+const Search: React.FC<SearchProps> = memo(({
   headers,
   settings,
   searchString,
@@ -26,9 +29,27 @@ const Search: React.FC<Props> = memo(({
   searchFieldRef,
   t,
 }) => {
-  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchString(event.target.value);
-  };
+
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>(store.getFilters('search'));
+
+  const handleRemoveFilter = (event, option) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const updatedFilters = searchFilters.filter(searchFilter => searchFilter.label !== option.label);
+    setSearchFilters(updatedFilters);
+  }
+
+  const handleAddNewFilter = (event, option) => {
+    event.stopPropagation();
+    event.preventDefault();
+    if(option.inputValue) {
+      const updatedFilters = [
+        { label: option.inputValue },
+        ...searchFilters.filter(searchFilter => searchFilter.label !== option.label)
+      ];
+      setSearchFilters(updatedFilters);      
+    }
+  }
 
   const handleAddTodo = () => {
     if(searchString) {
@@ -48,7 +69,7 @@ const Search: React.FC<Props> = memo(({
     } else if (!searchString && isSearchFocused && event.key === 'Escape') {
       const isSearchOpen = !settings.isSearchOpen;
       store.set('isSearchOpen', isSearchOpen);
-    } else if (searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+    } else if (isSearchFocused && searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
       handleAddTodo();
     }
   }, [searchFieldRef, searchString]);
@@ -62,6 +83,10 @@ const Search: React.FC<Props> = memo(({
       clearTimeout(delayedSearch);
     };
   }, [searchString]);
+
+  useEffect(() => {
+    ipcRenderer.send('storeSetFilters', 'search', searchFilters);
+  }, [searchFilters]);
 
   useEffect(() => {
     if(settings.isSearchOpen && searchFieldRef.current) {
@@ -80,38 +105,88 @@ const Search: React.FC<Props> = memo(({
     <>
       {settings.isSearchOpen && (
         <div id='Search' className={settings.isSearchOpen ? 'active' : ''}>
-          <TextField
-            variant='outlined'
-            placeholder={`${t('search.visibleTodos')} ${headers?.visibleObjects}`}
-            inputRef={searchFieldRef}
-            value={searchString}
-            onChange={handleInput}
-            data-testid="header-search-textfield"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  {searchString && searchString.length > 0 && (
-                    <Button 
-                      onClick={handleAddTodo}
-                      data-testid="header-search-textfield-add-todo"
-                    >
-                      {t('search.addAsTodo')}
-                    </Button>
-                  )}
-                  {searchString && searchString.length > 0 && (
-                    <button
-                      tabIndex={0}
-                      className='xClick'
-                      data-testid="header-search-textfield-empty"
-                      onClick={handleXClick}
-                    >
-                      <CancelIcon />
-                    </button>
-                  )}
-                </InputAdornment>
-              ),
+          <Autocomplete
+            freeSolo
+            onChange={(event, option) => {
+              if(event.key === 'Enter' && option.inputValue) {
+                handleAddNewFilter(event, option);
+              }
             }}
+            options={searchFilters}
+            filterOptions={(options, params) => {
+              const filter = createFilterOptions<FilmOptionType>();
+              const filtered = filter(options, params);
+              const { inputValue } = params;
+              const isExisting = filtered.some(filter => filter.label.includes(inputValue));
+              if (inputValue !== '' && !isExisting) {
+                filtered.push({
+                  inputValue,
+                  title: `Create filter "${inputValue}"`,
+                });
+              }
+              return filtered;
+            }}       
+            inputValue={searchString}
+            onInputChange={(event, value) => {
+              setSearchString(value);
+            }}
+            getOptionLabel={(option) => {
+              if (option.label) {
+                return option.label;
+              } else if (option.inputValue) {
+                return option.inputValue;
+              } else {
+                return searchString;
+              }
+            }}
+            renderOption={(props, option) => (
+              <li
+                {...props}
+                onClick={(event) => {
+                  if (option.label) {
+                    setSearchString(option.label)
+                  } else if(option.inputValue) {
+                    handleAddNewFilter(event, option);
+                    setSearchString(option.inputValue)
+                  }
+                }}
+              >
+                {option.inputValue !== undefined ? (
+                  <>
+                    <AddCircleIcon />
+                    {option.title}
+                  </>
+                ) : (
+                  <>
+                    <RemoveCircleIcon
+                      onClick={(event) => handleRemoveFilter(event, option)}
+                    />
+                    {option.label}
+                  </>
+                )}
+              </li>
+            )}
+            renderInput={(params) => (
+              <>
+                <TextField
+                  {...params}
+                  data-testid="header-search-textfield"  
+                  placeholder={`${t('search.visibleTodos')} ${headers?.visibleObjects}`}
+                  inputRef={searchFieldRef}
+                />
+              </>
+            )}
           />
+          {searchString && searchString.length > 0 && (
+            <>
+              <Button 
+                onClick={handleAddTodo}
+                data-testid="header-search-textfield-add-todo"
+              >
+                {t('search.addAsTodo')}
+              </Button>
+            </>
+          )}
         </div>
       )}
     </>

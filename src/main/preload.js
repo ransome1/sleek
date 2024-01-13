@@ -8,8 +8,11 @@ contextBridge.exposeInMainWorld('api', {
     set(property, value) {
       ipcRenderer.send('storeSetConfig', property, value);
     },
-    setFilters(value) {
-      ipcRenderer.send('storeSetFilters', value);
+    setFilters(property, value) {
+      ipcRenderer.send('storeSetFilters', property, value);
+    },
+    getFilters(key) {
+      return ipcRenderer.sendSync('storeGetFilters', key);
     },
     notifiedTodoObjects(value) {
       ipcRenderer.send('storeSetNotifiedTodoObjects', value);

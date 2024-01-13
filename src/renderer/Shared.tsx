@@ -30,7 +30,7 @@ export const handleFilterSelect = (key: string, value: string | string[] | null,
       }
     }
     updatedFilters[key] = filterList;
-    store.setFilters(updatedFilters);
+    store.setFilters('attributes', updatedFilters);
   } catch (error: any) {
     console.error(error);
   }
