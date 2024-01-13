@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import AlertColor from '@mui/material/AlertColor';
+import { AlertColor } from '@mui/material/Alert';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import AutoSuggest from './AutoSuggest';

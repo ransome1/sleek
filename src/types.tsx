@@ -8,7 +8,8 @@ declare global {
       store: {
         get: (key: string) => any;
         set: (key: string, val: any) => void;
-        setFilters: (val: any) => void;
+        getFilters: (key: string) => any;
+        setFilters: (key: string, val: any) => void;
       };
       ipcRenderer: {
         off: any;
@@ -197,6 +198,12 @@ declare global {
     attributes: Attributes,
     headers: HeadersObject,
     filters: Filters,
+  }
+
+  interface SearchFilter {
+    title?: string,
+    label?: string,
+    inputValue?: string,
   }
 
   type VisibleSetting = {

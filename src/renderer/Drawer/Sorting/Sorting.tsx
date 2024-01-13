@@ -37,7 +37,7 @@ const DrawerSorting: React.FC<Props> = ({
 		              control={
 		                <Switch
 		                  checked={settings[settingName as keyof Settings]}
-		                  onChange={(event) => store.set(settingName, event.target.checked)}
+		                  onChange={(event) => store.setConfig(settingName, event.target.checked)}
 		                  name={settingName}
 		                />
 		              }

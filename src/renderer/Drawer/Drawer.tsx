@@ -32,7 +32,7 @@ const DrawerComponent: React.FC<Props> = memo(({
   t
 }) => {
   const [activeTab, setActiveTab] = useState<string>('attributes');
-  const [drawerWidth, setDrawerWidth] = useState<number>(store.get('drawerWidth') || 500);
+  const [drawerWidth, setDrawerWidth] = useState<number>(store.getConfig('drawerWidth') || 500);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const startXRef = useRef<number>(0);
 
@@ -60,7 +60,7 @@ const DrawerComponent: React.FC<Props> = memo(({
   const handleKeyDown = (event: KeyboardEvent) => {
     const isSearchFocused = document.activeElement === searchFieldRef.current;
     if(!isSearchFocused && event.key === 'Escape') {
-      store.set('isDrawerOpen', false);
+      store.setConfig('isDrawerOpen', false);
     }
   };
 
@@ -76,7 +76,7 @@ const DrawerComponent: React.FC<Props> = memo(({
   }, [settings.isDrawerOpen]);
 
   useEffect(() => {
-    store.set('drawerWidth', drawerWidth);
+    store.setConfig('drawerWidth', drawerWidth);
   }, [drawerWidth]);
 
   return (

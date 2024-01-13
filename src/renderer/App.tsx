@@ -37,7 +37,7 @@ const translatedAttributes = (t: typeof i18n.t) => ({
 });
 
 const App = () => {
-  const [settings, setSettings] = useState<Settings>(store.get());
+  const [settings, setSettings] = useState<Settings>(store.getConfig());
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<AlertColor | undefined>();

@@ -58,7 +58,7 @@ const NavigationComponent: React.FC<Props> = memo(({
             <Button onClick={() => handleOpen()} data-testid='navigation-button-add-todo'>
               <AddIcon />
             </Button>
-            <Button onClick={() => store.set('isDrawerOpen', !settings.isDrawerOpen)} className={settings.isDrawerOpen ? 'active' : ''} data-testid='navigation-button-toggle-drawer'>
+            <Button onClick={() => store.setConfig('isDrawerOpen', !settings.isDrawerOpen)} className={settings.isDrawerOpen ? 'active' : ''} data-testid='navigation-button-toggle-drawer'>
               <FilterAltIcon />
             </Button>
             {headers && headers.completedTodoObjects > 0 && (
@@ -76,10 +76,10 @@ const NavigationComponent: React.FC<Props> = memo(({
         <Button className='break' onClick={() => setIsSettingsOpen(true)} data-testid='navigation-button-show-settings'>
           <SettingsIcon />
         </Button>
-        <Button onClick={() => store.set('isNavigationOpen', false)} data-testid='navigation-button-hide-navigation'>
+        <Button onClick={() => store.setConfig('isNavigationOpen', false)} data-testid='navigation-button-hide-navigation'>
           <KeyboardArrowLeftIcon />
         </Button>
-        <Button onClick={() => store.set('isNavigationOpen', true)} className='showNavigation' data-testid='navigation-button-show-navigation'>
+        <Button onClick={() => store.setConfig('isNavigationOpen', true)} className='showNavigation' data-testid='navigation-button-show-navigation'>
         <KeyboardArrowRightIcon />
       </Button>
       </div>

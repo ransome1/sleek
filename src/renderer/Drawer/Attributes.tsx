@@ -51,7 +51,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
   const handleAccordionToggle = (index: number) => {
     const updatedAccordionOpenState = settings.accordionOpenState;
     updatedAccordionOpenState[index] = !updatedAccordionOpenState[index];
-    store.set('accordionOpenState', updatedAccordionOpenState);
+    store.setConfig('accordionOpenState', updatedAccordionOpenState);
   };
 
   useEffect(() => {

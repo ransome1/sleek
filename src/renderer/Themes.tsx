@@ -2,7 +2,7 @@ import { createTheme, Theme } from '@mui/material/styles';
 
 const { store } = window.api;
 
-const disableAnimations = store.get('disableAnimations');
+const disableAnimations = store.getConfig('disableAnimations');
 
 const baseTheme: Theme = createTheme({
   ...(disableAnimations && { transitions: { create: () => 'none' } }),

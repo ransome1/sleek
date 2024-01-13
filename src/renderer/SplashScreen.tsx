@@ -29,7 +29,7 @@ const SplashScreen: FC<SplashScreenProps> = memo(({
   };
 
   const handleReset = () => {
-    store.setFilters([]);
+    store.setFilters('attributes', []);
     setSearchString('');
   };
 
@@ -48,7 +48,7 @@ const SplashScreen: FC<SplashScreenProps> = memo(({
           <DryCleaningIcon />
           <p>{t('splashscreen.noTodosVisible.text')}</p>
           <div className="buttons">
-            <Button variant='contained' onClick={handleReset} data-testid={`splashcreen-button-reset-filters`}>
+            <Button variant='contained' onClick={handleReset} data-testid={`splashscreen-button-reset-filters`}>
               {t('splashscreen.noTodosVisible.reset')}
             </Button>
           </div>
@@ -59,7 +59,7 @@ const SplashScreen: FC<SplashScreenProps> = memo(({
           <BeachAccessIcon />
           <p>{t('splashscreen.noTodosAvailable.text')}</p>
           <div className="buttons">
-            <Button variant='contained' onClick={handleCreateTodo} data-testid={`splashcreen-button-create-todo`}>
+            <Button variant='contained' onClick={handleCreateTodo} data-testid={`splashscreen-button-create-todo`}>
               {t('splashscreen.noTodosAvailable.create')}
             </Button>
           </div>
@@ -70,10 +70,10 @@ const SplashScreen: FC<SplashScreenProps> = memo(({
           <SaveAltIcon />
           <p>{t('splashscreen.noFiles.text')}</p>
           <div className="buttons">
-            <Button variant='contained' onClick={handleOpenFile}  data-testid={`splashcreen-button-open-file`}>
+            <Button variant='contained' onClick={handleOpenFile}  data-testid={`splashscreen-button-open-file`}>
               {t('openFile')}
             </Button>
-            <Button variant='contained' onClick={handleCreateFile} data-testid={`splashcreen-button-create-file`}>
+            <Button variant='contained' onClick={handleCreateFile} data-testid={`splashscreen-button-create-file`}>
               {t('createFile')}
             </Button>
           </div>

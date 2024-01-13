@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import Link from '@mui/material/Link';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -26,7 +26,7 @@ const visibleSettings = {
   },
 };
 
-const handleHelpClick = (event, url) => {
+const handleHelpClick = (event: MouseEvent, url: string) => {
   event.preventDefault();
   event.stopPropagation();
   if(url) {
@@ -34,16 +34,16 @@ const handleHelpClick = (event, url) => {
   }
 };
 
-const handleChange = (event, settingName, value) => {
-  store.set(settingName, value);
+const handleChange = (settingName: string, value: string | boolean) => {
+  store.setConfig(settingName, value);
 };
 
-interface Props extends WithTranslation {
+interface DrawerFiltersProps extends WithTranslation {
   settings: Settings;
   t: typeof i18n.t;
 }
 
-const DrawerFilters: React.FC<Props> = ({ 
+const DrawerFilters: React.FC<DrawerFiltersProps> = ({
   settings,
   t
 }) => {
@@ -58,7 +58,7 @@ const DrawerFilters: React.FC<Props> = ({
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
                   checked={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(event, settingName, event.target.checked)}
+                  onChange={(event) => handleChange(settingName, event.target.checked)}
                   name={settingName}
                 />
               }

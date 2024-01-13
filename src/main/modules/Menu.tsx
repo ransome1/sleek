@@ -159,7 +159,7 @@ function createMenu(files: FileObject[]) {
               label: 'Reset filters',
               accelerator: 'CmdOrCtrl+0',
               click: async () => {
-                filterStorage.set('filters', {});
+                filterStorage.set('attributes', {});
               },
             },
             {

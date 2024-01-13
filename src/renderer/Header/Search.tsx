@@ -1,9 +1,7 @@
-import React, { useState, useEffect, ChangeEvent, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo, MouseEvent } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
-import CancelIcon from '@mui/icons-material/Cancel';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { withTranslation, WithTranslation } from 'react-i18next';
@@ -30,24 +28,24 @@ const Search: React.FC<SearchProps> = memo(({
   t,
 }) => {
 
-  const [searchFilters, setSearchFilters] = useState<SearchFilters>(store.getFilters('search'));
+  const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'));
 
-  const handleRemoveFilter = (event, option) => {
+  const handleRemoveFilter = (event: MouseEvent, option: SearchFilter) => {
     event.stopPropagation();
     event.preventDefault();
     const updatedFilters = searchFilters.filter(searchFilter => searchFilter.label !== option.label);
     setSearchFilters(updatedFilters);
   }
 
-  const handleAddNewFilter = (event, option) => {
+  const handleAddNewFilter = (event: React.SyntheticEvent, value: string) => {
     event.stopPropagation();
     event.preventDefault();
-    if(option.inputValue) {
+    if (value) {
       const updatedFilters = [
-        { label: option.inputValue },
-        ...searchFilters.filter(searchFilter => searchFilter.label !== option.label)
+        { label: value },
+        ...searchFilters.filter(searchFilter => searchFilter.label !== value)
       ];
-      setSearchFilters(updatedFilters);      
+      setSearchFilters(updatedFilters);
     }
   }
 
@@ -57,18 +55,13 @@ const Search: React.FC<SearchProps> = memo(({
     }
   };
 
-  const handleXClick = () => {
-    setSearchString('');
-    searchFieldRef.current?.focus();
-  };
-
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     const isSearchFocused = document.activeElement === searchFieldRef.current;
     if (searchString && isSearchFocused && event.key === 'Escape') {
       setSearchString('');
     } else if (!searchString && isSearchFocused && event.key === 'Escape') {
       const isSearchOpen = !settings.isSearchOpen;
-      store.set('isSearchOpen', isSearchOpen);
+      store.setConfig('isSearchOpen', isSearchOpen);
     } else if (isSearchFocused && searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
       handleAddTodo();
     }
@@ -85,7 +78,9 @@ const Search: React.FC<SearchProps> = memo(({
   }, [searchString]);
 
   useEffect(() => {
-    ipcRenderer.send('storeSetFilters', 'search', searchFilters);
+    if(searchFilters) {
+      ipcRenderer.send('storeSetFilters', 'search', searchFilters);
+    }
   }, [searchFilters]);
 
   useEffect(() => {
@@ -107,17 +102,17 @@ const Search: React.FC<SearchProps> = memo(({
         <div id='Search' className={settings.isSearchOpen ? 'active' : ''}>
           <Autocomplete
             freeSolo
-            onChange={(event, option) => {
-              if(event.key === 'Enter' && option.inputValue) {
-                handleAddNewFilter(event, option);
+            onChange={(event, value: string | SearchFilter | null) => {
+              if (value && typeof value !== 'string' && value.inputValue) {
+                handleAddNewFilter(event, value.inputValue);
               }
             }}
             options={searchFilters}
-            filterOptions={(options, params) => {
-              const filter = createFilterOptions<FilmOptionType>();
-              const filtered = filter(options, params);
+            filterOptions={(options: (string | SearchFilter)[], params) => {
+              const filter = createFilterOptions<SearchFilter>();
+              const filtered: SearchFilter[] = filter(options as SearchFilter[], params);
               const { inputValue } = params;
-              const isExisting = filtered.some(filter => filter.label.includes(inputValue));
+              const isExisting = filtered.some(filter => filter.label && filter.label.includes(inputValue));
               if (inputValue !== '' && !isExisting) {
                 filtered.push({
                   inputValue,
@@ -125,33 +120,27 @@ const Search: React.FC<SearchProps> = memo(({
                 });
               }
               return filtered;
-            }}       
-            inputValue={searchString}
-            onInputChange={(event, value) => {
-              setSearchString(value);
             }}
-            getOptionLabel={(option) => {
-              if (option.label) {
-                return option.label;
-              } else if (option.inputValue) {
-                return option.inputValue;
+            inputValue={searchString}
+            onInputChange={(_, value) => setSearchString(value)}
+            getOptionLabel={(option: SearchFilter | string): string => {
+              if (typeof option === 'string') {
+                return option;
               } else {
-                return searchString;
+                if (option.label) {
+                  return option.label;
+                } else if (option.inputValue) {
+                  return option.inputValue;
+                } else {
+                  return searchString;
+                }
               }
             }}
-            renderOption={(props, option) => (
+            renderOption={(props, option: string | SearchFilter) => (
               <li
                 {...props}
-                onClick={(event) => {
-                  if (option.label) {
-                    setSearchString(option.label)
-                  } else if(option.inputValue) {
-                    handleAddNewFilter(event, option);
-                    setSearchString(option.inputValue)
-                  }
-                }}
               >
-                {option.inputValue !== undefined ? (
+                {typeof option !== 'string' && option.inputValue !== undefined ? (
                   <>
                     <AddCircleIcon />
                     {option.title}
@@ -159,9 +148,9 @@ const Search: React.FC<SearchProps> = memo(({
                 ) : (
                   <>
                     <RemoveCircleIcon
-                      onClick={(event) => handleRemoveFilter(event, option)}
+                      onClick={(event) => typeof option !== 'string' && handleRemoveFilter(event, option)}
                     />
-                    {option.label}
+                    {typeof option !== 'string' && option.label}
                   </>
                 )}
               </li>
@@ -179,7 +168,7 @@ const Search: React.FC<SearchProps> = memo(({
           />
           {searchString && searchString.length > 0 && (
             <>
-              <Button 
+              <Button
                 onClick={handleAddTodo}
                 data-testid="header-search-textfield-add-todo"
               >

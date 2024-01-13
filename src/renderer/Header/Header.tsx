@@ -25,7 +25,7 @@ const HeaderComponent: React.FC<Props> = memo(({
   );
 
   const handleOnClick = () => {
-    store.set('isSearchOpen', !settings.isSearchOpen);
+    store.setConfig('isSearchOpen', !settings.isSearchOpen);
   }
 
   useEffect(() => {

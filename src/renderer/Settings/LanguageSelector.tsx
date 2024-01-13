@@ -68,8 +68,8 @@ i18n
 	.use(initReactI18next)
 	.init(options)
 	.then(() => {
-		if(!store.get('language')) {
-			store.set('language', navigator.language.toLowerCase());
+		if(!store.getConfig('language')) {
+			store.setConfig('language', navigator.language.toLowerCase());
 		}
 		i18n.on('missingKey', (key: string) => {
 			console.warn(`Missing translation key: ${key}`);
@@ -117,7 +117,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 				data-testid={'setting-select-language'}
 				value={settings.language || navigator.language}
 				name='language'
-				onChange={(event: SelectChangeEvent) => store.set('language', event.target.value)}
+				onChange={(event: SelectChangeEvent) => store.setConfig('language', event.target.value)}
 			>
 				{Array.isArray(supportedLanguages) ? (
 					supportedLanguages.map((languageCode: string) => (

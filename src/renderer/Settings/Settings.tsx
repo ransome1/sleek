@@ -64,7 +64,7 @@ const visibleSettings: VisibleSettings = {
   },
 };
 
-const handleHelpClick = (event, url) => {
+const handleHelpClick = (event: React.MouseEvent, url: string) => {
   event.preventDefault();
   event.stopPropagation();
   if(url) {
@@ -72,8 +72,8 @@ const handleHelpClick = (event, url) => {
   }
 };
 
-const handleChange = (event, settingName, value) => {
-  store.set(settingName, value);
+const handleChange = (settingName: string, value: string | boolean | number) => {
+  store.setConfig(settingName, value);
 };
 
 interface SettingsProps extends WithTranslation {
@@ -107,7 +107,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
                   checked={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(event, settingName, event.target.checked)}
+                  onChange={(event) => handleChange(settingName, event.target.checked)}
                   name={settingName}
                 />
               }
@@ -142,7 +142,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                   className={settingName}
                   label={t(`settings.${settingName}`)}
                   value={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(event, settingName, event.target.value)}
+                  onChange={(event) => handleChange(settingName, event.target.value)}
                 >
                   {settingValue?.values?.map((value) => (
                     <MenuItem key={value} value={value}>
@@ -186,7 +186,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                     }
                     min={settingValue.min}
                     max={settingValue.max}
-                    onChange={(event: Event, value: number | number[]) => handleChange(event, settingName, value)}
+                    onChange={(_, value: number | number[]) => handleChange(settingName, value)}
                   />
                 </FormControl>
               ) : null

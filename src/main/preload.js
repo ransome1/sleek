@@ -2,10 +2,10 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('api', {
   store: {
-    get(key) {
+    getConfig(key) {
       return ipcRenderer.sendSync('storeGetConfig', key);
     },
-    set(property, value) {
+    setConfig(property, value) {
       ipcRenderer.send('storeSetConfig', property, value);
     },
     setFilters(property, value) {

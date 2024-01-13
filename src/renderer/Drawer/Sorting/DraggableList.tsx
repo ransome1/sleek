@@ -29,7 +29,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
   };
 
   useEffect(() => {
-    store.set('sorting', accordionOrder);
+    store.setConfig('sorting', accordionOrder);
   }, [accordionOrder]);
 
   return (
