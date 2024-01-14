@@ -1,6 +1,6 @@
 import { getActiveFile } from '../File/Active';
 import { readFileContent } from '../File/File';
-import { configStorage, filterStorage } from '../../config';
+import { config, filter } from '../../config';
 import { applyFilters } from '../Filters/Filters';
 import { updateAttributes, attributes } from '../Attributes';
 import { createTodoObjects } from './CreateTodoObjects';
@@ -22,10 +22,10 @@ async function processDataRequest(search?: string): Promise<void> {
   if(!activeFile) {
     return;
   }
-  const sorting: Sorting[] = configStorage.get('sorting');
-  const showHidden: boolean = configStorage.get('showHidden');
-  const fileSorting: boolean = configStorage.get('fileSorting');
-  const filters: Filters = filterStorage.get('attributes');
+  const sorting: Sorting[] = config.get('sorting');
+  const showHidden: boolean = config.get('showHidden');
+  const fileSorting: boolean = config.get('fileSorting');
+  const filters: Filters = filter.get('attributes');
 
   const fileContent = await readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
   let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);

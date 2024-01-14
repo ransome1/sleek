@@ -3,7 +3,7 @@ import { setFile } from './File/File';
 import { mainWindow, handleCreateWindow } from '../main';
 import { openFile, createFile } from './File/Dialog';
 import { handleRequestArchive } from './File/Archive';
-import { configStorage, filterStorage } from '../config';
+import { config, filter } from '../config';
 import appPackage from '../../../release/app/package.json';
 
 const isMac: boolean = process.platform === 'darwin';
@@ -98,15 +98,15 @@ function createMenu(files: FileObject[]) {
           label: 'Toggle drawer',
           accelerator: 'CmdOrCtrl+B',
           click: () => {
-            const isDrawerOpen = configStorage.get('isDrawerOpen');
-            configStorage.set('isDrawerOpen', !isDrawerOpen);
+            const isDrawerOpen = config.get('isDrawerOpen');
+            config.set('isDrawerOpen', !isDrawerOpen);
           },
         },
         {
           label: 'Toggle file tabs',
           click: () => {
-            const showFileTabs = configStorage.get('showFileTabs');
-            configStorage.set('showFileTabs', !showFileTabs);
+            const showFileTabs = config.get('showFileTabs');
+            config.set('showFileTabs', !showFileTabs);
           },
         }]
         : []),
@@ -114,16 +114,16 @@ function createMenu(files: FileObject[]) {
           label: 'Toggle navigation',
           accelerator: 'Ctrl+Alt+H',
           click: () => {
-            const isNavigationOpen = configStorage.get('isNavigationOpen');
-            configStorage.set('isNavigationOpen', !isNavigationOpen);
+            const isNavigationOpen = config.get('isNavigationOpen');
+            config.set('isNavigationOpen', !isNavigationOpen);
           },
         },
         {
           label: 'Toggle theme',
           accelerator: 'Ctrl+Alt+D',
           click: () => {
-            const shouldUseDarkColors = configStorage.get('shouldUseDarkColors');
-            configStorage.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
+            const shouldUseDarkColors = config.get('shouldUseDarkColors');
+            config.set('colorTheme', (shouldUseDarkColors) ? 'light' : 'dark')
           },
         },
       ],
@@ -143,23 +143,23 @@ function createMenu(files: FileObject[]) {
               label: 'Find',
               accelerator: 'CmdOrCtrl+F',
               click: () => {
-                const isSearchOpen = configStorage.get('isSearchOpen');
-                configStorage.set('isSearchOpen', !isSearchOpen);
+                const isSearchOpen = config.get('isSearchOpen');
+                config.set('isSearchOpen', !isSearchOpen);
               },
             },
             {
               label: 'Toggle completed',
               accelerator: 'Ctrl+H',
               click: async () => {
-                const showCompleted = configStorage.get('showCompleted');
-                configStorage.set('showCompleted', !showCompleted);
+                const showCompleted = config.get('showCompleted');
+                config.set('showCompleted', !showCompleted);
               },
             },
             {
               label: 'Reset filters',
               accelerator: 'CmdOrCtrl+0',
               click: async () => {
-                filterStorage.set('attributes', {});
+                filter.set('attributes', {});
               },
             },
             {

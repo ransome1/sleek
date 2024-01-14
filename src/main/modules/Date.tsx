@@ -1,10 +1,10 @@
 import Sugar from 'sugar';
 import dayjs from 'dayjs';
-import { configStorage } from '../config';
+import { config } from '../config';
 
 function mustNotify(date: Date): boolean {
   const today = dayjs().startOf('day');
-  const notificationThreshold: number = configStorage.get('notificationThreshold');
+  const notificationThreshold: number = config.get('notificationThreshold');
   return dayjs(date).isBefore(today.add(notificationThreshold, 'day')) || false;
 }
 

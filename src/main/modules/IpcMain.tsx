@@ -4,7 +4,7 @@ import { processDataRequest } from './ProcessDataRequest/ProcessDataRequest';
 import { changeCompleteState } from './ProcessDataRequest/ChangeCompleteState';
 import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
 import { archiveTodos, handleRequestArchive } from './File/Archive';
-import { configStorage, filterStorage, notifiedTodoObjectsStorage } from '../config';
+import { config, filter, notifiedTodoObjectsStorage } from '../config';
 import { addFile, setFile, removeFile } from './File/File';
 import { openFile, createFile } from './File/Dialog';
 import { createTodoObject } from './ProcessDataRequest/CreateTodoObjects';
@@ -61,7 +61,7 @@ async function handleWriteTodoToFile(event: IpcMainEvent, index: number, string:
 
 function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
   try {
-    event.returnValue = configStorage.get(value);
+    event.returnValue = config.get(value);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
@@ -70,7 +70,7 @@ function handleStoreGetConfig(event: IpcMainEvent, value: string): void {
 
 function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
   try {
-    configStorage.set(key, value);
+    config.set(key, value);
     console.log(`Set ${key} to ${value}`);
   } catch (error: any) {
     console.error(error);
@@ -80,7 +80,7 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
 
 function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): void {
   try {
-    filterStorage.set(key, value);
+    filter.set(key, value);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
@@ -89,7 +89,7 @@ function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): vo
 
 function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
   try {
-    event.returnValue = filterStorage.get(value);
+    event.returnValue = filter.get(value);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);

@@ -14,7 +14,7 @@ import './Attributes.scss';
 
 const { store } = window.api;
 
-interface Props extends WithTranslation {
+interface DrawerAttributesProps extends WithTranslation {
   settings: Settings;
   attributes: Attributes | null;
   attributeMapping: TranslatedAttributes;
@@ -22,7 +22,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t;
 }
 
-const DrawerAttributes: React.FC<Props> = memo(({
+const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
     settings,
     attributes,
     attributeMapping,
@@ -83,7 +83,7 @@ const DrawerAttributes: React.FC<Props> = memo(({
         </div>
       ) : (
         Object.keys(attributes).map((key, index) =>
-          Object.keys(attributes[key]).length > 0 ? (
+          attributes[key] && Object.keys(attributes[key]).length > 0 ? (
             <Accordion
               TransitionProps={{ unmountOnExit: true }}
               key={index}
@@ -100,7 +100,6 @@ const DrawerAttributes: React.FC<Props> = memo(({
                 </Badge>
               </AccordionSummary>
               <AccordionDetails>
-                
                   {attributes && Object.keys(attributes[key]).map((value, childIndex) => {
                     const excluded = filters && filters[key]?.some(
                       (filter: any) => filter.value === value && filter.exclude

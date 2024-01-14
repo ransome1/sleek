@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { app } from 'electron';
-import { configStorage } from '../../config';
+import { config } from '../../config';
 import { createTray } from '../Tray';
 import { createMenu } from '../Menu';
 import path from 'path';
@@ -26,7 +26,7 @@ async function readFileContent(filePath: string, bookmark: string | null): Promi
 function addFile(filePath: string, bookmark: string | null) {
   if(process.mas && !bookmark) throw new Error('The Mac App Store release requires you to open files using the file dialog');
 
-  const files: FileObject[] = configStorage.get('files');
+  const files: FileObject[] = config.get('files');
   const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath);
 
   files.forEach((file) => (file.active = false));
@@ -44,11 +44,11 @@ function addFile(filePath: string, bookmark: string | null) {
     files[existingFileIndex].active = true;
   }
 
-  configStorage.set('files', files);
+  config.set('files', files);
 
   createMenu(files);
 
-  const tray = configStorage.get('tray');
+  const tray = config.get('tray');
   if(tray) {
     createTray();
   }
@@ -57,7 +57,7 @@ function addFile(filePath: string, bookmark: string | null) {
 }
 
 function addDoneFile(filePath: string, bookmark: string | null) {
-  const files: FileObject[] = configStorage.get('files');
+  const files: FileObject[] = config.get('files');
   const activeIndex: number = files.findIndex((file) => file.active);
 
   if(activeIndex === -1) return false;
@@ -65,13 +65,13 @@ function addDoneFile(filePath: string, bookmark: string | null) {
   files[activeIndex].doneFilePath = filePath;
   files[activeIndex].doneFileBookmark = bookmark;
 
-  configStorage.set('files', files);
+  config.set('files', files);
 
   mainWindow!.webContents.send('triggerArchiving', true);
 }
 
 function removeFile(index: number) {
-  let files: FileObject[] = configStorage.get('files');
+  let files: FileObject[] = config.get('files');
 
   files.splice(index, 1);
   const activeIndex: number = files.findIndex((file) => file.active);
@@ -84,11 +84,11 @@ function removeFile(index: number) {
     files = [];
   }
 
-  configStorage.set('files', files);
+  config.set('files', files);
 
   createMenu(files);
 
-  const tray = configStorage.get('tray');
+  const tray = config.get('tray');
 
   if(tray) {
     createTray();
@@ -97,7 +97,7 @@ function removeFile(index: number) {
 }
 
 function setFile(index: number) {
-  const files: FileObject[] = configStorage.get('files');
+  const files: FileObject[] = config.get('files');
 
   if(files.length > 0) {
     files.forEach((file) => {
@@ -107,7 +107,7 @@ function setFile(index: number) {
 
   files[index].active = true;
 
-  configStorage.set('files', files);
+  config.set('files', files);
 
   return 'File changed';
 }

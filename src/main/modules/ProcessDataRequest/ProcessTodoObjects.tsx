@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import * as FilterLang from '../Filters/FilterLang.js';
 import { runQuery } from '../Filters/FilterQuery.js';
-import { configStorage } from '../../config';
+import { config } from '../../config';
 
 function countTodoObjects(todoObjects: TodoObject[], completed: boolean): number {
   const filteredTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
@@ -27,7 +27,7 @@ function applySearchString(searchString: string, todoObjects: TodoObject[]): Tod
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  const showCompleted: boolean = configStorage.get('showCompleted');
+  const showCompleted: boolean = config.get('showCompleted');
   return todoObjects.filter((todoObject: TodoObject) => {
     if(showCompleted) {
       return true;
@@ -46,8 +46,8 @@ function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
 }
 
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
-  const thresholdDateInTheFuture: boolean = configStorage.get('thresholdDateInTheFuture');
-  const dueDateInTheFuture: boolean = configStorage.get('dueDateInTheFuture');
+  const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture');
+  const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture');
 
   return todoObjects.flat().filter((todoObject) => {
     const tDate = dayjs(todoObject?.t);

@@ -35,13 +35,11 @@ async function openFile(setDoneFile: boolean): Promise<void> {
 
 async function createFile(setDoneFile: boolean): Promise<void> {
   const defaultFileName = setDoneFile ? 'done.txt' : 'todo.txt';
-
   const result: SaveDialogReturnValue = await dialog.showSaveDialog({
     defaultPath: path.join(app.getPath('documents'), defaultFileName),
     filters: dialogFilters,
     securityScopedBookmarks: true,
   });
-
   if(!result.canceled && result.filePath) {
     const filePath: string = result.filePath;
     const bookmark: string | null = result.bookmark || null;

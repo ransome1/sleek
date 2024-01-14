@@ -6,8 +6,8 @@ declare global {
     _paq?: any[];
     api: {
       store: {
-        get: (key: string) => any;
-        set: (key: string, val: any) => void;
+        getConfig: (key: string) => any;
+        setConfig: (key: string, val: any) => void;
         getFilters: (key: string) => any;
         setFilters: (key: string, val: any) => void;
       };
@@ -78,6 +78,8 @@ declare global {
     toVersion: string;
     accordionOpenState: boolean[];
     disableAnimations: boolean;
+    multilineTextField: boolean;
+    useMultilineForBulkTodoCreation: boolean;
     __internal__: { migrations: { version: string }};
   }
 

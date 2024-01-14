@@ -40,16 +40,16 @@ const DrawerComponent: React.FC<Props> = memo(({
     setActiveTab(newValue);
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    startXRef.current = e.pageX;
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    startXRef.current = event.pageX;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    const deltaX = startXRef.current - e.pageX;
+  const handleMouseMove = (event: MouseEvent) => {
+    const deltaX = startXRef.current - event.pageX;
     setDrawerWidth((prevWidth) => prevWidth - deltaX);
-    startXRef.current = e.pageX;
+    startXRef.current = event.pageX;
   };
 
   const handleMouseUp = () => {
@@ -76,7 +76,9 @@ const DrawerComponent: React.FC<Props> = memo(({
   }, [settings.isDrawerOpen]);
 
   useEffect(() => {
-    store.setConfig('drawerWidth', drawerWidth);
+    if(drawerWidth > 165) {
+      store.setConfig('drawerWidth', drawerWidth);
+    }
   }, [drawerWidth]);
 
   return (

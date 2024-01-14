@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, SyntheticEvent } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
 import CircleChecked from '@mui/icons-material/CheckCircle';
@@ -71,7 +71,7 @@ const Row: React.FC<Props> = memo(({
     ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, event.target.checked, false);
   };
 
-  const handleRowClick = (event: React.KeyboardEvent | React.MouseEvent) => {
+  const handleRowClick = (event: any) => {
     const clickedElement = event.target as HTMLElement;
     if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
       if(clickedElement.classList.contains('MuiChip-label') || clickedElement.closest('.MuiChip-label')) {

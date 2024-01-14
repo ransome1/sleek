@@ -30,30 +30,28 @@ const Search: React.FC<SearchProps> = memo(({
 
   const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'));
 
-  const handleRemoveFilter = (event: MouseEvent, option: SearchFilter) => {
+  const handleRemoveFilter = useCallback((event: MouseEvent, option: SearchFilter) => {
     event.stopPropagation();
     event.preventDefault();
     const updatedFilters = searchFilters.filter(searchFilter => searchFilter.label !== option.label);
     setSearchFilters(updatedFilters);
-  }
+  }, [searchFilters]);
 
-  const handleAddNewFilter = (event: React.SyntheticEvent, value: string) => {
+  const handleAddNewFilter = useCallback((event: React.SyntheticEvent, value: string) => {
     event.stopPropagation();
     event.preventDefault();
-    if (value) {
-      const updatedFilters = [
-        { label: value },
-        ...searchFilters.filter(searchFilter => searchFilter.label !== value)
-      ];
-      setSearchFilters(updatedFilters);
-    }
-  }
+    const updatedFilters = [
+      { label: value },
+      ...searchFilters.filter(searchFilter => searchFilter.label !== value)
+    ];
+    setSearchFilters(updatedFilters);
+  }, [searchFilters]);
 
-  const handleAddTodo = () => {
+  const handleAddTodo = useCallback(() => {
     if(searchString) {
       ipcRenderer.send('writeTodoToFile', -1, searchString);
     }
-  };
+  }, [searchString]);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     const isSearchFocused = document.activeElement === searchFieldRef.current;
@@ -65,7 +63,7 @@ const Search: React.FC<SearchProps> = memo(({
     } else if (isSearchFocused && searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
       handleAddTodo();
     }
-  }, [searchFieldRef, searchString]);
+  }, [searchFieldRef, searchString, settings.isSearchOpen]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -99,7 +97,7 @@ const Search: React.FC<SearchProps> = memo(({
   return (
     <>
       {settings.isSearchOpen && (
-        <div id='Search' className={settings.isSearchOpen ? 'active' : ''}>
+        <div id='search' className={settings.isSearchOpen ? 'active' : ''}>
           <Autocomplete
             freeSolo
             onChange={(event, value: string | SearchFilter | null) => {
@@ -126,21 +124,18 @@ const Search: React.FC<SearchProps> = memo(({
             getOptionLabel={(option: SearchFilter | string): string => {
               if (typeof option === 'string') {
                 return option;
-              } else {
-                if (option.label) {
-                  return option.label;
-                } else if (option.inputValue) {
-                  return option.inputValue;
-                } else {
-                  return searchString;
-                }
+              } else if (option.label) {
+                return option.label;
+              } else if (option.inputValue) {
+                return option.inputValue;
               }
             }}
             renderOption={(props, option: string | SearchFilter) => (
               <li
                 {...props}
+                data-testid={option.inputValue ? "header-search-autocomplete-create" : "header-search-autocomplete-select"}
               >
-                {typeof option !== 'string' && option.inputValue !== undefined ? (
+                {option.inputValue !== undefined ? (
                   <>
                     <AddCircleIcon />
                     {option.title}
@@ -148,7 +143,13 @@ const Search: React.FC<SearchProps> = memo(({
                 ) : (
                   <>
                     <RemoveCircleIcon
-                      onClick={(event) => typeof option !== 'string' && handleRemoveFilter(event, option)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        if(typeof option !== 'string') {
+                          handleRemoveFilter(event, option);
+                        }
+                      }}
+                      data-testid="header-search-autocomplete-remove"
                     />
                     {typeof option !== 'string' && option.label}
                   </>
@@ -159,7 +160,7 @@ const Search: React.FC<SearchProps> = memo(({
               <>
                 <TextField
                   {...params}
-                  data-testid="header-search-textfield"  
+                  data-testid="header-search-textfield"
                   placeholder={`${t('search.visibleTodos')} ${headers?.visibleObjects}`}
                   inputRef={searchFieldRef}
                 />

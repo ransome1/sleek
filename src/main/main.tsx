@@ -1,17 +1,19 @@
 import { app, BrowserWindow, nativeTheme } from 'electron';
 import path from 'path';
 import fs from 'fs';
-import { configStorage } from './config';
+import { config } from './config';
 import { createMenu } from './modules/Menu';
 import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
 import { addFile } from './modules/File/File';
 import { createTray } from './modules/Tray';
+import debounce from 'lodash/debounce';
 import './modules/IpcMain';
 
 const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any | undefined> = {};
+let resizeTimeout;
 
 const handleCreateWindow = () => {
   if(mainWindow) {
@@ -37,28 +39,40 @@ const handleClosed = async () => {
   eventListeners.watcher = undefined;
 }
 
-const handleResize = () => {
-  const rectangle = mainWindow?.getBounds() as WindowRectangle;
-  const width = rectangle.width;
-  const height = rectangle.height;
-  configStorage.set('windowDimensions', { width, height });
-  configStorage.set('windowMaximized', false);
+const handleResize = (event) => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const rectangle = mainWindow?.getBounds() as WindowRectangle;
+    const width = rectangle.width;
+    const height = rectangle.height;
+    config.set('windowDimensions', { width, height });
+    config.set('windowMaximized', false);
+  }, 500);
 }
 
 const handleMove = () => {
-  const rectangle = mainWindow?.getBounds() as WindowRectangle;
-  const x = rectangle.x;
-  const y = rectangle.y;
-  configStorage.set('windowPosition', { x, y });
-  configStorage.set('windowMaximized', false);
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const rectangle = mainWindow?.getBounds() as WindowRectangle;
+    const x = rectangle.x;
+    const y = rectangle.y;
+    config.set('windowPosition', { x, y });
+    config.set('windowMaximized', false);
+  }, 500);
 }
 
 const handleUnmaximize = () => {
-  configStorage.set('windowMaximized', false);
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    config.set('windowMaximized', false);
+  }, 500);
 }
 
 const handleMaximize = () => {
-  configStorage.set('windowMaximized', true)
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    config.set('windowMaximized', true)
+  }, 500);
 }
 
 const handleShow = () => {
@@ -66,19 +80,19 @@ const handleShow = () => {
 }
 
 const handleWindowSizeAndPosition = () => {
-  const isMaximized = configStorage.get('windowMaximized');
+  const isMaximized = config.get('windowMaximized');
   if(isMaximized) {
     mainWindow?.maximize();
     return;
   }
 
-  const windowDimensions: { width: number; height: number } | null = configStorage.get('windowDimensions') as { width: number; height: number } | null;
+  const windowDimensions: { width: number; height: number } | null = config.get('windowDimensions') as { width: number; height: number } | null;
 
   if(windowDimensions) {
     const { width, height } = windowDimensions;
     mainWindow?.setSize(width, height);
 
-    const windowPosition: { x: number; y: number } | null = configStorage.get('windowPosition') as { x: number; y: number } | null;
+    const windowPosition: { x: number; y: number } | null = config.get('windowPosition') as { x: number; y: number } | null;
     if(windowPosition) {
       const { x, y } = windowPosition;
       mainWindow?.setPosition(x, y);
@@ -87,7 +101,7 @@ const handleWindowSizeAndPosition = () => {
 }
 
 const createMainWindow = () => {
-  const shouldUseDarkColors: boolean = configStorage.get('shouldUseDarkColors');
+  const shouldUseDarkColors: boolean = config.get('shouldUseDarkColors');
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
@@ -106,7 +120,7 @@ const createMainWindow = () => {
 
   mainWindow?.loadURL(resolveHtmlPath('index.html'));
 
-  const files: FileObject[] = (configStorage.get('files') as FileObject[]) || [];
+  const files: FileObject[] = (config.get('files') as FileObject[]) || [];
   if(files) {
     createFileWatcher(files);  
   }
@@ -114,7 +128,7 @@ const createMainWindow = () => {
 
   handleWindowSizeAndPosition();  
 
-  const colorTheme = configStorage.get('colorTheme');
+  const colorTheme = config.get('colorTheme');
   nativeTheme.themeSource = colorTheme;
 
   mainWindow
@@ -132,7 +146,7 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize;
 
-  const tray: boolean = configStorage.get('tray');
+  const tray: boolean = config.get('tray');
   if(tray) {
     createTray();
   }
@@ -141,7 +155,7 @@ const createMainWindow = () => {
     mainWindow.webContents.openDevTools();
   }
 
-  const customStylesPath: string = configStorage.get('customStylesPath');
+  const customStylesPath: string = config.get('customStylesPath');
   if(customStylesPath) {
     fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
       if(!error) {
@@ -155,7 +169,7 @@ const createMainWindow = () => {
 }
 
 const handleWindowAllClosed = () => {
-  const tray = configStorage.get('tray');
+  const tray = config.get('tray');
   if(process.platform !== 'darwin' && !tray) {
     app.quit();
   } else if(process.platform === 'darwin' && tray) {

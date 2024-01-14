@@ -22,16 +22,17 @@ if(!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
 console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
 const customStylesPath: string = path.join(userDataDirectory, 'customStyles.css');
+if(!fs.existsSync(customStylesPath)) {
+  fs.writeFileSync(customStylesPath, '');
+}
 
-const configStorage: Store<Settings> = new Store<Settings>({
+const config: Store<Settings> = new Store<Settings>({
   cwd: userDataDirectory,
   name: 'config',
-  beforeEachMigration: context => {
-    console.log(`[config.json] migrating from ${context.fromVersion} → ${context.toVersion}`);
-  },
   migrations: {
     '2.0.0': store => {
-      store.setConfig('sorting', [
+      console.log('Creating new default configuration for v2.0.0');
+      store.set('sorting', [
         { id: '1', value: 'priority', invert: false },
         { id: '2', value: 'projects', invert: false },
         { id: '3', value: 'contexts', invert: false },
@@ -42,7 +43,7 @@ const configStorage: Store<Settings> = new Store<Settings>({
         { id: '8', value: 'rec', invert: false },
         { id: '9', value: 'pm', invert: false },
       ]);
-      store.setConfig('accordionOpenState', [
+      store.set('accordionOpenState', [
         true,
         true,
         true,
@@ -53,49 +54,52 @@ const configStorage: Store<Settings> = new Store<Settings>({
         false,
         false
       ]);
-      store.setConfig('files', []);
-      store.setConfig('appendCreationDate', false);
-      store.setConfig('showCompleted', true);
-      store.setConfig('showHidden', false);
-      store.setConfig('windowMaximized', false);
-      store.setConfig('fileSorting', false);
-      store.setConfig('convertRelativeToAbsoluteDates', true);
-      store.setConfig('thresholdDateInTheFuture', true);
-      store.setConfig('colorTheme', 'system');
-      store.setConfig('shouldUseDarkColors', false);
-      store.setConfig('notificationsAllowed', true);
-      store.setConfig('notificationThreshold', 2);
-      store.setConfig('showFileTabs', true);
-      store.setConfig('isNavigationOpen', true);
-      store.setConfig('customStylesPath', customStylesPath);
-      store.setConfig('tray', false);
-      store.setConfig('zoom', 100);
-      store.setConfig('multilineTextField', false);
-      store.setConfig('useMultilineForBulkTodoCreation', false);
-      store.setConfig('matomo', true);
+      store.set('files', []);
+      store.set('appendCreationDate', false);
+      store.set('showCompleted', true);
+      store.set('showHidden', false);
+      store.set('windowMaximized', false);
+      store.set('fileSorting', false);
+      store.set('convertRelativeToAbsoluteDates', true);
+      store.set('thresholdDateInTheFuture', true);
+      store.set('colorTheme', 'system');
+      store.set('shouldUseDarkColors', false);
+      store.set('notificationsAllowed', true);
+      store.set('notificationThreshold', 2);
+      store.set('showFileTabs', true);
+      store.set('isNavigationOpen', true);
+      store.set('customStylesPath', customStylesPath);
+      store.set('tray', false);
+      store.set('zoom', 100);
+      store.set('multilineTextField', false);
+      store.set('useMultilineForBulkTodoCreation', false);
+      store.set('matomo', true);
     },
     '2.0.1': store => {
-      store.setConfig('anonymousUserId', anonymousUserId);
+      console.log('Migrating from 2.0.0 → 2.0.1');
+      store.set('anonymousUserId', anonymousUserId);
     },
     '2.0.2': store => {
-      store.setConfig('dueDateInTheFuture', true);
+      console.log('Migrating from 2.0.1 → 2.0.2');
+      store.set('dueDateInTheFuture', true);
     },
     '2.0.4': store => {
+      console.log('Migrating from 2.0.2 → 2.0.4');
       store.delete('multilineTextField');
       store.delete('isDrawerOpen');
       store.delete('useMultilineForBulkTodoCreation');
-      store.setConfig('bulkTodoCreation', false);
-      store.setConfig('disableAnimations', false);
+      store.set('bulkTodoCreation', false);
+      store.set('disableAnimations', false);
     },
   }
 });
 
-const filterStorage = new Store<Filters>({ cwd: userDataDirectory, name: 'filters' });
+const filter = new Store<Filters>({ cwd: userDataDirectory, name: 'filters' });
 
-if(!filterStorage.has('search')) {
-  filterStorage.set('search', []);
-} else if(!filterStorage.has('attributes')) {
-  filterStorage.set('attributes', {});
+if(!filter.has('search')) {
+  filter.set('search', []);
+} else if(!filter.has('attributes')) {
+  filter.set('attributes', {});
 }
 
 const notifiedTodoObjectsPath = path.join(userDataDirectory, 'notifiedTodoObjects.json');
@@ -106,11 +110,7 @@ if(!fs.existsSync(notifiedTodoObjectsPath)) {
   fs.writeFileSync(notifiedTodoObjectsPath, JSON.stringify(defaultNotifiedTodoObjectsData));
 }
 
-if(!fs.existsSync(customStylesPath)) {
-  fs.writeFileSync(customStylesPath, '');
-}
-
-filterStorage.onDidAnyChange(async () => {
+filter.onDidChange('attributes', async () => {
   try {
     await processDataRequest(searchString);
   } catch(error: any) {
@@ -118,7 +118,7 @@ filterStorage.onDidAnyChange(async () => {
   }
 });
 
-configStorage.onDidAnyChange(async(settings) => {
+config.onDidAnyChange(async(settings) => {
   try {
     await processDataRequest(searchString);
     mainWindow!.webContents.send('settingsChanged', settings);
@@ -127,23 +127,35 @@ configStorage.onDidAnyChange(async(settings) => {
   }
 });
 
-configStorage.onDidChange('files', (files: FileObject[] | null) => {
+config.onDidChange('files', (newValue: FileObject[] | null) => {
   try {
-    if(files) {
-      createFileWatcher(files);
+    if (newValue) {
+      createFileWatcher(newValue);
     }
-  } catch(error: any) {
+  } catch (error: any) {
     console.error(error);
   }
 });
 
-configStorage.onDidChange('colorTheme', (colorTheme) => {
+config.onDidChange('windowPosition', (windowPosition) => {
+  console.log(windowPosition);
+});
+
+config.onDidChange('windowDimensions', (windowDimensions) => {
+  console.log(windowDimensions);
+});
+
+config.onDidChange('windowMaximized', (windowMaximized) => {
+  console.log(windowMaximized);
+});
+
+config.onDidChange('colorTheme', (colorTheme) => {
   if(colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
     nativeTheme.themeSource = colorTheme;
   }
 });
 
-configStorage.onDidChange('tray', () => {
+config.onDidChange('tray', () => {
   try {
     createTray();
   } catch(error: any) {
@@ -153,4 +165,4 @@ configStorage.onDidChange('tray', () => {
 
 nativeTheme.on('updated', handleTheme);
 
-export { configStorage, filterStorage, notifiedTodoObjectsStorage };
+export { config, filter, notifiedTodoObjectsStorage };

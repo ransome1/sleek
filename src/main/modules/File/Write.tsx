@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import { Item } from 'jstodotxt';
 import { lines } from '../ProcessDataRequest/CreateTodoObjects';
 import { getActiveFile } from './Active';
-import { configStorage } from '../../config';
+import { config } from '../../config';
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date';
 
 async function removeLineFromFile(id: number): Promise<string> {
@@ -36,9 +36,9 @@ async function writeTodoObjectToFile(id: number, string: string): Promise<void> 
   const bookmark = activeFile.todoFileBookmark;
   const todoFilePath = activeFile.todoFilePath;
 
-  const bulkTodoCreation: boolean = configStorage.get('bulkTodoCreation');
-  const convertRelativeToAbsoluteDates = configStorage.get('convertRelativeToAbsoluteDates');
-  const appendCreationDate = configStorage.get('appendCreationDate');
+  const bulkTodoCreation: boolean = config.get('bulkTodoCreation');
+  const convertRelativeToAbsoluteDates = config.get('convertRelativeToAbsoluteDates');
+  const appendCreationDate = config.get('appendCreationDate');
   
   const content = 
     (bulkTodoCreation) 

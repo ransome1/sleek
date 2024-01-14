@@ -1,6 +1,6 @@
 import { app, Menu, Tray } from 'electron';
 import { handleCreateWindow } from '../main';
-import { configStorage } from '../config';
+import { config } from '../config';
 import { getAssetPath } from '../util';
 import { setFile } from './File/File';
 
@@ -36,7 +36,7 @@ function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOp
 }
 
 function createTray() {
-  const isTray = configStorage.get('tray');
+  const isTray = config.get('tray');
 
   tray?.destroy();
 
@@ -45,7 +45,7 @@ function createTray() {
     return;
   }
 
-  const files: FileObject[] = configStorage.get('files') as FileObject[] || [];
+  const files: FileObject[] = config.get('files') as FileObject[] || [];
   const iconName: string = process.platform === 'win32' ? 'tray.ico' : 'tray.png';
   const menu: Electron.Menu = Menu.buildFromTemplate(createMenuTemplate(files));
 

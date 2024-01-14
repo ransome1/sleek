@@ -10,7 +10,7 @@ import './Filters.scss';
 
 const { store, ipcRenderer } = window.api;
 
-const visibleSettings = {
+const visibleSettings: VisibleSettings = {
   showCompleted: {
     style: 'toggle',
   },
@@ -57,7 +57,7 @@ const DrawerFilters: React.FC<DrawerFiltersProps> = ({
               control={
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
-                  checked={settings[settingName as keyof Settings]}
+                  checked={!!settings[settingName as keyof Settings]}
                   onChange={(event) => handleChange(settingName, event.target.checked)}
                   name={settingName}
                 />
@@ -66,7 +66,7 @@ const DrawerFilters: React.FC<DrawerFiltersProps> = ({
                 settingValue.help ? (
                   <>
                     {t(`drawer.filters.${settingName}`)}
-                    <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
+                    <Link onClick={(event) => settingValue.help && handleHelpClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   </>

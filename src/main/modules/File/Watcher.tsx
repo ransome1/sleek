@@ -1,6 +1,6 @@
 import chokidar, { FSWatcher } from 'chokidar';
 import { processDataRequest, searchString } from '../ProcessDataRequest/ProcessDataRequest';
-import { configStorage } from '../../config';
+import { config } from '../../config';
 import { eventListeners } from '../../main';
 
 let watcher: FSWatcher | null = null;
@@ -33,7 +33,7 @@ function createFileWatcher(files: FileObject[]): void {
     .on('unlink', (file) => {
       console.log(`Unlinked file: ${file}`);
       const updatedFiles = files.filter((item) => item.todoFilePath !== file);
-      configStorage.set('files', updatedFiles);
+      config.set('files', updatedFiles);
     });
 
   eventListeners.watcher = watcher;

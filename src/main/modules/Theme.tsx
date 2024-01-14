@@ -1,8 +1,8 @@
 import { nativeTheme } from 'electron';
-import { configStorage } from '../config';
+import { config } from '../config';
 
 function handleTheme() {
-  const colorTheme: string = configStorage.get('colorTheme');
+  const colorTheme: string = config.get('colorTheme');
   let shouldUseDarkColors: boolean;
   if(colorTheme === 'system') {
     shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
@@ -13,7 +13,7 @@ function handleTheme() {
   } else {
     shouldUseDarkColors = false;
   }
-  configStorage.set('shouldUseDarkColors', shouldUseDarkColors);
+  config.set('shouldUseDarkColors', shouldUseDarkColors);
 }
 
 export default handleTheme;
