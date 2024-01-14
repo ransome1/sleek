@@ -27,7 +27,7 @@ jest.mock('electron', () => ({
 }));
 
 jest.mock('../../main/config', () => ({
-  configStorage: {
+  config: {
     get: jest.fn()
   },
 }));

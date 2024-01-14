@@ -6,7 +6,7 @@ jest.mock('../../main/modules/File/Write', () => ({
 }));
 
 jest.mock('../../main/config', () => ({
-  configStorage: {
+  config: {
     get: jest.fn(),
   }
 }));

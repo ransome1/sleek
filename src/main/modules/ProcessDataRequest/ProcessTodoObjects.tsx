@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import * as FilterLang from '../Filters/FilterLang.js';
 import { runQuery } from '../Filters/FilterQuery.js';
+import { createTodoObject } from './CreateTodoObjects';
 import { config } from '../../config';
 
 function countTodoObjects(todoObjects: TodoObject[], completed: boolean): number {
@@ -12,6 +13,16 @@ function countTodoObjects(todoObjects: TodoObject[], completed: boolean): number
     }
   });
   return filteredTodoObjects.length;
+}
+
+function checkForSearchMatches(todoString: string, searchString: string): boolean {
+  try {
+    const todoObject = createTodoObject(-1, todoString);
+    const query = FilterLang.parse(searchString);
+    return runQuery(todoObject, query);
+  } catch (error) {
+    return todoString.toLowerCase().includes(searchString);
+  }
 }
 
 function applySearchString(searchString: string, todoObjects: TodoObject[]): TodoObject[] {
@@ -147,5 +158,6 @@ export {
   countTodoObjects,
   applySearchString,
   handleCompletedTodoObjects,
-  handleTodoObjectsDates
+  handleTodoObjectsDates,
+  checkForSearchMatches,
 };

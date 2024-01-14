@@ -4,6 +4,8 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import './Search.scss';
@@ -30,6 +32,16 @@ const Search: React.FC<SearchProps> = memo(({
 
   const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'));
 
+  const toggleNotify = (option) => {
+    const updatedFilters = searchFilters.map(searchFilter => {
+      if (searchFilter.label === option.label) {
+        return { ...searchFilter, notify: !option.notify }; // Set notify to true when removing
+      }
+      return searchFilter;
+    });
+    setSearchFilters(updatedFilters);
+  }
+
   const handleRemoveFilter = useCallback((event: MouseEvent, option: SearchFilter) => {
     event.stopPropagation();
     event.preventDefault();
@@ -41,7 +53,7 @@ const Search: React.FC<SearchProps> = memo(({
     event.stopPropagation();
     event.preventDefault();
     const updatedFilters = [
-      { label: value },
+      { label: value, notify: false },
       ...searchFilters.filter(searchFilter => searchFilter.label !== value)
     ];
     setSearchFilters(updatedFilters);
@@ -151,6 +163,24 @@ const Search: React.FC<SearchProps> = memo(({
                       }}
                       data-testid="header-search-autocomplete-remove"
                     />
+                    {option.notify === false ? (
+                      <NotificationsOffIcon
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleNotify(option);
+                        }}
+                        className="greyedOut"
+                        data-testid="header-search-autocomplete-notification-disable"
+                      />
+                    ) : (
+                      <NotificationsActiveIcon
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleNotify(option);
+                        }}                      
+                        data-testid="header-search-autocomplete-notification-enable"
+                      />
+                    )}
                     {typeof option !== 'string' && option.label}
                   </>
                 )}

@@ -118,6 +118,14 @@ filter.onDidChange('attributes', async () => {
   }
 });
 
+filter.onDidChange('search', async () => {
+  try {
+    await processDataRequest(searchString);
+  } catch(error: any) {
+    console.error(error);
+  }
+});
+
 config.onDidAnyChange(async(settings) => {
   try {
     await processDataRequest(searchString);
@@ -135,18 +143,6 @@ config.onDidChange('files', (newValue: FileObject[] | null) => {
   } catch (error: any) {
     console.error(error);
   }
-});
-
-config.onDidChange('windowPosition', (windowPosition) => {
-  console.log(windowPosition);
-});
-
-config.onDidChange('windowDimensions', (windowDimensions) => {
-  console.log(windowDimensions);
-});
-
-config.onDidChange('windowMaximized', (windowMaximized) => {
-  console.log(windowMaximized);
 });
 
 config.onDidChange('colorTheme', (colorTheme) => {

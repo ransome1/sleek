@@ -1,5 +1,5 @@
 import { handleNotification } from '../../main/modules/Notifications';
-import { configStorage } from '../../main/config';
+import { config } from '../../main/config';
 import { badge } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { Notification } from 'electron';
 import dayjs from 'dayjs';
@@ -27,7 +27,7 @@ jest.mock('../../main/config', () => ({
 		get: jest.fn(),
 		set: jest.fn(),
 	},
-  configStorage: {
+  config: {
     get: jest.fn((key) => {
       if(key === 'notificationsAllowed') {
         return true;
@@ -35,6 +35,10 @@ jest.mock('../../main/config', () => ({
         return 10;
       }
     }),
+    set: jest.fn(),
+  },
+  filter: {
+    get: jest.fn(),
     set: jest.fn(),
   },
 }));
@@ -69,14 +73,14 @@ describe('Notifications', () => {
 	});
 
 	test('should NOT handle notification when not allowed', () => {
-	  const configStorageGetMock = jest.fn((key) => {
+	  const configGetMock = jest.fn((key) => {
 	    if(key === 'notificationsAllowed') {
 	      return false;
 	    }
 	  });
-	  configStorage.get = configStorageGetMock;
+	  config.get = configGetMock;
 	  handleNotification('2023-10-20', 'Sample todo', badge);
-	  expect(configStorageGetMock).toHaveBeenCalledWith('notificationsAllowed');
+	  expect(configGetMock).toHaveBeenCalledWith('notificationsAllowed');
 	  expect(Notification).not.toHaveBeenCalled();
 	  expect(badge.count).toBe(3);
 	});

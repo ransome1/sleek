@@ -16,7 +16,7 @@ jest.mock('../../main/main', () => ({
 }));
 
 jest.mock('../../main/config', () => ({
-  configStorage: {
+  config: {
     get: jest.fn(() => {
       return [
         { active: false, todoFilePath: './src/__tests__/__mock__/test1.txt', todoFileName: 'test1.txt', todoFileBookmark: null, doneFilePath: './src/__tests__/__mock__/done.txt', doneFileBookmark: null },

@@ -1,7 +1,7 @@
 import { sortAndGroupTodoObjects, flattenTodoObjects, applySearchString, countTodoObjects } from '../../main/modules/ProcessDataRequest/ProcessTodoObjects';
 
 jest.mock('../../main/config', () => ({
-  configStorage: {
+  config: {
     get: jest.fn().mockReturnValue([
       {
         active: true,

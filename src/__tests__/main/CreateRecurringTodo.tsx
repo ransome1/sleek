@@ -7,7 +7,7 @@ jest.mock('../../main/modules/ProcessDataRequest/CreateTodoObjects', () => ({
 }));
 
 jest.mock('../../main/config', () => ({
-  configStorage: {
+  config: {
     get: jest.fn().mockReturnValue([
       {
         active: true,

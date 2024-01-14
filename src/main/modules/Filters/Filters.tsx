@@ -4,7 +4,6 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoO
       if(filterArray.length === 0) {
         return true;
       }
-
       const attributeValues: any = ['due', 't'].includes(key) ? todoObject[key as keyof TodoObject] : todoObject[key as keyof TodoObject];
       return filterArray.every(({ value, exclude }: Filter) => {
         if(

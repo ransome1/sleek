@@ -7,7 +7,6 @@ import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
 import { addFile } from './modules/File/File';
 import { createTray } from './modules/Tray';
-import debounce from 'lodash/debounce';
 import './modules/IpcMain';
 
 const environment: string | undefined = process.env.NODE_ENV;

@@ -1,5 +1,5 @@
 import path from 'path'
-import { configStorage } from '../../main/config';
+import { config } from '../../main/config';
 import { addFile, removeFile, setFile } from '../../main/modules/File/File';
 
 jest.mock('../../main/main', () => ({
@@ -23,7 +23,7 @@ jest.mock('../../main/modules/Menu', () => ({
 }));
 
 jest.mock('../../main/config', () => ({
-  configStorage: {
+  config: {
     get: jest.fn().mockReturnValue([
       { active: false, todoFileName: 'test1.txt', todoFilePath: path.join('/', 'path', 'to', 'test1.txt'), todoFileBookmark: null, doneFilePath: null, doneFileBookmark: null },
       { active: true, todoFileName: 'test2.txt', todoFilePath: path.join('/', 'path', 'to', 'test2.txt'), todoFileBookmark: null, doneFilePath: null, doneFileBookmark: null },
@@ -40,8 +40,8 @@ describe('File functions', () => {
 
   test('addFile should add a new file to the config storage', () => {
     addFile(path.join('/', 'path', 'to', 'test4.txt'), null);
-    expect(configStorage.set).toHaveBeenCalledTimes(1);
-    expect(configStorage.set).toHaveBeenCalledWith('files', [
+    expect(config.set).toHaveBeenCalledTimes(1);
+    expect(config.set).toHaveBeenCalledWith('files', [
       {
         active: false,
         todoFileName: 'test1.txt',
@@ -79,8 +79,8 @@ describe('File functions', () => {
   
   test('removeFile should remove a file from the config storage, the active file stays unchanged', () => {
     removeFile(1);
-    expect(configStorage.set).toHaveBeenCalledTimes(1);
-    expect(configStorage.set).toHaveBeenCalledWith('files', [
+    expect(config.set).toHaveBeenCalledTimes(1);
+    expect(config.set).toHaveBeenCalledWith('files', [
       {
         active: false,
         todoFileName: 'test1.txt',
@@ -110,8 +110,8 @@ describe('File functions', () => {
 
   test('removeFile should remove the active file from the config storage, a new active file is defined', () => {
     removeFile(2);
-    expect(configStorage.set).toHaveBeenCalledTimes(1);
-    expect(configStorage.set).toHaveBeenCalledWith('files', [
+    expect(config.set).toHaveBeenCalledTimes(1);
+    expect(config.set).toHaveBeenCalledWith('files', [
       {
         active: true,
         todoFileName: 'test1.txt',
@@ -133,8 +133,8 @@ describe('File functions', () => {
 
   test('setFile should set a file as active in the config storage', () => {
     setFile(1);
-    expect(configStorage.set).toHaveBeenCalledTimes(1);
-    expect(configStorage.set).toHaveBeenCalledWith('files', [
+    expect(config.set).toHaveBeenCalledTimes(1);
+    expect(config.set).toHaveBeenCalledWith('files', [
       {
         active: false,
         todoFileName: 'test1.txt',

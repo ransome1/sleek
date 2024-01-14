@@ -24,7 +24,10 @@
 			svg {
 				color: $blue;
 				margin-right: 0.5em;
-			} 
+				&.greyedOut {
+					color: $dark-grey;
+				}
+			}
 		}
 	}
 }

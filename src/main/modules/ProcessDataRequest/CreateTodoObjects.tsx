@@ -72,7 +72,7 @@ async function createTodoObjects(fileContent: string | null): Promise<TodoObject
   
   const todoObjects: TodoObject[] = await Promise.all(lines.map((line, i) => {
     const todoObject: TodoObject = createTodoObject(i, line);
-    if(todoObject.due && todoObject.body && !todoObject.complete) {
+    if(todoObject.body && !todoObject.complete) {
       handleNotification(todoObject.due, todoObject.body, badge);
     }
     return todoObject;
