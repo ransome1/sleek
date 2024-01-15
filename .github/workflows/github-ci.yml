@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 18
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         env:
@@ -40,7 +40,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 18
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 18
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         with:
