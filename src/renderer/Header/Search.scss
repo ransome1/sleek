@@ -4,11 +4,6 @@
 	display: flex;
 	position: relative;
 	margin-bottom: 0.25em;
-	.MuiButton-root {
-		position: absolute;
-		top: 0.5em;
-		right: 3.5em;
-	}
 	.MuiAutocomplete-root {
 		flex-direction: row;
 		flex: 1;

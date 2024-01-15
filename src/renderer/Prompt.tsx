@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -39,7 +39,7 @@ const Prompt: React.FC<Props> = ({
   return (
     <Dialog open={open} onClose={onClose}>
       {promptItem?.headline && <DialogTitle>{promptItem.headline}</DialogTitle>}
-      {promptItem?.text && <DialogContent><p>{promptItem.text}</p></DialogContent>}
+      {promptItem?.text && <DialogContent><Fragment><p dangerouslySetInnerHTML={{ __html: promptItem.text }} /></Fragment></DialogContent>}
       <DialogActions>
         <Button 
           onClick={onClose}

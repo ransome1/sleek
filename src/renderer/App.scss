@@ -1,26 +1,20 @@
 @import "Variables.scss";
 @import "Coloring.scss";
 
-@font-face {
-  font-family: "FreeSans";
-  src: url("../../assets/fonts/FreeSans.otf") format("opentype");
-  src: url("../../assets/fonts/FreeSans.ttf") format("truetype");
-}
-@font-face {
-  font-family: "FreeSansBold";
-  src: url("../../assets/fonts/FreeSansBold.otf") format("opentype");
-  src: url("../../assets/fonts/FreeSansBold.ttf") format("truetype");
-}
-
 body {
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  font-family: "Helvetica, Arial, Sans-Serif";
   code {
+    font-size: 0.9em;
     background: $lighter-grey;
-    color: $mid-grey;
+    color: $dark-grey;
+    border-radius: 0.25em;
+    padding: 0.25em;
+    white-space: nowrap;
   }
   #root {
     .flexContainer {
@@ -62,7 +56,7 @@ body {
   }
 
   h1, h2, h3, h4, h5 {
-    font-family: $font-family-bold;
+    font-weight: bold;
   }
 
   *::-webkit-scrollbar {

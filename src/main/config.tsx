@@ -118,13 +118,13 @@ filter.onDidChange('attributes', async () => {
   }
 });
 
-filter.onDidChange('search', async () => {
-  try {
-    await processDataRequest(searchString);
-  } catch(error: any) {
-    console.error(error);
-  }
-});
+// filter.onDidChange('search', async () => {
+//   try {
+//     await processDataRequest(searchString);
+//   } catch(error: any) {
+//     console.error(error);
+//   }
+// });
 
 config.onDidAnyChange(async(settings) => {
   try {

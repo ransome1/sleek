@@ -30,6 +30,20 @@ function createSpeakingDifference(dueDate: Dayjs) {
   return 'Due';
 }
 
+function isNotificationSuppressed(searchFilters, body) {
+  let suppressNotification = false;
+  for (const searchFilter of searchFilters) {
+    if (searchFilter.label && searchFilter.suppress) {
+      const match = checkForSearchMatches(body, searchFilter.label);
+      if (match) {
+        suppressNotification = true;
+        break;
+      }
+    }
+  }
+  return suppressNotification;
+}
+
 function handleNotification(due: string | null, body: string, badge: Badge) {
   const notificationAllowed = config.get('notificationsAllowed');
   
@@ -40,35 +54,18 @@ function handleNotification(due: string | null, body: string, badge: Badge) {
     const notificationThreshold: number = config.get('notificationThreshold');
     const hash = todayString + crypto.createHash('sha256').update(body).digest('hex');
     const searchFilters: SearchFilter[] = filter.get('search') || [];
-    
-    let searchFilterMatch;
-    for (const searchFilter of searchFilters) {
-      if (searchFilter.notify && searchFilter.label) {
-        const match = checkForSearchMatches(body, searchFilter.label);
-        if (match) {
-          searchFilterMatch = {
-            label: searchFilter.label,
-          };
-          break;
-        }
-      }
-    }
-        
-    let title: string;
-    if(dueDate.isToday() || dueDate.isBetween(today, today.add(notificationThreshold, 'day'))) {
-      title = createSpeakingDifference(dueDate)
-    } else if(searchFilterMatch && searchFilterMatch.label) {
-      title = `Matched "${searchFilterMatch.label}"`;
-    } else {
-      return;
-    }
 
-    badge.count += 1;
-    const notifiedTodoObjects = new Set<string>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
-    if(!notifiedTodoObjects.has(hash)) {
-      sendNotification(title, body);
-      notifiedTodoObjects.add(hash);
-      notifiedTodoObjectsStorage.set('notifiedTodoObjects', Array.from(notifiedTodoObjects));
+    if(isNotificationSuppressed(searchFilters, body)) return;
+        
+    if(dueDate.isToday() || dueDate.isBetween(today, today.add(notificationThreshold, 'day'))) {
+      badge.count += 1;
+      const title = createSpeakingDifference(dueDate);
+      const notifiedTodoObjects = new Set<string>(notifiedTodoObjectsStorage.get('notifiedTodoObjects', []));
+      if(!notifiedTodoObjects.has(hash)) {
+        sendNotification(title, body);
+        notifiedTodoObjects.add(hash);
+        notifiedTodoObjectsStorage.set('notifiedTodoObjects', Array.from(notifiedTodoObjects));
+      }
     }
   }
 }

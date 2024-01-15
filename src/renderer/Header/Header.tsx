@@ -16,7 +16,7 @@ const HeaderComponent: React.FC<Props> = memo(({
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       const isSearchFocused = document.activeElement === searchFieldRef.current;
-      if ((event.metaKey || event.ctrlKey) && event.key === 'f' && settings.isSearchOpen && !isSearchFocused) {
+      if ((event.metaKey || event.ctrlKey) && !event.shiftKey && event.key === 'f' && settings.isSearchOpen && !isSearchFocused) {
         event.preventDefault();
         searchFieldRef.current?.focus();
       }

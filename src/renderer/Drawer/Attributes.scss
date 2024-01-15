@@ -14,7 +14,7 @@
 		}
 	}
 	h3 {
-		font-family: 'FreeSansBold';
+		font-weight: bold;
 		padding: 0;
 		margin: 0;
 	}
@@ -67,7 +67,7 @@
 		}
 		.MuiBadge-badge {
 			z-index: 10;
-			font-family: 'FreeSansBold';
+			font-weight: bold;
 			font-size: 0.75em;
 		}
 		button:disabled {
@@ -87,7 +87,7 @@
 		button {
 			min-width: 1.75em;
 			font-size: 1.25em;
-			font-family: 'FreeSansBold';
+			font-weight: bold;
 			padding: 0.1em 0.65em;
 		}
 	}

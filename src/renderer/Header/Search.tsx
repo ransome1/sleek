@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useCallback, memo, MouseEvent } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
@@ -18,6 +24,7 @@ interface SearchProps extends WithTranslation {
   searchString: string;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
   searchFieldRef: React.RefObject<HTMLInputElement>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PrompItem>>;
   t: typeof i18n.t;
 }
 
@@ -27,33 +34,45 @@ const Search: React.FC<SearchProps> = memo(({
   searchString,
   setSearchString,
   searchFieldRef,
+  setPromptItem,
   t,
 }) => {
 
   const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'));
+  const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
 
-  const toggleNotify = (option) => {
+  const toggleSuppress = (option) => {
     const updatedFilters = searchFilters.map(searchFilter => {
       if (searchFilter.label === option.label) {
-        return { ...searchFilter, notify: !option.notify }; // Set notify to true when removing
+        return { ...searchFilter, suppress: !option.suppress };
       }
       return searchFilter;
     });
     setSearchFilters(updatedFilters);
   }
 
-  const handleRemoveFilter = useCallback((event: MouseEvent, option: SearchFilter) => {
-    event.stopPropagation();
-    event.preventDefault();
+  const handleDeleteFilterConfirm = (option) => {
     const updatedFilters = searchFilters.filter(searchFilter => searchFilter.label !== option.label);
     setSearchFilters(updatedFilters);
+  };
+
+  const handleDeleteFilter = useCallback((event: MouseEvent, option: SearchFilter) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setPromptItem({
+      id: 'confirmSearchFilterDelete',
+      headline: 'Delete search filter',
+      text: `This will delete search filter <code>${option.label}</code>`,
+      button1: 'Delete',
+      onButton1: () => handleDeleteFilterConfirm(option),
+    });
   }, [searchFilters]);
 
   const handleAddNewFilter = useCallback((event: React.SyntheticEvent, value: string) => {
     event.stopPropagation();
     event.preventDefault();
     const updatedFilters = [
-      { label: value, notify: false },
+      { label: value, suppress: false },
       ...searchFilters.filter(searchFilter => searchFilter.label !== value)
     ];
     setSearchFilters(updatedFilters);
@@ -64,18 +83,6 @@ const Search: React.FC<SearchProps> = memo(({
       ipcRenderer.send('writeTodoToFile', -1, searchString);
     }
   }, [searchString]);
-
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    const isSearchFocused = document.activeElement === searchFieldRef.current;
-    if (searchString && isSearchFocused && event.key === 'Escape') {
-      setSearchString('');
-    } else if (!searchString && isSearchFocused && event.key === 'Escape') {
-      const isSearchOpen = !settings.isSearchOpen;
-      store.setConfig('isSearchOpen', isSearchOpen);
-    } else if (isSearchFocused && searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
-      handleAddTodo();
-    }
-  }, [searchFieldRef, searchString, settings.isSearchOpen]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -99,9 +106,34 @@ const Search: React.FC<SearchProps> = memo(({
     }
   }, [settings.isSearchOpen, searchFieldRef]);
 
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    const isSearchFocused = document.activeElement === searchFieldRef.current;
+    if(!isAutocompleteOpen && isSearchFocused && event.key === 'ArrowDown') {
+      setIsAutocompleteOpen(true);
+    } else if (searchString && isSearchFocused && event.key === 'Escape') {
+      setSearchString('');
+    } else if (!searchString && isSearchFocused && event.key === 'Escape') {
+      const isSearchOpen = !settings.isSearchOpen;
+      store.setConfig('isSearchOpen', isSearchOpen);
+    } else if (isSearchFocused && searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+      handleAddTodo();
+    } else if((event.metaKey || event.ctrlKey) && event.shiftKey && event.key === 'f') {
+      searchFieldRef?.current?.focus();
+      setIsAutocompleteOpen(!isAutocompleteOpen);
+    }
+  }, [searchFieldRef, searchString, settings.isSearchOpen, isAutocompleteOpen]);
+
+  const handleKeyUp = useCallback((event: KeyboardEvent) => {
+    if(isAutocompleteOpen && (event.key === 'Escape' || event.key === 'Enter')) {
+      setIsAutocompleteOpen(false);
+    }
+  }, [isAutocompleteOpen]);    
+
   useEffect(() => {
+    document.addEventListener('keyup', handleKeyUp);
     document.addEventListener('keydown', handleKeyDown);
     return () => {
+      document.removeEventListener('keyup', handleKeyUp);
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyDown]);
@@ -112,12 +144,17 @@ const Search: React.FC<SearchProps> = memo(({
         <div id='search' className={settings.isSearchOpen ? 'active' : ''}>
           <Autocomplete
             freeSolo
+            autoHighlight
+            open={isAutocompleteOpen}
+            inputValue={searchString}      
+            options={searchFilters}
+            onBlur={() => setIsAutocompleteOpen(false)}
             onChange={(event, value: string | SearchFilter | null) => {
+              setIsAutocompleteOpen(false)
               if (value && typeof value !== 'string' && value.inputValue) {
                 handleAddNewFilter(event, value.inputValue);
               }
             }}
-            options={searchFilters}
             filterOptions={(options: (string | SearchFilter)[], params) => {
               const filter = createFilterOptions<SearchFilter>();
               const filtered: SearchFilter[] = filter(options as SearchFilter[], params);
@@ -131,7 +168,6 @@ const Search: React.FC<SearchProps> = memo(({
               }
               return filtered;
             }}
-            inputValue={searchString}
             onInputChange={(_, value) => setSearchString(value)}
             getOptionLabel={(option: SearchFilter | string): string => {
               if (typeof option === 'string') {
@@ -158,25 +194,25 @@ const Search: React.FC<SearchProps> = memo(({
                       onClick={(event) => {
                         event.stopPropagation();
                         if(typeof option !== 'string') {
-                          handleRemoveFilter(event, option);
+                          handleDeleteFilter(event, option);
                         }
                       }}
                       data-testid="header-search-autocomplete-remove"
                     />
-                    {option.notify === false ? (
+                    {option.suppress === false ? (
                       <NotificationsOffIcon
                         onClick={(event) => {
                           event.stopPropagation();
-                          toggleNotify(option);
+                          toggleSuppress(option);
                         }}
                         className="greyedOut"
                         data-testid="header-search-autocomplete-notification-disable"
                       />
                     ) : (
-                      <NotificationsActiveIcon
+                      <NotificationsOffIcon
                         onClick={(event) => {
                           event.stopPropagation();
-                          toggleNotify(option);
+                          toggleSuppress(option);
                         }}                      
                         data-testid="header-search-autocomplete-notification-enable"
                       />
@@ -187,26 +223,56 @@ const Search: React.FC<SearchProps> = memo(({
               </li>
             )}
             renderInput={(params) => (
-              <>
+              <>           
                 <TextField
                   {...params}
                   data-testid="header-search-textfield"
                   placeholder={`${t('search.visibleTodos')} ${headers?.visibleObjects}`}
                   inputRef={searchFieldRef}
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        {searchFilters.length > 0 || searchString ? (
+                          <IconButton 
+                            tabIndex={0}
+                            onClick={() => setIsAutocompleteOpen(!isAutocompleteOpen)} 
+                            data-testid="header-search-clear-icon"
+                          >
+                            {isAutocompleteOpen ? (
+                              <ArrowDropUpIcon />
+                            ) : (
+                              <ArrowDropDownIcon />
+                            )}
+                          </IconButton>
+                        ) : (
+                          <IconButton 
+                            disabled 
+                            data-testid="header-search-clear-icon"
+                          >
+                            <ArrowDropDownIcon style={{ color: 'gray' }} />
+                          </IconButton>
+                        )}
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {searchString && searchString.length > 0 && (
+                          <Button onClick={handleAddTodo} data-testid="header-search-textfield-add-todo">
+                            <AddIcon />
+                            {t('search.addAsTodo')}
+                          </Button>
+                        )}
+                        <IconButton tabIndex={0} onClick={() => setSearchString('')} data-testid="header-search-clear-icon">
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}                  
                 />
               </>
             )}
           />
-          {searchString && searchString.length > 0 && (
-            <>
-              <Button
-                onClick={handleAddTodo}
-                data-testid="header-search-textfield-add-todo"
-              >
-                {t('search.addAsTodo')}
-              </Button>
-            </>
-          )}
         </div>
       )}
     </>

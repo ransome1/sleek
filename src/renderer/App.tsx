@@ -134,6 +134,7 @@ const App = () => {
                     setSearchString={setSearchString}
                     settings={settings}
                     searchFieldRef={searchFieldRef}
+                    setPromptItem={setPromptItem}
                   />
                   <HeaderComponent
                     settings={settings}
