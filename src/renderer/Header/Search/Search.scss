@@ -1,0 +1,12 @@
+@import "../../Variables.scss";
+
+#search {
+	display: flex;
+	position: relative;
+	margin-bottom: 0.25em;
+	.MuiAutocomplete-root {
+		flex-direction: row;
+		flex: 1;
+		margin: 0 1em 0.25em 1em;
+	}
+}

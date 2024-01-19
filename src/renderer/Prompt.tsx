@@ -39,7 +39,12 @@ const Prompt: React.FC<Props> = ({
   return (
     <Dialog open={open} onClose={onClose}>
       {promptItem?.headline && <DialogTitle>{promptItem.headline}</DialogTitle>}
-      {promptItem?.text && <DialogContent><Fragment><p dangerouslySetInnerHTML={{ __html: promptItem.text }} /></Fragment></DialogContent>}
+      {promptItem?.text && 
+      <DialogContent>
+        <Fragment>
+          <span dangerouslySetInnerHTML={{ __html: promptItem.text }} />
+        </Fragment>
+      </DialogContent>}
       <DialogActions>
         <Button 
           onClick={onClose}

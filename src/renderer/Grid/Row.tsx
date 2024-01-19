@@ -43,7 +43,7 @@ const Row: React.FC<Props> = memo(({
     if(todoObject) ipcRenderer.send('saveToClipboard', todoObject?.string);
   };
 
-  const handleContextMenu = (event: React.MouseEvent) => {
+  const handleContextMenu = (event: React.MouseEvent, todoString: string) => {
     setContextMenu({
       event: event,
       items: [
@@ -58,7 +58,7 @@ const Row: React.FC<Props> = memo(({
           promptItem: {
             id: 'delete',
             headline: t('prompt.delete.headline'),
-            text: t('prompt.delete.text'),
+            text: `${t('prompt.delete.text')}: <code>${todoString}</code>`,
             button1: t('delete'),
             onButton1: handleConfirmDelete,
           }
@@ -85,7 +85,7 @@ const Row: React.FC<Props> = memo(({
       setPromptItem({
         id: 'delete',
         headline: t('prompt.delete.headline'),
-        text: t('prompt.delete.text'),
+        text: `${t('prompt.delete.text')}: <code>${todoObject.string}</code>`,
         button1: t('delete'),
         onButton1: handleConfirmDelete,
       });
@@ -119,7 +119,7 @@ const Row: React.FC<Props> = memo(({
         data-hidden={todoObject.hidden}
         onClick={(event) => handleRowClick(event)}
         onKeyDown={(event) => handleRowClick(event)}
-        onContextMenu={handleContextMenu}
+        onContextMenu={(event) => handleContextMenu(event, todoObject.string)}
         data-todotxt-attribute="priority"
         data-todotxt-value={todoObject.priority}
         data-testid={`datagrid-row`}

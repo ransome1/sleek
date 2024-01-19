@@ -1,0 +1,10 @@
+.MuiAutocomplete-root {	
+	.MuiButtonBase-root {
+		svg.invert {
+			transform: rotate(180deg);
+		}
+		&.addAsTodo {
+			margin-right: 0.5em;
+		}
+	}
+}

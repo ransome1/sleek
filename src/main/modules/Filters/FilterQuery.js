@@ -110,7 +110,7 @@ function runQuery(todoObject, compiledQuery) {
       case "++":
         next = q.shift();
         if(next === "*") {
-          stack.push(todoObject.projects ? true : false);
+          stack.push(todoObject.projects.length > 0);
         } else if(next.startsWith('"')) {
           stack.push(todoObject.projects && todoObject.projects.includes(next.slice(1,-1)));
         } else {
@@ -124,7 +124,7 @@ function runQuery(todoObject, compiledQuery) {
       case "@@":
         next = q.shift();
         if(next === "*") {
-          stack.push(todoObject.contexts ? true : false);
+          stack.push(todoObject.contexts.length > 0);
         } else if(next.startsWith('"')) {
           stack.push(todoObject.contexts && todoObject.contexts.includes(next.slice(1,-1)));
         } else {

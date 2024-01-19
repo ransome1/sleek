@@ -10,14 +10,15 @@ body {
   font-family: "Helvetica, Arial, Sans-Serif";
   code {
     font-size: 0.9em;
-    background: $lighter-grey;
-    color: $dark-grey;
+    
+    background-color: rgba(18, 18, 18, 0.15);
     border-radius: 0.25em;
     padding: 0.25em;
     white-space: nowrap;
   }
   #root {
     .flexContainer {
+      min-width: 25em;
       display: flex;
       flex-direction: row;
       margin-left: 5em;

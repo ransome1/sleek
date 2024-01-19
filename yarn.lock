@@ -1619,7 +1619,7 @@
   dependencies:
     "@babel/runtime" "^7.23.7"
 
-"@mui/material@^5.0.0", "@mui/material@^5.14.0":
+"@mui/material@^5.0.0", "@mui/material@^5.15.4":
   version "5.15.4"
   resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.15.4.tgz#354e0972fc89207926e9e53cc9cb349049873517"
   integrity sha512-T/LGRAC+M0c+D3+y67eHwIN5bSje0TxbcJCWR0esNvU11T0QwrX3jedXItPNBwMupF2F5VWCDHBVLlFnN3+ABA==

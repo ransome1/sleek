@@ -149,7 +149,6 @@ const AutoSuggest: React.FC<AutoSuggestProps> = ({
         getSuggestionValue={(suggestion: string) => suggestion}
         renderSuggestion={handleRenderSuggestion}
         onSuggestionSelected={handleSuggestionSelected}
-        //onSuggestionHighlighted={handleSuggestionHighlighted}
         inputProps={inputProps}
         focusInputOnSuggestionClick={true}
       />

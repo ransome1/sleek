@@ -206,7 +206,7 @@ declare global {
     title?: string,
     label?: string,
     inputValue?: string,
-    notify?: boolean,
+    suppress?: boolean,
   }
 
   type VisibleSetting = {

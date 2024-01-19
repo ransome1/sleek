@@ -30,7 +30,7 @@ function createSpeakingDifference(dueDate: Dayjs) {
   return 'Due';
 }
 
-function isNotificationSuppressed(searchFilters, body) {
+function isNotificationSuppressed(searchFilters: SearchFilter[], body: string) {
   let suppressNotification = false;
   for (const searchFilter of searchFilters) {
     if (searchFilter.label && searchFilter.suppress) {

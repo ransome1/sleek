@@ -116,7 +116,11 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                           selected ? 'selected' : ''
                         } ${excluded ? 'excluded' : ''}`}
                       >
-                        <Badge badgeContent={attributes[key][value].count} className={notify ? 'notify' : null }>
+                        <Badge 
+                          badgeContent={attributes[key][value].count}
+                          className={notify ? 'notify' : null }
+                          onClick={() => handleFilterSelect(key, value, filters, true)}
+                        >
                           <Button
                             className="attribute"
                             data-testid={`drawer-button-${key}`}
