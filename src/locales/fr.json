@@ -22,7 +22,7 @@
   "settings.dark": "Sombre",
   "settings.language": "Langue",
   "settings.notificationThreshold": "Umbral de notificación",
-  "settings.bulkTodoCreation": "Chaque ligne dans le champ de texte crée un élément de tâche séparé",
+  "settings.bulkTodoCreation": "Le texte sur plusieurs lignes crée des tâches séparées",
   "settings.matomo": "Autoriser l'analyse Matomo",
   "settings.zoom": "Zoom",
   "settings.disableAnimations": "Désactiver les animations",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Réinitialiser les filtres et la recherche",
   "search.visibleTodos": "Tâches visibles : ",
   "search.addAsTodo": "Ajouter en tant que tâche",
+  "search.filters.create": "Créer un filtre de recherche",
   "todoDialog.footer.add": "Ajouter",
   "todoDialog.footer.update": "Mettre à jour",
   "todoDialog.footer.cancel": "Annuler",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "Cela déplacera toutes les tâches terminées vers votre fichier d'archivage spécifié",
   "prompt.archive.button": "Archiver",
   "prompt.archive.changeFile.headline": "Choisissez un fichier pour archiver",
-  "prompt.archive.changeFile.text": "Pour archiver les tâches terminées, vous devez d'abord choisir un fichier d'archivage."
+  "prompt.archive.changeFile.text": "Pour archiver les tâches terminées, vous devez d'abord choisir un fichier d'archivage.",
+  "prompt.searchFilters.delete.body": "Supprimer le filtre de recherche"
 }

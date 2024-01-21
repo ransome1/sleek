@@ -22,7 +22,7 @@
   "settings.dark": "डार्क",
   "settings.language": "भाषा",
   "settings.notificationThreshold": "सूचना सीमा",
-  "settings.bulkTodoCreation": "पाठ क्षेत्र में प्रत्येक पंक्ति स्वतंत्र टूडू आइटम बनाती है",
+  "settings.bulkTodoCreation": "बहु-पंक्तिक टेक्स्ट से अलग-अलग कार्य बनाएं",
   "settings.matomo": "मैटोमो विश्लेषण की अनुमति दें",
   "settings.zoom": "ज़ूम",
   "settings.disableAnimations": "एनिमेशन अक्षम करें",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "फ़िल्टर और खोज को रीसेट करें",
   "search.visibleTodos": "दिखाई देने वाले कार्य: ",
   "search.addAsTodo": "काम के रूप में जोड़ें",
+  "search.filters.create": "खोज फ़िल्टर बनाएं",
   "todoDialog.footer.add": "जोड़ें",
   "todoDialog.footer.update": "अपडेट करें",
   "todoDialog.footer.cancel": "रद्द करें",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "इससे सभी पूर्ण हुई कार्यों को आपके निर्दिष्ट आर्काइव फ़ाइल में मूव किया जाएगा",
   "prompt.archive.button": "संग्रहित करें",
   "prompt.archive.changeFile.headline": "आर्काइव के लिए एक फ़ाइल चुनें",
-  "prompt.archive.changeFile.text": "पूर्ण हुए कार्यों को आर्काइव करने के लिए, आपको पहले एक आर्काइव फ़ाइल चुननी होगी।"
+  "prompt.archive.changeFile.text": "पूर्ण हुए कार्यों को आर्काइव करने के लिए, आपको पहले एक आर्काइव फ़ाइल चुननी होगी।",
+  "prompt.searchFilters.delete.body": "खोज फ़िल्टर हटाएं"
 }

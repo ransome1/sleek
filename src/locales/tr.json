@@ -22,8 +22,8 @@
   "settings.dark": "Koyu",
   "settings.language": "Dil",
   "settings.notificationThreshold": "Bildirim Eşik Değeri",
-  "settings.bulkTodoCreation": "Metin alanındaki her satır ayrı bir görev oluşturur",
-  "settings.matomo": "Matomo Analizine İzin Ver",
+  "settings.bulkTodoCreation": "Çoklu satır metin ayrı görevler oluşturur",
+  "settings.matomo": "Matomo analitiğine izin ver",
   "settings.zoom": "Yakınlaştırma",
   "settings.disableAnimations": "Animasyonları devre dışı bırak",
   "drawer.tabs.attributes": "Özellikler",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Filtreleri ve aramayı sıfırla",
   "search.visibleTodos": "Görünür görevler: ",
   "search.addAsTodo": "Görev olarak ekle",
+  "search.filters.create": "Arama filtresi oluştur",
   "todoDialog.footer.add": "Ekle",
   "todoDialog.footer.update": "Güncelle",
   "todoDialog.footer.cancel": "İptal",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "Bu, tüm tamamlanan görevleri belirttiğiniz arşiv dosyanıza taşıyacaktır",
   "prompt.archive.button": "Arşivle",
   "prompt.archive.changeFile.headline": "Arşivlemek için bir dosya seçin",
-  "prompt.archive.changeFile.text": "Tamamlanan görevleri arşivlemek için önce bir arşiv dosyası seçmeniz gerekiyor."
+  "prompt.archive.changeFile.text": "Tamamlanan görevleri arşivlemek için önce bir arşiv dosyası seçmeniz gerekiyor.",
+  "prompt.searchFilters.delete.body": "Arama filtresini sil"
 }

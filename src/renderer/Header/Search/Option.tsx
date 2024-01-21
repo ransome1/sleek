@@ -20,24 +20,6 @@ const toggleSuppress = (
   setSearchFilters(updatedFilters);
 };
 
-const handleDeleteFilter = (
-  event: MouseEvent,
-  option: SearchFilter,
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>,
-  searchFilters: SearchFilter[],
-  setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter[]>>
-) => {
-  event.stopPropagation();
-  event.preventDefault();
-  setPromptItem({
-    id: 'confirmSearchFilterDelete',
-    headline: 'Delete search filter',
-    text: `This will delete search filter <code>${option.label}</code>`,
-    button1: 'Delete',
-    onButton1: () => handleDeleteFilterConfirm(option, searchFilters, setSearchFilters),
-  });
-};
-
 const handleDeleteFilterConfirm = (
   option: SearchFilter,
   searchFilters: SearchFilter[],
@@ -54,6 +36,7 @@ interface OptionComponentProps extends WithTranslation {
   setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter[]>>;
   isAutocompleteOpen: boolean;
   setIsAutocompleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  t: typeof i18n.t;
 }
 
 const OptionComponent: React.FC<OptionComponentProps> = memo(({
@@ -63,8 +46,28 @@ const OptionComponent: React.FC<OptionComponentProps> = memo(({
   setSearchFilters,
   isAutocompleteOpen,
   setIsAutocompleteOpen,
+  t,
   ...props
 }) => {
+
+  const handleDeleteFilter = (
+    event: MouseEvent,
+    option: SearchFilter,
+    setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>,
+    searchFilters: SearchFilter[],
+    setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter[]>>,
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setPromptItem({
+      id: 'confirmSearchFilterDelete',
+      headline: t('delete'),
+      text: `${t('prompt.searchFilters.delete.body')} <code>${option.label}</code>`,
+      button1: t('delete'),
+      onButton1: () => handleDeleteFilterConfirm(option, searchFilters, setSearchFilters),
+    });
+  };
+
   const handleKeyUp = useCallback((event: KeyboardEvent) => {
     if (isAutocompleteOpen && (event.key === 'Escape' || event.key === 'Enter')) {
       setIsAutocompleteOpen(false);

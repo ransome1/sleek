@@ -22,8 +22,8 @@
   "settings.dark": "Темная",
   "settings.language": "Язык",
   "settings.notificationThreshold": "Порог уведомлений",
-  "settings.bulkTodoCreation": "Каждая строка в текстовом поле создает отдельную задачу",
-  "settings.matomo": "Разрешить анализ Matomo",
+  "settings.bulkTodoCreation": "Многострочный текст создает отдельные задачи",
+  "settings.matomo": "Разрешить аналитику Matomo",
   "settings.zoom": "Масштаб",
   "settings.disableAnimations": "Отключить анимации",
   "drawer.tabs.attributes": "Атрибуты",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Сбросить фильтры и поиск",
   "search.visibleTodos": "Видимые задачи: ",
   "search.addAsTodo": "Добавить как задачу",
+  "search.filters.create": "Создать фильтр поиска",
   "todoDialog.footer.add": "Добавить",
   "todoDialog.footer.update": "Обновить",
   "todoDialog.footer.cancel": "Отменить",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "Это переместит все завершенные задачи в указанный вами файл архивации",
   "prompt.archive.button": "Архивировать",
   "prompt.archive.changeFile.headline": "Выберите файл для архивации",
-  "prompt.archive.changeFile.text": "Чтобы архивировать завершенные задачи, сначала выберите файл для архивации."
+  "prompt.archive.changeFile.text": "Чтобы архивировать завершенные задачи, сначала выберите файл для архивации.",
+  "prompt.searchFilters.delete.body": "Удалить фильтр поиска"
 }

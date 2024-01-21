@@ -22,8 +22,8 @@
   "settings.dark": "Scuro",
   "settings.language": "Lingua",
   "settings.notificationThreshold": "Soglia di notifica",
-  "settings.bulkTodoCreation": "Ogni riga nel campo di testo crea un'attività separata",
-  "settings.matomo": "Consenti l'analisi di Matomo",
+  "settings.bulkTodoCreation": "Il testo su più linee crea attività separate",
+  "settings.matomo": "Consenti analisi Matomo",
   "settings.zoom": "Zoom",
   "settings.disableAnimations": "Disattiva animazioni",
   "drawer.tabs.attributes": "Attributi",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Reimposta filtri e ricerca",
   "search.visibleTodos": "Compiti visibili: ",
   "search.addAsTodo": "Aggiungi come attività",
+  "search.filters.create": "Crea filtro di ricerca",
   "todoDialog.footer.add": "Aggiungi",
   "todoDialog.footer.update": "Aggiorna",
   "todoDialog.footer.cancel": "Annulla",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "Questo sposterà tutti i compiti completati nel tuo file di archiviazione specificato",
   "prompt.archive.button": "Archivia",
   "prompt.archive.changeFile.headline": "Scegli un file da archiviare",
-  "prompt.archive.changeFile.text": "Per archiviare i compiti completati, devi prima scegliere un file di archiviazione."
+  "prompt.archive.changeFile.text": "Per archiviare i compiti completati, devi prima scegliere un file di archiviazione.",
+  "prompt.searchFilters.delete.body": "Elimina filtro di ricerca"
 }

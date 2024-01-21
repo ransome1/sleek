@@ -11,7 +11,7 @@ import SplashScreen from './SplashScreen';
 import FileTabs from './Header/FileTabs';
 import { darkTheme, lightTheme } from './Themes';
 import DrawerComponent from './Drawer/Drawer';
-import Search from './Header/Search/Search';
+import SearchComponent from './Header/Search/Search';
 import DialogComponent from './Dialog/Dialog';
 import Archive from './Archive';
 import HeaderComponent from './Header/Header';
@@ -128,7 +128,7 @@ const App = () => {
                  /> : null}
                 {headers && headers.availableObjects > 0 ?
                 <>
-                  <Search
+                  <SearchComponent
                     headers={headers}
                     searchString={searchString}
                     setSearchString={setSearchString}

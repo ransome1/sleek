@@ -33,7 +33,6 @@ const baseTheme: Theme = createTheme({
     },
     MuiAutocomplete: {
       styleOverrides: {
-        
         paper: {
           backgroundColor: '#ebebeb',
         }

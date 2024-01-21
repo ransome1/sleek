@@ -22,10 +22,10 @@
   "settings.dark": "Dark",
   "settings.language": "Language",
   "settings.notificationThreshold": "Notification threshold",
-  "settings.bulkTodoCreation": "Each row in the text field creates a separate to-do item",
-  "settings.matomo": "Allow Matomo Analysis",
+  "settings.bulkTodoCreation": "Multi-line text creates separate todos",
+  "settings.matomo": "Allow Matomo analytics",
   "settings.zoom": "Zoom",
-  "settings.disableAnimations": "Disable animations1",
+  "settings.disableAnimations": "Disable animations",
   "drawer.tabs.attributes": "Attributes",
   "drawer.tabs.filters": "Filters",
   "drawer.tabs.sorting": "Sorting",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Reset filters and search",
   "search.visibleTodos": "Visible todos: ",
   "search.addAsTodo": "Add as todo",
+  "search.filters.create": "Create search filter",
   "todoDialog.footer.add": "Add",
   "todoDialog.footer.update": "Update",
   "todoDialog.footer.cancel": "Cancel",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "This will move all completed todos to your specified archiving file",
   "prompt.archive.button": "Archive",
   "prompt.archive.changeFile.headline": "Choose a File for Archiving",
-  "prompt.archive.changeFile.text": "To archive completed todos, you need to choose an archive file first"
+  "prompt.archive.changeFile.text": "To archive completed todos, you need to choose an archive file first",
+  "prompt.searchFilters.delete.body": "Delete search filter"
 }

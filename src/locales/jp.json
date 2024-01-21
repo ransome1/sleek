@@ -22,8 +22,8 @@
   "settings.dark": "ダーク",
   "settings.language": "言語",
   "settings.notificationThreshold": "通知しきい値",
-  "settings.bulkTodoCreation": "テキストフィールド内の各行は別々のタスクを作成します",
-  "settings.matomo": "Matomoの分析を許可",
+  "settings.bulkTodoCreation": "複数行のテキストは個別のタスクを作成します",
+  "settings.matomo": "Matomoアナリティクスを許可する",
   "settings.zoom": "ズーム",
   "settings.disableAnimations": "アニメーションを無効にする",
   "drawer.tabs.attributes": "属性",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "フィルターと検索をリセット",
   "search.visibleTodos": "表示されるタスク：",
   "search.addAsTodo": "タスクとして追加",
+  "search.filters.create": "検索フィルターを作成する",
   "todoDialog.footer.add": "追加",
   "todoDialog.footer.update": "更新",
   "todoDialog.footer.cancel": "キャンセル",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "これにより、すべての完了したタスクが指定されたアーカイブファイルに移動されます",
   "prompt.archive.button": "アーカイブ",
   "prompt.archive.changeFile.headline": "アーカイブ用のファイルを選択",
-  "prompt.archive.changeFile.text": "完了したタスクをアーカイブするには、まずアーカイブ用のファイルを選択する必要があります。"
+  "prompt.archive.changeFile.text": "完了したタスクをアーカイブするには、まずアーカイブ用のファイルを選択する必要があります。",
+  "prompt.searchFilters.delete.body": "検索フィルターを削除する"
 }

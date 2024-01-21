@@ -22,7 +22,7 @@
   "settings.dark": "暗黑",
   "settings.language": "语言",
   "settings.notificationThreshold": "通知阈值",
-  "settings.bulkTodoCreation": "文本字段中的每一行都创建一个单独的待办事项",
+  "settings.bulkTodoCreation": "多行文本创建单独的待办事项",
   "settings.matomo": "允许Matomo分析",
   "settings.zoom": "缩放",
   "settings.disableAnimations": "禁用动画",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "重置过滤器和搜索",
   "search.visibleTodos": "可见任务：",
   "search.addAsTodo": "添加为任务",
+  "search.filters.create": "创建搜索过滤器",
   "todoDialog.footer.add": "添加",
   "todoDialog.footer.update": "更新",
   "todoDialog.footer.cancel": "取消",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "这将把所有已完成的待办事项移动到您指定的归档文件中",
   "prompt.archive.button": "归档",
   "prompt.archive.changeFile.headline": "选择一个文件进行归档",
-  "prompt.archive.changeFile.text": "要归档已完成的任务，您需要首先选择一个归档文件。"
+  "prompt.archive.changeFile.text": "要归档已完成的任务，您需要首先选择一个归档文件。",
+  "prompt.searchFilters.delete.body": "删除搜索过滤器"
 }

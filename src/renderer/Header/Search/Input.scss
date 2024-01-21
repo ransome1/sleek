@@ -1,4 +1,7 @@
 .MuiAutocomplete-root {	
+	.MuiInputBase-root {
+		padding-right: 0.5em!important;
+	}
 	.MuiButtonBase-root {
 		svg.invert {
 			transform: rotate(180deg);

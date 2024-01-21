@@ -22,8 +22,8 @@
   "settings.dark": "Sötét",
   "settings.language": "Nyelv",
   "settings.notificationThreshold": "Értesítés küszöbérték",
-  "settings.bulkTodoCreation": "Minden sor külön teendőelemet hoz létre a szövegmezőben",
-  "settings.matomo": "Matomo elemzés engedélyezése",
+  "settings.bulkTodoCreation": "Többsoros szöveg külön teendőket hoz létre",
+  "settings.matomo": "Matomo analitika engedélyezése",
   "settings.zoom": "Nagyítás",
   "settings.disableAnimations": "Animációk kikapcsolása",
   "drawer.tabs.attributes": "Tulajdonságok",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Szűrők és keresés visszaállítása",
   "search.visibleTodos": "Látható feladatok: ",
   "search.addAsTodo": "Hozzáadás feladatként",
+  "search.filters.create": "Keresési szűrő létrehozása",
   "todoDialog.footer.add": "Hozzáadás",
   "todoDialog.footer.update": "Frissítés",
   "todoDialog.footer.cancel": "Mégse",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "Ez az összes befejezett teendőt a megadott archiválási fájlba fogja áthelyezni",
   "prompt.archive.button": "Archiválás",
   "prompt.archive.changeFile.headline": "Válassz fájlt az archiváláshoz",
-  "prompt.archive.changeFile.text": "A befejezett teendők archiválásához először válaszd ki az archív fájlt."
+  "prompt.archive.changeFile.text": "A befejezett teendők archiválásához először válaszd ki az archív fájlt.",
+  "prompt.searchFilters.delete.body": "Keresési szűrő törlése"
 }

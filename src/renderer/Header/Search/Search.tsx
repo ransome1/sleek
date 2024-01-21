@@ -7,20 +7,6 @@ import './Search.scss';
 
 const { ipcRenderer, store } = window.api;
 
-const filterOptions = (options: string | SearchFilter[], params) => {
-  const filter = createFilterOptions<SearchFilter>();
-  const filtered: SearchFilter[] = filter(options as SearchFilter[], params);
-  const { inputValue } = params;
-  const isExisting = filtered.some(filter => filter.label && filter.label.includes(inputValue));
-  if (inputValue !== '' && !isExisting) {
-    filtered.push({
-      inputValue,
-      title: `Create filter <code>${inputValue}</code>`,
-    });
-  }
-  return filtered;
-};
-
 const handleAddNewFilter = (
   event: React.SyntheticEvent,
   value: string,
@@ -48,26 +34,42 @@ const getOptionLabel = (option: string | SearchFilter) => {
   }
 };
 
-interface SearchProps extends WithTranslation {
+interface SearchComponentProps extends WithTranslation {
   headers: HeadersObject | null;
   settings: Settings,
   searchString: string;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
   searchFieldRef: React.RefObject<HTMLInputElement>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
+  t: typeof i18n.t;
 }
 
-const Search: React.FC<SearchProps> = memo(({
+const SearchComponent: React.FC<SearchProps> = memo(({
   headers,
   settings,
   searchString,
   setSearchString,
   searchFieldRef,
   setPromptItem,
+  t,
 }) => {
 
   const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'));
   const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
+
+  const filterOptions = (options: string | SearchFilter[], params) => {
+    const filter = createFilterOptions<SearchFilter>();
+    const filtered: SearchFilter[] = filter(options as SearchFilter[], params);
+    const { inputValue } = params;
+    const isExisting = filtered.some(filter => filter.label && filter.label.includes(inputValue));
+    if (inputValue !== '' && !isExisting) {
+      filtered.push({
+        inputValue,
+        title: `${t('search.filters.create')} <code>${inputValue}</code>`,
+      });
+    }
+    return filtered;
+  };  
 
   useEffect(() => {
     const handleSearch = () => {
@@ -159,4 +161,4 @@ const Search: React.FC<SearchProps> = memo(({
   );
 });
 
-export default withTranslation()(Search);
+export default withTranslation()(SearchComponent);

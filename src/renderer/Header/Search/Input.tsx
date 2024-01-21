@@ -46,6 +46,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(({
 }) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      event.stopPropagation();
       const isSearchFocused = document.activeElement === searchFieldRef.current;
       if (isSearchFocused && searchString && (event.metaKey || event.ctrlKey) && event.key === 'Enter') {
         handleAddTodo(searchString);

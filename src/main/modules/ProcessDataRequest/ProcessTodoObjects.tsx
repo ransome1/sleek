@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import * as FilterLang from '../Filters/FilterLang.js';
-import { runQuery } from '../Filters/FilterQuery.js';
+import { runQuery } from '../Filters/FilterQuery';
 import { createTodoObject } from './CreateTodoObjects';
 import { config } from '../../config';
 
@@ -15,7 +15,7 @@ function countTodoObjects(todoObjects: TodoObject[], completed: boolean): number
   return filteredTodoObjects.length;
 }
 
-function checkForSearchMatches(todoString: string, searchString: string): boolean {
+function checkForSearchMatches(todoString: string, searchString: string) {
   try {
     const todoObject = createTodoObject(-1, todoString);
     const query = FilterLang.parse(searchString);

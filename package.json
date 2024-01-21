@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.7-rc.4",
+  "version": "2.0.7",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",

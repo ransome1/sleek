@@ -22,7 +22,7 @@
   "settings.dark": "Oscuro",
   "settings.language": "Idioma",
   "settings.notificationThreshold": "Umbral de notificación",
-  "settings.bulkTodoCreation": "Cada línea en el campo de texto crea un elemento de tarea separado",
+  "settings.bulkTodoCreation": "El texto de varias líneas crea tareas separadas",
   "settings.matomo": "Permitir análisis de Matomo",
   "settings.zoom": "Zoom",
   "settings.disableAnimations": "Desactivar animaciones",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Restablecer filtros y búsqueda",
   "search.visibleTodos": "Tareas visibles: ",
   "search.addAsTodo": "Agregar como tarea",
+  "search.filters.create": "Crear filtro de búsqueda",
   "todoDialog.footer.add": "Agregar",
   "todoDialog.footer.update": "Actualizar",
   "todoDialog.footer.cancel": "Cancelar",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "Esto moverá todas las tareas completadas a tu archivo de archivado especificado",
   "prompt.archive.button": "Archivar",
   "prompt.archive.changeFile.headline": "Selecciona un archivo para archivar",
-  "prompt.archive.changeFile.text": "Para archivar tareas completadas, primero debes elegir un archivo de archivo."
+  "prompt.archive.changeFile.text": "Para archivar tareas completadas, primero debes elegir un archivo de archivo.",
+  "prompt.searchFilters.delete.body": "Eliminar filtro de búsqueda"
 }

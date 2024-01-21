@@ -31,22 +31,23 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
  }) => {
   const mustNotify = (attributes: Attribute[]) => attributes.some((attribute) => attribute.notify);
 
-  const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
+  //const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   const isAttributesEmpty = (attributes: Attributes | null) => {
     return !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
   };
 
-  const handleCtrlCmdDown = (event: globalThis.KeyboardEvent) => {
-    if(event.ctrlKey || event.metaKey) {
-      setIsCtrlKeyPressed(true);
-    }
-  };
+  // const handleCtrlCmdDown = (event: globalThis.KeyboardEvent) => {
+  //   if(event.ctrlKey || event.metaKey) {
+  //     setIsCtrlKeyPressed(true);
+  //   }
+  // };
 
-  const handleCtrlCmdUp = () => {
-    setIsCtrlKeyPressed(false);
-  };
+  // const handleCtrlCmdUp = () => {
+  //   setIsCtrlKeyPressed(false);
+  // };
 
   const handleAccordionToggle = (index: number) => {
     const updatedAccordionOpenState = settings.accordionOpenState;
@@ -54,24 +55,24 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
     store.setConfig('accordionOpenState', updatedAccordionOpenState);
   };
 
-  useEffect(() => {
-    const handleFocusFirstTabbableElement = () => {
-      if(firstTabbableElementRef.current) {
-        firstTabbableElementRef.current.focus();
-      }
-    };
+  // useEffect(() => {
+  //   const handleFocusFirstTabbableElement = () => {
+  //     if(firstTabbableElementRef.current) {
+  //       firstTabbableElementRef.current.focus();
+  //     }
+  //   };
 
-    handleFocusFirstTabbableElement();
+  //   handleFocusFirstTabbableElement();
 
-    document.addEventListener('keydown', (event) => handleCtrlCmdDown(event));
-    document.addEventListener('keyup', handleCtrlCmdUp);
-    window.addEventListener('focus', handleCtrlCmdUp);
-    return () => {
-      document.removeEventListener('keydown', handleCtrlCmdDown);
-      document.removeEventListener('keyup', handleCtrlCmdUp);
-      window.removeEventListener('focus', handleCtrlCmdUp);
-    };
-  }, []);
+  //   document.addEventListener('keydown', (event) => handleCtrlCmdDown(event));
+  //   document.addEventListener('keyup', handleCtrlCmdUp);
+  //   window.addEventListener('focus', handleCtrlCmdUp);
+  //   return () => {
+  //     document.removeEventListener('keydown', handleCtrlCmdDown);
+  //     document.removeEventListener('keyup', handleCtrlCmdUp);
+  //     window.removeEventListener('focus', handleCtrlCmdUp);
+  //   };
+  // }, []);
 
   return (
     <div id="Attributes" ref={firstTabbableElementRef}>
@@ -112,14 +113,30 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                         key={`${key}-${value}-${childIndex}`}
                         data-todotxt-attribute={key}
                         data-todotxt-value={value}
-                        className={`filter${isCtrlKeyPressed ? ' hide' : ''} ${
+
+                        onMouseEnter={() => setHovered(`${key}-${value}-${childIndex}`)}
+                        onMouseLeave={() => setHovered(null)}
+
+                        className={`filter ${
                           selected ? 'selected' : ''
                         } ${excluded ? 'excluded' : ''}`}
                       >
                         <Badge 
-                          badgeContent={attributes[key][value].count}
+                          badgeContent={
+                            attributes[key][value].count > 0 ? (
+                              <span
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  handleFilterSelect(key, value, filters, true);
+                                }}
+                              >
+                                {hovered === `${key}-${value}-${childIndex}` ? <VisibilityOffIcon /> : attributes[key][value].count}
+                              </span>
+                            ) : (
+                              null
+                            )
+                          }
                           className={notify ? 'notify' : null }
-                          onClick={() => handleFilterSelect(key, value, filters, true)}
                         >
                           <Button
                             className="attribute"
@@ -128,20 +145,20 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                               disabled
                                 ? undefined
                                 : () =>
-                                  handleFilterSelect(key, value, filters, isCtrlKeyPressed)
+                                  handleFilterSelect(key, value, filters, false)
                             }
                             disabled={disabled}
                           >
                             {value}
                           </Button>
                         </Badge>
-                        {(isCtrlKeyPressed || excluded) && (
+                        {(excluded) && (
                           <div
                             data-todotxt-attribute={key}
                             data-todotxt-value={value}
                             data-testid={`drawer-button-exclude-${key}`}
                             className="overlay"
-                            onClick={() => handleFilterSelect(key, value, filters, isCtrlKeyPressed)}
+                            onClick={() => handleFilterSelect(key, value, filters, false)}
                           >
                             <VisibilityOffIcon />
                           </div>

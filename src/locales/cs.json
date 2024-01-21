@@ -22,7 +22,7 @@
   "settings.dark": "Tmavé",
   "settings.language": "Jazyk",
   "settings.notificationThreshold": "Hranice oznámení",
-  "settings.bulkTodoCreation": "Každý řádek v textovém poli vytvoří samostatnou položku úkolu",
+  "settings.bulkTodoCreation": "Víceřádkový text vytváří samostatné úkoly",
   "settings.matomo": "Povolit analýzu Matomo",
   "settings.zoom": "Přiblížení",
   "settings.disableAnimations": "Vypnout animace",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Obnovit filtry a hledání",
   "search.visibleTodos": "Viditelné úkoly: ",
   "search.addAsTodo": "Přidat jako úkol",
+  "search.filters.create": "Vytvořit vyhledávací filtr",
   "todoDialog.footer.add": "Přidat",
   "todoDialog.footer.update": "Aktualizovat",
   "todoDialog.footer.cancel": "Zrušit",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "Tímto se přesunou všechny dokončené úkoly do vašeho určeného archivačního souboru",
   "prompt.archive.button": "Archivovat",
   "prompt.archive.changeFile.headline": "Vyberte soubor pro archivaci",
-  "prompt.archive.changeFile.text": "Pro archivaci dokončených úkolů je nutné nejprve vybrat archivační soubor."
+  "prompt.archive.changeFile.text": "Pro archivaci dokončených úkolů je nutné nejprve vybrat archivační soubor.",
+  "prompt.searchFilters.delete.body": "Smazat vyhledávací filtr"
 }

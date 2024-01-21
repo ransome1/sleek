@@ -23,9 +23,6 @@ const visibleSettings: VisibleSettings = {
   convertRelativeToAbsoluteDates: {
     style: 'toggle',
   },
-  showFileTabs: {
-    style: 'toggle',
-  },
   tray: {
     style: 'toggle',
   },

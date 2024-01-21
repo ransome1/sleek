@@ -22,8 +22,8 @@
   "settings.dark": "Ciemny",
   "settings.language": "Język",
   "settings.notificationThreshold": "Prog powiadomień",
-  "settings.bulkTodoCreation": "Każdy wiersz w polu tekstowym tworzy oddzielną pozycję na liście zadań",
-  "settings.matomo": "Zezwalaj na analizę Matomo",
+  "settings.bulkTodoCreation": "Wielowierszowy tekst tworzy osobne zadania",
+  "settings.matomo": "Zezwalaj na analizy Matomo",
   "settings.zoom": "Powiększenie",
   "settings.disableAnimations": "Wyłącz animacje",
   "drawer.tabs.attributes": "Atrybuty",
@@ -51,6 +51,7 @@
   "splashscreen.noTodosVisible.reset": "Resetuj filtry i wyszukiwanie",
   "search.visibleTodos": "Widoczne zadania: ",
   "search.addAsTodo": "Dodaj jako zadanie",
+  "search.filters.create": "Utwórz filtr wyszukiwania",
   "todoDialog.footer.add": "Dodaj",
   "todoDialog.footer.update": "Aktualizuj",
   "todoDialog.footer.cancel": "Anuluj",
@@ -72,5 +73,6 @@
   "prompt.archive.text": "To spowoduje przeniesienie wszystkich ukończonych zadań do określonego pliku archiwizacji",
   "prompt.archive.button": "Archiwizuj",
   "prompt.archive.changeFile.headline": "Wybierz plik do archiwizacji",
-  "prompt.archive.changeFile.text": "Aby zarchiwizować ukończone zadania, musisz najpierw wybrać plik archiwizacyjny."
+  "prompt.archive.changeFile.text": "Aby zarchiwizować ukończone zadania, musisz najpierw wybrać plik archiwizacyjny.",
+  "prompt.searchFilters.delete.body": "Usuń filtr wyszukiwania"
 }
