@@ -37,7 +37,7 @@ const HeaderComponent: React.FC<Props> = memo(({
     };
   }, [handleKeyDown]);
 
-  return (
+  return (settings.showFileTabs &&
     <div id='ToolBar' onClick={handleOnClick}>
       <SearchIcon 
         className={settings.isSearchOpen ? 'active' : ''}

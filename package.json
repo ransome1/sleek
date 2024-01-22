@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -142,7 +142,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "buildVersion": "37",
+    "buildVersion": "38",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [

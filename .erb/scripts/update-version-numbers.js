@@ -2,12 +2,6 @@ const fs = require('fs');
 const packageJson = require('../../release/app/package.json');
 const dayjs = require('dayjs');
 
-let desktopFileContent = fs.readFileSync('../../flatpak/com.github.ransome1.sleek.desktop', 'utf8');
-desktopFileContent = desktopFileContent.replace(/Version=.*\n/, `Version=${packageJson.version}\n`);
-fs.writeFileSync('../../flatpak/com.github.ransome1.sleek.desktop', desktopFileContent);
-
-console.log('Updated com.github.ransome1.sleek.desktop with version', packageJson.version);
-
 let appdataContent = fs.readFileSync('../../flatpak/com.github.ransome1.sleek.appdata.xml', 'utf8');
 const formattedDate = dayjs(new Date()).format('YYYY-MM-DD');
 appdataContent = appdataContent.replace(/<release version=".*?" date=".*?"\/>/, `<release version="${packageJson.version}" date="${formattedDate}"/>`);
