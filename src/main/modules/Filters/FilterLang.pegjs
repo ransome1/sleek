@@ -1,3 +1,7 @@
+{{
+    import { addRecurrenceToDate } from "../ProcessDataRequest/CreateRecurringTodo";
+}}
+
 filterQuery
     = _ left:orExpr _  { return left; }
     / _ { return []; }
@@ -82,7 +86,7 @@ dateExpr
         // recurrence calculations.  All dates are returned from
         // the parser as millisec since epoch (getTime()) to
         // simplify comparisons in the filter lang execution engine.
-        let d = addIntervalToDate(new Date(left), count, unit);
+        let d = addRecurrenceToDate(new Date(left), unit, count);
         return d.getTime();
     }
     / left:dateLiteral  { return left; }
