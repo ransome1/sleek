@@ -13,6 +13,7 @@ import { i18n } from '../Settings/LanguageSelector';
 import './Drawer.scss';
 
 const { store } = window.api;
+let resizeTimeout;
 
 interface Props extends WithTranslation {
   settings: Settings;
@@ -47,9 +48,12 @@ const DrawerComponent: React.FC<Props> = memo(({
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-    const deltaX = startXRef.current - event.pageX;
-    setDrawerWidth((prevWidth) => prevWidth - deltaX);
+    
     startXRef.current = event.pageX;
+
+    setDrawerWidth((event.pageX - 80 >= 165) ? event.pageX - 80 : 165);
+
+    
   };
 
   const handleMouseUp = () => {
@@ -62,24 +66,18 @@ const DrawerComponent: React.FC<Props> = memo(({
     if(!isSearchFocused && event.key === 'Escape') {
       store.setConfig('isDrawerOpen', false);
     }
-  };
+  };  
 
   useEffect(() => {
-    if(settings.isDrawerOpen) {
-      document.addEventListener('keydown', (event) => handleKeyDown(event));
-    } else {
-      document.removeEventListener('keydown', (event) => handleKeyDown(event));
-    }
+    store.setConfig('drawerWidth', drawerWidth);
+  }, [drawerWidth]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', (event) => handleKeyDown(event));
     return () => {
       document.removeEventListener('keydown', (event) => handleKeyDown(event));
     };
-  }, [settings.isDrawerOpen]);
-
-  useEffect(() => {
-    if(drawerWidth > 165) {
-      store.setConfig('drawerWidth', drawerWidth);
-    }
-  }, [drawerWidth]);
+  }, []);
 
   return (
     <Drawer

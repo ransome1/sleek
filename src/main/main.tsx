@@ -38,7 +38,7 @@ const handleClosed = async () => {
   eventListeners.watcher = undefined;
 }
 
-const handleResize = (event) => {
+const handleResize = () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
     const rectangle = mainWindow?.getBounds() as WindowRectangle;
@@ -105,7 +105,11 @@ const createMainWindow = () => {
     width: 1280,
     height: 1000,
     backgroundColor: (shouldUseDarkColors) ? '#212224' : '#fff',
-    icon: process.platform === 'win32' ? getAssetPath('icons/sleek.ico') : getAssetPath('icons/512x512.png'),
+    icon: process.platform === 'win32'
+    ? getAssetPath('icons/sleek.ico')
+    : process.platform === 'darwin'
+    ? getAssetPath('icons/sleek.icns')
+    : getAssetPath('icons/512x512.png'),
     autoHideMenuBar: true,
     webPreferences: {
       spellcheck: false,

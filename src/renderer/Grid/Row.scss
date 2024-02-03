@@ -8,6 +8,14 @@
   border-bottom: solid 1px $light-grey;
   flex-wrap: wrap;
   gap: 0.25em;
+  a {
+    color: $blue;
+    text-decoration: underline;
+    svg {
+      font-size: 1.2em;
+      margin-bottom: -0.25em;
+    }
+  }
   button {
     height: 2em;
     line-height: 2em;

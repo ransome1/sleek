@@ -99,7 +99,7 @@ const DialogComponent: React.FC<Props> = memo(({
     try {
       let updatedValue;
       if(type === 'due' || type === 't') {
-        updatedValue = (value) ? dayjs(value).format('YYYY-MM-DD') : null;
+        if(dayjs(value).isValid()) updatedValue = (value) ? dayjs(value).format('YYYY-MM-DD') : null;
       } else if(type === 'pm') {
         updatedValue = (value === '0') ? null : value;
       } else {

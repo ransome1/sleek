@@ -3,7 +3,6 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -105,6 +104,8 @@ const InputComponent: React.FC<InputComponentProps> = memo(({
                 onClick={() => handleAddTodo(searchString)} 
                 data-testid="header-search-textfield-add-todo"
                 className="addAsTodo"
+                size="small"
+                variant="outlined"
               >
                 <AddIcon />
                 {t('search.addAsTodo')}

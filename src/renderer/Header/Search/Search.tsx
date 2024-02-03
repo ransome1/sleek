@@ -40,11 +40,11 @@ interface SearchComponentProps extends WithTranslation {
   searchString: string;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
   searchFieldRef: React.RefObject<HTMLInputElement>;
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   t: typeof i18n.t;
 }
 
-const SearchComponent: React.FC<SearchProps> = memo(({
+const SearchComponent: React.FC<SearchComponentProps> = memo(({
   headers,
   settings,
   searchString,
@@ -141,6 +141,7 @@ const SearchComponent: React.FC<SearchProps> = memo(({
                 {...props}
               />
             )}
+            
             renderInput={(params) => (
               <InputComponent
                 headers={headers}

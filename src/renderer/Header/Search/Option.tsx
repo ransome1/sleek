@@ -31,7 +31,7 @@ const handleDeleteFilterConfirm = (
 
 interface OptionComponentProps extends WithTranslation {
   option: SearchFilter;
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   searchFilters: SearchFilter[];
   setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter[]>>;
   isAutocompleteOpen: boolean;

@@ -72,7 +72,13 @@ const App = () => {
   }, [settings.files]);
 
   useEffect( () =>  {
-    i18n.changeLanguage(settings.language);
+    i18n.changeLanguage(settings.language)
+      .then(() => {
+        console.log(`Language set to "${settings.language}"`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, [settings.language]);  
 
   useEffect(() => {
