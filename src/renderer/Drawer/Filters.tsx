@@ -6,6 +6,7 @@ import Switch from '@mui/material/Switch';
 import HelpIcon from '@mui/icons-material/Help';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
+import { handleLinkClick } from '../Shared';
 import './Filters.scss';
 
 const { store, ipcRenderer } = window.api;
@@ -24,14 +25,6 @@ const visibleSettings: VisibleSettings = {
   dueDateInTheFuture: {
     style: 'toggle',
   },
-};
-
-const handleHelpClick = (event: MouseEvent, url: string) => {
-  event.preventDefault();
-  event.stopPropagation();
-  if(url) {
-    ipcRenderer.send('openInBrowser', url)
-  }
 };
 
 const handleChange = (settingName: string, value: string | boolean) => {
@@ -66,7 +59,7 @@ const DrawerFilters: React.FC<DrawerFiltersProps> = ({
                 settingValue.help ? (
                   <>
                     {t(`drawer.filters.${settingName}`)}
-                    <Link onClick={(event) => settingValue.help && handleHelpClick(event, settingValue.help)}>
+                    <Link onClick={(event) => settingValue.help && handleLinkClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   </>

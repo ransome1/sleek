@@ -12,9 +12,10 @@ import Slider from '@mui/material/Slider';
 import HelpIcon from '@mui/icons-material/Help';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import LanguageSelector, { i18n } from './LanguageSelector';
+import { handleLinkClick } from '../Shared';
 import './Settings.scss';
 
-const { store, ipcRenderer } = window.api;
+const { store } = window.api;
 
 const visibleSettings: VisibleSettings = {
   appendCreationDate: {
@@ -61,13 +62,7 @@ const visibleSettings: VisibleSettings = {
   },
 };
 
-const handleHelpClick = (event: React.MouseEvent, url: string) => {
-  event.preventDefault();
-  event.stopPropagation();
-  if(url) {
-    ipcRenderer.send('openInBrowser', url)
-  }
-};
+
 
 const handleChange = (settingName: string, value: string | boolean | number) => {
   store.setConfig(settingName, value);
@@ -112,7 +107,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                 settingValue.help ? (
                   <>
                     {t(`settings.${settingName}`)}
-                    <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
+                    <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   </>
@@ -127,7 +122,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                 <InputLabel>{t(`settings.${settingName}`)}</InputLabel>
                 {settingValue.help && (
                   <Badge badgeContent={
-                    <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
+                    <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   }>
@@ -155,7 +150,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                     {t(`settings.${settingName}`)}
                     {settingValue.help ? (
                       <>
-                        <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
+                        <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
                           <HelpIcon />
                         </Link>
                       </>
@@ -171,7 +166,7 @@ const Settings: React.FC<SettingsProps> = memo(({
                     label={
                       settingValue.help ? (
                         <Badge badgeContent={
-                          <Link onClick={(event) => handleHelpClick(event, settingValue.help)}>
+                          <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
                             <HelpIcon />
                           </Link>
                         }>

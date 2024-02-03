@@ -29,6 +29,7 @@ async function processDataRequest(search?: string): Promise<void> {
 
   const fileContent = await readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
   let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);
+
   todoObjects = handleTodoObjectsDates(todoObjects);
   headers.availableObjects = countTodoObjects(todoObjects, false);
   headers.completedTodoObjects = countTodoObjects(todoObjects, true);

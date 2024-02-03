@@ -11,6 +11,7 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ');
   
   let JsTodoTxtObject = new Item(content);
+
   const extensions = JsTodoTxtObject.extensions();
 
   if(attributeType) {

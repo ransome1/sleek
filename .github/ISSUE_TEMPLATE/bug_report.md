@@ -11,23 +11,25 @@ labels: 'bug'
 ### Important ###
 Please follow this template strictly when reporting bugs. 
 
-**App Version:** [_Enter app version here_]
+Reports that do not adhere to this template will not be addressed and will be closed.
 
-**Platform:** [_Windows / macOS / Linux_]
+**App Version:** Enter the version number, e.g., 1.2.3
 
-**Installation Method:** [_App Store / Direct Download / Other_]
+**Platform:** Windows / macOS / Linux
 
-**Bug Description:**
-[_Provide a clear and concise description of the bug you encountered._]
-
-**Steps to Reproduce:**
-1. [_List the steps to reproduce the bug. Be as specific as possible._]
+**Installation Method:** App Store / Direct Download / Other
 
 **Expected Behavior:**
-[_Explain what you expected to happen._]
+Explain what you expected to happen.
 
 **Actual Behavior:**
-[_Explain what actually happened._]
+Explain what actually happened.
+
+**Steps to Reproduce:**
+1. Open the app.
+2. Click on 'X' button.
+3. Observe the unexpected behavior.
+4. ...
 
 **Screenshots:**
-[_If applicable, include screenshots that demonstrate the bug._]
+If applicable, include screenshots that demonstrate the bug.
