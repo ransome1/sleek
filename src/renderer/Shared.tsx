@@ -1,4 +1,4 @@
-const { store } = window.api;
+const { store, ipcRenderer } = window.api;
 
 export const handleFilterSelect = (key: string, value: string | string[] | null, filters: Filters | null, isCtrlKeyPressed: boolean) => {
   try {
@@ -33,5 +33,13 @@ export const handleFilterSelect = (key: string, value: string | string[] | null,
     store.setFilters('attributes', updatedFilters);
   } catch (error: any) {
     console.error(error);
+  }
+};
+
+export const handleLinkClick = (event: React.MouseEvent, url: string) => {
+  event.preventDefault();
+  event.stopPropagation();
+  if(url) {
+    ipcRenderer.send('openInBrowser', url)
   }
 };

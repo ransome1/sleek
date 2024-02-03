@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
+import React, { useState, useRef, memo } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -132,9 +132,7 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                               >
                                 {hovered === `${key}-${value}-${childIndex}` ? <VisibilityOffIcon /> : attributes[key][value].count}
                               </span>
-                            ) : (
-                              null
-                            )
+                            ) : null
                           }
                           className={notify ? 'notify' : null }
                         >

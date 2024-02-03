@@ -1,13 +1,17 @@
-import React, { memo, SyntheticEvent } from 'react';
+import React, { memo } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
 import ListItem from '@mui/material/ListItem';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import Group from './Group';
 import Elements from './Elements';
 import { handleFilterSelect } from '../Shared';
+import RendererComponent from './Renderer';
 import './Row.scss';
 import { i18n } from '../Settings/LanguageSelector';
 
@@ -34,6 +38,10 @@ const Row: React.FC<Props> = memo(({
   settings,
   t,
 }) => {
+  
+  const handleButtonClick = (key: string, value: string) => {
+    handleFilterSelect(key, value, filters, false);
+  };
 
   const handleConfirmDelete = () => {
     if(todoObject) ipcRenderer.send('removeLineFromFile', todoObject?.id);
@@ -73,10 +81,22 @@ const Row: React.FC<Props> = memo(({
 
   const handleRowClick = (event: any) => {
     const clickedElement = event.target as HTMLElement;
-    if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
-      if(clickedElement.classList.contains('MuiChip-label') || clickedElement.closest('.MuiChip-label')) {
-        return;
-      } else if(todoObject && (clickedElement.tagName === 'SPAN' || clickedElement.tagName === 'LI')) {
+
+    if((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {      
+      const preventDialog = () => {
+        let match = false;
+        
+        if(clickedElement.classList.contains('MuiChip-label')) match = true;
+        if(clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-t') match = true;
+        if(clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due') match = true;
+        if(clickedElement.tagName.toLowerCase() === 'path') match = true;
+        if(clickedElement.tagName.toLowerCase() === 'a') match = true;
+        if(clickedElement.tagName.toLowerCase() === 'input') match = true;
+        if(clickedElement.tagName.toLowerCase() === 'button') match = true;
+        if(clickedElement.tagName.toLowerCase() === 'svg') match = true;
+        return match;
+      };      
+      if(!preventDialog() && todoObject) {
         event.preventDefault();
         setTodoObject(todoObject);
         setDialogOpen(true);
@@ -92,10 +112,6 @@ const Row: React.FC<Props> = memo(({
     } else if((event.metaKey || event.ctrlKey) && (event.key === 'c')) {
       handleSaveToClipboard();
     }
-  };
-
-  const handleButtonClick = (key: string, value: string) => {
-    handleFilterSelect(key, value, filters, false);
   };
 
   if(todoObject.group) {
@@ -135,12 +151,23 @@ const Row: React.FC<Props> = memo(({
 
         {todoObject.hidden && <VisibilityOffIcon />}
 
-        <Elements
+        {/*{<span dangerouslySetInnerHTML={{__html: marked.parseInline(todoObject.body)}} />}*/}
+
+        <RendererComponent 
+          todoObject={todoObject}
+          filters={filters}
+          settings={settings}
+          handleButtonClick={handleButtonClick}
+        />
+
+        {/*{ marked.parseInline(todoObject.body) }*/}
+
+        {/*<Elements
           todoObject={todoObject}
           filters={filters}
           handleButtonClick={handleButtonClick}
           settings={settings}
-        />
+        />*/}
       </ListItem>
     </>
   );
