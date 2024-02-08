@@ -4,10 +4,12 @@ import { runQuery } from '../Filters/FilterQuery';
 import { createTodoObject } from './CreateTodoObjects';
 import { config } from '../../config';
 
-function countTodoObjects(todoObjects: TodoObject[], completed: boolean): number {
+function countTodoObjects(todoObjects: TodoObject[], completed: boolean, visible?: boolean): number {
   const filteredTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
     if(completed) {
       return todoObject.complete;
+    } else if(visible) {
+      return todoObject.visible;
     } else {
       return todoObject;
     }
@@ -28,45 +30,59 @@ function checkForSearchMatches(todoString: string, searchString: string) {
 function applySearchString(searchString: string, todoObjects: TodoObject[]): TodoObject[] {
   try {
     const query = FilterLang.parse(searchString);
-    return todoObjects.filter(todoObject => runQuery(todoObject, query));
+    return todoObjects.map(todoObject => {
+      if(!todoObject.visible) return todoObject;
+      todoObject.visible = runQuery(todoObject, query);
+      return todoObject;
+    });
   } catch (error) {
     const lowerSearchString = searchString.toLowerCase();
     return Object.values(todoObjects)
       .flat()
-      .filter(todoObject => todoObject?.string?.toLowerCase().includes(lowerSearchString)) as TodoObject[];
+      .map(todoObject => {
+        if(!todoObject.visible) return todoObject;
+        todoObject.visible = todoObject?.string?.toLowerCase().includes(lowerSearchString) || false;
+        return todoObject;
+      }) as TodoObject[];
   }
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
   const showCompleted: boolean = config.get('showCompleted');
-  return todoObjects.filter((todoObject: TodoObject) => {
-    if(showCompleted) {
-      return true;
-    } else {
-      return !todoObject.complete;
+  return todoObjects.map((todoObject: TodoObject) => {
+    if(todoObject.complete && !showCompleted) {
+      todoObject.visible = false;
     }
+    return todoObject;
   });
 }
 
 function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  return Object.values(todoObjects)
-    .flat()
-    .filter((object: TodoObject | null) =>
-      object && !object.hidden
-    );
+  return todoObjects.map((todoObject: TodoObject) => {
+    if(!todoObject.visible) return todoObject;
+    todoObject.visible = todoObject.visible && !todoObject.hidden;
+    return todoObject;
+  });
 }
 
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
   const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture');
   const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture');
 
-  return todoObjects.flat().filter((todoObject) => {
-    const tDate = dayjs(todoObject?.t);
+  return todoObjects.map((todoObject: TodoObject) => {
+
+    if(!todoObject.visible) return todoObject;
+    
+    const thresholdDate = dayjs(todoObject?.t);
     const dueDate = dayjs(todoObject?.due);
-    if(!dueDateInTheFuture && dueDate && dueDate.isAfter(dayjs())) {
-      return false;
+
+    if(thresholdDate && thresholdDate.isAfter(dayjs()) && !thresholdDateInTheFuture) {
+      todoObject.visible = false;  
+    } else if(dueDate && dueDate.isAfter(dayjs()) && !dueDateInTheFuture) {
+      todoObject.visible = false;  
     }
-    return !(!thresholdDateInTheFuture && tDate && tDate.isAfter(dayjs()));
+
+    return todoObject;
   });
 }
 
@@ -125,8 +141,8 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
     return sortAndGroupObjects(sortedTodoObjects, 0, sorting);
 }
 
-function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string): any {
-  const flattenedObjects = [];
+function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string): TodoObject[] {
+  const flattenedObjects: TodoObject[] = [];
   const flatten = (todoObject: any, sortingKey: string) => {
     if(typeof todoObject === 'object' && todoObject !== null) {
       if('id' in todoObject) {
@@ -140,12 +156,6 @@ function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string): a
     }
   }
   for (const key in todoObjects) {
-    if(topLevelGroup) {
-      flattenedObjects.push({
-        group: topLevelGroup,
-        value: key,
-      });
-    }
     flatten(todoObjects[key], topLevelGroup);
   }
   return flattenedObjects;

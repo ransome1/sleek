@@ -45,6 +45,7 @@ describe('Create todo objects', () => {
       pm: "4",
       string: '(B) Test +project @context todo 1 due:2023-12-31 t:2024-03-24 h:1 test @anotherContext pm:4 and a strict rec:+2w',
       notify: false,
+      visible: true,
     });
   });
 
@@ -68,6 +69,7 @@ describe('Create todo objects', () => {
       pm: null,
       string: 'x 2023-07-23 2023-07-21 Test todo 2',
       notify: false,
+      visible: true,
     });
   });
 
@@ -91,6 +93,7 @@ describe('Create todo objects', () => {
       pm: null,
       string: 'Test todo 3 due:end of the year',
       notify: false,
+      visible: true,
     });    
   });
 
@@ -114,6 +117,7 @@ describe('Create todo objects', () => {
       pm: null,
       string: 'Test todo 4 t:first day of next year',
       notify: false,
+      visible: true,
     });    
   });
 });

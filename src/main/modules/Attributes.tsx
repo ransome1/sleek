@@ -26,6 +26,7 @@ function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: 
       (reset) ? attributes[key] = {} : attributes[key][attributeKey].count = 0
     });
     todoObjects.forEach((todoObject: TodoObject) => {
+      if(!todoObject.visible) return;
       const value = todoObject[key as keyof TodoObject];
       const notify: boolean = (key === 'due') ? !!todoObject?.notify : false;
 

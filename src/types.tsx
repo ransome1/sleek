@@ -109,9 +109,8 @@ declare global {
     hidden: boolean;
     pm: number | string | null;
     string: string | null;
-    group?: string;
-    value?: string;
     notify?: boolean;
+    visible: boolean;
   }
 
   interface TranslatedAttributes {

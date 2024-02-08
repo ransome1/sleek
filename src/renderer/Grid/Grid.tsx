@@ -1,6 +1,8 @@
 import React, { KeyboardEvent, memo } from 'react';
 import List from '@mui/material/List';
 import Row from './Row';
+import Group from './Group';
+import { handleFilterSelect } from '../Shared';
 import './Grid.scss';
 
 interface GridComponentProps {
@@ -33,6 +35,11 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
 
   const list = document.getElementById('grid');
   const totalRowCount = todoObjects?.length || 0;
+  const groups = new Array;
+
+  const handleButtonClick = (key: string, value: string) => {
+    handleFilterSelect(key, value, filters, false);
+  };
 
   const handleKeyUp = (event: KeyboardEvent) => {
     if(event.key === 'ArrowDown') {
@@ -80,24 +87,45 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
     }
   };
 
-  const visibleTodoObjects = todoObjects?.slice(0, visibleRowCount);
+  const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible !== false);
+
+  if(visibleTodoObjects.length === 0) return null;
 
   return (
     <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
-      {visibleTodoObjects?.map((row, index) => (
-        <Row
-          key={index}
-          todoObject={row}
-          filters={filters}
-          setTodoObject={setTodoObject}
-          setDialogOpen={setDialogOpen}
-          setContextMenu={setContextMenu}
-          setPromptItem={setPromptItem}
-          settings={settings}
-        />
-      ))}
+      {visibleTodoObjects?.map((row, index) => {
+        let renderGroup = false;
+        const groupValue = row[settings.sorting[0].value]?.toString() || null,
+        if (groups.length === 0 || !groups.includes(groupValue)) {
+          groups.push(groupValue);
+          renderGroup = true;
+        }
+        return (
+          <React.Fragment key={index}>
+            {renderGroup && (
+              <Group
+                value={groupValue}
+                group={settings.sorting[0].value}
+                filters={filters}
+                onClick={handleButtonClick}
+              />
+            )}
+            <Row
+              todoObject={row}
+              filters={filters}
+              setTodoObject={setTodoObject}
+              setDialogOpen={setDialogOpen}
+              setContextMenu={setContextMenu}
+              setPromptItem={setPromptItem}
+              settings={settings}
+              handleButtonClick={handleButtonClick}
+            />
+          </React.Fragment>
+        );
+      })}
     </List>
   );
+
 });
 
 export default GridComponent;

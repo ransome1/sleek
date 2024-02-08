@@ -70,6 +70,8 @@ const todoObjects: any =
     hidden: false,
     pm: null,
     string: '(C) 2025-12-09 +testProject5 test0 @testContext due:2023-01-02',
+    notify: false,
+    visible: true,
   },
   {
     id: 1,
@@ -86,6 +88,8 @@ const todoObjects: any =
     hidden: false,
     pm: null,    
     string: '(B) 2023-12-01 test1 +testProject7 @testContext7 t:2023-12-15',
+    notify: false,
+    visible: true,
   },
   {
     id: 2,
@@ -102,6 +106,8 @@ const todoObjects: any =
     hidden: false,
     pm: null,    
     string: 'x (C) 2025-12-08 2023-12-01 test2 +testProject1 @testContext due:2023-01-01',
+    notify: false,
+    visible: true,
   },
   {
     id: 3,
@@ -118,6 +124,8 @@ const todoObjects: any =
     hidden: false,
     pm: null,    
     string: '(A) 2023-06-24 test3 +testProject6 @testContext6 due:2023-12-03',
+    notify: false,
+    visible: true,
   },
   {
     id: 4,
@@ -134,6 +142,8 @@ const todoObjects: any =
     hidden: false,
     pm: null,    
     string: '(C) 2025-12-06 test3 +testProject3 @testContext due:2023-01-03',
+    notify: false,
+    visible: true,
   },
   {
     id: 5,
@@ -150,6 +160,8 @@ const todoObjects: any =
     hidden: false,
     pm: null,
     string: '(C) 2025-12-05 test3 +testProject2 @testContext due:2023-01-05',
+    notify: false,
+    visible: true,
   },
   {
     id: 6,
@@ -165,7 +177,9 @@ const todoObjects: any =
     rec: null,
     hidden: false,
     pm: null,    
-    string: '(C) 2025-12-07 test3 +testProject4 @testContext due:2023-01-04'
+    string: '(C) 2025-12-07 test3 +testProject4 @testContext due:2023-01-04',
+    notify: false,
+    visible: true,
   }  
 ];
 
@@ -176,7 +190,7 @@ describe('Process todo.txt objects', () => {
     });    
 
     test('Objects are counted correctly', () => {
-        const count: number = countTodoObjects(todoObjects, true);
+        const count: number = countTodoObjects(todoObjects, true, false);
         expect(count).toEqual(1);
     });
 

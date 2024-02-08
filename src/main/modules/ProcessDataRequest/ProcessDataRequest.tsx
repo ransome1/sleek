@@ -29,10 +29,7 @@ async function processDataRequest(search?: string): Promise<void> {
 
   const fileContent = await readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
   let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);
-
   todoObjects = handleTodoObjectsDates(todoObjects);
-  headers.availableObjects = countTodoObjects(todoObjects, false);
-  headers.completedTodoObjects = countTodoObjects(todoObjects, true);
   todoObjects = handleCompletedTodoObjects(todoObjects);
 
   updateAttributes(todoObjects, sorting, true);
@@ -41,7 +38,9 @@ async function processDataRequest(search?: string): Promise<void> {
   if(filters) todoObjects = applyFilters(todoObjects, filters);
   if(searchString) todoObjects = applySearchString(searchString, todoObjects);
 
-  headers.visibleObjects = countTodoObjects(todoObjects, false);
+  headers.visibleObjects = countTodoObjects(todoObjects, false, true);
+  headers.availableObjects = countTodoObjects(todoObjects, false);
+  headers.completedTodoObjects = countTodoObjects(todoObjects, true);
 
   updateAttributes(todoObjects, sorting, false);
 
