@@ -34,8 +34,9 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
  }) => {
 
   const list = document.getElementById('grid');
-  const totalRowCount = todoObjects?.length || 0;
   const groups = new Array;
+  const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible !== false)?.slice(0, visibleRowCount);
+  const totalRowCount = todoObjects?.length || 0;
 
   const handleButtonClick = (key: string, value: string) => {
     handleFilterSelect(key, value, filters, false);
@@ -86,8 +87,6 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
       }
     }
   };
-
-  const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible !== false);
 
   if(visibleTodoObjects.length === 0) return null;
 

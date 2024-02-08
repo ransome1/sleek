@@ -82,6 +82,9 @@ const App = () => {
   }, [settings.language]);  
 
   useEffect(() => {
+    const windowHeight = window.innerHeight;
+    const calculatedRowCount = Math.floor(windowHeight / 35);
+    setVisibleRowCount(calculatedRowCount * 1.5);
     ipcRenderer.send('requestData');
   }, []);
 

@@ -78,9 +78,10 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 
 					modifiedChild = reactStringReplace(modifiedChild, pattern, (match, i) => {
 						
-						const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.value === match);	
+						const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.value === match);
+
 						return (
-							<span key={`${type}-${i}`} className={selected ? 'filter selected' : 'filter'} data-todotxt-attribute={type}>
+							<span className={selected ? 'filter selected' : 'filter'} data-todotxt-attribute={type}>
 								{replacements[type](match, type)}
 							</span>
 						);
