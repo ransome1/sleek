@@ -181,7 +181,7 @@ declare global {
   type HeadersObject = {
     availableObjects: number;
     visibleObjects: number;
-    completedTodoObjects: number;
+    completedObjects: number;
   };
 
   type Badge = {

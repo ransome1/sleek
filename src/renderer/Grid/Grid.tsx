@@ -101,7 +101,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
         }
         return (
           <React.Fragment key={index}>
-            {renderGroup && (
+            {!settings.fileSorting && renderGroup && (
               <Group
                 value={groupValue}
                 group={settings.sorting[0].value}

@@ -4,17 +4,22 @@ import { runQuery } from '../Filters/FilterQuery';
 import { createTodoObject } from './CreateTodoObjects';
 import { config } from '../../config';
 
-function countTodoObjects(todoObjects: TodoObject[], completed: boolean, visible?: boolean): number {
-  const filteredTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
-    if(completed) {
-      return todoObject.complete;
-    } else if(visible) {
-      return todoObject.visible;
-    } else {
-      return todoObject;
-    }
+function countTodoObjects(todoObjects: TodoObject[]): HeadersObject {
+  const filteredObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+    return todoObject.visible;
   });
-  return filteredTodoObjects.length;
+
+  const completedObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+    if(todoObject.complete) return todoObject.complete;
+  });
+
+  const headers: HeadersObject = {
+    availableObjects: todoObjects.length,
+    visibleObjects: filteredObjects.length,
+    completedObjects: completedObjects.length
+  }
+
+  return headers;
 }
 
 function checkForSearchMatches(todoString: string, searchString: string) {
