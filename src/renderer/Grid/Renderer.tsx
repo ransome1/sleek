@@ -66,20 +66,18 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 		hidden: () => null as React.ReactNode,
 	};
 
+	const transformURL = (uri, children, title) => {
+    	return uri;
+  	};
+
 	const options = {
 		p: ({children}) => {
 			const modifiedChildren = React.Children.map(children, (child) => {
-
 				if(typeof child === 'object') return child;
-
 				let modifiedChild = child.split(/(\S+\s*)/).filter(Boolean);
-
 				expressions.forEach(({ pattern, type }) => {
-
 					modifiedChild = reactStringReplace(modifiedChild, pattern, (match, i) => {
-						
 						const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.value === match);
-
 						return (
 							<span className={selected ? 'filter selected' : 'filter'} data-todotxt-attribute={type}>
 								{replacements[type](match, type)}
@@ -104,7 +102,7 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 		},
 	};
 
-	return <ReactMarkdown remarkPlugins={[remarkGfm]} components={options}>{todoObject.body}</ReactMarkdown>;
+	return <ReactMarkdown remarkPlugins={[remarkGfm]} components={options} urlTransform={transformURL}>{todoObject.body}</ReactMarkdown>;
 };
 
 export default RendererComponent;
