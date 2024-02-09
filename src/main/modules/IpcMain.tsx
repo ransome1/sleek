@@ -197,11 +197,9 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   }
 }
 
-function handleOpenInBrowser(event: IpcMainEvent, url: string): void {
+async function handleOpenInBrowser(event: IpcMainEvent, url: string): Promise<void> {
   try {
-    if(url) {
-      shell?.openExternal(url);
-    }
+    await shell?.openExternal(url);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);
@@ -212,9 +210,7 @@ function removeEventListeners(): void {
   ipcMain.off('storeGetConfig', handleStoreGetConfig);
   ipcMain.off('storeSetConfig', handleStoreSetConfig);
   ipcMain.off('storeSetFilters', handleStoreSetFilters);
-
   ipcMain.off('storeGetFilters', handleStoreGetFilters);
-
   ipcMain.off('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
   ipcMain.off('setFile', handleSetFile);
   ipcMain.off('removeFile', handleRemoveFile);
@@ -239,9 +235,7 @@ app.on('before-quit', () => removeEventListeners);
 ipcMain.on('storeGetConfig', handleStoreGetConfig);
 ipcMain.on('storeSetConfig', handleStoreSetConfig);
 ipcMain.on('storeSetFilters', handleStoreSetFilters);
-
 ipcMain.on('storeGetFilters', handleStoreGetFilters);
-
 ipcMain.on('storeSetNotifiedTodoObjects', handleStoreSetNotifiedTodoObjects);
 ipcMain.on('setFile', handleSetFile);
 ipcMain.on('removeFile', handleRemoveFile);

@@ -1,13 +1,24 @@
+@import "../../Variables.scss";
+
 .MuiAutocomplete-root {	
 	.MuiInputBase-root {
 		padding-right: 0.5em!important;
 	}
 	.MuiButtonBase-root {
+		border: none;
 		svg.invert {
 			transform: rotate(180deg);
 		}
 		&.addAsTodo {
 			margin-right: 0.5em;
+		}
+		&.Mui-focusVisible {
+			svg {
+				color: $blue;
+			}
+		}
+		&:hover {
+			border: none;
 		}
 	}
 }

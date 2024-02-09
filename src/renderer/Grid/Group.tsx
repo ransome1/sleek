@@ -2,14 +2,12 @@ import React, { memo } from 'react';
 import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-
 interface GroupProps {
   value: string;
   group: string;
   filters: Filters | null;
   onClick: Function;
 }
-
 const Group: React.FC<GroupProps> = memo(({
   value,
   group,
@@ -17,18 +15,15 @@ const Group: React.FC<GroupProps> = memo(({
   onClick
 }) => {
   const values = value?.split(',') || [];
-
   return (
     <ListItem className="row group">
       {values.map((value, index) => {
         if(!value) {
           return <Divider key={index} />;
         }
-
         const selected: boolean = filters && (filters[group as keyof Filters] || []).some(
           (filter: Filter) => filter && filter.value === value.trim()
         );
-
         return (
           <div
             key={index}

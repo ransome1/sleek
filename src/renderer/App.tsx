@@ -56,7 +56,7 @@ const App = () => {
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
   const searchFieldRef = useRef<HTMLInputElement>(null);
   const [attributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
-  const [visibleRowCount, setVisibleRowCount] = useState(30);
+  const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
 
   useEffect(() => {
@@ -64,8 +64,6 @@ const App = () => {
   }, [snackBarContent]);
 
   useEffect(() => {
-    setVisibleRowCount(30);
-    setLoadMoreRows(true);
     if(settings.files?.length === 0) {
       setTodoObjects(null);
     }
@@ -82,6 +80,10 @@ const App = () => {
   }, [settings.language]);  
 
   useEffect(() => {
+    const windowHeight = window.innerHeight;
+    const calculatedRowCount = Math.floor(windowHeight / 35) * 2;
+    setVisibleRowCount(calculatedRowCount);
+    setLoadMoreRows(true);
     ipcRenderer.send('requestData');
   }, []);
 
@@ -172,6 +174,7 @@ const App = () => {
                 setSearchString={setSearchString}
                 headers={headers}
                 settings={settings}
+                todoObjects={todoObjects}
               />
             </div>
           </div>

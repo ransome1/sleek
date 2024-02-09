@@ -4,7 +4,6 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { WithTranslation, withTranslation } from 'react-i18next';
@@ -99,7 +98,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(({
         ),
         endAdornment: (
           <InputAdornment position="end">
-            {searchString && searchString.length > 0 && (
+            {searchString && searchString.length > 0 && !searchFilters.some(filter => filter.label === searchString) && (
               <Button 
                 onClick={() => handleAddTodo(searchString)} 
                 data-testid="header-search-textfield-add-todo"
@@ -107,16 +106,17 @@ const InputComponent: React.FC<InputComponentProps> = memo(({
                 size="small"
                 variant="outlined"
               >
-                <AddIcon />
                 {t('search.addAsTodo')}
               </Button>
             )}
             <IconButton tabIndex={0} onClick={() => ipcRenderer.send('openInBrowser', 'https://github.com/ransome1/sleek/wiki/Filter-Expressions-for-Advanced-Search')} data-testid="header-search-clear-icon">
               <HelpOutlineIcon />
             </IconButton>
-            <IconButton tabIndex={0} onClick={() => setSearchString('')} data-testid="header-search-clear-icon">
-              <ClearIcon />
-            </IconButton>
+            {searchString && searchString.length > 0 && (
+              <IconButton tabIndex={0} onClick={() => setSearchString('')} data-testid="header-search-clear-icon">
+                <ClearIcon />
+              </IconButton>
+            )}
           </InputAdornment>
         ),
       }}

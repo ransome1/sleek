@@ -7,12 +7,6 @@ import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../../main';
 import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString, handleTodoObjectsDates } from './ProcessTodoObjects';
 
-const headers: HeadersObject = {
-  availableObjects: 0,
-  visibleObjects: 0,
-  completedTodoObjects: 0,
-};
-
 let searchString: string;
 
 async function processDataRequest(search?: string): Promise<void> {
@@ -31,8 +25,6 @@ async function processDataRequest(search?: string): Promise<void> {
   let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);
 
   todoObjects = handleTodoObjectsDates(todoObjects);
-  headers.availableObjects = countTodoObjects(todoObjects, false);
-  headers.completedTodoObjects = countTodoObjects(todoObjects, true);
   todoObjects = handleCompletedTodoObjects(todoObjects);
 
   updateAttributes(todoObjects, sorting, true);
@@ -41,9 +33,9 @@ async function processDataRequest(search?: string): Promise<void> {
   if(filters) todoObjects = applyFilters(todoObjects, filters);
   if(searchString) todoObjects = applySearchString(searchString, todoObjects);
 
-  headers.visibleObjects = countTodoObjects(todoObjects, false);
-
   updateAttributes(todoObjects, sorting, false);
+
+  const headers: HeadersObject = countTodoObjects(todoObjects);
 
   if(fileSorting) {
     todoObjects = flattenTodoObjects(todoObjects, '');

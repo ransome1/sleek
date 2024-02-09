@@ -61,7 +61,7 @@ const NavigationComponent: React.FC<Props> = memo(({
             <Button onClick={() => store.setConfig('isDrawerOpen', !settings.isDrawerOpen)} className={settings.isDrawerOpen ? 'active' : ''} data-testid='navigation-button-toggle-drawer'>
               <FilterAltIcon />
             </Button>
-            {headers && headers.completedTodoObjects > 0 && (
+            {headers && headers.completedObjects > 0 && (
               <>
                 <Button onClick={() => ipcRenderer.send('requestArchive')} data-testid='navigation-button-archive-todos'>
                   <InventoryIcon />

@@ -30,8 +30,6 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
     t,
  }) => {
   const mustNotify = (attributes: Attribute[]) => attributes.some((attribute) => attribute.notify);
-
-  //const [isCtrlKeyPressed, setIsCtrlKeyPressed] = useState(false);
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
 
@@ -39,40 +37,11 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
     return !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
   };
 
-  // const handleCtrlCmdDown = (event: globalThis.KeyboardEvent) => {
-  //   if(event.ctrlKey || event.metaKey) {
-  //     setIsCtrlKeyPressed(true);
-  //   }
-  // };
-
-  // const handleCtrlCmdUp = () => {
-  //   setIsCtrlKeyPressed(false);
-  // };
-
   const handleAccordionToggle = (index: number) => {
     const updatedAccordionOpenState = settings.accordionOpenState;
     updatedAccordionOpenState[index] = !updatedAccordionOpenState[index];
     store.setConfig('accordionOpenState', updatedAccordionOpenState);
   };
-
-  // useEffect(() => {
-  //   const handleFocusFirstTabbableElement = () => {
-  //     if(firstTabbableElementRef.current) {
-  //       firstTabbableElementRef.current.focus();
-  //     }
-  //   };
-
-  //   handleFocusFirstTabbableElement();
-
-  //   document.addEventListener('keydown', (event) => handleCtrlCmdDown(event));
-  //   document.addEventListener('keyup', handleCtrlCmdUp);
-  //   window.addEventListener('focus', handleCtrlCmdUp);
-  //   return () => {
-  //     document.removeEventListener('keydown', handleCtrlCmdDown);
-  //     document.removeEventListener('keyup', handleCtrlCmdUp);
-  //     window.removeEventListener('focus', handleCtrlCmdUp);
-  //   };
-  // }, []);
 
   return (
     <div id="Attributes" ref={firstTabbableElementRef}>
@@ -106,24 +75,23 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                       (filter: any) => filter.value === value && filter.exclude
                     );
                     const selected = filters && filters[key]?.some((filter: any) => filter.value === value);
-                    const disabled = attributes[key][value].count === 0;
+                    const disabled = attributes[key][value].count === 0 || !attributes[key][value].visible;
                     const notify = (key === 'due') ? attributes[key][value].notify : false;
+                    
                     return (
                       <div
                         key={`${key}-${value}-${childIndex}`}
                         data-todotxt-attribute={key}
                         data-todotxt-value={value}
-
                         onMouseEnter={() => setHovered(`${key}-${value}-${childIndex}`)}
                         onMouseLeave={() => setHovered(null)}
-
                         className={`filter ${
                           selected ? 'selected' : ''
                         } ${excluded ? 'excluded' : ''}`}
                       >
                         <Badge 
                           badgeContent={
-                            attributes[key][value].count > 0 ? (
+                            !disabled && attributes[key][value].count > 0 ? (
                               <span
                                 onClick={(event) => {
                                   event.stopPropagation();

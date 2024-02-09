@@ -59,6 +59,7 @@ function createTodoObject(index: number, string: string, attributeType?: string,
     rec,
     hidden,
     pm,
+    visible: true,
     string: content,
   };
 }

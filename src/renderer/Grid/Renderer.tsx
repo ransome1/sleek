@@ -14,7 +14,7 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 	  { pattern: new RegExp(`t:${todoObject.tString?.replace(/\s/g, '\\s')}`, 'g'), type: 't', key: 't:' },
 	  { pattern: new RegExp(`due:${todoObject.dueString?.replace(/\s/g, '\\s')}`, 'g'), type: 'due', key: 'due:' },
 	  { pattern: /@(\S+)/, type: 'contexts', key: '@' },
-	  { pattern: /\+(\S+)/, type: 'projects', key: '+' },
+	  { pattern: /(?:^|\s)\+(\S+)/, type: 'projects', key: '+' },
 	  { pattern: /\bh:1\b/, type: 'hidden', key: 'h:1' },
 	  { pattern: /pm:(\d+)/, type: 'pm', key: 'pm:' },
 	  { pattern: /rec:([^ ]+)/, type: 'rec', key: 'rec:' },
@@ -66,50 +66,43 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 		hidden: () => null as React.ReactNode,
 	};
 
+	const transformURL = (uri, children, title) => {
+    	return uri;
+  	};
+
 	const options = {
-	  p: ({children}) => {
-
-	  	if(children.length > 0) {
-
-			let modifiedChild = children;
-
-			expressions.forEach(({ pattern, type, key }) => {
-			    modifiedChild = reactStringReplace(modifiedChild, pattern, (match, i) => {
-			    	const selected = filters && type !== null && (filters[type as keyof Filters] || []).some(
-				      (filter: Filter) => filter.value === match
-				    );	    
-			        return (
-			            <span
-			                key={`${type}-${i}`}
-			                className={selected ? 'filter selected' : 'filter'}
-			                data-todotxt-attribute={type}
-			            >
-			                {replacements[type](match, type)}
-			            </span>
-			        );
-			    });
+		p: ({children}) => {
+			const modifiedChildren = React.Children.map(children, (child) => {
+				if(typeof child === 'object') return child;
+				let modifiedChild = child.split(/(\S+\s*)/).filter(Boolean);
+				expressions.forEach(({ pattern, type }) => {
+					modifiedChild = reactStringReplace(modifiedChild, pattern, (match, i) => {
+						const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.value === match);
+						return (
+							<span className={selected ? 'filter selected' : 'filter'} data-todotxt-attribute={type}>
+								{replacements[type](match, type)}
+							</span>
+						);
+					});
+				});
+				return modifiedChild;
 			});
-
-			return modifiedChild;
-
-	  	} else {
-	  		return children;
-	  	}
-	  },
-	  a: ({ children, href }) => {
-	    const match = /([a-zA-Z]+:\/\/\S+)/g.exec(children);    
-	    if (match) {
-	      return (
-	        <a onClick={(event) => handleLinkClick(event, match[0])}>
-	          {match[1]}<OpenInNewIcon />
-	        </a>
-	      );
-	    }
-	    return <a onClick={(event) => handleLinkClick(event, href)}>{children}<OpenInNewIcon /></a>;
-	  },
+			return modifiedChildren;
+		},
+		a: ({ children, href }) => {
+			const match = /([a-zA-Z]+:\/\/\S+)/g.exec(children);
+			if (match) {
+				return (
+					<a onClick={(event) => handleLinkClick(event, children)}>
+						{children}<OpenInNewIcon />
+					</a>
+				);
+			}
+			return <a onClick={(event) => handleLinkClick(event, href)}>{children}<OpenInNewIcon /></a>;
+		},
 	};
 
-	return <ReactMarkdown remarkPlugins={[remarkGfm]} components={options}>{todoObject.body}</ReactMarkdown>;
+	return <ReactMarkdown remarkPlugins={[remarkGfm]} components={options} urlTransform={transformURL}>{todoObject.body}</ReactMarkdown>;
 };
 
 export default RendererComponent;

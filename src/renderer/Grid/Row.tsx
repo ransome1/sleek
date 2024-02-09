@@ -8,9 +8,7 @@ import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import Group from './Group';
 import Elements from './Elements';
-import { handleFilterSelect } from '../Shared';
 import RendererComponent from './Renderer';
 import './Row.scss';
 import { i18n } from '../Settings/LanguageSelector';
@@ -25,6 +23,7 @@ interface Props extends WithTranslation {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: Settings,
+  handleButtonClick: Function;
   t: typeof i18n.t;
 }
 
@@ -36,12 +35,9 @@ const Row: React.FC<Props> = memo(({
   setContextMenu,
   setPromptItem,
   settings,
+  handleButtonClick,
   t,
 }) => {
-  
-  const handleButtonClick = (key: string, value: string) => {
-    handleFilterSelect(key, value, filters, false);
-  };
 
   const handleConfirmDelete = () => {
     if(todoObject) ipcRenderer.send('removeLineFromFile', todoObject?.id);
@@ -114,17 +110,6 @@ const Row: React.FC<Props> = memo(({
     }
   };
 
-  if(todoObject.group) {
-    return (
-      <Group
-        value={(todoObject.value) ? todoObject.value : ''}
-        group={todoObject.group}
-        filters={filters}
-        onClick={handleButtonClick}
-      />
-    );
-  }
-
   return (
     <>
       <ListItem
@@ -151,8 +136,6 @@ const Row: React.FC<Props> = memo(({
 
         {todoObject.hidden && <VisibilityOffIcon />}
 
-        {/*{<span dangerouslySetInnerHTML={{__html: marked.parseInline(todoObject.body)}} />}*/}
-
         <RendererComponent 
           todoObject={todoObject}
           filters={filters}
@@ -160,14 +143,6 @@ const Row: React.FC<Props> = memo(({
           handleButtonClick={handleButtonClick}
         />
 
-        {/*{ marked.parseInline(todoObject.body) }*/}
-
-        {/*<Elements
-          todoObject={todoObject}
-          filters={filters}
-          handleButtonClick={handleButtonClick}
-          settings={settings}
-        />*/}
       </ListItem>
     </>
   );
