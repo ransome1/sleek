@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.9-rc.4",
+  "version": "2.0.9",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -99,7 +99,7 @@
     "@testing-library/jest-dom": "^6.4.1",
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.12",
-    "@types/node": "20.11.16",
+    "@types/node": "20.11.17",
     "@types/react": "^18.2.52",
     "@types/react-autosuggest": "^10.1.10",
     "@types/react-beautiful-dnd": "^13.1.8",
@@ -160,7 +160,8 @@
       "target": {
         "target": "default",
         "arch": [
-          "universal"
+          "arm64",
+          "x64"
         ]
       },
       "fileAssociations": [
@@ -181,7 +182,7 @@
       "entitlementsInherit": "assets/mas/entitlements.mac.plist",
       "gatekeeperAssess": false,
       "category": "public.app-category.productivity",
-      "artifactName": "${productName}-${version}-mac.${ext}",
+      "artifactName": "${productName}-${version}-mac-${arch}.${ext}",
       "darkModeSupport": true,
       "notarize": {
         "teamId": "8QSR3UZXP8"
