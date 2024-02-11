@@ -26,6 +26,7 @@
   "settings.matomo": "Matomoアナリティクスを許可する",
   "settings.zoom": "ズーム",
   "settings.disableAnimations": "アニメーションを無効にする",
+  "settings.useHumanFriendlyDates": "使いやすい日付を使用する",
   "drawer.tabs.attributes": "属性",
   "drawer.tabs.filters": "フィルター",
   "drawer.tabs.sorting": "ソート",

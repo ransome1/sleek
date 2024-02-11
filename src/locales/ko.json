@@ -26,6 +26,7 @@
   "settings.matomo": "Matomo 분석 허용",
   "settings.zoom": "줌",
   "settings.disableAnimations": "애니메이션 비활성화",
+  "settings.useHumanFriendlyDates": "사용자 친화적인 날짜 사용",
   "drawer.tabs.attributes": "속성",
   "drawer.tabs.filters": "필터",
   "drawer.tabs.sorting": "정렬",

@@ -26,6 +26,7 @@
   "settings.matomo": "Matomo analitiğine izin ver",
   "settings.zoom": "Yakınlaştırma",
   "settings.disableAnimations": "Animasyonları devre dışı bırak",
+  "settings.useHumanFriendlyDates": "İnsan dostu tarihleri kullan",
   "drawer.tabs.attributes": "Özellikler",
   "drawer.tabs.filters": "Filtreler",
   "drawer.tabs.sorting": "Sıralama",

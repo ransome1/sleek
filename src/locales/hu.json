@@ -26,6 +26,7 @@
   "settings.matomo": "Matomo analitika engedélyezése",
   "settings.zoom": "Nagyítás",
   "settings.disableAnimations": "Animációk kikapcsolása",
+  "settings.useHumanFriendlyDates": "Használjon emberbarát dátumokat",
   "drawer.tabs.attributes": "Tulajdonságok",
   "drawer.tabs.filters": "Szűrők",
   "drawer.tabs.sorting": "Rendezés",

@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg';
 import DatePickerInline from './DatePickerInline';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -90,15 +91,21 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 			return modifiedChildren;
 		},
 		a: ({ children, href }) => {
-			const match = /([a-zA-Z]+:\/\/\S+)/g.exec(children);
-			if (match) {
-				return (
-					<a onClick={(event) => handleLinkClick(event, children)}>
-						{children}<OpenInNewIcon />
-					</a>
-				);
-			}
-			return <a onClick={(event) => handleLinkClick(event, href)}>{children}<OpenInNewIcon /></a>;
+		  const match = /([a-zA-Z]+:\/\/\S+)/g.exec(children);
+		  const maxChars = 40;
+		  const truncatedChildren = children.length > maxChars ? children.slice(0, maxChars) + '...' : children;
+
+		  const link = (
+		    <a onClick={(event) => handleLinkClick(event, match ? children : href)}>
+		      {truncatedChildren}<OpenInNewIcon />
+		    </a>
+		  );
+
+		  return children.length > maxChars ? (
+		    <Tooltip title={children} arrow>
+		      {link}
+		    </Tooltip>
+		  ) : link;
 		},
 	};
 

@@ -6,6 +6,8 @@ import Chip from '@mui/material/Chip';
 import Badge from '@mui/material/Badge';
 import { handleFilterSelect } from '../Shared';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
 
 const { ipcRenderer } = window.api;
 
@@ -26,6 +28,12 @@ const DatePickerInline: React.FC<Props> = ({
 }) => {
 	const [open, setOpen] = useState(false);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
+
+  if(settings.useHumanFriendlyDates) {
+    dayjs.locale(settings.language);
+    dayjs.extend(relativeTime);
+    dayjs.extend(duration);
+  }
 
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
@@ -51,6 +59,7 @@ const DatePickerInline: React.FC<Props> = ({
     const ButtonField = ({ ...props }) => {
       const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
+      const friendlyDate = settings.useHumanFriendlyDates ? dayjs(date).fromNow() : null;
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
           <Badge variant="dot" invisible={mustNotify}>
@@ -66,7 +75,7 @@ const DatePickerInline: React.FC<Props> = ({
               data-testid={`datagrid-picker-date-${type}`}
               tabIndex={0}
             >
-              {date}
+              {(friendlyDate) ? friendlyDate : date}
             </div>
           </Badge>
         </Button>

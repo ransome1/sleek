@@ -26,6 +26,7 @@
   "settings.matomo": "मैटोमो विश्लेषण की अनुमति दें",
   "settings.zoom": "ज़ूम",
   "settings.disableAnimations": "एनिमेशन अक्षम करें",
+  "settings.useHumanFriendlyDates": "मानव-मित्रता योग्य तिथियाँ उपयोग करें",
   "drawer.tabs.attributes": "गुण",
   "drawer.tabs.filters": "फ़िल्टर",
   "drawer.tabs.sorting": "क्रमबद्ध करना",

@@ -26,6 +26,7 @@
   "settings.matomo": "Povolit analýzu Matomo",
   "settings.zoom": "Přiblížení",
   "settings.disableAnimations": "Vypnout animace",
+  "settings.useHumanFriendlyDates": "Používat lidsky přívětivá data",
   "drawer.tabs.attributes": "Atributy",
   "drawer.tabs.filters": "Filtry",
   "drawer.tabs.sorting": "Řazení",

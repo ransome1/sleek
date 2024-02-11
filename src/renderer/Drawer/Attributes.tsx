@@ -10,6 +10,9 @@ import AirIcon from '@mui/icons-material/Air';
 import { handleFilterSelect } from '../Shared';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
 import './Attributes.scss';
 
 const { store } = window.api;
@@ -32,6 +35,12 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
   const mustNotify = (attributes: Attribute[]) => attributes.some((attribute) => attribute.notify);
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
+
+  if(settings.useHumanFriendlyDates) {
+    dayjs.locale(settings.language);
+    dayjs.extend(relativeTime);
+    dayjs.extend(duration);
+  }
 
   const isAttributesEmpty = (attributes: Attributes | null) => {
     return !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
@@ -77,6 +86,7 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                     const selected = filters && filters[key]?.some((filter: any) => filter.value === value);
                     const disabled = attributes[key][value].count === 0 || !attributes[key][value].visible;
                     const notify = (key === 'due') ? attributes[key][value].notify : false;
+                    const friendlyDate = settings.useHumanFriendlyDates && dayjs(value).isValid() ? dayjs(value).fromNow() : null;
                     
                     return (
                       <div
@@ -115,7 +125,7 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                             }
                             disabled={disabled}
                           >
-                            {value}
+                            {(friendlyDate) ? friendlyDate : value}
                           </Button>
                         </Badge>
                         {(excluded) && (
@@ -132,7 +142,6 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
                       </div>
                     );
                   })}
-                
               </AccordionDetails>
             </Accordion>
           ) : null
