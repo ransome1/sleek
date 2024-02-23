@@ -19,6 +19,7 @@ describe('Should filter todos based on passed filters', () => {
     }
     const expected = [
       { id: 1, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-01-01', dueString: '2023-01-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: true, string: '' },
+      { id: 2, body: 'Test', created: null, complete: true, completed: null, priority: null, contexts: null, projects: ['Project 2'], due: '2023-02-01', dueString: '2023-02-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: false, string: '' },
       { id: 3, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-03-01', dueString: '2023-03-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: true, string: '' },
     ];
     const result = applyFilters(todoObjects, filters);

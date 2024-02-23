@@ -34,8 +34,8 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
  }) => {
 
   const list = document.getElementById('grid');
-  const groups = new Array;
-  const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible !== false)?.slice(0, visibleRowCount);
+  const groups: string[] = [];
+  const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible)?.slice(0, visibleRowCount);
   const totalRowCount = todoObjects?.length || 0;
 
   const handleButtonClick = (key: string, value: string) => {
@@ -93,9 +93,9 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
   return (
     <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
       {visibleTodoObjects?.map((row, index) => {
-        let renderGroup = false;
-        const groupValue = row[settings.sorting[0].value]?.toString() || null,
-        if (groups.length === 0 || !groups.includes(groupValue)) {
+        let renderGroup;
+        const groupValue = row[settings.sorting[0].value]?.toString() || null;
+        if(groups.length === 0 || !groups.includes(groupValue)) {
           groups.push(groupValue);
           renderGroup = true;
         }

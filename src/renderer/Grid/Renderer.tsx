@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import reactStringReplace from 'react-string-replace';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
@@ -9,8 +9,24 @@ import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-du
 import DatePickerInline from './DatePickerInline';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { handleLinkClick } from '../Shared';
+import { WithTranslation } from 'react-i18next';
+import { i18n } from '../Settings/LanguageSelector';
 
-const RendererComponent = ({ todoObject, filters, settings, handleButtonClick }) => {
+interface RendererComponentProps extends WithTranslation {
+	todoObject: TodoObject;
+	filters: Filters;
+	settings: Settings;
+	handleButtonClick: Function;
+	t: typeof i18n.t;
+}
+
+const RendererComponent: React.FC<RendererComponentProps> = memo(({
+	todoObject,
+	filters,
+	settings,
+	handleButtonClick
+}) => {
+
 	const expressions = [
 	  { pattern: new RegExp(`t:${todoObject.tString?.replace(/\s/g, '\\s')}`, 'g'), type: 't', key: 't:' },
 	  { pattern: new RegExp(`due:${todoObject.dueString?.replace(/\s/g, '\\s')}`, 'g'), type: 'due', key: 'due:' },
@@ -24,7 +40,7 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 	const replacements: {
 		[key: string]: (value: string, type: string) => React.ReactNode;
 	} = {
-		due: (value,type) => (
+		due: (_value,type) => (
 		  <DatePickerInline
 		    type={type}
 		    todoObject={todoObject}
@@ -33,7 +49,7 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 		    settings={settings}
 		  />
 		),
-		t: (value, type) => (
+		t: (_value, type) => (
 		  <DatePickerInline
 		    type={type}
 		    todoObject={todoObject}
@@ -67,17 +83,17 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 		hidden: () => null as React.ReactNode,
 	};
 
-	const transformURL = (uri, children, title) => {
+	const transformURL = (uri: string) => {
     	return uri;
   	};
 
 	const options = {
 		p: ({children}) => {
-			const modifiedChildren = React.Children.map(children, (child) => {
+			return React.Children.map(children, (child) => {
 				if(typeof child === 'object') return child;
 				let modifiedChild = child.split(/(\S+\s*)/).filter(Boolean);
 				expressions.forEach(({ pattern, type }) => {
-					modifiedChild = reactStringReplace(modifiedChild, pattern, (match, i) => {
+					modifiedChild = reactStringReplace(modifiedChild, pattern, (match) => {
 						const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.value === match);
 						return (
 							<span className={selected ? 'filter selected' : 'filter'} data-todotxt-attribute={type}>
@@ -88,7 +104,6 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 				});
 				return modifiedChild;
 			});
-			return modifiedChildren;
 		},
 		a: ({ children, href }) => {
 		  const match = /([a-zA-Z]+:\/\/\S+)/g.exec(children);
@@ -110,6 +125,6 @@ const RendererComponent = ({ todoObject, filters, settings, handleButtonClick })
 	};
 
 	return <ReactMarkdown remarkPlugins={[remarkGfm]} components={options} urlTransform={transformURL}>{todoObject.body}</ReactMarkdown>;
-};
+});
 
 export default RendererComponent;

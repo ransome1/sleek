@@ -1,15 +1,15 @@
 
-2024-02-11 Line 1 rec:1d due:2024-02-12
-2024-02-11 Line 1 rec:w due:2024-02-18
-2024-02-11 Line 1 rec:2m due:2024-04-11
-2024-02-11 Line 1 rec:+1d due:2024-02-13
-2024-02-11 Line 1 rec:7w due:2024-03-31
-2024-02-11 Line 1 due:2023-07-24 rec:+1b
-2024-02-11 taxes are due in one year t:2022-03-30 due:2022-04-30 rec:+1y
-2024-02-11 Water plants @home +quick due:2024-02-18 t:2024-02-08 rec:1w
-2024-02-11 Line 1 rec:+1d t:2023-09-20
-2024-02-11 Line 1 rec:1d pri:A due:2024-02-12
-2024-02-11 (A) Do something rec:d t:2024-02-12 @SomeContext
-2024-02-11 Do something rec:0d
-2024-02-11 Do something rec:0d due:2024-02-11
-2024-02-11 Do something rec:0d due:2024-02-11 t:2024-02-11
+2024-02-23 Line 1 rec:1d due:2024-02-24
+2024-02-23 Line 1 rec:w due:2024-03-01
+2024-02-23 Line 1 rec:2m due:2024-04-23
+2024-02-23 Line 1 rec:+1d due:2024-02-25
+2024-02-23 Line 1 rec:7w due:2024-04-12
+2024-02-23 Line 1 due:2023-07-24 rec:+1b
+2024-02-23 taxes are due in one year t:2022-03-30 due:2022-04-30 rec:+1y
+2024-02-23 Water plants @home +quick due:2024-03-01 t:2024-02-20 rec:1w
+2024-02-23 Line 1 rec:+1d t:2023-09-20
+2024-02-23 Line 1 rec:1d pri:A due:2024-02-24
+2024-02-23 (A) Do something rec:d t:2024-02-24 @SomeContext
+2024-02-23 Do something rec:0d
+2024-02-23 Do something rec:0d due:2024-02-23
+2024-02-23 Do something rec:0d due:2024-02-23 t:2024-02-23

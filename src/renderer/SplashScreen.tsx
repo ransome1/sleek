@@ -12,7 +12,6 @@ interface SplashScreenProps extends WithTranslation {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   headers: HeadersObject | null;
   settings: Settings;
-  todoObjects: TodoObject[];
   t: typeof i18n.t;
 }
 
@@ -23,7 +22,6 @@ const SplashScreen: FC<SplashScreenProps> = memo(({
   setDialogOpen,
   headers,
   settings,
-  todoObjects,
   t,
 }) => {
   const handleCreateTodo = () => {

@@ -62,7 +62,7 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
         </div>
       ) : (
         Object.keys(attributes).map((key, index) =>
-          attributes[key] && Object.keys(attributes[key]).length > 0 ? (
+          attributes && attributes[key] && Object.keys(attributes[key]).length > 0 ? (
             <Accordion
               TransitionProps={{ unmountOnExit: true }}
               key={index}

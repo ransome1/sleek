@@ -36,7 +36,7 @@ export const handleFilterSelect = (key: string, value: string | string[] | null,
   }
 };
 
-export const handleLinkClick = (event: React.MouseEvent, url: string) => {
+export const handleLinkClick = (event: MouseEvent, url: string) => {
   event.preventDefault();
   event.stopPropagation();
   if(url) {

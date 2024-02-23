@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Trigger Flathub build
-      uses: peter-evans/repository-dispatch@v2.1.2
+      uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.TRIGGER_FLATHUB_BUILD }}
         repository: ransome1/com.github.ransome1.sleek
@@ -23,9 +23,9 @@ jobs:
         os: [macos-latest]
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
       - name: Install Node and NPM
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@master
         with:
           node-version: 18
           cache: 'yarn'
@@ -54,9 +54,9 @@ jobs:
         os: [windows-latest]
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
       - name: Install Node and NPM
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@master
         with:
           node-version: 18
           cache: 'yarn'
@@ -78,9 +78,9 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
       - name: Install Node and NPM
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@master
         with:
           node-version: 18
           cache: 'yarn'
