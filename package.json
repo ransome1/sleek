@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.10-rc.2",
+  "version": "2.0.10",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -113,7 +113,7 @@
     "css-minimizer-webpack-plugin": "^6.0.0",
     "depcheck": "^1.4.7",
     "detect-port": "^1.5.1",
-    "electron": "^28.2.1",
+    "electron": "28.2.4",
     "electron-builder": "^24.2.1",
     "electron-devtools-installer": "^3.2.0",
     "electronmon": "^2.0.2",
