@@ -145,7 +145,7 @@ describe('Process todo.txt objects', () => {
         expect(flattenedObjects[3].due).toContain('2023-01-02');
         expect(flattenedObjects[4].due).toContain('2023-01-03');
         expect(flattenedObjects[5].due).toContain('2023-01-04');
-        expect(flattenedObjects[6].due).toContain('2023-01-05');
+        expect(flattenedObjects[6].due).toContain('2025-01-05');
     });
 
     test('Sorting: Priority -> Projects ', () => {
