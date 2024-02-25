@@ -80,7 +80,7 @@ jobs:
     - uses: actions/checkout@master
       with:
         fetch-depth: 0
-    - uses: pixta-dev/repository-mirroring-action@master
+    - uses: pixta-dev/repository-mirroring-action@v1
       with:
         target_repo_url:
           git@www.opencode.net:ransome/sleek.git
