@@ -26,6 +26,7 @@
   "settings.matomo": "Permitir análise do Matomo",
   "settings.zoom": "Zoom",
   "settings.disableAnimations": "Desativar animações",
+  "settings.useHumanFriendlyDates": "Usar datas amigáveis",
   "drawer.tabs.attributes": "Atributos",
   "drawer.tabs.filters": "Filtros",
   "drawer.tabs.sorting": "Ordenação",

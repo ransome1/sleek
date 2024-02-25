@@ -80,6 +80,7 @@ declare global {
     disableAnimations: boolean;
     multilineTextField: boolean;
     useMultilineForBulkTodoCreation: boolean;
+    useHumanFriendlyDates: boolean;
     __internal__: { migrations: { version: string }};
   }
 

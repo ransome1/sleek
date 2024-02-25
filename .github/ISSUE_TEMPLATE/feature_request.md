@@ -9,9 +9,7 @@ labels: 'feature request'
 ## Feature Request
 
 ### Important ###
-Please follow this template strictly when requesting features.
-
-Reports that do not adhere to this template will not be addressed and will be closed.
+Requests that do not adhere to this template will not be addressed and will be closed.
 
 If your feature request is more of a **loose idea** and you are **unsure about its implementation or potential impact**, please discuss it first in the [GitHub Discussions section](https://github.com/ransome1/sleek/discussions).
 

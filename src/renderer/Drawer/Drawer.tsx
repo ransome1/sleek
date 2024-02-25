@@ -13,7 +13,6 @@ import { i18n } from '../Settings/LanguageSelector';
 import './Drawer.scss';
 
 const { store } = window.api;
-let resizeTimeout;
 
 interface Props extends WithTranslation {
   settings: Settings;

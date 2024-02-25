@@ -174,7 +174,6 @@ const App = () => {
                 setSearchString={setSearchString}
                 headers={headers}
                 settings={settings}
-                todoObjects={todoObjects}
               />
             </div>
           </div>

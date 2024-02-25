@@ -38,6 +38,9 @@ const visibleSettings: VisibleSettings = {
   disableAnimations: {
     style: 'toggle',
   },
+  useHumanFriendlyDates: {
+    style: 'toggle',
+  },
   notificationsAllowed: {
     style: 'toggle',
   },

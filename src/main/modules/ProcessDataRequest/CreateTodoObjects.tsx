@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import { Item } from 'jstodotxt';
+import { config } from '../../config';
 import { handleNotification } from '../Notifications';
 import { extractSpeakingDates } from '../Date';
 import dayjs from 'dayjs';
@@ -36,7 +37,6 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   const notify = speakingDates['due:']?.notify || false;
   const t = speakingDates['t:']?.date || null;
   const tString = speakingDates['t:']?.string || null;
-  
   const hidden = extensions.some(extension => extension.key === 'h' && extension.value === '1');
   const pm: string | number | null = extensions.find(extension => extension.key === 'pm')?.value || null;
   const rec = extensions.find(extension => extension.key === 'rec')?.value || null;
@@ -71,14 +71,21 @@ async function createTodoObjects(fileContent: string | null): Promise<TodoObject
   }
   badge.count = 0;
   lines = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
+  const excludeLinesWithPrefix: string[] = config.get('excludeLinesWithPrefix') || [];
   
-  const todoObjects: TodoObject[] = await Promise.all(lines.map((line, i) => {
-    const todoObject: TodoObject = createTodoObject(i, line);
-    if(todoObject.body && !todoObject.complete) {
+  const todoObjects: TodoObject[] = await Promise.all(lines.map(async (line, i) => {
+    if(excludeLinesWithPrefix.some(prefix => line.startsWith(prefix))) {
+      return null;
+    }
+
+    const todoObject: TodoObject = await createTodoObject(i, line);
+
+    if (todoObject.body && !todoObject.complete) {
       handleNotification(todoObject.due, todoObject.body, badge);
     }
+
     return todoObject;
-  }));
+  })).then((objects) => objects.filter(Boolean) as TodoObject[]);
 
   app.setBadgeCount(badge.count);
 

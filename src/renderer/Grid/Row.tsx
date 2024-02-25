@@ -1,14 +1,10 @@
 import React, { memo } from 'react';
-import ReactDOMServer from 'react-dom/server';
 import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
 import ListItem from '@mui/material/ListItem';
 import CircleChecked from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import Elements from './Elements';
 import RendererComponent from './Renderer';
 import './Row.scss';
 import { i18n } from '../Settings/LanguageSelector';

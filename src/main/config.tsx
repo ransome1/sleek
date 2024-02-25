@@ -91,6 +91,11 @@ const config: Store<Settings> = new Store<Settings>({
       store.set('bulkTodoCreation', false);
       store.set('disableAnimations', false);
     },
+    '2.0.10': store => {
+      console.log('Migrating from 2.0.4 → 2.0.10');
+      store.set('useHumanFriendlyDates', false);
+      store.set('excludeLinesWithPrefix', null);
+    },
   }
 });
 
@@ -117,14 +122,6 @@ filter.onDidChange('attributes', async () => {
     console.error(error);
   }
 });
-
-// filter.onDidChange('search', async () => {
-//   try {
-//     await processDataRequest(searchString);
-//   } catch(error: any) {
-//     console.error(error);
-//   }
-// });
 
 config.onDidAnyChange(async(settings) => {
   try {

@@ -26,6 +26,7 @@
   "settings.matomo": "Разрешить аналитику Matomo",
   "settings.zoom": "Масштаб",
   "settings.disableAnimations": "Отключить анимации",
+  "settings.useHumanFriendlyDates": "Использовать удобочитаемые даты",
   "drawer.tabs.attributes": "Атрибуты",
   "drawer.tabs.filters": "Фильтры",
   "drawer.tabs.sorting": "Сортировка",

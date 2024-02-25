@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import Link from '@mui/material/Link';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -9,7 +9,7 @@ import { i18n } from '../Settings/LanguageSelector';
 import { handleLinkClick } from '../Shared';
 import './Filters.scss';
 
-const { store, ipcRenderer } = window.api;
+const { store} = window.api;
 
 const visibleSettings: VisibleSettings = {
   showCompleted: {

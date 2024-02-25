@@ -57,7 +57,7 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(({
   const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'));
   const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
 
-  const filterOptions = (options: string | SearchFilter[], params) => {
+  const filterOptions = (options: string | SearchFilter[], params: any) => {
     const filter = createFilterOptions<SearchFilter>();
     const filtered: SearchFilter[] = filter(options as SearchFilter[], params);
     const { inputValue } = params;
