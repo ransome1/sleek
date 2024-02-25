@@ -24,12 +24,14 @@ async function processDataRequest(search?: string): Promise<void> {
   const fileContent = await readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
   let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);
   todoObjects = handleTodoObjectsDates(todoObjects);
-  todoObjects = handleCompletedTodoObjects(todoObjects);
+  todoObjects = handleCompletedTodoObjects(todoObjects);  
 
   updateAttributes(todoObjects, sorting, true);
 
   if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
+
   if(filters) todoObjects = applyFilters(todoObjects, filters);
+
   if(searchString) todoObjects = applySearchString(searchString, todoObjects);
 
   updateAttributes(todoObjects, sorting, false);
