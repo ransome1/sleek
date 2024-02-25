@@ -118,7 +118,7 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(({
             freeSolo
             autoHighlight
             open={isAutocompleteOpen}
-            inputValue={searchString}      
+            inputValue={searchString || ''}      
             options={searchFilters}
             onBlur={() => setIsAutocompleteOpen(false)}
             filterOptions={filterOptions}

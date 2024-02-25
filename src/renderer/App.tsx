@@ -42,7 +42,7 @@ const App = () => {
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<AlertColor | undefined>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [searchString, setSearchString] = useState<string>('');
+  const [searchString, setSearchString] = useState<string | null>(null);
   const [todoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
   const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
   const [attributeFields, setAttributeFields] = useState<TodoObject | null>(null);

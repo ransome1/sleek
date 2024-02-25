@@ -1,5 +1,9 @@
 function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
   return todoObjects.map((todoObject: TodoObject) => {
+    if (!todoObject.visible) {
+      return todoObject;
+    }
+
     const isVisible = Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {
       if (filterArray.length === 0) {
         return true;
