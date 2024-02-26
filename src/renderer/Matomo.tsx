@@ -20,6 +20,7 @@ const MatomoComponent: React.FC<MatomoComponentProps> = ({
         'event': 'mtm.Start',
         'anonymousUserId': (anonymousUserId) ? anonymousUserId : null,
         'version': settings.__internal__.migrations.version,
+        'channel': settings.channel,
       });
       _paq.push((settings.matomo) ? ['forgetUserOptOut'] : ['optUserOut']);
       const

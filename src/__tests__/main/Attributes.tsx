@@ -23,14 +23,14 @@ describe('Set of filters must create a respective set of attributes and its coun
     ];
 
     const expectedAttributes = {
-      priority: { 'A': { count: 1, notify: false, visible: true}, 'C': { count: 1, notify: false, visible: true} },
-      projects: { 'Project 1': { count: 2, notify: false, visible: true}, 'Project 2': { count: 2, notify: false, visible: true} },
-      contexts: { 'Context 1': { count: 2, notify: false, visible: true} },
-      due: { '2023-01-01': { count: 1, notify: false, visible: true}, '2023-02-01': { count: 1, notify: false, visible: true}, '2023-03-01': { count: 1, notify: true, visible: true}, '2023-04-01': { count: 1, notify: false, visible: true} },
-      t: { '2024-02-01': { count: 2, notify: false, visible: true} },
-      rec: { '2b': { count: 1, notify: false, visible: true} },
+      priority: { 'A': { count: 1, notify: false}, 'C': { count: 1, notify: false} },
+      projects: { 'Project 1': { count: 2, notify: false}, 'Project 2': { count: 2, notify: false} },
+      contexts: { 'Context 1': { count: 2, notify: false} },
+      due: { '2023-01-01': { count: 1, notify: false}, '2023-02-01': { count: 1, notify: false}, '2023-03-01': { count: 1, notify: true}, '2023-04-01': { count: 1, notify: false} },
+      t: { '2024-02-01': { count: 2, notify: false} },
+      rec: { '2b': { count: 1, notify: false} },
       pm: {},
-      created: { '2026-01-01': { count: 2, notify: false, visible: true} },
+      created: { '2026-01-01': { count: 2, notify: false} },
       completed: {},
     };
     await updateAttributes(todoObjects, sorting, false);

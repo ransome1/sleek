@@ -1,34 +1,23 @@
 const { store, ipcRenderer } = window.api;
 
-export const handleFilterSelect = (key: string, value: string | string[] | null, filters: Filters | null, isCtrlKeyPressed: boolean) => {
+export const handleFilterSelect = (key: string, name: string, values: string | string[] | null, filters: Filters | null, exclude: boolean) => {
   try {
+
     const updatedFilters: Filters = { ...filters };
     const filterList: Filter[] = updatedFilters[key] || [];
 
-    if(typeof value === 'string') {
-      const values = value.split(',');
-      values.forEach((singleValue) => {
-        const filterIndex: number = filterList.findIndex((filter) => filter.value === singleValue);
-        if(filterIndex !== -1) {
-          filterList.splice(filterIndex, 1);
-          if(isCtrlKeyPressed) {
-            filterList.push({ value: singleValue, exclude: true });
-          }
-        } else {
-          filterList.push({ value: singleValue, exclude: isCtrlKeyPressed });
-        }
-      });
+    const filterIndex = filterList.findIndex((filter: Filter) => {
+      return Array.isArray(values) && Array.isArray(filter.values) ? 
+        values.every(v => filter.values.includes(v)) : 
+        filter.values === values;
+    });
+
+    if (filterIndex !== -1) {
+      filterList.splice(filterIndex, 1);
     } else {
-      const filterIndex = filterList.findIndex((filter: Filter) => filter.value === value);
-      if(filterIndex !== -1) {
-        filterList.splice(filterIndex, 1);
-        if(isCtrlKeyPressed) {
-          filterList.push({ value, exclude: true });
-        }
-      } else {
-        filterList.push({ value, exclude: isCtrlKeyPressed });
-      }
+      filterList.push({ name, values, exclude });
     }
+
     updatedFilters[key] = filterList;
     store.setFilters('attributes', updatedFilters);
   } catch (error: any) {

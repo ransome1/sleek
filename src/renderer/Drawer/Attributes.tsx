@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from 'react';
+import React, { useState, useRef, memo, useMemo } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -13,7 +13,11 @@ import { i18n } from '../Settings/LanguageSelector';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import calendar from 'dayjs/plugin/calendar';
 import './Attributes.scss';
+dayjs.extend(relativeTime);
+dayjs.extend(duration);
+dayjs.extend(calendar);
 
 const { store } = window.api;
 
@@ -26,25 +30,64 @@ interface DrawerAttributesProps extends WithTranslation {
 }
 
 const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
-    settings,
-    attributes,
-    attributeMapping,
-    filters,
-    t,
- }) => {
-  const mustNotify = (attributes: Attribute[]) => attributes.some((attribute) => attribute.notify);
+  settings,
+  attributes,
+  attributeMapping,
+  filters,
+  t,
+}) => {
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
 
-  if(settings.useHumanFriendlyDates) {
+  const friendlyDate = (value: string) => {
     dayjs.locale(settings.language);
-    dayjs.extend(relativeTime);
-    dayjs.extend(duration);
-  }
-
-  const isAttributesEmpty = (attributes: Attributes | null) => {
-    return !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length);
+    return dayjs(value).calendar(null, {
+      sameDay: `[${t(`drawer.attributes.today`)}]`,
+      nextDay: `[${t(`drawer.attributes.tomorrow`)}]`,
+      nextWeek: `[${t(`drawer.attributes.nextWeek`)}]`,
+      lastDay: `[${t(`drawer.attributes.yesterday`)}]`,
+      lastWeek: `[${t(`drawer.attributes.lastWeek`)}]`,
+      sameElse: function () {
+        return dayjs(this).fromNow();
+      },
+    });
   };
+
+  const preprocessAttributes = (attributeKey, attributes) => {
+    if (!attributes) {
+      return null;
+    }
+
+    const processedAttributes = {};
+
+    Object.keys(attributes).forEach((key) => {
+      if (attributes[key]) {
+        const count = attributes[key].count;
+        const formattedValue = settings.useHumanFriendlyDates && dayjs(key).isValid() ? friendlyDate(key) : key;
+
+        if (!processedAttributes[formattedValue]) {
+          processedAttributes[formattedValue] = {
+            key: attributeKey,
+            name: formattedValue,
+            count,
+            notify: attributes[key].notify,
+            aggregatedValues: [key]
+          };
+        } else {
+          processedAttributes[formattedValue].count += count;
+          processedAttributes[formattedValue].notify = processedAttributes[formattedValue].notify || attributes[key].notify;
+          processedAttributes[formattedValue].aggregatedValues.push(key);
+        }
+      }
+    });
+
+    return processedAttributes;
+  };
+
+  const isAttributesEmpty = useMemo(
+    () => !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length),
+    [attributes]
+  );
 
   const handleAccordionToggle = (index: number) => {
     const updatedAccordionOpenState = settings.accordionOpenState;
@@ -52,100 +95,105 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
     store.setConfig('accordionOpenState', updatedAccordionOpenState);
   };
 
+  const renderAttributes = (preprocessedAttributes: any, filters: Filters | null, handleFilterSelect: Function) => {
+
+    return Object.keys(preprocessedAttributes).map((value, childIndex) => {
+
+      const attribute = preprocessedAttributes[value];
+      const name = preprocessedAttributes[value].name;
+      const key = preprocessedAttributes[value].key;
+      const excluded = filters && filters[key]?.some((filter: any) => filter.name === name && filter.exclude);
+      const selected = filters && filters[key]?.some((filter: any) => filter.name === name);
+      const disabled = attribute.count === 0;
+      const notify = key === 'due' ? attribute.notify : false;
+
+      return (
+        <div
+          key={`${key}-${value}-${childIndex}`}
+          data-todotxt-attribute={key}
+          data-todotxt-value={value}
+          onMouseEnter={() => setHovered(`${key}-${value}-${childIndex}`)}
+          onMouseLeave={() => setHovered(null)}
+          className={`filter ${selected ? 'selected' : ''} ${excluded ? 'excluded' : ''}`}
+        >
+          <Badge
+            badgeContent={
+              !disabled && attribute.count > 0 ? (
+                <span
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleFilterSelect(key, name, attribute.aggregatedValues, filters, true);
+                  }}
+                >
+                  {hovered === `${key}-${value}-${childIndex}` ? <VisibilityOffIcon /> : attribute.count}
+                </span>
+              ) : null
+            }
+            className={notify ? 'notify' : null}
+          >
+            <Button
+              className="attribute"
+              data-testid={`drawer-button-${key}`}
+              onClick={
+                disabled
+                  ? undefined
+                  : () =>
+                    handleFilterSelect(key, name, attribute.aggregatedValues, filters, false)
+              }
+              disabled={disabled}
+            >
+              {value}
+            </Button>
+          </Badge>
+          {excluded && (
+            <div
+              data-todotxt-attribute={key}
+              data-todotxt-value={value}
+              data-testid={`drawer-button-exclude-${key}`}
+              className="overlay"
+              onClick={() => handleFilterSelect(key, name, attribute.aggregatedValues, filters, false)}
+            >
+              <VisibilityOffIcon />
+            </div>
+          )}
+        </div>
+      );
+    });
+  };
+
   return (
     <div id="Attributes" ref={firstTabbableElementRef}>
-      {isAttributesEmpty(attributes) ? (
-        <div className="placeholder">
-          <AirIcon />
-          <br />
-          {t(`drawer.attributes.noAttributesAvailable`)}
-        </div>
-      ) : (
-        Object.keys(attributes).map((key, index) =>
-          attributes && attributes[key] && Object.keys(attributes[key]).length > 0 ? (
+      {!isAttributesEmpty ? (
+        Object.keys(attributes).map((key, index) => {
+
+          const preprocessedAttributes = attributes[key] ? preprocessAttributes(key, attributes[key]) : attributes[key];
+
+          return Object.keys(preprocessedAttributes).length > 0 ? (
             <Accordion
               TransitionProps={{ unmountOnExit: true }}
               key={index}
               expanded={settings.accordionOpenState[index]}
               onChange={() => handleAccordionToggle(index)}
             >
-              <AccordionSummary 
-                expandIcon={<ExpandMoreIcon />}
-              >
-                <Badge variant="dot" invisible={!(key === 'due' && mustNotify(Object.values(attributes[key])))}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Badge variant="dot" invisible={!(key === 'due' && Object.values(preprocessedAttributes).some((attribute) => attribute.notify))}>
                   <h3 data-testid={`drawer-attributes-accordion-${key}`}>
                     {attributeMapping[key]}
                   </h3>
                 </Badge>
               </AccordionSummary>
               <AccordionDetails>
-                  {attributes && Object.keys(attributes[key]).map((value, childIndex) => {
-                    const excluded = filters && filters[key]?.some(
-                      (filter: any) => filter.value === value && filter.exclude
-                    );
-                    const selected = filters && filters[key]?.some((filter: any) => filter.value === value);
-                    const disabled = attributes[key][value].count === 0 || !attributes[key][value].visible;
-                    const notify = (key === 'due') ? attributes[key][value].notify : false;
-                    const friendlyDate = settings.useHumanFriendlyDates && dayjs(value).isValid() ? dayjs(value).fromNow() : null;
-                    
-                    return (
-                      <div
-                        key={`${key}-${value}-${childIndex}`}
-                        data-todotxt-attribute={key}
-                        data-todotxt-value={value}
-                        onMouseEnter={() => setHovered(`${key}-${value}-${childIndex}`)}
-                        onMouseLeave={() => setHovered(null)}
-                        className={`filter ${
-                          selected ? 'selected' : ''
-                        } ${excluded ? 'excluded' : ''}`}
-                      >
-                        <Badge 
-                          badgeContent={
-                            !disabled && attributes[key][value].count > 0 ? (
-                              <span
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  handleFilterSelect(key, value, filters, true);
-                                }}
-                              >
-                                {hovered === `${key}-${value}-${childIndex}` ? <VisibilityOffIcon /> : attributes[key][value].count}
-                              </span>
-                            ) : null
-                          }
-                          className={notify ? 'notify' : null }
-                        >
-                          <Button
-                            className="attribute"
-                            data-testid={`drawer-button-${key}`}
-                            onClick={
-                              disabled
-                                ? undefined
-                                : () =>
-                                  handleFilterSelect(key, value, filters, false)
-                            }
-                            disabled={disabled}
-                          >
-                            {(friendlyDate) ? friendlyDate : value}
-                          </Button>
-                        </Badge>
-                        {(excluded) && (
-                          <div
-                            data-todotxt-attribute={key}
-                            data-todotxt-value={value}
-                            data-testid={`drawer-button-exclude-${key}`}
-                            className="overlay"
-                            onClick={() => handleFilterSelect(key, value, filters, false)}
-                          >
-                            <VisibilityOffIcon />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                {renderAttributes(preprocessedAttributes, filters, handleFilterSelect)}
               </AccordionDetails>
             </Accordion>
-          ) : null
-        )
+          ) : null;
+        })
+      ) : (
+        <div className="placeholder">
+          <AirIcon />
+          <br />
+          {t(`drawer.attributes.noAttributesAvailable`)}
+        </div>
       )}
     </div>
   );

@@ -5,9 +5,15 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Badge from '@mui/material/Badge';
 import { handleFilterSelect } from '../Shared';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { i18n } from '../Settings/LanguageSelector';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import calendar from 'dayjs/plugin/calendar';
+dayjs.extend(relativeTime);
+dayjs.extend(duration);
+dayjs.extend(calendar);
 
 const { ipcRenderer } = window.api;
 
@@ -17,6 +23,7 @@ interface Props {
   date: string | null;
   filters: Filters | null;
   settings: Settings;
+  t: typeof i18n.t;
 }
 
 const DatePickerInline: React.FC<Props> = ({
@@ -25,15 +32,23 @@ const DatePickerInline: React.FC<Props> = ({
   date,
   filters,
   settings,
+  t,
 }) => {
 	const [open, setOpen] = useState(false);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
 
-  if(settings.useHumanFriendlyDates) {
-    dayjs.locale(settings.language);
-    dayjs.extend(relativeTime);
-    dayjs.extend(duration);
-  }
+  dayjs.locale(settings.language);
+
+  const friendlyDate = (value) => dayjs(value).calendar(null, {
+    sameDay: `[${t(`drawer.attributes.today`)}]`,
+    nextDay: `[${t(`drawer.attributes.tomorrow`)}]`,
+    nextWeek: `[${t(`drawer.attributes.nextWeek`)}]`,
+    lastDay: `[${t(`drawer.attributes.yesterday`)}]`,
+    lastWeek: `[${t(`drawer.attributes.lastWeek`)}]`,
+    sameElse: function (now) {
+      return dayjs(this).fromNow();
+    }
+  });
 
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
@@ -59,7 +74,9 @@ const DatePickerInline: React.FC<Props> = ({
     const ButtonField = ({ ...props }) => {
       const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
-      const friendlyDate = settings.useHumanFriendlyDates ? dayjs(date).fromNow() : null;
+
+      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, settings.language) : date;
+
       return (
         <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
           <Badge variant="dot" invisible={mustNotify}>
@@ -75,7 +92,7 @@ const DatePickerInline: React.FC<Props> = ({
               data-testid={`datagrid-picker-date-${type}`}
               tabIndex={0}
             >
-              {(friendlyDate) ? friendlyDate : date}
+              {formattedValue}
             </div>
           </Badge>
         </Button>
@@ -107,4 +124,4 @@ const DatePickerInline: React.FC<Props> = ({
   );
 };
 
-export default DatePickerInline;
+export default withTranslation()(DatePickerInline);

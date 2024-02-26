@@ -149,7 +149,7 @@ declare global {
   }
 
   interface Filter {
-    value: string;
+    values: string[];
     exclude: boolean;
   }
 
