@@ -24,18 +24,6 @@ import './App.scss';
 
 const { ipcRenderer, store } = window.api;
 
-const translatedAttributes = (t: typeof i18n.t) => ({
-  t: t('shared.attributeMapping.t'),
-  due: t('shared.attributeMapping.due'),
-  projects: t('shared.attributeMapping.projects'),
-  contexts: t('shared.attributeMapping.contexts'),
-  priority: t('shared.attributeMapping.priority'),
-  rec: t('shared.attributeMapping.rec'),
-  pm: t('shared.attributeMapping.pm'),
-  created: t('shared.attributeMapping.created'),
-  completed: t('shared.attributeMapping.completed'),
-});
-
 const App = () => {
   const [settings, setSettings] = useState<Settings>(store.getConfig());
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
@@ -55,7 +43,6 @@ const App = () => {
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
   const searchFieldRef = useRef<HTMLInputElement>(null);
-  const [attributeMapping] = useState<TranslatedAttributes>(translatedAttributes(i18n.t) || {});
   const [visibleRowCount, setVisibleRowCount] = useState(50);
   const [loadMoreRows, setLoadMoreRows] = useState(true);
 
@@ -123,7 +110,6 @@ const App = () => {
                 attributes={attributes}
                 filters={filters}
                 searchFieldRef={searchFieldRef}
-                attributeMapping={attributeMapping}
               />
             )}
             <div className="flexItems">

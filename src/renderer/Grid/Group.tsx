@@ -22,7 +22,7 @@ const Group: React.FC<GroupProps> = memo(({
           return <Divider key={index} />;
         }
         const selected: boolean = filters && (filters[group as keyof Filters] || []).some(
-          (filter: Filter) => filter && filter.value === value.trim()
+          (filter: Filter) => filter && filter.name === value.trim()
         );
         return (
           <div
@@ -31,7 +31,7 @@ const Group: React.FC<GroupProps> = memo(({
             data-todotxt-attribute={group}
             data-todotxt-value={value}
           >
-            <Button className='attribute' onClick={() => onClick(group, value.trim())} data-testid={`datagrid-button-${group}`}>
+            <Button className='attribute' onClick={() => onClick(group, value, value.trim())} data-testid={`datagrid-button-${group}`}>
               {value.trim()}
             </Button>
           </div>

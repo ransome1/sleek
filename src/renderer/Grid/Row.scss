@@ -52,6 +52,9 @@
   &[data-hidden=true] {
     filter: opacity(50%) grayscale(100%);
   }
+  &:last-child {
+    border-bottom-left-radius: 0.25em;
+  }
   &.group {
     margin-top: 1em;
     padding-left: 0;

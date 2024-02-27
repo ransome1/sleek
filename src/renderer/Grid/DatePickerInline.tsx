@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Badge from '@mui/material/Badge';
 import { handleFilterSelect } from '../Shared';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -45,7 +45,7 @@ const DatePickerInline: React.FC<Props> = ({
     nextWeek: `[${t(`drawer.attributes.nextWeek`)}]`,
     lastDay: `[${t(`drawer.attributes.yesterday`)}]`,
     lastWeek: `[${t(`drawer.attributes.lastWeek`)}]`,
-    sameElse: function (now) {
+    sameElse: function () {
       return dayjs(this).fromNow();
     }
   });
@@ -74,28 +74,29 @@ const DatePickerInline: React.FC<Props> = ({
     const ButtonField = ({ ...props }) => {
       const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
-
       const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, settings.language) : date;
-
+      const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.name === formattedValue);
       return (
-        <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
-          <Badge variant="dot" invisible={mustNotify}>
-            <Chip
-              onClick={() => handleFilterSelect(type, date, filters, false)}
-              label={chipText}
-              data-testid={`datagrid-button-${type}`}
-              tabIndex={0}
-            />
-            <div
-              onClick={(event) => handleClick(event)}
-              onKeyDown={(event) => handleKeyDown(event)}
-              data-testid={`datagrid-picker-date-${type}`}
-              tabIndex={0}
-            >
-              {formattedValue}
-            </div>
-          </Badge>
-        </Button>
+        <span className={selected ? 'selected' : null} data-todotxt-attribute={type}>
+          <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
+            <Badge variant="dot" invisible={mustNotify}>
+              <Chip
+                onClick={() => handleFilterSelect(type, formattedValue, [date], filters, false)}
+                label={chipText}
+                data-testid={`datagrid-button-${type}`}
+                tabIndex={0}
+              />
+              <div
+                onClick={(event) => handleClick(event)}
+                onKeyDown={(event) => handleKeyDown(event)}
+                data-testid={`datagrid-picker-date-${type}`}
+                tabIndex={0}
+              >
+                {formattedValue}
+              </div>
+            </Badge>
+          </Button>
+        </span>
       );
     };
     return (

@@ -81,6 +81,7 @@ declare global {
     multilineTextField: boolean;
     useMultilineForBulkTodoCreation: boolean;
     useHumanFriendlyDates: boolean;
+    channel: string;
     __internal__: { migrations: { version: string }};
   }
 

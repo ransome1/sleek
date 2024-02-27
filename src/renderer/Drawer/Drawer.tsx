@@ -19,7 +19,6 @@ interface Props extends WithTranslation {
   attributes: Attributes | null;
   filters: Filters | null;
   searchFieldRef: React.RefObject<HTMLInputElement>;
-  attributeMapping: TranslatedAttributes;
   t: typeof i18n.t;
 }
 
@@ -28,7 +27,6 @@ const DrawerComponent: React.FC<Props> = memo(({
   attributes,
   filters,
   searchFieldRef,
-  attributeMapping,
   t
 }) => {
   const [activeTab, setActiveTab] = useState<string>('attributes');
@@ -97,13 +95,12 @@ const DrawerComponent: React.FC<Props> = memo(({
         <DrawerAttributes
           settings={settings}
           attributes={attributes}
-          attributeMapping={attributeMapping}
           filters={filters}
         />
       )}
       {settings.isDrawerOpen && activeTab === 'filters' && <DrawerFilters settings={settings} />}
       {settings.isDrawerOpen && activeTab === 'sorting' && (
-        <DrawerSorting attributeMapping={attributeMapping} settings={settings} />
+        <DrawerSorting settings={settings} />
       )}
     </Drawer>
   );

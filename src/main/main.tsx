@@ -12,7 +12,7 @@ import './modules/IpcMain';
 const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any | undefined> = {};
-let resizeTimeout;
+let resizeTimeout: NodeJS.Timeout | undefined;
 
 const handleCreateWindow = () => {
   if(mainWindow) {
@@ -131,8 +131,7 @@ const createMainWindow = () => {
 
   handleWindowSizeAndPosition();  
 
-  const colorTheme = config.get('colorTheme');
-  nativeTheme.themeSource = colorTheme;
+  nativeTheme.themeSource = config.get('colorTheme');
 
   mainWindow
     .on('resize', handleResize)

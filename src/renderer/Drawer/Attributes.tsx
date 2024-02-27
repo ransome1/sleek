@@ -7,24 +7,17 @@ import Badge from '@mui/material/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AirIcon from '@mui/icons-material/Air';
-import { handleFilterSelect } from '../Shared';
+import { handleFilterSelect, friendlyDate, translatedAttributes } from '../Shared';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import duration from 'dayjs/plugin/duration';
-import calendar from 'dayjs/plugin/calendar';
 import './Attributes.scss';
-dayjs.extend(relativeTime);
-dayjs.extend(duration);
-dayjs.extend(calendar);
+
 
 const { store } = window.api;
 
 interface DrawerAttributesProps extends WithTranslation {
   settings: Settings;
   attributes: Attributes | null;
-  attributeMapping: TranslatedAttributes;
   filters: Filters | null;
   t: typeof i18n.t;
 }
@@ -32,38 +25,24 @@ interface DrawerAttributesProps extends WithTranslation {
 const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
   settings,
   attributes,
-  attributeMapping,
   filters,
   t,
 }) => {
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
 
-  const friendlyDate = (value: string) => {
-    dayjs.locale(settings.language);
-    return dayjs(value).calendar(null, {
-      sameDay: `[${t(`drawer.attributes.today`)}]`,
-      nextDay: `[${t(`drawer.attributes.tomorrow`)}]`,
-      nextWeek: `[${t(`drawer.attributes.nextWeek`)}]`,
-      lastDay: `[${t(`drawer.attributes.yesterday`)}]`,
-      lastWeek: `[${t(`drawer.attributes.lastWeek`)}]`,
-      sameElse: function () {
-        return dayjs(this).fromNow();
-      },
-    });
-  };
-
   const preprocessAttributes = (attributeKey, attributes) => {
     if (!attributes) {
       return null;
     }
 
+    const isDate: boolean = ['due', 't', 'completed', 'created'].includes(attributeKey);
     const processedAttributes = {};
 
     Object.keys(attributes).forEach((key) => {
       if (attributes[key]) {
         const count = attributes[key].count;
-        const formattedValue = settings.useHumanFriendlyDates && dayjs(key).isValid() ? friendlyDate(key) : key;
+        const formattedValue = settings.useHumanFriendlyDates && isDate ? friendlyDate(key, t) : key;
 
         if (!processedAttributes[formattedValue]) {
           processedAttributes[formattedValue] = {
@@ -166,7 +145,8 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
       {!isAttributesEmpty ? (
         Object.keys(attributes).map((key, index) => {
 
-          const preprocessedAttributes = attributes[key] ? preprocessAttributes(key, attributes[key]) : attributes[key];
+          const preprocessedAttributes: Attributes = preprocessAttributes(key, attributes[key]);
+          const attributeHeadline: string = translatedAttributes(t)[key];
 
           return Object.keys(preprocessedAttributes).length > 0 ? (
             <Accordion
@@ -178,7 +158,7 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Badge variant="dot" invisible={!(key === 'due' && Object.values(preprocessedAttributes).some((attribute) => attribute.notify))}>
                   <h3 data-testid={`drawer-attributes-accordion-${key}`}>
-                    {attributeMapping[key]}
+                    {attributeHeadline}
                   </h3>
                 </Badge>
               </AccordionSummary>
