@@ -50,15 +50,10 @@ const RecurrencePicker: React.FC<RecurrencePickerProps> = ({
   }, [interval, amount, strictRecurrence]);
 
   useEffect(() => {
-    const getInterval = (recurrence: string | null) => {
-      return recurrence && recurrence.startsWith('+') ? recurrence.slice(2, 3) : recurrence ? recurrence.slice(1, 2) : null;
-    }
-    const getAmount = (recurrence: string | null) => {
-      return recurrence && recurrence.startsWith('+') ? recurrence.slice(1, 2) : recurrence ? recurrence.slice(0, 1) : null;
-    }
-    const getStrictIndicator = (recurrence: string | null) => {
-      return recurrence ? recurrence.startsWith('+') : false;
-    }
+    const getInterval = (recurrence) => recurrence ? recurrence.match(/[a-zA-Z]+/) : null;
+    const getAmount = (recurrence) => recurrence ? recurrence.match(/\d+/) : null;
+    const getStrictIndicator = (recurrence: string | null) => !!recurrence?.startsWith('+');
+    
     setStrictRecurrence(getStrictIndicator(recurrence));
     setInterval(getInterval(recurrence));
     setAmount(getAmount(recurrence));
@@ -95,7 +90,7 @@ const RecurrencePicker: React.FC<RecurrencePickerProps> = ({
             onChange={() => handleChange('rec', recurrence)}
             value={recurrence || '-'}
             inputRef={recurrenceFieldRef}
-            data-testid="dialog--picker-recurrence"
+            data-testid="dialog-picker-recurrence"
             InputLabelProps={{
               shrink: true,
             }}
