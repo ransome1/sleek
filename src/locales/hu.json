@@ -40,6 +40,8 @@
   "drawer.attributes.nextWeek": "jövő hét",
   "drawer.attributes.yesterday": "tegnap",
   "drawer.attributes.lastWeek": "múlt hét",
+  "drawer.attributes.thisWeek": "ez a hét",
+  "drawer.attributes.thisMonth": "ez a hónap",
   "drawer.sorting.fileSorting": "Feladatok rendezése, ahogy megjelennek a fájlban",
   "shared.attributeMapping.t": "Hátralévő dátum",
   "shared.attributeMapping.due": "Határidő",

@@ -40,6 +40,8 @@
   "drawer.attributes.nextWeek": "来週",
   "drawer.attributes.yesterday": "昨日",
   "drawer.attributes.lastWeek": "先週",  
+  "drawer.attributes.thisWeek": "今週",
+  "drawer.attributes.thisMonth": "今月",
   "drawer.sorting.fileSorting": "ファイルに表示される順にタスクを並べ替え",
   "shared.attributeMapping.t": "期限日",
   "shared.attributeMapping.due": "期日",

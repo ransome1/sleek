@@ -40,6 +40,8 @@
   "drawer.attributes.nextWeek": "próxima semana",
   "drawer.attributes.yesterday": "ontem",
   "drawer.attributes.lastWeek": "semana passada",  
+  "drawer.attributes.thisWeek": "esta semana",
+  "drawer.attributes.thisMonth": "este mês",
   "drawer.sorting.fileSorting": "Ordenar tarefas como aparecem no ficheiro",
   "shared.attributeMapping.t": "Data de limite",
   "shared.attributeMapping.due": "Data de vencimento",

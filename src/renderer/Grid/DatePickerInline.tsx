@@ -4,16 +4,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Badge from '@mui/material/Badge';
-import { handleFilterSelect } from '../Shared';
+import { handleFilterSelect, friendlyDate } from '../Shared';
 import { withTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import duration from 'dayjs/plugin/duration';
-import calendar from 'dayjs/plugin/calendar';
-dayjs.extend(relativeTime);
-dayjs.extend(duration);
-dayjs.extend(calendar);
 
 const { ipcRenderer } = window.api;
 
@@ -36,19 +30,6 @@ const DatePickerInline: React.FC<Props> = ({
 }) => {
 	const [open, setOpen] = useState(false);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
-
-  dayjs.locale(settings.language);
-
-  const friendlyDate = (value) => dayjs(value).calendar(null, {
-    sameDay: `[${t(`drawer.attributes.today`)}]`,
-    nextDay: `[${t(`drawer.attributes.tomorrow`)}]`,
-    nextWeek: `[${t(`drawer.attributes.nextWeek`)}]`,
-    lastDay: `[${t(`drawer.attributes.yesterday`)}]`,
-    lastWeek: `[${t(`drawer.attributes.lastWeek`)}]`,
-    sameElse: function () {
-      return dayjs(this).fromNow();
-    }
-  });
 
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
@@ -74,8 +55,12 @@ const DatePickerInline: React.FC<Props> = ({
     const ButtonField = ({ ...props }) => {
       const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
-      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, settings.language) : date;
-      const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.name === formattedValue);
+      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, settings.language, t)[0] : date;
+
+      const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => {
+        return filter.values.includes(date);
+      });
+
       return (
         <span className={selected ? 'selected' : null} data-todotxt-attribute={type}>
           <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>

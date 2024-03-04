@@ -12,7 +12,6 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import './Attributes.scss';
 
-
 const { store } = window.api;
 
 interface DrawerAttributesProps extends WithTranslation {
@@ -31,42 +30,52 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
 
+  const isAttributesEmpty = useMemo(
+    () => !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length),
+    [attributes]
+  );
+
   const preprocessAttributes = (attributeKey, attributes) => {
     if (!attributes) {
       return null;
     }
 
-    const isDate: boolean = ['due', 't', 'completed', 'created'].includes(attributeKey);
+    const isDate = ['due', 't', 'completed', 'created'].includes(attributeKey);
     const processedAttributes = {};
 
     Object.keys(attributes).forEach((key) => {
       if (attributes[key]) {
         const count = attributes[key].count;
-        const formattedValue = settings.useHumanFriendlyDates && isDate ? friendlyDate(key, t) : key;
+        const formattedValues = settings.useHumanFriendlyDates && isDate ? friendlyDate(key, settings.language, t) : [key];
 
-        if (!processedAttributes[formattedValue]) {
-          processedAttributes[formattedValue] = {
-            key: attributeKey,
-            name: formattedValue,
-            count,
-            notify: attributes[key].notify,
-            aggregatedValues: [key]
-          };
-        } else {
-          processedAttributes[formattedValue].count += count;
-          processedAttributes[formattedValue].notify = processedAttributes[formattedValue].notify || attributes[key].notify;
-          processedAttributes[formattedValue].aggregatedValues.push(key);
-        }
+        formattedValues.forEach((formattedValue) => {
+          if (!processedAttributes[formattedValue]) {
+            processedAttributes[formattedValue] = {
+              key: attributeKey,
+              name: formattedValue,
+              count,
+              notify: attributes[key].notify,
+              aggregatedValues: [key]
+            };
+          } else {
+            processedAttributes[formattedValue].count += count;
+            processedAttributes[formattedValue].notify = processedAttributes[formattedValue].notify || attributes[key].notify;
+            processedAttributes[formattedValue].aggregatedValues.push(key);
+          }
+        });
       }
     });
 
-    return processedAttributes;
-  };
+    const sortedAttributes = Object.fromEntries(
+      Object.entries(processedAttributes).sort(([, a], [, b]) => {
+        const lastDateA = a.aggregatedValues.length > 0 ? a.aggregatedValues[a.aggregatedValues.length - 1] : 0;
+        const lastDateB = b.aggregatedValues.length > 0 ? b.aggregatedValues[b.aggregatedValues.length - 1] : 0;
+        return new Date(lastDateA).getTime() - new Date(lastDateB).getTime();
+      })
+    );
 
-  const isAttributesEmpty = useMemo(
-    () => !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length),
-    [attributes]
-  );
+    return sortedAttributes;
+  };  
 
   const handleAccordionToggle = (index: number) => {
     const updatedAccordionOpenState = settings.accordionOpenState;
@@ -143,8 +152,8 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
   return (
     <div id="Attributes" ref={firstTabbableElementRef}>
       {!isAttributesEmpty ? (
-        Object.keys(attributes).map((key, index) => {
 
+        Object.keys(attributes).map((key, index) => {
           const preprocessedAttributes: Attributes = preprocessAttributes(key, attributes[key]);
           const attributeHeadline: string = translatedAttributes(t)[key];
 

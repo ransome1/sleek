@@ -40,6 +40,8 @@
   "drawer.attributes.nextWeek": "nächste Woche",
   "drawer.attributes.yesterday": "gestern",
   "drawer.attributes.lastWeek": "letzte Woche",
+  "drawer.attributes.thisWeek": "diese Woche",
+  "drawer.attributes.thisMonth": "diesen Monat",
   "drawer.sorting.fileSorting": "Aufgaben in der Reihenfolge der Datei anordnen",
   "shared.attributeMapping.t": "Schwellenwertdatum",
   "shared.attributeMapping.due": "Fälligkeitsdatum",

@@ -40,6 +40,8 @@
   "drawer.attributes.nextWeek": "następny tydzień",
   "drawer.attributes.yesterday": "wczoraj",
   "drawer.attributes.lastWeek": "ostatni tydzień",
+  "drawer.attributes.thisWeek": "w tym tygodniu",
+  "drawer.attributes.thisMonth": "w tym miesiącu",
   "drawer.sorting.fileSorting": "Sortuj zadania tak, jak występują w pliku",
   "shared.attributeMapping.t": "Data progowa",
   "shared.attributeMapping.due": "Termin",

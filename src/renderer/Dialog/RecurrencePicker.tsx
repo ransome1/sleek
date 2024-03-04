@@ -53,7 +53,6 @@ const RecurrencePicker: React.FC<RecurrencePickerProps> = ({
     const getInterval = (recurrence) => recurrence ? recurrence.match(/[a-zA-Z]+/) : null;
     const getAmount = (recurrence) => recurrence ? recurrence.match(/\d+/) : null;
     const getStrictIndicator = (recurrence: string | null) => !!recurrence?.startsWith('+');
-    
     setStrictRecurrence(getStrictIndicator(recurrence));
     setInterval(getInterval(recurrence));
     setAmount(getAmount(recurrence));
