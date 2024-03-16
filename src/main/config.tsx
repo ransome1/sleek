@@ -100,6 +100,9 @@ const config: Store<Settings> = new Store<Settings>({
     '2.0.12': store => {
       console.log('Migrating from 2.0.11 → 2.0.12');
       store.set('channel', getChannel());
+      store.set('fileWatcherAtomic', 1000);
+      store.set('fileWatcherPolling', false);
+      store.set('fileWatcherPollingInterval', 100);
     },
   }
 });

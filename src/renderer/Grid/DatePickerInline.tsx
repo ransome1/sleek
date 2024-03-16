@@ -55,7 +55,7 @@ const DatePickerInline: React.FC<Props> = ({
     const ButtonField = ({ ...props }) => {
       const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
-      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, settings.language, t)[0] : date;
+      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, type, settings.language, t).pop() : date;
 
       const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => {
         return filter.values.includes(date);

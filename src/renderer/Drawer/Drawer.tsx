@@ -45,12 +45,8 @@ const DrawerComponent: React.FC<Props> = memo(({
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-    
     startXRef.current = event.pageX;
-
     setDrawerWidth((event.pageX - 80 >= 165) ? event.pageX - 80 : 165);
-
-    
   };
 
   const handleMouseUp = () => {

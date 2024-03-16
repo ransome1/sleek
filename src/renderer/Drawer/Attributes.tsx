@@ -29,7 +29,6 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
 }) => {
   const firstTabbableElementRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
-
   const isAttributesEmpty = useMemo(
     () => !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length),
     [attributes]
@@ -39,15 +38,12 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
     if (!attributes) {
       return null;
     }
-
     const isDate = ['due', 't', 'completed', 'created'].includes(attributeKey);
     const processedAttributes = {};
-
     Object.keys(attributes).forEach((key) => {
       if (attributes[key]) {
         const count = attributes[key].count;
-        const formattedValues = settings.useHumanFriendlyDates && isDate ? friendlyDate(key, settings.language, t) : [key];
-
+        const formattedValues = settings.useHumanFriendlyDates && isDate ? friendlyDate(key, attributeKey, settings.language, t) : [key];
         formattedValues.forEach((formattedValue) => {
           if (!processedAttributes[formattedValue]) {
             processedAttributes[formattedValue] = {
@@ -65,17 +61,17 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
         });
       }
     });
-
+    const sorting = [t('drawer.attributes.overdue'), t('drawer.attributes.elapsed'), t('drawer.attributes.lastWeek'), t('drawer.attributes.yesterday'), t('drawer.attributes.today'), t('drawer.attributes.tomorrow'), t('drawer.attributes.thisWeek'), t('drawer.attributes.nextWeek'), t('drawer.attributes.thisMonth'), t('drawer.attributes.nextMonth')]
     const sortedAttributes = Object.fromEntries(
-      Object.entries(processedAttributes).sort(([, a], [, b]) => {
-        const lastDateA = a.aggregatedValues.length > 0 ? a.aggregatedValues[a.aggregatedValues.length - 1] : 0;
-        const lastDateB = b.aggregatedValues.length > 0 ? b.aggregatedValues[b.aggregatedValues.length - 1] : 0;
-        return new Date(lastDateA).getTime() - new Date(lastDateB).getTime();
+      Object.entries(processedAttributes)
+      .sort(([aKey, a], [bKey, b]) => {
+        const indexA = sorting.indexOf(a.name);
+        const indexB = sorting.indexOf(b.name);
+        return (indexA !== -1 ? indexA : Number.MAX_SAFE_INTEGER) - (indexB !== -1 ? indexB : Number.MAX_SAFE_INTEGER);
       })
     );
-
     return sortedAttributes;
-  };  
+  };
 
   const handleAccordionToggle = (index: number) => {
     const updatedAccordionOpenState = settings.accordionOpenState;

@@ -24,7 +24,7 @@ jobs:
             in 15 days from now. Your efforts are greatly appreciated, and we
             value your contributions to the project.
           stale-issue-label: no-issue-activity
-          days-before-stale: 120
+          days-before-stale: 200
           days-before-close: 15
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}

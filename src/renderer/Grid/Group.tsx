@@ -2,37 +2,37 @@ import React, { memo } from 'react';
 import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+
 interface GroupProps {
-  value: string;
-  group: string;
+  value: string[];
+  todotxtAttribute: string;
   filters: Filters | null;
   onClick: Function;
 }
-const Group: React.FC<GroupProps> = memo(({
-  value,
-  group,
-  filters,
-  onClick
-}) => {
-  const values = value?.split(',') || [];
+
+const Group: React.FC<GroupProps> = memo(({ value, todotxtAttribute, filters, onClick }) => {
+
+  if (!value) {
+    return <ListItem className="row group"><Divider /></ListItem>;
+  }
+
+  const groupElements = value.split(',');
+
   return (
     <ListItem className="row group">
-      {values.map((value, index) => {
-        if(!value) {
-          return <Divider key={index} />;
-        }
-        const selected: boolean = filters && (filters[group as keyof Filters] || []).some(
-          (filter: Filter) => filter && filter.name === value.trim()
+      {groupElements.map((groupElement, index) => {
+        const selected: boolean = filters && (filters[todotxtAttribute as keyof Filters] || []).some(
+          (filter: Filter) => filter && filter.name === groupElement.trim()
         );
         return (
           <div
             key={index}
             className={selected ? 'selected filter' : 'filter'}
-            data-todotxt-attribute={group}
-            data-todotxt-value={value}
+            data-todotxt-attribute={todotxtAttribute}
+            data-todotxt-value={groupElement}
           >
-            <Button className='attribute' onClick={() => onClick(group, value, value.trim())} data-testid={`datagrid-button-${group}`}>
-              {value.trim()}
+            <Button className='attribute' onClick={() => onClick(todotxtAttribute, groupElement, groupElement.trim())} data-testid={`datagrid-button-${todotxtAttribute}`}>
+              {groupElement.trim()}
             </Button>
           </div>
         );

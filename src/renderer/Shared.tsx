@@ -2,9 +2,11 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import calendar from 'dayjs/plugin/calendar';
+import weekday from 'dayjs/plugin/weekday';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(calendar);
+dayjs.extend(weekday)
 
 const { store, ipcRenderer } = window.api;
 
@@ -55,11 +57,32 @@ export const translatedAttributes = (t: typeof i18n.t) => {
   }
 };
 
-export const friendlyDate = (value: string, language: string, t: typeof i18n.t) => {
+export const friendlyDate = (value: string, attributeKey: string, language: string, t: typeof i18n.t) => {
   const today = dayjs();
   const date = dayjs(value);
   const results = [];
+
   dayjs.locale(language)
+
+  if (date.isBefore(today, 'day')) {
+    results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));
+  }  
+
+  if (date.isAfter(today.subtract(1, 'week').startOf('week')) && date.isBefore(today.subtract(1, 'week').endOf('week'))) {
+    results.push(t('drawer.attributes.lastWeek'));
+  }
+
+  if (date.isBefore(today.endOf('month')) && date.isAfter(today.subtract(1, 'day'), 'day')) {
+    results.push(t('drawer.attributes.thisMonth'));
+  }
+
+  if (date.isSame(today, 'week')) {
+    results.push(t('drawer.attributes.thisWeek'));
+  }  
+
+  if (date.isSame(today.subtract(1, 'day'), 'day')) {
+    results.push(t('drawer.attributes.yesterday'));
+  }
 
   if (date.isSame(today, 'day')) {
     results.push(t('drawer.attributes.today'));
@@ -69,58 +92,18 @@ export const friendlyDate = (value: string, language: string, t: typeof i18n.t) 
     results.push(t('drawer.attributes.tomorrow'));
   }
 
-  if (date.isSame(today.subtract(1, 'day'), 'day')) {
-    results.push(t('drawer.attributes.yesterday'));
-  }
-
-  if (date.isSame(today, 'week')) {
-    results.push(t('drawer.attributes.thisWeek'));
-  }
 
   if (date.isSame(today.add(1, 'week'), 'week')) {
     results.push(t('drawer.attributes.nextWeek'));
   }
 
-  if (date.isBefore(today.endOf('month')) && date.isAfter(today, 'day')) {
-    results.push(t('drawer.attributes.thisMonth'));
+  if (date.month() === today.add(1, 'month').month()) {
+      results.push(t('drawer.attributes.nextMonth'));
   }
 
-  if (date.isBefore(today, 'month') && date.isAfter(today.subtract(1, 'week'), 'day')) {
-    results.push(t('drawer.attributes.lastWeek'));
-  }
-
-  if (date.isBefore(today.add(1, 'month').startOf('month')) && date.isAfter(today.endOf('month'), 'day')) {
-    results.push(t('drawer.attributes.nextMonth'));
-  }
-
-  if (results.length === 0) {
-    results.push(dayjs(value).fromNow())
+  if (date.isAfter(today.add(2, 'month').startOf('month'))) {
+    results.push(dayjs(date).format('YYYY-MM-DD'));
   }
 
   return results;
 };
-
-// export const friendlyDate = (value: string, t: typeof i18n.t) => {
-//   const today = dayjs();
-//   const date = dayjs(value);
-
-//   if (date.isSame(today, 'day')) {
-//     return `${t('drawer.attributes.today')}`;
-//   } else if (date.isSame(today.add(1, 'day'), 'day')) {
-//     return `${t('drawer.attributes.tomorrow')}`;
-//   } else if (date.isSame(today.subtract(1, 'day'), 'day')) {
-//     return `${t('drawer.attributes.yesterday')}`;
-//   } else if (date.isSame(today, 'week')) {
-//     return `${t('drawer.attributes.thisWeek')}`;
-//   } else if (date.isSame(today.add(1, 'week'), 'week')) {
-//     return `${t('drawer.attributes.nextWeek')}`;
-//   } else if (date.isBefore(today.endOf('month')) && date.isAfter(today, 'day')) {
-//     return `${t('drawer.attributes.thisMonth')}`;
-//   } else if (date.isBefore(today, 'month') && date.isAfter(today.subtract(1, 'week'), 'day')) {
-//     return `${t('drawer.attributes.lastWeek')}`;
-//   } else if (date.isBefore(today.add(1, 'month'), 'month') && date.isAfter(today, 'day')) {
-//     return `${t('drawer.attributes.nextMonth')}`;
-//   } else {
-//     return dayjs(value).fromNow();
-//   }
-// };

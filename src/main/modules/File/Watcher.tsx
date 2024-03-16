@@ -11,11 +11,20 @@ function createFileWatcher(files: FileObject[]): void {
     console.log(`Destroyed old file watcher`);
   }
 
+  const hasActiveEntry = files.some(file => file.active);
+  if (!hasActiveEntry && files.length > 0) {
+    files[0].active = true;
+    config.set('files', files)
+  }
+
+  const fileWatcherAtomic = config.get('fileWatcherAtomic') || 1000;
+  const fileWatcherPolling = config.get('fileWatcherPolling') || false;
+  const fileWatcherPollingInterval = config.get('fileWatcherPollingInterval') || 100;
+
   watcher = chokidar.watch(files.map((file) => file.todoFilePath), {
-    awaitWriteFinish: {
-      stabilityThreshold: 50,
-      pollInterval: 50,
-    },
+    atomic: fileWatcherAtomic,
+    usePolling: fileWatcherPolling,
+    interval: fileWatcherPollingInterval
   });
 
   watcher

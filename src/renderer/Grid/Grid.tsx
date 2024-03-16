@@ -104,7 +104,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
             {!settings.fileSorting && renderGroup && (
               <Group
                 value={groupValue}
-                group={settings.sorting[0].value}
+                todotxtAttribute={settings.sorting[0].value}
                 filters={filters}
                 onClick={handleButtonClick}
               />
