@@ -22,7 +22,7 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoO
 
         const hasMatchingValue = Array.isArray(attributeValues)
           ? attributeValues.some((val) => values.includes(val))
-          : attributeValues !== undefined && values.includes(attributeValues);
+          : Array.isArray(values) && values.includes(attributeValues);
 
         return exclude ? !hasMatchingValue : hasMatchingValue;
       });

@@ -6,7 +6,7 @@ import weekday from 'dayjs/plugin/weekday';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(calendar);
-dayjs.extend(weekday)
+dayjs.extend(weekday);
 
 const { store, ipcRenderer } = window.api;
 
@@ -58,11 +58,12 @@ export const translatedAttributes = (t: typeof i18n.t) => {
 };
 
 export const friendlyDate = (value: string, attributeKey: string, language: string, t: typeof i18n.t) => {
+
+  dayjs.locale(language)
+
   const today = dayjs();
   const date = dayjs(value);
   const results = [];
-
-  dayjs.locale(language)
 
   if (date.isBefore(today, 'day')) {
     results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));

@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.12-rc.4",
+  "version": "2.0.12-rc.5",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -221,10 +221,10 @@
         "appx"
       ],
       "icon": "assets/icons/sleek.ico",
-      "artifactName": "${productName}-${version}-win.${ext}"
+      "artifactName": "${productName}-${version}-win-${arch}.${ext}"
     },
     "nsis": {
-      "artifactName": "${productName}-${version}-win-Setup.${ext}"
+      "artifactName": "${productName}-${version}-win-${arch}-Setup.${ext}"
     },
     "appx": {
       "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
