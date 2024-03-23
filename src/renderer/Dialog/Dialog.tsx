@@ -105,7 +105,9 @@ const DialogComponent: React.FC<Props> = memo(({
       } else {
         updatedValue = value;
       }
+      
       ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, updatedValue);
+
     } catch(error: any) {
       console.error(error);
     }
@@ -115,12 +117,17 @@ const DialogComponent: React.FC<Props> = memo(({
     if(todoObject) {
       const updatedValue = todoObject.string?.replaceAll(String.fromCharCode(16), '\n') || '';
       setTextFieldValue(updatedValue);
-      updateAttributeFields(todoObject);
     }
   }, [todoObject]);
 
-  useEffect(() => {
-    if(textFieldValue) ipcRenderer.send('updateAttributeFields', todoObject?.id, textFieldValue)
+  useEffect(() => {  
+    const handleTextFieldValue = () => {
+      if(textFieldValue) ipcRenderer.send('updateAttributeFields', todoObject?.id, textFieldValue)
+    };
+    const delayedSearch: NodeJS.Timeout = setTimeout(handleTextFieldValue, 100);
+    return () => {
+      clearTimeout(delayedSearch);
+    };
   }, [textFieldValue]);
 
   useEffect(() => {
