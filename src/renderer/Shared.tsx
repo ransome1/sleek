@@ -16,16 +16,18 @@ export const handleFilterSelect = (key: string, name: string, values: string | s
     const updatedFilters: Filters = { ...filters };
     const filterList: Filter[] = updatedFilters[key] || [];
 
+    const normalizedValues = typeof values === 'string' ? [values] : values;
+
     const filterIndex = filterList.findIndex((filter: Filter) => {
-      return Array.isArray(values) && Array.isArray(filter.values) ? 
-        values.every(v => filter.values.includes(v)) : 
-        filter.values === values;
+      return Array.isArray(normalizedValues) && Array.isArray(filter.values) ? 
+        normalizedValues.every(v => filter.values.includes(v)) : 
+        filter.values === normalizedValues;
     });
 
     if (filterIndex !== -1) {
       filterList.splice(filterIndex, 1);
     } else {
-      filterList.push({ name, values, exclude });
+      filterList.push({ name, values: normalizedValues, exclude });
     }
 
     updatedFilters[key] = filterList;
@@ -34,6 +36,7 @@ export const handleFilterSelect = (key: string, name: string, values: string | s
     console.error(error);
   }
 };
+
 
 export const handleLinkClick = (event: MouseEvent, url: string) => {
   event.preventDefault();

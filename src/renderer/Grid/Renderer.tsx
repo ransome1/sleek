@@ -61,23 +61,23 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(({
 		  />
 		),
 		contexts: (value, type) => (
-		  <Button className='contexts' onClick={() => handleButtonClick(type, value, [value])} data-testid={`datagrid-button-${type}`}>
+		  <Button className='contexts' onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    {value}
 		  </Button>
 		),
 		projects: (value, type) => (
-		  <Button onClick={() => handleButtonClick(type, value, [value])} data-testid={`datagrid-button-${type}`}>
+		  <Button onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    {value}
 		  </Button>
 		),
 		rec: (value, type) => (
-		  <Button onClick={() => handleButtonClick(type, value, [value])} data-testid={`datagrid-button-${type}`}>
+		  <Button onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    <Chip label="rec:" />
 		    {value}
 		  </Button>
 		),
 		pm: (value, type) => (
-		  <Button className='pomodoro' onClick={() => handleButtonClick(type, value, [value])} data-testid={`datagrid-button-${type}`}>
+		  <Button className='pomodoro' onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    <TomatoIconDuo />
 		    {value}
 		  </Button>

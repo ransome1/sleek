@@ -66,7 +66,7 @@ const DatePickerInline: React.FC<Props> = ({
           <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
             <Badge variant="dot" invisible={mustNotify}>
               <Chip
-                onClick={() => handleFilterSelect(type, formattedValue, [date], filters, false)}
+                onClick={() => handleFilterSelect(type, formattedValue, date, filters, false)}
                 label={chipText}
                 data-testid={`datagrid-button-${type}`}
                 tabIndex={0}
