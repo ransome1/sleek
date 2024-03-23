@@ -7,12 +7,10 @@ const { store } = window.api;
 
 type DraggableListProps = {
   settings: Settings;
-  attributeMapping: TranslatedAttributes;
 };
 
 const DraggableList: React.FC<DraggableListProps> = ({
   settings,
-  attributeMapping,
 }) => {
   const [accordionOrder, setAccordionOrder] = useState<Sorting[]>(settings.sorting);
   const reorder = (list: Sorting[], startIndex: number, endIndex: number): Sorting[] => {
@@ -44,7 +42,6 @@ const DraggableList: React.FC<DraggableListProps> = ({
                 key={item.id}
                 settings={settings}
                 setAccordionOrder={setAccordionOrder}
-                attributeMapping={attributeMapping}
               />
             ))}
             {provided.placeholder}

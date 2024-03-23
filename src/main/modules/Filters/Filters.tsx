@@ -11,7 +11,7 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoO
 
       const attributeValues: any = ['due', 't'].includes(key) ? todoObject[key as keyof TodoObject] : todoObject[key as keyof TodoObject];
 
-      return filterArray.every(({ value, exclude }: Filter) => {
+      return filterArray.every(({ values, exclude }: Filter) => {
         if (
           attributeValues === undefined ||
           attributeValues === null ||
@@ -20,7 +20,10 @@ function applyFilters(todoObjects: TodoObject[], filters: Filters | null): TodoO
           return exclude;
         }
 
-        const hasMatchingValue = attributeValues.includes(value);
+        const hasMatchingValue = Array.isArray(attributeValues)
+          ? attributeValues.some((val) => values.includes(val))
+          : Array.isArray(values) && values.includes(attributeValues);
+
         return exclude ? !hasMatchingValue : hasMatchingValue;
       });
     });

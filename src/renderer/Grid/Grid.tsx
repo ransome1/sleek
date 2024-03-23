@@ -38,8 +38,8 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
   const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible)?.slice(0, visibleRowCount);
   const totalRowCount = todoObjects?.length || 0;
 
-  const handleButtonClick = (key: string, value: string) => {
-    handleFilterSelect(key, value, filters, false);
+  const handleButtonClick = (key: string, name: string, values: string[]) => {
+    handleFilterSelect(key, name, values, filters, false);
   };
 
   const handleKeyUp = (event: KeyboardEvent) => {
@@ -104,7 +104,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
             {!settings.fileSorting && renderGroup && (
               <Group
                 value={groupValue}
-                group={settings.sorting[0].value}
+                todotxtAttribute={settings.sorting[0].value}
                 filters={filters}
                 onClick={handleButtonClick}
               />

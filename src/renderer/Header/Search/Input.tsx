@@ -65,7 +65,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(({
     <TextField
       {...params}
       data-testid="header-search-textfield"
-      placeholder={`${t('search.visibleTodos')} ${headers?.visibleObjects}`}
+      placeholder={`${t('search.visibleTodos')}${headers?.visibleObjects}`}
       inputRef={searchFieldRef}
       InputProps={{
         ...params.InputProps,

@@ -4,22 +4,25 @@ import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
 import SortIcon from '@mui/icons-material/Sort';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { withTranslation } from 'react-i18next';
+import { i18n } from '../../Settings/LanguageSelector';
+import { translatedAttributes } from '../../Shared';
 import './DraggableListItem.scss';
 
 type DraggableListItemProps = {
   item: Sorting;
   index: number;
   settings: Settings;
-  attributeMapping: TranslatedAttributes;
   setAccordionOrder: React.Dispatch<React.SetStateAction<Sorting[]>>;
+  t: typeof i18n.t;
 };
 
 const DraggableListItem: React.FC<DraggableListItemProps> = ({
   item,
   index,
   settings,
-  attributeMapping,
   setAccordionOrder,
+  t,
 }) => {
   const updatedSorting = settings.sorting.map((sortingItem: Sorting) => {
     if(sortingItem.id === item.id) {
@@ -30,6 +33,8 @@ const DraggableListItem: React.FC<DraggableListItemProps> = ({
   const handleButtonClick = () => {
     setAccordionOrder(updatedSorting);
   };
+
+  const attributeHeadline: string = translatedAttributes(t)[item.value];
 
   return (
     <Draggable draggableId={item.id} index={index}>
@@ -42,7 +47,7 @@ const DraggableListItem: React.FC<DraggableListItemProps> = ({
           data-testid={`drawer-sorting-draggable-list-item-${item.value}`}
         >
           <div><DragHandleIcon /></div>
-          {attributeMapping[item.value]}
+          {attributeHeadline}
           <Button onClick={handleButtonClick} data-testid={`drawer-sorting-draggable-list-item-${item.value}-invert`}>
             {!item.invert && <SortIcon className='invert' />}
             {item.invert && <SortIcon />}
@@ -53,4 +58,4 @@ const DraggableListItem: React.FC<DraggableListItemProps> = ({
   );
 };
 
-export default DraggableListItem;
+export default withTranslation()(DraggableListItem);

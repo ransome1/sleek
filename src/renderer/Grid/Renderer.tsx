@@ -40,8 +40,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(({
 	const replacements: {
 		[key: string]: (value: string, type: string) => React.ReactNode;
 	} = {
-		due: (_value,type) => (
+		due: (value, type) => (
 		  <DatePickerInline
+		  	name={value}
 		    type={type}
 		    todoObject={todoObject}
 		    date={todoObject.due}
@@ -49,8 +50,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(({
 		    settings={settings}
 		  />
 		),
-		t: (_value, type) => (
+		t: (value, type) => (
 		  <DatePickerInline
+		    name={value}
 		    type={type}
 		    todoObject={todoObject}
 		    date={todoObject.t}
@@ -59,23 +61,23 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(({
 		  />
 		),
 		contexts: (value, type) => (
-		  <Button className='contexts' onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
+		  <Button className='contexts' onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    {value}
 		  </Button>
 		),
 		projects: (value, type) => (
-		  <Button onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
+		  <Button onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    {value}
 		  </Button>
 		),
 		rec: (value, type) => (
-		  <Button onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
+		  <Button onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    <Chip label="rec:" />
 		    {value}
 		  </Button>
 		),
 		pm: (value, type) => (
-		  <Button className='pomodoro' onClick={() => handleButtonClick(type, value)} data-testid={`datagrid-button-${type}`}>
+		  <Button className='pomodoro' onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
 		    <TomatoIconDuo />
 		    {value}
 		  </Button>
@@ -94,7 +96,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(({
 				let modifiedChild = child.split(/(\S+\s*)/).filter(Boolean);
 				expressions.forEach(({ pattern, type }) => {
 					modifiedChild = reactStringReplace(modifiedChild, pattern, (match) => {
-						const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => filter.value === match);
+						const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => {
+							return filter.name === match
+						});
 						return (
 							<span className={selected ? 'filter selected' : 'filter'} data-todotxt-attribute={type}>
 								{replacements[type](match, type)}

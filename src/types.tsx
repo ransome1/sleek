@@ -81,6 +81,7 @@ declare global {
     multilineTextField: boolean;
     useMultilineForBulkTodoCreation: boolean;
     useHumanFriendlyDates: boolean;
+    channel: string;
     __internal__: { migrations: { version: string }};
   }
 
@@ -149,7 +150,7 @@ declare global {
   }
 
   interface Filter {
-    value: string;
+    values: string[];
     exclude: boolean;
   }
 

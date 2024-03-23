@@ -7,6 +7,7 @@ import { createFileWatcher } from './modules/File/Watcher';
 import { createTray } from './modules/Tray';
 import { processDataRequest, searchString } from './modules/ProcessDataRequest/ProcessDataRequest';
 import handleTheme from './modules/Theme';
+import { getChannel } from './util';
 import crypto from 'crypto';
 
 Store.initRenderer();
@@ -95,6 +96,13 @@ const config: Store<Settings> = new Store<Settings>({
       console.log('Migrating from 2.0.4 → 2.0.10');
       store.set('useHumanFriendlyDates', false);
       store.set('excludeLinesWithPrefix', null);
+    },
+    '2.0.12': store => {
+      console.log('Migrating from 2.0.11 → 2.0.12');
+      store.set('channel', getChannel());
+      store.set('fileWatcherAtomic', 1000);
+      store.set('fileWatcherPolling', false);
+      store.set('fileWatcherPollingInterval', 100);
     },
   }
 });
