@@ -1,6 +1,8 @@
 # sleek
+![image](https://github.com/ransome1/sleek/assets/11188741/304d2da2-e8bd-4901-9d12-04a0f5426317)
 
 ### sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, macOS and Linux
+
 sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
 
 All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allows for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
@@ -10,8 +12,8 @@ sleek is available for Windows, macOS and Linux, and in several languages. [Scre
 ### ❤️ Sponsor sleek
 Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can help covering these by [sponsoring the project](https://github.com/sponsors/ransome1).
 
-### 👩🏾‍💻 Become a contributer
-We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `develop` branch reflects the most recent progress. Here you'll find our roadmap: https://github.com/users/ransome1/projects/3. For those interested, [we've updated our contribution guidelines](https://github.com/ransome1/sleek/wiki/Contributing-Guidelines).
+### 👩🏾‍💻 This project needs your support
+sleek's backlog is becoming increasingly populated, yet our capacity remains limited. If you are skilled in `React`, `TypeScript`, `Electron`, or `Jest/Playwright` you can support this project. Here you'll find our backlog: https://github.com/users/ransome1/projects/3. For those interested, [we've updated our contribution guidelines](https://github.com/ransome1/sleek/wiki/Contributing-Guidelines). The `develop` branch reflects the most recent progress.
 
 ### Get sleek from Apple Mac App Store
 <a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank"><img src='assets/store_badges/Download_on_the_Mac_App_Store.png' alt='Get sleek from Apple Mac App Store' width='180'/></a>

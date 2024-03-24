@@ -3,10 +3,12 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import calendar from 'dayjs/plugin/calendar';
 import weekday from 'dayjs/plugin/weekday';
+import updateLocale from 'dayjs/plugin/updateLocale';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(calendar);
 dayjs.extend(weekday);
+dayjs.extend(updateLocale);
 
 const { store, ipcRenderer } = window.api;
 
@@ -60,9 +62,10 @@ export const translatedAttributes = (t: typeof i18n.t) => {
   }
 };
 
-export const friendlyDate = (value: string, attributeKey: string, language: string, t: typeof i18n.t) => {
-
-  dayjs.locale(language)
+export const friendlyDate = (value: string, attributeKey: string, settings: Settings, t: typeof i18n.t) => {
+  dayjs.updateLocale(settings.language, {
+    weekStart: settings.weekStart,
+  });
 
   const today = dayjs();
   const date = dayjs(value);

@@ -104,6 +104,10 @@ const config: Store<Settings> = new Store<Settings>({
       store.set('fileWatcherPolling', false);
       store.set('fileWatcherPollingInterval', 100);
     },
+    '2.0.13': store => {
+      console.log('Migrating from 2.0.12 → 2.0.13');
+      store.set('weekStart', 1);
+    },
   }
 });
 

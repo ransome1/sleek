@@ -56,9 +56,10 @@ function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
   const showCompleted: boolean = config.get('showCompleted');
   return todoObjects.map((todoObject: TodoObject) => {
     if(todoObject.complete && !showCompleted) {
-      todoObject.visible = false;
+      return false;
+    } else {
+      return todoObject;
     }
-    return todoObject;
   });
 }
 
@@ -74,20 +75,14 @@ function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
   const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture');
   const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture');
 
-  return todoObjects.map((todoObject: TodoObject) => {
+  return todoObjects.filter((todoObject: TodoObject) => {
+    if (!todoObject.visible) return true;
 
-    if(!todoObject.visible) return todoObject;
-    
     const thresholdDate = dayjs(todoObject?.t);
     const dueDate = dayjs(todoObject?.due);
 
-    if(thresholdDate && thresholdDate.isAfter(dayjs()) && !thresholdDateInTheFuture) {
-      todoObject.visible = false;  
-    } else if(dueDate && dueDate.isAfter(dayjs()) && !dueDateInTheFuture) {
-      todoObject.visible = false;  
-    }
-
-    return todoObject;
+    return !(thresholdDate && thresholdDate.isAfter(dayjs()) && !thresholdDateInTheFuture) &&
+           !(dueDate && dueDate.isAfter(dayjs()) && !dueDateInTheFuture);
   });
 }
 
