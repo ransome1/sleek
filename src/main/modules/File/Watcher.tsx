@@ -17,15 +17,9 @@ function createFileWatcher(files: FileObject[]): void {
     config.set('files', files)
   }
 
-  const fileWatcherAtomic = config.get('fileWatcherAtomic') || 1000;
-  const fileWatcherPolling = config.get('fileWatcherPolling') || false;
-  const fileWatcherPollingInterval = config.get('fileWatcherPollingInterval') || 100;
+  const chokidarOptions = config.get('chokidarOptions');
 
-  watcher = chokidar.watch(files.map((file) => file.todoFilePath), {
-    atomic: fileWatcherAtomic,
-    usePolling: fileWatcherPolling,
-    interval: fileWatcherPollingInterval
-  });
+  watcher = chokidar.watch(files.map((file) => file.todoFilePath), chokidarOptions);
 
   watcher
     .on('add', (file) => {

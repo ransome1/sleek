@@ -75,7 +75,7 @@ export const friendlyDate = (value: string, attributeKey: string, settings: Sett
     results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));
   }  
 
-  if (date.isAfter(today.subtract(1, 'week').startOf('week')) && date.isBefore(today.subtract(1, 'week').endOf('week'))) {
+  if (date.isAfter(today.subtract(1, 'week').startOf('week').subtract(1, 'day')) && date.isBefore(today.subtract(1, 'week').endOf('week'))) {
     results.push(t('drawer.attributes.lastWeek'));
   }
 
@@ -99,13 +99,12 @@ export const friendlyDate = (value: string, attributeKey: string, settings: Sett
     results.push(t('drawer.attributes.tomorrow'));
   }
 
-
   if (date.isSame(today.add(1, 'week'), 'week')) {
     results.push(t('drawer.attributes.nextWeek'));
   }
 
   if (date.month() === today.add(1, 'month').month()) {
-      results.push(t('drawer.attributes.nextMonth'));
+    results.push(t('drawer.attributes.nextMonth'));
   }
 
   if (date.isAfter(today.add(2, 'month').startOf('month'))) {

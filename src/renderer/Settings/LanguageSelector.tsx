@@ -66,7 +66,7 @@ i18n
 	.init(options)
 	.then(() => {
 		if(!store.getConfig('language')) {
-			store.setConfig('language', navigator.language.toLowerCase());
+			store.setConfig('language', navigator.language.toLowerCase().substr(0, 2));
 		}
 		i18n.on('missingKey', (key: string) => {
 			console.warn(`Missing translation key: ${key}`);

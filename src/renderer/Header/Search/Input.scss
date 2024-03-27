@@ -6,9 +6,6 @@
 	}
 	.MuiButtonBase-root {
 		border: none;
-		svg {
-			color: $blue;
-		}
 		svg.invert {
 			transform: rotate(180deg);
 		}

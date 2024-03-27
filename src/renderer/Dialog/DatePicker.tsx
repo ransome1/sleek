@@ -4,7 +4,9 @@ import { i18n } from '../Settings/LanguageSelector';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import updateLocale from 'dayjs/plugin/updateLocale';
 import './DatePicker.scss';
+dayjs.extend(updateLocale);
 
 interface Props extends WithTranslation {
   date: string | null;
@@ -21,6 +23,9 @@ const DatePickerComponent: React.FC<Props> = ({
   handleChange,
   t,
 }) => {
+  dayjs.updateLocale(settings.language, {
+    weekStart: settings.weekStart,
+  });
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={settings.language}>
       <DatePicker
