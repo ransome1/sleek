@@ -110,6 +110,7 @@ const config: Store<Settings> = new Store<Settings>({
       store.delete('fileWatcherAtomic');
       store.delete('fileWatcherPolling');
       store.delete('fileWatcherPollingInterval');
+      store.delete('language');
       store.set('chokidarOptions', {
         awaitWriteFinish: {
           stabilityThreshold: 100,
