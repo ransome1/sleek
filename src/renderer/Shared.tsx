@@ -3,10 +3,12 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import calendar from 'dayjs/plugin/calendar';
 import weekday from 'dayjs/plugin/weekday';
+import updateLocale from 'dayjs/plugin/updateLocale';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(calendar);
 dayjs.extend(weekday);
+dayjs.extend(updateLocale);
 
 const { store, ipcRenderer } = window.api;
 
@@ -60,9 +62,10 @@ export const translatedAttributes = (t: typeof i18n.t) => {
   }
 };
 
-export const friendlyDate = (value: string, attributeKey: string, language: string, t: typeof i18n.t) => {
-
-  dayjs.locale(language)
+export const friendlyDate = (value: string, attributeKey: string, settings: Settings, t: typeof i18n.t) => {
+  dayjs.updateLocale(settings.language, {
+    weekStart: settings.weekStart,
+  });
 
   const today = dayjs();
   const date = dayjs(value);
@@ -72,7 +75,7 @@ export const friendlyDate = (value: string, attributeKey: string, language: stri
     results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));
   }  
 
-  if (date.isAfter(today.subtract(1, 'week').startOf('week')) && date.isBefore(today.subtract(1, 'week').endOf('week'))) {
+  if (date.isAfter(today.subtract(1, 'week').startOf('week').subtract(1, 'day')) && date.isBefore(today.subtract(1, 'week').endOf('week'))) {
     results.push(t('drawer.attributes.lastWeek'));
   }
 
@@ -96,13 +99,12 @@ export const friendlyDate = (value: string, attributeKey: string, language: stri
     results.push(t('drawer.attributes.tomorrow'));
   }
 
-
   if (date.isSame(today.add(1, 'week'), 'week')) {
     results.push(t('drawer.attributes.nextWeek'));
   }
 
   if (date.month() === today.add(1, 'month').month()) {
-      results.push(t('drawer.attributes.nextMonth'));
+    results.push(t('drawer.attributes.nextMonth'));
   }
 
   if (date.isAfter(today.add(2, 'month').startOf('month'))) {

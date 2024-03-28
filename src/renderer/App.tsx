@@ -64,7 +64,7 @@ const App = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [settings.language]);  
+  }, [settings.language]);
 
   useEffect(() => {
     const windowHeight = window.innerHeight;

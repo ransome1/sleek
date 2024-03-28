@@ -43,7 +43,7 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
     Object.keys(attributes).forEach((key) => {
       if (attributes[key]) {
         const count = attributes[key].count;
-        const formattedValues = settings.useHumanFriendlyDates && isDate ? friendlyDate(key, attributeKey, settings.language, t) : [key];
+        const formattedValues = settings.useHumanFriendlyDates && isDate ? friendlyDate(key, attributeKey, settings, t) : [key];
 
         formattedValues.forEach((formattedValue) => {
           if (!processedAttributes[formattedValue]) {

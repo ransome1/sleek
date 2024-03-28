@@ -40,6 +40,7 @@ const visibleSettings: VisibleSettings = {
   },
   useHumanFriendlyDates: {
     style: 'toggle',
+    help: 'https://github.com/ransome1/sleek/wiki/Human-friendly-dates',
   },
   notificationsAllowed: {
     style: 'toggle',
@@ -62,6 +63,10 @@ const visibleSettings: VisibleSettings = {
   colorTheme: {
     style: 'select',
     values: ['system', 'light', 'dark'],
+  },
+  weekStart: {
+    style: 'select',
+    values: [1, 0],
   },
 };
 

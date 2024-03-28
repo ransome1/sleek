@@ -7,7 +7,6 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import de from '../../locales/de.json';
 import en from '../../locales/en.json';
-import en_GB from '../../locales/en-gb.json';
 import it from '../../locales/it.json';
 import es from '../../locales/es.json';
 import fr from '../../locales/fr.json';
@@ -23,7 +22,6 @@ import ko from '../../locales/ko.json';
 import hi from '../../locales/hi.json';
 import 'dayjs/locale/de';
 import 'dayjs/locale/en';
-import 'dayjs/locale/en-gb';
 import 'dayjs/locale/it';
 import 'dayjs/locale/es';
 import 'dayjs/locale/fr';
@@ -41,7 +39,6 @@ const options: i18n.InitOptions = {
 	resources: {
 		de: { translation: de },
 		en: { translation: en },
-		'en-gb': { translation: en_GB },
 		it: { translation: it },
 		es: { translation: es },
 		fr: { translation: fr },
@@ -57,7 +54,7 @@ const options: i18n.InitOptions = {
 		hi: { translation: hi },
 	},
 	fallbackLng: 'en',
-	supportedLngs: ['de', 'en', 'en-gb', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
+	supportedLngs: ['de', 'en', 'it', 'es', 'fr', 'zh', 'pt', 'jp', 'tr', 'hu', 'cs', 'pl', 'ru', 'ko', 'hi'],
 	interpolation: {
 		escapeValue: false,
 	},
@@ -69,7 +66,7 @@ i18n
 	.init(options)
 	.then(() => {
 		if(!store.getConfig('language')) {
-			store.setConfig('language', navigator.language.toLowerCase());
+			store.setConfig('language', navigator.language.toLowerCase().substr(0, 2));
 		}
 		i18n.on('missingKey', (key: string) => {
 			console.warn(`Missing translation key: ${key}`);
@@ -82,7 +79,6 @@ i18n
 const friendlyLanguageName: Record<string, string> = {
 	de: 'Deutsch',
 	en: 'English',
-	'en-gb': 'English (UK)',
 	it: 'Italiano',
 	es: 'Español',
 	fr: 'Français',

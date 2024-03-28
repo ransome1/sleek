@@ -8,6 +8,8 @@ import { handleFilterSelect, friendlyDate } from '../Shared';
 import { withTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
 import dayjs from 'dayjs';
+import updateLocale from 'dayjs/plugin/updateLocale';
+dayjs.extend(updateLocale);
 
 const { ipcRenderer } = window.api;
 
@@ -30,6 +32,10 @@ const DatePickerInline: React.FC<Props> = ({
 }) => {
 	const [open, setOpen] = useState(false);
   const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
+
+  dayjs.updateLocale(settings.language, {
+    weekStart: settings.weekStart,
+  });
 
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
@@ -55,7 +61,7 @@ const DatePickerInline: React.FC<Props> = ({
     const ButtonField = ({ ...props }) => {
       const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
       const mustNotify = (type === 'due') ? !todoObject?.notify : true;
-      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, type, settings.language, t).pop() : date;
+      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, type, settings, t).pop() : date;
 
       const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => {
         return filter.values.includes(date);
