@@ -82,6 +82,7 @@ declare global {
     useMultilineForBulkTodoCreation: boolean;
     useHumanFriendlyDates: boolean;
     channel: string;
+    chokidarOptions: object;
     __internal__: { migrations: { version: string }};
   }
 
@@ -190,11 +191,11 @@ declare global {
     count: number;
   };
 
-  type ElementObject = {
-    type: string | null;
-    value: string | null;
-    index: number;
-  };
+  // type ElementObject = {
+  //   type: string | null;
+  //   value: string | null;
+  //   index: number;
+  // };
 
   interface RequestedData {
     todoObjects: TodoObject[],

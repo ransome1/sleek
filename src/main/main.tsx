@@ -110,7 +110,6 @@ const createMainWindow = () => {
     : process.platform === 'darwin'
     ? getAssetPath('icons/sleek.icns')
     : getAssetPath('icons/512x512.png'),
-    autoHideMenuBar: true,
     webPreferences: {
       spellcheck: false,
       contextIsolation: true,

@@ -30,6 +30,7 @@
   "settings.weekStart": "Erster Tag der Woche",
   "settings.0": "Sonntag",
   "settings.1": "Montag",
+  "settings.menuBarVisibility": "Menüleiste anzeigen",
   "drawer.tabs.attributes": "Attribute",
   "drawer.tabs.filters": "Filter",
   "drawer.tabs.sorting": "Sortierung",

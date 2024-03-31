@@ -30,6 +30,7 @@
   "settings.weekStart": "週の初日",
   "settings.0": "日曜日",
   "settings.1": "月曜日",
+  "settings.menuBarVisibility": "メニューバーを表示する",
   "drawer.tabs.attributes": "属性",
   "drawer.tabs.filters": "フィルター",
   "drawer.tabs.sorting": "ソート",

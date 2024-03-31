@@ -30,6 +30,7 @@
   "settings.weekStart": "Primo giorno della settimana",
   "settings.0": "Domenica",
   "settings.1": "Lunedì",
+  "settings.menuBarVisibility": "Mostra la barra dei menu",
   "drawer.tabs.attributes": "Attributi",
   "drawer.tabs.filters": "Filtri",
   "drawer.tabs.sorting": "Ordinamento",

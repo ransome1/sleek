@@ -30,6 +30,7 @@
   "settings.weekStart": "Первый день недели",
   "settings.0": "Воскресенье",
   "settings.1": "Понедельник",
+  "settings.menuBarVisibility": "Показать строку меню",
   "drawer.tabs.attributes": "Атрибуты",
   "drawer.tabs.filters": "Фильтры",
   "drawer.tabs.sorting": "Сортировка",

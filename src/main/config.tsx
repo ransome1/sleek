@@ -118,6 +118,10 @@ const config: Store<Settings> = new Store<Settings>({
         }
       })
     },
+    '2.0.14': store => {
+      console.log('Migrating from 2.0.13 → 2.0.14');
+      store.set('menuBarVisibility', true);
+    },
   }
 });
 
@@ -154,9 +158,9 @@ config.onDidAnyChange(async(settings) => {
   }
 });
 
-config.onDidChange('files', (newValue: FileObject[] | null) => {
+config.onDidChange('files', (newValue: FileObject[] | undefined) => {
   try {
-    if (newValue) {
+    if (newValue !== undefined) {
       createFileWatcher(newValue);
     }
   } catch (error: any) {
@@ -168,6 +172,10 @@ config.onDidChange('colorTheme', (colorTheme) => {
   if(colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
     nativeTheme.themeSource = colorTheme;
   }
+});
+
+config.onDidChange('menuBarVisibility', (menuBarVisibility) => {
+  mainWindow.setMenuBarVisibility(menuBarVisibility);
 });
 
 config.onDidChange('tray', () => {

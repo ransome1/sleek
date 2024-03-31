@@ -27,6 +27,9 @@ const visibleSettings: VisibleSettings = {
   tray: {
     style: 'toggle',
   },
+  menuBarVisibility: {
+    style: 'toggle',
+  },
   bulkTodoCreation: {
     style: 'toggle',
     help: 'https://github.com/ransome1/sleek/wiki/Multi%E2%80%90line-text-field#bulk-todo-creation',
