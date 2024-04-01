@@ -1,11 +1,12 @@
 import { getActiveFile } from '../File/Active';
 import { readFileContent } from '../File/File';
 import { config, filter } from '../../config';
-import { applyFilters } from '../Filters/Filters';
+import { applySearchString } from '../Filters/Search';
+import { applyAttributes, handleHiddenTodoObjects, handleCompletedTodoObjects, handleTodoObjectsDates } from '../Filters/Filters';
 import { updateAttributes, attributes } from '../Attributes';
 import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../../main';
-import { handleHiddenTodoObjects, handleCompletedTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects, applySearchString, handleTodoObjectsDates } from './ProcessTodoObjects';
+import { sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects } from './ProcessTodoObjects';
 
 let searchString: string;
 
@@ -30,7 +31,7 @@ async function processDataRequest(search?: string): Promise<void> {
 
   if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
 
-  if(filters) todoObjects = applyFilters(todoObjects, filters);
+  if(filters) todoObjects = applyAttributes(todoObjects, filters);
 
   if(searchString) todoObjects = applySearchString(searchString, todoObjects);
 

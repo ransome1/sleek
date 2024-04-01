@@ -4,6 +4,7 @@ import { app, nativeTheme } from 'electron';
 import fs from 'fs';
 import { mainWindow } from './main';
 import { createFileWatcher } from './modules/File/Watcher';
+import { writeToFile } from './modules/File/Write';
 import { createTray } from './modules/Tray';
 import { processDataRequest, searchString } from './modules/ProcessDataRequest/ProcessDataRequest';
 import handleTheme from './modules/Theme';
@@ -12,11 +13,7 @@ import crypto from 'crypto';
 
 Store.initRenderer();
 
-const environment: string | undefined = process.env.NODE_ENV;
-
-const anonymousUserId: string = crypto.randomUUID() || null;
-
-const userDataDirectory: string = (environment === 'development') ? path.join(app.getPath('userData'), 'userData-Development') : path.join(app.getPath('userData'), 'userData');
+const userDataDirectory: string = (process.env.NODE_ENV === 'development') ? path.join(app.getPath('userData'), 'userData-Development') : path.join(app.getPath('userData'), 'userData');
 
 if(!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
 
@@ -24,7 +21,7 @@ console.log('config.ts: sleek userdata is located at: ' + userDataDirectory);
 
 const customStylesPath: string = path.join(userDataDirectory, 'customStyles.css');
 if(!fs.existsSync(customStylesPath)) {
-  fs.writeFileSync(customStylesPath, '');
+  writeToFile('', customStylesPath, null)
 }
 
 const config: Store<Settings> = new Store<Settings>({
@@ -78,7 +75,7 @@ const config: Store<Settings> = new Store<Settings>({
     },
     '2.0.1': store => {
       console.log('Migrating from 2.0.0 → 2.0.1');
-      store.set('anonymousUserId', anonymousUserId);
+      store.set('anonymousUserId', crypto.randomUUID());
     },
     '2.0.2': store => {
       console.log('Migrating from 2.0.1 → 2.0.2');
@@ -138,7 +135,7 @@ const notifiedTodoObjectsStorage = new Store<{}>({ cwd: userDataDirectory, name:
 
 if(!fs.existsSync(notifiedTodoObjectsPath)) {
   const defaultNotifiedTodoObjectsData = {};
-  fs.writeFileSync(notifiedTodoObjectsPath, JSON.stringify(defaultNotifiedTodoObjectsData));
+  writeToFile(JSON.stringify(defaultNotifiedTodoObjectsData), notifiedTodoObjectsPath, null)
 }
 
 filter.onDidChange('attributes', async () => {
@@ -169,13 +166,17 @@ config.onDidChange('files', (newValue: FileObject[] | undefined) => {
 });
 
 config.onDidChange('colorTheme', (colorTheme) => {
-  if(colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
-    nativeTheme.themeSource = colorTheme;
+  try {
+    if(colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
+      nativeTheme.themeSource = colorTheme;
+    }
+  } catch (error: any) {
+    console.error(error);
   }
 });
 
 config.onDidChange('menuBarVisibility', (menuBarVisibility) => {
-  mainWindow.setMenuBarVisibility(menuBarVisibility);
+  mainWindow?.setMenuBarVisibility(menuBarVisibility || true);
 });
 
 config.onDidChange('tray', () => {

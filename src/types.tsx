@@ -83,6 +83,7 @@ declare global {
     useHumanFriendlyDates: boolean;
     channel: string;
     chokidarOptions: object;
+    menuBarVisibility: boolean;
     __internal__: { migrations: { version: string }};
   }
 
@@ -190,12 +191,6 @@ declare global {
   type Badge = {
     count: number;
   };
-
-  // type ElementObject = {
-  //   type: string | null;
-  //   value: string | null;
-  //   index: number;
-  // };
 
   interface RequestedData {
     todoObjects: TodoObject[],

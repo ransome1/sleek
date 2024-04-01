@@ -7,10 +7,6 @@ import path from 'path';
 import { mainWindow } from '../../main';
 
 async function readFileContent(filePath: string, bookmark: string | null): Promise<string | null> {
-  if(!filePath) {
-    return null;
-  }
-
   let fileContent;
 
   if(process.mas && bookmark) {
@@ -48,8 +44,7 @@ function addFile(filePath: string, bookmark: string | null) {
 
   createMenu(files);
 
-  const tray = config.get('tray');
-  if(tray) {
+  if(config.get('tray')) {
     createTray();
   }
 

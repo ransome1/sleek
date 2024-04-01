@@ -147,8 +147,7 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize;
 
-  const tray: boolean = config.get('tray');
-  if(tray) {
+  if(config.get('tray')) {
     createTray();
   }
 

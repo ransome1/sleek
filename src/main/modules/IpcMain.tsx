@@ -2,7 +2,7 @@ import { shell } from 'electron';
 import { ipcMain, app, IpcMainEvent, clipboard } from 'electron';
 import { processDataRequest } from './ProcessDataRequest/ProcessDataRequest';
 import { changeCompleteState } from './ProcessDataRequest/ChangeCompleteState';
-import { writeTodoObjectToFile, removeLineFromFile } from './File/Write';
+import { prepareContentForWriting, removeLineFromFile } from './File/Write';
 import { archiveTodos, handleRequestArchive } from './File/Archive';
 import { config, filter, notifiedTodoObjectsStorage } from '../config';
 import { addFile, setFile, removeFile } from './File/File';
@@ -40,18 +40,17 @@ function handleUpdateTodoObject(event: IpcMainEvent, index: number, string: stri
 
 async function handleWriteTodoToFile(event: IpcMainEvent, index: number, string: string, state: boolean, attributeType: string, attributeValue: string): Promise<void> {
   try {
-    let todoObject;
     if(attributeType && attributeValue) {
-      todoObject = createTodoObject(index, string, attributeType, attributeValue);
-      if(!todoObject.string) return;
-      const response = await writeTodoObjectToFile(index, todoObject.string);
-      event.reply('writeTodoToFile', response);
-      return;
+      const todoObject = createTodoObject(index, string, attributeType, attributeValue);
+      //const response = await prepareContentForWriting(index, todoObject.string);
+      await prepareContentForWriting(index, todoObject.string);
+      //event.reply('writeTodoToFile', response);
     } else {
       let updatedString: string | null = string;
       if(state !== undefined && index >= 0) updatedString = await changeCompleteState(string, state)
-      const response = await writeTodoObjectToFile(index, updatedString);
-      event.reply('writeTodoToFile', response);
+      //const response = await prepareContentForWriting(index, updatedString);
+      await prepareContentForWriting(index, updatedString);
+      //event.reply('writeTodoToFile', response);
     }
   } catch(error: any) {
     console.error(error);
@@ -168,9 +167,9 @@ async function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): Prom
   }
 }
 
-async function handleRemoveLineFromFile(event: IpcMainEvent, index: number): Promise<void> {
+function handleRemoveLineFromFile(event: IpcMainEvent, index: number) {
   try {
-    await removeLineFromFile(index);
+    removeLineFromFile(index);
   } catch (error: any) {
     console.error(error);
     event.reply('responseFromMainProcess', error);

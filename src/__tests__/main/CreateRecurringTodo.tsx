@@ -3,7 +3,7 @@ import { createRecurringTodo } from '../../main/modules/ProcessDataRequest/Creat
 import dayjs from 'dayjs';
 
 jest.mock('../../main/modules/ProcessDataRequest/CreateTodoObjects', () => ({
-  lines: [''],
+  linesInFile: [''],
 }));
 
 jest.mock('../../main/config', () => ({

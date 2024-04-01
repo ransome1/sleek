@@ -1,6 +1,6 @@
 import { Item } from 'jstodotxt';
 import dayjs from 'dayjs';
-import { writeTodoObjectToFile } from '../File/Write';
+import { prepareContentForWriting } from '../File/Write';
 
 enum RecurrenceInterval {
   Daily = 'd',
@@ -40,7 +40,7 @@ const addRecurrenceToDate = (date: Date, recurrenceInterval: string, recurrenceV
   }
 };
 
-const createRecurringTodo = async (string: string, recurrence: string): Promise<string> => {
+const createRecurringTodo = (string: string, recurrence: string): string => {
 
   let updatedString = (string || '').replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
   
@@ -73,7 +73,6 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
         ? dayjs(newDueDate).subtract(daysBetween, 'day').toDate()
         : addRecurrenceToDate(dayjs(creationDate).toDate(), recurrenceInterval, recurrenceValue);
 
-    // If the user only uses threshold date and no due date, the recurrence should not create a due date:
     const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
 
     if(newDueDate && creationDate && !recurrenceOnlyForThresholdDate) JsTodoTxtObject.setExtension('due', dayjs(newDueDate).format('YYYY-MM-DD'));
@@ -82,7 +81,7 @@ const createRecurringTodo = async (string: string, recurrence: string): Promise<
     JsTodoTxtObject.setComplete(false);
     JsTodoTxtObject.setCompleted(null);
 
-    await writeTodoObjectToFile(-1, JsTodoTxtObject.toString());
+    prepareContentForWriting(-1, JsTodoTxtObject.toString());
 
     return 'Recurring todo created';
   }

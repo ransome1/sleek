@@ -5,7 +5,7 @@ import { handleNotification } from '../Notifications';
 import { extractSpeakingDates } from '../Date';
 import dayjs from 'dayjs';
 
-let lines: string[];
+let linesInFile: string[];
 export const badge: Badge = { count: 0 };
 
 function createTodoObject(index: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
@@ -66,19 +66,19 @@ function createTodoObject(index: number, string: string, attributeType?: string,
 
 async function createTodoObjects(fileContent: string | null): Promise<TodoObject[] | []> {
   if(!fileContent) {
-    lines = [];
+    linesInFile = [];
     return [];
   }
   badge.count = 0;
-  lines = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
+  linesInFile = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
   const excludeLinesWithPrefix: string[] = config.get('excludeLinesWithPrefix') || [];
   
-  const todoObjects: TodoObject[] = await Promise.all(lines.map(async (line, i) => {
+  const todoObjects: TodoObject[] = await Promise.all(linesInFile.map(async (line, i) => {
     if(excludeLinesWithPrefix.some(prefix => line.startsWith(prefix))) {
       return null;
     }
 
-    const todoObject: TodoObject = await createTodoObject(i, line);
+    const todoObject: TodoObject = createTodoObject(i, line);
 
     if (todoObject.body && !todoObject.complete) {
       handleNotification(todoObject.due, todoObject.body, badge);
@@ -92,4 +92,4 @@ async function createTodoObjects(fileContent: string | null): Promise<TodoObject
   return todoObjects;
 }
 
-export { createTodoObjects, createTodoObject, lines };
+export { createTodoObjects, createTodoObject, linesInFile };

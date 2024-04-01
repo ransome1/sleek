@@ -1,9 +1,3 @@
-import dayjs from 'dayjs';
-import * as FilterLang from '../Filters/FilterLang.js';
-import { runQuery } from '../Filters/FilterQuery';
-import { createTodoObject } from './CreateTodoObjects';
-import { config } from '../../config';
-
 function countTodoObjects(todoObjects: TodoObject[]): HeadersObject {
   const filteredObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
     return todoObject.visible;
@@ -13,77 +7,11 @@ function countTodoObjects(todoObjects: TodoObject[]): HeadersObject {
     if(todoObject.complete) return todoObject.complete;
   });
 
-  const headers: HeadersObject = {
+  return {
     availableObjects: todoObjects.length,
     visibleObjects: filteredObjects.length,
     completedObjects: completedObjects.length
-  }
-
-  return headers;
-}
-
-function checkForSearchMatches(todoString: string, searchString: string) {
-  try {
-    const todoObject = createTodoObject(-1, todoString);
-    const query = FilterLang.parse(searchString);
-    return runQuery(todoObject, query);
-  } catch (error) {
-    return todoString.toLowerCase().includes(searchString);
-  }
-}
-
-function applySearchString(searchString: string, todoObjects: TodoObject[]): TodoObject[] {
-  try {
-    const query = FilterLang.parse(searchString);
-    return todoObjects.map(todoObject => {
-      if(!todoObject.visible) return todoObject;
-      todoObject.visible = runQuery(todoObject, query);
-      return todoObject;
-    });
-  } catch (error) {
-    const lowerSearchString = searchString.toLowerCase();
-    return Object.values(todoObjects)
-      .flat()
-      .map(todoObject => {
-        if(!todoObject.visible) return todoObject;
-        todoObject.visible = todoObject?.string?.toLowerCase().includes(lowerSearchString) || false;
-        return todoObject;
-      }) as TodoObject[];
-  }
-}
-
-function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  const showCompleted: boolean = config.get('showCompleted');
-  return todoObjects.map((todoObject: TodoObject) => {
-    if(todoObject.complete && !showCompleted) {
-      return false;
-    } else {
-      return todoObject;
-    }
-  });
-}
-
-function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  return todoObjects.map((todoObject: TodoObject) => {
-    if(!todoObject.visible) return todoObject;
-    todoObject.visible = todoObject.visible && !todoObject.hidden;
-    return todoObject;
-  });
-}
-
-function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
-  const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture');
-  const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture');
-
-  return todoObjects.filter((todoObject: TodoObject) => {
-    if (!todoObject.visible) return true;
-
-    const thresholdDate = dayjs(todoObject?.t);
-    const dueDate = dayjs(todoObject?.due);
-
-    return !(thresholdDate && thresholdDate.isAfter(dayjs()) && !thresholdDateInTheFuture) &&
-           !(dueDate && dueDate.isAfter(dayjs()) && !dueDateInTheFuture);
-  });
+  };
 }
 
 function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]): TodoObject[] {
@@ -162,12 +90,7 @@ function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string): T
 }
 
 export {
-  handleHiddenTodoObjects,
   flattenTodoObjects,
   sortAndGroupTodoObjects,
   countTodoObjects,
-  applySearchString,
-  handleCompletedTodoObjects,
-  handleTodoObjectsDates,
-  checkForSearchMatches,
 };

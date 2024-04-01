@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import { createTodoObjects } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
-import { applySearchString, countTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects } from '../../main/modules/ProcessDataRequest/ProcessTodoObjects';
+import { applySearchString } from '../../main/modules/Filters/Search';
+import { countTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects } from '../../main/modules/ProcessDataRequest/ProcessTodoObjects';
 
 jest.mock('../../main/config', () => ({
   config: {

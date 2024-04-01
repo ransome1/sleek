@@ -1,14 +1,13 @@
-import fs from 'fs/promises';
 import { getActiveFile } from './Active';
 import { readFileContent } from './File';
+import { writeToFile } from './Write';
 import { mainWindow } from '../../main';
 
-async function replaceFileContent(string: string, filePath: string) {
-  await fs.writeFile(filePath, string, 'utf8');
-}
-
 function handleRequestArchive(): void {
-  const activeFile = getActiveFile();
+  const activeFile: FileObject | null = getActiveFile();
+  if(!activeFile) {
+    throw new Error('Todo file is not defined');
+  }
   mainWindow!.webContents.send('triggerArchiving', Boolean(activeFile?.doneFilePath));
 }
 
@@ -30,9 +29,8 @@ async function readFilteredFileContent(filePath: string, bookmark: string | null
 
 async function archiveTodos(): Promise<string> {
   const activeFile: FileObject | null = getActiveFile();
-
-  if(activeFile === null) {
-    return 'No active file defined';
+  if(!activeFile) {
+    throw new Error('Todo file is not defined');
   }
 
   if(activeFile.doneFilePath === null) {
@@ -49,9 +47,9 @@ async function archiveTodos(): Promise<string> {
   
   const todosFromDoneFile: string | null = await readFileContent(activeFile.doneFilePath, activeFile.doneFileBookmark);
 
-  await replaceFileContent(todosFromDoneFile + '\n' + completedTodos, activeFile.doneFilePath);
-  
-  await replaceFileContent(uncompletedTodos, activeFile.todoFilePath);
+  await writeToFile(todosFromDoneFile + '\n' + completedTodos, activeFile.doneFilePath, activeFile.doneFileBookmark);
+
+  await writeToFile(uncompletedTodos, activeFile.todoFilePath, activeFile.todoFileBookmark);
 
   return 'Successfully archived';
 }

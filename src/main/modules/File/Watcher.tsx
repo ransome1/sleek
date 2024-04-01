@@ -17,9 +17,7 @@ function createFileWatcher(files: FileObject[]): void {
     config.set('files', files)
   }
 
-  const chokidarOptions = config.get('chokidarOptions');
-
-  watcher = chokidar.watch(files.map((file) => file.todoFilePath), chokidarOptions);
+  watcher = chokidar.watch(files.map((file) => file.todoFilePath), config.get('chokidarOptions'));
 
   watcher
     .on('add', (file) => {
