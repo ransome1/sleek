@@ -138,7 +138,7 @@ const App = () => {
                 : null }
               </>
               )}
-              {todoObjects && todoObjects.length > 0 && (
+              {todoObjects && (
                 <>
                   <GridComponent
                     todoObjects={todoObjects}

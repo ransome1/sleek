@@ -6,7 +6,7 @@ import { applyAttributes, handleHiddenTodoObjects, handleCompletedTodoObjects, h
 import { updateAttributes, attributes } from '../Attributes';
 import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../../main';
-import { sortAndGroupTodoObjects, flattenTodoObjects } from './ProcessTodoObjects';
+import { sortAndGroupTodoObjects } from './SortAndGroup';
 
 let searchString: string;
 let headers: HeadersObject = {
@@ -59,12 +59,16 @@ function processDataRequest(search?: string): RequestedData {
 
   headers.visibleObjects = visibleTodoObjects.length;
 
-  if(fileSorting) {
-    todoObjects = flattenTodoObjects(todoObjects, '');
-  } else {
-    const sortedAndGroupedTodos: TodoObject[] = sortAndGroupTodoObjects(todoObjects, sorting);
-    todoObjects = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
-  }
+  console.log(todoObjects)
+
+  todoObjects = sortAndGroupTodoObjects(todoObjects, sorting);
+
+  // if(fileSorting) {
+  //   todoObjects = flattenTodoObjects(todoObjects, '');
+  // } else {
+  //   const sortedAndGroupedTodos: TodoObject[] = sortAndGroupTodoObjects(todoObjects, sorting);
+  //   todoObjects = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
+  // }
 
   const requestedData: RequestedData = {
     todoObjects,

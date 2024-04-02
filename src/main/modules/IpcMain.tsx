@@ -4,7 +4,7 @@ import { changeCompleteState } from './ProcessDataRequest/ChangeCompleteState';
 import { prepareContentForWriting, removeLineFromFile } from './File/Write';
 import { archiveTodos, handleRequestArchive } from './File/Archive';
 import { config, filter, notifiedTodoObjectsStorage } from '../config';
-import { handleConfig } from '../util';
+import { handleError } from '../util';
 import { addFile, setFile, removeFile } from './File/File';
 import { openFile, createFile } from './File/Dialog';
 import { createTodoObject } from './ProcessDataRequest/CreateTodoObjects';

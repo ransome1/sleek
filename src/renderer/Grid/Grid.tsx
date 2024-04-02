@@ -34,8 +34,10 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
  }) => {
 
   const list = document.getElementById('grid');
-  const groups: string[] = [];
-  const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible)?.slice(0, visibleRowCount);
+  //const groups: string[] = [];
+  //const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible)?.slice(0, visibleRowCount);
+  let rowCount = 0;
+  
   const totalRowCount = todoObjects?.length || 0;
 
   const handleButtonClick = (key: string, name: string, values: string[]) => {
@@ -88,40 +90,41 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
     }
   };
 
-  if(visibleTodoObjects.length === 0) return null;
+  //if(visibleTodoObjects.length === 0) return null;
 
   return (
     <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
-      {visibleTodoObjects?.map((row, index) => {
-        let renderGroup;
-        const groupValue = row[settings.sorting[0].value]?.toString() || null;
-        if(groups.length === 0 || !groups.includes(groupValue)) {
-          groups.push(groupValue);
-          renderGroup = true;
-        }
-        return (
-          <React.Fragment key={index}>
-            {!settings.fileSorting && renderGroup && (
-              <Group
-                value={groupValue}
-                todotxtAttribute={settings.sorting[0].value}
-                filters={filters}
-                onClick={handleButtonClick}
-              />
-            )}
-            <Row
-              todoObject={row}
+      {todoObjects.map(group => (
+        group.visible && (
+          <React.Fragment key={group.title}>
+            <Group
+              value={group.title}
+              todotxtAttribute={settings.sorting[0].value}
               filters={filters}
-              setTodoObject={setTodoObject}
-              setDialogOpen={setDialogOpen}
-              setContextMenu={setContextMenu}
-              setPromptItem={setPromptItem}
-              settings={settings}
-              handleButtonClick={handleButtonClick}
+              onClick={handleButtonClick}
             />
+            {group.todoObjects.map(todoObject => {
+              if (!todoObject.visible) {
+                return null;
+              }
+              rowCount++;
+              return (
+                <Row
+                  key={todoObject.id}
+                  todoObject={todoObject}
+                  filters={filters}
+                  setTodoObject={setTodoObject}
+                  setDialogOpen={setDialogOpen}
+                  setContextMenu={setContextMenu}
+                  setPromptItem={setPromptItem}
+                  settings={settings}
+                  handleButtonClick={handleButtonClick}
+                />
+              );
+            })}
           </React.Fragment>
-        );
-      })}
+        )
+      ))}
     </List>
   );
 
