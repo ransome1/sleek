@@ -84,6 +84,9 @@ declare global {
     channel: string;
     chokidarOptions: object;
     menuBarVisibility: boolean;
+    fileWatcherAtomic: boolean;
+    fileWatcherPolling: boolean;
+    fileWatcherPollingInterval: boolean;
     __internal__: { migrations: { version: string }};
   }
 

@@ -11,7 +11,7 @@ function handleRequestArchive(): void {
   mainWindow!.webContents.send('triggerArchiving', Boolean(activeFile?.doneFilePath));
 }
 
-async function readFilteredFileContent(filePath: string, bookmark: string | null, complete: boolean): Promise<string> {
+function readFilteredFileContent(filePath: string, bookmark: string | null, complete: boolean): string {
   const filterStrings = (fileContent: string, complete: boolean): string => {
     const arrayOfStrings = fileContent.split('\n');
     const filteredArrayOfStrings = arrayOfStrings.filter(string => {
@@ -19,15 +19,15 @@ async function readFilteredFileContent(filePath: string, bookmark: string | null
     });
     return filteredArrayOfStrings.join('\n');
   };
-  const fileContent: string | null = await readFileContent(filePath, bookmark);
-  if(fileContent) {
+  const fileContent: string | Error = readFileContent(filePath, bookmark);
+  if(typeof fileContent === 'string') {
     return filterStrings(fileContent, complete);  
   } else {
     return '';
   }
 }
 
-async function archiveTodos(): Promise<string> {
+function archiveTodos(): string {
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
     throw new Error('Todo file is not defined');
@@ -37,19 +37,19 @@ async function archiveTodos(): Promise<string> {
     return 'Archiving file is not defined';
   }
 
-  const completedTodos: string = await readFilteredFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark, true);
+  const completedTodos: string = readFilteredFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark, true);
 
   if(!completedTodos) {
     return 'No completed todos found';
   }
 
-  const uncompletedTodos: string = await readFilteredFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark, false);
+  const uncompletedTodos: string = readFilteredFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark, false);
   
-  const todosFromDoneFile: string | null = await readFileContent(activeFile.doneFilePath, activeFile.doneFileBookmark);
+  const todosFromDoneFile: string | Error = readFileContent(activeFile.doneFilePath, activeFile.doneFileBookmark);
 
-  await writeToFile(todosFromDoneFile + '\n' + completedTodos, activeFile.doneFilePath, activeFile.doneFileBookmark);
+  writeToFile(todosFromDoneFile + '\n' + completedTodos, activeFile.doneFilePath, activeFile.doneFileBookmark);
 
-  await writeToFile(uncompletedTodos, activeFile.todoFilePath, activeFile.todoFileBookmark);
+  writeToFile(uncompletedTodos, activeFile.todoFilePath, activeFile.todoFileBookmark);
 
   return 'Successfully archived';
 }

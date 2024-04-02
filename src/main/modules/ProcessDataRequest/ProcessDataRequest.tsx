@@ -6,11 +6,16 @@ import { applyAttributes, handleHiddenTodoObjects, handleCompletedTodoObjects, h
 import { updateAttributes, attributes } from '../Attributes';
 import { createTodoObjects } from './CreateTodoObjects';
 import { mainWindow } from '../../main';
-import { sortAndGroupTodoObjects, flattenTodoObjects, countTodoObjects } from './ProcessTodoObjects';
+import { sortAndGroupTodoObjects, flattenTodoObjects } from './ProcessTodoObjects';
 
 let searchString: string;
+let headers: HeadersObject = {
+  availableObjects: 0,
+  visibleObjects: 0
+}
+let todoObjects: TodoObject[];
 
-async function processDataRequest(search?: string): Promise<void> {
+function processDataRequest(search?: string): RequestedData {
   searchString = search || '';
 
   const activeFile: FileObject | null = getActiveFile();
@@ -22,9 +27,20 @@ async function processDataRequest(search?: string): Promise<void> {
   const fileSorting: boolean = config.get('fileSorting');
   const filters: Filters = filter.get('attributes');
 
-  const fileContent = await readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
-  let todoObjects: TodoObject[] | [] = await createTodoObjects(fileContent);
+  const fileContent = readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
+
+  todoObjects = createTodoObjects(fileContent);
+
+  headers.availableObjects = todoObjects.length;
+
   todoObjects = handleTodoObjectsDates(todoObjects);
+
+  const completedTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+    return todoObject.complete;
+  });
+  
+  headers.completedObjects = completedTodoObjects.length;
+  
   todoObjects = handleCompletedTodoObjects(todoObjects);  
 
   updateAttributes(todoObjects, sorting, true);
@@ -37,7 +53,11 @@ async function processDataRequest(search?: string): Promise<void> {
 
   updateAttributes(todoObjects, sorting, false);
 
-  const headers: HeadersObject = countTodoObjects(todoObjects);
+  const visibleTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+    return todoObject.visible;
+  });
+
+  headers.visibleObjects = visibleTodoObjects.length;
 
   if(fileSorting) {
     todoObjects = flattenTodoObjects(todoObjects, '');
@@ -53,7 +73,7 @@ async function processDataRequest(search?: string): Promise<void> {
     filters,
   };
 
-  mainWindow!.webContents.send('requestData', requestedData);
+  return requestedData;
 }
 
 export { processDataRequest, searchString };

@@ -64,17 +64,17 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   };
 }
 
-async function createTodoObjects(fileContent: string | null): Promise<TodoObject[] | []> {
-  if(!fileContent) {
+function createTodoObjects(fileContent: string | null): TodoObject[] | [] {
+  if (!fileContent) {
     linesInFile = [];
     return [];
   }
   badge.count = 0;
   linesInFile = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
   const excludeLinesWithPrefix: string[] = config.get('excludeLinesWithPrefix') || [];
-  
-  const todoObjects: TodoObject[] = await Promise.all(linesInFile.map(async (line, i) => {
-    if(excludeLinesWithPrefix.some(prefix => line.startsWith(prefix))) {
+
+  const todoObjects: TodoObject[] = linesInFile.map((line, i) => {
+    if (excludeLinesWithPrefix.some(prefix => line.startsWith(prefix))) {
       return null;
     }
 
@@ -85,7 +85,7 @@ async function createTodoObjects(fileContent: string | null): Promise<TodoObject
     }
 
     return todoObject;
-  })).then((objects) => objects.filter(Boolean) as TodoObject[]);
+  }).filter(Boolean) as TodoObject[];
 
   app.setBadgeCount(badge.count);
 

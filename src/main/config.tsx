@@ -8,7 +8,7 @@ import { writeToFile } from './modules/File/Write';
 import { createTray } from './modules/Tray';
 import { processDataRequest, searchString } from './modules/ProcessDataRequest/ProcessDataRequest';
 import handleTheme from './modules/Theme';
-import { getChannel } from './util';
+import { getChannel, handleError } from './util';
 import crypto from 'crypto';
 
 Store.initRenderer();
@@ -138,20 +138,22 @@ if(!fs.existsSync(notifiedTodoObjectsPath)) {
   writeToFile(JSON.stringify(defaultNotifiedTodoObjectsData), notifiedTodoObjectsPath, null)
 }
 
-filter.onDidChange('attributes', async () => {
+filter.onDidChange('attributes', () => {
   try {
-    await processDataRequest(searchString);
-  } catch(error: any) {
-    console.error(error);
+    const requestedData = processDataRequest(searchString);
+    mainWindow!.webContents.send('requestData', requestedData);
+  } catch(error: Error) {
+    handleError(error);
   }
 });
 
-config.onDidAnyChange(async(settings) => {
+config.onDidAnyChange((settings) => {
   try {
-    await processDataRequest(searchString);
+    const requestedData = processDataRequest(searchString);
+    mainWindow!.webContents.send('requestData', requestedData);
     mainWindow!.webContents.send('settingsChanged', settings);
-  } catch(error: any) {
-    console.error(error);
+  } catch(error: Error) {
+    handleError(error);
   }
 });
 
@@ -160,8 +162,8 @@ config.onDidChange('files', (newValue: FileObject[] | undefined) => {
     if (newValue !== undefined) {
       createFileWatcher(newValue);
     }
-  } catch (error: any) {
-    console.error(error);
+  } catch(error: Error) {
+    handleError(error);
   }
 });
 
@@ -170,8 +172,8 @@ config.onDidChange('colorTheme', (colorTheme) => {
     if(colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
       nativeTheme.themeSource = colorTheme;
     }
-  } catch (error: any) {
-    console.error(error);
+  } catch(error: Error) {
+    handleError(error);
   }
 });
 

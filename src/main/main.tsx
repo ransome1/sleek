@@ -183,9 +183,10 @@ const handleBeforeQuit = () => {
   app.releaseSingleInstanceLock();
 }
 
-const handleOpenFile = (path: string) => {
-  if(path) addFile(path, null);
-};
+// const handleOpenFile = (path) => {
+//   console.log(typeof path)
+//   if(path) addFile(path, null);
+// };
 
 app
   .whenReady().then(() => {
@@ -193,14 +194,14 @@ app
     eventListeners.handleCreateWindow = handleCreateWindow;
     eventListeners.handleWindowAllClosed = handleWindowAllClosed;
     eventListeners.handleBeforeQuit = handleBeforeQuit;
-    eventListeners.handleOpenFile = handleOpenFile;
+    //eventListeners.handleOpenFile = handleOpenFile;
   })
   .catch(console.error);
 
 app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
-  .on('activate', handleCreateWindow)
-  .on('open-file', () => handleOpenFile(path));
+  .on('activate', handleCreateWindow);
+  //.on('open-file', () => handleOpenFile(path));
 
 export { mainWindow, handleCreateWindow, eventListeners };

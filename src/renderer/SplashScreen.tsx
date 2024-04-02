@@ -43,7 +43,7 @@ const SplashScreen: FC<SplashScreenProps> = memo(({
 
   return (
     <div id='splashScreen'>
-      {settings.files?.length > 0 && headers?.visibleObjects === 0 && headers?.availableObjects > 0 && (
+      {settings.files?.length > 0 && headers?.availableObjects > 0 && headers?.visibleObjects === 0 && (
         <>
           <DryCleaningIcon />
           <p>{t('splashscreen.noTodosVisible.text')}</p>

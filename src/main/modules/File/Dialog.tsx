@@ -2,6 +2,7 @@ import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'elect
 import path from 'path';
 import { addFile, addDoneFile } from './File';
 import { writeToFile } from './Write';
+import { handleError } from '../../util';
 
 const dialogFilters = [
   {
@@ -24,14 +25,10 @@ async function openFile(setDoneFile: boolean): Promise<void> {
     const filePath: string = result.filePaths[0];
     const bookmark: string | null = result.bookmarks?.[0] || null;
 
-    try {
-      if(setDoneFile) {
-        addDoneFile(filePath, bookmark);
-      } else {
-        addFile(filePath, bookmark);
-      }
-    } catch(error: any) {
-      console.error(error);
+    if(setDoneFile) {
+      addDoneFile(filePath, bookmark);
+    } else {
+      addFile(filePath, bookmark);
     }
   }
 }
@@ -50,14 +47,10 @@ async function createFile(setDoneFile: boolean): Promise<void> {
 
     writeToFile('', filePath, bookmark)
 
-    try {
-      if(setDoneFile) {
-        addDoneFile(filePath, bookmark);
-      } else {
-        addFile(filePath, bookmark);
-      }
-    } catch(error: any) {
-      console.error(error);
+    if(setDoneFile) {
+      addDoneFile(filePath, bookmark);
+    } else {
+      addFile(filePath, bookmark);
     }
   }
 }

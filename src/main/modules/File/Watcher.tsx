@@ -1,7 +1,8 @@
 import chokidar, { FSWatcher } from 'chokidar';
 import { processDataRequest, searchString } from '../ProcessDataRequest/ProcessDataRequest';
 import { config } from '../../config';
-import { eventListeners } from '../../main';
+import { handleError } from '../../util';
+import { mainWindow, eventListeners } from '../../main';
 
 let watcher: FSWatcher | null = null;
 
@@ -23,12 +24,13 @@ function createFileWatcher(files: FileObject[]): void {
     .on('add', (file) => {
       console.log(`Watching new file: ${file}`);
     })
-    .on('change', async (file) => {
+    .on('change', (file) => {
       try {
-        await processDataRequest(searchString);
+        const requestedData = processDataRequest(searchString);
+        mainWindow!.webContents.send('requestData', requestedData);
         console.log(`${file} has been changed`);
-      } catch(error: any) {
-        console.error(error.message);
+      } catch(error: Error) {
+        handleError(error);
       }
     })
     .on('unlink', (file) => {

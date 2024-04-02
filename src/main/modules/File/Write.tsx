@@ -8,23 +8,22 @@ import { replaceSpeakingDatesWithAbsoluteDates } from '../Date';
 
 function writeToFile(string: string, filePath: string, bookmark: string | null) {
   const stopAccessingSecurityScopedResource = (process.mas && bookmark) ? app.startAccessingSecurityScopedResource(bookmark) : null;
-  fs.writeFile(filePath, string, (error) => {
-    if (error) return error;
-    console.info('Written to file');
-    if(stopAccessingSecurityScopedResource) stopAccessingSecurityScopedResource()
-  });
+  
+  fs.writeFileSync(filePath, string, 'utf-8');
+  
+  if (stopAccessingSecurityScopedResource && process.mas && bookmark) {
+    stopAccessingSecurityScopedResource();
+  }
 }
 
-function removeLineFromFile(lineNumber: number): string {
-  const activeFile: FileObject | null = getActiveFile();
+function removeLineFromFile(lineNumber: number) {
+  let activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
     throw new Error('No active file found');
-  } else if(typeof lineNumber !== 'number') {
-    throw new Error(`No line number passed, can't delete without it`);
+  } else if(lineNumber >= 0) {
+    linesInFile.splice(lineNumber, 1);
+    writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark);
   }
-  linesInFile.splice(lineNumber, 1);
-  writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark);
-  return `Line ${lineNumber} removed from file`;
 }
 
 function prepareContentForWriting(lineNumber: number, string: string) {

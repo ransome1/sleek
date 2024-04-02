@@ -1,19 +1,3 @@
-function countTodoObjects(todoObjects: TodoObject[]): HeadersObject {
-  const filteredObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
-    return todoObject.visible;
-  });
-
-  const completedObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
-    if(todoObject.complete) return todoObject.complete;
-  });
-
-  return {
-    availableObjects: todoObjects.length,
-    visibleObjects: filteredObjects.length,
-    completedObjects: completedObjects.length
-  };
-}
-
 function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]): TodoObject[] {
     function compareValues(a: any, b: any, invert: boolean): number {
       const comparison = String(a).localeCompare(String(b), undefined, { sensitivity: 'base' });
@@ -91,6 +75,5 @@ function flattenTodoObjects(todoObjects: TodoObject[], topLevelGroup: string): T
 
 export {
   flattenTodoObjects,
-  sortAndGroupTodoObjects,
-  countTodoObjects,
+  sortAndGroupTodoObjects
 };

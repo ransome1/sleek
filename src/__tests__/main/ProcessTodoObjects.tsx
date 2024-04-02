@@ -1,7 +1,7 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 import { createTodoObjects } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
 import { applySearchString } from '../../main/modules/Filters/Search';
-import { countTodoObjects, sortAndGroupTodoObjects, flattenTodoObjects } from '../../main/modules/ProcessDataRequest/ProcessTodoObjects';
+import { sortAndGroupTodoObjects, flattenTodoObjects } from '../../main/modules/ProcessDataRequest/ProcessTodoObjects';
 
 jest.mock('../../main/config', () => ({
   config: {
@@ -73,56 +73,59 @@ let fileContent: string;
 
 describe('Process todo.txt objects', () => {
 
-    beforeAll(async() => {
+    beforeAll(() => {
         jest.clearAllMocks();
-        fileContent = await fs.readFile('./src/__tests__/__mock__/todo.txt', 'utf8');
-        todoObjects = await createTodoObjects(fileContent);
+        fileContent = fs.readFileSync('./src/__tests__/__mock__/todo.txt', 'utf8');
+        todoObjects = createTodoObjects(fileContent);
     });
 
-    beforeEach(async() => {
-        todoObjects = await createTodoObjects(fileContent);
-    });
-
-    test('Todo objects are counted correctly', async () => {
-        const headers: HeadersObject = countTodoObjects(todoObjects);
-        expect(headers.availableObjects).toEqual(7);
-        expect(headers.visibleObjects).toEqual(7);
-        expect(headers.completedObjects).toEqual(1);
+    beforeEach(() => {
+        todoObjects = createTodoObjects(fileContent);
     });
 
     test('Search for "test3"', () => {
         const searchString: string = 'test3';
         todoObjects = applySearchString(searchString, todoObjects);
-        const headers: HeadersObject = countTodoObjects(todoObjects);
-        expect(headers.visibleObjects).toEqual(4);
+        const visibleTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+            return todoObject.visible;
+        });
+        expect(visibleTodoObjects.length).toEqual(4);
     });
 
     test('Search for "lorem"', () => {
         const searchString: string = 'lorem';
         todoObjects = applySearchString(searchString, todoObjects);
-        const headers: HeadersObject = countTodoObjects(todoObjects);
-        expect(headers.visibleObjects).toEqual(0);
+        const visibleTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+            return todoObject.visible;
+        });
+        expect(visibleTodoObjects.length).toEqual(0);
     });
 
     test('Advanced search for "+testProject4 or +testProject2"', () => {
         const searchString: string = '+testProject4 or +testProject2';
         todoObjects = applySearchString(searchString, todoObjects);
-        const headers: HeadersObject = countTodoObjects(todoObjects);
-        expect(headers.visibleObjects).toEqual(2);
+        const visibleTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+            return todoObject.visible;
+        });
+        expect(visibleTodoObjects.length).toEqual(2);
     });
 
     test('Advanced search for "+testProject4 and +testProject2" result in 0 found objects', () => {
         const searchString:string = '+testProject4 and +testProject2';
         todoObjects = applySearchString(searchString, todoObjects);
-        const headers: HeadersObject = countTodoObjects(todoObjects);
-        expect(headers.visibleObjects).toEqual(0);
+        const visibleTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+            return todoObject.visible;
+        });
+        expect(visibleTodoObjects.length).toEqual(0);
     });
 
     test('Advanced search for "+testProject4 and !+testProject2" result in 1 found objects', () => {
         const searchString:string = '+testProject4 and !+testProject2';
         todoObjects = applySearchString(searchString, todoObjects);
-        const headers: HeadersObject = countTodoObjects(todoObjects);
-        expect(headers.visibleObjects).toEqual(1);
+        const visibleTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
+            return todoObject.visible;
+        });
+        expect(visibleTodoObjects.length).toEqual(1);
     });
 
     test('Function creates 3 top level groups (A, B, C)', () => {

@@ -1,6 +1,7 @@
 import { URL } from 'url';
 import { app } from 'electron';
 import path from 'path';
+import { mainWindow } from './main';
 
 const RESOURCES_PATH = app.isPackaged
   ? path.join(process.resourcesPath, 'assets')
@@ -40,4 +41,9 @@ function getChannel(): string {
   }
 }
 
-export { getAssetPath, resolveHtmlPath, getChannel }
+function handleError(error: Error) {
+  console.error(error);
+  mainWindow!.webContents.send('responseFromMainProcess', error);
+}
+
+export { getAssetPath, resolveHtmlPath, getChannel, handleError }

@@ -35,15 +35,13 @@ function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): To
   });
 }
 
-function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] | false {
+function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
   const showCompleted: boolean = config.get('showCompleted');
-  return todoObjects.map((todoObject: TodoObject) => {
-    if(todoObject.complete && !showCompleted) {
-      return false;
-    } else {
-      return todoObject;
-    }
-  });
+  if (!showCompleted) {
+    return todoObjects.filter((todoObject: TodoObject) => !todoObject.complete);
+  } else {
+    return todoObjects;
+  }
 }
 
 function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {

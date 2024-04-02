@@ -6,16 +6,14 @@ import { createMenu } from '../Menu';
 import path from 'path';
 import { mainWindow } from '../../main';
 
-async function readFileContent(filePath: string, bookmark: string | null): Promise<string | null> {
-  let fileContent;
+function readFileContent(filePath: string, bookmark: string | null): string | Error {
+  const stopAccessingSecurityScopedResource = (process.mas && bookmark) ? app.startAccessingSecurityScopedResource(bookmark) : null;
+  const fileContent = fs.readFileSync(filePath, 'utf8');
 
-  if(process.mas && bookmark) {
-    const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
-    fileContent = await fs.promises.readFile(filePath, 'utf8');
-    stopAccessingSecurityScopedResource()
-  } else {
-    fileContent = await fs.promises.readFile(filePath, 'utf8');
+  if (stopAccessingSecurityScopedResource && process.mas && bookmark) {
+    stopAccessingSecurityScopedResource();
   }
+
   return fileContent;
 }
 
