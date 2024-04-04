@@ -10,24 +10,24 @@ import { sortAndGroupTodoObjects } from './SortAndGroup';
 
 let searchString: string;
 let headers: HeadersObject = {
-  availableObjects: 0,
-  visibleObjects: 0
+  availableObjects: null,
+  completedObjects: null,
+  visibleObjects: null
 }
 let todoObjects: TodoObject[];
 
-function processDataRequest(search?: string): RequestedData {
+function dataRequest(search?: string): RequestedData {
   searchString = search || '';
 
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
     return;
   }
-  const sorting: Sorting[] = config.get('sorting');
-  const showHidden: boolean = config.get('showHidden');
-  const fileSorting: boolean = config.get('fileSorting');
-  const filters: Filters = filter.get('attributes');
-
+  
   const fileContent = readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
+
+  const sorting: Sorting[] = config.get('sorting');
+  const filters: Filters = filter.get('attributes');  
 
   todoObjects = createTodoObjects(fileContent);
 
@@ -45,33 +45,16 @@ function processDataRequest(search?: string): RequestedData {
 
   updateAttributes(todoObjects, sorting, true);
 
-  if(!showHidden) todoObjects = handleHiddenTodoObjects(todoObjects);
-
   if(filters) todoObjects = applyAttributes(todoObjects, filters);
 
   if(searchString) todoObjects = applySearchString(searchString, todoObjects);
 
   updateAttributes(todoObjects, sorting, false);
 
-  const visibleTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
-    return todoObject.visible;
-  });
-
-  headers.visibleObjects = visibleTodoObjects.length;
-
-  console.log(todoObjects)
-
-  todoObjects = sortAndGroupTodoObjects(todoObjects, sorting);
-
-  // if(fileSorting) {
-  //   todoObjects = flattenTodoObjects(todoObjects, '');
-  // } else {
-  //   const sortedAndGroupedTodos: TodoObject[] = sortAndGroupTodoObjects(todoObjects, sorting);
-  //   todoObjects = flattenTodoObjects(sortedAndGroupedTodos, sorting[0].value);
-  // }
+  const todoData = sortAndGroupTodoObjects(todoObjects, sorting);
 
   const requestedData: RequestedData = {
-    todoObjects,
+    todoData,
     attributes,
     headers,
     filters,
@@ -80,4 +63,4 @@ function processDataRequest(search?: string): RequestedData {
   return requestedData;
 }
 
-export { processDataRequest, searchString };
+export { dataRequest, searchString };

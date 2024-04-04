@@ -4,19 +4,19 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 
 interface GroupProps {
-  value: string[];
+  title: string | string[];
   todotxtAttribute: string;
   filters: Filters | null;
   onClick: Function;
 }
 
-const Group: React.FC<GroupProps> = memo(({ value, todotxtAttribute, filters, onClick }) => {
+const Group: React.FC<GroupProps> = memo(({ title, todotxtAttribute, filters, onClick }) => {
 
-  if (!value) {
+  if (!title || title.length === 0) {
     return <ListItem className="row group"><Divider /></ListItem>;
   }
-
-  const groupElements = value.split(',');
+  
+  const groupElements = (typeof title === 'string') ? [title] : title
 
   return (
     <ListItem className="row group">

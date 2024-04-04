@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import fs from 'fs';
 import { Item } from 'jstodotxt';
-import { linesInFile } from '../ProcessDataRequest/CreateTodoObjects';
+import { linesInFile } from '../DataRequest/CreateTodoObjects';
 import { getActiveFile } from './Active';
 import { config } from '../../config';
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date';

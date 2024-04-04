@@ -6,7 +6,7 @@ import { mainWindow } from './main';
 import { createFileWatcher } from './modules/File/Watcher';
 import { writeToFile } from './modules/File/Write';
 import { createTray } from './modules/Tray';
-import { processDataRequest, searchString } from './modules/ProcessDataRequest/ProcessDataRequest';
+import { dataRequest, searchString } from './modules/DataRequest/DataRequest';
 import handleTheme from './modules/Theme';
 import { getChannel, handleError } from './util';
 import crypto from 'crypto';
@@ -140,7 +140,7 @@ if(!fs.existsSync(notifiedTodoObjectsPath)) {
 
 filter.onDidChange('attributes', () => {
   try {
-    const requestedData = processDataRequest(searchString);
+    const requestedData = dataRequest(searchString);
     mainWindow!.webContents.send('requestData', requestedData);
   } catch(error: Error) {
     handleError(error);
@@ -149,7 +149,7 @@ filter.onDidChange('attributes', () => {
 
 config.onDidAnyChange((settings) => {
   try {
-    const requestedData = processDataRequest(searchString);
+    const requestedData = dataRequest(searchString);
     mainWindow!.webContents.send('requestData', requestedData);
     mainWindow!.webContents.send('settingsChanged', settings);
   } catch(error: Error) {

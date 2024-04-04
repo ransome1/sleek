@@ -100,7 +100,7 @@ declare global {
   }
 
   interface TodoObject {
-    id: number;
+    row: number;
     body: string | null;
     created: string | null;
     complete: boolean;
@@ -117,8 +117,16 @@ declare global {
     pm: number | string | null;
     string: string | null;
     notify?: boolean;
+  }
+
+  interface TodoGroup {
+    title: string;
+    todoObjects: TodoObject[];
+    row: number;
     visible: boolean;
   }
+
+  interface TodoData extends Array<TodoGroup> {}
 
   interface TranslatedAttributes {
     t: string;

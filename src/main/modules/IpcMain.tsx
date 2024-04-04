@@ -1,17 +1,17 @@
 import { ipcMain, app, IpcMainEvent, clipboard, shell } from 'electron';
-import { processDataRequest } from './ProcessDataRequest/ProcessDataRequest';
-import { changeCompleteState } from './ProcessDataRequest/ChangeCompleteState';
+import { dataRequest } from './DataRequest/DataRequest';
+import { changeCompleteState } from './DataRequest/ChangeCompleteState';
 import { prepareContentForWriting, removeLineFromFile } from './File/Write';
 import { archiveTodos, handleRequestArchive } from './File/Archive';
 import { config, filter, notifiedTodoObjectsStorage } from '../config';
 import { handleError } from '../util';
 import { addFile, setFile, removeFile } from './File/File';
 import { openFile, createFile } from './File/Dialog';
-import { createTodoObject } from './ProcessDataRequest/CreateTodoObjects';
+import { createTodoObject } from './DataRequest/CreateTodoObjects';
 
 function handleDataRequest(event: IpcMainEvent, searchString: string) {
   try {
-    const requestedData = processDataRequest(searchString);
+    const requestedData = dataRequest(searchString);
     event.reply('requestData', requestedData);
   } catch(error: Error) {
     handleError(error);

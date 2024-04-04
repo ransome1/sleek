@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 let linesInFile: string[];
 export const badge: Badge = { count: 0 };
 
-function createTodoObject(index: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
+function createTodoObject(row: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
   let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ');
   
   let JsTodoTxtObject = new Item(content);
@@ -43,7 +43,7 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   const creation = dayjs(JsTodoTxtObject.created()).isValid() ? dayjs(JsTodoTxtObject.created()).format('YYYY-MM-DD') : null;
   const completed = dayjs(JsTodoTxtObject.completed()).isValid() ? dayjs(JsTodoTxtObject.completed()).format('YYYY-MM-DD') : null;
   return {
-    id: index,
+    row,
     body,
     created: creation,
     complete: JsTodoTxtObject.complete(),
@@ -59,7 +59,6 @@ function createTodoObject(index: number, string: string, attributeType?: string,
     rec,
     hidden,
     pm,
-    visible: true,
     string: content,
   };
 }

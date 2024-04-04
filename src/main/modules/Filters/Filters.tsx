@@ -2,12 +2,8 @@ import { config } from '../../config';
 import dayjs from 'dayjs';
 
 function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
-  return todoObjects.map((todoObject: TodoObject) => {
-    if (!todoObject.visible) {
-      return todoObject;
-    }
-
-    todoObject.visible = Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {
+  return todoObjects.filter((todoObject: TodoObject) => {
+    return Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {
       if (filterArray.length === 0) {
         return true;
       }
@@ -30,8 +26,6 @@ function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): To
         return exclude ? !hasMatchingValue : hasMatchingValue;
       });
     });
-
-    return todoObject;
   });
 }
 
@@ -44,20 +38,11 @@ function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
   }
 }
 
-function handleHiddenTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  return todoObjects.map((todoObject: TodoObject) => {
-    if(!todoObject.visible) return todoObject;
-    todoObject.visible = todoObject.visible && !todoObject.hidden;
-    return todoObject;
-  });
-}
-
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
   const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture');
   const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture');
 
   return todoObjects.filter((todoObject: TodoObject) => {
-    if (!todoObject.visible) return true;
 
     const thresholdDate = dayjs(todoObject?.t);
     const dueDate = dayjs(todoObject?.due);

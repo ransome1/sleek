@@ -10,11 +10,11 @@ let attributes: Attributes = {
   completed: {},
 };
 
-function incrementCount(countObject: any, key: any | null, notify: boolean, visible: boolean): void {
+function incrementCount(countObject: any, key: any | null, notify: boolean): void {
   if(key) {
     let previousCount: number = parseInt(countObject[key]?.count) || 0;
     countObject[key] = {
-      count: (visible) ? previousCount + 1 : previousCount,
+      count: previousCount + 1,
       notify: notify,
     }
   }
@@ -31,19 +31,18 @@ function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: 
     todoObjects.forEach((todoObject: TodoObject) => {
       const value = todoObject[key as keyof TodoObject];
       const notify: boolean = (key === 'due') ? !!todoObject?.notify : false;
-      const visible: boolean = todoObject.visible;
       
       if(Array.isArray(value)) {
         value.forEach((element) => {
           if(element !== null) {
             const attributeKey = element as keyof Attribute;
             
-            incrementCount(attributes[key], attributeKey, notify, visible);
+            incrementCount(attributes[key], attributeKey, notify);
           }
         });
       } else {
         if(value !== null) {
-          incrementCount(attributes[key], value, notify, visible);
+          incrementCount(attributes[key], value, notify);
         }
       }
     });

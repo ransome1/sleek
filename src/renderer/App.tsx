@@ -31,7 +31,7 @@ const App = () => {
   const [snackBarSeverity, setSnackBarSeverity] = useState<AlertColor | undefined>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string | null>(null);
-  const [todoObjects, setTodoObjects] = useState<TodoObject[] | null>(null);
+  const [todoData, setTodoData] = useState<TodoData | null>(null);
   const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
   const [attributeFields, setAttributeFields] = useState<TodoObject | null>(null);
   const [headers, setHeaders] = useState<HeadersObject | null>(null);
@@ -43,8 +43,6 @@ const App = () => {
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
   const searchFieldRef = useRef<HTMLInputElement>(null);
-  const [visibleRowCount, setVisibleRowCount] = useState(50);
-  const [loadMoreRows, setLoadMoreRows] = useState(true);
 
   useEffect(() => {
     setSnackBarOpen(Boolean(snackBarContent));
@@ -52,7 +50,7 @@ const App = () => {
 
   useEffect(() => {
     if(settings.files?.length === 0) {
-      setTodoObjects(null);
+      setTodoData(null);
     }
   }, [settings.files]);
 
@@ -67,10 +65,10 @@ const App = () => {
   }, [settings.language]);
 
   useEffect(() => {
-    const windowHeight = window.innerHeight;
-    const calculatedRowCount = Math.floor(windowHeight / 35) * 2;
-    setVisibleRowCount(calculatedRowCount);
-    setLoadMoreRows(true);
+    // const windowHeight = window.innerHeight;
+    // const calculatedRowCount = Math.floor(windowHeight / 35) * 2;
+    // setVisibleRowCount(calculatedRowCount);
+    // setLoadMoreRows(true);
     ipcRenderer.send('requestData');
   }, []);
 
@@ -80,7 +78,7 @@ const App = () => {
         setHeaders={setHeaders}
         setAttributes={setAttributes}
         setFilters={setFilters}
-        setTodoObjects={setTodoObjects}
+        setTodoData={setTodoData}
         setTodoObject={setTodoObject}
         setAttributeFields={setAttributeFields}
         setSnackBarSeverity={setSnackBarSeverity}
@@ -138,20 +136,16 @@ const App = () => {
                 : null }
               </>
               )}
-              {todoObjects && (
+              {todoData && (
                 <>
                   <GridComponent
-                    todoObjects={todoObjects}
+                    todoData={todoData}
                     setTodoObject={setTodoObject}
                     filters={filters}
                     setDialogOpen={setDialogOpen}
                     setContextMenu={setContextMenu}
                     setPromptItem={setPromptItem}
                     settings={settings}
-                    visibleRowCount={visibleRowCount}
-                    setVisibleRowCount={setVisibleRowCount}
-                    loadMoreRows={loadMoreRows}
-                    setLoadMoreRows={setLoadMoreRows}
                   />
                 </>
               )}
