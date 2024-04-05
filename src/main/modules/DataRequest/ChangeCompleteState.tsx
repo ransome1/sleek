@@ -6,6 +6,7 @@ function changeCompleteState(string: string, state: boolean): string {
 
   let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ');
 
+  // todo: use createTodoObject() instead
   const JsTodoTxtObject = new Item(content);
 
   JsTodoTxtObject.setComplete(state);

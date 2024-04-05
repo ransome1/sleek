@@ -45,7 +45,13 @@ const IpcComponent: React.FC<Props> = ({
   const handleResponse = function (response: Error | string) {
     const severity = response instanceof Error ? 'error' : 'success';
     setSnackBarSeverity(severity);
-    setSnackBarContent(response instanceof Error ? response.message : response);
+    if(response instanceof Error) {
+      setSnackBarContent(response.message);
+      console.error(response);
+    } else {
+      setSnackBarContent(response);
+      console.info(response);
+    }
   };
 
   const handleDrop = (event: any) => {

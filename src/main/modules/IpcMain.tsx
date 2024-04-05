@@ -13,7 +13,7 @@ function handleDataRequest(event: IpcMainEvent, searchString: string) {
   try {
     const requestedData = dataRequest(searchString);
     event.reply('requestData', requestedData);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -22,7 +22,7 @@ function handleUpdateAttributeFields(event: IpcMainEvent, index: number, string:
   try {
     const todoObject = createTodoObject(index, string);
     event.reply('updateAttributeFields', todoObject);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -31,7 +31,7 @@ function handleUpdateTodoObject(event: IpcMainEvent, index: number, string: stri
  try {
     const todoObject = createTodoObject(index, string, attributeType, attributeValue);
     event.reply('updateTodoObject', todoObject);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -46,7 +46,7 @@ function handleWriteTodoToFile(event: IpcMainEvent, index: number, string: strin
       if(state !== undefined && index >= 0) updatedString = changeCompleteState(string, state)
       prepareContentForWriting(index, updatedString);
     }
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -54,7 +54,7 @@ function handleWriteTodoToFile(event: IpcMainEvent, index: number, string: strin
 function handleStoreGetConfig(event: IpcMainEvent, value: string) {
   try {
     event.returnValue = config.get(value);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -63,7 +63,7 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
   try {
     config.set(key, value);
     console.log(`Set ${key} to ${value}`);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -71,7 +71,7 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
 function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): void {
   try {
     filter.set(key, value);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -79,7 +79,7 @@ function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): vo
 function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
   try {
     event.returnValue = filter.get(value);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -87,7 +87,7 @@ function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
 function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): void {
   try {
     notifiedTodoObjectsStorage.set('notifiedTodoObjects', value);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -95,7 +95,7 @@ function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): voi
 function handleSetFile(event: IpcMainEvent, index: number): void {
   try {
     setFile(index);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -103,7 +103,7 @@ function handleSetFile(event: IpcMainEvent, index: number): void {
 function handleRemoveFile(event: IpcMainEvent, index: number): void {
   try {
     removeFile(index);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -111,7 +111,7 @@ function handleRemoveFile(event: IpcMainEvent, index: number): void {
 function handleAddFile(event: IpcMainEvent, filePath: string): void {
   try {
     addFile(filePath, null);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -119,7 +119,7 @@ function handleAddFile(event: IpcMainEvent, filePath: string): void {
 function handleDroppedFile(event: IpcMainEvent, filePath: string): void {
   try {
     addFile(filePath, null);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -127,15 +127,15 @@ function handleDroppedFile(event: IpcMainEvent, filePath: string): void {
 function handleRevealInFileManager(event: IpcMainEvent, pathToReveal: string): void {
   try {
     shell.showItemInFolder(pathToReveal);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
 
 async function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): Promise<void> {
   try {
-    openFile(setDoneFile);
-  } catch(error: Error) {
+    await openFile(setDoneFile);
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -143,7 +143,7 @@ async function handleOpenFile(event: IpcMainEvent, setDoneFile: boolean): Promis
 async function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): Promise<void> {
   try {
     await createFile(setDoneFile);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -151,16 +151,16 @@ async function handleCreateFile(event: IpcMainEvent, setDoneFile: boolean): Prom
 function handleRemoveLineFromFile(event: IpcMainEvent, index: number) {
   try {
     removeLineFromFile(index);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
 
-function handleArchiveTodos(event: IpcMainEvent): Promise<void> {
+function handleArchiveTodos(event: IpcMainEvent): void {
   try {
     const archivingResult = archiveTodos();
     event.reply('responseFromMainProcess', archivingResult);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
@@ -169,15 +169,15 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
     clipboard.writeText(string);
     event.reply('responseFromMainProcess', 'Copied to clipboard: ' + string);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 }
 
-async function handleOpenInBrowser(event: IpcMainEvent, url: string): Promise<void> {
+function handleOpenInBrowser(event: IpcMainEvent, url: string): void {
   try {
-    await shell?.openExternal(url);
-  } catch(error: Error) {
+    shell?.openExternal(url);
+  } catch(error: any) {
     handleError(error);
   }
 }

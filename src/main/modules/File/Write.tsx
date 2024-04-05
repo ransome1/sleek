@@ -52,15 +52,11 @@ function prepareContentForWriting(lineNumber: number, string: string) {
     linesInFile[lineNumber] = linesToAdd.join('\n');
   } else {
     for (let i = 0; i < linesToAdd.length; i++) {
-      if(config.get('appendCreationDate')) {
-        const JsTodoTxtObject = new Item(linesToAdd[i]);
-        if(!JsTodoTxtObject.created()) {
-          JsTodoTxtObject.setCreated(new Date());
-        }
-        linesInFile.push(JsTodoTxtObject.toString());  
-      } else {
-        linesInFile.push(linesToAdd[i]);
+      const JsTodoTxtObject = new Item(linesToAdd[i]);
+      if(config.get('appendCreationDate') && !JsTodoTxtObject.created()) {
+        JsTodoTxtObject.setCreated(new Date());
       }
+      linesInFile.push(JsTodoTxtObject.toString());
     }
   }
   

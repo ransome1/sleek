@@ -142,7 +142,7 @@ filter.onDidChange('attributes', () => {
   try {
     const requestedData = dataRequest(searchString);
     mainWindow!.webContents.send('requestData', requestedData);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 });
@@ -152,7 +152,7 @@ config.onDidAnyChange((settings) => {
     const requestedData = dataRequest(searchString);
     mainWindow!.webContents.send('requestData', requestedData);
     mainWindow!.webContents.send('settingsChanged', settings);
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 });
@@ -162,7 +162,7 @@ config.onDidChange('files', (newValue: FileObject[] | undefined) => {
     if (newValue !== undefined) {
       createFileWatcher(newValue);
     }
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 });
@@ -172,7 +172,7 @@ config.onDidChange('colorTheme', (colorTheme) => {
     if(colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
       nativeTheme.themeSource = colorTheme;
     }
-  } catch(error: Error) {
+  } catch(error: any) {
     handleError(error);
   }
 });

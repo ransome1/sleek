@@ -100,7 +100,7 @@ declare global {
   }
 
   interface TodoObject {
-    row: number;
+    lineNumber: number;
     body: string | null;
     created: string | null;
     complete: boolean;
@@ -117,6 +117,7 @@ declare global {
     pm: number | string | null;
     string: string | null;
     notify?: boolean;
+    [key: string]: any;
   }
 
   interface TodoGroup {
@@ -204,7 +205,7 @@ declare global {
   };
 
   interface RequestedData {
-    todoObjects: TodoObject[],
+    todoData: TodoDate,
     attributes: Attributes,
     headers: HeadersObject,
     filters: Filters,

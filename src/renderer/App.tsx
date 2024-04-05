@@ -65,10 +65,6 @@ const App = () => {
   }, [settings.language]);
 
   useEffect(() => {
-    // const windowHeight = window.innerHeight;
-    // const calculatedRowCount = Math.floor(windowHeight / 35) * 2;
-    // setVisibleRowCount(calculatedRowCount);
-    // setLoadMoreRows(true);
     ipcRenderer.send('requestData');
   }, []);
 
@@ -146,6 +142,8 @@ const App = () => {
                     setContextMenu={setContextMenu}
                     setPromptItem={setPromptItem}
                     settings={settings}
+                    headers={headers}
+                    searchString={searchString}
                   />
                 </>
               )}

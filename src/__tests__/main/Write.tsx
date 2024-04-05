@@ -28,7 +28,7 @@ jest.mock('../../main/config', () => ({
   },
 }));
 
-jest.mock('../../main/modules/ProcessDataRequest/CreateTodoObjects', () => ({
+jest.mock('../../main/modules/DataRequest/CreateTodoObjects', () => ({
   linesInFile: ['Line 1', 'Line 2', 'Line 3'],
 }));
 

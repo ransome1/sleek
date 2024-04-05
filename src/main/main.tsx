@@ -5,7 +5,6 @@ import { config } from './config';
 import { createMenu } from './modules/Menu';
 import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
-import { addFile } from './modules/File/File';
 import { createTray } from './modules/Tray';
 import './modules/IpcMain';
 

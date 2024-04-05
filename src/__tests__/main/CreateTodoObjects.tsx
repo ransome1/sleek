@@ -1,4 +1,4 @@
-import { createTodoObjects } from '../../main/modules/ProcessDataRequest/CreateTodoObjects';
+import { createTodoObjects } from '../../main/modules/DataRequest/CreateTodoObjects';
 
 jest.mock('electron', () => ({
   app: {
@@ -28,7 +28,7 @@ describe('Create todo objects', () => {
   test('should create a todo object', async () => {
     const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[0]).toEqual({
-      id: 0,
+      lineNumber: 0,
       body: 'Test +project @context todo 1 due:2023-12-31 t:2024-03-24 h:1 test @anotherContext pm:4 and a strict rec:+2w',
       created: null,
       complete: false,
@@ -45,21 +45,20 @@ describe('Create todo objects', () => {
       pm: "4",
       string: '(B) Test +project @context todo 1 due:2023-12-31 t:2024-03-24 h:1 test @anotherContext pm:4 and a strict rec:+2w',
       notify: false,
-      visible: true,
     });
   });
 
   test('should create a finished todo object', async () => {
     const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[1]).toEqual({
-      id: 1,
+      lineNumber: 1,
       body: 'Test todo 2',
       created: '2023-07-21',
       complete: true,
       completed: '2023-07-23',
       priority: null,
-      contexts: [],
-      projects: [],
+      contexts: null,
+      projects: null,
       due: null,
       dueString: null,
       t: null,
@@ -69,21 +68,20 @@ describe('Create todo objects', () => {
       pm: null,
       string: 'x 2023-07-23 2023-07-21 Test todo 2',
       notify: false,
-      visible: true,
     });
   });
 
   test('should create a todo object with speaking due date', async () => {
     const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[2]).toEqual({
-      id: 2,
+      lineNumber: 2,
       body: 'Test todo 3 due:end of the year',
       created: null,
       complete: false,
       completed: null,
       priority: null,
-      contexts: [],
-      projects: [],
+      contexts: null,
+      projects: null,
       due: '2024-12-31',
       dueString: 'end of the year',
       t: null,
@@ -93,21 +91,20 @@ describe('Create todo objects', () => {
       pm: null,
       string: 'Test todo 3 due:end of the year',
       notify: false,
-      visible: true,
     });    
   });
 
   test('should create a todo object with speaking t date', async () => {
     const todoObjects = await createTodoObjects(fileContent);
     expect(todoObjects[3]).toEqual({
-      id: 3,
+      lineNumber: 3,
       body: 'Test todo 4 t:first day of next year',
       created: null,
       complete: false,
       completed: null,
       priority: null,
-      contexts: [],
-      projects: [],
+      contexts: null,
+      projects: null,
       due: null,
       dueString: null,
       t: '2025-01-01',
@@ -117,7 +114,6 @@ describe('Create todo objects', () => {
       pm: null,
       string: 'Test todo 4 t:first day of next year',
       notify: false,
-      visible: true,
     });    
   });
 });

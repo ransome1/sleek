@@ -1,8 +1,8 @@
 import fs from 'fs';
-import { createRecurringTodo } from '../../main/modules/ProcessDataRequest/CreateRecurringTodo';
+import { createRecurringTodo } from '../../main/modules/DataRequest/CreateRecurringTodo';
 import dayjs from 'dayjs';
 
-jest.mock('../../main/modules/ProcessDataRequest/CreateTodoObjects', () => ({
+jest.mock('../../main/modules/DataRequest/CreateTodoObjects', () => ({
   linesInFile: [''],
 }));
 

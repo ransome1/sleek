@@ -2,10 +2,9 @@ import { getActiveFile } from '../File/Active';
 import { readFileContent } from '../File/File';
 import { config, filter } from '../../config';
 import { applySearchString } from '../Filters/Search';
-import { applyAttributes, handleHiddenTodoObjects, handleCompletedTodoObjects, handleTodoObjectsDates } from '../Filters/Filters';
+import { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates } from '../Filters/Filters';
 import { updateAttributes, attributes } from '../Attributes';
 import { createTodoObjects } from './CreateTodoObjects';
-import { mainWindow } from '../../main';
 import { sortAndGroupTodoObjects } from './SortAndGroup';
 
 let searchString: string;
@@ -35,6 +34,7 @@ function dataRequest(search?: string): RequestedData {
 
   todoObjects = handleTodoObjectsDates(todoObjects);
 
+  // todo: should this be improved
   const completedTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
     return todoObject.complete;
   });
@@ -51,7 +51,7 @@ function dataRequest(search?: string): RequestedData {
 
   updateAttributes(todoObjects, sorting, false);
 
-  const todoData = sortAndGroupTodoObjects(todoObjects, sorting);
+  const todoData: TodoDate = sortAndGroupTodoObjects(todoObjects, sorting);
 
   const requestedData: RequestedData = {
     todoData,

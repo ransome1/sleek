@@ -8,9 +8,9 @@ jest.mock('../../main/config', () => ({
 
 describe('Should filter todos based on passed filters', () => {
   const todoObjects = [
-    { id: 1, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-01-01', dueString: '2023-01-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: true, string: '' },
-    { id: 2, body: 'Test', created: null, complete: true, completed: null, priority: null, contexts: null, projects: ['Project 2'], due: '2023-02-01', dueString: '2023-02-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: true, string: '' },
-    { id: 3, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-03-01', dueString: '2023-03-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: true, string: '' },
+    { lineNumber: 1, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-01-01', dueString: '2023-01-01', t: null, tString: null, rec: null, hidden: false, pm: null, string: '' },
+    { lineNumber: 2, body: 'Test', created: null, complete: true, completed: null, priority: null, contexts: null, projects: ['Project 2'], due: '2023-02-01', dueString: '2023-02-01', t: null, tString: null, rec: null, hidden: false, pm: null, string: '' },
+    { lineNumber: 3, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-03-01', dueString: '2023-03-01', t: null, tString: null, rec: null, hidden: false, pm: null, string: '' },
   ];
 
   test('should return all todo objects if no filters are provided', () => {
@@ -24,9 +24,9 @@ describe('Should filter todos based on passed filters', () => {
       projects: [ { values: ['Project 1'], exclude: false } ]
     }
     const expected = [
-      { id: 1, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-01-01', dueString: '2023-01-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: true, string: '' },
-      { id: 2, body: 'Test', created: null, complete: true, completed: null, priority: null, contexts: null, projects: ['Project 2'], due: '2023-02-01', dueString: '2023-02-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: false, string: '' },
-      { id: 3, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-03-01', dueString: '2023-03-01', t: null, tString: null, rec: null, hidden: false, pm: null, visible: true, string: '' },
+      { lineNumber: 1, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-01-01', dueString: '2023-01-01', t: null, tString: null, rec: null, hidden: false, pm: null, string: '' },
+      { lineNumber: 2, body: 'Test', created: null, complete: true, completed: null, priority: null, contexts: null, projects: ['Project 2'], due: '2023-02-01', dueString: '2023-02-01', t: null, tString: null, rec: null, hidden: false, pm: null, string: '' },
+      { lineNumber: 3, body: 'Test', created: null, complete: false, completed: null, priority: null, contexts: null, projects: ['Project 1'], due: '2023-03-01', dueString: '2023-03-01', t: null, tString: null, rec: null, hidden: false, pm: null, string: '' },
     ];
     const result = applyAttributes(todoObjects, filters);
     expect(result).toEqual(expected);

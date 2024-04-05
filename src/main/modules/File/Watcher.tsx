@@ -29,7 +29,7 @@ function createFileWatcher(files: FileObject[]): void {
         const requestedData = dataRequest(searchString);
         mainWindow!.webContents.send('requestData', requestedData);
         console.log(`${file} has been changed`);
-      } catch(error: Error) {
+      } catch(error: any) {
         handleError(error);
       }
     })

@@ -16,7 +16,7 @@ function applySearchString(searchString: string, todoObjects: TodoObject[]): Tod
 
 function checkForSearchMatches(todoString: string, searchString: string) {
   try {
-    const todoObject = createTodoObject(todoString);
+    const todoObject = createTodoObject(-1, todoString);
     const query = FilterLang.parse(searchString);
     return runQuery(todoObject, query);
   } catch (error) {

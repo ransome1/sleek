@@ -57,7 +57,7 @@ const DialogComponent: React.FC<Props> = memo(({
   const handleAdd = () => {
     try {
       if(textFieldValue) {
-        const index = (todoObject) ? todoObject.id : -1;
+        const index = (todoObject) ? todoObject.lineNumber : -1;
         const string = textFieldValue.replaceAll(/\n/g, String.fromCharCode(16));
         ipcRenderer.send('writeTodoToFile', index, string);
         handleClose();
@@ -106,7 +106,7 @@ const DialogComponent: React.FC<Props> = memo(({
         updatedValue = value;
       }
       
-      ipcRenderer.send('updateTodoObject', todoObject?.id, textFieldValue, type, updatedValue);
+      ipcRenderer.send('updateTodoObject', todoObject?.lineNumber, textFieldValue, type, updatedValue);
 
     } catch(error: any) {
       console.error(error);
@@ -122,7 +122,7 @@ const DialogComponent: React.FC<Props> = memo(({
 
   useEffect(() => {  
     const handleTextFieldValue = () => {
-      if(textFieldValue) ipcRenderer.send('updateAttributeFields', todoObject?.id, textFieldValue)
+      if(textFieldValue) ipcRenderer.send('updateAttributeFields', todoObject?.lineNumber, textFieldValue)
     };
     const delayedSearch: NodeJS.Timeout = setTimeout(handleTextFieldValue, 100);
     return () => {
@@ -192,7 +192,7 @@ const DialogComponent: React.FC<Props> = memo(({
           onClick={handleAdd}
           data-testid="dialog-button-add-update"
         >
-          {todoObject && todoObject.id >= 0
+          {todoObject && todoObject.lineNumber >= 0
             ? t('todoDialog.footer.update')
             : settings.bulkTodoCreation
               ? `${t('todoDialog.footer.add')} (${numRowsWithContent || 0})`

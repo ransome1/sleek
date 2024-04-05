@@ -15,6 +15,8 @@ interface GridComponentProps {
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: Settings;
+  headers: Headers;
+  searchString: string;
 }
 
 const GridComponent: React.FC<GridComponentProps> = memo(({
@@ -25,12 +27,14 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
   setTodoObject,
   setPromptItem,
   settings,
+  headers,
+  searchString,
  }) => {
 
-  let renderedRows = 0;
+  let renderedRows: number[] = [];
   const list = document.getElementById('grid');
-  const [loadMoreRows, setLoadMoreRows] = useState(true);
-  const [maxRows, setMaxRows] = useState(50);
+  const [loadMoreRows, setLoadMoreRows] = useState(false);
+  const [maxRows, setMaxRows] = useState(Math.floor(window.innerHeight / 35) * 2);
 
   const handleButtonClick = (key: string, name: string, values: string[]) => {
     handleFilterSelect(key, name, values, filters, false);
@@ -67,17 +71,20 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
     }
   };
 
-  const handleScroll = () => {  
-    if(list && loadMoreRows) {      
-      const scrollPos = list.scrollTop;
-      const totalHeight = list.scrollHeight;
-      const clientHeight = list.clientHeight;
-      if(totalHeight - scrollPos <= clientHeight * 3) {
-        
+  const handleScroll = () => {
+    if(list) {
+      const a: number = list.scrollTop;
+      const b: number = list.scrollHeight - list.clientHeight;
+      const c: number = a / b;
+
+      if(c >= 0.85 && renderedRows.length < headers.availableObjects) {
+        setLoadMoreRows(true);
+      }
+
+      if(loadMoreRows) {
         setLoadMoreRows(false);
         setMaxRows((maxRows) => maxRows + 30);
-        ipcRenderer.send('requestData');
-        
+        ipcRenderer.send('requestData', searchString);
       }
     }
   };
@@ -85,13 +92,9 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
   return (
     <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
       {todoData?.map(group => {
-
-        if ((group.row <= renderedRows && renderedRows >= maxRows) || !group.visible) {
+        if (!group.visible) {
           return null;
         }
-
-        renderedRows++;
-
         return (
           <React.Fragment key={group.title}>
             <Group
@@ -100,28 +103,36 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
               filters={filters}
               onClick={handleButtonClick}
             />
-            {group.todoObjects.map(todoObject => {
+            {(() => {
+              const rows = [];
+              for (let i = 0; i < group.todoObjects.length; i++) {
+                const todoObject = group.todoObjects[i];
 
-              if (!settings.showHidden && todoObject.hidden || todoObject.row <= renderedRows && renderedRows >= maxRows) {
-                return null;
+                if(renderedRows.length >= maxRows) {
+                  break;
+                } else if(renderedRows.includes(todoObject.lineNumber)) {
+                  continue;
+                }
+
+                renderedRows.push(todoObject.lineNumber);
+
+                rows.push(
+                  <Row
+                    key={todoObject.lineNumber}
+                    todoObject={todoObject}
+                    filters={filters}
+                    setTodoObject={setTodoObject}
+                    setDialogOpen={setDialogOpen}
+                    setContextMenu={setContextMenu}
+                    setPromptItem={setPromptItem}
+                    settings={settings}
+                    handleButtonClick={handleButtonClick}
+                  />
+                );
               }
+              return rows;
 
-              renderedRows++;
-
-              return (
-                <Row
-                  key={todoObject.row}
-                  todoObject={todoObject}
-                  filters={filters}
-                  setTodoObject={setTodoObject}
-                  setDialogOpen={setDialogOpen}
-                  setContextMenu={setContextMenu}
-                  setPromptItem={setPromptItem}
-                  settings={settings}
-                  handleButtonClick={handleButtonClick}
-                />
-              );
-            })}
+            })()}
           </React.Fragment>
         );
       })}

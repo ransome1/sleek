@@ -2,7 +2,6 @@ import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'elect
 import path from 'path';
 import { addFile, addDoneFile } from './File';
 import { writeToFile } from './Write';
-import { handleError } from '../../util';
 
 const dialogFilters = [
   {

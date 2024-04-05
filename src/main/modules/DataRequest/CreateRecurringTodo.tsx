@@ -44,6 +44,7 @@ const createRecurringTodo = (string: string, recurrence: string): string => {
 
   let updatedString = (string || '').replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `);
   
+  // todo: use createTodoObject instead
   const JsTodoTxtObject = new Item(updatedString);
   const creationDate = new Date();
 

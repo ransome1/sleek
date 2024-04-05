@@ -36,7 +36,7 @@ const Row: React.FC<Props> = memo(({
 }) => {
 
   const handleConfirmDelete = () => {
-    if(todoObject) ipcRenderer.send('removeLineFromFile', todoObject?.id);
+    if(todoObject) ipcRenderer.send('removeLineFromFile', todoObject?.lineNumber);
   };
 
   const handleSaveToClipboard = () => {
@@ -68,7 +68,7 @@ const Row: React.FC<Props> = memo(({
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, event.target.checked, false);
+    ipcRenderer.send('writeTodoToFile', todoObject.lineNumber, todoObject.string, event.target.checked, false);
   };
 
   const handleRowClick = (event: any) => {
@@ -110,7 +110,7 @@ const Row: React.FC<Props> = memo(({
     <>
       <ListItem
         tabIndex={0}
-        key={todoObject.id}
+        key={todoObject.lineNumber}
         className="row"
         data-complete={todoObject.complete}
         data-hidden={todoObject.hidden}

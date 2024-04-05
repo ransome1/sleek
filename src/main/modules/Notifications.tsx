@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { Notification } from 'electron';
 import { config, filter, notifiedTodoObjectsStorage } from '../config';
-import { createTodoObject } from './DataRequest/CreateTodoObjects';
 import { checkForSearchMatches } from './Filters/Search';
 import dayjs, { Dayjs } from "dayjs";
 import isToday from 'dayjs/plugin/isToday';

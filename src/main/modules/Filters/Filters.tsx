@@ -52,4 +52,4 @@ function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
   });
 }
 
-export { applyAttributes, handleCompletedTodoObjects, handleHiddenTodoObjects, handleTodoObjectsDates };
+export { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates };
