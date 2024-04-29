@@ -107,7 +107,7 @@ export const friendlyDate = (value: string, attributeKey: string, settings: Sett
     results.push(t('drawer.attributes.nextMonth'));
   }
 
-  if (date.isAfter(today.add(2, 'month').startOf('month'))) {
+  if (date.isAfter(today.add(1, 'month').endOf('month'))) {
     results.push(dayjs(date).format('YYYY-MM-DD'));
   }
 

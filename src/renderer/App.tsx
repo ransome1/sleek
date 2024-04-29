@@ -132,7 +132,7 @@ const App = () => {
                 : null }
               </>
               )}
-              {todoData && (
+              {todoData && headers.availableObjects > 0 && (
                 <>
                   <GridComponent
                     todoData={todoData}

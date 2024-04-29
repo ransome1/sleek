@@ -1,8 +1,6 @@
 @import "../Variables.scss";
 
 .react-autosuggest__suggestions-container--open {
-	display: flex;
-	
 	max-height: 20em;
 	min-height: 5em;
 	overflow-y: auto;
@@ -10,7 +8,6 @@
 	z-index: 10;
 	margin-top: 0.125em;
 	padding: 1em;
-	display: block;
 	border-radius: $radius;
 	background-color: rgba(240, 240, 240, 1);
 	ul {

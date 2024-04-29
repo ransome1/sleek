@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.14",
+  "version": "2.0.14-rc.1",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -230,7 +230,7 @@
       "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
       "identityName": "17450RobinAhle.sleektodomanager",
       "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
-      "publisherDisplayName": "Robin Ahle",
+      "publisherDisplayName": "ransome1",
       "applicationId": "RobinAhle.sleektodomanager"
     },
     "linux": {

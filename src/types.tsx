@@ -205,7 +205,7 @@ declare global {
   };
 
   interface RequestedData {
-    todoData: TodoDate,
+    todoData: TodoData,
     attributes: Attributes,
     headers: HeadersObject,
     filters: Filters,

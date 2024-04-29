@@ -35,8 +35,6 @@ function createFileWatcher(files: FileObject[]): void {
     })
     .on('unlink', (file) => {
       console.log(`Unlinked file: ${file}`);
-      const updatedFiles = files.filter((item) => item.todoFilePath !== file);
-      config.set('files', updatedFiles);
     });
 
   eventListeners.watcher = watcher;

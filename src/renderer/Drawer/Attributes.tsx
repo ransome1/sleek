@@ -147,16 +147,14 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
   };
 
   return (
-    <div id="Attributes" ref={firstTabbableElementRef}>
+    <div id="Attributes">
       {!isAttributesEmpty ? (
-
         Object.keys(attributes).map((key, index) => {
           const preprocessedAttributes: Attributes = preprocessAttributes(key, attributes[key]);
           const attributeHeadline: string = translatedAttributes(t)[key];
 
           return Object.keys(preprocessedAttributes).length > 0 ? (
             <Accordion
-              TransitionProps={{ unmountOnExit: true }}
               key={index}
               expanded={settings.accordionOpenState[index]}
               onChange={() => handleAccordionToggle(index)}

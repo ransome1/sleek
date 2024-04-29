@@ -122,7 +122,7 @@ const DialogComponent: React.FC<Props> = memo(({
 
   useEffect(() => {  
     const handleTextFieldValue = () => {
-      if(textFieldValue) ipcRenderer.send('updateAttributeFields', todoObject?.lineNumber, textFieldValue)
+      ipcRenderer.send('updateAttributeFields', todoObject?.lineNumber, textFieldValue)
     };
     const delayedSearch: NodeJS.Timeout = setTimeout(handleTextFieldValue, 100);
     return () => {

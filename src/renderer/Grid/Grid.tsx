@@ -89,6 +89,8 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
     }
   };
 
+  if(headers.visibleObjects === 0) return null;
+
   return (
     <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
       {todoData?.map(group => {

@@ -26,7 +26,7 @@ function dataRequest(search?: string): RequestedData {
   const fileContent = readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
 
   const sorting: Sorting[] = config.get('sorting');
-  const filters: Filters = filter.get('attributes');  
+  const filters: Filters = filter.get('attributes');
 
   todoObjects = createTodoObjects(fileContent);
 
@@ -52,6 +52,8 @@ function dataRequest(search?: string): RequestedData {
   updateAttributes(todoObjects, sorting, false);
 
   const todoData: TodoDate = sortAndGroupTodoObjects(todoObjects, sorting);
+
+  headers.visibleObjects = todoObjects.length;
 
   const requestedData: RequestedData = {
     todoData,

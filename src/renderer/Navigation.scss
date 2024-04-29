@@ -63,9 +63,9 @@
     svg {
       color: $dark-grey;
     }
-    // &:hover, &:active, &.active {
-    //   background: $light-grey;
-    // }
+    &:active, &.active {
+      background: $light-grey;
+    }
     &:focus-visible {
       background: $mid-grey;
       border-color: $mid-grey;
