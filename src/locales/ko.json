@@ -30,6 +30,7 @@
   "settings.weekStart": "주의 첫날",
   "settings.0": "일요일",
   "settings.1": "월요일",
+  "settings.menuBarVisibility": "메뉴 바 표시",
   "drawer.tabs.attributes": "속성",
   "drawer.tabs.filters": "필터",
   "drawer.tabs.sorting": "정렬",

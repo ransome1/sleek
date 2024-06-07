@@ -36,16 +36,14 @@ function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOp
 }
 
 function createTray() {
-  const isTray = config.get('tray');
-
   tray?.destroy();
 
-  if(!isTray) {
+  if(!config.get('tray')) {
     app.dock?.show();
     return;
   }
 
-  const files: FileObject[] = config.get('files') as FileObject[] || [];
+  const files: FileObject[] = config.get('files');
   const iconName: string = process.platform === 'win32' ? 'tray.ico' : 'tray.png';
   const menu: Electron.Menu = Menu.buildFromTemplate(createMenuTemplate(files));
 

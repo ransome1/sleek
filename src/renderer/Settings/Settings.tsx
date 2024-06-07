@@ -27,6 +27,9 @@ const visibleSettings: VisibleSettings = {
   tray: {
     style: 'toggle',
   },
+  menuBarVisibility: {
+    style: 'toggle',
+  },
   bulkTodoCreation: {
     style: 'toggle',
     help: 'https://github.com/ransome1/sleek/wiki/Multi%E2%80%90line-text-field#bulk-todo-creation',
@@ -69,8 +72,6 @@ const visibleSettings: VisibleSettings = {
     values: [1, 0],
   },
 };
-
-
 
 const handleChange = (settingName: string, value: string | boolean | number) => {
   store.setConfig(settingName, value);

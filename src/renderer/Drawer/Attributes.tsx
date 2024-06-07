@@ -63,9 +63,9 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
       }
     });
     const sorting = [t('drawer.attributes.overdue'), t('drawer.attributes.elapsed'), t('drawer.attributes.lastWeek'), t('drawer.attributes.yesterday'), t('drawer.attributes.today'), t('drawer.attributes.tomorrow'), t('drawer.attributes.thisWeek'), t('drawer.attributes.nextWeek'), t('drawer.attributes.thisMonth'), t('drawer.attributes.nextMonth')]
-    const sortedAttributes = Object.fromEntries(
-      Object.entries(processedAttributes)
-      .sort(([aKey, a], [bKey, b]) => {
+      const sortedAttributes = Object.fromEntries(
+      // todo: fix types
+      Object.entries(processedAttributes).sort((a: any, b: any) => {
         const indexA = sorting.indexOf(a.name);
         const indexB = sorting.indexOf(b.name);
         return (indexA !== -1 ? indexA : Number.MAX_SAFE_INTEGER) - (indexB !== -1 ? indexB : Number.MAX_SAFE_INTEGER);
@@ -147,16 +147,14 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
   };
 
   return (
-    <div id="Attributes" ref={firstTabbableElementRef}>
+    <div id="Attributes">
       {!isAttributesEmpty ? (
-
         Object.keys(attributes).map((key, index) => {
           const preprocessedAttributes: Attributes = preprocessAttributes(key, attributes[key]);
           const attributeHeadline: string = translatedAttributes(t)[key];
 
           return Object.keys(preprocessedAttributes).length > 0 ? (
             <Accordion
-              TransitionProps={{ unmountOnExit: true }}
               key={index}
               expanded={settings.accordionOpenState[index]}
               onChange={() => handleAccordionToggle(index)}

@@ -1,80 +1,66 @@
 import { app } from 'electron';
-import fs from 'fs/promises';
+import fs from 'fs';
 import { Item } from 'jstodotxt';
-import { lines } from '../ProcessDataRequest/CreateTodoObjects';
+import { linesInFile } from '../DataRequest/CreateTodoObjects';
 import { getActiveFile } from './Active';
 import { config } from '../../config';
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date';
 
-async function removeLineFromFile(id: number): Promise<string> {
-  const activeFile: FileObject | null = getActiveFile();
-  if(!activeFile) {
-    throw new Error('No active file');
-  }
-  const bookmark = activeFile.todoFileBookmark;
-  const todoFilePath = activeFile.todoFilePath;
-
-  lines.splice(id, 1);
-  const modifiedContent = lines.join('\n');
-
-  if(process.mas && bookmark) {
-    const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
-    await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
-    stopAccessingSecurityScopedResource()
-  } else {
-    await fs.writeFile(todoFilePath, modifiedContent, 'utf8');
-  }
-
-  return `Line ${id} removed from file`;
-}
-
-async function writeTodoObjectToFile(id: number, string: string): Promise<void> {
-  const activeFile: FileObject | null = getActiveFile();
-  if(!activeFile) {
-    throw new Error('Todo file is not defined');
-  }
-  const bookmark = activeFile.todoFileBookmark;
-  const todoFilePath = activeFile.todoFilePath;
-
-  const bulkTodoCreation: boolean = config.get('bulkTodoCreation');
-  const convertRelativeToAbsoluteDates = config.get('convertRelativeToAbsoluteDates');
-  const appendCreationDate = config.get('appendCreationDate');
+function writeToFile(string: string, filePath: string, bookmark: string | null) {
+  const stopAccessingSecurityScopedResource = (process.mas && bookmark) ? app.startAccessingSecurityScopedResource(bookmark) : null;
   
-  const content = 
-    (bulkTodoCreation) 
-      ? string.replaceAll(String.fromCharCode(16), '\n') 
-      : string.replaceAll(/\n/g, String.fromCharCode(16));
-
-  const linesToWrite = content.split('\n').filter(line => line.trim() !== '');
-
-  if(linesToWrite.length === 0 && id < 1) {
-    throw new Error("No string provided, won't write empty todo to file");
-  } else {
-    if(convertRelativeToAbsoluteDates) {
-      for (let i = 0; i < linesToWrite.length; i++) {
-        linesToWrite[i] = replaceSpeakingDatesWithAbsoluteDates(linesToWrite[i]);
-      }
-    }
-    if(id >= 0) {
-      lines[id] = linesToWrite.join('\n');
-    } else {
-      for (let i = 0; i < linesToWrite.length; i++) {
-        const JsTodoTxtObject = new Item(linesToWrite[i]);
-        if(appendCreationDate && !JsTodoTxtObject.created()) {
-          JsTodoTxtObject.setCreated(new Date());
-        }
-        lines.push(JsTodoTxtObject.toString());
-      }
-    }
-  }
-
-  if(process.mas && bookmark) {
-    const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
-    await fs.writeFile(todoFilePath, lines.join('\n'), 'utf8');
-    stopAccessingSecurityScopedResource()
-  } else {
-    await fs.writeFile(todoFilePath, lines.join('\n'), 'utf8');
+  fs.writeFileSync(filePath, string, 'utf-8');
+  
+  if (stopAccessingSecurityScopedResource && process.mas && bookmark) {
+    stopAccessingSecurityScopedResource();
   }
 }
 
-export { writeTodoObjectToFile, removeLineFromFile };
+function removeLineFromFile(lineNumber: number) {
+  let activeFile: FileObject | null = getActiveFile();
+  if(!activeFile) {
+    throw new Error('No active file found');
+  } else if(lineNumber >= 0) {
+    linesInFile.splice(lineNumber, 1);
+    writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark);
+  }
+}
+
+function prepareContentForWriting(lineNumber: number, string: string) {
+  const activeFile: FileObject | null = getActiveFile();
+  if(!activeFile) {
+    throw new Error('No active file found');
+  } else if(!string) {
+    throw new Error('No content passed');
+  }
+
+  let linesToAdd;
+
+  if(config.get('bulkTodoCreation')) {
+    linesToAdd = string.replaceAll(String.fromCharCode(16), '\n');
+  } else {
+    linesToAdd = string.replaceAll(/\n/g, String.fromCharCode(16));
+  }
+
+  if(config.get('convertRelativeToAbsoluteDates')) {
+    linesToAdd = replaceSpeakingDatesWithAbsoluteDates(linesToAdd);
+  }
+
+  linesToAdd = linesToAdd.split('\n');
+
+  if(lineNumber >= 0) {
+    linesInFile[lineNumber] = linesToAdd.join('\n');
+  } else {
+    for (let i = 0; i < linesToAdd.length; i++) {
+      const JsTodoTxtObject = new Item(linesToAdd[i]);
+      if(config.get('appendCreationDate') && !JsTodoTxtObject.created()) {
+        JsTodoTxtObject.setCreated(new Date());
+      }
+      linesInFile.push(JsTodoTxtObject.toString());
+    }
+  }
+  
+  writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark);
+}
+
+export { prepareContentForWriting, removeLineFromFile, writeToFile };

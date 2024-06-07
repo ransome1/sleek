@@ -82,6 +82,11 @@ declare global {
     useMultilineForBulkTodoCreation: boolean;
     useHumanFriendlyDates: boolean;
     channel: string;
+    chokidarOptions: object;
+    menuBarVisibility: boolean;
+    fileWatcherAtomic: boolean;
+    fileWatcherPolling: boolean;
+    fileWatcherPollingInterval: boolean;
     __internal__: { migrations: { version: string }};
   }
 
@@ -95,7 +100,7 @@ declare global {
   }
 
   interface TodoObject {
-    id: number;
+    lineNumber: number;
     body: string | null;
     created: string | null;
     complete: boolean;
@@ -112,8 +117,17 @@ declare global {
     pm: number | string | null;
     string: string | null;
     notify?: boolean;
+    [key: string]: any;
+  }
+
+  interface TodoGroup {
+    title: string;
+    todoObjects: TodoObject[];
+    row: number;
     visible: boolean;
   }
+
+  interface TodoData extends Array<TodoGroup> {}
 
   interface TranslatedAttributes {
     t: string;
@@ -190,14 +204,8 @@ declare global {
     count: number;
   };
 
-  type ElementObject = {
-    type: string | null;
-    value: string | null;
-    index: number;
-  };
-
   interface RequestedData {
-    todoObjects: TodoObject[],
+    todoData: TodoData,
     attributes: Attributes,
     headers: HeadersObject,
     filters: Filters,

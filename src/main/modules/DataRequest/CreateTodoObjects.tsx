@@ -5,10 +5,10 @@ import { handleNotification } from '../Notifications';
 import { extractSpeakingDates } from '../Date';
 import dayjs from 'dayjs';
 
-let lines: string[];
+let linesInFile: string[];
 export const badge: Badge = { count: 0 };
 
-function createTodoObject(index: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
+function createTodoObject(lineNumber: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
   let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ');
   
   let JsTodoTxtObject = new Item(content);
@@ -40,17 +40,20 @@ function createTodoObject(index: number, string: string, attributeType?: string,
   const hidden = extensions.some(extension => extension.key === 'h' && extension.value === '1');
   const pm: string | number | null = extensions.find(extension => extension.key === 'pm')?.value || null;
   const rec = extensions.find(extension => extension.key === 'rec')?.value || null;
-  const creation = dayjs(JsTodoTxtObject.created()).isValid() ? dayjs(JsTodoTxtObject.created()).format('YYYY-MM-DD') : null;
+  const created = dayjs(JsTodoTxtObject.created()).isValid() ? dayjs(JsTodoTxtObject.created()).format('YYYY-MM-DD') : null;
   const completed = dayjs(JsTodoTxtObject.completed()).isValid() ? dayjs(JsTodoTxtObject.completed()).format('YYYY-MM-DD') : null;
+  const projects = JsTodoTxtObject.projects().length > 0 ? JsTodoTxtObject.projects() : null;
+  const contexts = JsTodoTxtObject.contexts().length > 0 ? JsTodoTxtObject.contexts() : null;
+
   return {
-    id: index,
+    lineNumber,
     body,
-    created: creation,
+    created,
     complete: JsTodoTxtObject.complete(),
     completed: completed,
     priority: JsTodoTxtObject.priority(),
-    contexts: JsTodoTxtObject.contexts(),
-    projects: JsTodoTxtObject.projects(),
+    contexts: contexts,
+    projects: projects,
     due,
     dueString,
     notify,
@@ -59,37 +62,39 @@ function createTodoObject(index: number, string: string, attributeType?: string,
     rec,
     hidden,
     pm,
-    visible: true,
     string: content,
   };
 }
 
-async function createTodoObjects(fileContent: string | null): Promise<TodoObject[] | []> {
-  if(!fileContent) {
-    lines = [];
+function createTodoObjects(fileContent: string | null): TodoObject[] | [] {
+  if (!fileContent) {
+    linesInFile = [];
     return [];
   }
   badge.count = 0;
-  lines = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
+  linesInFile = fileContent.split(/[\r\n]+/).filter(line => line.trim() !== '');
+
+  // todo: might causes problems due to index offset created by it
   const excludeLinesWithPrefix: string[] = config.get('excludeLinesWithPrefix') || [];
-  
-  const todoObjects: TodoObject[] = await Promise.all(lines.map(async (line, i) => {
-    if(excludeLinesWithPrefix.some(prefix => line.startsWith(prefix))) {
+
+  const todoObjects: TodoObject[] = linesInFile.map((line, index) => {
+    if (excludeLinesWithPrefix.some(prefix => line.startsWith(prefix))) {
       return null;
     }
 
-    const todoObject: TodoObject = await createTodoObject(i, line);
+    const todoObject: TodoObject = createTodoObject(index, line);
 
     if (todoObject.body && !todoObject.complete) {
       handleNotification(todoObject.due, todoObject.body, badge);
     }
 
     return todoObject;
-  })).then((objects) => objects.filter(Boolean) as TodoObject[]);
+
+  }).filter(Boolean) as TodoObject[];
 
   app.setBadgeCount(badge.count);
 
   return todoObjects;
 }
 
-export { createTodoObjects, createTodoObject, lines };
+export { createTodoObjects, createTodoObject, linesInFile };

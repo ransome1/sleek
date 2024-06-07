@@ -5,7 +5,6 @@ import { config } from './config';
 import { createMenu } from './modules/Menu';
 import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
-import { addFile } from './modules/File/File';
 import { createTray } from './modules/Tray';
 import './modules/IpcMain';
 
@@ -110,7 +109,6 @@ const createMainWindow = () => {
     : process.platform === 'darwin'
     ? getAssetPath('icons/sleek.icns')
     : getAssetPath('icons/512x512.png'),
-    autoHideMenuBar: true,
     webPreferences: {
       spellcheck: false,
       contextIsolation: true,
@@ -148,8 +146,7 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize;
 
-  const tray: boolean = config.get('tray');
-  if(tray) {
+  if(config.get('tray')) {
     createTray();
   }
 
@@ -185,9 +182,10 @@ const handleBeforeQuit = () => {
   app.releaseSingleInstanceLock();
 }
 
-const handleOpenFile = (path: string) => {
-  if(path) addFile(path, null);
-};
+// const handleOpenFile = (path) => {
+//   console.log(typeof path)
+//   if(path) addFile(path, null);
+// };
 
 app
   .whenReady().then(() => {
@@ -195,14 +193,14 @@ app
     eventListeners.handleCreateWindow = handleCreateWindow;
     eventListeners.handleWindowAllClosed = handleWindowAllClosed;
     eventListeners.handleBeforeQuit = handleBeforeQuit;
-    eventListeners.handleOpenFile = handleOpenFile;
+    //eventListeners.handleOpenFile = handleOpenFile;
   })
   .catch(console.error);
 
 app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
-  .on('activate', handleCreateWindow)
-  .on('open-file', () => handleOpenFile(path));
+  .on('activate', handleCreateWindow);
+  //.on('open-file', () => handleOpenFile(path));
 
 export { mainWindow, handleCreateWindow, eventListeners };

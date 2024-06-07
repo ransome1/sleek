@@ -39,7 +39,7 @@ const DatePickerInline: React.FC<Props> = ({
 
   const handleChange = (date: dayjs.Dayjs | null) => {
     try {
-      ipcRenderer.send('writeTodoToFile', todoObject.id, todoObject.string, false, type, dayjs(date).format('YYYY-MM-DD'));
+      ipcRenderer.send('writeTodoToFile', todoObject.lineNumber, todoObject.string, false, type, dayjs(date).format('YYYY-MM-DD'));
     } catch(error: any) {
       console.error(error);
     }

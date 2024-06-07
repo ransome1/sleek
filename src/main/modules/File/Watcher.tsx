@@ -1,7 +1,8 @@
 import chokidar, { FSWatcher } from 'chokidar';
-import { processDataRequest, searchString } from '../ProcessDataRequest/ProcessDataRequest';
+import { dataRequest, searchString } from '../DataRequest/DataRequest';
 import { config } from '../../config';
-import { eventListeners } from '../../main';
+import { handleError } from '../../util';
+import { mainWindow, eventListeners } from '../../main';
 
 let watcher: FSWatcher | null = null;
 
@@ -17,26 +18,23 @@ function createFileWatcher(files: FileObject[]): void {
     config.set('files', files)
   }
 
-  const chokidarOptions = config.get('chokidarOptions');
-
-  watcher = chokidar.watch(files.map((file) => file.todoFilePath), chokidarOptions);
+  watcher = chokidar.watch(files.map((file) => file.todoFilePath), config.get('chokidarOptions'));
 
   watcher
     .on('add', (file) => {
       console.log(`Watching new file: ${file}`);
     })
-    .on('change', async (file) => {
+    .on('change', (file) => {
       try {
-        await processDataRequest(searchString);
+        const requestedData = dataRequest(searchString);
+        mainWindow!.webContents.send('requestData', requestedData);
         console.log(`${file} has been changed`);
       } catch(error: any) {
-        console.error(error.message);
+        handleError(error);
       }
     })
     .on('unlink', (file) => {
       console.log(`Unlinked file: ${file}`);
-      const updatedFiles = files.filter((item) => item.todoFilePath !== file);
-      config.set('files', updatedFiles);
     });
 
   eventListeners.watcher = watcher;

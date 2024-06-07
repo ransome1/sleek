@@ -1,7 +1,7 @@
 import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron';
 import path from 'path';
-import fs from 'fs/promises';
 import { addFile, addDoneFile } from './File';
+import { writeToFile } from './Write';
 
 const dialogFilters = [
   {
@@ -30,7 +30,6 @@ async function openFile(setDoneFile: boolean): Promise<void> {
       addFile(filePath, bookmark);
     }
   }
-  return;
 }
 
 async function createFile(setDoneFile: boolean): Promise<void> {
@@ -40,17 +39,12 @@ async function createFile(setDoneFile: boolean): Promise<void> {
     filters: dialogFilters,
     securityScopedBookmarks: true,
   });
+  
   if(!result.canceled && result.filePath) {
     const filePath: string = result.filePath;
     const bookmark: string | null = result.bookmark || null;
 
-    if(process.mas && bookmark) {
-      const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(bookmark);  
-      await fs.writeFile(filePath, '');
-      stopAccessingSecurityScopedResource()
-    } else {
-      await fs.writeFile(filePath, '');
-    }
+    writeToFile('', filePath, bookmark)
 
     if(setDoneFile) {
       addDoneFile(filePath, bookmark);
@@ -58,7 +52,6 @@ async function createFile(setDoneFile: boolean): Promise<void> {
       addFile(filePath, bookmark);
     }
   }
-  return;
 }
 
 export {

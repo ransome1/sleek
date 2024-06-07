@@ -1,42 +1,40 @@
-import React, { KeyboardEvent, memo } from 'react';
+import React, { KeyboardEvent, memo, useState } from 'react';
 import List from '@mui/material/List';
 import Row from './Row';
 import Group from './Group';
 import { handleFilterSelect } from '../Shared';
 import './Grid.scss';
 
+const { ipcRenderer } = window.api;
+
 interface GridComponentProps {
-  todoObjects: TodoObject[] | null;
+  todoData: TodoData | null;
   filters: Filters | null;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: Settings;
-  visibleRowCount: number;
-  setVisibleRowCount: React.Dispatch<React.SetStateAction<number>>;
-  loadMoreRows: boolean;
-  setLoadMoreRows: React.Dispatch<React.SetStateAction<boolean>>;
+  headers: Headers;
+  searchString: string;
 }
 
 const GridComponent: React.FC<GridComponentProps> = memo(({
-  todoObjects,
+  todoData,
   filters,
   setDialogOpen,
   setContextMenu,
   setTodoObject,
   setPromptItem,
   settings,
-  visibleRowCount,
-  setVisibleRowCount,
-  loadMoreRows,
-  setLoadMoreRows,
+  headers,
+  searchString,
  }) => {
 
+  let renderedRows: number[] = [];
   const list = document.getElementById('grid');
-  const groups: string[] = [];
-  const visibleTodoObjects = todoObjects?.filter(todoObject => todoObject.visible)?.slice(0, visibleRowCount);
-  const totalRowCount = todoObjects?.length || 0;
+  const [loadMoreRows, setLoadMoreRows] = useState(false);
+  const [maxRows, setMaxRows] = useState(Math.floor(window.innerHeight / 35) * 2);
 
   const handleButtonClick = (key: string, name: string, values: string[]) => {
     handleFilterSelect(key, name, values, filters, false);
@@ -73,58 +71,75 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
     }
   };
 
-  const handleScroll = () => {  
-    if(list && loadMoreRows) {      
-      const scrollPos = list.scrollTop;
-      const totalHeight = list.scrollHeight;
-      const clientHeight = list.clientHeight;
-      if(totalHeight - scrollPos <= clientHeight * 3) {
-        if(visibleRowCount >= totalRowCount) {
-          setLoadMoreRows(false);
-        } else {
-          setVisibleRowCount((prevVisibleRowCount) => prevVisibleRowCount + 30);
-        }
+  const handleScroll = () => {
+    if(list) {
+      const a: number = list.scrollTop;
+      const b: number = list.scrollHeight - list.clientHeight;
+      const c: number = a / b;
+
+      if(c >= 0.85 && renderedRows.length < headers.availableObjects) {
+        setLoadMoreRows(true);
+      }
+
+      if(loadMoreRows) {
+        setLoadMoreRows(false);
+        setMaxRows((maxRows) => maxRows + 30);
+        ipcRenderer.send('requestData', searchString);
       }
     }
   };
 
-  if(visibleTodoObjects.length === 0) return null;
+  if(headers.visibleObjects === 0) return null;
 
   return (
     <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
-      {visibleTodoObjects?.map((row, index) => {
-        let renderGroup;
-        const groupValue = row[settings.sorting[0].value]?.toString() || null;
-        if(groups.length === 0 || !groups.includes(groupValue)) {
-          groups.push(groupValue);
-          renderGroup = true;
+      {todoData?.map(group => {
+        if (!group.visible) {
+          return null;
         }
         return (
-          <React.Fragment key={index}>
-            {!settings.fileSorting && renderGroup && (
-              <Group
-                value={groupValue}
-                todotxtAttribute={settings.sorting[0].value}
-                filters={filters}
-                onClick={handleButtonClick}
-              />
-            )}
-            <Row
-              todoObject={row}
+          <React.Fragment key={group.title}>
+            <Group
+              title={group.title}
+              todotxtAttribute={settings.sorting[0].value}
               filters={filters}
-              setTodoObject={setTodoObject}
-              setDialogOpen={setDialogOpen}
-              setContextMenu={setContextMenu}
-              setPromptItem={setPromptItem}
-              settings={settings}
-              handleButtonClick={handleButtonClick}
+              onClick={handleButtonClick}
             />
+            {(() => {
+              const rows = [];
+              for (let i = 0; i < group.todoObjects.length; i++) {
+                const todoObject = group.todoObjects[i];
+
+                if(renderedRows.length >= maxRows) {
+                  break;
+                } else if(renderedRows.includes(todoObject.lineNumber)) {
+                  continue;
+                }
+
+                renderedRows.push(todoObject.lineNumber);
+
+                rows.push(
+                  <Row
+                    key={todoObject.lineNumber}
+                    todoObject={todoObject}
+                    filters={filters}
+                    setTodoObject={setTodoObject}
+                    setDialogOpen={setDialogOpen}
+                    setContextMenu={setContextMenu}
+                    setPromptItem={setPromptItem}
+                    settings={settings}
+                    handleButtonClick={handleButtonClick}
+                  />
+                );
+              }
+              return rows;
+
+            })()}
           </React.Fragment>
         );
       })}
     </List>
   );
-
 });
 
 export default GridComponent;

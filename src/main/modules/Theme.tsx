@@ -2,18 +2,15 @@ import { nativeTheme } from 'electron';
 import { config } from '../config';
 
 function handleTheme() {
-  const colorTheme: string = config.get('colorTheme');
-  let shouldUseDarkColors: boolean;
-  if(colorTheme === 'system') {
-    shouldUseDarkColors = nativeTheme.shouldUseDarkColors;
-  } else if(colorTheme === 'dark') {
-    shouldUseDarkColors = true;
-  } else if(colorTheme === 'light') {
-    shouldUseDarkColors = false;
+  if(nativeTheme.themeSource === 'system') {
+    config.set('shouldUseDarkColors', nativeTheme.shouldUseDarkColors);
+  } else if(nativeTheme.themeSource === 'dark') {
+    config.set('shouldUseDarkColors', true);
+  } else if(nativeTheme.themeSource === 'light') {
+    config.set('shouldUseDarkColors', false);
   } else {
-    shouldUseDarkColors = false;
+    config.set('shouldUseDarkColors', false);
   }
-  config.set('shouldUseDarkColors', shouldUseDarkColors);
 }
 
 export default handleTheme;

@@ -1,7 +1,7 @@
 import { dialog } from 'electron';
 import { openFile, createFile } from '../../main/modules/File/Dialog';
 import { addFile } from '../../main/modules/File/File';
-import fs from 'fs/promises';
+import fs from 'fs';
 
 jest.mock('../../main/main', () => ({
   mainWindow: jest.fn(),
@@ -36,8 +36,8 @@ jest.mock('../../main/modules/File/File', () => ({
   addFile: jest.fn(),
 }));
 
-jest.mock('fs/promises', () => ({
-  writeFile: jest.fn(),
+jest.mock('fs', () => ({
+  writeFileSync: jest.fn(),
 }));
 
 describe('openFile', () => {
@@ -75,7 +75,7 @@ describe('createFile', () => {
     jest.clearAllMocks();
   });
 
-  it('should call addFile after successfully creating a file', async () => {
+  it('should call addFile after successfully creating a file', async() => {
     (dialog.showSaveDialog as jest.Mock).mockResolvedValueOnce({
       canceled: false,
       filePath: './src/__tests__/__mock__/fileDialog.txt',
@@ -90,11 +90,11 @@ describe('createFile', () => {
       filters: [{ name: 'Text files', extensions: ['txt'] }, { name: 'All files', extensions: ['*'] }],
     });
 
-    expect(fs.writeFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', '');
+    expect(fs.writeFileSync).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', '', 'utf-8');
     expect(addFile).toHaveBeenCalledWith('./src/__tests__/__mock__/fileDialog.txt', null);
   });
 
-  it('should not call addFile when file creation is canceled', async () => {
+  it('should not call addFile when file creation is canceled', async() => {
     (dialog.showSaveDialog as jest.Mock).mockResolvedValueOnce({
       canceled: true,
       filePath: undefined,

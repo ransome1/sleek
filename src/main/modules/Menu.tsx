@@ -6,9 +6,6 @@ import { handleRequestArchive } from './File/Archive';
 import { config, filter } from '../config';
 import appPackage from '../../../release/app/package.json';
 
-const isMac: boolean = process.platform === 'darwin';
-const description = appPackage.description;
-
 function createMenu(files: FileObject[]) {
   const template: Electron.MenuItemConstructorOptions[] = [
     {
@@ -21,7 +18,7 @@ function createMenu(files: FileObject[]) {
             const options = {
               title: 'About sleek',
               message: `sleek v${app.getVersion()}`,
-              detail: description,
+              detail: appPackage.description,
               buttons: [
                 'Close',
                 'Reveal configuration folder',
@@ -41,7 +38,7 @@ function createMenu(files: FileObject[]) {
             mainWindow!.webContents.send('isSettingsOpen', true);
           },
         },
-        ...(isMac
+        ...(process.platform === 'darwin'
         ? [
             { type: 'separator' },
             {

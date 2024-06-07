@@ -1,14 +1,14 @@
 import { attributes, updateAttributes } from '../../main/modules/Attributes';
 
 const todoObjects = [
-  { id: 1, created: null, priority: 'A', projects: ['Project 1'], contexts: ['Context 1'], due: '2023-01-01', dueString: '2023-01-01', complete: false, completed: null, t: '2024-02-01', tString: '2024-02-01', rec: null, pm: null, body: null, hidden: false, string: '', notify: false, visible: true, },
-  { id: 2, created: '2026-01-01', priority: null, projects: ['Project 2'], contexts: null, due: '2023-02-01', dueString: '2023-02-01', complete: false, completed: null, t: null, tString: null, rec: null, pm: null, body: null, hidden: false, string: '', notify: false, visible: true, },
-  { id: 3, created: null, priority: null, projects: ['Project 1'], contexts: null, due: '2023-03-01', dueString: '2023-03-01', complete: false, completed: null, t: null, tString: null, rec: '2b', pm: null, body: null, hidden: false, string: '', notify: true, visible: true, },
-  { id: 4, created: '2026-01-01', priority: 'C', projects: ['Project 2'], contexts: ['Context 1'], due: '2023-04-01', dueString: '2023-04-01', complete: false, completed: null, t: '2024-02-01', tString: '2024-02-01', rec: null, pm: null, body: null, hidden: false, string: '', notify: false, visible: true, },
+  { lineNumber: 1, created: null, priority: 'A', projects: ['Project 1'], contexts: ['Context 1'], due: '2023-01-01', dueString: '2023-01-01', complete: false, completed: null, t: '2024-02-01', tString: '2024-02-01', rec: null, pm: null, body: null, hidden: false, string: '', notify: false,  },
+  { lineNumber: 2, created: '2026-01-01', priority: null, projects: ['Project 2'], contexts: null, due: '2023-02-01', dueString: '2023-02-01', complete: false, completed: null, t: null, tString: null, rec: null, pm: null, body: null, hidden: false, string: '', notify: false,  },
+  { lineNumber: 3, created: null, priority: null, projects: ['Project 1'], contexts: null, due: '2023-03-01', dueString: '2023-03-01', complete: false, completed: null, t: null, tString: null, rec: '2b', pm: null, body: null, hidden: false, string: '', notify: true,  },
+  { lineNumber: 4, created: '2026-01-01', priority: 'C', projects: ['Project 2'], contexts: ['Context 1'], due: '2023-04-01', dueString: '2023-04-01', complete: false, completed: null, t: '2024-02-01', tString: '2024-02-01', rec: null, pm: null, body: null, hidden: false, string: '', notify: false,  },
 ];
 
 describe('Set of filters must create a respective set of attributes and its counts', () => {
-  test('Should create attributes based on todo objects', async () => {
+  test('Should create attributes based on todo objects', () => {
 
     const sorting = [
       { id: '1', value: 'priority', invert: false },
@@ -33,7 +33,7 @@ describe('Set of filters must create a respective set of attributes and its coun
       created: { '2026-01-01': { count: 2, notify: false} },
       completed: {},
     };
-    await updateAttributes(todoObjects, sorting, false);
+    updateAttributes(todoObjects, sorting, false);
     expect(attributes).toEqual(expectedAttributes);
   });
 

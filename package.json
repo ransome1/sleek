@@ -1,6 +1,6 @@
 {
   "name": "sleek",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "main": "./src/main/main.tsx",
   "scripts": {
     "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
@@ -125,7 +125,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "material-ui-popup-state": "^5.0.9",
     "mini-css-extract-plugin": "^2.8.0",
-    "peggy": "^3.0.2",
+    "peggy": "^4.0.2",
     "prettier": "^3.1.1",
     "react-refresh": "^0.14.0",
     "react-test-renderer": "^18.2.0",
@@ -147,7 +147,7 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "buildVersion": "42",
+    "buildVersion": "43",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -230,7 +230,7 @@
       "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
       "identityName": "17450RobinAhle.sleektodomanager",
       "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
-      "publisherDisplayName": "Robin Ahle",
+      "publisherDisplayName": "ransome1",
       "applicationId": "RobinAhle.sleektodomanager"
     },
     "linux": {

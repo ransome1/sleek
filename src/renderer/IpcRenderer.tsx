@@ -7,7 +7,7 @@ interface Props {
   setHeaders: React.Dispatch<React.SetStateAction<HeadersObject | null>>;
   setAttributes: React.Dispatch<React.SetStateAction<Attributes | null>>;
   setFilters: React.Dispatch<React.SetStateAction<Filters | null>>;
-  setTodoObjects: React.Dispatch<React.SetStateAction<TodoObject[] | null>>;
+  setTodoData: React.Dispatch<React.SetStateAction<TodoData | null>>;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<AlertColor | undefined>>;
@@ -20,7 +20,7 @@ const IpcComponent: React.FC<Props> = ({
   setHeaders,
   setAttributes,
   setFilters,
-  setTodoObjects,
+  setTodoData,
   setTodoObject,
   setAttributeFields,
   setSnackBarSeverity,
@@ -33,7 +33,7 @@ const IpcComponent: React.FC<Props> = ({
     if(requestedData?.headers) setHeaders(requestedData.headers);
     if(requestedData?.attributes) setAttributes(requestedData.attributes);
     if(requestedData?.filters) setFilters(requestedData.filters);
-    if(requestedData?.todoObjects) setTodoObjects(requestedData.todoObjects);
+    if(requestedData?.todoData) setTodoData(requestedData.todoData);
   };
 
   const handleUpdateAttributeFields = (todoObject: TodoObject) => {
@@ -45,7 +45,13 @@ const IpcComponent: React.FC<Props> = ({
   const handleResponse = function (response: Error | string) {
     const severity = response instanceof Error ? 'error' : 'success';
     setSnackBarSeverity(severity);
-    setSnackBarContent(response instanceof Error ? response.message : response);
+    if(response instanceof Error) {
+      setSnackBarContent(response.message);
+      console.error(response);
+    } else {
+      setSnackBarContent(response);
+      console.info(response);
+    }
   };
 
   const handleDrop = (event: any) => {
