@@ -32,6 +32,5 @@ npm-debug.log.*
 *.dtmp
 *.drawio
 *.snap
-*FilterLang.js
 *package-lock.json
 *qodana*

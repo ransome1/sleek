@@ -1,4 +1,4 @@
-import * as FilterLang from './FilterLang.js';
+import * as FilterLang from './FilterLang';
 import { runQuery } from './FilterQuery';
 import { createTodoObject } from '../DataRequest/CreateTodoObjects';
 
