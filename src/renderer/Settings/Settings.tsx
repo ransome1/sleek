@@ -73,8 +73,6 @@ const visibleSettings: VisibleSettings = {
   },
 };
 
-
-
 const handleChange = (settingName: string, value: string | boolean | number) => {
   store.setConfig(settingName, value);
 };
