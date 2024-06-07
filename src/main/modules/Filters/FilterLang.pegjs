@@ -1,5 +1,5 @@
 {{
-    import { addRecurrenceToDate } from "../ProcessDataRequest/CreateRecurringTodo";
+    import { addRecurrenceToDate } from "../DataRequest/CreateRecurringTodo";
 }}
 
 filterQuery
