@@ -4,6 +4,7 @@ import duration from 'dayjs/plugin/duration';
 import calendar from 'dayjs/plugin/calendar';
 import weekday from 'dayjs/plugin/weekday';
 import updateLocale from 'dayjs/plugin/updateLocale';
+import { i18n } from './Settings/LanguageSelector';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(calendar);
