@@ -1,5 +1,6 @@
 {
   "copy": "Copy",
+  "duplicate": "Duplicate",
   "delete": "Delete",
   "cancel": "Cancel",
   "openFile": "Open file",
