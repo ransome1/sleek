@@ -48,7 +48,6 @@ function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: 
     }
     attributes[key] = Object.fromEntries(Object.entries(attributes[key]).sort(([a], [b]) => a.localeCompare(b)));
   }
-  attributes = Object.fromEntries(sorting.map((item) => [item.value, attributes[item.value]]));
 }
 
 export { attributes, updateAttributes };
