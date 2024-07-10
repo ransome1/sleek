@@ -191,19 +191,13 @@ declare global {
   }
 
   type Attributes = {
-    [key in AttributeKey]: {
-      [key: string]: Attribute;
-    }
+    [attributeKey in AttributeKey]:
+      attributeKey extends DateAttributeKey
+        ? DateAttribute
+        : { [key: string]: Attribute; };
   }
 
-  type DateAttributes = {
-    [key: string]: {
-      date: string | null;
-      string: string | null;
-      type: string | null;
-      notify: boolean;
-    };
-  };
+  type DateAttributes = Pick<Attributes, DateAttributeKey>;
 
   type DateAttribute = {
     date: string | null;

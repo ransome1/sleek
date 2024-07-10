@@ -2,12 +2,12 @@ const attributes: Attributes = {
   priority: {},
   projects: {},
   contexts: {},
-  due: {},
-  t: {},
+  due: {} as DateAttribute,
+  t: {} as DateAttribute,
   rec: {},
   pm: {},
-  created: {},
-  completed: {},
+  created: {} as DateAttribute,
+  completed: {} as DateAttribute,
 };
 
 function incrementCount(countObject: any, key: any | null, notify: boolean): void {
