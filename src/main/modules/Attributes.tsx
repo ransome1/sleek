@@ -1,4 +1,4 @@
-let attributes: Attributes = {
+const attributes: Attributes = {
   priority: {},
   projects: {},
   contexts: {},
