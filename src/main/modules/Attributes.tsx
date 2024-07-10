@@ -10,6 +10,15 @@ const attributes: Attributes = {
   completed: {} as DateAttribute,
 };
 
+function getDateAttributes(): DateAttributes {
+  return {
+    due: attributes.due,
+    t: attributes.t,
+    created: attributes.created,
+    completed: attributes.completed,
+  };
+}
+
 function incrementCount(countObject: any, key: any | null, notify: boolean): void {
   if(key) {
     let previousCount: number = parseInt(countObject[key]?.count) || 0;
@@ -52,4 +61,4 @@ function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: 
   }
 }
 
-export { attributes, updateAttributes };
+export { attributes, getDateAttributes, updateAttributes };
