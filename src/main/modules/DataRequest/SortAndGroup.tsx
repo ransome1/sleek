@@ -1,4 +1,6 @@
 import { config } from '../../config';
+import { getDateAttributes } from '../Attributes';
+import { friendlyDateGroup } from '../Date';
 
 function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]): TodoGroup {
   const fileSorting: boolean = config.get('fileSorting');
@@ -31,13 +33,24 @@ function sortAndGroupTodoObjects(todoObjects: TodoObject[], sorting: Sorting[]):
     return 0;
   }
 
+  function getGroupKey(todoObject: TodoObject, attributeKey: string) {
+    const useFriendlyDates = config.get('useHumanFriendlyDates');
+    const isDateAttribute = Object.keys(getDateAttributes()).includes(attributeKey);
+
+    if (useFriendlyDates && isDateAttribute) {
+      return friendlyDateGroup(todoObject[attributeKey]);
+    }
+
+    return todoObject[attributeKey];
+  }
+
   function groupTodoObjectsByKey(todoObjects: TodoObject[], attributeKey: string) {
     const grouped: TodoGroup = {};
     for (const todoObject of todoObjects) {
-      const groupKey = todoObject[attributeKey] || null;
+      const groupKey = getGroupKey(todoObject, attributeKey);
       if (!grouped[groupKey]) {
         grouped[groupKey] = {
-          title: groupKey,
+          title: todoObject[attributeKey],
           todoObjects: [],
           visible: false
         };
