@@ -22,7 +22,9 @@ function incrementCount(countObject: any, key: any | null, notify: boolean): voi
 
 function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: boolean) {
 
-  for (const key in attributes) {
+  const attributeKeys = Object.keys(attributes) as AttributeKey[];
+
+  for (const key of attributeKeys) {
 
     for (const attributeKey in attributes[key]) {
       (reset) ? attributes[key] = {} : attributes[key][attributeKey].count = 0

@@ -168,12 +168,30 @@ declare global {
     exclude: boolean;
   }
 
+  type AttributeKey =
+    'priority'
+    | 'projects'
+    | 'contexts'
+    | 'due'
+    | 't'
+    | 'rec'
+    | 'pm'
+    | 'created'
+    | 'completed';
+
+  type DateAttributeKey = AttributeKey & (
+    'due'
+    | 't'
+    | 'created'
+    | 'completed'
+  );
+
   interface Attribute {
     [key: string]: number | boolean;
   }
 
-  interface Attributes {
-    [key: string]: {
+  type Attributes = {
+    [key in AttributeKey]: {
       [key: string]: Attribute;
     }
   }
