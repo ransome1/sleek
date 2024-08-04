@@ -247,6 +247,18 @@ declare global {
   };
 
   type VisibleSettings = Record<string, VisibleSetting>;
+
+  type FriendlyDateGroup =
+    | 'before-last-week'
+    | 'last-week'
+    | 'yesterday'
+    | 'today'
+    | 'tomorrow'
+    | 'this-week'
+    | 'next-week'
+    | 'this-month'
+    | 'next-month'
+    | 'after-next-month';
 }
 
 export {};
