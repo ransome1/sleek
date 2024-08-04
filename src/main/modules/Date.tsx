@@ -1,5 +1,5 @@
 import Sugar from 'sugar';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { config } from '../config';
 
 function mustNotify(date: Date): boolean {
@@ -86,4 +86,54 @@ function extractSpeakingDates(body: string): DateAttributes {
   return speakingDates;
 }
 
-export { extractSpeakingDates, replaceSpeakingDatesWithAbsoluteDates };
+function friendlyDateGroup(date: Dayjs): FriendlyDateGroup | null {
+  const today = dayjs();
+
+  if (!date || !date.isValid()) {
+    return null;
+  }
+
+  if (date.isBefore(today.subtract(1, 'week'))) {
+    return 'before-last-week';
+  }
+
+  if (date.isBefore(today.subtract(1, 'day'))) {
+    return 'last-week';
+  }
+
+  if (date.isBefore(today)) {
+    return 'yesterday';
+  }
+
+  if (date.isSame(today)) {
+    return 'today';
+  }
+
+  if (date.isSame(today.add(1, 'day'))) {
+    return 'tomorrow';
+  }
+
+  if (date.isBefore(today.add(1, 'week').add(1, 'day'))) {
+    return 'this-week';
+  }
+
+  if (date.isBefore(today.add(2, 'week').add(1, 'day'))) {
+    return 'next-week';
+  }
+
+  if (date.isBefore(today.add(1, 'month').add(1, 'day'))) {
+    return 'this-month';
+  }
+
+  if (date.isBefore(today.add(2, 'month').add(1, 'day'))) {
+    return 'next-month';
+  }
+
+  return 'after-next-month';
+}
+
+export {
+  extractSpeakingDates,
+  friendlyDateGroup,
+  replaceSpeakingDatesWithAbsoluteDates
+};
