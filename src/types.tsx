@@ -168,24 +168,36 @@ declare global {
     exclude: boolean;
   }
 
+  type AttributeKey =
+    'priority'
+    | 'projects'
+    | 'contexts'
+    | 'due'
+    | 't'
+    | 'rec'
+    | 'pm'
+    | 'created'
+    | 'completed';
+
+  type DateAttributeKey = AttributeKey & (
+    'due'
+    | 't'
+    | 'created'
+    | 'completed'
+  );
+
   interface Attribute {
     [key: string]: number | boolean;
   }
 
-  interface Attributes {
-    [key: string]: {
-      [key: string]: Attribute;
-    }
+  type Attributes = {
+    [attributeKey in AttributeKey]:
+      attributeKey extends DateAttributeKey
+        ? DateAttribute
+        : { [key: string]: Attribute; };
   }
 
-  type DateAttributes = {
-    [key: string]: {
-      date: string | null;
-      string: string | null;
-      type: string | null;
-      notify: boolean;
-    };
-  };
+  type DateAttributes = Pick<Attributes, DateAttributeKey>;
 
   type DateAttribute = {
     date: string | null;
@@ -229,6 +241,18 @@ declare global {
   };
 
   type VisibleSettings = Record<string, VisibleSetting>;
+
+  type FriendlyDateGroup =
+    | 'before-last-week'
+    | 'last-week'
+    | 'yesterday'
+    | 'today'
+    | 'tomorrow'
+    | 'this-week'
+    | 'next-week'
+    | 'this-month'
+    | 'next-month'
+    | 'after-next-month';
 }
 
 export {};

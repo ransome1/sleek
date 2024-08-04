@@ -1,14 +1,23 @@
-let attributes: Attributes = {
+const attributes: Attributes = {
   priority: {},
   projects: {},
   contexts: {},
-  due: {},
-  t: {},
+  due: {} as DateAttribute,
+  t: {} as DateAttribute,
   rec: {},
   pm: {},
-  created: {},
-  completed: {},
+  created: {} as DateAttribute,
+  completed: {} as DateAttribute,
 };
+
+function getDateAttributes(): DateAttributes {
+  return {
+    due: attributes.due,
+    t: attributes.t,
+    created: attributes.created,
+    completed: attributes.completed,
+  };
+}
 
 function incrementCount(countObject: any, key: any | null, notify: boolean): void {
   if(key) {
@@ -21,34 +30,35 @@ function incrementCount(countObject: any, key: any | null, notify: boolean): voi
 }
 
 function updateAttributes(todoObjects: TodoObject[], sorting: Sorting[], reset: boolean) {
-  
-  Object.keys(attributes).forEach((key) => {
-    
-    Object.keys(attributes[key]).forEach((attributeKey) => {
-      (reset) ? attributes[key] = {} : attributes[key][attributeKey].count = 0
-    });
 
-    todoObjects.forEach((todoObject: TodoObject) => {
+  const attributeKeys = Object.keys(attributes) as AttributeKey[];
+
+  for (const key of attributeKeys) {
+
+    for (const attributeKey in attributes[key]) {
+      (reset) ? attributes[key] = {} : attributes[key][attributeKey].count = 0
+    };
+
+    for (const todoObject of todoObjects) {
       const value = todoObject[key as keyof TodoObject];
       const notify: boolean = (key === 'due') ? !!todoObject?.notify : false;
-      
+
       if(Array.isArray(value)) {
-        value.forEach((element) => {
+        for (const element of value) {
           if(element !== null) {
             const attributeKey = element as keyof Attribute;
-            
+
             incrementCount(attributes[key], attributeKey, notify);
           }
-        });
+        }
       } else {
         if(value !== null) {
           incrementCount(attributes[key], value, notify);
         }
       }
-    });
+    }
     attributes[key] = Object.fromEntries(Object.entries(attributes[key]).sort(([a], [b]) => a.localeCompare(b)));
-  });
-  attributes = Object.fromEntries(sorting.map((item) => [item.value, attributes[item.value]]));
+  }
 }
 
-export { attributes, updateAttributes };
+export { attributes, getDateAttributes, updateAttributes };

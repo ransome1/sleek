@@ -5,8 +5,9 @@ import Divider from '@mui/material/Divider';
 import dayjs from 'dayjs';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import { friendlyDate } from 'renderer/Shared';
-import { i18n } from 'renderer/Settings/LanguageSelector';
-import { WithTranslation, withTranslation } from 'react-i18next';
+import type { i18n } from 'renderer/Settings/LanguageSelector';
+import { type WithTranslation, withTranslation } from 'react-i18next';
+import { getDateAttributes } from 'main/modules/Attributes';
 dayjs.extend(updateLocale);
 
 interface FormatGroupElementProps {
@@ -18,12 +19,13 @@ interface FormatGroupElementProps {
 
 function formatGroupElement({ groupElement, settings, t, todotxtAttribute }: FormatGroupElementProps) {
   // If group element is a date, then format according to user preferences
+  const dateAttributeKeys = Object.keys(getDateAttributes());
   if (
-    ['due', 't'].includes(todotxtAttribute)
+    dateAttributeKeys.includes(todotxtAttribute)
       && dayjs(groupElement).isValid()
       && settings.useHumanFriendlyDates
   ) {
-    return friendlyDate(groupElement, todotxtAttribute, settings, t).pop();
+    return friendlyDate(groupElement, todotxtAttribute, t).pop();
   }
 
   // No transformation required: display as-is
