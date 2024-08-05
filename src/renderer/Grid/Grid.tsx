@@ -100,7 +100,6 @@ const GridComponent: React.FC<GridComponentProps> = memo(({
         return (
           <React.Fragment key={group.title}>
             <Group
-              settings={settings}
               title={group.title}
               todotxtAttribute={settings.sorting[0].value}
               filters={filters}
