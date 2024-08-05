@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { prepareContentForWriting, removeLineFromFile } from '../../main/modules/File/Write';
+import { prepareContentForWriting, removeLineFromFile, duplicateRecord } from '../../main/modules/File/Write';
 import { config } from '../../main/config';
 import dayjs from 'dayjs';
 
@@ -157,4 +157,11 @@ describe('Writing to file', () => {
     expect(fileContent).toEqual(`Line 1\nEdited line\nMulti line 1Multi line 2Multi line 3\nUpdated line\nAppend 1\nAppend 2\nNew line with relative threshold date t:June 3rd, 2005\nLine4\nLine5\nLine6\nMulti line 1Multi line 2Multi line 3`);
     config.get = originalGet;
   });
+
+  test('should duplicate the second line and add it to the end of the file', () => {
+    duplicateRecord(1);
+    const fileContent = fs.readFileSync('./src/__tests__/__mock__/test.txt', 'utf8');
+    expect(fileContent).toEqual(`Line 1\nEdited line\nMulti line 1Multi line 2Multi line 3\nUpdated line\nAppend 1\nAppend 2\nNew line with relative threshold date t:June 3rd, 2005\nLine4\nLine5\nLine6\nMulti line 1Multi line 2Multi line 3\nEdited line`);
+  });
+
 });

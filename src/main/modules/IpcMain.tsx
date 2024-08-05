@@ -1,7 +1,7 @@
 import { ipcMain, app, IpcMainEvent, clipboard, shell } from 'electron';
 import { dataRequest } from './DataRequest/DataRequest';
 import { changeCompleteState } from './DataRequest/ChangeCompleteState';
-import { prepareContentForWriting, removeLineFromFile } from './File/Write';
+import { prepareContentForWriting, removeLineFromFile, duplicateRecord } from './File/Write';
 import { archiveTodos, handleRequestArchive } from './File/Archive';
 import { config, filter, notifiedTodoObjectsStorage } from '../config';
 import { handleError } from '../util';
@@ -156,6 +156,14 @@ function handleRemoveLineFromFile(event: IpcMainEvent, index: number) {
   }
 }
 
+function handleDuplicateRecord(event: IpcMainEvent, index: number) {
+  try {
+    duplicateRecord(index);
+  } catch(error: any) {
+    handleError(error);
+  }
+}
+
 function handleArchiveTodos(event: IpcMainEvent): void {
   try {
     const archivingResult = archiveTodos();
@@ -202,6 +210,7 @@ function removeEventListeners(): void {
   ipcMain.off('saveToClipboard', handleSaveToClipboard);
   ipcMain.off('revealInFileManager', handleRevealInFileManager);
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile);
+  ipcMain.off('duplicateRecord', handleDuplicateRecord);
   ipcMain.off('updateTodoObject', handleUpdateTodoObject);
   ipcMain.off('requestArchive', handleRequestArchive);
 }
@@ -227,5 +236,6 @@ ipcMain.on('droppedFile', handleDroppedFile);
 ipcMain.on('saveToClipboard', handleSaveToClipboard);
 ipcMain.on('revealInFileManager', handleRevealInFileManager);
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile);
+ipcMain.on('duplicateRecord', handleDuplicateRecord);
 ipcMain.on('updateTodoObject', handleUpdateTodoObject);
 ipcMain.on('requestArchive', handleRequestArchive);
