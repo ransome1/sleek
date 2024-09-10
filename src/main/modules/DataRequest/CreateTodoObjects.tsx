@@ -31,12 +31,12 @@ function createTodoObject(lineNumber: number, string: string, attributeType?: st
   content = JsTodoTxtObject.toString().replaceAll(' [LB] ', String.fromCharCode(16));
 
   const body = JsTodoTxtObject.body().replaceAll(' [LB] ', ' ');
-  const speakingDates = extractSpeakingDates(body);
-  const due = speakingDates.due?.date || null;
-  const dueString = speakingDates.due?.string || null;
-  const notify = speakingDates.due?.notify || false;
-  const t = speakingDates.t?.date || null;
-  const tString = speakingDates.t?.string || null;
+  const speakingDates: DateAttributes = extractSpeakingDates(body);
+  const due = speakingDates['due:']?.date || null;
+  const dueString = speakingDates['due:']?.string || null;
+  const notify = speakingDates['due:']?.notify || false;
+  const t = speakingDates['t:']?.date || null;
+  const tString = speakingDates['t:']?.string || null;
   const hidden = extensions.some(extension => extension.key === 'h' && extension.value === '1');
   const pm: string | number | null = extensions.find(extension => extension.key === 'pm')?.value || null;
   const rec = extensions.find(extension => extension.key === 'rec')?.value || null;
