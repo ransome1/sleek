@@ -1,5 +1,5 @@
 import Sugar from 'sugar';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { config } from '../config';
 
 function mustNotify(date: Date): boolean {
@@ -9,9 +9,9 @@ function mustNotify(date: Date): boolean {
 }
 
 function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
-  const speakingDates = extractSpeakingDates(string);
-  const due: DateAttribute = speakingDates.due;
-  const t: DateAttribute = speakingDates.t;
+  const speakingDates: DateAttributes = extractSpeakingDates(string);
+  const due: DateAttribute = speakingDates['due:'];
+  const t: DateAttribute = speakingDates['t:'];
   if(due.date) {
     string = string.replace(due.string!, due.date);
   }
@@ -50,22 +50,22 @@ function processDateWithSugar(string: string, type: string): DateAttribute | nul
   return lastMatch;
 }
 
-function extractSpeakingDates(body: string): Pick<DateAttributes, 'due'|'t'> {
-  const expressions: { pattern: RegExp, key: 'due'|'t', type: string }[] = [
-    { pattern: /due:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=t:|$)/g, key: 'due', type: 'relative' },
-    { pattern: /due:(\d{4}-\d{2}-\d{2})/g, key: 'due', type: 'absolute' },
-    { pattern: /t:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=due:|$)/g, key: 't', type: 'relative' },
-    { pattern: /t:(\d{4}-\d{2}-\d{2})/g, key: 't', type: 'absolute' },
+function extractSpeakingDates(body: string): DateAttributes {
+  const expressions = [
+    { pattern: /due:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=t:|$)/g, key: 'due:', type: 'relative' },
+    { pattern: /due:(\d{4}-\d{2}-\d{2})/g, key: 'due:', type: 'absolute' },
+    { pattern: /t:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=due:|$)/g, key: 't:', type: 'relative' },
+    { pattern: /t:(\d{4}-\d{2}-\d{2})/g, key: 't:', type: 'absolute' },
   ];
 
-  const speakingDates: Pick<DateAttributes, 'due'|'t'> = {
-    'due': {
+  const speakingDates: DateAttributes = {
+    'due:': {
       date: null,
       string: null,
       type: null,
       notify: false,
     },
-    't': {
+    't:': {
       date: null,
       string: null,
       type: null,
@@ -86,54 +86,4 @@ function extractSpeakingDates(body: string): Pick<DateAttributes, 'due'|'t'> {
   return speakingDates;
 }
 
-function friendlyDateGroup(date: Dayjs): FriendlyDateGroup | null {
-  const today = dayjs();
-
-  if (!date || !date.isValid()) {
-    return null;
-  }
-
-  if (date.isBefore(today.subtract(1, 'week'))) {
-    return 'before-last-week';
-  }
-
-  if (date.isBefore(today.subtract(1, 'day'))) {
-    return 'last-week';
-  }
-
-  if (date.isBefore(today)) {
-    return 'yesterday';
-  }
-
-  if (date.isSame(today)) {
-    return 'today';
-  }
-
-  if (date.isSame(today.add(1, 'day'))) {
-    return 'tomorrow';
-  }
-
-  if (date.isBefore(today.add(1, 'week').add(1, 'day'))) {
-    return 'this-week';
-  }
-
-  if (date.isBefore(today.add(2, 'week').add(1, 'day'))) {
-    return 'next-week';
-  }
-
-  if (date.isBefore(today.add(1, 'month').add(1, 'day'))) {
-    return 'this-month';
-  }
-
-  if (date.isBefore(today.add(2, 'month').add(1, 'day'))) {
-    return 'next-month';
-  }
-
-  return 'after-next-month';
-}
-
-export {
-  extractSpeakingDates,
-  friendlyDateGroup,
-  replaceSpeakingDatesWithAbsoluteDates
-};
+export { extractSpeakingDates, replaceSpeakingDatesWithAbsoluteDates };

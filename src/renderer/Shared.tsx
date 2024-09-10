@@ -5,7 +5,6 @@ import calendar from 'dayjs/plugin/calendar';
 import weekday from 'dayjs/plugin/weekday';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import { i18n } from './Settings/LanguageSelector';
-import { friendlyDateGroup } from 'main/modules/Date';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(calendar);
@@ -69,47 +68,48 @@ export const friendlyDate = (value: string, attributeKey: string, settings: Sett
     weekStart: settings.weekStart,
   });
 
+  const today = dayjs();
   const date = dayjs(value);
-  const group = friendlyDateGroup(date);
-
   const results = [];
 
-  switch (group) {
-    case null:
-      // This should never happen, as `date` will always be a valid date
-      break;
-    case 'before-last-week':
-      results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));
-      break;
-    case 'last-week':
-      results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));
-      results.push(t('drawer.attributes.lastWeek'));
-      break;
-    case 'yesterday':
-      results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));
-      results.push(t('drawer.attributes.yesterday'));
-      break;
-    case 'today':
-      results.push(t('drawer.attributes.today'));
-      break;
-    case 'tomorrow':
-      results.push(t('drawer.attributes.tomorrow'));
-      break;
-    case 'this-week':
-      results.push(t('drawer.attributes.thisWeek'));
-      break;
-    case 'next-week':
-      results.push(t('drawer.attributes.nextWeek'));
-      break;
-    case 'this-month':
-      results.push(t('drawer.attributes.thisMonth'));
-      break;
-    case 'next-month':
-      results.push(t('drawer.attributes.nextMonth'));
-      break;
-    case 'after-next-month':
-      results.push(dayjs(date).format('YYYY-MM-DD'));
-      break;
+  if (date.isBefore(today, 'day')) {
+    results.push((attributeKey === 'due') ? t('drawer.attributes.overdue') : t('drawer.attributes.elapsed'));
+  }  
+
+  if (date.isAfter(today.subtract(1, 'week').startOf('week').subtract(1, 'day')) && date.isBefore(today.subtract(1, 'week').endOf('week'))) {
+    results.push(t('drawer.attributes.lastWeek'));
+  }
+
+  if (date.isBefore(today.endOf('month')) && date.isAfter(today.subtract(1, 'day'), 'day')) {
+    results.push(t('drawer.attributes.thisMonth'));
+  }
+
+  if (date.isSame(today, 'week')) {
+    results.push(t('drawer.attributes.thisWeek'));
+  }  
+
+  if (date.isSame(today.subtract(1, 'day'), 'day')) {
+    results.push(t('drawer.attributes.yesterday'));
+  }
+
+  if (date.isSame(today, 'day')) {
+    results.push(t('drawer.attributes.today'));
+  }
+
+  if (date.isSame(today.add(1, 'day'), 'day')) {
+    results.push(t('drawer.attributes.tomorrow'));
+  }
+
+  if (date.isSame(today.add(1, 'week'), 'week')) {
+    results.push(t('drawer.attributes.nextWeek'));
+  }
+
+  if (date.month() === today.add(1, 'month').month()) {
+    results.push(t('drawer.attributes.nextMonth'));
+  }
+
+  if (date.isAfter(today.add(1, 'month').endOf('month'))) {
+    results.push(dayjs(date).format('YYYY-MM-DD'));
   }
 
   return results;
