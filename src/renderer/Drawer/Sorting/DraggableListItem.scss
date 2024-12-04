@@ -1,8 +1,8 @@
-@import "../../Variables.scss";
+@use "../../Variables.scss";
 
 #Sorting {
   .draggingListItem {
-    background: $lighter-grey;
+    background: Variables.$lighter-grey;
   }
 
   button {
@@ -20,7 +20,7 @@
 .darkTheme {
   #Sorting {
     .draggingListItem {
-      background: $dark-grey;
+      background: Variables.$dark-grey;
     }
   }
 }

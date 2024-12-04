@@ -1,9 +1,9 @@
-@import "../Variables.scss";
+@use "../Variables.scss";
 
 .datePicker {
 	width: 11.5em;
 	.Mui-focusVisible {
-		color: $blue;
+		color: Variables.$blue;
 	}
 }
 
@@ -11,10 +11,10 @@
 	button {
 			font-size: 1em;
 			border: none;
-			border-radius: $radius;
+			border-radius: Variables.$radius;
 			&.MuiPickersDay-today {
 				border: inherit;		
-				background: $mid-grey;
+				background: Variables.$mid-grey;
 			}
 		}
 }
