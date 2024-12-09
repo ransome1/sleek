@@ -26,6 +26,16 @@ function removeLineFromFile(lineNumber: number) {
   }
 }
 
+function duplicateRecord(lineNumber: number) {
+  let activeFile: FileObject | null = getActiveFile();
+  if(!activeFile) {
+    throw new Error('No active file found');
+  } else if(lineNumber >= 0 && lineNumber < linesInFile.length) {
+    linesInFile.push(linesInFile[lineNumber]);
+    writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark);
+  }
+}
+
 function prepareContentForWriting(lineNumber: number, string: string) {
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
@@ -63,4 +73,4 @@ function prepareContentForWriting(lineNumber: number, string: string) {
   writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark);
 }
 
-export { prepareContentForWriting, removeLineFromFile, writeToFile };
+export { prepareContentForWriting, removeLineFromFile, duplicateRecord, writeToFile };

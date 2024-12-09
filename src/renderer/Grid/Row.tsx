@@ -42,6 +42,9 @@ const Row: React.FC<Props> = memo(({
   const handleSaveToClipboard = () => {
     if(todoObject) ipcRenderer.send('saveToClipboard', todoObject?.string);
   };
+  const handleDuplicateRecord = () => {
+    if(todoObject) ipcRenderer.send('duplicateRecord', todoObject?.lineNumber);
+  };
 
   const handleContextMenu = (event: React.MouseEvent, todoString: string) => {
     setContextMenu({
@@ -51,6 +54,11 @@ const Row: React.FC<Props> = memo(({
           id: 'copy',
           label: t('copy'),
           function: handleSaveToClipboard,
+        },
+        {
+          id: 'duplicate',
+          label: t('duplicate'),
+          function: handleDuplicateRecord,
         },
         {
           id: 'delete',
