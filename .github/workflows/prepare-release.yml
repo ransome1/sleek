@@ -27,7 +27,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 18
+          node-version: 20
           cache: 'yarn'
       - name: Install and build
         run: |
@@ -58,7 +58,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 18
+          node-version: 20
           cache: 'yarn'
       - name: Install and build
         run: |
@@ -82,7 +82,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 18
+          node-version: 20
           cache: 'yarn'
       - name: Install and build
         run: |
