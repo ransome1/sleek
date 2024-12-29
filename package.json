@@ -253,8 +253,14 @@
     ]
   },
   "devEngines": {
-    "node": ">=14.x",
-    "npm": ">=7.x"
+    "runtime": {
+      "name": "node",
+      "version": ">=14.x"
+    },
+    "packageManager": {
+      "name": "npm",
+      "version": ">=7.x"
+    }
   },
   "electronmon": {
     "patterns": [
