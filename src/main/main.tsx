@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { config } from './config';
 import { createMenu } from './modules/Menu';
-import { getAssetPath, resolveHtmlPath } from './util';
+//import { getAssetPath, resolveHtmlPath } from './util';
 import { createFileWatcher, watcher } from './modules/File/Watcher';
 import { createTray } from './modules/Tray';
 import './modules/IpcMain';
@@ -98,6 +98,9 @@ const handleWindowSizeAndPosition = () => {
   }
 }
 
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+
 const createMainWindow = () => {
   const shouldUseDarkColors: boolean = config.get('shouldUseDarkColors');
   mainWindow = new BrowserWindow({
@@ -105,21 +108,20 @@ const createMainWindow = () => {
     height: 1000,
     backgroundColor: (shouldUseDarkColors) ? '#212224' : '#fff',
     icon: process.platform === 'win32'
-    ? getAssetPath('icons/sleek.ico')
+    ? './assets/icons/sleek.ico'
     : process.platform === 'darwin'
-    ? getAssetPath('icons/sleek.icns')
-    : getAssetPath('icons/512x512.png'),
+    ? './assets/icons/sleek.icns'
+    : './assets/icons/512x512.png',
     webPreferences: {
       spellcheck: false,
       contextIsolation: true,
       nodeIntegration: false,
-      preload: environment === 'production'
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.ts'),
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
 
-  mainWindow?.loadURL(resolveHtmlPath('index.html'));
+  //mainWindow?.loadURL(resolveHtmlPath('index.html'));
+  mainWindow?.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   const files: FileObject[] = (config.get('files') as FileObject[]) || [];
   if(files) {
@@ -127,7 +129,7 @@ const createMainWindow = () => {
   }
   createMenu(files);
 
-  handleWindowSizeAndPosition();  
+  handleWindowSizeAndPosition();
 
   nativeTheme.themeSource = config.get('colorTheme');
 

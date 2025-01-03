@@ -1,4 +1,4 @@
-@import "../Variables.scss";
+@use "../Variables.scss";
 
 #DialogComponent {
   .MuiDialog-paper {
@@ -30,9 +30,9 @@
     border-radius: 0;
     margin: 0!important;
     padding: 0.5em 1em;
-    color: $blue;
-    border-top: 1px solid $light-grey;
-    border-right: 1px solid $light-grey;
+    color: Variables.$blue;
+    border-top: 1px solid Variables.$light-grey;
+    border-right: 1px solid Variables.$light-grey;
     &:last-child {
       border-right: none;
     }

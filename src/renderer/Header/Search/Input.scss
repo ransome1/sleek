@@ -1,4 +1,4 @@
-@import "../../Variables.scss";
+@use "../../Variables.scss";
 
 .MuiAutocomplete-root {	
 	.MuiInputBase-root {
@@ -14,7 +14,7 @@
 		}
 		&.Mui-focusVisible {
 			svg {
-				color: $blue;
+				color: Variables.$blue;
 			}
 		}
 		&:hover {

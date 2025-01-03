@@ -1,4 +1,4 @@
-@import "../../Variables.scss";
+@use "../../Variables.scss";
 
 #Sorting {
 	padding: 0 1em;
@@ -9,7 +9,7 @@
 	}
 	li {
 		padding: 0.25em 1em;
-		border-bottom: 1px dashed $mid-grey;
+		border-bottom: 1px dashed Variables.$mid-grey;
 		& > *:not(:last-child) {
 			margin-right: 1em;
 		}
@@ -28,7 +28,7 @@
 .darkTheme {
 	#Sorting {
 		li {
-			border-color: $dark-grey;
+			border-color: Variables.$dark-grey;
 		}
 	}
 }

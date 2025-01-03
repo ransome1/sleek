@@ -1,5 +1,5 @@
-@import "Variables.scss";
-@import "Coloring.scss";
+@use "Variables.scss";
+@use "Coloring.scss";
 
 body {
   overflow: hidden;
@@ -42,8 +42,8 @@ body {
       }
       &.darkTheme {
         button.showNavigation {
-          background: $darker-grey;
-          color: $light-grey;
+          background: Variables.$darker-grey;
+          color: Variables.$light-grey;
         }            
       }
     }

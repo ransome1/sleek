@@ -1,9 +1,9 @@
-@import "Variables.scss";
+@use "Variables.scss";
 
 .hideNavigation #navigation button.showNavigation {
   min-width: 2.5em;
   display: flex;
-  border-top-right-radius: $radius;
+  border-top-right-radius: Variables.$radius;
 }
 
 .disableAnimations.hideNavigation #navigation,
@@ -21,7 +21,7 @@
   top: 0;
   left: 0;
   height: 100vh;
-  background: $lighter-grey;
+  background: Variables.$lighter-grey;
   display: flex;
   flex-direction: column;
   transition: left 0.3s ease;
@@ -40,7 +40,7 @@
     left: 0;
     display: none;
     background: white;
-    color: $dark-grey;
+    color: Variables.$dark-grey;
     z-index: 10;
     transition: width 0.3s ease;
     border-top-left-radius: 0;
@@ -61,25 +61,25 @@
       margin-top: auto;
     }
     svg {
-      color: $dark-grey;
+      color: Variables.$dark-grey;
     }
     &:active, &.active {
-      background: $light-grey;
+      background: Variables.$light-grey;
     }
     &:focus-visible {
-      background: $mid-grey;
-      border-color: $mid-grey;
+      background: Variables.$mid-grey;
+      border-color: Variables.$mid-grey;
     }
   }
 }
 
 .darkTheme {
   #navigation {
-    background: $darker-grey;
+    background: Variables.$darker-grey;
     button {
       border-color: rgba(255, 255, 255, 0.05) !important;
       svg {
-        color: $mid-grey;
+        color: Variables.$mid-grey;
       }
       &:hover, &:active, &.active {
         background: #3B3B3B;

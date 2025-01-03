@@ -1,4 +1,4 @@
-@import "Variables.scss";
+@use "Variables.scss";
 
 #splashScreen {
     display: flex;
@@ -13,7 +13,7 @@
     }
     svg {
         font-size: 3em;
-        color: $mid-grey;
+        color: Variables.$mid-grey;
     }
     .buttons {
         display: flex;
@@ -22,7 +22,7 @@
     }
     .fileDropZone {
         padding: 1em 2em;
-        border-radius: $radius;
+        border-radius: Variables.$radius;
         border: 2px dashed #ccc;
     }    
 }
@@ -30,7 +30,7 @@
 .darkTheme {
     #splashScreen {
         svg {
-            color: $dark-grey;
+            color: Variables.$dark-grey;
         }
  
     } 

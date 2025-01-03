@@ -1,4 +1,5 @@
-@import "./Variables.scss";
+@use "sass:color";
+@use "Variables.scss";
 
 *[data-todotxt-attribute] {
   --color1: #5a5a5a;
@@ -77,7 +78,7 @@
   border-left-color: var(--color2);
   &.selected {
     button {
-      background: darken(#FF3860, 25%);
+      background: color.adjust(#FF3860, $lightness: -25%);
     }
   }
 }
@@ -87,7 +88,7 @@
   border-left-color: var(--color2);
   &.selected {
     button {
-      background: darken(#fa745e, 25%);
+      background: color.adjust(#fa745e, $lightness: -25%);
     }
   }  
 }
@@ -97,7 +98,7 @@
   border-left-color: var(--color2);
   &.selected {
     button {
-      background: darken(#FFDD57, 25%);
+      background: color.adjust(#FFDD57, $lightness: -25%);
     }
   }  
 }
@@ -144,12 +145,12 @@
     button {
       .MuiChip-root {
         
-        background: darken(#5a5a5a, 10%);
+        background: color.adjust(#5a5a5a, $lightness: -10%);
       }      
     }
     &.selected {
       button {
-        background: darken(#5a5a5a, 10%);
+        background: color.adjust(#5a5a5a, $lightness: -10%);
       }
     }
   }
@@ -159,7 +160,7 @@
     --color2: #1e6251;
     &.selected {
       button {
-        background: darken(#1e6251, 10%);
+        background: color.adjust(#1e6251, $lightness: -10%);
       }
     }
   }
@@ -168,7 +169,7 @@
     --color2: #6f266f;
     &.selected {
       button {
-        background: darken(#6f266f, 10%);
+        background: color.adjust(#6f266f, $lightness: -10%);
       }
     }
   }

@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm'
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
-import { ReactComponent as TomatoIconDuo } from '../../../assets/icons/tomato-duo.svg';
+import TomatoIconDuo from '../../../assets/icons/tomato-duo.svg'
 import DatePickerInline from './DatePickerInline';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { handleLinkClick } from '../Shared';
@@ -78,7 +78,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(({
 		),
 		pm: (value, type) => (
 		  <Button className='pomodoro' onClick={() => handleButtonClick(type, value, value)} data-testid={`datagrid-button-${type}`}>
-		    <TomatoIconDuo />
+		    {<TomatoIconDuo />}
 		    {value}
 		  </Button>
 		),
