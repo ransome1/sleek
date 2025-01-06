@@ -1,15 +1,16 @@
-@import "../Variables.scss";
+@use "sass:color";
+@use "../Variables.scss";
 
 .row {
   width: auto;
   height: auto;
   cursor: pointer;
-  border-left: solid 5px $light-grey;
-  border-bottom: solid 1px $light-grey;
+  border-left: solid 5px Variables.$light-grey;
+  border-bottom: solid 1px Variables.$light-grey;
   flex-wrap: wrap;
   gap: 0.25em;
   a {
-    color: $blue;
+    color: Variables.$blue;
     text-decoration: underline;
     svg {
       font-size: 1.2em;
@@ -30,7 +31,7 @@
       font-size: 1em;
       width: auto;
       height: 2em;
-      border-radius: $radius 0 0 $radius;
+      border-radius: Variables.$radius 0 0 Variables.$radius;
       margin-left: -0.5em;
       margin-right: 0.5em;
       .MuiChip-label {
@@ -77,11 +78,11 @@
 
 .darkTheme {
   .row {
-    border-left: solid 5px $dark-grey;
-    border-bottom: solid 1px $dark-grey;
+    border-left: solid 5px Variables.$dark-grey;
+    border-bottom: solid 1px Variables.$dark-grey;
     button {
       .MuiChip-root {
-        background: darken($dark-grey, 10%);
+        background: color.adjust(Variables.$dark-grey, $lightness: -10%);
       }  
     }
     &.group {

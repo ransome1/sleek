@@ -1,4 +1,4 @@
-@import "../Variables.scss";
+@use "../Variables.scss";
 
 .react-autosuggest__suggestions-container--open {
 	max-height: 20em;
@@ -8,7 +8,7 @@
 	z-index: 10;
 	margin-top: 0.125em;
 	padding: 1em;
-	border-radius: $radius;
+	border-radius: Variables.$radius;
 	background-color: rgba(240, 240, 240, 1);
 	ul {
 		padding: 0;

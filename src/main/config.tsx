@@ -149,10 +149,14 @@ filter.onDidChange('attributes', () => {
 
 config.onDidAnyChange((settings) => {
   try {
-    const requestedData = dataRequest(searchString);
-    mainWindow!.webContents.send('requestData', requestedData);
-    mainWindow!.webContents.send('settingsChanged', settings);
-  } catch(error: any) {
+    if (mainWindow && mainWindow.webContents) {
+      const requestedData = dataRequest(searchString);
+      mainWindow.webContents.send('requestData', requestedData);
+      mainWindow.webContents.send('settingsChanged', settings);
+    } else {
+      console.warn('The window is not available, skipping setting change.');
+    }
+  } catch (error: any) {
     handleError(error);
   }
 });

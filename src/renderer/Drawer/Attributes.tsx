@@ -161,9 +161,9 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(({
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Badge variant="dot" invisible={!(key === 'due' && Object.values(preprocessedAttributes).some((attribute) => attribute.notify))}>
-                  <h3 data-testid={`drawer-attributes-accordion-${key}`}>
+                  <h2 data-testid={`drawer-attributes-accordion-${key}`}>
                     {attributeHeadline}
-                  </h3>
+                  </h2>
                 </Badge>
               </AccordionSummary>
               <AccordionDetails>

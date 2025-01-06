@@ -1,25 +1,4 @@
-import { URL } from 'url';
-import { app } from 'electron';
-import path from 'path';
 import { mainWindow } from './main';
-
-const RESOURCES_PATH = app.isPackaged
-  ? path.join(process.resourcesPath, 'assets')
-  : path.join(__dirname, '../../assets');
-
-function getAssetPath (...paths: string[]): string {
-  return path.resolve(RESOURCES_PATH, ...paths);
-}
-
-function resolveHtmlPath(htmlFileName: string): string {
-  if(process.env.NODE_ENV === 'development') {
-    const port = process.env.PORT || 1212;
-    const url = new URL(`http://localhost:${port}`);
-    url.pathname = htmlFileName;
-    return url.href;
-  }
-  return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
-}
 
 function getChannel(): string {
   if (process.env.APPIMAGE) {
@@ -46,4 +25,4 @@ function handleError(error: Error) {
   mainWindow!.webContents.send('responseFromMainProcess', error);
 }
 
-export { getAssetPath, resolveHtmlPath, getChannel, handleError }
+export { getChannel, handleError }

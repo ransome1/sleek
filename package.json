@@ -1,272 +1,104 @@
 {
   "name": "sleek",
-  "version": "2.0.14",
-  "main": "./src/main/main.tsx",
+  "productName": "sleek",
+  "version": "2.0.15-rc.1",
+  "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
+  "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
+  "keywords": [
+    "todo.txt",
+    "todo",
+    "productivity",
+    "tasks"
+  ],
+  "category": "ProjectManagement",
+  "homepage": "https://github.com/ransome1/",
+  "bugs": {
+    "url": "https://github.com/ransome1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ransome1/sleek.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "ransome1",
+    "email": "ransome@mailbox.org"
+  },
+  "copyright": "Copyright © 2021 to present ransome1",
+  "main": ".webpack/main",
   "scripts": {
-    "build": "concurrently \"yarn run peggy\" \"yarn run build:main\" \"yarn run build:renderer\"",
-    "build:dll": "cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
-    "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.ts",
-    "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
-    "postinstall": "node -r esbuild-register .erb/scripts/check-native-dep.js && electron-builder install-app-deps && npm run build:dll",
-    "package": "node -r esbuild-register ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never && npm run build:dll",
-    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
-    "start": "node -r esbuild-register ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
-    "start:main": "cross-env NODE_ENV=development NODE_OPTIONS=\"--loader esbuild-register/loader -r esbuild-register\" electronmon .",
-    "start:preload": "cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
-    "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "test": "jest",
-    "mac": "cross-env NODE_ENV=production yarn run build && electron-builder build -m --publish never",
-    "mas": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas --universal --publish never",
-    "masdev": "cross-env NODE_ENV=production yarn run build && electron-builder build -m mas-dev --universal --publish never",
-    "dir": "cross-env NODE_ENV=production yarn run build && electron-builder --dir --publish never",
-    "peggy": "peggy --format es --output ./src/main/modules/Filters/FilterLang.js ./src/main/modules/Filters/FilterLang.pegjs",
-    "depcheck": "depcheck"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "mas": "PLATFORM=mas DEBUG=electron-osx-sign* electron-forge make --arch=universal --platform=mas",
+    "lint": "eslint --ext .ts,.tsx ."
   },
-  "browserslist": [],
-  "prettier": {
-    "singleQuote": true,
-    "overrides": [
-      {
-        "files": [
-          ".prettierrc"
-        ],
-        "options": {
-          "parser": "json"
-        }
-      }
-    ]
-  },
-  "jest": {
-    "moduleDirectories": [
-      "node_modules",
-      "release/app/node_modules",
-      "src"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx",
-      "json"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
-    },
-    "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts",
-      "<rootDir>/jest.setup.js"
-    ],
-    "testEnvironment": "jsdom",
-    "testEnvironmentOptions": {
-      "url": "http://localhost/"
-    },
-    "testPathIgnorePatterns": [
-      "release/app/dist",
-      ".erb/dll"
-    ],
-    "transform": {
-      "\\.(ts|tsx|js|jsx)$": "ts-jest"
-    }
+  "devDependencies": {
+    "@electron-forge/cli": "^7.6.0",
+    "@electron-forge/maker-appx": "^7.6.0",
+    "@electron-forge/maker-deb": "^7.6.0",
+    "@electron-forge/maker-dmg": "https://registry.npmjs.org/@fellow/maker-dmg/-/maker-dmg-7.4.0.tgz",
+    "@electron-forge/maker-pkg": "^7.6.0",
+    "@electron-forge/maker-rpm": "^7.6.0",
+    "@electron-forge/maker-squirrel": "^7.6.0",
+    "@electron-forge/maker-zip": "^7.6.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.6.0",
+    "@electron-forge/plugin-fuses": "^7.6.0",
+    "@electron-forge/plugin-webpack": "^7.6.0",
+    "@electron-forge/publisher-github": "^7.6.0",
+    "@electron/fuses": "^1.8.0",
+    "@electron/notarize": "^2.5.0",
+    "@electron/osx-sign": "1.3.2",
+    "@electron/packager": "^18.3.6",
+    "@rabbitholesyndrome/electron-forge-maker-portable": "^0.2.0",
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.2",
+    "@types/react-autosuggest": "^10.1.10",
+    "@types/react-beautiful-dnd": "^13.1.8",
+    "@types/react-dom": "^19.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.19.0",
+    "@typescript-eslint/parser": "^8.19.0",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
+    "electron": "33.2.1",
+    "eslint": "^9.17.0",
+    "eslint-plugin-import": "^2.25.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "material-ui-popup-state": "^5.3.3",
+    "node-loader": "^2.0.0",
+    "sass": "^1.83.1",
+    "sass-loader": "^16.0.4",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.2.2",
+    "ts-node": "^10.0.0",
+    "typescript": "~5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.12",
-    "@mui/material": "^5.15.12",
-    "@mui/system": "^5.15.12",
-    "@mui/x-date-pickers": "^6.19.3",
-    "dayjs": "^1.11.9",
-    "electron-store": "^8.2.0",
-    "i18next": "^23.10.1",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/icons-material": "^6.3.1",
+    "@mui/material": "^6.3.1",
+    "@mui/system": "^6.3.1",
+    "@mui/x-date-pickers": "^7.23.3",
+    "chokidar": "^4.0.3",
+    "dayjs": "^1.11.13",
+    "electron-squirrel-startup": "^1.0.1",
+    "electron-store": "^10.0.0",
+    "i18next": "^24.2.0",
     "jstodotxt": "^1.0.0-alpha.0",
-    "react": "^18.2.0",
+    "process": "^0.11.10",
+    "react": "^19.0.0",
     "react-autosuggest": "^10.1.0",
-    "react-beautiful-dnd": "^13.1.1",
-    "react-dom": "^18.2.0",
-    "react-i18next": "^14.1.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^15.3.0",
     "react-markdown": "^9.0.1",
     "react-string-replace": "^1.1.1",
     "remark-gfm": "^4.0.0",
     "sugar": "^2.0.6"
-  },
-  "devDependencies": {
-    "@electron/notarize": "^2.2.0",
-    "@electron/rebuild": "^3.2.13",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
-    "@svgr/webpack": "^8.0.1",
-    "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
-    "@testing-library/jest-dom": "^6.4.1",
-    "@testing-library/react": "^14.2.1",
-    "@types/jest": "^29.5.12",
-    "@types/node": "20.11.25",
-    "@types/react": "^18.2.64",
-    "@types/react-autosuggest": "^10.1.10",
-    "@types/react-beautiful-dnd": "^13.1.8",
-    "@types/react-dom": "^18.2.21",
-    "@types/react-test-renderer": "^18.0.0",
-    "@types/webpack-bundle-analyzer": "^4.6.0",
-    "chalk": "^4.1.2",
-    "concurrently": "^8.1.0",
-    "cross-env": "^7.0.3",
-    "css-loader": "^6.10.0",
-    "css-minimizer-webpack-plugin": "^6.0.0",
-    "depcheck": "^1.4.7",
-    "detect-port": "^1.5.1",
-    "electron": "^28.2.6",
-    "electron-builder": "^24.2.1",
-    "electron-devtools-installer": "^3.2.0",
-    "electronmon": "^2.0.2",
-    "esbuild": "^0.20.0",
-    "esbuild-register": "^3.5.0",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.5.1",
-    "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.5.0",
-    "material-ui-popup-state": "^5.0.9",
-    "mini-css-extract-plugin": "^2.8.0",
-    "peggy": "^3.0.2",
-    "prettier": "^3.1.1",
-    "react-refresh": "^0.14.0",
-    "react-test-renderer": "^18.2.0",
-    "rimraf": "^5.0.1",
-    "sass": "^1.69.4",
-    "sass-loader": "^14.1.0",
-    "style-loader": "^3.3.3",
-    "terser-webpack-plugin": "^5.3.9",
-    "ts-jest": "^29.1.0",
-    "ts-loader": "^9.4.3",
-    "ts-node": "^10.9.1",
-    "tsconfig-paths-webpack-plugin": "^4.0.1",
-    "typescript": "^5.4.2",
-    "url-loader": "^4.1.1",
-    "webpack": "^5.90.1",
-    "webpack-bundle-analyzer": "^4.9.0",
-    "webpack-cli": "^5.1.1",
-    "webpack-dev-server": "^5.0.2",
-    "webpack-merge": "^5.9.0"
-  },
-  "build": {
-    "buildVersion": "44",
-    "asar": true,
-    "asarUnpack": "**\\*.{node,dll}",
-    "files": [
-      "dist",
-      "node_modules",
-      "package.json"
-    ],
-    "mac": {
-      "appId": "com.todotxt.sleek",
-      "target": {
-        "target": "default",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
-      },
-      "fileAssociations": [
-        {
-          "ext": [
-            "txt",
-            "md"
-          ],
-          "role": "Editor",
-          "isPackage": false,
-          "rank": "Owner"
-        }
-      ],
-      "icon": "assets/icons/icon.icns",
-      "type": "distribution",
-      "hardenedRuntime": true,
-      "entitlements": "assets/mas/entitlements.mac.plist",
-      "entitlementsInherit": "assets/mas/entitlements.mac.plist",
-      "gatekeeperAssess": false,
-      "category": "public.app-category.productivity",
-      "artifactName": "${productName}-${version}-mac-${arch}.${ext}",
-      "darkModeSupport": true,
-      "notarize": {
-        "teamId": "8QSR3UZXP8"
-      }
-    },
-    "dmg": {
-      "background": "assets/background.tiff",
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "masDev": {
-      "entitlements": "assets/mas/entitlements.mas.plist",
-      "entitlementsInherit": "assets/mas/entitlements.mas.inherit.plist",
-      "provisioningProfile": "assets/mas/development.provisionprofile"
-    },
-    "mas": {
-      "entitlements": "assets/mas/entitlements.mas.plist",
-      "entitlementsInherit": "assets/mas/entitlements.mas.inherit.plist",
-      "provisioningProfile": "assets/mas/distribution.provisionprofile"
-    },
-    "win": {
-      "target": [
-        "zip",
-        "portable",
-        "nsis",
-        "appx"
-      ],
-      "icon": "assets/icons/sleek.ico",
-      "artifactName": "${productName}-${version}-win-${arch}.${ext}"
-    },
-    "nsis": {
-      "artifactName": "${productName}-${version}-win-${arch}-Setup.${ext}"
-    },
-    "appx": {
-      "displayName": "sleek - todo.txt manager for Windows, free and open-source (FOSS)",
-      "identityName": "17450RobinAhle.sleektodomanager",
-      "publisher": "CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C",
-      "publisherDisplayName": "ransome1",
-      "applicationId": "RobinAhle.sleektodomanager"
-    },
-    "linux": {
-      "icon": "assets/icons",
-      "category": "ProjectManagement",
-      "target": [
-        "deb",
-        "freebsd",
-        "rpm",
-        "AppImage"
-      ]
-    },
-    "directories": {
-      "app": "release/app",
-      "buildResources": "assets",
-      "output": "release/build"
-    },
-    "extraResources": [
-      "./assets/**"
-    ]
-  },
-  "devEngines": {
-    "runtime": {
-      "name": "node",
-      "version": ">=14.x"
-    },
-    "packageManager": {
-      "name": "npm",
-      "version": ">=7.x"
-    }
-  },
-  "electronmon": {
-    "patterns": [
-      "!**/**",
-      "src/main/**"
-    ],
-    "logLevel": "quiet"
   }
 }

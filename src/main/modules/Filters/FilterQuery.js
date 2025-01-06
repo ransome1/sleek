@@ -71,11 +71,11 @@ function runQuery(todoObject, compiledQuery) {
         break;
       case "string":
         next = q.shift();  // the string value to match
-        stack.push(todoObject.string.toLowerCase().indexOf(next.toLowerCase()) !== -1);
+        stack.push(todoObject.toString().toLowerCase().indexOf(next.toLowerCase()) !== -1);
         break;
       case "regex":
         next = q.shift();  // the regex to match
-        stack.push(next.test(todoObject.string));
+        stack.push(next.test(todoObject.toString()));
         break;
       case "==":
         operand2 = stack.pop();

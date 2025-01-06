@@ -1,4 +1,4 @@
-@import "../../Variables.scss";
+@use "../../Variables.scss";
 
 .MuiAutocomplete-popper {
 	.MuiPaper-root {
@@ -6,10 +6,10 @@
 		box-shadow: none;
 		.MuiAutocomplete-listbox {
 			svg {
-				color: $blue;
+				color: Variables.$blue;
 				margin-right: 0.5em;
 				&.greyedOut {
-					color: $dark-grey;
+					color: Variables.$dark-grey;
 				}
 			}
 		}

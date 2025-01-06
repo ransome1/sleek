@@ -1,4 +1,4 @@
-@import "../Variables.scss";
+@use "../Variables.scss";
 
 .modal {
   position: absolute;
@@ -9,7 +9,7 @@
   max-width: 90vw;
   max-height: 90vh;
   overflow: auto;
-  border-radius: $radius;
+  border-radius: Variables.$radius;
   padding: 1em 2em 2em 2em;
   display: flex;
   flex-direction: column;

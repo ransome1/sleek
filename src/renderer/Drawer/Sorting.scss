@@ -1,0 +1,32 @@
+@use "../Variables.scss";
+#Sorting {
+	padding: 0 1em;
+	margin: 0;
+	
+	.MuiListItem-root {
+		border-bottom: 1px dashed Variables.$mid-grey;
+		.MuiListItemText-root {
+			padding: 0 1em;
+		}
+	}
+
+	button {
+		min-width: auto;
+		padding: 0.5em;
+		svg {
+			font-size: 1.25em;
+		}
+	}
+	
+	.invert {
+		transform: scaleY(-1);
+	}
+}
+
+.darkTheme {
+  #Sorting {
+    .MuiListItem-root {
+      border-bottom: 1px dashed Variables.$dark-grey;
+    }
+  }
+}

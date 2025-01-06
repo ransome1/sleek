@@ -47,7 +47,7 @@ function createTray() {
   const iconName: string = process.platform === 'win32' ? 'tray.ico' : 'tray.png';
   const menu: Electron.Menu = Menu.buildFromTemplate(createMenuTemplate(files));
 
-  tray = new Tray(getAssetPath(`icons/tray/${iconName}`));
+  tray = new Tray(`./assets/icons/tray/${iconName}`);
   tray.setToolTip('sleek');
   tray.setContextMenu(menu);
   tray.on('click', () => {

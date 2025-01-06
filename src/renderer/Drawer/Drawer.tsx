@@ -3,7 +3,7 @@ import Drawer from '@mui/material/Drawer';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import DrawerAttributes from './Attributes';
-import DrawerSorting from './Sorting/Sorting';
+import DrawerSorting from './Sorting';
 import DrawerFilters from './Filters';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterListIcon from '@mui/icons-material/FilterList';
