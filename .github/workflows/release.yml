@@ -25,6 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          npx run peggy
           npx electron-forge publish --arch=arm64,x64
   windows:
     strategy:
@@ -48,6 +49,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           DEBUG: 'electron-windows-store,electron-windows-installer:main,electron-forge:*,@electron/packager'
         run: |
+          npx run peggy
           npx electron-forge publish
   macos:
     strategy:
@@ -105,6 +107,7 @@ jobs:
           IDENTITY_APPLE_ID_APPLICATION: ${{ secrets.IDENTITY_APPLE_ID_APPLICATION }}
           DEBUG: 'electron-osx-sign*'
         run: |
+          npx run peggy
           npx electron-forge publish --arch=arm64,x64
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}

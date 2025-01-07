@@ -14,10 +14,8 @@ icon: ./assets/icons/512x512.png
 license: MIT
 compression: lzo
 architectures:
-- build-on: [amd64]
-  run-on: [amd64]
-- build-on: [arm64]
-  run-on: [arm64]
+- build-on: amd64
+- build-on: arm64
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
@@ -50,6 +48,7 @@ parts:
       fi
 
       node.yarn
+      node.yarn peggy
       node.yarn make
 
       mv $SNAPCRAFT_PART_BUILD/out/sleek-* \

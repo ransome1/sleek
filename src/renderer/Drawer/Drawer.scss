@@ -21,7 +21,7 @@
 					position: absolute;
 					right: 0em;
 					bottom: 0em;
-					color: Variables.$blue;
+					color: Variables.$dark-grey;
 				}
 			}
 		}
@@ -45,4 +45,18 @@
 
 .disableAnimations #drawer {
 	transition: none;
+}
+
+.darkTheme {
+	#drawer {
+		.MuiPaper-root {
+			.MuiTabs-flexContainer {
+				button {
+					.reset {
+						color: Variables.$light-grey;
+					}					
+				}
+			}
+		}
+	}
 }

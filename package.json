@@ -30,6 +30,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "peggy": "peggy --format es --output ./src/main/modules/Filters/FilterLang.js ./src/main/modules/Filters/FilterLang.pegjs",
     "mas": "PLATFORM=mas DEBUG=electron-osx-sign* electron-forge make --arch=universal --platform=mas",
     "lint": "eslint --ext .ts,.tsx ."
   },
@@ -69,6 +70,7 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "material-ui-popup-state": "^5.3.3",
     "node-loader": "^2.0.0",
+    "peggy": "^4.2.0",
     "sass": "^1.83.1",
     "sass-loader": "^16.0.4",
     "style-loader": "^4.0.0",
