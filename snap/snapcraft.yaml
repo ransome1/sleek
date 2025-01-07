@@ -1,5 +1,5 @@
 name: sleek
-base: core20
+base: core24
 version: "2.0.15-rc.1"
 summary: todo.txt manager for Linux, free and open-source (FOSS)
 description: |
@@ -8,7 +8,6 @@ description: |
   All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
   sleek is available for Windows, MacOS and Linux, and in several languages.
-
 grade: stable
 confinement: strict
 icon: ./assets/icons/512x512.png
@@ -28,7 +27,7 @@ apps:
       PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
       SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
       GTK_USE_PORTAL: '1'
-    extensions: [gnome-3-38]
+    extensions: [gnome]
     plugs:
     - desktop
     - home
@@ -51,25 +50,24 @@ parts:
       fi
 
       node.yarn
-      node.yarn run dir
+      node.yarn make
 
-      mv $SNAPCRAFT_PART_BUILD/release/build/linux-* \
+      mv $SNAPCRAFT_PART_BUILD/out/sleek-* \
         $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
       - libnss3        
   cleanup:
     after: [ sleek ]
     plugin: nil
-    build-snaps: [ gnome-3-38-2004 ]
+    build-snaps: [ gnome ]
     override-prime: |
       cd sleek
       ls -l
-      rm LICENSE.electron.txt
       rm LICENSES.chromium.html
       rm chrome-sandbox
       ls -l
       set -eux
-      for snap in "gnome-3-38-2004"; do  # List all content-snaps you're using here
+      for snap in "gnome"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do
