@@ -4,6 +4,7 @@ import DryCleaningIcon from '@mui/icons-material/DryCleaning';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { withTranslation, WithTranslation } from 'react-i18next';
+import { handleReset } from './Shared';
 import './SplashScreen.scss';
 import { i18n } from './Settings/LanguageSelector';
 
@@ -26,11 +27,6 @@ const SplashScreen: FC<SplashScreenProps> = memo(({
 }) => {
   const handleCreateTodo = () => {
     setDialogOpen(true);
-  };
-
-  const handleReset = () => {
-    store.setFilters('attributes', []);
-    setSearchString('');
   };
 
   const handleOpenFile = () => {

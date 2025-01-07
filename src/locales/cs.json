@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "V tomto souboru nejsou žádné úkoly",
   "splashscreen.noTodosAvailable.create": "Vytvořit úkol",
   "splashscreen.noTodosVisible.text": "Žádné výsledky nejsou viditelné.",
-  "splashscreen.noTodosVisible.reset": "Obnovit filtry a hledání",
+  "splashscreen.noTodosVisible.reset": "Obnovit filtry",
   "search.visibleTodos": "Viditelné úkoly: ",
   "search.addAsTodo": "Přidat jako úkol",
   "search.filters.create": "Vytvořit vyhledávací filtr",

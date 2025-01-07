@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "Bu dosyada görev yok",
   "splashscreen.noTodosAvailable.create": "Görev oluştur",
   "splashscreen.noTodosVisible.text": "Görünen sonuç yok.",
-  "splashscreen.noTodosVisible.reset": "Filtreleri ve aramayı sıfırla",
+  "splashscreen.noTodosVisible.reset": "Filtreleri sıfırla",
   "search.visibleTodos": "Görünür görevler: ",
   "search.addAsTodo": "Görev olarak ekle",
   "search.filters.create": "Arama filtresi oluştur",

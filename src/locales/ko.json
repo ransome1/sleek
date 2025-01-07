@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "이 파일에 작업이 없습니다",
   "splashscreen.noTodosAvailable.create": "작업 생성",
   "splashscreen.noTodosVisible.text": "표시할 결과 없음.",
-  "splashscreen.noTodosVisible.reset": "필터 및 검색 재설정",
+  "splashscreen.noTodosVisible.reset": "필터 초기화",
   "search.visibleTodos": "표시된 작업: ",
   "search.addAsTodo": "할 일로 추가",
   "search.filters.create": "검색 필터 생성",

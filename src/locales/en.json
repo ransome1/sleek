@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "No todos in this file",
   "splashscreen.noTodosAvailable.create": "Create a todo",
   "splashscreen.noTodosVisible.text": "No results visible.",
-  "splashscreen.noTodosVisible.reset": "Reset filters and search",
+  "splashscreen.noTodosVisible.reset": "Reset filters",
   "search.visibleTodos": "Visible todos: ",
   "search.addAsTodo": "Add as todo",
   "search.filters.create": "Create search filter",

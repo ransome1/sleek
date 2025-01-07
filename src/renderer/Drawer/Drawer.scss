@@ -15,6 +15,14 @@
 				font-size: 0.85em;
 				text-transform: none;
 				white-space: nowrap;
+				.reset {
+					width: 1em;
+					height: 1em;
+					position: absolute;
+					right: 0em;
+					bottom: 0em;
+					color: Variables.$blue;
+				}
 			}
 		}
 		.MuiTabs-indicator {

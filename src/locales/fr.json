@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "Aucune tâche dans ce fichier",
   "splashscreen.noTodosAvailable.create": "Créer une tâche",
   "splashscreen.noTodosVisible.text": "Aucun résultat visible.",
-  "splashscreen.noTodosVisible.reset": "Réinitialiser les filtres et la recherche",
+  "splashscreen.noTodosVisible.reset": "Réinitialiser les filtres",
   "search.visibleTodos": "Tâches visibles : ",
   "search.addAsTodo": "Ajouter en tant que tâche",
   "search.filters.create": "Créer un filtre de recherche",

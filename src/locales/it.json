@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "Nessun compito in questo file",
   "splashscreen.noTodosAvailable.create": "Crea un compito",
   "splashscreen.noTodosVisible.text": "Nessun risultato visibile.",
-  "splashscreen.noTodosVisible.reset": "Reimposta filtri e ricerca",
+  "splashscreen.noTodosVisible.reset": "Reimposta filtri",
   "search.visibleTodos": "Compiti visibili: ",
   "search.addAsTodo": "Aggiungi come attività",
   "search.filters.create": "Crea filtro di ricerca",

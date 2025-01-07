@@ -5,11 +5,13 @@
 	height: 3em;
 	position: fixed;
 	top: 0;
-	right: 1em;
+	right: 0;
 	z-index: 9;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	padding: 0 1em;
+	background: #fff;
 	svg {
 		display: flex;
 		cursor: pointer;
@@ -26,6 +28,7 @@
 
 .darkTheme {
 	#ToolBar {
+		background: #212224;
 		svg {
 			color: Variables.$mid-grey;
 			&.active {

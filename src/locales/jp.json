@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "このファイルにはタスクがありません",
   "splashscreen.noTodosAvailable.create": "タスクを作成",
   "splashscreen.noTodosVisible.text": "表示できる結果はありません。",
-  "splashscreen.noTodosVisible.reset": "フィルターと検索をリセット",
+  "splashscreen.noTodosVisible.reset": "フィルターをリセット",
   "search.visibleTodos": "表示されるタスク：",
   "search.addAsTodo": "タスクとして追加",
   "search.filters.create": "検索フィルターを作成する",

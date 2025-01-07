@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "此文件中没有任务",
   "splashscreen.noTodosAvailable.create": "创建任务",
   "splashscreen.noTodosVisible.text": "没有可见的结果。",
-  "splashscreen.noTodosVisible.reset": "重置过滤器和搜索",
+  "splashscreen.noTodosVisible.reset": "重置过滤器",
   "search.visibleTodos": "可见任务：",
   "search.addAsTodo": "添加为任务",
   "search.filters.create": "创建搜索过滤器",

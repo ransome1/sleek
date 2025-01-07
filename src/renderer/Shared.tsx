@@ -39,6 +39,10 @@ export const handleFilterSelect = (key: string, name: string, values: string | s
   }
 };
 
+export const handleReset = () => {
+  store.setFilters('attributes', []);
+};
+
 
 export const handleLinkClick = (event: MouseEvent, url: string) => {
   event.preventDefault();

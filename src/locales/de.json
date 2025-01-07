@@ -63,7 +63,7 @@
   "splashscreen.noTodosAvailable.text": "Keine Aufgaben in dieser Datei",
   "splashscreen.noTodosAvailable.create": "Eine Aufgabe erstellen",
   "splashscreen.noTodosVisible.text": "Keine sichtbaren Ergebnisse.",
-  "splashscreen.noTodosVisible.reset": "Filter und Suche zurücksetzen",
+  "splashscreen.noTodosVisible.reset": "Filter zurücksetzen",
   "search.visibleTodos": "Sichtbare Aufgaben: ",
   "search.addAsTodo": "Als Aufgabe hinzufügen",
   "search.filters.create": "Suchfilter erstellen",

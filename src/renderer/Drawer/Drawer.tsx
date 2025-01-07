@@ -2,11 +2,14 @@ import React, { useState, useRef, useEffect, memo } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Badge from '@mui/material/Badge';
 import DrawerAttributes from './Attributes';
 import DrawerSorting from './Sorting';
 import DrawerFilters from './Filters';
+import { handleReset } from '../Shared';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import TuneIcon from '@mui/icons-material/Tune';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { i18n } from '../Settings/LanguageSelector';
@@ -82,8 +85,21 @@ const DrawerComponent: React.FC<Props> = memo(({
       style={{ width: drawerWidth, marginLeft: -drawerWidth }}
     >
       <div className="drawerHandle" onMouseDown={handleMouseDown} />
-      <Tabs className="tabs" centered value={activeTab} onChange={handleTabChange}>
-        <Tab tabIndex={0} label={t('drawer.tabs.attributes')} value="attributes" icon={<FilterAltIcon />} data-testid={'drawer-tab-attributes'} />
+      <Tabs className="tabs" centered value={activeTab} onChange={handleTabChange}>  
+      <Tab 
+        tabIndex={0} 
+        label={
+          <>
+            {t('drawer.tabs.attributes')} 
+            {Object.values(filters).some(array => Array.isArray(array) && array.length > 0) && (
+              <RemoveCircleIcon onClick={handleReset} className="reset" />
+            )}
+          </>
+        }
+        value="attributes" 
+        icon={<FilterAltIcon />} 
+        data-testid={'drawer-tab-attributes'} 
+      />
         <Tab tabIndex={0} label={t('drawer.tabs.filters')} value="filters" icon={<TuneIcon />} data-testid={'drawer-tab-filters'} />
         <Tab tabIndex={0} label={t('drawer.tabs.sorting')} value="sorting" icon={<FilterListIcon />} data-testid={'drawer-tab-sorting'} />
       </Tabs>
