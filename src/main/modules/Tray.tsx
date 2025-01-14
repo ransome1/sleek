@@ -1,7 +1,9 @@
-import { app, Menu, Tray } from 'electron';
+import { app, Menu, Tray, nativeImage } from 'electron';
+import { fileURLToPath } from 'url';
 import { handleCreateWindow } from '../index';
 import { config } from '../config';
 import { setFile } from './File/File';
+import trayIcon from '../../../resources/tray/tray.png?asset'
 
 let tray: Tray;
 
@@ -43,10 +45,8 @@ function createTray() {
   }
 
   const files: FileObject[] = config.get('files');
-  const iconName: string = process.platform === 'win32' ? 'tray.ico' : 'tray.png';
   const menu: Electron.Menu = Menu.buildFromTemplate(createMenuTemplate(files));
-
-  tray = new Tray(`./assets/icons/tray/${iconName}`);
+  tray = new Tray(nativeImage.createFromPath(trayIcon))
   tray.setToolTip('sleek');
   tray.setContextMenu(menu);
   tray.on('click', () => {

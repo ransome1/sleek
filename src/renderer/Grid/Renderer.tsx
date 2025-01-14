@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm'
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
-import TomatoIconDuo from '../../../assets/icons/tomato-duo.svg';
+import TomatoIconDuo from '../public/tomato-duo.svg?asset'
 import DatePickerInline from './DatePickerInline';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { handleLinkClick } from '../Shared';

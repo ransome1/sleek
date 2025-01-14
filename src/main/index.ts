@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme } from 'electron';
+import { app, BrowserWindow, nativeTheme, nativeImage } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
@@ -6,8 +6,10 @@ import { config } from './config.js';
 import { createMenu } from './modules/Menu.js';
 import { createFileWatcher, watcher } from './modules/File/Watcher.js';
 import { createTray } from './modules/Tray.js';
+import macIcon from '../../resources/icon.icns?asset'
+import windowsIcon from '../../resources/icon.ico?asset'
+import linuxIcon from '../../resources/icon.png?asset'
 import './modules/IpcMain.js';
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any | undefined> = {};
@@ -105,10 +107,10 @@ const createMainWindow = () => {
     height: 1000,
     backgroundColor: (shouldUseDarkColors) ? '#212224' : '#fff',
     icon: process.platform === 'win32'
-    ? './assets/icons/sleek.ico'
+    ? nativeImage.createFromPath(windowsIcon)
     : process.platform === 'darwin'
-    ? './assets/icons/sleek.icns'
-    : './assets/icons/512x512.png',
+    ? nativeImage.createFromPath(macIcon)
+    : nativeImage.createFromPath(linuxIcon),
     webPreferences: {
       spellcheck: false,
       contextIsolation: true,
@@ -118,7 +120,7 @@ const createMainWindow = () => {
     },
   });
 
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+  if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(fileURLToPath(new URL('../renderer/index.html', import.meta.url)));

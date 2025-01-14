@@ -1,7 +1,8 @@
 import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import TomatoIconDuo from '../../../assets/icons/tomato-duo.svg';
+//import TomatoIconDuo from '../../../assets/icons/tomato-duo.svg';
+import TomatoIconDuo from '../public/tomato-duo.svg?asset'
 import './PomodoroPicker.scss';
 
 interface PomodoroPickerProps {

@@ -17,7 +17,7 @@ mac:
       role: Editor
       isPackage: false
       rank: Owner
-  icon: ./assets/icons/icon.icns
+  icon: ./resources/icon.icns
   type: distribution
   hardenedRuntime: true
   entitlements: assets/entitlements.mac.plist
@@ -27,7 +27,6 @@ mac:
   artifactName: ${productName}-${version}-mac-${arch}.${ext}
   darkModeSupport: true
 dmg:
-  background: assets/dmg/background.tiff
   contents:
     - x: 130
       'y': 220
@@ -49,7 +48,7 @@ win:
     - portable
     - nsis
     - appx
-  icon: assets/icons/sleek.ico
+  icon: resources/icon.ico
   artifactName: ${productName}-${version}-win-${arch}.${ext}
 nsis:
   artifactName: ${productName}-${version}-win-${arch}-Setup.${ext}
@@ -60,7 +59,7 @@ appx:
   publisherDisplayName: ransome1
   applicationId: RobinAhle.sleektodomanager
 linux:
-  icon: assets/icons
+  icon: resources/icon
   category: ProjectManagement
   target:
     - deb
