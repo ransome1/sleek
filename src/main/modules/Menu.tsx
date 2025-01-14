@@ -1,6 +1,6 @@
 import { app, Menu, dialog, shell } from 'electron';
 import { setFile } from './File/File';
-import { mainWindow, handleCreateWindow } from '../main';
+import { mainWindow, handleCreateWindow } from '../index';
 import { openFile, createFile } from './File/Dialog';
 import { handleRequestArchive } from './File/Archive';
 import { config, filter } from '../config';

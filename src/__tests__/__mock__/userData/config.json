@@ -1,0 +1,15 @@
+{
+	"isDrawerOpen": false,
+	"files": [
+		{
+			"active": false,
+			"path": "test1.txt",
+			"filename": "test1.txt"
+		},
+		{
+			"active": true,
+			"path": "test2.txt",
+			"filename": "test2.txt"
+		}		
+	]
+}

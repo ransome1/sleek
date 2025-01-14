@@ -1,0 +1,70 @@
+directories:
+  output: dist
+  buildResources: build
+buildVersion: '50'
+asar: true
+mac:
+  appId: com.todotxt.sleek
+  target:
+    target: default
+    arch:
+      - arm64
+      - x64
+  fileAssociations:
+    - ext:
+        - txt
+        - md
+      role: Editor
+      isPackage: false
+      rank: Owner
+  icon: ./assets/icons/icon.icns
+  type: distribution
+  hardenedRuntime: true
+  entitlements: assets/entitlements.mac.plist
+  entitlementsInherit: assets/entitlements.mac.plist
+  gatekeeperAssess: false
+  category: public.app-category.productivity
+  artifactName: ${productName}-${version}-mac-${arch}.${ext}
+  darkModeSupport: true
+dmg:
+  background: assets/dmg/background.tiff
+  contents:
+    - x: 130
+      'y': 220
+    - x: 410
+      'y': 220
+      type: link
+      path: /Applications
+masDev:
+  entitlements: build/entitlements.mas.plist
+  entitlementsInherit: build/entitlements.mas.inherit.plist
+  provisioningProfile: assets/development.provisionprofile
+mas:
+  entitlements: build/entitlements.mas.plist
+  entitlementsInherit: build/entitlements.mas.inherit.plist
+  provisioningProfile: assets/distribution.provisionprofile
+win:
+  target:
+    - zip
+    - portable
+    - nsis
+    - appx
+  icon: assets/icons/sleek.ico
+  artifactName: ${productName}-${version}-win-${arch}.${ext}
+nsis:
+  artifactName: ${productName}-${version}-win-${arch}-Setup.${ext}
+appx:
+  displayName: sleek - todo.txt manager for Windows, free and open-source (FOSS)
+  identityName: 17450RobinAhle.sleektodomanager
+  publisher: CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C
+  publisherDisplayName: ransome1
+  applicationId: RobinAhle.sleektodomanager
+linux:
+  icon: assets/icons
+  category: ProjectManagement
+  target:
+    - deb
+    - freebsd
+    - rpm
+    - AppImage
+electronVersion: 34.0.0

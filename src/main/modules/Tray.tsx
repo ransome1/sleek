@@ -1,7 +1,6 @@
 import { app, Menu, Tray } from 'electron';
-import { handleCreateWindow } from '../main';
+import { handleCreateWindow } from '../index';
 import { config } from '../config';
-import { getAssetPath } from '../util';
 import { setFile } from './File/File';
 
 let tray: Tray;

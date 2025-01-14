@@ -1,6 +1,6 @@
 name: sleek
 base: core24
-version: "2.0.15-rc.1"
+version: "2.0.15"
 summary: todo.txt manager for Linux, free and open-source (FOSS)
 description: |
   sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
@@ -8,14 +8,19 @@ description: |
   All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allow for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
   sleek is available for Windows, MacOS and Linux, and in several languages.
+
 grade: stable
 confinement: strict
 icon: ./assets/icons/512x512.png
 license: MIT
 compression: lzo
-architectures:
-- build-on: amd64
-- build-on: arm64
+platforms:
+  arm64:
+    build-on: [arm64]
+    build-for: [arm64]
+  amd64:
+    build-on: [amd64]
+    build-for: [amd64]
 apps:
   sleek:
     command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
@@ -38,7 +43,7 @@ parts:
     build-environment:
     - PATH: "$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin"
     build-snaps:
-    - node/18/stable
+    - node/22/stable
     source: .
     override-build: |
       if [ -n "$http_proxy" ]; then
@@ -48,25 +53,25 @@ parts:
       fi
 
       node.yarn
-      node.yarn peggy
-      node.yarn make
+      node.yarn build:unpack
 
-      mv $SNAPCRAFT_PART_BUILD/out/sleek-* \
+      mv $SNAPCRAFT_PART_BUILD/release/build/linux-* \
         $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
       - libnss3        
   cleanup:
     after: [ sleek ]
     plugin: nil
-    build-snaps: [ gnome ]
+    build-snaps: [gnome-42-2204]
     override-prime: |
       cd sleek
       ls -l
+      rm LICENSE.electron.txt
       rm LICENSES.chromium.html
       rm chrome-sandbox
       ls -l
       set -eux
-      for snap in "gnome"; do  # List all content-snaps you're using here
+      for snap in "gnome-42-2204"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do

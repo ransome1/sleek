@@ -1,18 +1,17 @@
 import { app, BrowserWindow, nativeTheme } from 'electron';
+import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
-import { config } from './config';
-import { createMenu } from './modules/Menu';
-import { createFileWatcher, watcher } from './modules/File/Watcher';
-import { createTray } from './modules/Tray';
-import './modules/IpcMain';
-
+import { config } from './config.js';
+import { createMenu } from './modules/Menu.js';
+import { createFileWatcher, watcher } from './modules/File/Watcher.js';
+import { createTray } from './modules/Tray.js';
+import './modules/IpcMain.js';
+import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
 let eventListeners: Record<string, any | undefined> = {};
 let resizeTimeout: NodeJS.Timeout | undefined;
-
-if (require('electron-squirrel-startup')) app.quit();
 
 const handleCreateWindow = () => {
   if(mainWindow) {
@@ -99,9 +98,6 @@ const handleWindowSizeAndPosition = () => {
   }
 }
 
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
-
 const createMainWindow = () => {
   const shouldUseDarkColors: boolean = config.get('shouldUseDarkColors');
   mainWindow = new BrowserWindow({
@@ -117,17 +113,22 @@ const createMainWindow = () => {
       spellcheck: false,
       contextIsolation: true,
       nodeIntegration: false,
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      preload: fileURLToPath(new URL('../preload/index.mjs', import.meta.url)),
+      sandbox: false
     },
   });
 
-  //mainWindow?.loadURL(resolveHtmlPath('index.html'));
-  mainWindow?.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  } else {
+    mainWindow.loadFile(fileURLToPath(new URL('../renderer/index.html', import.meta.url)));
+  }  
 
   const files: FileObject[] = (config.get('files') as FileObject[]) || [];
   if(files) {
     createFileWatcher(files);  
   }
+
   createMenu(files);
 
   handleWindowSizeAndPosition();

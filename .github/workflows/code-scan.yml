@@ -42,9 +42,9 @@ jobs:
       - name: Set up latest available Nodejs
         uses: actions/setup-node@master
       - name: Install dependencies
-        run: npm install        
+        run: yarn install        
       - name: Build
-        run: yarn run build
+        run: yarn build
       - name: Run tests
         run: yarn run test
       - name: Upload coverage reports to Codecov

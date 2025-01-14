@@ -93,3 +93,9 @@ out/
 
 # Provisionong profiles
 *.provisionprofile
+
+dist/
+
+mas/
+
+build/

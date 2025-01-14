@@ -1,4 +1,4 @@
-import { mainWindow } from './main';
+import { mainWindow } from './index.js';
 
 function getChannel(): string {
   if (process.env.APPIMAGE) {

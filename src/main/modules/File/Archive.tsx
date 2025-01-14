@@ -1,7 +1,7 @@
 import { getActiveFile } from './Active';
 import { readFileContent } from './File';
 import { writeToFile } from './Write';
-import { mainWindow } from '../../main';
+import { mainWindow } from '../../index';
 
 function handleRequestArchive(): void {
   const activeFile: FileObject | null = getActiveFile();

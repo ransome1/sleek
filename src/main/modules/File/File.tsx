@@ -4,7 +4,7 @@ import { config } from '../../config';
 import { createTray } from '../Tray';
 import { createMenu } from '../Menu';
 import path from 'path';
-import { mainWindow } from '../../main';
+import { mainWindow } from '../../index';
 
 function readFileContent(filePath: string, bookmark: string | null): string | Error {
   const stopAccessingSecurityScopedResource = (process.mas && bookmark) ? app.startAccessingSecurityScopedResource(bookmark) : null;

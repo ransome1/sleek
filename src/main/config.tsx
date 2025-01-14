@@ -2,7 +2,7 @@ import Store from 'electron-store';
 import path from 'path';
 import { app, nativeTheme } from 'electron';
 import fs from 'fs';
-import { mainWindow } from './main';
+import { mainWindow } from './index';
 import { createFileWatcher } from './modules/File/Watcher';
 import { writeToFile } from './modules/File/Write';
 import { createTray } from './modules/Tray';
