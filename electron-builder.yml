@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '50'
+buildVersion: '51'
 asar: true
 mac:
   appId: com.todotxt.sleek
@@ -20,8 +20,8 @@ mac:
   icon: ./resources/icon.icns
   type: distribution
   hardenedRuntime: true
-  entitlements: assets/entitlements.mac.plist
-  entitlementsInherit: assets/entitlements.mac.plist
+  entitlements: ./build/entitlements.mac.plist
+  entitlementsInherit: ./build/entitlements.mac.plist
   gatekeeperAssess: false
   category: public.app-category.productivity
   artifactName: ${productName}-${version}-mac-${arch}.${ext}
@@ -35,20 +35,36 @@ dmg:
       type: link
       path: /Applications
 masDev:
-  entitlements: build/entitlements.mas.plist
-  entitlementsInherit: build/entitlements.mas.inherit.plist
-  provisioningProfile: assets/development.provisionprofile
+  entitlements: ./assets/entitlements.mas.plist
+  entitlementsInherit: ./assets/entitlements.mas.inherit.plist
+  provisioningProfile: ./assets/development.provisionprofile
 mas:
-  entitlements: build/entitlements.mas.plist
-  entitlementsInherit: build/entitlements.mas.inherit.plist
-  provisioningProfile: assets/distribution.provisionprofile
+  entitlements: ./assets/entitlements.mas.plist
+  entitlementsInherit: ./assets/entitlements.mas.inherit.plist
+  provisioningProfile: ./assets/distribution.provisionprofile
 win:
   target:
-    - zip
-    - portable
-    - nsis
-    - appx
-  icon: resources/icon.ico
+    - target: zip
+      arch:
+        - arm64
+        - x64
+        - ia32
+    - target: portable
+      arch:
+        - arm64
+        - x64
+        - ia32
+    - target: nsis
+      arch:
+        - arm64
+        - x64
+        - ia32
+    - target: appx
+      arch:
+        - arm64
+        - x64
+        - ia32   
+  icon: ./resources/icon.ico
   artifactName: ${productName}-${version}-win-${arch}.${ext}
 nsis:
   artifactName: ${productName}-${version}-win-${arch}-Setup.${ext}
@@ -62,8 +78,20 @@ linux:
   icon: resources/icon
   category: ProjectManagement
   target:
-    - deb
-    - freebsd
-    - rpm
-    - AppImage
+    - target: deb
+      arch:
+        - arm64
+        - x64
+    - target: freebsd
+      arch:
+        - arm64
+        - x64
+    - target: rpm
+      arch:
+        - arm64
+        - x64
+    - target: AppImage
+      arch:
+        - arm64
+        - x64
 electronVersion: 34.0.0
