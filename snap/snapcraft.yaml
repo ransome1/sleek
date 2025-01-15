@@ -1,6 +1,6 @@
 name: sleek
 base: core24
-version: "2.0.15"
+version: "2.0.16"
 summary: todo.txt manager for Linux, free and open-source (FOSS)
 description: |
   sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
@@ -52,10 +52,10 @@ parts:
         export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
       fi
 
-      node.yarn
-      node.yarn build:unpack
+      node.yarn install
+      node.yarn run build:unpack
 
-      mv $SNAPCRAFT_PART_BUILD/release/build/linux-* \
+      mv $SNAPCRAFT_PART_BUILD/dist/linux* \
         $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
       - libnss3        

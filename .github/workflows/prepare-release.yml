@@ -42,6 +42,7 @@ jobs:
           APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          DEBUG: ${{ secrets.DEBUG }}
         with:
           max_attempts: 5
           github_token: ${{ secrets.github_token }}
@@ -66,6 +67,8 @@ jobs:
           yarn run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
+        env:
+          DEBUG: ${{ secrets.DEBUG }}
         with:
           max_attempts: 5
           github_token: ${{ secrets.github_token }}
@@ -90,6 +93,8 @@ jobs:
           yarn run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
+        env:
+          DEBUG: ${{ secrets.DEBUG }}
         with:
           max_attempts: 5
           github_token: ${{ secrets.github_token }}

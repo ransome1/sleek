@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '51'
+buildVersion: '52'
 asar: true
 mac:
   appId: com.todotxt.sleek
@@ -20,20 +20,16 @@ mac:
   icon: ./resources/icon.icns
   type: distribution
   hardenedRuntime: true
-  entitlements: ./build/entitlements.mac.plist
-  entitlementsInherit: ./build/entitlements.mac.plist
   gatekeeperAssess: false
   category: public.app-category.productivity
   artifactName: ${productName}-${version}-mac-${arch}.${ext}
   darkModeSupport: true
 dmg:
-  contents:
-    - x: 130
-      'y': 220
-    - x: 410
-      'y': 220
-      type: link
-      path: /Applications
+  window:
+    width: 550
+    height: 400
+    x: 130
+    y: 410    
 masDev:
   entitlements: ./assets/entitlements.mas.plist
   entitlementsInherit: ./assets/entitlements.mas.inherit.plist
@@ -77,6 +73,7 @@ appx:
 linux:
   icon: resources/icon
   category: ProjectManagement
+  artifactName: ${productName}-${version}-linux-${arch}.${ext}
   target:
     - target: deb
       arch:

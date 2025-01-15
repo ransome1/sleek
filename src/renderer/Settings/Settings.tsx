@@ -100,100 +100,105 @@ const Settings: React.FC<SettingsProps> = memo(({
     <Modal id='settings' open={isOpen} onClose={onClose} aria-labelledby='settings-modal-title'>
       <div className='modal'>
         <h3>{t('settings.headline')}</h3>
-        {Object.entries(visibleSettings).map(([settingName, settingValue]) => (
-          settingValue.style === 'toggle' ? (
-            <FormControlLabel
-              key={settingName}
-              control={
-                <Switch
-                  data-testid={`setting-toggle-${settingName}`}
-                  checked={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(settingName, event.target.checked)}
-                  name={settingName}
-                />
-              }
-              label={
-                settingValue.help ? (
-                  <>
-                    {t(`settings.${settingName}`)}
-                    <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
-                      <HelpIcon />
-                    </Link>
-                  </>
-                ) : t(`settings.${settingName}`)
-              }
-            />
-          ) : (
-            settingValue.style === 'select' ? (
-              <FormControl 
+        {Object.entries(visibleSettings).map(([settingName, settingValue]) => {
+          if (navigator.platform.startsWith('Mac') && settingName === 'menuBarVisibility') {
+            return null;
+          }
+          return (
+            settingValue.style === 'toggle' ? (
+              <FormControlLabel
                 key={settingName}
-              >
-                <InputLabel>{t(`settings.${settingName}`)}</InputLabel>
-                {settingValue.help && (
-                  <Badge badgeContent={
-                    <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
-                      <HelpIcon />
-                    </Link>
-                  }>
-                  </Badge>
-                )}
-                <Select
-                  id={`settings-${settingName}`}
-                  data-testid={`setting-select-${settingName}`}
-                  className={settingName}
-                  label={t(`settings.${settingName}`)}
-                  value={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(settingName, event.target.value)}
-                >
-                  {settingValue?.values?.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {t(`settings.${value}`)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                control={
+                  <Switch
+                    data-testid={`setting-toggle-${settingName}`}
+                    checked={settings[settingName as keyof Settings]}
+                    onChange={(event) => handleChange(settingName, event.target.checked)}
+                    name={settingName}
+                  />
+                }
+                label={
+                  settingValue.help ? (
+                    <>
+                      {t(`settings.${settingName}`)}
+                      <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
+                        <HelpIcon />
+                      </Link>
+                    </>
+                  ) : t(`settings.${settingName}`)
+                }
+              />
             ) : (
-              settingValue.style === 'slider' ? (
-                <FormControl key={settingName} sx={{ clear: 'both' }}>
-                  <label>
-                    {t(`settings.${settingName}`)}
-                    {settingValue.help ? (
-                      <>
-                        <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
-                          <HelpIcon />
-                        </Link>
-                      </>
-                    ) : null}
-                  </label>
-                  <Slider
-                    id={settingName}
-                    data-testid={`setting-slider-${settingName}`}
+              settingValue.style === 'select' ? (
+                <FormControl 
+                  key={settingName}
+                >
+                  <InputLabel>{t(`settings.${settingName}`)}</InputLabel>
+                  {settingValue.help && (
+                    <Badge badgeContent={
+                      <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
+                        <HelpIcon />
+                      </Link>
+                    }>
+                    </Badge>
+                  )}
+                  <Select
+                    id={`settings-${settingName}`}
+                    data-testid={`setting-select-${settingName}`}
+                    className={settingName}
+                    label={t(`settings.${settingName}`)}
                     value={settings[settingName as keyof Settings]}
-                    step={settingValue.step}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value: number): string => `${value}${settingValue.unit}`}
-                    label={
-                      settingValue.help ? (
-                        <Badge badgeContent={
+                    onChange={(event) => handleChange(settingName, event.target.value)}
+                  >
+                    {settingValue?.values?.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {t(`settings.${value}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : (
+                settingValue.style === 'slider' ? (
+                  <FormControl key={settingName} sx={{ clear: 'both' }}>
+                    <label>
+                      {t(`settings.${settingName}`)}
+                      {settingValue.help ? (
+                        <>
                           <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
                             <HelpIcon />
                           </Link>
-                        }>
-                          {t(`settings.${settingName}`)}
-                        </Badge>
-                      ) : (
-                        t(`settings.${settingName}`)
-                      )
-                    }
-                    min={settingValue.min}
-                    max={settingValue.max}
-                    onChange={(_, value: number | number[]) => handleChange(settingName, value)}
-                  />
-                </FormControl>
-              ) : null
+                        </>
+                      ) : null}
+                    </label>
+                    <Slider
+                      id={settingName}
+                      data-testid={`setting-slider-${settingName}`}
+                      value={settings[settingName as keyof Settings]}
+                      step={settingValue.step}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={(value: number): string => `${value}${settingValue.unit}`}
+                      label={
+                        settingValue.help ? (
+                          <Badge badgeContent={
+                            <Link onClick={(event) => handleLinkClick(event, settingValue.help)}>
+                              <HelpIcon />
+                            </Link>
+                          }>
+                            {t(`settings.${settingName}`)}
+                          </Badge>
+                        ) : (
+                          t(`settings.${settingName}`)
+                        )
+                      }
+                      min={settingValue.min}
+                      max={settingValue.max}
+                      onChange={(_, value: number | number[]) => handleChange(settingName, value)}
+                    />
+                  </FormControl>
+                ) : null
+              )
             )
-          )
-        ))}
+          );
+        })}
         <LanguageSelector
           settings={settings}
         />

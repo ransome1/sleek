@@ -182,7 +182,11 @@ config.onDidChange('colorTheme', (colorTheme) => {
 });
 
 config.onDidChange('menuBarVisibility', (menuBarVisibility) => {
-  mainWindow?.setMenuBarVisibility(menuBarVisibility || true);
+  if (mainWindow) {
+    mainWindow.setMenuBarVisibility(menuBarVisibility);
+  } else {
+    console.warn('The window is not available, skipping setting change.');
+  }  
 });
 
 config.onDidChange('tray', () => {
