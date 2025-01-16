@@ -90,5 +90,6 @@
   "prompt.archive.button": "Archivovat",
   "prompt.archive.changeFile.headline": "Vyberte soubor pro archivaci",
   "prompt.archive.changeFile.text": "Pro archivaci dokončených úkolů je nutné nejprve vybrat archivační soubor.",
-  "prompt.searchFilters.delete.body": "Smazat vyhledávací filtr"
+  "prompt.searchFilters.delete.headline": "Smazat filtr hledání?",
+  "prompt.searchFilters.delete.body": "Tento filtr hledání bude trvale smazán:"
 }

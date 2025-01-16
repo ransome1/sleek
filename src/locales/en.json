@@ -90,5 +90,6 @@
   "prompt.archive.button": "Archive",
   "prompt.archive.changeFile.headline": "Choose a File for Archiving",
   "prompt.archive.changeFile.text": "To archive completed todos, you need to choose an archive file first",
-  "prompt.searchFilters.delete.body": "Delete search filter"
+  "prompt.searchFilters.delete.headline": "Delete search filter?",
+  "prompt.searchFilters.delete.body": "This search filter will be permanently deleted:"
 }

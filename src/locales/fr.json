@@ -21,7 +21,7 @@
   "settings.light": "Clair",
   "settings.dark": "Sombre",
   "settings.language": "Langue",
-  "settings.notificationThreshold": "Umbral de notificación",
+  "settings.notificationThreshold": "Seuil de notification",
   "settings.bulkTodoCreation": "Le texte sur plusieurs lignes crée des tâches séparées",
   "settings.matomo": "Autoriser l'analyse Matomo",
   "settings.zoom": "Zoom",
@@ -90,5 +90,6 @@
   "prompt.archive.button": "Archiver",
   "prompt.archive.changeFile.headline": "Choisissez un fichier pour archiver",
   "prompt.archive.changeFile.text": "Pour archiver les tâches terminées, vous devez d'abord choisir un fichier d'archivage.",
-  "prompt.searchFilters.delete.body": "Supprimer le filtre de recherche"
+  "prompt.searchFilters.delete.headline": "Supprimer le filtre de recherche?",
+  "prompt.searchFilters.delete.body": "Ce filtre de recherche sera supprimé définitivement :"
 }

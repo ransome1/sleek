@@ -90,5 +90,6 @@
   "prompt.archive.button": "Arquivar",
   "prompt.archive.changeFile.headline": "Escolha um arquivo para arquivar",
   "prompt.archive.changeFile.text": "Para arquivar tarefas concluídas, é necessário escolher um arquivo de arquivamento primeiro.",
-  "prompt.searchFilters.delete.body": "Excluir filtro de pesquisa"
+  "prompt.searchFilters.delete.headline": "Excluir filtro de pesquisa?",
+  "prompt.searchFilters.delete.body": "Este filtro de pesquisa será excluído permanentemente:"
 }

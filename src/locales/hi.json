@@ -90,5 +90,6 @@
   "prompt.archive.button": "संग्रहित करें",
   "prompt.archive.changeFile.headline": "आर्काइव के लिए एक फ़ाइल चुनें",
   "prompt.archive.changeFile.text": "पूर्ण हुए कार्यों को आर्काइव करने के लिए, आपको पहले एक आर्काइव फ़ाइल चुननी होगी।",
-  "prompt.searchFilters.delete.body": "खोज फ़िल्टर हटाएं"
+  "prompt.searchFilters.delete.headline": "खोज फ़िल्टर हटाएं?",
+  "prompt.searchFilters.delete.body": "यह खोज फ़िल्टर स्थायी रूप से हटा दिया जाएगा:"
 }

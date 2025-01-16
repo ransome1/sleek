@@ -90,5 +90,6 @@
   "prompt.archive.button": "アーカイブ",
   "prompt.archive.changeFile.headline": "アーカイブ用のファイルを選択",
   "prompt.archive.changeFile.text": "完了したタスクをアーカイブするには、まずアーカイブ用のファイルを選択する必要があります。",
-  "prompt.searchFilters.delete.body": "検索フィルターを削除する"
+  "prompt.searchFilters.delete.headline": "検索フィルターを削除しますか？",
+  "prompt.searchFilters.delete.body": "この検索フィルターは永久に削除されます："
 }

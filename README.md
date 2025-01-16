@@ -1,6 +1,4 @@
 # sleek
-[<img src="https://api.gitsponsors.com/api/badge/img?id=301463691" height="30">](https://api.gitsponsors.com/api/badge/link?p=D8BfxYAU1DxX1VNxduDJQbIUSYf6yxW/d0eMica/OVIxkPYetoBj4zOxaMZ2M2UWztuE+Q9zJ62tLJqTewz4UzgisFtstXsGEBi0GLqJTMhvroMtJREbEjD6DFlvykacEc+7ak5lmmxN6ZECCJbm7w==)
-
 ![image](https://github.com/ransome1/sleek/assets/11188741/304d2da2-e8bd-4901-9d12-04a0f5426317)
 
 ### sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, macOS and Linux

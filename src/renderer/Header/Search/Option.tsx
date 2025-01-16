@@ -61,7 +61,7 @@ const OptionComponent: React.FC<OptionComponentProps> = memo(({
     event.preventDefault();
     setPromptItem({
       id: 'confirmSearchFilterDelete',
-      headline: t('delete'),
+      headline: t('prompt.searchFilters.delete.headline'),
       text: `${t('prompt.searchFilters.delete.body')} <code>${option.label}</code>`,
       button1: t('delete'),
       onButton1: () => handleDeleteFilterConfirm(option, searchFilters, setSearchFilters),

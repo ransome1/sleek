@@ -90,5 +90,6 @@
   "prompt.archive.button": "Archivieren",
   "prompt.archive.changeFile.headline": "Datei für Archivierung auswählen",
   "prompt.archive.changeFile.text": "Um abgeschlossene Aufgaben zu archivieren, musst du zuerst eine Archivdatei auswählen",
-  "prompt.searchFilters.delete.body": "Suchfilter löschen"
+  "prompt.searchFilters.delete.headline": "Suchfilter löschen?",
+  "prompt.searchFilters.delete.body": "Dieser Suchfilter wird dauerhaft gelöscht:"
 }

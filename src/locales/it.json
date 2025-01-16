@@ -90,5 +90,6 @@
   "prompt.archive.button": "Archivia",
   "prompt.archive.changeFile.headline": "Scegli un file da archiviare",
   "prompt.archive.changeFile.text": "Per archiviare i compiti completati, devi prima scegliere un file di archiviazione.",
-  "prompt.searchFilters.delete.body": "Elimina filtro di ricerca"
+  "prompt.searchFilters.delete.headline": "Eliminare il filtro di ricerca?",
+  "prompt.searchFilters.delete.body": "Questo filtro di ricerca verrà eliminato definitivamente:"
 }

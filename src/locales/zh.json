@@ -90,5 +90,6 @@
   "prompt.archive.button": "归档",
   "prompt.archive.changeFile.headline": "选择一个文件进行归档",
   "prompt.archive.changeFile.text": "要归档已完成的任务，您需要首先选择一个归档文件。",
-  "prompt.searchFilters.delete.body": "删除搜索过滤器"
+  "prompt.searchFilters.delete.headline": "删除搜索过滤器？",
+  "prompt.searchFilters.delete.body": "此搜索过滤器将被永久删除："
 }

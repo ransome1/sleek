@@ -90,5 +90,6 @@
   "prompt.archive.button": "Архивировать",
   "prompt.archive.changeFile.headline": "Выберите файл для архивации",
   "prompt.archive.changeFile.text": "Чтобы архивировать завершенные задачи, сначала выберите файл для архивации.",
-  "prompt.searchFilters.delete.body": "Удалить фильтр поиска"
+  "prompt.searchFilters.delete.headline": "Удалить фильтр поиска?",
+  "prompt.searchFilters.delete.body": "Этот фильтр поиска будет удален навсегда:"
 }

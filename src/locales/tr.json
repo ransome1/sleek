@@ -90,5 +90,6 @@
   "prompt.archive.button": "Arşivle",
   "prompt.archive.changeFile.headline": "Arşivlemek için bir dosya seçin",
   "prompt.archive.changeFile.text": "Tamamlanan görevleri arşivlemek için önce bir arşiv dosyası seçmeniz gerekiyor.",
-  "prompt.searchFilters.delete.body": "Arama filtresini sil"
+  "prompt.searchFilters.delete.headline": "Arama filtresini silmek istiyor musunuz?",
+  "prompt.searchFilters.delete.body": "Bu arama filtresi kalıcı olarak silinecektir:"
 }

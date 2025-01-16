@@ -20,13 +20,14 @@ function dataRequest(search?: string): RequestedData {
 
   const activeFile: FileObject | null = getActiveFile();
   if(!activeFile) {
-    return;
+    return false;
   }
   
   const fileContent = readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark);
 
   const sorting: Sorting[] = config.get('sorting');
   const filters: Filters = filter.get('attributes');
+  const showHidden: boolean = config.get('showHidden');
 
   todoObjects = createTodoObjects(fileContent);
 
@@ -51,9 +52,16 @@ function dataRequest(search?: string): RequestedData {
 
   updateAttributes(todoObjects, sorting, false);
 
-  const todoData: TodoDate = sortAndGroupTodoObjects(todoObjects, sorting);
+  if (showHidden) {
+    headers.visibleObjects = todoObjects.length;
+  } else {
+    const visibleObjects = todoObjects.filter(todoObject => !todoObject.hidden);
+    headers.visibleObjects = visibleObjects.length;
+    todoObjects = visibleObjects;
+  }
 
-  headers.visibleObjects = todoObjects.length;
+
+  const todoData: TodoDate = sortAndGroupTodoObjects(todoObjects, sorting);
 
   const requestedData: RequestedData = {
     todoData,

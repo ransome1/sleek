@@ -47,7 +47,7 @@ const NavigationComponent: React.FC<Props> = memo(({
       ipcRenderer.off('isDialogOpen', handleOpen);
       document.removeEventListener('keydown', handleKeyDown)
     };
-  }, []);
+  }, [settings.files]);
 
   return (
     <>

@@ -90,5 +90,6 @@
   "prompt.archive.button": "아카이브",
   "prompt.archive.changeFile.headline": "아카이브할 파일 선택",
   "prompt.archive.changeFile.text": "완료된 할 일을 아카이브하려면 먼저 아카이브 파일을 선택해야 합니다.",
-  "prompt.searchFilters.delete.body": "검색 필터 삭제"
+  "prompt.searchFilters.delete.headline": "검색 필터를 삭제하시겠습니까?",
+  "prompt.searchFilters.delete.body": "이 검색 필터는 영구적으로 삭제됩니다:"
 }

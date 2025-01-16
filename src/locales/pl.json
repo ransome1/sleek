@@ -90,5 +90,6 @@
   "prompt.archive.button": "Archiwizuj",
   "prompt.archive.changeFile.headline": "Wybierz plik do archiwizacji",
   "prompt.archive.changeFile.text": "Aby zarchiwizować ukończone zadania, musisz najpierw wybrać plik archiwizacyjny.",
-  "prompt.searchFilters.delete.body": "Usuń filtr wyszukiwania"
+  "prompt.searchFilters.delete.headline": "Usunąć filtr wyszukiwania?",
+  "prompt.searchFilters.delete.body": "Ten filtr wyszukiwania zostanie trwale usunięty:"
 }

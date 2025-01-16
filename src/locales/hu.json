@@ -90,5 +90,6 @@
   "prompt.archive.button": "Archiválás",
   "prompt.archive.changeFile.headline": "Válassz fájlt az archiváláshoz",
   "prompt.archive.changeFile.text": "A befejezett teendők archiválásához először válaszd ki az archív fájlt.",
-  "prompt.searchFilters.delete.body": "Keresési szűrő törlése"
+  "prompt.searchFilters.delete.headline": "Keresési szűrő törlése?",
+  "prompt.searchFilters.delete.body": "Ez a keresési szűrő véglegesen törlésre kerül:"
 }
