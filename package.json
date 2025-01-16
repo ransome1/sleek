@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.16-rc.1",
+  "version": "2.0.16",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -29,7 +29,7 @@
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
-    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "lint": "eslint ./src --fix",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "yarn typecheck:node && yarn typecheck:web",
@@ -38,20 +38,16 @@
     "build": "yarn peggy && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "yarn build && electron-builder --dir",
-    "build:win": "yarn build && electron-builder --win",
-    "build:mac": "yarn build && electron-builder --mac",
-    "build:linux": "yarn build && electron-builder --linux",
     "mas": "yarn build && electron-builder build -m mas --universal --publish never",
     "masdev": "yarn build && electron-builder build -m mas-dev --universal --publish never",
     "peggy": "peggy --format es --output ./src/main/modules/Filters/FilterLang.js ./src/main/modules/Filters/FilterLang.pegjs"
-  }, 
+  },
   "dependencies": {
-    "@electron-toolkit/utils": "^3.0.0",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
-    "@mui/icons-material": "^6.3.1",
-    "@mui/material": "^6.3.1",
-    "@mui/system": "^6.3.1",
+    "@mui/icons-material": "^6.4.0",
+    "@mui/material": "^6.4.0",
+    "@mui/system": "^6.4.0",
     "@mui/x-date-pickers": "^7.23.3",
     "chokidar": "^4.0.3",
     "dayjs": "^1.11.13",
@@ -68,7 +64,6 @@
     "sugar": "^2.0.6"
   },
   "devDependencies": {
-    "@babel/types": "^7.26.5",
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",

@@ -175,6 +175,7 @@ const App = () => {
             isOpen={isSettingsOpen}
             onClose={() => setIsSettingsOpen(false)}
             settings={settings}
+            setIsSettingsOpen={setIsSettingsOpen}
           />
           {contextMenu && (
             <ContextMenu

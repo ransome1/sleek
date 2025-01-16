@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import { handleCreateWindow } from '../index';
 import { config } from '../config';
 import { setFile } from './File/File';
-import trayIcon from '../../../resources/tray/tray.png?asset'
+import trayIcon from '../../../resources/tray.png?asset'
 
 let tray: Tray;
 

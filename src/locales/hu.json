@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "Hozzáadás",
   "todoDialog.footer.update": "Frissítés",
   "todoDialog.footer.cancel": "Mégse",
+  "todoDialog.footer.close": "Bezárás",
   "todoDialog.snackbar.emptyInput": "Kérjük, írjon be valamit a szövegmezőbe",
   "todoDialog.priorityPicker.label": "Prioritás",
   "todoDialog.datePicker.t": "Hátralévő dátum",

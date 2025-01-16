@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "Добавить",
   "todoDialog.footer.update": "Обновить",
   "todoDialog.footer.cancel": "Отменить",
+  "todoDialog.footer.close": "Закрыть",
   "todoDialog.snackbar.emptyInput": "Пожалуйста, введите что-то в текстовое поле",
   "todoDialog.priorityPicker.label": "Приоритет",
   "todoDialog.datePicker.t": "Дата порога",

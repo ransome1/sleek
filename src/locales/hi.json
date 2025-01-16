@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "जोड़ें",
   "todoDialog.footer.update": "अपडेट करें",
   "todoDialog.footer.cancel": "रद्द करें",
+  "todoDialog.footer.close": "बंद करें",
   "todoDialog.snackbar.emptyInput": "कृपया पाठ फ़ील्ड में कुछ डालें",
   "todoDialog.priorityPicker.label": "प्राथमिकता",
   "todoDialog.datePicker.t": "सीमा",

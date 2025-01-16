@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "追加",
   "todoDialog.footer.update": "更新",
   "todoDialog.footer.cancel": "キャンセル",
+  "todoDialog.footer.close": "閉じる",
   "todoDialog.snackbar.emptyInput": "テキストフィールドに何かを入力してください",
   "todoDialog.priorityPicker.label": "優先度",
   "todoDialog.datePicker.t": "期限日",

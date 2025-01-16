@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "Přidat",
   "todoDialog.footer.update": "Aktualizovat",
   "todoDialog.footer.cancel": "Zrušit",
+  "todoDialog.footer.close": "Zavřít",
   "todoDialog.snackbar.emptyInput": "Zadejte prosím něco do textového pole",
   "todoDialog.priorityPicker.label": "Priorita",
   "todoDialog.datePicker.t": "Termín",

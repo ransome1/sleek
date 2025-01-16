@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "Ajouter",
   "todoDialog.footer.update": "Mettre à jour",
   "todoDialog.footer.cancel": "Annuler",
+  "todoDialog.footer.close": "Fermer",
   "todoDialog.snackbar.emptyInput": "Veuillez entrer quelque chose dans le champ de texte",
   "todoDialog.priorityPicker.label": "Priorité",
   "todoDialog.datePicker.t": "Date limite",

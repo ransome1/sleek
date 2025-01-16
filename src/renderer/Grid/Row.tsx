@@ -86,6 +86,7 @@ const Row: React.FC<Props> = memo(({
         if(clickedElement.tagName.toLowerCase() === 'input') match = true;
         if(clickedElement.tagName.toLowerCase() === 'button') match = true;
         if(clickedElement.tagName.toLowerCase() === 'svg') match = true;
+        if(clickedElement.tagName.toLowerCase() === 'img') match = true;
         return match;
       };      
       if(!preventDialog() && todoObject) {

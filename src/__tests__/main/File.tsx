@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'path';
 import { config } from '../../main/config';
 import { addFile, removeFile, setFile } from '../../main/modules/File/File';
 

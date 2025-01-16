@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "Dodaj",
   "todoDialog.footer.update": "Aktualizuj",
   "todoDialog.footer.cancel": "Anuluj",
+  "todoDialog.footer.close": "Zamknij",
   "todoDialog.snackbar.emptyInput": "Proszę wprowadzić coś do pola tekstowego",
   "todoDialog.priorityPicker.label": "Priorytet",
   "todoDialog.datePicker.t": "Data progowa",

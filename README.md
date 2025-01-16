@@ -1,4 +1,6 @@
 # sleek
+[<img src="https://api.gitsponsors.com/api/badge/img?id=301463691" height="30">](https://api.gitsponsors.com/api/badge/link?p=D8BfxYAU1DxX1VNxduDJQbIUSYf6yxW/d0eMica/OVIxkPYetoBj4zOxaMZ2M2UWztuE+Q9zJ62tLJqTewz4UzgisFtstXsGEBi0GLqJTMhvroMtJREbEjD6DFlvykacEc+7ak5lmmxN6ZECCJbm7w==)
+
 ![image](https://github.com/ransome1/sleek/assets/11188741/304d2da2-e8bd-4901-9d12-04a0f5426317)
 
 ### sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, macOS and Linux
@@ -16,7 +18,7 @@ Pushing sleek to the Apple and Microsoft app stores creates annual costs. You ca
 sleek's backlog is becoming increasingly populated, yet our capacity remains limited. If you are skilled in `React`, `TypeScript`, `Electron`, or `Jest/Playwright` you can support this project. Here you'll find our backlog: https://github.com/users/ransome1/projects/3. For those interested, [we've updated our contribution guidelines](https://github.com/ransome1/sleek/wiki/Contributing-Guidelines). The `develop` branch reflects the most recent progress.
 
 ### Get sleek from Apple Mac App Store
-<a href="https://apps.apple.com/us/app/sleek-todo-manager/id1614704209" target="blank"><img src='assets/store_badges/Download_on_the_Mac_App_Store.png' alt='Get sleek from Apple Mac App Store' width='180'/></a>
+https://apps.apple.com/us/app/sleek-todo-manager/id1614704209
 
 ### Get sleek from Microsoft Store
 <a href="//www.microsoft.com/store/apps/9NWM2WXF60KR?cid=storebadge&ocid=badge" target="blank"><img src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png' alt='English badge' width='180'/></a>

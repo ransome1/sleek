@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '52'
+buildVersion: '54'
 asar: true
 mac:
   appId: com.todotxt.sleek
@@ -31,13 +31,13 @@ dmg:
     x: 130
     y: 410    
 masDev:
-  entitlements: ./assets/entitlements.mas.plist
-  entitlementsInherit: ./assets/entitlements.mas.inherit.plist
-  provisioningProfile: ./assets/development.provisionprofile
+  entitlements: ./build/entitlements.mas.plist
+  entitlementsInherit: ./build/entitlements.mas.inherit.plist
+  provisioningProfile: ./build/development.provisionprofile
 mas:
-  entitlements: ./assets/entitlements.mas.plist
-  entitlementsInherit: ./assets/entitlements.mas.inherit.plist
-  provisioningProfile: ./assets/distribution.provisionprofile
+  entitlements: ./build/entitlements.mas.plist
+  entitlementsInherit: ./build/entitlements.mas.inherit.plist
+  provisioningProfile: ./build/distribution.provisionprofile
 win:
   target:
     - target: zip
@@ -71,7 +71,7 @@ appx:
   publisherDisplayName: ransome1
   applicationId: RobinAhle.sleektodomanager
 linux:
-  icon: resources/icon
+  icon: ./resources/icon
   category: ProjectManagement
   artifactName: ${productName}-${version}-linux-${arch}.${ext}
   target:

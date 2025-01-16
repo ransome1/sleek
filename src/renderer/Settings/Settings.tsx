@@ -5,7 +5,11 @@ import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Modal from '@mui/material/Modal';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
 import Slider from '@mui/material/Slider';
@@ -81,6 +85,7 @@ interface SettingsProps extends WithTranslation {
   isOpen: boolean;
   onClose: () => void;
   settings: Settings;
+  setIsSettingsOpen: React.Dispatch<React.SetStateAction<string>>,
   t: typeof i18n.t;
 }
 
@@ -88,8 +93,13 @@ const Settings: React.FC<SettingsProps> = memo(({
   isOpen,
   onClose,
   settings,
+  setIsSettingsOpen,
   t,
 }) => {
+
+  const handleClose = () => {
+    setIsSettingsOpen(false);
+  };
   
   useEffect(() => {
     const adjustedFontSize = 16 * (settings.zoom / 100);
@@ -97,9 +107,13 @@ const Settings: React.FC<SettingsProps> = memo(({
   }, [settings.zoom]);
 
   return (
-    <Modal id='settings' open={isOpen} onClose={onClose} aria-labelledby='settings-modal-title'>
-      <div className='modal'>
-        <h3>{t('settings.headline')}</h3>
+    <Dialog
+      id="DialogSettingsComponent"
+      open={isOpen}
+      onClose={onClose}
+    >
+      <DialogTitle>{t('settings.headline')}</DialogTitle>
+      <DialogContent>
         {Object.entries(visibleSettings).map(([settingName, settingValue]) => {
           if (navigator.platform.startsWith('Mac') && settingName === 'menuBarVisibility') {
             return null;
@@ -202,8 +216,16 @@ const Settings: React.FC<SettingsProps> = memo(({
         <LanguageSelector
           settings={settings}
         />
-      </div>
-    </Modal>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={handleClose}
+          data-testid="dialog-setting-button-close"
+        >
+          {t('todoDialog.footer.close')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 });
 

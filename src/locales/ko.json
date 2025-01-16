@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "추가",
   "todoDialog.footer.update": "업데이트",
   "todoDialog.footer.cancel": "취소",
+  "todoDialog.footer.close": "닫기",
   "todoDialog.snackbar.emptyInput": "텍스트 필드에 내용을 입력하세요",
   "todoDialog.priorityPicker.label": "우선 순위",
   "todoDialog.datePicker.t": "임계",

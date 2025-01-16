@@ -70,6 +70,7 @@
   "todoDialog.footer.add": "添加",
   "todoDialog.footer.update": "更新",
   "todoDialog.footer.cancel": "取消",
+  "todoDialog.footer.close": "关闭",
   "todoDialog.snackbar.emptyInput": "请在文本字段中输入内容",
   "todoDialog.priorityPicker.label": "优先级",
   "todoDialog.datePicker.t": "阈值",
