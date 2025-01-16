@@ -12,6 +12,10 @@ sleek is available for Windows, macOS and Linux, and in several languages. [Scre
 ### ❤️ Sponsor sleek
 Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can help covering these by [sponsoring the project](https://github.com/sponsors/ransome1).
 
+The project is also participating in GitSponsors, a platform that supports open-source developers through funding:
+
+[<img src="https://api.gitsponsors.com/api/badge/img?id=301463691" height="20">](https://api.gitsponsors.com/api/badge/link?p=D8BfxYAU1DxX1VNxduDJQbIUSYf6yxW/d0eMica/OVIxkPYetoBj4zOxaMZ2M2UWztuE+Q9zJ62tLJqTewz4UzgisFtstXsGEBi0GLqJTMhvroMtJREbEjD6DFlvykacEc+7ak5lmmxN6ZECCJbm7w==)
+
 ### 👩🏾‍💻 This project needs your support
 sleek's backlog is becoming increasingly populated, yet our capacity remains limited. If you are skilled in `React`, `TypeScript`, `Electron`, or `Jest/Playwright` you can support this project. Here you'll find our backlog: https://github.com/users/ransome1/projects/3. For those interested, [we've updated our contribution guidelines](https://github.com/ransome1/sleek/wiki/Contributing-Guidelines). The `develop` branch reflects the most recent progress.
 
