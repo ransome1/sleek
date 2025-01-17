@@ -10,7 +10,7 @@ const baseTheme: Theme = createTheme({
     borderRadius: '0.65em'
   },
   typography: {
-    fontFamily: 'FreeSans, Helvetica, Arial, sans-serif',
+    fontFamily: 'Helvetica, Arial, sans-serif',
     fontSize: 'auto'
   },
   components: {

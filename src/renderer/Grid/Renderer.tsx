@@ -136,6 +136,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         })
       },
       a: ({ children, href }: { children: string; href?: string }): JSX.Element => {
+        if (!children) return false
         const match = /([a-zA-Z]+:\/\/\S+)/g.exec(children)
         const maxChars = 40
         const truncatedChildren =

@@ -10,6 +10,7 @@ import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
 import './modules/IpcMain.js'
+let startTime;
 const environment: string | undefined = process.env.NODE_ENV
 let mainWindow: BrowserWindow | null = null
 const eventListeners: Record<string, any | undefined> = {}
@@ -126,6 +127,20 @@ const createMainWindow = () => {
     }
   })
 
+  mainWindow.once('ready-to-show', () => {
+    const endTime = performance.now();
+    console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`);
+  });
+
+  mainWindow
+    .on('resize', handleResize)
+    .on('move', handleMove)
+    .on('show', handleShow)
+    .on('closed', handleClosed)
+    .on('maximize', handleMaximize)
+    .on('unmaximize', handleUnmaximize)
+
+
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -143,14 +158,6 @@ const createMainWindow = () => {
 
   nativeTheme.themeSource = config.get('colorTheme')
 
-  mainWindow
-    .on('resize', handleResize)
-    .on('move', handleMove)
-    .on('show', handleShow)
-    .on('closed', handleClosed)
-    .on('maximize', handleMaximize)
-    .on('unmaximize', handleUnmaximize)
-
   eventListeners.handleClosed = handleClosed
   eventListeners.handleResize = handleResize
   eventListeners.handleMove = handleMove
@@ -160,10 +167,6 @@ const createMainWindow = () => {
 
   if (config.get('tray')) {
     createTray()
-  }
-
-  if (environment === 'development') {
-    mainWindow.webContents.openDevTools()
   }
 
   const customStylesPath: string = config.get('customStylesPath')
@@ -176,6 +179,10 @@ const createMainWindow = () => {
         console.error('Error reading the CSS file:', error)
       }
     })
+  }  
+
+  if (environment === 'development') {
+    mainWindow.webContents.openDevTools()
   }
 }
 
@@ -202,6 +209,7 @@ const handleBeforeQuit = () => {
 app
   .whenReady()
   .then(() => {
+    startTime = performance.now();
     createMainWindow()
     eventListeners.handleCreateWindow = handleCreateWindow
     eventListeners.handleWindowAllClosed = handleWindowAllClosed
