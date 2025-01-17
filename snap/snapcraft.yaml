@@ -1,6 +1,6 @@
 name: sleek
 base: core24
-version: "2.0.16-rc.1"
+version: '2.0.16-rc.1'
 summary: todo.txt manager for Linux, free and open-source (FOSS)
 description: |
   sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
@@ -27,23 +27,23 @@ apps:
     environment:
       DISABLE_WAYLAND: 1
       TMPDIR: $XDG_RUNTIME_DIR
-      PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
+      PATH: '$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH'
       SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
       GTK_USE_PORTAL: '1'
     extensions: [gnome]
     plugs:
-    - desktop
-    - home
-    - browser-support
-    - network
-    - removable-media
+      - desktop
+      - home
+      - browser-support
+      - network
+      - removable-media
 parts:
   sleek:
     plugin: nil
     build-environment:
-    - PATH: "$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin"
+      - PATH: '$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin'
     build-snaps:
-    - node/22/stable
+      - node/22/stable
     source: .
     override-build: |
       if [ -n "$http_proxy" ]; then
@@ -58,9 +58,9 @@ parts:
       mv dist/linux* \
         $SNAPCRAFT_PART_INSTALL/sleek
     stage-packages:
-      - libnss3        
+      - libnss3
   cleanup:
-    after: [ sleek ]
+    after: [sleek]
     plugin: nil
     build-snaps: [gnome-42-2204]
     override-prime: |

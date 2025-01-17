@@ -1,28 +1,28 @@
-@use "../Variables.scss";
+@use '../Variables.scss';
 
 .react-autosuggest__suggestions-container--open {
-	max-height: 20em;
-	min-height: 5em;
-	overflow-y: auto;
-	position: fixed;
-	z-index: 10;
-	margin-top: 0.125em;
-	padding: 1em;
-	border-radius: Variables.$radius;
-	background-color: rgba(240, 240, 240, 1);
-	ul {
-		padding: 0;
-		margin: 0;
-		list-style: none;
-		li {
-			float: left;
-			margin: 0.15em 0.3em 0.15em 0;
-		}
-	}
+  max-height: 20em;
+  min-height: 5em;
+  overflow-y: auto;
+  position: fixed;
+  z-index: 10;
+  margin-top: 0.125em;
+  padding: 1em;
+  border-radius: Variables.$radius;
+  background-color: rgba(240, 240, 240, 1);
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    li {
+      float: left;
+      margin: 0.15em 0.3em 0.15em 0;
+    }
+  }
 }
 
 .darkTheme {
-	.react-autosuggest__suggestions-container--open {
-		background-color: rgba(45, 45, 45, 1);
-	}
+  .react-autosuggest__suggestions-container--open {
+    background-color: rgba(45, 45, 45, 1);
+  }
 }

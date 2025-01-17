@@ -3,13 +3,13 @@ name: Bug report
 about: Report a bug and help improving sleek
 title: ''
 labels: 'bug'
-
 ---
 
 ## Bug Report
 
-### Important ###
-Please follow this template strictly when reporting bugs. 
+### Important
+
+Please follow this template strictly when reporting bugs.
 
 Reports that do not adhere to this template will not be addressed and will be closed.
 
@@ -26,6 +26,7 @@ Explain what you expected to happen.
 Explain what actually happened.
 
 **Steps to Reproduce:**
+
 1. Open the app.
 2. Click on 'X' button.
 3. Observe the unexpected behavior.

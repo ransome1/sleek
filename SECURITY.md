@@ -5,10 +5,10 @@
 The following versions of sleek are provided with security updates.
 
 | Version | Supported |
-|---------|-----------|
-| 2.x.x   | ✅         |
-| 1.x.x   | ❌         |
-| 0.x.x   | ❌         |
+| ------- | --------- |
+| 2.x.x   | ✅        |
+| 1.x.x   | ❌        |
+| 0.x.x   | ❌        |
 
 ## Reporting a Vulnerability
 

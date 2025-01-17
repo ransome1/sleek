@@ -1,42 +1,42 @@
-@use "../Variables.scss";
+@use '../Variables.scss';
 
 #ToolBar {
-	width: 3em;
-	height: 3em;
-	position: fixed;
-	top: 0;
-	right: 0;
-	z-index: 9;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0 1em;
-	background: #fff;
-	svg {
-		display: flex;
-		cursor: pointer;
-		font-size: 1.85em;
-		color: Variables.$dark-grey;
-		&.active {
-			color: Variables.$blue;
-		}
-	}
-	& svg:hover {
-		color: Variables.$blue;
-	}
+  width: 3em;
+  height: 3em;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1em;
+  background: #fff;
+  svg {
+    display: flex;
+    cursor: pointer;
+    font-size: 1.85em;
+    color: Variables.$dark-grey;
+    &.active {
+      color: Variables.$blue;
+    }
+  }
+  & svg:hover {
+    color: Variables.$blue;
+  }
 }
 
 .darkTheme {
-	#ToolBar {
-		background: #212224;
-		svg {
-			color: Variables.$mid-grey;
-			&.active {
-				color: Variables.$blue;
-			}			
-		}
-		& svg:hover {
-			color: Variables.$blue;
-		}
-	}
+  #ToolBar {
+    background: #212224;
+    svg {
+      color: Variables.$mid-grey;
+      &.active {
+        color: Variables.$blue;
+      }
+    }
+    & svg:hover {
+      color: Variables.$blue;
+    }
+  }
 }

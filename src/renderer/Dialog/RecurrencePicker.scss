@@ -1,21 +1,21 @@
 #recurrencePicker {
-	.MuiPaper-root {
-		padding: 1em;
-		.MuiFormControl-root {
-			margin-right: 1em;
-			vertical-align: middle;
-			.recurrencePickerPopupInput {
-				input {
-					width: 3em;
-				}
-			}
-			.MuiFormControlLabel-root {
-				height: 1.5em;
-			}		
-		}
-	}
+  .MuiPaper-root {
+    padding: 1em;
+    .MuiFormControl-root {
+      margin-right: 1em;
+      vertical-align: middle;
+      .recurrencePickerPopupInput {
+        input {
+          width: 3em;
+        }
+      }
+      .MuiFormControlLabel-root {
+        height: 1.5em;
+      }
+    }
+  }
 }
 
 .recurrencePicker {
-	width: 7em;
+  width: 7em;
 }

@@ -1,4 +1,4 @@
-@use "../Variables.scss";
+@use '../Variables.scss';
 
 #grid {
   padding: 1em;
@@ -22,5 +22,5 @@
       background: Variables.$dark-grey;
       border-radius: 0.3em;
     }
-  }  
+  }
 }

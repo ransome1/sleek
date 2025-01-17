@@ -1,4 +1,4 @@
-@use "Variables.scss";
+@use 'Variables.scss';
 
 .hideNavigation #navigation button.showNavigation {
   min-width: 2.5em;
@@ -63,7 +63,8 @@
     svg {
       color: Variables.$dark-grey;
     }
-    &:active, &.active {
+    &:active,
+    &.active {
       background: Variables.$light-grey;
     }
     &:focus-visible {
@@ -81,12 +82,14 @@
       svg {
         color: Variables.$mid-grey;
       }
-      &:hover, &:active, &.active {
-        background: #3B3B3B;
+      &:hover,
+      &:active,
+      &.active {
+        background: #3b3b3b;
       }
       &:focus-visible {
-        background: #3B3B3B;
-      }      
+        background: #3b3b3b;
+      }
     }
   }
 }

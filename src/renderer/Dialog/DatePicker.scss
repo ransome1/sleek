@@ -1,20 +1,20 @@
-@use "../Variables.scss";
+@use '../Variables.scss';
 
 .datePicker {
-	width: 11.5em;
-	.Mui-focusVisible {
-		color: Variables.$blue;
-	}
+  width: 11.5em;
+  .Mui-focusVisible {
+    color: Variables.$blue;
+  }
 }
 
 .MuiPickersLayout-root {
-	button {
-			font-size: 1em;
-			border: none;
-			border-radius: Variables.$radius;
-			&.MuiPickersDay-today {
-				border: inherit;		
-				background: Variables.$mid-grey;
-			}
-		}
+  button {
+    font-size: 1em;
+    border: none;
+    border-radius: Variables.$radius;
+    &.MuiPickersDay-today {
+      border: inherit;
+      background: Variables.$mid-grey;
+    }
+  }
 }

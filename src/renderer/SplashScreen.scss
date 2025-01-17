@@ -1,37 +1,36 @@
-@use "Variables.scss";
+@use 'Variables.scss';
 
 #splashScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+  h1 {
+    font-weight: bold;
+    line-height: 1.2em;
+  }
+  svg {
+    font-size: 3em;
+    color: Variables.$mid-grey;
+  }
+  .buttons {
     display: flex;
-    flex-direction: column;
+    gap: 0.5em;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-    flex-grow: 1;
-    h1 {
-    	font-weight: bold;
-        line-height: 1.2em;
-    }
-    svg {
-        font-size: 3em;
-        color: Variables.$mid-grey;
-    }
-    .buttons {
-        display: flex;
-        gap: 0.5em;
-        justify-content: center;
-    }
-    .fileDropZone {
-        padding: 1em 2em;
-        border-radius: Variables.$radius;
-        border: 2px dashed #ccc;
-    }    
+  }
+  .fileDropZone {
+    padding: 1em 2em;
+    border-radius: Variables.$radius;
+    border: 2px dashed #ccc;
+  }
 }
 
 .darkTheme {
-    #splashScreen {
-        svg {
-            color: Variables.$dark-grey;
-        }
- 
-    } 
+  #splashScreen {
+    svg {
+      color: Variables.$dark-grey;
+    }
+  }
 }

@@ -1,5 +1,5 @@
-@use "Variables.scss";
-@use "Coloring.scss";
+@use 'Variables.scss';
+@use 'Coloring.scss';
 
 body {
   overflow: hidden;
@@ -32,7 +32,7 @@ body {
       }
       &.hideNavigation {
         transition: margin-left 0.3s ease;
-        margin-left: 0;        
+        margin-left: 0;
         #navigation {
           left: -5em;
         }
@@ -44,7 +44,7 @@ body {
         button.showNavigation {
           background: Variables.$darker-grey;
           color: Variables.$light-grey;
-        }            
+        }
       }
     }
     .disableAnimations {
@@ -54,7 +54,11 @@ body {
     }
   }
 
-  h1, h2, h3, h4, h5 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     font-weight: bold;
   }
 

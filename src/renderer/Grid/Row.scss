@@ -1,5 +1,5 @@
-@use "sass:color";
-@use "../Variables.scss";
+@use 'sass:color';
+@use '../Variables.scss';
 
 .row {
   width: auto;
@@ -38,7 +38,7 @@
         font-size: 1em;
         padding: 0 0.5em;
         margin: 0;
-      }      
+      }
     }
     &.pomodoro {
       svg {
@@ -49,8 +49,8 @@
   .MuiCheckbox-root {
     padding: 0.35em;
   }
-  &[data-complete=true],
-  &[data-hidden=true] {
+  &[data-complete='true'],
+  &[data-hidden='true'] {
     filter: opacity(50%) grayscale(100%);
   }
   &:last-child {
@@ -83,10 +83,10 @@
     button {
       .MuiChip-root {
         background: color.adjust(Variables.$dark-grey, $lightness: -10%);
-      }  
+      }
     }
     &.group {
       border: none;
-    }  
+    }
   }
 }

@@ -1,62 +1,62 @@
-@use "../Variables.scss";
+@use '../Variables.scss';
 
 #drawer {
-	height: 100vh;
-	padding: 0;
-	transition: margin-left 0.3s ease;
-	.MuiPaper-root {
-		position: relative;
-		z-index: 5;
-		.MuiTabs-root {
-			min-height: 5em;
-		}
-		.MuiTabs-flexContainer {
-			button {
-				font-size: 0.85em;
-				text-transform: none;
-				white-space: nowrap;
-				.reset {
-					width: 1em;
-					height: 1em;
-					position: absolute;
-					right: 0em;
-					bottom: 0em;
-					color: Variables.$dark-grey;
-				}
-			}
-		}
-		.MuiTabs-indicator {
-			top: 0;
-		}
-	}
-	.drawerHandle {
-		width: 0.3em;
-		height: 100vh;
-		position: absolute;
-		top: 0;
-		right: 0;
-		cursor: ew-resize;
-	}
-	&.open {
-		min-width: 19em;
-		margin-left: 0!important;
-	}
+  height: 100vh;
+  padding: 0;
+  transition: margin-left 0.3s ease;
+  .MuiPaper-root {
+    position: relative;
+    z-index: 5;
+    .MuiTabs-root {
+      min-height: 5em;
+    }
+    .MuiTabs-flexContainer {
+      button {
+        font-size: 0.85em;
+        text-transform: none;
+        white-space: nowrap;
+        .reset {
+          width: 1em;
+          height: 1em;
+          position: absolute;
+          right: 0em;
+          bottom: 0em;
+          color: Variables.$dark-grey;
+        }
+      }
+    }
+    .MuiTabs-indicator {
+      top: 0;
+    }
+  }
+  .drawerHandle {
+    width: 0.3em;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: ew-resize;
+  }
+  &.open {
+    min-width: 19em;
+    margin-left: 0 !important;
+  }
 }
 
 .disableAnimations #drawer {
-	transition: none;
+  transition: none;
 }
 
 .darkTheme {
-	#drawer {
-		.MuiPaper-root {
-			.MuiTabs-flexContainer {
-				button {
-					.reset {
-						color: Variables.$light-grey;
-					}					
-				}
-			}
-		}
-	}
+  #drawer {
+    .MuiPaper-root {
+      .MuiTabs-flexContainer {
+        button {
+          .reset {
+            color: Variables.$light-grey;
+          }
+        }
+      }
+    }
+  }
 }
