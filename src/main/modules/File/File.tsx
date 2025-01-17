@@ -1,31 +1,33 @@
-import fs from 'fs';
-import { app } from 'electron';
-import { config } from '../../config';
-import { createTray } from '../Tray';
-import { createMenu } from '../Menu';
-import path from 'path';
-import { mainWindow } from '../../index';
+import fs from 'fs'
+import { app } from 'electron'
+import { config } from '../../config'
+import { createTray } from '../Tray'
+import { createMenu } from '../Menu'
+import path from 'path'
+import { mainWindow } from '../../index'
 
 function readFileContent(filePath: string, bookmark: string | null): string | Error {
-  const stopAccessingSecurityScopedResource = (process.mas && bookmark) ? app.startAccessingSecurityScopedResource(bookmark) : null;
-  const fileContent = fs.readFileSync(filePath, 'utf8');
+  const stopAccessingSecurityScopedResource =
+    process.mas && bookmark ? app.startAccessingSecurityScopedResource(bookmark) : null
+  const fileContent = fs.readFileSync(filePath, 'utf8')
 
   if (stopAccessingSecurityScopedResource && process.mas && bookmark) {
-    stopAccessingSecurityScopedResource();
+    stopAccessingSecurityScopedResource()
   }
 
-  return fileContent;
+  return fileContent
 }
 
 function addFile(filePath: string, bookmark: string | null) {
-  if(process.mas && !bookmark) throw new Error('The Mac App Store release requires you to open files using the file dialog');
+  if (process.mas && !bookmark)
+    throw new Error('The Mac App Store release requires you to open files using the file dialog')
 
-  const files: FileObject[] = config.get('files');
-  const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath);
+  const files: FileObject[] = config.get('files')
+  const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath)
 
-  files.forEach((file) => (file.active = false));
+  files.forEach((file) => (file.active = false))
 
-  if(existingFileIndex === -1) {
+  if (existingFileIndex === -1) {
     files.push({
       active: true,
       todoFileName: path.basename(filePath),
@@ -33,76 +35,76 @@ function addFile(filePath: string, bookmark: string | null) {
       todoFileBookmark: bookmark,
       doneFilePath: null,
       doneFileBookmark: null
-    });
+    })
   } else {
-    files[existingFileIndex].active = true;
+    files[existingFileIndex].active = true
   }
 
-  config.set('files', files);
+  config.set('files', files)
 
-  createMenu(files);
+  createMenu(files)
 
-  if(config.get('tray')) {
-    createTray();
+  if (config.get('tray')) {
+    createTray()
   }
 
-  return 'File added';
+  return 'File added'
 }
 
 function addDoneFile(filePath: string, bookmark: string | null) {
-  const files: FileObject[] = config.get('files');
-  const activeIndex: number = files.findIndex((file) => file.active);
+  const files: FileObject[] = config.get('files')
+  const activeIndex: number = files.findIndex((file) => file.active)
 
-  if(activeIndex === -1) return false;
+  if (activeIndex === -1) return false
 
-  files[activeIndex].doneFilePath = filePath;
-  files[activeIndex].doneFileBookmark = bookmark;
+  files[activeIndex].doneFilePath = filePath
+  files[activeIndex].doneFileBookmark = bookmark
 
-  config.set('files', files);
+  config.set('files', files)
 
-  mainWindow!.webContents.send('triggerArchiving', true);
+  mainWindow!.webContents.send('triggerArchiving', true)
 }
 
 function removeFile(index: number) {
-  let files: FileObject[] = config.get('files');
+  let files: FileObject[] = config.get('files')
 
-  files.splice(index, 1);
-  const activeIndex: number = files.findIndex((file) => file.active);
+  files.splice(index, 1)
+  const activeIndex: number = files.findIndex((file) => file.active)
 
-  if(files.length > 0 && activeIndex === -1) {
-    files[0].active = true;
-  } else if(activeIndex !== -1) {
-    files[activeIndex].active = true;
+  if (files.length > 0 && activeIndex === -1) {
+    files[0].active = true
+  } else if (activeIndex !== -1) {
+    files[activeIndex].active = true
   } else {
-    files = [];
+    files = []
   }
 
-  config.set('files', files);
+  config.set('files', files)
 
-  createMenu(files);
+  createMenu(files)
 
-  const tray = config.get('tray');
+  const tray = config.get('tray')
 
-  if(tray) {
-    createTray();
+  if (tray) {
+    createTray()
   }
-  return 'File removed';
+  return 'File removed'
 }
 
 function setFile(index: number) {
-  const files: FileObject[] = config.get('files');
+  const files: FileObject[] = config.get('files')
 
-  if(files.length > 0) {
+  if (files.length > 0) {
     files.forEach((file) => {
-      file.active = false;
-    });
+      file.active = false
+    })
   }
 
-  files[index].active = true;
+  files[index].active = true
 
-  config.set('files', files);
+  config.set('files', files)
 
-  return 'File changed';
+  return 'File changed'
 }
 
-export { setFile, removeFile, addFile, addDoneFile, readFileContent };
+export { setFile, removeFile, addFile, addDoneFile, readFileContent }

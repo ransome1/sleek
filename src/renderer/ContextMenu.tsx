@@ -1,29 +1,25 @@
-import React, { memo } from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import React, { memo } from 'react'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 
 interface ContextMenuProps {
-  contextMenu: ContextMenu;
-  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+  contextMenu: ContextMenu
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
 }
 
-const ContextMenu: React.FC<ContextMenuProps> = memo(({
-  contextMenu,
-  setContextMenu,
-  setPromptItem,
-}) => {
-  const onClick = (contextMenuItem: ContextMenuItem) => {
-    if(contextMenuItem.promptItem) {
-      setPromptItem(contextMenuItem.promptItem);
-    } else if(contextMenuItem.function) {
-      contextMenuItem.function();
-      setContextMenu(null);
+const ContextMenu: React.FC<ContextMenuProps> = memo(
+  ({ contextMenu, setContextMenu, setPromptItem }) => {
+    const onClick = (contextMenuItem: ContextMenuItem): void => {
+      if (contextMenuItem.promptItem) {
+        setPromptItem(contextMenuItem.promptItem)
+      } else if (contextMenuItem.function) {
+        contextMenuItem.function()
+        setContextMenu(null)
+      }
     }
-  };
 
-  return (
-    <>
+    return (
       <Menu
         id="contextMenu"
         open={Boolean(contextMenu)}
@@ -31,18 +27,21 @@ const ContextMenu: React.FC<ContextMenuProps> = memo(({
         anchorReference="anchorPosition"
         anchorPosition={{ top: contextMenu.event.clientY, left: contextMenu.event.clientX }}
       >
-        {contextMenu && contextMenu.items.map((contextMenuItem: ContextMenuItem) => (
-          <MenuItem 
-            key={contextMenuItem.id}
-            data-testid={`contextMenu-item-${contextMenuItem.id}`}
-            onClick={() => onClick(contextMenuItem)}
-          >
-            {contextMenuItem.label}
-          </MenuItem>
-        ))}
+        {contextMenu &&
+          contextMenu.items.map((contextMenuItem: ContextMenuItem) => (
+            <MenuItem
+              key={contextMenuItem.id}
+              data-testid={`contextMenu-item-${contextMenuItem.id}`}
+              onClick={() => onClick(contextMenuItem)}
+            >
+              {contextMenuItem.label}
+            </MenuItem>
+          ))}
       </Menu>
-    </>
-  );
-});
+    )
+  }
+)
 
-export default ContextMenu;
+ContextMenu.displayName = 'ContextMenu'
+
+export default ContextMenu

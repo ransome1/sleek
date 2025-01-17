@@ -1,28 +1,28 @@
-import { mainWindow } from './index.js';
+import { mainWindow } from './index.js'
 
 function getChannel(): string {
   if (process.env.APPIMAGE) {
-    return "AppImage";
+    return 'AppImage'
   } else if (process.windowsStore) {
-    return "Windows Store";
+    return 'Windows Store'
   } else if (process.mas) {
-    return "Mac App Store";
+    return 'Mac App Store'
   } else if (process.env.SNAP) {
-    return "Snap Store";
+    return 'Snap Store'
   } else if (process.env.FLATPAK_ID) {
-    return "Flathub";
+    return 'Flathub'
   } else if (process.env.AUR) {
-    return "AUR";
+    return 'AUR'
   } else if (process.env.PORTABLE_EXECUTABLE_DIR) {
-    return "Portable";
+    return 'Portable'
   } else {
-    return "Misc";
+    return 'Misc'
   }
 }
 
 function handleError(error: Error) {
-  console.error(error);
-  mainWindow!.webContents.send('responseFromMainProcess', error);
+  console.error(error)
+  mainWindow!.webContents.send('responseFromMainProcess', error)
 }
 
 export { getChannel, handleError }

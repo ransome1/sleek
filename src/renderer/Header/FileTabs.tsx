@@ -1,43 +1,38 @@
-import React, { useState, useEffect, memo } from 'react';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { withTranslation, WithTranslation } from 'react-i18next';
-import './FileTabs.scss';
-import { i18n } from '../Settings/LanguageSelector';
+import React, { useState, useEffect, memo } from 'react'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { withTranslation, WithTranslation } from 'react-i18next'
+import './FileTabs.scss'
+import { i18n } from '../Settings/LanguageSelector'
 
-const { ipcRenderer } = window.api;
+const { ipcRenderer } = window.api
 
 interface FileTabsProps extends WithTranslation {
-  settings: Settings;
-  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-  t: typeof i18n.t;
+  settings: Settings
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
+  t: typeof i18n.t
 }
 
-const FileTabs: React.FC<FileTabsProps> = memo(({
-  settings,
-  setContextMenu,
-  t,
-}) => {
+const FileTabs: React.FC<FileTabsProps> = memo(({ settings, setContextMenu, t }) => {
+  const handleContextMenu = (event: React.MouseEvent, index: number): void => {
+    const fileObject = settings.files[index]
 
-  const handleContextMenu = (event: React.MouseEvent, index: number) => {
-    const fileObject = settings.files[index];
+    const handleOpenDoneFile = (): void => {
+      ipcRenderer.send('openFile', true)
+    }
 
-    const handleOpenDoneFile = () => {
-      ipcRenderer.send('openFile', true);
-    };
+    const handleCreateDoneFile = (): void => {
+      ipcRenderer.send('createFile', true)
+    }
 
-    const handleCreateDoneFile = () => {
-      ipcRenderer.send('createFile', true);
-    };
+    const handleRevealFile = (path: string | null): void => {
+      if (path) ipcRenderer.send('revealInFileManager', path)
+    }
 
-    const handleRevealFile = (path: string | null) => {
-      if(path) ipcRenderer.send('revealInFileManager', path);
-    };
-
-    const handleRemoveFile = (index: number) => {
-      if(index >= 0) ipcRenderer.send('removeFile', index);
-    };
+    const handleRemoveFile = (index: number): void => {
+      if (index >= 0) ipcRenderer.send('removeFile', index)
+    }
 
     setContextMenu({
       event: event,
@@ -52,19 +47,19 @@ const FileTabs: React.FC<FileTabsProps> = memo(({
             button1: t('openFile'),
             onButton1: handleOpenDoneFile,
             button2: t('createFile'),
-            onButton2: handleCreateDoneFile,
-          },
+            onButton2: handleCreateDoneFile
+          }
         },
         fileObject.todoFilePath && {
           id: 'revealFile',
           label: t('fileTabs.revealTodoFile'),
-          function: () => handleRevealFile(fileObject.todoFilePath),
+          function: (): void => handleRevealFile(fileObject.todoFilePath)
         },
         fileObject.doneFilePath && {
           id: 'revealArchivingFile',
           label: t('fileTabs.revealArchivingFile'),
-          function: () => handleRevealFile(fileObject.doneFilePath),
-        },      
+          function: (): void => handleRevealFile(fileObject.doneFilePath)
+        },
         {
           id: 'removeFile',
           label: t('fileTabs.removeFileLabel'),
@@ -72,53 +67,55 @@ const FileTabs: React.FC<FileTabsProps> = memo(({
             headline: t('fileTabs.removeFileHeadline'),
             text: t('fileTabs.removeFileText'),
             button1: t('fileTabs.removeFileLabel'),
-            onButton1: () => handleRemoveFile(index),
-          },
-        },
+            onButton1: (): void => handleRemoveFile(index)
+          }
+        }
       ].filter(Boolean)
-    });
-  };
+    })
+  }
 
-  const index = settings.files.findIndex((file) => file.active);
-  const [fileTab, setFileTab] = useState<number>(index !== -1 ? index : 0);
+  const index = settings.files.findIndex((file) => file.active)
+  const [fileTab, setFileTab] = useState<number>(index !== -1 ? index : 0)
 
-  const handleChange = (_event: React.SyntheticEvent, index: number) => {
-    if(index < 0 || index > 9) return false;
-    setFileTab(index);
-    ipcRenderer.send('setFile', index);
-  };
+  const handleChange = (_event: React.SyntheticEvent, index: number): boolean | void => {
+    if (index < 0 || index > 9) return false
+    setFileTab(index)
+    ipcRenderer.send('setFile', index)
+  }
 
   useEffect(() => {
-    setFileTab(index !== -1 ? index : 0);
-  }, [index]);
+    setFileTab(index !== -1 ? index : 0)
+  }, [index])
 
   return (
     <Tabs value={fileTab} id="fileTabs" onChange={handleChange}>
-    {settings.files.map((file, index) => (
-      file ? (
-        <Tab
-          key={index}
-          label={file.todoFileName}
-          tabIndex={0}
-          onContextMenu={(event) => handleContextMenu(event, index)}
-          data-testid={`header-filetabs-tab-${index}`}
-          className={file.active ? 'active-tab' : ''}
-          value={index}
-          icon={
-            <MoreVertIcon
-              data-testid={`header-filetabs-tab-${index}-icon`}
-              onClick={(event) => {
-                event.stopPropagation();
-                handleContextMenu(event, index);
-              }}
-              role="button"
-            />
-          }
-        />
-      ) : null
-    ))}
+      {settings.files.map((file, index) =>
+        file ? (
+          <Tab
+            key={index}
+            label={file.todoFileName}
+            tabIndex={0}
+            onContextMenu={(event) => handleContextMenu(event, index)}
+            data-testid={`header-filetabs-tab-${index}`}
+            className={file.active ? 'active-tab' : ''}
+            value={index}
+            icon={
+              <MoreVertIcon
+                data-testid={`header-filetabs-tab-${index}-icon`}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  handleContextMenu(event, index)
+                }}
+                role="button"
+              />
+            }
+          />
+        ) : null
+      )}
     </Tabs>
-  );
-});
+  )
+})
 
-export default withTranslation()(FileTabs);
+FileTabs.displayName = 'FileTabs'
+
+export default withTranslation()(FileTabs)

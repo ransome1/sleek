@@ -29,7 +29,7 @@
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
-    "lint": "eslint ./src --fix",
+    "lint": "eslint ./src/renderer --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "yarn typecheck:node && yarn typecheck:web",
@@ -40,7 +40,7 @@
     "build:unpack": "yarn build && electron-builder --dir",
     "mas": "yarn build && electron-builder build -m mas --universal --publish never",
     "masdev": "yarn build && electron-builder build -m mas-dev --universal --publish never",
-    "peggy": "peggy --format es --output ./src/main/modules/Filters/FilterLang.js ./src/main/modules/Filters/FilterLang.pegjs"
+    "peggy": "peggy --format es --dts --output ./src/main/modules/Filters/FilterLang.ts ./src/main/modules/Filters/FilterLang.pegjs"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
@@ -70,11 +70,12 @@
     "@types/node": "^22.10.6",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
+    "@typescript-eslint/parser": "^8.20.0",
     "@vitejs/plugin-react": "^4.3.1",
     "electron": "^34.0.0",
     "electron-builder": "^25.1.8",
     "electron-vite": "^2.3.0",
-    "eslint": "^9.18.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
     "material-ui-popup-state": "^5.3.3",
     "peggy": "^4.2.0",

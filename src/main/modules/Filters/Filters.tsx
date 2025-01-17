@@ -1,14 +1,16 @@
-import { config } from '../../config';
-import dayjs from 'dayjs';
+import { config } from '../../config'
+import dayjs from 'dayjs'
 
 function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
   return todoObjects.filter((todoObject: TodoObject) => {
     return Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {
       if (filterArray.length === 0) {
-        return true;
+        return true
       }
 
-      const attributeValues: any = ['due', 't'].includes(key) ? todoObject[key as keyof TodoObject] : todoObject[key as keyof TodoObject];
+      const attributeValues: any = ['due', 't'].includes(key)
+        ? todoObject[key as keyof TodoObject]
+        : todoObject[key as keyof TodoObject]
 
       return filterArray.every(({ values, exclude }: Filter) => {
         if (
@@ -16,40 +18,41 @@ function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): To
           attributeValues === null ||
           (Array.isArray(attributeValues) && attributeValues.length === 0)
         ) {
-          return exclude;
+          return exclude
         }
 
         const hasMatchingValue = Array.isArray(attributeValues)
           ? attributeValues.some((val) => values.includes(val))
-          : Array.isArray(values) && values.includes(attributeValues);
+          : Array.isArray(values) && values.includes(attributeValues)
 
-        return exclude ? !hasMatchingValue : hasMatchingValue;
-      });
-    });
-  });
+        return exclude ? !hasMatchingValue : hasMatchingValue
+      })
+    })
+  })
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  const showCompleted: boolean = config.get('showCompleted');
+  const showCompleted: boolean = config.get('showCompleted')
   if (!showCompleted) {
-    return todoObjects.filter((todoObject: TodoObject) => !todoObject.complete);
+    return todoObjects.filter((todoObject: TodoObject) => !todoObject.complete)
   } else {
-    return todoObjects;
+    return todoObjects
   }
 }
 
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
-  const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture');
-  const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture');
+  const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture')
+  const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture')
 
   return todoObjects.filter((todoObject: TodoObject) => {
+    const thresholdDate = dayjs(todoObject?.t)
+    const dueDate = dayjs(todoObject?.due)
 
-    const thresholdDate = dayjs(todoObject?.t);
-    const dueDate = dayjs(todoObject?.due);
-
-    return !(thresholdDate && thresholdDate.isAfter(dayjs()) && !thresholdDateInTheFuture) &&
-           !(dueDate && dueDate.isAfter(dayjs()) && !dueDateInTheFuture);
-  });
+    return (
+      !(thresholdDate && thresholdDate.isAfter(dayjs()) && !thresholdDateInTheFuture) &&
+      !(dueDate && dueDate.isAfter(dayjs()) && !dueDateInTheFuture)
+    )
+  })
 }
 
-export { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates };
+export { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates }

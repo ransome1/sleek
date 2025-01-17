@@ -1,9 +1,9 @@
-import { getActiveFile } from '../../main/modules/File/Active';
+import { getActiveFile } from '../../main/modules/File/Active'
 
 jest.mock('../../main/config', () => ({
   config: {
     get: jest.fn((key) => {
-      if(key === 'files') {
+      if (key === 'files') {
         return [
           {
             active: false,
@@ -11,7 +11,7 @@ jest.mock('../../main/config', () => ({
             todoFilePath: '/test1.txt',
             todoFileBookmark: null,
             doneFilePath: 'done.txt',
-            doneFileBookmark: null,
+            doneFileBookmark: null
           },
           {
             active: true,
@@ -19,25 +19,25 @@ jest.mock('../../main/config', () => ({
             todoFilePath: '/test2.txt',
             todoFileBookmark: null,
             doneFilePath: 'done.txt',
-            doneFileBookmark: null,
+            doneFileBookmark: null
           }
-        ];
+        ]
       }
     }),
-    set: jest.fn(),
-  },
-}));
+    set: jest.fn()
+  }
+}))
 
 describe('Get active file', () => {
   test('Should return the active file', () => {
-    const activeFile = getActiveFile();
+    const activeFile = getActiveFile()
     expect(activeFile).toEqual({
       active: true,
       todoFileName: 'test2.txt',
       todoFilePath: '/test2.txt',
       todoFileBookmark: null,
       doneFilePath: 'done.txt',
-      doneFileBookmark: null,
-    });
-  });
-});
+      doneFileBookmark: null
+    })
+  })
+})

@@ -1,71 +1,81 @@
-import React, { useState } from 'react';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import Badge from '@mui/material/Badge';
-import { handleFilterSelect, friendlyDate } from '../Shared';
-import { withTranslation } from 'react-i18next';
-import { i18n } from '../Settings/LanguageSelector';
-import dayjs from 'dayjs';
-import updateLocale from 'dayjs/plugin/updateLocale';
-dayjs.extend(updateLocale);
+import React, { useState } from 'react'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import Button from '@mui/material/Button'
+import Chip from '@mui/material/Chip'
+import Badge from '@mui/material/Badge'
+import { handleFilterSelect, friendlyDate } from '../Shared'
+import { withTranslation } from 'react-i18next'
+import { i18n } from '../Settings/LanguageSelector'
+import dayjs from 'dayjs'
+import updateLocale from 'dayjs/plugin/updateLocale'
+dayjs.extend(updateLocale)
 
-const { ipcRenderer } = window.api;
+const { ipcRenderer } = window.api
 
 interface Props {
-  type: string;
-  todoObject: TodoObject;
-  date: string | null;
-  filters: Filters | null;
-  settings: Settings;
-  t: typeof i18n.t;
+  type: string
+  todoObject: TodoObject
+  date: string | null
+  filters: Filters | null
+  settings: Settings
+  t: typeof i18n.t
 }
 
-const DatePickerInline: React.FC<Props> = ({
-  type,
-  todoObject,
-  date,
-  filters,
-  settings,
-  t,
-}) => {
-	const [open, setOpen] = useState(false);
-  const chipText = type === 'due' ? "due:" : type === 't' ? "t:" : null;
+const DatePickerInline: React.FC<Props> = ({ type, todoObject, date, filters, settings, t }) => {
+  const [open, setOpen] = useState(false)
+  const chipText = type === 'due' ? 'due:' : type === 't' ? 't:' : null
 
   dayjs.updateLocale(settings.language, {
-    weekStart: settings.weekStart,
-  });
+    weekStart: settings.weekStart
+  })
 
-  const handleChange = (date: dayjs.Dayjs | null) => {
+  const handleChange = (date: dayjs.Dayjs | null): void => {
     try {
-      ipcRenderer.send('writeTodoToFile', todoObject.lineNumber, todoObject.string, false, type, dayjs(date).format('YYYY-MM-DD'));
-    } catch(error: any) {
-      console.error(error);
+      ipcRenderer.send(
+        'writeTodoToFile',
+        todoObject.lineNumber,
+        todoObject.string,
+        false,
+        type,
+        dayjs(date).format('YYYY-MM-DD')
+      )
+    } catch (error: unknown) {
+      console.error(error)
     }
-  };
+  }
 
-  const handleClick = (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleClick = (event: React.MouseEvent): void => {
+    event.preventDefault()
     setOpen?.((prev) => !prev)
-  };
+  }
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    event.preventDefault();
-    if(event.key === 'Enter') {
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
+    event.preventDefault()
+    if (event.key === 'Enter') {
       setOpen?.((prev) => !prev)
     }
-  };
+  }
 
-  const DatePickerInline = ({ ...props }) => {
-    const ButtonField = ({ ...props }) => {
-      const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {} } = props;
-      const mustNotify = (type === 'due') ? !todoObject?.notify : true;
-      const formattedValue = settings.useHumanFriendlyDates && dayjs(date).isValid() ? friendlyDate(date, type, settings, t).pop() : date;
+  const DatePickerInline = ({ ...props }): void => {
+    const ButtonField = ({ ...props }): void => {
+      const {
+        disabled,
+        InputProps: { ref } = {},
+        inputProps: { 'aria-label': ariaLabel } = {}
+      } = props
+      const mustNotify = type === 'due' ? !todoObject?.notify : true
+      const formattedValue =
+        settings.useHumanFriendlyDates && dayjs(date).isValid()
+          ? friendlyDate(date, type, settings, t).pop()
+          : date
 
-      const selected = filters && type !== null && (filters[type as keyof Filters] || []).some((filter: Filter) => {
-        return filter.values.includes(date);
-      });
+      const selected =
+        filters &&
+        type !== null &&
+        (filters[type as keyof Filters] || []).some((filter: Filter) => {
+          return filter.values.includes(date)
+        })
 
       return (
         <span className={selected ? 'selected' : null} data-todotxt-attribute={type}>
@@ -88,11 +98,11 @@ const DatePickerInline: React.FC<Props> = ({
             </Badge>
           </Button>
         </span>
-      );
-    };
+      )
+    }
     return (
       <DatePicker
-        slots={{ 
+        slots={{
           field: ButtonField,
           ...props.slots
         }}
@@ -103,17 +113,14 @@ const DatePickerInline: React.FC<Props> = ({
         onOpen={() => setOpen(true)}
         value={dayjs(date)}
       />
-    );
-  };
+    )
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={settings.language}>
-      <DatePickerInline
-        onChange={handleChange}
-        date={date}
-      />
+      <DatePickerInline onChange={handleChange} date={date} />
     </LocalizationProvider>
-  );
-};
+  )
+}
 
-export default withTranslation()(DatePickerInline);
+export default withTranslation()(DatePickerInline)
