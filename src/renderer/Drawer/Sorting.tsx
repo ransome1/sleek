@@ -17,7 +17,7 @@ import './Sorting.scss'
 
 const { store } = window.api
 
-interface Props extends WithTranslation {
+interface DrawerSortingComponentProps extends WithTranslation {
   settings: Settings
   t: typeof i18n.t
 }
@@ -28,7 +28,7 @@ const visibleSettings = {
   }
 }
 
-const DrawerSorting: React.FC<Props> = ({ settings, t }) => {
+const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ settings, t }) => {
   const [accordionOrder, setAccordionOrder] = useState<Sorting[]>(settings.sorting)
 
   const moveItem = (index: number, direction: 'up' | 'down'): void => {
@@ -114,4 +114,4 @@ const DrawerSorting: React.FC<Props> = ({ settings, t }) => {
   )
 }
 
-export default withTranslation()(DrawerSorting)
+export default withTranslation()(DrawerSortingComponent)

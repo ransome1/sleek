@@ -14,14 +14,14 @@ import './Attributes.scss'
 
 const { store } = window.api
 
-interface DrawerAttributesProps extends WithTranslation {
+interface DrawerAttributesComponentProps extends WithTranslation {
   settings: Settings
   attributes: Attributes | null
   filters: Filters | null
   t: typeof i18n.t
 }
 
-const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(
+const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo(
   ({ settings, attributes, filters, t }) => {
     const [hovered, setHovered] = useState<string | null>(null)
     const isAttributesEmpty = useMemo(
@@ -226,6 +226,6 @@ const DrawerAttributes: React.FC<DrawerAttributesProps> = memo(
   }
 )
 
-DrawerAttributes.displayName = 'DrawerAttributes'
+DrawerAttributesComponent.displayName = 'DrawerAttributesComponent'
 
-export default withTranslation()(DrawerAttributes)
+export default withTranslation()(DrawerAttributesComponent)

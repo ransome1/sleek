@@ -16,7 +16,7 @@ import './Drawer.scss'
 
 const { store } = window.api
 
-interface Props extends WithTranslation {
+interface DrawerComponentProps extends WithTranslation {
   settings: Settings
   attributes: Attributes | null
   filters: Filters | null
@@ -24,7 +24,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t
 }
 
-const DrawerComponent: React.FC<Props> = memo(
+const DrawerComponent: React.FC<DrawerComponentProps> = memo(
   ({ settings, attributes, filters, searchFieldRef, t }) => {
     const [activeTab, setActiveTab] = useState<string>('attributes')
     const [drawerWidth, setDrawerWidth] = useState<number>(store.getConfig('drawerWidth') || 500)

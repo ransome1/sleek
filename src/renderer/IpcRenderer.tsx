@@ -3,7 +3,7 @@ import { AlertColor } from '@mui/material/Alert'
 
 const { ipcRenderer } = window.api
 
-interface Props {
+interface IpcComponentProps {
   setHeaders: React.Dispatch<React.SetStateAction<HeadersObject | null>>
   setAttributes: React.Dispatch<React.SetStateAction<Attributes | null>>
   setFilters: React.Dispatch<React.SetStateAction<Filters | null>>
@@ -16,7 +16,7 @@ interface Props {
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const IpcComponent: React.FC<Props> = ({
+const IpcComponent: React.FC<IpcComponentProps> = ({
   setHeaders,
   setAttributes,
   setFilters,

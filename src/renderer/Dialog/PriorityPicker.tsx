@@ -14,13 +14,17 @@ const priorities = [
   ...alphabetArray.map((letter) => ({ value: letter, label: letter }))
 ]
 
-interface PriorityPickerProps extends WithTranslation {
+interface PriorityPickerComponentProps extends WithTranslation {
   priority: string
   handleChange: (key: string, value: string) => void
   t: typeof i18n.t
 }
 
-const PriorityPicker: React.FC<PriorityPickerProps> = ({ priority, handleChange, t }) => {
+const PriorityPickerComponent: React.FC<PriorityPickerComponentProps> = ({
+  priority,
+  handleChange,
+  t
+}) => {
   const handleSelectChange = (event: SelectChangeEvent<string>): void => {
     handleChange('priority', event.target.value)
   }
@@ -45,4 +49,4 @@ const PriorityPicker: React.FC<PriorityPickerProps> = ({ priority, handleChange,
   )
 }
 
-export default withTranslation()(PriorityPicker)
+export default withTranslation()(PriorityPickerComponent)

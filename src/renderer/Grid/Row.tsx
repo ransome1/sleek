@@ -13,7 +13,7 @@ const { ipcRenderer } = window.api
 
 type HandleButtonClickType = (event: React.MouseEvent | React.KeyboardEvent) => void
 
-interface Props extends WithTranslation {
+interface RowProps extends WithTranslation {
   todoObject: TodoObject
   filters: Filters | null
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -25,7 +25,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t
 }
 
-const Row: React.FC<Props> = memo(
+const Row: React.FC<RowProps> = memo(
   ({
     todoObject,
     filters,

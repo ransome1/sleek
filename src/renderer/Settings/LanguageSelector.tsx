@@ -110,11 +110,11 @@ const friendlyLanguageName: Record<string, string> = {
   hi: 'हिन्दी'
 }
 
-interface LanguageSelectorProps {
+interface LanguageSelectorComponentProps {
   settings: Settings
 }
 
-const LanguageSelector: React.FC<LanguageSelectorProps> = ({ settings }) => {
+const LanguageSelectorComponent: React.FC<LanguageSelectorComponentProps> = ({ settings }) => {
   const supportedLanguages: false | readonly string[] | undefined = i18n.options.supportedLngs
 
   return (
@@ -144,5 +144,5 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ settings }) => {
   )
 }
 
-export default LanguageSelector
+export default LanguageSelectorComponent
 export { i18n }

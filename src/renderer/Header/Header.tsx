@@ -2,14 +2,14 @@ import React, { useEffect, useCallback, RefObject, memo } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 import './Header.scss'
 
-interface Props {
+interface HeaderComponentProps {
   settings: Settings
   searchFieldRef: RefObject<HTMLInputElement>
 }
 
 const { store } = window.api
 
-const HeaderComponent: React.FC<Props> = memo(({ settings, searchFieldRef }) => {
+const HeaderComponent: React.FC<HeaderComponentProps> = memo(({ settings, searchFieldRef }) => {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent): void => {
       const isSearchFocused = document.activeElement === searchFieldRef.current

@@ -16,7 +16,7 @@ import './Dialog.scss'
 
 const { ipcRenderer } = window.api
 
-interface Props extends WithTranslation {
+interface DialogComponentProps extends WithTranslation {
   dialogOpen: boolean
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   todoObject: TodoObject | null
@@ -32,7 +32,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t
 }
 
-const DialogComponent: React.FC<Props> = memo(
+const DialogComponent: React.FC<DialogComponentProps> = memo(
   ({
     dialogOpen,
     setDialogOpen,

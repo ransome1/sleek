@@ -13,7 +13,7 @@ import './Navigation.scss'
 
 const { ipcRenderer, store } = window.api
 
-interface Props extends WithTranslation {
+interface NavigationComponentProps extends WithTranslation {
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   settings: Settings
@@ -22,7 +22,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t
 }
 
-const NavigationComponent: React.FC<Props> = memo(
+const NavigationComponent: React.FC<NavigationComponentProps> = memo(
   ({ setIsSettingsOpen, setDialogOpen, settings, headers, setTodoObject, t }) => {
     const handleOpen = (): void => {
       if (settings.files?.length > 0) {

@@ -9,7 +9,7 @@ import './DatePicker.scss'
 
 dayjs.extend(updateLocale)
 
-interface Props extends WithTranslation {
+interface DatePickerComponentProps extends WithTranslation {
   date: string | null
   type: string
   settings: Settings
@@ -17,7 +17,13 @@ interface Props extends WithTranslation {
   t: typeof i18n.t
 }
 
-const DatePickerComponent: React.FC<Props> = ({ date, type, settings, handleChange, t }) => {
+const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
+  date,
+  type,
+  settings,
+  handleChange,
+  t
+}) => {
   dayjs.updateLocale(settings.language, {
     weekStart: settings.weekStart
   })

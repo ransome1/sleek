@@ -13,7 +13,7 @@ dayjs.extend(updateLocale)
 
 const { ipcRenderer } = window.api
 
-interface Props {
+interface DatePickerInlineComponentProps {
   type: string
   todoObject: TodoObject
   date: string | null
@@ -22,7 +22,14 @@ interface Props {
   t: typeof i18n.t
 }
 
-const DatePickerInline: React.FC<Props> = ({ type, todoObject, date, filters, settings, t }) => {
+const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
+  type,
+  todoObject,
+  date,
+  filters,
+  settings,
+  t
+}) => {
   const [open, setOpen] = useState(false)
   const chipText = type === 'due' ? 'due:' : type === 't' ? 't:' : null
 
@@ -123,4 +130,4 @@ const DatePickerInline: React.FC<Props> = ({ type, todoObject, date, filters, se
   )
 }
 
-export default withTranslation()(DatePickerInline)
+export default withTranslation()(DatePickerInlineComponent)

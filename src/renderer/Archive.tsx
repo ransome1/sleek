@@ -4,7 +4,7 @@ import { i18n } from './Settings/LanguageSelector'
 
 const { ipcRenderer } = window.api
 
-interface Props extends WithTranslation {
+interface ArchiveComponentProps extends WithTranslation {
   triggerArchiving: boolean
   setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>
   settings: Settings
@@ -13,7 +13,11 @@ interface Props extends WithTranslation {
   t: typeof i18n.t
 }
 
-const Archive: React.FC<Props> = ({ triggerArchiving, setPromptItem, t }) => {
+const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
+  triggerArchiving,
+  setPromptItem,
+  t
+}) => {
   const handleTriggerArchiving = (doneFileAvailable: boolean): void => {
     setPromptItem(doneFileAvailable ? promptItemArchiving : promptItemChooseChangeFile)
   }
@@ -64,4 +68,4 @@ const Archive: React.FC<Props> = ({ triggerArchiving, setPromptItem, t }) => {
   return <></>
 }
 
-export default withTranslation()(Archive)
+export default withTranslation()(ArchiveComponent)

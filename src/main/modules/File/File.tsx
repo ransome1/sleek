@@ -12,7 +12,7 @@ function readFileContent(filePath: string, bookmark: string | null): string | Er
 }
 
 function addFile(filePath: string, bookmark: string | null) {
-  if (!bookmark) {
+  if (process.mas && !bookmark) {
     mainWindow!.webContents.send('responseFromMainProcess', 'The Mac App Store release requires you to open files from within the app')    
     throw new Error('The Mac App Store release requires you to open files from within the app')
   }

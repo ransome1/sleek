@@ -2,13 +2,13 @@ import React, { memo } from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 
-interface ContextMenuProps {
+interface ContextMenuComponentProps {
   contextMenu: ContextMenu
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
 }
 
-const ContextMenu: React.FC<ContextMenuProps> = memo(
+const ContextMenuComponent: React.FC<ContextMenuComponentProps> = memo(
   ({ contextMenu, setContextMenu, setPromptItem }) => {
     const onClick = (contextMenuItem: ContextMenuItem): void => {
       if (contextMenuItem.promptItem) {
@@ -42,6 +42,6 @@ const ContextMenu: React.FC<ContextMenuProps> = memo(
   }
 )
 
-ContextMenu.displayName = 'ContextMenu'
+ContextMenuComponent.displayName = 'ContextMenuComponent'
 
-export default ContextMenu
+export default ContextMenuComponent

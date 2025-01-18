@@ -81,7 +81,7 @@ const handleChange = (settingName: string, value: string | boolean | number): vo
   store.setConfig(settingName, value)
 }
 
-interface SettingsProps extends WithTranslation {
+interface SettingsComponentProps extends WithTranslation {
   isOpen: boolean
   onClose: () => void
   settings: Settings
@@ -89,7 +89,7 @@ interface SettingsProps extends WithTranslation {
   t: typeof i18n.t
 }
 
-const Settings: React.FC<SettingsProps> = memo(
+const SettingsComponent: React.FC<SettingsComponentProps> = memo(
   ({ isOpen, onClose, settings, setIsSettingsOpen, t }) => {
     const handleClose = (): void => {
       setIsSettingsOpen(false)
@@ -212,6 +212,6 @@ const Settings: React.FC<SettingsProps> = memo(
   }
 )
 
-Settings.displayName = 'Settings'
+SettingsComponent.displayName = 'SettingsComponent'
 
-export default withTranslation()(Settings)
+export default withTranslation()(SettingsComponent)

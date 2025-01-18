@@ -4,12 +4,15 @@ import TextField from '@mui/material/TextField'
 import TomatoIconDuo from '../tomato-duo.svg?asset'
 import './PomodoroPicker.scss'
 
-interface PomodoroPickerProps {
+interface PomodoroPickerComponentProps {
   pomodoro: number | string
   handleChange: (key: string, value: string | number) => void
 }
 
-const PomodoroPicker: React.FC<PomodoroPickerProps> = ({ pomodoro, handleChange }) => {
+const PomodoroPickerComponent: React.FC<PomodoroPickerComponentProps> = ({
+  pomodoro,
+  handleChange
+}) => {
   const handlePomodoroChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     handleChange('pm', event.target.value)
   }
@@ -31,4 +34,4 @@ const PomodoroPicker: React.FC<PomodoroPickerProps> = ({ pomodoro, handleChange 
   )
 }
 
-export default PomodoroPicker
+export default PomodoroPickerComponent

@@ -31,12 +31,12 @@ const handleChange = (settingName: string, value: string | boolean): void => {
   store.setConfig(settingName, value)
 }
 
-interface DrawerFiltersProps extends WithTranslation {
+interface DrawerFiltersComponentProps extends WithTranslation {
   settings: Settings
   t: typeof i18n.t
 }
 
-const DrawerFilters: React.FC<DrawerFiltersProps> = ({ settings, t }) => {
+const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({ settings, t }) => {
   return (
     <div id="Filters">
       <FormGroup>
@@ -76,4 +76,4 @@ const DrawerFilters: React.FC<DrawerFiltersProps> = ({ settings, t }) => {
   )
 }
 
-export default withTranslation()(DrawerFilters)
+export default withTranslation()(DrawerFiltersComponent)

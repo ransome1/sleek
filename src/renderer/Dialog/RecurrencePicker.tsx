@@ -11,13 +11,17 @@ import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './RecurrencePicker.scss'
 
-interface RecurrencePickerProps extends WithTranslation {
+interface RecurrencePickerComponentProps extends WithTranslation {
   recurrence: string | null
   handleChange: (key: string, value: string) => void
   t: typeof i18n.t
 }
 
-const RecurrencePicker: React.FC<RecurrencePickerProps> = ({ recurrence, handleChange, t }) => {
+const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
+  recurrence,
+  handleChange,
+  t
+}) => {
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null)
   const [strictRecurrence, setStrictRecurrence] = useState<boolean>(false)
   const [interval, setInterval] = useState<string | null>(null)
@@ -179,4 +183,4 @@ const RecurrencePicker: React.FC<RecurrencePickerProps> = ({ recurrence, handleC
   )
 }
 
-export default withTranslation()(RecurrencePicker)
+export default withTranslation()(RecurrencePickerComponent)

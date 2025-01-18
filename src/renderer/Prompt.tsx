@@ -7,7 +7,7 @@ import Button from '@mui/material/Button'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from './Settings/LanguageSelector'
 
-interface Props extends WithTranslation {
+interface PromptComponentProps extends WithTranslation {
   open: boolean
   onClose: () => void
   promptItem: PromptItem | null
@@ -16,7 +16,7 @@ interface Props extends WithTranslation {
   t: typeof i18n.t
 }
 
-const Prompt: React.FC<Props> = ({
+const PromptComponent: React.FC<PromptComponentProps> = ({
   open,
   onClose,
   promptItem,
@@ -70,4 +70,4 @@ const Prompt: React.FC<Props> = ({
   )
 }
 
-export default withTranslation()(Prompt)
+export default withTranslation()(PromptComponent)
