@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.16-rc.2",
+  "version": "2.0.16",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -39,7 +39,7 @@
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "yarn build && electron-builder --dir",
     "mas": "yarn build && electron-builder build -m mas --universal --publish never",
-    "masdev": "yarn build && electron-builder build -m mas-dev --universal --publish never",
+    "masdev": "yarn build && electron-builder build -m mas-dev --publish never",
     "peggy": "peggy --format es --dts --output ./src/main/modules/Filters/FilterLang.ts ./src/main/modules/Filters/FilterLang.pegjs"
   },
   "dependencies": {

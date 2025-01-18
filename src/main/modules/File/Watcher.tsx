@@ -1,4 +1,5 @@
 import chokidar, { FSWatcher } from 'chokidar'
+import { app } from 'electron'
 import { dataRequest, searchString } from '../DataRequest/DataRequest'
 import { config } from '../../config'
 import { handleError } from '../../util'
@@ -16,6 +17,17 @@ function createFileWatcher(files: FileObject[]): void {
   if (!hasActiveEntry && files.length > 0) {
     files[0].active = true
     config.set('files', files)
+  }
+
+  if (process.mas) {
+    files.forEach((file) => {
+      if (file.todoFileBookmark) {
+        app.startAccessingSecurityScopedResource(file.todoFileBookmark)
+      }
+      if (file.doneFileBookmark) {
+        app.startAccessingSecurityScopedResource(file.doneFileBookmark)
+      }
+    })
   }
 
   watcher = chokidar.watch(

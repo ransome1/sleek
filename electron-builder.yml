@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '54'
+buildVersion: '56'
 asar: true
 mac:
   appId: com.todotxt.sleek

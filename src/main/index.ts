@@ -4,7 +4,8 @@ import path from 'path'
 import fs from 'fs'
 import { config } from './config.js'
 import { createMenu } from './modules/Menu.js'
-import { createFileWatcher, watcher } from './modules/File/Watcher.js'
+import { createFileWatcher, watcher } from './modules/File/Watcher'
+import { addFile } from './modules/File/File'
 import { createTray } from './modules/Tray.js'
 import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
@@ -201,10 +202,13 @@ const handleBeforeQuit = () => {
   app.releaseSingleInstanceLock()
 }
 
-// const handleOpenFile = (path) => {
-//   console.log(typeof path)
-//   if(path) addFile(path, null);
-// };
+const handleOpenFile = (path) => {
+  try {
+    if(path) addFile(path, null);
+  } catch(error) {
+    console.error(error)
+  }
+};
 
 app
   .whenReady()
@@ -214,7 +218,7 @@ app
     eventListeners.handleCreateWindow = handleCreateWindow
     eventListeners.handleWindowAllClosed = handleWindowAllClosed
     eventListeners.handleBeforeQuit = handleBeforeQuit
-    //eventListeners.handleOpenFile = handleOpenFile;
+    eventListeners.handleOpenFile = handleOpenFile
   })
   .catch(console.error)
 
@@ -222,6 +226,8 @@ app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
   .on('activate', handleCreateWindow)
-//.on('open-file', () => handleOpenFile(path));
-
+  .on('open-file', (event, path) => {
+    event.preventDefault()
+    handleOpenFile(path)
+  })
 export { mainWindow, handleCreateWindow, eventListeners }

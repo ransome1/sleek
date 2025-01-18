@@ -7,14 +7,7 @@ import { config } from '../../config'
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date'
 
 function writeToFile(string: string, filePath: string, bookmark: string | null) {
-  const stopAccessingSecurityScopedResource =
-    process.mas && bookmark ? app.startAccessingSecurityScopedResource(bookmark) : null
-
   fs.writeFileSync(filePath, string, 'utf-8')
-
-  if (stopAccessingSecurityScopedResource && process.mas && bookmark) {
-    stopAccessingSecurityScopedResource()
-  }
 }
 
 function removeLineFromFile(lineNumber: number) {

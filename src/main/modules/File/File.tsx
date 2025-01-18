@@ -7,20 +7,15 @@ import path from 'path'
 import { mainWindow } from '../../index'
 
 function readFileContent(filePath: string, bookmark: string | null): string | Error {
-  const stopAccessingSecurityScopedResource =
-    process.mas && bookmark ? app.startAccessingSecurityScopedResource(bookmark) : null
   const fileContent = fs.readFileSync(filePath, 'utf8')
-
-  if (stopAccessingSecurityScopedResource && process.mas && bookmark) {
-    stopAccessingSecurityScopedResource()
-  }
-
   return fileContent
 }
 
 function addFile(filePath: string, bookmark: string | null) {
-  if (process.mas && !bookmark)
-    throw new Error('The Mac App Store release requires you to open files using the file dialog')
+  if (!bookmark) {
+    mainWindow!.webContents.send('responseFromMainProcess', 'The Mac App Store release requires you to open files from within the app')    
+    throw new Error('The Mac App Store release requires you to open files from within the app')
+  }
 
   const files: FileObject[] = config.get('files')
   const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath)
