@@ -1,21 +1,26 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
+interface StoreReply {
+  [key: string]: object
+}
+
 contextBridge.exposeInMainWorld('api', {
   store: {
-    getConfig(key) {
+    getConfig(key): StoreReply {
       return ipcRenderer.sendSync('storeGetConfig', key)
     },
-    setConfig(property, value) {
-      ipcRenderer.send('storeSetConfig', property, value)
+    setConfig(property, value): StoreReply {
+      return ipcRenderer.send('storeSetConfig', property, value)
+      //ipcRenderer.send('storeSetConfig', property, value)
     },
-    setFilters(property, value) {
-      ipcRenderer.send('storeSetFilters', property, value)
+    setFilters(property, value): StoreReply {
+      return ipcRenderer.send('storeSetFilters', property, value)
     },
-    getFilters(key) {
+    getFilters(key): StoreReply {
       return ipcRenderer.sendSync('storeGetFilters', key)
     },
-    notifiedTodoObjects(value) {
-      ipcRenderer.send('storeSetNotifiedTodoObjects', value)
+    notifiedTodoObjects(value): StoreReply {
+      return ipcRenderer.send('storeSetNotifiedTodoObjects', value)
     }
   },
   ipcRenderer: {

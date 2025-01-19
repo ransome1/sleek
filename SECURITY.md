@@ -12,4 +12,4 @@ The following versions of sleek are provided with security updates.
 
 ## Reporting a Vulnerability
 
-If you find a vulnerability in sleek, please send as much detail as possible to ransome@mailbox.org.
+If you find a vulnerability in sleek, please open an issue and provide as much detail as possible.

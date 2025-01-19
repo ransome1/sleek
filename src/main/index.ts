@@ -11,7 +11,7 @@ import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
 import './modules/IpcMain.js'
-let startTime;
+let startTime
 const environment: string | undefined = process.env.NODE_ENV
 let mainWindow: BrowserWindow | null = null
 const eventListeners: Record<string, any | undefined> = {}
@@ -129,9 +129,9 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
-    const endTime = performance.now();
-    console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`);
-  });
+    const endTime = performance.now()
+    console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`)
+  })
 
   mainWindow
     .on('resize', handleResize)
@@ -140,7 +140,6 @@ const createMainWindow = () => {
     .on('closed', handleClosed)
     .on('maximize', handleMaximize)
     .on('unmaximize', handleUnmaximize)
-
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
@@ -180,7 +179,7 @@ const createMainWindow = () => {
         console.error('Error reading the CSS file:', error)
       }
     })
-  }  
+  }
 
   if (environment === 'development') {
     mainWindow.webContents.openDevTools()
@@ -204,16 +203,16 @@ const handleBeforeQuit = () => {
 
 const handleOpenFile = (path) => {
   try {
-    if(path) addFile(path, null);
-  } catch(error) {
+    if (path) addFile(path, null)
+  } catch (error) {
     console.error(error)
   }
-};
+}
 
 app
   .whenReady()
   .then(() => {
-    startTime = performance.now();
+    startTime = performance.now()
     createMainWindow()
     eventListeners.handleCreateWindow = handleCreateWindow
     eventListeners.handleWindowAllClosed = handleWindowAllClosed

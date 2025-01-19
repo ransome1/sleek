@@ -1,7 +1,7 @@
 import { nativeTheme } from 'electron'
 import { config } from '../config'
 
-function handleTheme() {
+function handleTheme(): void {
   if (nativeTheme.themeSource === 'system') {
     config.set('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
   } else if (nativeTheme.themeSource === 'dark') {

@@ -20,7 +20,7 @@ function getChannel(): string {
   }
 }
 
-function handleError(error: Error) {
+function handleError(error: Error): void {
   console.error(error)
   mainWindow!.webContents.send('responseFromMainProcess', error)
 }
