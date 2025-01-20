@@ -11,6 +11,10 @@ import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './RecurrencePicker.scss'
 
+const getInterval = (recurrence: string | null): void => recurrence ? recurrence.match(/[a-zA-Z]+/) : null
+const getAmount = (recurrence: string | null): void => recurrence ? recurrence.match(/\d+/) : 0
+const getStrictIndicator = (recurrence: string | null): void => !!recurrence?.startsWith('+')
+
 interface RecurrencePickerComponentProps extends WithTranslation {
   recurrence: string | null
   handleChange: (key: string, value: string) => void
@@ -22,43 +26,16 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
   handleChange,
   t
 }) => {
+
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null)
   const [strictRecurrence, setStrictRecurrence] = useState<boolean>(false)
   const [interval, setInterval] = useState<string | null>(null)
   const [amount, setAmount] = useState<string | null>(null)
 
-  const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (!amount) setAmount('1')
-    setInterval(event.target.value)
-  }
-
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (!interval) setInterval('d')
-    setAmount(event.target.value)
-  }
-
-  const handleStrictRecurrenceChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (!recurrence) return
-    setStrictRecurrence(event.target.checked)
-  }
-
   useEffect(() => {
-    if (amount && interval) {
-      const updatedValue = strictRecurrence ? '+' + amount + interval : amount + interval
-      handleChange('rec', updatedValue)
-    }
-  }, [interval, amount, strictRecurrence, handleChange])
-
-  useEffect(() => {
-    const getInterval = (recurrence: string | null): void =>
-      recurrence ? recurrence.match(/[a-zA-Z]+/) : null
-    const getAmount = (recurrence: string | null): void =>
-      recurrence ? recurrence.match(/\d+/) : null
-    const getStrictIndicator = (recurrence: string | null): void => !!recurrence?.startsWith('+')
-
     setStrictRecurrence(getStrictIndicator(recurrence))
-    setInterval(getInterval(recurrence))
     setAmount(getAmount(recurrence))
+    setInterval(getInterval(recurrence))
   }, [recurrence])
 
   useEffect(() => {
@@ -94,7 +71,7 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
           <TextField
             label={t('todoDialog.recurrencePicker.label')}
             className="recurrencePicker"
-            onChange={() => handleChange('rec', recurrence ?? '')}
+            onChange={(event) => handleChange('rec', event.target.value ?? '')}
             value={recurrence || '-'}
             inputRef={recurrenceFieldRef}
             data-testid="dialog-picker-recurrence"
@@ -120,8 +97,11 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
                 autoFocus={true}
                 label={t('todoDialog.recurrencePicker.every')}
                 type="number"
-                onChange={handleAmountChange}
-                defaultValue={amount || '1'}
+                onChange={(event) => {
+                  const updatedRecurrence = getStrictIndicator(recurrence) ? '+' + event.target.value + getInterval(recurrence) : event.target.value + getInterval(recurrence)
+                  handleChange('rec', updatedRecurrence)
+                }}
+                value={amount}
                 className="recurrencePickerPopupInput"
                 inputProps={{
                   min: 0
@@ -134,8 +114,11 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
             <FormControl>
               <RadioGroup
                 aria-labelledby="recurrencePickerRadioGroup"
-                value={interval || null}
-                onChange={handleIntervalChange}
+                value={interval}
+                onChange={(event) => {              
+                  const updatedRecurrence = getStrictIndicator(recurrence) ? '+' + getAmount(recurrence) + event.target.defaultValue : getAmount(recurrence) + event.target.defaultValue
+                  handleChange('rec', updatedRecurrence)                  
+                }}
               >
                 <FormControlLabel
                   value="d"
@@ -169,7 +152,10 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
                 control={
                   <Checkbox
                     checked={strictRecurrence}
-                    onChange={handleStrictRecurrenceChange}
+                    onChange={(event) => {
+                      const updatedRecurrence = event.target.checked ? '+' + getAmount(recurrence) + getInterval(recurrence) : getAmount(recurrence) + getInterval(recurrence)
+                      handleChange('rec', updatedRecurrence)
+                    }}
                     name="strictRecurrenceCheckbox"
                   />
                 }

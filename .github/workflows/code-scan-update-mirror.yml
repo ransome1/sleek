@@ -1,9 +1,20 @@
-name: Code scan and mirror to opencode.net
+name: Code scan, update Flathub and mirror to opencode.net
 on:
   push:
     branches:
       - '*'
 jobs:
+  trigger-flathub_build:
+    name: Trigger Flathub build bot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Flathub build
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.TRIGGER_FLATHUB_BUILD }}
+          repository: ransome1/com.github.ransome1.sleek
+          event-type: trigger-flathub-build
+          client-payload: '{"commit_id": "${{ github.sha }}"}'  
   snyk:
     runs-on: ubuntu-latest
     steps:

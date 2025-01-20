@@ -3896,10 +3896,10 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-jstodotxt@^1.0.0-alpha.0:
-  version "1.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/jstodotxt/-/jstodotxt-1.0.0-alpha.0.tgz#49f4c4eafd754f7848d026f648d55a40e86ca9d1"
-  integrity sha512-D7Dxn6DSJbgnjNABQriBuj16NAz4s0+NhEWIGvMoMqDFHm4X3G9N+c/hCVWIqoy7IN2neSpCcI6IMIS4fmla8Q==
+jstodotxt@1.0.0-alpha.3:
+  version "1.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/jstodotxt/-/jstodotxt-1.0.0-alpha.3.tgz#ee4313bbfea94fb48503d7c530fbf2b130ecafb2"
+  integrity sha512-XGe6QfxnklhDKpSCgn2hNq2F9IXZZZf9sGzkEtLC6sVA7InVeaYXNiPcX1mKZ5Q2VpPY2siV1UlLfo5x6beP4Q==
 
 "jsx-ast-utils@^2.4.1 || ^3.0.0":
   version "3.3.5"

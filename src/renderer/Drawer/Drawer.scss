@@ -7,8 +7,11 @@
   .MuiPaper-root {
     position: relative;
     z-index: 5;
+    // .MuiTabs-root {
+    //   min-height: 6em;
+    // }
     .MuiTabs-root {
-      min-height: 5em;
+      overflow:visible;
     }
     .MuiTabs-flexContainer {
       button {
