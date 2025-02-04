@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import SortIcon from '@mui/icons-material/Sort'
-import Button from '@mui/material/Button'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import { translatedAttributes } from '../Shared'
@@ -99,13 +98,13 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
 
               <ListItemText primary={translatedValues[item.value]} />
 
-              <Button
+              <button
                 onClick={() => toggleInvert(index)}
                 data-testid={`drawer-sorting-draggable-list-item-${item.value}-invert`}
                 aria-label={item.invert ? 'Descending order' : 'Ascending order'}
               >
                 {!item.invert ? <SortIcon className="invert" /> : <SortIcon />}
-              </Button>
+              </button>
             </ListItem>
           ))}
         </List>

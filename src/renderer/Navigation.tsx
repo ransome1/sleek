@@ -6,7 +6,7 @@ import FileOpenIcon from '@mui/icons-material/FileOpen'
 import SettingsIcon from '@mui/icons-material/Settings'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import Button from '@mui/material/Button'
+import li from '@mui/material/li'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from './Settings/LanguageSelector'
 import './Navigation.scss'
@@ -48,67 +48,67 @@ const NavigationComponent: React.FC<NavigationComponentProps> = memo(
 
     return (
       <>
-        <div id="navigation">
-          <div>sleek</div>
+        <ul id="navigation">
+          <li className="logo">sleek</li>
           {settings.files?.length > 0 && (
             <>
-              <Button
+              <li
                 onClick={() => handleOpen()}
                 data-testid="navigation-button-add-todo"
                 title={t('add')}
               >
                 <AddIcon />
-              </Button>
-              <Button
+              </li>
+              <li
                 onClick={() => store.setConfig('isDrawerOpen', !settings.isDrawerOpen)}
                 className={settings.isDrawerOpen ? 'active' : ''}
                 data-testid="navigation-button-toggle-drawer"
                 title={`${t('attributes')}, ${t('filters')}, ${t('sorting')}`}
               >
                 <FilterAltIcon />
-              </Button>
+              </li>
               {headers && headers.completedObjects > 0 && (
                 <>
-                  <Button
+                  <li
                     onClick={() => ipcRenderer.send('requestArchive')}
                     data-testid="navigation-button-archive-todos"
                     title={t('archive')}
                   >
                     <InventoryIcon />
-                  </Button>
+                  </li>
                 </>
               )}
             </>
           )}
-          <Button
+          <li
             onClick={() => ipcRenderer.send('openFile', false)}
             data-testid="navigation-button-open-file"
             title={t('openFile')}
           >
             <FileOpenIcon />
-          </Button>
-          <Button
+          </li>
+          <li
             className="break"
             onClick={() => setIsSettingsOpen(true)}
             data-testid="navigation-button-show-settings"
             title={t('settings')}
           >
             <SettingsIcon />
-          </Button>
-          <Button
+          </li>
+          <li
             onClick={() => store.setConfig('isNavigationOpen', false)}
             data-testid="navigation-button-hide-navigation"
           >
             <KeyboardArrowLeftIcon />
-          </Button>
-          <Button
+          </li>
+          <li
             onClick={() => store.setConfig('isNavigationOpen', true)}
             className="showNavigation"
             data-testid="navigation-button-show-navigation"
           >
             <KeyboardArrowRightIcon />
-          </Button>
-        </div>
+          </li>
+        </ul>
       </>
     )
   }

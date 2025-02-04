@@ -6,7 +6,6 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import DialogTitle from '@mui/material/DialogTitle'
-import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -62,10 +61,10 @@ const visibleSettings: VisibleSettings = {
   },
   zoom: {
     style: 'slider',
-    min: 75,
-    max: 125,
+    min: 50,
+    max: 150,
     unit: '%',
-    step: 5
+    step: 10
   },
   colorTheme: {
     style: 'select',
@@ -94,11 +93,6 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
     const handleClose = (): void => {
       setIsSettingsOpen(false)
     }
-
-    useEffect(() => {
-      const adjustedFontSize = 16 * (settings.zoom / 100)
-      document.body.style.fontSize = `${adjustedFontSize}px`
-    }, [settings.zoom])
 
     return (
       <Dialog id="DialogSettingsComponent" open={isOpen} onClose={onClose}>
@@ -203,9 +197,9 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
           <LanguageSelector settings={settings} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} data-testid="dialog-setting-button-close">
+          <button onClick={handleClose} data-testid="dialog-setting-button-close">
             {t('close')}
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
     )

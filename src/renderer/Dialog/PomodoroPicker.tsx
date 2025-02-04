@@ -21,7 +21,7 @@ const PomodoroPickerComponent: React.FC<PomodoroPickerComponentProps> = ({
     <FormControl id="pomodoroPicker">
       <TextField
         id="pomodoroPicker"
-        label={<img src={TomatoIconDuo} width={30} height={30} />}
+        label={<img src={TomatoIconDuo} />}
         type="number"
         onChange={handlePomodoroChange}
         value={pomodoro}

@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import Checkbox from '@mui/material/Checkbox'
-import ListItem from '@mui/material/ListItem'
+//import ListItem from '@mui/material/ListItem'
 import CircleChecked from '@mui/icons-material/CheckCircle'
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
@@ -125,7 +125,7 @@ const Row: React.FC<RowProps> = memo(
 
     return (
       <>
-        <ListItem
+        <li
           tabIndex={0}
           key={todoObject.lineNumber}
           className="row"
@@ -155,7 +155,7 @@ const Row: React.FC<RowProps> = memo(
             settings={settings}
             handleButtonClick={handleButtonClick}
           />
-        </ListItem>
+        </li>
       </>
     )
   }

@@ -7,13 +7,24 @@ body {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  font-family: Helvetica, Arial, sans-serif;
   code {
     font-size: 0.9em;
     background-color: rgba(18, 18, 18, 0.15);
     border-radius: 0.25em;
     padding: 0.25em;
   }
+  h2.MuiDialogTitle-root {
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+  a {
+    color: Variables.$blue;
+    text-decoration: underline;
+    svg {
+      font-size: 1.2em;
+      margin-bottom: -0.25em;
+    }
+  }  
   #root {
     .flexContainer {
       min-width: 25em;
@@ -40,12 +51,6 @@ body {
       &.hideNavigation.disableAnimations {
         transition: none;
       }
-      &.darkTheme {
-        button.showNavigation {
-          background: Variables.$darker-grey;
-          color: Variables.$light-grey;
-        }
-      }
     }
     .disableAnimations {
       .flexContainer {
@@ -53,15 +58,6 @@ body {
       }
     }
   }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    font-weight: bold;
-  }
-
   *::-webkit-scrollbar {
     background-color: transparent;
     width: 0.8em;

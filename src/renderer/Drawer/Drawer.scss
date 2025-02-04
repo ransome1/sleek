@@ -7,29 +7,30 @@
   .MuiPaper-root {
     position: relative;
     z-index: 5;
-    // .MuiTabs-root {
-    //   min-height: 6em;
-    // }
     .MuiTabs-root {
-      overflow:visible;
-    }
-    .MuiTabs-flexContainer {
-      button {
-        font-size: 0.85em;
-        text-transform: none;
-        white-space: nowrap;
-        .reset {
-          width: 1em;
-          height: 1em;
-          position: absolute;
-          right: 0em;
-          bottom: 0em;
-          color: Variables.$dark-grey;
+      height: auto;
+      overflow: visible;
+      .MuiTabs-flexContainer {
+        button {
+          min-width: 6em;
+          min-height: 5em;
+          padding: 0;
+          text-transform: none;
+          white-space: nowrap;
+          font-size: 0.8em;
+          .reset {
+            font-size: 1.25em;
+            position: absolute;
+            right: 0em;
+            bottom: 0em;
+            color: Variables.$dark-grey;
+          }
         }
       }
-    }
-    .MuiTabs-indicator {
-      top: 0;
+      .MuiTabs-indicator {
+        top: 0;
+        height: 0.2em;
+      }      
     }
   }
   .drawerHandle {

@@ -1,15 +1,15 @@
 @use 'Variables.scss';
 
-.hideNavigation #navigation button.showNavigation {
-  min-width: 2.5em;
-  display: flex;
+.hideNavigation #navigation li.showNavigation {
+  width: 2.5em;
   border-top-right-radius: Variables.$radius;
+  display: block;
 }
 
 .disableAnimations.hideNavigation #navigation,
 .disableAnimations #navigation {
   transition: none;
-  button.showNavigation {
+  li.showNavigation {
     transition: none;
   }
 }
@@ -25,21 +25,23 @@
   display: flex;
   flex-direction: column;
   transition: left 0.3s ease;
-  div {
-    font-weight: bold;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li.logo,
+  li.logo:hover {
     line-height: 5em;
-    text-align: center;
+    font-weight: bold;
+    cursor: auto;
     color: white;
     background: linear-gradient(0.33turn, #1b5551, #813e93);
   }
-  button.showNavigation {
-    width: 2.5em;
-    height: 5em;
+  li.showNavigation {
     position: fixed;
     bottom: 0;
     left: 0;
     display: none;
-    background: white;
+    background: Variables.$lighter-grey;
     color: Variables.$dark-grey;
     z-index: 10;
     transition: width 0.3s ease;
@@ -47,23 +49,32 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     &:hover {
-      width: 5em;
+      width: inherit;
     }
   }
-  button {
+  li {
+    width: 5em;
+    height: 5em;
     border-radius: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    min-width: 5em;
-    min-height: 5em;
+    //min-width: 5em;
+    // width: 5em;
+    // height: 5em;
     background: none;
-    font-size: 1em;
+    padding: 0;
+    margin: 0;
+    line-height: 5.75em;
+    text-align: center;
+    cursor: pointer;
     &.break {
       margin-top: auto;
     }
     svg {
+      // font-size: 1rem;
       color: Variables.$dark-grey;
     }
     &:active,
+    &:hover,
     &.active {
       background: Variables.$light-grey;
     }
@@ -77,17 +88,18 @@
 .darkTheme {
   #navigation {
     background: Variables.$darker-grey;
-    button {
+    li.showNavigation {
+      background: Variables.$darker-grey;
+    }
+    li {
       border-color: rgba(255, 255, 255, 0.05) !important;
       svg {
         color: Variables.$mid-grey;
       }
-      &:hover,
-      &:active,
+      &:hover:not(.logo),
+      &:active:not(.logo),
+      &:focus-visible,
       &.active {
-        background: #3b3b3b;
-      }
-      &:focus-visible {
         background: #3b3b3b;
       }
     }

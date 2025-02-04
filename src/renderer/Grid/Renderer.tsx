@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import reactStringReplace from 'react-string-replace'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import TomatoIconDuo from '../tomato-duo.svg?asset'
@@ -64,40 +63,39 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         />
       ),
       contexts: (value, type) => (
-        <Button
-          className="contexts"
+        <button
           onClick={() => handleButtonClick(type, value, value)}
           data-testid={`datagrid-button-${type}`}
         >
           {value}
-        </Button>
+        </button>
       ),
       projects: (value, type) => (
-        <Button
+        <button
           onClick={() => handleButtonClick(type, value, value)}
           data-testid={`datagrid-button-${type}`}
         >
           {value}
-        </Button>
+        </button>
       ),
       rec: (value, type) => (
-        <Button
+        <button
           onClick={() => handleButtonClick(type, value, value)}
           data-testid={`datagrid-button-${type}`}
         >
           <Chip label="rec:" />
           {value}
-        </Button>
+        </button>
       ),
       pm: (value, type) => (
-        <Button
+        <button
           className="pomodoro"
           onClick={() => handleButtonClick(type, value, value)}
           data-testid={`datagrid-button-${type}`}
         >
-          <img src={TomatoIconDuo} width={25} height={25} alt="Pomodoro" />
+          <img src={TomatoIconDuo} alt="Pomodoro" />
           {value}
-        </Button>
+        </button>
       ),
       hidden: () => null as React.ReactNode
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import IpcComponent from './IpcRenderer'
 import MatomoComponent from './Matomo'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -21,6 +21,8 @@ import { i18n } from './Settings/LanguageSelector'
 import Settings from './Settings/Settings'
 import Prompt from './Prompt'
 import './App.scss'
+import './Buttons.scss'
+import './Form.scss'
 
 const { ipcRenderer, store } = window.api
 
@@ -42,6 +44,14 @@ const App = (): JSX.Element => {
   const [textFieldValue, setTextFieldValue] = useState<string>('')
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null)
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
+  const [theme, setTheme] = useState(
+  createTheme({
+    ...(settings?.shouldUseDarkColors ? darkTheme : lightTheme),
+      typography: {
+        fontSize: Math.round(14 * (settings.zoom / 100)),
+      },
+    })
+  );
   const searchFieldRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -69,6 +79,31 @@ const App = (): JSX.Element => {
     ipcRenderer.send('requestData')
   }, [])
 
+  useEffect(() => {
+    const adjustedFontSize = Math.round(14 * (settings.zoom / 100));
+    const updatedTheme = createTheme({
+      ...(settings?.shouldUseDarkColors ? darkTheme : lightTheme),
+      typography: {
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontSize: adjustedFontSize,
+      },
+    });
+
+    setTheme(updatedTheme);
+
+    if (settings?.shouldUseDarkColors) {
+      document.body.classList.add('darkTheme');
+      document.body.classList.remove('lightTheme');
+    } else {
+      document.body.classList.add('lightTheme');
+      document.body.classList.remove('darkTheme');
+    }
+
+    return () => {
+      document.body.classList.remove('darkTheme', 'lightTheme');
+    };
+  }, [settings.shouldUseDarkColors, settings.zoom]);  
+
   return (
     <>
       <IpcComponent
@@ -85,10 +120,10 @@ const App = (): JSX.Element => {
       />
       {settings.matomo && <MatomoComponent settings={settings} />}
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={settings?.shouldUseDarkColors ? darkTheme : lightTheme}>
+        <ThemeProvider theme={theme}>
           <CssBaseline />
           <div
-            className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings?.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'} ${settings.disableAnimations ? 'disableAnimations' : ''}`}
+            className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings.disableAnimations ? 'disableAnimations' : ''}`}
           >
             <NavigationComponent
               setDialogOpen={setDialogOpen}

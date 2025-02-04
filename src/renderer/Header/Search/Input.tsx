@@ -3,12 +3,10 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import Button from '@mui/material/Button'
 import ClearIcon from '@mui/icons-material/Clear'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { WithTranslation, withTranslation } from 'react-i18next'
 import { i18n } from '../../Settings/LanguageSelector'
-import './Input.scss'
 
 const { ipcRenderer, store } = window.api
 
@@ -100,15 +98,14 @@ const InputComponent: React.FC<InputComponentProps> = memo(
               {searchString &&
                 searchString.length > 0 &&
                 !searchFilters.some((filter) => filter.label === searchString) && (
-                  <Button
+                  <button
                     onClick={() => handleAddTodo(searchString)}
                     data-testid="header-search-textfield-add-todo"
                     className="addAsTodo"
-                    size="small"
                     variant="outlined"
                   >
                     {t('search.addAsTodo')}
-                  </Button>
+                  </button>
                 )}
               <IconButton
                 tabIndex={0}

@@ -4,9 +4,13 @@
     .MuiFormControl-root {
       margin-right: 1em;
       vertical-align: middle;
+      .MuiInputBase-input {
+          padding: 1em;
+        }
       .recurrencePickerPopupInput {
         input {
           width: 3em;
+          padding: 0;
         }
       }
       .MuiFormControlLabel-root {

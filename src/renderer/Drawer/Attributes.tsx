@@ -2,9 +2,9 @@ import React, { useState, memo, useMemo } from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
-import Button from '@mui/material/Button'
 import Badge from '@mui/material/Badge'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import TomatoIconDuo from '../tomato-duo.svg?asset'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import AirIcon from '@mui/icons-material/Air'
 import { handleFilterSelect, friendlyDate, translatedAttributes } from '../Shared'
@@ -150,8 +150,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
               }
               className={notify ? 'notify' : null}
             >
-              <Button
-                className="attribute"
+              <button
                 data-testid={`drawer-button-${key}`}
                 onClick={
                   disabled
@@ -160,9 +159,11 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                         handleFilterSelect(key, name, attribute.aggregatedValues, filters, false)
                 }
                 disabled={disabled}
+                className={key === 'pm' ? 'pomodoro' : undefined}
               >
+                {key === 'pm' && <img src={TomatoIconDuo} alt="Pomodoro" />}
                 {value}
-              </Button>
+              </button>
             </Badge>
             {excluded && (
               <div
@@ -204,8 +205,9 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                         Object.values(preprocessedAttributes).some((attribute) => attribute.notify)
                       )
                     }
+                    data-testid={`drawer-attributes-accordion-${key}`}
                   >
-                    <h2 data-testid={`drawer-attributes-accordion-${key}`}>{attributeHeadline}</h2>
+                    {attributeHeadline}
                   </Badge>
                 </AccordionSummary>
                 <AccordionDetails>

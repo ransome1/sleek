@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo } from 'react'
-import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -156,7 +155,6 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
         id="DialogComponent"
         open={dialogOpen}
         onClose={handleClose}
-        className={settings.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}
         onKeyDown={handleKeyDown}
       >
         <DialogContent>
@@ -176,17 +174,17 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
           <RecurrencePicker recurrence={recurrence} handleChange={handleChange} />
           <PomodoroPicker pomodoro={pomodoro} handleChange={handleChange} />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} data-testid="dialog-button-cancel">
+        <DialogActions disableSpacing="true">
+          <button onClick={handleClose} data-testid="dialog-button-cancel">
             {t('cancel')}
-          </Button>
-          <Button onClick={handleAdd} data-testid="dialog-button-add-update">
+          </button>
+          <button onClick={handleAdd} data-testid="dialog-button-add-update">
             {todoObject && todoObject.lineNumber >= 0
               ? t('todoDialog.footer.update')
               : settings.bulkTodoCreation
                 ? `${t('add')} (${numRowsWithContent || 0})`
                 : `${t('add')}`}
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
     )

@@ -1,23 +1,19 @@
 @use '../Variables.scss';
 #Sorting {
-  padding: 0 1em;
-  margin: 0;
-
+  padding: 0.75em 1em;
   .MuiListItem-root {
+    padding: 0.25em 0;
     border-bottom: 1px dashed Variables.$mid-grey;
     .MuiListItemText-root {
       padding: 0 1em;
     }
   }
-
-  button {
-    min-width: auto;
-    padding: 0.5em;
+  button:last-of-type {
+    padding: 0.4em 0.5em;
     svg {
       font-size: 1.25em;
     }
   }
-
   .invert {
     transform: scaleY(-1);
   }
