@@ -1,0 +1,38 @@
+@use './Variables.scss';
+
+label {
+  width: 100%;
+  a {
+    svg {
+      font-size: 1em!important;
+    }
+  }
+}
+  
+.MuiInputBase-root {
+  padding: 1em;
+  .MuiInputAdornment-root {
+    max-height: 1.5em;
+    margin: 0;
+  }
+  .MuiInputBase-input {
+    margin: 0;
+    padding: 0;
+  }
+  .MuiSelect-select  {
+    margin: 0;
+    padding: 0;
+  }
+  &.MuiInputBase-multiline {
+  	padding: 1em;
+  }
+}
+
+.MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root, .MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root,
+.MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root, .MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root {
+	padding-right: 0.5em!important;
+}
+
+.MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input {
+	padding: 0.25em!important;
+}

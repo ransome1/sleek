@@ -11,8 +11,8 @@ import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './RecurrencePicker.scss'
 
-const getInterval = (recurrence: string | null): void => recurrence ? recurrence.match(/[a-zA-Z]+/) : null
-const getAmount = (recurrence: string | null): void => recurrence ? recurrence.match(/\d+/) : 0
+const getInterval = (recurrence: string | null): void => recurrence ? recurrence.match(/[a-zA-Z]+/) : 'd'
+const getAmount = (recurrence: string | null): void => recurrence ? recurrence.match(/\d+/) : 1
 const getStrictIndicator = (recurrence: string | null): void => !!recurrence?.startsWith('+')
 
 interface RecurrencePickerComponentProps extends WithTranslation {
@@ -75,9 +75,9 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
             value={recurrence || '-'}
             inputRef={recurrenceFieldRef}
             data-testid="dialog-picker-recurrence"
-            InputLabelProps={{
-              shrink: true
-            }}
+            // InputLabelProps={{
+            //   shrink: true
+            // }}
             {...bindTrigger(popupState)}
           />
 

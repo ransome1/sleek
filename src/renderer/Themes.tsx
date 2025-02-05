@@ -9,11 +9,12 @@ const baseTheme: Theme = createTheme({
   shape: {
     borderRadius: '0.65em'
   },
-  typography: {
-    fontFamily: 'Helvetica, Arial, sans-serif',
-    fontSize: 'auto'
-  },
   components: {
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true
+      }
+    },
     MuiFormLabel: {
       styleOverrides: {
         root: {
@@ -42,7 +43,6 @@ const baseTheme: Theme = createTheme({
       styleOverrides: {
         root: {
           svg: {
-            fontSize: '1em',
             color: '#1976d2',
             marginLeft: '0.3em'
           }
@@ -52,8 +52,7 @@ const baseTheme: Theme = createTheme({
     MuiBadge: {
       styleOverrides: {
         root: {
-          border: 'none',
-          lineHeight: '2em'
+          border: 'none'
         }
       }
     },
@@ -63,48 +62,7 @@ const baseTheme: Theme = createTheme({
           minHeight: 'auto'
         },
         indicator: {
-          backgroundColor: '#1976d2',
-          height: '0.2em'
-        }
-      }
-    },
-    MuiSvgIcon: {
-      styleOverrides: {
-        root: {
-          fontSize: '1.5em'
-        }
-      }
-    },
-    MuiSwitch: {
-      styleOverrides: {
-        root: {
-          '& .MuiSwitch-switchBase.Mui-checked': {
-            color: '#1976d2',
-            '&:hover': {
-              backgroundColor: 'none'
-            }
-          },
-          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: '#1976d2'
-          },
-          '& .MuiSwitch-switchBase.Mui-focusVisible': {
-            background: 'rgb(25, 118, 210, 0.2)'
-          }
-        }
-      }
-    },
-    MuiSlider: {
-      styleOverrides: {
-        root: {
-          color: '#1976d2'
-        }
-      }
-    },
-    MuiDivider: {
-      styleOverrides: {
-        root: {
-          margin: '1.5em',
-          border: 'none'
+          backgroundColor: '#1976d2'
         }
       }
     },
@@ -120,25 +78,6 @@ const baseTheme: Theme = createTheme({
         }
       }
     },
-    MuiDialogActions: {
-      styleOverrides: {
-        root: {
-          padding: '0'
-        }
-      }
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          fontSize: '1em'
-        }
-      }
-    },
-    MuiButtonBase: {
-      defaultProps: {
-        disableRipple: true
-      }
-    }
   }
 })
 
@@ -189,24 +128,10 @@ const darkTheme: Theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          background: '#2d2d2d'
-        },
+          background: '#2d2d2d',
+        },     
         notchedOutline: {
           border: 'none'
-        }
-      }
-    },
-    MuiDialogActions: {
-      styleOverrides: {
-        root: {
-          padding: '0',
-          '& .MuiButton-root': {
-            borderColor: '#2d2d2d'
-          },
-          '& .MuiButton-root:hover': {
-            background: 'none',
-            color: '#f0f0f0'
-          }
         }
       }
     },
@@ -248,45 +173,6 @@ const darkTheme: Theme = createTheme({
         }
       }
     },
-    MuiPickersDay: {
-      styleOverrides: {
-        root: {
-          '&.Mui-selected': {
-            color: 'white',
-            backgroundColor: '#1976d2'
-          },
-          '&.MuiPickersDay-today': {
-            color: '#2d2d2d'
-          }
-        }
-      }
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          minWidth: '2.5em',
-          textTransform: 'none',
-          fontSize: '1em',
-          boxShadow: 'none',
-          background: '#1976d2',
-          color: 'white',
-          '&:hover': {
-            boxShadow: 'none',
-            background: '#1976d2'
-          },
-          '&:active': {
-            boxShadow: 'none'
-          },
-          '&:focus': {
-            boxShadow: 'none'
-          },
-          '&.Mui-focusVisible': {
-            outline: '2px solid #f0f0f0',
-            backgroundColor: 'none'
-          }
-        }
-      }
-    }
   }
 })
 
@@ -334,19 +220,6 @@ const lightTheme: Theme = createTheme({
         }
       }
     },
-    MuiDialogActions: {
-      styleOverrides: {
-        root: {
-          padding: '0',
-          '& .MuiButton-root': {
-            borderColor: '#f0f0f0'
-          },
-          '& .MuiButton-root:hover': {
-            background: '#f0f0f0'
-          }
-        }
-      }
-    },
     MuiTab: {
       styleOverrides: {
         root: {
@@ -375,32 +248,6 @@ const lightTheme: Theme = createTheme({
         }
       }
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          minWidth: '2.5em',
-          textTransform: 'none',
-          fontSize: '1em',
-          boxShadow: 'none',
-          background: '#1976d2',
-          color: 'white',
-          '&:hover': {
-            boxShadow: 'none',
-            background: '#1976d2'
-          },
-          '&:active': {
-            boxShadow: 'none'
-          },
-          '&:focus': {
-            boxShadow: 'none'
-          },
-          '&:focus-visible': {
-            outline: '2px solid #5a5a5a',
-            border: 'none'
-          }
-        }
-      }
-    }
   }
 })
 

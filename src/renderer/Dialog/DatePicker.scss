@@ -1,16 +1,51 @@
 @use '../Variables.scss';
 
 .datePicker {
-  width: 11.5em;
+  width: 13em;
   .Mui-focusVisible {
     color: Variables.$blue;
   }
 }
 
 .MuiPickersLayout-root {
+  max-height: 20em;
+  .MuiYearCalendar-root {
+    width: inherit;
+    width: auto;
+    max-height: 15.5em;
+    .MuiPickersYear-yearButton {
+      width: auto;
+      height: auto;
+      margin: 0;
+    }
+  }
+  .MuiDateCalendar-root {
+    width: 20em;
+    height: auto;
+    max-height: auto;
+    padding: 0.5em 1em;
+    .MuiPickersCalendarHeader-root {
+      max-height: auto;
+      min-height: auto;
+      padding: 0;
+      margin: 0;
+    }
+    .MuiDayCalendar-header {
+      span {
+        width: 3em;
+        height: 3em;
+      }
+    }
+    .MuiPickersDay-root {
+      width: 3em;
+      height: 3em;
+
+    }
+  }
+  // .MuiPickersSlideTransition-root {
+  //   max-height: 13em;
+  // }
   button {
-    font-size: 1em;
-    border: none;
     border-radius: Variables.$radius;
     &.MuiPickersDay-today {
       border: inherit;

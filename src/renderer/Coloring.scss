@@ -32,7 +32,6 @@
     }
   }
   .MuiBadge-badge {
-    border-radius: 1em;
     color: var(--color2);
     background: var(--color1);
   }
@@ -107,9 +106,6 @@
   --color1: rgb(221, 44, 0);
   --color2: white;
   button {
-    svg {
-      margin: 0 0.2em;
-    }
     &.Mui-disabled {
       color: white;
     }

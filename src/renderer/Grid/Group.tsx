@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
 import ListItem from '@mui/material/ListItem'
-import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 
 interface GroupProps {
@@ -36,13 +35,13 @@ const Group: React.FC<GroupProps> = memo(({ title, todotxtAttribute, filters, on
             data-todotxt-attribute={todotxtAttribute}
             data-todotxt-value={groupElement}
           >
-            <Button
+            <button
               className="attribute"
               onClick={() => onClick(todotxtAttribute, groupElement, groupElement.trim())}
               data-testid={`datagrid-button-${todotxtAttribute}`}
             >
               {groupElement.trim()}
-            </Button>
+            </button>
           </div>
         )
       })}

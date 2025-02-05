@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
-import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import './AutoSuggest.scss'
 
@@ -80,14 +79,14 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   ): JSX.Element => (
     <div
       data-todotxt-attribute={prefix === '+' ? 'projects' : prefix === '@' ? 'contexts' : ''}
-      className={isHighlighted ? 'selected' : ''}
+      className={isHighlighted ? 'filter selected' : 'filter'}
     >
-      <Button
+      <button
         key={suggestion}
         data-testid={`dialog-autosuggest-button-${prefix === '+' ? 'project' : prefix === '@' ? 'context' : ''}`}
       >
         {suggestion}
-      </Button>
+      </button>
     </div>
   )
 
@@ -143,14 +142,14 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
     <>
       <Autosuggest
         renderInputComponent={(inputProps) => (
-          <TextField {...inputProps} multiline className="input" />
+          <TextField {...inputProps} multiline />
         )}
         renderSuggestionsContainer={({ containerProps, children }) => (
           <div
             {...containerProps}
             style={{
-              width: textFieldRef.current?.offsetWidth
-                ? textFieldRef.current.offsetWidth + 28
+              width: textFieldRef.current?.clientWidth
+                ? textFieldRef.current.clientWidth + textFieldRef.current.offsetLeft * 2
                 : 'auto'
             }}
           >
