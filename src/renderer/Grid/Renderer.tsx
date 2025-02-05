@@ -84,7 +84,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           data-testid={`datagrid-button-${type}`}
         >
           <Chip label="rec:" />
-          {value}
+          <div>{value}</div>
         </button>
       ),
       pm: (value, type) => (

@@ -5,6 +5,7 @@ button {
 	border: none;
 	border-radius: Variables.$radius;
 	padding: 0.6em 0.7em;
+	margin: 0;
 	cursor: pointer;
 	background: Variables.$blue;
 	color: white;
@@ -12,10 +13,15 @@ button {
 
 li {
 	[data-todotxt-attribute='due'],
-	[data-todotxt-attribute='t'] {
+	[data-todotxt-attribute='t'],
+	[data-todotxt-attribute='rec'] {
 		button {
+			display: flex;
 			padding: 0 0.5em 0 0;
-			margin: 0 0.5em;
+			margin: 0;
+		}
+		div:first-child {
+			margin-right: 0.25em;
 		}
 	  div {
 	  	display: flex;
@@ -48,8 +54,6 @@ li {
 		  font-size: 1em;
 		  width: auto;
 		  border-radius: Variables.$radius 0 0 Variables.$radius;
-		  margin-left: -0.5em;
-		  margin-right: 0.5em;
 		  .MuiChip-label {
 		    font-size: 1em;
 		    padding: 0 0.5em;
