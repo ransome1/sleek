@@ -41,7 +41,6 @@ const App = (): JSX.Element => {
   const [attributes, setAttributes] = useState<Attributes | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false)
   const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null)
-  const [textFieldValue, setTextFieldValue] = useState<string>('')
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null)
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
   const [theme, setTheme] = useState(
@@ -195,8 +194,6 @@ const App = (): JSX.Element => {
               setAttributeFields={setAttributeFields}
               setSnackBarSeverity={setSnackBarSeverity}
               setSnackBarContent={setSnackBarContent}
-              textFieldValue={textFieldValue}
-              setTextFieldValue={setTextFieldValue}
               settings={settings}
             />
           ) : null}

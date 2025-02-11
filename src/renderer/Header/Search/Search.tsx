@@ -6,6 +6,7 @@ import Autocomplete, {
 import OptionComponent from './Option'
 import InputComponent from './Input'
 import { withTranslation, WithTranslation } from 'react-i18next'
+import LanguageSelector, { i18n } from '../Settings/LanguageSelector'
 import './Search.scss'
 
 const { ipcRenderer, store } = window.api
@@ -38,23 +39,6 @@ const getOptionLabel = (option: string | SearchFilter): string => {
   return ''
 }
 
-const filterOptions = (
-  options: string | SearchFilter[],
-  params: { inputValue: string }
-): SearchFilter[] => {
-  const filter = createFilterOptions<SearchFilter>()
-  const filtered: SearchFilter[] = filter(options as SearchFilter[], params)
-  const { inputValue } = params
-  const isExisting = filtered.some((filter) => filter.label && filter.label.includes(inputValue))
-  if (inputValue !== '' && !isExisting) {
-    filtered.push({
-      inputValue,
-      title: `Create new filter: <code>${inputValue}</code>`
-    })
-  }
-  return filtered
-}
-
 interface SearchComponentProps extends WithTranslation {
   headers: HeadersObject | null
   settings: Settings
@@ -62,10 +46,11 @@ interface SearchComponentProps extends WithTranslation {
   setSearchString: React.Dispatch<React.SetStateAction<string>>
   searchFieldRef: React.RefObject<HTMLInputElement>
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
+  t: typeof i18n.t
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = memo(
-  ({ headers, settings, searchString, setSearchString, searchFieldRef, setPromptItem }) => {
+  ({ headers, settings, searchString, setSearchString, searchFieldRef, setPromptItem, t }) => {
     const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'))
     const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false)
 
@@ -104,6 +89,23 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
       },
       [searchFieldRef, isAutocompleteOpen]
     )
+
+    const filterOptions = (
+      options: string | SearchFilter[],
+      params: { inputValue: string },
+    ): SearchFilter[] => {
+      const filter = createFilterOptions<SearchFilter>()
+      const filtered: SearchFilter[] = filter(options as SearchFilter[], params)
+      const { inputValue } = params
+      const isExisting = filtered.some((filter) => filter.label && filter.label.includes(inputValue))
+      if (inputValue !== '' && !isExisting) {
+        filtered.push({
+          inputValue,
+          title: `${t('search.filters.create')}: <code>${inputValue}</code>`
+        })
+      }
+      return filtered
+    }    
 
     useEffect(() => {
       document.addEventListener('keydown', handleKeyDown)

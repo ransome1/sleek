@@ -12,6 +12,7 @@ import es from '../../locales/es.json'
 import fr from '../../locales/fr.json'
 import zh from '../../locales/zh.json'
 import pt from '../../locales/pt.json'
+import pt_br from '../../locales/pt-br.json'
 import jp from '../../locales/jp.json'
 import tr from '../../locales/tr.json'
 import hu from '../../locales/hu.json'
@@ -27,11 +28,14 @@ import 'dayjs/locale/es'
 import 'dayjs/locale/fr'
 import 'dayjs/locale/zh'
 import 'dayjs/locale/pt'
+import 'dayjs/locale/pt-br'
 import 'dayjs/locale/tr'
 import 'dayjs/locale/hu'
 import 'dayjs/locale/cs'
 import 'dayjs/locale/pl'
 import 'dayjs/locale/ru'
+import 'dayjs/locale/ko'
+import 'dayjs/locale/hi'
 
 const { store } = window.api
 
@@ -44,6 +48,7 @@ const options: i18n.InitOptions = {
     fr: { translation: fr },
     zh: { translation: zh },
     pt: { translation: pt },
+    'pt-br': { translation: pt_br },
     jp: { translation: jp },
     tr: { translation: tr },
     hu: { translation: hu },
@@ -62,6 +67,7 @@ const options: i18n.InitOptions = {
     'fr',
     'zh',
     'pt',
+    'pt-br',
     'jp',
     'tr',
     'hu',
@@ -99,7 +105,8 @@ const friendlyLanguageName: Record<string, string> = {
   es: 'Español',
   fr: 'Français',
   zh: '简体中文',
-  pt: 'Português',
+  pt: 'Português (Portugal)',
+  'pt-br': 'Português (Brasil)',
   jp: '日本語',
   tr: 'Türkçe',
   hu: 'Magyar',

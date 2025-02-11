@@ -42,14 +42,16 @@
 
     }
   }
-  // .MuiPickersSlideTransition-root {
-  //   max-height: 13em;
-  // }
   button {
     border-radius: Variables.$radius;
     &.MuiPickersDay-today {
       border: inherit;
       background: Variables.$mid-grey;
+    }
+  }
+  .darkTheme {
+    button.MuiPickersDay-today {
+      color: black;
     }
   }
 }

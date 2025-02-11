@@ -8,9 +8,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.25em;
-  padding: 0.4em;
+  padding: 0.75em 0.4em;
   .MuiCheckbox-root {
     padding: 0;
+    margin: 0 0.25em;
   }
   &[data-complete='true'],
   &[data-hidden='true'] {
@@ -29,10 +30,6 @@
 
 .darkTheme {
   .row {
-    border-left: solid 0.2em Variables.$dark-grey;
-    border-bottom: solid 1px Variables.$dark-grey;
-    &.group {
-      border: none;
-    }
+    border-color: Variables.$dark-grey;
   }
 }

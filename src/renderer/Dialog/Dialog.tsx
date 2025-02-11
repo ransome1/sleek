@@ -25,8 +25,6 @@ interface DialogComponentProps extends WithTranslation {
   setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<AlertColor | undefined>>
   setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>
-  textFieldValue: string
-  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>
   settings: Settings
   t: typeof i18n.t
 }
@@ -42,19 +40,18 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     setAttributeFields,
     setSnackBarSeverity,
     setSnackBarContent,
-    textFieldValue,
-    setTextFieldValue,
     settings,
     t
   }) => {
-    const numRowsWithContent = textFieldValue
-      ?.split('\n')
-      .filter((line) => line.trim() !== '').length
     const [priority, setPriority] = useState<string>('-')
     const [dueDate, setDueDate] = useState<string | null>(null)
     const [thresholdDate, setThresholdDate] = useState<string | null>(null)
     const [recurrence, setRecurrence] = useState<string | null>(null)
     const [pomodoro, setPomodoro] = useState<number | string>(0)
+    const [textFieldValue, setTextFieldValue] = useState<string>('')
+    const numRowsWithContent = textFieldValue
+      ?.split('\n')
+      .filter((line) => line.trim() !== '').length
 
     const handleAdd = (): void => {
       try {

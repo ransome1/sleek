@@ -134,6 +134,7 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
     onKeyDown: handleKeyDown,
     'test-id': 'dialog-autosuggest-textfield'
   }
+
   useEffect(() => {
     textFieldRef.current?.focus()
   }, [textFieldRef])
