@@ -36,7 +36,6 @@ const Group: React.FC<GroupProps> = memo(({ title, todotxtAttribute, filters, on
             data-todotxt-value={groupElement}
           >
             <button
-              className="attribute"
               onClick={() => onClick(todotxtAttribute, groupElement, groupElement.trim())}
               data-testid={`datagrid-button-${todotxtAttribute}`}
             >

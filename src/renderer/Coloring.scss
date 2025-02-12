@@ -1,6 +1,13 @@
 @use 'sass:color';
 @use 'Variables.scss';
 
+button:not(.MuiIconButton-root):not(.MuiTab-root):not(.MuiAccordionSummary-root),
+button:hover:not(.MuiIconButton-root) {
+  &:focus-visible {
+    outline: 0.1em solid Variables.$dark-grey;
+  }
+}
+
 *[data-todotxt-attribute] {
   --color1: #5a5a5a;
   --color2: #ccc;
@@ -134,6 +141,10 @@
 }
 
 .darkTheme {
+  button:not(.MuiIconButton-root),
+  button:hover:not(.MuiIconButton-root) {
+    outline-color: Variables.$light-grey;
+  }
   *[data-todotxt-attribute]:not(
       [data-todotxt-attribute='priority'],
       [data-todotxt-attribute='projects'],

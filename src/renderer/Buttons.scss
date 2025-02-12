@@ -11,7 +11,30 @@ button {
 	color: white;
 }
 
-li {
+.MuiDialog-root {
+  .MuiDialog-paper {
+    .MuiDialogActions-root {
+      button {
+        width: 100%;
+        background: none;
+        border-radius: 0;
+        color: Variables.$blue;
+        font-weight: bold;
+        border-top: 1px solid Variables.$light-grey;
+        border-right: 1px solid Variables.$light-grey;
+        margin: 0;
+        &:last-child {
+          border-right: none;
+        }
+      }   
+    }
+  }
+}
+
+.row {
+	button {
+		padding: 0.25em 0.5em;
+	}
 	[data-todotxt-attribute='due'],
 	[data-todotxt-attribute='t'],
 	[data-todotxt-attribute='rec'] {
@@ -29,13 +52,7 @@ li {
 	  	height: 100%;
 	  	padding: 0.25em 0;
 	  }
-	}
-}
-
-.row {
-	button {
-		padding: 0.25em 0.5em;
-	}
+	}	
   &.group {
 		button {
 	    font-size: 1.25em;
@@ -115,15 +132,11 @@ li {
 	height: 0.6em;
 	border-radius: 50%;
 }
-.group [data-todotxt-attribute='priority'],
-#Attributes [data-todotxt-attribute='priority'] {
+div[data-todotxt-attribute='priority'] {
 	button {
-		min-width: 2em;
-		height: 2em;
-		line-height: 2em;
 		font-size: 1.25em;
 		font-weight: bold;
-		padding: 0;
+		padding: 0.4em 0.6em;
 	}
 }
 

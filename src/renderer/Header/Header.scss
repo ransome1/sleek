@@ -1,8 +1,8 @@
 @use '../Variables.scss';
 
 #ToolBar {
-  width: 3em;
-  height: 3em;
+  width: 2.5em;
+  aspect-ratio: 1;
   position: fixed;
   top: 0;
   right: 0;
@@ -21,7 +21,7 @@
       color: Variables.$blue;
     }
   }
-  & svg:hover {
+  &svg:hover {
     color: Variables.$blue;
   }
 }

@@ -121,7 +121,14 @@ function createMenu(files: FileObject[]) {
             const shouldUseDarkColors = config.get('shouldUseDarkColors')
             config.set('colorTheme', shouldUseDarkColors ? 'light' : 'dark')
           }
-        }
+        },
+        {
+          label: 'Toggle compact mode',
+          click: () => {
+            const compact = config.get('compact')
+            config.set('compact', !compact)
+          }
+        }        
       ]
     },
     ...(files?.length > 0

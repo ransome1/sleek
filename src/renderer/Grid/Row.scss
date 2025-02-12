@@ -4,11 +4,15 @@
 .row {
   cursor: pointer;
   border-left: solid 0.2em Variables.$light-grey;
-  border-bottom: solid 1px Variables.$light-grey;
+  border-bottom: dotted 1px Variables.$light-grey;
   display: flex;
   flex-wrap: wrap;
+
   gap: 0.25em;
-  padding: 0.75em 0.4em;
+  padding: 0.6em;
+
+  align-items: center;
+
   .MuiCheckbox-root {
     padding: 0;
     margin: 0 0.25em;
@@ -21,7 +25,6 @@
     border-bottom-left-radius: 0.25em;
   }
   &.group {
-    margin-top: 1em;
     padding-left: 0;
     border: none;
     cursor: auto;

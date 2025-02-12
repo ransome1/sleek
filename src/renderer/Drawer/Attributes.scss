@@ -1,7 +1,7 @@
 @use '../Variables.scss';
 
 #Attributes {
-  padding: 0.75em 1em;
+  padding: 0 1em 0.75em 1em;
   overflow-y: scroll;
   .placeholder {
     padding: 2em 0;
@@ -9,34 +9,30 @@
     text-align: center;
   }
   .MuiAccordion-root {
-    .Mui-expanded {
-      margin: 1em 0;
+    margin: 0;
+    .MuiAccordion-heading {
+      button {
+        padding: 0;
+      }
     }
     .MuiAccordionDetails-root {
-      padding: 0.5em 0;
+      padding: 0;
       display: flex;
       flex-wrap: wrap;
       gap: 0.3em;
     }
     .MuiAccordionSummary-root {
-      height: 3em;
-      min-height: 3em;
-      padding: 0;
+      height: 2.5em;
+      min-height: 2.5em;
       margin: 0;
       font-size: 1.25em;
       font-weight: bold;
       .MuiBadge-badge {
         background: #ff3860;
       }
-      &.Mui-expanded {
-        min-height: auto;
-      }
     }
     &:before {
       display: none;
-    }
-    &.Mui-expanded {
-      margin: 0;
     }
   }
   &::-webkit-scrollbar-thumb:window-inactive,

@@ -23,6 +23,7 @@ import Prompt from './Prompt'
 import './App.scss'
 import './Buttons.scss'
 import './Form.scss'
+import './Compact.scss'
 
 const { ipcRenderer, store } = window.api
 
@@ -79,6 +80,18 @@ const App = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
+    if (settings?.compact) {
+      document.body.classList.add('compact');
+    } else {
+      document.body.classList.remove('compact');
+    }
+
+    return () => {
+      document.body.classList.remove('compact');
+    };
+  }, [settings.compact]);  
+
+  useEffect(() => {
     const adjustedFontSize = Math.round(14 * (settings.zoom / 100));
     const updatedTheme = createTheme({
       ...(settings?.shouldUseDarkColors ? darkTheme : lightTheme),
@@ -101,7 +114,7 @@ const App = (): JSX.Element => {
     return () => {
       document.body.classList.remove('darkTheme', 'lightTheme');
     };
-  }, [settings.shouldUseDarkColors, settings.zoom]);  
+  }, [settings.shouldUseDarkColors, settings.zoom]);
 
   return (
     <>

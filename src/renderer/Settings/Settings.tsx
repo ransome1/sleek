@@ -48,6 +48,9 @@ const visibleSettings: VisibleSettings = {
     style: 'toggle',
     help: 'https://github.com/ransome1/sleek/wiki/Human-friendly-dates'
   },
+  compact: {
+    style: 'toggle'
+  },
   notificationsAllowed: {
     style: 'toggle'
   },

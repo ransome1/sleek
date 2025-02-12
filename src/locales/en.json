@@ -31,6 +31,7 @@
   "settings.0": "Sunday",
   "settings.1": "Monday",
   "settings.menuBarVisibility": "Show menu bar",
+  "settings.compact": "Compact view",
   "attributes": "Attributes",
   "filters": "Filters",
   "sorting": "Sorting",

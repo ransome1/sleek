@@ -2,7 +2,6 @@
 
 #drawer {
   height: 100vh;
-  padding: 0;
   transition: margin-left 0.3s ease;
   .MuiPaper-root {
     position: relative;
@@ -12,12 +11,7 @@
       overflow: visible;
       .MuiTabs-flexContainer {
         button {
-          min-width: 6em;
-          min-height: 5em;
-          padding: 0;
           text-transform: none;
-          white-space: nowrap;
-          font-size: 0.8em;
           .reset {
             font-size: 1.25em;
             position: absolute;

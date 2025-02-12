@@ -3,7 +3,7 @@
 .hideNavigation #navigation li.showNavigation {
   width: 2.5em;
   border-top-right-radius: Variables.$radius;
-  display: block;
+  display: flex;
 }
 
 .disableAnimations.hideNavigation #navigation,
@@ -28,49 +28,20 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  li.logo,
-  li.logo:hover {
-    line-height: 5em;
-    font-weight: bold;
-    cursor: auto;
-    color: white;
-    background: linear-gradient(0.33turn, #1b5551, #813e93);
-  }
-  li.showNavigation {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    display: none;
-    background: Variables.$lighter-grey;
-    color: Variables.$dark-grey;
-    z-index: 10;
-    transition: width 0.3s ease;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    &:hover {
-      width: inherit;
-    }
-  }
   li {
-    width: 5em;
-    height: 5em;
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    //min-width: 5em;
-    // width: 5em;
-    // height: 5em;
     background: none;
-    padding: 0;
-    margin: 0;
-    line-height: 5.75em;
-    text-align: center;
     cursor: pointer;
     &.break {
       margin-top: auto;
     }
     svg {
-      // font-size: 1rem;
       color: Variables.$dark-grey;
     }
     &:active,
@@ -82,15 +53,36 @@
       background: Variables.$mid-grey;
       border-color: Variables.$mid-grey;
     }
+    &.logo,
+    &.logo:hover {
+      font-weight: bold;
+      cursor: auto;
+      color: white;
+      background: linear-gradient(0.33turn, #1b5551, #813e93);
+    }
+    &.showNavigation {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      display: none;
+      background: Variables.$lighter-grey;
+      color: Variables.$dark-grey;
+      z-index: 10;
+      transition: width 0.3s ease;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      &:hover {
+        width: inherit;
+        display: inherit;
+      }
+    }    
   }
 }
 
 .darkTheme {
   #navigation {
     background: Variables.$darker-grey;
-    li.showNavigation {
-      background: Variables.$darker-grey;
-    }
     li {
       border-color: rgba(255, 255, 255, 0.05) !important;
       svg {
@@ -101,6 +93,9 @@
       &:focus-visible,
       &.active {
         background: #3b3b3b;
+      }
+      &.showNavigation {
+        background: Variables.$darker-grey;
       }
     }
   }

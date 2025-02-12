@@ -101,8 +101,8 @@ const InputComponent: React.FC<InputComponentProps> = memo(
                   <button
                     onClick={() => handleAddTodo(searchString)}
                     data-testid="header-search-textfield-add-todo"
-                    className="addAsTodo"
                     variant="outlined"
+                    className="addAsTodo"
                   >
                     {t('search.addAsTodo')}
                   </button>

@@ -1,19 +1,17 @@
 @use '../Variables.scss';
 
 #fileTabs {
-  height: 2.5em;
-  min-height: 2.5em;
+  overflow: visible;
   .MuiTabs-scroller {
     button[role='tab'] {
-      min-width: 8.5em;
       min-height: auto;
-      padding: 0.85em 1em;
+      padding: 0.5em 0.5em 0.5em 1em;
       text-transform: lowercase;
       display: flex;
       flex-direction: row;
       font-size: 0.8em;
       svg {
-        margin: 0 0 0 0.5em;
+        margin: 0;
         padding: 0.1em;
         order: 2;
       }

@@ -4,50 +4,39 @@
   .MuiDialog-paper {
     max-width: 60em;
     .MuiDialogContent-root {
-      padding: 1.5em;
+      gap: 0.5em;
     }
   }
 }
-.MuiDialogContent-root {
-  display: flex;
-  gap: 0.5em;
-  flex-wrap: wrap;
-  .MuiFormControl-root {
-    label[data-shrink=false] {
-      transform: translate(1em, 1em) scale(1);
+
+.MuiDialog-root {
+  .MuiDialog-paper {
+    .MuiDialogTitle-root {
+      font-size: 1.2em;
+      font-weight: bold;
+      padding-bottom: 0;
     }
-    label[data-shrink=true] {
-      transform: translate(0.5em, -0.5em) scale(0.75);
+    .MuiDialogContent-root {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1.5em;
+      .react-autosuggest__container {
+        width: 100%;
+        .MuiTextField-root {
+          width: 100%;
+        }
+      }      
     }
-  }
-  .react-autosuggest__container {
-    width: 100%;
-    .MuiTextField-root {
-      width: 100%;
-      textarea {
-        font-size: 1.25em;
+    .MuiDialogActions-root {
+      padding: 0;
+      button {
+        padding: 0.8em;
       }
     }
   }
 }
 
-.MuiDialogActions-root {
-  padding: 0!important;
-  button {
-    width: 100%;
-    background: none;
-    border-radius: 0;
-    color: Variables.$blue;
-    font-weight: bold;
-    border-top: 1px solid Variables.$light-grey;
-    border-right: 1px solid Variables.$light-grey;
-    margin: 0!important;
-    &:last-child {
-      border-right: none;
-    }
-  }
-}
-.darkTheme #DialogComponent .MuiDialog-paper .MuiDialogActions-root button {
+.darkTheme .MuiDialog-root .MuiDialog-paper .MuiDialogActions-root button {
   border-top: 1px solid Variables.$darker-grey;
   border-right: 1px solid Variables.$darker-grey;
 }

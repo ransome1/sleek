@@ -1,0 +1,137 @@
+.compact {
+	.MuiPopover-paper {
+		ul {
+			padding: 0;
+		}
+	}
+	#DialogComponent {
+		.MuiDialog-paper {
+			max-width: 60em;
+			.MuiDialogContent-root {
+				padding: 1em;
+			}
+		}
+	}
+	.MuiAutocomplete-root,
+	.MuiDialogContent-root {
+	  .MuiFormControl-root {
+	    label[data-shrink=false] {
+	      transform: translate(0.8em, 0.8em) scale(1);
+	    }
+	    .MuiInputBase-root {
+	      padding: 0.8em;
+	      &.MuiInputBase-multiline {
+	       padding: 0.8em;
+	      }      
+	    }
+	  }
+	}	
+	#recurrencePicker .MuiPaper-root {
+		padding: 0.5em;
+	}
+	.react-autosuggest__suggestions-container--open {
+	  max-height: 20em;
+	  min-height: 5em;
+	  margin-top: 0.125em;
+	  padding: 0.5em;
+	  ul {
+	    li {
+	      float: left;
+	      margin: 0.15em 0.3em 0.15em 0;
+	    }
+	  }
+	}	
+	button {
+		padding: 0.4em;
+	}
+	div[data-todotxt-attribute='priority'] {
+		button {
+			font-size: 1.25em;
+			font-weight: bold;
+			padding: 0.3em 0.5em;
+		}
+	}	
+	#root {
+		.flexContainer {		
+			margin-left: 3em;
+			&.hideNavigation {
+				#navigation {
+					left: -3em;
+				}
+			}
+			#navigation {
+				width: 3em;
+				li {
+					svg {
+						font-size: 1.25em;
+					}
+					&.logo {
+						font-size: 0.8em;
+					}
+				}
+			}
+			#grid {
+				padding: 0 0.75em 0.75em 0.75em;
+				.row {
+					padding: 0.3em;
+					.MuiCheckbox-root {
+						padding: 0;
+						margin: 0 0.1em;
+					}
+					[data-todotxt-attribute='due'],
+					[data-todotxt-attribute='t'],
+					[data-todotxt-attribute='rec'] {
+						button {
+							padding: 0 0.5em 0 0;
+						}
+						div {
+							padding: 0.2em 0;
+						}
+					}
+					.filter:not([data-todotxt-attribute='priority']):not([data-todotxt-attribute='t']):not([data-todotxt-attribute='due']):not([data-todotxt-attribute='rec']) {
+						button {
+							padding: 0.2em 0.4em;
+						}
+					}
+				}				
+			}
+			#search {
+				padding: 0.25em 0.75em;
+			}
+			#drawer {
+				#Attributes {
+					.filter:not([data-todotxt-attribute='priority']) button {
+						padding: 0.4em;
+					}
+				}
+				#Sorting {
+					.MuiListItem-root {
+
+					}
+				}
+			}
+			#ToolBar {
+				width: 2.5em;
+				aspect-ratio: 1;
+				padding: 0 1em;
+				svg {
+					font-size: 1.85em;
+				}
+			}
+			#fileTabs {
+			  .MuiTabs-scroller {
+			    button[role='tab'] {
+			      min-height: auto;
+			      padding: 0.5em;
+			      svg {
+			        margin: 0;
+			      }
+			    }
+			  }
+			}			
+		}
+	}
+	.hideNavigation #navigation li.showNavigation {
+		width: 2em;
+	}
+}
