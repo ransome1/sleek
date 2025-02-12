@@ -49,9 +49,11 @@
       background: Variables.$mid-grey;
     }
   }
-  .darkTheme {
+}
+.darkTheme {
+  .MuiPickersLayout-root {
     button.MuiPickersDay-today {
-      color: black;
+      color: Variables.$darker-grey;
     }
   }
 }
