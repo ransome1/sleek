@@ -20,6 +20,21 @@
   }
 }
 
+.compact {
+  .react-autosuggest__suggestions-container--open {
+    max-height: 20em;
+    min-height: 5em;
+    margin-top: 0.125em;
+    padding: 0.5em;
+    ul {
+      li {
+        float: left;
+        margin: 0.15em 0.3em 0.15em 0;
+      }
+    }
+  }  
+}
+
 .darkTheme {
   .react-autosuggest__suggestions-container--open {
     background-color: rgba(45, 45, 45, 1);

@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "Gecikmiş",
   "drawer.attributes.elapsed": "Geçmiş",
   "drawer.sorting.fileSorting": "Görevleri dosyada göründükleri sıraya göre sırala",
+  "drawer.sorting.sortCompletedLast": "Tamamlanan görevleri liste sonuna taşı",
   "shared.attributeMapping.t": "Eşik tarihi",
   "shared.attributeMapping.due": "Bitiş tarihi",
   "shared.attributeMapping.projects": "Projeler",

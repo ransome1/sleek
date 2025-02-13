@@ -23,3 +23,9 @@
 .recurrencePicker {
   width: 7em;
 }
+
+.compact {
+  #recurrencePicker .MuiPaper-root {
+    padding: 0.5em;
+  }
+}

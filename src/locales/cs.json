@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "pozadu",
   "drawer.attributes.elapsed": "uplynulý",
   "drawer.sorting.fileSorting": "Seřadit úkoly podle pořadí v souboru",
+  "drawer.sorting.sortCompletedLast": "Přesuňte dokončené úkoly na konec seznamu",
   "shared.attributeMapping.t": "Termín",
   "shared.attributeMapping.due": "Termín splnění",
   "shared.attributeMapping.projects": "Projekty",

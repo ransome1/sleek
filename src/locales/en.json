@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "overdue",
   "drawer.attributes.elapsed": "elapsed",
   "drawer.sorting.fileSorting": "Order todos as they appear in the file",
+  "drawer.sorting.sortCompletedLast": "Move completed tasks to the end of the list",
   "shared.attributeMapping.t": "Threshold date",
   "shared.attributeMapping.due": "Due date",
   "shared.attributeMapping.projects": "Projects",

@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useCallback, memo } from 'react'
-import Autocomplete, {
-  createFilterOptions,
-  AutocompleteRenderInputParams
-} from '@mui/material/Autocomplete'
+import Autocomplete, {createFilterOptions, AutocompleteRenderInputParams} from '@mui/material/Autocomplete'
 import OptionComponent from './Option'
 import InputComponent from './Input'
 import { withTranslation, WithTranslation } from 'react-i18next'
@@ -49,121 +46,123 @@ interface SearchComponentProps extends WithTranslation {
   t: typeof i18n.t
 }
 
-const SearchComponent: React.FC<SearchComponentProps> = memo(
-  ({ headers, settings, searchString, setSearchString, searchFieldRef, setPromptItem, t }) => {
-    const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'))
-    const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false)
+const SearchComponent: React.FC<SearchComponentProps> = memo(({ headers, settings, searchString, setSearchString, searchFieldRef, setPromptItem, t }) => {
+  const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'))
+  const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false)
 
-    useEffect(() => {
-      const handleSearch = (): void => {
-        ipcRenderer.send('requestData', searchString)
+  useEffect(() => {
+    const handleSearch = (): void => {
+      if(searchString != null) {
+        ipcRenderer.send('requestData', searchString);
       }
-      const delayedSearch: NodeJS.Timeout = setTimeout(handleSearch, 200)
+    }
 
-      return (): void => {
-        clearTimeout(delayedSearch)
-      }
-    }, [searchString])
+    const delayedSearch: NodeJS.Timeout = setTimeout(handleSearch, 200)
 
-    useEffect(() => {
-      if (searchFilters) {
-        ipcRenderer.send('storeSetFilters', 'search', searchFilters)
-      }
-    }, [searchFilters])
+    return (): void => {
+      clearTimeout(delayedSearch)
+    }
+  }, [searchString])
 
-    useEffect(() => {
-      if (settings.isSearchOpen && searchFieldRef.current) {
+  useEffect(() => {
+    if (searchFilters) {
+      ipcRenderer.send('storeSetFilters', 'search', searchFilters)
+    }
+  }, [searchFilters])
+
+  useEffect(() => {
+    if (settings.isSearchOpen && searchFieldRef.current) {
+      searchFieldRef?.current?.focus()
+    }
+  }, [settings.isSearchOpen, searchFieldRef])
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent): void => {
+      const isSearchFocused = document.activeElement === searchFieldRef.current
+      if (!isAutocompleteOpen && isSearchFocused && event.key === 'ArrowDown') {
+        setIsAutocompleteOpen(true)
+      } else if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.code === 'KeyF') {
         searchFieldRef?.current?.focus()
+        setIsAutocompleteOpen(!isAutocompleteOpen)
       }
-    }, [settings.isSearchOpen, searchFieldRef])
+    },
+    [searchFieldRef, isAutocompleteOpen]
+  )
 
-    const handleKeyDown = useCallback(
-      (event: KeyboardEvent): void => {
-        const isSearchFocused = document.activeElement === searchFieldRef.current
-        if (!isAutocompleteOpen && isSearchFocused && event.key === 'ArrowDown') {
-          setIsAutocompleteOpen(true)
-        } else if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.code === 'KeyF') {
-          searchFieldRef?.current?.focus()
-          setIsAutocompleteOpen(!isAutocompleteOpen)
-        }
-      },
-      [searchFieldRef, isAutocompleteOpen]
-    )
+  const filterOptions = (
+    options: string | SearchFilter[],
+    params: { inputValue: string },
+  ): SearchFilter[] => {
+    const filter = createFilterOptions<SearchFilter>()
+    const filtered: SearchFilter[] = filter(options as SearchFilter[], params)
+    const { inputValue } = params
+    const isExisting = filtered.some((filter) => filter.label && filter.label.includes(inputValue))
+    if (inputValue !== '' && !isExisting) {
+      filtered.push({
+        inputValue,
+        title: `${t('search.filters.create')}: <code>${inputValue}</code>`
+      })
+    }
+    return filtered
+  }    
 
-    const filterOptions = (
-      options: string | SearchFilter[],
-      params: { inputValue: string },
-    ): SearchFilter[] => {
-      const filter = createFilterOptions<SearchFilter>()
-      const filtered: SearchFilter[] = filter(options as SearchFilter[], params)
-      const { inputValue } = params
-      const isExisting = filtered.some((filter) => filter.label && filter.label.includes(inputValue))
-      if (inputValue !== '' && !isExisting) {
-        filtered.push({
-          inputValue,
-          title: `${t('search.filters.create')}: <code>${inputValue}</code>`
-        })
-      }
-      return filtered
-    }    
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown)
+    return (): void => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleKeyDown])
 
-    useEffect(() => {
-      document.addEventListener('keydown', handleKeyDown)
-      return (): void => {
-        document.removeEventListener('keydown', handleKeyDown)
-      }
-    }, [handleKeyDown])
-
-    return (
-      <>
-        {settings.isSearchOpen && (
-          <div id="search" className={settings.isSearchOpen ? 'active' : ''}>
-            <Autocomplete
-              freeSolo
-              autoHighlight
-              open={isAutocompleteOpen}
-              inputValue={searchString || ''}
-              options={searchFilters}
-              onBlur={() => setIsAutocompleteOpen(false)}
-              filterOptions={filterOptions}
-              onInputChange={(_, value) => setSearchString(value)}
-              getOptionLabel={getOptionLabel}
-              onChange={(event, value: string | SearchFilter | null): void => {
-                setIsAutocompleteOpen(false)
-                if (value && value.inputValue) {
-                  handleAddNewFilter(event, value.inputValue, searchFilters, setSearchFilters)
-                }
-              }}
-              renderOption={(props, option) => (
-                <OptionComponent
-                  option={option}
-                  setPromptItem={setPromptItem}
-                  searchFilters={searchFilters}
-                  setSearchFilters={setSearchFilters}
-                  isAutocompleteOpen={isAutocompleteOpen}
-                  setIsAutocompleteOpen={setIsAutocompleteOpen}
-                  {...props}
-                />
-              )}
-              renderInput={(params: AutocompleteRenderInputParams) => (
-                <InputComponent
-                  headers={headers}
-                  searchString={searchString}
-                  setSearchString={setSearchString}
-                  searchFilters={searchFilters}
-                  searchFieldRef={searchFieldRef}
-                  isAutocompleteOpen={isAutocompleteOpen}
-                  setIsAutocompleteOpen={setIsAutocompleteOpen}
-                  settings={settings}
-                  {...params}
-                />
-              )}
-            />
-          </div>
-        )}
-      </>
-    )
-  }
+  return (
+    <>
+      {settings.isSearchOpen && (
+        <div id="search" className={settings.isSearchOpen ? 'active' : ''}>
+          <Autocomplete
+            freeSolo
+            autoHighlight
+            open={isAutocompleteOpen}
+            inputValue={searchString || ''}
+            options={searchFilters}
+            onBlur={() => setIsAutocompleteOpen(false)}
+            filterOptions={filterOptions}
+            onInputChange={(_, value) => setSearchString(value)}
+            getOptionLabel={getOptionLabel}
+            onChange={(event, value: string | SearchFilter | null): void => {
+              setIsAutocompleteOpen(false)
+              if (value && value.inputValue) {
+                handleAddNewFilter(event, value.inputValue, searchFilters, setSearchFilters)
+              }
+            }}
+            renderOption={(props, option) => (
+              <OptionComponent
+                option={option}
+                setPromptItem={setPromptItem}
+                searchFilters={searchFilters}
+                setSearchFilters={setSearchFilters}
+                isAutocompleteOpen={isAutocompleteOpen}
+                setIsAutocompleteOpen={setIsAutocompleteOpen}
+                {...props}
+              />
+            )}
+            renderInput={(params: AutocompleteRenderInputParams) => (
+              <InputComponent
+                headers={headers}
+                searchString={searchString}
+                setSearchString={setSearchString}
+                searchFilters={searchFilters}
+                searchFieldRef={searchFieldRef}
+                isAutocompleteOpen={isAutocompleteOpen}
+                setIsAutocompleteOpen={setIsAutocompleteOpen}
+                settings={settings}
+                {...params}
+              />
+            )}
+          />
+        </div>
+      )}
+    </>
+  )
+}
 )
 
 SearchComponent.displayName = 'SearchComponent'

@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "期限切れ",
   "drawer.attributes.elapsed": "経過",
   "drawer.sorting.fileSorting": "ファイルに表示される順にタスクを並べ替え",
+  "drawer.sorting.sortCompletedLast": "完了したタスクをリストの最後に移動する",
   "shared.attributeMapping.t": "期限日",
   "shared.attributeMapping.due": "期日",
   "shared.attributeMapping.projects": "プロジェクト",

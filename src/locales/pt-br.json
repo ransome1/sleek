@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "atrasada",
   "drawer.attributes.elapsed": "decorrido",
   "drawer.sorting.fileSorting": "Encomende Todos como eles aparecem no arquivo",
+  "drawer.sorting.sortCompletedLast": "Mover tarefas concluídas para o final da lista",
   "shared.attributeMapping.t": "Data limite",
   "shared.attributeMapping.due": "Data de vencimento",
   "shared.attributeMapping.projects": "Projetos",

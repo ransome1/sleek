@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "просроченный",
   "drawer.attributes.elapsed": "прошедший",
   "drawer.sorting.fileSorting": "Сортировать задачи в порядке их появления в файле",
+  "drawer.sorting.sortCompletedLast": "Переместить выполненные задачи в конец списка",
   "shared.attributeMapping.t": "Дата порога",
   "shared.attributeMapping.due": "Дата выполнения",
   "shared.attributeMapping.projects": "Проекты",

@@ -24,6 +24,9 @@ interface DrawerSortingComponentProps extends WithTranslation {
 const visibleSettings = {
   fileSorting: {
     style: 'toggle'
+  },
+  sortCompletedLast: {
+    style: 'toggle'
   }
 }
 

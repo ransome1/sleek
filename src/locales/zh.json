@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "过期",
   "drawer.attributes.elapsed": "已过",
   "drawer.sorting.fileSorting": "按照它们在文件中出现的顺序排序任务",
+  "drawer.sorting.sortCompletedLast": "将已完成的任务移动到列表末尾",
   "shared.attributeMapping.t": "阈值日期",
   "shared.attributeMapping.due": "截止日期",
   "shared.attributeMapping.projects": "项目",

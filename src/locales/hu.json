@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "késedelmes",
   "drawer.attributes.elapsed": "eltelt",
   "drawer.sorting.fileSorting": "Feladatok rendezése, ahogy megjelennek a fájlban",
+  "drawer.sorting.sortCompletedLast": "Mozgassa a befejezett feladatokat a lista végére",
   "shared.attributeMapping.t": "Hátralévő dátum",
   "shared.attributeMapping.due": "Határidő",
   "shared.attributeMapping.projects": "Projektek",

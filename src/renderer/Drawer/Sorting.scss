@@ -3,6 +3,7 @@
   padding: 0.75em 1em;
   .MuiListItem-root {
     padding: 0.25em 0;
+    gap: 0.5em;
     border-bottom: 1px dashed Variables.$mid-grey;
     .MuiListItemText-root {
       padding: 0 1em;
@@ -16,6 +17,15 @@
   }
   .invert {
     transform: scaleY(-1);
+  }
+}
+
+.compact {
+  #Sorting {
+    .MuiListItem-root {
+      padding: 0.125em 0;
+      gap: 0.25em;
+    }
   }
 }
 

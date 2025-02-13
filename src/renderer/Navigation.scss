@@ -80,6 +80,36 @@
   }
 }
 
+.compact {
+  #navigation {
+    width: 3em;
+    li {
+      svg {
+        font-size: 1.25em;
+      }
+      &.logo {
+        font-size: 0.8em;
+      }
+    }
+  }
+  #root {
+   .flexContainer {    
+     margin-left: 3em;
+     &.hideNavigation {
+       #navigation {
+         left: -3em;
+       }
+     }   
+   }
+  }
+  .hideNavigation #navigation li.showNavigation {
+    width: 2em;
+    &:hover {
+      width: 3em;
+    }
+  }  
+}
+
 .darkTheme {
   #navigation {
     background: Variables.$darker-grey;

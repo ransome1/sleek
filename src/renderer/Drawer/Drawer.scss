@@ -45,6 +45,16 @@
   transition: none;
 }
 
+.compact {
+  #drawer {
+    #Attributes {
+      .filter:not([data-todotxt-attribute='priority']) button {
+        padding: 0.4em;
+      }
+    }
+  }
+}
+
 .darkTheme {
   #drawer {
     .MuiPaper-root {

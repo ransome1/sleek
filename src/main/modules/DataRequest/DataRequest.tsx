@@ -64,7 +64,7 @@ function dataRequest(search?: string): RequestedData {
     todoObjects = visibleObjects
   }
 
-  const todoData: TodoDate = sortAndGroupTodoObjects(todoObjects, sorting)
+  const todoData: TodoData = sortAndGroupTodoObjects(todoObjects, sorting)
 
   const requestedData: RequestedData = {
     todoData,

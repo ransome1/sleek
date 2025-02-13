@@ -23,7 +23,6 @@ import Prompt from './Prompt'
 import './App.scss'
 import './Buttons.scss'
 import './Form.scss'
-import './Compact.scss'
 
 const { ipcRenderer, store } = window.api
 
@@ -80,21 +79,11 @@ const App = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    if (settings?.compact) {
-      document.body.classList.add('compact');
-    } else {
-      document.body.classList.remove('compact');
-    }
+    const { shouldUseDarkColors, zoom, compact } = settings;
+    const adjustedFontSize = Math.round(14 * (zoom / 100));
 
-    return () => {
-      document.body.classList.remove('compact');
-    };
-  }, [settings.compact]);  
-
-  useEffect(() => {
-    const adjustedFontSize = Math.round(14 * (settings.zoom / 100));
     const updatedTheme = createTheme({
-      ...(settings?.shouldUseDarkColors ? darkTheme : lightTheme),
+      ...(shouldUseDarkColors ? darkTheme : lightTheme),
       typography: {
         fontFamily: 'Helvetica, Arial, sans-serif',
         fontSize: adjustedFontSize,
@@ -103,18 +92,14 @@ const App = (): JSX.Element => {
 
     setTheme(updatedTheme);
 
-    if (settings?.shouldUseDarkColors) {
-      document.body.classList.add('darkTheme');
-      document.body.classList.remove('lightTheme');
-    } else {
-      document.body.classList.add('lightTheme');
-      document.body.classList.remove('darkTheme');
-    }
+    document.body.classList.toggle('compact', compact);
+    document.body.classList.toggle('darkTheme', shouldUseDarkColors);
+    document.body.classList.toggle('lightTheme', !shouldUseDarkColors);
 
     return () => {
-      document.body.classList.remove('darkTheme', 'lightTheme');
+      document.body.classList.remove('darkTheme', 'lightTheme', 'compact');
     };
-  }, [settings.shouldUseDarkColors, settings.zoom]);
+  }, [settings.shouldUseDarkColors, settings.zoom, settings.compact]);
 
   return (
     <>

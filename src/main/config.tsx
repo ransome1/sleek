@@ -115,6 +115,7 @@ const config: Store<Settings> = new Store<Settings>({
     '2.0.17': (store) => {
       console.log('Migrating from 2.0.14 → 2.0.17')
       store.set('compact', false)
+      store.set('sortCompletedLast', false)
     }
   }
 })

@@ -140,6 +140,19 @@ div[data-todotxt-attribute='priority'] {
 	}
 }
 
+.compact {
+	button {
+		padding: 0.4em;
+	}
+	div[data-todotxt-attribute='priority'] {
+		button {
+			font-size: 1.25em;
+			font-weight: bold;
+			padding: 0.3em 0.5em;
+		}
+	}
+}
+
 .darkTheme {
     .filter {
       button:disabled {

@@ -36,6 +36,31 @@
   }
 }
 
+.compact {
+  #DialogComponent {
+    .MuiDialog-paper {
+      max-width: 60em;
+      .MuiDialogContent-root {
+        padding: 1em;
+      }
+    }
+  }  
+  .MuiAutocomplete-root,
+  .MuiDialogContent-root {
+    .MuiFormControl-root {
+      label[data-shrink=false] {
+        transform: translate(0.8em, 0.8em) scale(1);
+      }
+      .MuiInputBase-root {
+        padding: 0.8em;
+        &.MuiInputBase-multiline {
+         padding: 0.8em;
+        }      
+      }
+    }
+  }  
+}
+
 .darkTheme .MuiDialog-root .MuiDialog-paper .MuiDialogActions-root button {
   border-top: 1px solid Variables.$darker-grey;
   border-right: 1px solid Variables.$darker-grey;

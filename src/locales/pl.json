@@ -51,6 +51,7 @@
   "drawer.attributes.overdue": "zaległy",
   "drawer.attributes.elapsed": "upłynął",
   "drawer.sorting.fileSorting": "Sortuj zadania tak, jak występują w pliku",
+  "drawer.sorting.sortCompletedLast": "Przenieś ukończone zadania na koniec listy",
   "shared.attributeMapping.t": "Data progowa",
   "shared.attributeMapping.due": "Termin",
   "shared.attributeMapping.projects": "Projekty",
