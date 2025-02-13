@@ -79,16 +79,11 @@ function runQuery(todoObject: TodoObject, compiledQuery: Opcode[]): boolean {
         break
       case 'string':
         next = q.shift()
-        stack.push(
-          todoObject
-            .toString()
-            .toLowerCase()
-            .indexOf(next?.toLowerCase() || '') !== -1
-        )
+        stack.push(todoObject.string.toLowerCase().indexOf(next.toLowerCase()) !== -1);
         break
       case 'regex':
         next = q.shift()
-        stack.push(next instanceof RegExp ? next.test(todoObject.toString()) : false)
+        stack.push(next.test(todoObject.string));
         break
       case '==':
         operand2 = stack.pop() as boolean
