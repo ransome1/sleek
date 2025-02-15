@@ -1,12 +1,12 @@
 import Store from 'electron-store'
 import path from 'path'
 import { app, nativeTheme } from 'electron'
+import { dataRequest, searchString } from './modules/DataRequest/DataRequest'
 import fs from 'fs'
 import { mainWindow } from './index'
 import { createFileWatcher } from './modules/File/Watcher'
 import { writeToFile } from './modules/File/Write'
 import { createTray } from './modules/Tray'
-import { dataRequest, searchString } from './modules/DataRequest/DataRequest'
 import handleTheme from './modules/Theme'
 import { getChannel, handleError } from './util'
 import crypto from 'crypto'
@@ -151,8 +151,6 @@ filter.onDidChange('attributes', () => {
 config.onDidAnyChange((settings) => {
   try {
     if (mainWindow && mainWindow.webContents) {
-      const requestedData = dataRequest(searchString)
-      mainWindow.webContents.send('requestData', requestedData)
       mainWindow.webContents.send('settingsChanged', settings)
     } else {
       console.warn('The window is not available, skipping setting change.')
@@ -166,6 +164,8 @@ config.onDidChange('files', (newValue: FileObject[] | undefined) => {
   try {
     if (newValue !== undefined) {
       createFileWatcher(newValue)
+      const requestedData = dataRequest(searchString)
+      mainWindow!.webContents.send('requestData', requestedData)
     }
   } catch (error: any) {
     handleError(error)

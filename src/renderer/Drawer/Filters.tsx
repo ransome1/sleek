@@ -6,29 +6,29 @@ import Switch from '@mui/material/Switch'
 import HelpIcon from '@mui/icons-material/Help'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
-import { handleLinkClick } from '../Shared'
+import { handleLinkClick, handleToggleClick } from '../Shared'
 import './Filters.scss'
 
 const { store } = window.api
 
 const visibleSettings: VisibleSettings = {
   showCompleted: {
-    style: 'toggle'
+    style: 'toggle',
+    rerender: true
   },
   showHidden: {
     style: 'toggle',
+    rerender: true,
     help: 'https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)'
   },
   thresholdDateInTheFuture: {
-    style: 'toggle'
+    style: 'toggle',
+    rerender: true
   },
   dueDateInTheFuture: {
-    style: 'toggle'
+    style: 'toggle',
+    rerender: true
   }
-}
-
-const handleChange = (settingName: string, value: string | boolean): void => {
-  store.setConfig(settingName, value)
 }
 
 interface DrawerFiltersComponentProps extends WithTranslation {
@@ -48,7 +48,7 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({ setting
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
                   checked={!!settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(settingName, event.target.checked)}
+                  onChange={(event) => handleToggleClick(settingName, event.target.checked, settingValue.rerender)}
                   name={settingName}
                 />
               }
@@ -56,11 +56,7 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({ setting
                 settingValue.help ? (
                   <>
                     {t(`drawer.filters.${settingName}`)}
-                    <Link
-                      onClick={(event) =>
-                        settingValue.help && handleLinkClick(event, settingValue.help)
-                      }
-                    >
+                    <Link onClick={(event) => settingValue.help && handleLinkClick(event, settingValue.help, settingValue.rerender)}>
                       <HelpIcon />
                     </Link>
                   </>

@@ -1,6 +1,6 @@
 @use '../Variables.scss';
 
-#drawer {
+.MuiDrawer-root {
   height: 100vh;
   transition: margin-left 0.3s ease;
   .MuiPaper-root {
@@ -11,7 +11,14 @@
       overflow: visible;
       .MuiTabs-flexContainer {
         button {
+          min-width: 7em;
+          min-height: auto;
+          padding: 0.75em 1.5em;
+          font-size: 0.8em;
           text-transform: none;
+          svg {
+            font-size: 1.5em;
+          }
           .reset {
             font-size: 1.25em;
             position: absolute;
@@ -37,7 +44,6 @@
   }
   &.open {
     min-width: 19em;
-    margin-left: 0 !important;
   }
 }
 

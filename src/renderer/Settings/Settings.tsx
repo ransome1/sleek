@@ -1,4 +1,5 @@
 import React, { useEffect, memo } from 'react'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Link from '@mui/material/Link'
 import Badge from '@mui/material/Badge'
 import FormControl from '@mui/material/FormControl'
@@ -15,10 +16,11 @@ import Slider from '@mui/material/Slider'
 import HelpIcon from '@mui/icons-material/Help'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import LanguageSelector, { i18n } from './LanguageSelector'
-import { handleLinkClick } from '../Shared'
+import { handleLinkClick, handleToggleClick } from '../Shared'
+import { darkTheme, lightTheme } from '../Themes'
 import './Settings.scss'
 
-const { store } = window.api
+const { ipcRenderer, store } = window.api
 
 const visibleSettings: VisibleSettings = {
   appendCreationDate: {
@@ -28,7 +30,7 @@ const visibleSettings: VisibleSettings = {
     style: 'toggle'
   },
   tray: {
-    style: 'toggle'
+    style: 'toggle',
   },
   menuBarVisibility: {
     style: 'toggle'
@@ -79,20 +81,63 @@ const visibleSettings: VisibleSettings = {
   }
 }
 
-const handleChange = (settingName: string, value: string | boolean | number): void => {
-  store.setConfig(settingName, value)
-}
+// const handleChange = (settingName: string, value: string | boolean | number): void => {
+//   store.setConfig(settingName, value)
+// }
 
 interface SettingsComponentProps extends WithTranslation {
   isOpen: boolean
   onClose: () => void
   settings: Settings
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<string>>
+  setTheme: React.Dispatch<React.SetStateAction<string>>
+  setTodoData: React.Dispatch<React.SetStateAction<string>>
   t: typeof i18n.t
 }
 
-const SettingsComponent: React.FC<SettingsComponentProps> = memo(
-  ({ isOpen, onClose, settings, setIsSettingsOpen, t }) => {
+const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onClose, settings, setIsSettingsOpen, setTheme, setTodoData, t }) => {
+    
+    useEffect(() => {
+      if (settings.files?.length === 0) {
+        setTodoData(null)
+      }
+    }, [settings.files])
+
+    useEffect(() => {
+      i18n
+        .changeLanguage(settings.language)
+        .then(() => {
+          console.log(`Language set to "${settings.language}"`)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    }, [settings.language])
+
+    useEffect(() => {
+      const { shouldUseDarkColors, zoom, compact, disableAnimations } = settings;
+      const adjustedFontSize = Math.round(14 * (zoom / 100));
+
+      const updatedTheme = createTheme({
+        ...(shouldUseDarkColors ? darkTheme : lightTheme),
+        typography: {
+          fontFamily: 'Helvetica, Arial, sans-serif',
+          fontSize: adjustedFontSize,
+        },
+      });
+
+      setTheme(updatedTheme);
+
+      document.body.classList.toggle('disableAnimations', disableAnimations);
+      document.body.classList.toggle('compact', compact);
+      document.body.classList.toggle('darkTheme', shouldUseDarkColors);
+      document.body.classList.toggle('lightTheme', !shouldUseDarkColors);
+
+      return () => {
+        document.body.classList.remove('darkTheme', 'lightTheme', 'compact');
+      };
+    }, [settings.shouldUseDarkColors, settings.zoom, settings.compact, settings.disableAnimations]);    
+
     const handleClose = (): void => {
       setIsSettingsOpen(false)
     }
@@ -112,7 +157,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                   <Switch
                     data-testid={`setting-toggle-${settingName}`}
                     checked={settings[settingName as keyof Settings]}
-                    onChange={(event) => handleChange(settingName, event.target.checked)}
+                    onChange={(event) => handleToggleClick(settingName, event.target.checked)}
                     name={settingName}
                   />
                 }
@@ -147,7 +192,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                   className={settingName}
                   label={t(`settings.${settingName}`)}
                   value={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(settingName, event.target.value)}
+                  onChange={(event) => handleToggleClick(settingName, event.target.value)}
                 >
                   {settingValue?.values?.map((value) => (
                     <MenuItem key={value} value={value}>
@@ -192,7 +237,8 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                   }
                   min={settingValue.min}
                   max={settingValue.max}
-                  onChange={(_, value: number | number[]) => handleChange(settingName, value)}
+                  onChange={(_, value: number | number[]) => handleToggleClick(settingName, value)}
+                  //onChange={(event) => handleToggleClick(event, settingName, event.target.checked)}
                 />
               </FormControl>
             ) : null

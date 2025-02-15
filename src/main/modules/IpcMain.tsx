@@ -1,5 +1,6 @@
 import { ipcMain, app, IpcMainEvent, clipboard, shell } from 'electron'
-import { dataRequest } from './DataRequest/DataRequest'
+import { dataRequest, searchString } from './DataRequest/DataRequest'
+import { mainWindow } from '../index'
 import { changeCompleteState } from './DataRequest/ChangeCompleteState'
 import { prepareContentForWriting, removeLineFromFile } from './File/Write'
 import { archiveTodos, handleRequestArchive } from './File/Archive'

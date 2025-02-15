@@ -44,6 +44,11 @@
         padding: 1em;
       }
     }
+    .MuiDialogActions-root {
+      button {
+        padding: 0.5em;
+      }
+    }    
   }  
   .MuiAutocomplete-root,
   .MuiDialogContent-root {

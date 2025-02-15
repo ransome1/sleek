@@ -24,7 +24,7 @@ import './App.scss'
 import './Buttons.scss'
 import './Form.scss'
 
-const { ipcRenderer, store } = window.api
+const { store, ipcRenderer } = window.api
 
 const App = (): JSX.Element => {
   const [settings, setSettings] = useState<Settings>(store.getConfig())
@@ -44,12 +44,12 @@ const App = (): JSX.Element => {
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null)
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
   const [theme, setTheme] = useState(
-  createTheme({
-    ...(settings?.shouldUseDarkColors ? darkTheme : lightTheme),
-      typography: {
-        fontSize: Math.round(14 * (settings.zoom / 100)),
-      },
-    })
+    createTheme({
+      ...(settings?.shouldUseDarkColors ? darkTheme : lightTheme),
+        typography: {
+          fontSize: Math.round(14 * (settings.zoom / 100)),
+        },
+      })
   );
   const searchFieldRef = useRef<HTMLInputElement>(null)
 
@@ -58,48 +58,8 @@ const App = (): JSX.Element => {
   }, [snackBarContent])
 
   useEffect(() => {
-    if (settings.files?.length === 0) {
-      setTodoData(null)
-    }
-  }, [settings.files])
-
-  useEffect(() => {
-    i18n
-      .changeLanguage(settings.language)
-      .then(() => {
-        console.log(`Language set to "${settings.language}"`)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }, [settings.language])
-
-  useEffect(() => {
     ipcRenderer.send('requestData')
   }, [])
-
-  useEffect(() => {
-    const { shouldUseDarkColors, zoom, compact } = settings;
-    const adjustedFontSize = Math.round(14 * (zoom / 100));
-
-    const updatedTheme = createTheme({
-      ...(shouldUseDarkColors ? darkTheme : lightTheme),
-      typography: {
-        fontFamily: 'Helvetica, Arial, sans-serif',
-        fontSize: adjustedFontSize,
-      },
-    });
-
-    setTheme(updatedTheme);
-
-    document.body.classList.toggle('compact', compact);
-    document.body.classList.toggle('darkTheme', shouldUseDarkColors);
-    document.body.classList.toggle('lightTheme', !shouldUseDarkColors);
-
-    return () => {
-      document.body.classList.remove('darkTheme', 'lightTheme', 'compact');
-    };
-  }, [settings.shouldUseDarkColors, settings.zoom, settings.compact]);
 
   return (
     <>
@@ -120,7 +80,7 @@ const App = (): JSX.Element => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <div
-            className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings.disableAnimations ? 'disableAnimations' : ''}`}
+            className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'}`}
           >
             <NavigationComponent
               setDialogOpen={setDialogOpen}
@@ -200,6 +160,8 @@ const App = (): JSX.Element => {
             onClose={() => setIsSettingsOpen(false)}
             settings={settings}
             setIsSettingsOpen={setIsSettingsOpen}
+            setTheme={setTheme}
+            setTodoData={setTodoData}
           />
           {contextMenu && (
             <ContextMenu

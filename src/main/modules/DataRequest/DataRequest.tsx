@@ -2,14 +2,11 @@ import { getActiveFile } from '../File/Active'
 import { readFileContent } from '../File/File'
 import { config, filter } from '../../config'
 import { applySearchString } from '../Filters/Search'
-import {
-  applyAttributes,
-  handleCompletedTodoObjects,
-  handleTodoObjectsDates
-} from '../Filters/Filters'
+import { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates } from '../Filters/Filters'
 import { updateAttributes, attributes } from '../Attributes'
 import { createTodoObjects } from './CreateTodoObjects'
-import { sortAndGroupTodoObjects } from './SortAndGroup'
+import { sortTodoObjects } from './Sort'
+import { groupTodoObjects } from './Group'
 
 let searchString: string
 const headers: HeadersObject = {
@@ -19,8 +16,7 @@ const headers: HeadersObject = {
 }
 let todoObjects: TodoObject[]
 
-function dataRequest(search?: string): RequestedData {
-  searchString = search || ''
+function dataRequest(search: string = ''): RequestedData {
 
   const activeFile: FileObject | null = getActiveFile()
   if (!activeFile) {
@@ -32,6 +28,7 @@ function dataRequest(search?: string): RequestedData {
   const sorting: Sorting[] = config.get('sorting')
   const filters: Filters = filter.get('attributes')
   const showHidden: boolean = config.get('showHidden')
+  const fileSorting = config.get('fileSorting');
 
   todoObjects = createTodoObjects(fileContent)
 
@@ -52,7 +49,7 @@ function dataRequest(search?: string): RequestedData {
 
   if (filters) todoObjects = applyAttributes(todoObjects, filters)
 
-  if (searchString) todoObjects = applySearchString(searchString, todoObjects)
+  if (search) todoObjects = applySearchString(search, todoObjects)
 
   updateAttributes(todoObjects, sorting, false)
 
@@ -64,7 +61,20 @@ function dataRequest(search?: string): RequestedData {
     todoObjects = visibleObjects
   }
 
-  const todoData: TodoData = sortAndGroupTodoObjects(todoObjects, sorting)
+  let todoData;
+
+  if (fileSorting) {
+    todoData = [
+      {
+        title: null,
+        todoObjects,
+        visible: true,
+      },
+    ];
+  } else {
+    todoObjects.sort((a, b) => sortTodoObjects(a, b, sorting));
+    todoData = groupTodoObjects(todoObjects, sorting[0].value);
+  }
 
   const requestedData: RequestedData = {
     todoData,
