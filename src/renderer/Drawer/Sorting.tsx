@@ -11,7 +11,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import SortIcon from '@mui/icons-material/Sort'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
-import { translatedAttributes, handleToggleClick } from '../Shared'
+import { translatedAttributes } from '../Shared'
 import './Sorting.scss'
 
 const { store } = window.api
@@ -68,7 +68,7 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
               control={
                 <Switch
                   checked={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleToggleClick(settingName, event.target.checked, settingValue.rerender)}
+                  onChange={(event) => store.setConfig(settingName, event.target.checked)}
                   name={settingName}
                 />
               }

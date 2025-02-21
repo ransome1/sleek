@@ -148,24 +148,53 @@ filter.onDidChange('attributes', () => {
   }
 })
 
-config.onDidAnyChange((settings) => {
+const rerender = {
+  'sorting': true,
+  'files': true,
+  'showCompleted': true,
+  'showHidden': true,
+  'fileSorting': true,
+  'thresholdDateInTheFuture': true,
+  'dueDateInTheFuture': true,
+  'sortCompletedLast': true,
+};
+
+function findObjectDifferences(oldObj, newObj) {
+  const differences = {};
+
+  for (const key in newObj) {
+    if (JSON.stringify(newObj[key]) !== JSON.stringify(oldObj[key])) {
+      differences[key] = {
+        oldValue: oldObj[key],
+        newValue: newObj[key],
+      };
+      if (rerender[key]) {
+        const requestedData = dataRequest(searchString)
+        mainWindow!.webContents.send('requestData', requestedData)
+        return false;
+      }
+    }
+  }
+  return differences;
+}
+
+config.onDidAnyChange((newValue, oldValue) => {
   try {
     if (mainWindow && mainWindow.webContents) {
-      mainWindow.webContents.send('settingsChanged', settings)
+      findObjectDifferences(oldValue, newValue);
+      mainWindow.webContents.send('settingsChanged', newValue)
     } else {
       console.warn('The window is not available, skipping setting change.')
     }
   } catch (error: any) {
     handleError(error)
   }
-})
+});
 
 config.onDidChange('files', (newValue: FileObject[] | undefined) => {
   try {
     if (newValue !== undefined) {
       createFileWatcher(newValue)
-      const requestedData = dataRequest(searchString)
-      mainWindow!.webContents.send('requestData', requestedData)
     }
   } catch (error: any) {
     handleError(error)

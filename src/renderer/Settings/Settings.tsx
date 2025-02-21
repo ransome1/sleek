@@ -16,7 +16,7 @@ import Slider from '@mui/material/Slider'
 import HelpIcon from '@mui/icons-material/Help'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import LanguageSelector, { i18n } from './LanguageSelector'
-import { handleLinkClick, handleToggleClick } from '../Shared'
+import { handleLinkClick } from '../Shared'
 import { darkTheme, lightTheme } from '../Themes'
 import './Settings.scss'
 
@@ -80,10 +80,6 @@ const visibleSettings: VisibleSettings = {
     values: [1, 0]
   }
 }
-
-// const handleChange = (settingName: string, value: string | boolean | number): void => {
-//   store.setConfig(settingName, value)
-// }
 
 interface SettingsComponentProps extends WithTranslation {
   isOpen: boolean
@@ -157,7 +153,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
                   <Switch
                     data-testid={`setting-toggle-${settingName}`}
                     checked={settings[settingName as keyof Settings]}
-                    onChange={(event) => handleToggleClick(settingName, event.target.checked)}
+                    onChange={(event) => store.setConfig(settingName, event.target.checked)}
                     name={settingName}
                   />
                 }
@@ -192,7 +188,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
                   className={settingName}
                   label={t(`settings.${settingName}`)}
                   value={settings[settingName as keyof Settings]}
-                  onChange={(event) => handleToggleClick(settingName, event.target.value)}
+                  onChange={(event) => store.setConfig(settingName, event.target.value)}
                 >
                   {settingValue?.values?.map((value) => (
                     <MenuItem key={value} value={value}>
@@ -237,8 +233,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
                   }
                   min={settingValue.min}
                   max={settingValue.max}
-                  onChange={(_, value: number | number[]) => handleToggleClick(settingName, value)}
-                  //onChange={(event) => handleToggleClick(event, settingName, event.target.checked)}
+                  onChange={(_, value: number | number[]) => store.setConfig(settingName, event.target.checked)}
                 />
               </FormControl>
             ) : null

@@ -5,7 +5,7 @@ on:
       - '*'
 jobs:
   trigger-flathub_build:
-    name: Trigger Flathub build bot
+    name: Update commit id in Flathub repo
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Flathub build

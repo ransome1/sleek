@@ -67,15 +67,6 @@ export const handleReset = (): void => {
   store.setFilters('attributes', [])
 }
 
-export const handleToggleClick = (settingName: string, settingValue: boolean, rerender: boolean): void => {
-  if (settingName) {
-    store.setConfig(settingName, settingValue, rerender)
-    if(rerender) {
-      ipcRenderer.send('requestData')
-    }
-  }
-}
-
 export const handleLinkClick = (event: MouseEvent, url: string): void => {
   event.preventDefault()
   event.stopPropagation()

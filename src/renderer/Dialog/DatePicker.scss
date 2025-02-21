@@ -47,6 +47,10 @@
       border: inherit;
       background: Variables.$mid-grey;
     }
+    &.Mui-selected {
+      color: white;
+      background: Variables.$blue;
+    }
   }
 }
 .darkTheme {

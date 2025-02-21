@@ -9,7 +9,6 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import li from '@mui/material/li'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from './Settings/LanguageSelector'
-import { handleToggleClick } from './Shared'
 import './Navigation.scss'
 
 const { ipcRenderer, store } = window.api
@@ -61,8 +60,7 @@ const NavigationComponent: React.FC<NavigationComponentProps> = memo(
                 <AddIcon />
               </li>
               <li
-                //onClick={() => store.setConfig('isDrawerOpen', !settings.isDrawerOpen)}
-                onClick={() => handleToggleClick('isDrawerOpen', !settings.isDrawerOpen)}
+                onClick={() => store.setConfig('isDrawerOpen', !settings.isDrawerOpen)}
                 className={settings.isDrawerOpen ? 'active' : ''}
                 data-testid="navigation-button-toggle-drawer"
                 title={`${t('attributes')}, ${t('filters')}, ${t('sorting')}`}

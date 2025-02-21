@@ -6,7 +6,7 @@ import Switch from '@mui/material/Switch'
 import HelpIcon from '@mui/icons-material/Help'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
-import { handleLinkClick, handleToggleClick } from '../Shared'
+import { handleLinkClick } from '../Shared'
 import './Filters.scss'
 
 const { store } = window.api
@@ -48,7 +48,7 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({ setting
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
                   checked={!!settings[settingName as keyof Settings]}
-                  onChange={(event) => handleToggleClick(settingName, event.target.checked, settingValue.rerender)}
+                  onChange={(event) => store.setConfig(settingName, event.target.checked)}
                   name={settingName}
                 />
               }

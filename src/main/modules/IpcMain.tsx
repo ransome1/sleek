@@ -130,14 +130,6 @@ function handleAddFile(event: IpcMainEvent, filePath: string): void {
   }
 }
 
-function handleDroppedFile(event: IpcMainEvent, filePath: string): void {
-  try {
-    addFile(filePath, null)
-  } catch (error: any) {
-    handleError(error)
-  }
-}
-
 function handleRevealInFileManager(event: IpcMainEvent, pathToReveal: string): void {
   try {
     shell.showItemInFolder(pathToReveal)
@@ -212,7 +204,6 @@ function removeEventListeners(): void {
   ipcMain.off('writeTodoToFile', handleWriteTodoToFile)
   ipcMain.off('archiveTodos', handleArchiveTodos)
   ipcMain.off('addFile', handleAddFile)
-  ipcMain.off('droppedFile', handleDroppedFile)
   ipcMain.off('saveToClipboard', handleSaveToClipboard)
   ipcMain.off('revealInFileManager', handleRevealInFileManager)
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile)
@@ -237,7 +228,6 @@ ipcMain.on('requestData', handleDataRequest)
 ipcMain.on('writeTodoToFile', handleWriteTodoToFile)
 ipcMain.on('archiveTodos', handleArchiveTodos)
 ipcMain.on('addFile', handleAddFile)
-ipcMain.on('droppedFile', handleDroppedFile)
 ipcMain.on('saveToClipboard', handleSaveToClipboard)
 ipcMain.on('revealInFileManager', handleRevealInFileManager)
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile)

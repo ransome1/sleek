@@ -126,6 +126,9 @@
       }
       &.showNavigation {
         background: Variables.$darker-grey;
+        &:hover {
+          background: inherit;  
+        }
       }
     }
   }

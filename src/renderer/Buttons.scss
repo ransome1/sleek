@@ -26,6 +26,9 @@ button {
         &:last-child {
           border-right: none;
         }
+        &:hover {
+        	background: Variables.$lighter-grey;
+        }
       }   
     }
   }
@@ -163,4 +166,16 @@ div[data-todotxt-attribute='priority'] {
         background: rgba(0, 0, 0, 0.35);
       }
     }
+	.MuiDialog-root {
+	  .MuiDialog-paper {
+	    .MuiDialogActions-root {
+	      button {
+	        &:hover {
+	        	color: white;
+	        	background: Variables.$dark-grey;
+	        }
+	      }   
+	    }
+	  }
+	}    
 }

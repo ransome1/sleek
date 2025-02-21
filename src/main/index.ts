@@ -226,7 +226,9 @@ app
   .on('before-quit', handleBeforeQuit)
   .on('activate', handleCreateWindow)
   .on('open-file', (event, path) => {
-    event.preventDefault()
-    handleOpenFile(path)
-  })
+    event.preventDefault();
+      setTimeout(() => {
+        handleOpenFile(path);
+      }, 1000);
+  });
 export { mainWindow, handleCreateWindow, eventListeners }
