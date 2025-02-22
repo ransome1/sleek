@@ -3,7 +3,8 @@
 #fileTabs {
   overflow: visible;
   .MuiTabs-scroller {
-    button[role='tab'] {
+    .MuiTab-root {
+      min-width: auto;
       min-height: auto;
       padding: 0.5em 0.5em 0.5em 1em;
       text-transform: lowercase;

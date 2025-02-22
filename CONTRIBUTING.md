@@ -17,7 +17,7 @@ We're actively inviting passionate contributors skilled in `React`, `TypeScript`
 
 ## Getting Started
 
-Before contributing, make sure you have the latest version of Git, Node.js and yarn installed on your system.
+Before contributing, make sure you have the latest version of Git and Node.js installed on your system.
 
 ## Contributing
 
@@ -42,7 +42,7 @@ We welcome pull requests for bug fixes, enhancements, or new features. To contri
 1. Fork the repository and create a new branch for your feature or bug fix.
 2. Make your changes in the new branch, adhering to the [coding guidelines](#coding-guidelines).
 3. Write tests using [Jest](https://jestjs.io/) to cover your changes.
-4. Ensure that your code and tests pass by running `yarn test`.
+4. Ensure that your code and tests pass by running `npm run test`.
 5. Commit your changes using [proper commit guidelines](#commit-guidelines).
 6. Push your branch to your forked repository.
 7. Open a pull request against the main repository's `main` branch.
@@ -59,12 +59,12 @@ Before starting work on sleek, we recommend reviewing the [GitHub Issue backlog]
 To set up the development environment and run sleek locally, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/ransome1/sleek.git`
-2. Install project dependencies: `yarn`
-3. Start the development server: `yarn dev`
+2. Install project dependencies: `npm install`
+3. Start the development server: `npm run dev`
 
 ## Testing
 
-sleek uses [Jest](https://jestjs.io/) as the testing framework. To run tests, use the following command: `yarn test`
+sleek uses [Jest](https://jestjs.io/) as the testing framework. To run tests, use the following command: `npm run test`
 
 To contribute to the testing efforts, consider the following:
 

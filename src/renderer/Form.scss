@@ -8,29 +8,37 @@ label {
     }
   }
 }
-
 .MuiAutocomplete-root,
 .MuiPaper-root,
 .MuiDialogContent-root {
-  .MuiIconButton-root {
-    padding: 0.1em;
-  }
+  flex-direction: row;
+  flex: 1;
   button.addAsTodo {
     margin-right: 0.5em;
   }
-  .MuiButtonBase-root {
-    border: none;
-    svg.invert {
-      transform: rotate(180deg);
-    }
-    &.Mui-focusVisible {
-      svg {
-        color: Variables.$blue;
+  .MuiFormControlLabel-root {
+    margin-left: -0.78571429em;
+    margin-left: 1,14285714em;
+    .MuiSwitch-root {
+      width: 4.14285714em;
+      height: 2.71428571em;
+      padding: 0.85714286em;
+      .MuiSwitch-switchBase {
+        padding: 0.64285714em;
+        &.Mui-checked {
+          transform: translateX(1.3em);
+          color: Variables.$blue;
+        }
       }
-    }
-    
-    &:hover {
-      border: none;
+      .MuiSwitch-track {
+        &.Mui-checked {
+          background-color: Variables.$blue;
+        }
+      }
+      .MuiSwitch-thumb {
+        width: 1.42857143em;
+        height: 1.42857143em;
+      }
     }
   }
   .MuiFormControl-root {
@@ -40,25 +48,37 @@ label {
     label[data-shrink=true] {
       transform: translate(0.5em, -0.5em) scale(0.75);
     }
+
+    .MuiSlider-root {
+      height: 0.28571429em;
+      .MuiSlider-thumb {
+        width: 1.42857143em;
+        height: 1.42857143em;
+        background-color: Variables.$blue;
+      }
+      .MuiSlider-track {
+        border-color: Variables.$blue;
+        background-color: Variables.$blue;
+      }
+    }
     .MuiInputBase-root {
-      padding: 1em 1.75em 1em 1em;
+      padding: 0;
       .MuiInputAdornment-root {
         max-height: 1.5em;
-        margin: 0;
+        margin: 0.25em;
       }
       .MuiInputBase-input {
         margin: 0;
-        padding: 0;
+        padding: 1em;
       }
       .MuiSelect-select  {
         margin: 0;
-        padding: 0;
+        padding: 1em;
       }
       &.MuiInputBase-multiline {
         textarea {
           font-size: 1.25em;
         }
-       padding: 1em;
       }
     }
   }

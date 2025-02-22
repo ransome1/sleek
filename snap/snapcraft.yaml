@@ -52,8 +52,8 @@ parts:
         export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
       fi
 
-      node.yarn install
-      node.yarn run build:unpack
+      npm install
+      npm run build:unpack
 
       mv dist/linux* \
         $SNAPCRAFT_PART_INSTALL/sleek

@@ -17,11 +17,11 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 23
-          cache: 'yarn'
+          cache: 'npm'
       - name: Install and build
         run: |
-          yarn --network-timeout 100000
-          yarn run build
+          npm install
+          npm run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         env:
@@ -49,11 +49,11 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 23
-          cache: 'yarn'
+          cache: 'npm'
       - name: Install and build
         run: |
-          yarn --network-timeout 100000
-          yarn run build
+          npm install
+          npm run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         env:
@@ -75,11 +75,11 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 23
-          cache: 'yarn'
+          cache: 'npm'
       - name: Install and build
         run: |
-          yarn --network-timeout 100000
-          yarn run build
+          npm install
+          npm run build
       - name: Run Electron Builder
         uses: samuelmeuli/action-electron-builder@v1
         env:

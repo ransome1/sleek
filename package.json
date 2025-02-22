@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.17-rc.5",
+  "version": "2.0.17-rc.6",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -32,15 +32,15 @@
     "lint": "eslint ./src/ --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
-    "typecheck": "yarn typecheck:node && yarn typecheck:web",
+    "typecheck": "npm run typecheck:node && npx typecheck:web",
     "start": "electron-vite preview",
     "dev": "electron-vite dev --watch",
-    "build": "yarn peggy && electron-vite build",
+    "build": "npm run peggy && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "yarn build && electron-builder --dir",
-    "mas": "yarn build && electron-builder build -m mas --universal --publish never",
-    "masdev": "yarn build && electron-builder build -m mas-dev --publish never",
-    "peggy": "peggy --format es --dts --output ./src/main/modules/Filters/FilterLang.ts ./src/main/modules/Filters/FilterLang.pegjs"
+    "build:unpack": "npm run build && electron-builder --dir",
+    "mas": "npm run build && electron-builder build -m mas --universal --publish never",
+    "masdev": "npm run build && electron-builder build -m mas-dev --publish never",
+    "peggy": "npx peggy --format es --dts --output ./src/main/modules/Filters/FilterLang.ts ./src/main/modules/Filters/FilterLang.pegjs"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
@@ -71,7 +71,7 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@typescript-eslint/parser": "^8.24.1",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "electron": "^34.2.0",
     "electron-builder": "^25.1.8",
     "electron-vite": "^3.0.0",
@@ -83,7 +83,6 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass": "^1.85.0",
-    "typescript": "^5.5.2",
-    "vite": "^6.1.1"
+    "typescript": "^5.7.3"
   }
 }

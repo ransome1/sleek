@@ -233,7 +233,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
                   }
                   min={settingValue.min}
                   max={settingValue.max}
-                  onChange={(_, value: number | number[]) => store.setConfig(settingName, event.target.checked)}
+                  onChange={(_, value: number | number[]) => store.setConfig(settingName, value)}
                 />
               </FormControl>
             ) : null

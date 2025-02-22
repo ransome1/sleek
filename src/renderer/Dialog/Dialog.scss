@@ -14,7 +14,7 @@
     .MuiDialogTitle-root {
       font-size: 1.2em;
       font-weight: bold;
-      padding-bottom: 0;
+      padding: 1.2em 1.2em 0 1.2em;
     }
     .MuiDialogContent-root {
       display: flex;
@@ -49,8 +49,7 @@
         padding: 0.5em;
       }
     }    
-  }  
-  .MuiAutocomplete-root,
+  }
   .MuiDialogContent-root {
     .MuiFormControl-root {
       label[data-shrink=false] {

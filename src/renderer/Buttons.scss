@@ -83,7 +83,7 @@ button {
 		&.pomodoro {
 			display: flex;
 			img {
-				margin: 0 0.25em
+			 	margin: 0 0.2em 0 0;
 			}
 		}
 		&:disabled {
@@ -142,6 +142,26 @@ div[data-todotxt-attribute='priority'] {
 		padding: 0.4em 0.6em;
 	}
 }
+
+  .MuiButtonBase-root {
+    border: none;
+    svg.invert {
+      transform: rotate(180deg);
+    }
+    &.Mui-focusVisible {
+      svg {
+        color: Variables.$blue;
+      }
+    }
+    
+    &:hover {
+      border: none;
+    }
+    &.MuiIconButton-root {
+			padding: 0.25em;
+			margin: 0;
+		}
+  }
 
 .compact {
 	button {
