@@ -2,7 +2,7 @@ import chokidar, { FSWatcher } from 'chokidar'
 import { app } from 'electron'
 import { dataRequest, searchString } from '../DataRequest/DataRequest'
 import { config } from '../../config'
-import { handleError } from '../../util'
+import { handleError } from '../../Util'
 import { mainWindow, eventListeners } from '../../index'
 
 let watcher: FSWatcher | null = null

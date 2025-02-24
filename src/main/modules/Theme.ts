@@ -1,16 +1,21 @@
 import { nativeTheme } from 'electron'
 import { config } from '../config'
+import { handleError } from '../Util'
 
-function handleTheme(): void {
-  if (nativeTheme.themeSource === 'system') {
-    config.set('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
-  } else if (nativeTheme.themeSource === 'dark') {
-    config.set('shouldUseDarkColors', true)
-  } else if (nativeTheme.themeSource === 'light') {
-    config.set('shouldUseDarkColors', false)
-  } else {
-    config.set('shouldUseDarkColors', false)
+nativeTheme.on('updated', () => {
+  try {
+    if (nativeTheme.themeSource === 'system') {
+      config.set('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
+    } else if (nativeTheme.themeSource === 'dark') {
+      config.set('shouldUseDarkColors', true)
+    } else {
+      config.set('shouldUseDarkColors', false)
+    }
+  } catch (error: error) {
+    handleError(error)
   }
-}
+});
 
-export default handleTheme
+export function handleTheme(colorTheme) {
+  nativeTheme.themeSource = colorTheme;
+}

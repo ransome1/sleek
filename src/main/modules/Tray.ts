@@ -36,10 +36,10 @@ function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOp
   ]
 }
 
-function createTray() {
+export function handleTray(showTray) {
   tray?.destroy()
 
-  if (!config.get('tray')) {
+  if (!showTray) {
     app.dock?.show()
     return
   }
@@ -53,5 +53,3 @@ function createTray() {
     handleCreateWindow()
   })
 }
-
-export { createTray }

@@ -1,8 +1,6 @@
 import fs from 'fs'
 import { app } from 'electron'
 import { config } from '../../config'
-import { createTray } from '../Tray'
-import { createMenu } from '../Menu'
 import path from 'path'
 import { mainWindow } from '../../index'
 
@@ -40,12 +38,6 @@ function addFile(filePath: string, bookmark: string | null) {
 
   config.set('files', files)
 
-  createMenu(files)
-
-  if (config.get('tray')) {
-    createTray()
-  }
-
   return 'File added'
 }
 
@@ -79,13 +71,6 @@ function removeFile(index: number) {
 
   config.set('files', files)
 
-  createMenu(files)
-
-  const tray = config.get('tray')
-
-  if (tray) {
-    createTray()
-  }
   return 'File removed'
 }
 

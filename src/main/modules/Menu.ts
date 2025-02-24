@@ -3,7 +3,8 @@ import { setFile } from './File/File'
 import { mainWindow, handleCreateWindow } from '../index'
 import { openFile, createFile } from './File/Dialog'
 import { handleRequestArchive } from './File/Archive'
-import { config, filter } from '../config'
+import { config } from '../config'
+import { FilterStore } from '../FilterStore'
 import appPackage from '../../../package.json'
 
 function createMenu(files: FileObject[]) {
@@ -163,7 +164,7 @@ function createMenu(files: FileObject[]) {
                 label: 'Reset filters',
                 accelerator: 'CmdOrCtrl+0',
                 click: async () => {
-                  filter.set('attributes', {})
+                  FilterStore.set('attributes', {})
                 }
               },
               {

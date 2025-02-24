@@ -4,8 +4,10 @@ import { mainWindow } from '../index'
 import { changeCompleteState } from './DataRequest/ChangeCompleteState'
 import { prepareContentForWriting, removeLineFromFile } from './File/Write'
 import { archiveTodos, handleRequestArchive } from './File/Archive'
-import { config, filter, notifiedTodoObjectsStorage } from '../config'
-import { handleError } from '../util'
+import { config } from '../config'
+import { NotificationStore } from '../NotificationStore'
+import { FilterStore } from '../FilterStore'
+import { handleError } from '../Util'
 import { addFile, setFile, removeFile } from './File/File'
 import { openFile, createFile } from './File/Dialog'
 import { createTodoObject } from './DataRequest/CreateTodoObjects'
@@ -84,7 +86,7 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
 
 function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): void {
   try {
-    filter.set(key, value)
+    FilterStore.set(key, value)
   } catch (error: any) {
     handleError(error)
   }
@@ -92,7 +94,7 @@ function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): vo
 
 function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
   try {
-    event.returnValue = filter.get(value)
+    event.returnValue = FilterStore.get(value)
   } catch (error: any) {
     handleError(error)
   }
@@ -100,7 +102,7 @@ function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
 
 function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): void {
   try {
-    notifiedTodoObjectsStorage.set('notifiedTodoObjects', value)
+    NotificationStore.set('notifiedTodoObjects', value)
   } catch (error: any) {
     handleError(error)
   }

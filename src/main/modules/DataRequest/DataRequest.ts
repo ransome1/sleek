@@ -1,6 +1,7 @@
 import { getActiveFile } from '../File/Active'
 import { readFileContent } from '../File/File'
-import { config, filter } from '../../config'
+import { config } from '../../config'
+import { FilterStore } from '../../FilterStore'
 import { applySearchString } from '../Filters/Search'
 import { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates } from '../Filters/Filters'
 import { updateAttributes, attributes } from '../Attributes'
@@ -26,7 +27,7 @@ function dataRequest(search: string = ''): RequestedData {
   const fileContent = readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark)
 
   const sorting: Sorting[] = config.get('sorting')
-  const filters: Filters = filter.get('attributes')
+  const filters: Filters = FilterStore.get('attributes')
   const showHidden: boolean = config.get('showHidden')
   const fileSorting = config.get('fileSorting');
 

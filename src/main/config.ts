@@ -1,17 +1,16 @@
 import Store from 'electron-store'
 import path from 'path'
-import { app, nativeTheme } from 'electron'
+import { app } from 'electron'
 import { dataRequest, searchString } from './modules/DataRequest/DataRequest'
 import fs from 'fs'
+import { userDataDirectory } from './Util'
 import { mainWindow } from './index'
 import { createFileWatcher } from './modules/File/Watcher'
-import { writeToFile } from './modules/File/Write'
-import { createTray } from './modules/Tray'
-import handleTheme from './modules/Theme'
-import { handleError } from './util'
+import { handleTray } from './modules/Tray'
+import { handleTheme } from './modules/Theme'
+import { createMenu } from './modules/Menu'
+import { handleError } from './Util'
 import crypto from 'crypto'
-
-Store.initRenderer()
 
 const getChannel = function(): string {
   if (process.env.APPIMAGE) {
@@ -31,20 +30,6 @@ const getChannel = function(): string {
   } else {
     return 'Misc'
   }
-}
-
-const userDataDirectory: string =
-  process.env.NODE_ENV === 'development'
-    ? path.join(app.getPath('userData'), 'userData-Development')
-    : path.join(app.getPath('userData'), 'userData')
-
-if (!fs.existsSync(userDataDirectory)) fs.mkdirSync(userDataDirectory)
-
-console.log('config.ts: sleek userdata is located at: ' + userDataDirectory)
-
-const customStylesPath: string = path.join(userDataDirectory, 'customStyles.css')
-if (!fs.existsSync(customStylesPath)) {
-  writeToFile('', customStylesPath, null)
 }
 
 const migrations = {
@@ -76,7 +61,7 @@ const migrations = {
     store.set('notificationThreshold', 2)
     store.set('showFileTabs', true)
     store.set('isNavigationOpen', true)
-    store.set('customStylesPath', customStylesPath)
+    store.set('customStylesPath', path.join(userDataDirectory, 'customStyles.css'))
     store.set('tray', false)
     store.set('zoom', 100)
     store.set('multilineTextField', false)
@@ -142,34 +127,6 @@ const config = new Store<StoreType>({
   migrations
 })
 
-const filter = new Store<Filters>({ cwd: userDataDirectory, name: 'filters' })
-
-if (!filter.has('search')) {
-  filter.set('search', [])
-} else if (!filter.has('attributes')) {
-  filter.set('attributes', {})
-}
-
-const notifiedTodoObjectsPath = path.join(userDataDirectory, 'notifiedTodoObjects.json')
-const notifiedTodoObjectsStorage = new Store<{}>({
-  cwd: userDataDirectory,
-  name: 'notifiedTodoObjects'
-})
-
-if (!fs.existsSync(notifiedTodoObjectsPath)) {
-  const defaultNotifiedTodoObjectsData = {}
-  writeToFile(JSON.stringify(defaultNotifiedTodoObjectsData), notifiedTodoObjectsPath, null)
-}
-
-filter.onDidChange('attributes', () => {
-  try {
-    const requestedData = dataRequest(searchString)
-    mainWindow!.webContents.send('requestData', requestedData)
-  } catch (error: any) {
-    handleError(error)
-  }
-})
-
 const rerender = {
   'sorting': true,
   'files': true,
@@ -215,9 +172,11 @@ config.onDidAnyChange((newValue, oldValue) => {
 
 config.onDidChange('files', (newValue: FileObject[] | undefined) => {
   try {
-    if (newValue !== undefined) {
-      createFileWatcher(newValue)
-    }
+    if (!newValue) return false;
+    
+    createFileWatcher(newValue)
+    handleTray(config.get('tray'))
+    createMenu(newValue)
   } catch (error: any) {
     handleError(error)
   }
@@ -225,30 +184,26 @@ config.onDidChange('files', (newValue: FileObject[] | undefined) => {
 
 config.onDidChange('colorTheme', (colorTheme) => {
   try {
-    if (colorTheme === 'system' || colorTheme === 'light' || colorTheme === 'dark') {
-      nativeTheme.themeSource = colorTheme
-    }
+    handleTheme(colorTheme);
   } catch (error: any) {
     handleError(error)
   }
 })
 
 config.onDidChange('menuBarVisibility', (menuBarVisibility) => {
-  if (mainWindow) {
-    mainWindow.setMenuBarVisibility(menuBarVisibility)
-  } else {
-    console.warn('The window is not available, skipping setting change.')
-  }
-})
-
-config.onDidChange('tray', () => {
   try {
-    createTray()
+    mainWindow!.setMenuBarVisibility(menuBarVisibility)
   } catch (error: any) {
-    console.error(error)
+    handleError(error)
+  }  
+})
+
+config.onDidChange('tray', (tray) => {
+  try {
+    handleTray(tray)
+  } catch (error: any) {
+    handleError(error)
   }
 })
 
-nativeTheme.on('updated', handleTheme)
-
-export { config, filter, notifiedTodoObjectsStorage }
+export { config }

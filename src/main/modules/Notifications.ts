@@ -1,6 +1,8 @@
 import crypto from 'crypto'
 import { Notification } from 'electron'
-import { config, filter, notifiedTodoObjectsStorage } from '../config'
+import { config } from '../config'
+import { NotificationStore } from '../NotificationStore'
+import { FilterStore } from '../FilterStore'
 import { checkForSearchMatches } from './Filters/Search'
 import dayjs, { Dayjs } from 'dayjs'
 import isToday from 'dayjs/plugin/isToday.js'
@@ -49,7 +51,7 @@ function handleNotification(due: string | null, body: string, badge: Badge) {
     const dueDate = dayjs(due, 'YYYY-MM-DD')
     const notificationThreshold: number = config.get('notificationThreshold')
     const hash = today.format('YYYY-MM-DD') + crypto.createHash('sha256').update(body).digest('hex')
-    const searchFilters: SearchFilter[] = filter.get('search') || []
+    const searchFilters: SearchFilter[] = FilterStore.get('search') || []
 
     if (isNotificationSuppressed(searchFilters, body)) return
 
@@ -57,12 +59,12 @@ function handleNotification(due: string | null, body: string, badge: Badge) {
       badge.count += 1
       const title = createSpeakingDifference(dueDate)
       const notifiedTodoObjects = new Set<string>(
-        notifiedTodoObjectsStorage.get('notifiedTodoObjects', [])
+        NotificationStore.get('notifiedTodoObjects', [])
       )
       if (!notifiedTodoObjects.has(hash)) {
         sendNotification(title, body)
         notifiedTodoObjects.add(hash)
-        notifiedTodoObjectsStorage.set('notifiedTodoObjects', Array.from(notifiedTodoObjects))
+        NotificationStore.set('notifiedTodoObjects', Array.from(notifiedTodoObjects))
       }
     }
   }
