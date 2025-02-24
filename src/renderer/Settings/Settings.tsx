@@ -17,7 +17,7 @@ import HelpIcon from '@mui/icons-material/Help'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import LanguageSelector, { i18n } from './LanguageSelector'
 import { handleLinkClick } from '../Shared'
-import { darkTheme, lightTheme } from '../Themes'
+import { dark, light } from '../Themes'
 import './Settings.scss'
 
 const { ipcRenderer, store } = window.api
@@ -115,7 +115,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
       const adjustedFontSize = Math.round(14 * (zoom / 100));
 
       const updatedTheme = createTheme({
-        ...(shouldUseDarkColors ? darkTheme : lightTheme),
+        ...(shouldUseDarkColors ? dark : light),
         typography: {
           fontFamily: 'Helvetica, Arial, sans-serif',
           fontSize: adjustedFontSize,
@@ -126,11 +126,11 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
 
       document.body.classList.toggle('disableAnimations', disableAnimations);
       document.body.classList.toggle('compact', compact);
-      document.body.classList.toggle('darkTheme', shouldUseDarkColors);
-      document.body.classList.toggle('lightTheme', !shouldUseDarkColors);
+      document.body.classList.toggle('dark', shouldUseDarkColors);
+      document.body.classList.toggle('light', !shouldUseDarkColors);
 
       return () => {
-        document.body.classList.remove('darkTheme', 'lightTheme', 'compact');
+        document.body.classList.remove('dark', 'light', 'compact');
       };
     }, [settings.shouldUseDarkColors, settings.zoom, settings.compact, settings.disableAnimations]);    
 

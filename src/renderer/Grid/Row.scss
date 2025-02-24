@@ -9,12 +9,12 @@
   flex-wrap: wrap;
 
   gap: 0.25em;
-  padding: 0.6em;
+  padding: 0.5em;
 
   align-items: center;
 
   .MuiCheckbox-root {
-    padding: 0;
+    padding: 0.25em;
     margin: 0 0.25em;
   }
   &[data-complete='true'],
@@ -31,7 +31,7 @@
   }
 }
 
-.darkTheme {
+.dark {
   .row {
     border-color: Variables.$dark-grey;
   }

@@ -1,12 +1,7 @@
 import Sugar from 'sugar'
 import dayjs from 'dayjs'
+import { mustNotify } from './Notify'
 import { config } from '../config'
-
-function mustNotify(date: Date): boolean {
-  const today = dayjs().startOf('day')
-  const notificationThreshold: number = config.get('notificationThreshold')
-  return dayjs(date).isBefore(today.add(notificationThreshold, 'day')) || false
-}
 
 function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const speakingDates: DateAttributes = extractSpeakingDates(string)

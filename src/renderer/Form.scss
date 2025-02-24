@@ -20,13 +20,13 @@ label {
     margin-left: -0.78571429em;
     margin-left: 1,14285714em;
     .MuiSwitch-root {
-      width: 4.14285714em;
-      height: 2.71428571em;
-      padding: 0.85714286em;
+      width: 4em;
+      height: 2.4em;
+      padding: 0.75em;
       .MuiSwitch-switchBase {
-        padding: 0.64285714em;
+        padding: 0.5em;
         &.Mui-checked {
-          transform: translateX(1.3em);
+          transform: translateX(1.4em);
           color: Variables.$blue;
         }
       }
@@ -36,8 +36,8 @@ label {
         }
       }
       .MuiSwitch-thumb {
-        width: 1.42857143em;
-        height: 1.42857143em;
+        width: 1.4em;
+        height: 1.4em;
       }
     }
   }

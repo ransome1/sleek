@@ -1,4 +1,17 @@
 {
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+  },
   "files": [],
-  "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.web.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.web.json"
+    }
+  ]
 }

@@ -9,7 +9,7 @@ import NavigationComponent from './Navigation'
 import GridComponent from './Grid/Grid'
 import SplashScreen from './SplashScreen'
 import FileTabs from './Header/FileTabs'
-import { darkTheme, lightTheme } from './Themes'
+import { dark, light } from './Themes'
 import DrawerComponent from './Drawer/Drawer'
 import SearchComponent from './Header/Search/Search'
 import DialogComponent from './Dialog/Dialog'
@@ -45,7 +45,7 @@ const App = (): JSX.Element => {
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
   const [theme, setTheme] = useState(
     createTheme({
-      ...(settings?.shouldUseDarkColors ? darkTheme : lightTheme),
+      ...(settings?.shouldUseDarkColors ? dark : light),
         typography: {
           fontSize: Math.round(14 * (settings.zoom / 100)),
         },

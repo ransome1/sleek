@@ -140,7 +140,7 @@ button:hover:not(.MuiIconButton-root) {
   --color2: #c5ede3;
 }
 
-.darkTheme {
+.dark {
   button:not(.MuiIconButton-root),
   button:hover:not(.MuiIconButton-root) {
     outline-color: Variables.$light-grey;
