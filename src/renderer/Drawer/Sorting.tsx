@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import SortIcon from '@mui/icons-material/Sort'
-import Button from '@mui/material/Button'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import { translatedAttributes } from '../Shared'
@@ -24,17 +23,20 @@ interface DrawerSortingComponentProps extends WithTranslation {
 
 const visibleSettings = {
   fileSorting: {
-    style: 'toggle'
+    style: 'toggle',
+    rerender: true
+  },
+  sortCompletedLast: {
+    style: 'toggle',
+    rerender: true
   }
 }
 
 const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ settings, t }) => {
   const [accordionOrder, setAccordionOrder] = useState<Sorting[]>(settings.sorting)
-
   const moveItem = (index: number, direction: 'up' | 'down'): void => {
     const newAccordionOrder = [...accordionOrder]
     const swapIndex = direction === 'up' ? index - 1 : index + 1
-
     if (swapIndex >= 0 && swapIndex < newAccordionOrder.length) {
       ;[newAccordionOrder[index], newAccordionOrder[swapIndex]] = [
         newAccordionOrder[swapIndex],
@@ -44,7 +46,6 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
       setAccordionOrder(newAccordionOrder)
     }
   }
-
   const toggleInvert = (index: number): void => {
     const newAccordionOrder = [...accordionOrder]
     newAccordionOrder[index].invert = !newAccordionOrder[index].invert
@@ -99,13 +100,13 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
 
               <ListItemText primary={translatedValues[item.value]} />
 
-              <Button
+              <button
                 onClick={() => toggleInvert(index)}
                 data-testid={`drawer-sorting-draggable-list-item-${item.value}-invert`}
                 aria-label={item.invert ? 'Descending order' : 'Ascending order'}
               >
                 {!item.invert ? <SortIcon className="invert" /> : <SortIcon />}
-              </Button>
+              </button>
             </ListItem>
           ))}
         </List>

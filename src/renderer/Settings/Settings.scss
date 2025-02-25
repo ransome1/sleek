@@ -1,35 +1,11 @@
 @use '../Variables.scss';
 
 #DialogSettingsComponent {
-  label {
-    width: 100%;
-  }
-  .MuiFormControl-root {
-    width: 100%;
-    margin: 1em 0 0 0;
+  .MuiPaper-root {
+    max-width: 42em;
+    .MuiFormControl-root {
+      width: 100%;
+      margin: 1em 0 0 0;
+    }
   }
 }
-// .modal {
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   width: 35em;
-//   max-width: 90vw;
-//   max-height: 90vh;
-//   overflow: auto;
-//   border-radius: Variables.$radius;
-//   padding: 1em 2em 2em 2em;
-//   display: flex;
-//   flex-direction: column;
-//   .MuiLink-root {
-//     cursor: pointer;
-//   }
-//   .MuiInputBase-root {
-//     width: 100%;
-//   }
-//   .MuiFormControl-root {
-//     margin: 1em 0 0 0;
-
-//   }
-// }

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import IpcComponent from './IpcRenderer'
 import MatomoComponent from './Matomo'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -9,7 +9,7 @@ import NavigationComponent from './Navigation'
 import GridComponent from './Grid/Grid'
 import SplashScreen from './SplashScreen'
 import FileTabs from './Header/FileTabs'
-import { darkTheme, lightTheme } from './Themes'
+import { dark, light } from './Themes'
 import DrawerComponent from './Drawer/Drawer'
 import SearchComponent from './Header/Search/Search'
 import DialogComponent from './Dialog/Dialog'
@@ -21,8 +21,10 @@ import { i18n } from './Settings/LanguageSelector'
 import Settings from './Settings/Settings'
 import Prompt from './Prompt'
 import './App.scss'
+import './Buttons.scss'
+import './Form.scss'
 
-const { ipcRenderer, store } = window.api
+const { store, ipcRenderer } = window.api
 
 const App = (): JSX.Element => {
   const [settings, setSettings] = useState<Settings>(store.getConfig())
@@ -39,31 +41,21 @@ const App = (): JSX.Element => {
   const [attributes, setAttributes] = useState<Attributes | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false)
   const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null)
-  const [textFieldValue, setTextFieldValue] = useState<string>('')
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null)
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
+  const [theme, setTheme] = useState(
+    createTheme({
+      ...(settings?.shouldUseDarkColors ? dark : light),
+        typography: {
+          fontSize: Math.round(14 * (settings.zoom / 100)),
+        },
+      })
+  );
   const searchFieldRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setSnackBarOpen(Boolean(snackBarContent))
   }, [snackBarContent])
-
-  useEffect(() => {
-    if (settings.files?.length === 0) {
-      setTodoData(null)
-    }
-  }, [settings.files])
-
-  useEffect(() => {
-    i18n
-      .changeLanguage(settings.language)
-      .then(() => {
-        console.log(`Language set to "${settings.language}"`)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }, [settings.language])
 
   useEffect(() => {
     ipcRenderer.send('requestData')
@@ -85,10 +77,10 @@ const App = (): JSX.Element => {
       />
       {settings.matomo && <MatomoComponent settings={settings} />}
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={settings?.shouldUseDarkColors ? darkTheme : lightTheme}>
+        <ThemeProvider theme={theme}>
           <CssBaseline />
           <div
-            className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'} ${settings?.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'} ${settings.disableAnimations ? 'disableAnimations' : ''}`}
+            className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'}`}
           >
             <NavigationComponent
               setDialogOpen={setDialogOpen}
@@ -160,8 +152,6 @@ const App = (): JSX.Element => {
               setAttributeFields={setAttributeFields}
               setSnackBarSeverity={setSnackBarSeverity}
               setSnackBarContent={setSnackBarContent}
-              textFieldValue={textFieldValue}
-              setTextFieldValue={setTextFieldValue}
               settings={settings}
             />
           ) : null}
@@ -170,6 +160,8 @@ const App = (): JSX.Element => {
             onClose={() => setIsSettingsOpen(false)}
             settings={settings}
             setIsSettingsOpen={setIsSettingsOpen}
+            setTheme={setTheme}
+            setTodoData={setTodoData}
           />
           {contextMenu && (
             <ContextMenu

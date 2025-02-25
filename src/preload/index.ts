@@ -9,9 +9,8 @@ contextBridge.exposeInMainWorld('api', {
     getConfig(key): StoreReply {
       return ipcRenderer.sendSync('storeGetConfig', key)
     },
-    setConfig(property, value): StoreReply {
-      return ipcRenderer.send('storeSetConfig', property, value)
-      //ipcRenderer.send('storeSetConfig', property, value)
+    setConfig(property, value, rerender): StoreReply {
+      return ipcRenderer.send('storeSetConfig', property, value, rerender)
     },
     setFilters(property, value): StoreReply {
       return ipcRenderer.send('storeSetFilters', property, value)

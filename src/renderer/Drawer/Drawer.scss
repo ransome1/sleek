@@ -1,35 +1,37 @@
 @use '../Variables.scss';
 
-#drawer {
+.MuiDrawer-root {
   height: 100vh;
-  padding: 0;
   transition: margin-left 0.3s ease;
   .MuiPaper-root {
     position: relative;
     z-index: 5;
-    // .MuiTabs-root {
-    //   min-height: 6em;
-    // }
     .MuiTabs-root {
-      overflow:visible;
-    }
-    .MuiTabs-flexContainer {
-      button {
-        font-size: 0.85em;
-        text-transform: none;
-        white-space: nowrap;
-        .reset {
-          width: 1em;
-          height: 1em;
-          position: absolute;
-          right: 0em;
-          bottom: 0em;
-          color: Variables.$dark-grey;
+      height: auto;
+      overflow: visible;
+      .MuiTabs-flexContainer {
+        button {
+          min-width: 7em;
+          min-height: auto;
+          padding: 0.75em 1.5em;
+          font-size: 0.8em;
+          text-transform: none;
+          svg {
+            font-size: 1.5em;
+          }
+          .reset {
+            font-size: 1.25em;
+            position: absolute;
+            right: 0em;
+            bottom: 0em;
+            color: Variables.$dark-grey;
+          }
         }
       }
-    }
-    .MuiTabs-indicator {
-      top: 0;
+      .MuiTabs-indicator {
+        top: 0;
+        height: 0.2em;
+      }      
     }
   }
   .drawerHandle {
@@ -42,7 +44,6 @@
   }
   &.open {
     min-width: 19em;
-    margin-left: 0 !important;
   }
 }
 
@@ -50,7 +51,17 @@
   transition: none;
 }
 
-.darkTheme {
+.compact {
+  #drawer {
+    #Attributes {
+      .filter:not([data-todotxt-attribute='priority']) button {
+        padding: 0.4em;
+      }
+    }
+  }
+}
+
+.dark {
   #drawer {
     .MuiPaper-root {
       .MuiTabs-flexContainer {

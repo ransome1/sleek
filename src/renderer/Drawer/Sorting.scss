@@ -1,29 +1,35 @@
 @use '../Variables.scss';
 #Sorting {
-  padding: 0 1em;
-  margin: 0;
-
+  padding: 0.75em 1em;
   .MuiListItem-root {
+    padding: 0.25em 0;
+    gap: 0.5em;
     border-bottom: 1px dashed Variables.$mid-grey;
     .MuiListItemText-root {
       padding: 0 1em;
     }
   }
-
-  button {
-    min-width: auto;
-    padding: 0.5em;
+  button:last-of-type {
+    padding: 0.4em 0.4em 0.2em 0.4em;
     svg {
       font-size: 1.25em;
     }
   }
-
   .invert {
     transform: scaleY(-1);
   }
 }
 
-.darkTheme {
+.compact {
+  #Sorting {
+    .MuiListItem-root {
+      padding: 0.125em 0;
+      gap: 0.25em;
+    }
+  }
+}
+
+.dark {
   #Sorting {
     .MuiListItem-root {
       border-bottom: 1px dashed Variables.$dark-grey;

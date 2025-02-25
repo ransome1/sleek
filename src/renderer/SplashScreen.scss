@@ -23,11 +23,11 @@
   .fileDropZone {
     padding: 1em 2em;
     border-radius: Variables.$radius;
-    border: 2px dashed #ccc;
+    border: 0.15em dashed #ccc;
   }
 }
 
-.darkTheme {
+.dark {
   #splashScreen {
     svg {
       color: Variables.$dark-grey;

@@ -53,16 +53,6 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
     }
   }
 
-  const handleDrop = (event: React.DragEvent<HTMLElement>): void => {
-    event.preventDefault()
-    const filePath = event.dataTransfer.files[0].path
-    if (typeof filePath === 'string') ipcRenderer.send('droppedFile', filePath)
-  }
-
-  const handleDragOver = (event: React.DragEvent<HTMLElement>): void => {
-    event.preventDefault()
-  }
-
   useEffect(() => {
     ipcRenderer.on('requestData', handleRequestedData)
     ipcRenderer.on('updateAttributeFields', handleUpdateAttributeFields)
@@ -70,8 +60,6 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
     ipcRenderer.on('responseFromMainProcess', handleResponse)
     ipcRenderer.on('settingsChanged', (settings: Settings) => setSettings(settings))
     ipcRenderer.on('isSettingsOpen', (isSettingsOpen: boolean) => setIsSettingsOpen(isSettingsOpen))
-    window.addEventListener('drop', handleDrop)
-    window.addEventListener('dragover', handleDragOver)
     return (): void => {
       ipcRenderer.off('requestData', handleRequestedData)
       ipcRenderer.off('updateAttributeFields', handleUpdateAttributeFields)
@@ -81,8 +69,6 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
       ipcRenderer.off('isSettingsOpen', (isSettingsOpen: boolean) =>
         setIsSettingsOpen(isSettingsOpen)
       )
-      window.removeEventListener('drop', handleDrop)
-      window.removeEventListener('dragover', handleDragOver)
     }
   }, [])
 

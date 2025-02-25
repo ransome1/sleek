@@ -77,8 +77,8 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
         variant="persistent"
         open={settings.isDrawerOpen}
         className={`${settings.isDrawerOpen ? 'open' : ''}`}
-        style={{ width: drawerWidth, marginLeft: -drawerWidth }}
-      >
+        style={{ width: drawerWidth, marginLeft: settings.isDrawerOpen ? 0 : -drawerWidth }}
+      >      
         <div className="drawerHandle" onMouseDown={handleMouseDown} />
         <Tabs className="tabs" centered value={activeTab} onChange={handleTabChange}>
           <Tab

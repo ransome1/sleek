@@ -13,22 +13,22 @@ const { store } = window.api
 
 const visibleSettings: VisibleSettings = {
   showCompleted: {
-    style: 'toggle'
+    style: 'toggle',
+    rerender: true
   },
   showHidden: {
     style: 'toggle',
+    rerender: true,
     help: 'https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)'
   },
   thresholdDateInTheFuture: {
-    style: 'toggle'
+    style: 'toggle',
+    rerender: true
   },
   dueDateInTheFuture: {
-    style: 'toggle'
+    style: 'toggle',
+    rerender: true
   }
-}
-
-const handleChange = (settingName: string, value: string | boolean): void => {
-  store.setConfig(settingName, value)
 }
 
 interface DrawerFiltersComponentProps extends WithTranslation {
@@ -48,7 +48,7 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({ setting
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
                   checked={!!settings[settingName as keyof Settings]}
-                  onChange={(event) => handleChange(settingName, event.target.checked)}
+                  onChange={(event) => store.setConfig(settingName, event.target.checked)}
                   name={settingName}
                 />
               }
@@ -56,11 +56,7 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({ setting
                 settingValue.help ? (
                   <>
                     {t(`drawer.filters.${settingName}`)}
-                    <Link
-                      onClick={(event) =>
-                        settingValue.help && handleLinkClick(event, settingValue.help)
-                      }
-                    >
+                    <Link onClick={(event) => settingValue.help && handleLinkClick(event, settingValue.help, settingValue.rerender)}>
                       <HelpIcon />
                     </Link>
                   </>

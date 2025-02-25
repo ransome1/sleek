@@ -2,52 +2,20 @@
 @use '../Variables.scss';
 
 .row {
-  width: auto;
-  height: auto;
   cursor: pointer;
-  border-left: solid 5px Variables.$light-grey;
-  border-bottom: solid 1px Variables.$light-grey;
+  border-left: solid 0.2em Variables.$light-grey;
+  border-bottom: dotted 1px Variables.$light-grey;
+  display: flex;
   flex-wrap: wrap;
+
   gap: 0.25em;
-  a {
-    color: Variables.$blue;
-    text-decoration: underline;
-    svg {
-      font-size: 1.2em;
-      margin-bottom: -0.25em;
-    }
-  }
-  button {
-    height: 2em;
-    line-height: 2em;
-    font-size: 0.9em;
-    padding: 0 0.5em;
-    svg {
-      width: 1em;
-      height: 1em;
-      margin: 0 0 0 0.5em;
-    }
-    .MuiChip-root {
-      font-size: 1em;
-      width: auto;
-      height: 2em;
-      border-radius: Variables.$radius 0 0 Variables.$radius;
-      margin-left: -0.5em;
-      margin-right: 0.5em;
-      .MuiChip-label {
-        font-size: 1em;
-        padding: 0 0.5em;
-        margin: 0;
-      }
-    }
-    &.pomodoro {
-      svg {
-        font-size: 1.5em;
-      }
-    }
-  }
+  padding: 0.5em;
+
+  align-items: center;
+
   .MuiCheckbox-root {
-    padding: 0.35em;
+    padding: 0.25em;
+    margin: 0 0.25em;
   }
   &[data-complete='true'],
   &[data-hidden='true'] {
@@ -57,36 +25,14 @@
     border-bottom-left-radius: 0.25em;
   }
   &.group {
-    margin-top: 1em;
     padding-left: 0;
     border: none;
     cursor: auto;
-    button {
-      min-width: auto;
-      min-height: auto;
-      font-size: 1.25em;
-      font-weight: bold;
-      padding: 0.1em 0.6em;
-      border-radius: 0.65em;
-    }
-    &:first-child {
-      margin-top: 0;
-      padding-top: 0;
-    }
   }
 }
 
-.darkTheme {
+.dark {
   .row {
-    border-left: solid 5px Variables.$dark-grey;
-    border-bottom: solid 1px Variables.$dark-grey;
-    button {
-      .MuiChip-root {
-        background: color.adjust(Variables.$dark-grey, $lightness: -10%);
-      }
-    }
-    &.group {
-      border: none;
-    }
+    border-color: Variables.$dark-grey;
   }
 }

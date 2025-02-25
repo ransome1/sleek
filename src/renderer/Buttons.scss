@@ -1,0 +1,201 @@
+@use 'Variables.scss';
+
+button {	
+	font-size: 1em;
+	border: none;
+	border-radius: Variables.$radius;
+	padding: 0.6em 0.7em;
+	margin: 0;
+	cursor: pointer;
+	background: Variables.$blue;
+	color: white;
+}
+
+.MuiDialog-root {
+  .MuiDialog-paper {
+    .MuiDialogActions-root {
+      button {
+        width: 100%;
+        background: none;
+        border-radius: 0;
+        color: Variables.$blue;
+        font-weight: bold;
+        border-top: 1px solid Variables.$light-grey;
+        border-right: 1px solid Variables.$light-grey;
+        margin: 0;
+        &:last-child {
+          border-right: none;
+        }
+        &:hover {
+        	background: Variables.$lighter-grey;
+        }
+      }   
+    }
+  }
+}
+
+.row {
+	button {
+		padding: 0.25em 0.5em;
+	}
+	[data-todotxt-attribute='due'],
+	[data-todotxt-attribute='t'],
+	[data-todotxt-attribute='rec'] {
+		button {
+			display: flex;
+			padding: 0 0.5em 0 0;
+			margin: 0;
+		}
+		div:first-child {
+			margin-right: 0.25em;
+		}
+	  div {
+	  	display: flex;
+	  	align-items: center;
+	  	height: 100%;
+	  	padding: 0.25em 0;
+	  }
+	}	
+  &.group {
+		button {
+	    font-size: 1.25em;
+	    font-weight: bold;
+	  }
+  }
+}
+
+.filter {
+	position: relative;
+	button {
+		svg, img {
+		  width: 1em;
+		}
+		.MuiChip-root {
+		  font-size: 1em;
+		  width: auto;
+		  border-radius: Variables.$radius 0 0 Variables.$radius;
+		  .MuiChip-label {
+		    font-size: 1em;
+		    padding: 0 0.5em;
+		    margin: 0;
+		  }
+		}
+		&.pomodoro {
+			display: flex;
+			img {
+			 	margin: 0 0.2em 0 0;
+			}
+		}
+		&:disabled {
+			color: Variables.$dark-grey;
+			background: Variables.$mid-grey;
+			filter: opacity(50%) grayscale(100%);
+		}
+	}
+  .overlay {
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-radius: Variables.$radius;
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    svg {
+      font-size: 1.25em;
+    }
+  }
+	.MuiBadge-badge {
+		min-width: 1.5em;
+		height: 1.5em;
+		padding: 0.25em;
+		z-index: 10;
+		font-weight: bold;
+		cursor: pointer;
+		svg {
+			margin-top: 0.15em;
+			font-size: inherit;
+		}		
+	}
+	&.excluded {
+      .overlay {
+        display: flex;
+        color: Variables.$darker-grey;
+      }
+    }
+}
+.MuiBadge-badge.MuiBadge-dot {
+	min-width: auto;
+	width: 0.6em;
+	height: 0.6em;
+	border-radius: 50%;
+}
+div[data-todotxt-attribute='priority'] {
+	button {
+		font-size: 1.25em;
+		font-weight: bold;
+		padding: 0.4em 0.6em;
+	}
+}
+
+  .MuiButtonBase-root {
+    border: none;
+    svg.invert {
+      transform: rotate(180deg);
+    }
+    &.Mui-focusVisible {
+      svg {
+        color: Variables.$blue;
+      }
+    }
+    
+    &:hover {
+      border: none;
+    }
+    &.MuiIconButton-root {
+			padding: 0.25em;
+			margin: 0;
+		}
+  }
+
+.compact {
+	button {
+		padding: 0.4em;
+	}
+	div[data-todotxt-attribute='priority'] {
+		button {
+			font-size: 1.25em;
+			font-weight: bold;
+			padding: 0.3em 0.5em;
+		}
+	}
+}
+
+.dark {
+    .filter {
+      button:disabled {
+        color: Variables.$mid-grey;
+        background: Variables.$dark-grey;
+      }
+      .overlay {
+        background: rgba(0, 0, 0, 0.35);
+      }
+    }
+	.MuiDialog-root {
+	  .MuiDialog-paper {
+	    .MuiDialogActions-root {
+	      button {
+	        &:hover {
+	        	color: white;
+	        	background: Variables.$dark-grey;
+	        }
+	      }   
+	    }
+	  }
+	}    
+}

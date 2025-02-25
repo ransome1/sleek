@@ -1,5 +1,4 @@
 import React, { FC, memo } from 'react'
-import Button from '@mui/material/Button'
 import DryCleaningIcon from '@mui/icons-material/DryCleaning'
 import BeachAccessIcon from '@mui/icons-material/BeachAccess'
 import SaveAltIcon from '@mui/icons-material/SaveAlt'
@@ -40,13 +39,13 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
               <DryCleaningIcon />
               <p>{t('splashscreen.noTodosVisible.text')}</p>
               <div className="buttons">
-                <Button
+                <button
                   variant="contained"
                   onClick={handleReset}
                   data-testid={`splashscreen-button-reset-filters`}
                 >
                   {t('splashscreen.noTodosVisible.reset')}
-                </Button>
+                </button>
               </div>
             </>
           )}
@@ -55,13 +54,13 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
             <BeachAccessIcon />
             <p>{t('splashscreen.noTodosAvailable.text')}</p>
             <div className="buttons">
-              <Button
+              <button
                 variant="contained"
                 onClick={handleCreateTodo}
                 data-testid={`splashscreen-button-create-todo`}
               >
                 {t('splashscreen.noTodosAvailable.create')}
-              </Button>
+              </button>
             </div>
           </>
         )}
@@ -70,20 +69,20 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
             <SaveAltIcon />
             <p>{t('splashscreen.noFiles.text')}</p>
             <div className="buttons">
-              <Button
+              <button
                 variant="contained"
                 onClick={handleOpenFile}
                 data-testid={`splashscreen-button-open-file`}
               >
                 {t('openFile')}
-              </Button>
-              <Button
+              </button>
+              <button
                 variant="contained"
                 onClick={handleCreateFile}
                 data-testid={`splashscreen-button-create-file`}
               >
                 {t('createFile')}
-              </Button>
+              </button>
             </div>
           </div>
         )}

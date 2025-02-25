@@ -4,8 +4,10 @@
   display: flex;
   position: relative;
   padding: 0.5em 1em;
-  .MuiAutocomplete-root {
-    flex-direction: row;
-    flex: 1;
+}
+
+.compact {
+  #search {
+    padding: 0.25em 0.5em;
   }
 }

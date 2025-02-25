@@ -30,7 +30,7 @@ const PriorityPickerComponent: React.FC<PriorityPickerComponentProps> = ({
   }
 
   return (
-    <FormControl id="priorityPicker" className="priorityPicker">
+    <FormControl id="priorityPicker">
       <InputLabel>{t('todoDialog.priorityPicker.label')}</InputLabel>
       <Select
         id="priorityPicker"

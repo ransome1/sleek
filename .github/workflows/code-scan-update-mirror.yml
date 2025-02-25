@@ -5,7 +5,7 @@ on:
       - '*'
 jobs:
   trigger-flathub_build:
-    name: Trigger Flathub build bot
+    name: Update commit id in Flathub repo
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Flathub build
@@ -91,7 +91,8 @@ jobs:
       - uses: actions/checkout@master
         with:
           fetch-depth: 0
-      - uses: pixta-dev/repository-mirroring-action@v1
+      - uses: keninkujovic/gitlab-sync@2.0.0
         with:
-          target_repo_url: git@www.opencode.net:ransome/sleek.git
-          ssh_private_key: ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
+          gitlab_url: https://www.opencode.net/ransome/sleek.git
+          username: ransome
+          gitlab_pat: ${{ secrets.GITLAB_PAT }}

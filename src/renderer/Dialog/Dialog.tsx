@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo } from 'react'
-import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -26,8 +25,6 @@ interface DialogComponentProps extends WithTranslation {
   setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>
   setSnackBarSeverity: React.Dispatch<React.SetStateAction<AlertColor | undefined>>
   setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>
-  textFieldValue: string
-  setTextFieldValue: React.Dispatch<React.SetStateAction<string>>
   settings: Settings
   t: typeof i18n.t
 }
@@ -43,19 +40,18 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     setAttributeFields,
     setSnackBarSeverity,
     setSnackBarContent,
-    textFieldValue,
-    setTextFieldValue,
     settings,
     t
   }) => {
-    const numRowsWithContent = textFieldValue
-      ?.split('\n')
-      .filter((line) => line.trim() !== '').length
     const [priority, setPriority] = useState<string>('-')
     const [dueDate, setDueDate] = useState<string | null>(null)
     const [thresholdDate, setThresholdDate] = useState<string | null>(null)
     const [recurrence, setRecurrence] = useState<string | null>(null)
     const [pomodoro, setPomodoro] = useState<number | string>(0)
+    const [textFieldValue, setTextFieldValue] = useState<string>('')
+    const numRowsWithContent = textFieldValue
+      ?.split('\n')
+      .filter((line) => line.trim() !== '').length
 
     const handleAdd = (): void => {
       try {
@@ -156,7 +152,6 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
         id="DialogComponent"
         open={dialogOpen}
         onClose={handleClose}
-        className={settings.shouldUseDarkColors ? 'darkTheme' : 'lightTheme'}
         onKeyDown={handleKeyDown}
       >
         <DialogContent>
@@ -176,17 +171,17 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
           <RecurrencePicker recurrence={recurrence} handleChange={handleChange} />
           <PomodoroPicker pomodoro={pomodoro} handleChange={handleChange} />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} data-testid="dialog-button-cancel">
+        <DialogActions disableSpacing="true">
+          <button onClick={handleClose} data-testid="dialog-button-cancel">
             {t('cancel')}
-          </Button>
-          <Button onClick={handleAdd} data-testid="dialog-button-add-update">
+          </button>
+          <button onClick={handleAdd} data-testid="dialog-button-add-update">
             {todoObject && todoObject.lineNumber >= 0
               ? t('todoDialog.footer.update')
               : settings.bulkTodoCreation
                 ? `${t('add')} (${numRowsWithContent || 0})`
                 : `${t('add')}`}
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
     )

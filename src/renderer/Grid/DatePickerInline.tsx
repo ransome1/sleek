@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Badge from '@mui/material/Badge'
 import { handleFilterSelect, friendlyDate } from '../Shared'
@@ -86,7 +85,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
 
       return (
         <span className={selected ? 'selected' : null} data-todotxt-attribute={type}>
-          <Button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
+          <button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
             <Badge variant="dot" invisible={mustNotify}>
               <Chip
                 onClick={() => handleFilterSelect(type, formattedValue, date, filters, false)}
@@ -103,7 +102,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
                 {formattedValue}
               </div>
             </Badge>
-          </Button>
+          </button>
         </span>
       )
     }

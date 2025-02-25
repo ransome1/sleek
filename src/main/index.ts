@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme, nativeImage } from 'electron'
+import { app, BrowserWindow, nativeImage } from 'electron'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs'
@@ -6,11 +6,13 @@ import { config } from './config.js'
 import { createMenu } from './modules/Menu.js'
 import { createFileWatcher, watcher } from './modules/File/Watcher'
 import { addFile } from './modules/File/File'
-import { createTray } from './modules/Tray.js'
+import { handleTray } from './modules/Tray.js'
 import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
+import { handleTheme } from './modules/Theme.js'
 import './modules/IpcMain.js'
+
 let startTime
 const environment: string | undefined = process.env.NODE_ENV
 let mainWindow: BrowserWindow | null = null
@@ -156,7 +158,8 @@ const createMainWindow = () => {
 
   handleWindowSizeAndPosition()
 
-  nativeTheme.themeSource = config.get('colorTheme')
+  const colorTheme: string = config.get('colorTheme')
+  handleTheme(colorTheme);
 
   eventListeners.handleClosed = handleClosed
   eventListeners.handleResize = handleResize
@@ -165,9 +168,7 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize
 
-  if (config.get('tray')) {
-    createTray()
-  }
+  handleTray(config.get('tray'))
 
   const customStylesPath: string = config.get('customStylesPath')
   if (customStylesPath) {
@@ -221,12 +222,15 @@ app
   })
   .catch(console.error)
 
+// do we need open-file event?
 app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
   .on('activate', handleCreateWindow)
   .on('open-file', (event, path) => {
-    event.preventDefault()
-    handleOpenFile(path)
-  })
+    event.preventDefault();
+      setTimeout(() => {
+        handleOpenFile(path);
+      }, 1000);
+  });
 export { mainWindow, handleCreateWindow, eventListeners }

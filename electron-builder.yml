@@ -3,6 +3,19 @@ directories:
   buildResources: build
 buildVersion: '56'
 asar: true
+files:
+  - "**/*"
+  - "!**/node_modules/**/*"
+  - "!**/flatpak/**/*"
+  - "!**/snap/**/*"
+  - "!**/src/**/*"
+  - "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}"
+  - "!.editorconfig"
+  - "!**/._*"
+  - "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}"
+  - "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}"
+  - "!**/{appveyor.yml,.travis.yml,circle.yml}"
+  - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
 mac:
   appId: com.todotxt.sleek
   target:

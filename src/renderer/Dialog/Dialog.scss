@@ -2,39 +2,70 @@
 
 #DialogComponent {
   .MuiDialog-paper {
-    max-width: 50em;
-    position: relative;
-  }
-  .MuiDialogContent-root {
-    display: flex;
-    gap: 0.625em;
-    flex-wrap: wrap;
-    .input {
-      width: 100%;
-      textarea {
-        font-size: 1.25em;
-        width: 100%;
-      }
-    }
-    .react-autosuggest__container {
-      width: 100%;
-      flex-grow: 1;
+    max-width: 60em;
+    .MuiDialogContent-root {
+      gap: 0.5em;
     }
   }
 }
 
-.MuiDialogActions-root {
-  button {
-    width: 100%;
-    background: none;
-    border-radius: 0;
-    margin: 0 !important;
-    padding: 0.5em 1em;
-    color: Variables.$blue;
-    border-top: 1px solid Variables.$light-grey;
-    border-right: 1px solid Variables.$light-grey;
-    &:last-child {
-      border-right: none;
+.MuiDialog-root {
+  .MuiDialog-paper {
+    .MuiDialogTitle-root {
+      font-size: 1.2em;
+      font-weight: bold;
+      padding: 1.2em 1.2em 0 1.2em;
+    }
+    .MuiDialogContent-root {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1.5em;
+      .react-autosuggest__container {
+        width: 100%;
+        .MuiTextField-root {
+          width: 100%;
+        }
+      }      
+    }
+    .MuiDialogActions-root {
+      padding: 0;
+      button {
+        padding: 0.8em;
+      }
     }
   }
+}
+
+.compact {
+  #DialogComponent {
+    .MuiDialog-paper {
+      max-width: 60em;
+      .MuiDialogContent-root {
+        padding: 1em;
+      }
+    }
+    .MuiDialogActions-root {
+      button {
+        padding: 0.5em;
+      }
+    }    
+  }
+  .MuiDialogContent-root {
+    .MuiFormControl-root {
+      label[data-shrink=false] {
+        transform: translate(0.8em, 0.8em) scale(1);
+      }
+      .MuiInputBase-root {
+        padding: 0.8em;
+        &.MuiInputBase-multiline {
+         padding: 0.8em;
+        }      
+      }
+    }
+  }  
+}
+
+.dark .MuiDialog-root .MuiDialog-paper .MuiDialogActions-root button {
+  border-top: 1px solid Variables.$darker-grey;
+  border-right: 1px solid Variables.$darker-grey;
 }

@@ -1,15 +1,15 @@
 @use 'Variables.scss';
 
-.hideNavigation #navigation button.showNavigation {
-  min-width: 2.5em;
-  display: flex;
+.hideNavigation #navigation li.showNavigation {
+  width: 2.5em;
   border-top-right-radius: Variables.$radius;
+  display: flex;
 }
 
 .disableAnimations.hideNavigation #navigation,
 .disableAnimations #navigation {
   transition: none;
-  button.showNavigation {
+  li.showNavigation {
     transition: none;
   }
 }
@@ -25,38 +25,19 @@
   display: flex;
   flex-direction: column;
   transition: left 0.3s ease;
-  div {
-    font-weight: bold;
-    line-height: 5em;
-    text-align: center;
-    color: white;
-    background: linear-gradient(0.33turn, #1b5551, #813e93);
-  }
-  button.showNavigation {
-    width: 2.5em;
-    height: 5em;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    display: none;
-    background: white;
-    color: Variables.$dark-grey;
-    z-index: 10;
-    transition: width 0.3s ease;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    &:hover {
-      width: 5em;
-    }
-  }
-  button {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    min-width: 5em;
-    min-height: 5em;
     background: none;
-    font-size: 1em;
+    cursor: pointer;
     &.break {
       margin-top: auto;
     }
@@ -64,6 +45,7 @@
       color: Variables.$dark-grey;
     }
     &:active,
+    &:hover,
     &.active {
       background: Variables.$light-grey;
     }
@@ -71,24 +53,82 @@
       background: Variables.$mid-grey;
       border-color: Variables.$mid-grey;
     }
+    &.logo,
+    &.logo:hover {
+      font-weight: bold;
+      cursor: auto;
+      color: white;
+      background: linear-gradient(0.33turn, #1b5551, #813e93);
+    }
+    &.showNavigation {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      display: none;
+      background: Variables.$lighter-grey;
+      color: Variables.$dark-grey;
+      z-index: 10;
+      transition: width 0.3s ease;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      &:hover {
+        width: inherit;
+        display: inherit;
+      }
+    }    
   }
 }
 
-.darkTheme {
+.compact {
+  #navigation {
+    width: 3em;
+    li {
+      svg {
+        font-size: 1.25em;
+      }
+      &.logo {
+        font-size: 0.8em;
+      }
+    }
+  }
+  #root {
+   .flexContainer {    
+     margin-left: 3em;
+     &.hideNavigation {
+       #navigation {
+         left: -3em;
+       }
+     }   
+   }
+  }
+  .hideNavigation #navigation li.showNavigation {
+    width: 2em;
+    &:hover {
+      width: 3em;
+    }
+  }  
+}
+
+.dark {
   #navigation {
     background: Variables.$darker-grey;
-    button {
+    li {
       border-color: rgba(255, 255, 255, 0.05) !important;
       svg {
         color: Variables.$mid-grey;
       }
-      &:hover,
-      &:active,
+      &:hover:not(.logo),
+      &:active:not(.logo),
+      &:focus-visible,
       &.active {
         background: #3b3b3b;
       }
-      &:focus-visible {
-        background: #3b3b3b;
+      &.showNavigation {
+        background: Variables.$darker-grey;
+        &:hover {
+          background: inherit;  
+        }
       }
     }
   }
