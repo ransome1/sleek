@@ -1,7 +1,9 @@
+/// <reference types="vitest" />
+import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import react from '@vitejs/plugin-react'
 
-export default {
+export default defineConfig({
   main: {},
   preload: {},
   renderer: {
@@ -12,4 +14,4 @@ export default {
     },
     plugins: [react()]
   }
-}
+})

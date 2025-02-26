@@ -3,9 +3,10 @@
     "esModuleInterop": true,
     "target": "esnext",
     "module": "nodenext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "composite": true
   },
-  "files": [],
+  //"files": [],
   "references": [
     {
       "path": "./tsconfig.node.json"

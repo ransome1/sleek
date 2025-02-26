@@ -70,6 +70,7 @@
   "search.addAsTodo": "할 일로 추가",
   "search.filters.create": "검색 필터 생성",
   "add": "추가",
+  "todoDialog.input.placeholder": "도움말 버튼을 클릭하여 여기에 무엇을 입력해야 하는지 알아보세요",
   "todoDialog.footer.update": "업데이트",
   "cancel": "취소",
   "close": "닫기",

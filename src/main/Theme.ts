@@ -1,15 +1,15 @@
 import { nativeTheme } from 'electron'
-import { config } from '../config'
-import { handleError } from '../Util'
+import { SettingsStore } from './Stores/SettingsStore'
+import { handleError } from './Shared'
 
 nativeTheme.on('updated', () => {
   try {
     if (nativeTheme.themeSource === 'system') {
-      config.set('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
+      SettingsStore.set('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
     } else if (nativeTheme.themeSource === 'dark') {
-      config.set('shouldUseDarkColors', true)
+      SettingsStore.set('shouldUseDarkColors', true)
     } else {
-      config.set('shouldUseDarkColors', false)
+      SettingsStore.set('shouldUseDarkColors', false)
     }
   } catch (error: error) {
     handleError(error)

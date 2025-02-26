@@ -2,7 +2,21 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.17] - 2025-02-22
+## [2.0.18] - 2025-02-26
+
+### Added
+
+* `vitest` as new testing framework
+* Test cases for `Notification` module
+* Configured `codecov` for testing during pipeline runs
+
+### Enhanced
+
+* Refactored stores
+* Refactored `Notification` module
+* Refactored `compact view`
+
+## [2.0.17] - 2025-02-24
 
 ### Added
 

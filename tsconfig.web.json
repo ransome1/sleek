@@ -7,10 +7,6 @@
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
-    // "target": "ESNext",
-    // "module": "NodeNext",
-    // "moduleResolution": "NodeNext",
-    "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {

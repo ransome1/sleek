@@ -70,6 +70,7 @@
   "search.addAsTodo": "タスクとして追加",
   "search.filters.create": "検索フィルターを作成する",
   "add": "追加",
+  "todoDialog.input.placeholder": "ヘルプボタンをクリックして、ここに何を入力するかを学びます",
   "todoDialog.footer.update": "更新",
   "cancel": "キャンセル",
   "close": "閉じる",

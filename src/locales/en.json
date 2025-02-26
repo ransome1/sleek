@@ -70,6 +70,7 @@
   "search.addAsTodo": "Add as todo",
   "search.filters.create": "Create search filter",
   "add": "Add",
+  "todoDialog.input.placeholder": "Click the help button to learn what to type here",
   "todoDialog.footer.update": "Update",
   "cancel": "Cancel",
   "close": "Close",

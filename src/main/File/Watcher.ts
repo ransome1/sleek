@@ -1,9 +1,9 @@
 import chokidar, { FSWatcher } from 'chokidar'
 import { app } from 'electron'
 import { dataRequest, searchString } from '../DataRequest/DataRequest'
-import { config } from '../../config'
-import { handleError } from '../../Util'
-import { mainWindow, eventListeners } from '../../index'
+import { SettingsStore } from '../Stores/SettingsStore'
+import { handleError, userDataDirectory } from '../Shared'
+import { mainWindow, eventListeners } from '../index'
 
 let watcher: FSWatcher | null = null
 
@@ -16,7 +16,7 @@ function createFileWatcher(files: FileObject[]): void {
   const hasActiveEntry = files.some((file) => file.active)
   if (!hasActiveEntry && files.length > 0) {
     files[0].active = true
-    config.set('files', files)
+    SettingsStore.set('files', files)
   }
 
   if (process.mas) {
@@ -32,8 +32,10 @@ function createFileWatcher(files: FileObject[]): void {
 
   watcher = chokidar.watch(
     files.map((file) => file.todoFilePath),
-    config.get('chokidarOptions')
+    SettingsStore.get('chokidarOptions')
   )
+
+  watcher.add(userDataDirectory + '/filters.json')
 
   watcher
     .on('add', (file) => {

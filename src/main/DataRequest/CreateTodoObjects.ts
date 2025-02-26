@@ -1,19 +1,14 @@
 import { app } from 'electron'
 import { Item } from 'jstodotxt'
-import { config } from '../../config'
-import { handleNotification } from '../Notifications'
+import { SettingsStore } from '../Stores/SettingsStore'
+import { HandleNotification } from '../Notifications'
 import { extractSpeakingDates } from '../Date'
 import dayjs from 'dayjs'
 
 let linesInFile: string[]
 export const badge: Badge = { count: 0 }
 
-function createTodoObject(
-  lineNumber: number,
-  string: string,
-  attributeType?: string,
-  attributeValue?: string
-): TodoObject {
+function createTodoObject(lineNumber: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
   let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ')
 
   const JsTodoTxtObject = new Item(content)
@@ -85,23 +80,21 @@ function createTodoObjects(fileContent: string | null): TodoObject[] | [] {
   linesInFile = fileContent.split(/[\r\n]+/).filter((line) => line.trim() !== '')
 
   // todo: might causes problems due to index offset created by it
-  const excludeLinesWithPrefix: string[] = config.get('excludeLinesWithPrefix') || []
+  const excludeLinesWithPrefix: string[] = SettingsStore.get('excludeLinesWithPrefix') || []
 
-  const todoObjects: TodoObject[] = linesInFile
-    .map((line, index) => {
-      if (excludeLinesWithPrefix.some((prefix) => line.startsWith(prefix))) {
-        return null
-      }
+  const todoObjects: TodoObject[] = linesInFile.map((line, index) => {
+    if (excludeLinesWithPrefix.some((prefix) => line.startsWith(prefix))) {
+      return null
+    }
 
-      const todoObject: TodoObject = createTodoObject(index, line)
+    const todoObject: TodoObject = createTodoObject(index, line)
 
-      if (todoObject.body && !todoObject.complete) {
-        handleNotification(todoObject.due, todoObject.body, badge)
-      }
+    if (SettingsStore.get('notificationsAllowed') && todoObject.body && !todoObject.complete) {
+      HandleNotification(dayjs(todoObject.due, 'YYYY-MM-DD'), todoObject.body, badge)
+    }
 
-      return todoObject
-    })
-    .filter(Boolean) as TodoObject[]
+    return todoObject
+  }).filter(Boolean) as TodoObject[]
 
   app.setBadgeCount(badge.count)
 

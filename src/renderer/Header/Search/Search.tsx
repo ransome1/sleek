@@ -47,7 +47,7 @@ interface SearchComponentProps extends WithTranslation {
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = memo(({ headers, settings, searchString, setSearchString, searchFieldRef, setPromptItem, t }) => {
-  const [searchFilters, setSearchFilters] = useState<SearchFilter[]>(store.getFilters('search'))
+  const [searchFilters, setSearchFilters] = useState(store.getFilters('search') || [])
   const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false)
 
   useEffect(() => {

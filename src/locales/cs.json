@@ -70,6 +70,7 @@
   "search.addAsTodo": "Přidat jako úkol",
   "search.filters.create": "Vytvořit vyhledávací filtr",
   "add": "Přidat",
+  "todoDialog.input.placeholder": "Klikněte na tlačítko nápovědy, abyste se dozvěděli, co sem napsat",
   "todoDialog.footer.update": "Aktualizovat",
   "cancel": "Zrušit",
   "close": "Zavřít",

@@ -75,7 +75,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(
           ...params.InputProps,
           startAdornment: (
             <InputAdornment position="start">
-              {searchFilters.length > 0 || searchString ? (
+              {searchFilters?.length > 0 || searchString ? (
                 <IconButton tabIndex={0} onClick={() => setIsAutocompleteOpen(!isAutocompleteOpen)}>
                   {isAutocompleteOpen ? (
                     <ExpandMoreIcon
@@ -96,8 +96,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(
           endAdornment: (
             <InputAdornment position="end">
               {searchString &&
-                searchString.length > 0 &&
-                !searchFilters.some((filter) => filter.label === searchString) && (
+                searchString.length > 0 && !searchFilters?.some((filter) => filter.label === searchString) && (
                   <button
                     onClick={() => handleAddTodo(searchString)}
                     data-testid="header-search-textfield-add-todo"

@@ -1,4 +1,4 @@
-import { config } from '../../config';
+import { SettingsStore } from '../Stores/SettingsStore';
 
 const compareValues = (a: any, b: any, invert: boolean): number => {
   if (a === b) return 0;
@@ -12,7 +12,7 @@ const compareValues = (a: any, b: any, invert: boolean): number => {
 };
 
 const sortTodoObjects = (a: TodoObject, b: TodoObject, sorting: Sorting[]): number => {
-  const sortCompletedLast = config.get('sortCompletedLast');
+  const sortCompletedLast = SettingsStore.get('sortCompletedLast');
 
   if (sortCompletedLast) {
     if (a.complete && !b.complete) return 1;
