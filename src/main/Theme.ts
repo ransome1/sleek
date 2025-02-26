@@ -1,6 +1,6 @@
 import { nativeTheme } from 'electron'
 import { SettingsStore } from './Stores/SettingsStore'
-import { handleError } from './Util'
+import { handleError } from './Shared'
 
 nativeTheme.on('updated', () => {
   try {

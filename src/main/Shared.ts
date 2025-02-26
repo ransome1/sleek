@@ -1,6 +1,6 @@
 import { app } from 'electron'
-import { mainWindow } from './index.js'
 import path from 'path'
+import { mainWindow } from './index.js'
 
 export const userDataDirectory: string =
   process.env.NODE_ENV === 'development'
