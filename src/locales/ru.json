@@ -70,6 +70,7 @@
   "search.addAsTodo": "Добавить как задачу",
   "search.filters.create": "Создать фильтр поиска",
   "add": "Добавить",
+  "todoDialog.input.placeholder": "Нажмите кнопку помощи, чтобы узнать, что ввести здесь",
   "todoDialog.footer.update": "Обновить",
   "cancel": "Отменить",
   "close": "Закрыть",

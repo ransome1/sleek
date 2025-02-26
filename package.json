@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -40,19 +40,19 @@
     "build:mas": "npm run build && electron-builder build -m mas --universal --publish never",
     "build:masdev": "npm run build && electron-builder build -m mas-dev --publish never",
     "postinstall": "electron-builder install-app-deps",
-    "peggy": "npx peggy --format es --dts --output ./src/main/modules/Filters/FilterLang.ts ./src/main/modules/Filters/FilterLang.pegjs"
+    "peggy": "npx peggy --format es --dts --output ./src/main/Filters/FilterLang.ts ./src/main/Filters/FilterLang.pegjs"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
-    "@mui/system": "^6.4.0",
-    "@mui/x-date-pickers": "^7.27.0",
+    "@mui/system": "^6.4.3",
+    "@mui/x-date-pickers": "^7.27.1",
     "chokidar": "^4.0.3",
     "dayjs": "^1.11.13",
-    "electron-store": "^10.0.0",
-    "i18next": "^24.2.0",
+    "electron-store": "^10.0.1",
+    "i18next": "^24.2.2",
     "jstodotxt": "1.0.0-alpha.3",
     "react": "^19.0.0",
     "react-autosuggest": "^10.1.0",
@@ -67,7 +67,7 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
@@ -78,8 +78,8 @@
     "peggy": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "sass": "^1.85.0",
+    "sass": "^1.85.1",
     "typescript": "^5.7.3",
-    "vitest": "^3.0.6"
+    "vitest": "^3.0.7"
   }
 }

@@ -1,7 +1,7 @@
 import Sugar from 'sugar'
 import dayjs from 'dayjs'
-import { mustNotify } from './Notify'
-import { config } from '../config'
+import { MustNotify } from './Notifications'
+import { SettingsStore } from '../Stores/SettingsStore'
 
 function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const speakingDates: DateAttributes = extractSpeakingDates(string)
@@ -30,14 +30,14 @@ function processDateWithSugar(string: string, type: string): DateAttribute | nul
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
         string: combinedValue.slice(0, -1),
         type: type,
-        notify: mustNotify(sugarDate)
+        notify: MustNotify(dayjs(sugarDate))
       }
     } else if (Sugar.Date.isValid(sugarDate) && type === 'relative') {
       lastMatch = {
         date: dayjs(sugarDate).format('YYYY-MM-DD'),
         string: combinedValue.slice(0, -1),
         type: type,
-        notify: mustNotify(sugarDate)
+        notify: MustNotify(dayjs(sugarDate))
       }
     }
     index++

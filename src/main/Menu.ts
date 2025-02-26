@@ -1,11 +1,11 @@
 import { app, Menu, dialog, shell } from 'electron'
 import { setFile } from './File/File'
-import { mainWindow, handleCreateWindow } from '../index'
+import { mainWindow, handleCreateWindow } from './index'
 import { openFile, createFile } from './File/Dialog'
 import { handleRequestArchive } from './File/Archive'
-import { config } from '../config'
-import { FilterStore } from '../FilterStore'
-import appPackage from '../../../package.json'
+import { SettingsStore } from './Stores/SettingsStore'
+import { FiltersStore } from './Stores/FiltersStore'
+import appPackage from '../../package.json'
 
 function createMenu(files: FileObject[]) {
   const template: Electron.MenuItemConstructorOptions[] = [
@@ -94,15 +94,15 @@ function createMenu(files: FileObject[]) {
                 label: 'Toggle drawer',
                 accelerator: 'CmdOrCtrl+B',
                 click: () => {
-                  const isDrawerOpen = config.get('isDrawerOpen')
-                  config.set('isDrawerOpen', !isDrawerOpen)
+                  const isDrawerOpen = SettingsStore.get('isDrawerOpen')
+                  SettingsStore.set('isDrawerOpen', !isDrawerOpen)
                 }
               },
               {
                 label: 'Toggle file tabs',
                 click: () => {
-                  const showFileTabs = config.get('showFileTabs')
-                  config.set('showFileTabs', !showFileTabs)
+                  const showFileTabs = SettingsStore.get('showFileTabs')
+                  SettingsStore.set('showFileTabs', !showFileTabs)
                 }
               }
             ]
@@ -111,23 +111,23 @@ function createMenu(files: FileObject[]) {
           label: 'Toggle navigation',
           accelerator: 'Ctrl+Alt+H',
           click: () => {
-            const isNavigationOpen = config.get('isNavigationOpen')
-            config.set('isNavigationOpen', !isNavigationOpen)
+            const isNavigationOpen = SettingsStore.get('isNavigationOpen')
+            SettingsStore.set('isNavigationOpen', !isNavigationOpen)
           }
         },
         {
           label: 'Toggle theme',
           accelerator: 'Ctrl+Alt+D',
           click: () => {
-            const shouldUseDarkColors = config.get('shouldUseDarkColors')
-            config.set('colorTheme', shouldUseDarkColors ? 'light' : 'dark')
+            const shouldUseDarkColors = SettingsStore.get('shouldUseDarkColors')
+            SettingsStore.set('colorTheme', shouldUseDarkColors ? 'light' : 'dark')
           }
         },
         {
           label: 'Toggle compact mode',
           click: () => {
-            const compact = config.get('compact')
-            config.set('compact', !compact)
+            const compact = SettingsStore.get('compact')
+            SettingsStore.set('compact', !compact)
           }
         }        
       ]
@@ -148,23 +148,23 @@ function createMenu(files: FileObject[]) {
                 label: 'Find',
                 accelerator: 'CmdOrCtrl+F',
                 click: () => {
-                  const isSearchOpen = config.get('isSearchOpen')
-                  config.set('isSearchOpen', !isSearchOpen)
+                  const isSearchOpen = SettingsStore.get('isSearchOpen')
+                  SettingsStore.set('isSearchOpen', !isSearchOpen)
                 }
               },
               {
                 label: 'Toggle completed',
                 accelerator: 'Ctrl+H',
                 click: async () => {
-                  const showCompleted = config.get('showCompleted')
-                  config.set('showCompleted', !showCompleted)
+                  const showCompleted = SettingsStore.get('showCompleted')
+                  SettingsStore.set('showCompleted', !showCompleted)
                 }
               },
               {
                 label: 'Reset filters',
                 accelerator: 'CmdOrCtrl+0',
                 click: async () => {
-                  FilterStore.set('attributes', {})
+                  FiltersStore.set('attributes', {})
                 }
               },
               {

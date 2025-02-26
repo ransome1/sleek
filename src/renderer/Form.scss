@@ -84,6 +84,23 @@ label {
   }
 }
 
+.compact {
+  .MuiAutocomplete-root,
+  .MuiPaper-root,
+  .MuiDialogContent-root {
+    .MuiFormControl-root {
+      .MuiInputBase-root {
+        .MuiInputBase-input {
+          padding: 0.75em;
+        }
+        .MuiSelect-select  {
+          padding: 0.75em;
+        }
+      }
+    }
+  }
+}
+
 .MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root, .MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root,
 .MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root, .MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root {
 	padding-right: 0.5em!important;

@@ -70,6 +70,7 @@
   "search.addAsTodo": "添加为任务",
   "search.filters.create": "创建搜索过滤器",
   "add": "添加",
+  "todoDialog.input.placeholder": "点击帮助按钮以了解在此处输入什么",
   "todoDialog.footer.update": "更新",
   "cancel": "取消",
   "close": "关闭",

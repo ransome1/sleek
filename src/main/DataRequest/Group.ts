@@ -1,7 +1,7 @@
-import { config } from '../../config';
+import { SettingsStore } from '../Stores/SettingsStore';
 
 const groupTodoObjects = (todoObjects: TodoObject[], attributeKey: string): TodoGroup => {
-  const showHidden = config.get('showHidden');
+  const showHidden = SettingsStore.get('showHidden');
   const grouped: TodoGroup = {};
 
   for (const todoObject of todoObjects) {

@@ -70,6 +70,7 @@
   "search.addAsTodo": "Als Aufgabe hinzufügen",
   "search.filters.create": "Suchfilter erstellen",
   "add": "Hinzufügen",
+  "todoDialog.input.placeholder": "Klicken Sie auf die Hilfeschaltfläche, um zu erfahren, was Sie hier eingeben sollen",
   "todoDialog.footer.update": "Aktualisieren",
   "cancel": "Abbrechen",
   "close": "Schließen",

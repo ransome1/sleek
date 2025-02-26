@@ -70,6 +70,7 @@
   "search.addAsTodo": "Aggiungi come attività",
   "search.filters.create": "Crea filtro di ricerca",
   "add": "Aggiungi",
+  "todoDialog.input.placeholder": "Fai clic sul pulsante di aiuto per sapere cosa scrivere qui",
   "todoDialog.footer.update": "Aggiorna",
   "cancel": "Annulla",
   "close": "Chiudi",

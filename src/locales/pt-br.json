@@ -70,6 +70,7 @@
   "search.addAsTodo": "Adicionar como tarefa",
   "search.filters.create": "Crie filtro de pesquisa",
   "add": "Adicionar",
+  "todoDialog.input.placeholder": "Clique no botão de ajuda para saber o que digitar aqui",
   "todoDialog.footer.update": "Atualização",
   "close": "fechar",
   "todoDialog.snackbar.emptyInput": "Por favor, insira algo no campo de texto",

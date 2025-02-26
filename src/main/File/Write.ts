@@ -3,7 +3,7 @@ import fs from 'fs'
 import { Item } from 'jstodotxt'
 import { linesInFile } from '../DataRequest/CreateTodoObjects'
 import { getActiveFile } from './Active'
-import { config } from '../../config'
+import { SettingsStore } from '../Stores/SettingsStore'
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date'
 
 function writeToFile(string: string, filePath: string, bookmark: string | null) {
@@ -30,13 +30,13 @@ function prepareContentForWriting(lineNumber: number, string: string) {
 
   let linesToAdd
 
-  if (config.get('bulkTodoCreation')) {
+  if (SettingsStore.get('bulkTodoCreation')) {
     linesToAdd = string.replaceAll(String.fromCharCode(16), '\n')
   } else {
     linesToAdd = string.replaceAll(/\n/g, String.fromCharCode(16))
   }
 
-  if (config.get('convertRelativeToAbsoluteDates')) {
+  if (SettingsStore.get('convertRelativeToAbsoluteDates')) {
     linesToAdd = replaceSpeakingDatesWithAbsoluteDates(linesToAdd)
   }
 
@@ -47,7 +47,7 @@ function prepareContentForWriting(lineNumber: number, string: string) {
   } else {
     for (let i = 0; i < linesToAdd.length; i++) {
       const JsTodoTxtObject = new Item(linesToAdd[i])
-      if (config.get('appendCreationDate') && !JsTodoTxtObject.created()) {
+      if (SettingsStore.get('appendCreationDate') && !JsTodoTxtObject.created()) {
         JsTodoTxtObject.setCreated(new Date())
       }
       linesInFile.push(JsTodoTxtObject.toString())

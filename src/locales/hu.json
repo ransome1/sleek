@@ -70,6 +70,7 @@
   "search.addAsTodo": "Hozzáadás feladatként",
   "search.filters.create": "Keresési szűrő létrehozása",
   "add": "Hozzáadás",
+  "todoDialog.input.placeholder": "Kattintson a Súgó gombra, hogy megtudja, mit írjon ide",
   "todoDialog.footer.update": "Frissítés",
   "cancel": "Mégse",
   "close": "Bezárás",

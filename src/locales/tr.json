@@ -70,6 +70,7 @@
   "search.addAsTodo": "Görev olarak ekle",
   "search.filters.create": "Arama filtresi oluştur",
   "add": "Ekle",
+  "todoDialog.input.placeholder": "Yardım düğmesine tıklayın buraya ne yazacağınızı öğrenmek için",
   "todoDialog.footer.update": "Güncelle",
   "cancel": "İptal",
   "close": "Kapat",

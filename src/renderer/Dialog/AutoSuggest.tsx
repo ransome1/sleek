@@ -1,20 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
+import { withTranslation, WithTranslation } from 'react-i18next'
+import { i18n } from '../Settings/LanguageSelector'
 import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import IconButton from '@mui/material/IconButton'
 import './AutoSuggest.scss'
+
+const { ipcRenderer } = window.api
 
 const regex: RegExp = /(?<=^| )[+@][^ ]*/g
 
-interface AutoSuggestComponentProps {
+interface AutoSuggestComponentProps extends WithTranslation {
   textFieldValue: string
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>
   attributes: Attributes | null
+  t: typeof i18n.t
 }
 
 const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   textFieldValue,
   setTextFieldValue,
-  attributes
+  attributes,
+  t
 }) => {
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [prefix, setPrefix] = useState<string | null>(null)
@@ -127,7 +136,7 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   }
 
   const inputProps = {
-    placeholder: `(A) text +project @context due:2020-12-12 t:2021-01-10 rec:d pm:1`,
+    placeholder: t('todoDialog.input.placeholder'),
     value: textFieldValue ? textFieldValue.replaceAll(String.fromCharCode(16), '\n') : '',
     inputRef: textFieldRef,
     onChange: handleChange,
@@ -143,7 +152,28 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
     <>
       <Autosuggest
         renderInputComponent={(inputProps) => (
-          <TextField {...inputProps} multiline />
+          <TextField
+            multiline
+            InputProps={{
+              ...inputProps,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    tabIndex={0}
+                    onClick={() =>
+                      ipcRenderer.send(
+                        'openInBrowser',
+                        'https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions'
+                      )
+                    }
+                    data-testid="header-search-clear-icon"
+                  >
+                    <HelpOutlineIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
         )}
         renderSuggestionsContainer={({ containerProps, children }) => (
           <div
@@ -171,4 +201,4 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   )
 }
 
-export default AutoSuggestComponent
+export default withTranslation()(AutoSuggestComponent)

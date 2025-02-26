@@ -70,6 +70,7 @@
   "search.addAsTodo": "काम के रूप में जोड़ें",
   "search.filters.create": "खोज फ़िल्टर बनाएं",
   "add": "जोड़ें",
+  "todoDialog.input.placeholder": "मदद बटन पर क्लिक करें यह जानने के लिए कि यहां क्या टाइप करना है",
   "todoDialog.footer.update": "अपडेट करें",
   "cancel": "रद्द करें",
   "close": "बंद करें",

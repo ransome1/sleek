@@ -3,13 +3,11 @@
   "include": [
     "electron.vite.config.*",
     "src/main/**/*",
-    "src/preload/**/*"
+    "src/main/**/*.ts",
+    "src/preload/**/*",
+    "resources/icon.icns",
   ],
   "compilerOptions": {
-    // "target": "ESNext",
-    // "module": "NodeNext",
-    // "moduleResolution": "NodeNext",
-    "composite": true,
     "types": ["electron-vite/node"]
   }
 }

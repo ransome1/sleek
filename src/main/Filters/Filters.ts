@@ -1,4 +1,4 @@
-import { config } from '../../config'
+import { SettingsStore } from '../Stores/SettingsStore'
 import dayjs from 'dayjs'
 
 function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
@@ -32,7 +32,7 @@ function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): To
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  const showCompleted: boolean = config.get('showCompleted')
+  const showCompleted: boolean = SettingsStore.get('showCompleted')
   if (!showCompleted) {
     return todoObjects.filter((todoObject: TodoObject) => !todoObject.complete)
   } else {
@@ -41,8 +41,8 @@ function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
 }
 
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
-  const thresholdDateInTheFuture: boolean = config.get('thresholdDateInTheFuture')
-  const dueDateInTheFuture: boolean = config.get('dueDateInTheFuture')
+  const thresholdDateInTheFuture: boolean = SettingsStore.get('thresholdDateInTheFuture')
+  const dueDateInTheFuture: boolean = SettingsStore.get('dueDateInTheFuture')
 
   return todoObjects.filter((todoObject: TodoObject) => {
     const thresholdDate = dayjs(todoObject?.t)

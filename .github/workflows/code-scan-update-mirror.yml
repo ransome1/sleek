@@ -39,29 +39,29 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
-  # codecov:
-  #   needs: njsscan
-  #   name: Codecov
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       language: ['javascript']
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@master
-  #     - name: Set up latest available Nodejs
-  #       uses: actions/setup-node@master
-  #     - name: Install dependencies
-  #       run: yarn install
-  #     - name: Build
-  #       run: yarn build
-  #     - name: Run tests
-  #       run: yarn run test
-  #     - name: Upload coverage reports to Codecov
-  #       uses: codecov/codecov-action@v4
-  #       env:
-  #         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  codecov:
+    needs: njsscan
+    name: Codecov
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Set up latest available Nodejs
+        uses: actions/setup-node@master
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Run tests
+        run: npm test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   codeql:
     needs: njsscan
     name: CodeQL

@@ -2,16 +2,16 @@ import { app, BrowserWindow, nativeImage } from 'electron'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs'
-import { config } from './config.js'
-import { createMenu } from './modules/Menu.js'
-import { createFileWatcher, watcher } from './modules/File/Watcher'
-import { addFile } from './modules/File/File'
-import { handleTray } from './modules/Tray.js'
+import { SettingsStore } from './Stores/SettingsStore.js'
+import { createMenu } from './Menu.js'
+import { createFileWatcher, watcher } from './File/Watcher'
+import { addFile } from './File/File'
+import { handleTray } from './Tray.js'
 import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
-import { handleTheme } from './modules/Theme.js'
-import './modules/IpcMain.js'
+import { handleTheme } from './Theme.js'
+import './IpcMain.js'
 
 let startTime
 const environment: string | undefined = process.env.NODE_ENV
@@ -49,8 +49,8 @@ const handleResize = () => {
     const rectangle = mainWindow?.getBounds() as WindowRectangle
     const width = rectangle.width
     const height = rectangle.height
-    config.set('windowDimensions', { width, height })
-    config.set('windowMaximized', false)
+    SettingsStore.set('windowDimensions', { width, height })
+    SettingsStore.set('windowMaximized', false)
   }, 500)
 }
 
@@ -60,22 +60,22 @@ const handleMove = () => {
     const rectangle = mainWindow?.getBounds() as WindowRectangle
     const x = rectangle.x
     const y = rectangle.y
-    config.set('windowPosition', { x, y })
-    config.set('windowMaximized', false)
+    SettingsStore.set('windowPosition', { x, y })
+    SettingsStore.set('windowMaximized', false)
   }, 500)
 }
 
 const handleUnmaximize = () => {
   clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
-    config.set('windowMaximized', false)
+    SettingsStore.set('windowMaximized', false)
   }, 500)
 }
 
 const handleMaximize = () => {
   clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
-    config.set('windowMaximized', true)
+    SettingsStore.set('windowMaximized', true)
   }, 500)
 }
 
@@ -84,13 +84,13 @@ const handleShow = () => {
 }
 
 const handleWindowSizeAndPosition = () => {
-  const isMaximized = config.get('windowMaximized')
+  const isMaximized = SettingsStore.get('windowMaximized')
   if (isMaximized) {
     mainWindow?.maximize()
     return
   }
 
-  const windowDimensions: { width: number; height: number } | null = config.get(
+  const windowDimensions: { width: number; height: number } | null = SettingsStore.get(
     'windowDimensions'
   ) as { width: number; height: number } | null
 
@@ -98,7 +98,7 @@ const handleWindowSizeAndPosition = () => {
     const { width, height } = windowDimensions
     mainWindow?.setSize(width, height)
 
-    const windowPosition: { x: number; y: number } | null = config.get('windowPosition') as {
+    const windowPosition: { x: number; y: number } | null = SettingsStore.get('windowPosition') as {
       x: number
       y: number
     } | null
@@ -110,7 +110,7 @@ const handleWindowSizeAndPosition = () => {
 }
 
 const createMainWindow = () => {
-  const shouldUseDarkColors: boolean = config.get('shouldUseDarkColors')
+  const shouldUseDarkColors: boolean = SettingsStore.get('shouldUseDarkColors')
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
@@ -149,7 +149,7 @@ const createMainWindow = () => {
     mainWindow.loadFile(fileURLToPath(new URL('../renderer/index.html', import.meta.url)))
   }
 
-  const files: FileObject[] = (config.get('files') as FileObject[]) || []
+  const files: FileObject[] = (SettingsStore.get('files') as FileObject[]) || []
   if (files) {
     createFileWatcher(files)
   }
@@ -158,7 +158,7 @@ const createMainWindow = () => {
 
   handleWindowSizeAndPosition()
 
-  const colorTheme: string = config.get('colorTheme')
+  const colorTheme: string = SettingsStore.get('colorTheme')
   handleTheme(colorTheme);
 
   eventListeners.handleClosed = handleClosed
@@ -168,9 +168,9 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize
 
-  handleTray(config.get('tray'))
+  handleTray(SettingsStore.get('tray'))
 
-  const customStylesPath: string = config.get('customStylesPath')
+  const customStylesPath: string = SettingsStore.get('customStylesPath')
   if (customStylesPath) {
     fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
       if (!error) {
@@ -188,7 +188,7 @@ const createMainWindow = () => {
 }
 
 const handleWindowAllClosed = () => {
-  const tray = config.get('tray')
+  const tray = SettingsStore.get('tray')
   if (process.platform !== 'darwin' && !tray) {
     app.quit()
   } else if (process.platform === 'darwin' && tray) {

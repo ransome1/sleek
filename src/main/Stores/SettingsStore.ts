@@ -1,18 +1,17 @@
 import Store from 'electron-store'
 import path from 'path'
 import { app } from 'electron'
-import { dataRequest, searchString } from './modules/DataRequest/DataRequest'
 import fs from 'fs'
-import { userDataDirectory } from './Util'
-import { mainWindow } from './index'
-import { createFileWatcher } from './modules/File/Watcher'
-import { handleTray } from './modules/Tray'
-import { handleTheme } from './modules/Theme'
-import { createMenu } from './modules/Menu'
-import { handleError } from './Util'
 import crypto from 'crypto'
+import { dataRequest, searchString } from '../DataRequest/DataRequest'
+import { userDataDirectory, handleError } from '../Util'
+import { mainWindow } from '../index'
+import { createFileWatcher } from '../File/Watcher'
+import { handleTray } from '../Tray'
+import { handleTheme } from '../Theme'
+import { createMenu } from '../Menu'
 
-const getChannel = function(): string {
+const distributionChannel = function(): string {
   if (process.env.APPIMAGE) {
     return 'AppImage'
   } else if (process.windowsStore) {
@@ -91,7 +90,7 @@ const migrations = {
   },
   '2.0.12': (store) => {
     console.log('Migrating from 2.0.11 → 2.0.12')
-    store.set('channel', getChannel())
+    store.set('channel', distributionChannel())
     store.set('fileWatcherAtomic', 1000)
     store.set('fileWatcherPolling', false)
     store.set('fileWatcherPollingInterval', 100)
@@ -121,13 +120,14 @@ const migrations = {
   }
 }
 
-const config = new Store<StoreType>({
+const SettingsStore = new Store<StoreType>({
   cwd: userDataDirectory,
   name: 'config',
+  projectName: 'sleek',
   migrations
 })
 
-const rerender = {
+const rerenderDefinition = {
   'sorting': true,
   'files': true,
   'showCompleted': true,
@@ -138,16 +138,16 @@ const rerender = {
   'sortCompletedLast': true,
 };
 
-function findObjectDifferences(oldObj, newObj) {
+function findChanges(oldValue, newValue) {
   const differences = {};
 
-  for (const key in newObj) {
-    if (JSON.stringify(newObj[key]) !== JSON.stringify(oldObj[key])) {
+  for (const key in newValue) {
+    if (JSON.stringify(newValue[key]) !== JSON.stringify(oldValue[key])) {
       differences[key] = {
-        oldValue: oldObj[key],
-        newValue: newObj[key],
+        oldValue: oldValue[key],
+        newValue: newValue[key],
       };
-      if (rerender[key]) {
+      if (rerenderDefinition[key]) {
         const requestedData = dataRequest(searchString)
         mainWindow!.webContents.send('requestData', requestedData)
         return false;
@@ -157,10 +157,10 @@ function findObjectDifferences(oldObj, newObj) {
   return differences;
 }
 
-config.onDidAnyChange((newValue, oldValue) => {
+SettingsStore.onDidAnyChange((newValue, oldValue) => {
   try {
     if (mainWindow && mainWindow.webContents) {
-      findObjectDifferences(oldValue, newValue);
+      findChanges(oldValue, newValue);
       mainWindow.webContents.send('settingsChanged', newValue)
     } else {
       console.warn('The window is not available, skipping setting change.')
@@ -170,19 +170,19 @@ config.onDidAnyChange((newValue, oldValue) => {
   }
 });
 
-config.onDidChange('files', (newValue: FileObject[] | undefined) => {
+SettingsStore.onDidChange('files', (newValue: FileObject[] | undefined) => {
   try {
     if (!newValue) return false;
     
     createFileWatcher(newValue)
-    handleTray(config.get('tray'))
+    handleTray(SettingsStore.get('tray'))
     createMenu(newValue)
   } catch (error: any) {
     handleError(error)
   }
 })
 
-config.onDidChange('colorTheme', (colorTheme) => {
+SettingsStore.onDidChange('colorTheme', (colorTheme) => {
   try {
     handleTheme(colorTheme);
   } catch (error: any) {
@@ -190,7 +190,7 @@ config.onDidChange('colorTheme', (colorTheme) => {
   }
 })
 
-config.onDidChange('menuBarVisibility', (menuBarVisibility) => {
+SettingsStore.onDidChange('menuBarVisibility', (menuBarVisibility) => {
   try {
     mainWindow!.setMenuBarVisibility(menuBarVisibility)
   } catch (error: any) {
@@ -198,7 +198,7 @@ config.onDidChange('menuBarVisibility', (menuBarVisibility) => {
   }  
 })
 
-config.onDidChange('tray', (tray) => {
+SettingsStore.onDidChange('tray', (tray) => {
   try {
     handleTray(tray)
   } catch (error: any) {
@@ -206,4 +206,4 @@ config.onDidChange('tray', (tray) => {
   }
 })
 
-export { config }
+export { SettingsStore }

@@ -1,8 +1,8 @@
 import fs from 'fs'
 import { app } from 'electron'
-import { config } from '../../config'
+import { SettingsStore } from '../Stores/SettingsStore'
 import path from 'path'
-import { mainWindow } from '../../index'
+import { mainWindow } from '../index'
 
 function readFileContent(filePath: string, bookmark: string | null): string | Error {
   const fileContent = fs.readFileSync(filePath, 'utf8')
@@ -18,7 +18,7 @@ function addFile(filePath: string, bookmark: string | null) {
     throw new Error('The Mac App Store release requires you to open files from within the app')
   }
 
-  const files: FileObject[] = config.get('files')
+  const files: FileObject[] = SettingsStore.get('files')
   const existingFileIndex = files.findIndex((file) => file.todoFilePath === filePath)
 
   files.forEach((file) => (file.active = false))
@@ -36,13 +36,13 @@ function addFile(filePath: string, bookmark: string | null) {
     files[existingFileIndex].active = true
   }
 
-  config.set('files', files)
+  SettingsStore.set('files', files)
 
   return 'File added'
 }
 
 function addDoneFile(filePath: string, bookmark: string | null) {
-  const files: FileObject[] = config.get('files')
+  const files: FileObject[] = SettingsStore.get('files')
   const activeIndex: number = files.findIndex((file) => file.active)
 
   if (activeIndex === -1) return false
@@ -50,13 +50,13 @@ function addDoneFile(filePath: string, bookmark: string | null) {
   files[activeIndex].doneFilePath = filePath
   files[activeIndex].doneFileBookmark = bookmark
 
-  config.set('files', files)
+  SettingsStore.set('files', files)
 
   mainWindow!.webContents.send('triggerArchiving', true)
 }
 
 function removeFile(index: number) {
-  let files: FileObject[] = config.get('files')
+  let files: FileObject[] = SettingsStore.get('files')
 
   files.splice(index, 1)
   const activeIndex: number = files.findIndex((file) => file.active)
@@ -69,13 +69,13 @@ function removeFile(index: number) {
     files = []
   }
 
-  config.set('files', files)
+  SettingsStore.set('files', files)
 
   return 'File removed'
 }
 
 function setFile(index: number) {
-  const files: FileObject[] = config.get('files')
+  const files: FileObject[] = SettingsStore.get('files')
 
   if (files.length > 0) {
     files.forEach((file) => {
@@ -85,7 +85,7 @@ function setFile(index: number) {
 
   files[index].active = true
 
-  config.set('files', files)
+  SettingsStore.set('files', files)
 
   return 'File changed'
 }

@@ -1,13 +1,13 @@
 import { ipcMain, app, IpcMainEvent, clipboard, shell } from 'electron'
 import { dataRequest, searchString } from './DataRequest/DataRequest'
-import { mainWindow } from '../index'
+import { mainWindow } from './index'
 import { changeCompleteState } from './DataRequest/ChangeCompleteState'
 import { prepareContentForWriting, removeLineFromFile } from './File/Write'
 import { archiveTodos, handleRequestArchive } from './File/Archive'
-import { config } from '../config'
-import { NotificationStore } from '../NotificationStore'
-import { FilterStore } from '../FilterStore'
-import { handleError } from '../Util'
+import { SettingsStore } from './Stores/SettingsStore'
+import { NotificationsStore } from './Stores/NotificationsStore'
+import { FiltersStore } from './Stores/FiltersStore'
+import { handleError } from './Util'
 import { addFile, setFile, removeFile } from './File/File'
 import { openFile, createFile } from './File/Dialog'
 import { createTodoObject } from './DataRequest/CreateTodoObjects'
@@ -69,7 +69,7 @@ function handleWriteTodoToFile(
 
 function handleStoreGetConfig(event: IpcMainEvent, value: string) {
   try {
-    event.returnValue = config.get(value)
+    event.returnValue = SettingsStore.get(value)
   } catch (error: any) {
     handleError(error)
   }
@@ -77,7 +77,7 @@ function handleStoreGetConfig(event: IpcMainEvent, value: string) {
 
 function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
   try {
-    config.set(key, value)
+    SettingsStore.set(key, value)
     console.log(`Set ${key} to ${value}`)
   } catch (error: any) {
     handleError(error)
@@ -86,7 +86,7 @@ function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
 
 function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): void {
   try {
-    FilterStore.set(key, value)
+    FiltersStore.set(key, value)
   } catch (error: any) {
     handleError(error)
   }
@@ -94,7 +94,7 @@ function handleStoreSetFilters(event: IpcMainEvent, key: string, value: any): vo
 
 function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
   try {
-    event.returnValue = FilterStore.get(value)
+    event.returnValue = FiltersStore.get(value)
   } catch (error: any) {
     handleError(error)
   }
@@ -102,7 +102,7 @@ function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
 
 function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): void {
   try {
-    NotificationStore.set('notifiedTodoObjects', value)
+    NotificationsStore.set('notifiedTodoObjects', value)
   } catch (error: any) {
     handleError(error)
   }

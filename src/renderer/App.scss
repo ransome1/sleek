@@ -15,6 +15,7 @@ body {
   }
   a {
     color: Variables.$blue;
+    cursor: pointer;
     text-decoration: underline;
     svg {
       font-size: 1.2em;

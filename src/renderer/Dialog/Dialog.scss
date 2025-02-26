@@ -40,29 +40,23 @@
   #DialogComponent {
     .MuiDialog-paper {
       max-width: 60em;
-      .MuiDialogContent-root {
-        padding: 1em;
-      }
+    } 
+  }
+  .MuiDialog-container{
+    .MuiDialogContent-root {
+      padding: 1em;
+      .MuiFormControl-root {
+        label[data-shrink=false] {
+          transform: translate(0.75em, 0.75em) scale(1);
+        }
+      }      
     }
     .MuiDialogActions-root {
       button {
         padding: 0.5em;
       }
-    }    
-  }
-  .MuiDialogContent-root {
-    .MuiFormControl-root {
-      label[data-shrink=false] {
-        transform: translate(0.8em, 0.8em) scale(1);
-      }
-      .MuiInputBase-root {
-        padding: 0.8em;
-        &.MuiInputBase-multiline {
-         padding: 0.8em;
-        }      
-      }
     }
-  }  
+  }
 }
 
 .dark .MuiDialog-root .MuiDialog-paper .MuiDialogActions-root button {
