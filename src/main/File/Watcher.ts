@@ -1,7 +1,7 @@
 import chokidar, { FSWatcher } from 'chokidar'
 import { app } from 'electron'
 import { dataRequest, searchString } from '../DataRequest/DataRequest'
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 import { handleError, userDataDirectory } from '../Shared'
 import { mainWindow, eventListeners } from '../index'
 

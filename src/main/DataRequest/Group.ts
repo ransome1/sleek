@@ -1,4 +1,4 @@
-import { SettingsStore } from '../Stores/SettingsStore';
+import { SettingsStore } from '../Stores';
 
 const groupTodoObjects = (todoObjects: TodoObject[], attributeKey: string): TodoGroup => {
   const showHidden = SettingsStore.get('showHidden');

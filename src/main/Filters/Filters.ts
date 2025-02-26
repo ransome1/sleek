@@ -1,4 +1,4 @@
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 import dayjs from 'dayjs'
 
 function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {

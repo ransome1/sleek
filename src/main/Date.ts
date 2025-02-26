@@ -1,7 +1,7 @@
 import Sugar from 'sugar'
 import dayjs from 'dayjs'
 import { MustNotify } from './Notifications'
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 
 function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const speakingDates: DateAttributes = extractSpeakingDates(string)

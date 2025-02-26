@@ -3,8 +3,7 @@ import { setFile } from './File/File'
 import { mainWindow, handleCreateWindow } from './index'
 import { openFile, createFile } from './File/Dialog'
 import { handleRequestArchive } from './File/Archive'
-import { SettingsStore } from './Stores/SettingsStore'
-import { FiltersStore } from './Stores/FiltersStore'
+import { SettingsStore, FiltersStore } from './Stores'
 import appPackage from '../../package.json'
 
 function createMenu(files: FileObject[]) {

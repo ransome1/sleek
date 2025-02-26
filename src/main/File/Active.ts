@@ -1,4 +1,4 @@
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 
 export function getActiveFile(): FileObject | null {
   const files: FileObject[] = SettingsStore.get('files')

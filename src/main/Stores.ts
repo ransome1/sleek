@@ -120,13 +120,6 @@ const migrations = {
   }
 }
 
-const SettingsStore = new Store<StoreType>({
-  cwd: userDataDirectory,
-  name: 'config',
-  projectName: 'sleek',
-  migrations
-})
-
 const rerenderDefinition = {
   'sorting': true,
   'files': true,
@@ -156,6 +149,25 @@ function findChanges(oldValue, newValue) {
   }
   return differences;
 }
+
+export const SettingsStore = new Store<StoreType>({
+  cwd: userDataDirectory,
+  name: 'config',
+  projectName: 'sleek',
+  migrations
+})
+
+export const FiltersStore = new Store({
+  cwd: userDataDirectory,
+  name: 'filters',
+  projectName: 'sleek'
+})
+
+export const NotificationsStore = new Store({
+  cwd: userDataDirectory,
+  name: 'notifiedTodoObjects',
+  projectName: 'sleek'
+})
 
 SettingsStore.onDidAnyChange((newValue, oldValue) => {
   try {
@@ -205,5 +217,3 @@ SettingsStore.onDidChange('tray', (tray) => {
     handleError(error)
   }
 })
-
-export { SettingsStore }

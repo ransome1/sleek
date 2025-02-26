@@ -1,7 +1,7 @@
 import { app, Menu, Tray, nativeImage } from 'electron'
 import { fileURLToPath } from 'url'
 import { handleCreateWindow } from './index'
-import { SettingsStore } from './Stores/SettingsStore'
+import { SettingsStore } from './Stores'
 import { setFile } from './File/File'
 import trayIcon from '../../resources/tray.png?asset'
 

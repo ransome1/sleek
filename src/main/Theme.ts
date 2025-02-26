@@ -1,5 +1,5 @@
 import { nativeTheme } from 'electron'
-import { SettingsStore } from './Stores/SettingsStore'
+import { SettingsStore } from './Stores'
 import { handleError } from './Shared'
 
 nativeTheme.on('updated', () => {

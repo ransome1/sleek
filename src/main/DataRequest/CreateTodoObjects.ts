@@ -1,6 +1,6 @@
 import { app } from 'electron'
 import { Item } from 'jstodotxt'
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 import { HandleNotification } from '../Notifications'
 import { extractSpeakingDates } from '../Date'
 import dayjs from 'dayjs'

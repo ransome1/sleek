@@ -3,7 +3,7 @@ import fs from 'fs'
 import { Item } from 'jstodotxt'
 import { linesInFile } from '../DataRequest/CreateTodoObjects'
 import { getActiveFile } from './Active'
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date'
 
 function writeToFile(string: string, filePath: string, bookmark: string | null) {

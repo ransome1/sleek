@@ -1,4 +1,4 @@
-import { SettingsStore } from '../Stores/SettingsStore';
+import { SettingsStore } from '../Stores';
 
 const compareValues = (a: any, b: any, invert: boolean): number => {
   if (a === b) return 0;

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { app } from 'electron'
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 import path from 'path'
 import { mainWindow } from '../index'
 
