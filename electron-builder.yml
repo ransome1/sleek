@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '56'
+buildVersion: '57'
 asar: true
 files:
   - "**/*"
@@ -41,8 +41,6 @@ dmg:
   window:
     width: 550
     height: 400
-    x: 130
-    y: 410
 masDev:
   entitlements: ./build/entitlements.mas.plist
   entitlementsInherit: ./build/entitlements.mas.inherit.plist

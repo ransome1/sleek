@@ -1,4 +1,4 @@
-name: Code scan, update Flathub and mirror to opencode.net
+name: Scan code, execute unit test, update Flathub and mirror to opencode.net
 on:
   push:
     branches:
@@ -51,7 +51,7 @@ jobs:
         uses: github/codeql-action/analyze@v3
   codecov:
     needs: codeql
-    name: Codecov
+    name: Run unit tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -66,16 +66,16 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Run tests
+      - name: Run unit tests
         run: npm test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}  
   mirror:
+    needs: codecov
     name: Mirror code to opencode.net
     runs-on: ubuntu-latest
-    needs: Codecov
     steps:
       - uses: actions/checkout@master
         with:
@@ -85,7 +85,7 @@ jobs:
           gitlab_url: https://www.opencode.net/ransome/sleek.git
           username: ransome
           gitlab_pat: ${{ secrets.GITLAB_PAT }}
-  trigger-flathub_build:
+  flathub:
     name: Update commit id in Flathub repo
     runs-on: ubuntu-latest
     needs: mirror

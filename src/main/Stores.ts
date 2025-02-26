@@ -3,13 +3,13 @@ import path from 'path'
 import { app } from 'electron'
 import fs from 'fs'
 import crypto from 'crypto'
-import { dataRequest, searchString } from '../DataRequest/DataRequest'
-import { userDataDirectory, handleError } from '../Shared'
-import { mainWindow } from '../index'
-import { createFileWatcher } from '../File/Watcher'
-import { handleTray } from '../Tray'
-import { handleTheme } from '../Theme'
-import { createMenu } from '../Menu'
+import { dataRequest, searchString } from './DataRequest/DataRequest'
+import { userDataDirectory, handleError } from './Shared'
+import { mainWindow } from './index'
+import { createFileWatcher } from './File/Watcher'
+import { handleTray } from './Tray'
+import { handleTheme } from './Theme'
+import { createMenu } from './Menu'
 
 const distributionChannel = function(): string {
   if (process.env.APPIMAGE) {
@@ -165,7 +165,7 @@ export const FiltersStore = new Store({
 
 export const NotificationsStore = new Store({
   cwd: userDataDirectory,
-  name: 'notifiedTodoObjects',
+  name: 'notificationHashes',
   projectName: 'sleek'
 })
 

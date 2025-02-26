@@ -100,7 +100,7 @@ function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
 
 function handleStoreSetNotifiedTodoObjects(event: IpcMainEvent, value: any): void {
   try {
-    NotificationsStore.set('notifiedTodoObjects', value)
+    NotificationsStore.set('notificationHashes', value)
   } catch (error: any) {
     handleError(error)
   }

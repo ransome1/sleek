@@ -20,7 +20,7 @@ interface Badge {
 
 const getToday = (): Dayjs => dayjs().startOf('day');
 const getNotificationThreshold = (): number => SettingsStore.get('notificationThreshold');
-const getNotifiedTodoObjects = (): string[] => NotificationsStore.get('notifiedTodoObjects') || [];
+const getNotifiedTodoObjects = (): string[] => NotificationsStore.get('notificationHashes') || [];
 const getSearchFilters = (): SearchFilter[] => FiltersStore.get('search') || [];
 
 export function MustNotify(date: Dayjs): boolean {
@@ -40,9 +40,9 @@ export function CreateTitle(dueDate: Dayjs): string {
 export function SuppressNotification(dueDate: Dayjs, body: string, hash: string): boolean {
   const today = getToday();
   const notificationThreshold = getNotificationThreshold();
-  const notifiedTodoObjects = getNotifiedTodoObjects();
+  const notificationHashes = getNotifiedTodoObjects();
 
-  if (notifiedTodoObjects.includes(hash)) return true;
+  if (notificationHashes.includes(hash)) return true;
   if (dueDate.isBefore(today)) return true;
   if (dueDate.isAfter(today.add(notificationThreshold, 'day'))) return true;
 
@@ -53,9 +53,7 @@ export function SuppressNotification(dueDate: Dayjs, body: string, hash: string)
 export function CountBadge(dueDate: Dayjs, badge: Badge): void {
   const today = getToday();
   const notificationThreshold = getNotificationThreshold();
-  if (dueDate.isBefore(today.add(notificationThreshold, 'day'))) {
-    badge.count += 1;
-  }
+  if (dueDate.isBefore(today.add(notificationThreshold, 'day'))) badge.count++
 }
 
 export function HandleNotification(dueDate: Dayjs, body: string, badge: Badge): void {
@@ -73,7 +71,7 @@ export function HandleNotification(dueDate: Dayjs, body: string, badge: Badge): 
   });
   notification.show();
 
-  const notifiedTodoObjects = getNotifiedTodoObjects();
-  notifiedTodoObjects.push(hash);
-  NotificationsStore.set('notifiedTodoObjects', notifiedTodoObjects);
+  const notificationHashes = getNotifiedTodoObjects();
+  notificationHashes.push(hash);
+  NotificationsStore.set('notificationHashes', notificationHashes);
 }

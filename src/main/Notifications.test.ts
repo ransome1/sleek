@@ -9,11 +9,6 @@ const inOneWeek = dayjs(today).add(1, 'week')
 const lastWeek = dayjs(today).subtract(1, 'week')
 const inFourDays = dayjs(today).add(4, 'day')
 
-// const notifiedTodoObjects = [
-//   '80ec2a9b5c90483a077107a7c67b97859c3201f3551aef3e752bfa03f8eb3e6b',
-//   'd501a7388cde39b1ce79c3457228188b51696a8a8f578147ce83b89ee1d9b15f',
-// ]
-
 vi.mock('./Stores', () => {
   return {
     SettingsStore: {
@@ -106,10 +101,10 @@ describe('CreateTitle', () => {
   it('`Due tomorrow` if due date is tomorrow', () => {
     expect(CreateTitle(tomorrow)).toBe('Due tomorrow');
   });
-  it('`Due in 7 days` if due date is in 7 days', () => {
+  it('`Due in 7 days` if due date is in 7 days from today', () => {
     expect(CreateTitle(inOneWeek)).toBe('Due in 7 days');
   });
-  it('`Due in 4 days` if due date is in 4 days today', () => {
+  it('`Due in 4 days` if due date is in 4 days from today', () => {
     expect(CreateTitle(inFourDays)).toBe('Due in 4 days');
   });
 });
