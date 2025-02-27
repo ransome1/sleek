@@ -89,7 +89,7 @@ function createTodoObjects(fileContent: string | null): TodoObject[] | [] {
 
     const todoObject: TodoObject = createTodoObject(index, line)
 
-    if (SettingsStore.get('notificationsAllowed') && todoObject.body && !todoObject.complete) {
+    if (SettingsStore.get('notificationsAllowed') && todoObject.body && todoObject.due && !todoObject.complete) {
       HandleNotification(dayjs(todoObject.due, 'YYYY-MM-DD'), todoObject.body, badge)
     }
 

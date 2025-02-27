@@ -57,6 +57,7 @@ export function CountBadge(dueDate: Dayjs, badge: Badge): void {
 }
 
 export function HandleNotification(dueDate: Dayjs, body: string, badge: Badge): void {
+  if (!dueDate) return;
   const today = getToday();
   const hash = crypto.createHash('sha256').update(body).digest('hex');
 

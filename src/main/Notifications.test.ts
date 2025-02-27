@@ -154,11 +154,18 @@ describe('HandleNotification', () => {
     expect(badge.count).toBe(1);
     expect(Notification).not.toHaveBeenCalled();
   });
-    it('No notification is triggered if due date is next week and badge count is not increased', () => {
+  it('No notification is triggered if due date is next week and badge count is not increased', () => {
     const badge = { count: 0 };
     HandleNotification(inOneWeek, `due:${dayjs(inOneWeek).format('YYYY-MM-DD')}`, badge);
 
     expect(badge.count).toBe(0);
     expect(Notification).not.toHaveBeenCalled();
   });
+  it('No notification is triggered and no badge count is increased if due date is not set', () => {
+    const badge = { count: 0 };
+    HandleNotification(null, `due:${dayjs(inOneWeek).format('YYYY-MM-DD')}`, badge);
+
+    expect(badge.count).toBe(0);
+    expect(Notification).not.toHaveBeenCalled();
+  });  
 });
