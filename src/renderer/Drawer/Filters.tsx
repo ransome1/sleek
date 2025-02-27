@@ -56,7 +56,7 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({ setting
                 settingValue.help ? (
                   <>
                     {t(`drawer.filters.${settingName}`)}
-                    <Link onClick={(event) => settingValue.help && handleLinkClick(event, settingValue.help, settingValue.rerender)}>
+                    <Link onClick={(event) => settingValue.help && handleLinkClick(event, settingValue.help)}>
                       <HelpIcon />
                     </Link>
                   </>

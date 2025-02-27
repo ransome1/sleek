@@ -61,7 +61,7 @@
   "shared.attributeMapping.pm": "ポモドーロ",
   "shared.attributeMapping.created": "作成日",
   "shared.attributeMapping.completed": "完了日",
-  "splashscreen.noFiles.text": "todo.txt ファイルをここにドラッグ＆ドロップするか、ボタンを使用してください",
+  "splashscreen.noFiles.text": "既存のtodo.txtファイルを開くか、新しく作成してください",
   "splashscreen.noTodosAvailable.text": "このファイルにはタスクがありません",
   "splashscreen.noTodosAvailable.create": "タスクを作成",
   "splashscreen.noTodosVisible.text": "表示できる結果はありません。",

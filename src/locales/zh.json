@@ -61,7 +61,7 @@
   "shared.attributeMapping.pm": "番茄工作法",
   "shared.attributeMapping.created": "创建日期",
   "shared.attributeMapping.completed": "完成日期",
-  "splashscreen.noFiles.text": "将您的 todo.txt 文件拖到此处或使用按钮",
+  "splashscreen.noFiles.text": "打开一个现有的todo.txt文件或创建一个新的",
   "splashscreen.noTodosAvailable.text": "此文件中没有任务",
   "splashscreen.noTodosAvailable.create": "创建任务",
   "splashscreen.noTodosVisible.text": "没有可见的结果。",

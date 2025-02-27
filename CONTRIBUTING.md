@@ -1,6 +1,6 @@
 # Contributing to sleek
 ## 👩🏾‍💻 Become a contributer
-We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `Jest/Playwright` to join our collaborative effort. The `develop` branch reflects the most recent progress. [Here you'll find our roadmap](https://github.com/users/ransome1/projects/3).
+We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `vitest` to join our collaborative effort. [Here you'll find our roadmap](https://github.com/users/ransome1/projects/3).
 
 ## Table of Contents
 
@@ -21,9 +21,9 @@ Before contributing, make sure you have the latest version of Git and Node.js in
 
 ## Contributing
 
-### Refactoring
+### GitHub Backlog
 
-Our goal for Sleek is to maintain a clean and well-coded project. We prioritize refactoring efforts over adding an excessive number of features. By focusing on improving the code base, we increase the likelihood of attracting participants who are interested in joining the project and contributing.
+Before contributing to sleek, we recommend reviewing the [GitHub Issue backlog](https://github.com/ransome1/sleek/issues) to align your contributions with existing issues. This helps avoid duplication of efforts and ensures that your work aligns with the project roadmap. If you find an issue that you would like to contribute to, please indicate your interest by commenting on the issue.
 
 ### Reporting Issues
 
@@ -39,9 +39,9 @@ If you have ideas for new features or improvements, we encourage you to open a f
 
 We welcome pull requests for bug fixes, enhancements, or new features. To contribute code, please follow these steps:
 
-1. Fork the repository and create a new branch for your feature or bug fix.
+1. Fork the repository and create a new branch based on the `main` branch.
 2. Make your changes in the new branch, adhering to the [coding guidelines](#coding-guidelines).
-3. Write tests using [Jest](https://jestjs.io/) to cover your changes.
+3. Write tests using [vitest](https://vitest.dev/guide/) to cover your changes.
 4. Ensure that your code and tests pass by running `npm run test`.
 5. Commit your changes using [proper commit guidelines](#commit-guidelines).
 6. Push your branch to your forked repository.
@@ -49,10 +49,6 @@ We welcome pull requests for bug fixes, enhancements, or new features. To contri
 8. Provide a clear description of your changes and the problem they solve.
 
 We will review your pull request as soon as possible. Your contributions are greatly appreciated!
-
-### GitHub Issue Backlog
-
-Before starting work on sleek, we recommend reviewing the [GitHub Issue backlog](https://github.com/ransome1/sleek/issues) to align your contributions with existing issues. This helps avoid duplication of efforts and ensures that your work aligns with the project roadmap. If you find an issue that you would like to contribute to, please indicate your interest by commenting on the issue.
 
 ## Development Setup
 
@@ -64,11 +60,12 @@ To set up the development environment and run sleek locally, follow these steps:
 
 ## Testing
 
-sleek uses [Jest](https://jestjs.io/) as the testing framework. To run tests, use the following command: `npm run test`
+sleek uses [vitest](https://vitest.dev/guide/) as the framework for unit testing. To run tests, use the following command: `npm test`
 
 To contribute to the testing efforts, consider the following:
 
 - Write tests to cover new features or changes in functionality.
+- Test files are kept in separate files, for example Module.ts & Module.test.ts
 - Ensure that existing tests pass before making new contributions.
 - Aim for high test coverage to maintain code quality.
 

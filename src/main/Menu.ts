@@ -203,6 +203,12 @@ function createMenu(files: FileObject[]) {
           }
         },
         {
+          label: 'Changelog',
+          click: () => {
+            shell?.openExternal('https://github.com/ransome1/sleek/blob/main/CHANGELOG.md')
+          }
+        },
+        {
           label: 'Report bugs',
           click: () => {
             shell?.openExternal('https://github.com/ransome1/sleek/issues')
@@ -242,12 +248,6 @@ function createMenu(files: FileObject[]) {
               }
             ]
           : []),
-        {
-          label: 'sleek on GitHub',
-          click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/')
-          }
-        },
         {
           role: 'toggleDevTools',
           label: 'Developer tools'

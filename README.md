@@ -4,7 +4,7 @@
 
 ### sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. It's available for Windows, macOS and Linux
 
-sleek is an open-source (FOSS) todo manager based on the todo.txt syntax. Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
+sleek is an open-source (FOSS) todo manager based on the [todo.txt syntax](https://github.com/todotxt/todo.txt). Stripped down to only the most necessary features, and with a clean and simple interface, sleek aims to help you focus on getting things done.
 
 All classic todo.txt attributes are supported and enhanced by additional features. Creating todos is straightforward, and tag-based filtering in tandem with highly customisable grouping and smart full-text search allows for rapid information retrieval. Completed todos can be hidden or archived into separate done.txt files. Easy integration with other todo.txt apps is facilitated by continuously scanning todo.txt files for changes.
 
@@ -16,7 +16,7 @@ Pushing sleek to the Apple and Microsoft app stores creates annual costs. You ca
 
 ### 👩🏾‍💻 This project needs your support
 
-sleek's backlog is becoming increasingly populated, yet our capacity is limited. If you are skilled in `React`, `TypeScript`, `Electron`, or `Jest/Playwright` you can support this project. We need to continue refactoring the code, build reliable test coverage, and reduce bugs. Here you'll find our backlog: https://github.com/users/ransome1/projects/3. For those interested, [we've updated our contribution guidelines](https://github.com/ransome1/sleek/wiki/Contributing-Guidelines). The `develop` branch reflects the most recent progress.
+sleek's backlog is becoming increasingly populated, yet our capacity is limited. If you are skilled in `React`, `TypeScript`, `Electron`, or `vitest` you can support this project. We need to continue refactoring the code, build reliable test coverage, and reduce bugs. Here you'll find our backlog: https://github.com/users/ransome1/projects/3. For those interested, [we've updated our contribution guidelines](https://github.com/ransome1/sleek/wiki/Contributing-Guidelines). The `develop` branch reflects the most recent progress.
 
 ### Get sleek from Apple Mac App Store
 

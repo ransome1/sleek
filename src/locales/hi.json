@@ -61,7 +61,7 @@
   "shared.attributeMapping.pm": "पोमोडोरोस",
   "shared.attributeMapping.created": "निर्माण तिथि",
   "shared.attributeMapping.completed": "पूर्ण तिथि",
-  "splashscreen.noFiles.text": "अपनी todo.txt फ़ाइल यहाँ ड्रैग करें या बटन का उपयोग करें",
+  "splashscreen.noFiles.text": "एक मौजूदा todo.txt फ़ाइल खोलें या एक नई बनाएं",
   "splashscreen.noTodosAvailable.text": "इस फ़ाइल में कोई कार्य नहीं हैं",
   "splashscreen.noTodosAvailable.create": "कार्य बनाएं",
   "splashscreen.noTodosVisible.text": "कोई दिखाई देने वाला परिणाम नहीं है।",

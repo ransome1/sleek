@@ -13,14 +13,22 @@
   }
   svg {
     font-size: 3em;
-    color: Variables.$mid-grey;
+    color: Variables.$dark-grey;
+  }
+  p {
+    a {
+      svg {
+        font-size: 1.2em;
+        color: Variables.$blue;
+      }
+    }
   }
   .buttons {
     display: flex;
     gap: 0.5em;
     justify-content: center;
   }
-  .fileDropZone {
+  .container {
     padding: 1em 2em;
     border-radius: Variables.$radius;
     border: 0.15em dashed #ccc;
@@ -30,7 +38,14 @@
 .dark {
   #splashScreen {
     svg {
-      color: Variables.$dark-grey;
+      color: Variables.$mid-grey;
+    }
+    p {
+      a {
+        svg {
+          color: Variables.$blue;
+        }
+      }
     }
   }
 }
