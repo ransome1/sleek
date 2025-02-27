@@ -16,6 +16,7 @@
   "settings.notificationsAllowed": "Enviar notificaciones",
   "settings.showFileTabs": "Mostrar pestañas de archivo",
   "settings.tray": "Minimizar a la bandeja en lugar de cerrar la aplicación",
+  "settings.invertTrayColor": "Invertir color del ícono de la bandeja",
   "settings.colorTheme": "Tema",
   "settings.system": "Seguir el sistema",
   "settings.light": "Claro",

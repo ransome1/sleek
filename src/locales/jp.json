@@ -16,6 +16,7 @@
   "settings.notificationsAllowed": "通知を送信",
   "settings.showFileTabs": "ファイルタブを表示",
   "settings.tray": "アプリケーションを終了する代わりにトレイに最小化",
+  "settings.invertTrayColor": "トレイアイコンの色を反転する",
   "settings.colorTheme": "テーマ",
   "settings.system": "システムに従う",
   "settings.light": "ライト",

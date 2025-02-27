@@ -5,7 +5,6 @@ import { SettingsStore } from './Stores'
 import { setFile } from './File/File'
 import TrayIconDark from '../../resources/trayDarkTemplate.png?asset'
 import TrayIconLight from '../../resources/trayLightTemplate.png?asset'
-//import { mainWindow } from './index.js'
 
 interface File {
   active: boolean;
@@ -39,7 +38,7 @@ function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOp
   ];
 }
 
-export function HandleTray(showTray: boolean): void {
+export function HandleTray(showTray: boolean, invertTrayColor: boolean): void {
   if (tray) {
     tray.destroy();
   }
@@ -51,11 +50,8 @@ export function HandleTray(showTray: boolean): void {
 
   const files: FileObject[] = SettingsStore.get('files');
   const menu: Electron.Menu = Menu.buildFromTemplate(createMenuTemplate(files));
-  const TrayIcon = nativeTheme.shouldUseDarkColors ? TrayIconDark : TrayIconLight;
+  const TrayIcon = (nativeTheme.shouldUseDarkColors && !invertTrayColor) || (!nativeTheme.shouldUseDarkColors && invertTrayColor) ? TrayIconDark : TrayIconLight;
   tray = new Tray(nativeImage.createFromPath(TrayIcon));
-
-  // mainWindow!.webContents.send('responseFromMainProcess', nativeTheme.shouldUseDarkColors)
-  // mainWindow!.webContents.send('responseFromMainProcess', TrayIcon)
 
   if (tray) {
     tray.setToolTip('sleek');

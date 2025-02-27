@@ -16,6 +16,7 @@
   "settings.notificationsAllowed": "Bildirimleri Gönder",
   "settings.showFileTabs": "Dosya sekmesini göster",
   "settings.tray": "Uygulamayı kapatmak yerine taya küçült",
+  "settings.invertTrayColor": "Tepsi simgesinin rengini ters çevir",
   "settings.colorTheme": "Tema",
   "settings.system": "Sistemi Takip Et",
   "settings.light": "Açık",

@@ -217,3 +217,12 @@ SettingsStore.onDidChange('tray', (tray) => {
     handleError(error)
   }
 })
+
+SettingsStore.onDidChange('invertTrayColor', (invertTrayColor) => {
+  try {
+    const tray: boolean = SettingsStore.get('tray');
+    HandleTray(tray, invertTrayColor)
+  } catch (error: any) {
+    handleError(error)
+  }
+})

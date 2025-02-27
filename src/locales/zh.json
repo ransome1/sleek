@@ -16,6 +16,7 @@
   "settings.notificationsAllowed": "发送通知",
   "settings.showFileTabs": "显示文件选项卡",
   "settings.tray": "最小化到托盘而不是退出应用程序",
+  "settings.invertTrayColor": "反转托盘图标颜色",
   "settings.colorTheme": "主题",
   "settings.system": "跟随系统",
   "settings.light": "明亮",

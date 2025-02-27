@@ -16,6 +16,7 @@
   "settings.notificationsAllowed": "Wysyłaj powiadomienia",
   "settings.showFileTabs": "Pokaż karty plików",
   "settings.tray": "Minimalizuj do zasobnika zamiast zamykania aplikacji",
+  "settings.invertTrayColor": "Odwróć kolor ikony na pasku zadań",
   "settings.colorTheme": "Motyw kolorystyczny",
   "settings.system": "Zastosuj motyw systemowy",
   "settings.light": "Jasny",

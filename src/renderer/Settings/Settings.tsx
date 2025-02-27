@@ -30,7 +30,10 @@ const visibleSettings: VisibleSettings = {
     style: 'toggle'
   },
   tray: {
-    style: 'toggle',
+    style: 'toggle'
+  },
+  invertTrayColor: {
+    style: 'toggle'
   },
   menuBarVisibility: {
     style: 'toggle'
