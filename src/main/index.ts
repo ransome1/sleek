@@ -6,7 +6,7 @@ import { SettingsStore } from './Stores.js'
 import { createMenu } from './Menu.js'
 import { createFileWatcher, watcher } from './File/Watcher'
 import { addFile } from './File/File'
-import { handleTray } from './Tray.js'
+import { HandleTray } from './Tray'
 import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
@@ -168,7 +168,7 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize
 
-  handleTray(SettingsStore.get('tray'))
+  //HandleTray(SettingsStore.get('tray'))
 
   const customStylesPath: string = SettingsStore.get('customStylesPath')
   if (customStylesPath) {
@@ -177,7 +177,7 @@ const createMainWindow = () => {
         mainWindow?.webContents.insertCSS(data)
         console.error('Styles injected found in CSS file:', customStylesPath)
       } else {
-        console.error('Error reading the CSS file:', error)
+        console.error('Could not read custom CSS file. More info: https://github.com/ransome1/sleek/wiki/Custom-CSS')
       }
     })
   }

@@ -7,7 +7,7 @@ import { dataRequest, searchString } from './DataRequest/DataRequest'
 import { userDataDirectory, handleError } from './Shared'
 import { mainWindow } from './index'
 import { createFileWatcher } from './File/Watcher'
-import { handleTray } from './Tray'
+import { HandleTray } from './Tray'
 import { handleTheme } from './Theme'
 import { createMenu } from './Menu'
 
@@ -187,7 +187,7 @@ SettingsStore.onDidChange('files', (newValue: FileObject[] | undefined) => {
     if (!newValue) return false;
     
     createFileWatcher(newValue)
-    handleTray(SettingsStore.get('tray'))
+    HandleTray(SettingsStore.get('tray'))
     createMenu(newValue)
   } catch (error: any) {
     handleError(error)
@@ -212,7 +212,7 @@ SettingsStore.onDidChange('menuBarVisibility', (menuBarVisibility) => {
 
 SettingsStore.onDidChange('tray', (tray) => {
   try {
-    handleTray(tray)
+    HandleTray(tray)
   } catch (error: any) {
     handleError(error)
   }
