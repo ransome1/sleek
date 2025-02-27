@@ -12,7 +12,7 @@ nativeTheme.on('updated', () => {
     } else {
       SettingsStore.set('shouldUseDarkColors', false)
     }
-    HandleTray(SettingsStore.get('tray'))
+    HandleTray()
   } catch (error: error) {
     handleError(error)
   }

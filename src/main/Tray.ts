@@ -38,7 +38,11 @@ function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOp
   ];
 }
 
-export function HandleTray(showTray: boolean, invertTrayColor: boolean): void {
+export function HandleTray(): void {
+
+  const showTray: boolean = SettingsStore.get('tray');;
+  const invertTrayColor: boolean = SettingsStore.get('invertTrayColor');;
+
   if (tray) {
     tray.destroy();
   }

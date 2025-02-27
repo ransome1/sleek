@@ -3,6 +3,7 @@ import { app } from 'electron'
 import { dataRequest, searchString } from '../DataRequest/DataRequest'
 import { SettingsStore } from '../Stores'
 import { handleError, userDataDirectory } from '../Shared'
+import { createMenu } from '../Menu'
 import { mainWindow, eventListeners } from '../index'
 
 let watcher: FSWatcher | null = null
@@ -34,6 +35,8 @@ function createFileWatcher(files: FileObject[]): void {
     files.map((file) => file.todoFilePath),
     SettingsStore.get('chokidarOptions')
   )
+
+  createMenu(files)
 
   watcher.add(userDataDirectory + '/filters.json')
 

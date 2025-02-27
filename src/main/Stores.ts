@@ -9,7 +9,6 @@ import { mainWindow } from './index'
 import { createFileWatcher } from './File/Watcher'
 import { HandleTray } from './Tray'
 import { handleTheme } from './Theme'
-import { createMenu } from './Menu'
 
 const distributionChannel = function(): string {
   if (process.env.APPIMAGE) {
@@ -187,8 +186,7 @@ SettingsStore.onDidChange('files', (newValue: FileObject[] | undefined) => {
     if (!newValue) return false;
     
     createFileWatcher(newValue)
-    HandleTray(SettingsStore.get('tray'))
-    createMenu(newValue)
+    
   } catch (error: any) {
     handleError(error)
   }
@@ -210,18 +208,17 @@ SettingsStore.onDidChange('menuBarVisibility', (menuBarVisibility) => {
   }  
 })
 
-SettingsStore.onDidChange('tray', (tray) => {
+SettingsStore.onDidChange('tray', () => {
   try {
-    HandleTray(tray)
+    HandleTray()
   } catch (error: any) {
     handleError(error)
   }
 })
 
-SettingsStore.onDidChange('invertTrayColor', (invertTrayColor) => {
+SettingsStore.onDidChange('invertTrayColor', () => {
   try {
-    const tray: boolean = SettingsStore.get('tray');
-    HandleTray(tray, invertTrayColor)
+    HandleTray()
   } catch (error: any) {
     handleError(error)
   }

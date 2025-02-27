@@ -4,6 +4,7 @@ import { mainWindow, handleCreateWindow } from './index'
 import { openFile, createFile } from './File/Dialog'
 import { handleRequestArchive } from './File/Archive'
 import { SettingsStore, FiltersStore } from './Stores'
+import { HandleTray } from './Tray'
 import appPackage from '../../package.json'
 
 function createMenu(files: FileObject[]) {
@@ -260,6 +261,7 @@ function createMenu(files: FileObject[]) {
   ]
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
+  HandleTray()
 }
 
 export { createMenu }
