@@ -116,6 +116,10 @@ const migrations = {
     console.log('Migrating from 2.0.14 → 2.0.17')
     store.set('compact', false)
     store.set('sortCompletedLast', false)
+  },
+  '2.0.19': (store) => {
+    console.log('Migrating from 2.0.17 → 2.0.19')
+    store.set('invertTrayColor', false)
   }
 }
 
@@ -128,6 +132,7 @@ const rerenderDefinition = {
   'thresholdDateInTheFuture': true,
   'dueDateInTheFuture': true,
   'sortCompletedLast': true,
+  'notificationThreshold': true,
 };
 
 function findChanges(oldValue, newValue) {

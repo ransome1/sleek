@@ -1,9 +1,8 @@
 import Sugar from 'sugar'
-import dayjs from 'dayjs'
 import { MustNotify } from './Notifications'
 import { SettingsStore } from '../Stores'
 
-function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
+export function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const speakingDates: DateAttributes = extractSpeakingDates(string)
   const due: DateAttribute = speakingDates['due:']
   const t: DateAttribute = speakingDates['t:']
@@ -16,36 +15,32 @@ function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   return string
 }
 
-function processDateWithSugar(string: string, type: string): DateAttribute | null {
-  const array = string.split(' ')
-  let index = 0
-  let combinedValue = ''
-  let lastMatch = null
+function processDateWithSugar(string: string, type: string) {
+  const words = string.split(' ');
+  let combinedValue = '';
+  let lastMatch = null;
 
-  while (index < array.length) {
-    if (array[index]) combinedValue += array[index] + ' '
-    const sugarDate = Sugar.Date.create(combinedValue, { future: true })
-    if (Sugar.Date.isValid(sugarDate) && type === 'absolute') {
+  for (let index = 0; index < words.length; index++) {
+    if (words[index]) combinedValue += words[index] + ' ';
+
+    const sugarDate = Sugar.Date.create(combinedValue, { future: true });
+
+    if (!Sugar.Date.isValid(sugarDate)) continue;
+
+    if (type === 'absolute' || type === 'relative') {
+      const isoDate = Sugar.Date(sugarDate).format('%F').raw;
       lastMatch = {
-        date: dayjs(sugarDate).format('YYYY-MM-DD'),
+        date: isoDate,
         string: combinedValue.slice(0, -1),
         type: type,
-        notify: MustNotify(dayjs(sugarDate))
-      }
-    } else if (Sugar.Date.isValid(sugarDate) && type === 'relative') {
-      lastMatch = {
-        date: dayjs(sugarDate).format('YYYY-MM-DD'),
-        string: combinedValue.slice(0, -1),
-        type: type,
-        notify: MustNotify(dayjs(sugarDate))
-      }
+        notify: MustNotify(sugarDate)
+      };
     }
-    index++
   }
-  return lastMatch
+  return lastMatch;
 }
 
-function extractSpeakingDates(body: string): DateAttributes {
+export function extractSpeakingDates(body: string) {
   const expressions = [
     { pattern: /due:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=t:|$)/g, key: 'due:', type: 'relative' },
     { pattern: /due:(\d{4}-\d{2}-\d{2})/g, key: 'due:', type: 'absolute' },
@@ -53,7 +48,7 @@ function extractSpeakingDates(body: string): DateAttributes {
     { pattern: /t:(\d{4}-\d{2}-\d{2})/g, key: 't:', type: 'absolute' }
   ]
 
-  const speakingDates: DateAttributes = {
+  const speakingDates = {
     'due:': {
       date: null,
       string: null,
@@ -80,5 +75,3 @@ function extractSpeakingDates(body: string): DateAttributes {
 
   return speakingDates
 }
-
-export { extractSpeakingDates, replaceSpeakingDatesWithAbsoluteDates }

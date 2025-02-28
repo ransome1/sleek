@@ -1,13 +1,13 @@
 import { expect, test, beforeEach, afterEach, describe, it, vi } from 'vitest'
-import { MustNotify, CreateTitle, SuppressNotification, HandleNotification } from './Notifications'
-import dayjs from 'dayjs'
+import { DateTime } from "luxon";
 import { Notification } from 'electron';
+import { MustNotify, CreateTitle, SuppressNotification, HandleNotification, GetToday } from './Notifications'
 
-const today = dayjs().startOf('day')
-const tomorrow = dayjs(today).add(1, 'day')
-const inOneWeek = dayjs(today).add(1, 'week')
-const lastWeek = dayjs(today).subtract(1, 'week')
-const inFourDays = dayjs(today).add(4, 'day')
+const today = GetToday();
+const tomorrow = today.plus({ days: 1 });
+const inOneWeek = today.plus({ weeks: 1 });
+const lastWeek = today.minus({ weeks: 1 });
+const inFourDays = today.plus({ days: 4 });
 
 vi.mock('./Stores', () => {
   return {
@@ -23,7 +23,7 @@ vi.mock('./Stores', () => {
       get: vi.fn((key) => {
         if (key === 'search') {
           return [{
-            label: `due: > ${dayjs(today).format('YYYY-MM-DD')} && due: < ${dayjs(inFourDays).format('YYYY-MM-DD')}`,
+            label: `due: > ${today.toISODate()} && due: < ${inFourDays.toISODate()}`,
             suppress: true,
           }];
         }
@@ -129,10 +129,10 @@ describe('SuppressNotification', () => {
     expect(SuppressNotification(lastWeek, '', '')).toBe(true);
   });
   it('Suppressed by search filter when due date is matched', () => {
-    expect(SuppressNotification(tomorrow, `due:${dayjs(tomorrow).format('YYYY-MM-DD')}`, '')).toBe(true);
+    expect(SuppressNotification(tomorrow, `due:${tomorrow.toISODate()}`, '')).toBe(true);
   });
   it('Not suppressed by search filter when due date is not matched', () => {
-    expect(SuppressNotification(inFourDays, `due:${dayjs(inFourDays).format('YYYY-MM-DD')}`, '')).toBe(false);
+    expect(SuppressNotification(inFourDays, `due:${inFourDays.toISODate()}`, '')).toBe(false);
   });
 });
 
@@ -142,28 +142,28 @@ describe('HandleNotification', () => {
   });
   it('Notification is triggered if due date is today', () => {
     const badge = { count: 0 };
-    HandleNotification(today, `due:${dayjs(today).format('YYYY-MM-DD')}`, badge);
+    HandleNotification(today, `due:${today.toISODate()}`, badge);
 
     expect(badge.count).toBe(1);
     expect(Notification).toHaveBeenCalled();
   });
   it('No notification is triggered if due date is last week, but badge count is increased', () => {
     const badge = { count: 0 };
-    HandleNotification(lastWeek, `due:${dayjs(lastWeek).format('YYYY-MM-DD')}`, badge);
+    HandleNotification(lastWeek, `due:${lastWeek.toISODate()}`, badge);
 
     expect(badge.count).toBe(1);
     expect(Notification).not.toHaveBeenCalled();
   });
   it('No notification is triggered if due date is next week and badge count is not increased', () => {
     const badge = { count: 0 };
-    HandleNotification(inOneWeek, `due:${dayjs(inOneWeek).format('YYYY-MM-DD')}`, badge);
+    HandleNotification(inOneWeek, `due:${inOneWeek.toISODate()}`, badge);
 
     expect(badge.count).toBe(0);
     expect(Notification).not.toHaveBeenCalled();
   });
   it('No notification is triggered and no badge count is increased if due date is not set', () => {
     const badge = { count: 0 };
-    HandleNotification(null, `due:${dayjs(inOneWeek).format('YYYY-MM-DD')}`, badge);
+    HandleNotification(null, `due:${inOneWeek.toISODate()}`, badge);
 
     expect(badge.count).toBe(0);
     expect(Notification).not.toHaveBeenCalled();

@@ -17,7 +17,7 @@ interface File {
 
 let tray: Tray | null = null;
 
-function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOptions[] {
+function createTrayMenu(files: FileObject[]): Electron.MenuItemConstructorOptions[] {
   const fileItems = files.length > 0
     ? files.map((file, index) => ({
         label: file.todoFileName!,
@@ -53,7 +53,7 @@ export function HandleTray(): void {
   }
 
   const files: FileObject[] = SettingsStore.get('files');
-  const menu: Electron.Menu = Menu.buildFromTemplate(createMenuTemplate(files));
+  const menu: Electron.Menu = Menu.buildFromTemplate(createTrayMenu(files));
   const TrayIcon = (nativeTheme.shouldUseDarkColors && !invertTrayColor) || (!nativeTheme.shouldUseDarkColors && invertTrayColor) ? TrayIconDark : TrayIconLight;
   tray = new Tray(nativeImage.createFromPath(TrayIcon));
 
