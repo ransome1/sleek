@@ -1,10 +1,12 @@
 import { app, Menu, Tray, nativeImage, nativeTheme } from 'electron'
 import { fileURLToPath } from 'url'
-import { handleCreateWindow } from './index'
+import { handleCreateWindow, mainWindow } from './index'
 import { SettingsStore } from './Stores'
 import { setFile } from './File/File'
 import TrayIconDark from '../../resources/trayDarkTemplate.png?asset'
 import TrayIconLight from '../../resources/trayLightTemplate.png?asset'
+import TrayIconDarkWin from '../../resources/trayDark.ico?asset'
+import TrayIconLightWin from '../../resources/trayLight.ico?asset'
 
 interface File {
   active: boolean;
@@ -38,28 +40,50 @@ function createTrayMenu(files: FileObject[]): Electron.MenuItemConstructorOption
   ];
 }
 
+function GetTrayIconPath(): string {
+  const invertTrayColor: boolean = SettingsStore.get('invertTrayColor');
+  if (process.platform === 'win32') {
+    if (nativeTheme.shouldUseDarkColors) {
+      return invertTrayColor ? TrayIconLightWin : TrayIconDarkWin;
+    } else {
+      return invertTrayColor ? TrayIconDarkWin : TrayIconLightWin;
+    }
+  } else {
+    if (nativeTheme.shouldUseDarkColors) {
+      return invertTrayColor ? TrayIconLight : TrayIconDark;
+    } else {
+      return invertTrayColor ? TrayIconDark : TrayIconLight;
+    }
+  }  
+}
+
 export function HandleTray(): void {
-
-  const showTray: boolean = SettingsStore.get('tray');;
-  const invertTrayColor: boolean = SettingsStore.get('invertTrayColor');;
-
   if (tray) {
     tray.destroy();
   }
 
+  const showTray: boolean = SettingsStore.get('tray');
   if (!showTray) {
     app.dock?.show();
     return;
   }
 
-  const files: FileObject[] = SettingsStore.get('files');
-  const menu: Electron.Menu = Menu.buildFromTemplate(createTrayMenu(files));
-  const TrayIcon = (nativeTheme.shouldUseDarkColors && !invertTrayColor) || (!nativeTheme.shouldUseDarkColors && invertTrayColor) ? TrayIconDark : TrayIconLight;
-  tray = new Tray(nativeImage.createFromPath(TrayIcon));
+  const TrayIconPath: string = GetTrayIconPath();
+  tray = new Tray(nativeImage.createFromPath(TrayIconPath));
 
   if (tray) {
+    const files: FileObject[] = SettingsStore.get('files');
+    const menu: Electron.Menu = Menu.buildFromTemplate(createTrayMenu(files));
     tray.setToolTip('sleek');
     tray.setContextMenu(menu);
-    tray.on('click', handleCreateWindow);
+    tray.on('click', (event) => {
+      if(!mainWindow) {
+        handleCreateWindow();
+      } else if (mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else if(!mainWindow?.isVisible()) {
+        mainWindow.show();
+      }
+    });
   }
 }

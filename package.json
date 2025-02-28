@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.19-rc.1",
+  "version": "2.0.19-rc.2",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -27,7 +27,7 @@
   "copyright": "Copyright © 2021 to present ransome1",
   "main": "./out/main/index.js",
   "type": "module",
-  "node": ">=18",
+  "node": ">=22",
   "scripts": {
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",

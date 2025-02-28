@@ -6,10 +6,14 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ### Added
 
-* `Tray` icons which adapt to color theme of operating system
+* `Tray` icons which adapt to color theme of operating system (#593)
 * Option to invert color of tray icon manually
 * DMG background image
 * Help button to splashscreen
+
+### Enhanced
+* Replaced `dayjs` with `Luxon`
+* Refactoring `Date` module
 
 ### Fixed
 * Bug in `notification` feature which did not suppress messages reliably
