@@ -5,6 +5,8 @@ import { SettingsStore } from './Stores'
 import { setFile } from './File/File'
 import TrayIconDark from '../../resources/trayDarkTemplate.png?asset'
 import TrayIconLight from '../../resources/trayLightTemplate.png?asset'
+import TrayIconDarkWin from '../../resources/trayDarkTemplate.ico?asset'
+import TrayIconLightWin from '../../resources/trayLightTemplate.ico?asset'
 
 interface File {
   active: boolean;
@@ -54,7 +56,8 @@ export function HandleTray(): void {
 
   const files: FileObject[] = SettingsStore.get('files');
   const menu: Electron.Menu = Menu.buildFromTemplate(createTrayMenu(files));
-  const TrayIcon = (nativeTheme.shouldUseDarkColors && !invertTrayColor) || (!nativeTheme.shouldUseDarkColors && invertTrayColor) ? TrayIconDark : TrayIconLight;
+
+  const TrayIcon = (process.platform === 'win32' ? (nativeTheme.shouldUseDarkColors && !invertTrayColor ? TrayIconDarkWin : TrayIconLightWin) : (nativeTheme.shouldUseDarkColors && !invertTrayColor ? TrayIconDark : TrayIconLight));
   tray = new Tray(nativeImage.createFromPath(TrayIcon));
 
   if (tray) {
