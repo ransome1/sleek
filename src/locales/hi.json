@@ -17,6 +17,7 @@
   "settings.showFileTabs": "फ़ाइल टैब दिखाएं",
   "settings.tray": "एप्लिकेशन को बंद करने के बजाय ट्रे में कम करें",
   "settings.invertTrayColor": "ट्रे आइकॉन का रंग उलटें",
+  "settings.startMinimized": "ऐप्लिकेशन को ट्रे में मिनिमाइज़ करके प्रारंभ करें",
   "settings.colorTheme": "थीम",
   "settings.system": "सिस्टम का पालन करें",
   "settings.light": "रोशनी",

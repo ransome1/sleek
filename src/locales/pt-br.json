@@ -17,6 +17,7 @@
   "settings.showFileTabs": "Mostrar guias de arquivo",
   "settings.tray": "Minimizar para bandeja em vez de sair do aplicativo",
   "settings.invertTrayColor": "Inverter cor do ícone da bandeja",
+  "settings.startMinimized": "Iniciar o aplicativo minimizado na bandeja",
   "settings.colorTheme": "Tema",
   "settings.system": "Siga o sistema",
   "settings.light": "Claro",

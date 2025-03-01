@@ -16,6 +16,7 @@
   "settings.notificationsAllowed": "Értesítések küldése",
   "settings.showFileTabs": "Fájl lapok megjelenítése",
   "settings.tray": "Kisiklik az értesítési területre az alkalmazás bezárása helyett",
+  "settings.startMinimized": "Indítsa el alkalmazást minimalizálva a tálcán",
   "settings.invertTrayColor": "Tálca ikon színének inverziója",
   "settings.colorTheme": "Téma",
   "settings.system": "Kövesse a rendszert",

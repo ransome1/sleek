@@ -16,6 +16,7 @@
   "settings.notificationsAllowed": "Envoyer des notifications",
   "settings.showFileTabs": "Afficher les onglets de fichier",
   "settings.tray": "Minimiser dans la zone de notification au lieu de quitter l'application",
+  "settings.startMinimized": "Démarrer l'application minimisée dans la barre d'état",
   "settings.invertTrayColor": "Inverser la couleur de l'icône de la barre d'état système",
   "settings.colorTheme": "Thème",
   "settings.system": "Suivre le système",

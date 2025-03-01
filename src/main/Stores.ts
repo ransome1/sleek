@@ -119,7 +119,8 @@ const migrations = {
   },
   '2.0.19': (store) => {
     console.log('Migrating from 2.0.17 → 2.0.19')
-    store.set('invertTrayColor', false)
+    store.set('invertTrayColor', false),
+    store.set('startMinimized', false)
   }
 }
 

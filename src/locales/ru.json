@@ -17,6 +17,7 @@
   "settings.showFileTabs": "Показать вкладки файлов",
   "settings.tray": "Свернуть в трей вместо закрытия приложения",
   "settings.invertTrayColor": "Инвертировать цвет иконки в трее",
+  "settings.startMinimized": "Запускать приложение, свёрнутое в трей",
   "settings.colorTheme": "Тема",
   "settings.system": "Следовать системе",
   "settings.light": "Светлая",

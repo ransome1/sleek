@@ -77,7 +77,9 @@ export function HandleTray(): void {
     tray.setToolTip('sleek');
     tray.setContextMenu(menu);
     tray.on('click', (event) => {
-      if(!mainWindow) {
+      if (process.platform === 'darwin') {
+        return false;
+      } else if(!mainWindow) {
         handleCreateWindow();
       } else if (mainWindow.isVisible()) {
         mainWindow.hide();

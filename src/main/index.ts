@@ -114,6 +114,7 @@ const createMainWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
+    show: false,
     backgroundColor: shouldUseDarkColors ? '#212224' : '#fff',
     icon:
       process.platform === 'win32'
@@ -131,6 +132,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
     const endTime = performance.now()
     console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`)
   })
@@ -167,8 +169,6 @@ const createMainWindow = () => {
   eventListeners.handleShow = handleShow
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize
-
-  //HandleTray(SettingsStore.get('tray'))
 
   const customStylesPath: string = SettingsStore.get('customStylesPath')
   if (customStylesPath) {
@@ -214,7 +214,14 @@ app
   .whenReady()
   .then(() => {
     startTime = performance.now()
-    createMainWindow()
+    HandleTray()
+    const tray = SettingsStore.get('tray');
+    const startMinimized = SettingsStore.get('startMinimized');
+    if(tray && startMinimized) {
+      app.dock?.hide()
+    } else {
+      createMainWindow()
+    }
     eventListeners.handleCreateWindow = handleCreateWindow
     eventListeners.handleWindowAllClosed = handleWindowAllClosed
     eventListeners.handleBeforeQuit = handleBeforeQuit
