@@ -1,34 +1,20 @@
 import { SettingsStore } from '../Stores'
 import dayjs from 'dayjs'
 
-function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
-  return todoObjects.filter((todoObject: TodoObject) => {
-    return Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {
-      if (filterArray.length === 0) {
-        return true
-      }
+function hasMatchingFilters(todoObject, filters) {
+  return Object.keys(filters).every(key => {
+    const filterValuesSet = new Set(filters[key].map(filter => filter.value).flat());
+    if (Array.isArray(todoObject[key])) {
+      return todoObject[key].some(value => filterValuesSet.has(value));
+    } else if (typeof todoObject[key] === 'string') {
+      return filterValuesSet.has(todoObject[key]);
+    }
+    return false;
+  });
+}
 
-      const attributeValues: any = ['due', 't'].includes(key)
-        ? todoObject[key as keyof TodoObject]
-        : todoObject[key as keyof TodoObject]
-
-      return filterArray.every(({ values, exclude }: Filter) => {
-        if (
-          attributeValues === undefined ||
-          attributeValues === null ||
-          (Array.isArray(attributeValues) && attributeValues.length === 0)
-        ) {
-          return exclude
-        }
-
-        const hasMatchingValue = Array.isArray(attributeValues)
-          ? attributeValues.some((val) => values.includes(val))
-          : Array.isArray(values) && values.includes(attributeValues)
-
-        return exclude ? !hasMatchingValue : hasMatchingValue
-      })
-    })
-  })
+function applyAttributes(todoObjects, filters) {
+  return todoObjects.filter(todoObject => hasMatchingFilters(todoObject, filters));
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {

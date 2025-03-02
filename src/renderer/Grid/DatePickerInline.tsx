@@ -3,7 +3,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Chip from '@mui/material/Chip'
 import Badge from '@mui/material/Badge'
-import { handleFilterSelect, friendlyDate } from '../Shared'
+import { HandleFilterSelect, friendlyDate, IsSelected } from '../Shared'
 import { withTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import dayjs from 'dayjs'
@@ -65,30 +65,20 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
 
   const DatePickerInline = ({ ...props }): void => {
     const ButtonField = ({ ...props }): void => {
-      const {
-        disabled,
-        InputProps: { ref } = {},
-        inputProps: { 'aria-label': ariaLabel } = {}
-      } = props
+      const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {}} = props
       const mustNotify = type === 'due' ? !todoObject?.notify : true
-      const formattedValue =
+      const groupedName =
         settings.useHumanFriendlyDates && dayjs(date).isValid()
           ? friendlyDate(date, type, settings, t).pop()
           : date
 
-      const selected =
-        filters &&
-        type !== null &&
-        (filters[type as keyof Filters] || []).some((filter: Filter) => {
-          return filter.values.includes(date)
-        })
-
       return (
-        <span className={selected ? 'selected' : null} data-todotxt-attribute={type}>
+        <span className={IsSelected(type, [date], filters) ? 'selected' : null} data-todotxt-attribute={type}>
           <button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
             <Badge variant="dot" invisible={mustNotify}>
               <Chip
-                onClick={() => handleFilterSelect(type, formattedValue, date, filters, false)}
+                //onClick={() => HandleFilterSelect(type, groupedName, date, filters, false)}
+                onClick={() => HandleFilterSelect(type, [date], filters, false)}
                 label={chipText}
                 data-testid={`datagrid-button-${type}`}
                 tabIndex={0}
@@ -99,7 +89,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
                 data-testid={`datagrid-picker-date-${type}`}
                 tabIndex={0}
               >
-                {formattedValue}
+                {groupedName}
               </div>
             </Badge>
           </button>

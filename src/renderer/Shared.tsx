@@ -12,13 +12,8 @@ dayjs.extend(updateLocale)
 
 const { store, ipcRenderer } = window.api
 
-interface Filters {
-  [key: string]: Filter[]
-}
-
 interface Filter {
-  name: string
-  values: string[]
+  value: string
   exclude: boolean
 }
 
@@ -27,32 +22,40 @@ interface Settings {
   weekStart: number
 }
 
-export const handleFilterSelect = (
-  key: string,
-  name: string,
-  values: string | string[] | null,
-  filters: Filters | null,
-  exclude: boolean
-): void => {
+export function IsSelected(key, value, filters) {
+  if (filters[key]) {
+
+    for (let i = 0; i < filters[key].length; i++) {
+      if(JSON.stringify(filters[key][i].value) === JSON.stringify(value)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export const HandleFilterSelect = (key: string, value: string, filters: Filters[] | null, exclude: boolean, groupedName?: string): void => {
   try {
-    const updatedFilters: Filters = { ...filters }
-    const filterList: Filter[] = updatedFilters[key] || []
+    let updatedFilters = filters;
+    const filtersForKey = filters[key] || [];
+    const matchIndex = filtersForKey.findIndex(filter => JSON.stringify(filter.value) === JSON.stringify(value));
 
-    const normalizedValues = typeof values === 'string' ? [values] : values
-
-    const filterIndex = filterList.findIndex((filter: Filter) => {
-      return Array.isArray(normalizedValues) && Array.isArray(filter.values)
-        ? normalizedValues.every((v) => filter.values.includes(v))
-        : filter.values === normalizedValues
-    })
-
-    if (filterIndex !== -1) {
-      filterList.splice(filterIndex, 1)
+    if (matchIndex >= 0) {
+      filtersForKey.splice(matchIndex, 1)
     } else {
-      filterList.push({ name, values: normalizedValues, exclude })
+      filtersForKey.push({
+        value,
+        exclude,
+        groupedName
+      });
     }
 
-    updatedFilters[key] = filterList
+    updatedFilters[key] = filtersForKey;
+
+    if (updatedFilters[key].length === 0) {
+      delete updatedFilters[key]
+    }
+
     store.setFilters('attributes', updatedFilters)
   } catch (error: unknown) {
     if (error instanceof Error) {

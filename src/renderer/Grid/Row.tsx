@@ -1,11 +1,15 @@
 import React, { memo } from 'react'
 import Checkbox from '@mui/material/Checkbox'
-//import ListItem from '@mui/material/ListItem'
+import Tooltip from '@mui/material/Tooltip'
 import CircleChecked from '@mui/icons-material/CheckCircle'
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+//import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import TodayIcon from '@mui/icons-material/Today';
 import { withTranslation, WithTranslation } from 'react-i18next'
 import RendererComponent from './Renderer'
+import { HandleFilterSelect, IsSelected } from '../Shared'
 import './Row.scss'
 import { i18n } from '../Settings/LanguageSelector'
 
@@ -91,8 +95,7 @@ const Row: React.FC<RowProps> = memo(
 
           if (clickedElement.classList.contains('MuiChip-label')) match = true
           if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-t') match = true
-          if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due')
-            match = true
+          if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due') match = true
           if (clickedElement.tagName.toLowerCase() === 'path') match = true
           if (clickedElement.tagName.toLowerCase() === 'a') match = true
           if (clickedElement.tagName.toLowerCase() === 'input') match = true
@@ -134,9 +137,9 @@ const Row: React.FC<RowProps> = memo(
           onClick={(event) => handleRowClick(event)}
           onKeyDown={(event) => handleRowClick(event)}
           onContextMenu={(event) => handleContextMenu(event, todoObject.string)}
+          data-testid={`datagrid-row`}
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
-          data-testid={`datagrid-row`}
         >
           <Checkbox
             icon={<CircleUnchecked />}
@@ -146,6 +149,47 @@ const Row: React.FC<RowProps> = memo(
             onChange={handleCheckboxChange}
             inputProps={{ 'data-testid': 'datagrid-checkbox' }}
           />
+
+          {todoObject.priority &&
+            <span
+              data-todotxt-attribute="priority"
+              data-todotxt-value={todoObject.priority}
+              className={IsSelected('priority', [todoObject.priority], filters) ? 'selected filter' : 'filter'}
+              data-testid={`datagrid-button-priority`}
+            >
+              <button
+                onClick={() => HandleFilterSelect('priority', [todoObject.priority], filters, false)}
+              >
+                {todoObject.priority}
+              </button>
+            </span>
+          }
+
+          {todoObject.completed &&
+            <Tooltip title={`${t('shared.attributeMapping.completed')} ${todoObject.completed}`} arrow>
+              <EventAvailableIcon />
+            </Tooltip>
+          }
+
+          {todoObject.created &&
+            <Tooltip title={`${t('shared.attributeMapping.created')} ${todoObject.created}`} arrow>
+              <TodayIcon />
+            </Tooltip>
+          }
+          {/*{todoObject.created &&
+            <>
+             <Tooltip title={`Created on ${todoObject.created}`} arrow>
+                <HistoryToggleOffIcon />
+              </Tooltip>
+              <button
+                className="creation"
+                // onClick={() => handleButtonClick(type, value, value)}
+                // data-testid={`datagrid-button-${type}`}
+              >
+                <div>{todoObject.created}</div>
+              </button>
+            </>
+          }*/}
 
           {todoObject.hidden && <VisibilityOffIcon />}
 
