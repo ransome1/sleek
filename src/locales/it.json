@@ -17,6 +17,7 @@
   "settings.showFileTabs": "Mostra le schede dei file",
   "settings.tray": "Minimizza nella barra delle applicazioni anziché chiudere l'applicazione",
   "settings.invertTrayColor": "Inverti il colore dell'icona della tray",
+  "settings.startMinimized": "Avvia l'applicazione minimizzata nella barra delle applicazioni",
   "settings.colorTheme": "Tema",
   "settings.system": "Segui il sistema",
   "settings.light": "Chiaro",

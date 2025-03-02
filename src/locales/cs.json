@@ -17,6 +17,7 @@
   "settings.showFileTabs": "Zobrazit záložky souborů",
   "settings.invertTrayColor": "Invertovat barvu ikony na panelu",
   "settings.tray": "Minimalizovat do oznamovací oblasti místo ukončení aplikace",
+  "settings.startMinimized": "Spustit aplikaci minimalizovanou v trayi",
   "settings.colorTheme": "Téma",
   "settings.system": "Sledovat systém",
   "settings.light": "Světlé",

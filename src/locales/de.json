@@ -17,6 +17,7 @@
   "settings.showFileTabs": "Datei-Tabs anzeigen",
   "settings.tray": "In Tray-Leiste minimieren anstatt die Anwendung zu beenden",
   "settings.invertTrayColor": "Farbe des Tray-Symbols umkehren",
+  "settings.startMinimized": "Starte Anwendung minimiert im Tray",
   "settings.colorTheme": "Design",
   "settings.system": "System folgen",
   "settings.light": "Hell",

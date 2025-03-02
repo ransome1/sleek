@@ -17,6 +17,7 @@
   "settings.showFileTabs": "Dosya sekmesini göster",
   "settings.tray": "Uygulamayı kapatmak yerine taya küçült",
   "settings.invertTrayColor": "Tepsi simgesinin rengini ters çevir",
+  "settings.startMinimized": "Uygulamayı simge durumunda başlat",
   "settings.colorTheme": "Tema",
   "settings.system": "Sistemi Takip Et",
   "settings.light": "Açık",
