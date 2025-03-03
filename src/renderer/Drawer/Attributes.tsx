@@ -4,10 +4,10 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Badge from '@mui/material/Badge'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import TomatoIconDuo from '../tomato-duo.svg?asset'
+import PomodoroIcon from '../../../resources/pomodoro.svg?asset'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import AirIcon from '@mui/icons-material/Air'
-import { HandleFilterSelect, friendlyDate, translatedAttributes, IsSelected } from '../Shared'
+import { HandleFilterSelect, friendlyDate, translatedAttributes, IsSelected, IsExcluded } from '../Shared'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './Attributes.scss'
@@ -42,15 +42,14 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
           groupedNames.forEach((groupedName) => {
             if (!processedAttributes[groupedName]) {
               processedAttributes[groupedName] = {
-                //key: attributeKey,
                 count,
                 notify: attributes[key].notify,
-                values: [key],
+                value: [key],
               }
             } else {
               processedAttributes[groupedName].count += count
               processedAttributes[groupedName].notify = processedAttributes[groupedName].notify || attributes[key].notify
-              processedAttributes[groupedName].values.push(key)
+              processedAttributes[groupedName].value.push(key)
             }
           })
         }
@@ -89,10 +88,12 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
     const renderAttributes = (key: string, preprocessedAttributes) => {
       return Object.keys(preprocessedAttributes).map((value, childIndex) => {
         const attribute = preprocessedAttributes[value]
-        const excluded = filters && filters[key]?.some((filter: Filter) => filter.name === name && filter.exclude)
+        const excluded = IsExcluded(attribute, filters)
+        const selected = IsSelected(key, filters, attribute.value)
         const disabled = attribute.count === 0
+
         const notify = key === 'due' ? attribute.notify : false
-        const groupedName = (attribute.values.length > 1) ? value : null
+        const groupedName = (attribute.value.length > 1) ? value : null
         return (
           <div
             key={`${key}-${value}-${childIndex}`}
@@ -100,7 +101,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
             data-todotxt-value={value}
             onMouseEnter={() => setHovered(`${key}-${value}-${childIndex}`)}
             onMouseLeave={() => setHovered(null)}
-            className={`filter ${IsSelected(key, attribute.values, filters) ? 'selected' : ''} ${excluded ? 'excluded' : ''}`}
+            className={`filter ${selected ? 'selected' : ''} ${excluded ? 'excluded' : ''}`}
           >
             <Badge
               badgeContent={
@@ -108,7 +109,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                   <span
                     onClick={(event) => {
                       event.stopPropagation()
-                      HandleFilterSelect(key, attribute.values, filters, true, groupedName)
+                      HandleFilterSelect(key, attribute.value, filters, true, groupedName)
                     }}
                   >
                     {hovered === `${key}-${value}-${childIndex}` ? (
@@ -126,13 +127,14 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                 onClick={
                   disabled
                     ? undefined
-                    : (): void =>
-                        HandleFilterSelect(key, attribute.values, filters, false, groupedName)
+                    : (): void => {
+                      HandleFilterSelect(key, attribute.value, filters, false, groupedName)
+                    }
                 }
                 disabled={disabled}
                 className={key === 'pm' ? 'pomodoro' : undefined}
               >
-                {key === 'pm' && <img src={TomatoIconDuo} alt="Pomodoro" />}
+                {key === 'pm' && <img src={PomodoroIcon} alt="Pomodoro" />}
                 {value}
               </button>
             </Badge>
@@ -143,7 +145,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                 data-testid={`drawer-button-exclude-${key}`}
                 className="overlay"
                 onClick={() =>
-                  HandleFilterSelect(key, attribute.values, filters, false, groupedName)
+                  HandleFilterSelect(key, attribute.value, filters, true, groupedName)
                 }
               >
                 <VisibilityOffIcon />

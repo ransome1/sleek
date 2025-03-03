@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
-import TomatoIconDuo from '../tomato-duo.svg?asset'
+import PomodoroIcon from '../../../resources/pomodoro.svg?asset'
 import DatePickerInline from './DatePickerInline'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { handleLinkClick, HandleFilterSelect, IsSelected } from '../Shared'
@@ -15,12 +15,11 @@ interface RendererComponentProps extends WithTranslation {
   todoObject: TodoObject
   filters: Filters
   settings: Settings
-  handleButtonClick: (type: string, value: string, label: string) => void
   t: typeof i18n.t
 }
 
 const RendererComponent: React.FC<RendererComponentProps> = memo(
-  ({ todoObject, filters, settings, handleButtonClick }) => {
+  ({ todoObject, filters, settings }) => {
     const expressions = [
       {
         pattern: new RegExp(`t:${todoObject.tString?.replace(/\s/g, '\\s')}`, 'g'),
@@ -93,7 +92,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           onClick={() => HandleFilterSelect(type, [value], filters, false)}
           data-testid={`datagrid-button-${type}`}
         >
-          <img src={TomatoIconDuo} alt="Pomodoro" />
+          <img src={PomodoroIcon} alt="Pomodoro" />
           {value}
         </button>
       ),
@@ -116,7 +115,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
               return (
                 <span
                   key={`${type}-${match}-${index}`}
-                  className={IsSelected(type, [match], filters) ? 'selected filter' : 'filter'}
+                  className={IsSelected(type, filters, [match]) ? 'selected filter' : 'filter'}
                   data-todotxt-attribute={type}
                 >
                   {replacements[type](match, type)}

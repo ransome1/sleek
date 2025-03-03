@@ -7,15 +7,20 @@
   border-bottom: dotted 1px Variables.$light-grey;
   display: flex;
   flex-wrap: wrap;
-
   gap: 0.25em;
   padding: 0.5em;
-
   align-items: center;
-
   .MuiCheckbox-root {
     padding: 0.25em;
-    margin: 0 0.25em;
+  }
+  [data-todotxt-attribute="priority"] {
+    button {
+      font-weight: bold;
+    }
+  }
+  [data-todotxt-attribute="created"],
+  [data-todotxt-attribute="completed"] {
+    filter: opacity(50%);
   }
   &[data-complete='true'],
   &[data-hidden='true'] {

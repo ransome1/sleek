@@ -73,11 +73,10 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
           : date
 
       return (
-        <span className={IsSelected(type, [date], filters) ? 'selected' : null} data-todotxt-attribute={type}>
+        <span className={IsSelected(type, filters, [date]) ? 'selected' : null} data-todotxt-attribute={type}>
           <button id={props.id} disabled={disabled} ref={ref} aria-label={ariaLabel} tabIndex={-1}>
             <Badge variant="dot" invisible={mustNotify}>
               <Chip
-                //onClick={() => HandleFilterSelect(type, groupedName, date, filters, false)}
                 onClick={() => HandleFilterSelect(type, [date], filters, false)}
                 label={chipText}
                 data-testid={`datagrid-button-${type}`}

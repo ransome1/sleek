@@ -19,7 +19,7 @@ let mainWindow: BrowserWindow | null = null
 const eventListeners: Record<string, any | undefined> = {}
 let resizeTimeout: NodeJS.Timeout | undefined
 
-const handleCreateWindow = () => {
+const HandleCreateWindow = () => {
   if (mainWindow) {
     mainWindow.show()
   } else {
@@ -36,7 +36,7 @@ const handleClosed = async () => {
   eventListeners.handleShow = undefined
   eventListeners.handleMaximize = undefined
   eventListeners.handleUnmaximize = undefined
-  eventListeners.handleCreateWindow = undefined
+  eventListeners.HandleCreateWindow = undefined
   eventListeners.handleWindowAllClosed = undefined
   eventListeners.handleWillQuit = undefined
   eventListeners.handleBeforeQuit = undefined
@@ -214,15 +214,15 @@ app
   .whenReady()
   .then(() => {
     startTime = performance.now()
-    HandleTray()
     const tray = SettingsStore.get('tray');
     const startMinimized = SettingsStore.get('startMinimized');
     if(tray && startMinimized) {
       app.dock?.hide()
+      HandleTray()
     } else {
       createMainWindow()
     }
-    eventListeners.handleCreateWindow = handleCreateWindow
+    eventListeners.HandleCreateWindow = HandleCreateWindow
     eventListeners.handleWindowAllClosed = handleWindowAllClosed
     eventListeners.handleBeforeQuit = handleBeforeQuit
     eventListeners.handleOpenFile = handleOpenFile
@@ -233,11 +233,11 @@ app
 app
   .on('window-all-closed', handleWindowAllClosed)
   .on('before-quit', handleBeforeQuit)
-  .on('activate', handleCreateWindow)
+  .on('activate', HandleCreateWindow)
   .on('open-file', (event, path) => {
     event.preventDefault();
       setTimeout(() => {
         handleOpenFile(path);
       }, 1000);
   });
-export { mainWindow, handleCreateWindow, eventListeners }
+export { mainWindow, HandleCreateWindow, eventListeners }

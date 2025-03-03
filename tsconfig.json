@@ -6,7 +6,6 @@
     "moduleResolution": "nodenext",
     "composite": true
   },
-  //"files": [],
   "references": [
     {
       "path": "./tsconfig.node.json"

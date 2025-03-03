@@ -4,9 +4,8 @@ import Tooltip from '@mui/material/Tooltip'
 import CircleChecked from '@mui/icons-material/CheckCircle'
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-//import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import TodayIcon from '@mui/icons-material/Today';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { withTranslation, WithTranslation } from 'react-i18next'
 import RendererComponent from './Renderer'
 import { HandleFilterSelect, IsSelected } from '../Shared'
@@ -150,16 +149,14 @@ const Row: React.FC<RowProps> = memo(
             inputProps={{ 'data-testid': 'datagrid-checkbox' }}
           />
 
-          {todoObject.priority &&
+          {settings.sorting[0].value != 'priority' && todoObject.priority &&
             <span
               data-todotxt-attribute="priority"
               data-todotxt-value={todoObject.priority}
-              className={IsSelected('priority', [todoObject.priority], filters) ? 'selected filter' : 'filter'}
+              className={IsSelected('priority', filters, [todoObject.priority]) ? 'selected filter' : 'filter'}
               data-testid={`datagrid-button-priority`}
             >
-              <button
-                onClick={() => HandleFilterSelect('priority', [todoObject.priority], filters, false)}
-              >
+              <button onClick={() => HandleFilterSelect('priority', [todoObject.priority], filters, false)}>
                 {todoObject.priority}
               </button>
             </span>
@@ -167,29 +164,21 @@ const Row: React.FC<RowProps> = memo(
 
           {todoObject.completed &&
             <Tooltip title={`${t('shared.attributeMapping.completed')} ${todoObject.completed}`} arrow>
-              <EventAvailableIcon />
+              <EventAvailableIcon
+                data-todotxt-attribute="completed"
+                data-testid={`datagrid-button-completed`}
+              />
             </Tooltip>
           }
 
-          {todoObject.created &&
+          {todoObject.created &&       
             <Tooltip title={`${t('shared.attributeMapping.created')} ${todoObject.created}`} arrow>
-              <TodayIcon />
+              <EditCalendarIcon
+                data-todotxt-attribute="created"
+                data-testid={`datagrid-button-created`}
+               />
             </Tooltip>
           }
-          {/*{todoObject.created &&
-            <>
-             <Tooltip title={`Created on ${todoObject.created}`} arrow>
-                <HistoryToggleOffIcon />
-              </Tooltip>
-              <button
-                className="creation"
-                // onClick={() => handleButtonClick(type, value, value)}
-                // data-testid={`datagrid-button-${type}`}
-              >
-                <div>{todoObject.created}</div>
-              </button>
-            </>
-          }*/}
 
           {todoObject.hidden && <VisibilityOffIcon />}
 
@@ -197,7 +186,6 @@ const Row: React.FC<RowProps> = memo(
             todoObject={todoObject}
             filters={filters}
             settings={settings}
-            handleButtonClick={handleButtonClick}
           />
         </li>
       </>

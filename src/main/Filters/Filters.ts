@@ -1,20 +1,36 @@
 import { SettingsStore } from '../Stores'
 import dayjs from 'dayjs'
 
-function hasMatchingFilters(todoObject, filters) {
-  return Object.keys(filters).every(key => {
-    const filterValuesSet = new Set(filters[key].map(filter => filter.value).flat());
-    if (Array.isArray(todoObject[key])) {
-      return todoObject[key].some(value => filterValuesSet.has(value));
-    } else if (typeof todoObject[key] === 'string') {
-      return filterValuesSet.has(todoObject[key]);
-    }
-    return false;
-  });
-}
-
 function applyAttributes(todoObjects, filters) {
-  return todoObjects.filter(todoObject => hasMatchingFilters(todoObject, filters));
+  return todoObjects.filter(todoObject => {
+      let match = true;
+      for (const [key, filterList] of Object.entries(filters)) {
+          for (const filter of filterList) {
+              const values = filter.value;
+              const exclude = filter.exclude;
+              if (key in todoObject && todoObject[key] !== null) {
+                  if (exclude) {
+                      if (values.some(value => todoObject[key].includes(value))) {
+                          match = false;
+                          break;
+                      }
+                  } else {
+                      if (!values.some(value => todoObject[key].includes(value))) {
+                          match = false;
+                          break;
+                      }
+                  }
+              } else if (!exclude) {
+                  match = false;
+                  break;
+              }
+          }
+          if (!match) {
+              break;
+          }
+      }
+      return match;
+  });
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {

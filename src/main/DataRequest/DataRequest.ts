@@ -16,7 +16,9 @@ const headers: HeadersObject = {
 }
 let todoObjects: TodoObject[]
 
-function dataRequest(search: string = ''): RequestedData {
+function dataRequest(passedSearchString: string = ''): RequestedData {
+
+  searchString = passedSearchString
 
   const activeFile: FileObject | null = getActiveFile()
   if (!activeFile) {
@@ -49,7 +51,7 @@ function dataRequest(search: string = ''): RequestedData {
 
   if (filters) todoObjects = applyAttributes(todoObjects, filters)
 
-  if (search) todoObjects = applySearchString(search, todoObjects)
+  if (searchString) todoObjects = applySearchString(searchString, todoObjects)
 
   updateAttributes(todoObjects, sorting, false)
 

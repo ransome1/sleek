@@ -6,6 +6,7 @@
     "src/main/**/*.ts",
     "src/preload/**/*",
     "resources/icon.icns",
+    "resources/*.icns*",
   ],
   "compilerOptions": {
     "types": ["electron-vite/node"]

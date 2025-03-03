@@ -24,9 +24,9 @@ const Group: React.FC<GroupProps> = memo(({ attributeKey, value, filters }) => {
     <ListItem className="row group">
       {groupElements.map((value, index) => {
         return (
-          <span
+          <div
             key={index}
-            className={IsSelected(attributeKey, [value], filters) ? 'selected filter' : 'filter'}
+            className={IsSelected(attributeKey, filters, [value]) ? 'selected filter' : 'filter'}
             data-todotxt-attribute={attributeKey}
             data-todotxt-value={value}   
           >
@@ -36,7 +36,7 @@ const Group: React.FC<GroupProps> = memo(({ attributeKey, value, filters }) => {
             >
               {value}
             </button>
-          </span>
+          </div>
         )
       })}
     </ListItem>

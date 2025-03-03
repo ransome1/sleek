@@ -36,10 +36,6 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     const [loadMoreRows, setLoadMoreRows] = useState(false)
     const [maxRows, setMaxRows] = useState(Math.floor(window.innerHeight / 35) * 2)
 
-    // const handleButtonClick = (key: string, name: string, values: string[]): void => {
-    //   handleFilterSelect(key, name, values, filters, false)
-    // }
-
     const handleKeyUp = (event: KeyboardEvent): void => {
       if (event.key === 'ArrowDown') {
         const listItems = document.querySelectorAll('li:not(.group)')

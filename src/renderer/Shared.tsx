@@ -22,11 +22,26 @@ interface Settings {
   weekStart: number
 }
 
-export function IsSelected(key, value, filters) {
+export function IsSelected(key, filters, value) {
   if (filters[key]) {
-
     for (let i = 0; i < filters[key].length; i++) {
       if(JSON.stringify(filters[key][i].value) === JSON.stringify(value)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export function IsExcluded(attribute, filters) {
+  const attributeValues = attribute.value;
+
+  for (const filterList of Object.values(filters)) {
+    for (const filter of filterList) {
+      const filterValues = filter.value;
+      const exclude = filter.exclude;
+      
+      if (filterValues.some(value => attributeValues.includes(value)) && exclude) {
         return true;
       }
     }
@@ -67,7 +82,7 @@ export const HandleFilterSelect = (key: string, value: string, filters: Filters[
 }
 
 export const handleReset = (): void => {
-  store.setFilters('attributes', [])
+  store.setFilters('attributes', {})
 }
 
 export const handleLinkClick = (event: MouseEvent, url: string): void => {

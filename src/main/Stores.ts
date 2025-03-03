@@ -192,6 +192,7 @@ SettingsStore.onDidChange('files', (newValue: FileObject[] | undefined) => {
     if (!newValue) return false;
     
     createFileWatcher(newValue)
+    HandleTray()
     
   } catch (error: any) {
     handleError(error)
