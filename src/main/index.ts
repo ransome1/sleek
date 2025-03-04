@@ -10,7 +10,7 @@ import { HandleTray } from './Tray'
 import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
-import { handleTheme } from './Theme.js'
+import { HandleTheme } from './Theme.js'
 import './IpcMain.js'
 
 let startTime
@@ -161,7 +161,7 @@ const createMainWindow = () => {
   handleWindowSizeAndPosition()
 
   const colorTheme: string = SettingsStore.get('colorTheme')
-  handleTheme(colorTheme);
+  HandleTheme(colorTheme);
 
   eventListeners.handleClosed = handleClosed
   eventListeners.handleResize = handleResize

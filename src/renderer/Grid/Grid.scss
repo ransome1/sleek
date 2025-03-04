@@ -1,6 +1,7 @@
 @use '../Variables.scss';
 
 #grid {
+  min-width: 20em;
   padding: 0 1em 1em 1em;
   overflow-y: scroll;
   overflow-x: hidden;

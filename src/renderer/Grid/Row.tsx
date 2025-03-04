@@ -85,10 +85,7 @@ const Row: React.FC<RowProps> = memo(
     const handleRowClick = (event: React.MouseEvent | React.KeyboardEvent): void => {
       const clickedElement = event.target as HTMLElement
 
-      if (
-        (event.type === 'keydown' && (event as React.KeyboardEvent).key === 'Enter') ||
-        event.type === 'click'
-      ) {
+      if ((event.type === 'keydown' && (event as React.KeyboardEvent).key === 'Enter') || event.type === 'click') {
         const preventDialog = (): boolean => {
           let match = false
 
@@ -149,7 +146,7 @@ const Row: React.FC<RowProps> = memo(
             inputProps={{ 'data-testid': 'datagrid-checkbox' }}
           />
 
-          {settings.sorting[0].value != 'priority' && todoObject.priority &&
+          {(settings.sorting[0].value != 'priority' || settings.fileSorting) && todoObject.priority &&
             <span
               data-todotxt-attribute="priority"
               data-todotxt-value={todoObject.priority}

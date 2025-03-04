@@ -1,9 +1,9 @@
 import { nativeTheme } from 'electron'
 import { SettingsStore } from './Stores'
-import { handleError } from './Shared'
+import { HandleError } from './Shared'
 import { HandleTray } from './Tray'
 
-nativeTheme.on('updated', () => {
+nativeTheme.on('updated', (): void => {
   try {
     if (nativeTheme.themeSource === 'system') {
       SettingsStore.set('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
@@ -14,10 +14,14 @@ nativeTheme.on('updated', () => {
     }
     HandleTray()
   } catch (error: error) {
-    handleError(error)
+    HandleError(error)
   }
 });
 
-export function handleTheme(colorTheme) {
-  nativeTheme.themeSource = colorTheme;
+export function HandleTheme(colorTheme): void {
+  if (colorTheme != 'dark' && colorTheme != 'light' && colorTheme != 'system') {
+    nativeTheme.themeSource = 'system';
+  } else {
+    nativeTheme.themeSource = colorTheme;
+  }
 }

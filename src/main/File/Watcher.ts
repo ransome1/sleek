@@ -2,7 +2,7 @@ import chokidar, { FSWatcher } from 'chokidar'
 import { app } from 'electron'
 import { dataRequest, searchString } from '../DataRequest/DataRequest'
 import { SettingsStore } from '../Stores'
-import { handleError, userDataDirectory } from '../Shared'
+import { HandleError, userDataDirectory } from '../Shared'
 import { createMenu } from '../Menu'
 import { mainWindow, eventListeners } from '../index'
 
@@ -50,7 +50,7 @@ function createFileWatcher(files: FileObject[]): void {
         mainWindow!.webContents.send('requestData', requestedData)
         console.log(`${file} has been changed`)
       } catch (error: any) {
-        handleError(error)
+        HandleError(error)
       }
     })
     .on('unlink', (file) => {

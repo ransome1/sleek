@@ -4,11 +4,11 @@ import { app } from 'electron'
 import fs from 'fs'
 import crypto from 'crypto'
 import { dataRequest, searchString } from './DataRequest/DataRequest'
-import { userDataDirectory, handleError } from './Shared'
+import { userDataDirectory, HandleError } from './Shared'
 import { mainWindow } from './index'
 import { createFileWatcher } from './File/Watcher'
 import { HandleTray } from './Tray'
-import { handleTheme } from './Theme'
+import { HandleTheme } from './Theme'
 
 const distributionChannel = function(): string {
   if (process.env.APPIMAGE) {
@@ -183,7 +183,7 @@ SettingsStore.onDidAnyChange((newValue, oldValue) => {
       console.warn('The window is not available, skipping setting change.')
     }
   } catch (error: any) {
-    handleError(error)
+    HandleError(error)
   }
 });
 
@@ -195,15 +195,15 @@ SettingsStore.onDidChange('files', (newValue: FileObject[] | undefined) => {
     HandleTray()
     
   } catch (error: any) {
-    handleError(error)
+    HandleError(error)
   }
 })
 
 SettingsStore.onDidChange('colorTheme', (colorTheme) => {
   try {
-    handleTheme(colorTheme);
+    HandleTheme(colorTheme);
   } catch (error: any) {
-    handleError(error)
+    HandleError(error)
   }
 })
 
@@ -211,7 +211,7 @@ SettingsStore.onDidChange('menuBarVisibility', (menuBarVisibility) => {
   try {
     mainWindow!.setMenuBarVisibility(menuBarVisibility)
   } catch (error: any) {
-    handleError(error)
+    HandleError(error)
   }  
 })
 
@@ -219,7 +219,7 @@ SettingsStore.onDidChange('tray', () => {
   try {
     HandleTray()
   } catch (error: any) {
-    handleError(error)
+    HandleError(error)
   }
 })
 
@@ -227,6 +227,6 @@ SettingsStore.onDidChange('invertTrayColor', () => {
   try {
     HandleTray()
   } catch (error: any) {
-    handleError(error)
+    HandleError(error)
   }
 })

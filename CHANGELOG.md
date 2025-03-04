@@ -10,6 +10,8 @@ All notable changes to sleek will be documented in this file. The format is base
 * Option to invert color of tray icon manually
 * DMG background image
 * Help button to splashscreen
+* Added icons for completion and creation dates (#747)
+* New line is added to eof to establish wider todo.txt application compatibility
 
 ### Enhanced
 * Replaced `dayjs` with `Luxon`
@@ -17,6 +19,7 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ### Fixed
 * Bug in `notification` feature which did not suppress messages reliably
+* Fixed bug regarding missing search term (#785)
 
 ## [2.0.18] - 2025-02-26
 

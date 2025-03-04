@@ -119,7 +119,7 @@ button:hover:not(.MuiIconButton-root) {
   }
   .overlay {
     svg {
-      color: var(--color2);
+      color: var(--color1);
     }
   }
   .selected {
@@ -160,7 +160,7 @@ button:hover:not(.MuiIconButton-root) {
     }
     &.selected {
       button {
-        background: color.adjust(#5a5a5a, $lightness: -10%);
+        background: color.adjust(#5a5a5a, $lightness: -15%);
       }
     }
   }

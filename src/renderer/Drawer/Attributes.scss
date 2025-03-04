@@ -10,11 +10,6 @@
   }
   .MuiAccordion-root {
     margin: 0;
-    .MuiAccordion-heading {
-      button {
-        padding: 0;
-      }
-    }
     .MuiAccordionDetails-root {
       padding: 0;
       display: flex;
@@ -27,6 +22,7 @@
       margin: 0;
       font-size: 1.25em;
       font-weight: bold;
+      padding: 0;
       .MuiBadge-badge {
         background: #ff3860;
       }

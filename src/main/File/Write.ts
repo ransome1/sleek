@@ -7,7 +7,7 @@ import { SettingsStore } from '../Stores'
 import { replaceSpeakingDatesWithAbsoluteDates } from '../Date'
 
 function writeToFile(string: string, filePath: string, bookmark: string | null) {
-  fs.writeFileSync(filePath, string, 'utf-8')
+  fs.writeFileSync(filePath, string + '\n', 'utf-8')
 }
 
 function removeLineFromFile(lineNumber: number) {
