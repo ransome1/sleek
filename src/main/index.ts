@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs'
 import { SettingsStore } from './Stores.js'
-import { createMenu } from './Menu.js'
+import { CreateMenu } from './Menu.js'
 import { createFileWatcher, watcher } from './File/Watcher'
 import { addFile } from './File/File'
 import { HandleTray } from './Tray'
@@ -18,6 +18,8 @@ const environment: string | undefined = process.env.NODE_ENV
 let mainWindow: BrowserWindow | null = null
 const eventListeners: Record<string, any | undefined> = {}
 let resizeTimeout: NodeJS.Timeout | undefined
+const additionalData = { myKey: 'myValue' }
+const gotTheLock = app.requestSingleInstanceLock()
 
 const HandleCreateWindow = () => {
   if (mainWindow) {
@@ -156,7 +158,7 @@ const createMainWindow = () => {
     createFileWatcher(files)
   }
 
-  createMenu(files)
+  CreateMenu(files)
 
   handleWindowSizeAndPosition()
 
@@ -189,7 +191,7 @@ const createMainWindow = () => {
 
 const handleWindowAllClosed = () => {
   const tray = SettingsStore.get('tray')
-  if (process.platform !== 'darwin' && !tray) {
+  if (process.platform !== 'darwin' && !tray && !gotTheLock) {
     app.quit()
   } else if (process.platform === 'darwin' && tray) {
     app.dock?.hide()
@@ -232,6 +234,13 @@ app
 // do we need open-file event?
 app
   .on('window-all-closed', handleWindowAllClosed)
+  .on('second-instance', (event, commandLine, workingDirectory, additionalData) => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+        mainWindow.focus()
+      }
+    }
+  )
   .on('before-quit', handleBeforeQuit)
   .on('activate', HandleCreateWindow)
   .on('open-file', (event, path) => {

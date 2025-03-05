@@ -19,7 +19,8 @@
     }
   }
   [data-todotxt-attribute="created"],
-  [data-todotxt-attribute="completed"] {
+  [data-todotxt-attribute="completed"],
+  [data-todotxt-attribute="hidden"] {
     filter: opacity(50%);
   }
   &[data-complete='true'],

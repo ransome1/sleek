@@ -5,7 +5,7 @@ import CircleChecked from '@mui/icons-material/CheckCircle'
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 import { withTranslation, WithTranslation } from 'react-i18next'
 import RendererComponent from './Renderer'
 import { HandleFilterSelect, IsSelected } from '../Shared'
@@ -82,25 +82,24 @@ const Row: React.FC<RowProps> = memo(
       )
     }
 
+    const preventDialog = (clickedElement): boolean => {
+      let match = false
+
+      if (clickedElement.classList.contains('MuiChip-label')) match = true
+      if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-t') match = true
+      if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due') match = true
+      if (clickedElement.tagName.toLowerCase() === 'a') match = true
+      if (clickedElement.tagName.toLowerCase() === 'input') match = true
+      if (clickedElement.tagName.toLowerCase() === 'button') match = true
+      if (clickedElement.tagName.toLowerCase() === 'img') match = true
+      return match
+    }    
+
     const handleRowClick = (event: React.MouseEvent | React.KeyboardEvent): void => {
       const clickedElement = event.target as HTMLElement
 
       if ((event.type === 'keydown' && (event as React.KeyboardEvent).key === 'Enter') || event.type === 'click') {
-        const preventDialog = (): boolean => {
-          let match = false
-
-          if (clickedElement.classList.contains('MuiChip-label')) match = true
-          if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-t') match = true
-          if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due') match = true
-          if (clickedElement.tagName.toLowerCase() === 'path') match = true
-          if (clickedElement.tagName.toLowerCase() === 'a') match = true
-          if (clickedElement.tagName.toLowerCase() === 'input') match = true
-          if (clickedElement.tagName.toLowerCase() === 'button') match = true
-          if (clickedElement.tagName.toLowerCase() === 'svg') match = true
-          if (clickedElement.tagName.toLowerCase() === 'img') match = true
-          return match
-        }
-        if (!preventDialog() && todoObject) {
+        if (!preventDialog(clickedElement) && todoObject) {
           event.preventDefault()
           setTodoObject(todoObject)
           setDialogOpen(true)
@@ -170,14 +169,14 @@ const Row: React.FC<RowProps> = memo(
 
           {todoObject.created &&       
             <Tooltip title={`${t('shared.attributeMapping.created')} ${todoObject.created}`} arrow>
-              <EditCalendarIcon
+              <EventNoteIcon
                 data-todotxt-attribute="created"
                 data-testid={`datagrid-button-created`}
                />
             </Tooltip>
           }
 
-          {todoObject.hidden && <VisibilityOffIcon />}
+          {todoObject.hidden && <VisibilityOffIcon data-todotxt-attribute="hidden " />}
 
           <RendererComponent
             todoObject={todoObject}

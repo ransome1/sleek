@@ -3,15 +3,7 @@ import { DateTime } from "luxon";
 import { Notification } from 'electron';
 import { SettingsStore, NotificationsStore, FiltersStore } from './Stores';
 import { checkForSearchMatches } from './Filters/Search';
-
-interface SearchFilter {
-  label: string;
-  suppress: boolean;
-}
-
-interface Badge {
-  count: number;
-}
+import { SearchFilter, Badge } from '../Types'
 
 export const GetToday = (): DateTime => {
   const now = DateTime.now();
