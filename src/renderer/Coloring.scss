@@ -80,7 +80,7 @@ button:hover:not(.MuiIconButton-root) {
 }
 
 *[data-todotxt-attribute='priority'][data-todotxt-value='A'] {
-  --color2: #ff3860;
+  --color2: #ff0000;
   border-left-color: var(--color2);
   &.selected {
     button {
@@ -90,7 +90,7 @@ button:hover:not(.MuiIconButton-root) {
 }
 
 *[data-todotxt-attribute='priority'][data-todotxt-value='B'] {
-  --color2: #fa745e;
+  --color2: #fd7d67;
   border-left-color: var(--color2);
   &.selected {
     button {

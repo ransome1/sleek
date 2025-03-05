@@ -74,7 +74,7 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^34.2.0",
+    "electron": "^35.0.0",
     "electron-builder": "^25.1.8",
     "electron-vite": "^3.0.0",
     "material-ui-popup-state": "^5.3.3",

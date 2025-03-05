@@ -76,9 +76,9 @@ const migrations = {
   },
   '2.0.4': (config) => {
     console.log('Migrating from 2.0.2 → 2.0.4')
-    store.delete('multilineTextField')
-    store.delete('isDrawerOpen')
-    store.delete('useMultilineForBulkTodoCreation')
+    config.delete('multilineTextField')
+    config.delete('isDrawerOpen')
+    config.delete('useMultilineForBulkTodoCreation')
     config.set('bulkTodoCreation', false)
     config.set('disableAnimations', false)
   },
@@ -97,10 +97,10 @@ const migrations = {
   '2.0.13': (config) => {
     console.log('Migrating from 2.0.12 → 2.0.13')
     config.set('weekStart', 1)
-    store.delete('fileWatcherAtomic')
-    store.delete('fileWatcherPolling')
-    store.delete('fileWatcherPollingInterval')
-    store.delete('language')
+    config.delete('fileWatcherAtomic')
+    config.delete('fileWatcherPolling')
+    config.delete('fileWatcherPollingInterval')
+    config.delete('language')
     config.set('chokidarOptions', {
       awaitWriteFinish: {
         stabilityThreshold: 100,

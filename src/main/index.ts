@@ -92,9 +92,7 @@ const handleWindowSizeAndPosition = () => {
     return
   }
 
-  const windowDimensions: { width: number; height: number } | null = SettingsStore.get(
-    'windowDimensions'
-  ) as { width: number; height: number } | null
+  const windowDimensions: { width: number; height: number } | null = SettingsStore.get('windowDimensions') as { width: number; height: number } | null
 
   if (windowDimensions) {
     const { width, height } = windowDimensions
@@ -164,6 +162,7 @@ const createMainWindow = () => {
 
   const colorTheme: string = SettingsStore.get('colorTheme')
   HandleTheme(colorTheme);
+  HandleTray()
 
   eventListeners.handleClosed = handleClosed
   eventListeners.handleResize = handleResize
@@ -191,7 +190,7 @@ const createMainWindow = () => {
 
 const handleWindowAllClosed = () => {
   const tray = SettingsStore.get('tray')
-  if (process.platform !== 'darwin' && !tray && !gotTheLock) {
+  if (process.platform !== 'darwin' && !tray) {
     app.quit()
   } else if (process.platform === 'darwin' && tray) {
     app.dock?.hide()
@@ -212,41 +211,42 @@ const handleOpenFile = (path) => {
   }
 }
 
-app
-  .whenReady()
-  .then(() => {
-    startTime = performance.now()
-    const tray = SettingsStore.get('tray');
-    const startMinimized = SettingsStore.get('startMinimized');
-    if(tray && startMinimized) {
-      app.dock?.hide()
-      HandleTray()
-    } else {
-      createMainWindow()
-    }
-    eventListeners.HandleCreateWindow = HandleCreateWindow
-    eventListeners.handleWindowAllClosed = handleWindowAllClosed
-    eventListeners.handleBeforeQuit = handleBeforeQuit
-    eventListeners.handleOpenFile = handleOpenFile
-  })
-  .catch(console.error)
-
-// do we need open-file event?
-app
-  .on('window-all-closed', handleWindowAllClosed)
-  .on('second-instance', (event, commandLine, workingDirectory, additionalData) => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-        mainWindow.focus()
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app
+    .on('second-instance', () => {
+      if(mainWindow) {
+        mainWindow.show()
       }
-    }
-  )
-  .on('before-quit', handleBeforeQuit)
-  .on('activate', HandleCreateWindow)
-  .on('open-file', (event, path) => {
-    event.preventDefault();
-      setTimeout(() => {
-        handleOpenFile(path);
-      }, 1000);
-  });
+    })
+    .on('window-all-closed', handleWindowAllClosed)
+    .on('before-quit', handleBeforeQuit)
+    .on('activate', HandleCreateWindow)
+    .on('open-file', (event, path) => {
+      event.preventDefault();
+        setTimeout(() => {
+          handleOpenFile(path);
+        }, 1000);
+    });
+
+  app
+    .whenReady()
+    .then(() => {
+      startTime = performance.now()
+      const tray = SettingsStore.get('tray');
+      const startMinimized = SettingsStore.get('startMinimized');
+      if(tray && startMinimized) {
+        app.dock?.hide()
+        HandleTray()
+      } else {
+        createMainWindow()
+      }
+      eventListeners.HandleCreateWindow = HandleCreateWindow
+      eventListeners.handleWindowAllClosed = handleWindowAllClosed
+      eventListeners.handleBeforeQuit = handleBeforeQuit
+      eventListeners.handleOpenFile = handleOpenFile
+    })
+    .catch(console.error)
+}
 export { mainWindow, HandleCreateWindow, eventListeners }

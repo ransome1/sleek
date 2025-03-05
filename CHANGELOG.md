@@ -8,6 +8,7 @@ All notable changes to sleek will be documented in this file. The format is base
 
 * `Tray` icons which adapt to color theme of operating system (#593)
 * Option to invert color of tray icon manually
+* Option to let the app start minimized to tray (#748)
 * DMG background image
 * Help button to splashscreen
 * Added icons for completion and creation dates (#747)
@@ -16,10 +17,12 @@ All notable changes to sleek will be documented in this file. The format is base
 ### Enhanced
 * Replaced `dayjs` with `Luxon`
 * Refactoring `Date` module
+* Adjusted the red color hue
 
 ### Fixed
 * Bug in `notification` feature which did not suppress messages reliably
-* Fixed bug regarding missing search term (#785)
+* Bug regarding missing search term (#785)
+* Bugs around how the app starts and quits
 
 ## [2.0.18] - 2025-02-26
 
