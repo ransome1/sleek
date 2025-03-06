@@ -7,7 +7,9 @@ export const userDataDirectory: string =
     ? path.join(app.getPath('userData'), 'userData-Development')
     : path.join(app.getPath('userData'), 'userData')
 
-export function handleError(error: Error): void {
+export function HandleError(error: Error): void {
   console.error(error)
-  mainWindow!.webContents.send('responseFromMainProcess', error)
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.send('responseFromMainProcess', error)
+  }
 }

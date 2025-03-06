@@ -1,16 +1,16 @@
 import React, { memo } from 'react'
 import ListItem from '@mui/material/ListItem'
 import Divider from '@mui/material/Divider'
+import { HandleFilterSelect, IsSelected } from '../Shared'
 
 interface GroupProps {
-  title: string | string[]
-  todotxtAttribute: string
+  key: string
+  value: string | string[]
   filters: Filters | null
-  onClick: (type: string, value: string, label: string) => void
 }
 
-const Group: React.FC<GroupProps> = memo(({ title, todotxtAttribute, filters, onClick }) => {
-  if (!title || title.length === 0) {
+const Group: React.FC<GroupProps> = memo(({ attributeKey, value, filters }) => {
+  if (!value || value.length === 0) {
     return (
       <ListItem className="row group">
         <Divider />
@@ -18,28 +18,23 @@ const Group: React.FC<GroupProps> = memo(({ title, todotxtAttribute, filters, on
     )
   }
 
-  const groupElements = typeof title === 'string' ? [title] : title
+  const groupElements = typeof value === 'string' ? [value] : value
 
   return (
     <ListItem className="row group">
-      {groupElements.map((groupElement, index) => {
-        const selected: boolean =
-          filters &&
-          (filters[todotxtAttribute as keyof Filters] || []).some(
-            (filter: Filter) => filter && filter.name === groupElement.trim()
-          )
+      {groupElements.map((value, index) => {
         return (
           <div
             key={index}
-            className={selected ? 'selected filter' : 'filter'}
-            data-todotxt-attribute={todotxtAttribute}
-            data-todotxt-value={groupElement}
+            className={IsSelected(attributeKey, filters, [value]) ? 'selected filter' : 'filter'}
+            data-todotxt-attribute={attributeKey}
+            data-todotxt-value={value}   
           >
             <button
-              onClick={() => onClick(todotxtAttribute, groupElement, groupElement.trim())}
-              data-testid={`datagrid-button-${todotxtAttribute}`}
+              onClick={() => HandleFilterSelect(attributeKey, [value], filters, false)}
+              data-testid={`datagrid-group-button-${attributeKey}`}
             >
-              {groupElement.trim()}
+              {value}
             </button>
           </div>
         )

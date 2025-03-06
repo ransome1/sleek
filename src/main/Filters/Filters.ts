@@ -1,34 +1,36 @@
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 import dayjs from 'dayjs'
 
-function applyAttributes(todoObjects: TodoObject[], filters: Filters | null): TodoObject[] {
-  return todoObjects.filter((todoObject: TodoObject) => {
-    return Object.entries(filters || {}).every(([key, filterArray]: [string, Filter[]]) => {
-      if (filterArray.length === 0) {
-        return true
+function applyAttributes(todoObjects, filters) {
+  return todoObjects.filter(todoObject => {
+      let match = true;
+      for (const [key, filterList] of Object.entries(filters)) {
+          for (const filter of filterList) {
+              const values = filter.value;
+              const exclude = filter.exclude;
+              if (key in todoObject && todoObject[key] !== null) {
+                  if (exclude) {
+                      if (values.some(value => todoObject[key].includes(value))) {
+                          match = false;
+                          break;
+                      }
+                  } else {
+                      if (!values.some(value => todoObject[key].includes(value))) {
+                          match = false;
+                          break;
+                      }
+                  }
+              } else if (!exclude) {
+                  match = false;
+                  break;
+              }
+          }
+          if (!match) {
+              break;
+          }
       }
-
-      const attributeValues: any = ['due', 't'].includes(key)
-        ? todoObject[key as keyof TodoObject]
-        : todoObject[key as keyof TodoObject]
-
-      return filterArray.every(({ values, exclude }: Filter) => {
-        if (
-          attributeValues === undefined ||
-          attributeValues === null ||
-          (Array.isArray(attributeValues) && attributeValues.length === 0)
-        ) {
-          return exclude
-        }
-
-        const hasMatchingValue = Array.isArray(attributeValues)
-          ? attributeValues.some((val) => values.includes(val))
-          : Array.isArray(values) && values.includes(attributeValues)
-
-        return exclude ? !hasMatchingValue : hasMatchingValue
-      })
-    })
-  })
+      return match;
+  });
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {

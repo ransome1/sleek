@@ -1,75 +1,75 @@
-import dayjs, { Dayjs } from 'dayjs'
-import crypto from 'crypto'
-import { Notification } from 'electron'
-import { SettingsStore } from './Stores/SettingsStore'
-import { NotificationsStore } from './Stores/NotificationsStore'
-import { FiltersStore } from './Stores/FiltersStore'
-import { checkForSearchMatches } from './Filters/Search'
-import isToday from 'dayjs/plugin/isToday.js'
-import isTomorrow from 'dayjs/plugin/isTomorrow.js'
-dayjs.extend(isToday)
-dayjs.extend(isTomorrow)
+import crypto from 'crypto';
+import { DateTime } from "luxon";
+import { Notification } from 'electron';
+import { SettingsStore, NotificationsStore, FiltersStore } from './Stores';
+import { checkForSearchMatches } from './Filters/Search';
+import { SearchFilter, Badge } from '../Types'
 
-interface SearchFilter {
-  label: string;
-  suppress: boolean;
+export const GetToday = (): DateTime => {
+  const now = DateTime.now();
+  return now.startOf('day');
+}
+const GetThresholdDay = (): DateTime => {
+  const today = GetToday();
+  const notificationThreshold = GetNotificationThreshold();
+  return today.plus({ days: notificationThreshold });
+}
+const GetNotificationThreshold = (): number => SettingsStore.get('notificationThreshold');
+const GetNotifiedTodoObjects = (): string[] => NotificationsStore.get('notificationHashes') || [];
+const GetSearchFilters = (): SearchFilter[] => FiltersStore.get('search') || [];
+
+export function MustNotify(date): boolean {
+  const today = GetToday();
+  const thresholdDay = GetThresholdDay();
+  return date < thresholdDay
 }
 
-export function MustNotify(date: Dayjs): boolean {
-  const today: Dayjs = dayjs().startOf('day')
-  const notificationThreshold: number = SettingsStore.get('notificationThreshold')
-  return dayjs(date).isBefore(today.add(notificationThreshold, 'day')) || false
+export function CreateTitle(dueDate): string {
+  const today: DateTime = GetToday();
+  const tomorrow: DateTime = today.plus({ days: 1 });
+  const daysUntilDue: DateTime = dueDate.diff(today, 'days').toObject().days;
+  const thresholdDay = GetThresholdDay();
+
+  if(dueDate.hasSame(today, 'day')) return 'Due today';
+  if(dueDate.hasSame(tomorrow, 'day')) return 'Due tomorrow';
+  return daysUntilDue > 1 ? `Due in ${daysUntilDue} days` : '';
 }
 
-export function CreateTitle(dueDate: Dayjs, today: Dayjs): string {
-  const daysUntilDue: number = dueDate.diff(today, 'day') + 1
-  if (dueDate.isToday()) return 'Due today'
-  if (dueDate.isTomorrow()) return 'Due tomorrow'
-  if (daysUntilDue > 1) return `Due in ${daysUntilDue} days`
+export function SuppressNotification(dueDate, body: string, hash: string): boolean {
+  const notificationHashes: string[] = GetNotifiedTodoObjects();
+  if (notificationHashes.includes(hash)) return true;
+  
+  const today: DateTime = GetToday();
+  const thresholdDay = GetThresholdDay();
+  if (dueDate < today || dueDate >= thresholdDay) return true;
+
+  const searchFilters = GetSearchFilters();
+  return searchFilters.some(filter => filter.label && filter.suppress && checkForSearchMatches(body, filter.label));
 }
 
-export function SuppressNotification(dueDate: Dayjs, today: Dayjs, body: string, notifiedTodoObjects: string[], hash: string, notificationThreshold: number): boolean {
-
-  if (notifiedTodoObjects.includes(hash)) return true
-
-  if (dueDate.isBefore(today)) return true
-
-  if (dueDate.isAfter(today.add(notificationThreshold, 'day'))) return true
-
-  const searchFilters: SearchFilter[] = FiltersStore.get('search') || []
-  for (const searchFilter of searchFilters) {
-    
-    if (searchFilter.label && searchFilter.suppress) {
-      const match: boolean = checkForSearchMatches(body, searchFilter.label)
-      return match
-    }
-  }
-  return false
+export function CountBadge(dueDate, badge: Badge): void {
+  const thresholdDay = GetThresholdDay();
+  if (dueDate < thresholdDay) badge.count++
 }
 
-export function CountBadge(dueDate: Dayjs, today: Dayjs, notificationThreshold: number, badge: Badge): void {
-  if (dueDate.isBefore(today.add(notificationThreshold, 'day'))) {
-    badge.count += 1
-  }
-}
+export function HandleNotification(due: string, body: string, badge: Badge): void {
+  if (!due || !body) return;
+  const hash = crypto.createHash('sha256').update(body).digest('hex');
 
-export function HandleNotification(dueDate: Dayjs, body: string, badge: Badge): void {
-  const today: Dayjs = dayjs().startOf('day')
-  const hash: string = crypto.createHash('sha256').update(body).digest('hex')
-  const notifiedTodoObjects = NotificationsStore.get('notifiedTodoObjects') || []
-  const notificationThreshold: number = SettingsStore.get('notificationThreshold')
+  const dueDate = DateTime.fromISO(due);
 
-  CountBadge(dueDate, today, notificationThreshold, badge);
+  CountBadge(dueDate, badge);
 
-  if (SuppressNotification(dueDate, today, body, notifiedTodoObjects, hash, notificationThreshold)) return false;
+  if (SuppressNotification(dueDate, body, hash)) return;
 
   const notification = new Notification({
-    title: CreateTitle(dueDate, today),
+    title: CreateTitle(dueDate),
     body,
-    silent: false
-  })
-  notification.show()
+    silent: false,
+  });
+  notification.show();
 
-  notifiedTodoObjects.push(hash)
-  NotificationsStore.set('notifiedTodoObjects', notifiedTodoObjects)
+  const notificationHashes = GetNotifiedTodoObjects();
+  notificationHashes.push(hash);
+  NotificationsStore.set('notificationHashes', notificationHashes);
 }

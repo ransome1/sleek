@@ -1,7 +1,6 @@
 import { getActiveFile } from '../File/Active'
 import { readFileContent } from '../File/File'
-import { SettingsStore } from '../Stores/SettingsStore'
-import { FiltersStore } from '../Stores/FiltersStore'
+import { SettingsStore, FiltersStore } from '../Stores'
 import { applySearchString } from '../Filters/Search'
 import { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates } from '../Filters/Filters'
 import { updateAttributes, attributes } from '../Attributes'
@@ -17,7 +16,9 @@ const headers: HeadersObject = {
 }
 let todoObjects: TodoObject[]
 
-function dataRequest(search: string = ''): RequestedData {
+function dataRequest(passedSearchString: string = ''): RequestedData {
+
+  searchString = passedSearchString
 
   const activeFile: FileObject | null = getActiveFile()
   if (!activeFile) {
@@ -50,7 +51,7 @@ function dataRequest(search: string = ''): RequestedData {
 
   if (filters) todoObjects = applyAttributes(todoObjects, filters)
 
-  if (search) todoObjects = applySearchString(search, todoObjects)
+  if (searchString) todoObjects = applySearchString(searchString, todoObjects)
 
   updateAttributes(todoObjects, sorting, false)
 

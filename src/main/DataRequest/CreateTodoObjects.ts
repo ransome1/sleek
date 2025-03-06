@@ -1,6 +1,6 @@
 import { app } from 'electron'
 import { Item } from 'jstodotxt'
-import { SettingsStore } from '../Stores/SettingsStore'
+import { SettingsStore } from '../Stores'
 import { HandleNotification } from '../Notifications'
 import { extractSpeakingDates } from '../Date'
 import dayjs from 'dayjs'
@@ -89,8 +89,8 @@ function createTodoObjects(fileContent: string | null): TodoObject[] | [] {
 
     const todoObject: TodoObject = createTodoObject(index, line)
 
-    if (SettingsStore.get('notificationsAllowed') && todoObject.body && !todoObject.complete) {
-      HandleNotification(dayjs(todoObject.due, 'YYYY-MM-DD'), todoObject.body, badge)
+    if (SettingsStore.get('notificationsAllowed') && todoObject.body && todoObject.due && !todoObject.complete) {
+      HandleNotification(todoObject.due, todoObject.body, badge)
     }
 
     return todoObject

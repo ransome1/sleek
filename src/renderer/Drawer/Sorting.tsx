@@ -28,7 +28,8 @@ const visibleSettings = {
   },
   sortCompletedLast: {
     style: 'toggle',
-    rerender: true
+    rerender: true,
+    dependsOn: ['fileSorting']
   }
 }
 
@@ -61,8 +62,14 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
   return (
     <div id="Sorting">
       <FormGroup>
-        {Object.entries(visibleSettings).map(([settingName, settingValue]) =>
-          settingValue.style === 'toggle' ? (
+        {Object.entries(visibleSettings).map(([settingName, settingValue]) => {
+          // todo: this is a duplicate, must be improved
+          if (settingValue.dependsOn) {
+            for (let i = 0; i < settingValue.dependsOn.length; i++) {
+              if (settings[settingValue.dependsOn[i]]) return null;
+            }
+          }
+          return settingValue.style === 'toggle' ? (
             <FormControlLabel
               key={settingName}
               control={
@@ -74,8 +81,8 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
               }
               label={t(`drawer.sorting.${settingName}`)}
             />
-          ) : null
-        )}
+          ) : null;
+        })}
       </FormGroup>
       {!settings.fileSorting && (
         <List>

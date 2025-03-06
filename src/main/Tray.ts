@@ -1,55 +1,60 @@
-import { app, Menu, Tray, nativeImage } from 'electron'
+import { app, Menu, Tray, nativeImage, nativeTheme } from 'electron'
 import { fileURLToPath } from 'url'
-import { handleCreateWindow } from './index'
-import { SettingsStore } from './Stores/SettingsStore'
+import { HandleCreateWindow, mainWindow } from './index'
+import { GetFileMenuEntries } from './Menu'
+import { SettingsStore } from './Stores'
 import { setFile } from './File/File'
-import trayIcon from '../../resources/tray.png?asset'
+import { File } from '../../Types'
+import TrayIconDark from '../../resources/trayDarkTemplate.png?asset'
+import TrayIconLight from '../../resources/trayLightTemplate.png?asset'
+import TrayIconDarkWin from '../../resources/trayDark.ico?asset'
+import TrayIconLightWin from '../../resources/trayLight.ico?asset'
 
-let tray: Tray
+let tray: Tray | null = null;
 
-function createMenuTemplate(files: FileObject[]): Electron.MenuItemConstructorOptions[] {
-  return [
-    {
-      label: 'Show sleek',
-      click: () => {
-        handleCreateWindow()
-      }
-    },
-    { type: 'separator' },
-    ...(files?.length > 0
-      ? files.map((file: FileObject, index: number) => ({
-          label: file.todoFileName!,
-          accelerator: `CommandOrControl+${index + 1}`,
-          click: () => {
-            setFile(index)
-            handleCreateWindow()
-          }
-        }))
-      : []),
-    { type: 'separator' },
-    {
-      label: 'Quit',
-      click: () => {
-        app.quit()
-      }
-    }
-  ]
+export function GetTrayIconPath(): string {
+  const invertTrayColor = SettingsStore.get('invertTrayColor');
+  const isDarkMode = nativeTheme.shouldUseDarkColors;
+  if (process.platform === 'win32') {
+    return invertTrayColor ? (isDarkMode ? TrayIconLightWin : TrayIconDarkWin) : (isDarkMode ? TrayIconDarkWin : TrayIconLightWin);
+  } else {
+    return invertTrayColor ? (isDarkMode ? TrayIconLight : TrayIconDark) : (isDarkMode ? TrayIconDark : TrayIconLight);
+  }
 }
 
-export function handleTray(showTray) {
-  tray?.destroy()
+export function HandleTray(): void {
+  tray?.destroy();
 
+  const showTray: boolean = SettingsStore.get('tray');
   if (!showTray) {
-    app.dock?.show()
-    return
+    app.dock?.show();
+    return false;
   }
 
-  const files: FileObject[] = SettingsStore.get('files')
-  const menu: Electron.Menu = Menu.buildFromTemplate(createMenuTemplate(files))
-  tray = new Tray(nativeImage.createFromPath(trayIcon))
-  tray.setToolTip('sleek')
-  tray.setContextMenu(menu)
-  tray.on('click', () => {
-    handleCreateWindow()
-  })
+  const TrayIconPath: string = GetTrayIconPath();
+  tray = new Tray(nativeImage.createFromPath(TrayIconPath));
+
+  if (tray) {
+    const files: FileObject[] = SettingsStore.get('files');
+    const menu: Electron.Menu = Menu.buildFromTemplate([
+      { label: 'Show sleek', click: HandleCreateWindow },
+      { type: 'separator' },
+      ...GetFileMenuEntries(files),
+      { type: 'separator' },
+      { label: 'Quit sleek', click: app.quit }
+    ]);
+    tray.setToolTip('sleek');
+    tray.setContextMenu(menu);
+    tray.on('click', (event) => {
+      if (process.platform === 'darwin') {
+        return false;
+      } else if(!mainWindow) {
+        HandleCreateWindow();
+      } else if (mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else if(!mainWindow?.isVisible()) {
+        mainWindow.show();
+      }
+    });
+  }
 }

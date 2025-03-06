@@ -2,15 +2,15 @@ import { app, BrowserWindow, nativeImage } from 'electron'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs'
-import { SettingsStore } from './Stores/SettingsStore.js'
-import { createMenu } from './Menu.js'
+import { SettingsStore } from './Stores.js'
+import { CreateMenu } from './Menu.js'
 import { createFileWatcher, watcher } from './File/Watcher'
 import { addFile } from './File/File'
-import { handleTray } from './Tray.js'
+import { HandleTray } from './Tray'
 import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
-import { handleTheme } from './Theme.js'
+import { HandleTheme } from './Theme.js'
 import './IpcMain.js'
 
 let startTime
@@ -18,8 +18,10 @@ const environment: string | undefined = process.env.NODE_ENV
 let mainWindow: BrowserWindow | null = null
 const eventListeners: Record<string, any | undefined> = {}
 let resizeTimeout: NodeJS.Timeout | undefined
+const additionalData = { myKey: 'myValue' }
+const gotTheLock = app.requestSingleInstanceLock()
 
-const handleCreateWindow = () => {
+const HandleCreateWindow = () => {
   if (mainWindow) {
     mainWindow.show()
   } else {
@@ -36,7 +38,7 @@ const handleClosed = async () => {
   eventListeners.handleShow = undefined
   eventListeners.handleMaximize = undefined
   eventListeners.handleUnmaximize = undefined
-  eventListeners.handleCreateWindow = undefined
+  eventListeners.HandleCreateWindow = undefined
   eventListeners.handleWindowAllClosed = undefined
   eventListeners.handleWillQuit = undefined
   eventListeners.handleBeforeQuit = undefined
@@ -90,9 +92,7 @@ const handleWindowSizeAndPosition = () => {
     return
   }
 
-  const windowDimensions: { width: number; height: number } | null = SettingsStore.get(
-    'windowDimensions'
-  ) as { width: number; height: number } | null
+  const windowDimensions: { width: number; height: number } | null = SettingsStore.get('windowDimensions') as { width: number; height: number } | null
 
   if (windowDimensions) {
     const { width, height } = windowDimensions
@@ -114,6 +114,7 @@ const createMainWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
+    show: false,
     backgroundColor: shouldUseDarkColors ? '#212224' : '#fff',
     icon:
       process.platform === 'win32'
@@ -131,6 +132,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
     const endTime = performance.now()
     console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`)
   })
@@ -154,12 +156,13 @@ const createMainWindow = () => {
     createFileWatcher(files)
   }
 
-  createMenu(files)
+  CreateMenu(files)
 
   handleWindowSizeAndPosition()
 
   const colorTheme: string = SettingsStore.get('colorTheme')
-  handleTheme(colorTheme);
+  HandleTheme(colorTheme);
+  HandleTray()
 
   eventListeners.handleClosed = handleClosed
   eventListeners.handleResize = handleResize
@@ -168,8 +171,6 @@ const createMainWindow = () => {
   eventListeners.handleMaximize = handleMaximize
   eventListeners.handleUnmaximize = handleUnmaximize
 
-  handleTray(SettingsStore.get('tray'))
-
   const customStylesPath: string = SettingsStore.get('customStylesPath')
   if (customStylesPath) {
     fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
@@ -177,7 +178,7 @@ const createMainWindow = () => {
         mainWindow?.webContents.insertCSS(data)
         console.error('Styles injected found in CSS file:', customStylesPath)
       } else {
-        console.error('Error reading the CSS file:', error)
+        console.error('Could not read custom CSS file. More info: https://github.com/ransome1/sleek/wiki/Custom-CSS')
       }
     })
   }
@@ -210,27 +211,42 @@ const handleOpenFile = (path) => {
   }
 }
 
-app
-  .whenReady()
-  .then(() => {
-    startTime = performance.now()
-    createMainWindow()
-    eventListeners.handleCreateWindow = handleCreateWindow
-    eventListeners.handleWindowAllClosed = handleWindowAllClosed
-    eventListeners.handleBeforeQuit = handleBeforeQuit
-    eventListeners.handleOpenFile = handleOpenFile
-  })
-  .catch(console.error)
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app
+    .on('second-instance', () => {
+      if(mainWindow) {
+        mainWindow.show()
+      }
+    })
+    .on('window-all-closed', handleWindowAllClosed)
+    .on('before-quit', handleBeforeQuit)
+    .on('activate', HandleCreateWindow)
+    .on('open-file', (event, path) => {
+      event.preventDefault();
+        setTimeout(() => {
+          handleOpenFile(path);
+        }, 1000);
+    });
 
-// do we need open-file event?
-app
-  .on('window-all-closed', handleWindowAllClosed)
-  .on('before-quit', handleBeforeQuit)
-  .on('activate', handleCreateWindow)
-  .on('open-file', (event, path) => {
-    event.preventDefault();
-      setTimeout(() => {
-        handleOpenFile(path);
-      }, 1000);
-  });
-export { mainWindow, handleCreateWindow, eventListeners }
+  app
+    .whenReady()
+    .then(() => {
+      startTime = performance.now()
+      const tray = SettingsStore.get('tray');
+      const startMinimized = SettingsStore.get('startMinimized');
+      if(tray && startMinimized) {
+        app.dock?.hide()
+        HandleTray()
+      } else {
+        createMainWindow()
+      }
+      eventListeners.HandleCreateWindow = HandleCreateWindow
+      eventListeners.handleWindowAllClosed = handleWindowAllClosed
+      eventListeners.handleBeforeQuit = handleBeforeQuit
+      eventListeners.handleOpenFile = handleOpenFile
+    })
+    .catch(console.error)
+}
+export { mainWindow, HandleCreateWindow, eventListeners }

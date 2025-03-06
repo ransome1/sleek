@@ -1,8 +1,9 @@
 import chokidar, { FSWatcher } from 'chokidar'
 import { app } from 'electron'
 import { dataRequest, searchString } from '../DataRequest/DataRequest'
-import { SettingsStore } from '../Stores/SettingsStore'
-import { handleError, userDataDirectory } from '../Shared'
+import { SettingsStore } from '../Stores'
+import { HandleError, userDataDirectory } from '../Shared'
+import { CreateMenu } from '../Menu'
 import { mainWindow, eventListeners } from '../index'
 
 let watcher: FSWatcher | null = null
@@ -35,6 +36,8 @@ function createFileWatcher(files: FileObject[]): void {
     SettingsStore.get('chokidarOptions')
   )
 
+  CreateMenu(files)
+
   watcher.add(userDataDirectory + '/filters.json')
 
   watcher
@@ -47,7 +50,7 @@ function createFileWatcher(files: FileObject[]): void {
         mainWindow!.webContents.send('requestData', requestedData)
         console.log(`${file} has been changed`)
       } catch (error: any) {
-        handleError(error)
+        HandleError(error)
       }
     })
     .on('unlink', (file) => {

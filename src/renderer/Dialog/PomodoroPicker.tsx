@@ -1,7 +1,7 @@
 import React from 'react'
 import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
-import TomatoIconDuo from '../tomato-duo.svg?asset'
+import PomodoroIcon from '../../../resources/pomodoro.svg?asset'
 import './PomodoroPicker.scss'
 
 interface PomodoroPickerComponentProps {
@@ -21,7 +21,7 @@ const PomodoroPickerComponent: React.FC<PomodoroPickerComponentProps> = ({
     <FormControl id="pomodoroPicker">
       <TextField
         id="pomodoroPicker"
-        label={<img src={TomatoIconDuo} />}
+        label={<img src={PomodoroIcon} />}
         type="number"
         onChange={handlePomodoroChange}
         value={pomodoro}

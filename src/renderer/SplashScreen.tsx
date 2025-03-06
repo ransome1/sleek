@@ -1,9 +1,11 @@
 import React, { FC, memo } from 'react'
 import DryCleaningIcon from '@mui/icons-material/DryCleaning'
 import BeachAccessIcon from '@mui/icons-material/BeachAccess'
-import SaveAltIcon from '@mui/icons-material/SaveAlt'
+import FileOpenIcon from '@mui/icons-material/FileOpen'
+import HelpIcon from '@mui/icons-material/Help'
+import Link from '@mui/material/Link'
 import { withTranslation, WithTranslation } from 'react-i18next'
-import { handleReset } from './Shared'
+import { handleReset, handleLinkClick } from './Shared'
 import './SplashScreen.scss'
 import { i18n } from './Settings/LanguageSelector'
 
@@ -65,9 +67,14 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
           </>
         )}
         {settings.files?.length === 0 && (
-          <div className="fileDropZone">
-            <SaveAltIcon />
-            <p>{t('splashscreen.noFiles.text')}</p>
+          <div className="container">
+            <FileOpenIcon />
+            <p>
+              {t('splashscreen.noFiles.text')}
+              <Link onClick={(event) => handleLinkClick(event, 'https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions')}>
+                <HelpIcon />
+              </Link>
+            </p>
             <div className="buttons">
               <button
                 variant="contained"

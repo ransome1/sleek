@@ -2,7 +2,7 @@ import React, { KeyboardEvent, memo, useState } from 'react'
 import List from '@mui/material/List'
 import Row from './Row'
 import Group from './Group'
-import { handleFilterSelect } from '../Shared'
+import { HandleFilterSelect } from '../Shared'
 import './Grid.scss'
 
 const { ipcRenderer } = window.api
@@ -35,10 +35,6 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     const list = document.getElementById('grid')
     const [loadMoreRows, setLoadMoreRows] = useState(false)
     const [maxRows, setMaxRows] = useState(Math.floor(window.innerHeight / 35) * 2)
-
-    const handleButtonClick = (key: string, name: string, values: string[]): void => {
-      handleFilterSelect(key, name, values, filters, false)
-    }
 
     const handleKeyUp = (event: KeyboardEvent): void => {
       if (event.key === 'ArrowDown') {
@@ -100,10 +96,9 @@ const GridComponent: React.FC<GridComponentProps> = memo(
           return (
             <React.Fragment key={group.title}>
               <Group
-                title={group.title}
-                todotxtAttribute={settings.sorting[0].value}
+                attributeKey={settings.sorting[0].value}
+                value={group.title}
                 filters={filters}
-                onClick={handleButtonClick}
               />
               {((): void => {
                 const rows = []
@@ -128,7 +123,6 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                       setContextMenu={setContextMenu}
                       setPromptItem={setPromptItem}
                       settings={settings}
-                      handleButtonClick={handleButtonClick}
                     />
                   )
                 }

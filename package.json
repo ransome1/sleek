@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.18",
+  "version": "2.0.19",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -27,7 +27,7 @@
   "copyright": "Copyright © 2021 to present ransome1",
   "main": "./out/main/index.js",
   "type": "module",
-  "node": ">=18",
+  "node": ">=22",
   "scripts": {
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
@@ -35,6 +35,7 @@
     "start": "electron-vite preview",
     "dev": "electron-vite dev --watch",
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "build": "npm run peggy && electron-vite build",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:mas": "npm run build && electron-builder build -m mas --universal --publish never",
@@ -45,20 +46,21 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.4.5",
-    "@mui/material": "^6.4.5",
-    "@mui/system": "^6.4.3",
+    "@mui/icons-material": "^6.4.7",
+    "@mui/material": "^6.4.7",
+    "@mui/system": "^6.4.7",
     "@mui/x-date-pickers": "^7.27.1",
     "chokidar": "^4.0.3",
     "dayjs": "^1.11.13",
     "electron-store": "^10.0.1",
     "i18next": "^24.2.2",
     "jstodotxt": "1.0.0-alpha.3",
+    "luxon": "^3.5.0",
     "react": "^19.0.0",
     "react-autosuggest": "^10.1.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.4.1",
-    "react-markdown": "^10.0.0",
+    "react-markdown": "^10.0.1",
     "react-string-replace": "^1.1.1",
     "remark-gfm": "^4.0.1",
     "sugar": "^2.0.6"
@@ -67,11 +69,12 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@types/node": "^22.13.5",
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^22.13.9",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^34.2.0",
+    "electron": "^35.0.0",
     "electron-builder": "^25.1.8",
     "electron-vite": "^3.0.0",
     "material-ui-popup-state": "^5.3.3",
@@ -79,7 +82,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass": "^1.85.1",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.7"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
   }
 }

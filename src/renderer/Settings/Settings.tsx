@@ -29,8 +29,20 @@ const visibleSettings: VisibleSettings = {
   convertRelativeToAbsoluteDates: {
     style: 'toggle'
   },
-  tray: {
+  useHumanFriendlyDates: {
     style: 'toggle',
+    help: 'https://github.com/ransome1/sleek/wiki/Human-friendly-dates'
+  },  
+  tray: {
+    style: 'toggle'
+  },
+  invertTrayColor: {
+    style: 'toggle',
+    dependsOn: ['tray']
+  },
+  startMinimized: {
+    style: 'toggle',
+    dependsOn: ['tray']
   },
   menuBarVisibility: {
     style: 'toggle'
@@ -45,10 +57,6 @@ const visibleSettings: VisibleSettings = {
   },
   disableAnimations: {
     style: 'toggle'
-  },
-  useHumanFriendlyDates: {
-    style: 'toggle',
-    help: 'https://github.com/ransome1/sleek/wiki/Human-friendly-dates'
   },
   compact: {
     style: 'toggle'
@@ -146,6 +154,13 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
             if (navigator.platform.startsWith('Mac') && settingName === 'menuBarVisibility') {
               return null
             }
+
+            if(settingValue.dependsOn) {
+              for (let i = 0; i < settingValue.dependsOn.length; i++) {
+                if(!settings[settingValue.dependsOn[i]]) return null
+              }
+            }
+
             return settingValue.style === 'toggle' ? (
               <FormControlLabel
                 key={settingName}

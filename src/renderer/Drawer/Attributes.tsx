@@ -4,10 +4,10 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Badge from '@mui/material/Badge'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import TomatoIconDuo from '../tomato-duo.svg?asset'
+import PomodoroIcon from '../../../resources/pomodoro.svg?asset'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import AirIcon from '@mui/icons-material/Air'
-import { handleFilterSelect, friendlyDate, translatedAttributes } from '../Shared'
+import { HandleFilterSelect, friendlyDate, translatedAttributes, IsSelected, IsExcluded } from '../Shared'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './Attributes.scss'
@@ -21,54 +21,35 @@ interface DrawerAttributesComponentProps extends WithTranslation {
   t: typeof i18n.t
 }
 
-const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo(
-  ({ settings, attributes, filters, t }) => {
+const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo(({ settings, attributes, filters, t }) => {
     const [hovered, setHovered] = useState<string | null>(null)
-    const isAttributesEmpty = useMemo(
-      () =>
-        !attributes ||
-        Object.values(attributes).every((attribute) => !Object.keys(attribute).length),
-      [attributes]
-    )
+    const isAttributesEmpty = useMemo(() => !attributes || Object.values(attributes).every((attribute) => !Object.keys(attribute).length), [attributes] )
 
-    const preprocessAttributes = (
-      attributeKey: string,
-      attributes: Record<string, { count: number; notify: boolean }>
-    ): Record<
-      string,
-      { key: string; name: string; count: number; notify: boolean; aggregatedValues: string[] }
-    > | null => {
-      if (!attributes) {
-        return null
-      }
+    const preprocessAttributes = (attributeKey: string, attributes) => {
+      if (!attributes) return null
+
       const isDate = ['due', 't', 'completed', 'created'].includes(attributeKey)
-      const processedAttributes: Record<
-        string,
-        { key: string; name: string; count: number; notify: boolean; aggregatedValues: string[] }
-      > = {}
+      const processedAttributes = {}
 
       Object.keys(attributes).forEach((key) => {
         if (attributes[key]) {
           const count = attributes[key].count
-          const formattedValues =
+          const groupedNames =
             settings.useHumanFriendlyDates && isDate
               ? friendlyDate(key, attributeKey, settings, t)
               : [key]
 
-          formattedValues.forEach((formattedValue) => {
-            if (!processedAttributes[formattedValue]) {
-              processedAttributes[formattedValue] = {
-                key: attributeKey,
-                name: formattedValue,
+          groupedNames.forEach((groupedName) => {
+            if (!processedAttributes[groupedName]) {
+              processedAttributes[groupedName] = {
                 count,
                 notify: attributes[key].notify,
-                aggregatedValues: [key]
+                value: [key],
               }
             } else {
-              processedAttributes[formattedValue].count += count
-              processedAttributes[formattedValue].notify =
-                processedAttributes[formattedValue].notify || attributes[key].notify
-              processedAttributes[formattedValue].aggregatedValues.push(key)
+              processedAttributes[groupedName].count += count
+              processedAttributes[groupedName].notify = processedAttributes[groupedName].notify || attributes[key].notify
+              processedAttributes[groupedName].value.push(key)
             }
           })
         }
@@ -104,24 +85,15 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
       store.setConfig('accordionOpenState', updatedAccordionOpenState)
     }
 
-    const renderAttributes = (
-      preprocessedAttributes: Record<
-        string,
-        { key: string; name: string; count: number; notify: boolean; aggregatedValues: string[] }
-      >,
-      filters: Filters | null,
-      handleFilterSelect: HandleFilterSelectType
-    ): JSX.Element[] => {
+    const renderAttributes = (key: string, preprocessedAttributes) => {
       return Object.keys(preprocessedAttributes).map((value, childIndex) => {
         const attribute = preprocessedAttributes[value]
-        const name = attribute.name
-        const key = attribute.key
-        const excluded =
-          filters && filters[key]?.some((filter: Filter) => filter.name === name && filter.exclude)
-        const selected = filters && filters[key]?.some((filter: Filter) => filter.name === name)
+        const excluded = IsExcluded(attribute, filters)
+        const selected = IsSelected(key, filters, attribute.value)
         const disabled = attribute.count === 0
-        const notify = key === 'due' ? attribute.notify : false
 
+        const notify = key === 'due' ? attribute.notify : false
+        const groupedName = (attribute.value.length > 1) ? value : null
         return (
           <div
             key={`${key}-${value}-${childIndex}`}
@@ -137,7 +109,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                   <span
                     onClick={(event) => {
                       event.stopPropagation()
-                      handleFilterSelect(key, name, attribute.aggregatedValues, filters, true)
+                      HandleFilterSelect(key, attribute.value, filters, true, groupedName)
                     }}
                   >
                     {hovered === `${key}-${value}-${childIndex}` ? (
@@ -155,13 +127,14 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                 onClick={
                   disabled
                     ? undefined
-                    : (): void =>
-                        handleFilterSelect(key, name, attribute.aggregatedValues, filters, false)
+                    : (): void => {
+                      HandleFilterSelect(key, attribute.value, filters, false, groupedName)
+                    }
                 }
                 disabled={disabled}
                 className={key === 'pm' ? 'pomodoro' : undefined}
               >
-                {key === 'pm' && <img src={TomatoIconDuo} alt="Pomodoro" />}
+                {key === 'pm' && <img src={PomodoroIcon} alt="Pomodoro" />}
                 {value}
               </button>
             </Badge>
@@ -172,7 +145,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                 data-testid={`drawer-button-exclude-${key}`}
                 className="overlay"
                 onClick={() =>
-                  handleFilterSelect(key, name, attribute.aggregatedValues, filters, false)
+                  HandleFilterSelect(key, attribute.value, filters, true, groupedName)
                 }
               >
                 <VisibilityOffIcon />
@@ -188,8 +161,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
         {!isAttributesEmpty ? (
           Object.keys(attributes).map((key, index) => {
             const preprocessedAttributes: Attributes = preprocessAttributes(key, attributes[key])
-            const attributeHeadline: string = translatedAttributes(t)[key]
-
+            const accordionSummary: string = translatedAttributes(t)[key]
             return Object.keys(preprocessedAttributes).length > 0 ? (
               <Accordion
                 key={index}
@@ -207,11 +179,11 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
                     }
                     data-testid={`drawer-attributes-accordion-${key}`}
                   >
-                    {attributeHeadline}
+                    {accordionSummary}
                   </Badge>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {renderAttributes(preprocessedAttributes, filters, handleFilterSelect)}
+                  {renderAttributes(key, preprocessedAttributes)}
                 </AccordionDetails>
               </Accordion>
             ) : null

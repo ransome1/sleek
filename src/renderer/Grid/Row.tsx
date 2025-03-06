@@ -1,11 +1,14 @@
 import React, { memo } from 'react'
 import Checkbox from '@mui/material/Checkbox'
-//import ListItem from '@mui/material/ListItem'
+import Tooltip from '@mui/material/Tooltip'
 import CircleChecked from '@mui/icons-material/CheckCircle'
 import CircleUnchecked from '@mui/icons-material/RadioButtonUnchecked'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 import { withTranslation, WithTranslation } from 'react-i18next'
 import RendererComponent from './Renderer'
+import { HandleFilterSelect, IsSelected } from '../Shared'
 import './Row.scss'
 import { i18n } from '../Settings/LanguageSelector'
 
@@ -79,29 +82,24 @@ const Row: React.FC<RowProps> = memo(
       )
     }
 
+    const preventDialog = (clickedElement): boolean => {
+      let match = false
+
+      if (clickedElement.classList.contains('MuiChip-label')) match = true
+      if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-t') match = true
+      if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due') match = true
+      if (clickedElement.tagName.toLowerCase() === 'a') match = true
+      if (clickedElement.tagName.toLowerCase() === 'input') match = true
+      if (clickedElement.tagName.toLowerCase() === 'button') match = true
+      if (clickedElement.tagName.toLowerCase() === 'img') match = true
+      return match
+    }    
+
     const handleRowClick = (event: React.MouseEvent | React.KeyboardEvent): void => {
       const clickedElement = event.target as HTMLElement
 
-      if (
-        (event.type === 'keydown' && (event as React.KeyboardEvent).key === 'Enter') ||
-        event.type === 'click'
-      ) {
-        const preventDialog = (): boolean => {
-          let match = false
-
-          if (clickedElement.classList.contains('MuiChip-label')) match = true
-          if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-t') match = true
-          if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due')
-            match = true
-          if (clickedElement.tagName.toLowerCase() === 'path') match = true
-          if (clickedElement.tagName.toLowerCase() === 'a') match = true
-          if (clickedElement.tagName.toLowerCase() === 'input') match = true
-          if (clickedElement.tagName.toLowerCase() === 'button') match = true
-          if (clickedElement.tagName.toLowerCase() === 'svg') match = true
-          if (clickedElement.tagName.toLowerCase() === 'img') match = true
-          return match
-        }
-        if (!preventDialog() && todoObject) {
+      if ((event.type === 'keydown' && (event as React.KeyboardEvent).key === 'Enter') || event.type === 'click') {
+        if (!preventDialog(clickedElement) && todoObject) {
           event.preventDefault()
           setTodoObject(todoObject)
           setDialogOpen(true)
@@ -134,9 +132,9 @@ const Row: React.FC<RowProps> = memo(
           onClick={(event) => handleRowClick(event)}
           onKeyDown={(event) => handleRowClick(event)}
           onContextMenu={(event) => handleContextMenu(event, todoObject.string)}
+          data-testid={`datagrid-row`}
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
-          data-testid={`datagrid-row`}
         >
           <Checkbox
             icon={<CircleUnchecked />}
@@ -147,13 +145,43 @@ const Row: React.FC<RowProps> = memo(
             inputProps={{ 'data-testid': 'datagrid-checkbox' }}
           />
 
-          {todoObject.hidden && <VisibilityOffIcon />}
+          {(settings.sorting[0].value != 'priority' || settings.fileSorting) && todoObject.priority &&
+            <span
+              data-todotxt-attribute="priority"
+              data-todotxt-value={todoObject.priority}
+              className={IsSelected('priority', filters, [todoObject.priority]) ? 'selected filter' : 'filter'}
+              data-testid={`datagrid-button-priority`}
+            >
+              <button onClick={() => HandleFilterSelect('priority', [todoObject.priority], filters, false)}>
+                {todoObject.priority}
+              </button>
+            </span>
+          }
+
+          {todoObject.completed &&
+            <Tooltip title={`${t('shared.attributeMapping.completed')} ${todoObject.completed}`} arrow>
+              <EventAvailableIcon
+                data-todotxt-attribute="completed"
+                data-testid={`datagrid-button-completed`}
+              />
+            </Tooltip>
+          }
+
+          {todoObject.created &&       
+            <Tooltip title={`${t('shared.attributeMapping.created')} ${todoObject.created}`} arrow>
+              <EventNoteIcon
+                data-todotxt-attribute="created"
+                data-testid={`datagrid-button-created`}
+               />
+            </Tooltip>
+          }
+
+          {todoObject.hidden && <VisibilityOffIcon data-todotxt-attribute="hidden " />}
 
           <RendererComponent
             todoObject={todoObject}
             filters={filters}
             settings={settings}
-            handleButtonClick={handleButtonClick}
           />
         </li>
       </>

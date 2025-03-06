@@ -51,7 +51,7 @@ button:hover:not(.MuiIconButton-root) {
       background: var(--color1);
     }
   }
-  &.selected.excluded {
+  .selected.excluded {
     button {
       color: var(--color1);
       background: var(--color2);
@@ -69,7 +69,7 @@ button:hover:not(.MuiIconButton-root) {
   &.selected {
     button {
       color: white;
-      background: #5a5a5a;
+      background: Variables.$dark-grey;
     }
   }
   .overlay {
@@ -80,7 +80,7 @@ button:hover:not(.MuiIconButton-root) {
 }
 
 *[data-todotxt-attribute='priority'][data-todotxt-value='A'] {
-  --color2: #ff3860;
+  --color2: #ff0000;
   border-left-color: var(--color2);
   &.selected {
     button {
@@ -90,7 +90,7 @@ button:hover:not(.MuiIconButton-root) {
 }
 
 *[data-todotxt-attribute='priority'][data-todotxt-value='B'] {
-  --color2: #fa745e;
+  --color2: #fd7d67;
   border-left-color: var(--color2);
   &.selected {
     button {
@@ -119,10 +119,10 @@ button:hover:not(.MuiIconButton-root) {
   }
   .overlay {
     svg {
-      color: var(--color2);
+      color: var(--color1);
     }
   }
-  &.selected {
+  .selected {
     button {
       color: white;
       background: rgb(221, 44, 0);
@@ -160,7 +160,7 @@ button:hover:not(.MuiIconButton-root) {
     }
     &.selected {
       button {
-        background: color.adjust(#5a5a5a, $lightness: -10%);
+        background: color.adjust(#5a5a5a, $lightness: -15%);
       }
     }
   }
