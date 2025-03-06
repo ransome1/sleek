@@ -2,7 +2,7 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.19] - 2025-02-xx
+## [2.0.19] - 2025-03-06
 
 ### Added
 
@@ -12,12 +12,12 @@ All notable changes to sleek will be documented in this file. The format is base
 * DMG background image
 * Help button to splashscreen
 * Added icons for completion and creation dates (#747)
-* New line is added to eof to establish wider todo.txt application compatibility
+* New line is added to eof to establish wider todo.txt application compatibility (#730)
 
 ### Enhanced
 * Replaced `dayjs` with `Luxon`
-* Refactoring `Date` module
-* Adjusted the red color hue
+* Refactoring `Date`, `Theme`, `Store`, `Menu` module
+* Adjusted the red color hue (discussed in #784)
 
 ### Fixed
 * Bug in `notification` feature which did not suppress messages reliably

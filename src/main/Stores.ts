@@ -67,15 +67,15 @@ const migrations = {
     config.set('matomo', true)
   },
   '2.0.1': (config) => {
-    console.log('Migrating from 2.0.0 → 2.0.1')
+    console.log('Migrating settings store from 2.0.0 → 2.0.1')
     config.set('anonymousUserId', crypto.randomUUID())
   },
   '2.0.2': (config) => {
-    console.log('Migrating from 2.0.1 → 2.0.2')
+    console.log('Migrating settings store from 2.0.1 → 2.0.2')
     config.set('dueDateInTheFuture', true)
   },
   '2.0.4': (config) => {
-    console.log('Migrating from 2.0.2 → 2.0.4')
+    console.log('Migrating settings store from 2.0.2 → 2.0.4')
     config.delete('multilineTextField')
     config.delete('isDrawerOpen')
     config.delete('useMultilineForBulkTodoCreation')
@@ -83,19 +83,19 @@ const migrations = {
     config.set('disableAnimations', false)
   },
   '2.0.10': (config) => {
-    console.log('Migrating from 2.0.4 → 2.0.10')
+    console.log('Migrating settings store from 2.0.4 → 2.0.10')
     config.set('useHumanFriendlyDates', false)
     config.set('excludeLinesWithPrefix', null)
   },
   '2.0.12': (config) => {
-    console.log('Migrating from 2.0.11 → 2.0.12')
+    console.log('Migrating settings store from 2.0.11 → 2.0.12')
     config.set('channel', distributionChannel())
     config.set('fileWatcherAtomic', 1000)
     config.set('fileWatcherPolling', false)
     config.set('fileWatcherPollingInterval', 100)
   },
   '2.0.13': (config) => {
-    console.log('Migrating from 2.0.12 → 2.0.13')
+    console.log('Migrating settings store from 2.0.12 → 2.0.13')
     config.set('weekStart', 1)
     config.delete('fileWatcherAtomic')
     config.delete('fileWatcherPolling')
@@ -109,16 +109,16 @@ const migrations = {
     })
   },
   '2.0.14': (config) => {
-    console.log('Migrating from 2.0.13 → 2.0.14')
+    console.log('Migrating settings store from 2.0.13 → 2.0.14')
     config.set('menuBarVisibility', true)
   },
   '2.0.17': (config) => {
-    console.log('Migrating from 2.0.14 → 2.0.17')
+    console.log('Migrating settings store from 2.0.14 → 2.0.17')
     config.set('compact', false)
     config.set('sortCompletedLast', false)
   },
   '2.0.19': (config) => {
-    console.log('Migrating from 2.0.17 → 2.0.19')
+    console.log('Migrating settings store from 2.0.17 → 2.0.19')
     config.set('invertTrayColor', false),
     config.set('startMinimized', false)
   }
@@ -164,6 +164,12 @@ export const SettingsStore = new Store<StoreType>({
 export const FiltersStore = new Store({
   cwd: userDataDirectory,
   name: 'filters',
+  migrations: {
+    '2.0.19': (filters) => {
+      console.log('Migrating filter store → 2.0.19')
+      filters.set('attributes', {})
+    }
+  }
 })
 
 export const NotificationsStore = new Store({
