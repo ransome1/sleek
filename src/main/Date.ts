@@ -7,7 +7,7 @@ export function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const due: DateAttribute = speakingDates['due:']
   const t: DateAttribute = speakingDates['t:']
   if (due.date) {
-    string = string.replace(due.string!, due.date)
+    string = string.replace(`due:${due.string!}`, `due:${due.date}`)
   }
   if (t.date) {
     string = string.replace(t.string!, t.date)
