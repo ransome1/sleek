@@ -115,7 +115,7 @@ export interface SourceText {
   readonly text: string;
 }
 
-export declare class SyntaxError extends Error {
+export declare class SyntaxError extends globalThis.SyntaxError {
   /**
    * Constructs the human-readable message from the machine representation.
    *
@@ -124,7 +124,6 @@ export declare class SyntaxError extends Error {
    *   expected
    */
   static buildMessage(expected: Expectation[], found?: string | null | undefined): string;
-  readonly message: string;
   readonly expected: Expectation[];
   readonly found: string | null | undefined;
   readonly location: LocationRange;

@@ -65,6 +65,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
 
   const DatePickerInline = ({ ...props }): void => {
     const ButtonField = ({ ...props }): void => {
+      
       const { disabled, InputProps: { ref } = {}, inputProps: { 'aria-label': ariaLabel } = {}} = props
       const mustNotify = type === 'due' ? !todoObject?.notify : true
       const groupedName =

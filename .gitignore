@@ -102,3 +102,5 @@ entitlements.mas.inherit.plist
 entitlements.mas.plist
 
 FilterLang.ts
+
+yarn.lock
