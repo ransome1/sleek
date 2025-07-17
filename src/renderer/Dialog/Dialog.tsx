@@ -121,7 +121,12 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     useEffect(() => {
       if (todoObject) {
         const updatedValue = todoObject.string?.replaceAll(String.fromCharCode(16), '\n') || ''
-        setTextFieldValue(updatedValue)
+        // Prefill a space when nothing but a prio was selected
+        if (/^\([A-Z]\)$/.test(updatedValue)) {
+          setTextFieldValue(updatedValue + ' ')
+        } else {
+          setTextFieldValue(updatedValue)
+        }
       }
     }, [todoObject])
 
