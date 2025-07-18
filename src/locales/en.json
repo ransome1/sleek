@@ -32,6 +32,7 @@
   "settings.weekStart": "First day of the week",
   "settings.0": "Sunday",
   "settings.1": "Monday",
+  "settings.6": "Saturday",
   "settings.menuBarVisibility": "Show menu bar",
   "settings.compact": "Compact view",
   "attributes": "Attributes",
