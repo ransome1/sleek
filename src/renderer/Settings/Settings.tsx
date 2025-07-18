@@ -85,7 +85,7 @@ const visibleSettings: VisibleSettings = {
   },
   weekStart: {
     style: 'select',
-    values: [1, 0]
+    values: [1, 6, 0]
   }
 }
 
