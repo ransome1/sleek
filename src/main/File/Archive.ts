@@ -62,8 +62,9 @@ function archiveTodos(): string {
     activeFile.doneFileBookmark
   )
 
+  const separator = todosFromDoneFile.toString().endsWith('\n') ? '' : '\n'
   writeToFile(
-    todosFromDoneFile + '\n' + completedTodos,
+    todosFromDoneFile + separator + completedTodos,
     activeFile.doneFilePath,
     activeFile.doneFileBookmark
   )
