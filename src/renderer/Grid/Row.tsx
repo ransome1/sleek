@@ -88,6 +88,12 @@ const Row: React.FC<RowProps> = memo(
       if (clickedElement.classList.contains('MuiChip-label')) match = true
       if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-t') match = true
       if (clickedElement.getAttribute('data-testid') === 'datagrid-picker-date-due') match = true
+      // if (clickedElement.closest('.filter')) {
+      //   const foundElement = clickedElement.closest('.filter');
+      //   if(foundElement.getAttribute('data-todotxt-attribute') === 'due' || foundElement.getAttribute('data-todotxt-attribute') === 't') {
+      //     match = true
+      //   }
+      // }
       if (clickedElement.tagName.toLowerCase() === 'a') match = true
       if (clickedElement.tagName.toLowerCase() === 'input') match = true
       if (clickedElement.tagName.toLowerCase() === 'button') match = true

@@ -53,7 +53,7 @@ button {
 	  	display: flex;
 	  	align-items: center;
 	  	height: 100%;
-	  	padding: 0.25em 0;
+	  	padding: 0.1em 0;
 	  }
 	}	
   &.group {
@@ -164,9 +164,15 @@ div[data-todotxt-attribute='priority'] {
   }
 
 .compact {
-	button {
-		padding: 0.4em;
-	}
+	// .row {
+	// 	[data-todotxt-attribute='due'],
+	// 	[data-todotxt-attribute='t'],
+	// 	[data-todotxt-attribute='rec'] {
+	// 	  div {
+	// 	  	padding: 0.1em 0;
+	// 	  }
+	// 	}
+	// }	
 	div[data-todotxt-attribute='priority'] {
 		button {
 			font-size: 1.25em;
