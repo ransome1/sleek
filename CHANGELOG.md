@@ -6,9 +6,11 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ### Added
 * Updated all dependencies to its latest versions
+* Added Saturday as option for first day of the week (#721) contributed by @Lezurex
 
 ### Enhanced
 * Enhanced Italian translations contributed by @lookup82
+* Enhanced archiving function (#810) contributed by @Lezurex
 * Minor CSS and React component clean up
 
 ### Fixed
