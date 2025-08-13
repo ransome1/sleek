@@ -79,7 +79,7 @@ appx:
   displayName: sleek - Todo manager
   identityName: 17450RobinAhle.sleektodomanager
   publisher: CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C
-  publisherDisplayName: ransome1
+  publisherDisplayName: Robin Ahle
   applicationId: RobinAhle.sleektodomanager
 linux:
   icon: ./resources/icon

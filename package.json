@@ -21,10 +21,10 @@
   },
   "license": "MIT",
   "author": {
-    "name": "ransome1",
+    "name": "Robin Ahle",
     "email": "ransome@mailbox.org"
   },
-  "copyright": "Copyright © 2021 to present ransome1",
+  "copyright": "Copyright © 2021 to present Robin Ahle",
   "main": "./out/main/index.js",
   "type": "module",
   "node": ">=22",

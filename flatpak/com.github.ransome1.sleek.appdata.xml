@@ -6,7 +6,7 @@
   <launchable type="desktop-id">com.github.ransome1.sleek.desktop</launchable>
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
-  <developer_name>ransome1</developer_name>
+  <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.1"/>
   <releases>
     <release version="2.0.20" date="2025-08-12"/>

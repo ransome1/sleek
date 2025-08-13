@@ -20,7 +20,9 @@ sleek's backlog is becoming increasingly populated, yet our capacity is limited.
 
 ### Get sleek from Apple Mac App Store
 
-https://apps.apple.com/us/app/sleek-todo-manager/id1614704209
+<a href="https://apps.apple.com/de/app/sleek-todo-txt-manager/id1614704209?mt=12&itscg=30200&itsct=apps_box_badge&mttnsubad=1614704209" style="display: inline-block;">
+<img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1648771200" alt="Download on the App Store" style="vertical-align: middle; object-fit: contain;" width='180' />
+</a>
 
 ### Get sleek from Microsoft Store
 
@@ -42,8 +44,9 @@ Run it using: `flatpak run com.github.ransome1.sleek`
 
 ### Get sleek from Homebrew
 
-Install sleek from [Homebrew](https://formulae.brew.sh/cask/sleek).
-`brew install --cask sleek`
+Install sleek from [Homebrew](https://formulae.brew.sh/cask/sleek-app).
+
+`brew install --cask sleek-app`
 
 ### Get sleek from Arch User Repository
 
