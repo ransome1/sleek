@@ -9,7 +9,8 @@
   <developer_name>Robin Ahle</developer_name>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="2.0.20" date="2025-08-12"/>
+    <release version="2.0.21" date="2025-09-07"/>
+    <url type="details">https://raw.githubusercontent.com/ransome1/sleek/refs/heads/main/CHANGELOG.md</url>
   </releases>
   <url type="homepage">https://github.com/ransome1/sleek</url>
   <url type="contact">https://github.com/ransome1/sleek/issues</url>
