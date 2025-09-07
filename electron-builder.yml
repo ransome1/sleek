@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '59'
+buildVersion: '60'
 asar: true
 files:
   - "**/*"
@@ -102,4 +102,4 @@ linux:
       arch:
         - arm64
         - x64
-electronVersion: 34.0.0
+electronVersion: 38.0.0
