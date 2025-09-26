@@ -62,14 +62,21 @@ function archiveTodos(): string {
     activeFile.doneFileBookmark
   )
 
-  const separator = todosFromDoneFile.toString().endsWith('\n') ? '' : '\n'
+  const contentForDoneFile = todosFromDoneFile.length > 1
+    ? todosFromDoneFile + completedTodos
+    : completedTodos;
+
   writeToFile(
-    todosFromDoneFile + separator + completedTodos,
+    contentForDoneFile,
     activeFile.doneFilePath,
     activeFile.doneFileBookmark
   )
 
-  writeToFile(uncompletedTodos, activeFile.todoFilePath, activeFile.todoFileBookmark)
+  writeToFile(
+    uncompletedTodos,
+    activeFile.todoFilePath,
+    activeFile.todoFileBookmark
+  )
 
   return 'Successfully archived'
 }

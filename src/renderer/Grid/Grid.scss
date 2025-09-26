@@ -19,25 +19,7 @@
 .compact {
   #grid {
     padding: 0 0.75em 0.75em 0.75em;
-    .row {
-      padding: 0.3em;
-      [data-todotxt-attribute='due'],
-      [data-todotxt-attribute='t'],
-      [data-todotxt-attribute='rec'] {
-        button {
-          padding: 0 0.5em 0 0;
-        }
-        div {
-          padding: 0.1em 0;
-        }
-      }
-      .filter:not([data-todotxt-attribute='priority']):not([data-todotxt-attribute='t']):not([data-todotxt-attribute='due']):not([data-todotxt-attribute='rec']) {
-        button {
-          padding: 0.2em 0.4em;
-        }
-      }
-    }
-  }  
+  }
 }
 
 .dark {

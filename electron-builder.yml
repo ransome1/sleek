@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '60'
+buildVersion: '61'
 asar: true
 files:
   - "**/*"

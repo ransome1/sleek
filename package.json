@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.21",
+  "version": "2.0.22-rc.1",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -59,14 +59,14 @@
     "react": "^19.1.0",
     "react-autosuggest": "^10.1.0",
     "react-dom": "^19.1.0",
-    "react-i18next": "^15.6.0",
+    "react-i18next": "^16.0.0",
     "react-markdown": "^10.1.0",
     "react-string-replace": "^1.1.1",
     "remark-gfm": "^4.0.1",
     "sugar": "^2.0.6"
   },
   "devDependencies": {
-    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@electron-toolkit/tsconfig": "^2.0.0",
     "@types/luxon": "^3.6.2",
     "@types/node": "^24.0.14",
     "@types/react": "^19.1.8",

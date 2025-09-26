@@ -159,7 +159,7 @@ button:hover:not(.MuiIconButton-root) {
       }
     }
     &.selected {
-      button {
+      button, div {
         background: color.adjust(#5a5a5a, $lightness: -15%);
       }
     }
