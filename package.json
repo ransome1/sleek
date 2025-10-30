@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.22-rc.1",
+  "version": "2.0.22-rc.2",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -22,7 +22,7 @@
   "license": "MIT",
   "author": {
     "name": "Robin Ahle",
-    "email": "ransome@mailbox.org"
+    "email": "sleek@datenkrake.eu"
   },
   "copyright": "Copyright © 2021 to present Robin Ahle",
   "main": "./out/main/index.js",
@@ -49,10 +49,10 @@
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
     "@mui/system": "^7.2.0",
-    "@mui/x-date-pickers": "^8.8.0",
+    "@mui/x-date-pickers": "^8.16.0",
     "chokidar": "^4.0.3",
     "dayjs": "^1.11.13",
-    "electron-store": "^10.1.0",
+    "electron-store": "^11.0.2",
     "i18next": "^25.3.2",
     "jstodotxt": "1.0.0-alpha.3",
     "luxon": "^3.7.1",
@@ -72,7 +72,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^5.0.0",
-    "electron": "^38.0.0",
+    "electron": "^39.0.0",
     "electron-builder": "^26.0.12",
     "electron-vite": "^4.0.0",
     "material-ui-popup-state": "^5.3.6",

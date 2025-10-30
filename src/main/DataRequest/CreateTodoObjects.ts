@@ -15,19 +15,6 @@ function createTodoObject(lineNumber: number, string: string, attributeType?: st
 
   const extensions = JsTodoTxtObject.extensions()
 
-  if (attributeType) {
-    if (attributeType === 'priority') {
-      const value = attributeValue === '-' ? null : attributeValue
-      JsTodoTxtObject.setPriority(value)
-    } else {
-      if (!attributeValue) {
-        JsTodoTxtObject.removeExtension(attributeType)
-      } else {
-        JsTodoTxtObject.setExtension(attributeType, attributeValue)
-      }
-    }
-  }
-
   content = JsTodoTxtObject.toString().replaceAll(' [LB] ', String.fromCharCode(16))
 
   const body = JsTodoTxtObject.body().replaceAll(' [LB] ', ' ')
@@ -49,6 +36,30 @@ function createTodoObject(lineNumber: number, string: string, attributeType?: st
     : null
   const projects = JsTodoTxtObject.projects().length > 0 ? JsTodoTxtObject.projects() : null
   const contexts = JsTodoTxtObject.contexts().length > 0 ? JsTodoTxtObject.contexts() : null
+  const pri: string | number | null =
+    extensions.find((extension) => extension.key === 'pri')?.value || null
+
+
+  let priority;
+
+  if (attributeType) {
+    if (attributeType === 'priority') {
+      const value = attributeValue === '-' ? null : attributeValue
+      JsTodoTxtObject.setPriority(value)
+    } else {
+      if (!attributeValue) {
+        JsTodoTxtObject.removeExtension(attributeType)
+      } else {
+        JsTodoTxtObject.setExtension(attributeType, attributeValue)
+      }
+    }
+  }
+
+  if(JsTodoTxtObject.priority()) {
+    priority = JsTodoTxtObject.priority();
+  } else if(!JsTodoTxtObject.priority() && pri) {
+    priority = pri;
+  }
 
   return {
     lineNumber,
@@ -56,7 +67,7 @@ function createTodoObject(lineNumber: number, string: string, attributeType?: st
     created,
     complete: JsTodoTxtObject.complete(),
     completed: completed,
-    priority: JsTodoTxtObject.priority(),
+    priority,
     contexts: contexts,
     projects: projects,
     due,

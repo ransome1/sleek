@@ -35,6 +35,12 @@ button {
 }
 
 .row {
+	[data-todotxt-attribute="priority"] {
+    button {
+      font-weight: bold;
+    }
+  }	
+	
 	button {
 		padding: 0.25em 0.5em;
 	}
@@ -55,11 +61,13 @@ button {
 	  	height: 100%;
 	  	padding: 0.1em 0;
 	  }
-	}	
+	}
+
   &.group {
 		button {
 	    font-size: 1.25em;
 	    font-weight: bold;
+	    padding: 0.25em 0.5em;
 	  }
   }
 }

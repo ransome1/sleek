@@ -5,6 +5,7 @@ function restorePreviousPriority(JsTodoTxtObject: any) {
   )
   const previousPriorityString: string = JsTodoTxtObject.extensions()[previousPriorityIndex]?.value
   JsTodoTxtObject.setPriority(previousPriorityString)
+  JsTodoTxtObject.removeExtension('pri', previousPriorityString);
 }
 
 export default restorePreviousPriority
