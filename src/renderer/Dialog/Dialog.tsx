@@ -105,7 +105,6 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
         } else {
           updatedValue = value
         }
-
         ipcRenderer.send(
           'updateTodoObject',
           todoObject?.lineNumber,

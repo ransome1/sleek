@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.22-rc.2",
+  "version": "2.0.22-rc.3",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -50,7 +50,7 @@
     "@mui/material": "^7.2.0",
     "@mui/system": "^7.2.0",
     "@mui/x-date-pickers": "^8.16.0",
-    "chokidar": "^4.0.3",
+    "chokidar": "^5.0.0",
     "dayjs": "^1.11.13",
     "electron-store": "^11.0.2",
     "i18next": "^25.3.2",
@@ -81,6 +81,6 @@
     "react-dom": "^19.1.0",
     "sass": "^1.89.2",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.14"
   }
 }
