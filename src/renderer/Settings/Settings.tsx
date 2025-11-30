@@ -22,48 +22,113 @@ import './Settings.scss'
 
 const { ipcRenderer, store } = window.api
 
+/**
+ * ============================================================================
+ * SIMPLIFICATION ANALYSIS FOR OPINIONATED macOS APP
+ * ============================================================================
+ *
+ * The following settings can be REMOVED or HARDCODED for a minimal experience:
+ *
+ * [REMOVE] Language selector (LanguageSelector.tsx)
+ *   → Hardcode to 'en' or 'zh' based on your preference
+ *   → Delete: src/renderer/Settings/LanguageSelector.tsx
+ *   → Delete: src/locales/* (keep only one language file)
+ *
+ * [REMOVE] matomo
+ *   → Analytics/privacy toggle - not needed for personal tool
+ *
+ * [REMOVE] menuBarVisibility
+ *   → Already hidden on macOS (line 154-156), can be completely removed
+ *
+ * [REMOVE] invertTrayColor
+ *   → macOS handles tray icons automatically with template images
+ *
+ * [HARDCODE] colorTheme → 'system'
+ *   → Follow macOS system dark/light mode automatically
+ *
+ * [HARDCODE] weekStart → 1 (Monday)
+ *   → Standard week start for productivity apps
+ *
+ * [HARDCODE] appendCreationDate → true
+ *   → Best practice for todo.txt
+ *
+ * [HARDCODE] convertRelativeToAbsoluteDates → true
+ *   → Better for persistence
+ *
+ * [HARDCODE] useHumanFriendlyDates → true
+ *   → Better UX
+ *
+ * [KEEP] Essential settings:
+ *   - zoom (accessibility)
+ *   - compact (UI preference)
+ *   - notificationsAllowed + notificationThreshold
+ *   - tray + startMinimized (for menubar app behavior)
+ *   - bulkTodoCreation (power user feature)
+ *   - disableAnimations (accessibility)
+ *
+ * [SIMPLIFY] Multi-file management (FileTabs.tsx)
+ *   → For a minimal app, consider supporting only ONE todo.txt file
+ *   → Remove: src/renderer/Header/FileTabs.tsx
+ *   → Simplify: src/main/File/* to handle single file only
+ *
+ * ============================================================================
+ */
+
 const visibleSettings: VisibleSettings = {
+  // [HARDCODE as 'true'] - Best practice for todo.txt format
   appendCreationDate: {
     style: 'toggle'
   },
+  // [HARDCODE as 'true'] - Better for data persistence
   convertRelativeToAbsoluteDates: {
     style: 'toggle'
   },
+  // [HARDCODE as 'true'] - Better user experience
   useHumanFriendlyDates: {
     style: 'toggle',
     help: 'https://github.com/ransome1/sleek/wiki/Human-friendly-dates'
-  },  
+  },
+  // [KEEP] - Useful for menubar app mode on macOS
   tray: {
     style: 'toggle'
   },
+  // [REMOVE] - macOS handles this automatically with template images
   invertTrayColor: {
     style: 'toggle',
     dependsOn: ['tray']
   },
+  // [KEEP] - Useful for menubar app mode
   startMinimized: {
     style: 'toggle',
     dependsOn: ['tray']
   },
+  // [REMOVE] - Not applicable to macOS (already conditionally hidden)
   menuBarVisibility: {
     style: 'toggle'
   },
+  // [KEEP] - Power user feature
   bulkTodoCreation: {
     style: 'toggle',
     help: 'https://github.com/ransome1/sleek/wiki/Multi%E2%80%90line-text-field#bulk-todo-creation'
   },
+  // [REMOVE] - Analytics not needed for personal tool
   matomo: {
     style: 'toggle',
     help: 'https://github.com/ransome1/sleek/blob/main/PRIVACY.md'
   },
+  // [KEEP] - Accessibility feature
   disableAnimations: {
     style: 'toggle'
   },
+  // [KEEP] - UI density preference
   compact: {
     style: 'toggle'
   },
+  // [KEEP] - Notification feature
   notificationsAllowed: {
     style: 'toggle'
   },
+  // [KEEP] - Notification configuration
   notificationThreshold: {
     style: 'slider',
     min: 0,
@@ -72,6 +137,7 @@ const visibleSettings: VisibleSettings = {
     step: 1,
     help: 'https://github.com/ransome1/sleek/wiki/Notifications-and-badges#notification-threshold'
   },
+  // [KEEP] - Accessibility feature
   zoom: {
     style: 'slider',
     min: 50,
@@ -79,10 +145,12 @@ const visibleSettings: VisibleSettings = {
     unit: '%',
     step: 10
   },
+  // [HARDCODE as 'system'] - Follow macOS system preference
   colorTheme: {
     style: 'select',
     values: ['system', 'light', 'dark']
   },
+  // [HARDCODE as 1] - Monday as standard week start
   weekStart: {
     style: 'select',
     values: [1, 6, 0]

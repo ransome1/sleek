@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=sleek
-Exec=sleek
-Terminal=false
-Type=Application
-Icon=${SNAP}/meta/gui/icon.png
-StartupWMClass=sleek
-Comment=todo.txt manager for Linux, free and open-source (FOSS)
-Categories=ProjectManagement

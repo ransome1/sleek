@@ -2,13 +2,14 @@
   "name": "sleek",
   "productName": "sleek",
   "version": "2.0.22",
-  "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
-  "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
+  "description": "A minimal todo.txt manager for macOS",
+  "synopsis": "A minimal todo.txt manager for macOS",
   "keywords": [
     "todo.txt",
     "todo",
     "productivity",
-    "tasks"
+    "tasks",
+    "macos"
   ],
   "category": "ProjectManagement",
   "homepage": "https://github.com/ransome1/",
@@ -37,7 +38,7 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "build": "npm run peggy && electron-vite build",
-    "build:unpack": "npm run build && electron-builder --dir",
+    "build:mac": "npm run build && electron-builder build -m --publish never",
     "build:mas": "npm run build && electron-builder build -m mas --universal --publish never",
     "build:masdev": "npm run build && electron-builder build -m mas-dev --publish never",
     "postinstall": "electron-builder install-app-deps",
