@@ -1,7 +1,100 @@
-$radius: 0.65em;
-$blue: #1976d2;
-$darker-grey: #2d2d2d;
-$dark-grey: #5a5a5a;
-$mid-grey: #ccc;
-$light-grey: #ebebeb;
-$lighter-grey: #f0f0f0;
+// ============================================
+// SLEEK UI - Modern Design System Variables
+// ============================================
+
+// Border radius
+$radius: 0.75em;
+$radius-sm: 0.5em;
+$radius-lg: 1em;
+$radius-xl: 1.5em;
+
+// Core brand colors
+$blue: #3b82f6;
+$blue-light: #60a5fa;
+$blue-dark: #2563eb;
+
+// Gray scale - Light mode
+$darker-grey: #1e293b;
+$dark-grey: #475569;
+$mid-grey: #94a3b8;
+$light-grey: #e2e8f0;
+$lighter-grey: #f1f5f9;
+$white: #ffffff;
+
+// Gray scale - Dark mode specific
+$dark-bg-primary: #0f172a;
+$dark-bg-secondary: #1e293b;
+$dark-bg-tertiary: #334155;
+$dark-bg-elevated: #475569;
+$dark-text-primary: #f8fafc;
+$dark-text-secondary: #cbd5e1;
+$dark-text-muted: #64748b;
+
+// Accent colors for priority gradients
+$priority-a-start: #ef4444;
+$priority-a-end: #f97316;
+$priority-b-start: #f59e0b;
+$priority-b-end: #fbbf24;
+$priority-c-start: #3b82f6;
+$priority-c-end: #60a5fa;
+$priority-d-start: #64748b;
+$priority-d-end: #94a3b8;
+
+// Tag colors - Projects (purple/violet)
+$project-bg-light: #ede9fe;
+$project-text-light: #6d28d9;
+$project-bg-dark: #4c1d95;
+$project-text-dark: #ddd6fe;
+
+// Tag colors - Contexts (teal/cyan)
+$context-bg-light: #ccfbf1;
+$context-text-light: #0d9488;
+$context-bg-dark: #134e4a;
+$context-text-dark: #99f6e4;
+
+// Notification/accent colors
+$notification: #f43f5e;
+$success: #10b981;
+$warning: #f59e0b;
+$info: #0ea5e9;
+
+// Glassmorphism
+$glass-bg-light: rgba(255, 255, 255, 0.7);
+$glass-bg-dark: rgba(30, 41, 59, 0.8);
+$glass-blur: 12px;
+$glass-border-light: rgba(255, 255, 255, 0.3);
+$glass-border-dark: rgba(255, 255, 255, 0.1);
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+// Dark mode shadows
+$shadow-dark-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+$shadow-dark-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+$shadow-dark-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+
+// Animation timings
+$transition-fast: 0.15s ease;
+$transition-normal: 0.25s ease;
+$transition-slow: 0.35s ease;
+$transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// Spacing
+$spacing-xs: 0.25em;
+$spacing-sm: 0.5em;
+$spacing-md: 1em;
+$spacing-lg: 1.5em;
+$spacing-xl: 2em;
+
+// Touch-friendly minimum size
+$touch-target: 44px;
+
+// Z-index layers
+$z-base: 1;
+$z-dropdown: 10;
+$z-sticky: 20;
+$z-modal: 100;
+$z-tooltip: 200;

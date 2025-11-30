@@ -1,75 +1,205 @@
 @use '../Variables.scss';
 
+// ============================================
+// SLEEK UI - Drawer/Sidebar Styling
+// ============================================
+
 .MuiDrawer-root {
   height: 100vh;
-  transition: margin-left 0.3s ease;
+  transition: margin-left Variables.$transition-slow;
+
   .MuiPaper-root {
     position: relative;
-    z-index: 5;
+    z-index: Variables.$z-dropdown;
+    background: Variables.$glass-bg-light;
+    backdrop-filter: blur(Variables.$glass-blur);
+    -webkit-backdrop-filter: blur(Variables.$glass-blur);
+    border-left: 1px solid Variables.$glass-border-light;
+    box-shadow: Variables.$shadow-lg;
+
+    // Tabs container
     .MuiTabs-root {
       height: auto;
       overflow: visible;
+      background: transparent;
+      border-bottom: 1px solid Variables.$light-grey;
+
       .MuiTabs-flexContainer {
         button {
           min-width: 7em;
           min-height: auto;
-          padding: 0.75em 1.5em;
-          font-size: 0.8em;
+          padding: 1em 1.5em;
+          font-size: 0.85em;
+          font-weight: 500;
           text-transform: none;
-          svg {
-            font-size: 1.5em;
+          transition: all Variables.$transition-fast;
+          position: relative;
+          color: Variables.$dark-grey;
+
+          &:hover {
+            background: rgba(59, 130, 246, 0.08);
+            color: Variables.$blue;
           }
+
+          &.Mui-selected {
+            color: Variables.$blue;
+            font-weight: 600;
+          }
+
+          svg {
+            font-size: 1.4em;
+            margin-bottom: 0.2em;
+          }
+
+          // Reset/clear button
           .reset {
-            font-size: 1.25em;
+            font-size: 1.1em;
             position: absolute;
-            right: 0em;
-            bottom: 0em;
-            color: Variables.$dark-grey;
+            right: 0.25em;
+            bottom: 0.25em;
+            color: Variables.$mid-grey;
+            transition: all Variables.$transition-fast;
+            opacity: 0;
+            transform: scale(0.8);
+
+            &:hover {
+              color: Variables.$notification;
+              transform: scale(1);
+            }
+          }
+
+          &:hover .reset,
+          &.Mui-selected .reset {
+            opacity: 1;
+            transform: scale(1);
           }
         }
       }
+
+      // Tab indicator
       .MuiTabs-indicator {
         top: 0;
-        height: 0.2em;
-      }      
+        height: 3px;
+        border-radius: 0 0 3px 3px;
+        background: linear-gradient(90deg, Variables.$blue, Variables.$blue-light);
+      }
     }
   }
+
+  // Resize handle
   .drawerHandle {
-    width: 0.3em;
+    width: 4px;
     height: 100vh;
     position: absolute;
     top: 0;
     right: 0;
     cursor: ew-resize;
+    background: transparent;
+    transition: background Variables.$transition-fast;
+
+    &:hover {
+      background: Variables.$blue;
+    }
+
+    &:active {
+      background: Variables.$blue-dark;
+    }
   }
+
+  // Open state minimum width
   &.open {
-    min-width: 19em;
+    min-width: 20em;
   }
 }
+
+// ============================================
+// ANIMATION DISABLED MODE
+// ============================================
 
 .disableAnimations #drawer {
   transition: none;
+
+  .MuiPaper-root .MuiTabs-root .MuiTabs-flexContainer button {
+    transition: none;
+
+    .reset {
+      transition: none;
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .drawerHandle {
+    transition: none;
+  }
 }
+
+// ============================================
+// COMPACT MODE
+// ============================================
 
 .compact {
   #drawer {
+    .MuiPaper-root .MuiTabs-root .MuiTabs-flexContainer button {
+      padding: 0.75em 1em;
+      font-size: 0.8em;
+
+      svg {
+        font-size: 1.25em;
+      }
+    }
+
     #Attributes {
       .filter:not([data-todotxt-attribute='priority']) button {
-        padding: 0.4em;
+        padding: 0.35em 0.5em;
+        font-size: 0.85em;
       }
     }
   }
 }
 
+// ============================================
+// DARK MODE
+// ============================================
+
 .dark {
-  #drawer {
+  .MuiDrawer-root {
     .MuiPaper-root {
-      .MuiTabs-flexContainer {
-        button {
-          .reset {
-            color: Variables.$light-grey;
+      background: Variables.$glass-bg-dark;
+      border-left-color: Variables.$glass-border-dark;
+      box-shadow: Variables.$shadow-dark-lg;
+
+      .MuiTabs-root {
+        border-bottom-color: Variables.$dark-bg-tertiary;
+
+        .MuiTabs-flexContainer {
+          button {
+            color: Variables.$dark-text-secondary;
+
+            &:hover {
+              background: rgba(59, 130, 246, 0.12);
+              color: Variables.$blue-light;
+            }
+
+            &.Mui-selected {
+              color: Variables.$blue-light;
+            }
+
+            .reset {
+              color: Variables.$dark-text-muted;
+
+              &:hover {
+                color: Variables.$notification;
+              }
+            }
           }
         }
+      }
+    }
+
+    .drawerHandle {
+      &:hover {
+        background: Variables.$blue-light;
       }
     }
   }

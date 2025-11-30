@@ -1,105 +1,205 @@
 @use 'Variables.scss';
 
-button {	
-	font-size: 1em;
-	border: none;
-	border-radius: Variables.$radius;
-	padding: 0.6em 0.7em;
-	margin: 0;
-	cursor: pointer;
-	background: Variables.$blue;
-	color: white;
+// ============================================
+// SLEEK UI - Button Styling
+// ============================================
+
+// Base button styles
+button {
+  font-size: 1em;
+  font-weight: 500;
+  border: none;
+  border-radius: Variables.$radius;
+  padding: 0.6em 1em;
+  margin: 0;
+  cursor: pointer;
+  background: linear-gradient(135deg, Variables.$blue, Variables.$blue-dark);
+  color: white;
+  transition: all Variables.$transition-fast;
+  position: relative;
+  overflow: hidden;
+  min-height: Variables.$touch-target;
+
+  // Hover state with lift effect
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  }
+
+  // Active/pressed state
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
+  }
+
+  // Focus visible state
+  &:focus-visible {
+    outline: 2px solid Variables.$blue-light;
+    outline-offset: 2px;
+  }
 }
+
+// ============================================
+// DIALOG BUTTONS
+// ============================================
 
 .MuiDialog-root {
   .MuiDialog-paper {
     .MuiDialogActions-root {
+      padding: 0;
+      gap: 0;
+
       button {
         width: 100%;
         background: none;
         border-radius: 0;
         color: Variables.$blue;
-        font-weight: bold;
+        font-weight: 600;
         border-top: 1px solid Variables.$light-grey;
         border-right: 1px solid Variables.$light-grey;
         margin: 0;
+        min-height: 48px;
+        transition: all Variables.$transition-fast;
+
         &:last-child {
           border-right: none;
+          border-bottom-right-radius: 16px;
         }
+
+        &:first-child:last-child {
+          border-bottom-left-radius: 16px;
+        }
+
         &:hover {
-        	background: Variables.$lighter-grey;
+          background: Variables.$lighter-grey;
+          transform: none;
+          box-shadow: none;
         }
-      }   
+
+        &:active {
+          background: Variables.$light-grey;
+          transform: none;
+        }
+      }
     }
   }
 }
+
+// ============================================
+// ROW BUTTONS
+// ============================================
 
 .row {
-	[data-todotxt-attribute="priority"] {
+  [data-todotxt-attribute="priority"] {
     button {
-      font-weight: bold;
+      font-weight: 700;
     }
-  }	
-	
-	button {
-		padding: 0.25em 0.5em;
-	}
-	[data-todotxt-attribute='due'],
-	[data-todotxt-attribute='t'],
-	[data-todotxt-attribute='rec'] {
-		button {
-			display: flex;
-			padding: 0 0.5em 0 0;
-			margin: 0;
-		}
-		div:first-child {
-			margin-right: 0.25em;
-		}
-	  div {
-	  	display: flex;
-	  	align-items: center;
-	  	height: 100%;
-	  	padding: 0.1em 0;
-	  }
-	}
+  }
 
+  button {
+    padding: 0.3em 0.6em;
+    min-height: auto;
+    background: none;
+    box-shadow: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Date/time attribute buttons
+  [data-todotxt-attribute='due'],
+  [data-todotxt-attribute='t'],
+  [data-todotxt-attribute='rec'] {
+    button {
+      display: flex;
+      padding: 0 0.5em 0 0;
+      margin: 0;
+      align-items: center;
+    }
+
+    div:first-child {
+      margin-right: 0.25em;
+    }
+
+    div {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0.1em 0;
+    }
+  }
+
+  // Group header buttons
   &.group {
-		button {
-	    font-size: 1.25em;
-	    font-weight: bold;
-	    padding: 0.25em 0.5em;
-	  }
+    button {
+      font-size: 1.2em;
+      font-weight: 700;
+      padding: 0.3em 0.5em;
+      color: Variables.$darker-grey;
+      background: transparent;
+
+      &:hover {
+        color: Variables.$blue;
+      }
+    }
   }
 }
 
+// ============================================
+// FILTER BUTTONS
+// ============================================
+
 .filter {
-	position: relative;
-	button {
-		svg, img {
-		  width: 1em;
-		}
-		.MuiChip-root {
-		  font-size: 1em;
-		  width: auto;
-		  border-radius: Variables.$radius 0 0 Variables.$radius;
-		  .MuiChip-label {
-		    font-size: 1em;
-		    padding: 0 0.5em;
-		    margin: 0;
-		  }
-		}
-		&.pomodoro {
-			display: flex;
-			img {
-			 	margin: 0 0.2em 0 0;
-			}
-		}
-		&:disabled {
-			color: Variables.$dark-grey;
-			background: Variables.$mid-grey;
-			filter: opacity(50%) grayscale(100%);
-		}
-	}
+  position: relative;
+
+  button {
+    svg, img {
+      width: 1em;
+    }
+
+    .MuiChip-root {
+      font-size: 1em;
+      width: auto;
+      border-radius: Variables.$radius 0 0 Variables.$radius;
+
+      .MuiChip-label {
+        font-size: 1em;
+        padding: 0 0.5em;
+        margin: 0;
+      }
+    }
+
+    // Pomodoro button
+    &.pomodoro {
+      display: flex;
+      align-items: center;
+
+      img {
+        margin: 0 0.25em 0 0;
+      }
+    }
+
+    // Disabled state
+    &:disabled {
+      color: Variables.$mid-grey;
+      background: Variables.$light-grey;
+      filter: opacity(60%) grayscale(80%);
+      cursor: not-allowed;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // Exclusion overlay
   .overlay {
     width: 100%;
     height: 100%;
@@ -112,104 +212,213 @@ button {
     top: 0;
     left: 0;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(2px);
     cursor: pointer;
+    transition: all Variables.$transition-fast;
+
     svg {
       font-size: 1.25em;
     }
   }
-	.MuiBadge-badge {
-		min-width: 1.5em;
-		height: 1.5em;
-		padding: 0.25em;
-		z-index: 10;
-		font-weight: bold;
-		cursor: pointer;
-		svg {
-			margin-top: 0.15em;
-			font-size: inherit;
-		}		
-	}
-	&.excluded {
-      .overlay {
-        display: flex;
-        color: Variables.$darker-grey;
-      }
-    }
-}
-.MuiBadge-badge.MuiBadge-dot {
-	min-width: auto;
-	width: 0.6em;
-	height: 0.6em;
-	border-radius: 50%;
-}
-div[data-todotxt-attribute='priority'] {
-	button {
-		font-size: 1.25em;
-		font-weight: bold;
-		padding: 0.4em 0.6em;
-	}
-}
 
-  .MuiButtonBase-root {
-    border: none;
-    svg.invert {
-      transform: rotate(180deg);
+  // Badge styling
+  .MuiBadge-badge {
+    min-width: 1.5em;
+    height: 1.5em;
+    padding: 0.2em 0.4em;
+    z-index: 10;
+    font-weight: 600;
+    font-size: 0.75em;
+    cursor: pointer;
+    transition: all Variables.$transition-fast;
+
+    svg {
+      margin-top: 0.1em;
+      font-size: inherit;
     }
-    &.Mui-focusVisible {
-      svg {
-        color: Variables.$blue;
-      }
-    }
-    
-    &:hover {
-      border: none;
-    }
-    &.MuiIconButton-root {
-			padding: 0.25em;
-			margin: 0;
-		}
   }
 
-.compact {
-	// .row {
-	// 	[data-todotxt-attribute='due'],
-	// 	[data-todotxt-attribute='t'],
-	// 	[data-todotxt-attribute='rec'] {
-	// 	  div {
-	// 	  	padding: 0.1em 0;
-	// 	  }
-	// 	}
-	// }	
-	div[data-todotxt-attribute='priority'] {
-		button {
-			font-size: 1.25em;
-			font-weight: bold;
-			padding: 0.3em 0.5em;
-		}
-	}
+  // Excluded state
+  &.excluded {
+    .overlay {
+      display: flex;
+      color: Variables.$darker-grey;
+    }
+  }
 }
 
+// Badge dot styling
+.MuiBadge-badge.MuiBadge-dot {
+  min-width: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+// Priority button in drawer
+div[data-todotxt-attribute='priority'] {
+  button {
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: 0.4em 0.6em;
+  }
+}
+
+// ============================================
+// MUI BUTTON BASE
+// ============================================
+
+.MuiButtonBase-root {
+  border: none;
+  transition: all Variables.$transition-fast;
+
+  svg.invert {
+    transform: rotate(180deg);
+    transition: transform Variables.$transition-normal;
+  }
+
+  &.Mui-focusVisible {
+    svg {
+      color: Variables.$blue;
+    }
+  }
+
+  &:hover {
+    border: none;
+  }
+
+  &.MuiIconButton-root {
+    padding: 0.5em;
+    margin: 0;
+    border-radius: Variables.$radius-sm;
+    min-width: Variables.$touch-target;
+    min-height: Variables.$touch-target;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+}
+
+// ============================================
+// COMPACT MODE
+// ============================================
+
+.compact {
+  button {
+    min-height: 36px;
+  }
+
+  div[data-todotxt-attribute='priority'] {
+    button {
+      font-size: 1.1em;
+      font-weight: 700;
+      padding: 0.25em 0.4em;
+    }
+  }
+
+  .MuiButtonBase-root.MuiIconButton-root {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0.35em;
+  }
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
 .dark {
-    .filter {
-      button:disabled {
-        color: Variables.$mid-grey;
-        background: Variables.$dark-grey;
-      }
-      .overlay {
-        background: rgba(0, 0, 0, 0.35);
+  button {
+    &:hover {
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+  }
+
+  .filter {
+    button:disabled {
+      color: Variables.$dark-text-muted;
+      background: Variables.$dark-bg-tertiary;
+    }
+
+    .overlay {
+      background: rgba(15, 23, 42, 0.6);
+      color: Variables.$dark-text-secondary;
+    }
+  }
+
+  .row {
+    &.group button {
+      color: Variables.$dark-text-primary;
+
+      &:hover {
+        color: Variables.$blue-light;
       }
     }
-	.MuiDialog-root {
-	  .MuiDialog-paper {
-	    .MuiDialogActions-root {
-	      button {
-	        &:hover {
-	        	color: white;
-	        	background: Variables.$dark-grey;
-	        }
-	      }   
-	    }
-	  }
-	}    
+  }
+
+  .MuiDialog-root {
+    .MuiDialog-paper {
+      .MuiDialogActions-root {
+        button {
+          border-color: Variables.$dark-bg-tertiary;
+          color: Variables.$blue-light;
+
+          &:hover {
+            color: white;
+            background: Variables.$dark-bg-tertiary;
+          }
+
+          &:active {
+            background: Variables.$dark-bg-elevated;
+          }
+        }
+      }
+    }
+  }
+
+  .MuiButtonBase-root.MuiIconButton-root {
+    &:hover {
+      background: rgba(59, 130, 246, 0.15);
+    }
+  }
+}
+
+// ============================================
+// ANIMATION DISABLED MODE
+// ============================================
+
+.disableAnimations {
+  button {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+
+  .filter .overlay {
+    transition: none;
+  }
+
+  .MuiButtonBase-root {
+    transition: none;
+
+    &.MuiIconButton-root:active {
+      transform: none;
+    }
+  }
 }

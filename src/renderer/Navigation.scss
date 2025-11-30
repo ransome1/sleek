@@ -1,11 +1,19 @@
 @use 'Variables.scss';
 
+// ============================================
+// SLEEK UI - Navigation Sidebar Styling
+// ============================================
+
+// Hidden navigation - show toggle button
 .hideNavigation #navigation li.showNavigation {
-  width: 2.5em;
-  border-top-right-radius: Variables.$radius;
+  width: 2.75em;
+  border-top-right-radius: Variables.$radius-lg;
+  border-bottom-right-radius: Variables.$radius-lg;
   display: flex;
+  box-shadow: Variables.$shadow-md;
 }
 
+// Disable animations
 .disableAnimations.hideNavigation #navigation,
 .disableAnimations #navigation {
   transition: none;
@@ -17,17 +25,22 @@
 #navigation {
   width: 5em;
   position: fixed;
-  z-index: 10;
+  z-index: Variables.$z-sticky;
   top: 0;
   left: 0;
   height: 100vh;
-  background: Variables.$lighter-grey;
+  background: Variables.$glass-bg-light;
+  backdrop-filter: blur(Variables.$glass-blur);
+  -webkit-backdrop-filter: blur(Variables.$glass-blur);
+  border-right: 1px solid Variables.$glass-border-light;
   display: flex;
   flex-direction: column;
-  transition: left 0.3s ease;
+  transition: left Variables.$transition-slow;
   list-style: none;
   padding: 0;
   margin: 0;
+  box-shadow: Variables.$shadow-md;
+
   li {
     width: 100%;
     aspect-ratio: 1;
@@ -35,100 +48,310 @@
     justify-content: center;
     align-items: center;
     border-radius: 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    background: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: transparent;
     cursor: pointer;
+    transition: all Variables.$transition-fast;
+    position: relative;
+    min-height: Variables.$touch-target;
+
+    // Spacer for bottom items
     &.break {
       margin-top: auto;
     }
+
+    // Icon styling
     svg {
       color: Variables.$dark-grey;
+      font-size: 1.35em;
+      transition: all Variables.$transition-fast;
     }
-    &:active,
-    &:hover,
-    &.active {
-      background: Variables.$light-grey;
+
+    // Hover state
+    &:hover:not(.logo) {
+      background: rgba(59, 130, 246, 0.08);
+
+      svg {
+        color: Variables.$blue;
+        transform: scale(1.1);
+      }
     }
+
+    // Active/selected state
+    &.active:not(.logo) {
+      background: rgba(59, 130, 246, 0.12);
+
+      svg {
+        color: Variables.$blue;
+      }
+
+      // Active indicator
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 50%;
+        background: linear-gradient(180deg, Variables.$blue, Variables.$blue-light);
+        border-radius: 0 2px 2px 0;
+      }
+    }
+
+    // Focus visible state
     &:focus-visible {
-      background: Variables.$mid-grey;
-      border-color: Variables.$mid-grey;
+      background: rgba(59, 130, 246, 0.15);
+      outline: none;
+
+      svg {
+        color: Variables.$blue;
+      }
     }
+
+    // Active/pressed state
+    &:active:not(.logo) {
+      background: rgba(59, 130, 246, 0.18);
+      transform: scale(0.95);
+    }
+
+    // Logo item
     &.logo,
     &.logo:hover {
-      font-weight: bold;
-      cursor: auto;
+      font-weight: 700;
+      cursor: default;
       color: white;
-      background: linear-gradient(0.33turn, #1b5551, #813e93);
+      background: linear-gradient(135deg, #0d9488, #6d28d9);
+      border-bottom: none;
+      position: relative;
+      overflow: hidden;
+
+      // Subtle shine effect
+      &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent 40%,
+          rgba(255, 255, 255, 0.1) 50%,
+          transparent 60%
+        );
+        animation: logo-shine 3s ease-in-out infinite;
+      }
+
+      svg {
+        color: white;
+      }
     }
+
+    // Toggle navigation button (when hidden)
     &.showNavigation {
       position: fixed;
-      bottom: 0;
+      bottom: Variables.$spacing-md;
       left: 0;
       display: none;
-      background: Variables.$lighter-grey;
+      background: Variables.$glass-bg-light;
+      backdrop-filter: blur(Variables.$glass-blur);
       color: Variables.$dark-grey;
-      z-index: 10;
-      transition: width 0.3s ease;
+      z-index: Variables.$z-sticky;
+      transition: all Variables.$transition-normal;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+      box-shadow: Variables.$shadow-md;
+
       &:hover {
-        width: inherit;
-        display: inherit;
+        width: 3.5em;
+        background: Variables.$lighter-grey;
+
+        svg {
+          color: Variables.$blue;
+        }
       }
-    }    
+    }
+
+    // Keyboard shortcut tooltip
+    &[data-tooltip] {
+      &::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(15, 23, 42, 0.95);
+        color: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 0.75em;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all Variables.$transition-fast;
+        pointer-events: none;
+        z-index: Variables.$z-tooltip;
+      }
+
+      &:hover::after {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
   }
 }
+
+// Logo shine animation
+@keyframes logo-shine {
+  0%, 100% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+// ============================================
+// COMPACT MODE
+// ============================================
 
 .compact {
   #navigation {
     width: 3em;
+
     li {
       svg {
-        font-size: 1.25em;
+        font-size: 1.15em;
       }
+
       &.logo {
-        font-size: 0.8em;
+        font-size: 0.75em;
+      }
+
+      &.active::before {
+        width: 2px;
+        height: 40%;
       }
     }
   }
+
   #root {
-   .flexContainer {    
-     margin-left: 3em;
-     &.hideNavigation {
-       #navigation {
-         left: -3em;
-       }
-     }   
-   }
+    .flexContainer {
+      margin-left: 3em;
+
+      &.hideNavigation {
+        #navigation {
+          left: -3em;
+        }
+      }
+    }
   }
+
   .hideNavigation #navigation li.showNavigation {
     width: 2em;
+
     &:hover {
       width: 3em;
     }
-  }  
+  }
 }
+
+// ============================================
+// DARK MODE
+// ============================================
 
 .dark {
   #navigation {
-    background: Variables.$darker-grey;
+    background: Variables.$glass-bg-dark;
+    border-right-color: Variables.$glass-border-dark;
+    box-shadow: Variables.$shadow-dark-lg;
+
     li {
-      border-color: rgba(255, 255, 255, 0.05) !important;
+      border-color: rgba(255, 255, 255, 0.05);
+
       svg {
-        color: Variables.$mid-grey;
+        color: Variables.$dark-text-secondary;
       }
-      &:hover:not(.logo),
-      &:active:not(.logo),
-      &:focus-visible,
-      &.active {
-        background: #3b3b3b;
-      }
-      &.showNavigation {
-        background: Variables.$darker-grey;
-        &:hover {
-          background: inherit;  
+
+      &:hover:not(.logo) {
+        background: rgba(59, 130, 246, 0.12);
+
+        svg {
+          color: Variables.$blue-light;
         }
+      }
+
+      &.active:not(.logo) {
+        background: rgba(59, 130, 246, 0.18);
+
+        svg {
+          color: Variables.$blue-light;
+        }
+
+        &::before {
+          background: linear-gradient(180deg, Variables.$blue-light, Variables.$blue);
+        }
+      }
+
+      &:focus-visible {
+        background: rgba(59, 130, 246, 0.2);
+
+        svg {
+          color: Variables.$blue-light;
+        }
+      }
+
+      &:active:not(.logo) {
+        background: rgba(59, 130, 246, 0.25);
+      }
+
+      &.showNavigation {
+        background: Variables.$glass-bg-dark;
+        box-shadow: Variables.$shadow-dark-md;
+
+        &:hover {
+          background: Variables.$dark-bg-tertiary;
+
+          svg {
+            color: Variables.$blue-light;
+          }
+        }
+      }
+
+      // Dark mode tooltip
+      &[data-tooltip]::after {
+        background: rgba(248, 250, 252, 0.95);
+        color: Variables.$dark-bg-primary;
+      }
+    }
+  }
+}
+
+// ============================================
+// ANIMATION DISABLED MODE
+// ============================================
+
+.disableAnimations {
+  #navigation {
+    li {
+      transition: none;
+
+      svg {
+        transition: none;
+      }
+
+      &:hover:not(.logo) svg {
+        transform: none;
+      }
+
+      &:active:not(.logo) {
+        transform: none;
+      }
+
+      &.logo::after {
+        animation: none;
       }
     }
   }

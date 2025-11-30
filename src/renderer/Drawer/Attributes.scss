@@ -1,48 +1,198 @@
 @use '../Variables.scss';
 
+// ============================================
+// SLEEK UI - Attributes Panel Styling
+// ============================================
+
 #Attributes {
-  padding: 0 1em 0.75em 1em;
+  padding: Variables.$spacing-md Variables.$spacing-md Variables.$spacing-md Variables.$spacing-md;
   overflow-y: scroll;
+  scroll-behavior: smooth;
+
+  // Placeholder when no attributes
   .placeholder {
-    padding: 2em 0;
-    opacity: 0.5;
+    padding: Variables.$spacing-xl 0;
+    opacity: 0.6;
     text-align: center;
+    font-size: 0.9em;
+    color: Variables.$dark-grey;
   }
+
+  // Accordion sections
   .MuiAccordion-root {
-    margin: 0;
-    .MuiAccordionDetails-root {
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.3em;
-    }
-    .MuiAccordionSummary-root {
-      height: 2.5em;
-      min-height: 2.5em;
-      margin: 0;
-      font-size: 1.25em;
-      font-weight: bold;
-      padding: 0;
-      .MuiBadge-badge {
-        background: #ff3860;
-      }
-    }
+    margin: 0 0 Variables.$spacing-sm 0;
+    background: transparent;
+    border-radius: Variables.$radius;
+    transition: all Variables.$transition-fast;
+
     &:before {
       display: none;
     }
+
+    // Expanded state
+    &.Mui-expanded {
+      margin: 0 0 Variables.$spacing-md 0;
+
+      .MuiAccordionSummary-root {
+        background: rgba(59, 130, 246, 0.08);
+        border-radius: Variables.$radius Variables.$radius 0 0;
+      }
+    }
+
+    // Accordion content
+    .MuiAccordionDetails-root {
+      padding: Variables.$spacing-sm;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4em;
+      background: Variables.$lighter-grey;
+      border-radius: 0 0 Variables.$radius Variables.$radius;
+    }
+
+    // Accordion header
+    .MuiAccordionSummary-root {
+      height: 2.75em;
+      min-height: 2.75em;
+      margin: 0;
+      font-size: 1.1em;
+      font-weight: 600;
+      padding: 0 Variables.$spacing-sm;
+      border-radius: Variables.$radius;
+      transition: all Variables.$transition-fast;
+
+      &:hover {
+        background: rgba(59, 130, 246, 0.05);
+      }
+
+      // Expand icon
+      .MuiAccordionSummary-expandIconWrapper {
+        color: Variables.$dark-grey;
+        transition: all Variables.$transition-fast;
+
+        &.Mui-expanded {
+          transform: rotate(180deg);
+        }
+      }
+
+      // Count badge
+      .MuiBadge-badge {
+        background: Variables.$notification;
+        color: white;
+        font-weight: 600;
+        font-size: 0.7em;
+        min-width: 1.5em;
+        height: 1.5em;
+        padding: 0 0.4em;
+      }
+
+      // Category icon
+      .category-icon {
+        margin-right: Variables.$spacing-sm;
+        color: Variables.$dark-grey;
+        font-size: 1.1em;
+      }
+    }
   }
+
+  // Custom scrollbar
   &::-webkit-scrollbar-thumb:window-inactive,
   &::-webkit-scrollbar-thumb {
     background: Variables.$mid-grey;
-    border-radius: 0.3em;
+    border-radius: 4px;
+    transition: background Variables.$transition-fast;
+
+    &:hover {
+      background: Variables.$dark-grey;
+    }
+  }
+
+  // Count badge for each attribute
+  .attribute-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5em;
+    height: 1.5em;
+    padding: 0 0.4em;
+    margin-left: 0.4em;
+    background: Variables.$mid-grey;
+    color: white;
+    font-size: 0.75em;
+    font-weight: 600;
+    border-radius: 9999px;
   }
 }
 
+// ============================================
+// COMPACT MODE
+// ============================================
+
+.compact {
+  #Attributes {
+    padding: Variables.$spacing-sm;
+
+    .MuiAccordion-root {
+      .MuiAccordionSummary-root {
+        height: 2.25em;
+        min-height: 2.25em;
+        font-size: 1em;
+      }
+
+      .MuiAccordionDetails-root {
+        padding: Variables.$spacing-xs;
+        gap: 0.3em;
+      }
+    }
+  }
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
 .dark {
   #Attributes {
+    .placeholder {
+      color: Variables.$dark-text-secondary;
+    }
+
+    .MuiAccordion-root {
+      &.Mui-expanded {
+        .MuiAccordionSummary-root {
+          background: rgba(59, 130, 246, 0.12);
+        }
+      }
+
+      .MuiAccordionDetails-root {
+        background: Variables.$dark-bg-tertiary;
+      }
+
+      .MuiAccordionSummary-root {
+        &:hover {
+          background: rgba(59, 130, 246, 0.08);
+        }
+
+        .MuiAccordionSummary-expandIconWrapper {
+          color: Variables.$dark-text-secondary;
+        }
+
+        .category-icon {
+          color: Variables.$dark-text-secondary;
+        }
+      }
+    }
+
     &::-webkit-scrollbar-thumb:window-inactive,
     &::-webkit-scrollbar-thumb {
-      background: Variables.$dark-grey;
+      background: Variables.$dark-bg-elevated;
+
+      &:hover {
+        background: Variables.$dark-text-muted;
+      }
+    }
+
+    .attribute-count {
+      background: Variables.$dark-bg-elevated;
     }
   }
 }

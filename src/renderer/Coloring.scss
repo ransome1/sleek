@@ -1,16 +1,26 @@
 @use 'sass:color';
 @use 'Variables.scss';
 
+// ============================================
+// SLEEK UI - Modern Coloring System
+// ============================================
+
+// Focus styles for buttons
 button:not(.MuiIconButton-root):not(.MuiTab-root):not(.MuiAccordionSummary-root),
 button:hover:not(.MuiIconButton-root) {
   &:focus-visible {
-    outline: 0.1em solid Variables.$dark-grey;
+    outline: 2px solid Variables.$blue;
+    outline-offset: 2px;
   }
 }
 
+// Base attribute styling
 *[data-todotxt-attribute] {
-  --color1: #5a5a5a;
-  --color2: #ccc;
+  --color1: #{Variables.$dark-grey};
+  --color2: #{Variables.$light-grey};
+  --gradient-start: #{Variables.$dark-grey};
+  --gradient-end: #{Variables.$dark-grey};
+
   .overlay {
     svg {
       color: var(--color1);
@@ -21,7 +31,8 @@ button:hover:not(.MuiIconButton-root) {
     &.notify {
       .MuiBadge-badge {
         color: white;
-        background: #ff3860;
+        background: Variables.$notification;
+        animation: pulse-badge 2s ease-in-out infinite;
       }
     }
   }
@@ -30,6 +41,7 @@ button:hover:not(.MuiIconButton-root) {
   button:hover {
     color: var(--color1);
     background: var(--color2);
+    transition: all 0.2s ease;
     &:focus-visible {
       outline-color: var(--color1);
     }
@@ -38,19 +50,25 @@ button:hover:not(.MuiIconButton-root) {
       background: var(--color1);
     }
   }
+
   .MuiBadge-badge {
     color: var(--color2);
     background: var(--color1);
+    font-weight: 600;
   }
+
   .MuiBadge-dot {
-    background: #ff3860;
+    background: Variables.$notification;
   }
+
   &.selected {
     button {
       color: white;
       background: var(--color1);
+      box-shadow: 0 2px 8px color.adjust(#000, $alpha: -0.8);
     }
   }
+
   .selected.excluded {
     button {
       color: var(--color1);
@@ -59,19 +77,36 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
+// ============================================
+// PRIORITY STYLING WITH GRADIENTS
+// ============================================
+
 *[data-todotxt-attribute='priority'] {
   --color1: white;
+
   button {
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+
     &.Mui-disabled {
       color: white;
     }
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px color.adjust(#000, $alpha: -0.75);
+    }
   }
+
   &.selected {
     button {
       color: white;
       background: Variables.$dark-grey;
     }
   }
+
   .overlay {
     svg {
       color: var(--color2);
@@ -79,53 +114,113 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
+// Priority A - Critical/Urgent (Red-Orange gradient)
 *[data-todotxt-attribute='priority'][data-todotxt-value='A'] {
-  --color2: #ff0000;
-  border-left-color: var(--color2);
-  &.selected {
-    button {
-      background: color.adjust(#ff3860, $lightness: -25%);
-    }
-  }
-}
+  --color2: transparent;
+  --gradient-start: #{Variables.$priority-a-start};
+  --gradient-end: #{Variables.$priority-a-end};
+  border-left-color: Variables.$priority-a-start;
 
-*[data-todotxt-attribute='priority'][data-todotxt-value='B'] {
-  --color2: #fd7d67;
-  border-left-color: var(--color2);
-  &.selected {
-    button {
-      background: color.adjust(#fa745e, $lightness: -25%);
-    }
-  }
-}
-
-*[data-todotxt-attribute='priority'][data-todotxt-value='C'] {
-  --color2: #ffdd57;
-  border-left-color: var(--color2);
-  &.selected {
-    button {
-      background: color.adjust(#ffdd57, $lightness: -25%);
-    }
-  }
-}
-
-// Priority D - Admin/Batch tasks (1-2-3-5 rule)
-// Uses cool gray/blue-gray to indicate low-priority, low-effort tasks
-*[data-todotxt-attribute='priority'][data-todotxt-value='D'] {
-  --color2: #78909c;  // Blue-gray color
-  border-left-color: var(--color2);
-  &.selected {
-    button {
-      background: color.adjust(#78909c, $lightness: -20%);
-    }
-  }
-  // Subtle visual differentiation
   button {
-    opacity: 0.85;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    box-shadow: 0 2px 8px color.adjust(Variables.$priority-a-start, $alpha: -0.5);
+
+    &:hover {
+      box-shadow: 0 4px 16px color.adjust(Variables.$priority-a-start, $alpha: -0.4);
+    }
+  }
+
+  &.selected {
+    button {
+      background: linear-gradient(135deg,
+        color.adjust(Variables.$priority-a-start, $lightness: -15%),
+        color.adjust(Variables.$priority-a-end, $lightness: -15%));
+    }
   }
 }
 
-// Priority E-Z - Even lower priority, very muted
+// Priority B - High (Yellow-Amber gradient)
+*[data-todotxt-attribute='priority'][data-todotxt-value='B'] {
+  --color2: transparent;
+  --gradient-start: #{Variables.$priority-b-start};
+  --gradient-end: #{Variables.$priority-b-end};
+  border-left-color: Variables.$priority-b-start;
+
+  button {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: #1e293b;
+    text-shadow: none;
+    box-shadow: 0 2px 8px color.adjust(Variables.$priority-b-start, $alpha: -0.5);
+
+    &:hover {
+      box-shadow: 0 4px 16px color.adjust(Variables.$priority-b-start, $alpha: -0.4);
+    }
+  }
+
+  &.selected {
+    button {
+      background: linear-gradient(135deg,
+        color.adjust(Variables.$priority-b-start, $lightness: -15%),
+        color.adjust(Variables.$priority-b-end, $lightness: -15%));
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+// Priority C - Normal (Blue gradient)
+*[data-todotxt-attribute='priority'][data-todotxt-value='C'] {
+  --color2: transparent;
+  --gradient-start: #{Variables.$priority-c-start};
+  --gradient-end: #{Variables.$priority-c-end};
+  border-left-color: Variables.$priority-c-start;
+
+  button {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    box-shadow: 0 2px 8px color.adjust(Variables.$priority-c-start, $alpha: -0.5);
+
+    &:hover {
+      box-shadow: 0 4px 16px color.adjust(Variables.$priority-c-start, $alpha: -0.4);
+    }
+  }
+
+  &.selected {
+    button {
+      background: linear-gradient(135deg,
+        color.adjust(Variables.$priority-c-start, $lightness: -15%),
+        color.adjust(Variables.$priority-c-end, $lightness: -15%));
+    }
+  }
+}
+
+// Priority D - Low/Batch (Gray gradient)
+*[data-todotxt-attribute='priority'][data-todotxt-value='D'] {
+  --color2: transparent;
+  --gradient-start: #{Variables.$priority-d-start};
+  --gradient-end: #{Variables.$priority-d-end};
+  border-left-color: Variables.$priority-d-start;
+
+  button {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    box-shadow: 0 2px 6px color.adjust(Variables.$priority-d-start, $alpha: -0.6);
+    opacity: 0.9;
+
+    &:hover {
+      opacity: 1;
+      box-shadow: 0 4px 12px color.adjust(Variables.$priority-d-start, $alpha: -0.5);
+    }
+  }
+
+  &.selected {
+    button {
+      background: linear-gradient(135deg,
+        color.adjust(Variables.$priority-d-start, $lightness: -15%),
+        color.adjust(Variables.$priority-d-end, $lightness: -15%));
+    }
+  }
+}
+
+// Priority E-Z - Very low priority, muted styling
 *[data-todotxt-attribute='priority'][data-todotxt-value='E'],
 *[data-todotxt-attribute='priority'][data-todotxt-value='F'],
 *[data-todotxt-attribute='priority'][data-todotxt-value='G'],
@@ -148,85 +243,234 @@ button:hover:not(.MuiIconButton-root) {
 *[data-todotxt-attribute='priority'][data-todotxt-value='X'],
 *[data-todotxt-attribute='priority'][data-todotxt-value='Y'],
 *[data-todotxt-attribute='priority'][data-todotxt-value='Z'] {
-  --color2: #b0bec5;  // Even lighter gray
-  border-left-color: var(--color2);
+  --color2: #cbd5e1;
+  border-left-color: #cbd5e1;
+
   button {
+    background: linear-gradient(135deg, #94a3b8, #cbd5e1);
     opacity: 0.7;
+    text-shadow: none;
+    color: #475569;
+
+    &:hover {
+      opacity: 0.85;
+    }
   }
 }
 
+// ============================================
+// PM (Pomodoro) INDICATORS
+// ============================================
+
 *[data-todotxt-attribute^='pm'] {
-  --color1: rgb(221, 44, 0);
+  --color1: #dc2626;
   --color2: white;
+
   button {
     &.Mui-disabled {
       color: white;
     }
   }
+
   .overlay {
     svg {
       color: var(--color1);
     }
   }
+
   .selected {
     button {
       color: white;
-      background: rgb(221, 44, 0);
+      background: linear-gradient(135deg, #dc2626, #ef4444);
     }
   }
 }
 
+// ============================================
+// PROJECT TAGS - Pill-shaped Purple/Violet
+// ============================================
+
 *[data-todotxt-attribute='projects'] {
-  --color1: #6f266f;
-  --color2: #f1d6f1;
+  --color1: #{Variables.$project-text-light};
+  --color2: #{Variables.$project-bg-light};
+
+  button {
+    border-radius: 9999px;
+    padding: 0.35em 0.75em;
+    font-weight: 500;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px color.adjust(Variables.$project-text-light, $alpha: -0.85);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px color.adjust(Variables.$project-text-light, $alpha: -0.8);
+    }
+  }
+
+  &.selected button {
+    background: linear-gradient(135deg, Variables.$project-text-light, color.adjust(Variables.$project-text-light, $lightness: 10%));
+    color: white;
+  }
 }
 
+// ============================================
+// CONTEXT TAGS - Pill-shaped Teal/Cyan
+// ============================================
+
 *[data-todotxt-attribute='contexts'] {
-  --color1: #1e6251;
-  --color2: #c5ede3;
+  --color1: #{Variables.$context-text-light};
+  --color2: #{Variables.$context-bg-light};
+
+  button {
+    border-radius: 9999px;
+    padding: 0.35em 0.75em;
+    font-weight: 500;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px color.adjust(Variables.$context-text-light, $alpha: -0.85);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px color.adjust(Variables.$context-text-light, $alpha: -0.8);
+    }
+  }
+
+  &.selected button {
+    background: linear-gradient(135deg, Variables.$context-text-light, color.adjust(Variables.$context-text-light, $lightness: 10%));
+    color: white;
+  }
 }
+
+// ============================================
+// DARK MODE OVERRIDES
+// ============================================
 
 .dark {
   button:not(.MuiIconButton-root),
   button:hover:not(.MuiIconButton-root) {
-    outline-color: Variables.$light-grey;
+    outline-color: Variables.$blue-light;
   }
+
+  // Generic attributes in dark mode
   *[data-todotxt-attribute]:not(
       [data-todotxt-attribute='priority'],
       [data-todotxt-attribute='projects'],
       [data-todotxt-attribute='contexts'],
       [data-todotxt-attribute^='pm']
     ) {
-    --color1: #f0f0f0;
-    --color2: #5a5a5a;
+    --color1: #{Variables.$dark-text-primary};
+    --color2: #{Variables.$dark-bg-tertiary};
+
     button {
       .MuiChip-root {
-        background: color.adjust(#5a5a5a, $lightness: -10%);
+        background: color.adjust(Variables.$dark-bg-tertiary, $lightness: -10%);
       }
     }
+
     &.selected {
       button, div {
-        background: color.adjust(#5a5a5a, $lightness: -15%);
+        background: color.adjust(Variables.$dark-bg-tertiary, $lightness: -15%);
       }
     }
   }
 
+  // Context tags in dark mode
   *[data-todotxt-attribute='contexts'] {
-    --color1: #c5ede3;
-    --color2: #1e6251;
+    --color1: #{Variables.$context-text-dark};
+    --color2: #{Variables.$context-bg-dark};
+
+    button {
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+    }
+
     &.selected {
       button {
-        background: color.adjust(#1e6251, $lightness: -10%);
+        background: linear-gradient(135deg,
+          Variables.$context-text-light,
+          color.adjust(Variables.$context-text-light, $lightness: 10%));
+        color: white;
       }
     }
   }
+
+  // Project tags in dark mode
   *[data-todotxt-attribute='projects'] {
-    --color1: #f1d6f1;
-    --color2: #6f266f;
-    &.selected {
-      button {
-        background: color.adjust(#6f266f, $lightness: -10%);
+    --color1: #{Variables.$project-text-dark};
+    --color2: #{Variables.$project-bg-dark};
+
+    button {
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       }
     }
+
+    &.selected {
+      button {
+        background: linear-gradient(135deg,
+          Variables.$project-text-light,
+          color.adjust(Variables.$project-text-light, $lightness: 10%));
+        color: white;
+      }
+    }
+  }
+
+  // Priority badges enhanced for dark mode
+  *[data-todotxt-attribute='priority'] {
+    button {
+      &:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+    }
+  }
+
+  // Low priority even more muted in dark mode
+  *[data-todotxt-attribute='priority'][data-todotxt-value='E'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='F'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='G'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='H'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='I'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='J'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='K'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='L'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='M'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='N'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='O'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='P'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='Q'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='R'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='S'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='T'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='U'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='V'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='W'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='X'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='Y'],
+  *[data-todotxt-attribute='priority'][data-todotxt-value='Z'] {
+    button {
+      background: linear-gradient(135deg, #475569, #64748b);
+      color: #cbd5e1;
+    }
+  }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
   }
 }
