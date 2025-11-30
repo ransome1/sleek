@@ -75,6 +75,10 @@ const { ipcRenderer, store } = window.api
  */
 
 const visibleSettings: VisibleSettings = {
+  // [NEW] Bi-Daily Unit View - Core feature for opinionated workflow
+  biDailyView: {
+    style: 'toggle'
+  },
   // [HARDCODE as 'true'] - Best practice for todo.txt format
   appendCreationDate: {
     style: 'toggle'

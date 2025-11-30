@@ -1,0 +1,222 @@
+/**
+ * Bi-Daily Unit View Styles
+ * A three-column layout for the Bi-Daily work unit system
+ */
+
+.bidaily-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  gap: 16px;
+  overflow: auto;
+
+  .bidaily-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    flex: 1;
+    min-height: 0;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .bidaily-backlog {
+    margin-top: 8px;
+
+    .unit-column {
+      max-height: 200px;
+    }
+  }
+}
+
+.unit-column {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  min-height: 200px;
+  max-height: 100%;
+
+  &.current-unit {
+    border: 2px solid var(--primary-color, #1976d2);
+
+    .unit-header {
+      background: linear-gradient(135deg,
+        var(--primary-color, #1976d2) 0%,
+        var(--primary-dark, #1565c0) 100%
+      );
+      color: white;
+
+      .unit-title,
+      .unit-date-range,
+      .unit-count {
+        color: white;
+      }
+    }
+  }
+
+  .unit-header {
+    padding: 12px 16px;
+    background: var(--surface-color, #f5f5f5);
+
+    .dark & {
+      background: var(--surface-dark, #2d2d2d);
+    }
+
+    .unit-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .unit-date-range {
+      display: block;
+      opacity: 0.8;
+      font-size: 0.75rem;
+    }
+
+    .unit-count {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+  }
+
+  .unit-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+
+    .empty-message {
+      text-align: center;
+      padding: 24px;
+      opacity: 0.6;
+    }
+
+    // Inherit row styles from Grid
+    li.row {
+      border-radius: 8px;
+      margin-bottom: 4px;
+      padding: 8px 12px;
+
+      &:hover {
+        background: var(--hover-color, rgba(0, 0, 0, 0.04));
+      }
+    }
+  }
+}
+
+// Rest Day View Styles
+.rest-day-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 32px;
+
+  .rest-day-card {
+    text-align: center;
+    padding: 48px;
+    max-width: 500px;
+    border-radius: 24px;
+
+    .rest-emoji {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .rest-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary, #333);
+
+      .dark & {
+        color: var(--text-primary-dark, #fff);
+      }
+    }
+
+    .rest-subtitle {
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+
+    .rest-suggestions {
+      text-align: left;
+
+      h6 {
+        margin-bottom: 12px;
+        font-weight: 500;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          padding: 8px 0;
+          font-size: 0.95rem;
+
+          &:not(:last-child) {
+            border-bottom: 1px solid var(--divider-color, #eee);
+          }
+        }
+      }
+    }
+  }
+}
+
+.bidaily-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  opacity: 0.6;
+}
+
+// Dark mode adjustments
+body.dark {
+  .unit-column {
+    background: var(--paper-dark, #1e1e1e);
+
+    &.current-unit {
+      border-color: var(--primary-light, #42a5f5);
+    }
+  }
+
+  .rest-day-card {
+    background: var(--paper-dark, #1e1e1e);
+  }
+}
+
+// Compact mode adjustments
+body.compact {
+  .bidaily-view {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .unit-column {
+    .unit-header {
+      padding: 8px 12px;
+
+      .unit-title {
+        font-size: 0.9rem;
+      }
+    }
+
+    .unit-list {
+      padding: 4px;
+
+      li.row {
+        padding: 4px 8px;
+        margin-bottom: 2px;
+      }
+    }
+  }
+}

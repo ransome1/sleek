@@ -11,6 +11,7 @@
   "fileTabs.removeFileText": "它不会从您的硬盘驱动器中删除。",
   "fileTabs.removeFileLabel": "删除",
   "settings": "设置",
+  "settings.biDailyView": "启用双日单元视图（周日-周一、周二-周三、周四-周五）",
   "settings.appendCreationDate": "创建任务时附加创建日期",
   "settings.convertRelativeToAbsoluteDates": "将相对日期转换为绝对日期",
   "settings.notificationsAllowed": "发送通知",

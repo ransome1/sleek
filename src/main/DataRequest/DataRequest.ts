@@ -7,6 +7,7 @@ import { updateAttributes, attributes } from '../Attributes'
 import { createTodoObjects } from './CreateTodoObjects'
 import { sortTodoObjects } from './Sort'
 import { groupTodoObjects } from './Group'
+import { createBiDailyTodoData, isRestDay, getWeekUnits } from './BiDailyUnit'
 
 let searchString: string
 const headers: HeadersObject = {
@@ -30,7 +31,8 @@ function dataRequest(passedSearchString: string = ''): RequestedData {
   const sorting: Sorting[] = SettingsStore.get('sorting')
   const filters: Filters = FiltersStore.get('attributes')
   const showHidden: boolean = SettingsStore.get('showHidden')
-  const fileSorting = SettingsStore.get('fileSorting');
+  const fileSorting = SettingsStore.get('fileSorting')
+  const biDailyViewEnabled: boolean = SettingsStore.get('biDailyView') ?? false
 
   todoObjects = createTodoObjects(fileContent)
 
@@ -63,26 +65,37 @@ function dataRequest(passedSearchString: string = ''): RequestedData {
     todoObjects = visibleObjects
   }
 
-  let todoData;
+  let todoData
+  let biDailyMeta = null
 
-  if (fileSorting) {
+  // Bi-Daily Unit View Mode
+  if (biDailyViewEnabled) {
+    todoData = createBiDailyTodoData(todoObjects, showHidden)
+    const weekUnits = getWeekUnits()
+    biDailyMeta = {
+      isRestDay: isRestDay(),
+      currentUnit: weekUnits.currentUnit,
+      weekStart: weekUnits.weekStart.format('YYYY-MM-DD')
+    }
+  } else if (fileSorting) {
     todoData = [
       {
         title: null,
         todoObjects,
         visible: true,
       },
-    ];
+    ]
   } else {
-    todoObjects.sort((a, b) => sortTodoObjects(a, b, sorting));
-    todoData = groupTodoObjects(todoObjects, sorting[0].value);
+    todoObjects.sort((a, b) => sortTodoObjects(a, b, sorting))
+    todoData = groupTodoObjects(todoObjects, sorting[0].value)
   }
 
   const requestedData: RequestedData = {
     todoData,
     attributes,
     headers,
-    filters
+    filters,
+    biDailyMeta
   }
 
   return requestedData
