@@ -4,6 +4,8 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
+import Button from '@mui/material/Button'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import Row from './Row'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
@@ -81,9 +83,10 @@ UnitColumn.displayName = 'UnitColumn'
 
 interface RestDayViewProps {
   t: typeof i18n.t
+  onReview?: (unitType: string) => void
 }
 
-const RestDayView: React.FC<RestDayViewProps> = memo(({ t }) => {
+const RestDayView: React.FC<RestDayViewProps> = memo(({ t, onReview }) => {
   return (
     <Box className="rest-day-view">
       <Paper className="rest-day-card" elevation={3}>
@@ -106,6 +109,19 @@ const RestDayView: React.FC<RestDayViewProps> = memo(({ t }) => {
             <li>☕ 享受一杯咖啡，放松身心</li>
           </ul>
         </Box>
+        {onReview && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Box className="review-section">
+              <Typography variant="h6" sx={{ mb: 1 }}>复盘本周各周期：</Typography>
+              <ButtonGroup variant="outlined" size="small" className="review-buttons">
+                <Button onClick={() => onReview('A')}>复盘 A</Button>
+                <Button onClick={() => onReview('B')}>复盘 B</Button>
+                <Button onClick={() => onReview('C')}>复盘 C</Button>
+              </ButtonGroup>
+            </Box>
+          </>
+        )}
       </Paper>
     </Box>
   )
@@ -122,6 +138,7 @@ interface BiDailyViewComponentProps extends WithTranslation {
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
   settings: Settings
   isRestDay: boolean
+  onReview?: (unitType: string) => void
   t: typeof i18n.t
 }
 
@@ -134,11 +151,12 @@ const BiDailyViewComponent: React.FC<BiDailyViewComponentProps> = memo(({
   setPromptItem,
   settings,
   isRestDay,
+  onReview,
   t
 }) => {
   // Show rest day view on Saturday
   if (isRestDay) {
-    return <RestDayView t={t} />
+    return <RestDayView t={t} onReview={onReview} />
   }
 
   if (!todoData || todoData.length === 0) {

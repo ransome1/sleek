@@ -168,6 +168,30 @@
         }
       }
     }
+
+    .review-section {
+      text-align: center;
+      padding-top: 8px;
+
+      h6 {
+        margin-bottom: 16px;
+        font-weight: 500;
+      }
+
+      .review-buttons {
+        .MuiButton-root {
+          text-transform: none;
+          font-size: 0.875rem;
+          padding: 6px 16px;
+          border-color: var(--primary-color, #1976d2);
+          color: var(--primary-color, #1976d2);
+
+          &:hover {
+            background-color: var(--primary-light, rgba(25, 118, 210, 0.08));
+          }
+        }
+      }
+    }
   }
 }
 

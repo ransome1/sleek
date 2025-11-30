@@ -10,7 +10,14 @@ import { addFile, setFile, removeFile } from './File/File'
 import { openFile, createFile } from './File/Dialog'
 import { createTodoObject } from './DataRequest/CreateTodoObjects'
 import { validateQuota, getQuotaDashboard, getAllUnitsQuotaStatus, Priority } from './DataRequest/QuotaSystem'
-import { getCurrentUnit } from './DataRequest/BiDailyUnit'
+import { getCurrentUnit, UnitType } from './DataRequest/BiDailyUnit'
+import {
+  checkReviewTrigger,
+  calculateUnitReviewStats,
+  generateReviewNote,
+  markReviewCompleted,
+  getPreviousUnit
+} from './DataRequest/ReviewSystem'
 
 function handleDataRequest(event: IpcMainEvent, searchString: string) {
   try {
@@ -114,6 +121,52 @@ function handleGetAllQuotaStatus(event: IpcMainEvent) {
       }
     })
     event.reply('allQuotaStatus', result)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+// Review System Handlers
+function handleCheckReviewTrigger(event: IpcMainEvent) {
+  try {
+    const result = checkReviewTrigger()
+    event.reply('reviewTriggerResult', result)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+function handleGetReviewStats(event: IpcMainEvent, unitType: string) {
+  try {
+    const stats = calculateUnitReviewStats(unitType as any)
+    event.reply('reviewStats', stats)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+function handleSaveReviewNote(event: IpcMainEvent, unitType: string, userNote: string) {
+  try {
+    const stats = calculateUnitReviewStats(unitType as any)
+    if (stats) {
+      const reviewNote = generateReviewNote(stats, userNote)
+      // Add to file as a completed task (review record)
+      prepareContentForWriting(-1, reviewNote)
+      markReviewCompleted()
+      event.reply('reviewNoteSaved', { success: true })
+    } else {
+      event.reply('reviewNoteSaved', { success: false, error: 'No stats available' })
+    }
+  } catch (error: any) {
+    HandleError(error)
+    event.reply('reviewNoteSaved', { success: false, error: error.message })
+  }
+}
+
+function handleMarkReviewCompleted(event: IpcMainEvent) {
+  try {
+    markReviewCompleted()
+    event.reply('reviewMarkedCompleted', { success: true })
   } catch (error: any) {
     HandleError(error)
   }
@@ -265,6 +318,10 @@ function removeEventListeners(): void {
   ipcMain.off('requestArchive', handleRequestArchive)
   ipcMain.off('getQuotaDashboard', handleGetQuotaDashboard)
   ipcMain.off('getAllQuotaStatus', handleGetAllQuotaStatus)
+  ipcMain.off('checkReviewTrigger', handleCheckReviewTrigger)
+  ipcMain.off('getReviewStats', handleGetReviewStats)
+  ipcMain.off('saveReviewNote', handleSaveReviewNote)
+  ipcMain.off('markReviewCompleted', handleMarkReviewCompleted)
 }
 
 app.on('before-quit', () => removeEventListeners)
@@ -291,3 +348,7 @@ ipcMain.on('updateTodoObject', handleUpdateTodoObject)
 ipcMain.on('requestArchive', handleRequestArchive)
 ipcMain.on('getQuotaDashboard', handleGetQuotaDashboard)
 ipcMain.on('getAllQuotaStatus', handleGetAllQuotaStatus)
+ipcMain.on('checkReviewTrigger', handleCheckReviewTrigger)
+ipcMain.on('getReviewStats', handleGetReviewStats)
+ipcMain.on('saveReviewNote', handleSaveReviewNote)
+ipcMain.on('markReviewCompleted', handleMarkReviewCompleted)

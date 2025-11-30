@@ -7,6 +7,7 @@ import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
 import NavigationComponent from './Navigation'
 import GridComponent from './Grid/Grid'
+import BiDailyView from './Grid/BiDailyView'
 import SplashScreen from './SplashScreen'
 import FileTabs from './Header/FileTabs'
 import { dark, light } from './Themes'
@@ -20,6 +21,7 @@ import { I18nextProvider } from 'react-i18next'
 import { i18n } from './Settings/LanguageSelector'
 import Settings from './Settings/Settings'
 import Prompt from './Prompt'
+import ReviewModal from './Review/ReviewModal'
 import './App.scss'
 import './Buttons.scss'
 import './Form.scss'
@@ -43,6 +45,13 @@ const App = (): JSX.Element => {
   const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null)
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null)
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
+  const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false)
+  const [reviewUnitType, setReviewUnitType] = useState<string | null>(null)
+  const [biDailyMeta, setBiDailyMeta] = useState<{
+    isRestDay: boolean
+    currentUnit: string
+    weekStart: string
+  } | null>(null)
   const [theme, setTheme] = useState(
     createTheme({
       ...(settings?.shouldUseDarkColors ? dark : light),
@@ -61,6 +70,35 @@ const App = (): JSX.Element => {
     ipcRenderer.send('requestData')
   }, [])
 
+  // Check for review trigger on app start (only when BiDaily view is enabled)
+  useEffect(() => {
+    if (!settings?.biDailyView) return
+
+    const handleReviewTrigger = (_event: any, result: {
+      shouldShowReview: boolean
+      unitToReview: string | null
+      reviewDate: string | null
+      reason: string
+    }) => {
+      if (result.shouldShowReview && result.unitToReview) {
+        setReviewUnitType(result.unitToReview)
+        setReviewModalOpen(true)
+      }
+    }
+
+    ipcRenderer.on('reviewTriggerResult', handleReviewTrigger)
+
+    // Check on mount after a short delay to ensure data is loaded
+    const timer = setTimeout(() => {
+      ipcRenderer.send('checkReviewTrigger')
+    }, 1000)
+
+    return () => {
+      ipcRenderer.removeListener('reviewTriggerResult', handleReviewTrigger)
+      clearTimeout(timer)
+    }
+  }, [settings?.biDailyView])
+
   return (
     <>
       <IpcComponent
@@ -74,6 +112,7 @@ const App = (): JSX.Element => {
         setSnackBarContent={setSnackBarContent}
         setSettings={setSettings}
         setIsSettingsOpen={setIsSettingsOpen}
+        setBiDailyMeta={setBiDailyMeta}
       />
       {settings.matomo && <MatomoComponent settings={settings} />}
       <I18nextProvider i18n={i18n}>
@@ -120,17 +159,34 @@ const App = (): JSX.Element => {
               )}
               {todoData && headers.availableObjects > 0 && (
                 <>
-                  <GridComponent
-                    todoData={todoData}
-                    setTodoObject={setTodoObject}
-                    filters={filters}
-                    setDialogOpen={setDialogOpen}
-                    setContextMenu={setContextMenu}
-                    setPromptItem={setPromptItem}
-                    settings={settings}
-                    headers={headers}
-                    searchString={searchString}
-                  />
+                  {settings.biDailyView ? (
+                    <BiDailyView
+                      todoData={todoData}
+                      filters={filters}
+                      setDialogOpen={setDialogOpen}
+                      setContextMenu={setContextMenu}
+                      setTodoObject={setTodoObject}
+                      setPromptItem={setPromptItem}
+                      settings={settings}
+                      isRestDay={biDailyMeta?.isRestDay || false}
+                      onReview={(unitType: string) => {
+                        setReviewUnitType(unitType)
+                        setReviewModalOpen(true)
+                      }}
+                    />
+                  ) : (
+                    <GridComponent
+                      todoData={todoData}
+                      setTodoObject={setTodoObject}
+                      filters={filters}
+                      setDialogOpen={setDialogOpen}
+                      setContextMenu={setContextMenu}
+                      setPromptItem={setPromptItem}
+                      settings={settings}
+                      headers={headers}
+                      searchString={searchString}
+                    />
+                  )}
                 </>
               )}
               <SplashScreen
@@ -195,6 +251,16 @@ const App = (): JSX.Element => {
               promptItem={promptItem}
               setPromptItem={setPromptItem}
               setContextMenu={setContextMenu}
+            />
+          )}
+          {settings?.biDailyView && (
+            <ReviewModal
+              open={reviewModalOpen}
+              onClose={() => {
+                setReviewModalOpen(false)
+                setReviewUnitType(null)
+              }}
+              unitType={reviewUnitType}
             />
           )}
         </ThemeProvider>

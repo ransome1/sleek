@@ -1,0 +1,311 @@
+@use '../Variables.scss';
+
+.review-modal {
+  .MuiDialog-paper {
+    border-radius: 12px;
+    max-width: 480px;
+  }
+}
+
+.review-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  .emoji {
+    font-size: 1.5rem;
+  }
+
+  .date-range {
+    margin-left: auto;
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+}
+
+.review-content {
+  padding: 1rem 1.5rem !important;
+
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: Variables.$dark-grey;
+  }
+
+  .completion-overview {
+    margin-bottom: 1rem;
+
+    .completion-message {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      color: #333;
+    }
+
+    .completion-progress {
+      .progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #e0e0e0;
+
+        .MuiLinearProgress-bar {
+          border-radius: 4px;
+        }
+
+        &.excellent .MuiLinearProgress-bar {
+          background-color: #4caf50;
+        }
+
+        &.good .MuiLinearProgress-bar {
+          background-color: #ff9800;
+        }
+
+        &.needs-work .MuiLinearProgress-bar {
+          background-color: #f44336;
+        }
+      }
+
+      .progress-label {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #666;
+        text-align: right;
+      }
+    }
+  }
+
+  .section-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .core-challenge {
+    margin: 0.75rem 0;
+
+    .challenge-status {
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+
+      &.completed {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      &.incomplete {
+        background-color: #fff3e0;
+        color: #e65100;
+      }
+
+      .challenge-task {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        opacity: 0.8;
+        font-style: italic;
+      }
+    }
+  }
+
+  .priority-breakdown {
+    margin: 0.75rem 0;
+
+    .priority-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+
+      .priority-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+
+        &.priority-a {
+          background-color: rgba(255, 0, 0, 0.1);
+          border-left: 3px solid #ff0000;
+        }
+
+        &.priority-b {
+          background-color: rgba(253, 125, 103, 0.1);
+          border-left: 3px solid #fd7d67;
+        }
+
+        &.priority-c {
+          background-color: rgba(255, 221, 87, 0.1);
+          border-left: 3px solid #ffdd57;
+        }
+
+        &.priority-d {
+          background-color: rgba(120, 144, 156, 0.1);
+          border-left: 3px solid #78909c;
+        }
+
+        .priority-label {
+          color: #555;
+        }
+
+        .priority-count {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .time-tracking {
+    margin: 0.75rem 0;
+
+    .time-stats {
+      display: flex;
+      gap: 1.5rem;
+
+      .time-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+
+        .time-icon {
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+
+  .user-note {
+    margin-top: 0.75rem;
+
+    .MuiOutlinedInput-root {
+      font-size: 0.9rem;
+    }
+  }
+
+  .MuiDivider-root {
+    margin: 0.75rem 0;
+  }
+}
+
+.review-actions {
+  padding: 0.75rem 1.5rem 1rem !important;
+  gap: 0.5rem;
+
+  button {
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.skip-button {
+      background-color: transparent;
+      border: 1px solid #ccc;
+      color: #666;
+
+      &:hover {
+        background-color: #f5f5f5;
+        border-color: #999;
+      }
+    }
+
+    &.save-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+
+      &:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+    }
+  }
+}
+
+// Dark theme support
+.dark {
+  .review-modal {
+    .MuiDialog-paper {
+      background-color: #1e1e1e;
+    }
+  }
+
+  .review-content {
+    .loading {
+      color: Variables.$light-grey;
+    }
+
+    .completion-overview {
+      .completion-message {
+        color: #e0e0e0;
+      }
+
+      .completion-progress {
+        .progress-bar {
+          background-color: #424242;
+        }
+
+        .progress-label {
+          color: #aaa;
+        }
+      }
+    }
+
+    .section-title {
+      color: #aaa;
+    }
+
+    .core-challenge {
+      .challenge-status {
+        &.completed {
+          background-color: rgba(46, 125, 50, 0.2);
+        }
+
+        &.incomplete {
+          background-color: rgba(230, 81, 0, 0.2);
+        }
+      }
+    }
+
+    .priority-breakdown {
+      .priority-grid {
+        .priority-item {
+          .priority-label {
+            color: #ccc;
+          }
+        }
+      }
+    }
+
+    .time-tracking {
+      .time-stats {
+        .time-item {
+          color: #ccc;
+        }
+      }
+    }
+  }
+
+  .review-actions {
+    button {
+      &.skip-button {
+        border-color: #555;
+        color: #aaa;
+
+        &:hover {
+          background-color: #333;
+          border-color: #777;
+        }
+      }
+    }
+  }
+}
