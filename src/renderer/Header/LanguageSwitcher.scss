@@ -1,0 +1,82 @@
+@use '../Variables.scss';
+
+.language-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+  border-radius: Variables.$radius-md;
+  background: transparent;
+  transition: all Variables.$transition-fast;
+  user-select: none;
+
+  &:hover {
+    background: rgba(59, 130, 246, 0.08);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .lang-option {
+    color: Variables.$mid-grey;
+    transition: color Variables.$transition-fast;
+
+    &.active {
+      color: Variables.$blue;
+      font-weight: 600;
+    }
+  }
+
+  .lang-divider {
+    color: Variables.$light-grey;
+    margin: 0 0.25em;
+  }
+}
+
+// Dark mode
+.dark {
+  .language-switcher {
+    &:hover {
+      background: rgba(59, 130, 246, 0.12);
+    }
+
+    .lang-option {
+      color: Variables.$dark-text-secondary;
+
+      &.active {
+        color: Variables.$blue-light;
+      }
+    }
+
+    .lang-divider {
+      color: Variables.$dark-text-tertiary;
+    }
+  }
+}
+
+// Compact mode
+.compact {
+  .language-switcher {
+    font-size: 0.75em;
+    padding: 0.4em 0.5em;
+  }
+}
+
+// Disable animations
+.disableAnimations {
+  .language-switcher {
+    transition: none;
+
+    &:active {
+      transform: none;
+    }
+
+    .lang-option {
+      transition: none;
+    }
+  }
+}
