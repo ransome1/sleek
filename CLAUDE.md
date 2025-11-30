@@ -234,20 +234,39 @@ Standard todo.txt syntax with extensions:
 - Key-value: `key:value`
 
 ### Bi-Daily Units
-Tasks are grouped into time-based units for organization and review. The system supports AM/PM splits for daily task management.
+Tasks are grouped into 2-day time units for organization and review:
+- **Unit A**: Sunday + Monday
+- **Unit B**: Tuesday + Wednesday
+- **Unit C**: Thursday + Friday
+- **Saturday**: Rest & Review day
+
+The bi-daily structure provides antifragile buffering - if Day 1 underperforms, Day 2 allows recovery.
 
 ### Quota System (1-2-3-5)
-Priority-based task limits per time unit:
-- Priority A: 1 task limit
-- Priority B: 2 task limit
-- Priority C: 3 task limit
-- Priority D: 5 task limit
+A scientifically-grounded task management system. Priority-based limits per bi-daily unit:
+
+| Priority | Limit | Type | Energy Level | Duration |
+|----------|-------|------|--------------|----------|
+| **(A)** | 1 | Core Challenge | High | ~90 min |
+| **(B)** | 2 | Key Progress | Medium | ~45 min each |
+| **(C)** | 3 | Standard Tasks | Low | ~25 min each |
+| **(D)** | 5 | Admin/Batch | Any | ~10 min each |
+
+**Total**: 11 tasks per unit = **5.5 tasks/day** (aligns with Ivy Lee Method's 6-task recommendation)
+
+**Theoretical foundations** (see `docs/METHODOLOGY.md` for details):
+- **Ivy Lee Method** (1903): ~6 tasks/day optimal for focus
+- **Flow State Research** (Csikszentmihalyi): Deep focus for complex tasks
+- **Ultradian Rhythms** (Kleitman): 90-120min natural work cycles
+- **Antifragile Principles** (Taleb): Buffer time for resilience
+- **Energy Management** (Schwartz): Match tasks to energy levels
 
 ### Review System
 Periodic review of completed tasks with:
 - Stats calculation per unit
 - User notes for reflection
 - Review completion tracking
+- Antifragile learning from incomplete tasks
 
 ## Common Development Tasks
 
