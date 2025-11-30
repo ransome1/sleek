@@ -4,41 +4,47 @@ const { store } = window.api
 
 const disableAnimations = store.getConfig('disableAnimations')
 
-// Modern color palette
+// Modern color palette - soft and comfortable
 const colors = {
-  // Light mode
+  // Light mode - warm and clean
   light: {
     primary: '#3b82f6',
     primaryDark: '#2563eb',
     primaryLight: '#60a5fa',
-    background: '#ffffff',
-    backgroundSecondary: '#f1f5f9',
+    background: '#fafbfc',
+    backgroundSecondary: '#f3f4f6',
     paper: '#ffffff',
-    drawer: '#f8fafc',
-    text: '#1e293b',
-    textSecondary: '#475569',
-    textMuted: '#94a3b8',
-    border: '#e2e8f0',
-    hover: '#f1f5f9',
-    focus: '#e2e8f0',
-    input: '#f1f5f9'
+    drawer: '#f9fafb',
+    text: '#24292f',
+    textSecondary: '#57606a',
+    textMuted: '#8b949e',
+    border: '#d8dee4',
+    hover: '#f3f4f6',
+    focus: '#e5e7eb',
+    input: '#f3f4f6',
+    success: '#2da44e',
+    warning: '#d29922',
+    error: '#cf222e'
   },
-  // Dark mode - modern deep blue-gray
+  // Dark mode - soft dark (GitHub Dark Dimmed style, not too black)
   dark: {
-    primary: '#3b82f6',
-    primaryDark: '#2563eb',
-    primaryLight: '#60a5fa',
-    background: '#0f172a',
-    backgroundSecondary: '#1e293b',
-    paper: '#1e293b',
-    drawer: '#1e293b',
-    text: '#f8fafc',
-    textSecondary: '#cbd5e1',
-    textMuted: '#64748b',
-    border: '#334155',
-    hover: '#334155',
-    focus: '#334155',
-    input: '#334155'
+    primary: '#58a6ff',
+    primaryDark: '#388bfd',
+    primaryLight: '#79c0ff',
+    background: '#22272e',      // Soft dark, not pure black
+    backgroundSecondary: '#2d333b',
+    paper: '#2d333b',
+    drawer: '#2d333b',
+    text: '#adbac7',            // Softer white
+    textSecondary: '#768390',
+    textMuted: '#545d68',
+    border: '#444c56',
+    hover: '#373e47',
+    focus: '#444c56',
+    input: '#373e47',
+    success: '#57ab5a',
+    warning: '#c69026',
+    error: '#e5534b'
   }
 }
 
