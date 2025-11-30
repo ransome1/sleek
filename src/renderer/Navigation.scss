@@ -224,6 +224,105 @@
 }
 
 // ============================================
+// VIEW MODE GROUP
+// ============================================
+
+#navigation {
+  li.view-mode-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 4px;
+    aspect-ratio: auto;
+    min-height: auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all Variables.$transition-fast;
+
+      svg {
+        font-size: 1.1em;
+      }
+
+      &:hover {
+        background: rgba(59, 130, 246, 0.1);
+
+        svg {
+          color: Variables.$blue;
+        }
+      }
+
+      &.active {
+        background: rgba(59, 130, 246, 0.15);
+
+        svg {
+          color: Variables.$blue;
+        }
+      }
+    }
+  }
+
+  // Batch mode toggle
+  li.batch-mode {
+    svg {
+      color: Variables.$dark-grey;
+    }
+
+    &.active {
+      background: rgba(245, 158, 11, 0.15);
+
+      svg {
+        color: #f59e0b;
+      }
+
+      &::before {
+        background: linear-gradient(180deg, #f59e0b, #fbbf24);
+      }
+    }
+  }
+}
+
+// Dark mode view mode group
+.dark #navigation {
+  li.view-mode-group {
+    border-color: rgba(255, 255, 255, 0.05);
+
+    span {
+      &:hover {
+        background: rgba(59, 130, 246, 0.15);
+
+        svg {
+          color: Variables.$blue-light;
+        }
+      }
+
+      &.active {
+        background: rgba(59, 130, 246, 0.2);
+
+        svg {
+          color: Variables.$blue-light;
+        }
+      }
+    }
+  }
+
+  li.batch-mode.active {
+    background: rgba(245, 158, 11, 0.2);
+
+    &::before {
+      background: linear-gradient(180deg, #fbbf24, #f59e0b);
+    }
+  }
+}
+
+// ============================================
 // COMPACT MODE
 // ============================================
 

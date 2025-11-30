@@ -8,8 +8,10 @@ import Alert, { AlertColor } from '@mui/material/Alert'
 import NavigationComponent from './Navigation'
 import GridComponent from './Grid/Grid'
 import BiDailyView from './Grid/BiDailyView'
+import CalendarView from './Grid/CalendarView'
 import SplashScreen from './SplashScreen'
 import FileTabs from './Header/FileTabs'
+import QuickAddBar from './Header/QuickAddBar'
 import { dark, light } from './Themes'
 import DrawerComponent from './Drawer/Drawer'
 import SearchComponent from './Header/Search/Search'
@@ -22,11 +24,16 @@ import { i18n } from './Settings/LanguageSelector'
 import Settings from './Settings/Settings'
 import Prompt from './Prompt'
 import ReviewModal from './Review/ReviewModal'
+import WeeklyReviewModal from './Review/WeeklyReviewModal'
+import BatchOperationsBar from './Batch/BatchOperationsBar'
 import './App.scss'
 import './Buttons.scss'
 import './Form.scss'
 
 const { store, ipcRenderer } = window.api
+
+// View mode type: 'list' | 'bidaily' | 'calendar'
+type ViewMode = 'list' | 'bidaily' | 'calendar'
 
 const App = (): JSX.Element => {
   const [settings, setSettings] = useState<Settings>(store.getConfig())
@@ -47,11 +54,17 @@ const App = (): JSX.Element => {
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false)
   const [reviewUnitType, setReviewUnitType] = useState<string | null>(null)
+  const [weeklyReviewOpen, setWeeklyReviewOpen] = useState<boolean>(false)
   const [biDailyMeta, setBiDailyMeta] = useState<{
     isRestDay: boolean
     currentUnit: string
     weekStart: string
   } | null>(null)
+  // View mode state: list, bidaily, or calendar
+  const [viewMode, setViewMode] = useState<ViewMode>(settings?.biDailyView ? 'bidaily' : 'list')
+  // Batch operations state
+  const [selectedTodos, setSelectedTodos] = useState<number[]>([])
+  const [batchMode, setBatchMode] = useState<boolean>(false)
   const [theme, setTheme] = useState(
     createTheme({
       ...(settings?.shouldUseDarkColors ? dark : light),
@@ -127,6 +140,10 @@ const App = (): JSX.Element => {
               setIsSettingsOpen={setIsSettingsOpen}
               setTodoObject={setTodoObject}
               headers={headers}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              batchMode={batchMode}
+              setBatchMode={setBatchMode}
             />
             {settings?.files?.length > 0 && (
               <DrawerComponent
@@ -142,6 +159,8 @@ const App = (): JSX.Element => {
                   {settings.showFileTabs ? (
                     <FileTabs settings={settings} setContextMenu={setContextMenu} />
                   ) : null}
+                  {/* Quick Add Bar */}
+                  <QuickAddBar settings={settings} />
                   {headers && headers.availableObjects > 0 ? (
                     <>
                       <SearchComponent
@@ -159,7 +178,17 @@ const App = (): JSX.Element => {
               )}
               {todoData && headers.availableObjects > 0 && (
                 <>
-                  {settings.biDailyView ? (
+                  {viewMode === 'calendar' ? (
+                    <CalendarView
+                      todoData={todoData}
+                      filters={filters}
+                      setDialogOpen={setDialogOpen}
+                      setContextMenu={setContextMenu}
+                      setTodoObject={setTodoObject}
+                      setPromptItem={setPromptItem}
+                      settings={settings}
+                    />
+                  ) : viewMode === 'bidaily' || settings.biDailyView ? (
                     <BiDailyView
                       todoData={todoData}
                       filters={filters}
@@ -173,6 +202,9 @@ const App = (): JSX.Element => {
                         setReviewUnitType(unitType)
                         setReviewModalOpen(true)
                       }}
+                      selectedTodos={selectedTodos}
+                      setSelectedTodos={setSelectedTodos}
+                      batchMode={batchMode}
                     />
                   ) : (
                     <GridComponent
@@ -185,9 +217,22 @@ const App = (): JSX.Element => {
                       settings={settings}
                       headers={headers}
                       searchString={searchString}
+                      selectedTodos={selectedTodos}
+                      setSelectedTodos={setSelectedTodos}
+                      batchMode={batchMode}
                     />
                   )}
                 </>
+              )}
+              {/* Batch Operations Bar */}
+              {batchMode && selectedTodos.length > 0 && (
+                <BatchOperationsBar
+                  selectedTodos={selectedTodos}
+                  setSelectedTodos={setSelectedTodos}
+                  setBatchMode={setBatchMode}
+                  setSnackBarContent={setSnackBarContent}
+                  setSnackBarSeverity={setSnackBarSeverity}
+                />
               )}
               <SplashScreen
                 setDialogOpen={setDialogOpen}
@@ -254,14 +299,20 @@ const App = (): JSX.Element => {
             />
           )}
           {settings?.biDailyView && (
-            <ReviewModal
-              open={reviewModalOpen}
-              onClose={() => {
-                setReviewModalOpen(false)
-                setReviewUnitType(null)
-              }}
-              unitType={reviewUnitType}
-            />
+            <>
+              <ReviewModal
+                open={reviewModalOpen}
+                onClose={() => {
+                  setReviewModalOpen(false)
+                  setReviewUnitType(null)
+                }}
+                unitType={reviewUnitType}
+              />
+              <WeeklyReviewModal
+                open={weeklyReviewOpen}
+                onClose={() => setWeeklyReviewOpen(false)}
+              />
+            </>
           )}
         </ThemeProvider>
       </I18nextProvider>

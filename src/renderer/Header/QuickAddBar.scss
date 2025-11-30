@@ -1,0 +1,113 @@
+.quick-add-bar {
+  padding: 8px 16px;
+  background-color: var(--background-secondary, #f3f4f6);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+
+  .quick-add-input {
+    .MuiOutlinedInput-root {
+      background-color: var(--paper-bg, #ffffff);
+      border-radius: 8px;
+
+      fieldset {
+        border-color: var(--border-color, #d8dee4);
+      }
+
+      &:hover fieldset {
+        border-color: #3b82f6;
+      }
+
+      &.Mui-focused fieldset {
+        border-color: #3b82f6;
+        border-width: 2px;
+      }
+    }
+
+    .MuiInputBase-input {
+      font-size: 14px;
+      padding: 10px 12px;
+
+      &::placeholder {
+        color: var(--text-muted);
+        opacity: 1;
+      }
+    }
+
+    .MuiInputAdornment-root {
+      .MuiSvgIcon-root {
+        color: var(--text-muted);
+      }
+
+      .MuiIconButton-root {
+        &:hover {
+          background-color: rgba(59, 130, 246, 0.1);
+
+          .MuiSvgIcon-root {
+            color: #3b82f6;
+          }
+        }
+
+        &:disabled {
+          .MuiSvgIcon-root {
+            color: var(--text-muted);
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+  }
+
+  .quick-add-preview {
+    margin-top: 6px;
+    padding: 4px 8px;
+    background-color: rgba(59, 130, 246, 0.08);
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .preview-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+      color: #3b82f6;
+      background-color: transparent;
+      padding: 0;
+    }
+  }
+}
+
+// Dark mode
+.dark .quick-add-bar {
+  background-color: var(--background-secondary, #2d333b);
+  border-color: var(--border-color, #444c56);
+
+  .quick-add-input {
+    .MuiOutlinedInput-root {
+      background-color: var(--input-bg, #373e47);
+
+      fieldset {
+        border-color: var(--border-color, #444c56);
+      }
+
+      &:hover fieldset {
+        border-color: #58a6ff;
+      }
+
+      &.Mui-focused fieldset {
+        border-color: #58a6ff;
+      }
+    }
+  }
+
+  .quick-add-preview {
+    background-color: rgba(88, 166, 255, 0.1);
+
+    code {
+      color: #58a6ff;
+    }
+  }
+}
