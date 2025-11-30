@@ -201,57 +201,11 @@ const GetMenuTemplate = (files: File[]): Electron.MenuItemConstructorOptions[] =
       label: 'Help',
       submenu: [
         {
-          label: 'sleek wiki',
+          label: 'todo.txt syntax',
           click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/wiki');
+            shell?.openExternal('https://github.com/todotxt/todo.txt');
           }
         },
-        {
-          label: 'Changelog',
-          click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/blob/main/CHANGELOG.md');
-          }
-        },
-        {
-          label: 'Report bugs',
-          click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/issues');
-          }
-        },
-        {
-          label: 'Discuss new or existing features',
-          click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/discussions');
-          }
-        },
-        {
-          label: 'Contributing',
-          click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md');
-          }
-        },
-        {
-          label: 'Keyboard shortcuts',
-          click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x');
-          }
-        },
-        {
-          label: 'Privacy policy',
-          click: () => {
-            shell?.openExternal('https://github.com/ransome1/sleek/blob/master/PRIVACY.md');
-          }
-        },
-        ...(!process.mas
-          ? [
-              {
-                label: 'Sponsoring',
-                click: () => {
-                  shell?.openExternal('https://github.com/sponsors/ransome1');
-                }
-              }
-            ]
-          : []),
         {
           role: 'toggleDevTools',
           label: 'Developer tools'

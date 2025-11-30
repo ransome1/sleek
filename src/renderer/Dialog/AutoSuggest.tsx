@@ -163,7 +163,7 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
                     onClick={() =>
                       ipcRenderer.send(
                         'openInBrowser',
-                        'https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions'
+                        'https://github.com/todotxt/todo.txt'
                       )
                     }
                     data-testid="header-search-clear-icon"

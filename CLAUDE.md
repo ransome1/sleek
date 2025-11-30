@@ -1,13 +1,12 @@
-# CLAUDE.md - AI Assistant Guide for sleek
+# CLAUDE.md - AI Assistant Guide for Sleek0
 
 ## Project Overview
 
-**sleek** is a minimal todo.txt manager for macOS built with Electron, React, and TypeScript. It provides a clean, intuitive interface for managing tasks using the open [todo.txt syntax](https://github.com/todotxt/todo.txt).
+**Sleek0** is a minimal todo.txt manager for macOS built with Electron, React, and TypeScript. It provides a clean, intuitive interface for managing tasks using the open [todo.txt syntax](https://github.com/todotxt/todo.txt).
 
 - **Version:** 2.0.22
 - **License:** MIT
 - **Platform:** macOS (arm64 and x64)
-- **Repository:** https://github.com/ransome1/sleek.git
 
 ## Tech Stack
 

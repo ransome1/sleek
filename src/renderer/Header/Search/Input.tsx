@@ -111,7 +111,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(
                 onClick={() =>
                   ipcRenderer.send(
                     'openInBrowser',
-                    'https://github.com/ransome1/sleek/wiki/Filter-Expressions-for-Advanced-Search'
+                    'https://github.com/todotxt/todo.txt'
                   )
                 }
                 data-testid="header-search-clear-icon"

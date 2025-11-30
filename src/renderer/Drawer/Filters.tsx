@@ -18,8 +18,7 @@ const visibleSettings: VisibleSettings = {
   },
   showHidden: {
     style: 'toggle',
-    rerender: true,
-    help: 'https://github.com/ransome1/sleek/wiki/Hidden-todos-(h:)'
+    rerender: true
   },
   thresholdDateInTheFuture: {
     style: 'toggle',

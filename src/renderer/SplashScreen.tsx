@@ -71,7 +71,7 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
             <FileOpenIcon />
             <p>
               {t('splashscreen.noFiles.text')}
-              <Link onClick={(event) => handleLinkClick(event, 'https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions')}>
+              <Link onClick={(event) => handleLinkClick(event, 'https://github.com/todotxt/todo.txt')}>
                 <HelpIcon />
               </Link>
             </p>
