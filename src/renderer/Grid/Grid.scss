@@ -1,33 +1,219 @@
 @use '../Variables.scss';
 
+// ============================================
+// SLEEK UI - Grid/Task List Styling
+// ============================================
+
 #grid {
   min-width: 20em;
-  padding: 0 1em 1em 1em;
+  padding: Variables.$spacing-md Variables.$spacing-lg Variables.$spacing-lg Variables.$spacing-lg;
   overflow-y: scroll;
   overflow-x: hidden;
   flex-grow: 1;
+  scroll-behavior: smooth;
+
+  // Hide first divider
   .MuiDivider-root:first-child {
     display: none;
   }
+
+  // Custom scrollbar
   &::-webkit-scrollbar-thumb:window-inactive,
   &::-webkit-scrollbar-thumb {
-    background: Variables.$light-grey;
-    border-radius: 0.3em;
+    background: Variables.$mid-grey;
+    border-radius: 4px;
+    transition: background Variables.$transition-fast;
+
+    &:hover {
+      background: Variables.$dark-grey;
+    }
+  }
+
+  // Empty state
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: Variables.$spacing-xl * 2;
+    text-align: center;
+    color: Variables.$dark-grey;
+
+    .empty-icon {
+      font-size: 4em;
+      color: Variables.$mid-grey;
+      margin-bottom: Variables.$spacing-md;
+      opacity: 0.5;
+    }
+
+    h3 {
+      font-size: 1.25em;
+      font-weight: 600;
+      margin: 0 0 Variables.$spacing-sm 0;
+      color: Variables.$darker-grey;
+    }
+
+    p {
+      font-size: 0.9em;
+      margin: 0 0 Variables.$spacing-lg 0;
+      max-width: 300px;
+      line-height: 1.6;
+    }
+
+    .quick-add-hint {
+      display: flex;
+      align-items: center;
+      gap: Variables.$spacing-sm;
+      padding: Variables.$spacing-sm Variables.$spacing-md;
+      background: Variables.$lighter-grey;
+      border-radius: Variables.$radius;
+      font-size: 0.85em;
+      color: Variables.$dark-grey;
+
+      kbd {
+        background: Variables.$white;
+        border: 1px solid Variables.$light-grey;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 0.85em;
+        font-family: inherit;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+
+  // Search results count
+  .search-results-count {
+    display: flex;
+    align-items: center;
+    gap: Variables.$spacing-sm;
+    padding: Variables.$spacing-sm Variables.$spacing-md;
+    margin-bottom: Variables.$spacing-md;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: Variables.$radius;
+    font-size: 0.85em;
+    color: Variables.$blue-dark;
+
+    svg {
+      font-size: 1.1em;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  // No search results
+  .no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: Variables.$spacing-xl;
+    text-align: center;
+
+    svg {
+      font-size: 3em;
+      color: Variables.$mid-grey;
+      margin-bottom: Variables.$spacing-md;
+    }
+
+    p {
+      color: Variables.$dark-grey;
+      margin: 0;
+    }
+  }
+
+  // Transition container for list animations
+  .task-list-transition {
+    &-enter {
+      opacity: 0;
+    }
+
+    &-enter-active {
+      opacity: 1;
+      transition: opacity Variables.$transition-normal;
+    }
+
+    &-exit {
+      opacity: 1;
+    }
+
+    &-exit-active {
+      opacity: 0;
+      transition: opacity Variables.$transition-normal;
+    }
   }
 }
 
+// ============================================
+// COMPACT MODE
+// ============================================
+
 .compact {
   #grid {
-    padding: 0 0.75em 0.75em 0.75em;
+    padding: Variables.$spacing-sm Variables.$spacing-md Variables.$spacing-md Variables.$spacing-md;
+
+    .empty-state {
+      padding: Variables.$spacing-xl;
+
+      .empty-icon {
+        font-size: 3em;
+      }
+    }
   }
 }
+
+// ============================================
+// DARK MODE
+// ============================================
 
 .dark {
   #grid {
     &::-webkit-scrollbar-thumb:window-inactive,
     &::-webkit-scrollbar-thumb {
-      background: Variables.$dark-grey;
-      border-radius: 0.3em;
+      background: Variables.$dark-bg-elevated;
+
+      &:hover {
+        background: Variables.$dark-text-muted;
+      }
+    }
+
+    .empty-state {
+      color: Variables.$dark-text-secondary;
+
+      .empty-icon {
+        color: Variables.$dark-text-muted;
+      }
+
+      h3 {
+        color: Variables.$dark-text-primary;
+      }
+
+      .quick-add-hint {
+        background: Variables.$dark-bg-secondary;
+        color: Variables.$dark-text-secondary;
+
+        kbd {
+          background: Variables.$dark-bg-tertiary;
+          border-color: Variables.$dark-bg-elevated;
+          color: Variables.$dark-text-primary;
+        }
+      }
+    }
+
+    .search-results-count {
+      background: rgba(59, 130, 246, 0.15);
+      color: Variables.$blue-light;
+    }
+
+    .no-results {
+      svg {
+        color: Variables.$dark-text-muted;
+      }
+
+      p {
+        color: Variables.$dark-text-secondary;
+      }
     }
   }
 }

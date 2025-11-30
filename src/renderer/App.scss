@@ -1,62 +1,348 @@
 @use 'Variables.scss';
 @use 'Coloring.scss';
 
+// ============================================
+// SLEEK UI - Root Application Styling
+// ============================================
+
+// CSS Custom Properties for theming
+:root {
+  --app-bg: #{Variables.$white};
+  --app-text: #{Variables.$darker-grey};
+  --app-text-secondary: #{Variables.$dark-grey};
+  --app-border: #{Variables.$light-grey};
+  --app-shadow: #{Variables.$shadow-md};
+  --transition-speed: 0.25s;
+}
+
+// Global reset and base styles
+* {
+  box-sizing: border-box;
+}
+
 body {
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--app-text);
+  background: var(--app-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  // Code blocks
   code {
     font-size: 0.9em;
-    background-color: rgba(18, 18, 18, 0.15);
-    border-radius: 0.25em;
-    padding: 0.25em;
+    font-family: "SF Mono", "Fira Code", "Monaco", monospace;
+    background-color: rgba(59, 130, 246, 0.1);
+    border-radius: Variables.$radius-sm;
+    padding: 0.2em 0.4em;
+    color: Variables.$blue-dark;
   }
+
+  // Links
   a {
     color: Variables.$blue;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
+    transition: color Variables.$transition-fast;
+
+    &:hover {
+      color: Variables.$blue-dark;
+      text-decoration: underline;
+    }
+
     svg {
       font-size: 1.2em;
       margin-bottom: -0.25em;
+      transition: transform Variables.$transition-fast;
     }
-  }  
+
+    &:hover svg {
+      transform: translateX(2px);
+    }
+  }
+
+  // Root container
   #root {
     .flexContainer {
       min-width: 25em;
       display: flex;
       flex-direction: row;
       margin-left: 5em;
+      transition: margin-left Variables.$transition-slow;
+      background: var(--app-bg);
+
       header {
-        height: 2.5em;
+        height: 3em;
         display: flex;
+        align-items: center;
+        padding: 0 Variables.$spacing-md;
+        background: transparent;
+        border-bottom: 1px solid Variables.$light-grey;
       }
+
       .flexItems {
         width: 100%;
         height: 100vh;
         display: flex;
         flex-direction: column;
+        background: var(--app-bg);
       }
+
+      // Hide navigation state
       &.hideNavigation {
-        transition: margin-left 0.3s ease;
+        transition: margin-left Variables.$transition-slow;
         margin-left: 0;
+
         #navigation {
           left: -5em;
         }
       }
+
       &.hideNavigation.disableAnimations {
         transition: none;
       }
     }
+
     .disableAnimations {
       .flexContainer {
         transition: none;
       }
     }
   }
+
+  // Custom scrollbar styling
   *::-webkit-scrollbar {
     background-color: transparent;
-    width: 0.8em;
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: Variables.$mid-grey;
+    border-radius: 4px;
+    transition: background Variables.$transition-fast;
+
+    &:hover {
+      background: Variables.$dark-grey;
+    }
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+// ============================================
+// GLOBAL TRANSITIONS & ANIMATIONS
+// ============================================
+
+// Fade transitions for filter changes
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity Variables.$transition-normal;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity Variables.$transition-normal;
+}
+
+// Slide transitions
+.slide-up-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-up-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all Variables.$transition-normal;
+}
+
+.slide-up-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-up-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all Variables.$transition-normal;
+}
+
+// Scale bounce animation for buttons
+.scale-bounce {
+  transition: transform Variables.$transition-bounce;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Pulse animation for notifications
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+// Shimmer loading effect
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    Variables.$lighter-grey 25%,
+    Variables.$light-grey 50%,
+    Variables.$lighter-grey 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
+.dark {
+  --app-bg: #{Variables.$dark-bg-primary};
+  --app-text: #{Variables.$dark-text-primary};
+  --app-text-secondary: #{Variables.$dark-text-secondary};
+  --app-border: #{Variables.$dark-bg-tertiary};
+
+  body {
+    background: Variables.$dark-bg-primary;
+    color: Variables.$dark-text-primary;
+  }
+
+  code {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: Variables.$blue-light;
+  }
+
+  #root .flexContainer {
+    background: Variables.$dark-bg-primary;
+
+    header {
+      border-bottom-color: Variables.$dark-bg-tertiary;
+    }
+
+    .flexItems {
+      background: Variables.$dark-bg-primary;
+    }
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: Variables.$dark-bg-elevated;
+
+    &:hover {
+      background: Variables.$dark-text-muted;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      Variables.$dark-bg-secondary 25%,
+      Variables.$dark-bg-tertiary 50%,
+      Variables.$dark-bg-secondary 75%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+// ============================================
+// COMPACT MODE
+// ============================================
+
+.compact {
+  #root .flexContainer {
+    margin-left: 3em;
+
+    header {
+      height: 2.5em;
+    }
+
+    &.hideNavigation {
+      #navigation {
+        left: -3em;
+      }
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE / WINDOW SIZE ADAPTATIONS
+// ============================================
+
+@media (max-width: 600px) {
+  body #root .flexContainer {
+    margin-left: 0;
+
+    #navigation {
+      left: -5em;
+    }
+  }
+}
+
+// ============================================
+// ANIMATION DISABLED MODE
+// ============================================
+
+.disableAnimations {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .fade-enter,
+  .fade-enter-active,
+  .fade-exit,
+  .fade-exit-active,
+  .slide-up-enter,
+  .slide-up-enter-active,
+  .slide-up-exit,
+  .slide-up-exit-active {
+    transition: none !important;
+  }
+
+  .pulse,
+  .shimmer {
+    animation: none !important;
   }
 }

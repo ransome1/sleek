@@ -1,71 +1,319 @@
 @use 'sass:color';
 @use '../Variables.scss';
 
+// ============================================
+// SLEEK UI - Modern Task Row Styling
+// ============================================
+
 .row {
   cursor: pointer;
-  border-left: solid 0.2em Variables.$light-grey;
-  border-bottom: dotted 1px Variables.$light-grey;
+  border-left: solid 3px Variables.$light-grey;
+  border-bottom: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25em;
-  padding: 0.5em;
+  gap: 0.35em;
+  padding: 0.75em 1em;
   align-items: center;
+  margin-bottom: 0.5em;
+  border-radius: Variables.$radius;
+  background: Variables.$white;
+  box-shadow: Variables.$shadow-sm;
+  transition: all Variables.$transition-normal;
+  position: relative;
+  overflow: hidden;
+
+  // Hover state - lift effect
+  &:hover {
+    box-shadow: Variables.$shadow-md;
+    transform: translateY(-1px);
+    background: Variables.$lighter-grey;
+  }
+
+  // Focus state
+  &:focus-visible {
+    outline: 2px solid Variables.$blue;
+    outline-offset: 2px;
+  }
+
+  // Active/pressed state
+  &:active {
+    transform: translateY(0);
+    box-shadow: Variables.$shadow-sm;
+  }
+
+  // Filter buttons within row
   .filter {
     display: inline-flex;
     vertical-align: middle;
   }
+
+  // Checkbox styling
   .MuiCheckbox-root {
     padding: 0.25em;
+    transition: all Variables.$transition-fast;
+
+    &:hover {
+      background: rgba(Variables.$blue, 0.1);
+      border-radius: 50%;
+    }
   }
+
+  // Muted date attributes
   [data-todotxt-attribute="created"],
   [data-todotxt-attribute="completed"],
   [data-todotxt-attribute="hidden"] {
-    filter: opacity(50%);
+    filter: opacity(60%);
+    font-size: 0.85em;
   }
-  &[data-complete='true'],
+
+  // Completed task styling with strikethrough animation
+  &[data-complete='true'] {
+    filter: opacity(60%) grayscale(80%);
+    background: Variables.$lighter-grey;
+    box-shadow: none;
+
+    .task-text {
+      text-decoration: line-through;
+      text-decoration-color: Variables.$mid-grey;
+    }
+
+    &:hover {
+      filter: opacity(70%) grayscale(60%);
+    }
+  }
+
+  // Hidden task styling
   &[data-hidden='true'] {
     filter: opacity(50%) grayscale(100%);
+    background: Variables.$lighter-grey;
+    box-shadow: none;
   }
+
+  // Last row styling
   &:last-child {
-    border-bottom-left-radius: 0.25em;
+    border-bottom-left-radius: Variables.$radius;
+    border-bottom-right-radius: Variables.$radius;
   }
+
+  // Group header row
   &.group {
     padding-left: 0;
     border: none;
     cursor: auto;
+    background: transparent;
+    box-shadow: none;
+    margin-top: 1em;
+    margin-bottom: 0.25em;
+
+    &:hover {
+      transform: none;
+      background: transparent;
+    }
+  }
+
+  // Task text styling
+  .task-text {
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+    line-height: 1.5;
+    transition: all Variables.$transition-normal;
+  }
+
+  // Search highlight
+  .highlight {
+    background: linear-gradient(135deg, #fef08a, #fde047);
+    padding: 0.1em 0.2em;
+    border-radius: 0.25em;
+    color: #1e293b;
   }
 }
 
+// Animating new rows
+.row-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.row-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all Variables.$transition-normal;
+}
+
+.row-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.row-exit-active {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all Variables.$transition-normal;
+}
+
+// Completion animation
+.row-completing {
+  animation: complete-task 0.4s ease forwards;
+}
+
+@keyframes complete-task {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+    background: Variables.$success;
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+}
+
+// Drag state
+.row-dragging {
+  box-shadow: Variables.$shadow-lg;
+  transform: scale(1.02) rotate(1deg);
+  z-index: 100;
+  opacity: 0.95;
+}
+
+.row-drag-over {
+  border-top: 2px dashed Variables.$blue;
+}
+
+// ============================================
+// COMPACT MODE
+// ============================================
+
 .compact {
   .row {
-    padding: 0.3em;
+    padding: 0.4em 0.6em;
+    margin-bottom: 0.3em;
+    gap: 0.2em;
+    border-radius: Variables.$radius-sm;
+
     [data-todotxt-attribute='due'],
     [data-todotxt-attribute='t'],
     [data-todotxt-attribute='rec'] {
       button {
-        padding: 0 0.5em 0 0;
+        padding: 0 0.4em 0 0;
       }
 
       div {
         padding: 0;
       }
     }
+
     .filter:not([data-todotxt-attribute='priority']):not([data-todotxt-attribute='t']):not([data-todotxt-attribute='due']):not([data-todotxt-attribute='rec']) {
       button {
-        padding: 0.2em 0.4em;
+        padding: 0.15em 0.35em;
+        font-size: 0.85em;
       }
     }
+
     &.group {
       padding-left: 0;
+      margin-top: 0.75em;
+
       button {
-        padding: 0.2em 0.4em;
-      }      
+        padding: 0.15em 0.35em;
+        font-size: 1.1em;
+      }
     }
   }
 }
 
+// ============================================
+// DARK MODE
+// ============================================
+
 .dark {
   .row {
-    border-color: Variables.$dark-grey;
+    background: Variables.$dark-bg-secondary;
+    border-color: Variables.$dark-bg-tertiary;
+    box-shadow: Variables.$shadow-dark-sm;
+
+    &:hover {
+      background: Variables.$dark-bg-tertiary;
+      box-shadow: Variables.$shadow-dark-md;
+    }
+
+    &[data-complete='true'] {
+      background: Variables.$dark-bg-primary;
+
+      .task-text {
+        text-decoration-color: Variables.$dark-text-muted;
+      }
+    }
+
+    &[data-hidden='true'] {
+      background: Variables.$dark-bg-primary;
+    }
+
+    &.group {
+      background: transparent;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #854d0e, #a16207);
+      color: #fef3c7;
+    }
+  }
+
+  .row-completing {
+    @keyframes complete-task-dark {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(0.98);
+        background: color.adjust(Variables.$success, $lightness: -20%);
+      }
+      100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+    }
+    animation: complete-task-dark 0.4s ease forwards;
+  }
+}
+
+// ============================================
+// ANIMATION DISABLED MODE
+// ============================================
+
+.disableAnimations {
+  .row {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+
+  .row-enter,
+  .row-enter-active,
+  .row-exit,
+  .row-exit-active {
+    transition: none;
+    animation: none;
+  }
+
+  .row-completing {
+    animation: none;
+  }
+
+  .row-dragging {
+    transform: none;
   }
 }

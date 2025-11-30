@@ -1,5 +1,9 @@
 @use 'Variables.scss';
 
+// ============================================
+// SLEEK UI - Splash/Empty State Screen
+// ============================================
+
 #splashScreen {
   display: flex;
   flex-direction: column;
@@ -7,45 +11,188 @@
   align-items: center;
   text-align: center;
   flex-grow: 1;
+  padding: Variables.$spacing-xl;
+  animation: fadeIn 0.5s ease;
+
+  // Title
   h1 {
-    font-weight: bold;
-    line-height: 1.2em;
+    font-weight: 700;
+    font-size: 1.75em;
+    line-height: 1.3;
+    margin: 0 0 Variables.$spacing-sm 0;
+    color: Variables.$darker-grey;
+    letter-spacing: -0.025em;
   }
+
+  // Main icon
   svg {
-    font-size: 3em;
-    color: Variables.$dark-grey;
+    font-size: 4em;
+    color: Variables.$mid-grey;
+    margin-bottom: Variables.$spacing-lg;
+    opacity: 0.6;
   }
+
+  // Description text
   p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: Variables.$dark-grey;
+    margin: 0 0 Variables.$spacing-md 0;
+    max-width: 320px;
+
     a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      color: Variables.$blue;
+      font-weight: 500;
+      transition: color Variables.$transition-fast;
+
+      &:hover {
+        color: Variables.$blue-dark;
+      }
+
       svg {
-        font-size: 1.2em;
-        color: Variables.$blue;
+        font-size: 1em;
+        color: inherit;
+        margin: 0;
+        opacity: 1;
       }
     }
   }
+
+  // Button container
   .buttons {
     display: flex;
-    gap: 0.5em;
+    gap: Variables.$spacing-md;
     justify-content: center;
+    margin-top: Variables.$spacing-md;
+
+    button {
+      min-width: 120px;
+    }
   }
+
+  // Dashed container
   .container {
-    padding: 1em 2em;
+    padding: Variables.$spacing-xl Variables.$spacing-xl * 1.5;
+    border-radius: Variables.$radius-lg;
+    border: 2px dashed Variables.$mid-grey;
+    background: Variables.$lighter-grey;
+    transition: all Variables.$transition-normal;
+    max-width: 400px;
+
+    &:hover {
+      border-color: Variables.$blue;
+      background: rgba(59, 130, 246, 0.05);
+    }
+  }
+
+  // Keyboard shortcuts hint
+  .shortcuts-hint {
+    margin-top: Variables.$spacing-xl;
+    padding: Variables.$spacing-md Variables.$spacing-lg;
+    background: Variables.$lighter-grey;
     border-radius: Variables.$radius;
-    border: 0.15em dashed Variables.$mid-grey;
+    font-size: 0.85em;
+    color: Variables.$dark-grey;
+
+    .shortcut {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: Variables.$spacing-sm;
+      margin: Variables.$spacing-xs 0;
+
+      kbd {
+        background: Variables.$white;
+        border: 1px solid Variables.$light-grey;
+        border-radius: 4px;
+        padding: 2px 8px;
+        font-size: 0.9em;
+        font-family: inherit;
+        font-weight: 500;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+
+  // Decorative illustration (optional)
+  .illustration {
+    width: 200px;
+    height: auto;
+    margin-bottom: Variables.$spacing-lg;
+    opacity: 0.8;
   }
 }
 
+// Fade in animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
 .dark {
   #splashScreen {
-    svg {
-      color: Variables.$mid-grey;
+    h1 {
+      color: Variables.$dark-text-primary;
     }
+
+    svg {
+      color: Variables.$dark-text-muted;
+    }
+
     p {
+      color: Variables.$dark-text-secondary;
+
       a {
-        svg {
+        color: Variables.$blue-light;
+
+        &:hover {
           color: Variables.$blue;
         }
       }
     }
+
+    .container {
+      border-color: Variables.$dark-bg-tertiary;
+      background: Variables.$dark-bg-secondary;
+
+      &:hover {
+        border-color: Variables.$blue-light;
+        background: rgba(59, 130, 246, 0.1);
+      }
+    }
+
+    .shortcuts-hint {
+      background: Variables.$dark-bg-secondary;
+      color: Variables.$dark-text-secondary;
+
+      .shortcut kbd {
+        background: Variables.$dark-bg-tertiary;
+        border-color: Variables.$dark-bg-elevated;
+        color: Variables.$dark-text-primary;
+      }
+    }
+  }
+}
+
+// ============================================
+// ANIMATION DISABLED MODE
+// ============================================
+
+.disableAnimations {
+  #splashScreen {
+    animation: none;
   }
 }
