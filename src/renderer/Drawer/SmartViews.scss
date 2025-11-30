@@ -1,0 +1,68 @@
+.smart-views {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+
+  .smart-views-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .MuiButtonGroup-root {
+    .MuiButton-root {
+      text-transform: none;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-color: var(--border-color, #d8dee4);
+      color: var(--text-secondary);
+
+      &:hover {
+        background-color: var(--hover-color, #f3f4f6);
+        border-color: var(--border-color, #d8dee4);
+      }
+
+      &.active {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        border-color: #3b82f6;
+
+        .MuiSvgIcon-root {
+          color: #3b82f6;
+        }
+      }
+
+      .MuiSvgIcon-root {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+// Dark mode
+.dark .smart-views {
+  border-color: var(--border-color, #444c56);
+
+  .MuiButtonGroup-root {
+    .MuiButton-root {
+      border-color: var(--border-color, #444c56);
+      color: var(--text-secondary);
+
+      &:hover {
+        background-color: var(--hover-color, #373e47);
+      }
+
+      &.active {
+        background-color: rgba(88, 166, 255, 0.15);
+        color: #58a6ff;
+        border-color: #58a6ff;
+
+        .MuiSvgIcon-root {
+          color: #58a6ff;
+        }
+      }
+    }
+  }
+}

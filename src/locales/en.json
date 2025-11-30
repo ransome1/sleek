@@ -31,6 +31,17 @@
   "calendar.today": "Today",
   "calendar.addTask": "Add Task",
   "calendar.noTasks": "No tasks on this day",
+  "smartViews.label": "Smart Views",
+  "smartViews.all": "All",
+  "smartViews.today": "Today",
+  "smartViews.next7Days": "Next 7 Days",
+  "quickAdd.placeholder": "Quick add task (try: 'Buy milk tomorrow' or '!1 important task')",
+  "quickAdd.preview": "Preview",
+  "quickAdd.helpTitle": "Quick Add Syntax",
+  "quickAdd.helpDate": "Dates",
+  "quickAdd.helpPriority": "Priority",
+  "quickAdd.helpProject": "Project",
+  "quickAdd.helpContext": "Context",
   "fileTabs.changeLocation": "Change file for archiving",
   "fileTabs.revealTodoFile": "Show todo file in file manager",
   "fileTabs.revealArchivingFile": "Show archiving file in file manager",
@@ -125,5 +136,9 @@
   "prompt.archive.changeFile.headline": "Choose a File for Archiving",
   "prompt.archive.changeFile.text": "To archive completed todos, you need to choose an archive file first",
   "prompt.searchFilters.delete.headline": "Delete search filter?",
-  "prompt.searchFilters.delete.body": "This search filter will be permanently deleted:"
+  "prompt.searchFilters.delete.body": "This search filter will be permanently deleted:",
+  "dragDrop.changePriority.headline": "Change Priority?",
+  "dragDrop.changePriority.text": "Move task to priority",
+  "dragDrop.changePriority.confirm": "Change Priority",
+  "dragDrop.changePriority.keep": "Keep Priority"
 }

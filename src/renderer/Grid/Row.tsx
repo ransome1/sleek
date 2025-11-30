@@ -24,7 +24,7 @@ interface RowProps extends WithTranslation {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
   settings: Settings
-  handleButtonClick: HandleButtonClickType
+  handleButtonClick?: HandleButtonClickType
   t: typeof i18n.t
 }
 

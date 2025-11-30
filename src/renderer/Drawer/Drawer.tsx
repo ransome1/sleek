@@ -9,6 +9,7 @@ import TuneIcon from '@mui/icons-material/Tune'
 import DrawerAttributes from './Attributes'
 import DrawerSorting from './Sorting'
 import DrawerFilters from './Filters'
+import SmartViews from './SmartViews'
 import { handleReset } from '../Shared'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
@@ -78,8 +79,10 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
         open={settings.isDrawerOpen}
         className={`${settings.isDrawerOpen ? 'open' : ''}`}
         style={{ width: drawerWidth, marginLeft: settings.isDrawerOpen ? 0 : -drawerWidth }}
-      >      
+      >
         <div className="drawerHandle" onMouseDown={handleMouseDown} />
+        {/* Smart Views - Quick Filters */}
+        <SmartViews filters={filters} />
         <Tabs className="tabs" centered value={activeTab} onChange={handleTabChange}>
           <Tab
             tabIndex={0}

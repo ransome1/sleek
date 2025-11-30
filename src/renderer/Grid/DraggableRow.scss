@@ -1,0 +1,78 @@
+.draggable-row {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+
+  &.dragging {
+    background-color: var(--hover-color, #f3f4f6);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    flex-shrink: 0;
+    cursor: grab;
+    opacity: 0.3;
+    transition: opacity 0.15s ease;
+    touch-action: none;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .MuiSvgIcon-root {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+  }
+
+  .row-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &:hover .drag-handle {
+    opacity: 0.6;
+  }
+}
+
+// Dark mode
+.dark .draggable-row {
+  &.dragging {
+    background-color: var(--hover-color, #373e47);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+// Priority drop zones (for future enhancement)
+.priority-drop-zone {
+  min-height: 40px;
+  border: 2px dashed transparent;
+  border-radius: 8px;
+  margin: 4px 0;
+  padding: 8px;
+  transition: all 0.2s ease;
+
+  &.active {
+    border-color: var(--border-color, #d8dee4);
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+
+  &.over {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  &.priority-a.over { border-color: #e63946; background-color: rgba(230, 57, 70, 0.1); }
+  &.priority-b.over { border-color: #f4a261; background-color: rgba(244, 162, 97, 0.1); }
+  &.priority-c.over { border-color: #2a9d8f; background-color: rgba(42, 157, 143, 0.1); }
+  &.priority-d.over { border-color: #6c757d; background-color: rgba(108, 117, 125, 0.1); }
+}

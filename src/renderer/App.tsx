@@ -11,6 +11,7 @@ import BiDailyView from './Grid/BiDailyView'
 import CalendarView from './Grid/CalendarView'
 import SplashScreen from './SplashScreen'
 import FileTabs from './Header/FileTabs'
+import QuickAddBar from './Header/QuickAddBar'
 import { dark, light } from './Themes'
 import DrawerComponent from './Drawer/Drawer'
 import SearchComponent from './Header/Search/Search'
@@ -158,6 +159,8 @@ const App = (): JSX.Element => {
                   {settings.showFileTabs ? (
                     <FileTabs settings={settings} setContextMenu={setContextMenu} />
                   ) : null}
+                  {/* Quick Add Bar */}
+                  <QuickAddBar settings={settings} />
                   {headers && headers.availableObjects > 0 ? (
                     <>
                       <SearchComponent

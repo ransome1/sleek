@@ -2,7 +2,7 @@ import { ipcMain, app, IpcMainEvent, clipboard, shell } from 'electron'
 import { dataRequest, searchString } from './DataRequest/DataRequest'
 import { mainWindow } from './index'
 import { changeCompleteState } from './DataRequest/ChangeCompleteState'
-import { prepareContentForWriting, removeLineFromFile } from './File/Write'
+import { prepareContentForWriting, removeLineFromFile, reorderLineInFile } from './File/Write'
 import { archiveTodos, handleRequestArchive } from './File/Archive'
 import { SettingsStore, FiltersStore, NotificationsStore } from './Stores'
 import { HandleError } from './Shared'
@@ -433,6 +433,14 @@ function handleRemoveLineFromFile(event: IpcMainEvent, index: number) {
   }
 }
 
+function handleReorderTodo(event: IpcMainEvent, fromLineNumber: number, toLineNumber: number) {
+  try {
+    reorderLineInFile(fromLineNumber, toLineNumber)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
 function handleArchiveTodos(event: IpcMainEvent): void {
   try {
     const archivingResult = archiveTodos()
@@ -478,6 +486,7 @@ function removeEventListeners(): void {
   ipcMain.off('saveToClipboard', handleSaveToClipboard)
   ipcMain.off('revealInFileManager', handleRevealInFileManager)
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile)
+  ipcMain.off('reorderTodo', handleReorderTodo)
   ipcMain.off('updateTodoObject', handleUpdateTodoObject)
   ipcMain.off('requestArchive', handleRequestArchive)
   ipcMain.off('getQuotaDashboard', handleGetQuotaDashboard)
@@ -512,6 +521,7 @@ ipcMain.on('addFile', handleAddFile)
 ipcMain.on('saveToClipboard', handleSaveToClipboard)
 ipcMain.on('revealInFileManager', handleRevealInFileManager)
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile)
+ipcMain.on('reorderTodo', handleReorderTodo)
 ipcMain.on('updateTodoObject', handleUpdateTodoObject)
 ipcMain.on('requestArchive', handleRequestArchive)
 ipcMain.on('getQuotaDashboard', handleGetQuotaDashboard)

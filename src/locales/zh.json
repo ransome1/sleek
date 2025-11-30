@@ -31,6 +31,17 @@
   "calendar.today": "今天",
   "calendar.addTask": "添加任务",
   "calendar.noTasks": "这一天没有任务",
+  "smartViews.label": "快捷视图",
+  "smartViews.all": "全部",
+  "smartViews.today": "今天",
+  "smartViews.next7Days": "未来7天",
+  "quickAdd.placeholder": "快速添加任务（试试：'买牛奶 明天' 或 '!1 重要任务'）",
+  "quickAdd.preview": "预览",
+  "quickAdd.helpTitle": "快捷语法",
+  "quickAdd.helpDate": "日期",
+  "quickAdd.helpPriority": "优先级",
+  "quickAdd.helpProject": "项目",
+  "quickAdd.helpContext": "上下文",
   "fileTabs.changeLocation": "更改文件以进行归档",
   "fileTabs.revealTodoFile": "在文件管理器中显示待办文件",
   "fileTabs.revealArchivingFile": "在文件管理器中显示归档文件",
@@ -125,5 +136,9 @@
   "prompt.archive.changeFile.headline": "选择一个文件进行归档",
   "prompt.archive.changeFile.text": "要归档已完成的任务，您需要首先选择一个归档文件。",
   "prompt.searchFilters.delete.headline": "删除搜索过滤器？",
-  "prompt.searchFilters.delete.body": "此搜索过滤器将被永久删除："
+  "prompt.searchFilters.delete.body": "此搜索过滤器将被永久删除：",
+  "dragDrop.changePriority.headline": "更改优先级？",
+  "dragDrop.changePriority.text": "将任务移动到优先级",
+  "dragDrop.changePriority.confirm": "更改优先级",
+  "dragDrop.changePriority.keep": "保持优先级"
 }

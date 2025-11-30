@@ -20,6 +20,33 @@ function removeLineFromFile(lineNumber: number) {
   }
 }
 
+function reorderLineInFile(fromLineNumber: number, toLineNumber: number) {
+  const activeFile: FileObject | null = getActiveFile()
+  if (!activeFile) {
+    throw new Error('No active file found')
+  }
+
+  if (fromLineNumber < 0 || fromLineNumber >= linesInFile.length) {
+    throw new Error('Invalid source line number')
+  }
+  if (toLineNumber < 0 || toLineNumber >= linesInFile.length) {
+    throw new Error('Invalid target line number')
+  }
+  if (fromLineNumber === toLineNumber) {
+    return // No change needed
+  }
+
+  // Remove the line from its original position
+  const [movedLine] = linesInFile.splice(fromLineNumber, 1)
+
+  // Insert it at the new position
+  // Adjust target index if source was before target
+  const adjustedToIndex = fromLineNumber < toLineNumber ? toLineNumber : toLineNumber
+  linesInFile.splice(adjustedToIndex, 0, movedLine)
+
+  writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark)
+}
+
 function prepareContentForWriting(lineNumber: number, string: string) {
   const activeFile: FileObject | null = getActiveFile()
   if (!activeFile) {
@@ -57,4 +84,4 @@ function prepareContentForWriting(lineNumber: number, string: string) {
   writeToFile(linesInFile.join('\n'), activeFile.todoFilePath, activeFile.todoFileBookmark)
 }
 
-export { prepareContentForWriting, removeLineFromFile, writeToFile }
+export { prepareContentForWriting, removeLineFromFile, reorderLineInFile, writeToFile }
