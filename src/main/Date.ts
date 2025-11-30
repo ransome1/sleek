@@ -41,10 +41,10 @@ function processDateWithSugar(string: string, type: string) {
 
 export function extractSpeakingDates(body: string) {
   const expressions = [
-    { pattern: /due:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g, key: 'due:', type: 'relative' },
-    { pattern: /due:(\d{4}-\d{2}-\d{2})/g, key: 'due:', type: 'absolute' },
-    { pattern: /t:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g, key: 't:', type: 'relative' },
-    { pattern: /t:(\d{4}-\d{2}-\d{2})/g, key: 't:', type: 'absolute' }
+    { pattern: /(?<=\b)due:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g, key: 'due:', type: 'relative' },
+    { pattern: /(?<=\b)due:(\d{4}-\d{2}-\d{2})/g, key: 'due:', type: 'absolute' },
+    { pattern: /(?<=\b)t:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g, key: 't:', type: 'relative' },
+    { pattern: /(?<=\b)t:(\d{4}-\d{2}-\d{2})/g, key: 't:', type: 'absolute' }
   ]
 
   const speakingDates = {
