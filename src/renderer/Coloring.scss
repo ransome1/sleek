@@ -109,6 +109,52 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
+// Priority D - Admin/Batch tasks (1-2-3-5 rule)
+// Uses cool gray/blue-gray to indicate low-priority, low-effort tasks
+*[data-todotxt-attribute='priority'][data-todotxt-value='D'] {
+  --color2: #78909c;  // Blue-gray color
+  border-left-color: var(--color2);
+  &.selected {
+    button {
+      background: color.adjust(#78909c, $lightness: -20%);
+    }
+  }
+  // Subtle visual differentiation
+  button {
+    opacity: 0.85;
+  }
+}
+
+// Priority E-Z - Even lower priority, very muted
+*[data-todotxt-attribute='priority'][data-todotxt-value='E'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='F'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='G'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='H'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='I'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='J'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='K'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='L'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='M'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='N'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='O'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='P'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='Q'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='R'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='S'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='T'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='U'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='V'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='W'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='X'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='Y'],
+*[data-todotxt-attribute='priority'][data-todotxt-value='Z'] {
+  --color2: #b0bec5;  // Even lighter gray
+  border-left-color: var(--color2);
+  button {
+    opacity: 0.7;
+  }
+}
+
 *[data-todotxt-attribute^='pm'] {
   --color1: rgb(221, 44, 0);
   --color2: white;
