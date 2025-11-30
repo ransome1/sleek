@@ -10,6 +10,61 @@ All classic todo.txt attributes are supported and enhanced by additional feature
 
 sleek is available for Windows, macOS and Linux, and in several languages. [Screenshots can be found here](https://github.com/ransome1/sleek/wiki/Screenshots). For more detailed information, [please refer to the sleek wiki](https://github.com/ransome1/sleek/wiki).
 
+## Features
+
+### Core Features
+- **todo.txt Syntax Support**: Full support for standard todo.txt format including priorities, dates, projects, contexts, and key-value pairs
+- **Recurrence**: Support for recurring tasks with flexible patterns (`rec:+1w`, `rec:+1m`, etc.)
+- **Smart Filtering**: Powerful filter language with tag-based filtering and full-text search
+- **Customizable Grouping & Sorting**: Organize tasks your way
+- **Auto-archiving**: Move completed todos to done.txt files
+- **File Watching**: Real-time sync with external changes to todo.txt files
+- **Multi-language Support**: Available in 16 languages
+
+### Advanced Features
+- **Bi-Daily Units**: Group tasks into AM/PM time-based units for better daily organization
+- **Quota System (1-2-3-5)**: Priority-based task limits per time unit
+  - Priority A: 1 task limit
+  - Priority B: 2 task limit
+  - Priority C: 3 task limit
+  - Priority D: 5 task limit
+- **Review System**: Periodic review of completed tasks with stats and notes
+- **Energy View**: Batch processing mode for bi-daily units
+
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Runtime | Electron 39.0.0, Node.js 22+ |
+| UI Framework | React 19.1.0 |
+| Language | TypeScript 5.8.3 (strict mode) |
+| Build Tool | electron-vite 4.0.0 |
+| UI Library | Material-UI (MUI) 7.2.0 |
+| Testing | Vitest 4.0.14 |
+| i18n | react-i18next |
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server with hot reload
+npm run dev
+
+# Run tests
+npm test
+
+# Type checking
+npm run typecheck
+
+# Build application
+npm run build
+
+# Build macOS DMG
+npm run build:mac
+```
+
 ### ❤️ Sponsor sleek
 
 Pushing sleek to the Apple and Microsoft app stores creates annual costs. You can help covering these by [sponsoring the project](https://github.com/sponsors/ransome1).
