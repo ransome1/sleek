@@ -11,7 +11,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import SortIcon from '@mui/icons-material/Sort'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
-import { translatedAttributes } from '../Shared'
+import { translatedAttributes, shouldHideByDependency } from '../Shared'
 import './Sorting.scss'
 
 const { store } = window.api
@@ -63,11 +63,8 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
     <div id="Sorting">
       <FormGroup>
         {Object.entries(visibleSettings).map(([settingName, settingValue]) => {
-          // todo: this is a duplicate, must be improved
-          if (settingValue.dependsOn) {
-            for (let i = 0; i < settingValue.dependsOn.length; i++) {
-              if (settings[settingValue.dependsOn[i]]) return null;
-            }
+          if (shouldHideByDependency(settings, settingValue.dependsOn, true)) {
+            return null
           }
           return settingValue.style === 'toggle' ? (
             <FormControlLabel

@@ -93,6 +93,29 @@ export const handleLinkClick = (event: MouseEvent, url: string): void => {
   }
 }
 
+/**
+ * Checks if a setting should be hidden based on its dependencies.
+ * @param settings - The current settings object
+ * @param dependsOn - Array of setting keys this setting depends on
+ * @param hideWhenTrue - If true, hide when dependencies are enabled; if false, hide when disabled
+ * @returns true if the setting should be hidden
+ */
+export const shouldHideByDependency = (
+  settings: Record<string, unknown>,
+  dependsOn: string[] | undefined,
+  hideWhenTrue: boolean = false
+): boolean => {
+  if (!dependsOn) return false
+
+  for (const dep of dependsOn) {
+    const depValue = Boolean(settings[dep])
+    if (hideWhenTrue ? depValue : !depValue) {
+      return true
+    }
+  }
+  return false
+}
+
 export const translatedAttributes = (t: typeof i18n.t): Record<string, string> => {
   return {
     t: t('shared.attributeMapping.t'),

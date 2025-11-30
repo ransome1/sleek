@@ -16,7 +16,7 @@ import Slider from '@mui/material/Slider'
 import HelpIcon from '@mui/icons-material/Help'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import LanguageSelector, { i18n } from './LanguageSelector'
-import { handleLinkClick } from '../Shared'
+import { handleLinkClick, shouldHideByDependency } from '../Shared'
 import { dark, light } from '../Themes'
 import './Settings.scss'
 
@@ -223,10 +223,8 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(({ isOpen, onCl
               return null
             }
 
-            if(settingValue.dependsOn) {
-              for (let i = 0; i < settingValue.dependsOn.length; i++) {
-                if(!settings[settingValue.dependsOn[i]]) return null
-              }
+            if (shouldHideByDependency(settings, settingValue.dependsOn)) {
+              return null
             }
 
             return settingValue.style === 'toggle' ? (
