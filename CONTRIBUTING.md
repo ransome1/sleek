@@ -1,6 +1,4 @@
-# Contributing to sleek
-## 👩🏾‍💻 Become a contributer
-We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `vitest` to join our collaborative effort. [Here you'll find our roadmap](https://github.com/users/ransome1/projects/3).
+# Contributing to Sleek0
 
 ## Table of Contents
 
@@ -9,7 +7,6 @@ We're actively inviting passionate contributors skilled in `React`, `TypeScript`
     - [Reporting Issues](#reporting-issues)
     - [Feature Requests](#feature-requests)
     - [Pull Requests](#pull-requests)
-    - [GitHub Issue Backlog](#github-issue-backlog)
 3. [Development Setup](#development-setup)
 4. [Testing](#testing)
 5. [Coding Guidelines](#coding-guidelines)
@@ -21,17 +18,11 @@ Before contributing, make sure you have the latest version of Git and Node.js in
 
 ## Contributing
 
-### GitHub Backlog
-
-Before contributing to sleek, we recommend reviewing the [GitHub Issue backlog](https://github.com/ransome1/sleek/issues) to align your contributions with existing issues. This helps avoid duplication of efforts and ensures that your work aligns with the project roadmap. If you find an issue that you would like to contribute to, please indicate your interest by commenting on the issue.
-
 ### Reporting Issues
 
-If you encounter any issues or bugs while using sleek, please open an [issue on the GitHub repository](https://github.com/ransome1/sleek/issues). When reporting issues, please provide detailed information about the problem, including steps to reproduce and any error messages or logs if applicable.
+If you encounter any issues or bugs while using Sleek0, please open an issue on the GitHub repository. When reporting issues, please provide detailed information about the problem, including steps to reproduce and any error messages or logs if applicable.
 
 ### Feature Requests
-
-**If your feature request is more of a loose idea and you are unsure about its implementation or potential impact, please discuss it first in the [GitHub Discussions section](https://github.com/ransome1/sleek/discussions). Engage with the community and gather feedback before submitting a formal feature request.**
 
 If you have ideas for new features or improvements, we encourage you to open a feature request issue on GitHub. Describe the desired functionality or improvement in detail to help us understand and evaluate the suggestion.
 
@@ -52,15 +43,15 @@ We will review your pull request as soon as possible. Your contributions are gre
 
 ## Development Setup
 
-To set up the development environment and run sleek locally, follow these steps:
+To set up the development environment and run Sleek0 locally, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/ransome1/sleek.git`
+1. Clone the repository
 2. Install project dependencies: `npm install`
 3. Start the development server: `npm run dev`
 
 ## Testing
 
-sleek uses [vitest](https://vitest.dev/guide/) as the framework for unit testing. To run tests, use the following command: `npm test`
+Sleek0 uses [vitest](https://vitest.dev/guide/) as the framework for unit testing. To run tests, use the following command: `npm test`
 
 To contribute to the testing efforts, consider the following:
 
@@ -90,7 +81,6 @@ When making commits, please follow these guidelines:
 - Keep the subject line short and concise (preferably 50 characters or less).
 - Provide additional details in the body if needed.
 - Reference relevant issues or pull requests in the commit message if applicable.
-- Inform the maintainer if you've integrated dependencies that require acknowledgment.
 
 Example:
 ```
@@ -101,6 +91,6 @@ Implement a new feature that allows users to customize settings.
 Fixes #123
 ```
 
-Thank you for taking the time to review these contributing guidelines. We appreciate your contributions and look forward to collaborating with you! If you have any questions, feel free to reach out to us.
+Thank you for taking the time to review these contributing guidelines. We appreciate your contributions and look forward to collaborating with you!
 
 Happy coding and testing!

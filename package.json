@@ -1,6 +1,6 @@
 {
-  "name": "sleek",
-  "productName": "sleek",
+  "name": "sleek0",
+  "productName": "Sleek0",
   "version": "2.0.22",
   "description": "A minimal todo.txt manager for macOS",
   "synopsis": "A minimal todo.txt manager for macOS",
@@ -12,14 +12,6 @@
     "macos"
   ],
   "category": "ProjectManagement",
-  "homepage": "https://github.com/ransome1/",
-  "bugs": {
-    "url": "https://github.com/ransome1/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ransome1/sleek.git"
-  },
   "license": "MIT",
   "author": {
     "name": "Robin Ahle",

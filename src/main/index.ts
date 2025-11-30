@@ -178,7 +178,7 @@ const createMainWindow = () => {
         mainWindow?.webContents.insertCSS(data)
         console.error('Styles injected found in CSS file:', customStylesPath)
       } else {
-        console.error('Could not read custom CSS file. More info: https://github.com/ransome1/sleek/wiki/Custom-CSS')
+        console.error('Could not read custom CSS file')
       }
     })
   }

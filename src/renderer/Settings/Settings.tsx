@@ -89,8 +89,7 @@ const visibleSettings: VisibleSettings = {
   },
   // [HARDCODE as 'true'] - Better user experience
   useHumanFriendlyDates: {
-    style: 'toggle',
-    help: 'https://github.com/ransome1/sleek/wiki/Human-friendly-dates'
+    style: 'toggle'
   },
   // [KEEP] - Useful for menubar app mode on macOS
   tray: {
@@ -112,13 +111,11 @@ const visibleSettings: VisibleSettings = {
   },
   // [KEEP] - Power user feature
   bulkTodoCreation: {
-    style: 'toggle',
-    help: 'https://github.com/ransome1/sleek/wiki/Multi%E2%80%90line-text-field#bulk-todo-creation'
+    style: 'toggle'
   },
   // [REMOVE] - Analytics not needed for personal tool
   matomo: {
-    style: 'toggle',
-    help: 'https://github.com/ransome1/sleek/blob/main/PRIVACY.md'
+    style: 'toggle'
   },
   // [KEEP] - Accessibility feature
   disableAnimations: {
@@ -138,8 +135,7 @@ const visibleSettings: VisibleSettings = {
     min: 0,
     max: 10,
     unit: ' days',
-    step: 1,
-    help: 'https://github.com/ransome1/sleek/wiki/Notifications-and-badges#notification-threshold'
+    step: 1
   },
   // [KEEP] - Accessibility feature
   zoom: {
