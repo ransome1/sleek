@@ -11,6 +11,25 @@
   gap: 16px;
   overflow: auto;
 
+  // Header with Energy View and Mode Switcher
+  .bidaily-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color, #eee);
+
+    .dark & {
+      border-color: var(--border-dark, #333);
+    }
+
+    .bidaily-energy-bar {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
   .bidaily-columns {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -67,10 +86,16 @@
       background: var(--surface-dark, #2d2d2d);
     }
 
+    .unit-header-top {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 4px;
+    }
+
     .unit-title {
       font-weight: 600;
       font-size: 1rem;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .unit-date-range {
@@ -84,6 +109,11 @@
       margin-top: 4px;
       font-size: 0.7rem;
       opacity: 0.7;
+
+      .hidden-count {
+        color: var(--warning-color, #f57c00);
+        font-style: italic;
+      }
     }
   }
 
@@ -98,6 +128,33 @@
       opacity: 0.6;
     }
 
+    // Row wrapper for view mode styling
+    .row-wrapper {
+      transition: all 0.3s ease;
+
+      // Focus mode: dim non-A tasks
+      &.dimmed {
+        opacity: 0.35;
+        filter: grayscale(100%);
+        transform: scale(0.98);
+
+        &:hover {
+          opacity: 0.6;
+          filter: grayscale(50%);
+        }
+      }
+
+      // Batch mode: highlight D tasks
+      &.highlighted {
+        transform: scale(1.01);
+
+        li.row {
+          border-left-width: 4px;
+          background: var(--batch-highlight, rgba(141, 153, 174, 0.1));
+        }
+      }
+    }
+
     // Inherit row styles from Grid
     li.row {
       border-radius: 8px;
@@ -106,6 +163,35 @@
 
       &:hover {
         background: var(--hover-color, rgba(0, 0, 0, 0.04));
+      }
+    }
+  }
+}
+
+// View mode specific styles
+.bidaily-view {
+  // Focus mode: emphasize A priority, blur others
+  &.mode-focus {
+    .unit-column {
+      &.current-unit {
+        box-shadow: 0 4px 20px rgba(230, 57, 70, 0.3);
+        border-color: #e63946;
+      }
+    }
+  }
+
+  // Batch mode: emphasize D priority tasks
+  &.mode-batch {
+    .unit-column {
+      .unit-header {
+        background: linear-gradient(135deg, #8d99ae 0%, #6b7280 100%);
+        color: white;
+
+        .unit-title,
+        .unit-date-range,
+        .unit-count {
+          color: white;
+        }
       }
     }
   }
