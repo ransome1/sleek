@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
@@ -7,6 +7,8 @@ import List from '@mui/material/List'
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Row from './Row'
+import EnergyView from './EnergyView'
+import ViewModeSwitcher, { ViewMode } from './ViewModeSwitcher'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './BiDailyView.scss'
@@ -22,6 +24,8 @@ interface UnitColumnProps {
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
   settings: Settings
+  viewMode: ViewMode
+  unitType?: string
 }
 
 const UnitColumn: React.FC<UnitColumnProps> = memo(({
@@ -34,44 +38,81 @@ const UnitColumn: React.FC<UnitColumnProps> = memo(({
   setContextMenu,
   setTodoObject,
   setPromptItem,
-  settings
+  settings,
+  viewMode,
+  unitType
 }) => {
+  // Filter tasks based on view mode
+  const getVisibleTasks = () => {
+    if (viewMode === 'batch') {
+      // In batch mode, only show D priority tasks
+      return todoObjects.filter(todo => todo.priority === 'D')
+    }
+    return todoObjects
+  }
+
+  const visibleTasks = getVisibleTasks()
+  const hiddenCount = todoObjects.length - visibleTasks.length
+
+  // Get row class based on view mode and priority
+  const getRowClass = (priority: string | null) => {
+    if (viewMode === 'focus' && priority !== 'A') {
+      return 'dimmed'
+    }
+    if (viewMode === 'batch' && priority === 'D') {
+      return 'highlighted'
+    }
+    return ''
+  }
+
   return (
     <Paper
-      className={`unit-column ${isCurrentUnit ? 'current-unit' : ''}`}
+      className={`unit-column ${isCurrentUnit ? 'current-unit' : ''} mode-${viewMode}`}
       elevation={isCurrentUnit ? 4 : 1}
     >
       <Box className="unit-header">
-        <Typography variant="h6" className="unit-title">
-          {title}
-        </Typography>
-        {dateRange && (
-          <Typography variant="caption" className="unit-date-range">
-            {dateRange}
+        <Box className="unit-header-top">
+          <Typography variant="h6" className="unit-title">
+            {title}
           </Typography>
+          {dateRange && (
+            <Typography variant="caption" className="unit-date-range">
+              {dateRange}
+            </Typography>
+          )}
+        </Box>
+        {unitType && unitType !== 'REST' && (
+          <EnergyView unitType={unitType} compact />
         )}
         <Typography variant="caption" className="unit-count">
-          {todoObjects.length} 项任务
+          {visibleTasks.length} 项任务
+          {hiddenCount > 0 && viewMode === 'batch' && (
+            <span className="hidden-count"> (+{hiddenCount} 隐藏)</span>
+          )}
         </Typography>
       </Box>
       <Divider />
-      <List className="unit-list">
-        {todoObjects.length === 0 ? (
+      <List className={`unit-list mode-${viewMode}`}>
+        {visibleTasks.length === 0 ? (
           <Typography className="empty-message" variant="body2" color="text.secondary">
-            暂无任务
+            {viewMode === 'batch' ? '无琐事任务' : '暂无任务'}
           </Typography>
         ) : (
-          todoObjects.map((todoObject) => (
-            <Row
+          visibleTasks.map((todoObject) => (
+            <div
               key={todoObject.lineNumber}
-              todoObject={todoObject}
-              filters={filters}
-              setTodoObject={setTodoObject}
-              setDialogOpen={setDialogOpen}
-              setContextMenu={setContextMenu}
-              setPromptItem={setPromptItem}
-              settings={settings}
-            />
+              className={`row-wrapper ${getRowClass(todoObject.priority)}`}
+            >
+              <Row
+                todoObject={todoObject}
+                filters={filters}
+                setTodoObject={setTodoObject}
+                setDialogOpen={setDialogOpen}
+                setContextMenu={setContextMenu}
+                setPromptItem={setPromptItem}
+                settings={settings}
+              />
+            </div>
           ))
         )}
       </List>
@@ -154,6 +195,12 @@ const BiDailyViewComponent: React.FC<BiDailyViewComponentProps> = memo(({
   onReview,
   t
 }) => {
+  // View mode state: 'normal' | 'focus' | 'batch'
+  const [viewMode, setViewMode] = useState<ViewMode>('normal')
+
+  // Find the current unit for the EnergyView
+  const currentUnit = todoData?.find(group => group.isCurrentUnit)?.unitType || 'A'
+
   // Show rest day view on Saturday
   if (isRestDay) {
     return <RestDayView t={t} onReview={onReview} />
@@ -174,7 +221,18 @@ const BiDailyViewComponent: React.FC<BiDailyViewComponentProps> = memo(({
   const backlog = todoData.find(group => group.unitType === 'REST')
 
   return (
-    <Box className="bidaily-view">
+    <Box className={`bidaily-view mode-${viewMode}`}>
+      {/* Energy View Header with View Mode Switcher */}
+      <Box className="bidaily-header">
+        <Box className="bidaily-energy-bar">
+          <EnergyView unitType={currentUnit} />
+        </Box>
+        <ViewModeSwitcher
+          currentMode={viewMode}
+          onModeChange={setViewMode}
+        />
+      </Box>
+
       <Box className="bidaily-columns">
         {mainUnits.map((group) => (
           <UnitColumn
@@ -189,6 +247,8 @@ const BiDailyViewComponent: React.FC<BiDailyViewComponentProps> = memo(({
             setTodoObject={setTodoObject}
             setPromptItem={setPromptItem}
             settings={settings}
+            viewMode={viewMode}
+            unitType={group.unitType}
           />
         ))}
       </Box>
@@ -206,6 +266,8 @@ const BiDailyViewComponent: React.FC<BiDailyViewComponentProps> = memo(({
             setTodoObject={setTodoObject}
             setPromptItem={setPromptItem}
             settings={settings}
+            viewMode={viewMode}
+            unitType="REST"
           />
         </Box>
       )}

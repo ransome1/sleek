@@ -1,0 +1,86 @@
+/**
+ * View Mode Switcher Styles
+ * Toggle between Normal, Focus, and Batch modes
+ */
+
+.view-mode-switcher {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0 8px 0;
+
+  &.compact {
+    padding: 0 0 4px 0;
+  }
+
+  .MuiButtonGroup-root {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+
+    .MuiButton-root {
+      text-transform: none;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-color: var(--border-color, #ddd);
+      color: var(--text-secondary, #666);
+      background: var(--surface-color, #fff);
+      transition: all 0.2s ease;
+
+      .dark & {
+        border-color: var(--border-dark, #444);
+        color: var(--text-secondary-dark, #aaa);
+        background: var(--surface-dark, #2d2d2d);
+      }
+
+      &:hover {
+        background: var(--hover-color, rgba(0, 0, 0, 0.04));
+
+        .dark & {
+          background: var(--hover-dark, rgba(255, 255, 255, 0.08));
+        }
+      }
+
+      &.active {
+        background: var(--primary-color, #1976d2);
+        color: white;
+        border-color: var(--primary-color, #1976d2);
+
+        &:hover {
+          background: var(--primary-dark, #1565c0);
+        }
+      }
+
+      .MuiButton-startIcon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  &.compact {
+    .MuiButton-root {
+      padding: 4px 8px;
+      min-width: auto;
+
+      .MuiSvgIcon-root {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// Focus mode button with special styling
+.view-mode-switcher .MuiButton-root[class*="focus"] {
+  &.active {
+    background: linear-gradient(135deg, #e63946 0%, #c62828 100%);
+    border-color: #e63946;
+  }
+}
+
+// Batch mode button with special styling
+.view-mode-switcher .MuiButton-root[class*="batch"] {
+  &.active {
+    background: linear-gradient(135deg, #8d99ae 0%, #6b7280 100%);
+    border-color: #8d99ae;
+  }
+}

@@ -1,0 +1,100 @@
+/**
+ * Energy View Styles
+ * Visual quota bar showing 1-2-3-5 priority allocation
+ */
+
+.energy-view {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  margin-bottom: 8px;
+
+  &.compact {
+    padding: 4px 0;
+    margin-bottom: 4px;
+  }
+
+  .energy-bar {
+    display: flex;
+    flex: 1;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--surface-color, #f0f0f0);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    .dark & {
+      background: var(--surface-dark, #2d2d2d);
+    }
+  }
+
+  .energy-segment {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+
+    &.at-limit {
+      .energy-fill {
+        animation: pulse-glow 2s infinite;
+      }
+    }
+  }
+
+  .energy-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    transition: width 0.3s ease;
+    border-radius: inherit;
+  }
+
+  .energy-label {
+    position: relative;
+    z-index: 1;
+    font-size: 8px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .energy-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: fit-content;
+
+    .energy-total {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary, #666);
+      opacity: 0.8;
+
+      .dark & {
+        color: var(--text-secondary-dark, #aaa);
+      }
+    }
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 100, 100, 0);
+  }
+  50% {
+    box-shadow: 0 0 8px 2px rgba(255, 100, 100, 0.5);
+  }
+}
