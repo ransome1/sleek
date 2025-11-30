@@ -1,0 +1,189 @@
+/**
+ * Quota Dashboard Styles
+ * Visual representation of the 1-2-3-5 quota system
+ */
+
+.quota-dashboard {
+  padding: 8px 12px;
+  background: var(--surface-color, #f8f9fa);
+  border-radius: 8px;
+  margin-bottom: 8px;
+
+  .dark & {
+    background: var(--surface-dark, #2d2d2d);
+  }
+
+  &.compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 8px;
+    background: transparent;
+
+    .quota-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      border-radius: 12px;
+      border: 1.5px solid;
+      background: var(--background-color, #fff);
+      transition: all 0.2s ease;
+
+      .dark & {
+        background: var(--background-dark, #1a1a1a);
+      }
+
+      &.at-limit {
+        background: rgba(229, 57, 53, 0.1);
+        border-color: #e53935 !important;
+        animation: pulse-limit 1.5s ease-in-out infinite;
+      }
+    }
+  }
+
+  .quota-items {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+
+    @media (max-width: 600px) {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
+  .quota-item {
+    flex: 1;
+    min-width: 60px;
+    padding: 6px 8px;
+    background: var(--background-color, #fff);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+
+    .dark & {
+      background: var(--background-dark, #1a1a1a);
+    }
+
+    &.at-limit {
+      background: rgba(229, 57, 53, 0.1);
+      animation: pulse-limit 1.5s ease-in-out infinite;
+
+      .quota-count {
+        color: #e53935;
+        font-weight: 600;
+      }
+    }
+
+    .quota-header {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+
+      .quota-emoji {
+        font-size: 0.9rem;
+      }
+
+      .quota-priority {
+        font-weight: 600;
+        font-size: 0.75rem;
+        color: var(--text-secondary, #666);
+
+        .dark & {
+          color: var(--text-secondary-dark, #aaa);
+        }
+      }
+
+      .quota-count {
+        margin-left: auto;
+        font-size: 0.8rem;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+    }
+
+    .quota-progress {
+      height: 4px;
+      border-radius: 2px;
+      background-color: var(--divider-color, #e0e0e0);
+
+      .dark & {
+        background-color: var(--divider-dark, #444);
+      }
+    }
+  }
+
+  .quota-total {
+    padding-top: 6px;
+    border-top: 1px solid var(--divider-color, #e0e0e0);
+
+    .dark & {
+      border-top-color: var(--divider-dark, #444);
+    }
+
+    .total-label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.7rem;
+      color: var(--text-secondary, #666);
+      text-align: right;
+
+      .dark & {
+        color: var(--text-secondary-dark, #aaa);
+      }
+    }
+
+    .total-progress {
+      height: 3px;
+      border-radius: 1.5px;
+      background-color: var(--divider-color, #e0e0e0);
+
+      .dark & {
+        background-color: var(--divider-dark, #444);
+      }
+    }
+  }
+}
+
+@keyframes pulse-limit {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Inline quota indicator for headers
+.quota-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  font-size: 0.75rem;
+
+  .quota-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+
+    .dark & {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &.at-limit {
+      background: rgba(229, 57, 53, 0.15);
+      color: #e53935;
+    }
+
+    &.priority-A { color: #e53935; }
+    &.priority-B { color: #fb8c00; }
+    &.priority-C { color: #1e88e5; }
+    &.priority-D { color: #78909c; }
+  }
+}

@@ -9,6 +9,15 @@ import { HandleError } from './Shared'
 import { addFile, setFile, removeFile } from './File/File'
 import { openFile, createFile } from './File/Dialog'
 import { createTodoObject } from './DataRequest/CreateTodoObjects'
+import { validateQuota, getQuotaDashboard, getAllUnitsQuotaStatus, Priority } from './DataRequest/QuotaSystem'
+import { getCurrentUnit, UnitType } from './DataRequest/BiDailyUnit'
+import {
+  checkReviewTrigger,
+  calculateUnitReviewStats,
+  generateReviewNote,
+  markReviewCompleted,
+  getPreviousUnit
+} from './DataRequest/ReviewSystem'
 
 function handleDataRequest(event: IpcMainEvent, searchString: string) {
   try {
@@ -52,14 +61,112 @@ function handleWriteTodoToFile(
   attributeValue: string
 ) {
   try {
+    // Create todo object to get priority and due date
+    const todoObject = createTodoObject(index, string, attributeType, attributeValue)
+
+    // Only validate quota for new tasks or priority/due date changes
+    // Skip validation for completion state changes
+    if (state === undefined) {
+      const priority = (todoObject.priority as Priority) || null
+      const dueDate = todoObject.due || null
+
+      // Validate quota before writing
+      const validation = validateQuota(priority, dueDate, index >= 0 ? index : undefined)
+
+      if (!validation.isValid) {
+        // Send quota exceeded error to renderer
+        event.reply('quotaExceeded', {
+          message: validation.message,
+          messageCN: validation.messageCN,
+          priority: validation.priority,
+          unitType: validation.unitType,
+          current: validation.current,
+          limit: validation.limit
+        })
+        return // Block the write operation
+      }
+    }
+
     if (attributeType && attributeValue) {
-      const todoObject = createTodoObject(index, string, attributeType, attributeValue)
       prepareContentForWriting(index, todoObject.string)
     } else {
       let updatedString: string | null = string
       if (state !== undefined && index >= 0) updatedString = changeCompleteState(string, state)
       prepareContentForWriting(index, updatedString)
     }
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+function handleGetQuotaDashboard(event: IpcMainEvent, unitType?: string) {
+  try {
+    const unit = unitType || getCurrentUnit()
+    const dashboard = getQuotaDashboard(unit as any)
+    event.reply('quotaDashboard', dashboard)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+function handleGetAllQuotaStatus(event: IpcMainEvent) {
+  try {
+    const statuses = getAllUnitsQuotaStatus()
+    // Convert Map to object for IPC
+    const result: Record<string, any> = {}
+    statuses.forEach((value, key) => {
+      result[key] = {
+        ...value,
+        quotas: Object.fromEntries(value.quotas)
+      }
+    })
+    event.reply('allQuotaStatus', result)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+// Review System Handlers
+function handleCheckReviewTrigger(event: IpcMainEvent) {
+  try {
+    const result = checkReviewTrigger()
+    event.reply('reviewTriggerResult', result)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+function handleGetReviewStats(event: IpcMainEvent, unitType: string) {
+  try {
+    const stats = calculateUnitReviewStats(unitType as any)
+    event.reply('reviewStats', stats)
+  } catch (error: any) {
+    HandleError(error)
+  }
+}
+
+function handleSaveReviewNote(event: IpcMainEvent, unitType: string, userNote: string) {
+  try {
+    const stats = calculateUnitReviewStats(unitType as any)
+    if (stats) {
+      const reviewNote = generateReviewNote(stats, userNote)
+      // Add to file as a completed task (review record)
+      prepareContentForWriting(-1, reviewNote)
+      markReviewCompleted()
+      event.reply('reviewNoteSaved', { success: true })
+    } else {
+      event.reply('reviewNoteSaved', { success: false, error: 'No stats available' })
+    }
+  } catch (error: any) {
+    HandleError(error)
+    event.reply('reviewNoteSaved', { success: false, error: error.message })
+  }
+}
+
+function handleMarkReviewCompleted(event: IpcMainEvent) {
+  try {
+    markReviewCompleted()
+    event.reply('reviewMarkedCompleted', { success: true })
   } catch (error: any) {
     HandleError(error)
   }
@@ -209,6 +316,12 @@ function removeEventListeners(): void {
   ipcMain.off('removeLineFromFile', handleRemoveLineFromFile)
   ipcMain.off('updateTodoObject', handleUpdateTodoObject)
   ipcMain.off('requestArchive', handleRequestArchive)
+  ipcMain.off('getQuotaDashboard', handleGetQuotaDashboard)
+  ipcMain.off('getAllQuotaStatus', handleGetAllQuotaStatus)
+  ipcMain.off('checkReviewTrigger', handleCheckReviewTrigger)
+  ipcMain.off('getReviewStats', handleGetReviewStats)
+  ipcMain.off('saveReviewNote', handleSaveReviewNote)
+  ipcMain.off('markReviewCompleted', handleMarkReviewCompleted)
 }
 
 app.on('before-quit', () => removeEventListeners)
@@ -233,3 +346,9 @@ ipcMain.on('revealInFileManager', handleRevealInFileManager)
 ipcMain.on('removeLineFromFile', handleRemoveLineFromFile)
 ipcMain.on('updateTodoObject', handleUpdateTodoObject)
 ipcMain.on('requestArchive', handleRequestArchive)
+ipcMain.on('getQuotaDashboard', handleGetQuotaDashboard)
+ipcMain.on('getAllQuotaStatus', handleGetAllQuotaStatus)
+ipcMain.on('checkReviewTrigger', handleCheckReviewTrigger)
+ipcMain.on('getReviewStats', handleGetReviewStats)
+ipcMain.on('saveReviewNote', handleSaveReviewNote)
+ipcMain.on('markReviewCompleted', handleMarkReviewCompleted)

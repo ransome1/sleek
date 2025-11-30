@@ -118,6 +118,10 @@ const migrations = {
     console.log('Migrating from 2.0.14 → 2.0.17')
     store.set('compact', false)
     store.set('sortCompletedLast', false)
+  },
+  '2.0.23': (store) => {
+    console.log('Migrating from 2.0.17 → 2.0.23: Adding Bi-Daily Unit View')
+    store.set('biDailyView', false)
   }
 }
 
@@ -136,6 +140,7 @@ const rerender = {
   'thresholdDateInTheFuture': true,
   'dueDateInTheFuture': true,
   'sortCompletedLast': true,
+  'biDailyView': true,
 };
 
 function findObjectDifferences(oldObj, newObj) {

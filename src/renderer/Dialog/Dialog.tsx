@@ -3,6 +3,8 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { AlertColor } from '@mui/material/Alert'
+import Alert from '@mui/material/Alert'
+import Collapse from '@mui/material/Collapse'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import AutoSuggest from './AutoSuggest'
@@ -10,10 +12,20 @@ import PriorityPicker from './PriorityPicker'
 import DatePicker from './DatePicker'
 import PomodoroPicker from './PomodoroPicker'
 import RecurrencePicker from './RecurrencePicker'
+import QuotaDashboard from '../Grid/QuotaDashboard'
 import { i18n } from '../Settings/LanguageSelector'
 import './Dialog.scss'
 
-const { ipcRenderer } = window.api
+const { ipcRenderer, store } = window.api
+
+interface QuotaExceededData {
+  message: string
+  messageCN: string
+  priority: string
+  unitType: string
+  current: number
+  limit: number
+}
 
 interface DialogComponentProps extends WithTranslation {
   dialogOpen: boolean
@@ -49,17 +61,41 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     const [recurrence, setRecurrence] = useState<string | null>(null)
     const [pomodoro, setPomodoro] = useState<number | string>(0)
     const [textFieldValue, setTextFieldValue] = useState<string>('')
+    const [quotaError, setQuotaError] = useState<QuotaExceededData | null>(null)
     const numRowsWithContent = textFieldValue
       ?.split('\n')
       .filter((line) => line.trim() !== '').length
 
+    const biDailyViewEnabled = settings.biDailyView ?? false
+
+    // Listen for quota exceeded errors
+    useEffect(() => {
+      const handleQuotaExceeded = (_event: any, data: QuotaExceededData) => {
+        setQuotaError(data)
+        setSnackBarSeverity('warning')
+        setSnackBarContent(data.messageCN)
+      }
+
+      ipcRenderer.on('quotaExceeded', handleQuotaExceeded)
+      return () => {
+        ipcRenderer.removeListener('quotaExceeded', handleQuotaExceeded)
+      }
+    }, [setSnackBarSeverity, setSnackBarContent])
+
     const handleAdd = (): void => {
       try {
         if (textFieldValue) {
+          setQuotaError(null) // Clear previous error
           const index = todoObject ? todoObject.lineNumber : -1
           const string = textFieldValue.replaceAll(/\n/g, String.fromCharCode(16))
           ipcRenderer.send('writeTodoToFile', index, string)
-          handleClose()
+          // Only close if no quota error occurs (handled by quotaExceeded listener)
+          setTimeout(() => {
+            // Check if quota error was set
+            if (!quotaError) {
+              handleClose()
+            }
+          }, 100)
         } else {
           setSnackBarSeverity('info')
           setSnackBarContent(t('todoDialog.snackbar.emptyInput'))
@@ -73,6 +109,7 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
       setTodoObject(null)
       setAttributeFields(null)
       setTextFieldValue('')
+      setQuotaError(null)
       setDialogOpen(false)
     }
 
@@ -148,6 +185,7 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     useEffect(() => {
       if (dialogOpen) {
         setTextFieldValue(todoObject?.string || '')
+        setQuotaError(null)
       }
     }, [dialogOpen])
 
@@ -159,6 +197,22 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
         onKeyDown={handleKeyDown}
       >
         <DialogContent>
+          {/* Quota Dashboard - only show when BiDaily view is enabled */}
+          {biDailyViewEnabled && (
+            <QuotaDashboard compact showTotal={false} />
+          )}
+
+          {/* Quota Error Alert */}
+          <Collapse in={!!quotaError}>
+            <Alert
+              severity="warning"
+              onClose={() => setQuotaError(null)}
+              sx={{ mb: 2 }}
+            >
+              {quotaError?.messageCN}
+            </Alert>
+          </Collapse>
+
           <AutoSuggest
             textFieldValue={textFieldValue}
             setTextFieldValue={setTextFieldValue}

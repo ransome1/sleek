@@ -3,6 +3,12 @@ import { AlertColor } from '@mui/material/Alert'
 
 const { ipcRenderer } = window.api
 
+interface BiDailyMeta {
+  isRestDay: boolean
+  currentUnit: string
+  weekStart: string
+}
+
 interface IpcComponentProps {
   setHeaders: React.Dispatch<React.SetStateAction<HeadersObject | null>>
   setAttributes: React.Dispatch<React.SetStateAction<Attributes | null>>
@@ -14,6 +20,7 @@ interface IpcComponentProps {
   setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>
   setSettings: React.Dispatch<React.SetStateAction<Settings>>
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setBiDailyMeta?: React.Dispatch<React.SetStateAction<BiDailyMeta | null>>
 }
 
 const IpcComponent: React.FC<IpcComponentProps> = ({
@@ -26,13 +33,17 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   setSnackBarSeverity,
   setSnackBarContent,
   setSettings,
-  setIsSettingsOpen
+  setIsSettingsOpen,
+  setBiDailyMeta
 }) => {
   const handleRequestedData = (requestedData: RequestedData): void => {
     if (requestedData?.headers) setHeaders(requestedData.headers)
     if (requestedData?.attributes) setAttributes(requestedData.attributes)
     if (requestedData?.filters) setFilters(requestedData.filters)
     if (requestedData?.todoData) setTodoData(requestedData.todoData)
+    if (setBiDailyMeta) {
+      setBiDailyMeta(requestedData?.biDailyMeta || null)
+    }
   }
 
   const handleUpdateAttributeFields = (todoObject: TodoObject): void => {

@@ -6,8 +6,6 @@ asar: true
 files:
   - "**/*"
   - "!**/node_modules/**/*"
-  - "!**/flatpak/**/*"
-  - "!**/snap/**/*"
   - "!**/src/**/*"
   - "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}"
   - "!.editorconfig"
@@ -16,6 +14,8 @@ files:
   - "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}"
   - "!**/{appveyor.yml,.travis.yml,circle.yml}"
   - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+
+# macOS Only Configuration
 mac:
   appId: com.todotxt.sleek
   target:
@@ -37,69 +37,18 @@ mac:
   category: public.app-category.productivity
   artifactName: ${productName}-${version}-mac-${arch}.${ext}
   darkModeSupport: true
+
 dmg:
   window:
     width: 550
     height: 400
+
 masDev:
   entitlements: ./build/entitlements.mas.plist
   entitlementsInherit: ./build/entitlements.mas.inherit.plist
   provisioningProfile: ./build/development.provisionprofile
+
 mas:
   entitlements: ./build/entitlements.mas.plist
   entitlementsInherit: ./build/entitlements.mas.inherit.plist
   provisioningProfile: ./build/distribution.provisionprofile
-win:
-  target:
-    - target: zip
-      arch:
-        - arm64
-        - x64
-        - ia32
-    - target: portable
-      arch:
-        - arm64
-        - x64
-        - ia32
-    - target: nsis
-      arch:
-        - arm64
-        - x64
-        - ia32
-    - target: appx
-      arch:
-        - arm64
-        - x64
-        - ia32
-  icon: ./resources/icon.ico
-  artifactName: ${productName}-${version}-win-${arch}.${ext}
-nsis:
-  artifactName: ${productName}-${version}-win-${arch}-Setup.${ext}
-appx:
-  displayName: sleek - Todo manager
-  identityName: 17450RobinAhle.sleektodomanager
-  publisher: CN=2B3D4037-FF2E-4C36-84A6-CFF49F585C0C
-  publisherDisplayName: Robin Ahle
-  applicationId: RobinAhle.sleektodomanager
-linux:
-  icon: ./resources/icon
-  category: ProjectManagement
-  artifactName: ${productName}-${version}-linux-${arch}.${ext}
-  target:
-    - target: deb
-      arch:
-        - arm64
-        - x64
-    - target: freebsd
-      arch:
-        - arm64
-        - x64
-    - target: rpm
-      arch:
-        - arm64
-        - x64
-    - target: AppImage
-      arch:
-        - arm64
-        - x64
-electronVersion: 38.0.0

@@ -11,6 +11,7 @@
   "fileTabs.removeFileText": "It will not be deleted from your hard drive",
   "fileTabs.removeFileLabel": "Remove",
   "settings": "Settings",
+  "settings.biDailyView": "Enable Bi-Daily Unit View (Sun-Mon, Tue-Wed, Thu-Fri)",
   "settings.appendCreationDate": "Append creation date when todo is created",
   "settings.convertRelativeToAbsoluteDates": "Convert relative dates to absolute dates",
   "settings.notificationsAllowed": "Send notifications",
