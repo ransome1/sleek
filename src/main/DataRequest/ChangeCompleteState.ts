@@ -1,12 +1,9 @@
-import { Item } from 'jstodotxt'
 import { createRecurringTodo } from './CreateRecurringTodo'
 import restorePreviousPriority from './RestorePreviousPriority'
+import { createItem, itemToString } from './CreateTodoObjects'
 
 function changeCompleteState(string: string, state: boolean): string {
-  const content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ')
-
-  // todo: use createTodoObject() instead
-  const JsTodoTxtObject = new Item(content)
+  const JsTodoTxtObject = createItem(string)
 
   JsTodoTxtObject.setComplete(state)
 
@@ -29,7 +26,7 @@ function changeCompleteState(string: string, state: boolean): string {
     restorePreviousPriority(JsTodoTxtObject)
   }
 
-  return JsTodoTxtObject.toString().replaceAll(' [LB] ', '\n')
+  return itemToString(JsTodoTxtObject)
 }
 
 export { changeCompleteState }

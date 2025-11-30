@@ -8,10 +8,26 @@ import dayjs from 'dayjs'
 let linesInFile: string[]
 export const badge: Badge = { count: 0 }
 
-function createTodoObject(lineNumber: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
-  let content = string.replaceAll(/[\x10\r\n]/g, ' [LB] ')
+const LINE_BREAK_PLACEHOLDER = ' [LB] '
 
-  const JsTodoTxtObject = new Item(content)
+/**
+ * Creates a jstodotxt Item with normalized line breaks.
+ * Use this instead of directly calling `new Item()` to ensure consistent handling.
+ */
+function createItem(string: string): Item {
+  const normalizedContent = string.replaceAll(/[\x10\r\n]/g, LINE_BREAK_PLACEHOLDER)
+  return new Item(normalizedContent)
+}
+
+/**
+ * Converts an Item back to a string, restoring the original line break character.
+ */
+function itemToString(item: Item, lineBreakChar: string = '\n'): string {
+  return item.toString().replaceAll(LINE_BREAK_PLACEHOLDER, lineBreakChar)
+}
+
+function createTodoObject(lineNumber: number, string: string, attributeType?: string, attributeValue?: string): TodoObject {
+  const JsTodoTxtObject = createItem(string)
 
   const extensions = JsTodoTxtObject.extensions()
 
@@ -28,9 +44,9 @@ function createTodoObject(lineNumber: number, string: string, attributeType?: st
     }
   }  
 
-  content = JsTodoTxtObject.toString().replaceAll(' [LB] ', String.fromCharCode(16))
+  const content = itemToString(JsTodoTxtObject, String.fromCharCode(16))
 
-  const body = JsTodoTxtObject.body().replaceAll(' [LB] ', ' ')
+  const body = JsTodoTxtObject.body().replaceAll(LINE_BREAK_PLACEHOLDER, ' ')
   const speakingDates: DateAttributes = extractSpeakingDates(body)
   const due = speakingDates['due:']?.date || null
   const dueString = speakingDates['due:']?.string || null
@@ -107,4 +123,4 @@ function createTodoObjects(fileContent: string | null): TodoObject[] | [] {
   return todoObjects
 }
 
-export { createTodoObjects, createTodoObject, linesInFile }
+export { createTodoObjects, createTodoObject, createItem, itemToString, LINE_BREAK_PLACEHOLDER, linesInFile }

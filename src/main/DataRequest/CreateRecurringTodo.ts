@@ -1,6 +1,6 @@
-import { Item } from 'jstodotxt'
 import dayjs from 'dayjs'
 import { prepareContentForWriting } from '../File/Write'
+import { createItem } from './CreateTodoObjects'
 
 enum RecurrenceInterval {
   Daily = 'd',
@@ -46,10 +46,7 @@ const addRecurrenceToDate = (
 }
 
 const createRecurringTodo = (string: string, recurrence: string): string => {
-  const updatedString = (string || '').replaceAll(/[\x10\r\n]/g, ` ${String.fromCharCode(16)} `)
-
-  // todo: use createTodoObject instead
-  const JsTodoTxtObject = new Item(updatedString)
+  const JsTodoTxtObject = createItem(string || '')
   const creationDate = new Date()
 
   JsTodoTxtObject.setCreated(creationDate)
