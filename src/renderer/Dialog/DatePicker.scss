@@ -2,8 +2,10 @@
 
 .compact {
   .datePicker {
-    .MuiPickersSectionList-root {
-      padding: 0.75em;
+    .MuiPickersInputBase-root {
+      .MuiPickersSectionList-root {
+        padding: 0.75em;
+      }
     }
   }
 }
@@ -11,6 +13,7 @@
 .datePicker {
   width: 13em;
   .MuiPickersInputBase-root {
+    padding: 0 0.25em 0 0;
     background: Variables.$lighter-grey;
     .MuiPickersSectionList-root {
       padding: 1em;
