@@ -60,6 +60,16 @@
       margin-top: auto;
     }
 
+    // Language switcher wrapper
+    &.language-switcher-wrapper {
+      cursor: default;
+      border-bottom: none;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
     // Icon styling
     svg {
       color: Variables.$dark-grey;
@@ -317,6 +327,13 @@
           svg {
             color: Variables.$blue-light;
           }
+        }
+      }
+
+      // Language switcher wrapper in dark mode
+      &.language-switcher-wrapper {
+        &:hover {
+          background: transparent;
         }
       }
 

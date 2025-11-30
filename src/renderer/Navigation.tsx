@@ -9,6 +9,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import li from '@mui/material/li'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from './Settings/LanguageSelector'
+import LanguageSwitcher from './Header/LanguageSwitcher'
 import './Navigation.scss'
 
 const { ipcRenderer, store } = window.api
@@ -87,8 +88,10 @@ const NavigationComponent: React.FC<NavigationComponentProps> = memo(
           >
             <FileOpenIcon />
           </li>
+          <li className="break language-switcher-wrapper">
+            <LanguageSwitcher settings={settings} />
+          </li>
           <li
-            className="break"
             onClick={() => setIsSettingsOpen(true)}
             data-testid="navigation-button-show-settings"
             title={t('settings')}
