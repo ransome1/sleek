@@ -25,7 +25,7 @@ jobs:
         with:
           args: '. --sarif --output results.sarif || true'
       - name: Upload njsscan report
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
   codeql:
@@ -42,13 +42,13 @@ jobs:
       - name: Set up latest available Nodejs
         uses: actions/setup-node@master
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v4
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
   codecov:
     needs: codeql
     name: Run unit tests
@@ -80,11 +80,22 @@ jobs:
       - uses: actions/checkout@master
         with:
           fetch-depth: 0
-      - uses: keninkujovic/gitlab-sync@2.0.0
+      - uses: SvanBoxel/gitlab-mirror-and-ci-action@master
         with:
-          gitlab_url: https://www.opencode.net/ransome/sleek.git
-          username: ransome
-          gitlab_pat: ${{ secrets.GITLAB_PAT }}
+          args: "https://www.opencode.net/ransome/sleek.git"
+        env:
+          FOLLOW_TAGS: "false"
+          FORCE_PUSH: "false"
+          GITLAB_HOSTNAME: "opencode.net"
+          GITLAB_USERNAME: "ransome"
+          GITLAB_PASSWORD: ${{ secrets.GITLAB_PAT }}
+          GITLAB_PROJECT_ID: "1637"
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+      #- uses: kujov/gitlab-sync@2.1.0
+        #with:
+          #gitlab_url: https://www.opencode.net/ransome/sleek.git
+          #username: ransome
+          #gitlab_pat: ${{ secrets.GITLAB_PAT }}
   flathub:
     name: Update commit id in Flathub repo
     runs-on: ubuntu-latest
