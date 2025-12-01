@@ -2,6 +2,20 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.22] - 2025-11-30
+
+### Added
+* `pri` extension is now recognized during typing (#831)
+
+### Enhanced
+* Update metadata for com.github.ransome1.sleek by @razzeee in https://github.com/ransome1/sleek/pull/841
+* Check word boundary in front of attribute keys by @Lezurex in https://github.com/ransome1/sleek/pull/825
+* Added new dock icon for macOS builds to meet new Tahoe requirements
+* [#821](https://github.com/ransome1/sleek/issues/821)
+
+### Fixed
+* [#828](https://github.com/ransome1/sleek/issues/828) and various CSS glitches
+
 ## [2.0.21] - 2025-09-07
 
 ### Enhanced
