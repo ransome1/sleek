@@ -62,8 +62,10 @@ function archiveTodos(): string {
     activeFile.doneFileBookmark
   )
 
+  // Only write a new line when file is not empty and does not already end with a new line
+  const separator = todosFromDoneFile.toString().endsWith('\n') || todosFromDoneFile.toString() === '' ? '' : '\n'
   const contentForDoneFile = todosFromDoneFile.length > 1
-    ? todosFromDoneFile + completedTodos
+    ? todosFromDoneFile + separator + completedTodos
     : completedTodos;
 
   writeToFile(
