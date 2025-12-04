@@ -1,5 +1,5 @@
 import { SettingsStore } from '../Stores'
-import dayjs from 'dayjs'
+import { DateTime } from "luxon"
 
 function applyAttributes(todoObjects, filters) {
   return todoObjects.filter(todoObject => {
@@ -43,18 +43,19 @@ function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
 }
 
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
-  const thresholdDateInTheFuture: boolean = SettingsStore.get('thresholdDateInTheFuture')
-  const dueDateInTheFuture: boolean = SettingsStore.get('dueDateInTheFuture')
+  const thresholdDateInTheFuture: boolean = SettingsStore.get('thresholdDateInTheFuture');
+  const dueDateInTheFuture: boolean = SettingsStore.get('dueDateInTheFuture');
+  const now = DateTime.now();
 
   return todoObjects.filter((todoObject: TodoObject) => {
-    const thresholdDate = dayjs(todoObject?.t)
-    const dueDate = dayjs(todoObject?.due)
+    const thresholdDate = todoObject?.t ? DateTime.fromISO(todoObject.t) : null;
+    const dueDate = todoObject?.due ? DateTime.fromISO(todoObject.due) : null;
 
     return (
-      !(thresholdDate && thresholdDate.isAfter(dayjs()) && !thresholdDateInTheFuture) &&
-      !(dueDate && dueDate.isAfter(dayjs()) && !dueDateInTheFuture)
-    )
-  })
+      !(thresholdDate && thresholdDate > now && !thresholdDateInTheFuture) &&
+      !(dueDate && dueDate > now && !dueDateInTheFuture)
+    );
+  });
 }
 
 export { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates }
