@@ -213,6 +213,7 @@ SettingsStore.onDidChange('colorTheme', (colorTheme) => {
 SettingsStore.onDidChange('menuBarVisibility', (menuBarVisibility) => {
   try {
     mainWindow!.setMenuBarVisibility(menuBarVisibility)
+    mainWindow!.setAutoHideMenuBar(!menuBarVisibility)
   } catch (error: any) {
     HandleError(error)
   }  

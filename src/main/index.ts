@@ -111,11 +111,13 @@ const handleWindowSizeAndPosition = () => {
 
 const createMainWindow = () => {
   const shouldUseDarkColors: boolean = SettingsStore.get('shouldUseDarkColors')
+  const shouldShowMenubar: boolean = SettingsStore.get('menuBarVisibility')
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
     show: false,
     backgroundColor: shouldUseDarkColors ? '#212224' : '#fff',
+    autoHideMenuBar: !shouldShowMenubar,
     icon:
       process.platform === 'win32'
         ? nativeImage.createFromPath(windowsIcon)
@@ -132,6 +134,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
+    mainWindow.setMenuBarVisibility(shouldShowMenubar)
     mainWindow.show();
     const endTime = performance.now()
     console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`)
