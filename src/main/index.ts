@@ -151,6 +151,8 @@ const createMainWindow = () => {
     mainWindow.loadFile(fileURLToPath(new URL('../renderer/index.html', import.meta.url)))
   }
 
+  const isDev = process.argv[0].endsWith("node_modules/electron/dist/electron")
+  process.argv.splice(isDev ? 2 : 1).forEach(f => handleOpenFile(path.resolve(f)))
   const files: FileObject[] = (SettingsStore.get('files') as FileObject[]) || []
   if (files) {
     createFileWatcher(files)
