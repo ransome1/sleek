@@ -2,12 +2,14 @@ import React, { useState, memo, useMemo } from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
+import Link from '@mui/material/Link'
+import HelpIcon from '@mui/icons-material/Help'
 import Badge from '@mui/material/Badge'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import PomodoroIcon from '../../../resources/pomodoro.svg?asset'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import AirIcon from '@mui/icons-material/Air'
-import { HandleFilterSelect, friendlyDate, translatedAttributes, IsSelected, IsExcluded } from '../Shared'
+import { HandleFilterSelect, friendlyDate, translatedAttributes, IsSelected, IsExcluded, handleLinkClick } from '../Shared'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './Attributes.scss'
@@ -193,6 +195,10 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> = memo
             <AirIcon />
             <br />
             {t(`drawer.attributes.noAttributesAvailable`)}
+
+            <Link onClick={(event) => handleLinkClick(event, 'https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions')}>
+              <HelpIcon />
+            </Link>            
           </div>
         )}
       </div>
