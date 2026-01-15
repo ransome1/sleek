@@ -1,5 +1,9 @@
 import React, { useEffect, useCallback, RefObject, memo } from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import ViewKanbanIcon from "@mui/icons-material/ViewKanban";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import "./Header.scss";
 import { SettingStore } from "../../@types";
 
@@ -34,6 +38,11 @@ const HeaderComponent: React.FC<HeaderComponentProps> = memo(
       store.setConfig("isSearchOpen", !settings.isSearchOpen);
     };
 
+    const handleViewModeToggle = (): void => {
+      const newMode = settings.viewMode === "list" ? "kanban" : "list";
+      store.setConfig("viewMode", newMode);
+    };
+
     useEffect(() => {
       const handleDocumentKeyDown = (event: KeyboardEvent): void =>
         handleKeyDown(event);
@@ -46,11 +55,28 @@ const HeaderComponent: React.FC<HeaderComponentProps> = memo(
 
     return (
       settings.showFileTabs && (
-        <div id="ToolBar" onClick={handleOnClick}>
-          <SearchIcon
-            className={settings.isSearchOpen ? "active" : ""}
-            data-testid={"header-search-icon"}
-          />
+        <div id="ToolBar">
+          <div onClick={handleOnClick}>
+            <SearchIcon
+              className={settings.isSearchOpen ? "active" : ""}
+              data-testid={"header-search-icon"}
+            />
+          </div>
+          <Tooltip
+            title={
+              settings.viewMode === "list"
+                ? "Switch to Kanban view"
+                : "Switch to List view"
+            }
+          >
+            <IconButton onClick={handleViewModeToggle} size="small">
+              {settings.viewMode === "list" ? (
+                <ViewKanbanIcon />
+              ) : (
+                <ViewListIcon />
+              )}
+            </IconButton>
+          </Tooltip>
         </div>
       )
     );
