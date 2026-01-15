@@ -83,6 +83,7 @@ const migrations = {
     store.delete('useMultilineForBulkTodoCreation')
     store.set('bulkTodoCreation', false)
     store.set('disableAnimations', false)
+    store.set('viewMode', 'list')
   },
   '2.0.10': (store) => {
     console.log('Migrating from 2.0.4 → 2.0.10')
@@ -173,7 +174,7 @@ config.onDidAnyChange((newValue, oldValue) => {
 config.onDidChange('files', (newValue: FileObject[] | undefined) => {
   try {
     if (!newValue) return false;
-    
+
     createFileWatcher(newValue)
     handleTray(config.get('tray'))
     createMenu(newValue)
@@ -195,7 +196,7 @@ config.onDidChange('menuBarVisibility', (menuBarVisibility) => {
     mainWindow!.setMenuBarVisibility(menuBarVisibility)
   } catch (error: any) {
     handleError(error)
-  }  
+  }
 })
 
 config.onDidChange('tray', (tray) => {
