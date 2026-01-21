@@ -9,6 +9,7 @@
     "resources/*.icns*",
   ],
   "compilerOptions": {
+    "composite": true,
     "types": ["electron-vite/node"]
   }
 }

@@ -4,7 +4,8 @@ import AddIcon from '@mui/icons-material/Add'
 import { DateTime } from 'luxon'
 import './KanbanView.scss'
 
-const { ipcRenderer } = window.api
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const { ipcRenderer } = (window as any).api
 
 interface KanbanViewProps {
   todoData: TodoData
@@ -24,12 +25,12 @@ interface KanbanColumn {
 
 const KanbanView: React.FC<KanbanViewProps> = ({
   todoData,
-  filters,
+  // filters, // Removed unused parameter
   setTodoObject,
   setDialogOpen,
   setContextMenu,
   setPromptItem,
-  settings
+  // settings // Removed unused parameter
 }) => {
   const [columns, setColumns] = useState<KanbanColumn[]>([])
   const [draggedTodo, setDraggedTodo] = useState<TodoObject | null>(null)
@@ -301,36 +302,37 @@ const KanbanView: React.FC<KanbanViewProps> = ({
     })
   }
 
-  const handleCloseContextMenu = () => {
-    setContextMenu(null)
-  }
+  // const handleCloseContextMenu = () => {
+  //   setContextMenu(null)
+  // }
 
-  const handleToggleComplete = (todo: TodoObject) => {
-    ipcRenderer.send('writeTodoToFile', todo.lineNumber, todo.string, !todo.complete, false)
-    handleCloseContextMenu()
-  }
+  // Helper functions for future use
+  // const handleToggleComplete = (todo: TodoObject) => {
+  //   ipcRenderer.send('writeTodoToFile', todo.lineNumber, todo.string, !todo.complete, false)
+  //   handleCloseContextMenu()
+  // }
 
-  const handleDeleteTodo = (todo: TodoObject) => {
-    setPromptItem({
-      headline: 'Delete todo?',
-      body: todo.body || todo.string,
-      acceptFunction: () => {
-        ipcRenderer.send('removeLineFromFile', todo.lineNumber)
-        setPromptItem(null)
-      },
-      declineFunction: () => setPromptItem(null)
-    })
-    handleCloseContextMenu()
-  }
+  // const handleDeleteTodo = (todo: TodoObject) => {
+  //   setPromptItem({
+  //     headline: 'Delete todo?',
+  //     body: todo.body || todo.string,
+  //     acceptFunction: () => {
+  //       ipcRenderer.send('removeLineFromFile', todo.lineNumber)
+  //       setPromptItem(null)
+  //     },
+  //     declineFunction: () => setPromptItem(null)
+  //   })
+  //   handleCloseContextMenu()
+  // }
 
-  const handleChangePriority = (todo: TodoObject, priority: string) => {
-    let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, '')
-    if (priority) {
-      updatedString = `(${priority}) ${updatedString}`
-    }
-    ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString, todo.complete, false)
-    handleCloseContextMenu()
-  }
+  // const handleChangePriority = (todo: TodoObject, priority: string) => {
+  //   let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, '')
+  //   if (priority) {
+  //     updatedString = `(${priority}) ${updatedString}`
+  //   }
+  //   ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString, todo.complete, false)
+  //   handleCloseContextMenu()
+  // }
 
   const getPriorityColor = (priority: string | null): string => {
     if (!priority) return 'default'
