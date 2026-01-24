@@ -7,7 +7,7 @@ import { dataRequest, searchString } from './DataRequest/DataRequest'
 import { userDataDirectory, HandleError } from './Shared'
 import { mainWindow } from './index'
 import { createFileWatcher } from './File/Watcher'
-import { HandleTray } from './Tray'
+import { CreateTray, DestroyTray, UpdateTrayImage, UpdateTrayMenu } from './Tray'
 import { HandleTheme } from './Theme'
 
 const distributionChannel = function(): string {
@@ -195,7 +195,7 @@ SettingsStore.onDidChange('files', (newValue: FileObject[] | undefined) => {
     if (!newValue) return false;
     
     createFileWatcher(newValue)
-    HandleTray()
+    UpdateTrayMenu()
     
   } catch (error: any) {
     HandleError(error)
@@ -218,9 +218,9 @@ SettingsStore.onDidChange('menuBarVisibility', (menuBarVisibility) => {
   }  
 })
 
-SettingsStore.onDidChange('tray', () => {
+SettingsStore.onDidChange('tray', (v: boolean) => {
   try {
-    HandleTray()
+    v ? CreateTray() : DestroyTray()
   } catch (error: any) {
     HandleError(error)
   }
@@ -228,7 +228,7 @@ SettingsStore.onDidChange('tray', () => {
 
 SettingsStore.onDidChange('invertTrayColor', () => {
   try {
-    HandleTray()
+    UpdateTrayImage()
   } catch (error: any) {
     HandleError(error)
   }
