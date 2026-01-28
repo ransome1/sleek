@@ -73,7 +73,7 @@
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^5.0.0",
     "electron": "^39.0.0",
-    "electron-builder": "^26.0.12",
+    "electron-builder": "^26.6.0",
     "electron-vite": "^4.0.0",
     "material-ui-popup-state": "^5.3.6",
     "peggy": "^5.0.5",
