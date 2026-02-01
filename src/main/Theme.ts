@@ -1,7 +1,7 @@
 import { nativeTheme } from 'electron'
 import { SettingsStore } from './Stores'
 import { HandleError } from './Shared'
-import { HandleTray } from './Tray'
+import { UpdateTrayImage } from './Tray'
 
 nativeTheme.on('updated', (): void => {
   try {
@@ -12,7 +12,7 @@ nativeTheme.on('updated', (): void => {
     } else {
       SettingsStore.set('shouldUseDarkColors', false)
     }
-    HandleTray()
+    UpdateTrayImage()
   } catch (error: error) {
     HandleError(error)
   }

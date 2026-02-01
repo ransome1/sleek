@@ -1,12 +1,11 @@
 import { app, BrowserWindow, nativeImage } from 'electron'
 import { fileURLToPath } from 'url'
-import path from 'path'
 import fs from 'fs'
 import { SettingsStore } from './Stores.js'
 import { CreateMenu } from './Menu.js'
 import { createFileWatcher, watcher } from './File/Watcher'
 import { addFile } from './File/File'
-import { HandleTray } from './Tray'
+import { CreateTray } from './Tray'
 import macIcon from '../../resources/icon.icns?asset'
 import windowsIcon from '../../resources/icon.ico?asset'
 import linuxIcon from '../../resources/icon.png?asset'
@@ -18,14 +17,14 @@ const environment: string | undefined = process.env.NODE_ENV
 let mainWindow: BrowserWindow | null = null
 const eventListeners: Record<string, any | undefined> = {}
 let resizeTimeout: NodeJS.Timeout | undefined
-const additionalData = { myKey: 'myValue' }
 const gotTheLock = app.requestSingleInstanceLock()
 
 const HandleCreateWindow = () => {
-  if (mainWindow) {
-    mainWindow.show()
-  } else {
+  const wins = BrowserWindow.getAllWindows()
+  if (wins.length === 0) {
     createMainWindow()
+  } else {
+    wins[0].focus()
   }
 }
 
@@ -162,7 +161,6 @@ const createMainWindow = () => {
 
   const colorTheme: string = SettingsStore.get('colorTheme')
   HandleTheme(colorTheme);
-  HandleTray()
 
   eventListeners.handleClosed = handleClosed
   eventListeners.handleResize = handleResize
@@ -236,9 +234,9 @@ if (!gotTheLock) {
       startTime = performance.now()
       const tray = SettingsStore.get('tray');
       const startMinimized = SettingsStore.get('startMinimized');
+      if(tray) CreateTray()
       if(tray && startMinimized) {
         app.dock?.hide()
-        HandleTray()
       } else {
         createMainWindow()
       }

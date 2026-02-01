@@ -4,7 +4,6 @@ import { mainWindow, HandleCreateWindow } from './index';
 import { openFile, createFile } from './File/Dialog';
 import { handleRequestArchive } from './File/Archive';
 import { SettingsStore, FiltersStore } from './Stores';
-import { HandleTray } from './Tray';
 import { File } from '../Types';
 import appPackage from '../../package.json';
 
