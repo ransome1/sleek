@@ -1,6 +1,6 @@
-import { expect, test, beforeEach, afterEach, describe, it, vi } from 'vitest'
+import { expect, beforeEach, describe, it, vi } from 'vitest'
 import { nativeTheme, Tray } from 'electron';
-import { GetTrayIconPath, HandleTray, CreateTrayMenu } from './Tray'
+import { CreateTray, GetTrayImagePath } from './Tray'
 import { SettingsStore } from './Stores'
 
 vi.mock('./Stores', () => {
@@ -24,18 +24,18 @@ vi.mock('electron', () => {
       on: vi.fn()
     },
     nativeImage: {
-      createFromPath: vi.fn()
+      createFromPath: vi.fn(),
+      createEmpty: vi.fn()
     },
     app: {
       getPath: vi.fn().mockReturnValue(''),
     },
-    Tray: vi.fn().mockImplementation(() => {
-      return {
-        setToolTip: vi.fn(),
-        setContextMenu: vi.fn(),
-        on: vi.fn(),
-        destroy: vi.fn(),
-      };
+    Tray: vi.fn(class {
+      setToolTip = vi.fn()
+      setContextMenu = vi.fn()
+      setImage = vi.fn()
+      on = vi.fn()
+      destroy = vi.fn()
     }),
     Menu: {
       buildFromTemplate: vi.fn()
@@ -58,32 +58,19 @@ vi.mock('path', () => {
   };
 });
 
-describe('HandleTray', () => {
+describe('CreateTray', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  // it('Tray is called when setting is available', () => {
-  //   vi.mocked(SettingsStore.get).mockImplementationOnce((key) => {
-  //     if (key === 'tray') {
-  //       return true;
-  //     }
-  //   });
-  //   HandleTray()
-  //   expect(Tray).toHaveBeenCalled();
-  // });
-  it('Tray is not called when setting is available', () => {
-    vi.mocked(SettingsStore.get).mockImplementationOnce((key) => {
-      if (key === 'tray') {
-        return false;
-      }
-    });
-    HandleTray()
-    expect(Tray).not.toHaveBeenCalled();
+  it('Tray is created', () => {
+    const tray = CreateTray()
+    expect(Tray).toHaveBeenCalled();
+    expect(tray.setToolTip).toHaveBeenCalledWith("sleek")
   });
 });
 
-describe('GetTrayIconPath', () => {
+describe('GetTrayImagePath', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -92,12 +79,12 @@ describe('GetTrayIconPath', () => {
 
     vi.stubGlobal('process', { platform: 'win32' });
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
-    expect(GetTrayIconPath()).toBe('/resources/trayDark.ico?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayDark.ico?asset');
   });
   it('On Windows in light mode, black .ico tray icon is used', () => {
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal('process', { platform: 'win32' });
-    expect(GetTrayIconPath()).toBe('/resources/trayLight.ico?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayLight.ico?asset');
   });
   it('On Windows in light mode, when tray icon color is inverted white .ico tray icon is used', () => {
     vi.mocked(SettingsStore.get).mockImplementationOnce((key) => {
@@ -107,27 +94,27 @@ describe('GetTrayIconPath', () => {
     });
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal('process', { platform: 'win32' });
-    expect(GetTrayIconPath()).toBe('/resources/trayDark.ico?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayDark.ico?asset');
   });
   it('On macOS in light mode, black .png tray icon is used', () => {
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal('process', { platform: 'darwin' });
-    expect(GetTrayIconPath()).toBe('/resources/trayLightTemplate.png?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayLightTemplate.png?asset');
   });
   it('On macOS in dark mode, white .png tray icon is used', () => {
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
     vi.stubGlobal('process', { platform: 'darwin' });
-    expect(GetTrayIconPath()).toBe('/resources/trayDarkTemplate.png?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayDarkTemplate.png?asset');
   });
     it('On Linux in light mode, black .png tray icon is used', () => {
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal('process', { platform: 'linux' });
-    expect(GetTrayIconPath()).toBe('/resources/trayLightTemplate.png?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayLightTemplate.png?asset');
   });
   it('On Linux in dark mode, white .png tray icon is used', () => {
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
     vi.stubGlobal('process', { platform: 'linux' });
-    expect(GetTrayIconPath()).toBe('/resources/trayDarkTemplate.png?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayDarkTemplate.png?asset');
   });
   it('On Linux in light mode, when tray icon color is inverted white .png tray icon is used', () => {
     vi.mocked(SettingsStore.get).mockImplementationOnce((key) => {
@@ -137,6 +124,6 @@ describe('GetTrayIconPath', () => {
     });
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal('process', { platform: 'linux' });
-    expect(GetTrayIconPath()).toBe('/resources/trayDarkTemplate.png?asset');
+    expect(GetTrayImagePath()).toBe('/resources/trayDarkTemplate.png?asset');
   });  
 });
