@@ -16,14 +16,14 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 23
+          node-version: 24
           cache: 'npm'
       - name: Install and build
         run: |
           npm install
           npm run build
       - name: Run Electron Builder
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: Yan-Jobs/action-electron-builder@v1.7.0
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -48,14 +48,14 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 23
+          node-version: 24
           cache: 'npm'
       - name: Install and build
         run: |
           npm install
           npm run build
       - name: Run Electron Builder
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: Yan-Jobs/action-electron-builder@v1.7.0
         env:
           DEBUG: ${{ secrets.DEBUG }}
         with:
@@ -74,14 +74,14 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 23
+          node-version: 24
           cache: 'npm'
       - name: Install and build
         run: |
           npm install
           npm run build
       - name: Run Electron Builder
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: Yan-Jobs/action-electron-builder@v1.7.0
         env:
           DEBUG: ${{ secrets.DEBUG }}
         with:

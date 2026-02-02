@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.23",
+  "version": "2.0.23-rc.1",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -27,7 +27,7 @@
   "copyright": "Copyright © 2021 to present Robin Ahle",
   "main": "./out/main/index.js",
   "type": "module",
-  "node": ">=22",
+  "node": ">=24",
   "scripts": {
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
@@ -61,20 +61,20 @@
     "react-dom": "^19.1.0",
     "react-i18next": "^16.0.0",
     "react-markdown": "^10.1.0",
-    "react-string-replace": "^1.1.1",
+    "react-string-replace": "^2.0.1",
     "remark-gfm": "^4.0.1",
     "sugar": "^2.0.6"
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@types/luxon": "^3.6.2",
-    "@types/node": "^24.0.14",
+    "@types/node": "^25.1.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^5.0.0",
-    "electron": "^39.0.0",
+    "electron": "^40.1.0",
     "electron-builder": "^26.0.12",
-    "electron-vite": "^4.0.0",
+    "electron-vite": "^5.0.0",
     "material-ui-popup-state": "^5.3.6",
     "peggy": "^5.0.5",
     "react": "^19.1.0",
