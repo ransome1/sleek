@@ -2,6 +2,23 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.23] - 2026-02-05
+
+### Added
+* Added help icon to empty attribute view
+
+### Enhanced
+* Updated all dependencies
+* Replaced dayjs with luxon in Filters.ts
+* Improved tray icon handling (#853)
+* Allowing capitalisation of filenames in tabs (#845)
+
+### Fixed
+* #824
+* #842
+* #827
+* #849
+
 ## [2.0.22] - 2025-11-30
 
 ### Added

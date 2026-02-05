@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: '61'
+buildVersion: '62'
 asar: true
 files:
   - "!**/flatpak/**/*"

@@ -98,6 +98,10 @@ dist/
 
 mas/
 
+coverage/
+
+dist/
+
 entitlements.mas.inherit.plist
 entitlements.mas.plist
 
