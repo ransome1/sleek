@@ -124,12 +124,10 @@ const App = (): JSX.Element => {
                   {settings.viewMode === 'kanban' ? (
                     <KanbanView
                       todoData={todoData}
-                      filters={filters}
                       setTodoObject={setTodoObject}
                       setDialogOpen={setDialogOpen}
                       setContextMenu={setContextMenu}
                       setPromptItem={setPromptItem}
-                      settings={settings}
                     />
                   ) : (
                     <GridComponent

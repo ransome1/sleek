@@ -9,12 +9,10 @@ const { ipcRenderer } = (window as any).api
 
 interface KanbanViewProps {
   todoData: TodoData
-  filters: Filters | null
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
-  settings: Settings
 }
 
 interface KanbanColumn {
@@ -25,12 +23,10 @@ interface KanbanColumn {
 
 const KanbanView: React.FC<KanbanViewProps> = ({
   todoData,
-  // filters, // Removed unused parameter
   setTodoObject,
   setDialogOpen,
   setContextMenu,
-  setPromptItem,
-  // settings // Removed unused parameter
+  setPromptItem
 }) => {
   const [columns, setColumns] = useState<KanbanColumn[]>([])
   const [draggedTodo, setDraggedTodo] = useState<TodoObject | null>(null)
@@ -301,38 +297,6 @@ const KanbanView: React.FC<KanbanViewProps> = ({
       ]
     })
   }
-
-  // const handleCloseContextMenu = () => {
-  //   setContextMenu(null)
-  // }
-
-  // Helper functions for future use
-  // const handleToggleComplete = (todo: TodoObject) => {
-  //   ipcRenderer.send('writeTodoToFile', todo.lineNumber, todo.string, !todo.complete, false)
-  //   handleCloseContextMenu()
-  // }
-
-  // const handleDeleteTodo = (todo: TodoObject) => {
-  //   setPromptItem({
-  //     headline: 'Delete todo?',
-  //     body: todo.body || todo.string,
-  //     acceptFunction: () => {
-  //       ipcRenderer.send('removeLineFromFile', todo.lineNumber)
-  //       setPromptItem(null)
-  //     },
-  //     declineFunction: () => setPromptItem(null)
-  //   })
-  //   handleCloseContextMenu()
-  // }
-
-  // const handleChangePriority = (todo: TodoObject, priority: string) => {
-  //   let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, '')
-  //   if (priority) {
-  //     updatedString = `(${priority}) ${updatedString}`
-  //   }
-  //   ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString, todo.complete, false)
-  //   handleCloseContextMenu()
-  // }
 
   const getPriorityColor = (priority: string | null): string => {
     if (!priority) return 'default'
