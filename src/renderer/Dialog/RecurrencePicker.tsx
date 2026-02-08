@@ -11,9 +11,19 @@ import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
 import './RecurrencePicker.scss'
 
-const getInterval = (recurrence: string | null): void => recurrence ? recurrence.match(/[a-zA-Z]+/) : 'd'
-const getAmount = (recurrence: string | null): void => recurrence ? recurrence.match(/\d+/) : 1
-const getStrictIndicator = (recurrence: string | null): void => !!recurrence?.startsWith('+')
+const getInterval = (recurrence: string | null): string => {
+  if (!recurrence) return 'd'
+  const m = recurrence.match(/[a-zA-Z]+/)
+  if (!m) return 'd'
+  return m[0]
+}
+const getAmount = (recurrence: string | null): string => {
+  if (!recurrence) return '1'
+  const m = recurrence.match(/\d+/)
+  if (!m) return ''
+  return m[0]
+}
+const getStrictIndicator = (recurrence: string | null): boolean => !!recurrence?.startsWith('+')
 
 interface RecurrencePickerComponentProps extends WithTranslation {
   recurrence: string | null
@@ -29,8 +39,8 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
 
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null)
   const [strictRecurrence, setStrictRecurrence] = useState<boolean>(false)
-  const [interval, setInterval] = useState<string | null>(null)
-  const [amount, setAmount] = useState<string | null>(null)
+  const [interval, setInterval] = useState<string>('d')
+  const [amount, setAmount] = useState<string>('1')
 
   useEffect(() => {
     setStrictRecurrence(getStrictIndicator(recurrence))
@@ -103,13 +113,15 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
                 }}
                 value={amount}
                 className="recurrencePickerPopupInput"
-                inputProps={{
-                  min: 0
-                }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-              />
+                slotProps={{
+                  htmlInput: {
+                    min: 0
+                  },
+
+                  inputLabel: {
+                    shrink: true
+                  }
+                }} />
             </FormControl>
             <FormControl>
               <RadioGroup
@@ -166,7 +178,7 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
         </FormControl>
       )}
     </PopupState>
-  )
+  );
 }
 
 export default withTranslation()(RecurrencePickerComponent)

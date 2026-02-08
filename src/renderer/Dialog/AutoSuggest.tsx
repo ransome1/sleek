@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Attributes, JSX, useEffect, useRef, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { i18n } from '../Settings/LanguageSelector'
@@ -151,33 +151,40 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   return (
     <>
       <Autosuggest
-        renderInputComponent={(inputProps) => (
-          <TextField
+        renderInputComponent={(inputProps) => {
+          // Removes React key prop warning. As there's nothing being mapped
+          // here, key is not necessary.
+          delete inputProps["key"]
+
+          return <TextField
             multiline
-            InputProps={{
-              ...inputProps,
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    tabIndex={0}
-                    onClick={() =>
-                      ipcRenderer.send(
-                        'openInBrowser',
-                        'https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions'
-                      )
-                    }
-                    data-testid="header-search-clear-icon"
-                  >
-                    <HelpOutlineIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                ...inputProps,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      tabIndex={0}
+                      onClick={() =>
+                        ipcRenderer.send(
+                          'openInBrowser',
+                          'https://github.com/ransome1/sleek/wiki/Available-todo.txt-attributes-and-extensions'
+                        )
+                      }
+                      data-testid="header-search-clear-icon"
+                    >
+                      <HelpOutlineIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
             }}
           />
-        )}
+        }}
         renderSuggestionsContainer={({ containerProps, children }) => (
           <div
             {...containerProps}
+            key={containerProps.key}
             style={{
               width: textFieldRef.current?.clientWidth
                 ? textFieldRef.current.clientWidth + textFieldRef.current.offsetLeft * 2
@@ -198,7 +205,7 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
         focusInputOnSuggestionClick={true}
       />
     </>
-  )
+  );
 }
 
 export default withTranslation()(AutoSuggestComponent)

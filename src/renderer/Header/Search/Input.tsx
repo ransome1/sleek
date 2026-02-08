@@ -71,67 +71,68 @@ const InputComponent: React.FC<InputComponentProps> = memo(
         data-testid="header-search-textfield"
         placeholder={`Todos in file ${headers?.availableObjects}`}
         inputRef={searchFieldRef}
-        InputProps={{
-          ...params.InputProps,
-          startAdornment: (
-            <InputAdornment position="start">
-              {searchFilters?.length > 0 || searchString ? (
-                <IconButton tabIndex={0} onClick={() => setIsAutocompleteOpen(!isAutocompleteOpen)}>
-                  {isAutocompleteOpen ? (
-                    <ExpandMoreIcon
-                      className="invert"
-                      data-testid="header-search-textfield-hide-filters"
-                    />
-                  ) : (
-                    <ExpandMoreIcon data-testid="header-search-textfield-show-filters" />
-                  )}
-                </IconButton>
-              ) : (
-                <IconButton disabled data-testid="header-search-clear-icon">
-                  <ExpandMoreIcon style={{ color: 'gray' }} />
-                </IconButton>
-              )}
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              {searchString &&
-                searchString.length > 0 && !searchFilters?.some((filter) => filter.label === searchString) && (
-                  <button
-                    onClick={() => handleAddTodo(searchString)}
-                    data-testid="header-search-textfield-add-todo"
-                    variant="outlined"
-                    className="addAsTodo"
-                  >
-                    {t('search.addAsTodo')}
-                  </button>
+        slotProps={{
+          input: {
+            ...params.InputProps,
+            startAdornment: (
+              <InputAdornment position="start">
+                {searchFilters?.length > 0 || searchString ? (
+                  <IconButton tabIndex={0} onClick={() => setIsAutocompleteOpen(!isAutocompleteOpen)}>
+                    {isAutocompleteOpen ? (
+                      <ExpandMoreIcon
+                        className="invert"
+                        data-testid="header-search-textfield-hide-filters"
+                      />
+                    ) : (
+                      <ExpandMoreIcon data-testid="header-search-textfield-show-filters" />
+                    )}
+                  </IconButton>
+                ) : (
+                  <IconButton disabled data-testid="header-search-clear-icon">
+                    <ExpandMoreIcon style={{ color: 'gray' }} />
+                  </IconButton>
                 )}
-              <IconButton
-                tabIndex={0}
-                onClick={() =>
-                  ipcRenderer.send(
-                    'openInBrowser',
-                    'https://github.com/ransome1/sleek/wiki/Filter-Expressions-for-Advanced-Search'
-                  )
-                }
-                data-testid="header-search-clear-icon"
-              >
-                <HelpOutlineIcon />
-              </IconButton>
-              {searchString && searchString.length > 0 && (
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                {searchString &&
+                  searchString.length > 0 && !searchFilters?.some((filter) => filter.label === searchString) && (
+                    <button
+                      onClick={() => handleAddTodo(searchString)}
+                      data-testid="header-search-textfield-add-todo"
+                      className="addAsTodo"
+                    >
+                      {t('search.addAsTodo')}
+                    </button>
+                  )}
                 <IconButton
                   tabIndex={0}
-                  onClick={() => setSearchString('')}
+                  onClick={() =>
+                    ipcRenderer.send(
+                      'openInBrowser',
+                      'https://github.com/ransome1/sleek/wiki/Filter-Expressions-for-Advanced-Search'
+                    )
+                  }
                   data-testid="header-search-clear-icon"
                 >
-                  <ClearIcon />
+                  <HelpOutlineIcon />
                 </IconButton>
-              )}
-            </InputAdornment>
-          )
+                {searchString && searchString.length > 0 && (
+                  <IconButton
+                    tabIndex={0}
+                    onClick={() => setSearchString('')}
+                    data-testid="header-search-clear-icon"
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                )}
+              </InputAdornment>
+            )
+          }
         }}
       />
-    )
+    );
   }
 )
 

@@ -26,12 +26,14 @@ const PomodoroPickerComponent: React.FC<PomodoroPickerComponentProps> = ({
         onChange={handlePomodoroChange}
         value={pomodoro}
         data-testid="dialog-picker-pomodoro"
-        inputProps={{
-          min: 0
+        slotProps={{
+          htmlInput: {
+            min: 0
+          }
         }}
       />
     </FormControl>
-  )
+  );
 }
 
 export default PomodoroPickerComponent
