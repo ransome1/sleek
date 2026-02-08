@@ -1,9 +1,9 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vite'
+import { defineConfig, UserConfig } from 'vite'
 import { resolve } from 'path'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+export const config = {
   main: {},
   preload: {},
   renderer: {
@@ -15,6 +15,11 @@ export default defineConfig({
     plugins: [react()]
   },
   test: {
-    // ... Specify options here.
-  },  
-})
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["src/setupTests.ts"]
+  },
+  plugins: [react()]  
+} satisfies UserConfig
+
+export default defineConfig(config);

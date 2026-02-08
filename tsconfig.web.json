@@ -5,7 +5,7 @@
     "src/renderer/**/*",
     "src/renderer/**/*.tsx",
     "src/preload/*.d.ts"
-  ],
+, "src/preload/electron.d.ts"  ],
   "compilerOptions": {
     "jsx": "react-jsx",
     "baseUrl": ".",
@@ -14,6 +14,7 @@
         "src/renderer/src/*"
       ]
     },
-    "types": ["electron-vite/node"]
+    "types": ["electron-vite/node", "vitest/globals", "@testing-library/jest-dom"],
+    "composite": true
   }
 }

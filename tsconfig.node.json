@@ -1,14 +1,15 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
   "include": [
-    "electron.vite.config.*",
+    "vite.config.*",
     "src/main/**/*",
     "src/main/**/*.ts",
     "src/preload/**/*",
     "resources/icon.icns",
-    "resources/*.icns*",
+    "resources/*.icns*", "src/preload/electron.d.ts",
   ],
   "compilerOptions": {
-    "types": ["electron-vite/node"]
+    "types": ["electron-vite/node", "vitest/globals"],
+    "composite": true
   }
 }
