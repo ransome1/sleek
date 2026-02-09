@@ -20,6 +20,7 @@ import { I18nextProvider } from 'react-i18next'
 import { i18n } from './Settings/LanguageSelector'
 import Settings from './Settings/Settings'
 import Prompt from './Prompt'
+import KanbanView from './Kanban/KanbanView'
 import './App.scss'
 import './Buttons.scss'
 import './Form.scss'
@@ -120,17 +121,27 @@ const App = (): JSX.Element => {
               )}
               {todoData && headers.availableObjects > 0 && (
                 <>
-                  <GridComponent
-                    todoData={todoData}
-                    setTodoObject={setTodoObject}
-                    filters={filters}
-                    setDialogOpen={setDialogOpen}
-                    setContextMenu={setContextMenu}
-                    setPromptItem={setPromptItem}
-                    settings={settings}
-                    headers={headers}
-                    searchString={searchString}
-                  />
+                  {settings.viewMode === 'kanban' ? (
+                    <KanbanView
+                      todoData={todoData}
+                      setTodoObject={setTodoObject}
+                      setDialogOpen={setDialogOpen}
+                      setContextMenu={setContextMenu}
+                      setPromptItem={setPromptItem}
+                    />
+                  ) : (
+                    <GridComponent
+                      todoData={todoData}
+                      setTodoObject={setTodoObject}
+                      filters={filters}
+                      setDialogOpen={setDialogOpen}
+                      setContextMenu={setContextMenu}
+                      setPromptItem={setPromptItem}
+                      settings={settings}
+                      headers={headers}
+                      searchString={searchString}
+                    />
+                  )}
                 </>
               )}
               <SplashScreen

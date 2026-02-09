@@ -1,8 +1,7 @@
 @use '../Variables.scss';
 
 #ToolBar {
-  width: 2.5em;
-  aspect-ratio: 1;
+  min-width: 2.5em;
   position: fixed;
   top: 0;
   right: 0;
@@ -10,8 +9,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.5em;
   padding: 0 1em;
   background: #fff;
+  > div {
+    display: flex;
+    align-items: center;
+  }
   svg {
     display: flex;
     cursor: pointer;
@@ -21,8 +25,11 @@
       color: Variables.$blue;
     }
   }
-  &svg:hover {
+  svg:hover {
     color: Variables.$blue;
+  }
+  .MuiIconButton-root {
+    padding: 0.25em;
   }
 }
 
