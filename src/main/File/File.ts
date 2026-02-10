@@ -1,13 +1,9 @@
 import fs from "fs";
-import { app } from "electron";
 import { SettingsStore } from "../Stores";
 import path from "path";
 import { mainWindow } from "../index";
 
-function readFileContent(
-  filePath: string,
-  bookmark: string | null,
-): string | Error {
+function readFileContent(filePath: string): string | Error {
   const fileContent = fs.readFileSync(filePath, "utf8");
   return fileContent;
 }

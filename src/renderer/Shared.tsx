@@ -60,7 +60,7 @@ export const HandleFilterSelect = (
   groupedName?: string,
 ): void => {
   try {
-    let updatedFilters = filters;
+    const updatedFilters = filters;
     const filtersForKey = filters[key] || [];
     const matchIndex = filtersForKey.findIndex(
       (filter) => JSON.stringify(filter.value) === JSON.stringify(value),

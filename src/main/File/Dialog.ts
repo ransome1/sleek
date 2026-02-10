@@ -49,7 +49,7 @@ async function createFile(setDoneFile: boolean): Promise<void> {
     const filePath: string = result.filePath;
     const bookmark: string | null = result.bookmark || null;
 
-    writeToFile("", filePath, bookmark);
+    writeToFile("", filePath);
 
     if (setDoneFile) {
       addDoneFile(filePath, bookmark);

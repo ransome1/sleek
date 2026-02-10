@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { nativeTheme } from "electron";
 import { SettingsStore } from "./Stores";
 import { HandleTheme } from "./Theme";

@@ -3,6 +3,7 @@ import { createRecurringTodo } from "./CreateRecurringTodo";
 import restorePreviousPriority from "./RestorePreviousPriority";
 
 function changeCompleteState(string: string, state: boolean): string {
+  // eslint-disable-next-line no-control-regex
   const content = string.replaceAll(/[\x10\r\n]/g, " [LB] ");
 
   // todo: use createTodoObject() instead

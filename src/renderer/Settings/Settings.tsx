@@ -1,5 +1,5 @@
 import React, { useEffect, memo } from "react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import Badge from "@mui/material/Badge";
 import FormControl from "@mui/material/FormControl";
@@ -20,7 +20,7 @@ import { handleLinkClick } from "../Shared";
 import { dark, light } from "../Themes";
 import "./Settings.scss";
 
-const { ipcRenderer, store } = window.api;
+const { store } = window.api;
 
 const visibleSettings: VisibleSettings = {
   appendCreationDate: {

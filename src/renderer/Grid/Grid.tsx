@@ -2,7 +2,6 @@ import React, { KeyboardEvent, memo, useState } from "react";
 import List from "@mui/material/List";
 import Row from "./Row";
 import Group from "./Group";
-import { HandleFilterSelect } from "../Shared";
 import "./Grid.scss";
 
 const { ipcRenderer } = window.api;

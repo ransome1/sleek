@@ -14,6 +14,7 @@ function createTodoObject(
   attributeType?: string,
   attributeValue?: string,
 ): TodoObject {
+  // eslint-disable-next-line no-control-regex
   let content = string.replaceAll(/[\x10\r\n]/g, " [LB] ");
 
   const JsTodoTxtObject = new Item(content);

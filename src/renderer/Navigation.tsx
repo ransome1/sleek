@@ -6,7 +6,6 @@ import FileOpenIcon from "@mui/icons-material/FileOpen";
 import SettingsIcon from "@mui/icons-material/Settings";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import li from "@mui/material/li";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { i18n } from "./Settings/LanguageSelector";
 import "./Navigation.scss";

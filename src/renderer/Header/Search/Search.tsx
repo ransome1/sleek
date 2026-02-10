@@ -6,7 +6,7 @@ import Autocomplete, {
 import OptionComponent from "./Option";
 import InputComponent from "./Input";
 import { withTranslation, WithTranslation } from "react-i18next";
-import LanguageSelector, { i18n } from "../Settings/LanguageSelector";
+import { i18n } from "../Settings/LanguageSelector";
 import "./Search.scss";
 
 const { ipcRenderer, store } = window.api;

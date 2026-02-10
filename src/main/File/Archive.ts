@@ -65,7 +65,6 @@ function archiveTodos(): string {
 
   const todosFromDoneFile: string | Error = readFileContent(
     activeFile.doneFilePath,
-    activeFile.doneFileBookmark,
   );
 
   // Only write a new line when file is not empty and does not already end with a new line
@@ -79,17 +78,9 @@ function archiveTodos(): string {
       ? todosFromDoneFile + separator + completedTodos
       : completedTodos;
 
-  writeToFile(
-    contentForDoneFile,
-    activeFile.doneFilePath,
-    activeFile.doneFileBookmark,
-  );
+  writeToFile(contentForDoneFile, activeFile.doneFilePath);
 
-  writeToFile(
-    uncompletedTodos,
-    activeFile.todoFilePath,
-    activeFile.todoFileBookmark,
-  );
+  writeToFile(uncompletedTodos, activeFile.todoFilePath);
 
   return "Successfully archived";
 }

@@ -1,7 +1,5 @@
 import Store from "electron-store";
 import path from "path";
-import { app } from "electron";
-import fs from "fs";
 import crypto from "crypto";
 import { dataRequest, searchString } from "./DataRequest/DataRequest";
 import { userDataDirectory, HandleError } from "./Shared";
@@ -137,7 +135,8 @@ const migrations = {
   },
   "2.0.19": (config) => {
     console.log("Migrating settings store from 2.0.17 → 2.0.19");
-    (config.set("invertTrayColor", false), config.set("startMinimized", false));
+    config.set("invertTrayColor", false);
+    config.set("startMinimized", false);
   },
 };
 
@@ -237,7 +236,8 @@ SettingsStore.onDidChange("menuBarVisibility", (menuBarVisibility) => {
 
 SettingsStore.onDidChange("tray", (v: boolean) => {
   try {
-    v ? CreateTray() : DestroyTray();
+    if (v) CreateTray();
+    else DestroyTray();
   } catch (error: any) {
     HandleError(error);
   }

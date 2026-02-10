@@ -14,10 +14,6 @@ import { i18n } from "../Settings/LanguageSelector";
 
 const { ipcRenderer } = window.api;
 
-type HandleButtonClickType = (
-  event: React.MouseEvent | React.KeyboardEvent,
-) => void;
-
 interface RowProps extends WithTranslation {
   todoObject: TodoObject;
   filters: Filters | null;
@@ -26,7 +22,6 @@ interface RowProps extends WithTranslation {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: Settings;
-  handleButtonClick: HandleButtonClickType;
   t: typeof i18n.t;
 }
 
@@ -39,7 +34,6 @@ const Row: React.FC<RowProps> = memo(
     setContextMenu,
     setPromptItem,
     settings,
-    handleButtonClick,
     t,
   }) => {
     const handleConfirmDelete = (): void => {

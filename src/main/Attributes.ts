@@ -30,11 +30,11 @@ function updateAttributes(
   reset: boolean,
 ) {
   Object.keys(attributes).forEach((key) => {
-    Object.keys(attributes[key]).forEach((attributeKey) => {
+    Object.keys(attributes[key]).forEach((attributeKey) =>
       reset
         ? (attributes[key] = {})
-        : (attributes[key][attributeKey].count = 0);
-    });
+        : (attributes[key][attributeKey].count = 0),
+    );
 
     todoObjects.forEach((todoObject: TodoObject) => {
       const value = todoObject[key as keyof TodoObject];

@@ -1,5 +1,4 @@
-import { expect, test, beforeEach, afterEach, describe, it, vi } from "vitest";
-import { DateTime } from "luxon";
+import { expect, beforeEach, describe, it, vi } from "vitest";
 import { Notification } from "electron";
 import {
   MustNotify,

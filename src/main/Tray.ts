@@ -69,7 +69,7 @@ export function UpdateTrayMenu(): void {
   tray.setContextMenu(menu);
 }
 
-function handleTrayClick(_: Electron.KeyboardEvent): void {
+function handleTrayClick(): void {
   if (process.platform === "darwin") {
     return;
   } else if (!mainWindow) {

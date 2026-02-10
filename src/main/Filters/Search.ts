@@ -9,7 +9,7 @@ function applySearchString(
   try {
     const query = FilterLang.parse(searchString);
     return todoObjects.filter((todoObject) => runQuery(todoObject, query));
-  } catch (error) {
+  } catch {
     const lowerSearchString = searchString.toLowerCase();
     return Object.values(todoObjects)
       .flat()
@@ -24,7 +24,7 @@ function checkForSearchMatches(todoString: string, searchString: string) {
     const todoObject = createTodoObject(-1, todoString);
     const query = FilterLang.parse(searchString);
     return runQuery(todoObject, query);
-  } catch (error) {
+  } catch {
     return todoString.toLowerCase().includes(searchString);
   }
 }

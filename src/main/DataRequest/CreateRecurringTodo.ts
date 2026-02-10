@@ -49,6 +49,7 @@ const addRecurrenceToDate = (
 
 const createRecurringTodo = (string: string, recurrence: string): string => {
   const updatedString = (string || "").replaceAll(
+    // eslint-disable-next-line no-control-regex
     /[\x10\r\n]/g,
     ` ${String.fromCharCode(16)} `,
   );

@@ -1,4 +1,3 @@
-import { app } from "electron";
 import fs from "fs";
 import { Item } from "jstodotxt";
 import { linesInFile } from "../DataRequest/CreateTodoObjects";
@@ -6,11 +5,7 @@ import { getActiveFile } from "./Active";
 import { SettingsStore } from "../Stores";
 import { replaceSpeakingDatesWithAbsoluteDates } from "../Date";
 
-function writeToFile(
-  string: string,
-  filePath: string,
-  bookmark: string | null,
-) {
+function writeToFile(string: string, filePath: string) {
   fs.writeFileSync(filePath, string + "\n", "utf-8");
 }
 
@@ -20,11 +15,7 @@ function removeLineFromFile(lineNumber: number) {
     throw new Error("No active file found");
   } else if (lineNumber >= 0) {
     linesInFile.splice(lineNumber, 1);
-    writeToFile(
-      linesInFile.join("\n"),
-      activeFile.todoFilePath,
-      activeFile.todoFileBookmark,
-    );
+    writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
   }
 }
 
@@ -65,11 +56,7 @@ function prepareContentForWriting(lineNumber: number, string: string) {
     }
   }
 
-  writeToFile(
-    linesInFile.join("\n"),
-    activeFile.todoFilePath,
-    activeFile.todoFileBookmark,
-  );
+  writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
 }
 
 export { prepareContentForWriting, removeLineFromFile, writeToFile };

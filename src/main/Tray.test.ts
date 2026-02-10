@@ -1,4 +1,3 @@
-import { expect, beforeEach, describe, it, vi } from "vitest";
 import { nativeTheme, Tray } from "electron";
 import { CreateTray, GetTrayImagePath } from "./Tray";
 import { SettingsStore } from "./Stores";

@@ -21,7 +21,6 @@ const GetNotifiedTodoObjects = (): string[] =>
 const GetSearchFilters = (): SearchFilter[] => FiltersStore.get("search") || [];
 
 export function MustNotify(date): boolean {
-  const today = GetToday();
   const thresholdDay = GetThresholdDay();
   return date < thresholdDay;
 }
@@ -30,7 +29,6 @@ export function CreateTitle(dueDate): string {
   const today: DateTime = GetToday();
   const tomorrow: DateTime = today.plus({ days: 1 });
   const daysUntilDue: DateTime = dueDate.diff(today, "days").toObject().days;
-  const thresholdDay = GetThresholdDay();
 
   if (dueDate.hasSame(today, "day")) return "Due today";
   if (dueDate.hasSame(tomorrow, "day")) return "Due tomorrow";

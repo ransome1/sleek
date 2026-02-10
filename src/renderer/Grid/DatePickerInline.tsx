@@ -1,13 +1,8 @@
-import React, { useState, useRef } from "react";
-import {
-  LocalizationProvider,
-  DatePicker,
-  DatePickerProps,
-} from "@mui/x-date-pickers";
+import React, { useState } from "react";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Chip from "@mui/material/Chip";
 import Badge from "@mui/material/Badge";
-import Popper from "@mui/material/Popper";
 import { HandleFilterSelect, friendlyDate, IsSelected } from "../Shared";
 import { withTranslation } from "react-i18next";
 import dayjs from "dayjs";
@@ -33,7 +28,6 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   filters,
   settings,
   t,
-  DatePickerProps,
 }) => {
   const [open, setOpen] = useState(false);
   //const ButtonFieldRef = useRef<HTMLButtonElement>(null);
