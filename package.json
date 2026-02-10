@@ -36,6 +36,9 @@
     "dev": "electron-vite dev --watch",
     "test": "vitest",
     "coverage": "vitest run --coverage",
+    "lint": "npx eslint ./src",
+    "format": "npx prettier . --check",
+    "format:write": "npx prettier . --write",
     "build": "npm run peggy && electron-vite build",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:mas": "npm run build && electron-builder build -m mas --universal --publish never",
@@ -67,6 +70,7 @@
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^2.0.0",
+    "@eslint/js": "^9.39.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -78,13 +82,19 @@
     "electron": "^40.1.0",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.3.0",
     "jsdom": "^28.0.0",
     "material-ui-popup-state": "^5.3.6",
     "peggy": "^5.0.5",
+    "prettier": "^3.8.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sass": "^1.89.2",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.55.0",
     "vitest": "^4.0.14"
   }
 }
