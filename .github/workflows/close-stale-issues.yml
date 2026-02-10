@@ -8,7 +8,8 @@ jobs:
     steps:
       - uses: actions/stale@v8
         with:
-          stale-issue-message: This is an automated response. We acknowledge your report,
+          stale-issue-message:
+            This is an automated response. We acknowledge your report,
             and we appreciate your engagement. However, as there has been no
             recent activity in this thread, it has been marked as stale. If you
             have any further feedback or if the matter is still relevant, please

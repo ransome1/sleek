@@ -1,66 +1,76 @@
-import { getActiveFile } from '../File/Active'
-import { readFileContent } from '../File/File'
-import { SettingsStore, FiltersStore } from '../Stores'
-import { applySearchString } from '../Filters/Search'
-import { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates } from '../Filters/Filters'
-import { updateAttributes, attributes } from '../Attributes'
-import { createTodoObjects } from './CreateTodoObjects'
-import { sortTodoObjects } from './Sort'
-import { groupTodoObjects } from './Group'
+import { getActiveFile } from "../File/Active";
+import { readFileContent } from "../File/File";
+import { SettingsStore, FiltersStore } from "../Stores";
+import { applySearchString } from "../Filters/Search";
+import {
+  applyAttributes,
+  handleCompletedTodoObjects,
+  handleTodoObjectsDates,
+} from "../Filters/Filters";
+import { updateAttributes, attributes } from "../Attributes";
+import { createTodoObjects } from "./CreateTodoObjects";
+import { sortTodoObjects } from "./Sort";
+import { groupTodoObjects } from "./Group";
 
-let searchString: string
+let searchString: string;
 const headers: HeadersObject = {
   availableObjects: null,
   completedObjects: null,
-  visibleObjects: null
-}
-let todoObjects: TodoObject[]
+  visibleObjects: null,
+};
+let todoObjects: TodoObject[];
 
-function dataRequest(passedSearchString: string = ''): RequestedData {
+function dataRequest(passedSearchString: string = ""): RequestedData {
+  searchString = passedSearchString;
 
-  searchString = passedSearchString
-
-  const activeFile: FileObject | null = getActiveFile()
+  const activeFile: FileObject | null = getActiveFile();
   if (!activeFile) {
-    return false
+    return false;
   }
 
-  const fileContent = readFileContent(activeFile.todoFilePath, activeFile.todoFileBookmark)
+  const fileContent = readFileContent(
+    activeFile.todoFilePath,
+    activeFile.todoFileBookmark,
+  );
 
-  const sorting: Sorting[] = SettingsStore.get('sorting')
-  const filters: Filters = FiltersStore.get('attributes')
-  const showHidden: boolean = SettingsStore.get('showHidden')
-  const fileSorting = SettingsStore.get('fileSorting');
+  const sorting: Sorting[] = SettingsStore.get("sorting");
+  const filters: Filters = FiltersStore.get("attributes");
+  const showHidden: boolean = SettingsStore.get("showHidden");
+  const fileSorting = SettingsStore.get("fileSorting");
 
-  todoObjects = createTodoObjects(fileContent)
+  todoObjects = createTodoObjects(fileContent);
 
-  headers.availableObjects = todoObjects.length
+  headers.availableObjects = todoObjects.length;
 
-  todoObjects = handleTodoObjectsDates(todoObjects)
+  todoObjects = handleTodoObjectsDates(todoObjects);
 
   // todo: should this be improved
-  const completedTodoObjects: TodoObject[] = todoObjects.filter((todoObject: TodoObject) => {
-    return todoObject.complete
-  })
+  const completedTodoObjects: TodoObject[] = todoObjects.filter(
+    (todoObject: TodoObject) => {
+      return todoObject.complete;
+    },
+  );
 
-  headers.completedObjects = completedTodoObjects.length
+  headers.completedObjects = completedTodoObjects.length;
 
-  todoObjects = handleCompletedTodoObjects(todoObjects)
+  todoObjects = handleCompletedTodoObjects(todoObjects);
 
-  updateAttributes(todoObjects, sorting, true)
+  updateAttributes(todoObjects, sorting, true);
 
-  if (filters) todoObjects = applyAttributes(todoObjects, filters)
+  if (filters) todoObjects = applyAttributes(todoObjects, filters);
 
-  if (searchString) todoObjects = applySearchString(searchString, todoObjects)
+  if (searchString) todoObjects = applySearchString(searchString, todoObjects);
 
-  updateAttributes(todoObjects, sorting, false)
+  updateAttributes(todoObjects, sorting, false);
 
   if (showHidden) {
-    headers.visibleObjects = todoObjects.length
+    headers.visibleObjects = todoObjects.length;
   } else {
-    const visibleObjects = todoObjects.filter((todoObject) => !todoObject.hidden)
-    headers.visibleObjects = visibleObjects.length
-    todoObjects = visibleObjects
+    const visibleObjects = todoObjects.filter(
+      (todoObject) => !todoObject.hidden,
+    );
+    headers.visibleObjects = visibleObjects.length;
+    todoObjects = visibleObjects;
   }
 
   let todoData;
@@ -82,10 +92,10 @@ function dataRequest(passedSearchString: string = ''): RequestedData {
     todoData,
     attributes,
     headers,
-    filters
-  }
+    filters,
+  };
 
-  return requestedData
+  return requestedData;
 }
 
-export { dataRequest, searchString }
+export { dataRequest, searchString };

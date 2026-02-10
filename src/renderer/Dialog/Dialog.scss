@@ -1,4 +1,4 @@
-@use '../Variables.scss';
+@use "../Variables.scss";
 
 #DialogComponent {
   .MuiDialog-paper {
@@ -25,7 +25,7 @@
         .MuiTextField-root {
           width: 100%;
         }
-      }      
+      }
     }
     .MuiDialogActions-root {
       padding: 0;
@@ -40,16 +40,16 @@
   #DialogComponent {
     .MuiDialog-paper {
       max-width: 60em;
-    } 
+    }
   }
-  .MuiDialog-container{
+  .MuiDialog-container {
     .MuiDialogContent-root {
       padding: 1em;
       .MuiFormControl-root {
-        label[data-shrink=false] {
+        label[data-shrink="false"] {
           transform: translate(0.75em, 0.75em) scale(1);
         }
-      }      
+      }
     }
     .MuiDialogActions-root {
       button {

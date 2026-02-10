@@ -1,57 +1,62 @@
-import { app, dialog, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron'
-import path from 'path'
-import { addFile, addDoneFile } from './File'
-import { writeToFile } from './Write'
+import {
+  app,
+  dialog,
+  OpenDialogReturnValue,
+  SaveDialogReturnValue,
+} from "electron";
+import path from "path";
+import { addFile, addDoneFile } from "./File";
+import { writeToFile } from "./Write";
 
 const dialogFilters = [
   {
-    name: 'Text files',
-    extensions: ['txt']
+    name: "Text files",
+    extensions: ["txt"],
   },
   {
-    name: 'All files',
-    extensions: ['*']
-  }
-]
+    name: "All files",
+    extensions: ["*"],
+  },
+];
 
 async function openFile(setDoneFile: boolean): Promise<void> {
   const result: OpenDialogReturnValue = await dialog.showOpenDialog({
-    properties: ['openFile'],
+    properties: ["openFile"],
     filters: dialogFilters,
-    securityScopedBookmarks: true
-  })
+    securityScopedBookmarks: true,
+  });
   if (!result.canceled && result.filePaths.length > 0) {
-    const filePath: string = result.filePaths[0]
-    const bookmark: string | null = result.bookmarks?.[0] || null
+    const filePath: string = result.filePaths[0];
+    const bookmark: string | null = result.bookmarks?.[0] || null;
 
     if (setDoneFile) {
-      addDoneFile(filePath, bookmark)
+      addDoneFile(filePath, bookmark);
     } else {
-      addFile(filePath, bookmark)
+      addFile(filePath, bookmark);
     }
   }
 }
 
 async function createFile(setDoneFile: boolean): Promise<void> {
-  const defaultFileName = setDoneFile ? 'done.txt' : 'todo.txt'
+  const defaultFileName = setDoneFile ? "done.txt" : "todo.txt";
   const result: SaveDialogReturnValue = await dialog.showSaveDialog({
-    defaultPath: path.join(app.getPath('documents'), defaultFileName),
+    defaultPath: path.join(app.getPath("documents"), defaultFileName),
     filters: dialogFilters,
-    securityScopedBookmarks: true
-  })
+    securityScopedBookmarks: true,
+  });
 
   if (!result.canceled && result.filePath) {
-    const filePath: string = result.filePath
-    const bookmark: string | null = result.bookmark || null
+    const filePath: string = result.filePath;
+    const bookmark: string | null = result.bookmark || null;
 
-    writeToFile('', filePath, bookmark)
+    writeToFile("", filePath, bookmark);
 
     if (setDoneFile) {
-      addDoneFile(filePath, bookmark)
+      addDoneFile(filePath, bookmark);
     } else {
-      addFile(filePath, bookmark)
+      addFile(filePath, bookmark);
     }
   }
 }
 
-export { createFile, openFile }
+export { createFile, openFile };

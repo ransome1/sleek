@@ -1,32 +1,32 @@
-import React, { useEffect, memo } from 'react'
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import ClearIcon from '@mui/icons-material/Clear'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import { WithTranslation, withTranslation } from 'react-i18next'
-import { i18n } from '../../Settings/LanguageSelector'
+import React, { useEffect, memo } from "react";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ClearIcon from "@mui/icons-material/Clear";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { i18n } from "../../Settings/LanguageSelector";
 
-const { ipcRenderer, store } = window.api
+const { ipcRenderer, store } = window.api;
 
 interface InputComponentProps extends WithTranslation {
-  headers: HeadersObject | null
-  searchString: string
-  setSearchString: React.Dispatch<React.SetStateAction<string>>
-  searchFilters: SearchFilter[]
-  searchFieldRef: React.RefObject<HTMLInputElement>
-  isAutocompleteOpen: boolean
-  setIsAutocompleteOpen: React.Dispatch<React.SetStateAction<boolean>>
-  settings: Settings
-  t: typeof i18n.t
+  headers: HeadersObject | null;
+  searchString: string;
+  setSearchString: React.Dispatch<React.SetStateAction<string>>;
+  searchFilters: SearchFilter[];
+  searchFieldRef: React.RefObject<HTMLInputElement>;
+  isAutocompleteOpen: boolean;
+  setIsAutocompleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  settings: Settings;
+  t: typeof i18n.t;
 }
 
 const handleAddTodo = (searchString: string): void => {
   if (searchString) {
-    ipcRenderer.send('writeTodoToFile', -1, searchString)
+    ipcRenderer.send("writeTodoToFile", -1, searchString);
   }
-}
+};
 
 const InputComponent: React.FC<InputComponentProps> = memo(
   ({
@@ -43,27 +43,28 @@ const InputComponent: React.FC<InputComponentProps> = memo(
   }) => {
     useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent): void => {
-        event.stopPropagation()
-        const isSearchFocused = document.activeElement === searchFieldRef.current
+        event.stopPropagation();
+        const isSearchFocused =
+          document.activeElement === searchFieldRef.current;
         if (
           isSearchFocused &&
           searchString &&
           (event.metaKey || event.ctrlKey) &&
-          event.key === 'Enter'
+          event.key === "Enter"
         ) {
-          handleAddTodo(searchString)
-        } else if (searchString && isSearchFocused && event.key === 'Escape') {
-          setSearchString('')
-        } else if (!searchString && isSearchFocused && event.key === 'Escape') {
-          store.setConfig('isSearchOpen', !settings.isSearchOpen)
+          handleAddTodo(searchString);
+        } else if (searchString && isSearchFocused && event.key === "Escape") {
+          setSearchString("");
+        } else if (!searchString && isSearchFocused && event.key === "Escape") {
+          store.setConfig("isSearchOpen", !settings.isSearchOpen);
         }
-      }
+      };
 
-      document.addEventListener('keydown', handleKeyDown)
+      document.addEventListener("keydown", handleKeyDown);
       return (): void => {
-        document.removeEventListener('keydown', handleKeyDown)
-      }
-    }, [searchString, searchFieldRef, settings.isSearchOpen])
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [searchString, searchFieldRef, settings.isSearchOpen]);
 
     return (
       <TextField
@@ -77,7 +78,10 @@ const InputComponent: React.FC<InputComponentProps> = memo(
             startAdornment: (
               <InputAdornment position="start">
                 {searchFilters?.length > 0 || searchString ? (
-                  <IconButton tabIndex={0} onClick={() => setIsAutocompleteOpen(!isAutocompleteOpen)}>
+                  <IconButton
+                    tabIndex={0}
+                    onClick={() => setIsAutocompleteOpen(!isAutocompleteOpen)}
+                  >
                     {isAutocompleteOpen ? (
                       <ExpandMoreIcon
                         className="invert"
@@ -89,7 +93,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(
                   </IconButton>
                 ) : (
                   <IconButton disabled data-testid="header-search-clear-icon">
-                    <ExpandMoreIcon style={{ color: 'gray' }} />
+                    <ExpandMoreIcon style={{ color: "gray" }} />
                   </IconButton>
                 )}
               </InputAdornment>
@@ -97,21 +101,24 @@ const InputComponent: React.FC<InputComponentProps> = memo(
             endAdornment: (
               <InputAdornment position="end">
                 {searchString &&
-                  searchString.length > 0 && !searchFilters?.some((filter) => filter.label === searchString) && (
+                  searchString.length > 0 &&
+                  !searchFilters?.some(
+                    (filter) => filter.label === searchString,
+                  ) && (
                     <button
                       onClick={() => handleAddTodo(searchString)}
                       data-testid="header-search-textfield-add-todo"
                       className="addAsTodo"
                     >
-                      {t('search.addAsTodo')}
+                      {t("search.addAsTodo")}
                     </button>
                   )}
                 <IconButton
                   tabIndex={0}
                   onClick={() =>
                     ipcRenderer.send(
-                      'openInBrowser',
-                      'https://github.com/ransome1/sleek/wiki/Filter-Expressions-for-Advanced-Search'
+                      "openInBrowser",
+                      "https://github.com/ransome1/sleek/wiki/Filter-Expressions-for-Advanced-Search",
                     )
                   }
                   data-testid="header-search-clear-icon"
@@ -121,21 +128,21 @@ const InputComponent: React.FC<InputComponentProps> = memo(
                 {searchString && searchString.length > 0 && (
                   <IconButton
                     tabIndex={0}
-                    onClick={() => setSearchString('')}
+                    onClick={() => setSearchString("")}
                     data-testid="header-search-clear-icon"
                   >
                     <ClearIcon />
                   </IconButton>
                 )}
               </InputAdornment>
-            )
-          }
+            ),
+          },
         }}
       />
     );
-  }
-)
+  },
+);
 
-InputComponent.displayName = 'InputComponent'
+InputComponent.displayName = "InputComponent";
 
-export default withTranslation()(InputComponent)
+export default withTranslation()(InputComponent);

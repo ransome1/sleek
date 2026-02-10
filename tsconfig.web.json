@@ -4,17 +4,20 @@
     "src/renderer/env.d.ts",
     "src/renderer/**/*",
     "src/renderer/**/*.tsx",
-    "src/preload/*.d.ts"
-, "src/preload/electron.d.ts"  ],
+    "src/preload/*.d.ts",
+    "src/preload/electron.d.ts"
+  ],
   "compilerOptions": {
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@renderer/*": [
-        "src/renderer/src/*"
-      ]
+      "@renderer/*": ["src/renderer/src/*"]
     },
-    "types": ["electron-vite/node", "vitest/globals", "@testing-library/jest-dom"],
+    "types": [
+      "electron-vite/node",
+      "vitest/globals",
+      "@testing-library/jest-dom"
+    ],
     "composite": true
   }
 }

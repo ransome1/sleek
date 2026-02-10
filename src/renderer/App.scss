@@ -1,5 +1,5 @@
-@use 'Variables.scss';
-@use 'Coloring.scss';
+@use "Variables.scss";
+@use "Coloring.scss";
 
 body {
   overflow: hidden;
@@ -21,7 +21,7 @@ body {
       font-size: 1.2em;
       margin-bottom: -0.25em;
     }
-  }  
+  }
   #root {
     .flexContainer {
       min-width: 25em;

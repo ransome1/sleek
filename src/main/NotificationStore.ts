@@ -1,10 +1,10 @@
-import Store from 'electron-store'
-import { userDataDirectory } from './Util'
+import Store from "electron-store";
+import { userDataDirectory } from "./Util";
 
 export const NotificationStore = new Store({
   cwd: userDataDirectory,
-  name: 'notifiedTodoObjects'
-})
+  name: "notifiedTodoObjects",
+});
 
 // const notifiedTodoObjectsPath = path.join(userDataDirectory, 'notifiedTodoObjects.json')
 // if (!fs.existsSync(notifiedTodoObjectsPath)) {

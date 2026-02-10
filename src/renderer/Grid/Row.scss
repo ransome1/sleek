@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use '../Variables.scss';
+@use "sass:color";
+@use "../Variables.scss";
 
 .row {
   cursor: pointer;
@@ -22,8 +22,8 @@
   [data-todotxt-attribute="hidden"] {
     filter: opacity(50%);
   }
-  &[data-complete='true'],
-  &[data-hidden='true'] {
+  &[data-complete="true"],
+  &[data-hidden="true"] {
     filter: opacity(50%) grayscale(100%);
   }
   &:last-child {
@@ -39,9 +39,9 @@
 .compact {
   .row {
     padding: 0.3em;
-    [data-todotxt-attribute='due'],
-    [data-todotxt-attribute='t'],
-    [data-todotxt-attribute='rec'] {
+    [data-todotxt-attribute="due"],
+    [data-todotxt-attribute="t"],
+    [data-todotxt-attribute="rec"] {
       button {
         padding: 0 0.5em 0 0;
       }
@@ -50,7 +50,11 @@
         padding: 0;
       }
     }
-    .filter:not([data-todotxt-attribute='priority']):not([data-todotxt-attribute='t']):not([data-todotxt-attribute='due']):not([data-todotxt-attribute='rec']) {
+    .filter:not([data-todotxt-attribute="priority"]):not(
+        [data-todotxt-attribute="t"]
+      ):not([data-todotxt-attribute="due"]):not(
+        [data-todotxt-attribute="rec"]
+      ) {
       button {
         padding: 0.2em 0.4em;
       }
@@ -59,7 +63,7 @@
       padding-left: 0;
       button {
         padding: 0.2em 0.4em;
-      }      
+      }
     }
   }
 }

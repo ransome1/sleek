@@ -1,7 +1,9 @@
-@use 'sass:color';
-@use 'Variables.scss';
+@use "sass:color";
+@use "Variables.scss";
 
-button:not(.MuiIconButton-root):not(.MuiTab-root):not(.MuiAccordionSummary-root),
+button:not(.MuiIconButton-root):not(.MuiTab-root):not(
+    .MuiAccordionSummary-root
+  ),
 button:hover:not(.MuiIconButton-root) {
   &:focus-visible {
     outline: 0.1em solid Variables.$dark-grey;
@@ -59,7 +61,7 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
-*[data-todotxt-attribute='priority'] {
+*[data-todotxt-attribute="priority"] {
   --color1: white;
   button {
     &.Mui-disabled {
@@ -79,7 +81,7 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
-*[data-todotxt-attribute='priority'][data-todotxt-value='A'] {
+*[data-todotxt-attribute="priority"][data-todotxt-value="A"] {
   --color2: #ff0000;
   border-left-color: var(--color2);
   &.selected {
@@ -89,7 +91,7 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
-*[data-todotxt-attribute='priority'][data-todotxt-value='B'] {
+*[data-todotxt-attribute="priority"][data-todotxt-value="B"] {
   --color2: #fd7d67;
   border-left-color: var(--color2);
   &.selected {
@@ -99,7 +101,7 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
-*[data-todotxt-attribute='priority'][data-todotxt-value='C'] {
+*[data-todotxt-attribute="priority"][data-todotxt-value="C"] {
   --color2: #ffdd57;
   border-left-color: var(--color2);
   &.selected {
@@ -109,7 +111,7 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
-*[data-todotxt-attribute^='pm'] {
+*[data-todotxt-attribute^="pm"] {
   --color1: rgb(221, 44, 0);
   --color2: white;
   button {
@@ -130,12 +132,12 @@ button:hover:not(.MuiIconButton-root) {
   }
 }
 
-*[data-todotxt-attribute='projects'] {
+*[data-todotxt-attribute="projects"] {
   --color1: #6f266f;
   --color2: #f1d6f1;
 }
 
-*[data-todotxt-attribute='contexts'] {
+*[data-todotxt-attribute="contexts"] {
   --color1: #1e6251;
   --color2: #c5ede3;
 }
@@ -146,10 +148,10 @@ button:hover:not(.MuiIconButton-root) {
     outline-color: Variables.$light-grey;
   }
   *[data-todotxt-attribute]:not(
-      [data-todotxt-attribute='priority'],
-      [data-todotxt-attribute='projects'],
-      [data-todotxt-attribute='contexts'],
-      [data-todotxt-attribute^='pm']
+      [data-todotxt-attribute="priority"],
+      [data-todotxt-attribute="projects"],
+      [data-todotxt-attribute="contexts"],
+      [data-todotxt-attribute^="pm"]
     ) {
     --color1: #f0f0f0;
     --color2: #5a5a5a;
@@ -159,13 +161,14 @@ button:hover:not(.MuiIconButton-root) {
       }
     }
     &.selected {
-      button, div {
+      button,
+      div {
         background: color.adjust(#5a5a5a, $lightness: -15%);
       }
     }
   }
 
-  *[data-todotxt-attribute='contexts'] {
+  *[data-todotxt-attribute="contexts"] {
     --color1: #c5ede3;
     --color2: #1e6251;
     &.selected {
@@ -174,7 +177,7 @@ button:hover:not(.MuiIconButton-root) {
       }
     }
   }
-  *[data-todotxt-attribute='projects'] {
+  *[data-todotxt-attribute="projects"] {
     --color1: #f1d6f1;
     --color2: #6f266f;
     &.selected {

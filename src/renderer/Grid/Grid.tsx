@@ -1,22 +1,22 @@
-import React, { KeyboardEvent, memo, useState } from 'react'
-import List from '@mui/material/List'
-import Row from './Row'
-import Group from './Group'
-import { HandleFilterSelect } from '../Shared'
-import './Grid.scss'
+import React, { KeyboardEvent, memo, useState } from "react";
+import List from "@mui/material/List";
+import Row from "./Row";
+import Group from "./Group";
+import { HandleFilterSelect } from "../Shared";
+import "./Grid.scss";
 
-const { ipcRenderer } = window.api
+const { ipcRenderer } = window.api;
 
 interface GridComponentProps {
-  todoData: TodoData | null
-  filters: Filters | null
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
-  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
-  settings: Settings
-  headers: Headers
-  searchString: string
+  todoData: TodoData | null;
+  filters: Filters | null;
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
+  settings: Settings;
+  headers: Headers;
+  searchString: string;
 }
 
 const GridComponent: React.FC<GridComponentProps> = memo(
@@ -29,69 +29,80 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     setPromptItem,
     settings,
     headers,
-    searchString
+    searchString,
   }) => {
-    const renderedRows: number[] = []
-    const list = document.getElementById('grid')
-    const [loadMoreRows, setLoadMoreRows] = useState(false)
-    const [maxRows, setMaxRows] = useState(Math.floor(window.innerHeight / 35) * 2)
+    const renderedRows: number[] = [];
+    const list = document.getElementById("grid");
+    const [loadMoreRows, setLoadMoreRows] = useState(false);
+    const [maxRows, setMaxRows] = useState(
+      Math.floor(window.innerHeight / 35) * 2,
+    );
 
     const handleKeyUp = (event: KeyboardEvent): void => {
-      if (event.key === 'ArrowDown') {
-        const listItems = document.querySelectorAll('li:not(.group)')
-        const currentIndex = Array.from(listItems).indexOf(document.activeElement)
-        const nextIndex = currentIndex + 1
-        const nextElement = listItems[nextIndex]
+      if (event.key === "ArrowDown") {
+        const listItems = document.querySelectorAll("li:not(.group)");
+        const currentIndex = Array.from(listItems).indexOf(
+          document.activeElement,
+        );
+        const nextIndex = currentIndex + 1;
+        const nextElement = listItems[nextIndex];
         if (nextElement) {
-          nextElement.focus()
+          nextElement.focus();
         }
-      } else if (event.key === 'ArrowUp') {
-        const listItems = document.querySelectorAll('li:not(.group)')
-        const currentIndex: number = Array.from(listItems).indexOf(document.activeElement)
-        const prevIndex: number = currentIndex - 1
-        const prevElement: Element = listItems[prevIndex]
+      } else if (event.key === "ArrowUp") {
+        const listItems = document.querySelectorAll("li:not(.group)");
+        const currentIndex: number = Array.from(listItems).indexOf(
+          document.activeElement,
+        );
+        const prevIndex: number = currentIndex - 1;
+        const prevElement: Element = listItems[prevIndex];
         if (prevElement) {
-          prevElement.focus()
+          prevElement.focus();
         }
-      } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-        if (!event.target.closest('li')) return
+      } else if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+        if (!event.target.closest("li")) return;
         const rowItems = event.target
-          .closest('li')
-          .querySelectorAll('button, input, select, a[href], [tabindex]:not([tabindex="-1"])')
-        const currentIndex = Array.from(rowItems).indexOf(document.activeElement)
-        const nextIndex = event.key === 'ArrowRight' ? currentIndex + 1 : currentIndex - 1
-        const nextElement = rowItems[nextIndex]
+          .closest("li")
+          .querySelectorAll(
+            'button, input, select, a[href], [tabindex]:not([tabindex="-1"])',
+          );
+        const currentIndex = Array.from(rowItems).indexOf(
+          document.activeElement,
+        );
+        const nextIndex =
+          event.key === "ArrowRight" ? currentIndex + 1 : currentIndex - 1;
+        const nextElement = rowItems[nextIndex];
         if (nextElement) {
-          nextElement.focus()
+          nextElement.focus();
         }
       }
-    }
+    };
 
     const handleScroll = (): void => {
       if (list) {
-        const a: number = list.scrollTop
-        const b: number = list.scrollHeight - list.clientHeight
-        const c: number = a / b
+        const a: number = list.scrollTop;
+        const b: number = list.scrollHeight - list.clientHeight;
+        const c: number = a / b;
 
         if (c >= 0.85 && renderedRows.length < headers.availableObjects) {
-          setLoadMoreRows(true)
+          setLoadMoreRows(true);
         }
 
         if (loadMoreRows) {
-          setLoadMoreRows(false)
-          setMaxRows((maxRows) => maxRows + 30)
-          ipcRenderer.send('requestData', searchString)
+          setLoadMoreRows(false);
+          setMaxRows((maxRows) => maxRows + 30);
+          ipcRenderer.send("requestData", searchString);
         }
       }
-    }
+    };
 
-    if (headers.visibleObjects === 0) return null
+    if (headers.visibleObjects === 0) return null;
 
     return (
       <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
         {todoData?.map((group) => {
           if (!group.visible) {
-            return null
+            return null;
           }
           return (
             <React.Fragment key={group.title}>
@@ -101,17 +112,17 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                 filters={filters}
               />
               {((): void => {
-                const rows = []
+                const rows = [];
                 for (let i = 0; i < group.todoObjects.length; i++) {
-                  const todoObject = group.todoObjects[i]
+                  const todoObject = group.todoObjects[i];
 
                   if (renderedRows.length >= maxRows) {
-                    break
+                    break;
                   } else if (renderedRows.includes(todoObject.lineNumber)) {
-                    continue
+                    continue;
                   }
 
-                  renderedRows.push(todoObject.lineNumber)
+                  renderedRows.push(todoObject.lineNumber);
 
                   rows.push(
                     <Row
@@ -123,19 +134,19 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                       setContextMenu={setContextMenu}
                       setPromptItem={setPromptItem}
                       settings={settings}
-                    />
-                  )
+                    />,
+                  );
                 }
-                return rows
+                return rows;
               })()}
             </React.Fragment>
-          )
+          );
         })}
       </List>
-    )
-  }
-)
+    );
+  },
+);
 
-GridComponent.displayName = 'GridComponent'
+GridComponent.displayName = "GridComponent";
 
-export default GridComponent
+export default GridComponent;

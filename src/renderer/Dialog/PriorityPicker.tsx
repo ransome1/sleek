@@ -1,40 +1,42 @@
-import React from 'react'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import { withTranslation, WithTranslation } from 'react-i18next'
-import { i18n } from '../Settings/LanguageSelector'
-import './PriorityPicker.scss'
+import React from "react";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import { withTranslation, WithTranslation } from "react-i18next";
+import { i18n } from "../Settings/LanguageSelector";
+import "./PriorityPicker.scss";
 
-const alphabetArray = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index))
+const alphabetArray = Array.from({ length: 26 }, (_, index) =>
+  String.fromCharCode(65 + index),
+);
 
 const priorities = [
-  { value: '-', label: '-' },
-  ...alphabetArray.map((letter) => ({ value: letter, label: letter }))
-]
+  { value: "-", label: "-" },
+  ...alphabetArray.map((letter) => ({ value: letter, label: letter })),
+];
 
 interface PriorityPickerComponentProps extends WithTranslation {
-  priority: string
-  handleChange: (key: string, value: string) => void
-  t: typeof i18n.t
+  priority: string;
+  handleChange: (key: string, value: string) => void;
+  t: typeof i18n.t;
 }
 
 const PriorityPickerComponent: React.FC<PriorityPickerComponentProps> = ({
   priority,
   handleChange,
-  t
+  t,
 }) => {
   const handleSelectChange = (event: SelectChangeEvent<string>): void => {
-    handleChange('priority', event.target.value)
-  }
+    handleChange("priority", event.target.value);
+  };
 
   return (
     <FormControl id="priorityPicker">
-      <InputLabel>{t('todoDialog.priorityPicker.label')}</InputLabel>
+      <InputLabel>{t("todoDialog.priorityPicker.label")}</InputLabel>
       <Select
         id="priorityPicker"
-        label={t('todoDialog.priorityPicker.label')}
+        label={t("todoDialog.priorityPicker.label")}
         value={priority}
         onChange={handleSelectChange}
         data-testid="dialog-picker-priority"
@@ -46,7 +48,7 @@ const PriorityPickerComponent: React.FC<PriorityPickerComponentProps> = ({
         ))}
       </Select>
     </FormControl>
-  )
-}
+  );
+};
 
-export default withTranslation()(PriorityPickerComponent)
+export default withTranslation()(PriorityPickerComponent);

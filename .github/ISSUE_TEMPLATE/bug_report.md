@@ -1,8 +1,8 @@
 ---
 name: Bug report
 about: Report a bug and help improving sleek
-title: ''
-labels: 'bug'
+title: ""
+labels: "bug"
 ---
 
 ## Bug Report

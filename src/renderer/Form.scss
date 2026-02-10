@@ -1,10 +1,10 @@
-@use './Variables.scss';
+@use "./Variables.scss";
 
 label {
   width: 100%;
   a {
     svg {
-      font-size: 1em!important;
+      font-size: 1em !important;
     }
   }
 }
@@ -18,7 +18,7 @@ label {
   }
   .MuiFormControlLabel-root {
     margin-left: -0.78571429em;
-    margin-left: 1,14285714em;
+    margin-left: 1, 14285714em;
     .MuiSwitch-root {
       width: 4em;
       height: 2.4em;
@@ -42,10 +42,10 @@ label {
     }
   }
   .MuiFormControl-root {
-    label[data-shrink=false] {
+    label[data-shrink="false"] {
       transform: translate(1em, 1em) scale(1);
     }
-    label[data-shrink=true] {
+    label[data-shrink="true"] {
       transform: translate(0.5em, -0.5em) scale(0.75);
     }
 
@@ -71,7 +71,7 @@ label {
         margin: 0;
         padding: 1em;
       }
-      .MuiSelect-select  {
+      .MuiSelect-select {
         margin: 0;
         padding: 1em;
       }
@@ -93,7 +93,7 @@ label {
         .MuiInputBase-input {
           padding: 0.75em;
         }
-        .MuiSelect-select  {
+        .MuiSelect-select {
           padding: 0.75em;
         }
       }
@@ -101,7 +101,13 @@ label {
   }
 }
 
-.MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root, .MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root,
-.MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root, .MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root .MuiOutlinedInput-root {
-	padding-right: 0.5em!important;
+.MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root
+  .MuiOutlinedInput-root,
+.MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root
+  .MuiOutlinedInput-root,
+.MuiAutocomplete-hasPopupIcon.css-10wd9eg-MuiAutocomplete-root
+  .MuiOutlinedInput-root,
+.MuiAutocomplete-hasClearIcon.css-10wd9eg-MuiAutocomplete-root
+  .MuiOutlinedInput-root {
+  padding-right: 0.5em !important;
 }

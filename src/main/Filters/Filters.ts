@@ -1,50 +1,52 @@
-import { SettingsStore } from '../Stores'
-import { DateTime } from "luxon"
+import { SettingsStore } from "../Stores";
+import { DateTime } from "luxon";
 
 function applyAttributes(todoObjects, filters) {
-  return todoObjects.filter(todoObject => {
-      let match = true;
-      for (const [key, filterList] of Object.entries(filters)) {
-          for (const filter of filterList) {
-              const values = filter.value;
-              const exclude = filter.exclude;
-              if (key in todoObject && todoObject[key] !== null) {
-                  if (exclude) {
-                      if (values.some(value => todoObject[key].includes(value))) {
-                          match = false;
-                          break;
-                      }
-                  } else {
-                      if (!values.some(value => todoObject[key].includes(value))) {
-                          match = false;
-                          break;
-                      }
-                  }
-              } else if (!exclude) {
-                  match = false;
-                  break;
-              }
-          }
-          if (!match) {
+  return todoObjects.filter((todoObject) => {
+    let match = true;
+    for (const [key, filterList] of Object.entries(filters)) {
+      for (const filter of filterList) {
+        const values = filter.value;
+        const exclude = filter.exclude;
+        if (key in todoObject && todoObject[key] !== null) {
+          if (exclude) {
+            if (values.some((value) => todoObject[key].includes(value))) {
+              match = false;
               break;
+            }
+          } else {
+            if (!values.some((value) => todoObject[key].includes(value))) {
+              match = false;
+              break;
+            }
           }
+        } else if (!exclude) {
+          match = false;
+          break;
+        }
       }
-      return match;
+      if (!match) {
+        break;
+      }
+    }
+    return match;
   });
 }
 
 function handleCompletedTodoObjects(todoObjects: TodoObject[]): TodoObject[] {
-  const showCompleted: boolean = SettingsStore.get('showCompleted')
+  const showCompleted: boolean = SettingsStore.get("showCompleted");
   if (!showCompleted) {
-    return todoObjects.filter((todoObject: TodoObject) => !todoObject.complete)
+    return todoObjects.filter((todoObject: TodoObject) => !todoObject.complete);
   } else {
-    return todoObjects
+    return todoObjects;
   }
 }
 
 function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
-  const thresholdDateInTheFuture: boolean = SettingsStore.get('thresholdDateInTheFuture');
-  const dueDateInTheFuture: boolean = SettingsStore.get('dueDateInTheFuture');
+  const thresholdDateInTheFuture: boolean = SettingsStore.get(
+    "thresholdDateInTheFuture",
+  );
+  const dueDateInTheFuture: boolean = SettingsStore.get("dueDateInTheFuture");
   const now = DateTime.now();
 
   return todoObjects.filter((todoObject: TodoObject) => {
@@ -58,4 +60,4 @@ function handleTodoObjectsDates(todoObjects: TodoObject[]): TodoObject[] {
   });
 }
 
-export { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates }
+export { applyAttributes, handleCompletedTodoObjects, handleTodoObjectsDates };

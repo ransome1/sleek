@@ -2,7 +2,7 @@ name: Scan code, execute unit test, update Flathub and mirror to opencode.net
 on:
   push:
     branches:
-      - '*'
+      - "*"
 jobs:
   snyk:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
         id: njsscan
         uses: ajinabraham/njsscan-action@master
         with:
-          args: '. --sarif --output results.sarif || true'
+          args: ". --sarif --output results.sarif || true"
       - name: Upload njsscan report
         uses: github/codeql-action/upload-sarif@v4
         with:
@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript']
+        language: ["javascript"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
@@ -56,7 +56,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript']
+        language: ["javascript"]
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -71,7 +71,7 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}  
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   mirror:
     needs: codecov
     name: Mirror code to opencode.net
@@ -102,4 +102,4 @@ jobs:
           token: ${{ secrets.TRIGGER_FLATHUB_BUILD }}
           repository: ransome1/com.github.ransome1.sleek
           event-type: trigger-flathub-build
-          client-payload: '{"commit_id": "${{ github.sha }}"}'          
+          client-payload: '{"commit_id": "${{ github.sha }}"}'

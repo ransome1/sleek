@@ -1,63 +1,63 @@
-import chokidar, { FSWatcher } from 'chokidar'
-import { app } from 'electron'
-import { dataRequest, searchString } from '../DataRequest/DataRequest'
-import { SettingsStore } from '../Stores'
-import { HandleError, userDataDirectory } from '../Shared'
-import { CreateMenu } from '../Menu'
-import { mainWindow, eventListeners } from '../index'
+import chokidar, { FSWatcher } from "chokidar";
+import { app } from "electron";
+import { dataRequest, searchString } from "../DataRequest/DataRequest";
+import { SettingsStore } from "../Stores";
+import { HandleError, userDataDirectory } from "../Shared";
+import { CreateMenu } from "../Menu";
+import { mainWindow, eventListeners } from "../index";
 
-let watcher: FSWatcher | null = null
+let watcher: FSWatcher | null = null;
 
 function createFileWatcher(files: FileObject[]): void {
   if (watcher) {
-    watcher?.close()
-    console.log(`Destroyed old file watcher`)
+    watcher?.close();
+    console.log(`Destroyed old file watcher`);
   }
 
-  const hasActiveEntry = files.some((file) => file.active)
+  const hasActiveEntry = files.some((file) => file.active);
   if (!hasActiveEntry && files.length > 0) {
-    files[0].active = true
-    SettingsStore.set('files', files)
+    files[0].active = true;
+    SettingsStore.set("files", files);
   }
 
   if (process.mas) {
     files.forEach((file) => {
       if (file.todoFileBookmark) {
-        app.startAccessingSecurityScopedResource(file.todoFileBookmark)
+        app.startAccessingSecurityScopedResource(file.todoFileBookmark);
       }
       if (file.doneFileBookmark) {
-        app.startAccessingSecurityScopedResource(file.doneFileBookmark)
+        app.startAccessingSecurityScopedResource(file.doneFileBookmark);
       }
-    })
+    });
   }
 
   watcher = chokidar.watch(
     files.map((file) => file.todoFilePath),
-    SettingsStore.get('chokidarOptions')
-  )
+    SettingsStore.get("chokidarOptions"),
+  );
 
-  CreateMenu(files)
+  CreateMenu(files);
 
-  watcher.add(userDataDirectory + '/filters.json')
+  watcher.add(userDataDirectory + "/filters.json");
 
   watcher
-    .on('add', (file) => {
-      console.log(`Watching new file: ${file}`)
+    .on("add", (file) => {
+      console.log(`Watching new file: ${file}`);
     })
-    .on('change', (file) => {
+    .on("change", (file) => {
       try {
-        const requestedData = dataRequest(searchString)
-        mainWindow!.webContents.send('requestData', requestedData)
-        console.log(`${file} has been changed`)
+        const requestedData = dataRequest(searchString);
+        mainWindow!.webContents.send("requestData", requestedData);
+        console.log(`${file} has been changed`);
       } catch (error: any) {
-        HandleError(error)
+        HandleError(error);
       }
     })
-    .on('unlink', (file) => {
-      console.log(`Unlinked file: ${file}`)
-    })
+    .on("unlink", (file) => {
+      console.log(`Unlinked file: ${file}`);
+    });
 
-  eventListeners.watcher = watcher
+  eventListeners.watcher = watcher;
 }
 
-export { createFileWatcher, watcher }
+export { createFileWatcher, watcher };

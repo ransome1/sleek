@@ -1,63 +1,68 @@
-import React, { useState, useEffect } from 'react'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Switch from '@mui/material/Switch'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import IconButton from '@mui/material/IconButton'
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
-import SortIcon from '@mui/icons-material/Sort'
-import { withTranslation, WithTranslation } from 'react-i18next'
-import { i18n } from '../Settings/LanguageSelector'
-import { translatedAttributes } from '../Shared'
-import './Sorting.scss'
+import React, { useState, useEffect } from "react";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import IconButton from "@mui/material/IconButton";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import SortIcon from "@mui/icons-material/Sort";
+import { withTranslation, WithTranslation } from "react-i18next";
+import { i18n } from "../Settings/LanguageSelector";
+import { translatedAttributes } from "../Shared";
+import "./Sorting.scss";
 
-const { store } = window.api
+const { store } = window.api;
 
 interface DrawerSortingComponentProps extends WithTranslation {
-  settings: Settings
-  t: typeof i18n.t
+  settings: Settings;
+  t: typeof i18n.t;
 }
 
 const visibleSettings = {
   fileSorting: {
-    style: 'toggle',
-    rerender: true
+    style: "toggle",
+    rerender: true,
   },
   sortCompletedLast: {
-    style: 'toggle',
+    style: "toggle",
     rerender: true,
-    dependsOn: ['fileSorting']
-  }
-}
+    dependsOn: ["fileSorting"],
+  },
+};
 
-const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ settings, t }) => {
-  const [accordionOrder, setAccordionOrder] = useState<Sorting[]>(settings.sorting)
-  const moveItem = (index: number, direction: 'up' | 'down'): void => {
-    const newAccordionOrder = [...accordionOrder]
-    const swapIndex = direction === 'up' ? index - 1 : index + 1
+const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({
+  settings,
+  t,
+}) => {
+  const [accordionOrder, setAccordionOrder] = useState<Sorting[]>(
+    settings.sorting,
+  );
+  const moveItem = (index: number, direction: "up" | "down"): void => {
+    const newAccordionOrder = [...accordionOrder];
+    const swapIndex = direction === "up" ? index - 1 : index + 1;
     if (swapIndex >= 0 && swapIndex < newAccordionOrder.length) {
-      ;[newAccordionOrder[index], newAccordionOrder[swapIndex]] = [
+      [newAccordionOrder[index], newAccordionOrder[swapIndex]] = [
         newAccordionOrder[swapIndex],
-        newAccordionOrder[index]
-      ]
+        newAccordionOrder[index],
+      ];
 
-      setAccordionOrder(newAccordionOrder)
+      setAccordionOrder(newAccordionOrder);
     }
-  }
+  };
   const toggleInvert = (index: number): void => {
-    const newAccordionOrder = [...accordionOrder]
-    newAccordionOrder[index].invert = !newAccordionOrder[index].invert
-    setAccordionOrder(newAccordionOrder)
-  }
+    const newAccordionOrder = [...accordionOrder];
+    newAccordionOrder[index].invert = !newAccordionOrder[index].invert;
+    setAccordionOrder(newAccordionOrder);
+  };
 
   useEffect(() => {
-    store.setConfig('sorting', accordionOrder)
-  }, [accordionOrder])
+    store.setConfig("sorting", accordionOrder);
+  }, [accordionOrder]);
 
-  const translatedValues = translatedAttributes(t)
+  const translatedValues = translatedAttributes(t);
 
   return (
     <div id="Sorting">
@@ -69,13 +74,15 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
               if (settings[settingValue.dependsOn[i]]) return null;
             }
           }
-          return settingValue.style === 'toggle' ? (
+          return settingValue.style === "toggle" ? (
             <FormControlLabel
               key={settingName}
               control={
                 <Switch
                   checked={settings[settingName as keyof Settings]}
-                  onChange={(event) => store.setConfig(settingName, event.target.checked)}
+                  onChange={(event) =>
+                    store.setConfig(settingName, event.target.checked)
+                  }
                   name={settingName}
                 />
               }
@@ -91,7 +98,7 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
               <IconButton
                 edge="end"
                 aria-label="up"
-                onClick={() => moveItem(index, 'up')}
+                onClick={() => moveItem(index, "up")}
                 disabled={index === 0}
               >
                 <ArrowUpwardIcon />
@@ -99,7 +106,7 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
               <IconButton
                 edge="end"
                 aria-label="down"
-                onClick={() => moveItem(index, 'down')}
+                onClick={() => moveItem(index, "down")}
                 disabled={index === accordionOrder.length - 1}
               >
                 <ArrowDownwardIcon />
@@ -110,7 +117,9 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
               <button
                 onClick={() => toggleInvert(index)}
                 data-testid={`drawer-sorting-draggable-list-item-${item.value}-invert`}
-                aria-label={item.invert ? 'Descending order' : 'Ascending order'}
+                aria-label={
+                  item.invert ? "Descending order" : "Ascending order"
+                }
               >
                 {!item.invert ? <SortIcon className="invert" /> : <SortIcon />}
               </button>
@@ -119,7 +128,7 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({ setting
         </List>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default withTranslation()(DrawerSortingComponent)
+export default withTranslation()(DrawerSortingComponent);

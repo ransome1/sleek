@@ -1,253 +1,264 @@
-import { app, BrowserWindow, nativeImage } from 'electron'
-import { fileURLToPath } from 'url'
-import fs from 'fs'
-import { SettingsStore } from './Stores.js'
-import { CreateMenu } from './Menu.js'
-import { createFileWatcher, watcher } from './File/Watcher'
-import { addFile } from './File/File'
-import { CreateTray } from './Tray'
-import macIcon from '../../resources/icon.icns?asset'
-import windowsIcon from '../../resources/icon.ico?asset'
-import linuxIcon from '../../resources/icon.png?asset'
-import { HandleTheme } from './Theme.js'
-import './IpcMain.js'
+import { app, BrowserWindow, nativeImage } from "electron";
+import { fileURLToPath } from "url";
+import fs from "fs";
+import { SettingsStore } from "./Stores.js";
+import { CreateMenu } from "./Menu.js";
+import { createFileWatcher, watcher } from "./File/Watcher";
+import { addFile } from "./File/File";
+import { CreateTray } from "./Tray";
+import macIcon from "../../resources/icon.icns?asset";
+import windowsIcon from "../../resources/icon.ico?asset";
+import linuxIcon from "../../resources/icon.png?asset";
+import { HandleTheme } from "./Theme.js";
+import "./IpcMain.js";
 
-let startTime
-const environment: string | undefined = process.env.NODE_ENV
-let mainWindow: BrowserWindow | null = null
-const eventListeners: Record<string, any | undefined> = {}
-let resizeTimeout: NodeJS.Timeout | undefined
-const gotTheLock = app.requestSingleInstanceLock()
+let startTime;
+const environment: string | undefined = process.env.NODE_ENV;
+let mainWindow: BrowserWindow | null = null;
+const eventListeners: Record<string, any | undefined> = {};
+let resizeTimeout: NodeJS.Timeout | undefined;
+const gotTheLock = app.requestSingleInstanceLock();
 
 const HandleCreateWindow = () => {
-  const wins = BrowserWindow.getAllWindows()
+  const wins = BrowserWindow.getAllWindows();
   if (wins.length === 0) {
-    createMainWindow()
+    createMainWindow();
   } else {
-    wins[0].focus()
+    wins[0].focus();
   }
-}
+};
 
 const handleClosed = async () => {
-  if (watcher) await watcher.close()
-  mainWindow = null
-  eventListeners.handleClosed = undefined
-  eventListeners.handleResize = undefined
-  eventListeners.handleMove = undefined
-  eventListeners.handleShow = undefined
-  eventListeners.handleMaximize = undefined
-  eventListeners.handleUnmaximize = undefined
-  eventListeners.HandleCreateWindow = undefined
-  eventListeners.handleWindowAllClosed = undefined
-  eventListeners.handleWillQuit = undefined
-  eventListeners.handleBeforeQuit = undefined
-  eventListeners.watcher = undefined
-}
+  if (watcher) await watcher.close();
+  mainWindow = null;
+  eventListeners.handleClosed = undefined;
+  eventListeners.handleResize = undefined;
+  eventListeners.handleMove = undefined;
+  eventListeners.handleShow = undefined;
+  eventListeners.handleMaximize = undefined;
+  eventListeners.handleUnmaximize = undefined;
+  eventListeners.HandleCreateWindow = undefined;
+  eventListeners.handleWindowAllClosed = undefined;
+  eventListeners.handleWillQuit = undefined;
+  eventListeners.handleBeforeQuit = undefined;
+  eventListeners.watcher = undefined;
+};
 
 const handleResize = () => {
-  clearTimeout(resizeTimeout)
+  clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    const rectangle = mainWindow?.getBounds() as WindowRectangle
-    const width = rectangle.width
-    const height = rectangle.height
-    SettingsStore.set('windowDimensions', { width, height })
-    SettingsStore.set('windowMaximized', false)
-  }, 500)
-}
+    const rectangle = mainWindow?.getBounds() as WindowRectangle;
+    const width = rectangle.width;
+    const height = rectangle.height;
+    SettingsStore.set("windowDimensions", { width, height });
+    SettingsStore.set("windowMaximized", false);
+  }, 500);
+};
 
 const handleMove = () => {
-  clearTimeout(resizeTimeout)
+  clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    const rectangle = mainWindow?.getBounds() as WindowRectangle
-    const x = rectangle.x
-    const y = rectangle.y
-    SettingsStore.set('windowPosition', { x, y })
-    SettingsStore.set('windowMaximized', false)
-  }, 500)
-}
+    const rectangle = mainWindow?.getBounds() as WindowRectangle;
+    const x = rectangle.x;
+    const y = rectangle.y;
+    SettingsStore.set("windowPosition", { x, y });
+    SettingsStore.set("windowMaximized", false);
+  }, 500);
+};
 
 const handleUnmaximize = () => {
-  clearTimeout(resizeTimeout)
+  clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    SettingsStore.set('windowMaximized', false)
-  }, 500)
-}
+    SettingsStore.set("windowMaximized", false);
+  }, 500);
+};
 
 const handleMaximize = () => {
-  clearTimeout(resizeTimeout)
+  clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    SettingsStore.set('windowMaximized', true)
-  }, 500)
-}
+    SettingsStore.set("windowMaximized", true);
+  }, 500);
+};
 
 const handleShow = () => {
-  app.dock?.show()
-}
+  app.dock?.show();
+};
 
 const handleWindowSizeAndPosition = () => {
-  const isMaximized = SettingsStore.get('windowMaximized')
+  const isMaximized = SettingsStore.get("windowMaximized");
   if (isMaximized) {
-    mainWindow?.maximize()
-    return
+    mainWindow?.maximize();
+    return;
   }
 
-  const windowDimensions: { width: number; height: number } | null = SettingsStore.get('windowDimensions') as { width: number; height: number } | null
+  const windowDimensions: { width: number; height: number } | null =
+    SettingsStore.get("windowDimensions") as {
+      width: number;
+      height: number;
+    } | null;
 
   if (windowDimensions) {
-    const { width, height } = windowDimensions
-    mainWindow?.setSize(width, height)
+    const { width, height } = windowDimensions;
+    mainWindow?.setSize(width, height);
 
-    const windowPosition: { x: number; y: number } | null = SettingsStore.get('windowPosition') as {
-      x: number
-      y: number
-    } | null
+    const windowPosition: { x: number; y: number } | null = SettingsStore.get(
+      "windowPosition",
+    ) as {
+      x: number;
+      y: number;
+    } | null;
     if (windowPosition) {
-      const { x, y } = windowPosition
-      mainWindow?.setPosition(x, y)
+      const { x, y } = windowPosition;
+      mainWindow?.setPosition(x, y);
     }
   }
-}
+};
 
 const createMainWindow = () => {
-  const shouldUseDarkColors: boolean = SettingsStore.get('shouldUseDarkColors')
-  const shouldShowMenubar: boolean = SettingsStore.get('menuBarVisibility')
+  const shouldUseDarkColors: boolean = SettingsStore.get("shouldUseDarkColors");
+  const shouldShowMenubar: boolean = SettingsStore.get("menuBarVisibility");
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 1000,
     show: false,
-    backgroundColor: shouldUseDarkColors ? '#212224' : '#fff',
+    backgroundColor: shouldUseDarkColors ? "#212224" : "#fff",
     autoHideMenuBar: !shouldShowMenubar,
     icon:
-      process.platform === 'win32'
+      process.platform === "win32"
         ? nativeImage.createFromPath(windowsIcon)
-        : process.platform === 'darwin'
+        : process.platform === "darwin"
           ? nativeImage.createFromPath(macIcon)
           : nativeImage.createFromPath(linuxIcon),
     webPreferences: {
       spellcheck: false,
       contextIsolation: true,
       nodeIntegration: false,
-      preload: fileURLToPath(new URL('../preload/index.mjs', import.meta.url)),
-      sandbox: false
-    }
-  })
+      preload: fileURLToPath(new URL("../preload/index.mjs", import.meta.url)),
+      sandbox: false,
+    },
+  });
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.setMenuBarVisibility(shouldShowMenubar)
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.setMenuBarVisibility(shouldShowMenubar);
     mainWindow.show();
-    const endTime = performance.now()
-    console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`)
-  })
+    const endTime = performance.now();
+    console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`);
+  });
 
   mainWindow
-    .on('resize', handleResize)
-    .on('move', handleMove)
-    .on('show', handleShow)
-    .on('closed', handleClosed)
-    .on('maximize', handleMaximize)
-    .on('unmaximize', handleUnmaximize)
+    .on("resize", handleResize)
+    .on("move", handleMove)
+    .on("show", handleShow)
+    .on("closed", handleClosed)
+    .on("maximize", handleMaximize)
+    .on("unmaximize", handleUnmaximize);
 
-  if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  if (!app.isPackaged && process.env["ELECTRON_RENDERER_URL"]) {
+    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
   } else {
-    mainWindow.loadFile(fileURLToPath(new URL('../renderer/index.html', import.meta.url)))
+    mainWindow.loadFile(
+      fileURLToPath(new URL("../renderer/index.html", import.meta.url)),
+    );
   }
 
-  const files: FileObject[] = (SettingsStore.get('files') as FileObject[]) || []
+  const files: FileObject[] =
+    (SettingsStore.get("files") as FileObject[]) || [];
   if (files) {
-    createFileWatcher(files)
+    createFileWatcher(files);
   }
 
-  CreateMenu(files)
+  CreateMenu(files);
 
-  handleWindowSizeAndPosition()
+  handleWindowSizeAndPosition();
 
-  const colorTheme: string = SettingsStore.get('colorTheme')
+  const colorTheme: string = SettingsStore.get("colorTheme");
   HandleTheme(colorTheme);
 
-  eventListeners.handleClosed = handleClosed
-  eventListeners.handleResize = handleResize
-  eventListeners.handleMove = handleMove
-  eventListeners.handleShow = handleShow
-  eventListeners.handleMaximize = handleMaximize
-  eventListeners.handleUnmaximize = handleUnmaximize
+  eventListeners.handleClosed = handleClosed;
+  eventListeners.handleResize = handleResize;
+  eventListeners.handleMove = handleMove;
+  eventListeners.handleShow = handleShow;
+  eventListeners.handleMaximize = handleMaximize;
+  eventListeners.handleUnmaximize = handleUnmaximize;
 
-  const customStylesPath: string = SettingsStore.get('customStylesPath')
+  const customStylesPath: string = SettingsStore.get("customStylesPath");
   if (customStylesPath) {
-    fs.readFile(customStylesPath, 'utf8', (error: Error | null, data) => {
+    fs.readFile(customStylesPath, "utf8", (error: Error | null, data) => {
       if (!error) {
-        mainWindow?.webContents.insertCSS(data)
-        console.error('Styles injected found in CSS file:', customStylesPath)
+        mainWindow?.webContents.insertCSS(data);
+        console.error("Styles injected found in CSS file:", customStylesPath);
       } else {
-        console.error('Could not read custom CSS file. More info: https://github.com/ransome1/sleek/wiki/Custom-CSS')
+        console.error(
+          "Could not read custom CSS file. More info: https://github.com/ransome1/sleek/wiki/Custom-CSS",
+        );
       }
-    })
+    });
   }
 
-  if (environment === 'development') {
-    mainWindow.webContents.openDevTools()
+  if (environment === "development") {
+    mainWindow.webContents.openDevTools();
   }
-}
+};
 
 const handleWindowAllClosed = () => {
-  const tray = SettingsStore.get('tray')
-  if (process.platform !== 'darwin' && !tray) {
-    app.quit()
-  } else if (process.platform === 'darwin' && tray) {
-    app.dock?.hide()
+  const tray = SettingsStore.get("tray");
+  if (process.platform !== "darwin" && !tray) {
+    app.quit();
+  } else if (process.platform === "darwin" && tray) {
+    app.dock?.hide();
   } else {
-    mainWindow?.hide()
+    mainWindow?.hide();
   }
-}
+};
 
 const handleBeforeQuit = () => {
-  app.releaseSingleInstanceLock()
-}
+  app.releaseSingleInstanceLock();
+};
 
 const handleOpenFile = (path) => {
   try {
-    if (path) addFile(path, null)
+    if (path) addFile(path, null);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 if (!gotTheLock) {
   app.quit();
 } else {
   app
-    .on('second-instance', () => {
-      if(mainWindow) {
-        mainWindow.show()
+    .on("second-instance", () => {
+      if (mainWindow) {
+        mainWindow.show();
       }
     })
-    .on('window-all-closed', handleWindowAllClosed)
-    .on('before-quit', handleBeforeQuit)
-    .on('activate', HandleCreateWindow)
-    .on('open-file', (event, path) => {
+    .on("window-all-closed", handleWindowAllClosed)
+    .on("before-quit", handleBeforeQuit)
+    .on("activate", HandleCreateWindow)
+    .on("open-file", (event, path) => {
       event.preventDefault();
-        setTimeout(() => {
-          handleOpenFile(path);
-        }, 1000);
+      setTimeout(() => {
+        handleOpenFile(path);
+      }, 1000);
     });
 
   app
     .whenReady()
     .then(() => {
-      startTime = performance.now()
-      const tray = SettingsStore.get('tray');
-      const startMinimized = SettingsStore.get('startMinimized');
-      if(tray) CreateTray()
-      if(tray && startMinimized) {
-        app.dock?.hide()
+      startTime = performance.now();
+      const tray = SettingsStore.get("tray");
+      const startMinimized = SettingsStore.get("startMinimized");
+      if (tray) CreateTray();
+      if (tray && startMinimized) {
+        app.dock?.hide();
       } else {
-        createMainWindow()
+        createMainWindow();
       }
-      eventListeners.HandleCreateWindow = HandleCreateWindow
-      eventListeners.handleWindowAllClosed = handleWindowAllClosed
-      eventListeners.handleBeforeQuit = handleBeforeQuit
-      eventListeners.handleOpenFile = handleOpenFile
+      eventListeners.HandleCreateWindow = HandleCreateWindow;
+      eventListeners.handleWindowAllClosed = handleWindowAllClosed;
+      eventListeners.handleBeforeQuit = handleBeforeQuit;
+      eventListeners.handleOpenFile = handleOpenFile;
     })
-    .catch(console.error)
+    .catch(console.error);
 }
-export { mainWindow, HandleCreateWindow, eventListeners }
+export { mainWindow, HandleCreateWindow, eventListeners };

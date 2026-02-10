@@ -1,24 +1,24 @@
-import React, { memo } from 'react'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import './ContextMenu.scss'
+import React, { memo } from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import "./ContextMenu.scss";
 
 interface ContextMenuComponentProps {
-  contextMenu: ContextMenu
-  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
+  contextMenu: ContextMenu;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
 const ContextMenuComponent: React.FC<ContextMenuComponentProps> = memo(
   ({ contextMenu, setContextMenu, setPromptItem }) => {
     const onClick = (contextMenuItem: ContextMenuItem): void => {
       if (contextMenuItem.promptItem) {
-        setPromptItem(contextMenuItem.promptItem)
+        setPromptItem(contextMenuItem.promptItem);
       } else if (contextMenuItem.function) {
-        contextMenuItem.function()
-        setContextMenu(null)
+        contextMenuItem.function();
+        setContextMenu(null);
       }
-    }
+    };
 
     return (
       <Menu
@@ -26,7 +26,10 @@ const ContextMenuComponent: React.FC<ContextMenuComponentProps> = memo(
         open={Boolean(contextMenu)}
         onClose={() => setContextMenu(null)}
         anchorReference="anchorPosition"
-        anchorPosition={{ top: contextMenu.event.clientY, left: contextMenu.event.clientX }}
+        anchorPosition={{
+          top: contextMenu.event.clientY,
+          left: contextMenu.event.clientX,
+        }}
       >
         {contextMenu &&
           contextMenu.items.map((contextMenuItem: ContextMenuItem) => (
@@ -39,10 +42,10 @@ const ContextMenuComponent: React.FC<ContextMenuComponentProps> = memo(
             </MenuItem>
           ))}
       </Menu>
-    )
-  }
-)
+    );
+  },
+);
 
-ContextMenuComponent.displayName = 'ContextMenuComponent'
+ContextMenuComponent.displayName = "ContextMenuComponent";
 
-export default ContextMenuComponent
+export default ContextMenuComponent;

@@ -1,15 +1,17 @@
 # Contributing to sleek
+
 ## 👩🏾‍💻 Become a contributer
+
 We're actively inviting passionate contributors skilled in `React`, `TypeScript`, `Electron`, and `vitest` to join our collaborative effort. [Here you'll find our roadmap](https://github.com/users/ransome1/projects/3).
 
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
 2. [Contributing](#contributing)
-    - [Reporting Issues](#reporting-issues)
-    - [Feature Requests](#feature-requests)
-    - [Pull Requests](#pull-requests)
-    - [GitHub Issue Backlog](#github-issue-backlog)
+   - [Reporting Issues](#reporting-issues)
+   - [Feature Requests](#feature-requests)
+   - [Pull Requests](#pull-requests)
+   - [GitHub Issue Backlog](#github-issue-backlog)
 3. [Development Setup](#development-setup)
 4. [Testing](#testing)
 5. [Coding Guidelines](#coding-guidelines)
@@ -93,6 +95,7 @@ When making commits, please follow these guidelines:
 - Inform the maintainer if you've integrated dependencies that require acknowledgment.
 
 Example:
+
 ```
 Add new feature
 

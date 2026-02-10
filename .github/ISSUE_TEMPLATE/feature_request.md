@@ -1,8 +1,8 @@
 ---
 name: Feature request
 about: Suggest a feature for sleek
-title: ''
-labels: 'feature request'
+title: ""
+labels: "feature request"
 ---
 
 ## Feature Request

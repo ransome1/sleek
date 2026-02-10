@@ -1,14 +1,14 @@
-import { SettingsStore } from '../Stores';
+import { SettingsStore } from "../Stores";
 
 const compareValues = (a: any, b: any, invert: boolean): number => {
   if (a === b) return 0;
   if (a === null || a === undefined) return 1;
   if (b === null || b === undefined) return -1;
 
-  const numA = typeof a === 'string' && !isNaN(Number(a)) ? Number(a) : a;
-  const numB = typeof b === 'string' && !isNaN(Number(b)) ? Number(b) : b;
+  const numA = typeof a === "string" && !isNaN(Number(a)) ? Number(a) : a;
+  const numB = typeof b === "string" && !isNaN(Number(b)) ? Number(b) : b;
 
-  if (typeof numA === 'number' && typeof numB === 'number') {
+  if (typeof numA === "number" && typeof numB === "number") {
     return invert ? numB - numA : numA - numB;
   }
 
@@ -18,8 +18,12 @@ const compareValues = (a: any, b: any, invert: boolean): number => {
   return invert ? strB.localeCompare(strA) : strA.localeCompare(strB);
 };
 
-const sortTodoObjects = (a: TodoObject, b: TodoObject, sorting: Sorting[]): number => {
-  const sortCompletedLast = SettingsStore.get('sortCompletedLast');
+const sortTodoObjects = (
+  a: TodoObject,
+  b: TodoObject,
+  sorting: Sorting[],
+): number => {
+  const sortCompletedLast = SettingsStore.get("sortCompletedLast");
 
   if (sortCompletedLast) {
     if (a.complete && !b.complete) return 1;

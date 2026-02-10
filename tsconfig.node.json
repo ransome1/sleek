@@ -6,7 +6,8 @@
     "src/main/**/*.ts",
     "src/preload/**/*",
     "resources/icon.icns",
-    "resources/*.icns*", "src/preload/electron.d.ts",
+    "resources/*.icns*",
+    "src/preload/electron.d.ts"
   ],
   "compilerOptions": {
     "types": ["electron-vite/node", "vitest/globals"],

@@ -1,4 +1,4 @@
-@use 'Variables.scss';
+@use "Variables.scss";
 
 .hideNavigation #navigation li.showNavigation {
   width: 2.5em;
@@ -76,7 +76,7 @@
         width: inherit;
         display: inherit;
       }
-    }    
+    }
   }
 }
 
@@ -93,21 +93,21 @@
     }
   }
   #root {
-   .flexContainer {    
-     margin-left: 3em;
-     &.hideNavigation {
-       #navigation {
-         left: -3em;
-       }
-     }   
-   }
+    .flexContainer {
+      margin-left: 3em;
+      &.hideNavigation {
+        #navigation {
+          left: -3em;
+        }
+      }
+    }
   }
   .hideNavigation #navigation li.showNavigation {
     width: 2em;
     &:hover {
       width: 3em;
     }
-  }  
+  }
 }
 
 .dark {
@@ -127,7 +127,7 @@
       &.showNavigation {
         background: Variables.$darker-grey;
         &:hover {
-          background: inherit;  
+          background: inherit;
         }
       }
     }

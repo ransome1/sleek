@@ -1,7 +1,7 @@
 /// <reference types="vitest/config" />
-import { defineConfig, UserConfig } from 'vite'
-import { resolve } from 'path'
-import react from '@vitejs/plugin-react'
+import { defineConfig, UserConfig } from "vite";
+import { resolve } from "path";
+import react from "@vitejs/plugin-react";
 
 export const config = {
   main: {},
@@ -9,17 +9,17 @@ export const config = {
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/')
-      }
+        "@renderer": resolve("src/renderer/"),
+      },
     },
-    plugins: [react()]
+    plugins: [react()],
   },
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: ["src/setupTests.ts"]
+    setupFiles: ["src/setupTests.ts"],
   },
-  plugins: [react()]  
-} satisfies UserConfig
+  plugins: [react()],
+} satisfies UserConfig;
 
 export default defineConfig(config);

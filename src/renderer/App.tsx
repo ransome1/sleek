@@ -1,65 +1,69 @@
-import { useEffect, useState, useRef, JSX } from 'react'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import IpcComponent from './IpcRenderer'
-import MatomoComponent from './Matomo'
-import CssBaseline from '@mui/material/CssBaseline'
-import Snackbar from '@mui/material/Snackbar'
-import Alert, { AlertColor } from '@mui/material/Alert'
-import NavigationComponent from './Navigation'
-import GridComponent from './Grid/Grid'
-import SplashScreen from './SplashScreen'
-import FileTabs from './Header/FileTabs'
-import { dark, light } from './Themes'
-import DrawerComponent from './Drawer/Drawer'
-import SearchComponent from './Header/Search/Search'
-import DialogComponent from './Dialog/Dialog'
-import Archive from './Archive'
-import HeaderComponent from './Header/Header'
-import ContextMenu from './ContextMenu'
-import { I18nextProvider } from 'react-i18next'
-import { i18n } from './Settings/LanguageSelector'
-import Settings from './Settings/Settings'
-import Prompt, { PromptItem } from './Prompt'
-import './App.scss'
-import './Buttons.scss'
-import './Form.scss'
+import { useEffect, useState, useRef, JSX } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import IpcComponent from "./IpcRenderer";
+import MatomoComponent from "./Matomo";
+import CssBaseline from "@mui/material/CssBaseline";
+import Snackbar from "@mui/material/Snackbar";
+import Alert, { AlertColor } from "@mui/material/Alert";
+import NavigationComponent from "./Navigation";
+import GridComponent from "./Grid/Grid";
+import SplashScreen from "./SplashScreen";
+import FileTabs from "./Header/FileTabs";
+import { dark, light } from "./Themes";
+import DrawerComponent from "./Drawer/Drawer";
+import SearchComponent from "./Header/Search/Search";
+import DialogComponent from "./Dialog/Dialog";
+import Archive from "./Archive";
+import HeaderComponent from "./Header/Header";
+import ContextMenu from "./ContextMenu";
+import { I18nextProvider } from "react-i18next";
+import { i18n } from "./Settings/LanguageSelector";
+import Settings from "./Settings/Settings";
+import Prompt, { PromptItem } from "./Prompt";
+import "./App.scss";
+import "./Buttons.scss";
+import "./Form.scss";
 
-const { store, ipcRenderer } = window.api
+const { store, ipcRenderer } = window.api;
 
 const App = (): JSX.Element => {
-  const [settings, setSettings] = useState<Settings>(store.getConfig())
-  const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false)
-  const [snackBarContent, setSnackBarContent] = useState<string | null>(null)
-  const [snackBarSeverity, setSnackBarSeverity] = useState<AlertColor | undefined>()
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-  const [searchString, setSearchString] = useState<string | null>(null)
-  const [todoData, setTodoData] = useState<TodoData | null>(null)
-  const [todoObject, setTodoObject] = useState<TodoObject | null>(null)
-  const [attributeFields, setAttributeFields] = useState<TodoObject | null>(null)
-  const [headers, setHeaders] = useState<HeadersObject | null>(null)
-  const [filters, setFilters] = useState<Filters | null>([])
-  const [attributes, setAttributes] = useState<Attributes | null>(null)
-  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false)
-  const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null)
-  const [promptItem, setPromptItem] = useState<PromptItem | null>(null)
-  const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false)
+  const [settings, setSettings] = useState<Settings>(store.getConfig());
+  const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
+  const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
+  const [snackBarSeverity, setSnackBarSeverity] = useState<
+    AlertColor | undefined
+  >();
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [searchString, setSearchString] = useState<string | null>(null);
+  const [todoData, setTodoData] = useState<TodoData | null>(null);
+  const [todoObject, setTodoObject] = useState<TodoObject | null>(null);
+  const [attributeFields, setAttributeFields] = useState<TodoObject | null>(
+    null,
+  );
+  const [headers, setHeaders] = useState<HeadersObject | null>(null);
+  const [filters, setFilters] = useState<Filters | null>([]);
+  const [attributes, setAttributes] = useState<Attributes | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null);
+  const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
+  const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
   const [theme, setTheme] = useState(
     createTheme({
       ...(settings?.shouldUseDarkColors ? dark : light),
-        typography: {
-          fontSize: Math.round(14 * (settings.zoom / 100)),
-        },
-      })
+      typography: {
+        fontSize: Math.round(14 * (settings.zoom / 100)),
+      },
+    }),
   );
-  const searchFieldRef = useRef<HTMLInputElement>(null)
+  const searchFieldRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setSnackBarOpen(Boolean(snackBarContent))
-  }, [snackBarContent])
+    setSnackBarOpen(Boolean(snackBarContent));
+  }, [snackBarContent]);
 
   useEffect(() => {
-    ipcRenderer.send('requestData')
-  }, [])
+    ipcRenderer.send("requestData");
+  }, []);
 
   return (
     <>
@@ -80,7 +84,7 @@ const App = (): JSX.Element => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <div
-            className={`flexContainer ${settings?.isNavigationOpen ? '' : 'hideNavigation'}`}
+            className={`flexContainer ${settings?.isNavigationOpen ? "" : "hideNavigation"}`}
           >
             <NavigationComponent
               setDialogOpen={setDialogOpen}
@@ -101,7 +105,10 @@ const App = (): JSX.Element => {
               {settings.files?.length > 0 && (
                 <>
                   {settings.showFileTabs ? (
-                    <FileTabs settings={settings} setContextMenu={setContextMenu} />
+                    <FileTabs
+                      settings={settings}
+                      setContextMenu={setContextMenu}
+                    />
                   ) : null}
                   {headers && headers.availableObjects > 0 ? (
                     <>
@@ -113,7 +120,10 @@ const App = (): JSX.Element => {
                         searchFieldRef={searchFieldRef}
                         setPromptItem={setPromptItem}
                       />
-                      <HeaderComponent settings={settings} searchFieldRef={searchFieldRef} />
+                      <HeaderComponent
+                        settings={settings}
+                        searchFieldRef={searchFieldRef}
+                      />
                     </>
                   ) : null}
                 </>
@@ -175,7 +185,10 @@ const App = (): JSX.Element => {
             onClose={() => setSnackBarContent(null)}
             autoHideDuration={3000}
           >
-            <Alert severity={snackBarSeverity} data-testid={`snackbar-${snackBarSeverity}`}>
+            <Alert
+              severity={snackBarSeverity}
+              data-testid={`snackbar-${snackBarSeverity}`}
+            >
               {snackBarContent}
             </Alert>
           </Snackbar>
@@ -200,7 +213,7 @@ const App = (): JSX.Element => {
         </ThemeProvider>
       </I18nextProvider>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

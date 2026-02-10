@@ -1,4 +1,4 @@
-@use '../Variables.scss';
+@use "../Variables.scss";
 
 .MuiDrawer-root {
   height: 100vh;
@@ -31,7 +31,7 @@
       .MuiTabs-indicator {
         top: 0;
         height: 0.2em;
-      }      
+      }
     }
   }
   .drawerHandle {
@@ -54,7 +54,7 @@
 .compact {
   #drawer {
     #Attributes {
-      .filter:not([data-todotxt-attribute='priority']) button {
+      .filter:not([data-todotxt-attribute="priority"]) button {
         padding: 0.4em;
       }
     }
