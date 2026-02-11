@@ -45,10 +45,11 @@ We welcome pull requests for bug fixes, enhancements, or new features. To contri
 2. Make your changes in the new branch, adhering to the [coding guidelines](#coding-guidelines).
 3. Write tests using [vitest](https://vitest.dev/guide/) to cover your changes.
 4. Ensure that your code and tests pass by running `npm run test`.
-5. Commit your changes using [proper commit guidelines](#commit-guidelines).
-6. Push your branch to your forked repository.
-7. Open a pull request against the main repository's `main` branch.
-8. Provide a clear description of your changes and the problem they solve.
+5. Run `npm run format` to check that your changes adhere to our formatting style. Use `npm run format:write` to automatically format all files.
+6. Commit your changes using [proper commit guidelines](#commit-guidelines).
+7. Push your branch to your forked repository.
+8. Open a pull request against the main repository's `main` branch.
+9. Provide a clear description of your changes and the problem they solve.
 
 We will review your pull request as soon as possible. Your contributions are greatly appreciated!
 

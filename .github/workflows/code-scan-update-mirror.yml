@@ -51,7 +51,7 @@ jobs:
         uses: github/codeql-action/analyze@v4
   codecov:
     needs: codeql
-    name: Run unit tests
+    name: Run tests and formatting
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -66,8 +66,10 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+      - name: Check formatting
+        run: npm run format
       - name: Run unit tests
-        run: npm test
+        run: npm run coverage
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         env:
