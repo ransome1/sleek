@@ -5,10 +5,11 @@ import { SettingsStore } from "../Stores";
 import { HandleError, userDataDirectory } from "../Shared";
 import { CreateMenu } from "../Menu";
 import { mainWindow, eventListeners } from "../index";
+import { File } from "../../Types";
 
 let watcher: FSWatcher | null = null;
 
-function createFileWatcher(files: FileObject[]): void {
+function createFileWatcher(files: File[]): void {
   if (watcher) {
     watcher?.close();
     console.log(`Destroyed old file watcher`);

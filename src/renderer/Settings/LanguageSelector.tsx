@@ -3,7 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import i18n from "i18next";
+import i18n, { InitOptions } from "i18next";
 import { initReactI18next } from "react-i18next";
 import de from "../../locales/de.json";
 import en from "../../locales/en.json";
@@ -36,10 +36,11 @@ import "dayjs/locale/pl";
 import "dayjs/locale/ru";
 import "dayjs/locale/ko";
 import "dayjs/locale/hi";
+import { SettingStore } from "src/Types";
 
 const { store } = window.api;
 
-const options: i18n.InitOptions = {
+const options: InitOptions = {
   resources: {
     de: { translation: de },
     en: { translation: en },
@@ -118,7 +119,7 @@ const friendlyLanguageName: Record<string, string> = {
 };
 
 interface LanguageSelectorComponentProps {
-  settings: Settings;
+  settings: SettingStore;
 }
 
 const LanguageSelectorComponent: React.FC<LanguageSelectorComponentProps> = ({

@@ -8,11 +8,12 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { handleReset, handleLinkClick } from "./Shared";
 import "./SplashScreen.scss";
 import { i18n } from "./Settings/LanguageSelector";
+import { HeadersObject, SettingStore } from "src/Types";
 
 interface SplashScreenComponentProps extends WithTranslation {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  headers: HeadersObject | null;
-  settings: Settings;
+  headers: HeadersObject;
+  settings: SettingStore;
   t: typeof i18n.t;
 }
 
@@ -42,7 +43,6 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
               <p>{t("splashscreen.noTodosVisible.text")}</p>
               <div className="buttons">
                 <button
-                  variant="contained"
                   onClick={handleReset}
                   data-testid={`splashscreen-button-reset-filters`}
                 >
@@ -57,7 +57,6 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
             <p>{t("splashscreen.noTodosAvailable.text")}</p>
             <div className="buttons">
               <button
-                variant="contained"
                 onClick={handleCreateTodo}
                 data-testid={`splashscreen-button-create-todo`}
               >
@@ -84,14 +83,12 @@ const SplashScreenComponent: FC<SplashScreenComponentProps> = memo(
             </p>
             <div className="buttons">
               <button
-                variant="contained"
                 onClick={handleOpenFile}
                 data-testid={`splashscreen-button-open-file`}
               >
                 {t("openFile")}
               </button>
               <button
-                variant="contained"
                 onClick={handleCreateFile}
                 data-testid={`splashscreen-button-create-file`}
               >

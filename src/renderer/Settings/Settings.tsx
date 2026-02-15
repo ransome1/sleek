@@ -1,5 +1,5 @@
 import React, { useEffect, memo } from "react";
-import { createTheme } from "@mui/material/styles";
+import { createTheme, Theme } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import Badge from "@mui/material/Badge";
 import FormControl from "@mui/material/FormControl";
@@ -19,8 +19,22 @@ import LanguageSelector, { i18n } from "./LanguageSelector";
 import { handleLinkClick } from "../Shared";
 import { dark, light } from "../Themes";
 import "./Settings.scss";
+import { SettingStore } from "src/Types";
 
 const { store } = window.api;
+
+interface VisibleSettings {
+  [k: string]: {
+    style: "toggle" | "slider" | "select";
+    help?: string;
+    dependsOn?: string[];
+    min?: number;
+    max?: number;
+    unit?: string;
+    step?: number;
+    values?: (string|number)[];
+  }
+}
 
 const visibleSettings: VisibleSettings = {
   appendCreationDate: {
@@ -92,10 +106,10 @@ const visibleSettings: VisibleSettings = {
 interface SettingsComponentProps extends WithTranslation {
   isOpen: boolean;
   onClose: () => void;
-  settings: Settings;
-  setIsSettingsOpen: React.Dispatch<React.SetStateAction<string>>;
-  setTheme: React.Dispatch<React.SetStateAction<string>>;
-  setTodoData: React.Dispatch<React.SetStateAction<string>>;
+  settings: SettingStore;
+  setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setTodoData: React.Dispatch<React.SetStateAction<string|null>>;
   t: typeof i18n.t;
 }
 
@@ -185,7 +199,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                   control={
                     <Switch
                       data-testid={`setting-toggle-${settingName}`}
-                      checked={settings[settingName as keyof Settings]}
+                      checked={settings[settingName as keyof SettingStore] as boolean}
                       onChange={(event) =>
                         store.setConfig(settingName, event.target.checked)
                       }
@@ -198,7 +212,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                         {t(`settings.${settingName}`)}
                         <Link
                           onClick={(event) =>
-                            handleLinkClick(event, settingValue.help)
+                            handleLinkClick(event, settingValue.help!)
                           }
                         >
                           <HelpIcon />
@@ -217,7 +231,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                       badgeContent={
                         <Link
                           onClick={(event) =>
-                            handleLinkClick(event, settingValue.help)
+                            handleLinkClick(event, settingValue.help!)
                           }
                         >
                           <HelpIcon />
@@ -230,7 +244,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                     data-testid={`setting-select-${settingName}`}
                     className={settingName}
                     label={t(`settings.${settingName}`)}
-                    value={settings[settingName as keyof Settings]}
+                    value={settings[settingName as keyof SettingStore]}
                     onChange={(event) =>
                       store.setConfig(settingName, event.target.value)
                     }
@@ -250,7 +264,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                       <>
                         <Link
                           onClick={(event) =>
-                            handleLinkClick(event, settingValue.help)
+                            handleLinkClick(event, settingValue.help!)
                           }
                         >
                           <HelpIcon />
@@ -261,7 +275,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                   <Slider
                     id={settingName}
                     data-testid={`setting-slider-${settingName}`}
-                    value={settings[settingName as keyof Settings]}
+                    value={settings[settingName as keyof SettingStore] as number}
                     step={settingValue.step}
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value: number): string =>
@@ -273,7 +287,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                           badgeContent={
                             <Link
                               onClick={(event) =>
-                                handleLinkClick(event, settingValue.help)
+                                handleLinkClick(event, settingValue.help!)
                               }
                             >
                               <HelpIcon />

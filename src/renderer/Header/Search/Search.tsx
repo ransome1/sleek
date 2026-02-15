@@ -6,8 +6,14 @@ import Autocomplete, {
 import OptionComponent from "./Option";
 import InputComponent from "./Input";
 import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
 import "./Search.scss";
+import {
+  HeadersObject,
+  PromptItem,
+  SearchFilter,
+  SettingStore,
+} from "src/Types";
+import { i18n } from "src/renderer/Settings/LanguageSelector";
 
 const { ipcRenderer, store } = window.api;
 
@@ -19,7 +25,7 @@ const handleAddNewFilter = (
 ): void => {
   event.stopPropagation();
   event.preventDefault();
-  const updatedFilters = [
+  const updatedFilters: SearchFilter[] = [
     { label: value, suppress: false },
     ...searchFilters.filter((searchFilter) => searchFilter.label !== value),
   ];
@@ -41,10 +47,10 @@ const getOptionLabel = (option: string | SearchFilter): string => {
 
 interface SearchComponentProps extends WithTranslation {
   headers: HeadersObject | null;
-  settings: Settings;
+  settings: SettingStore;
   searchString: string;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
-  searchFieldRef: React.RefObject<HTMLInputElement>;
+  searchFieldRef: React.RefObject<HTMLInputElement | null>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   t: typeof i18n.t;
 }
@@ -71,7 +77,7 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
         }
       };
 
-      const delayedSearch: NodeJS.Timeout = setTimeout(handleSearch, 200);
+      const delayedSearch = setTimeout(handleSearch, 200);
 
       return (): void => {
         clearTimeout(delayedSearch);

@@ -5,7 +5,8 @@
     "src/renderer/**/*",
     "src/renderer/**/*.tsx",
     "src/preload/*.d.ts",
-    "src/preload/electron.d.ts"
+    "src/preload/electron.d.ts",
+    "src/Types.d.ts"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

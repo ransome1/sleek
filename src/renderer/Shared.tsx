@@ -4,6 +4,8 @@ import duration from "dayjs/plugin/duration";
 import calendar from "dayjs/plugin/calendar";
 import weekday from "dayjs/plugin/weekday";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { Filter, Filters, FiltersKeys, SettingStore } from "src/Types";
+import { i18n } from "./Settings/LanguageSelector";
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(calendar);
@@ -11,11 +13,6 @@ dayjs.extend(weekday);
 dayjs.extend(updateLocale);
 
 const { store, ipcRenderer } = window.api;
-
-interface Filter {
-  value: string;
-  exclude: boolean;
-}
 
 interface Settings {
   language: string;
@@ -33,7 +30,7 @@ export function IsSelected(key, filters, value) {
   return false;
 }
 
-export function IsExcluded(attribute, filters) {
+export function IsExcluded(attribute, filters: Filters) {
   const attributeValues = attribute.value;
 
   for (const filterList of Object.values(filters)) {
@@ -53,15 +50,16 @@ export function IsExcluded(attribute, filters) {
 }
 
 export const HandleFilterSelect = (
-  key: string,
+  key: FiltersKeys,
   value: string,
-  filters: Filters[] | null,
+  filters: Filters | null,
   exclude: boolean,
   groupedName?: string,
 ): void => {
   try {
-    const updatedFilters = filters;
-    const filtersForKey = filters[key] || [];
+    const updatedFilters = filters || ({} as Filters);
+    const filtersForKey =
+      filters && filters[key] ? filters[key] : ([] as Filter[]);
     const matchIndex = filtersForKey.findIndex(
       (filter) => JSON.stringify(filter.value) === JSON.stringify(value),
     );
@@ -96,7 +94,7 @@ export const handleReset = (): void => {
   store.setFilters("attributes", {});
 };
 
-export const handleLinkClick = (event: MouseEvent, url: string): void => {
+export const handleLinkClick = (event: React.MouseEvent, url: string): void => {
   event.preventDefault();
   event.stopPropagation();
   if (url) {
@@ -123,7 +121,7 @@ export const translatedAttributes = (
 export const friendlyDate = (
   value: string,
   attributeKey: string,
-  settings: Settings,
+  settings: SettingStore,
   t: typeof i18n.t,
 ): string[] => {
   dayjs.updateLocale(settings.language, {

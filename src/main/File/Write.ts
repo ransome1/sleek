@@ -10,7 +10,7 @@ function writeToFile(string: string, filePath: string) {
 }
 
 function removeLineFromFile(lineNumber: number) {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
   } else if (lineNumber >= 0) {
@@ -20,7 +20,7 @@ function removeLineFromFile(lineNumber: number) {
 }
 
 function prepareContentForWriting(lineNumber: number, string: string) {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
   } else if (!string) {

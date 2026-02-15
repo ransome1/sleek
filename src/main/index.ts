@@ -11,11 +11,14 @@ import windowsIcon from "../../resources/icon.ico?asset";
 import linuxIcon from "../../resources/icon.png?asset";
 import { HandleTheme } from "./Theme.js";
 import "./IpcMain.js";
+import { FSWatcher } from "chokidar";
 
 let startTime;
 const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
-const eventListeners: Record<string, any | undefined> = {};
+const eventListeners: Record<string, EventListener | undefined> & {
+  watcher?: FSWatcher;
+} = {};
 let resizeTimeout: NodeJS.Timeout | undefined;
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -47,7 +50,8 @@ const handleClosed = async () => {
 const handleResize = () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    const rectangle = mainWindow?.getBounds() as WindowRectangle;
+    const rectangle = mainWindow?.getBounds();
+    if (!rectangle) return;
     const width = rectangle.width;
     const height = rectangle.height;
     SettingsStore.set("windowDimensions", { width, height });
@@ -58,7 +62,8 @@ const handleResize = () => {
 const handleMove = () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    const rectangle = mainWindow?.getBounds() as WindowRectangle;
+    const rectangle = mainWindow?.getBounds();
+    if (!rectangle) return;
     const x = rectangle.x;
     const y = rectangle.y;
     SettingsStore.set("windowPosition", { x, y });
@@ -91,22 +96,13 @@ const handleWindowSizeAndPosition = () => {
     return;
   }
 
-  const windowDimensions: { width: number; height: number } | null =
-    SettingsStore.get("windowDimensions") as {
-      width: number;
-      height: number;
-    } | null;
+  const windowDimensions = SettingsStore.get("windowDimensions");
 
   if (windowDimensions) {
     const { width, height } = windowDimensions;
     mainWindow?.setSize(width, height);
 
-    const windowPosition: { x: number; y: number } | null = SettingsStore.get(
-      "windowPosition",
-    ) as {
-      x: number;
-      y: number;
-    } | null;
+    const windowPosition = SettingsStore.get("windowPosition");
     if (windowPosition) {
       const { x, y } = windowPosition;
       mainWindow?.setPosition(x, y);
@@ -139,6 +135,7 @@ const createMainWindow = () => {
   });
 
   mainWindow.once("ready-to-show", () => {
+    if (!mainWindow) return;
     mainWindow.setMenuBarVisibility(shouldShowMenubar);
     mainWindow.show();
     const endTime = performance.now();
@@ -161,8 +158,7 @@ const createMainWindow = () => {
     );
   }
 
-  const files: FileObject[] =
-    (SettingsStore.get("files") as FileObject[]) || [];
+  const files = SettingsStore.get("files");
   if (files) {
     createFileWatcher(files);
   }

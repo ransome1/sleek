@@ -1,8 +1,17 @@
-import React, { KeyboardEvent, memo, useState } from "react";
+import React, { memo, ReactElement, ReactNode, useState } from "react";
 import List from "@mui/material/List";
 import Row from "./Row";
 import Group from "./Group";
 import "./Grid.scss";
+import {
+  ContextMenu,
+  Filters,
+  HeadersObject,
+  PromptItem,
+  SettingStore,
+  TodoData,
+  TodoObject,
+} from "src/Types";
 
 const { ipcRenderer } = window.api;
 
@@ -13,9 +22,9 @@ interface GridComponentProps {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  settings: Settings;
-  headers: Headers;
-  searchString: string;
+  settings: SettingStore;
+  headers: HeadersObject;
+  searchString: string | null;
 }
 
 const GridComponent: React.FC<GridComponentProps> = memo(
@@ -37,11 +46,12 @@ const GridComponent: React.FC<GridComponentProps> = memo(
       Math.floor(window.innerHeight / 35) * 2,
     );
 
-    const handleKeyUp = (event: KeyboardEvent): void => {
+    const handleKeyUp: React.KeyboardEventHandler = (event): void => {
       if (event.key === "ArrowDown") {
-        const listItems = document.querySelectorAll("li:not(.group)");
-        const currentIndex = Array.from(listItems).indexOf(
-          document.activeElement,
+        const listItems =
+          document.querySelectorAll<HTMLElement>("li:not(.group)");
+        const currentIndex = Array.from<Element>(listItems).indexOf(
+          document.activeElement!,
         );
         const nextIndex = currentIndex + 1;
         const nextElement = listItems[nextIndex];
@@ -49,24 +59,24 @@ const GridComponent: React.FC<GridComponentProps> = memo(
           nextElement.focus();
         }
       } else if (event.key === "ArrowUp") {
-        const listItems = document.querySelectorAll("li:not(.group)");
-        const currentIndex: number = Array.from(listItems).indexOf(
-          document.activeElement,
+        const listItems =
+          document.querySelectorAll<HTMLElement>("li:not(.group)");
+        const currentIndex: number = Array.from<Element>(listItems).indexOf(
+          document.activeElement!,
         );
         const prevIndex: number = currentIndex - 1;
-        const prevElement: Element = listItems[prevIndex];
+        const prevElement: HTMLElement = listItems[prevIndex];
         if (prevElement) {
           prevElement.focus();
         }
       } else if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
-        if (!event.target.closest("li")) return;
-        const rowItems = event.target
-          .closest("li")
-          .querySelectorAll(
+        const closest =(event.target as HTMLElement).closest("li")
+        if (!closest) return;
+        const rowItems = closest.querySelectorAll<HTMLElement>(
             'button, input, select, a[href], [tabindex]:not([tabindex="-1"])',
           );
-        const currentIndex = Array.from(rowItems).indexOf(
-          document.activeElement,
+        const currentIndex = Array.from<Element>(rowItems).indexOf(
+          document.activeElement!,
         );
         const nextIndex =
           event.key === "ArrowRight" ? currentIndex + 1 : currentIndex - 1;
@@ -110,8 +120,8 @@ const GridComponent: React.FC<GridComponentProps> = memo(
                 value={group.title}
                 filters={filters}
               />
-              {((): void => {
-                const rows = [];
+              {((): ReactNode => {
+                const rows = [] as ReactElement[];
                 for (let i = 0; i < group.todoObjects.length; i++) {
                   const todoObject = group.todoObjects[i];
 

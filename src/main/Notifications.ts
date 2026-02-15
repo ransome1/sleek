@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { Notification } from "electron";
 import { SettingsStore, NotificationsStore, FiltersStore } from "./Stores";
 import { checkForSearchMatches } from "./Filters/Search";
-import { SearchFilter, Badge } from "../Types";
+import { SearchFilter, Badge } from "../Types.js";
 
 export const GetToday = (): DateTime => {
   const now = DateTime.now();
