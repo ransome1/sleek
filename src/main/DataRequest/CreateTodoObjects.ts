@@ -8,6 +8,7 @@ import {
 } from "../Date";
 import { lineBreakPlaceholder } from "../Shared";
 import { DateTime } from "luxon";
+import { Badge, TodoObject } from "@sleek-types";
 
 let linesInFile: string[];
 const badge: Badge = { count: 0 };
@@ -50,7 +51,7 @@ function createTodoObject(
   );
 
   const body = JsTodoTxtObject.body().replaceAll(" [LB] ", " ");
-  const speakingDates: DateAttributes = extractSpeakingDates(body);
+  const speakingDates = extractSpeakingDates(body);
   const due = speakingDates["due:"]?.date || null;
   const dueString = speakingDates["due:"]?.string || null;
   const notify = speakingDates["due:"]?.notify || false;
@@ -59,7 +60,7 @@ function createTodoObject(
   const hidden = extensions.some(
     (extension) => extension.key === "h" && extension.value === "1",
   );
-  const pm: string | number | null =
+  const stringPm: string | null =
     extensions.find((extension) => extension.key === "pm")?.value || null;
   const rec =
     extensions.find((extension) => extension.key === "rec")?.value || null;
@@ -84,6 +85,14 @@ function createTodoObject(
     existingPriority !== null && existingPriority !== undefined
       ? existingPriority
       : pri;
+
+  let pm: number | null;
+  if (!stringPm) {
+    pm = null;
+  } else {
+    pm = parseInt(stringPm);
+    if (isNaN(pm)) pm = null;
+  }
 
   return {
     lineNumber,

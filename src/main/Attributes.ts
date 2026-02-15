@@ -15,10 +15,9 @@
 //   Pass 2 (reset = false) — update counts to reflect only the filtered/searched
 //                            subset so the UI can show match counts per attribute.
 
-type AttributeEntry = { count: number; notify: boolean; hide: boolean };
-type AttributeGroup = Record<string, AttributeEntry>;
+import { AttributeGroup, Attributes, Sorting, TodoObject } from "@sleek-types";
 
-let attributes: Record<string, AttributeGroup> = {
+let attributes: Attributes = {
   priority: {},
   projects: {},
   contexts: {},
@@ -26,6 +25,7 @@ let attributes: Record<string, AttributeGroup> = {
   t: {},
   rec: {},
   pm: {},
+  hidden: {},
   created: {},
   completed: {},
 };
@@ -49,6 +49,7 @@ function incrementCount(
     count: hidden ? previous : previous + 1,
     notify,
     hide,
+    value: [],
   };
 }
 
@@ -125,7 +126,7 @@ function updateAttributes(
   // Reorder attribute categories to match the user-defined sort order.
   attributes = Object.fromEntries(
     sorting.map((item) => [item.value, attributes[item.value]]),
-  );
+  ) as Attributes;
 }
 
 export { attributes, updateAttributes };

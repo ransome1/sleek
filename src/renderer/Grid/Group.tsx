@@ -2,9 +2,11 @@ import React, { memo } from "react";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import { HandleFilterSelect, IsSelected } from "../Shared";
+import { AttributeKey, Filters } from "@sleek-types";
 
 interface GroupProps {
-  value: string | string[];
+  attributeKey: AttributeKey;
+  value: string | string[] | null;
   filters: Filters | null;
 }
 
@@ -35,7 +37,7 @@ const Group: React.FC<GroupProps> = memo(({ attributeKey, value, filters }) => {
           >
             <button
               onClick={() =>
-                HandleFilterSelect(attributeKey, [value], filters, false)
+                HandleFilterSelect(attributeKey, [value], filters, false, null)
               }
               data-testid={`datagrid-group-button-${attributeKey}`}
             >

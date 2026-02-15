@@ -10,28 +10,29 @@ import DrawerAttributes from "./Attributes";
 import DrawerSorting from "./Sorting";
 import DrawerFilters from "./Filters";
 import { handleReset } from "../Shared";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import "./Drawer.scss";
+import { Attributes, Filters, SettingStore } from "@sleek-types";
 
 const { store } = window.api;
 
-interface DrawerComponentProps extends WithTranslation {
-  settings: Settings;
+interface DrawerComponentProps {
+  settings: SettingStore;
   attributes: Attributes | null;
-  filters: Filters | null;
-  searchFieldRef: React.RefObject<HTMLInputElement>;
-  t: typeof i18n.t;
+  filters: Filters;
+  searchFieldRef: React.RefObject<HTMLInputElement | null>;
 }
 
 const DrawerComponent: React.FC<DrawerComponentProps> = memo(
-  ({ settings, attributes, filters, searchFieldRef, t }) => {
+  ({ settings, attributes, filters, searchFieldRef }) => {
     const [activeTab, setActiveTab] = useState<string>("attributes");
     const [drawerWidth, setDrawerWidth] = useState<number>(
       store.getConfig("drawerWidth") || 500,
     );
     const containerRef = useRef<HTMLDivElement | null>(null);
     const startXRef = useRef<number>(0);
+
+    const { t } = useTranslation();
 
     const handleTabChange = (
       _event: React.ChangeEvent<unknown>,
@@ -146,4 +147,4 @@ const DrawerComponent: React.FC<DrawerComponentProps> = memo(
 
 DrawerComponent.displayName = "DrawerComponent";
 
-export default withTranslation()(DrawerComponent);
+export default DrawerComponent;

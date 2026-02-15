@@ -4,10 +4,11 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import HelpIcon from "@mui/icons-material/Help";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import { handleLinkClick } from "../Shared";
 import "./Filters.scss";
+import { VisibleSettings } from "../Settings/Settings";
+import { SettingStore } from "@sleek-types";
 
 const { store } = window.api;
 
@@ -31,15 +32,14 @@ const visibleSettings: VisibleSettings = {
   },
 };
 
-interface DrawerFiltersComponentProps extends WithTranslation {
-  settings: Settings;
-  t: typeof i18n.t;
+interface DrawerFiltersComponentProps {
+  settings: SettingStore;
 }
 
 const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({
   settings,
-  t,
 }) => {
+  const { t } = useTranslation();
   return (
     <div id="Filters">
       <FormGroup>
@@ -50,7 +50,7 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({
               control={
                 <Switch
                   data-testid={`setting-toggle-${settingName}`}
-                  checked={!!settings[settingName as keyof Settings]}
+                  checked={!!settings[settingName as keyof SettingStore]}
                   onChange={(event) =>
                     store.setConfig(settingName, event.target.checked)
                   }
@@ -82,4 +82,4 @@ const DrawerFiltersComponent: React.FC<DrawerFiltersComponentProps> = ({
   );
 };
 
-export default withTranslation()(DrawerFiltersComponent);
+export default DrawerFiltersComponent;

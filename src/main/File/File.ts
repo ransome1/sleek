@@ -3,7 +3,7 @@ import { SettingsStore } from "../Stores";
 import path from "path";
 import { mainWindow } from "../index";
 
-function readFileContent(filePath: string): string | Error {
+function readFileContent(filePath: string): string {
   const fileContent = fs.readFileSync(filePath, "utf8");
   return fileContent;
 }
@@ -19,7 +19,7 @@ function addFile(filePath: string, bookmark: string | null) {
     );
   }
 
-  const files: FileObject[] = SettingsStore.get("files");
+  const files = SettingsStore.get("files");
   const existingFileIndex = files.findIndex(
     (file) => file.todoFilePath === filePath,
   );
@@ -45,10 +45,10 @@ function addFile(filePath: string, bookmark: string | null) {
 }
 
 function addDoneFile(filePath: string, bookmark: string | null) {
-  const files: FileObject[] = SettingsStore.get("files");
+  const files = SettingsStore.get("files");
   const activeIndex: number = files.findIndex((file) => file.active);
 
-  if (activeIndex === -1) return false;
+  if (activeIndex === -1) return;
 
   files[activeIndex].doneFilePath = filePath;
   files[activeIndex].doneFileBookmark = bookmark;
@@ -59,7 +59,7 @@ function addDoneFile(filePath: string, bookmark: string | null) {
 }
 
 function removeFile(index: number) {
-  let files: FileObject[] = SettingsStore.get("files");
+  let files = SettingsStore.get("files");
 
   files.splice(index, 1);
   const activeIndex: number = files.findIndex((file) => file.active);
@@ -78,7 +78,7 @@ function removeFile(index: number) {
 }
 
 function setFile(index: number) {
-  const files: FileObject[] = SettingsStore.get("files");
+  const files = SettingsStore.get("files");
 
   if (files.length > 0) {
     files.forEach((file) => {

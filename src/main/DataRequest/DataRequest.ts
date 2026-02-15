@@ -11,30 +11,34 @@ import { updateAttributes, attributes } from "../Attributes";
 import { createTodoObjects } from "./CreateTodoObjects";
 import { sortTodoObjects } from "./Sort";
 import { groupTodoObjects } from "./Group";
+import {
+  Filters,
+  HeadersObject,
+  RequestedData,
+  Sorting,
+  TodoObject,
+} from "@sleek-types";
 
 let searchString: string;
 const headers: HeadersObject = {
-  availableObjects: null,
-  completedObjects: null,
-  visibleObjects: null,
+  availableObjects: 0,
+  completedObjects: 0,
+  visibleObjects: 0,
 };
 let todoObjects: TodoObject[];
 
-function dataRequest(passedSearchString: string = ""): RequestedData {
+function dataRequest(passedSearchString: string = ""): RequestedData | null {
   searchString = passedSearchString;
 
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
-    return false;
+    return null;
   }
 
-  const fileContent = readFileContent(
-    activeFile.todoFilePath,
-    activeFile.todoFileBookmark,
-  );
+  const fileContent = readFileContent(activeFile.todoFilePath);
 
   const sorting: Sorting[] = SettingsStore.get("sorting");
-  const filters: Filters = FiltersStore.get("attributes");
+  const filters: Filters = FiltersStore.get("attributes") as Filters;
   const showHidden: boolean = SettingsStore.get("showHidden");
   const fileSorting = SettingsStore.get("fileSorting");
 

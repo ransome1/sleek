@@ -4,18 +4,18 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import Chip from "@mui/material/Chip";
 import Badge from "@mui/material/Badge";
 import { HandleFilterSelect, friendlyDate, IsSelected } from "../Shared";
-import { withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
+import { AttributeKey, Filters, SettingStore, TodoObject } from "@sleek-types";
 
 const { ipcRenderer } = window.api;
 
 interface DatePickerInlineComponentProps {
-  type: string;
+  type: AttributeKey;
   todoObject: TodoObject;
   date: string | null;
   filters: Filters | null;
-  settings: Settings;
-  t: (key: string) => string;
+  settings: SettingStore;
 }
 
 const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
@@ -24,11 +24,12 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   date,
   filters,
   settings,
-  t,
 }) => {
   const [open, setOpen] = useState(false);
   //const ButtonFieldRef = useRef<HTMLButtonElement>(null);
   const chipText = type === "due" ? "due:" : type === "t" ? "t:" : null;
+
+  const { t } = useTranslation();
 
   LuxonSettings.defaultWeekSettings = {
     firstDay: (settings.weekStart === 0
@@ -68,13 +69,21 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
 
     return (
       <span
-        className={IsSelected(type, filters, [date]) ? "selected" : null}
+        className={IsSelected(type, filters, [date]) ? "selected" : undefined}
         data-todotxt-attribute={type}
       >
         <button tabIndex={-1}>
           <Badge variant="dot" invisible={mustNotify}>
             <Chip
-              onClick={() => HandleFilterSelect(type, [date], filters, false)}
+              onClick={() =>
+                HandleFilterSelect(
+                  type,
+                  date ? [date] : [],
+                  filters,
+                  false,
+                  null,
+                )
+              }
               label={chipText}
               data-testid={`datagrid-button-${type}`}
               tabIndex={0}
@@ -102,11 +111,11 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
         open={open}
         onClose={() => setOpen(false)}
         value={date ? DateTime.fromISO(date) : null}
-        onChange={handleChange as any}
+        onChange={handleChange}
         slots={{ field: ButtonField }}
       />
     </LocalizationProvider>
   );
 };
 
-export default withTranslation()(DatePickerInlineComponent);
+export default DatePickerInlineComponent;

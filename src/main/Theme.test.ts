@@ -28,19 +28,19 @@ vi.mock("./index.js", () => {
   };
 });
 
-const nativeThemeListener = nativeTheme.on.mock.calls.find(
-  (call) => call[0] === "updated",
-)?.[1];
+const nativeThemeListener = vi
+  .mocked(nativeTheme)
+  .on.mock.calls.find((call) => call[0] === "updated")?.[1];
 
 describe("nativeTheme.on", () => {
   it("Sets dark setting when themeSource is dark", () => {
     vi.mocked(nativeTheme).themeSource = "dark";
-    nativeThemeListener();
+    nativeThemeListener!();
     expect(SettingsStore.set).toHaveBeenCalledWith("shouldUseDarkColors", true);
   });
   it("Sets light setting when themeSource is light", () => {
     vi.mocked(nativeTheme).themeSource = "light";
-    nativeThemeListener();
+    nativeThemeListener!();
     expect(SettingsStore.set).toHaveBeenCalledWith(
       "shouldUseDarkColors",
       false,
@@ -48,14 +48,16 @@ describe("nativeTheme.on", () => {
   });
   it("Sets dark setting when themeSource is system and OS is set to dark", () => {
     vi.mocked(nativeTheme).themeSource = "system";
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
-    nativeThemeListener();
+    nativeThemeListener!();
     expect(SettingsStore.set).toHaveBeenCalledWith("shouldUseDarkColors", true);
   });
   it("Sets dark setting when themeSource is system and OS is set to dark", () => {
     vi.mocked(nativeTheme).themeSource = "system";
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
-    nativeThemeListener();
+    nativeThemeListener!();
     expect(SettingsStore.set).toHaveBeenCalledWith(
       "shouldUseDarkColors",
       false,

@@ -9,16 +9,16 @@ contextBridge.exposeInMainWorld("api", {
     getConfig(key): StoreReply {
       return ipcRenderer.sendSync("storeGetConfig", key);
     },
-    setConfig(property, value, rerender): StoreReply {
+    setConfig(property, value, rerender) {
       return ipcRenderer.send("storeSetConfig", property, value, rerender);
     },
-    setFilters(property, value): StoreReply {
+    setFilters(property, value) {
       return ipcRenderer.send("storeSetFilters", property, value);
     },
     getFilters(key): StoreReply {
       return ipcRenderer.sendSync("storeGetFilters", key);
     },
-    notifiedTodoObjects(value): StoreReply {
+    notifiedTodoObjects(value) {
       return ipcRenderer.send("storeSetNotifiedTodoObjects", value);
     },
   },

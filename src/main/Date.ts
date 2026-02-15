@@ -16,10 +16,13 @@ export function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   return string;
 }
 
-function processDateWithSugar(string: string, type: string) {
+function processDateWithSugar(
+  string: string,
+  type: string,
+): DateAttribute | null {
   const words = string.split(" ");
   let combinedValue = "";
-  let lastMatch = null;
+  let lastMatch: DateAttribute | null = null;
 
   for (let index = 0; index < words.length; index++) {
     if (words[index]) combinedValue += words[index] + " ";
@@ -45,27 +48,45 @@ function processDateWithSugar(string: string, type: string) {
   return lastMatch;
 }
 
-export function extractSpeakingDates(body: string) {
+type DateType = "relative" | "absolute";
+
+export interface DateAttribute {
+  date: string | null;
+  string: string | null;
+  type: DateType | null;
+  notify: boolean;
+}
+
+export interface DateAttributes {
+  "due:": DateAttribute;
+  "t:": DateAttribute;
+}
+
+export function extractSpeakingDates(body: string): DateAttributes {
   const expressions = [
     {
       pattern: /(?<=\b)due:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g,
       key: "due:",
-      type: "relative",
+      type: "relative" as DateType,
     },
     {
       pattern: /(?<=\b)due:(\d{4}-\d{2}-\d{2})/g,
       key: "due:",
-      type: "absolute",
+      type: "absolute" as DateType,
     },
     {
       pattern: /(?<=\b)t:(?!(\d{4}-\d{2}-\d{2}))(.*?)(?=[^\s]:|$)/g,
       key: "t:",
-      type: "relative",
+      type: "relative" as DateType,
     },
-    { pattern: /(?<=\b)t:(\d{4}-\d{2}-\d{2})/g, key: "t:", type: "absolute" },
+    {
+      pattern: /(?<=\b)t:(\d{4}-\d{2}-\d{2})/g,
+      key: "t:",
+      type: "absolute" as DateType,
+    },
   ];
 
-  const speakingDates = {
+  const speakingDates: DateAttributes = {
     "due:": {
       date: null,
       string: null,

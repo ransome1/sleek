@@ -1,7 +1,8 @@
+import { Filters, TodoObject } from "@sleek-types";
 import { SettingsStore } from "../Stores";
 import { DateTime } from "luxon";
 
-function applyAttributes(todoObjects, filters) {
+function applyAttributes(todoObjects: TodoObject[], filters: Filters) {
   return todoObjects.filter((todoObject) => {
     let match = true;
     for (const [key, filterList] of Object.entries(filters)) {

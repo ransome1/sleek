@@ -3,7 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import i18n from "i18next";
+import i18n, { InitOptions } from "i18next";
 import { initReactI18next } from "react-i18next";
 import de from "../../locales/de.json";
 import en from "../../locales/en.json";
@@ -21,10 +21,11 @@ import pl from "../../locales/pl.json";
 import ru from "../../locales/ru.json";
 import ko from "../../locales/ko.json";
 import hi from "../../locales/hi.json";
+import { SettingStore } from "../../@types";
 
 const { store } = window.api;
 
-const options: i18n.InitOptions = {
+const options: InitOptions = {
   resources: {
     de: { translation: de },
     en: { translation: en },
@@ -103,7 +104,7 @@ const friendlyLanguageName: Record<string, string> = {
 };
 
 interface LanguageSelectorComponentProps {
-  settings: Settings;
+  settings: SettingStore;
 }
 
 const LanguageSelectorComponent: React.FC<LanguageSelectorComponentProps> = ({

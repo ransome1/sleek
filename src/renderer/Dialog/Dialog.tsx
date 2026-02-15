@@ -3,19 +3,19 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { AlertColor } from "@mui/material/Alert";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { DateTime } from "luxon";
 import AutoSuggest from "./AutoSuggest";
 import PriorityPicker from "./PriorityPicker";
 import DatePicker from "./DatePicker";
 import PomodoroPicker from "./PomodoroPicker";
 import RecurrencePicker from "./RecurrencePicker";
-import { i18n } from "../Settings/LanguageSelector";
 import "./Dialog.scss";
+import { Attributes, SettingStore, TodoObject } from "../../@types";
 
 const { ipcRenderer } = window.api;
 
-interface DialogComponentProps extends WithTranslation {
+interface DialogComponentProps {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   todoObject: TodoObject | null;
@@ -27,8 +27,7 @@ interface DialogComponentProps extends WithTranslation {
     React.SetStateAction<AlertColor | undefined>
   >;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
-  settings: Settings;
-  t: typeof i18n.t;
+  settings: SettingStore;
 }
 
 const DialogComponent: React.FC<DialogComponentProps> = memo(
@@ -43,7 +42,6 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     setSnackBarSeverity,
     setSnackBarContent,
     settings,
-    t,
   }) => {
     const [priority, setPriority] = useState<string>("-");
     const [dueDate, setDueDate] = useState<string | null>(null);
@@ -54,6 +52,8 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     const numRowsWithContent = textFieldValue
       ?.split("\n")
       .filter((line) => line.trim() !== "").length;
+
+    const { t } = useTranslation();
 
     const handleAdd = (): void => {
       try {
@@ -70,7 +70,7 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
           setSnackBarContent(t("todoDialog.snackbar.emptyInput"));
         }
       } catch (error: unknown) {
-        console.error(error.message);
+        console.error((error as Error).message);
       }
     };
 
@@ -155,10 +155,7 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
           textFieldValue,
         );
       };
-      const delayedSearch: NodeJS.Timeout = setTimeout(
-        handleTextFieldValue,
-        100,
-      );
+      const delayedSearch = setTimeout(handleTextFieldValue, 100);
       return (): void => {
         clearTimeout(delayedSearch);
       };
@@ -194,21 +191,28 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
             date={dueDate}
             type="due"
             settings={settings}
-            handleChange={handleChange}
+            handleChange={(type, value) =>
+              handleChange(type, value ? value.toString() : "")
+            }
           />
           <DatePicker
             date={thresholdDate}
             type="t"
             settings={settings}
-            handleChange={handleChange}
+            handleChange={(type, value) =>
+              handleChange(type, value ? value.toString() : "")
+            }
           />
           <RecurrencePicker
             recurrence={recurrence}
             handleChange={handleChange}
           />
-          <PomodoroPicker pomodoro={pomodoro} handleChange={handleChange} />
+          <PomodoroPicker
+            pomodoro={pomodoro}
+            handleChange={(key, value) => handleChange(key, value.toString())}
+          />
         </DialogContent>
-        <DialogActions disableSpacing="true">
+        <DialogActions disableSpacing={true}>
           <button onClick={handleClose} data-testid="dialog-button-cancel">
             {t("cancel")}
           </button>
@@ -227,4 +231,4 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
 
 DialogComponent.displayName = "DialogComponent";
 
-export default withTranslation()(DialogComponent);
+export default DialogComponent;

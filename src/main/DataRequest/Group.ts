@@ -1,11 +1,12 @@
+import { TodoData, TodoGroups, TodoObject } from "@sleek-types";
 import { SettingsStore } from "../Stores";
 
 const groupTodoObjects = (
   todoObjects: TodoObject[],
   attributeKey: string,
-): TodoGroup => {
+): TodoData => {
   const showHidden = SettingsStore.get("showHidden");
-  const grouped: TodoGroup = {};
+  const grouped: TodoGroups = {};
 
   for (const todoObject of todoObjects) {
     const groupKey = todoObject[attributeKey] || null;

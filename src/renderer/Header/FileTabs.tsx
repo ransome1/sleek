@@ -2,20 +2,21 @@ import React, { useState, useEffect, memo } from "react";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import "./FileTabs.scss";
-import { i18n } from "../Settings/LanguageSelector";
+import { ContextMenu, ContextMenuItem, SettingStore } from "@sleek-types";
 
 const { ipcRenderer } = window.api;
 
-interface FileTabsComponentProps extends WithTranslation {
-  settings: Settings;
+interface FileTabsComponentProps {
+  settings: SettingStore;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
-  t: typeof i18n.t;
 }
 
 const FileTabsComponent: React.FC<FileTabsComponentProps> = memo(
-  ({ settings, setContextMenu, t }) => {
+  ({ settings, setContextMenu }) => {
+    const { t } = useTranslation();
+
     const handleContextMenu = (
       event: React.MouseEvent,
       index: number,
@@ -74,7 +75,7 @@ const FileTabsComponent: React.FC<FileTabsComponentProps> = memo(
               onButton1: (): void => handleRemoveFile(index),
             },
           },
-        ].filter(Boolean),
+        ].filter(Boolean) as ContextMenuItem[],
       });
     };
 
@@ -126,4 +127,4 @@ const FileTabsComponent: React.FC<FileTabsComponentProps> = memo(
 
 FileTabsComponent.displayName = "FileTabsComponent";
 
-export default withTranslation()(FileTabsComponent);
+export default FileTabsComponent;

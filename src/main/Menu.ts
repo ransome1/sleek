@@ -1,10 +1,10 @@
-import { app, Menu, dialog, shell } from "electron";
+import { app, Menu, dialog, shell, MenuItemConstructorOptions } from "electron";
 import { setFile } from "./File/File";
 import { mainWindow, HandleCreateWindow } from "./index";
 import { openFile, createFile } from "./File/Dialog";
 import { handleRequestArchive } from "./File/Archive";
 import { SettingsStore, FiltersStore } from "./Stores";
-import { File } from "../Types";
+import { File } from "../@types";
 import appPackage from "../../package.json";
 
 export const GetFileMenuEntries = (files: File[]) => {
@@ -49,13 +49,13 @@ const GetMenuTemplate = (
           },
         },
         ...(process.platform === "darwin"
-          ? [
+          ? ([
               { type: "separator" },
               {
                 accelerator: "Cmd+H",
                 role: "hide",
               },
-            ]
+            ] as MenuItemConstructorOptions[])
           : []),
         { type: "separator" },
         {

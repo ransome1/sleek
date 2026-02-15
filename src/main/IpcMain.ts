@@ -13,8 +13,8 @@ function handleDataRequest(event: IpcMainEvent, searchString: string) {
   try {
     const requestedData = dataRequest(searchString);
     event.reply("requestData", requestedData);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
@@ -26,8 +26,8 @@ function handleUpdateAttributeFields(
   try {
     const todoObject = createTodoObject(index, string);
     event.reply("updateAttributeFields", todoObject);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
@@ -46,13 +46,13 @@ function handleUpdateTodoObject(
       attributeValue,
     );
     event.reply("updateTodoObject", todoObject);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 function handleWriteTodoToFile(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   index: number,
   string: string,
   state: boolean,
@@ -67,128 +67,128 @@ function handleWriteTodoToFile(
         attributeType,
         attributeValue,
       );
-      prepareContentForWriting(index, todoObject.string);
+      prepareContentForWriting(index, todoObject.string, state);
     } else {
       let updatedString: string | null = string;
       if (state !== undefined && index >= 0)
         updatedString = changeCompleteState(string, state);
       prepareContentForWriting(index, updatedString, state);
     }
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 function handleStoreGetConfig(event: IpcMainEvent, value: string) {
   try {
     event.returnValue = SettingsStore.get(value);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
-function handleStoreSetConfig(event: IpcMainEvent, key: string, value: any) {
+function handleStoreSetConfig(_: IpcMainEvent, key: string, value: unknown) {
   try {
     SettingsStore.set(key, value);
     console.log(`Set ${key} to ${value}`);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 function handleStoreSetFilters(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   key: string,
-  value: any,
+  value: unknown,
 ): void {
   try {
     FiltersStore.set(key, value);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 function handleStoreGetFilters(event: IpcMainEvent, value: string): void {
   try {
     event.returnValue = FiltersStore.get(value);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 function handleStoreSetNotifiedTodoObjects(
-  event: IpcMainEvent,
-  value: any,
+  _: IpcMainEvent,
+  value: unknown,
 ): void {
   try {
     NotificationsStore.set("notificationHashes", value);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
-function handleSetFile(event: IpcMainEvent, index: number): void {
+function handleSetFile(_: IpcMainEvent, index: number): void {
   try {
     setFile(index);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
-function handleRemoveFile(event: IpcMainEvent, index: number): void {
+function handleRemoveFile(_: IpcMainEvent, index: number): void {
   try {
     removeFile(index);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
-function handleAddFile(event: IpcMainEvent, filePath: string): void {
+function handleAddFile(_: IpcMainEvent, filePath: string): void {
   try {
     addFile(filePath, null);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 function handleRevealInFileManager(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   pathToReveal: string,
 ): void {
   try {
     shell.showItemInFolder(pathToReveal);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 async function handleOpenFile(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   setDoneFile: boolean,
 ): Promise<void> {
   try {
     await openFile(setDoneFile);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
 async function handleCreateFile(
-  event: IpcMainEvent,
+  _: IpcMainEvent,
   setDoneFile: boolean,
 ): Promise<void> {
   try {
     await createFile(setDoneFile);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
-function handleRemoveLineFromFile(event: IpcMainEvent, index: number) {
+function handleRemoveLineFromFile(_: IpcMainEvent, index: number) {
   try {
     removeLineFromFile(index);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
@@ -196,8 +196,8 @@ function handleArchiveTodos(event: IpcMainEvent): void {
   try {
     const archivingResult = archiveTodos();
     event.reply("responseFromMainProcess", archivingResult);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
@@ -205,16 +205,16 @@ function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
     clipboard.writeText(string);
     event.reply("responseFromMainProcess", "Copied to clipboard: " + string);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 
-function handleOpenInBrowser(event: IpcMainEvent, url: string): void {
+function handleOpenInBrowser(_: IpcMainEvent, url: string): void {
   try {
     shell?.openExternal(url);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 }
 

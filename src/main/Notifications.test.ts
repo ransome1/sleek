@@ -24,6 +24,7 @@ vi.mock("./Stores", () => {
         if (key === "notificationThreshold") {
           return 5;
         }
+        return undefined;
       }),
     },
     FiltersStore: {

@@ -11,7 +11,7 @@ const writeToFile = (string: string, filePath: string) => {
 };
 
 const removeLineFromFile = (lineNumber: number) => {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
   } else if (lineNumber >= 0) {
@@ -25,7 +25,7 @@ const prepareContentForWriting = (
   string: string,
   state: boolean,
 ) => {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
   } else if (!string) {
