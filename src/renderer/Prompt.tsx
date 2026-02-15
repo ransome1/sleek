@@ -4,15 +4,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { useTranslation } from "react-i18next";
-
-export interface PromptItem {
-  headline?: string;
-  text?: string;
-  button1?: string;
-  onButton1?: React.MouseEventHandler<HTMLButtonElement>;
-  button2?: string;
-  onButton2?: React.MouseEventHandler<HTMLButtonElement>;
-}
+import { ContextMenu, PromptItem } from "src/Types";
 
 interface PromptComponentProps {
   open: boolean;

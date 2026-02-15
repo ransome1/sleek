@@ -13,14 +13,15 @@ import { handleReset } from "../Shared";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { i18n } from "../Settings/LanguageSelector";
 import "./Drawer.scss";
+import { Filters, SettingStore } from "src/Types";
 
 const { store } = window.api;
 
 interface DrawerComponentProps extends WithTranslation {
-  settings: Settings;
+  settings: SettingStore;
   attributes: Attributes | null;
-  filters: Filters | null;
-  searchFieldRef: React.RefObject<HTMLInputElement>;
+  filters: Filters;
+  searchFieldRef: React.RefObject<HTMLInputElement | null>;
   t: typeof i18n.t;
 }
 

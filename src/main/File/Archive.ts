@@ -4,7 +4,7 @@ import { writeToFile } from "./Write";
 import { mainWindow } from "../index";
 
 function handleRequestArchive(): void {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("Todo file is not defined");
   }
@@ -14,11 +14,7 @@ function handleRequestArchive(): void {
   );
 }
 
-function readFilteredFileContent(
-  filePath: string,
-  bookmark: string | null,
-  complete: boolean,
-): string {
+function readFilteredFileContent(filePath: string, complete: boolean): string {
   const filterStrings = (fileContent: string, complete: boolean): string => {
     const arrayOfStrings = fileContent.split("\n");
     const filteredArrayOfStrings = arrayOfStrings.filter((string) => {
@@ -29,7 +25,7 @@ function readFilteredFileContent(
     });
     return filteredArrayOfStrings.join("\n");
   };
-  const fileContent: string | Error = readFileContent(filePath, bookmark);
+  const fileContent: string | Error = readFileContent(filePath);
   if (typeof fileContent === "string") {
     return filterStrings(fileContent, complete);
   } else {
@@ -38,7 +34,7 @@ function readFilteredFileContent(
 }
 
 function archiveTodos(): string {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("Todo file is not defined");
   }
@@ -49,7 +45,6 @@ function archiveTodos(): string {
 
   const completedTodos: string = readFilteredFileContent(
     activeFile.todoFilePath,
-    activeFile.todoFileBookmark,
     true,
   );
 
@@ -59,20 +54,14 @@ function archiveTodos(): string {
 
   const uncompletedTodos: string = readFilteredFileContent(
     activeFile.todoFilePath,
-    activeFile.todoFileBookmark,
     false,
   );
 
-  const todosFromDoneFile: string | Error = readFileContent(
-    activeFile.doneFilePath,
-  );
+  const todosFromDoneFile = readFileContent(activeFile.doneFilePath);
 
   // Only write a new line when file is not empty and does not already end with a new line
   const separator =
-    todosFromDoneFile.toString().endsWith("\n") ||
-    todosFromDoneFile.toString() === ""
-      ? ""
-      : "\n";
+    todosFromDoneFile.endsWith("\n") || todosFromDoneFile === "" ? "" : "\n";
   const contentForDoneFile =
     todosFromDoneFile.length > 1
       ? todosFromDoneFile + separator + completedTodos

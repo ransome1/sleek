@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, JSX } from "react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import IpcComponent from "./IpcRenderer";
 import MatomoComponent from "./Matomo";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,15 +19,25 @@ import ContextMenu from "./ContextMenu";
 import { I18nextProvider } from "react-i18next";
 import { i18n } from "./Settings/LanguageSelector";
 import Settings from "./Settings/Settings";
-import Prompt, { PromptItem } from "./Prompt";
+import Prompt from "./Prompt";
 import "./App.scss";
 import "./Buttons.scss";
 import "./Form.scss";
+import {
+  ContextMenu as ContextMenuType,
+  HeadersObject,
+  PromptItem,
+  Filters,
+  SettingStore,
+  TodoData,
+  TodoObject,
+  Attributes,
+} from "src/Types";
 
 const { store, ipcRenderer } = window.api;
 
 const App = (): JSX.Element => {
-  const [settings, setSettings] = useState<Settings>(store.getConfig());
+  const [settings, setSettings] = useState<SettingStore>(store.getConfig());
   const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
   const [snackBarContent, setSnackBarContent] = useState<string | null>(null);
   const [snackBarSeverity, setSnackBarSeverity] = useState<
@@ -41,13 +51,13 @@ const App = (): JSX.Element => {
     null,
   );
   const [headers, setHeaders] = useState<HeadersObject | null>(null);
-  const [filters, setFilters] = useState<Filters | null>([]);
+  const [filters, setFilters] = useState<Filters>({});
   const [attributes, setAttributes] = useState<Attributes | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
-  const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null);
+  const [contextMenu, setContextMenu] = useState<ContextMenuType | null>(null);
   const [promptItem, setPromptItem] = useState<PromptItem | null>(null);
   const [triggerArchiving, setTriggerArchiving] = useState<boolean>(false);
-  const [theme, setTheme] = useState(
+  const [theme, setTheme] = useState<Theme>(
     createTheme({
       ...(settings?.shouldUseDarkColors ? dark : light),
       typography: {
@@ -110,7 +120,7 @@ const App = (): JSX.Element => {
                       setContextMenu={setContextMenu}
                     />
                   ) : null}
-                  {headers && headers.availableObjects > 0 ? (
+                  {headers && headers.availableObjects > 0 && (
                     <>
                       <SearchComponent
                         headers={headers}
@@ -125,10 +135,10 @@ const App = (): JSX.Element => {
                         searchFieldRef={searchFieldRef}
                       />
                     </>
-                  ) : null}
+                  )}
                 </>
               )}
-              {todoData && headers.availableObjects > 0 && (
+              {todoData && headers && headers.availableObjects > 0 && (
                 <>
                   <GridComponent
                     todoData={todoData}
@@ -143,12 +153,13 @@ const App = (): JSX.Element => {
                   />
                 </>
               )}
-              <SplashScreen
-                setDialogOpen={setDialogOpen}
-                setSearchString={setSearchString}
-                headers={headers}
-                settings={settings}
-              />
+              {headers && (
+                <SplashScreen
+                  setDialogOpen={setDialogOpen}
+                  headers={headers}
+                  settings={settings}
+                />
+              )}
             </div>
           </div>
           {dialogOpen ? (

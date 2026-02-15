@@ -12,6 +12,7 @@ import {
   UpdateTrayMenu,
 } from "./Tray";
 import { HandleTheme } from "./Theme";
+import { SettingStore } from "../Types";
 
 const distributionChannel = function (): string {
   if (process.env.APPIMAGE) {
@@ -171,7 +172,7 @@ function findChanges(oldValue, newValue) {
   return differences;
 }
 
-export const SettingsStore = new Store<StoreType>({
+export const SettingsStore = new Store<SettingStore>({
   cwd: userDataDirectory,
   name: "config",
   migrations,
@@ -206,9 +207,9 @@ SettingsStore.onDidAnyChange((newValue, oldValue) => {
   }
 });
 
-SettingsStore.onDidChange("files", (newValue: FileObject[] | undefined) => {
+SettingsStore.onDidChange("files", (newValue) => {
   try {
-    if (!newValue) return false;
+    if (!newValue) return;
 
     createFileWatcher(newValue);
     UpdateTrayMenu();
@@ -227,14 +228,14 @@ SettingsStore.onDidChange("colorTheme", (colorTheme) => {
 
 SettingsStore.onDidChange("menuBarVisibility", (menuBarVisibility) => {
   try {
-    mainWindow!.setMenuBarVisibility(menuBarVisibility);
+    mainWindow!.setMenuBarVisibility(menuBarVisibility!);
     mainWindow!.setAutoHideMenuBar(!menuBarVisibility);
   } catch (error: any) {
     HandleError(error);
   }
 });
 
-SettingsStore.onDidChange("tray", (v: boolean) => {
+SettingsStore.onDidChange("tray", (v) => {
   try {
     if (v) CreateTray();
     else DestroyTray();

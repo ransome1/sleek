@@ -4,7 +4,7 @@ import { mainWindow, HandleCreateWindow } from "./index";
 import { openFile, createFile } from "./File/Dialog";
 import { handleRequestArchive } from "./File/Archive";
 import { SettingsStore, FiltersStore } from "./Stores";
-import { File } from "../Types";
+import { File } from "../Types.js";
 import appPackage from "../../package.json";
 
 export const GetFileMenuEntries = (files: File[]) => {

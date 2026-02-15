@@ -2,7 +2,7 @@ import { app, Menu, Tray, nativeImage, nativeTheme } from "electron";
 import { HandleCreateWindow, mainWindow } from "./index";
 import { GetFileMenuEntries } from "./Menu";
 import { SettingsStore } from "./Stores";
-import { File } from "../Types";
+import { File } from "../Types.js";
 import TrayIconDark from "../../resources/trayDarkTemplate.png?asset";
 import TrayIconLight from "../../resources/trayLightTemplate.png?asset";
 import TrayIconDarkWin from "../../resources/trayDark.ico?asset";

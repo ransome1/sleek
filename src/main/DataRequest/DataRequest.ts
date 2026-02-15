@@ -23,14 +23,13 @@ let todoObjects: TodoObject[];
 function dataRequest(passedSearchString: string = ""): RequestedData {
   searchString = passedSearchString;
 
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     return false;
   }
 
   const fileContent = readFileContent(
     activeFile.todoFilePath,
-    activeFile.todoFileBookmark,
   );
 
   const sorting: Sorting[] = SettingsStore.get("sorting");

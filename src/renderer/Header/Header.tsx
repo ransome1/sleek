@@ -1,10 +1,11 @@
 import React, { useEffect, useCallback, RefObject, memo } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import "./Header.scss";
+import { SettingStore } from "src/Types";
 
 interface HeaderComponentProps {
-  settings: Settings;
-  searchFieldRef: RefObject<HTMLInputElement>;
+  settings: SettingStore;
+  searchFieldRef: RefObject<HTMLInputElement | null>;
 }
 
 const { store } = window.api;

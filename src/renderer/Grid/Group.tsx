@@ -2,9 +2,10 @@ import React, { memo } from "react";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import { HandleFilterSelect, IsSelected } from "../Shared";
+import { Filters } from "src/Types";
 
 interface GroupProps {
-  key: string;
+  attributeKey: string;
   value: string | string[];
   filters: Filters | null;
 }

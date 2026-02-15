@@ -9,13 +9,14 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { i18n } from "./Settings/LanguageSelector";
 import "./Navigation.scss";
+import { HeadersObject, SettingStore, TodoObject } from "src/Types";
 
 const { ipcRenderer, store } = window.api;
 
 interface NavigationComponentProps extends WithTranslation {
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: Settings;
+  settings: SettingStore;
   headers: HeadersObject | null;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   t: typeof i18n.t;
