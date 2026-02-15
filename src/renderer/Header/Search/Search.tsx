@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useCallback, memo } from "react";
-import Autocomplete, {
-  createFilterOptions,
-  AutocompleteRenderInputParams,
-} from "@mui/material/Autocomplete";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import OptionComponent from "./Option";
 import InputComponent from "./Input";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import "./Search.scss";
+import {
+  HeadersObject,
+  PromptItem,
+  SearchFilter,
+  SettingStore,
+} from "@sleek-types";
+import { FilterOptionsState } from "@mui/material";
 
 const { ipcRenderer, store } = window.api;
 
@@ -19,7 +22,7 @@ const handleAddNewFilter = (
 ): void => {
   event.stopPropagation();
   event.preventDefault();
-  const updatedFilters = [
+  const updatedFilters: SearchFilter[] = [
     { label: value, suppress: false },
     ...searchFilters.filter((searchFilter) => searchFilter.label !== value),
   ];
@@ -39,14 +42,13 @@ const getOptionLabel = (option: string | SearchFilter): string => {
   return "";
 };
 
-interface SearchComponentProps extends WithTranslation {
+interface SearchComponentProps {
   headers: HeadersObject | null;
-  settings: Settings;
+  settings: SettingStore;
   searchString: string;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
-  searchFieldRef: React.RefObject<HTMLInputElement>;
+  searchFieldRef: React.RefObject<HTMLInputElement | null>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  t: typeof i18n.t;
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = memo(
@@ -57,8 +59,9 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
     setSearchString,
     searchFieldRef,
     setPromptItem,
-    t,
   }) => {
+    const { t } = useTranslation();
+
     const [searchFilters, setSearchFilters] = useState(
       store.getFilters("search") || [],
     );
@@ -71,7 +74,7 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
         }
       };
 
-      const delayedSearch: NodeJS.Timeout = setTimeout(handleSearch, 200);
+      const delayedSearch = setTimeout(handleSearch, 200);
 
       return (): void => {
         clearTimeout(delayedSearch);
@@ -113,17 +116,19 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
     );
 
     const filterOptions = (
-      options: string | SearchFilter[],
-      params: { inputValue: string },
-    ): SearchFilter[] => {
-      const filter = createFilterOptions<SearchFilter>();
-      const filtered: SearchFilter[] = filter(
-        options as SearchFilter[],
+      options: (string | SearchFilter)[],
+      params: FilterOptionsState<string | SearchFilter>,
+    ): (string | SearchFilter)[] => {
+      const filter = createFilterOptions<string | SearchFilter>();
+      const filtered: (string | SearchFilter)[] = filter(
+        options as (string | SearchFilter)[],
         params,
       );
       const { inputValue } = params;
-      const isExisting = filtered.some(
-        (filter) => filter.label && filter.label.includes(inputValue),
+      const isExisting = filtered.some((filter) =>
+        (typeof filter === "string" ? filter : filter.label || "").includes(
+          inputValue,
+        ),
       );
       if (inputValue !== "" && !isExisting) {
         filtered.push({
@@ -157,7 +162,7 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
               getOptionLabel={getOptionLabel}
               onChange={(event, value: string | SearchFilter | null): void => {
                 setIsAutocompleteOpen(false);
-                if (value && value.inputValue) {
+                if (value && typeof value !== "string" && value.inputValue) {
                   handleAddNewFilter(
                     event,
                     value.inputValue,
@@ -166,7 +171,7 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
                   );
                 }
               }}
-              renderOption={(props, option) => (
+              renderOption={(props, option: string | SearchFilter) => (
                 <OptionComponent
                   option={option}
                   setPromptItem={setPromptItem}
@@ -177,7 +182,7 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
                   {...props}
                 />
               )}
-              renderInput={(params: AutocompleteRenderInputParams) => (
+              renderInput={(params) => (
                 <InputComponent
                   headers={headers}
                   searchString={searchString}
@@ -200,4 +205,4 @@ const SearchComponent: React.FC<SearchComponentProps> = memo(
 
 SearchComponent.displayName = "SearchComponent";
 
-export default withTranslation()(SearchComponent);
+export default SearchComponent;

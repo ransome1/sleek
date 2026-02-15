@@ -9,8 +9,9 @@ import Typography from "@mui/material/Typography";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import "./Option.scss";
+import { PromptItem, SearchFilter } from "@sleek-types";
 
 const toggleSuppress = (
   option: SearchFilter,
@@ -37,14 +38,13 @@ const handleDeleteFilterConfirm = (
   setSearchFilters(updatedFilters);
 };
 
-interface OptionComponentProps extends WithTranslation {
-  option: SearchFilter;
+interface OptionComponentProps {
+  option: string | SearchFilter;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   searchFilters: SearchFilter[];
   setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter[]>>;
   isAutocompleteOpen: boolean;
   setIsAutocompleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  t: typeof i18n.t;
 }
 
 const OptionComponent: React.FC<OptionComponentProps> = memo(
@@ -55,13 +55,14 @@ const OptionComponent: React.FC<OptionComponentProps> = memo(
     setSearchFilters,
     isAutocompleteOpen,
     setIsAutocompleteOpen,
-    t,
     ...props
   }) => {
+    const { t } = useTranslation();
+
     const handleDeleteFilter = (
       event: MouseEvent,
       option: SearchFilter,
-      setPromptItem: React.Dispatch<React.SetStateAction<PromptItem>>,
+      setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>,
       searchFilters: SearchFilter[],
       setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter[]>>,
     ): void => {
@@ -96,38 +97,42 @@ const OptionComponent: React.FC<OptionComponentProps> = memo(
       };
     }, [handleKeyUp]);
 
+    const isSearchFilter = typeof option !== "string";
+
     return (
       <li
         data-testid={
-          option.inputValue
+          isSearchFilter && option.inputValue
             ? "header-search-autocomplete-create"
             : "header-search-autocomplete-select"
         }
         {...props}
       >
-        {option.inputValue ? (
+        {isSearchFilter && option.inputValue ? (
           <>
             <AddCircleIcon data-testid="header-search-autocomplete-add" />
             <Fragment>
-              <span dangerouslySetInnerHTML={{ __html: option.title }} />
+              <span dangerouslySetInnerHTML={{ __html: option.title || "" }} />
             </Fragment>
           </>
         ) : (
           <>
-            <RemoveCircleIcon
-              onClick={(event) => {
-                event.stopPropagation();
-                handleDeleteFilter(
-                  event,
-                  option,
-                  setPromptItem,
-                  searchFilters,
-                  setSearchFilters,
-                );
-              }}
-              data-testid="header-search-autocomplete-remove"
-            />
-            {option.suppress === false ? (
+            {isSearchFilter && (
+              <RemoveCircleIcon
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleDeleteFilter(
+                    event,
+                    option,
+                    setPromptItem,
+                    searchFilters,
+                    setSearchFilters,
+                  );
+                }}
+                data-testid="header-search-autocomplete-remove"
+              />
+            )}
+            {isSearchFilter && option.suppress === false && (
               <NotificationsOffIcon
                 onClick={(event) => {
                   event.stopPropagation();
@@ -136,7 +141,8 @@ const OptionComponent: React.FC<OptionComponentProps> = memo(
                 className="greyedOut"
                 data-testid="header-search-autocomplete-notification-disable"
               />
-            ) : (
+            )}
+            {isSearchFilter && option.suppress !== false && (
               <NotificationsOffIcon
                 onClick={(event) => {
                   event.stopPropagation();
@@ -145,9 +151,16 @@ const OptionComponent: React.FC<OptionComponentProps> = memo(
                 data-testid="header-search-autocomplete-notification-enable"
               />
             )}
-            <Typography>
-              <code>{option.label}</code>
-            </Typography>
+            {isSearchFilter && (
+              <Typography>
+                <code>{option.label}</code>
+              </Typography>
+            )}
+            {!isSearchFilter && (
+              <Typography>
+                <code>{option}</code>
+              </Typography>
+            )}
           </>
         )}
       </li>
@@ -157,4 +170,4 @@ const OptionComponent: React.FC<OptionComponentProps> = memo(
 
 OptionComponent.displayName = "OptionComponent";
 
-export default withTranslation()(OptionComponent);
+export default OptionComponent;

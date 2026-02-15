@@ -1,13 +1,14 @@
 import * as FilterLang from "./FilterLang";
 import { runQuery } from "./FilterQuery";
 import { createTodoObject } from "../DataRequest/CreateTodoObjects";
+import { TodoObject } from "@sleek-types";
 
 function applySearchString(
   searchString: string,
   todoObjects: TodoObject[],
 ): TodoObject[] {
   try {
-    const query = FilterLang.parse(searchString);
+    const query = FilterLang.parse(searchString, {});
     return todoObjects.filter((todoObject) => runQuery(todoObject, query));
   } catch {
     const lowerSearchString = searchString.toLowerCase();
@@ -22,7 +23,7 @@ function applySearchString(
 function checkForSearchMatches(todoString: string, searchString: string) {
   try {
     const todoObject = createTodoObject(-1, todoString);
-    const query = FilterLang.parse(searchString);
+    const query = FilterLang.parse(searchString, {});
     return runQuery(todoObject, query);
   } catch {
     return todoString.toLowerCase().includes(searchString);

@@ -1,4 +1,10 @@
-const compareValues = (a: any, b: any, invert: boolean): number => {
+import { Sorting, TodoObject } from "@sleek-types";
+
+const compareValues = (
+  a: string | string[] | number | boolean | null,
+  b: string | string[] | number | boolean | null,
+  invert: boolean,
+): number => {
   if (a === b) return 0;
   if (a === null || a === undefined) return 1;
   if (b === null || b === undefined) return -1;

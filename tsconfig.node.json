@@ -6,10 +6,15 @@
     "src/main/**/*.ts",
     "src/preload/**/*",
     "build/icon.icns",
-    "src/preload/electron.d.ts"
+    "src/preload/electron.d.ts",
+    "src/@types/**/*"
   ],
   "compilerOptions": {
-    "types": ["electron-vite/node", "vitest/globals"],
-    "composite": true
+    "types": ["node", "electron-vite/node", "vitest/globals"],
+    "composite": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@sleek-types": ["./src/@types/index"]
+    }
   }
 }

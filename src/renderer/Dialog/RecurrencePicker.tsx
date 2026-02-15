@@ -6,8 +6,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Checkbox from "@mui/material/Checkbox";
 import Popover from "@mui/material/Popover";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import "./RecurrencePicker.scss";
 
 const getInterval = (recurrence: string | null): string => {
@@ -25,22 +24,22 @@ const getAmount = (recurrence: string | null): string => {
 const getStrictIndicator = (recurrence: string | null): boolean =>
   !!recurrence?.startsWith("+");
 
-interface RecurrencePickerComponentProps extends WithTranslation {
+interface RecurrencePickerComponentProps {
   recurrence: string | null;
   handleChange: (key: string, value: string) => void;
-  t: typeof i18n.t;
 }
 
 const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
   recurrence,
   handleChange,
-  t,
 }) => {
   const recurrenceFieldRef = useRef<HTMLInputElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [strictRecurrence, setStrictRecurrence] = useState<boolean>(false);
   const [interval, setInterval] = useState<string>("d");
   const [amount, setAmount] = useState<string>("1");
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     setStrictRecurrence(getStrictIndicator(recurrence));
@@ -186,4 +185,4 @@ const RecurrencePickerComponent: React.FC<RecurrencePickerComponentProps> = ({
   );
 };
 
-export default withTranslation()(RecurrencePickerComponent);
+export default RecurrencePickerComponent;

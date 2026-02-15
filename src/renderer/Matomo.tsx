@@ -1,7 +1,8 @@
+import { SettingStore } from "@sleek-types";
 import React, { useEffect } from "react";
 
 interface MatomoComponentProps {
-  settings: Settings;
+  settings: SettingStore;
 }
 
 const environment = process.env.NODE_ENV;

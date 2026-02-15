@@ -1,29 +1,27 @@
 import React, { JSX, useEffect, useRef, useState } from "react";
 import Autosuggest from "react-autosuggest";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
 import "./AutoSuggest.scss";
+import { Attributes } from "../../@types";
 
 const { ipcRenderer } = window.api;
 
 const regex: RegExp = /(?<=^| )[+@][^ ]*/g;
 
-interface AutoSuggestComponentProps extends WithTranslation {
+interface AutoSuggestComponentProps {
   textFieldValue: string;
   setTextFieldValue: React.Dispatch<React.SetStateAction<string>>;
   attributes: Attributes | null;
-  t: typeof i18n.t;
 }
 
 const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   textFieldValue,
   setTextFieldValue,
   attributes,
-  t,
 }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [prefix, setPrefix] = useState<string | null>(null);
@@ -35,6 +33,8 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
     end: -1,
   });
   const textFieldRef = useRef<HTMLInputElement>(null);
+
+  const { t } = useTranslation();
 
   const handleSuggestionsFetchRequested = ({
     value,
@@ -90,12 +90,12 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   const getSuggestions = (trigger: string, match: string): string[] => {
     if (trigger === "@") {
       setPrefix("@");
-      return Object.keys(attributes?.contexts).filter((key) =>
+      return Object.keys(attributes?.contexts || {}).filter((key) =>
         key.includes(match),
       );
     } else if (trigger === "+") {
       setPrefix("+");
-      return Object.keys(attributes?.projects).filter((key) =>
+      return Object.keys(attributes?.projects || {}).filter((key) =>
         key.includes(match),
       );
     } else {
@@ -145,12 +145,16 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
       if (suggestions.length > 0 && event.key === "Tab") {
         event.preventDefault();
         if (suggestions.length === 1) {
-          handleSuggestionSelected(null, { suggestion: suggestions[0] });
+          handleSuggestionSelected({} as React.SyntheticEvent, {
+            suggestion: suggestions[0],
+          });
         }
       } else if (suggestions.length > 0 && event.key === "ArrowDown") {
         event.stopPropagation();
         if (suggestions.length === 1) {
-          handleSuggestionSelected(null, { suggestion: suggestions[0] });
+          handleSuggestionSelected({} as React.SyntheticEvent, {
+            suggestion: suggestions[0],
+          });
         }
       } else if (suggestions.length > 0 && event.key === "Escape") {
         event.stopPropagation();
@@ -239,4 +243,4 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
   );
 };
 
-export default withTranslation()(AutoSuggestComponent);
+export default AutoSuggestComponent;

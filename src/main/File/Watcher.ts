@@ -5,10 +5,11 @@ import { SettingsStore } from "../Stores";
 import { HandleError, userDataDirectory } from "../Shared";
 import { CreateMenu } from "../Menu";
 import { mainWindow, eventListeners } from "../index";
+import { File } from "@sleek-types";
 
 let watcher: FSWatcher | null = null;
 
-function createFileWatcher(files: FileObject[]): void {
+function createFileWatcher(files: File[]): void {
   if (watcher) {
     watcher?.close();
     console.log(`Destroyed old file watcher`);
@@ -49,8 +50,8 @@ function createFileWatcher(files: FileObject[]): void {
         const requestedData = dataRequest(searchString);
         mainWindow!.webContents.send("requestData", requestedData);
         console.log(`${file} has been changed`);
-      } catch (error: any) {
-        HandleError(error);
+      } catch (error: unknown) {
+        HandleError(error as Error);
       }
     })
     .on("unlink", (file) => {

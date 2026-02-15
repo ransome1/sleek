@@ -1,7 +1,9 @@
-function restorePreviousPriority(JsTodoTxtObject: any) {
-  if (!JsTodoTxtObject.extensions) return false;
+import { Item } from "jstodotxt";
+
+function restorePreviousPriority(JsTodoTxtObject: Item) {
+  if (!JsTodoTxtObject.extensions) return;
   const previousPriorityIndex: number = JsTodoTxtObject.extensions().findIndex(
-    (extension: any) => extension.key === "pri",
+    (extension: { key: string; value: string }) => extension.key === "pri",
   );
   const previousPriorityString: string =
     JsTodoTxtObject.extensions()[previousPriorityIndex]?.value;

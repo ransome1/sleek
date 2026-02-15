@@ -17,19 +17,25 @@ import {
   IsExcluded,
   handleLinkClick,
 } from "../Shared";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import "./Attributes.scss";
+import {
+  AttributeGroup,
+  Attributes,
+  Filters,
+  AttributeKey,
+  SettingStore,
+} from "@sleek-types";
+import { i18n } from "../Settings/LanguageSelector";
 
 const { store } = window.api;
 
 const DATE_ATTRIBUTE_KEYS = ["due", "t", "completed", "created"];
 
-interface DrawerAttributesComponentProps extends WithTranslation {
-  settings: Settings;
+interface DrawerAttributesComponentProps {
+  settings: SettingStore;
   attributes: Attributes | null;
   filters: Filters | null;
-  t: typeof i18n.t;
 }
 
 // Merges raw attribute entries into display-ready buckets.
@@ -44,9 +50,9 @@ interface DrawerAttributesComponentProps extends WithTranslation {
 // Date buckets are sorted by recency (overdue → next month). All other
 // attribute values were already sorted alphabetically by the main process.
 function buildDisplayBuckets(
-  attributeKey: string,
+  attributeKey: AttributeKey,
   rawGroup: AttributeGroup,
-  settings: Settings,
+  settings: SettingStore,
   t: typeof i18n.t,
 ): AttributeGroup {
   const isDate = DATE_ATTRIBUTE_KEYS.includes(attributeKey);
@@ -79,7 +85,7 @@ function buildDisplayBuckets(
   // Sort date buckets by recency. Non-date buckets are already alphabetically
   // sorted by the main process and their order is preserved here.
   if (isDate) {
-    const dateSortOrder = [
+    const dateSortOrder: string[] = [
       t("drawer.attributes.overdue"),
       t("drawer.attributes.elapsed"),
       t("drawer.attributes.lastWeek"),
@@ -107,8 +113,10 @@ function buildDisplayBuckets(
 }
 
 const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
-  memo(({ settings, attributes, filters, t }) => {
+  memo(({ settings, attributes, filters }) => {
     const [hovered, setHovered] = useState<string | null>(null);
+
+    const { t } = useTranslation();
 
     const isAttributesEmpty = useMemo(
       () =>
@@ -127,7 +135,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
     };
 
     const renderFilterChips = (
-      categoryKey: string,
+      categoryKey: AttributeKey,
       buckets: AttributeGroup,
     ) => {
       return Object.entries(buckets).map(
@@ -170,7 +178,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
                     </span>
                   ) : null
                 }
-                className={attribute.notify ? "notify" : null}
+                className={attribute.notify ? "notify" : undefined}
               >
                 <button
                   data-testid={`drawer-button-${categoryKey}`}
@@ -222,8 +230,9 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
 
     return (
       <div id="Attributes">
-        {!isAttributesEmpty ? (
-          Object.keys(attributes).map((categoryKey, index) => {
+        {!isAttributesEmpty && attributes ? (
+          Object.keys(attributes).map((catKey, index) => {
+            const categoryKey = catKey as AttributeKey;
             const buckets = buildDisplayBuckets(
               categoryKey,
               attributes[categoryKey],
@@ -286,4 +295,4 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
 
 DrawerAttributesComponent.displayName = "DrawerAttributesComponent";
 
-export default withTranslation()(DrawerAttributesComponent);
+export default DrawerAttributesComponent;

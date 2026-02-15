@@ -1,26 +1,28 @@
 import React, { useEffect, memo } from "react";
-import TextField from "@mui/material/TextField";
+import TextField, { StandardTextFieldProps } from "@mui/material/TextField";
 import { useForkRef } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClearIcon from "@mui/icons-material/Clear";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { i18n } from "../../Settings/LanguageSelector";
+import { HeadersObject, SearchFilter, SettingStore } from "@sleek-types";
+import { useTranslation } from "react-i18next";
 
 const { ipcRenderer, store } = window.api;
 
-interface InputComponentProps extends WithTranslation {
+interface InputComponentProps {
   headers: HeadersObject | null;
   searchString: string;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
   searchFilters: SearchFilter[];
-  searchFieldRef: React.RefObject<HTMLInputElement>;
+  searchFieldRef: React.RefObject<HTMLInputElement | null>;
   isAutocompleteOpen: boolean;
   setIsAutocompleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: Settings;
-  t: typeof i18n.t;
+  settings: SettingStore;
+  slotProps?: Partial<StandardTextFieldProps["slotProps"]> & {
+    htmlInput?: { ref?: React.Ref<HTMLInputElement> };
+  };
 }
 
 const handleAddTodo = (searchString: string): void => {
@@ -39,16 +41,12 @@ const InputComponent: React.FC<InputComponentProps> = memo(
     isAutocompleteOpen,
     setIsAutocompleteOpen,
     settings,
-    t,
-    tReady: _tReady,
-    i18n: _i18n,
-    tOptions: _tOptions,
+    slotProps,
     ...params
   }) => {
-    const inputRef = useForkRef(
-      searchFieldRef,
-      params.slotProps?.htmlInput?.ref,
-    );
+    const { t } = useTranslation();
+
+    const inputRef = useForkRef(searchFieldRef, slotProps?.htmlInput?.ref);
     useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent): void => {
         event.stopPropagation();
@@ -83,9 +81,9 @@ const InputComponent: React.FC<InputComponentProps> = memo(
           total: headers?.availableObjects,
         })}
         slotProps={{
-          ...params.slotProps,
+          ...slotProps,
           input: {
-            ...params.slotProps?.input,
+            ...slotProps?.input,
             startAdornment: (
               <InputAdornment position="start">
                 {searchFilters?.length > 0 || searchString ? (
@@ -149,7 +147,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(
             ),
           },
           htmlInput: {
-            ...params.slotProps?.htmlInput,
+            ...slotProps?.htmlInput,
             ref: inputRef,
           },
         }}
@@ -160,4 +158,4 @@ const InputComponent: React.FC<InputComponentProps> = memo(
 
 InputComponent.displayName = "InputComponent";
 
-export default withTranslation()(InputComponent);
+export default InputComponent;

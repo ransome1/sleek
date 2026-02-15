@@ -11,6 +11,7 @@ vi.mock("./Stores", () => {
         } else if (key === "files") {
           return [];
         }
+        return undefined;
       }),
     },
   };
@@ -100,10 +101,12 @@ describe("GetTrayImagePath", () => {
 
   it("On Windows in dark mode, white .ico tray icon is used", () => {
     vi.stubGlobal("process", { platform: "win32" });
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
     expect(GetTrayImagePath()).toBe("/resources/trayDark.ico?asset");
   });
   it("On Windows in light mode, black .ico tray icon is used", () => {
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "win32" });
     expect(GetTrayImagePath()).toBe("/resources/trayLight.ico?asset");
@@ -113,7 +116,9 @@ describe("GetTrayImagePath", () => {
       if (key === "invertTrayColor") {
         return true;
       }
+      return undefined;
     });
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "win32" });
     expect(GetTrayImagePath()).toBe("/resources/trayDark.ico?asset");
@@ -123,17 +128,21 @@ describe("GetTrayImagePath", () => {
       if (key === "invertTrayColor") {
         return true;
       }
+      return undefined;
     });
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
     vi.stubGlobal("process", { platform: "win32" });
     expect(GetTrayImagePath()).toBe("/resources/trayLight.ico?asset");
   });
   it("On macOS in light mode, black .png tray icon is used", () => {
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "darwin" });
     expect(GetTrayImagePath()).toBe("/resources/trayLightTemplate.png?asset");
   });
   it("On macOS in dark mode, white .png tray icon is used", () => {
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
     vi.stubGlobal("process", { platform: "darwin" });
     expect(GetTrayImagePath()).toBe("/resources/trayDarkTemplate.png?asset");
@@ -143,17 +152,21 @@ describe("GetTrayImagePath", () => {
       if (key === "invertTrayColor") {
         return true;
       }
+      return undefined;
     });
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "darwin" });
     expect(GetTrayImagePath()).toBe("/resources/trayDarkTemplate.png?asset");
   });
   it("On Linux in light mode, black .png tray icon is used", () => {
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "linux" });
     expect(GetTrayImagePath()).toBe("/resources/trayLightTemplate.png?asset");
   });
   it("On Linux in dark mode, white .png tray icon is used", () => {
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
     vi.stubGlobal("process", { platform: "linux" });
     expect(GetTrayImagePath()).toBe("/resources/trayDarkTemplate.png?asset");
@@ -163,7 +176,9 @@ describe("GetTrayImagePath", () => {
       if (key === "invertTrayColor") {
         return true;
       }
+      return undefined;
     });
+    //@ts-expect-error Read-only, but we're mocking it.
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "linux" });
     expect(GetTrayImagePath()).toBe("/resources/trayDarkTemplate.png?asset");

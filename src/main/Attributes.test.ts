@@ -1,41 +1,48 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { attributes, updateAttributes } from "./Attributes";
+import { Sorting, TodoObject } from "@sleek-types";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-const sorting = [
-  { value: "priority" },
-  { value: "projects" },
-  { value: "contexts" },
-  { value: "due" },
-  { value: "t" },
-  { value: "rec" },
-  { value: "pm" },
-  { value: "created" },
-  { value: "completed" },
+const sorting: Sorting[] = [
+  { value: "priority", invert: false },
+  { value: "projects", invert: false },
+  { value: "contexts", invert: false },
+  { value: "due", invert: false },
+  { value: "t", invert: false },
+  { value: "rec", invert: false },
+  { value: "pm", invert: false },
+  { value: "created", invert: false },
+  { value: "completed", invert: false },
 ];
 
 /** Reset attributes to a clean state before each test. */
 function reset() {
-  updateAttributes([], sorting as any, true);
+  updateAttributes([], sorting, true);
 }
 
 /** Build a minimal TodoObject with sensible defaults. */
-function todo(overrides: Partial<Record<string, any>> = {}): any {
+function todo(overrides: Partial<TodoObject> = {}): TodoObject {
   return {
     priority: null,
     projects: [],
     contexts: [],
     due: null,
+    dueString: null,
     t: null,
+    tString: null,
     rec: null,
     pm: null,
     created: null,
     completed: null,
     notify: false,
     hidden: false,
+    complete: false,
+    lineNumber: 1,
+    body: "",
+    string: "",
     ...overrides,
   };
 }
@@ -48,25 +55,21 @@ describe("count", () => {
   beforeEach(reset);
 
   it("is 1 after one visible todo with that value", () => {
-    updateAttributes([todo({ priority: "A" })], sorting as any, true);
+    updateAttributes([todo({ priority: "A" })], sorting, true);
     expect(attributes.priority["A"].count).toBe(1);
   });
 
   it("increments for each additional visible todo", () => {
     updateAttributes(
       [todo({ priority: "A" }), todo({ priority: "A" })],
-      sorting as any,
+      sorting,
       true,
     );
     expect(attributes.priority["A"].count).toBe(2);
   });
 
   it("is not incremented for a hidden todo", () => {
-    updateAttributes(
-      [todo({ priority: "A", hidden: true })],
-      sorting as any,
-      true,
-    );
+    updateAttributes([todo({ priority: "A", hidden: true })], sorting, true);
     expect(attributes.priority["A"].count).toBe(0);
   });
 
@@ -76,24 +79,20 @@ describe("count", () => {
         todo({ priority: "A" }), // visible
         todo({ priority: "A", hidden: true }), // hidden — must not count
       ],
-      sorting as any,
+      sorting,
       true,
     );
     expect(attributes.priority["A"].count).toBe(1);
   });
 
   it("counts multi-value attributes (projects) per element", () => {
-    updateAttributes(
-      [todo({ projects: ["work", "home"] })],
-      sorting as any,
-      true,
-    );
+    updateAttributes([todo({ projects: ["work", "home"] })], sorting, true);
     expect(attributes.projects["work"].count).toBe(1);
     expect(attributes.projects["home"].count).toBe(1);
   });
 
   it("skips null values", () => {
-    updateAttributes([todo({ priority: null })], sorting as any, true);
+    updateAttributes([todo({ priority: null })], sorting, true);
     expect(attributes.priority["null"]).toBeUndefined();
   });
 });
@@ -106,16 +105,12 @@ describe("hide", () => {
   beforeEach(reset);
 
   it("is false when the todo is visible", () => {
-    updateAttributes([todo({ priority: "A" })], sorting as any, true);
+    updateAttributes([todo({ priority: "A" })], sorting, true);
     expect(attributes.priority["A"].hide).toBe(false);
   });
 
   it("is true when all todos with that value are hidden", () => {
-    updateAttributes(
-      [todo({ priority: "A", hidden: true })],
-      sorting as any,
-      true,
-    );
+    updateAttributes([todo({ priority: "A", hidden: true })], sorting, true);
     expect(attributes.priority["A"].hide).toBe(true);
   });
 
@@ -126,7 +121,7 @@ describe("hide", () => {
         todo({ priority: "A" }), // this one makes it visible
         todo({ priority: "A", hidden: true }),
       ],
-      sorting as any,
+      sorting,
       true,
     );
     expect(attributes.priority["A"].hide).toBe(false);
@@ -138,7 +133,7 @@ describe("hide", () => {
         todo({ priority: "A" }), // visible first
         todo({ priority: "A", hidden: true }),
       ],
-      sorting as any,
+      sorting,
       true,
     );
     expect(attributes.priority["A"].hide).toBe(false);
@@ -155,18 +150,14 @@ describe("notify", () => {
   it("is true for a due attribute when the todo has notify set", () => {
     updateAttributes(
       [todo({ due: "2024-01-15", notify: true })],
-      sorting as any,
+      sorting,
       true,
     );
     expect(attributes.due["2024-01-15"].notify).toBe(true);
   });
 
   it("is false for non-due attributes even when the todo has notify set", () => {
-    updateAttributes(
-      [todo({ priority: "A", notify: true })],
-      sorting as any,
-      true,
-    );
+    updateAttributes([todo({ priority: "A", notify: true })], sorting, true);
     expect(attributes.priority["A"].notify).toBe(false);
   });
 });
@@ -185,7 +176,7 @@ describe("alphabetical sort", () => {
         todo({ priority: "A" }),
         todo({ priority: "B" }),
       ],
-      sorting as any,
+      sorting,
       true,
     );
     expect(Object.keys(attributes.priority)).toEqual(["A", "B", "C"]);
@@ -203,13 +194,13 @@ describe("two-pass behaviour", () => {
     // Pass 1: two todos
     updateAttributes(
       [todo({ priority: "A" }), todo({ priority: "A" })],
-      sorting as any,
+      sorting,
       true,
     );
     expect(attributes.priority["A"].count).toBe(2);
 
     // Pass 2: only one todo survives filtering
-    updateAttributes([todo({ priority: "A" })], sorting as any, false);
+    updateAttributes([todo({ priority: "A" })], sorting, false);
     expect(attributes.priority["A"].count).toBe(1);
   });
 
@@ -220,12 +211,12 @@ describe("two-pass behaviour", () => {
         todo({ priority: "A" }), // visible → hide = false
         todo({ priority: "B", hidden: true }), // hidden → hide = true
       ],
-      sorting as any,
+      sorting,
       true,
     );
 
     // Pass 2: filtered list is empty — neither value has a matching todo
-    updateAttributes([], sorting as any, false);
+    updateAttributes([], sorting, false);
 
     // "A" was visible in pass 1: must remain visible (hide = false) with count 0
     expect(attributes.priority["A"].count).toBe(0);
@@ -238,11 +229,11 @@ describe("two-pass behaviour", () => {
 
   it("pass 1 with reset = true wipes stale values from a previous run", () => {
     // First request: "A" exists
-    updateAttributes([todo({ priority: "A" })], sorting as any, true);
+    updateAttributes([todo({ priority: "A" })], sorting, true);
     expect(attributes.priority["A"]).toBeDefined();
 
     // Second request, pass 1: "A" is gone from the file
-    updateAttributes([todo({ priority: "B" })], sorting as any, true);
+    updateAttributes([todo({ priority: "B" })], sorting, true);
     expect(attributes.priority["A"]).toBeUndefined();
     expect(attributes.priority["B"]).toBeDefined();
   });
@@ -256,18 +247,18 @@ describe("category sort order", () => {
   beforeEach(reset);
 
   it("reorders top-level categories to match the provided sort order", () => {
-    const customSorting = [
-      { value: "due" },
-      { value: "priority" },
-      { value: "projects" },
-      { value: "contexts" },
-      { value: "t" },
-      { value: "rec" },
-      { value: "pm" },
-      { value: "created" },
-      { value: "completed" },
+    const customSorting: Sorting[] = [
+      { value: "due", invert: false },
+      { value: "priority", invert: false },
+      { value: "projects", invert: false },
+      { value: "contexts", invert: false },
+      { value: "t", invert: false },
+      { value: "rec", invert: false },
+      { value: "pm", invert: false },
+      { value: "created", invert: false },
+      { value: "completed", invert: false },
     ];
-    updateAttributes([], customSorting as any, true);
+    updateAttributes([], customSorting, true);
     expect(Object.keys(attributes)[0]).toBe("due");
     expect(Object.keys(attributes)[1]).toBe("priority");
   });

@@ -6,23 +6,28 @@ import CircleUnchecked from "@mui/icons-material/RadioButtonUnchecked";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import RendererComponent from "./Renderer";
 import { HandleFilterSelect, IsSelected } from "../Shared";
 import "./Row.scss";
-import { i18n } from "../Settings/LanguageSelector";
+import {
+  ContextMenu,
+  Filters,
+  PromptItem,
+  SettingStore,
+  TodoObject,
+} from "@sleek-types";
 
 const { ipcRenderer } = window.api;
 
-interface RowProps extends WithTranslation {
+interface RowProps {
   todoObject: TodoObject;
   filters: Filters | null;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  settings: Settings;
-  t: typeof i18n.t;
+  settings: SettingStore;
 }
 
 const Row: React.FC<RowProps> = memo(
@@ -34,8 +39,9 @@ const Row: React.FC<RowProps> = memo(
     setContextMenu,
     setPromptItem,
     settings,
-    t,
   }) => {
+    const { t } = useTranslation();
+
     const handleConfirmDelete = (): void => {
       if (todoObject)
         ipcRenderer.send("removeLineFromFile", todoObject.lineNumber);
@@ -166,7 +172,6 @@ const Row: React.FC<RowProps> = memo(
             tabIndex={0}
             checked={todoObject.complete}
             onChange={handleCheckboxChange}
-            slotProps={{ input: { "data-testid": "datagrid-checkbox" } }}
           />
 
           {(settings.sorting[0].value != "priority" || settings.fileSorting) &&
@@ -185,9 +190,10 @@ const Row: React.FC<RowProps> = memo(
                   onClick={() =>
                     HandleFilterSelect(
                       "priority",
-                      [todoObject.priority],
+                      [todoObject.priority!],
                       filters,
                       false,
+                      null,
                     )
                   }
                 >
@@ -226,7 +232,7 @@ const Row: React.FC<RowProps> = memo(
 
           <RendererComponent
             todoObject={todoObject}
-            filters={filters}
+            filters={filters ? filters : ({} as Filters)}
             settings={settings}
           />
         </li>
@@ -237,4 +243,4 @@ const Row: React.FC<RowProps> = memo(
 
 Row.displayName = "Row";
 
-export default withTranslation()(Row);
+export default Row;

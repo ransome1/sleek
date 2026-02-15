@@ -31,8 +31,8 @@
     "node": ">=25"
   },
   "scripts": {
-    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
-    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
     "dev": "electron-vite dev --watch",
@@ -46,7 +46,8 @@
     "build:mas": "npm run build && electron-builder build -m mas --universal --publish never",
     "build:masdev": "npm run build && electron-builder build -m mas-dev --publish never",
     "postinstall": "electron-builder install-app-deps",
-    "peggy": "npx peggy --format es --dts --output ./src/main/Filters/FilterLang.ts ./src/main/Filters/FilterLang.pegjs"
+    "peggy": "npx peggy --format es --dts --output ./src/main/Filters/FilterLang.ts ./src/main/Filters/FilterLang.pegjs && npm run peggy:ts-nocheck",
+    "peggy:ts-nocheck": "node -e \"const fs=require('fs');const p='src/main/Filters/FilterLang.ts';const c=fs.readFileSync(p,'utf8');if(!c.startsWith('// @ts-nocheck')) fs.writeFileSync(p,'// @ts-nocheck\\n'+c,'utf8')\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
