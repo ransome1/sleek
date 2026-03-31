@@ -5,8 +5,7 @@
     "src/main/**/*",
     "src/main/**/*.ts",
     "src/preload/**/*",
-    "resources/icon.icns",
-    "resources/*.icns*",
+    "build/icon.icns",
     "src/preload/electron.d.ts"
   ],
   "compilerOptions": {

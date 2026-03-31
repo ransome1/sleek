@@ -35,7 +35,6 @@ mac:
       role: Editor
       isPackage: false
       rank: Owner
-  icon: ./resources/icon.icns
   type: distribution
   hardenedRuntime: true
   gatekeeperAssess: false

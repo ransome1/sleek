@@ -6,7 +6,7 @@ import { CreateMenu } from "./Menu.js";
 import { createFileWatcher, watcher } from "./File/Watcher";
 import { addFile } from "./File/File";
 import { CreateTray } from "./Tray";
-import macIcon from "../../resources/icon.icns?asset";
+import macIcon from "../../build/icon.icns?asset";
 import windowsIcon from "../../resources/icon.ico?asset";
 import linuxIcon from "../../resources/icon.png?asset";
 import { HandleTheme } from "./Theme.js";
