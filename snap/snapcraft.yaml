@@ -1,11 +1,23 @@
 name: sleek
+title: sleek
 base: core24
-version: "2.0.23"
+version: "2.0.24"
 summary: todo.txt manager for Linux, free and open-source (FOSS)
 description: |
   sleek is an open-source (FOSS) todo manager based on the todo.txt syntax.
   Stripped down to only the most necessary features, and with a clean and
   simple interface, sleek aims to help you focus on getting things done.
+donation:
+  - https://github.com/sponsors/ransome1
+issues:
+  - https://github.com/ransome1/sleek/issues
+website:
+  - https://github.com/ransome1/sleek
+source-code:
+  - https://github.com/ransome1/sleek
+contact:
+  - sleek@datenkrake.eu
+  - https://github.com/ransome1/sleek/discussions
 grade: stable
 confinement: strict
 icon: ./build/512x512.png
@@ -22,16 +34,12 @@ platforms:
 
 apps:
   sleek:
-    command: snap/command-chain/desktop-launch $SNAP/sleek/sleek --disable-gpu --no-sandbox
+    command: bin/sleek-wrapper
     environment:
-      DISABLE_WAYLAND: 1
       TMPDIR: $XDG_RUNTIME_DIR
-      PATH: "$SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin:$PATH"
-      SNAP_DESKTOP_RUNTIME: $SNAP/gnome-platform
-      GTK_USE_PORTAL: "1"
+      WAYLAND_DISPLAY: ""
     extensions: [gnome]
     plugs:
-      - desktop
       - home
       - browser-support
       - network
@@ -47,56 +55,50 @@ parts:
     override-pull: |
       set -eux
       craftctl default
-
-      NODE_VERSION="20.18.3"
+      NODE_VERSION="22.14.0"
       ARCH="$(dpkg --print-architecture)"
       case "$ARCH" in
         amd64) NODE_ARCH="x64" ;;
         arm64) NODE_ARCH="arm64" ;;
         *)     echo "Unsupported arch: $ARCH"; exit 1 ;;
       esac
-
-      echo "Downloading Node.js v${NODE_VERSION} for ${NODE_ARCH}..."
       curl --proxy "${http_proxy:-}" -fsSL \
         "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz" \
         -o node.tar.xz
-
       mkdir -p node-sdk
       tar -xJf node.tar.xz --strip-components=1 -C node-sdk
       rm node.tar.xz
-      echo "Node.js installed: $(./node-sdk/bin/node --version)"
-
     override-build: |
       set -eux
-
       export PATH="${SNAPCRAFT_PART_SRC}/node-sdk/bin:${PATH}"
-
-      echo "Node: $(node --version)"
-      echo "npm:  $(npm --version)"
-
       if [ -n "${http_proxy:-}" ]; then
         export ELECTRON_GET_USE_PROXY=1
         export GLOBAL_AGENT_HTTP_PROXY="${http_proxy}"
         npm config set proxy "${http_proxy}"
         npm config set https-proxy "${http_proxy}"
       fi
-
       npm install
       npm run build:unpack
       mv dist/linux* "${SNAPCRAFT_PART_INSTALL}/sleek"
 
+      mkdir -p "${SNAPCRAFT_PART_INSTALL}/bin"
+      cat > "${SNAPCRAFT_PART_INSTALL}/bin/sleek-wrapper" << 'WRAPPER'
+      #!/bin/bash
+      exec "$SNAP/sleek/sleek" --no-sandbox --ozone-platform=x11 "$@"
+      WRAPPER
+      chmod +x "${SNAPCRAFT_PART_INSTALL}/bin/sleek-wrapper"
     stage-packages:
       - libnss3
 
   cleanup:
     after: [sleek]
     plugin: nil
-    build-snaps: [gnome-42-2204]
+    build-snaps: [gnome-46-2404-sdk]
     override-prime: |
       set -eux
-      cd "$SNAPCRAFT_PRIME/sleek"
+      cd "$SNAPCRAFT_PRIME/sleek" || exit 0
       rm -f LICENSE.electron.txt LICENSES.chromium.html chrome-sandbox
-      for snap in "gnome-42-2204"; do
+      for snap in "gnome-46-2404-sdk"; do
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do

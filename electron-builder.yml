@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: "62"
+buildVersion: "63"
 asar: true
 files:
   - "!**/flatpak/**/*"
@@ -106,4 +106,4 @@ linux:
       arch:
         - arm64
         - x64
-electronVersion: 40.1.0
+electronVersion: 41.1.1
