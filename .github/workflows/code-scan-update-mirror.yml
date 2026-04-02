@@ -78,21 +78,18 @@ jobs:
     needs: codecov
     name: Mirror code to opencode.net
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: SvanBoxel/gitlab-mirror-and-ci-action@master
-        with:
-          args: "https://www.opencode.net/ransome/sleek.git"
-        env:
-          FOLLOW_TAGS: "false"
-          FORCE_PUSH: "false"
-          GITLAB_HOSTNAME: "opencode.net"
-          GITLAB_USERNAME: "ransome"
-          GITLAB_PASSWORD: ${{ secrets.GITLAB_PAT }}
-          GITLAB_PROJECT_ID: "1637"
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          fetch-tags: true
+      - name: Push to GitLab mirror
+        run: |
+          git push --force \
+            "https://ransome:${{ secrets.GITLAB_PAT }}@www.opencode.net/ransome/sleek.git" \
+            "HEAD:refs/heads/main" \
+            "refs/tags/*:refs/tags/*"
   flathub:
     name: Update commit id in Flathub repo
     runs-on: ubuntu-latest
