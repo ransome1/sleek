@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 
 type Opcode =
   | "pri"
@@ -40,7 +40,7 @@ function runQuery(todoObject: TodoObject, compiledQuery: Opcode[]): boolean {
         break;
       case "due":
         if (todoObject.due) {
-          const d = dayjs(todoObject.due).toDate();
+          const d = DateTime.fromISO(todoObject.due).toJSDate();
           stack.push(
             new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(),
           );
@@ -51,7 +51,7 @@ function runQuery(todoObject: TodoObject, compiledQuery: Opcode[]): boolean {
       case "duestr":
         next = q.shift();
         if (todoObject.dueString) {
-          let d = dayjs(todoObject.dueString).toDate();
+          let d = DateTime.fromISO(todoObject.dueString).toJSDate();
           d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
           stack.push(d.toISOString().slice(0, 10).startsWith(next));
         } else {
@@ -60,7 +60,7 @@ function runQuery(todoObject: TodoObject, compiledQuery: Opcode[]): boolean {
         break;
       case "threshold":
         if (todoObject.t) {
-          const d = dayjs(todoObject.t).toDate();
+          const d = DateTime.fromISO(todoObject.t).toJSDate();
           stack.push(
             new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(),
           );
@@ -71,7 +71,7 @@ function runQuery(todoObject: TodoObject, compiledQuery: Opcode[]): boolean {
       case "tstr":
         next = q.shift();
         if (todoObject.tString) {
-          let d = dayjs(todoObject.tString).toDate();
+          let d = DateTime.fromISO(todoObject.tString).toJSDate();
           d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
           stack.push(d.toISOString().slice(0, 10).startsWith(next));
         } else {

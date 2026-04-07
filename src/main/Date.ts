@@ -1,5 +1,7 @@
 import Sugar from "sugar";
-import { MustNotify } from "./Notifications";
+import { DateTime } from "luxon";
+import { MustNotify, GetToday } from "./Notifications";
+import { SettingsStore } from "./Stores";
 
 export function replaceSpeakingDatesWithAbsoluteDates(string: string): string {
   const speakingDates: DateAttributes = extractSpeakingDates(string);
@@ -28,11 +30,15 @@ function processDateWithSugar(string: string, type: string) {
 
     if (type === "absolute" || type === "relative") {
       const isoDate = Sugar.Date(sugarDate).format("%F").raw;
+      const today = GetToday();
+      const thresholdDay = today.plus({
+        days: SettingsStore.get("notificationThreshold") as number,
+      });
       lastMatch = {
         date: isoDate,
         string: combinedValue.slice(0, -1),
         type: type,
-        notify: MustNotify(sugarDate),
+        notify: MustNotify(DateTime.fromJSDate(sugarDate), thresholdDay),
       };
     }
   }

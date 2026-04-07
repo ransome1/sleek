@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import Chip from "@mui/material/Chip";
 import Badge from "@mui/material/Badge";
 import { HandleFilterSelect, friendlyDate, IsSelected } from "../Shared";
 import { withTranslation } from "react-i18next";
-import dayjs from "dayjs";
-import updateLocale from "dayjs/plugin/updateLocale";
-
-dayjs.extend(updateLocale);
+import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
 
 const { ipcRenderer } = window.api;
 
@@ -33,11 +30,15 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   //const ButtonFieldRef = useRef<HTMLButtonElement>(null);
   const chipText = type === "due" ? "due:" : type === "t" ? "t:" : null;
 
-  dayjs.updateLocale(settings.language, {
-    weekStart: settings.weekStart,
-  });
+  LuxonSettings.defaultWeekSettings = {
+    firstDay: (settings.weekStart === 0
+      ? 7
+      : settings.weekStart) as WeekdayNumbers,
+    minimalDays: 4,
+    weekend: [6, 7],
+  };
 
-  const handleChange = (date: dayjs.Dayjs | null) => {
+  const handleChange = (date: DateTime | null) => {
     try {
       ipcRenderer.send(
         "writeTodoToFile",
@@ -45,7 +46,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
         todoObject.string,
         false,
         type,
-        dayjs(date).format("YYYY-MM-DD"),
+        date ? date.toFormat("yyyy-MM-dd") : null,
       );
     } catch (error) {
       console.error(error);
@@ -61,7 +62,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   const ButtonField = () => {
     const mustNotify = type === "due" ? !todoObject?.notify : true;
     const groupedName =
-      settings.useHumanFriendlyDates && dayjs(date).isValid()
+      settings.useHumanFriendlyDates && date && DateTime.fromISO(date).isValid
         ? friendlyDate(date, type, settings, t).pop()
         : date;
 
@@ -94,14 +95,14 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
 
   return (
     <LocalizationProvider
-      dateAdapter={AdapterDayjs}
+      dateAdapter={AdapterLuxon}
       adapterLocale={settings.language}
     >
       <DatePicker
         open={open}
         onClose={() => setOpen(false)}
-        value={dayjs(date)}
-        onChange={handleChange}
+        value={date ? DateTime.fromISO(date) : null}
+        onChange={handleChange as any}
         slots={{ field: ButtonField }}
       />
     </LocalizationProvider>
