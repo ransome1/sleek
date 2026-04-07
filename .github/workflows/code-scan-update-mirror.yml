@@ -71,7 +71,7 @@ jobs:
       - name: Run unit tests
         run: npm run coverage
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   mirror:
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@master
         with:
           fetch-depth: 0
           fetch-tags: true
