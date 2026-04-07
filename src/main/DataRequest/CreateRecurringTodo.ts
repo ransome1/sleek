@@ -1,5 +1,5 @@
 import { Item } from "jstodotxt";
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 import { prepareContentForWriting } from "../File/Write";
 import { lineBreakPlaceholder } from "../Shared";
 
@@ -34,15 +34,23 @@ const addRecurrenceToDate = (
       : recurrenceValue;
   switch (recurrenceInterval) {
     case RecurrenceInterval.Daily:
-      return dayjs(date).add(validRecurrenceValue, "day").toDate();
+      return DateTime.fromJSDate(date)
+        .plus({ days: validRecurrenceValue })
+        .toJSDate();
     case RecurrenceInterval.BusinessDays:
       return addBusinessDays(date, validRecurrenceValue);
     case RecurrenceInterval.Weekly:
-      return dayjs(date).add(validRecurrenceValue, "week").toDate();
+      return DateTime.fromJSDate(date)
+        .plus({ weeks: validRecurrenceValue })
+        .toJSDate();
     case RecurrenceInterval.Monthly:
-      return dayjs(date).add(validRecurrenceValue, "month").toDate();
+      return DateTime.fromJSDate(date)
+        .plus({ months: validRecurrenceValue })
+        .toJSDate();
     case RecurrenceInterval.Annually:
-      return dayjs(date).add(validRecurrenceValue, "year").toDate();
+      return DateTime.fromJSDate(date)
+        .plus({ years: validRecurrenceValue })
+        .toJSDate();
     default:
       return date;
   }
@@ -80,7 +88,10 @@ const createRecurringTodo = (string: string, recurrence: string): string => {
     )?.value;
     const daysBetween: number =
       oldDueDate && oldThresholdDate
-        ? dayjs(oldDueDate, "YYYY-MM-DD").diff(oldThresholdDate, "day")
+        ? DateTime.fromISO(oldDueDate).diff(
+            DateTime.fromISO(oldThresholdDate),
+            "days",
+          ).days
         : 0;
 
     const newDueDate =
@@ -88,26 +99,28 @@ const createRecurringTodo = (string: string, recurrence: string): string => {
         ? null
         : strictRecurrence
           ? addRecurrenceToDate(
-              dayjs(oldDueDate).toDate(),
+              DateTime.fromISO(oldDueDate).toJSDate(),
               recurrenceInterval,
               recurrenceValue,
             )
           : addRecurrenceToDate(
-              dayjs(creationDate).toDate(),
+              DateTime.fromJSDate(creationDate).toJSDate(),
               recurrenceInterval,
               recurrenceValue,
             );
 
     const newThresholdDate = strictRecurrence
       ? addRecurrenceToDate(
-          dayjs(oldThresholdDate).toDate(),
+          DateTime.fromISO(oldThresholdDate).toJSDate(),
           recurrenceInterval,
           recurrenceValue,
         )
       : daysBetween > 0
-        ? dayjs(newDueDate).subtract(daysBetween, "day").toDate()
+        ? DateTime.fromJSDate(newDueDate!)
+            .minus({ days: daysBetween })
+            .toJSDate()
         : addRecurrenceToDate(
-            dayjs(creationDate).toDate(),
+            DateTime.fromJSDate(creationDate).toJSDate(),
             recurrenceInterval,
             recurrenceValue,
           );
@@ -117,12 +130,12 @@ const createRecurringTodo = (string: string, recurrence: string): string => {
     if (newDueDate && creationDate && !recurrenceOnlyForThresholdDate)
       JsTodoTxtObject.setExtension(
         "due",
-        dayjs(newDueDate).format("YYYY-MM-DD"),
+        DateTime.fromJSDate(newDueDate).toFormat("yyyy-MM-dd"),
       );
     if (oldThresholdDate)
       JsTodoTxtObject.setExtension(
         "t",
-        dayjs(newThresholdDate).format("YYYY-MM-DD"),
+        DateTime.fromJSDate(newThresholdDate!).toFormat("yyyy-MM-dd"),
       );
 
     JsTodoTxtObject.setComplete(false);

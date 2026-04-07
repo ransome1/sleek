@@ -1,14 +1,4 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import duration from "dayjs/plugin/duration";
-import calendar from "dayjs/plugin/calendar";
-import weekday from "dayjs/plugin/weekday";
-import updateLocale from "dayjs/plugin/updateLocale";
-dayjs.extend(relativeTime);
-dayjs.extend(duration);
-dayjs.extend(calendar);
-dayjs.extend(weekday);
-dayjs.extend(updateLocale);
+import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
 
 const { store, ipcRenderer } = window.api;
 
@@ -121,15 +111,19 @@ export const friendlyDate = (
   settings: Settings,
   t: typeof i18n.t,
 ): string[] => {
-  dayjs.updateLocale(settings.language, {
-    weekStart: settings.weekStart,
-  });
+  LuxonSettings.defaultWeekSettings = {
+    firstDay: (settings.weekStart === 0
+      ? 7
+      : settings.weekStart) as WeekdayNumbers,
+    minimalDays: 4,
+    weekend: [6, 7],
+  };
 
-  const today = dayjs();
-  const date = dayjs(value);
+  const today = DateTime.now().startOf("day");
+  const date = DateTime.fromISO(value).startOf("day");
   const results: string[] = [];
 
-  if (date.isBefore(today, "day")) {
+  if (date < today) {
     results.push(
       attributeKey === "due"
         ? t("drawer.attributes.overdue")
@@ -138,47 +132,50 @@ export const friendlyDate = (
   }
 
   if (
-    date.isAfter(
-      today.subtract(1, "week").startOf("week").subtract(1, "day"),
-    ) &&
-    date.isBefore(today.subtract(1, "week").endOf("week"))
+    date >=
+      today.minus({ weeks: 1 }).startOf("week", { useLocaleWeeks: true }) &&
+    date <= today.minus({ weeks: 1 }).endOf("week", { useLocaleWeeks: true })
   ) {
     results.push(t("drawer.attributes.lastWeek"));
   }
 
-  if (
-    date.isBefore(today.endOf("month")) &&
-    date.isAfter(today.subtract(1, "day"), "day")
-  ) {
+  if (date <= today.endOf("month") && date > today.minus({ days: 1 })) {
     results.push(t("drawer.attributes.thisMonth"));
   }
 
-  if (date.isSame(today, "week")) {
+  if (
+    date >= today.startOf("week", { useLocaleWeeks: true }) &&
+    date <= today.endOf("week", { useLocaleWeeks: true })
+  ) {
     results.push(t("drawer.attributes.thisWeek"));
   }
 
-  if (date.isSame(today.subtract(1, "day"), "day")) {
+  if (date.hasSame(today.minus({ days: 1 }), "day")) {
     results.push(t("drawer.attributes.yesterday"));
   }
 
-  if (date.isSame(today, "day")) {
+  if (date.hasSame(today, "day")) {
     results.push(t("drawer.attributes.today"));
   }
 
-  if (date.isSame(today.add(1, "day"), "day")) {
+  if (date.hasSame(today.plus({ days: 1 }), "day")) {
     results.push(t("drawer.attributes.tomorrow"));
   }
 
-  if (date.isSame(today.add(1, "week"), "week")) {
+  if (
+    date >=
+      today.plus({ weeks: 1 }).startOf("week", { useLocaleWeeks: true }) &&
+    date <= today.plus({ weeks: 1 }).endOf("week", { useLocaleWeeks: true })
+  ) {
     results.push(t("drawer.attributes.nextWeek"));
   }
 
-  if (date.month() === today.add(1, "month").month()) {
+  if (date.month === today.plus({ months: 1 }).month) {
     results.push(t("drawer.attributes.nextMonth"));
   }
 
-  if (date.isAfter(today.add(1, "month").endOf("month"))) {
-    results.push(dayjs(date).format("YYYY-MM-DD"));
+  if (date > today.plus({ months: 1 }).endOf("month")) {
+    results.push(date.toFormat("yyyy-MM-dd"));
   }
 
   return results;

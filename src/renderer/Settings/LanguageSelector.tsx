@@ -21,21 +21,6 @@ import pl from "../../locales/pl.json";
 import ru from "../../locales/ru.json";
 import ko from "../../locales/ko.json";
 import hi from "../../locales/hi.json";
-import "dayjs/locale/de";
-import "dayjs/locale/en";
-import "dayjs/locale/it";
-import "dayjs/locale/es";
-import "dayjs/locale/fr";
-import "dayjs/locale/zh";
-import "dayjs/locale/pt";
-import "dayjs/locale/pt-br";
-import "dayjs/locale/tr";
-import "dayjs/locale/hu";
-import "dayjs/locale/cs";
-import "dayjs/locale/pl";
-import "dayjs/locale/ru";
-import "dayjs/locale/ko";
-import "dayjs/locale/hi";
 
 const { store } = window.api;
 

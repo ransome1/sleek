@@ -4,7 +4,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { AlertColor } from "@mui/material/Alert";
 import { withTranslation, WithTranslation } from "react-i18next";
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 import AutoSuggest from "./AutoSuggest";
 import PriorityPicker from "./PriorityPicker";
 import DatePicker from "./DatePicker";
@@ -101,12 +101,22 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
       }
     };
 
-    const handleChange = (type: string, value: string): void => {
+    const handleChange = (
+      type: string,
+      value: string | DateTime | null,
+    ): void => {
       try {
         let updatedValue;
         if (type === "due" || type === "t") {
-          if (dayjs(value).isValid())
-            updatedValue = value ? dayjs(value).format("YYYY-MM-DD") : null;
+          const dateValue =
+            value instanceof DateTime
+              ? value
+              : value
+                ? DateTime.fromISO(value as string)
+                : null;
+          if (dateValue && dateValue.isValid)
+            updatedValue = dateValue.toFormat("yyyy-MM-dd");
+          else updatedValue = null;
         } else if (type === "pm") {
           updatedValue = value === "0" ? null : value;
         } else {

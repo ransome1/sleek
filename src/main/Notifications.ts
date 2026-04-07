@@ -5,30 +5,29 @@ import { SettingsStore, NotificationsStore, FiltersStore } from "./Stores";
 import { checkForSearchMatches } from "./Filters/Search";
 import { SearchFilter, Badge } from "../Types";
 
-export const GetToday = (): DateTime => {
-  const now = DateTime.now();
-  return now.startOf("day");
-};
-const GetThresholdDay = (): DateTime => {
-  const today = GetToday();
-  const notificationThreshold = GetNotificationThreshold();
-  return today.plus({ days: notificationThreshold });
-};
-const GetNotificationThreshold = (): number =>
-  SettingsStore.get("notificationThreshold");
-const GetNotifiedTodoObjects = (): string[] =>
-  NotificationsStore.get("notificationHashes") || [];
-const GetSearchFilters = (): SearchFilter[] => FiltersStore.get("search") || [];
+// ─── Store accessors ────────────────────────────────────────────────────────
 
-export function MustNotify(date): boolean {
-  const thresholdDay = GetThresholdDay();
-  return date < thresholdDay;
+const getNotificationThreshold = (): number =>
+  SettingsStore.get("notificationThreshold");
+
+const getNotifiedHashes = (): string[] =>
+  (NotificationsStore.get("notificationHashes") as string[]) || [];
+
+const getSearchFilters = (): SearchFilter[] =>
+  (FiltersStore.get("search") as SearchFilter[]) || [];
+
+export const GetToday = (): DateTime => DateTime.now().startOf("day");
+
+const getThresholdDay = (today: DateTime): DateTime =>
+  today.plus({ days: getNotificationThreshold() });
+
+export function MustNotify(dueDate: DateTime, thresholdDay: DateTime): boolean {
+  return dueDate < thresholdDay;
 }
 
-export function CreateTitle(dueDate): string {
-  const today: DateTime = GetToday();
+export function CreateTitle(dueDate: DateTime, today: DateTime): string {
   const tomorrow: DateTime = today.plus({ days: 1 });
-  const daysUntilDue: DateTime = dueDate.diff(today, "days").toObject().days;
+  const daysUntilDue: number = dueDate.diff(today, "days").toObject().days ?? 0;
 
   if (dueDate.hasSame(today, "day")) return "Due today";
   if (dueDate.hasSame(tomorrow, "day")) return "Due tomorrow";
@@ -36,28 +35,28 @@ export function CreateTitle(dueDate): string {
 }
 
 export function SuppressNotification(
-  dueDate,
+  dueDate: DateTime,
   body: string,
   hash: string,
+  today: DateTime,
+  thresholdDay: DateTime,
 ): boolean {
-  const notificationHashes: string[] = GetNotifiedTodoObjects();
-  if (notificationHashes.includes(hash)) return true;
-
-  const today: DateTime = GetToday();
-  const thresholdDay = GetThresholdDay();
+  if (getNotifiedHashes().includes(hash)) return true;
   if (dueDate < today || dueDate >= thresholdDay) return true;
 
-  const searchFilters = GetSearchFilters();
-  return searchFilters.some(
-    (filter) =>
+  return getSearchFilters().some(
+    (filter: SearchFilter) =>
       filter.label &&
       filter.suppress &&
       checkForSearchMatches(body, filter.label),
   );
 }
 
-export function CountBadge(dueDate, badge: Badge): void {
-  const thresholdDay = GetThresholdDay();
+export function CountBadge(
+  dueDate: DateTime,
+  badge: Badge,
+  thresholdDay: DateTime,
+): void {
   if (dueDate < thresholdDay) badge.count++;
 }
 
@@ -67,22 +66,24 @@ export function HandleNotification(
   badge: Badge,
 ): void {
   if (!due || !body) return;
+
+  const today = GetToday();
+  const thresholdDay = getThresholdDay(today);
+  const dueDate = DateTime.fromISO(due);
   const hash = crypto.createHash("sha256").update(body).digest("hex");
 
-  const dueDate = DateTime.fromISO(due);
+  CountBadge(dueDate, badge, thresholdDay);
 
-  CountBadge(dueDate, badge);
-
-  if (SuppressNotification(dueDate, body, hash)) return;
+  if (SuppressNotification(dueDate, body, hash, today, thresholdDay)) return;
 
   const notification = new Notification({
-    title: CreateTitle(dueDate),
+    title: CreateTitle(dueDate, today),
     body,
     silent: false,
   });
   notification.show();
 
-  const notificationHashes = GetNotifiedTodoObjects();
+  const notificationHashes = getNotifiedHashes();
   notificationHashes.push(hash);
   NotificationsStore.set("notificationHashes", notificationHashes);
 }

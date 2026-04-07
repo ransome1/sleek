@@ -4,7 +4,7 @@ import { SettingsStore } from "../Stores";
 import { HandleNotification } from "../Notifications";
 import { extractSpeakingDates } from "../Date";
 import { lineBreakPlaceholder } from "../Shared";
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
 
 let linesInFile: string[];
 const badge: Badge = { count: 0 };
@@ -54,12 +54,16 @@ function createTodoObject(
     extensions.find((extension) => extension.key === "pm")?.value || null;
   const rec =
     extensions.find((extension) => extension.key === "rec")?.value || null;
-  const created = dayjs(JsTodoTxtObject.created()).isValid()
-    ? dayjs(JsTodoTxtObject.created()).format("YYYY-MM-DD")
-    : null;
-  const completed = dayjs(JsTodoTxtObject.completed()).isValid()
-    ? dayjs(JsTodoTxtObject.completed()).format("YYYY-MM-DD")
-    : null;
+  const createdRaw = JsTodoTxtObject.created();
+  const created =
+    createdRaw && DateTime.fromJSDate(createdRaw).isValid
+      ? DateTime.fromJSDate(createdRaw).toFormat("yyyy-MM-dd")
+      : null;
+  const completedRaw = JsTodoTxtObject.completed();
+  const completed =
+    completedRaw && DateTime.fromJSDate(completedRaw).isValid
+      ? DateTime.fromJSDate(completedRaw).toFormat("yyyy-MM-dd")
+      : null;
   const projects =
     JsTodoTxtObject.projects().length > 0 ? JsTodoTxtObject.projects() : null;
   const contexts =
