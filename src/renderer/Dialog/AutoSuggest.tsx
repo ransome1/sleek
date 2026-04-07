@@ -1,4 +1,4 @@
-import React, { Attributes, JSX, useEffect, useRef, useState } from "react";
+import React, { JSX, useEffect, useRef, useState } from "react";
 import Autosuggest from "react-autosuggest";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { i18n } from "../Settings/LanguageSelector";

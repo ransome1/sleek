@@ -12,11 +12,6 @@ dayjs.extend(updateLocale);
 
 const { store, ipcRenderer } = window.api;
 
-interface Filter {
-  value: string;
-  exclude: boolean;
-}
-
 interface Settings {
   language: string;
   weekStart: number;

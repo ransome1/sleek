@@ -6,10 +6,8 @@ const { ipcRenderer } = window.api;
 
 interface ArchiveComponentProps extends WithTranslation {
   triggerArchiving: boolean;
-  setTriggerArchiving: React.Dispatch<React.SetStateAction<boolean>>;
   settings: Settings;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  headers: HeadersObject | null;
   t: typeof i18n.t;
 }
 

@@ -241,7 +241,7 @@ function removeEventListeners(): void {
   ipcMain.off("requestArchive", handleRequestArchive);
 }
 
-app.on("before-quit", () => removeEventListeners);
+app.on("before-quit", () => removeEventListeners());
 
 ipcMain.on("storeGetConfig", handleStoreGetConfig);
 ipcMain.on("storeSetConfig", handleStoreSetConfig);

@@ -7,7 +7,7 @@ import { lineBreakPlaceholder } from "../Shared";
 import dayjs from "dayjs";
 
 let linesInFile: string[];
-export const badge: Badge = { count: 0 };
+const badge: Badge = { count: 0 };
 
 function createTodoObject(
   lineNumber: number,

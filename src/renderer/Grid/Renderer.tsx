@@ -8,14 +8,11 @@ import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import DatePickerInline from "./DatePickerInline";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { handleLinkClick, HandleFilterSelect, IsSelected } from "../Shared";
-import { WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
 
-interface RendererComponentProps extends WithTranslation {
+interface RendererComponentProps {
   todoObject: TodoObject;
   filters: Filters;
   settings: Settings;
-  t: typeof i18n.t;
 }
 
 const RendererComponent: React.FC<RendererComponentProps> = memo(

@@ -4,7 +4,6 @@ import Divider from "@mui/material/Divider";
 import { HandleFilterSelect, IsSelected } from "../Shared";
 
 interface GroupProps {
-  key: string;
   value: string | string[];
   filters: Filters | null;
 }
