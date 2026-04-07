@@ -1,6 +1,7 @@
 import { Item } from "jstodotxt";
 import dayjs from "dayjs";
 import { prepareContentForWriting } from "../File/Write";
+import { lineBreakPlaceholder } from "../Shared";
 
 enum RecurrenceInterval {
   Daily = "d",
@@ -51,7 +52,7 @@ const createRecurringTodo = (string: string, recurrence: string): string => {
   const updatedString = (string || "").replaceAll(
     // eslint-disable-next-line no-control-regex
     /[\x10\r\n]/g,
-    ` ${String.fromCharCode(16)} `,
+    ` ${lineBreakPlaceholder} `,
   );
 
   // todo: use createTodoObject instead

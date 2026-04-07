@@ -108,3 +108,7 @@ entitlements.mas.plist
 FilterLang.ts
 
 yarn.lock
+
+opencode.json
+
+AGENTS.md

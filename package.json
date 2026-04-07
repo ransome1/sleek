@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.24",
+  "version": "2.0.25-rc.1",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -13,7 +13,7 @@
   "category": "ProjectManagement",
   "homepage": "https://github.com/ransome1/",
   "bugs": {
-    "url": "https://github.com/ransome1/issues"
+    "url": "https://github.com/ransome1/sleek/issues"
   },
   "repository": {
     "type": "git",
@@ -27,11 +27,13 @@
   "copyright": "Copyright © 2021 to present Robin Ahle",
   "main": "./out/main/index.js",
   "type": "module",
-  "node": ">=24",
+  "engines": {
+    "node": ">=25"
+  },
   "scripts": {
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
-    "typecheck": "npm run typecheck:node && npx typecheck:web",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
     "dev": "electron-vite dev --watch",
     "test": "vitest",
@@ -59,12 +61,13 @@
     "i18next": "^26.0.3",
     "jstodotxt": "1.0.0-alpha.3",
     "luxon": "^3.7.1",
-    "react": "^19.1.0",
+    "react": "^19.2.4",
     "react-autosuggest": "^10.1.0",
-    "react-dom": "^19.1.0",
+    "react-dom": "^19.2.4",
     "react-i18next": "^17.0.2",
     "react-markdown": "^10.1.0",
     "react-string-replace": "^2.0.1",
+    "material-ui-popup-state": "^5.3.6",
     "remark-gfm": "^4.0.1",
     "sugar": "^2.0.6"
   },
@@ -88,14 +91,12 @@
     "eslint-plugin-react": "^7.37.5",
     "globals": "^17.3.0",
     "jsdom": "^29.0.1",
-    "material-ui-popup-state": "^5.3.6",
     "peggy": "^5.0.5",
     "prettier": "^3.8.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
     "sass": "^1.89.2",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.55.0",
+    "vite": "^8.0.5",
     "vitest": "^4.0.14"
   }
 }

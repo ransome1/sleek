@@ -72,7 +72,7 @@ function handleWriteTodoToFile(
       let updatedString: string | null = string;
       if (state !== undefined && index >= 0)
         updatedString = changeCompleteState(string, state);
-      prepareContentForWriting(index, updatedString);
+      prepareContentForWriting(index, updatedString, state);
     }
   } catch (error: any) {
     HandleError(error);

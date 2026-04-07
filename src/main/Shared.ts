@@ -7,6 +7,8 @@ export const userDataDirectory: string =
     ? path.join(app.getPath("userData"), "userData-Development")
     : path.join(app.getPath("userData"), "userData");
 
+export const lineBreakPlaceholder: string = String.fromCharCode(16);
+
 export function HandleError(error: Error): void {
   console.error(error);
   if (mainWindow && mainWindow.webContents) {

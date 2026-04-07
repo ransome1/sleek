@@ -16,7 +16,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 24
+          node-version: 25
           cache: "npm"
       - name: Install and build
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 24
+          node-version: 25
           cache: "npm"
       - name: Install and build
         run: |
@@ -74,7 +74,7 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@master
         with:
-          node-version: 24
+          node-version: 25
           cache: "npm"
       - name: Install and build
         run: |

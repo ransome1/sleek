@@ -4,12 +4,13 @@ import { linesInFile } from "../DataRequest/CreateTodoObjects";
 import { getActiveFile } from "./Active";
 import { SettingsStore } from "../Stores";
 import { replaceSpeakingDatesWithAbsoluteDates } from "../Date";
+import { lineBreakPlaceholder } from "../Shared";
 
-function writeToFile(string: string, filePath: string) {
+const writeToFile = (string: string, filePath: string) => {
   fs.writeFileSync(filePath, string + "\n", "utf-8");
-}
+};
 
-function removeLineFromFile(lineNumber: number) {
+const removeLineFromFile = (lineNumber: number) => {
   const activeFile: FileObject | null = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
@@ -17,9 +18,13 @@ function removeLineFromFile(lineNumber: number) {
     linesInFile.splice(lineNumber, 1);
     writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
   }
-}
+};
 
-function prepareContentForWriting(lineNumber: number, string: string) {
+const prepareContentForWriting = (
+  lineNumber: number,
+  string: string,
+  state: boolean,
+) => {
   const activeFile: FileObject | null = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
@@ -29,10 +34,10 @@ function prepareContentForWriting(lineNumber: number, string: string) {
 
   let linesToAdd;
 
-  if (SettingsStore.get("bulkTodoCreation")) {
-    linesToAdd = string.replaceAll(String.fromCharCode(16), "\n");
+  if (SettingsStore.get("bulkTodoCreation") && !state && lineNumber < 0) {
+    linesToAdd = string.replaceAll(lineBreakPlaceholder, "\n");
   } else {
-    linesToAdd = string.replaceAll(/\n/g, String.fromCharCode(16));
+    linesToAdd = string.replaceAll(/\n/g, lineBreakPlaceholder);
   }
 
   if (SettingsStore.get("convertRelativeToAbsoluteDates")) {
@@ -57,6 +62,6 @@ function prepareContentForWriting(lineNumber: number, string: string) {
   }
 
   writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
-}
+};
 
 export { prepareContentForWriting, removeLineFromFile, writeToFile };

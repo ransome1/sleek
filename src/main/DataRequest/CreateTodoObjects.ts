@@ -3,6 +3,7 @@ import { Item } from "jstodotxt";
 import { SettingsStore } from "../Stores";
 import { HandleNotification } from "../Notifications";
 import { extractSpeakingDates } from "../Date";
+import { lineBreakPlaceholder } from "../Shared";
 import dayjs from "dayjs";
 
 let linesInFile: string[];
@@ -36,7 +37,7 @@ function createTodoObject(
 
   content = JsTodoTxtObject.toString().replaceAll(
     " [LB] ",
-    String.fromCharCode(16),
+    lineBreakPlaceholder,
   );
 
   const body = JsTodoTxtObject.body().replaceAll(" [LB] ", " ");
