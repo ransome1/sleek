@@ -1,8 +1,12 @@
 directories:
   output: dist
   buildResources: build
-buildVersion: "63"
+buildVersion: "64"
 asar: true
+asarUnpack:
+  - "resources/icon.ico"
+  - "resources/trayDark.ico"
+  - "resources/trayLight.ico"
 files:
   - "!**/flatpak/**/*"
   - "!**/snap/**/*"
@@ -21,6 +25,7 @@ files:
   - "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}"
   - "!**/{appveyor.yml,.travis.yml,circle.yml}"
   - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+  - "!LICENSES.chromium"
 mac:
   appId: com.todotxt.sleek
   target:
@@ -106,4 +111,3 @@ linux:
       arch:
         - arm64
         - x64
-electronVersion: 41.1.1

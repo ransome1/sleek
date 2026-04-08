@@ -1,6 +1,7 @@
 import { Item } from "jstodotxt";
 import { createRecurringTodo } from "./CreateRecurringTodo";
 import restorePreviousPriority from "./RestorePreviousPriority";
+import { SettingsStore } from "../Stores";
 
 function changeCompleteState(string: string, state: boolean): string {
   // eslint-disable-next-line no-control-regex
@@ -12,17 +13,19 @@ function changeCompleteState(string: string, state: boolean): string {
   JsTodoTxtObject.setComplete(state);
 
   if (state) {
-    JsTodoTxtObject.setCreated(
-      JsTodoTxtObject.created() ? JsTodoTxtObject.created() : new Date(),
-    );
-    JsTodoTxtObject.setCompleted(new Date());
-
     const recurrence = JsTodoTxtObject?.extensions().find(
       (item) => item.key === "rec",
     );
+
     if (recurrence?.value) {
-      createRecurringTodo(JsTodoTxtObject.toString(), recurrence.value);
+      createRecurringTodo(content, recurrence.value);
     }
+
+    JsTodoTxtObject.setCreated(
+      JsTodoTxtObject.created() ? JsTodoTxtObject.created() : new Date(),
+    );
+
+    JsTodoTxtObject.setCompleted(new Date());
 
     const currentPriority = JsTodoTxtObject.priority();
     if (currentPriority) {

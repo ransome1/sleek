@@ -2,6 +2,20 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.25] - 2026-04-08
+
+### Enhanced
+
+- Replaced `dayjs` completely with `Luxon` and removed `dayjs` dependency
+- Refactoring: Removed unneccessary code and files
+
+### Fixed
+
+- When you set a todo’s status to 'done' and bulk creation is turned on, line breaks will no longer create new todos (#822)
+- On Windows, sleek no longer leaves behind a `*.tmp.ico` file in `%TEMP%` after each run. The tray icon files are now unpacked from the application archive so Windows can read them directly, avoiding the temporary copy that was never cleaned up (#848)
+- Recurring todos using a bare interval without a number (e.g. `rec:w`, `rec:m`) now correctly receive a new due date when completed. Previously the due date was silently omitted.
+- Strict recurring todos (e.g. `rec:+1w`) with no existing due date now correctly fall back to the completion date plus the recurrence interval, as documented. Previously an invalid date was written.
+
 ## [2.0.24] - 2026-04-01
 
 ### Enhanced

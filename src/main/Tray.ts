@@ -13,22 +13,14 @@ let tray: Tray | null = null;
 export function GetTrayImagePath(): string {
   const invertTrayColor = SettingsStore.get("invertTrayColor");
   const isDarkMode = nativeTheme.shouldUseDarkColors;
-  if (process.platform === "win32") {
-    return invertTrayColor
-      ? isDarkMode
-        ? TrayIconLightWin
-        : TrayIconDarkWin
-      : isDarkMode
-        ? TrayIconDarkWin
-        : TrayIconLightWin;
+  const isWindows = process.platform === "win32";
+
+  if (isWindows) {
+    const useDark = invertTrayColor ? !isDarkMode : isDarkMode;
+    return useDark ? TrayIconDarkWin : TrayIconLightWin;
   } else {
-    return invertTrayColor
-      ? isDarkMode
-        ? TrayIconLight
-        : TrayIconDark
-      : isDarkMode
-        ? TrayIconDark
-        : TrayIconLight;
+    const useDark = invertTrayColor ? !isDarkMode : isDarkMode;
+    return useDark ? TrayIconDark : TrayIconLight;
   }
 }
 
@@ -39,8 +31,7 @@ export function CreateTray(): Tray {
   tray.setToolTip("sleek");
   tray.on("click", handleTrayClick);
 
-  UpdateTrayImage();
-  UpdateTrayMenu();
+  UpdateTray();
 
   return tray;
 }
@@ -48,6 +39,11 @@ export function CreateTray(): Tray {
 export function DestroyTray(): void {
   tray?.destroy();
   tray = null;
+}
+
+export function UpdateTray(): void {
+  UpdateTrayImage();
+  UpdateTrayMenu();
 }
 
 export function UpdateTrayImage(): void {
@@ -76,7 +72,7 @@ function handleTrayClick(): void {
     HandleCreateWindow();
   } else if (mainWindow.isVisible()) {
     mainWindow.hide();
-  } else if (!mainWindow?.isVisible()) {
+  } else {
     mainWindow.show();
   }
 }

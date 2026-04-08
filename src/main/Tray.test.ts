@@ -1,5 +1,5 @@
 import { nativeTheme, Tray } from "electron";
-import { CreateTray, GetTrayImagePath } from "./Tray";
+import { CreateTray, DestroyTray, GetTrayImagePath } from "./Tray";
 import { SettingsStore } from "./Stores";
 
 vi.mock("./Stores", () => {
@@ -69,6 +69,28 @@ describe("CreateTray", () => {
     expect(Tray).toHaveBeenCalled();
     expect(tray.setToolTip).toHaveBeenCalledWith("sleek");
   });
+
+  it("calls destroy on any existing tray before creating a new one", () => {
+    const first = CreateTray();
+    CreateTray();
+    expect(first.destroy).toHaveBeenCalledOnce();
+  });
+});
+
+describe("DestroyTray", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("calls destroy on the tray instance", () => {
+    const tray = CreateTray();
+    DestroyTray();
+    expect(tray.destroy).toHaveBeenCalledOnce();
+  });
+
+  it("is a no-op when no tray has been created", () => {
+    expect(() => DestroyTray()).not.toThrow();
+  });
 });
 
 describe("GetTrayImagePath", () => {
@@ -76,7 +98,7 @@ describe("GetTrayImagePath", () => {
     vi.clearAllMocks();
   });
 
-  it("On Windows in light mode, black .ico tray icon is used", () => {
+  it("On Windows in dark mode, white .ico tray icon is used", () => {
     vi.stubGlobal("process", { platform: "win32" });
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
     expect(GetTrayImagePath()).toBe("/resources/trayDark.ico?asset");
@@ -86,7 +108,7 @@ describe("GetTrayImagePath", () => {
     vi.stubGlobal("process", { platform: "win32" });
     expect(GetTrayImagePath()).toBe("/resources/trayLight.ico?asset");
   });
-  it("On Windows in light mode, when tray icon color is inverted white .ico tray icon is used", () => {
+  it("On Windows in light mode, when tray icon color is inverted, white .ico tray icon is used", () => {
     vi.mocked(SettingsStore.get).mockImplementationOnce((key) => {
       if (key === "invertTrayColor") {
         return true;
@@ -96,6 +118,16 @@ describe("GetTrayImagePath", () => {
     vi.stubGlobal("process", { platform: "win32" });
     expect(GetTrayImagePath()).toBe("/resources/trayDark.ico?asset");
   });
+  it("On Windows in dark mode, when tray icon color is inverted, black .ico tray icon is used", () => {
+    vi.mocked(SettingsStore.get).mockImplementationOnce((key) => {
+      if (key === "invertTrayColor") {
+        return true;
+      }
+    });
+    vi.mocked(nativeTheme).shouldUseDarkColors = true;
+    vi.stubGlobal("process", { platform: "win32" });
+    expect(GetTrayImagePath()).toBe("/resources/trayLight.ico?asset");
+  });
   it("On macOS in light mode, black .png tray icon is used", () => {
     vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "darwin" });
@@ -103,6 +135,16 @@ describe("GetTrayImagePath", () => {
   });
   it("On macOS in dark mode, white .png tray icon is used", () => {
     vi.mocked(nativeTheme).shouldUseDarkColors = true;
+    vi.stubGlobal("process", { platform: "darwin" });
+    expect(GetTrayImagePath()).toBe("/resources/trayDarkTemplate.png?asset");
+  });
+  it("On macOS in light mode, when tray icon color is inverted, white .png tray icon is used", () => {
+    vi.mocked(SettingsStore.get).mockImplementationOnce((key) => {
+      if (key === "invertTrayColor") {
+        return true;
+      }
+    });
+    vi.mocked(nativeTheme).shouldUseDarkColors = false;
     vi.stubGlobal("process", { platform: "darwin" });
     expect(GetTrayImagePath()).toBe("/resources/trayDarkTemplate.png?asset");
   });
