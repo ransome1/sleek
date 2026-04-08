@@ -1,7 +1,7 @@
 import { app, BrowserWindow, nativeImage } from "electron";
 import { fileURLToPath } from "url";
 import fs from "fs";
-import { SettingsStore } from "./Stores.js";
+import { SettingsStore, setMainWindow } from "./Stores.js";
 import { CreateMenu } from "./Menu.js";
 import { createFileWatcher, watcher } from "./File/Watcher";
 import { addFile } from "./File/File";
@@ -12,7 +12,7 @@ import linuxIcon from "../../resources/icon.png?asset";
 import { HandleTheme } from "./Theme.js";
 import "./IpcMain.js";
 
-let startTime;
+const startTime = performance.now();
 const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
 const eventListeners: Record<string, any | undefined> = {};
@@ -31,6 +31,7 @@ const HandleCreateWindow = () => {
 const handleClosed = async () => {
   if (watcher) await watcher.close();
   mainWindow = null;
+  setMainWindow(null);
   eventListeners.handleClosed = undefined;
   eventListeners.handleResize = undefined;
   eventListeners.handleMove = undefined;
@@ -137,12 +138,18 @@ const createMainWindow = () => {
       sandbox: false,
     },
   });
+  setMainWindow(mainWindow);
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.setMenuBarVisibility(shouldShowMenubar);
     mainWindow.show();
     const endTime = performance.now();
     console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`);
+
+    const files: FileObject[] =
+      (SettingsStore.get("files") as FileObject[]) || [];
+    createFileWatcher(files);
+    CreateMenu(files);
   });
 
   mainWindow
@@ -160,14 +167,6 @@ const createMainWindow = () => {
       fileURLToPath(new URL("../renderer/index.html", import.meta.url)),
     );
   }
-
-  const files: FileObject[] =
-    (SettingsStore.get("files") as FileObject[]) || [];
-  if (files) {
-    createFileWatcher(files);
-  }
-
-  CreateMenu(files);
 
   handleWindowSizeAndPosition();
 
@@ -245,7 +244,6 @@ if (!gotTheLock) {
   app
     .whenReady()
     .then(() => {
-      startTime = performance.now();
       const tray = SettingsStore.get("tray");
       const startMinimized = SettingsStore.get("startMinimized");
       if (tray) CreateTray();

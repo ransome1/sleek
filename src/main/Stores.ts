@@ -1,9 +1,9 @@
 import Store from "electron-store";
 import path from "path";
 import crypto from "crypto";
+import { BrowserWindow } from "electron";
 import { dataRequest, searchString } from "./DataRequest/DataRequest";
 import { userDataDirectory, HandleError } from "./Shared";
-import { mainWindow } from "./index";
 import { createFileWatcher } from "./File/Watcher";
 import {
   CreateTray,
@@ -12,6 +12,12 @@ import {
   UpdateTrayMenu,
 } from "./Tray";
 import { HandleTheme } from "./Theme";
+
+let mainWindow: BrowserWindow | null = null;
+
+export function setMainWindow(window: BrowserWindow | null): void {
+  mainWindow = window;
+}
 
 const distributionChannel = function (): string {
   if (process.env.APPIMAGE) {
@@ -177,21 +183,47 @@ export const SettingsStore = new Store<StoreType>({
   migrations,
 });
 
-export const FiltersStore = new Store({
-  cwd: userDataDirectory,
-  name: "filters",
-  migrations: {
-    "2.0.19": (filters) => {
-      console.log("Migrating filter store → 2.0.19");
-      filters.set("attributes", {});
-    },
-  },
-});
+let _filtersStore: Store | null = null;
 
-export const NotificationsStore = new Store({
-  cwd: userDataDirectory,
-  name: "notificationHashes",
-});
+function getFiltersStore(): Store {
+  if (!_filtersStore) {
+    _filtersStore = new Store({
+      cwd: userDataDirectory,
+      name: "filters",
+      migrations: {
+        "2.0.19": (filters) => {
+          console.log("Migrating filter store → 2.0.19");
+          filters.set("attributes", {});
+        },
+      },
+    });
+  }
+  return _filtersStore;
+}
+
+export const FiltersStore = {
+  get: (...args: Parameters<Store["get"]>) => getFiltersStore().get(...args),
+  set: (...args: Parameters<Store["set"]>) => getFiltersStore().set(...args),
+};
+
+let _notificationsStore: Store | null = null;
+
+function getNotificationsStore(): Store {
+  if (!_notificationsStore) {
+    _notificationsStore = new Store({
+      cwd: userDataDirectory,
+      name: "notificationHashes",
+    });
+  }
+  return _notificationsStore;
+}
+
+export const NotificationsStore = {
+  get: (...args: Parameters<Store["get"]>) =>
+    getNotificationsStore().get(...args),
+  set: (...args: Parameters<Store["set"]>) =>
+    getNotificationsStore().set(...args),
+};
 
 SettingsStore.onDidAnyChange((newValue, oldValue) => {
   try {
