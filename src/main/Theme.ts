@@ -24,4 +24,7 @@ export function HandleTheme(colorTheme): void {
   } else {
     nativeTheme.themeSource = colorTheme;
   }
+  // Sync immediately rather than waiting for the "updated" event, which is not
+  // guaranteed to fire if themeSource was already set to this value.
+  SettingsStore.set("shouldUseDarkColors", nativeTheme.shouldUseDarkColors);
 }

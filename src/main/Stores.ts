@@ -1,7 +1,7 @@
 import Store from "electron-store";
 import path from "path";
 import crypto from "crypto";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, nativeTheme } from "electron";
 import { dataRequest, searchString } from "./DataRequest/DataRequest";
 import { userDataDirectory, HandleError } from "./Shared";
 import { createFileWatcher } from "./File/Watcher";
@@ -73,7 +73,7 @@ const migrations = {
     config.set("convertRelativeToAbsoluteDates", true);
     config.set("thresholdDateInTheFuture", true);
     config.set("colorTheme", "system");
-    config.set("shouldUseDarkColors", false);
+    config.set("shouldUseDarkColors", nativeTheme.shouldUseDarkColors);
     config.set("notificationsAllowed", true);
     config.set("notificationThreshold", 2);
     config.set("showFileTabs", true);

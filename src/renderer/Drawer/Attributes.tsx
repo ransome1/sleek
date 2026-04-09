@@ -23,6 +23,8 @@ import "./Attributes.scss";
 
 const { store } = window.api;
 
+const DATE_ATTRIBUTE_KEYS = ["due", "t", "completed", "created"];
+
 interface DrawerAttributesComponentProps extends WithTranslation {
   settings: Settings;
   attributes: Attributes | null;
@@ -30,181 +32,217 @@ interface DrawerAttributesComponentProps extends WithTranslation {
   t: typeof i18n.t;
 }
 
+// Merges raw attribute entries into display-ready buckets.
+//
+// For date attributes with useHumanFriendlyDates enabled, multiple ISO date
+// values can collapse into one human label (e.g. "Today", "This Week").
+// When that happens, counts are summed, notify uses OR, and hide uses AND
+// (false wins — one visible todo makes the whole bucket visible).
+//
+// For non-date attributes, each raw value becomes its own bucket unchanged.
+//
+// Date buckets are sorted by recency (overdue → next month). All other
+// attribute values were already sorted alphabetically by the main process.
+function buildDisplayBuckets(
+  attributeKey: string,
+  rawGroup: AttributeGroup,
+  settings: Settings,
+  t: typeof i18n.t,
+): AttributeGroup {
+  const isDate = DATE_ATTRIBUTE_KEYS.includes(attributeKey);
+  const buckets: AttributeGroup = {};
+
+  for (const [rawKey, entry] of Object.entries(rawGroup)) {
+    const bucketNames =
+      settings.useHumanFriendlyDates && isDate
+        ? friendlyDate(rawKey, attributeKey, settings, t)
+        : [rawKey];
+
+    for (const bucketName of bucketNames) {
+      if (!buckets[bucketName]) {
+        buckets[bucketName] = {
+          count: entry.count,
+          notify: entry.notify,
+          hide: entry.hide,
+          value: [rawKey],
+        };
+      } else {
+        buckets[bucketName].count += entry.count;
+        buckets[bucketName].notify = buckets[bucketName].notify || entry.notify;
+        // false wins: one visible todo in the bucket makes the whole bucket visible
+        buckets[bucketName].hide = buckets[bucketName].hide && entry.hide;
+        buckets[bucketName].value.push(rawKey);
+      }
+    }
+  }
+
+  // Sort date buckets by recency. Non-date buckets are already alphabetically
+  // sorted by the main process and their order is preserved here.
+  if (isDate) {
+    const dateSortOrder = [
+      t("drawer.attributes.overdue"),
+      t("drawer.attributes.elapsed"),
+      t("drawer.attributes.lastWeek"),
+      t("drawer.attributes.yesterday"),
+      t("drawer.attributes.today"),
+      t("drawer.attributes.tomorrow"),
+      t("drawer.attributes.thisWeek"),
+      t("drawer.attributes.nextWeek"),
+      t("drawer.attributes.thisMonth"),
+      t("drawer.attributes.nextMonth"),
+    ];
+    return Object.fromEntries(
+      Object.entries(buckets).sort(([a], [b]) => {
+        const indexA = dateSortOrder.indexOf(a);
+        const indexB = dateSortOrder.indexOf(b);
+        return (
+          (indexA !== -1 ? indexA : Number.MAX_SAFE_INTEGER) -
+          (indexB !== -1 ? indexB : Number.MAX_SAFE_INTEGER)
+        );
+      }),
+    );
+  }
+
+  return buckets;
+}
+
 const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
   memo(({ settings, attributes, filters, t }) => {
     const [hovered, setHovered] = useState<string | null>(null);
+
     const isAttributesEmpty = useMemo(
       () =>
         !attributes ||
         Object.values(attributes).every(
-          (attribute) => !Object.keys(attribute).length,
+          (group) => Object.keys(group).length === 0,
         ),
       [attributes],
     );
 
-    const preprocessAttributes = (attributeKey: string, attributes) => {
-      if (!attributes) return null;
-
-      const isDate = ["due", "t", "completed", "created"].includes(
-        attributeKey,
-      );
-      const processedAttributes = {};
-
-      Object.keys(attributes).forEach((key) => {
-        if (attributes[key]) {
-          const count = attributes[key].count;
-          const groupedNames =
-            settings.useHumanFriendlyDates && isDate
-              ? friendlyDate(key, attributeKey, settings, t)
-              : [key];
-
-          groupedNames.forEach((groupedName) => {
-            if (!processedAttributes[groupedName]) {
-              processedAttributes[groupedName] = {
-                count,
-                notify: attributes[key].notify,
-                value: [key],
-              };
-            } else {
-              processedAttributes[groupedName].count += count;
-              processedAttributes[groupedName].notify =
-                processedAttributes[groupedName].notify ||
-                attributes[key].notify;
-              processedAttributes[groupedName].value.push(key);
-            }
-          });
-        }
-      });
-      const sorting = [
-        t("drawer.attributes.overdue"),
-        t("drawer.attributes.elapsed"),
-        t("drawer.attributes.lastWeek"),
-        t("drawer.attributes.yesterday"),
-        t("drawer.attributes.today"),
-        t("drawer.attributes.tomorrow"),
-        t("drawer.attributes.thisWeek"),
-        t("drawer.attributes.nextWeek"),
-        t("drawer.attributes.thisMonth"),
-        t("drawer.attributes.nextMonth"),
-      ];
-      const sortedAttributes = Object.fromEntries(
-        Object.entries(processedAttributes).sort((a: unknown, b: unknown) => {
-          const indexA = sorting.indexOf(a.name);
-          const indexB = sorting.indexOf(b.name);
-          return (
-            (indexA !== -1 ? indexA : Number.MAX_SAFE_INTEGER) -
-            (indexB !== -1 ? indexB : Number.MAX_SAFE_INTEGER)
-          );
-        }),
-      );
-      return sortedAttributes;
-    };
-
     const handleAccordionToggle = (index: number): void => {
-      const updatedAccordionOpenState = settings.accordionOpenState;
-      updatedAccordionOpenState[index] = !updatedAccordionOpenState[index];
-      store.setConfig("accordionOpenState", updatedAccordionOpenState);
+      // Spread to avoid mutating the settings object in place
+      const updated = [...settings.accordionOpenState];
+      updated[index] = !updated[index];
+      store.setConfig("accordionOpenState", updated);
     };
 
-    const renderAttributes = (key: string, preprocessedAttributes) => {
-      return Object.keys(preprocessedAttributes).map((value, childIndex) => {
-        const attribute = preprocessedAttributes[value];
-        const excluded = IsExcluded(attribute, filters);
-        const selected = IsSelected(key, filters, attribute.value);
-        const disabled = attribute.count === 0;
+    const renderFilterChips = (
+      categoryKey: string,
+      buckets: AttributeGroup,
+    ) => {
+      return Object.entries(buckets).map(
+        ([bucketName, attribute], childIndex) => {
+          if (attribute.hide) return null;
 
-        const notify = key === "due" ? attribute.notify : false;
-        const groupedName = attribute.value.length > 1 ? value : null;
-        return (
-          <div
-            key={`${key}-${value}-${childIndex}`}
-            data-todotxt-attribute={key}
-            data-todotxt-value={value}
-            onMouseEnter={() => setHovered(`${key}-${value}-${childIndex}`)}
-            onMouseLeave={() => setHovered(null)}
-            className={`filter ${selected ? "selected" : ""} ${excluded ? "excluded" : ""}`}
-          >
-            <Badge
-              badgeContent={
-                !disabled && attribute.count > 0 ? (
-                  <span
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      HandleFilterSelect(
-                        key,
-                        attribute.value,
-                        filters,
-                        true,
-                        groupedName,
-                      );
-                    }}
-                  >
-                    {hovered === `${key}-${value}-${childIndex}` ? (
-                      <VisibilityOffIcon />
-                    ) : (
-                      attribute.count
-                    )}
-                  </span>
-                ) : null
-              }
-              className={notify ? "notify" : null}
+          const chipId = `${categoryKey}-${bucketName}-${childIndex}`;
+          const isHovered = hovered === chipId;
+          const excluded = IsExcluded(attribute, filters);
+          const selected = IsSelected(categoryKey, filters, attribute.value);
+          const disabled = attribute.count === 0;
+          // groupedName is only set when multiple raw dates collapsed into one bucket label
+          const groupedName = attribute.value.length > 1 ? bucketName : null;
+
+          return (
+            <div
+              key={chipId}
+              data-todotxt-attribute={categoryKey}
+              data-todotxt-value={bucketName}
+              onMouseEnter={() => setHovered(chipId)}
+              onMouseLeave={() => setHovered(null)}
+              className={`filter ${selected ? "selected" : ""} ${excluded ? "excluded" : ""}`}
             >
-              <button
-                data-testid={`drawer-button-${key}`}
-                onClick={
-                  disabled
-                    ? undefined
-                    : (): void => {
+              <Badge
+                badgeContent={
+                  attribute.count > 0 ? (
+                    <span
+                      onClick={(event) => {
+                        event.stopPropagation();
                         HandleFilterSelect(
-                          key,
+                          categoryKey,
                           attribute.value,
                           filters,
-                          false,
+                          true,
                           groupedName,
                         );
-                      }
+                      }}
+                    >
+                      {isHovered ? <VisibilityOffIcon /> : attribute.count}
+                    </span>
+                  ) : null
                 }
-                disabled={disabled}
-                className={key === "pm" ? "pomodoro" : undefined}
+                className={attribute.notify ? "notify" : null}
               >
-                {key === "pm" && <img src={PomodoroIcon} alt="Pomodoro" />}
-                {value}
-              </button>
-            </Badge>
-            {excluded && (
-              <div
-                data-todotxt-attribute={key}
-                data-todotxt-value={value}
-                data-testid={`drawer-button-exclude-${key}`}
-                className="overlay"
-                onClick={() =>
-                  HandleFilterSelect(
-                    key,
-                    attribute.value,
-                    filters,
-                    true,
-                    groupedName,
-                  )
-                }
-              >
-                <VisibilityOffIcon />
-              </div>
-            )}
-          </div>
-        );
-      });
+                <button
+                  data-testid={`drawer-button-${categoryKey}`}
+                  onClick={
+                    disabled
+                      ? undefined
+                      : () =>
+                          HandleFilterSelect(
+                            categoryKey,
+                            attribute.value,
+                            filters,
+                            false,
+                            groupedName,
+                          )
+                  }
+                  disabled={disabled}
+                  className={categoryKey === "pm" ? "pomodoro" : undefined}
+                >
+                  {categoryKey === "pm" && (
+                    <img src={PomodoroIcon} alt="Pomodoro" />
+                  )}
+                  {bucketName}
+                </button>
+              </Badge>
+              {excluded && (
+                <div
+                  data-todotxt-attribute={categoryKey}
+                  data-todotxt-value={bucketName}
+                  data-testid={`drawer-button-exclude-${categoryKey}`}
+                  className="overlay"
+                  onClick={() =>
+                    HandleFilterSelect(
+                      categoryKey,
+                      attribute.value,
+                      filters,
+                      true,
+                      groupedName,
+                    )
+                  }
+                >
+                  <VisibilityOffIcon />
+                </div>
+              )}
+            </div>
+          );
+        },
+      );
     };
 
     return (
       <div id="Attributes">
         {!isAttributesEmpty ? (
-          Object.keys(attributes).map((key, index) => {
-            const preprocessedAttributes: Attributes = preprocessAttributes(
-              key,
-              attributes[key],
+          Object.keys(attributes).map((categoryKey, index) => {
+            const buckets = buildDisplayBuckets(
+              categoryKey,
+              attributes[categoryKey],
+              settings,
+              t,
             );
-            const accordionSummary: string = translatedAttributes(t)[key];
-            return Object.keys(preprocessedAttributes).length > 0 ? (
+            // Don't render the accordion if there are no entries at all,
+            // or if every entry is intentionally hidden via h:1.
+            const hasEntries = Object.keys(buckets).length > 0;
+            const hasVisibleEntries = Object.values(buckets).some(
+              (attribute) => !attribute.hide,
+            );
+            if (!hasEntries || !hasVisibleEntries) return null;
+
+            const hasNotification =
+              categoryKey === "due" &&
+              Object.values(buckets).some((attribute) => attribute.notify);
+
+            return (
               <Accordion
                 key={index}
                 expanded={settings.accordionOpenState[index]}
@@ -213,31 +251,23 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Badge
                     variant="dot"
-                    invisible={
-                      !(
-                        key === "due" &&
-                        Object.values(preprocessedAttributes).some(
-                          (attribute) => attribute.notify,
-                        )
-                      )
-                    }
-                    data-testid={`drawer-attributes-accordion-${key}`}
+                    invisible={!hasNotification}
+                    data-testid={`drawer-attributes-accordion-${categoryKey}`}
                   >
-                    {accordionSummary}
+                    {translatedAttributes(t)[categoryKey]}
                   </Badge>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {renderAttributes(key, preprocessedAttributes)}
+                  {renderFilterChips(categoryKey, buckets)}
                 </AccordionDetails>
               </Accordion>
-            ) : null;
+            );
           })
         ) : (
           <div className="placeholder">
             <AirIcon />
             <br />
-            {t(`drawer.attributes.noAttributesAvailable`)}
-
+            {t("drawer.attributes.noAttributesAvailable")}
             <Link
               onClick={(event) =>
                 handleLinkClick(
