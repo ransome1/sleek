@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Crea un compito",
   "splashscreen.noTodosVisible.text": "Nessun risultato visibile",
   "splashscreen.noTodosVisible.reset": "Reimposta filtri",
-  "search.visibleTodos": "Compiti visibili: ",
+  "search.visibleTodos": "Mostrando {{visible}} di {{total}} attività",
   "search.addAsTodo": "Aggiungi come attività",
   "search.filters.create": "Crea filtro di ricerca",
   "add": "Aggiungi",

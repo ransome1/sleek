@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Create a todo",
   "splashscreen.noTodosVisible.text": "No results visible",
   "splashscreen.noTodosVisible.reset": "Reset filters",
-  "search.visibleTodos": "Visible todos: ",
+  "search.visibleTodos": "Showing {{visible}} of {{total}} todos",
   "search.addAsTodo": "Add as todo",
   "search.filters.create": "Create search filter",
   "add": "Add",

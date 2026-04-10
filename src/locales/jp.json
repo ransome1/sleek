@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "タスクを作成",
   "splashscreen.noTodosVisible.text": "表示できる結果はありません。",
   "splashscreen.noTodosVisible.reset": "フィルターをリセット",
-  "search.visibleTodos": "表示されるタスク：",
+  "search.visibleTodos": "{{total}} 件中 {{visible}} 件を表示",
   "search.addAsTodo": "タスクとして追加",
   "search.filters.create": "検索フィルターを作成する",
   "add": "追加",

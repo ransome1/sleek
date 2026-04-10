@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Utwórz zadanie",
   "splashscreen.noTodosVisible.text": "Brak widocznych wyników",
   "splashscreen.noTodosVisible.reset": "Resetuj filtry",
-  "search.visibleTodos": "Widoczne zadania: ",
+  "search.visibleTodos": "Wyświetlanie {{visible}} z {{total}} zadań",
   "search.addAsTodo": "Dodaj jako zadanie",
   "search.filters.create": "Utwórz filtr wyszukiwania",
   "add": "Dodaj",

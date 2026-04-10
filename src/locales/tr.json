@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Görev oluştur",
   "splashscreen.noTodosVisible.text": "Görünen sonuç yok",
   "splashscreen.noTodosVisible.reset": "Filtreleri sıfırla",
-  "search.visibleTodos": "Görünür görevler: ",
+  "search.visibleTodos": "{{total}} görevin {{visible}} tanesi gösteriliyor",
   "search.addAsTodo": "Görev olarak ekle",
   "search.filters.create": "Arama filtresi oluştur",
   "add": "Ekle",

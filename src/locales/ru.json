@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Создать задачу",
   "splashscreen.noTodosVisible.text": "Нет видимых результатов",
   "splashscreen.noTodosVisible.reset": "Сбросить фильтры",
-  "search.visibleTodos": "Видимые задачи: ",
+  "search.visibleTodos": "Показано {{visible}} из {{total}} задач",
   "search.addAsTodo": "Добавить как задачу",
   "search.filters.create": "Создать фильтр поиска",
   "add": "Добавить",

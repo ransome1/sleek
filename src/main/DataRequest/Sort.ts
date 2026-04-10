@@ -1,5 +1,3 @@
-import { SettingsStore } from "../Stores";
-
 const compareValues = (a: any, b: any, invert: boolean): number => {
   if (a === b) return 0;
   if (a === null || a === undefined) return 1;
@@ -23,13 +21,6 @@ const sortTodoObjects = (
   b: TodoObject,
   sorting: Sorting[],
 ): number => {
-  const sortCompletedLast = SettingsStore.get("sortCompletedLast");
-
-  if (sortCompletedLast) {
-    if (a.complete && !b.complete) return 1;
-    if (!a.complete && b.complete) return -1;
-  }
-
   for (const { value, invert } of sorting) {
     const compareResult = compareValues(a[value], b[value], invert);
     if (compareResult !== 0) {

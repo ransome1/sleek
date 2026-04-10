@@ -86,6 +86,17 @@ function dataRequest(passedSearchString: string = ""): RequestedData {
   } else {
     todoObjects.sort((a, b) => sortTodoObjects(a, b, sorting));
     todoData = groupTodoObjects(todoObjects, sorting[0].value);
+
+    const sortCompletedLast = SettingsStore.get("sortCompletedLast");
+    if (sortCompletedLast) {
+      for (const group of todoData) {
+        group.todoObjects.sort((a, b) => {
+          if (a.complete && !b.complete) return 1;
+          if (!a.complete && b.complete) return -1;
+          return 0;
+        });
+      }
+    }
   }
 
   const requestedData: RequestedData = {

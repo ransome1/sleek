@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Feladat létrehozása",
   "splashscreen.noTodosVisible.text": "Nincs látható eredmény",
   "splashscreen.noTodosVisible.reset": "Szűrők visszaállítása",
-  "search.visibleTodos": "Látható feladatok: ",
+  "search.visibleTodos": "{{visible}} megjelenítve {{total}} feladatból",
   "search.addAsTodo": "Hozzáadás feladatként",
   "search.filters.create": "Keresési szűrő létrehozása",
   "add": "Hozzáadás",

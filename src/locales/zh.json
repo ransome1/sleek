@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "创建任务",
   "splashscreen.noTodosVisible.text": "没有可见的结果。",
   "splashscreen.noTodosVisible.reset": "重置过滤器",
-  "search.visibleTodos": "可见任务：",
+  "search.visibleTodos": "显示 {{visible}} 个（共 {{total}} 个）待办事项",
   "search.addAsTodo": "添加为任务",
   "search.filters.create": "创建搜索过滤器",
   "add": "添加",

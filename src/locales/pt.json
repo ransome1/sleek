@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Criar uma tarefa",
   "splashscreen.noTodosVisible.text": "Sem resultados visíveis",
   "splashscreen.noTodosVisible.reset": "Repor filtros",
-  "search.visibleTodos": "Tarefas visíveis: ",
+  "search.visibleTodos": "Mostrando {{visible}} de {{total}} tarefas",
   "search.addAsTodo": "Adicionar como tarefa",
   "search.filters.create": "Criar filtro de pesquisa",
   "add": "Adicionar",

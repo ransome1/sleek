@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "작업 생성",
   "splashscreen.noTodosVisible.text": "표시할 결과 없음",
   "splashscreen.noTodosVisible.reset": "필터 초기화",
-  "search.visibleTodos": "표시된 작업: ",
+  "search.visibleTodos": "{{total}}개 중 {{visible}}개 표시",
   "search.addAsTodo": "할 일로 추가",
   "search.filters.create": "검색 필터 생성",
   "add": "추가",

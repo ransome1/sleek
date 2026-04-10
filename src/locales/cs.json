@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "Vytvořit úkol",
   "splashscreen.noTodosVisible.text": "Žádné výsledky nejsou viditelné",
   "splashscreen.noTodosVisible.reset": "Obnovit filtry",
-  "search.visibleTodos": "Viditelné úkoly: ",
+  "search.visibleTodos": "Zobrazeno {{visible}} z {{total}} úkolů",
   "search.addAsTodo": "Přidat jako úkol",
   "search.filters.create": "Vytvořit vyhledávací filtr",
   "add": "Přidat",

@@ -69,7 +69,7 @@
   "splashscreen.noTodosAvailable.create": "कार्य बनाएं",
   "splashscreen.noTodosVisible.text": "कोई दिखाई देने वाला परिणाम नहीं है।",
   "splashscreen.noTodosVisible.reset": "फ़िल्टर रीसेट करें",
-  "search.visibleTodos": "दिखाई देने वाले कार्य: ",
+  "search.visibleTodos": "{{total}} में से {{visible}} कार्य दिखाए जा रहे हैं",
   "search.addAsTodo": "काम के रूप में जोड़ें",
   "search.filters.create": "खोज फ़िल्टर बनाएं",
   "add": "जोड़ें",
