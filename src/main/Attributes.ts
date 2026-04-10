@@ -38,15 +38,15 @@ function incrementCount(
   group: AttributeGroup,
   value: string,
   notify: boolean,
-  todoHidden: boolean,
+  hidden: boolean,
 ): void {
   const previous = group[value]?.count ?? 0;
   // Once a visible todo has been seen for this value, hide is locked to false.
   // A single visible todo is enough to show the attribute in the sidebar.
   const alreadyVisible = group[value]?.hide === false;
-  const hide = alreadyVisible ? false : todoHidden;
+  const hide = alreadyVisible ? false : hidden;
   group[value] = {
-    count: todoHidden ? previous : previous + 1,
+    count: hidden ? previous : previous + 1,
     notify,
     hide,
   };
@@ -77,19 +77,19 @@ function tallyAttribute(
 
     // due is the only attribute whose notify flag is meaningful
     const notify = attributeName === "due" ? !!todo.notify : false;
-    const todoHidden = todo.hidden === true;
+    const hidden = todo.hidden === true;
 
     if (Array.isArray(value)) {
       // multi-value attributes: projects, contexts
       for (const element of value) {
         if (element !== null) {
-          incrementCount(group, element as string, notify, todoHidden);
+          incrementCount(group, element as string, notify, hidden);
         }
       }
     } else {
       // single-value attributes: priority, due, t, rec, pm, created, completed
       if (value !== null) {
-        incrementCount(group, value as string, notify, todoHidden);
+        incrementCount(group, value as string, notify, hidden);
       }
     }
   }

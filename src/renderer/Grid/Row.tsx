@@ -166,7 +166,7 @@ const Row: React.FC<RowProps> = memo(
             tabIndex={0}
             checked={todoObject.complete}
             onChange={handleCheckboxChange}
-            inputProps={{ "data-testid": "datagrid-checkbox" }}
+            slotProps={{ input: { "data-testid": "datagrid-checkbox" } }}
           />
 
           {(settings.sorting[0].value != "priority" || settings.fileSorting) &&

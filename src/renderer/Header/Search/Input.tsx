@@ -1,10 +1,11 @@
 import React, { useEffect, memo } from "react";
 import TextField from "@mui/material/TextField";
+import { useForkRef } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClearIcon from "@mui/icons-material/Clear";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { i18n } from "../../Settings/LanguageSelector";
 
@@ -39,8 +40,15 @@ const InputComponent: React.FC<InputComponentProps> = memo(
     setIsAutocompleteOpen,
     settings,
     t,
+    tReady: _tReady,
+    i18n: _i18n,
+    tOptions: _tOptions,
     ...params
   }) => {
+    const inputRef = useForkRef(
+      searchFieldRef,
+      params.slotProps?.htmlInput?.ref,
+    );
     useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent): void => {
         event.stopPropagation();
@@ -71,10 +79,10 @@ const InputComponent: React.FC<InputComponentProps> = memo(
         {...params}
         data-testid="header-search-textfield"
         placeholder={`Todos in file ${headers?.availableObjects}`}
-        inputRef={searchFieldRef}
         slotProps={{
+          ...params.slotProps,
           input: {
-            ...params.InputProps,
+            ...params.slotProps?.input,
             startAdornment: (
               <InputAdornment position="start">
                 {searchFilters?.length > 0 || searchString ? (
@@ -123,7 +131,7 @@ const InputComponent: React.FC<InputComponentProps> = memo(
                   }
                   data-testid="header-search-clear-icon"
                 >
-                  <HelpOutlineIcon />
+                  <HelpOutlineOutlinedIcon />
                 </IconButton>
                 {searchString && searchString.length > 0 && (
                   <IconButton
@@ -136,6 +144,10 @@ const InputComponent: React.FC<InputComponentProps> = memo(
                 )}
               </InputAdornment>
             ),
+          },
+          htmlInput: {
+            ...params.slotProps?.htmlInput,
+            ref: inputRef,
           },
         }}
       />

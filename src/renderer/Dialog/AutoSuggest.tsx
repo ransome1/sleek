@@ -4,7 +4,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { i18n } from "../Settings/LanguageSelector";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import IconButton from "@mui/material/IconButton";
 import "./AutoSuggest.scss";
 
@@ -202,7 +202,7 @@ const AutoSuggestComponent: React.FC<AutoSuggestComponentProps> = ({
                         }
                         data-testid="header-search-clear-icon"
                       >
-                        <HelpOutlineIcon />
+                        <HelpOutlineOutlinedIcon />
                       </IconButton>
                     </InputAdornment>
                   ),
