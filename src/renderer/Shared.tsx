@@ -123,60 +123,60 @@ export const friendlyDate = (
   const date = DateTime.fromISO(value).startOf("day");
   const results: string[] = [];
 
-  if (date < today) {
-    results.push(
-      attributeKey === "due"
-        ? t("drawer.attributes.overdue")
-        : t("drawer.attributes.elapsed"),
-    );
+  // Calculate days difference (positive = future, negative = past)
+  const daysDiff = date.diff(today, "days").days;
+
+  // Past dates
+  if (daysDiff < 0) {
+    if (daysDiff === -1) {
+      results.push(t("drawer.attributes.yesterday"));
+    } else {
+      results.push(
+        attributeKey === "due"
+          ? t("drawer.attributes.overdue")
+          : t("drawer.attributes.elapsed"),
+      );
+    }
+    return results;
   }
 
-  if (
-    date >=
-      today.minus({ weeks: 1 }).startOf("week", { useLocaleWeeks: true }) &&
-    date <= today.minus({ weeks: 1 }).endOf("week", { useLocaleWeeks: true })
-  ) {
-    results.push(t("drawer.attributes.lastWeek"));
-  }
-
-  if (date <= today.endOf("month") && date > today.minus({ days: 1 })) {
-    results.push(t("drawer.attributes.thisMonth"));
-  }
-
-  if (
-    date >= today.startOf("week", { useLocaleWeeks: true }) &&
-    date <= today.endOf("week", { useLocaleWeeks: true })
-  ) {
-    results.push(t("drawer.attributes.thisWeek"));
-  }
-
-  if (date.hasSame(today.minus({ days: 1 }), "day")) {
-    results.push(t("drawer.attributes.yesterday"));
-  }
-
-  if (date.hasSame(today, "day")) {
+  // Today
+  if (daysDiff === 0) {
     results.push(t("drawer.attributes.today"));
+    return results;
   }
 
-  if (date.hasSame(today.plus({ days: 1 }), "day")) {
+  // Tomorrow (1 day away)
+  if (daysDiff === 1) {
     results.push(t("drawer.attributes.tomorrow"));
+    return results;
   }
 
-  if (
-    date >=
-      today.plus({ weeks: 1 }).startOf("week", { useLocaleWeeks: true }) &&
-    date <= today.plus({ weeks: 1 }).endOf("week", { useLocaleWeeks: true })
-  ) {
-    results.push(t("drawer.attributes.nextWeek"));
+  // This week - remainder of current calendar week (based on weekStart)
+  const endOfThisWeek = today.endOf("week", { useLocaleWeeks: true });
+
+  if (date <= endOfThisWeek) {
+    results.push(t("drawer.attributes.thisWeek"));
+    return results;
   }
 
-  if (date.month === today.plus({ months: 1 }).month) {
+  // This month - rest of current month
+  const endOfThisMonth = today.endOf("month");
+
+  if (date <= endOfThisMonth) {
+    results.push(t("drawer.attributes.thisMonth"));
+    return results;
+  }
+
+  // Next month - dates in the following month
+  const endOfNextMonth = today.plus({ months: 1 }).endOf("month");
+
+  if (date <= endOfNextMonth) {
     results.push(t("drawer.attributes.nextMonth"));
+    return results;
   }
 
-  if (date > today.plus({ months: 1 }).endOf("month")) {
-    results.push(date.toFormat("yyyy-MM-dd"));
-  }
-
+  // Far future - use date format
+  results.push(date.toFormat("yyyy-MM-dd"));
   return results;
 };

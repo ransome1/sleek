@@ -2,6 +2,12 @@
 
 All notable changes to sleek will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Enhanced
+
+- Improved human-friendly date labels to follow the documented specification: dates are shown as "This week", "This month", "Next month" based on calendar boundaries (respecting the `weekStart` setting), with past dates as "Overdue"/"Elapsed" and far future dates as date strings. This ensures April 23 (in the same month but beyond this week) displays as "This month" rather than being mislabeled.
+
 ## [2.0.25] - 2026-04-08
 
 ### Enhanced
@@ -11,7 +17,7 @@ All notable changes to sleek will be documented in this file. The format is base
 
 ### Fixed
 
-- When you set a todo’s status to 'done' and bulk creation is turned on, line breaks will no longer create new todos (#822)
+- When you set a todo's status to 'done' and bulk creation is turned on, line breaks will no longer create new todos (#822)
 - On Windows, sleek no longer leaves behind a `*.tmp.ico` file in `%TEMP%` after each run. The tray icon files are now unpacked from the application archive so Windows can read them directly, avoiding the temporary copy that was never cleaned up (#848)
 - Recurring todos using a bare interval without a number (e.g. `rec:w`, `rec:m`) now correctly receive a new due date when completed. Previously the due date was silently omitted.
 - Strict recurring todos (e.g. `rec:+1w`) with no existing due date now correctly fall back to the completion date plus the recurrence interval, as documented. Previously an invalid date was written.

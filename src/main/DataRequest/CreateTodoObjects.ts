@@ -2,7 +2,10 @@ import { app } from "electron";
 import { Item } from "jstodotxt";
 import { SettingsStore } from "../Stores";
 import { HandleNotification } from "../Notifications";
-import { extractSpeakingDates } from "../Date";
+import {
+  extractSpeakingDates,
+  replaceSpeakingDatesWithAbsoluteDates,
+} from "../Date";
 import { lineBreakPlaceholder } from "../Shared";
 import { DateTime } from "luxon";
 
@@ -17,6 +20,12 @@ function createTodoObject(
 ): TodoObject {
   // eslint-disable-next-line no-control-regex
   let content = string.replaceAll(/[\x10\r\n]/g, " [LB] ");
+
+  // When setting an extension, first replace any speaking dates with absolute dates
+  // to prevent jstodotxt from mishandling the date replacement
+  if (attributeType && (attributeType === "due" || attributeType === "t")) {
+    content = replaceSpeakingDatesWithAbsoluteDates(content);
+  }
 
   const JsTodoTxtObject = new Item(content);
 
