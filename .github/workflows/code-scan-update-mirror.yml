@@ -7,7 +7,7 @@ jobs:
   snyk:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v6
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
-        uses: actions/checkout@master
+        uses: actions/checkout@v6
       - name: nodejsscan scan
         id: njsscan
         uses: ajinabraham/njsscan-action@master
@@ -38,9 +38,12 @@ jobs:
         language: ["javascript"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master
-      - name: Set up latest available Nodejs
-        uses: actions/setup-node@master
+        uses: actions/checkout@v6
+      - name: Set up Nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 25
+          cache: "npm"
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
@@ -59,9 +62,12 @@ jobs:
         language: ["javascript"]
     steps:
       - name: Checkout code
-        uses: actions/checkout@master
-      - name: Set up latest available Nodejs
-        uses: actions/setup-node@master
+        uses: actions/checkout@v6
+      - name: Set up Nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 25
+          cache: "npm"
       - name: Install dependencies
         run: npm install
       - name: Build
@@ -80,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true

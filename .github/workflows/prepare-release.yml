@@ -12,9 +12,9 @@ jobs:
         os: [macos-latest]
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v6
       - name: Install Node and NPM
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v6
         with:
           node-version: 25
           cache: "npm"
@@ -44,9 +44,9 @@ jobs:
         os: [windows-latest]
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v6
       - name: Install Node and NPM
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v6
         with:
           node-version: 25
           cache: "npm"
@@ -70,9 +70,9 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v6
       - name: Install Node and NPM
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v6
         with:
           node-version: 25
           cache: "npm"
