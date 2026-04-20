@@ -3,8 +3,10 @@ import { readFileContent } from "./File";
 import { writeToFile } from "./Write";
 import { mainWindow } from "../index";
 
-function handleRequestArchive(): void {
-  const activeFile = getActiveFile();
+const COMPLETION_MARKER = "x ";
+
+function checkArchiveReadiness(): void {
+  const activeFile: FileObject | null = getActiveFile();
   if (!activeFile) {
     throw new Error("Todo file is not defined");
   }
@@ -14,64 +16,58 @@ function handleRequestArchive(): void {
   );
 }
 
-function readFilteredFileContent(filePath: string, complete: boolean): string {
-  const filterStrings = (fileContent: string, complete: boolean): string => {
-    const arrayOfStrings = fileContent.split("\n");
-    const filteredArrayOfStrings = arrayOfStrings.filter((string) => {
-      return (
-        (complete && string.startsWith("x ")) ||
-        (!complete && !string.startsWith("x "))
-      );
-    });
-    return filteredArrayOfStrings.join("\n");
-  };
-  const fileContent: string | Error = readFileContent(filePath);
-  if (typeof fileContent === "string") {
-    return filterStrings(fileContent, complete);
-  } else {
-    return "";
-  }
+function isCompleted(line: string): boolean {
+  return line.startsWith(COMPLETION_MARKER);
+}
+
+function filterByCompletion(content: string, complete: boolean): string {
+  return content
+    .split("\n")
+    .filter((line) => (complete ? isCompleted(line) : !isCompleted(line)))
+    .join("\n");
 }
 
 function archiveTodos(): string {
-  const activeFile = getActiveFile();
+  const activeFile: FileObject | null = getActiveFile();
   if (!activeFile) {
     throw new Error("Todo file is not defined");
   }
 
-  if (activeFile.doneFilePath === null) {
-    return "Archiving file is not defined";
+  if (!activeFile.doneFilePath) {
+    throw new Error("Archiving file is not defined");
   }
 
-  const completedTodos: string = readFilteredFileContent(
+  // Read todo file only once
+  const todoContent: string = readFileContent(
     activeFile.todoFilePath,
-    true,
+    activeFile.todoFileBookmark,
   );
 
-  if (!completedTodos) {
-    return "No completed todos found";
+  // Split into completed and uncompleted in memory
+  const completedTodos = filterByCompletion(todoContent, true);
+  const uncompletedTodos = filterByCompletion(todoContent, false);
+
+  if (!completedTodos.trim()) {
+    throw new Error("No completed todos found");
   }
 
-  const uncompletedTodos: string = readFilteredFileContent(
-    activeFile.todoFilePath,
-    false,
+  const todosFromDoneFile: string = readFileContent(
+    activeFile.doneFilePath,
+    activeFile.doneFileBookmark,
   );
-
-  const todosFromDoneFile = readFileContent(activeFile.doneFilePath);
 
   // Only write a new line when file is not empty and does not already end with a new line
-  const separator =
-    todosFromDoneFile.endsWith("\n") || todosFromDoneFile === "" ? "" : "\n";
-  const contentForDoneFile =
-    todosFromDoneFile.length > 1
-      ? todosFromDoneFile + separator + completedTodos
-      : completedTodos;
+  const trim = todosFromDoneFile.trim();
+  const separator = trim ? "\n" : "";
+  const contentForDoneFile = trim
+    ? `${trim}${separator}${completedTodos}`
+    : completedTodos;
 
+  // Use safe write with atomic operations and backup
   writeToFile(contentForDoneFile, activeFile.doneFilePath);
-
   writeToFile(uncompletedTodos, activeFile.todoFilePath);
 
   return "Successfully archived";
 }
 
-export { archiveTodos, handleRequestArchive };
+export { archiveTodos, checkArchiveReadiness };
