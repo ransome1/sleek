@@ -5,7 +5,7 @@ import {
   SaveDialogReturnValue,
 } from "electron";
 import path from "path";
-import { addFile, addDoneFile } from "./File";
+import { registerTodoFile, linkDoneFile } from "./File";
 import { writeToFile } from "./Write";
 
 const dialogFilters = [
@@ -30,9 +30,9 @@ async function openFile(setDoneFile: boolean): Promise<void> {
     const bookmark: string | null = result.bookmarks?.[0] || null;
 
     if (setDoneFile) {
-      addDoneFile(filePath, bookmark);
+      linkDoneFile(filePath, bookmark);
     } else {
-      addFile(filePath, bookmark);
+      registerTodoFile(filePath, bookmark);
     }
   }
 }
@@ -52,9 +52,9 @@ async function createFile(setDoneFile: boolean): Promise<void> {
     writeToFile("", filePath);
 
     if (setDoneFile) {
-      addDoneFile(filePath, bookmark);
+      linkDoneFile(filePath, bookmark);
     } else {
-      addFile(filePath, bookmark);
+      registerTodoFile(filePath, bookmark);
     }
   }
 }

@@ -1,8 +1,8 @@
 import { app, Menu, dialog, shell } from "electron";
-import { setFile } from "./File/File";
+import { activateFile } from "./File/File";
 import { mainWindow, HandleCreateWindow } from "./index";
 import { openFile, createFile } from "./File/Dialog";
-import { handleRequestArchive } from "./File/Archive";
+import { checkArchiveReadiness } from "./File/Archive";
 import { SettingsStore, FiltersStore } from "./Stores";
 import { File } from "../Types";
 import appPackage from "../../package.json";
@@ -12,7 +12,7 @@ export const GetFileMenuEntries = (files: File[]) => {
     label: file.todoFileName,
     accelerator: `CommandOrControl+${index + 1}`,
     click: () => {
-      setFile(index);
+      activateFile(index);
     },
   }));
 };
@@ -180,7 +180,7 @@ const GetMenuTemplate = (
                 label: "Archive completed todos",
                 accelerator: "Ctrl+Alt+A",
                 click: () => {
-                  handleRequestArchive();
+                  checkArchiveReadiness();
                 },
               },
             ],

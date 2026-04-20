@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { Item } from "jstodotxt";
 import { linesInFile } from "../DataRequest/CreateTodoObjects";
 import { getActiveFile } from "./Active";
@@ -6,8 +7,67 @@ import { SettingsStore } from "../Stores";
 import { replaceSpeakingDatesWithAbsoluteDates } from "../Date";
 import { lineBreakPlaceholder } from "../Shared";
 
-const writeToFile = (string: string, filePath: string) => {
-  fs.writeFileSync(filePath, string + "\n", "utf-8");
+/**
+ * Safely writes content to a file using atomic operations:
+ * 1. Write to temporary file
+ * 2. Verify temporary file was created
+ * 3. Create backup of original file
+ * 4. Rename (atomic operation on most filesystems)
+ * 5. Clean up backup on success
+ *
+ * Ensures data integrity if process crashes mid-write.
+ *
+ * Use this for critical operations where data loss is unacceptable:
+ * - Archiving (moves data between files)
+ * - Any modification of existing todo.txt files
+ *
+ * @param string Content to write
+ * @param filePath Path to target file
+ * @throws Error if write operation fails (original file remains unchanged)
+ */
+const writeToFile = (string: string, filePath: string): void => {
+  const tempFilePath = `${filePath}.tmp`;
+  const backupFilePath = `${filePath}.bak`;
+
+  try {
+    if (process.mas) {
+      // MAS: Direct write without temp files (less safe but required by sandbox)
+      fs.writeFileSync(filePath, string + "\n", "utf-8");
+    } else {
+      // Step 1: Write to temporary file
+      fs.writeFileSync(tempFilePath, string + "\n", "utf-8");
+
+      // Step 2: Verify temporary file exists and is readable
+      if (!fs.existsSync(tempFilePath)) {
+        throw new Error(`Failed to create temporary file: ${tempFilePath}`);
+      }
+
+      // Step 3: Create backup of original file if it exists
+      if (fs.existsSync(filePath)) {
+        fs.copyFileSync(filePath, backupFilePath);
+      }
+
+      // Step 4: Atomically replace original file with temporary file
+      fs.renameSync(tempFilePath, filePath);
+
+      // Step 5: Clean up backup on success
+      if (fs.existsSync(backupFilePath)) {
+        fs.unlinkSync(backupFilePath);
+      }
+    }
+  } catch (error) {
+    // Cleanup on error
+    if (fs.existsSync(tempFilePath)) {
+      try {
+        fs.unlinkSync(tempFilePath);
+      } catch {
+        // Ignore cleanup errors
+      }
+    }
+    throw new Error(
+      `Failed to write file ${filePath}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
 };
 
 const removeLineFromFile = (lineNumber: number) => {
@@ -20,24 +80,24 @@ const removeLineFromFile = (lineNumber: number) => {
   }
 };
 
-const prepareContentForWriting = (
+const writeSingleTodoToFile = (
   lineNumber: number,
-  string: string,
-  state: boolean,
+  content: string,
+  isEditMode: boolean,
 ) => {
   const activeFile: FileObject | null = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
-  } else if (!string) {
+  } else if (!content) {
     throw new Error("No content passed");
   }
 
   let linesToAdd;
 
-  if (SettingsStore.get("bulkTodoCreation") && !state && lineNumber < 0) {
-    linesToAdd = string.replaceAll(lineBreakPlaceholder, "\n");
+  if (SettingsStore.get("bulkTodoCreation") && !isEditMode && lineNumber < 0) {
+    linesToAdd = content.replaceAll(lineBreakPlaceholder, "\n");
   } else {
-    linesToAdd = string.replaceAll(/\n/g, lineBreakPlaceholder);
+    linesToAdd = content.replaceAll(/\n/g, lineBreakPlaceholder);
   }
 
   if (SettingsStore.get("convertRelativeToAbsoluteDates")) {
@@ -64,4 +124,4 @@ const prepareContentForWriting = (
   writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
 };
 
-export { prepareContentForWriting, removeLineFromFile, writeToFile };
+export { writeSingleTodoToFile, removeLineFromFile, writeToFile };

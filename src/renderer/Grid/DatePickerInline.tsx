@@ -41,7 +41,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   const handleChange = (date: DateTime | null) => {
     try {
       ipcRenderer.send(
-        "writeTodoToFile",
+        "writeSingleTodoToFile",
         todoObject.lineNumber,
         todoObject.string,
         false,

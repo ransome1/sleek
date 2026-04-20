@@ -76,7 +76,7 @@ const Row: React.FC<RowProps> = memo(
       event: React.ChangeEvent<HTMLInputElement>,
     ): void => {
       ipcRenderer.send(
-        "writeTodoToFile",
+        "writeSingleTodoToFile",
         todoObject.lineNumber,
         todoObject.string,
         event.target.checked,

@@ -1,11 +1,11 @@
 import { ipcMain, app, IpcMainEvent, clipboard, shell } from "electron";
 import { dataRequest } from "./DataRequest/DataRequest";
 import { changeCompleteState } from "./DataRequest/ChangeCompleteState";
-import { prepareContentForWriting, removeLineFromFile } from "./File/Write";
-import { archiveTodos, handleRequestArchive } from "./File/Archive";
+import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
+import { archiveTodos, checkArchiveReadiness } from "./File/Archive";
 import { SettingsStore, FiltersStore, NotificationsStore } from "./Stores";
 import { HandleError } from "./Shared";
-import { addFile, setFile, removeFile } from "./File/File";
+import { registerTodoFile, activateFile, removeFile } from "./File/File";
 import { openFile, createFile } from "./File/Dialog";
 import { createTodoObject } from "./DataRequest/CreateTodoObjects";
 
@@ -67,12 +67,12 @@ function handleWriteTodoToFile(
         attributeType,
         attributeValue,
       );
-      prepareContentForWriting(index, todoObject.string);
+      writeSingleTodoToFile(index, todoObject.string);
     } else {
       let updatedString: string | null = string;
       if (state !== undefined && index >= 0)
         updatedString = changeCompleteState(string, state);
-      prepareContentForWriting(index, updatedString, state);
+      writeSingleTodoToFile(index, updatedString, state);
     }
   } catch (error: any) {
     HandleError(error);
@@ -129,7 +129,7 @@ function handleStoreSetNotifiedTodoObjects(
 
 function handleSetFile(event: IpcMainEvent, index: number): void {
   try {
-    setFile(index);
+    activateFile(index);
   } catch (error: any) {
     HandleError(error);
   }
@@ -145,7 +145,7 @@ function handleRemoveFile(event: IpcMainEvent, index: number): void {
 
 function handleAddFile(event: IpcMainEvent, filePath: string): void {
   try {
-    addFile(filePath, null);
+    registerTodoFile(filePath, null);
   } catch (error: any) {
     HandleError(error);
   }
@@ -231,14 +231,14 @@ function removeEventListeners(): void {
   ipcMain.off("updateAttributeFields", handleUpdateAttributeFields);
   ipcMain.off("openInBrowser", handleOpenInBrowser);
   ipcMain.off("requestData", handleDataRequest);
-  ipcMain.off("writeTodoToFile", handleWriteTodoToFile);
+  ipcMain.off("writeSingleTodoToFile", handleWriteTodoToFile);
   ipcMain.off("archiveTodos", handleArchiveTodos);
   ipcMain.off("addFile", handleAddFile);
   ipcMain.off("saveToClipboard", handleSaveToClipboard);
   ipcMain.off("revealInFileManager", handleRevealInFileManager);
   ipcMain.off("removeLineFromFile", handleRemoveLineFromFile);
   ipcMain.off("updateTodoObject", handleUpdateTodoObject);
-  ipcMain.off("requestArchive", handleRequestArchive);
+  ipcMain.off("requestArchive", checkArchiveReadiness);
 }
 
 app.on("before-quit", () => removeEventListeners());
@@ -255,11 +255,11 @@ ipcMain.on("createFile", handleCreateFile);
 ipcMain.on("updateAttributeFields", handleUpdateAttributeFields);
 ipcMain.on("openInBrowser", handleOpenInBrowser);
 ipcMain.on("requestData", handleDataRequest);
-ipcMain.on("writeTodoToFile", handleWriteTodoToFile);
+ipcMain.on("writeSingleTodoToFile", handleWriteTodoToFile);
 ipcMain.on("archiveTodos", handleArchiveTodos);
 ipcMain.on("addFile", handleAddFile);
 ipcMain.on("saveToClipboard", handleSaveToClipboard);
 ipcMain.on("revealInFileManager", handleRevealInFileManager);
 ipcMain.on("removeLineFromFile", handleRemoveLineFromFile);
 ipcMain.on("updateTodoObject", handleUpdateTodoObject);
-ipcMain.on("requestArchive", handleRequestArchive);
+ipcMain.on("requestArchive", checkArchiveReadiness);

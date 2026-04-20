@@ -9,10 +9,9 @@ import {
 // Mocks
 // ---------------------------------------------------------------------------
 
-const mockPrepareContentForWriting = vi.fn();
+const mockWriteTodoToFile = vi.fn();
 vi.mock("../File/Write", () => ({
-  prepareContentForWriting: (...args: unknown[]) =>
-    mockPrepareContentForWriting(...args),
+  writeSingleTodoToFile: (...args: unknown[]) => mockWriteTodoToFile(...args),
 }));
 
 vi.mock("../Shared", () => ({
@@ -33,10 +32,10 @@ vi.mock("../Stores", () => ({
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Extract the todo string that was passed to prepareContentForWriting. */
+/** Extract the todo string that was passed to writeSingleTodoToFile. */
 const capturedTodo = (): string => {
-  expect(mockPrepareContentForWriting).toHaveBeenCalledOnce();
-  return mockPrepareContentForWriting.mock.calls[0][1] as string;
+  expect(mockWriteTodoToFile).toHaveBeenCalledOnce();
+  return mockWriteTodoToFile.mock.calls[0][1] as string;
 };
 
 /** Parse a `key:value` extension out of a todo string. */
@@ -138,9 +137,9 @@ describe("createRecurringTodo", () => {
   // -------------------------------------------------------------------------
 
   describe("no recurrence", () => {
-    it("does not call prepareContentForWriting when recurrence string is empty", () => {
+    it("does not call writeSingleTodoToFile when recurrence string is empty", () => {
       createRecurringTodo("Example todo", "");
-      expect(mockPrepareContentForWriting).not.toHaveBeenCalled();
+      expect(mockWriteTodoToFile).not.toHaveBeenCalled();
     });
   });
 
@@ -313,13 +312,13 @@ describe("createRecurringTodo", () => {
   });
 
   // -------------------------------------------------------------------------
-  // prepareContentForWriting call
+  // writeSingleTodoToFile call
   // -------------------------------------------------------------------------
 
-  describe("prepareContentForWriting", () => {
-    it("calls prepareContentForWriting with index -1 (append) and state false", () => {
+  describe("writeSingleTodoToFile", () => {
+    it("calls writeSingleTodoToFile with index -1 (append) and state false", () => {
       createRecurringTodo("Example todo rec:w", "w");
-      expect(mockPrepareContentForWriting).toHaveBeenCalledWith(
+      expect(mockWriteTodoToFile).toHaveBeenCalledWith(
         -1,
         expect.any(String),
         false,

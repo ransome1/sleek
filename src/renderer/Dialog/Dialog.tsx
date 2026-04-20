@@ -63,7 +63,7 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
             /\n/g,
             String.fromCharCode(16),
           );
-          ipcRenderer.send("writeTodoToFile", index, string);
+          ipcRenderer.send("writeSingleTodoToFile", index, string);
           handleClose();
         } else {
           setSnackBarSeverity("info");

@@ -4,7 +4,7 @@ import fs from "fs";
 import { SettingsStore, setMainWindow } from "./Stores.js";
 import { CreateMenu } from "./Menu.js";
 import { createFileWatcher, watcher } from "./File/Watcher";
-import { addFile } from "./File/File";
+import { registerTodoFile } from "./File/File";
 import { CreateTray } from "./Tray";
 import macIcon from "../../build/icon.icns?asset";
 import windowsIcon from "../../resources/icon.ico?asset";
@@ -17,7 +17,10 @@ const environment: string | undefined = process.env.NODE_ENV;
 let mainWindow: BrowserWindow | null = null;
 const eventListeners: Record<string, any | undefined> = {};
 let resizeTimeout: NodeJS.Timeout | undefined;
-const gotTheLock = app.requestSingleInstanceLock();
+const gotTheLock = () => {
+  if (process.mas) return true; // todo remove when fixed https://github.com/electron/electron/issues/35540
+  return app.requestSingleInstanceLock();
+};
 
 const HandleCreateWindow = () => {
   const wins = BrowserWindow.getAllWindows();
@@ -216,7 +219,7 @@ const handleBeforeQuit = () => {
 
 const handleOpenFile = (path) => {
   try {
-    if (path) addFile(path, null);
+    if (path) registerTodoFile(path, null);
   } catch (error) {
     console.error(error);
   }

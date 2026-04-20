@@ -1,14 +1,27 @@
 import fs from "fs";
+import { app } from "electron";
 import { SettingsStore } from "../Stores";
 import path from "path";
 import { mainWindow } from "../index";
 
-function readFileContent(filePath: string): string | Error {
-  const fileContent = fs.readFileSync(filePath, "utf8");
-  return fileContent;
+function readFileContent(
+  filePath: string,
+  bookmark: string | null = null,
+): string {
+  try {
+    if (process.mas && bookmark) {
+      app.startAccessingSecurityScopedResource(bookmark);
+    }
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    return fileContent;
+  } catch (error) {
+    throw new Error(
+      `Failed to read file ${filePath}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
 }
 
-function addFile(filePath: string, bookmark: string | null) {
+function registerTodoFile(filePath: string, bookmark: string | null) {
   if (process.mas && !bookmark) {
     mainWindow!.webContents.send(
       "responseFromMainProcess",
@@ -44,7 +57,7 @@ function addFile(filePath: string, bookmark: string | null) {
   return "File added";
 }
 
-function addDoneFile(filePath: string, bookmark: string | null) {
+function linkDoneFile(filePath: string, bookmark: string | null) {
   const files: FileObject[] = SettingsStore.get("files");
   const activeIndex: number = files.findIndex((file) => file.active);
 
@@ -77,7 +90,7 @@ function removeFile(index: number) {
   return "File removed";
 }
 
-function setFile(index: number) {
+function activateFile(index: number) {
   const files: FileObject[] = SettingsStore.get("files");
 
   if (files.length > 0) {
@@ -93,4 +106,10 @@ function setFile(index: number) {
   return "File changed";
 }
 
-export { setFile, removeFile, addFile, addDoneFile, readFileContent };
+export {
+  activateFile,
+  removeFile,
+  registerTodoFile,
+  linkDoneFile,
+  readFileContent,
+};

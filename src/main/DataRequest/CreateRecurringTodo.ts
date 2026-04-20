@@ -1,6 +1,6 @@
 import { Item } from "jstodotxt";
 import { DateTime } from "luxon";
-import { prepareContentForWriting } from "../File/Write";
+import { writeSingleTodoToFile } from "../File/Write";
 import { lineBreakPlaceholder } from "../Shared";
 import { SettingsStore } from "../Stores";
 
@@ -137,7 +137,7 @@ const createRecurringTodo = (string: string, recurrence: string): void => {
   JsTodoTxtObject.setComplete(false);
   JsTodoTxtObject.setCompleted(null);
 
-  prepareContentForWriting(-1, JsTodoTxtObject.toString(), false);
+  writeSingleTodoToFile(-1, JsTodoTxtObject.toString(), false);
 };
 
 export { createRecurringTodo, addRecurrenceToDate };

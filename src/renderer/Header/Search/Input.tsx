@@ -25,7 +25,7 @@ interface InputComponentProps extends WithTranslation {
 
 const handleAddTodo = (searchString: string): void => {
   if (searchString) {
-    ipcRenderer.send("writeTodoToFile", -1, searchString);
+    ipcRenderer.send("writeSingleTodoToFile", -1, searchString);
   }
 };
 
