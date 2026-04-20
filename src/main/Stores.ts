@@ -12,6 +12,7 @@ import {
   UpdateTrayMenu,
 } from "./Tray";
 import { HandleTheme } from "./Theme";
+import { SettingStore } from "@sleek-types";
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -177,7 +178,7 @@ function findChanges(oldValue, newValue) {
   return differences;
 }
 
-export const SettingsStore = new Store<StoreType>({
+export const SettingsStore = new Store<SettingStore>({
   cwd: userDataDirectory,
   name: "config",
   migrations,
@@ -202,8 +203,8 @@ function getFiltersStore(): Store {
 }
 
 export const FiltersStore = {
-  get: (...args: Parameters<Store["get"]>) => getFiltersStore().get(...args),
-  set: (...args: Parameters<Store["set"]>) => getFiltersStore().set(...args),
+  get: (key: string) => getFiltersStore().get(key),
+  set: (key: string, value: unknown) => getFiltersStore().set(key, value),
 };
 
 let _notificationsStore: Store | null = null;
@@ -219,10 +220,8 @@ function getNotificationsStore(): Store {
 }
 
 export const NotificationsStore = {
-  get: (...args: Parameters<Store["get"]>) =>
-    getNotificationsStore().get(...args),
-  set: (...args: Parameters<Store["set"]>) =>
-    getNotificationsStore().set(...args),
+  get: (key: string) => getNotificationsStore().get(key),
+  set: (key: string, value: unknown) => getNotificationsStore().set(key, value),
 };
 
 SettingsStore.onDidAnyChange((newValue, oldValue) => {
@@ -233,52 +232,52 @@ SettingsStore.onDidAnyChange((newValue, oldValue) => {
     } else {
       console.warn("The window is not available, skipping setting change.");
     }
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 });
 
-SettingsStore.onDidChange("files", (newValue: FileObject[] | undefined) => {
+SettingsStore.onDidChange("files", (newValue) => {
   try {
-    if (!newValue) return false;
+    if (!newValue) return;
 
     createFileWatcher(newValue);
     UpdateTrayMenu();
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 });
 
 SettingsStore.onDidChange("colorTheme", (colorTheme) => {
   try {
     HandleTheme(colorTheme);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 });
 
 SettingsStore.onDidChange("menuBarVisibility", (menuBarVisibility) => {
   try {
-    mainWindow!.setMenuBarVisibility(menuBarVisibility);
+    mainWindow!.setMenuBarVisibility(menuBarVisibility!);
     mainWindow!.setAutoHideMenuBar(!menuBarVisibility);
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 });
 
-SettingsStore.onDidChange("tray", (v: boolean) => {
+SettingsStore.onDidChange("tray", (v) => {
   try {
     if (v) CreateTray();
     else DestroyTray();
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 });
 
 SettingsStore.onDidChange("invertTrayColor", () => {
   try {
     UpdateTrayImage();
-  } catch (error: any) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 });

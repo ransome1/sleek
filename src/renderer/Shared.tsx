@@ -1,11 +1,8 @@
 import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
+import { Filter, Filters, AttributeKey, SettingStore } from "@sleek-types";
+import { i18n } from "./Settings/LanguageSelector";
 
 const { store, ipcRenderer } = window.api;
-
-interface Settings {
-  language: string;
-  weekStart: number;
-}
 
 export function IsSelected(key, filters, value) {
   if (filters[key]) {
@@ -18,7 +15,8 @@ export function IsSelected(key, filters, value) {
   return false;
 }
 
-export function IsExcluded(attribute, filters) {
+export function IsExcluded(attribute, filters: Filters | null) {
+  if (!filters) return false;
   const attributeValues = attribute.value;
 
   for (const filterList of Object.values(filters)) {
@@ -38,15 +36,16 @@ export function IsExcluded(attribute, filters) {
 }
 
 export const HandleFilterSelect = (
-  key: string,
-  value: string,
-  filters: Filters[] | null,
+  key: AttributeKey,
+  value: string[],
+  filters: Filters | null,
   exclude: boolean,
-  groupedName?: string,
+  groupedName: string | null,
 ): void => {
   try {
-    const updatedFilters = filters;
-    const filtersForKey = filters[key] || [];
+    const updatedFilters = filters || ({} as Filters);
+    const filtersForKey =
+      filters && filters[key] ? filters[key] : ([] as Filter[]);
     const matchIndex = filtersForKey.findIndex(
       (filter) => JSON.stringify(filter.value) === JSON.stringify(value),
     );
@@ -81,7 +80,7 @@ export const handleReset = (): void => {
   store.setFilters("attributes", {});
 };
 
-export const handleLinkClick = (event: MouseEvent, url: string): void => {
+export const handleLinkClick = (event: React.MouseEvent, url: string): void => {
   event.preventDefault();
   event.stopPropagation();
   if (url) {
@@ -108,7 +107,7 @@ export const translatedAttributes = (
 export const friendlyDate = (
   value: string,
   attributeKey: string,
-  settings: Settings,
+  settings: SettingStore,
   t: typeof i18n.t,
 ): string[] => {
   LuxonSettings.defaultWeekSettings = {

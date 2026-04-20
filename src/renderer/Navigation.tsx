@@ -6,30 +6,24 @@ import FileOpenIcon from "@mui/icons-material/FileOpen";
 import SettingsIcon from "@mui/icons-material/Settings";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "./Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import "./Navigation.scss";
+import { HeadersObject, SettingStore, TodoObject } from "@sleek-types";
 
 const { ipcRenderer, store } = window.api;
 
-interface NavigationComponentProps extends WithTranslation {
+interface NavigationComponentProps {
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: Settings;
+  settings: SettingStore;
   headers: HeadersObject | null;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
-  t: typeof i18n.t;
 }
 
 const NavigationComponent: React.FC<NavigationComponentProps> = memo(
-  ({
-    setIsSettingsOpen,
-    setDialogOpen,
-    settings,
-    headers,
-    setTodoObject,
-    t,
-  }) => {
+  ({ setIsSettingsOpen, setDialogOpen, settings, headers, setTodoObject }) => {
+    const { t } = useTranslation();
+
     const handleOpen = (): void => {
       if (settings.files?.length > 0) {
         setTodoObject(null);
@@ -124,4 +118,4 @@ const NavigationComponent: React.FC<NavigationComponentProps> = memo(
 
 NavigationComponent.displayName = "NavigationComponent"; // Set displayName explicitly
 
-export default withTranslation()(NavigationComponent);
+export default NavigationComponent;

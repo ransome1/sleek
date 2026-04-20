@@ -1,23 +1,17 @@
 import { expect, describe, it } from "vitest";
 import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
 import { friendlyDate } from "./Shared";
+import { SettingStore } from "@sleek-types";
+import { i18n } from "./Settings/LanguageSelector";
 
 // Mock translation function
-const mockT = (key: string): string => {
-  const translations = {
-    "drawer.attributes.today": "Today",
-    "drawer.attributes.yesterday": "Yesterday",
-    "drawer.attributes.tomorrow": "Tomorrow",
-    "drawer.attributes.thisWeek": "This week",
-    "drawer.attributes.thisMonth": "This month",
-    "drawer.attributes.nextMonth": "Next month",
-    "drawer.attributes.overdue": "Overdue",
-    "drawer.attributes.elapsed": "Elapsed",
-  };
-  return translations[key] || key;
+// @ts-expect-error We're not gonna get into this...
+const mockT: typeof i18n.t = (key) => {
+  return key;
 };
 
-const mockSettings = {
+// @ts-expect-error Ignore this until we have a default SettingStore to test with.
+const mockSettings: SettingStore = {
   language: "en",
   weekStart: 1, // Monday
 };
@@ -35,19 +29,19 @@ describe("friendlyDate", () => {
     it("should return 'Yesterday' for 1 day ago", () => {
       const yesterday = getRelativeDate(-1);
       const result = friendlyDate(yesterday, "due", mockSettings, mockT);
-      expect(result).toContain("Yesterday");
+      expect(result).toContain("drawer.attributes.yesterday");
     });
 
     it("should return 'Overdue' for dates more than 1 day in the past", () => {
       const twoDaysAgo = getRelativeDate(-2);
       const result = friendlyDate(twoDaysAgo, "due", mockSettings, mockT);
-      expect(result).toContain("Overdue");
+      expect(result).toContain("drawer.attributes.overdue");
     });
 
     it("should return 'Elapsed' for threshold dates in the past", () => {
       const twoDaysAgo = getRelativeDate(-2);
       const result = friendlyDate(twoDaysAgo, "t", mockSettings, mockT);
-      expect(result).toContain("Elapsed");
+      expect(result).toContain("drawer.attributes.elapsed");
     });
   });
 
@@ -55,14 +49,14 @@ describe("friendlyDate", () => {
     it("should return 'Today' for today", () => {
       const today_str = getRelativeDate(0);
       const result = friendlyDate(today_str, "due", mockSettings, mockT);
-      expect(result).toContain("Today");
+      expect(result).toContain("drawer.attributes.today");
       expect(result.length).toBe(1);
     });
 
     it("should return 'Tomorrow' for tomorrow", () => {
       const tomorrow = getRelativeDate(1);
       const result = friendlyDate(tomorrow, "due", mockSettings, mockT);
-      expect(result).toContain("Tomorrow");
+      expect(result).toContain("drawer.attributes.tomorrow");
       expect(result.length).toBe(1);
     });
   });
@@ -83,7 +77,7 @@ describe("friendlyDate", () => {
       if (daysUntilEndOfWeek >= 3) {
         const dateInThisWeek = getRelativeDate(2);
         const result = friendlyDate(dateInThisWeek, "due", mockSettings, mockT);
-        expect(result).toContain("This week");
+        expect(result).toContain("drawer.attributes.thisWeek");
       }
     });
   });
@@ -113,8 +107,8 @@ describe("friendlyDate", () => {
           mockSettings,
           mockT,
         );
-        expect(result).toContain("This month");
-        expect(result).not.toContain("This week");
+        expect(result).toContain("drawer.attributes.thisMonth");
+        expect(result).not.toContain("drawer.attributes.thisWeek");
       }
     });
   });
@@ -133,7 +127,7 @@ describe("friendlyDate", () => {
           mockSettings,
           mockT,
         );
-        expect(result).toContain("Next month");
+        expect(result).toContain("drawer.attributes.nextMonth");
       }
     });
   });
@@ -159,7 +153,7 @@ describe("friendlyDate", () => {
       const today_str = getRelativeDate(0);
       const result = friendlyDate(today_str, "due", mockSettings, mockT);
       expect(result.length).toBe(1);
-      expect(result[0]).toBe("Today");
+      expect(result[0]).toBe("drawer.attributes.today");
     });
   });
 
@@ -167,13 +161,13 @@ describe("friendlyDate", () => {
     it("should use 'Overdue' for due dates in the past", () => {
       const twoDaysAgo = getRelativeDate(-2);
       const result = friendlyDate(twoDaysAgo, "due", mockSettings, mockT);
-      expect(result).toContain("Overdue");
+      expect(result).toContain("drawer.attributes.overdue");
     });
 
     it("should use 'Elapsed' for threshold dates in the past", () => {
       const twoDaysAgo = getRelativeDate(-2);
       const result = friendlyDate(twoDaysAgo, "t", mockSettings, mockT);
-      expect(result).toContain("Elapsed");
+      expect(result).toContain("drawer.attributes.elapsed");
     });
   });
 });

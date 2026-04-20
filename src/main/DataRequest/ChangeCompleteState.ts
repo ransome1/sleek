@@ -1,7 +1,6 @@
 import { Item } from "jstodotxt";
 import { createRecurringTodo } from "./CreateRecurringTodo";
 import restorePreviousPriority from "./RestorePreviousPriority";
-import { SettingsStore } from "../Stores";
 
 function changeCompleteState(string: string, state: boolean): string {
   // eslint-disable-next-line no-control-regex

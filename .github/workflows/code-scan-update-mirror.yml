@@ -74,6 +74,10 @@ jobs:
         run: npm run build
       - name: Check formatting
         run: npm run format
+      - name: Lint with ESLint
+        run: npm run lint
+      - name: Check TypeScript typings
+        run: npm run typecheck
       - name: Run unit tests
         run: npm run coverage
       - name: Upload coverage reports to Codecov

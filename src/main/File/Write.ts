@@ -71,7 +71,7 @@ const writeToFile = (string: string, filePath: string): void => {
 };
 
 const removeLineFromFile = (lineNumber: number) => {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
   } else if (lineNumber >= 0) {
@@ -85,7 +85,7 @@ const writeSingleTodoToFile = (
   content: string,
   isEditMode: boolean,
 ) => {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("No active file found");
   } else if (!content) {

@@ -1,21 +1,20 @@
 import React, { useEffect } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "./Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
+import { PromptItem } from "@sleek-types";
 
 const { ipcRenderer } = window.api;
 
-interface ArchiveComponentProps extends WithTranslation {
+interface ArchiveComponentProps {
   triggerArchiving: boolean;
-  settings: Settings;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
-  t: typeof i18n.t;
 }
 
 const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
   triggerArchiving,
   setPromptItem,
-  t,
 }) => {
+  const { t } = useTranslation();
+
   const handleTriggerArchiving = (doneFileAvailable: boolean): void => {
     setPromptItem(
       doneFileAvailable ? promptItemArchiving : promptItemChooseChangeFile,
@@ -58,7 +57,7 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
     }
   }, [triggerArchiving]);
 
-  useEffect((): void => {
+  useEffect(() => {
     ipcRenderer.on("triggerArchiving", handleTriggerArchiving);
     return (): void => {
       ipcRenderer.off("triggerArchiving", handleTriggerArchiving);
@@ -68,4 +67,4 @@ const ArchiveComponent: React.FC<ArchiveComponentProps> = ({
   return <></>;
 };
 
-export default withTranslation()(ArchiveComponent);
+export default ArchiveComponent;

@@ -1,12 +1,21 @@
 import React, { useEffect } from "react";
 import { AlertColor } from "@mui/material/Alert";
+import {
+  Attributes,
+  Filters,
+  HeadersObject,
+  RequestedData,
+  SettingStore,
+  TodoData,
+  TodoObject,
+} from "@sleek-types";
 
 const { ipcRenderer } = window.api;
 
 interface IpcComponentProps {
   setHeaders: React.Dispatch<React.SetStateAction<HeadersObject | null>>;
   setAttributes: React.Dispatch<React.SetStateAction<Attributes | null>>;
-  setFilters: React.Dispatch<React.SetStateAction<Filters | null>>;
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   setTodoData: React.Dispatch<React.SetStateAction<TodoData | null>>;
   setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
   setAttributeFields: React.Dispatch<React.SetStateAction<TodoObject | null>>;
@@ -14,7 +23,7 @@ interface IpcComponentProps {
     React.SetStateAction<AlertColor | undefined>
   >;
   setSnackBarContent: React.Dispatch<React.SetStateAction<string | null>>;
-  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
+  setSettings: React.Dispatch<React.SetStateAction<SettingStore>>;
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -30,7 +39,7 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
   setSettings,
   setIsSettingsOpen,
 }) => {
-  const handleRequestedData = (requestedData: RequestedData): void => {
+  const handleRequestedData = (requestedData: RequestedData | null): void => {
     if (requestedData?.headers) setHeaders(requestedData.headers);
     if (requestedData?.attributes) setAttributes(requestedData.attributes);
     if (requestedData?.filters) setFilters(requestedData.filters);
@@ -63,7 +72,7 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
       setTodoObject(todoObject),
     );
     ipcRenderer.on("responseFromMainProcess", handleResponse);
-    ipcRenderer.on("settingsChanged", (settings: Settings) =>
+    ipcRenderer.on("settingsChanged", (settings: SettingStore) =>
       setSettings(settings),
     );
     ipcRenderer.on("isSettingsOpen", (isSettingsOpen: boolean) =>
@@ -76,7 +85,7 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
         setTodoObject(todoObject),
       );
       ipcRenderer.off("responseFromMainProcess", handleResponse);
-      ipcRenderer.off("settingsChanged", (settings: Settings) =>
+      ipcRenderer.off("settingsChanged", (settings: SettingStore) =>
         setSettings(settings),
       );
       ipcRenderer.off("isSettingsOpen", (isSettingsOpen: boolean) =>

@@ -1,6 +1,6 @@
-import React, { memo } from "react";
+import React, { JSX, memo } from "react";
 import reactStringReplace from "react-string-replace";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Chip from "@mui/material/Chip";
 import Tooltip from "@mui/material/Tooltip";
@@ -8,45 +8,46 @@ import PomodoroIcon from "../../../resources/pomodoro.svg?asset";
 import DatePickerInline from "./DatePickerInline";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { handleLinkClick, HandleFilterSelect, IsSelected } from "../Shared";
+import { TodoObject, Filters, SettingStore, AttributeKey } from "@sleek-types";
 
 interface RendererComponentProps {
   todoObject: TodoObject;
   filters: Filters;
-  settings: Settings;
+  settings: SettingStore;
 }
 
 const RendererComponent: React.FC<RendererComponentProps> = memo(
   ({ todoObject, filters, settings }) => {
-    const expressions = [
-      {
-        pattern: new RegExp(
-          `t:${todoObject.tString?.replace(/\s/g, "\\s")}`,
-          "g",
-        ),
-        type: "t",
-        key: "t:",
-      },
-      {
-        pattern: new RegExp(
-          `due:${todoObject.dueString?.replace(/\s/g, "\\s")}`,
-          "g",
-        ),
-        type: "due",
-        key: "due:",
-      },
-      { pattern: /@(\S+)/, type: "contexts", key: "@" },
-      { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
-      { pattern: /\bh:1\b/, type: "hidden", key: "h:1" },
-      { pattern: /\bpm:(\d+)/, type: "pm", key: "pm:" },
-      { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
-    ];
+    const expressions: { pattern: RegExp; type: AttributeKey; key: string }[] =
+      [
+        {
+          pattern: new RegExp(
+            `t:${todoObject.tString?.replace(/\s/g, "\\s")}`,
+            "g",
+          ),
+          type: "t",
+          key: "t:",
+        },
+        {
+          pattern: new RegExp(
+            `due:${todoObject.dueString?.replace(/\s/g, "\\s")}`,
+            "g",
+          ),
+          type: "due",
+          key: "due:",
+        },
+        { pattern: /@(\S+)/, type: "contexts", key: "@" },
+        { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
+        { pattern: /\bh:1\b/, type: "hidden", key: "h:1" },
+        { pattern: /\bpm:(\d+)/, type: "pm", key: "pm:" },
+        { pattern: /\brec:([^ ]+)/, type: "rec", key: "rec:" },
+      ];
 
     const replacements: {
-      [key: string]: (value: string, type: string) => React.ReactNode;
+      [key: string]: (value: string, type: AttributeKey) => React.ReactNode;
     } = {
-      due: (value, type) => (
+      due: (_, type) => (
         <DatePickerInline
-          name={value}
           type={type}
           todoObject={todoObject}
           date={todoObject.due}
@@ -54,9 +55,8 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           settings={settings}
         />
       ),
-      t: (value, type) => (
+      t: (_, type) => (
         <DatePickerInline
-          name={value}
           type={type}
           todoObject={todoObject}
           date={todoObject.t}
@@ -66,7 +66,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       ),
       contexts: (value, type) => (
         <button
-          onClick={() => HandleFilterSelect(type, [value], filters, false)}
+          onClick={() =>
+            HandleFilterSelect(type, [value], filters, false, null)
+          }
           data-testid={`datagrid-button-${type}`}
         >
           {value}
@@ -74,7 +76,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       ),
       projects: (value, type) => (
         <button
-          onClick={() => HandleFilterSelect(type, [value], filters, false)}
+          onClick={() =>
+            HandleFilterSelect(type, [value], filters, false, null)
+          }
           data-testid={`datagrid-button-${type}`}
         >
           {value}
@@ -82,7 +86,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       ),
       rec: (value, type) => (
         <button
-          onClick={() => HandleFilterSelect(type, [value], filters, false)}
+          onClick={() =>
+            HandleFilterSelect(type, [value], filters, false, null)
+          }
           data-testid={`datagrid-button-${type}`}
         >
           <Chip label="rec:" />
@@ -92,7 +98,9 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       pm: (value, type) => (
         <button
           className="pomodoro"
-          onClick={() => HandleFilterSelect(type, [value], filters, false)}
+          onClick={() =>
+            HandleFilterSelect(type, [value], filters, false, null)
+          }
           data-testid={`datagrid-button-${type}`}
         >
           <img src={PomodoroIcon} alt="Pomodoro" />
@@ -106,15 +114,15 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       return uri;
     };
 
-    const options = {
-      p: ({ children }: { children: React.ReactNode }): JSX.Element => {
-        return React.Children.map(children, (child) => {
-          if (typeof child === "object") return child;
-          let modifiedChild = child.split(/(\S+\s*)/).filter(Boolean);
+    const options: Components = {
+      p: ({ children }): JSX.Element | null => {
+        const mappedChildren = React.Children.map(children, (child) => {
+          if (typeof child !== "string") return child;
+          let modifiedChild: React.ReactNode = child;
           let index = 0;
           expressions.forEach(({ pattern, type }) => {
             modifiedChild = reactStringReplace(
-              modifiedChild,
+              modifiedChild as string,
               pattern,
               (match) => {
                 index++;
@@ -136,33 +144,33 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
           });
           return modifiedChild;
         });
+        return mappedChildren ? <>{mappedChildren}</> : null;
       },
-      a: ({
-        children,
-        href,
-      }: {
-        children: string;
-        href?: string;
-      }): JSX.Element => {
-        if (!children) return false;
-        const match = /([a-zA-Z]+:\/\/\S+)/g.exec(children);
+      a: ({ children, href, ...props }): JSX.Element | null => {
+        if (!children) return null;
+        const childrenStr =
+          typeof children === "string" ? children : String(children);
+        const match = /([a-zA-Z]+:\/\/\S+)/g.exec(childrenStr);
         const maxChars = 40;
         const truncatedChildren =
-          children.length > maxChars
-            ? children.slice(0, maxChars) + "..."
-            : children;
+          childrenStr.length > maxChars
+            ? childrenStr.slice(0, maxChars) + "..."
+            : childrenStr;
 
         const link = (
           <a
-            onClick={(event) => handleLinkClick(event, match ? children : href)}
+            {...props}
+            onClick={(event) =>
+              handleLinkClick(event, match ? childrenStr : href || childrenStr)
+            }
           >
             {truncatedChildren}
             <OpenInNewIcon />
           </a>
         );
 
-        return children.length > maxChars ? (
-          <Tooltip title={children} arrow>
+        return childrenStr.length > maxChars ? (
+          <Tooltip title={childrenStr} arrow>
             {link}
           </Tooltip>
         ) : (

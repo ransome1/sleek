@@ -13,8 +13,8 @@ nativeTheme.on("updated", (): void => {
       SettingsStore.set("shouldUseDarkColors", false);
     }
     UpdateTrayImage();
-  } catch (error: error) {
-    HandleError(error);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
   }
 });
 

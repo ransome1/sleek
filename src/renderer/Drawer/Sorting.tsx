@@ -9,19 +9,19 @@ import IconButton from "@mui/material/IconButton";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SortIcon from "@mui/icons-material/Sort";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
 import { translatedAttributes } from "../Shared";
 import "./Sorting.scss";
+import { SettingStore, Sorting } from "@sleek-types";
+import { VisibleSettings } from "../Settings/Settings";
+import { useTranslation } from "react-i18next";
 
 const { store } = window.api;
 
-interface DrawerSortingComponentProps extends WithTranslation {
-  settings: Settings;
-  t: typeof i18n.t;
+interface DrawerSortingComponentProps {
+  settings: SettingStore;
 }
 
-const visibleSettings = {
+const visibleSettings: VisibleSettings = {
   fileSorting: {
     style: "toggle",
     rerender: true,
@@ -35,11 +35,13 @@ const visibleSettings = {
 
 const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({
   settings,
-  t,
 }) => {
   const [accordionOrder, setAccordionOrder] = useState<Sorting[]>(
     settings.sorting,
   );
+
+  const { t } = useTranslation();
+
   const moveItem = (index: number, direction: "up" | "down"): void => {
     const newAccordionOrder = [...accordionOrder];
     const swapIndex = direction === "up" ? index - 1 : index + 1;
@@ -79,7 +81,7 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({
               key={settingName}
               control={
                 <Switch
-                  checked={settings[settingName as keyof Settings]}
+                  checked={settings[settingName]}
                   onChange={(event) =>
                     store.setConfig(settingName, event.target.checked)
                   }
@@ -131,4 +133,4 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({
   );
 };
 
-export default withTranslation()(DrawerSortingComponent);
+export default DrawerSortingComponent;

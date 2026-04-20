@@ -1,17 +1,16 @@
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { i18n } from "../Settings/LanguageSelector";
+import { useTranslation } from "react-i18next";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
 import "./DatePicker.scss";
+import { SettingStore } from "../../@types";
 
-interface DatePickerComponentProps extends WithTranslation {
+interface DatePickerComponentProps {
   date: string | null;
   type: string;
-  settings: Settings;
+  settings: SettingStore;
   handleChange: (type: string, value: DateTime | null) => void;
-  t: typeof i18n.t;
 }
 
 const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
@@ -19,7 +18,6 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   type,
   settings,
   handleChange,
-  t,
 }) => {
   LuxonSettings.defaultWeekSettings = {
     firstDay: (settings.weekStart === 0
@@ -28,6 +26,9 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
     minimalDays: 4,
     weekend: [6, 7],
   };
+
+  const { t } = useTranslation();
+
   return (
     <LocalizationProvider
       dateAdapter={AdapterLuxon}
@@ -47,4 +48,4 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   );
 };
 
-export default withTranslation()(DatePickerComponent);
+export default DatePickerComponent;

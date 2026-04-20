@@ -2,8 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "target": "esnext",
-    "module": "nodenext",
-    "moduleResolution": "nodenext"
+    "module": "esnext",
+    "moduleResolution": "bundler"
   },
   "references": [
     {
