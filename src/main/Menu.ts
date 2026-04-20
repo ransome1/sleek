@@ -1,4 +1,4 @@
-import { app, Menu, dialog, shell } from "electron";
+import { app, Menu, dialog, shell, MenuItemConstructorOptions } from "electron";
 import { activateFile } from "./File/File";
 import { mainWindow, HandleCreateWindow } from "./index";
 import { openFile, createFile } from "./File/Dialog";
@@ -49,13 +49,13 @@ const GetMenuTemplate = (
           },
         },
         ...(process.platform === "darwin"
-          ? [
+          ? ([
               { type: "separator" },
               {
                 accelerator: "Cmd+H",
                 role: "hide",
               },
-            ]
+            ] as MenuItemConstructorOptions[])
           : []),
         { type: "separator" },
         {

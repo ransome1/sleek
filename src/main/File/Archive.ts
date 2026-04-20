@@ -2,11 +2,12 @@ import { getActiveFile } from "./Active";
 import { readFileContent } from "./File";
 import { writeToFile } from "./Write";
 import { mainWindow } from "../index";
+import { File } from "@sleek-types";
 
 const COMPLETION_MARKER = "x ";
 
 function checkArchiveReadiness(): void {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile: File | null = getActiveFile();
   if (!activeFile) {
     throw new Error("Todo file is not defined");
   }
@@ -28,7 +29,7 @@ function filterByCompletion(content: string, complete: boolean): string {
 }
 
 function archiveTodos(): string {
-  const activeFile: FileObject | null = getActiveFile();
+  const activeFile = getActiveFile();
   if (!activeFile) {
     throw new Error("Todo file is not defined");
   }

@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import { Item } from "jstodotxt";
 import { linesInFile } from "../DataRequest/CreateTodoObjects";
 import { getActiveFile } from "./Active";

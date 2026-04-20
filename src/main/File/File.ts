@@ -3,6 +3,7 @@ import { app } from "electron";
 import { SettingsStore } from "../Stores";
 import path from "path";
 import { mainWindow } from "../index";
+import { File } from "@sleek-types";
 
 function readFileContent(
   filePath: string,
@@ -32,7 +33,7 @@ function registerTodoFile(filePath: string, bookmark: string | null) {
     );
   }
 
-  const files: FileObject[] = SettingsStore.get("files");
+  const files = SettingsStore.get("files");
   const existingFileIndex = files.findIndex(
     (file) => file.todoFilePath === filePath,
   );
@@ -58,10 +59,10 @@ function registerTodoFile(filePath: string, bookmark: string | null) {
 }
 
 function linkDoneFile(filePath: string, bookmark: string | null) {
-  const files: FileObject[] = SettingsStore.get("files");
+  const files: File[] = SettingsStore.get("files");
   const activeIndex: number = files.findIndex((file) => file.active);
 
-  if (activeIndex === -1) return false;
+  if (activeIndex === -1) return;
 
   files[activeIndex].doneFilePath = filePath;
   files[activeIndex].doneFileBookmark = bookmark;
@@ -72,7 +73,7 @@ function linkDoneFile(filePath: string, bookmark: string | null) {
 }
 
 function removeFile(index: number) {
-  let files: FileObject[] = SettingsStore.get("files");
+  let files = SettingsStore.get("files");
 
   files.splice(index, 1);
   const activeIndex: number = files.findIndex((file) => file.active);
@@ -91,7 +92,7 @@ function removeFile(index: number) {
 }
 
 function activateFile(index: number) {
-  const files: FileObject[] = SettingsStore.get("files");
+  const files: File[] = SettingsStore.get("files");
 
   if (files.length > 0) {
     files.forEach((file) => {
