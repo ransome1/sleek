@@ -12,5 +12,6 @@ export default defineConfig({
       },
     },
   },
+  assetsInclude: ["**/*.icns", "**/*.ico", "**/*.png"],
   ...config.renderer,
 });
