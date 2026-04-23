@@ -115,7 +115,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(
               return null;
             }
             return (
-              <React.Fragment key={group.title}>
+              <React.Fragment key={group.title?.toString()}>
                 <Group
                   attributeKey={settings.sorting[0].value}
                   value={group.title}

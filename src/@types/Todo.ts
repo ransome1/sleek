@@ -27,7 +27,7 @@ export interface TodoObject {
 }
 
 export interface TodoGroup {
-  title: string | null;
+  title: string | string[] | null;
   visible: boolean;
   todoObjects: TodoObject[];
 }
