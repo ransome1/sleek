@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import Chip from "@mui/material/Chip";
@@ -25,8 +25,11 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
   filters,
   settings,
 }) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
-  //const ButtonFieldRef = useRef<HTMLButtonElement>(null);
+  const setDateButtonRef = useCallback((node: HTMLElement | null) => {
+    setAnchorEl(node);
+  }, []);
   const chipText = type === "due" ? "due:" : type === "t" ? "t:" : null;
 
   const { t } = useTranslation();
@@ -60,14 +63,17 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
     setOpen((prev) => !prev);
   };
 
-  const ButtonField = () => {
-    const mustNotify = type === "due" ? !todoObject?.notify : true;
-    const groupedName =
-      settings.useHumanFriendlyDates && date && DateTime.fromISO(date).isValid
-        ? friendlyDate(date, type, settings, t).pop()
-        : date;
+  const mustNotify = type === "due" ? !todoObject?.notify : true;
+  const groupedName =
+    settings.useHumanFriendlyDates && date && DateTime.fromISO(date).isValid
+      ? friendlyDate(date, type, settings, t).pop()
+      : date;
 
-    return (
+return (
+    <LocalizationProvider
+      dateAdapter={AdapterLuxon}
+      adapterLocale={settings.language}
+    >
       <span
         className={IsSelected(type, filters, [date]) ? "selected" : undefined}
         data-todotxt-attribute={type}
@@ -89,6 +95,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
               tabIndex={0}
             />
             <div
+              ref={setDateButtonRef}
               onClick={toggleOpen}
               onKeyDown={(event) => event.key === "Enter" && toggleOpen(event)}
               data-testid={`datagrid-picker-date-${type}`}
@@ -99,20 +106,32 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
           </Badge>
         </button>
       </span>
-    );
-  };
-
-  return (
-    <LocalizationProvider
-      dateAdapter={AdapterLuxon}
-      adapterLocale={settings.language}
-    >
       <DatePicker
         open={open}
         onClose={() => setOpen(false)}
         value={date ? DateTime.fromISO(date) : null}
         onChange={handleChange}
-        slots={{ field: ButtonField }}
+        slots={{ field: () => <span style={{ display: 'none' }} /> }}
+        slotProps={{ popper: {
+          anchorEl: anchorEl,
+          placement: 'bottom-start',
+          modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 8],
+              },
+            },
+            {
+              name: 'flip',
+              enabled: true,
+            },
+            {
+              name: 'preventOverflow',
+              enabled: true,
+            },
+          ],
+        } }}
       />
     </LocalizationProvider>
   );
