@@ -60,6 +60,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
 
   const toggleOpen = (event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault();
+    event.stopPropagation();
     setOpen((prev) => !prev);
   };
 
@@ -81,7 +82,8 @@ return (
         <button tabIndex={-1}>
           <Badge variant="dot" invisible={mustNotify}>
             <Chip
-              onClick={() =>
+              onClick={(event) => {
+                event.stopPropagation();
                 HandleFilterSelect(
                   type,
                   date ? [date] : [],
@@ -89,7 +91,7 @@ return (
                   false,
                   null,
                 )
-              }
+              }}
               label={chipText}
               data-testid={`datagrid-button-${type}`}
               tabIndex={0}

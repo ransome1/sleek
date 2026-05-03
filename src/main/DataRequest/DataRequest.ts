@@ -32,7 +32,22 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
 
   const activeFile = getActiveFile();
   if (!activeFile) {
-    return null;
+    return {
+  headers: {
+    availableObjects: 0,
+    completedObjects: 0,
+    visibleObjects: 0
+  },
+  attributes: {
+    priority: {}, due: {}, t: {}, contexts: {}, projects: {},
+    rec: {}, pm: {}, hidden: {}, created: {}, completed: {}
+  },
+  filters: {
+    priority: [], due: [], t: [], contexts: [], projects: [],
+    rec: [], pm: [], hidden: [], created: [], completed: []
+  },
+  todoData: []
+};
   }
 
   const fileContent = readFileContent(activeFile.todoFilePath);

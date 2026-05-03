@@ -10,13 +10,14 @@ function applyAttributes(todoObjects: TodoObject[], filters: Filters) {
         const values = filter.value;
         const exclude = filter.exclude;
         if (key in todoObject && todoObject[key] !== null) {
+          const todoValue = String(todoObject[key]);
           if (exclude) {
-            if (values.some((value) => todoObject[key].includes(value))) {
+            if (values.some((value) => todoValue.includes(value))) {
               match = false;
               break;
             }
           } else {
-            if (!values.some((value) => todoObject[key].includes(value))) {
+            if (!values.some((value) => todoValue.includes(value))) {
               match = false;
               break;
             }

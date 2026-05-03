@@ -4,6 +4,13 @@ const { store } = window.api;
 
 const disableAnimations = store.getConfig("disableAnimations");
 
+const focusStyle = {
+  outline: "2px solid #1976d2",
+  outlineOffset: "-2px",
+};
+
+;
+
 const baseTheme: Theme = createTheme({
   ...(disableAnimations && { transitions: { create: () => "none" } }),
   shape: {
@@ -18,9 +25,7 @@ const baseTheme: Theme = createTheme({
     MuiFormLabel: {
       styleOverrides: {
         root: {
-          "&.Mui-focused": {
-            color: "#1976d2",
-          },
+          
         },
       },
     },
@@ -118,10 +123,7 @@ const dark: Theme = createTheme({
     MuiListItem: {
       styleOverrides: {
         root: {
-          "&:focus-visible": {
-            background: "#2d2d2d",
-            outline: "none;",
-          },
+          "&:focus-visible": focusStyle,
         },
       },
     },
@@ -129,6 +131,7 @@ const dark: Theme = createTheme({
       styleOverrides: {
         root: {
           background: "#2d2d2d",
+          "&:focus-visible": focusStyle,
         },
         notchedOutline: {
           border: "none",
@@ -141,19 +144,14 @@ const dark: Theme = createTheme({
           "&.Mui-selected": {
             color: "#1976d2",
           },
-          "&.Mui-focusVisible": {
-            backgroundColor: "#2d2d2d",
-          },
+          "&.Mui-focusVisible": focusStyle,
         },
       },
     },
-    MuiRadio: {
+    MuiFormControlLabel: {
       styleOverrides: {
         root: {
-          color: "white",
-          "&.Mui-checked": {
-            color: "#1976d2",
-          },
+          "&:focus-within": focusStyle,
         },
       },
     },
@@ -164,12 +162,28 @@ const dark: Theme = createTheme({
           "&.Mui-checked": {
             color: "#1976d2",
           },
-          "&.Mui-focusVisible svg": {
-            color: "white",
-          },
-          "&.Mui-checked.Mui-focusVisible svg": {
-            color: "white",
-          },
+          "&.Mui-focusVisible": focusStyle
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focusVisible": focusStyle,
+        },
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focusVisible": focusStyle,
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focusVisible": focusStyle,
         },
       },
     },
@@ -204,6 +218,7 @@ const light: Theme = createTheme({
       styleOverrides: {
         root: {
           background: "#f0f0f0",
+          "&:focus-visible": focusStyle,
         },
         notchedOutline: {
           border: "none",
@@ -213,10 +228,7 @@ const light: Theme = createTheme({
     MuiListItem: {
       styleOverrides: {
         root: {
-          "&:focus-visible": {
-            background: "#f0f0f0",
-            outline: "none;",
-          },
+          "&:focus-visible": focusStyle,
         },
       },
     },
@@ -226,9 +238,14 @@ const light: Theme = createTheme({
           "&.Mui-selected": {
             color: "#1976d2",
           },
-          "&.Mui-focusVisible": {
-            backgroundColor: "#ccc",
-          },
+          "&.Mui-focusVisible": focusStyle,
+        },
+      },
+    },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        root: {
+          "&:focus-within": focusStyle,
         },
       },
     },
@@ -239,12 +256,7 @@ const light: Theme = createTheme({
           "&.Mui-checked": {
             color: "#1976d2",
           },
-          "&.Mui-focusVisible svg": {
-            color: "#5a5a5a",
-          },
-          "&.Mui-checked.Mui-focusVisible svg": {
-            color: "5a5a5a",
-          },
+          "&.Mui-focusVisible": focusStyle
         },
       },
     },

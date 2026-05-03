@@ -174,12 +174,13 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
     }, [dialogOpen]);
 
     return (
-      <Dialog
-        id="DialogComponent"
-        open={dialogOpen}
-        onClose={handleClose}
-        onKeyDown={handleKeyDown}
-      >
+<Dialog
+  id="DialogComponent"
+  open={dialogOpen}
+  onClose={handleClose}
+  onKeyDown={handleKeyDown}
+  autoFocus={true}
+>
         <DialogContent>
           <AutoSuggest
             textFieldValue={textFieldValue}

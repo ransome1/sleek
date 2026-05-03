@@ -15,20 +15,26 @@
   .MuiPickersInputBase-root {
     padding: 0 0.25em 0 0;
     background: Variables.$lighter-grey;
+    font-size: 0.9em;
     .MuiPickersSectionList-root {
       padding: 1em;
+      font-size: 1.1em;
     }
     fieldset {
       border: none;
-      outline: none;
       &.MuiPickersOutlinedInput-notchedOutline {
         border: none;
       }
     }
+
   }
   .Mui-focusVisible {
     color: Variables.$blue;
   }
+}
+
+.MuiPopper-root {
+  z-index: 2000 !important;
 }
 
 .MuiPickersLayout-root {
@@ -36,11 +42,11 @@
   .MuiYearCalendar-root {
     width: inherit;
     width: auto;
-    max-height: 15.5em;
     .MuiPickersYear-yearButton {
       width: auto;
       height: auto;
       margin: 0;
+      line-height: 1;
     }
   }
   .MuiDateCalendar-root {
@@ -53,8 +59,10 @@
       min-height: auto;
       padding: 0;
       margin: 0;
+      font-size: 1.1em;
     }
     .MuiDayCalendar-header {
+      font-size: 1.1em;
       span {
         width: 3em;
         height: 3em;
@@ -67,6 +75,7 @@
   }
   button {
     border-radius: Variables.$radius;
+    font-size: 1em;
     &.MuiPickersDay-today {
       border: inherit;
       background: Variables.$mid-grey;

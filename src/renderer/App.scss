@@ -1,6 +1,13 @@
 @use "Variables.scss";
 @use "Coloring.scss";
 
+*:focus-visible:not(input, textarea, .MuiInputBase-root) {
+  outline: 2px solid Variables.$blue !important;
+  outline-offset: -2px !important;
+  background-color: transparent !important;
+  color: Variables.$blue !important;
+}
+
 body {
   overflow: hidden;
   user-select: none;
@@ -59,4 +66,8 @@ body {
     background-color: transparent;
     width: 0.8em;
   }
+}
+
+.dark {
+
 }

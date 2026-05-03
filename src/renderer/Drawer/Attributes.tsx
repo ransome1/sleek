@@ -199,7 +199,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
                 >
                   {categoryKey === "pm" && (
                     <img src={PomodoroIcon} alt="Pomodoro" />
-                  )}
+                  )}                  
                   {bucketName}
                 </button>
               </Badge>
