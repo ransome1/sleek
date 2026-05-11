@@ -1,4 +1,3 @@
-@use "./Variables.scss";
 
 label {
   width: 100%;
@@ -27,12 +26,12 @@ label {
         padding: 0.5em;
         &.Mui-checked {
           transform: translateX(1.4em);
-          color: Variables.$blue;
+          color: var(--semantic-primary);
         }
       }
       .MuiSwitch-track {
         &.Mui-checked {
-          background-color: Variables.$blue;
+          background-color: var(--semantic-primary);
         }
       }
       .MuiSwitch-thumb {
@@ -54,11 +53,11 @@ label {
       .MuiSlider-thumb {
         width: 1.42857143em;
         height: 1.42857143em;
-        background-color: Variables.$blue;
+        background-color: var(--semantic-primary);
       }
       .MuiSlider-track {
-        border-color: Variables.$blue;
-        background-color: Variables.$blue;
+        border-color: var(--semantic-primary);
+        background-color: var(--semantic-primary);
       }
     }
     .MuiInputBase-root {

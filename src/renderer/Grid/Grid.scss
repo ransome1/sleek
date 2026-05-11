@@ -1,4 +1,3 @@
-@use "../Variables.scss";
 
 #grid {
   min-width: 20em;
@@ -11,7 +10,7 @@
   }
   &::-webkit-scrollbar-thumb:window-inactive,
   &::-webkit-scrollbar-thumb {
-    background: Variables.$light-grey;
+    background: var(--color-surfaceVariant);
     border-radius: 0.3em;
   }
 }
@@ -26,7 +25,7 @@
   #grid {
     &::-webkit-scrollbar-thumb:window-inactive,
     &::-webkit-scrollbar-thumb {
-      background: Variables.$dark-grey;
+      background: var(--color-outline);
       border-radius: 0.3em;
     }
   }

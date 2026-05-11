@@ -1,10 +1,9 @@
 @use "sass:color";
-@use "../Variables.scss";
 
 .row {
   cursor: pointer;
-  border-left: solid 0.2em Variables.$light-grey;
-  border-bottom: dotted 1px Variables.$light-grey;
+  border-left: solid 0.2em var(--color-surfaceVariant);
+  border-bottom: dotted 1px var(--color-surfaceVariant);
   display: flex;
   flex-wrap: wrap;
   gap: 0.25em;
@@ -70,6 +69,6 @@
 
 .dark {
   .row {
-    border-color: Variables.$dark-grey;
+    border-color: var(--color-outlineVariant);
   }
 }

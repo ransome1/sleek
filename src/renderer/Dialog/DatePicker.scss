@@ -1,4 +1,3 @@
-@use "../Variables.scss";
 
 .compact {
   .datePicker {
@@ -14,7 +13,7 @@
   width: 13em;
   .MuiPickersInputBase-root {
     padding: 0 0.25em 0 0;
-    background: Variables.$lighter-grey;
+    background: var(--color-surface);
     font-size: 0.9em;
     .MuiPickersSectionList-root {
       padding: 1em;
@@ -29,7 +28,7 @@
 
   }
   .Mui-focusVisible {
-    color: Variables.$blue;
+    color: var(--semantic-primary);
   }
 }
 
@@ -74,27 +73,27 @@
     }
   }
   button {
-    border-radius: Variables.$radius;
+    border-radius: var(--radius);
     font-size: 1em;
     &.MuiPickersDay-today {
       border: inherit;
-      background: Variables.$mid-grey;
+      background: var(--color-outlineVariant);
     }
     &.Mui-selected {
       color: white;
-      background: Variables.$blue;
+      background: var(--semantic-primary);
     }
   }
 }
 .dark {
   .datePicker {
     .MuiPickersInputBase-root {
-      background: Variables.$darker-grey;
+      background: var(--color-surfaceVariant);
     }
   }
   .MuiPickersLayout-root {
     button.MuiPickersDay-today {
-      color: Variables.$darker-grey;
+      color: var(--color-surfaceVariant);
     }
   }
 }

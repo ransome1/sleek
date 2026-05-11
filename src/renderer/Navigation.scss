@@ -1,8 +1,7 @@
-@use "Variables.scss";
 
 .hideNavigation #navigation li.showNavigation {
   width: 2.5em;
-  border-top-right-radius: Variables.$radius;
+  border-top-right-radius: var(--radius);
   display: flex;
 }
 
@@ -21,7 +20,7 @@
   top: 0;
   left: 0;
   height: 100vh;
-  background: Variables.$lighter-grey;
+  background: var(--color-surface);
   display: flex;
   flex-direction: column;
   transition: left 0.3s ease;
@@ -42,31 +41,31 @@
       margin-top: auto;
     }
     svg {
-      color: Variables.$dark-grey;
+      color: var(--navigation-icon-color);
     }
     &:active,
     &:hover,
     &.active {
-      background: Variables.$light-grey;
+      background-color: var(--navigation-hover-bg);
     }
     &:focus-visible {
-      background: Variables.$mid-grey;
-      border-color: Variables.$mid-grey;
+      background: var(--color-outlineVariant);
+      border-color: var(--color-outlineVariant);
     }
     &.logo,
     &.logo:hover {
       font-weight: bold;
       cursor: auto;
       color: white;
-      background: linear-gradient(0.33turn, #1b5551, #813e93);
+      background: linear-gradient(0.33turn, var(--gradient-logo-start), var(--gradient-logo-end));
     }
     &.showNavigation {
       position: fixed;
       bottom: 0;
       left: 0;
       display: none;
-      background: Variables.$lighter-grey;
-      color: Variables.$dark-grey;
+background: var(--color-surfaceVariant);
+      color: var(--navigation-icon-color);
       z-index: 10;
       transition: width 0.3s ease;
       border-top-left-radius: 0;
@@ -112,20 +111,20 @@
 
 .dark {
   #navigation {
-    background: Variables.$darker-grey;
+    background: var(--color-surfaceVariant);
     li {
       border-color: rgba(255, 255, 255, 0.05) !important;
       svg {
-        color: Variables.$mid-grey;
+        color: var(--navigation-icon-color);
       }
       &:hover:not(.logo),
       &:active:not(.logo),
       &:focus-visible,
       &.active {
-        background: #3b3b3b;
+background: var(--color-surface);
       }
       &.showNavigation {
-        background: Variables.$darker-grey;
+background: var(--color-surface);
         &:hover {
           background: inherit;
         }

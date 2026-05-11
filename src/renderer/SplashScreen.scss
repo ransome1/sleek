@@ -1,4 +1,3 @@
-@use "Variables.scss";
 
 #splashScreen {
   display: flex;
@@ -13,13 +12,13 @@
   }
   svg {
     font-size: 3em;
-    color: Variables.$dark-grey;
+    color: var(--color-outline);
   }
   p {
     a {
       svg {
         font-size: 1.2em;
-        color: Variables.$blue;
+        color: var(--semantic-primary);
       }
     }
   }
@@ -30,20 +29,20 @@
   }
   .container {
     padding: 1em 2em;
-    border-radius: Variables.$radius;
-    border: 0.15em dashed Variables.$mid-grey;
+    border-radius: var(--radius);
+    border: 0.15em dashed var(--color-outlineVariant);
   }
 }
 
 .dark {
   #splashScreen {
     svg {
-      color: Variables.$mid-grey;
+      color: var(--color-outlineVariant);
     }
     p {
       a {
         svg {
-          color: Variables.$blue;
+          color: var(--semantic-primary);
         }
       }
     }

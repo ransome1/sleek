@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Sleek unified color palette - all colors in one place"
+  },
+  "semantic": {
+    "primary": "#1976d2",
+    "error": "#f44336",
+    "warning": "#ff9800",
+    "success": "#4caf50",
+    "notification": "#ff3860",
+    "focus": "#1976d2"
+  },
+  "priority": {
+    "A": {
+      "base": "#ff0000",
+      "selected": "#B70025"
+    },
+    "B": {
+      "base": "#fd7d67",
+      "selected": "#D22307"
+    },
+    "C": {
+      "base": "#ffdd57",
+      "selected": "#d4a83a"
+    }
+  },
+  "pomodoro": {
+    "light": {
+      "base": {
+        "text": "rgb(221, 44, 0)",
+        "background": "white"
+      },
+      "selected": {
+        "text": "white",
+        "background": "rgb(221, 44, 0)"
+      },
+      "badgeText": "white",
+      "badgeBackground": "rgb(221, 44, 0)"
+    },
+    "dark": {
+      "base": {
+        "text": "rgb(221, 44, 0)",
+        "background": "white"
+      },
+      "selected": {
+        "text": "white",
+        "background": "rgb(221, 44, 0)"
+      },
+      "badgeText": "white",
+      "badgeBackground": "rgb(221, 44, 0)"
+    }
+  },
+  "navigation": {
+    "light": {
+      "iconColor": "#5a5a5a",
+      "hoverBackground": "#ebebeb"
+    },
+    "dark": {
+      "iconColor": "#b0b0b0",
+      "hoverBackground": "#4a4a4a"
+    }
+  },
+  "attributes": {
+    "projects": {
+      "text": "#6f266f",
+      "background": "#f1d6f1",
+      "darkText": "#f1d6f1",
+      "darkBackground": "#6f266f",
+      "selectedLight": "#491949",
+      "selectedDark": "#491949"
+    },
+    "contexts": {
+      "text": "#1e6251",
+      "background": "#c5ede3",
+      "darkText": "#c5ede3",
+      "darkBackground": "#1e6251",
+      "selectedLight": "#123B31",
+      "selectedDark": "#123B31"
+    },
+    "pomodoro": {
+      "text": "rgb(221, 44, 0)",
+      "background": "white",
+      "darkText": "rgb(221, 44, 0)",
+      "darkBackground": "white",
+      "selectedText": "white",
+      "selectedBackground": "rgb(221, 44, 0)"
+    },
+    "generic": {
+      "text": "#5a5a5a",
+      "background": "#ccc"
+    }
+  },
+  "light": {
+    "background": "#ffffff",
+    "surface": "#f0f0f0",
+    "surfaceVariant": "#ebebeb",
+    "outline": "#5a5a5a",
+    "outlineVariant": "#ccc",
+    "onSurface": "#212224",
+    "onBackground": "#000000"
+  },
+  "dark": {
+    "background": "#212224",
+    "surface": "#3b3b3b",
+    "surfaceVariant": "#2d2d2d",
+    "outline": "#f0f0f0",
+    "outlineVariant": "#5a5a5a",
+    "onSurface": "#ebebeb",
+    "onBackground": "#ffffff"
+  },
+  "chipDark": {
+    "background": "#4a4a4a",
+    "backgroundFocus": "#2d2d2d"
+  },
+  "gradients": {
+    "logo": {
+      "start": "#1b5551",
+      "end": "#813e93"
+    }
+  },
+  "opacity": {
+    "disabled": 0.5,
+    "hover": 0.7,
+    "focus": 1.0
+  }
+}

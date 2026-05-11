@@ -1,11 +1,10 @@
-@use "Variables.scss";
-@use "Coloring.scss";
+@use "AttributeColoring.scss";
 
-*:focus-visible:not(input, textarea, .MuiInputBase-root) {
-  outline: 2px solid Variables.$blue !important;
+*:focus-visible:not(input, textarea, .MuiInputBase-root, .MuiPaper-root) {
+  outline: 2px solid var(--semantic-primary) !important;
   outline-offset: -2px !important;
   background-color: transparent !important;
-  color: Variables.$blue !important;
+  color: var(--semantic-primary) !important;
 }
 
 body {
@@ -16,12 +15,12 @@ body {
   -ms-user-select: none;
   code {
     font-size: 0.9em;
-    background-color: rgba(18, 18, 18, 0.15);
+    background-color: rgba(0, 0, 0, 0.1);
     border-radius: 0.25em;
     padding: 0.25em;
   }
   a {
-    color: Variables.$blue;
+    color: var(--semantic-primary);
     cursor: pointer;
     text-decoration: underline;
     svg {
@@ -66,8 +65,4 @@ body {
     background-color: transparent;
     width: 0.8em;
   }
-}
-
-.dark {
-
 }

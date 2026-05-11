@@ -1,20 +1,22 @@
 import { createTheme, Theme } from "@mui/material/styles";
+import colors from "./Colors";
 
 const { store } = window.api;
 
 const disableAnimations = store.getConfig("disableAnimations");
 
+// Border radius constant - used in SCSS via CSS variable
+export const BORDER_RADIUS = "0.65em";
+
 const focusStyle = {
-  outline: "2px solid #1976d2",
+  outline: `2px solid ${colors.semantic.primary}`,
   outlineOffset: "-2px",
 };
-
-;
 
 const baseTheme: Theme = createTheme({
   ...(disableAnimations && { transitions: { create: () => "none" } }),
   shape: {
-    borderRadius: "0.65em",
+    borderRadius: BORDER_RADIUS,
   },
   components: {
     MuiButtonBase: {
@@ -40,7 +42,7 @@ const baseTheme: Theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         paper: {
-          backgroundColor: "#ebebeb",
+          backgroundColor: colors.light.surfaceVariant,
         },
       },
     },
@@ -48,7 +50,7 @@ const baseTheme: Theme = createTheme({
       styleOverrides: {
         root: {
           svg: {
-            color: "#1976d2",
+            color: colors.semantic.primary,
             marginLeft: "0.3em",
           },
         },
@@ -67,7 +69,7 @@ const baseTheme: Theme = createTheme({
           minHeight: "auto",
         },
         indicator: {
-          backgroundColor: "#1976d2",
+          backgroundColor: colors.semantic.primary,
         },
       },
     },
@@ -91,8 +93,8 @@ const dark: Theme = createTheme({
   palette: {
     mode: "dark",
     background: {
-      default: "#212224",
-      paper: "#3B3B3B",
+      default: colors.dark.background,
+      paper: colors.dark.surface,
     },
   },
   components: {
@@ -107,7 +109,7 @@ const dark: Theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         paper: {
-          backgroundColor: "#212224",
+          backgroundColor: colors.dark.background,
         },
       },
     },
@@ -115,7 +117,7 @@ const dark: Theme = createTheme({
       styleOverrides: {
         root: {
           ".modal": {
-            background: "#3B3B3B",
+            background: colors.dark.surface,
           },
         },
       },
@@ -130,7 +132,7 @@ const dark: Theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          background: "#2d2d2d",
+          background: colors.dark.surfaceVariant,
           "&:focus-visible": focusStyle,
         },
         notchedOutline: {
@@ -142,7 +144,7 @@ const dark: Theme = createTheme({
       styleOverrides: {
         root: {
           "&.Mui-selected": {
-            color: "#1976d2",
+            color: colors.semantic.primary,
           },
           "&.Mui-focusVisible": focusStyle,
         },
@@ -158,9 +160,9 @@ const dark: Theme = createTheme({
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: "#1976d2",
+          color: colors.semantic.primary,
           "&.Mui-checked": {
-            color: "#1976d2",
+            color: colors.semantic.primary,
           },
           "&.Mui-focusVisible": focusStyle
         },
@@ -201,7 +203,7 @@ const light: Theme = createTheme({
       styleOverrides: {
         paper: {
           border: "none",
-          backgroundColor: "#ebebeb",
+          backgroundColor: colors.light.surfaceVariant,
         },
       },
     },
@@ -209,7 +211,7 @@ const light: Theme = createTheme({
       styleOverrides: {
         root: {
           ".modal": {
-            background: "#fff",
+            background: colors.light.background,
           },
         },
       },
@@ -217,7 +219,7 @@ const light: Theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          background: "#f0f0f0",
+          background: colors.light.surface,
           "&:focus-visible": focusStyle,
         },
         notchedOutline: {
@@ -236,7 +238,7 @@ const light: Theme = createTheme({
       styleOverrides: {
         root: {
           "&.Mui-selected": {
-            color: "#1976d2",
+            color: colors.semantic.primary,
           },
           "&.Mui-focusVisible": focusStyle,
         },
@@ -252,9 +254,9 @@ const light: Theme = createTheme({
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: "#1976d2",
+          color: colors.semantic.primary,
           "&.Mui-checked": {
-            color: "#1976d2",
+            color: colors.semantic.primary,
           },
           "&.Mui-focusVisible": focusStyle
         },

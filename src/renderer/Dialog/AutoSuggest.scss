@@ -1,4 +1,3 @@
-@use "../Variables.scss";
 
 .react-autosuggest__suggestions-container--open {
   max-height: 20em;
@@ -7,8 +6,8 @@
   z-index: 10;
   margin-top: 0.125em;
   padding: 1em;
-  border-radius: Variables.$radius;
-  background-color: rgba(240, 240, 240, 1);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
   ul {
     padding: 0;
     margin: 0;
@@ -37,6 +36,6 @@
 
 .dark {
   .react-autosuggest__suggestions-container--open {
-    background-color: rgba(45, 45, 45, 1);
+    background-color: var(--color-surfaceVariant);
   }
 }
