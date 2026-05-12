@@ -68,6 +68,22 @@
   }
 }
 
+.multiLineView {
+  .row {
+    .row-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .row-badges {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25em;
+      align-items: center;
+    }
+  }
+}
+
 .dark {
   .row {
     border-color: Variables.$dark-grey;

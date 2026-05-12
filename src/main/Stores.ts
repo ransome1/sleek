@@ -145,6 +145,10 @@ const migrations = {
     config.set("invertTrayColor", false);
     config.set("startMinimized", false);
   },
+  "2.0.27": (config) => {
+    console.log("Migrating settings store from 2.0.19 → 2.0.27");
+    config.set("multiLineView", config.get("multiLineView", false));
+  },
 };
 
 const rerenderDefinition = {

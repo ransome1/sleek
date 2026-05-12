@@ -76,6 +76,9 @@ const visibleSettings: VisibleSettings = {
   compact: {
     style: "toggle",
   },
+  multiLineView: {
+    style: "toggle",
+  },
   notificationsAllowed: {
     style: "toggle",
   },
@@ -149,17 +152,19 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
 
       document.body.classList.toggle("disableAnimations", disableAnimations);
       document.body.classList.toggle("compact", compact);
+      document.body.classList.toggle("multiLineView", settings.multiLineView);
       document.body.classList.toggle("dark", shouldUseDarkColors);
       document.body.classList.toggle("light", !shouldUseDarkColors);
 
       return () => {
-        document.body.classList.remove("dark", "light", "compact");
+        document.body.classList.remove("dark", "light", "compact", "multiLineView");
       };
     }, [
       settings.shouldUseDarkColors,
       settings.zoom,
       settings.compact,
       settings.disableAnimations,
+      settings.multiLineView,
     ]);
 
     const { t } = useTranslation();
