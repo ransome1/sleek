@@ -26,6 +26,9 @@
   &[data-hidden="true"] {
     filter: opacity(50%) grayscale(100%);
   }
+  &[data-inprogress="true"] {
+    border-left-color: #ffa726;
+  }
   &:last-child {
     border-bottom-left-radius: 0.25em;
   }
