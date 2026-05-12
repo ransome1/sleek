@@ -179,6 +179,7 @@ const App = (): JSX.Element => {
                     settings={settings}
                     headers={headers}
                     searchString={searchString}
+                    setTodoData={setTodoData}
                   />
                 </>
               )}

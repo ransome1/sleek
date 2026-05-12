@@ -6,6 +6,9 @@ import CircleUnchecked from "@mui/icons-material/RadioButtonUnchecked";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { useTranslation } from "react-i18next";
 import { SnackbarAction } from "@sleek-types";
 import { useAttributeContextMenu } from "../Shared/useAttributeContextMenu";
@@ -33,6 +36,7 @@ interface RowProps {
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: SettingStore;
   onNotification: React.Dispatch<SnackbarAction>;
+  justDragged: boolean;
 }
 
 const Row: React.FC<RowProps> = memo(
@@ -45,6 +49,7 @@ const Row: React.FC<RowProps> = memo(
     setPromptItem,
     settings,
     onNotification,
+    justDragged,
   }) => {
     const { t } = useTranslation();
     const { handleContextMenu: handleAttributeContextMenu } =
@@ -60,6 +65,26 @@ const Row: React.FC<RowProps> = memo(
       t,
       ipcRenderer,
     });
+
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({
+      id: todoObject.lineNumber,
+      data: {
+        todoObject,
+      },
+    });
+
+    const style: React.CSSProperties = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+    };
 
     const handleConfirmDelete = (): void => {
       if (todoObject)
@@ -81,11 +106,13 @@ const Row: React.FC<RowProps> = memo(
       );
     };
 
-    const preventDialog = (clickedElement): boolean => {
+    const preventDialog = (clickedElement: HTMLElement): boolean => {
       let match = false;
 
       // Check direct element
       if (clickedElement.classList.contains("MuiChip-label")) match = true;
+      if (clickedElement.classList.contains("drag-handle")) match = true;
+      if (clickedElement.closest(".drag-handle")) match = true;
       if (
         clickedElement.getAttribute("data-testid") === "datagrid-picker-date-t"
       )
@@ -131,7 +158,7 @@ const Row: React.FC<RowProps> = memo(
       ) {
         if (preventDialog(clickedElement)) {
           event.stopPropagation();
-        } else if (todoObject) {
+        } else if (todoObject && !justDragged) {
           event.preventDefault();
           setTodoObject(todoObject);
           setDialogOpen(true);
@@ -159,9 +186,11 @@ const Row: React.FC<RowProps> = memo(
     return (
       <>
         <li
+          ref={setNodeRef}
+          style={style}
           tabIndex={0}
           key={todoObject.lineNumber}
-          className="row"
+          className={`row${isDragging ? " dragging" : ""}`}
           data-complete={todoObject.complete}
           data-hidden={todoObject.hidden}
           onClick={(event) => handleRowClick(event)}
@@ -177,6 +206,14 @@ const Row: React.FC<RowProps> = memo(
           data-todotxt-attribute="priority"
           data-todotxt-value={todoObject.priority}
         >
+          <span
+            className="drag-handle"
+            {...attributes}
+            {...listeners}
+            data-testid="datagrid-drag-handle"
+          >
+            <DragIndicatorIcon />
+          </span>
           <Checkbox
             icon={<CircleUnchecked />}
             checkedIcon={<CircleChecked />}
@@ -245,7 +282,7 @@ const Row: React.FC<RowProps> = memo(
           )}
 
           {todoObject.hidden && (
-            <VisibilityOffIcon data-todotxt-attribute="hidden " />
+            <VisibilityOffIcon data-todotxt-attribute="hidden" />
           )}
 
           <RendererComponent

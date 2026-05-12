@@ -8,7 +8,12 @@ import {
 } from "./Stores";
 import { dataRequest, searchString } from "./DataRequest/DataRequest";
 import { createTodoObject } from "./DataRequest/CreateTodoObjects";
-import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
+import {
+  writeSingleTodoToFile,
+  removeLineFromFile,
+  reorderTodoLines,
+  moveTodoLine,
+} from "./File/Write";
 import {
   archiveSingleTodo,
   archiveTodos,
@@ -222,6 +227,40 @@ function handleRemoveLineFromFile(
 ): void {
   try {
     removeLineFromFile(lineNumber);
+    refreshRequestedData(event);
+  } catch (error) {
+    if (error instanceof Error) {
+      HandleError(error);
+      event.reply("responseFromMainProcess", error);
+    }
+  }
+}
+
+function handleReorderTodoLines(
+  event: IpcMainEvent,
+  fromLineNumber: number,
+  toLineNumber: number,
+): void {
+  try {
+    reorderTodoLines(fromLineNumber, toLineNumber);
+    refreshRequestedData(event);
+  } catch (error) {
+    if (error instanceof Error) {
+      HandleError(error);
+      event.reply("responseFromMainProcess", error);
+    }
+  }
+}
+
+function handleMoveTodoLine(
+  event: IpcMainEvent,
+  fromLineNumber: number,
+  toLineNumber: number,
+  attributeType: string,
+  attributeValue: string,
+): void {
+  try {
+    moveTodoLine(fromLineNumber, toLineNumber, attributeType, attributeValue);
     refreshRequestedData(event);
   } catch (error) {
     if (error instanceof Error) {
@@ -454,6 +493,14 @@ export const ipcHandlers: IpcHandlerEntry[] = [
   {
     channel: "removeLineFromFile",
     handler: handleRemoveLineFromFile,
+  },
+  {
+    channel: "reorderTodoLines",
+    handler: handleReorderTodoLines,
+  },
+  {
+    channel: "moveTodoLine",
+    handler: handleMoveTodoLine,
   },
   {
     channel: "updateTodoObject",

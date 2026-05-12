@@ -38,6 +38,23 @@
     border: none;
     cursor: auto;
   }
+  .drag-handle {
+    cursor: grab;
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-outline);
+    padding: 0 0.15em;
+    &:active {
+      cursor: grabbing;
+    }
+    svg {
+      font-size: 1.1em;
+    }
+  }
+  &.dragging {
+    opacity: 0.5;
+    border-left-style: dashed;
+  }
 }
 
 .compact {
