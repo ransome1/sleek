@@ -14,6 +14,7 @@ export interface TodoObject {
 
   priority: string | null;
   hidden: boolean;
+  inprogress: boolean;
   due: string | null;
   dueString: string | null;
   t: string | null;

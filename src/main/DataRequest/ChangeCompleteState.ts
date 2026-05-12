@@ -26,6 +26,8 @@ function changeCompleteState(string: string, state: boolean): string {
       JsTodoTxtObject.setPriority(null);
       JsTodoTxtObject.setExtension("pri", currentPriority);
     }
+
+    JsTodoTxtObject.removeExtension("inprogress");
   } else {
     JsTodoTxtObject.setCompleted(null);
     restorePreviousPriority(JsTodoTxtObject);
