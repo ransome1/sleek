@@ -42,6 +42,7 @@
   "settings.6": "शनिवार",
   "settings.menuBarVisibility": "मेनू बार दिखाएं",
   "settings.compact": "संकुचित दृश्य",
+  "settings.multiLineView": "दो-पंक्ति दृश्य",
   "settings.enableSafeWrites": "सुरक्षित लिखने की अनुमति: यदि स्लीक सहेजते समय क्रैश हो जाता है, तो डेटा हानि से टोडो की रक्षा करें",
   "settings.days": " दिन",
   "drawer.filters.showCompleted": "पूर्ण किए गए कार्य",

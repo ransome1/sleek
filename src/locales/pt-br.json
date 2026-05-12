@@ -42,6 +42,7 @@
   "settings.6": "Sábado",
   "settings.menuBarVisibility": "Mostrar barra de menus",
   "settings.compact": "Visão compacta",
+  "settings.multiLineView": "Vista em duas linhas",
   "settings.enableSafeWrites": "Proteger tarefas de perda de dados se o sleek travar durante um salvamento",
   "settings.days": " dias",
   "drawer.filters.showCompleted": "Tarefas concluídas",

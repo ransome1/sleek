@@ -42,6 +42,7 @@
   "settings.6": "토요일",
   "settings.menuBarVisibility": "메뉴 바 표시",
   "settings.compact": "컴팩트 보기",
+  "settings.multiLineView": "두 줄 보기",
   "settings.enableSafeWrites": "sleek이 저장 중에 충돌할 경우 할 일의 데이터 손실을 방지합니다",
   "settings.days": " 일",
   "drawer.filters.showCompleted": "완료된 작업",
