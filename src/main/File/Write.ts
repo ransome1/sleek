@@ -1,6 +1,7 @@
 import fs from "fs";
 import { Item } from "jstodotxt";
 import { linesInFile } from "../DataRequest/CreateTodoObjects";
+import { createTodoObject } from "../DataRequest/CreateTodoObjects";
 import { getActiveFile } from "./Active";
 import { SettingsStore } from "../Stores";
 import { replaceSpeakingDatesWithAbsoluteDates } from "../Date";
@@ -123,4 +124,88 @@ const writeSingleTodoToFile = (
   writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
 };
 
-export { writeSingleTodoToFile, removeLineFromFile, writeToFile };
+const reorderTodoLines = (fromLineNumber: number, toLineNumber: number) => {
+  const activeFile = getActiveFile();
+  if (!activeFile) {
+    throw new Error("No active file found");
+  } else if (!linesInFile) {
+    throw new Error("No file data available");
+  } else if (fromLineNumber < 0 || toLineNumber < 0) {
+    throw new Error("Invalid line numbers");
+  } else if (fromLineNumber >= linesInFile.length || toLineNumber >= linesInFile.length) {
+    throw new Error("Line number out of range");
+  } else if (fromLineNumber === toLineNumber) {
+    return;
+  }
+
+  const [movedLine] = linesInFile.splice(fromLineNumber, 1);
+  linesInFile.splice(toLineNumber, 0, movedLine);
+  writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
+};
+
+const moveTodoLine = (
+  fromLineNumber: number,
+  toLineNumber: number,
+  attributeType: string,
+  attributeValue: string,
+) => {
+  const activeFile = getActiveFile();
+  if (!activeFile) {
+    throw new Error("No active file found");
+  } else if (fromLineNumber < 0 || toLineNumber < 0) {
+    throw new Error("Invalid line numbers");
+  } else if (fromLineNumber >= linesInFile.length || toLineNumber >= linesInFile.length) {
+    throw new Error("Line number out of range");
+  }
+
+  let updatedString = linesInFile[fromLineNumber];
+
+  if (attributeType === "projects") {
+    const projectPattern = /(?:^|\s)\+\S+/g;
+    const existingProjects = updatedString.match(projectPattern) || [];
+    const hasTarget = existingProjects.some(p => p.trim() === `+${attributeValue}`);
+    if (!hasTarget) {
+      updatedString = updatedString.replace(projectPattern, "");
+      const dateAttrMatch = updatedString.match(/\s+(due:|t:|rec:|pm:)/);
+      if (dateAttrMatch && dateAttrMatch.index !== undefined) {
+        updatedString = updatedString.slice(0, dateAttrMatch.index) + ` +${attributeValue}` + updatedString.slice(dateAttrMatch.index);
+      } else {
+        updatedString = `${updatedString} +${attributeValue}`;
+      }
+    }
+  } else if (attributeType === "contexts") {
+    const contextPattern = /(?:^|\s)@\S+/g;
+    const existingContexts = updatedString.match(contextPattern) || [];
+    const hasTarget = existingContexts.some(c => c.trim() === `@${attributeValue}`);
+    if (!hasTarget) {
+      updatedString = updatedString.replace(contextPattern, "");
+      const dateAttrMatch = updatedString.match(/\s+(due:|t:|rec:|pm:)/);
+      if (dateAttrMatch && dateAttrMatch.index !== undefined) {
+        updatedString = updatedString.slice(0, dateAttrMatch.index) + ` @${attributeValue}` + updatedString.slice(dateAttrMatch.index);
+      } else {
+        updatedString = `${updatedString} @${attributeValue}`;
+      }
+    }
+  } else {
+    const todoObject = createTodoObject(
+      fromLineNumber,
+      updatedString,
+      attributeType,
+      attributeValue,
+    );
+    updatedString = todoObject.string;
+  }
+
+  linesInFile[fromLineNumber] = updatedString;
+
+  if (fromLineNumber === toLineNumber) {
+    writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
+    return;
+  }
+
+  const [movedLine] = linesInFile.splice(fromLineNumber, 1);
+  linesInFile.splice(toLineNumber, 0, movedLine);
+  writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
+};
+
+export { writeSingleTodoToFile, removeLineFromFile, writeToFile, reorderTodoLines, moveTodoLine };

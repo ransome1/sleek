@@ -1,7 +1,7 @@
 import { ipcMain, app, IpcMainEvent, clipboard, shell } from "electron";
 import { dataRequest } from "./DataRequest/DataRequest";
 import { changeCompleteState } from "./DataRequest/ChangeCompleteState";
-import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
+import { writeSingleTodoToFile, removeLineFromFile, reorderTodoLines, moveTodoLine } from "./File/Write";
 import { archiveTodos, checkArchiveReadiness } from "./File/Archive";
 import { SettingsStore, FiltersStore, NotificationsStore } from "./Stores";
 import { HandleError } from "./Shared";
@@ -90,7 +90,6 @@ function handleStoreGetConfig(event: IpcMainEvent, value: string) {
 function handleStoreSetConfig(_: IpcMainEvent, key: string, value: unknown) {
   try {
     SettingsStore.set(key, value);
-    console.log(`Set ${key} to ${value}`);
   } catch (error) {
     if (error instanceof Error) HandleError(error);
   }
@@ -192,6 +191,32 @@ function handleRemoveLineFromFile(_: IpcMainEvent, index: number) {
   }
 }
 
+function handleReorderTodoLines(
+  _: IpcMainEvent,
+  fromLineNumber: number,
+  toLineNumber: number,
+) {
+  try {
+    reorderTodoLines(fromLineNumber, toLineNumber);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
+  }
+}
+
+function handleMoveTodoLine(
+  _: IpcMainEvent,
+  fromLineNumber: number,
+  toLineNumber: number,
+  attributeType: string,
+  attributeValue: string,
+) {
+  try {
+    moveTodoLine(fromLineNumber, toLineNumber, attributeType, attributeValue);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
+  }
+}
+
 function handleArchiveTodos(event: IpcMainEvent): void {
   try {
     const archivingResult = archiveTodos();
@@ -237,6 +262,8 @@ function removeEventListeners(): void {
   ipcMain.off("saveToClipboard", handleSaveToClipboard);
   ipcMain.off("revealInFileManager", handleRevealInFileManager);
   ipcMain.off("removeLineFromFile", handleRemoveLineFromFile);
+  ipcMain.off("reorderTodoLines", handleReorderTodoLines);
+  ipcMain.off("moveTodoLine", handleMoveTodoLine);
   ipcMain.off("updateTodoObject", handleUpdateTodoObject);
   ipcMain.off("requestArchive", checkArchiveReadiness);
 }
@@ -261,5 +288,7 @@ ipcMain.on("addFile", handleAddFile);
 ipcMain.on("saveToClipboard", handleSaveToClipboard);
 ipcMain.on("revealInFileManager", handleRevealInFileManager);
 ipcMain.on("removeLineFromFile", handleRemoveLineFromFile);
+ipcMain.on("reorderTodoLines", handleReorderTodoLines);
+ipcMain.on("moveTodoLine", handleMoveTodoLine);
 ipcMain.on("updateTodoObject", handleUpdateTodoObject);
 ipcMain.on("requestArchive", checkArchiveReadiness);

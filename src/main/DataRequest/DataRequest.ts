@@ -92,14 +92,14 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
     todoData = groupTodoObjects(todoObjects, sorting[0].value);
 
     const sortCompletedLast = SettingsStore.get("sortCompletedLast");
-    if (sortCompletedLast) {
-      for (const group of todoData) {
-        group.todoObjects.sort((a, b) => {
+    for (const group of todoData) {
+      group.todoObjects.sort((a, b) => {
+        if (sortCompletedLast) {
           if (a.complete && !b.complete) return 1;
           if (!a.complete && b.complete) return -1;
-          return 0;
-        });
-      }
+        }
+        return a.lineNumber - b.lineNumber;
+      });
     }
   }
 

@@ -6,6 +6,9 @@ import CircleUnchecked from "@mui/icons-material/RadioButtonUnchecked";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { useTranslation } from "react-i18next";
 import RendererComponent from "./Renderer";
 import { HandleFilterSelect, IsSelected } from "../Shared";
@@ -28,6 +31,7 @@ interface RowProps {
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: SettingStore;
+  justDragged: boolean;
 }
 
 const Row: React.FC<RowProps> = memo(
@@ -39,8 +43,29 @@ const Row: React.FC<RowProps> = memo(
     setContextMenu,
     setPromptItem,
     settings,
+    justDragged,
   }) => {
     const { t } = useTranslation();
+
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({
+      id: todoObject.lineNumber,
+      data: {
+        todoObject,
+      },
+    });
+
+    const style: React.CSSProperties = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+    };
 
     const handleConfirmDelete = (): void => {
       if (todoObject)
@@ -90,10 +115,12 @@ const Row: React.FC<RowProps> = memo(
       );
     };
 
-    const preventDialog = (clickedElement): boolean => {
+    const preventDialog = (clickedElement: HTMLElement): boolean => {
       let match = false;
 
       if (clickedElement.classList.contains("MuiChip-label")) match = true;
+      if (clickedElement.classList.contains("drag-handle")) match = true;
+      if (clickedElement.closest(".drag-handle")) match = true;
       if (
         clickedElement.getAttribute("data-testid") === "datagrid-picker-date-t"
       )
@@ -126,7 +153,7 @@ const Row: React.FC<RowProps> = memo(
           (event as React.KeyboardEvent).key === "Enter") ||
         event.type === "click"
       ) {
-        if (!preventDialog(clickedElement) && todoObject) {
+        if (!preventDialog(clickedElement) && todoObject && !justDragged) {
           event.preventDefault();
           setTodoObject(todoObject);
           setDialogOpen(true);
@@ -152,91 +179,98 @@ const Row: React.FC<RowProps> = memo(
     };
 
     return (
-      <>
-        <li
-          tabIndex={0}
-          key={todoObject.lineNumber}
-          className="row"
-          data-complete={todoObject.complete}
-          data-hidden={todoObject.hidden}
-          onClick={(event) => handleRowClick(event)}
-          onKeyDown={(event) => handleRowClick(event)}
-          onContextMenu={(event) => handleContextMenu(event, todoObject.string)}
-          data-testid={`datagrid-row`}
-          data-todotxt-attribute="priority"
-          data-todotxt-value={todoObject.priority}
+      <li
+        ref={setNodeRef}
+        style={style}
+        tabIndex={0}
+        className={`row${isDragging ? " dragging" : ""}`}
+        data-complete={todoObject.complete}
+        data-hidden={todoObject.hidden}
+        onClick={(event) => handleRowClick(event)}
+        onKeyDown={(event) => handleRowClick(event)}
+        onContextMenu={(event) => handleContextMenu(event, todoObject.string)}
+        data-testid={`datagrid-row`}
+        data-todotxt-attribute="priority"
+        data-todotxt-value={todoObject.priority}
+      >
+        <span
+          className="drag-handle"
+          {...attributes}
+          {...listeners}
+          data-testid="datagrid-drag-handle"
         >
-          <Checkbox
-            icon={<CircleUnchecked />}
-            checkedIcon={<CircleChecked />}
-            tabIndex={0}
-            checked={todoObject.complete}
-            onChange={handleCheckboxChange}
-          />
+          <DragIndicatorIcon />
+        </span>
+        <Checkbox
+          icon={<CircleUnchecked />}
+          checkedIcon={<CircleChecked />}
+          tabIndex={0}
+          checked={todoObject.complete}
+          onChange={handleCheckboxChange}
+        />
 
-          {(settings.sorting[0].value != "priority" || settings.fileSorting) &&
-            todoObject.priority && (
-              <span
-                data-todotxt-attribute="priority"
-                data-todotxt-value={todoObject.priority}
-                className={
-                  IsSelected("priority", filters, [todoObject.priority])
-                    ? "selected filter"
-                    : "filter"
+        {(settings.sorting[0].value != "priority" || settings.fileSorting) &&
+          todoObject.priority && (
+            <span
+              data-todotxt-attribute="priority"
+              data-todotxt-value={todoObject.priority}
+              className={
+                IsSelected("priority", filters, [todoObject.priority])
+                  ? "selected filter"
+                  : "filter"
+              }
+              data-testid={`datagrid-button-priority`}
+            >
+              <button
+                onClick={() =>
+                  HandleFilterSelect(
+                    "priority",
+                    [todoObject.priority!],
+                    filters,
+                    false,
+                    null,
+                  )
                 }
-                data-testid={`datagrid-button-priority`}
               >
-                <button
-                  onClick={() =>
-                    HandleFilterSelect(
-                      "priority",
-                      [todoObject.priority!],
-                      filters,
-                      false,
-                      null,
-                    )
-                  }
-                >
-                  {todoObject.priority}
-                </button>
-              </span>
-            )}
-
-          {todoObject.completed && (
-            <Tooltip
-              title={`${t("shared.attributeMapping.completed")} ${todoObject.completed}`}
-              arrow
-            >
-              <EventAvailableIcon
-                data-todotxt-attribute="completed"
-                data-testid={`datagrid-button-completed`}
-              />
-            </Tooltip>
+                {todoObject.priority}
+              </button>
+            </span>
           )}
 
-          {todoObject.created && (
-            <Tooltip
-              title={`${t("shared.attributeMapping.created")} ${todoObject.created}`}
-              arrow
-            >
-              <EventNoteIcon
-                data-todotxt-attribute="created"
-                data-testid={`datagrid-button-created`}
-              />
-            </Tooltip>
-          )}
+        {todoObject.completed && (
+          <Tooltip
+            title={`${t("shared.attributeMapping.completed")} ${todoObject.completed}`}
+            arrow
+          >
+            <EventAvailableIcon
+              data-todotxt-attribute="completed"
+              data-testid={`datagrid-button-completed`}
+            />
+          </Tooltip>
+        )}
 
-          {todoObject.hidden && (
-            <VisibilityOffIcon data-todotxt-attribute="hidden " />
-          )}
+        {todoObject.created && (
+          <Tooltip
+            title={`${t("shared.attributeMapping.created")} ${todoObject.created}`}
+            arrow
+          >
+            <EventNoteIcon
+              data-todotxt-attribute="created"
+              data-testid={`datagrid-button-created`}
+            />
+          </Tooltip>
+        )}
 
-          <RendererComponent
-            todoObject={todoObject}
-            filters={filters ? filters : ({} as Filters)}
-            settings={settings}
-          />
-        </li>
-      </>
+        {todoObject.hidden && (
+          <VisibilityOffIcon data-todotxt-attribute="hidden" />
+        )}
+
+        <RendererComponent
+          todoObject={todoObject}
+          filters={filters ? filters : ({} as Filters)}
+          settings={settings}
+        />
+      </li>
     );
   },
 );

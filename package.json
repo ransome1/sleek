@@ -35,7 +35,7 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
-    "dev": "electron-vite dev --watch",
+    "dev": "npm run peggy && electron-vite dev --watch",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "npx eslint ./src",
@@ -50,6 +50,9 @@
     "peggy:ts-nocheck": "node -e \"const fs=require('fs');const p='src/main/Filters/FilterLang.ts';const c=fs.readFileSync(p,'utf8');if(!c.startsWith('// @ts-nocheck')) fs.writeFileSync(p,'// @ts-nocheck\\n'+c,'utf8')\""
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.0",

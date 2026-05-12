@@ -34,6 +34,23 @@
     border: none;
     cursor: auto;
   }
+  .drag-handle {
+    cursor: grab;
+    display: inline-flex;
+    align-items: center;
+    color: Variables.$light-grey;
+    padding: 0 0.15em;
+    &:active {
+      cursor: grabbing;
+    }
+    svg {
+      font-size: 1.1em;
+    }
+  }
+  &.dragging {
+    opacity: 0.5;
+    border-left-style: dashed;
+  }
 }
 
 .compact {
@@ -71,5 +88,8 @@
 .dark {
   .row {
     border-color: Variables.$dark-grey;
+    .drag-handle {
+      color: Variables.$dark-grey;
+    }
   }
 }
