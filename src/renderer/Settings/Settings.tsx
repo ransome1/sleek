@@ -169,7 +169,13 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
     };
 
     return (
-      <Dialog id="DialogSettingsComponent" open={isOpen} onClose={onClose} disableEnforceFocus={false} autoFocus={true}>
+      <Dialog
+        id="DialogSettingsComponent"
+        open={isOpen}
+        onClose={onClose}
+        disableEnforceFocus={false}
+        autoFocus={true}
+      >
         <DialogTitle>{t("settings")}</DialogTitle>
         <DialogContent>
           {Object.entries(visibleSettings).map(

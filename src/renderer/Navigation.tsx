@@ -52,121 +52,121 @@ const NavigationComponent: React.FC<NavigationComponentProps> = memo(
           <li className="logo">sleek</li>
           {settings.files?.length > 0 && (
             <>
-               <li
-                 onClick={() => handleOpen()}
-                 onKeyDown={(e) => {
-                   if (e.key === "Enter" || e.key === " ") {
-                     e.preventDefault();
-                     handleOpen();
-                   }
-                 }}
-                 tabIndex={0}
-                 role="button"
-                 aria-label="Button description"
-                 data-testid="navigation-button-add-todo"
-                 title={t("add")}
-               >
-                 <AddIcon />
-               </li>
-               <li
-                 onClick={() =>
-                   store.setConfig("isDrawerOpen", !settings.isDrawerOpen)
-                 }
-                 onKeyDown={(e) => {
-                   if (e.key === "Enter" || e.key === " ") {
-                     e.preventDefault();
-                     store.setConfig("isDrawerOpen", !settings.isDrawerOpen);
-                   }
-                 }}
-                 className={settings.isDrawerOpen ? "active" : ""}
-                 tabIndex={0}
-                 role="button"
-                 data-testid="navigation-button-toggle-drawer"
-                 title={`${t("attributes")}, ${t("filters")}, ${t("sorting")}`}
-               >
-                 <FilterAltIcon />
-               </li>
+              <li
+                onClick={() => handleOpen()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleOpen();
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label="Button description"
+                data-testid="navigation-button-add-todo"
+                title={t("add")}
+              >
+                <AddIcon />
+              </li>
+              <li
+                onClick={() =>
+                  store.setConfig("isDrawerOpen", !settings.isDrawerOpen)
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    store.setConfig("isDrawerOpen", !settings.isDrawerOpen);
+                  }
+                }}
+                className={settings.isDrawerOpen ? "active" : ""}
+                tabIndex={0}
+                role="button"
+                data-testid="navigation-button-toggle-drawer"
+                title={`${t("attributes")}, ${t("filters")}, ${t("sorting")}`}
+              >
+                <FilterAltIcon />
+              </li>
               {headers && headers.completedObjects > 0 && (
                 <>
-                   <li
-                     onClick={() => ipcRenderer.send("requestArchive")}
-                     onKeyDown={(e) => {
-                       if (e.key === "Enter" || e.key === " ") {
-                         e.preventDefault();
-                         ipcRenderer.send("requestArchive");
-                       }
-                     }}
-                     tabIndex={0}
-                     role="button"
-                     data-testid="navigation-button-archive-todos"
-                     title={t("archive")}
-                   >
-                     <InventoryIcon />
-                   </li>
+                  <li
+                    onClick={() => ipcRenderer.send("requestArchive")}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        ipcRenderer.send("requestArchive");
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    data-testid="navigation-button-archive-todos"
+                    title={t("archive")}
+                  >
+                    <InventoryIcon />
+                  </li>
                 </>
               )}
             </>
           )}
-           <li
-             onClick={() => ipcRenderer.send("openFile", false)}
-             onKeyDown={(e) => {
-               if (e.key === "Enter" || e.key === " ") {
-                 e.preventDefault();
-                 ipcRenderer.send("openFile", false);
-               }
-             }}
-             tabIndex={0}
-             role="button"
-             data-testid="navigation-button-open-file"
-             title={t("openFile")}
-           >
-             <FileOpenIcon />
-           </li>
-           <li
-             className="break"
-             onClick={() => setIsSettingsOpen(true)}
-             onKeyDown={(e) => {
-               if (e.key === "Enter" || e.key === " ") {
-                 e.preventDefault();
-                 setIsSettingsOpen(true);
-               }
-             }}
-             tabIndex={0}
-             role="button"
-             data-testid="navigation-button-show-settings"
-             title={t("settings")}
-           >
-             <SettingsIcon />
-           </li>
-           <li
-             onClick={() => store.setConfig("isNavigationOpen", false)}
-             onKeyDown={(e) => {
-               if (e.key === "Enter" || e.key === " ") {
-                 e.preventDefault();
-                 store.setConfig("isNavigationOpen", false);
-               }
-             }}
-             tabIndex={0}
-             role="button"
-             data-testid="navigation-button-hide-navigation"
-           >
-             <KeyboardArrowLeftIcon />
-           </li>
-           <li
-             onClick={() => store.setConfig("isNavigationOpen", true)}
-             onKeyDown={(e) => {
-               if (e.key === "Enter" || e.key === " ") {
-                 e.preventDefault();
-                 store.setConfig("isNavigationOpen", true);
-               }
-             }}
-             className="showNavigation"
-             tabIndex={0}
-             role="button"
-             data-testid="navigation-button-show-navigation"
-           >
-             <KeyboardArrowRightIcon />
-           </li>
+          <li
+            onClick={() => ipcRenderer.send("openFile", false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                ipcRenderer.send("openFile", false);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            data-testid="navigation-button-open-file"
+            title={t("openFile")}
+          >
+            <FileOpenIcon />
+          </li>
+          <li
+            className="break"
+            onClick={() => setIsSettingsOpen(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsSettingsOpen(true);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            data-testid="navigation-button-show-settings"
+            title={t("settings")}
+          >
+            <SettingsIcon />
+          </li>
+          <li
+            onClick={() => store.setConfig("isNavigationOpen", false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                store.setConfig("isNavigationOpen", false);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            data-testid="navigation-button-hide-navigation"
+          >
+            <KeyboardArrowLeftIcon />
+          </li>
+          <li
+            onClick={() => store.setConfig("isNavigationOpen", true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                store.setConfig("isNavigationOpen", true);
+              }
+            }}
+            className="showNavigation"
+            tabIndex={0}
+            role="button"
+            data-testid="navigation-button-show-navigation"
+          >
+            <KeyboardArrowRightIcon />
+          </li>
         </ul>
       </>
     );

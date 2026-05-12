@@ -26,9 +26,7 @@ const baseTheme: Theme = createTheme({
     },
     MuiFormLabel: {
       styleOverrides: {
-        root: {
-          
-        },
+        root: {},
       },
     },
     MuiAccordion: {
@@ -164,7 +162,7 @@ const dark: Theme = createTheme({
           "&.Mui-checked": {
             color: colors.semantic.primary,
           },
-          "&.Mui-focusVisible": focusStyle
+          "&.Mui-focusVisible": focusStyle,
         },
       },
     },
@@ -258,7 +256,7 @@ const light: Theme = createTheme({
           "&.Mui-checked": {
             color: colors.semantic.primary,
           },
-          "&.Mui-focusVisible": focusStyle
+          "&.Mui-focusVisible": focusStyle,
         },
       },
     },

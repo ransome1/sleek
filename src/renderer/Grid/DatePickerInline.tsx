@@ -70,7 +70,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
       ? friendlyDate(date, type, settings, t).pop()
       : date;
 
-return (
+  return (
     <LocalizationProvider
       dateAdapter={AdapterLuxon}
       adapterLocale={settings.language}
@@ -90,7 +90,7 @@ return (
                   filters,
                   false,
                   null,
-                )
+                );
               }}
               label={chipText}
               data-testid={`datagrid-button-${type}`}
@@ -113,27 +113,29 @@ return (
         onClose={() => setOpen(false)}
         value={date ? DateTime.fromISO(date) : null}
         onChange={handleChange}
-        slots={{ field: () => <span style={{ display: 'none' }} /> }}
-        slotProps={{ popper: {
-          anchorEl: anchorEl,
-          placement: 'bottom-start',
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 8],
+        slots={{ field: () => <span style={{ display: "none" }} /> }}
+        slotProps={{
+          popper: {
+            anchorEl: anchorEl,
+            placement: "bottom-start",
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 8],
+                },
               },
-            },
-            {
-              name: 'flip',
-              enabled: true,
-            },
-            {
-              name: 'preventOverflow',
-              enabled: true,
-            },
-          ],
-        } }}
+              {
+                name: "flip",
+                enabled: true,
+              },
+              {
+                name: "preventOverflow",
+                enabled: true,
+              },
+            ],
+          },
+        }}
       />
     </LocalizationProvider>
   );

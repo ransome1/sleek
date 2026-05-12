@@ -1,4 +1,3 @@
-
 .hideNavigation #navigation li.showNavigation {
   width: 2.5em;
   border-top-right-radius: var(--radius);
@@ -57,14 +56,18 @@
       font-weight: bold;
       cursor: auto;
       color: white;
-      background: linear-gradient(0.33turn, var(--gradient-logo-start), var(--gradient-logo-end));
+      background: linear-gradient(
+        0.33turn,
+        var(--gradient-logo-start),
+        var(--gradient-logo-end)
+      );
     }
     &.showNavigation {
       position: fixed;
       bottom: 0;
       left: 0;
       display: none;
-background: var(--color-surfaceVariant);
+      background: var(--color-surfaceVariant);
       color: var(--navigation-icon-color);
       z-index: 10;
       transition: width 0.3s ease;
@@ -121,10 +124,10 @@ background: var(--color-surfaceVariant);
       &:active:not(.logo),
       &:focus-visible,
       &.active {
-background: var(--color-surface);
+        background: var(--color-surface);
       }
       &.showNavigation {
-background: var(--color-surface);
+        background: var(--color-surface);
         &:hover {
           background: inherit;
         }

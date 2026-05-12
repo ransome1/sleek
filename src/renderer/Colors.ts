@@ -1,6 +1,6 @@
-import colorsJson from './colors.json';
+import colorsJson from "./colors.json";
 
-export type ColorTheme = 'light' | 'dark';
+export type ColorTheme = "light" | "dark";
 
 export interface PriorityColor {
   base: string;
@@ -129,25 +129,34 @@ export function getPriorityColor(priority: string): PriorityColor | undefined {
 export function getAttributeColors(
   attribute: string,
   theme: ColorTheme,
-): { text: string; background: string; selectedText?: string; selectedBackground?: string } | null {
+): {
+  text: string;
+  background: string;
+  selectedText?: string;
+  selectedBackground?: string;
+} | null {
   const attr = colors.attributes[attribute as keyof typeof colors.attributes];
   if (!attr) return null;
 
   // Handle old structure (projects, contexts, generic)
   if (attr.text && attr.background) {
     return {
-      text: theme === 'light' ? attr.text : (attr.darkText || attr.text),
-      background: theme === 'light' ? attr.background : (attr.darkBackground || attr.background),
-      selectedText: theme === 'light' ? attr.selectedLight : attr.selectedDark,
-      selectedBackground: theme === 'light' ? attr.selectedLight : attr.selectedDark,
+      text: theme === "light" ? attr.text : attr.darkText || attr.text,
+      background:
+        theme === "light"
+          ? attr.background
+          : attr.darkBackground || attr.background,
+      selectedText: theme === "light" ? attr.selectedLight : attr.selectedDark,
+      selectedBackground:
+        theme === "light" ? attr.selectedLight : attr.selectedDark,
     };
   }
 
   // Handle new structure (pomodoro)
   if (attr.selectedText && attr.selectedBackground) {
     return {
-      text: attr.text || '',
-      background: attr.background || '',
+      text: attr.text || "",
+      background: attr.background || "",
       selectedText: attr.selectedText,
       selectedBackground: attr.selectedBackground,
     };
@@ -168,7 +177,7 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
 
   // Add theme colors
   Object.entries(themeColors).forEach(([key, value]) => {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       vars[`--color-${key}`] = value;
     }
   });
@@ -185,16 +194,16 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
   });
 
   // Add pomodoro colors for current theme
-  vars['--pomodoro-text'] = pomodoroColors.base.text;
-  vars['--pomodoro-bg'] = pomodoroColors.base.background;
-  vars['--pomodoro-selected-text'] = pomodoroColors.selected.text;
-  vars['--pomodoro-selected-bg'] = pomodoroColors.selected.background;
-  vars['--pomodoro-badge-text'] = pomodoroColors.badgeText;
-  vars['--pomodoro-badge-bg'] = pomodoroColors.badgeBackground;
+  vars["--pomodoro-text"] = pomodoroColors.base.text;
+  vars["--pomodoro-bg"] = pomodoroColors.base.background;
+  vars["--pomodoro-selected-text"] = pomodoroColors.selected.text;
+  vars["--pomodoro-selected-bg"] = pomodoroColors.selected.background;
+  vars["--pomodoro-badge-text"] = pomodoroColors.badgeText;
+  vars["--pomodoro-badge-bg"] = pomodoroColors.badgeBackground;
 
   // Add navigation colors for current theme
-  vars['--navigation-icon-color'] = navigationColors.iconColor;
-  vars['--navigation-hover-bg'] = navigationColors.hoverBackground;
+  vars["--navigation-icon-color"] = navigationColors.iconColor;
+  vars["--navigation-hover-bg"] = navigationColors.hoverBackground;
 
   // Add attribute colors and their selected states
   Object.entries(colors.attributes).forEach(([attrName, attrColors]) => {
@@ -202,18 +211,24 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
 
     // Handle old structure (projects, contexts, generic)
     if (attrColors.text && attrColors.background) {
-      vars[`${prefix}-text`] = theme === 'light' ? attrColors.text : (attrColors.darkText || attrColors.text);
-      vars[`${prefix}-bg`] = theme === 'light' ? attrColors.background : (attrColors.darkBackground || attrColors.background);
-      if (theme === 'light' && attrColors.selectedLight) {
+      vars[`${prefix}-text`] =
+        theme === "light"
+          ? attrColors.text
+          : attrColors.darkText || attrColors.text;
+      vars[`${prefix}-bg`] =
+        theme === "light"
+          ? attrColors.background
+          : attrColors.darkBackground || attrColors.background;
+      if (theme === "light" && attrColors.selectedLight) {
         vars[`${prefix}-selected`] = attrColors.selectedLight;
-      } else if (theme === 'dark' && attrColors.selectedDark) {
+      } else if (theme === "dark" && attrColors.selectedDark) {
         vars[`${prefix}-selected`] = attrColors.selectedDark;
       }
     }
     // Handle new structure (pomodoro)
     else if (attrColors.selectedText && attrColors.selectedBackground) {
-      vars[`${prefix}-text`] = attrColors.text || '';
-      vars[`${prefix}-bg`] = attrColors.background || '';
+      vars[`${prefix}-text`] = attrColors.text || "";
+      vars[`${prefix}-bg`] = attrColors.background || "";
       vars[`${prefix}-selected-text`] = attrColors.selectedText;
       vars[`${prefix}-selected-bg`] = attrColors.selectedBackground;
     }
