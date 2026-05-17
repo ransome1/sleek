@@ -57,4 +57,5 @@ export interface SettingStore {
   };
   channel: string;
   anonymousUserId: string;
+  viewMode: "list" | "kanban";
 }
