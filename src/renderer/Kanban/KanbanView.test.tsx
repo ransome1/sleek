@@ -1,135 +1,272 @@
-import { describe, it, expect } from 'vitest'
+import { render, screen, fireEvent } from "@testing-library/react";
+import { DateTime } from "luxon";
+import KanbanView from "./KanbanView";
+import { TodoObject, TodoGroup } from "../../@types";
 
-/**
- * KanbanView Component Tests
- *
- * Note: This project currently only has tests for main process code.
- * React component testing with @testing-library/react would require additional setup.
- *
- * For now, we document the expected behavior and test utility functions.
- * Future enhancement: Add full React component testing infrastructure.
- */
+const makeTodo = (overrides: Partial<TodoObject> = {}): TodoObject => ({
+  lineNumber: 1,
+  body: "Test todo",
+  string: "Test todo",
+  complete: false,
+  created: null,
+  completed: null,
+  priority: null,
+  contexts: null,
+  projects: null,
+  due: null,
+  dueString: null,
+  notify: false,
+  t: null,
+  tString: null,
+  rec: null,
+  hidden: false,
+  pm: null,
+  ...overrides,
+});
 
-describe('KanbanView', () => {
-  describe('getPriorityColor logic', () => {
-    const getPriorityColor = (priority: string | null): string => {
-      if (!priority) return 'default'
-      const priorityLetter = priority.toUpperCase()
-      if (priorityLetter <= 'C') return 'error'
-      if (priorityLetter <= 'F') return 'warning'
-      return 'default'
-    }
+const makeTodoData = (todos: TodoObject[]) => [
+  { title: null, visible: true, todoObjects: todos } as TodoGroup,
+];
 
-    it('returns "default" for null priority', () => {
-      expect(getPriorityColor(null)).toBe('default')
-    })
+describe("KanbanView", () => {
+  const setTodoObject = vi.fn();
+  const setDialogOpen = vi.fn();
+  const setContextMenu = vi.fn();
+  const setPromptItem = vi.fn();
 
-    it('returns "error" for high priority (A-C)', () => {
-      expect(getPriorityColor('A')).toBe('error')
-      expect(getPriorityColor('B')).toBe('error')
-      expect(getPriorityColor('C')).toBe('error')
-    })
+  const defaultProps = {
+    setTodoObject,
+    setDialogOpen,
+    setContextMenu,
+    setPromptItem,
+  };
 
-    it('returns "warning" for medium priority (D-F)', () => {
-      expect(getPriorityColor('D')).toBe('warning')
-      expect(getPriorityColor('E')).toBe('warning')
-      expect(getPriorityColor('F')).toBe('warning')
-    })
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-    it('returns "default" for low priority (G+)', () => {
-      expect(getPriorityColor('G')).toBe('default')
-      expect(getPriorityColor('Z')).toBe('default')
-    })
+  describe("column rendering", () => {
+    it("renders all four column headers", () => {
+      render(<KanbanView todoData={makeTodoData([])} {...defaultProps} />);
 
-    it('handles lowercase priority letters', () => {
-      expect(getPriorityColor('a')).toBe('error')
-      expect(getPriorityColor('d')).toBe('warning')
-    })
-  })
+      expect(screen.getByText("Backlog")).toBeInTheDocument();
+      expect(screen.getByText("This Week")).toBeInTheDocument();
+      expect(screen.getByText("In Progress")).toBeInTheDocument();
+      expect(screen.getByText("Done")).toBeInTheDocument();
+    });
 
-  describe('Column categorization logic', () => {
-    it('should categorize completed todos in Done column', () => {
-      const todo = { complete: true }
-      expect(todo.complete).toBe(true)
-    })
+    it("shows todo count badge for each column", () => {
+      const todos = [
+        makeTodo({ lineNumber: 1, body: "Task A" }),
+        makeTodo({ lineNumber: 2, body: "Task B", complete: true }),
+      ];
 
-    it('should categorize wip:1 todos in In Progress column', () => {
-      const todoString = 'Task wip:1'
-      expect(todoString.includes('wip:1')).toBe(true)
-    })
+      render(<KanbanView todoData={makeTodoData(todos)} {...defaultProps} />);
 
-    it('should categorize todos with near due dates in This Week column', () => {
-      // Todos due within 7 days should be in This Week
-      const dueDateString = '2026-01-22'
-      expect(dueDateString).toBeTruthy()
-    })
+      const counts = screen.getAllByText("1");
+      expect(counts).toHaveLength(2);
+    });
+  });
 
-    it('should categorize other todos in Backlog column', () => {
-      const todo = {
-        complete: false,
-        due: null,
-        string: 'Regular task'
-      }
-      expect(!todo.complete && !todo.string.includes('wip:1')).toBe(true)
-    })
-  })
+  describe("todo categorization", () => {
+    it("places completed todos in the Done column", () => {
+      const todo = makeTodo({ body: "Finished task", complete: true });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
 
-  describe('Priority sorting logic', () => {
-    const sortByPriority = (a: any, b: any) => {
-      if (!a.priority && !b.priority) return 0
-      if (!a.priority) return 1
-      if (!b.priority) return -1
-      return a.priority.localeCompare(b.priority)
-    }
+      expect(screen.getByText("Finished task")).toBeInTheDocument();
 
-    it('sorts todos with priority before todos without', () => {
-      const withPriority = { priority: 'A' }
-      const withoutPriority = { priority: null }
-      expect(sortByPriority(withPriority, withoutPriority)).toBeLessThan(0)
-    })
+      const doneColumn = screen.getByText("Done").closest(".kanban-column");
+      expect(doneColumn).toContainElement(screen.getByText("Finished task"));
+    });
 
-    it('sorts higher priority (A) before lower priority (B)', () => {
-      const highPriority = { priority: 'A' }
-      const lowPriority = { priority: 'B' }
-      expect(sortByPriority(highPriority, lowPriority)).toBeLessThan(0)
-    })
+    it("places wip:1 todos in the In Progress column", () => {
+      const todo = makeTodo({
+        lineNumber: 2,
+        body: "Ongoing task",
+        string: "Ongoing task wip:1",
+      });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
 
-    it('returns 0 for todos with same priority', () => {
-      const todo1 = { priority: 'A' }
-      const todo2 = { priority: 'A' }
-      expect(sortByPriority(todo1, todo2)).toBe(0)
-    })
+      const inProgressColumn = screen
+        .getByText("In Progress")
+        .closest(".kanban-column");
+      expect(inProgressColumn).toContainElement(
+        screen.getByText("Ongoing task"),
+      );
+    });
 
-    it('returns 0 when both todos have no priority', () => {
-      const todo1 = { priority: null }
-      const todo2 = { priority: null }
-      expect(sortByPriority(todo1, todo2)).toBe(0)
-    })
-  })
+    it("places todos due within 7 days in the This Week column", () => {
+      const dueDate = DateTime.now().plus({ days: 3 }).toISODate()!;
+      const todo = makeTodo({
+        lineNumber: 3,
+        body: "Due soon",
+        due: dueDate,
+        dueString: dueDate,
+      });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
 
-  describe('Component behavior expectations', () => {
-    it('should have 4 columns: Backlog, This Week, In Progress, Done', () => {
-      const expectedColumns = ['backlog', 'thisWeek', 'inProgress', 'done']
-      expect(expectedColumns).toHaveLength(4)
-    })
+      const thisWeekColumn = screen
+        .getByText("This Week")
+        .closest(".kanban-column");
+      expect(thisWeekColumn).toContainElement(screen.getByText("Due soon"));
+    });
 
-    it('should support drag and drop between columns', () => {
-      // Document expected behavior
-      const canDragAndDrop = true
-      expect(canDragAndDrop).toBe(true)
-    })
+    it("places todos with far future due dates in Backlog", () => {
+      const dueDate = DateTime.now().plus({ days: 30 }).toISODate()!;
+      const todo = makeTodo({
+        lineNumber: 4,
+        body: "Future task",
+        due: dueDate,
+        dueString: dueDate,
+      });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
 
-    it('should allow adding new todos from each column', () => {
-      // Document expected behavior
-      const hasAddButton = true
-      expect(hasAddButton).toBe(true)
-    })
+      const backlogColumn = screen
+        .getByText("Backlog")
+        .closest(".kanban-column");
+      expect(backlogColumn).toContainElement(screen.getByText("Future task"));
+    });
 
-    it('should display context menu on right click', () => {
-      // Document expected behavior
-      const hasContextMenu = true
-      expect(hasContextMenu).toBe(true)
-    })
-  })
-})
+    it("places todos without due dates or tags in Backlog", () => {
+      const todo = makeTodo({ lineNumber: 5, body: "Undated task" });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
 
+      const backlogColumn = screen
+        .getByText("Backlog")
+        .closest(".kanban-column");
+      expect(backlogColumn).toContainElement(screen.getByText("Undated task"));
+    });
+  });
+
+  describe("user interactions", () => {
+    it("opens the dialog when a todo card is clicked", () => {
+      const todo = makeTodo({ lineNumber: 1, body: "Clickable task" });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
+
+      fireEvent.click(screen.getByText("Clickable task"));
+
+      expect(setTodoObject).toHaveBeenCalledWith(todo);
+      expect(setDialogOpen).toHaveBeenCalledWith(true);
+    });
+
+    it("opens the context menu on right-click of a todo card", () => {
+      const todo = makeTodo({ lineNumber: 1, body: "Right-click task" });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
+
+      fireEvent.contextMenu(screen.getByText("Right-click task"));
+
+      expect(setContextMenu).toHaveBeenCalledTimes(1);
+      const contextMenuArg = setContextMenu.mock.calls[0][0];
+      expect(contextMenuArg).toHaveProperty("items");
+      expect(
+        contextMenuArg.items.some((item: { id: string }) => item.id === "edit"),
+      ).toBe(true);
+      expect(
+        contextMenuArg.items.some(
+          (item: { id: string }) => item.id === "delete",
+        ),
+      ).toBe(true);
+    });
+
+    it("opens a new-todo dialog when the Add button is clicked", () => {
+      render(<KanbanView todoData={makeTodoData([])} {...defaultProps} />);
+
+      const addButtons = screen.getAllByTitle("Add new todo");
+      fireEvent.click(addButtons[0]);
+
+      expect(setTodoObject).toHaveBeenCalledTimes(1);
+      expect(setDialogOpen).toHaveBeenCalledWith(true);
+    });
+
+    it("prefills wip:1 tag when adding from the In Progress column", () => {
+      render(<KanbanView todoData={makeTodoData([])} {...defaultProps} />);
+
+      const addButtons = screen.getAllByTitle("Add new todo");
+      const inProgressColumn = screen
+        .getByText("In Progress")
+        .closest(".kanban-column")!;
+      const inProgressAddBtn = inProgressColumn.querySelector(
+        '[title="Add new todo"]',
+      )!;
+      fireEvent.click(inProgressAddBtn);
+
+      const newTodo = setTodoObject.mock.calls[0][0] as TodoObject;
+      expect(newTodo.string).toContain("wip:1");
+    });
+
+    it("prefills a due date when adding from the This Week column", () => {
+      render(<KanbanView todoData={makeTodoData([])} {...defaultProps} />);
+
+      const thisWeekColumn = screen
+        .getByText("This Week")
+        .closest(".kanban-column")!;
+      const addBtn = thisWeekColumn.querySelector('[title="Add new todo"]')!;
+      fireEvent.click(addBtn);
+
+      const newTodo = setTodoObject.mock.calls[0][0] as TodoObject;
+      expect(newTodo.string).toMatch(/due:\d{4}-\d{2}-\d{2}/);
+    });
+  });
+
+  describe("todo card display", () => {
+    it("shows priority badge for todos with priority", () => {
+      const todo = makeTodo({
+        lineNumber: 1,
+        body: "Priority task",
+        priority: "A",
+      });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
+
+      expect(screen.getByText("(A)")).toBeInTheDocument();
+    });
+
+    it("shows due date when present", () => {
+      const dueDate = DateTime.now().plus({ days: 2 }).toISODate()!;
+      const todo = makeTodo({
+        lineNumber: 1,
+        body: "Due task",
+        due: dueDate,
+        dueString: dueDate,
+      });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
+
+      expect(screen.getByText(`Due: ${dueDate}`)).toBeInTheDocument();
+    });
+
+    it("shows project tags", () => {
+      const todo = makeTodo({
+        lineNumber: 1,
+        body: "Project task",
+        projects: ["myproject"],
+      });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
+
+      expect(screen.getByText("+myproject")).toBeInTheDocument();
+    });
+
+    it("shows context tags", () => {
+      const todo = makeTodo({
+        lineNumber: 1,
+        body: "Context task",
+        contexts: ["work"],
+      });
+      render(<KanbanView todoData={makeTodoData([todo])} {...defaultProps} />);
+
+      expect(screen.getByText("@work")).toBeInTheDocument();
+    });
+  });
+
+  describe("priority sorting", () => {
+    it("sorts higher priority todos before lower priority within a column", () => {
+      const todos = [
+        makeTodo({ lineNumber: 1, body: "Low priority", priority: "C" }),
+        makeTodo({ lineNumber: 2, body: "High priority", priority: "A" }),
+      ];
+      render(<KanbanView todoData={makeTodoData(todos)} {...defaultProps} />);
+
+      const cards = screen.getAllByText(/(High priority|Low priority)/);
+      expect(cards[0]).toHaveTextContent("High priority");
+      expect(cards[1]).toHaveTextContent("Low priority");
+    });
+  });
+});

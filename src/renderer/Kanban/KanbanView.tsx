@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { IconButton } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
-import { DateTime } from 'luxon'
-import './KanbanView.scss'
+import React, { useState, useEffect } from "react";
+import { IconButton } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { DateTime } from "luxon";
+import "./KanbanView.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const { ipcRenderer } = (window as any).api
+const { ipcRenderer } = (window as any).api;
 
 interface KanbanViewProps {
-  todoData: TodoData
-  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>
-  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>
+  todoData: TodoData;
+  setTodoObject: React.Dispatch<React.SetStateAction<TodoObject | null>>;
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
+  setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
 }
 
 interface KanbanColumn {
-  id: string
-  title: string
-  todos: TodoObject[]
+  id: string;
+  title: string;
+  todos: TodoObject[];
 }
 
 const KanbanView: React.FC<KanbanViewProps> = ({
@@ -26,80 +26,92 @@ const KanbanView: React.FC<KanbanViewProps> = ({
   setTodoObject,
   setDialogOpen,
   setContextMenu,
-  setPromptItem
+  setPromptItem,
 }) => {
-  const [columns, setColumns] = useState<KanbanColumn[]>([])
-  const [draggedTodo, setDraggedTodo] = useState<TodoObject | null>(null)
-  const [draggedFromColumn, setDraggedFromColumn] = useState<string | null>(null)
-  const [dropBeforeTodo, setDropBeforeTodo] = useState<TodoObject | null>(null)
+  const [columns, setColumns] = useState<KanbanColumn[]>([]);
+  const [draggedTodo, setDraggedTodo] = useState<TodoObject | null>(null);
+  const [draggedFromColumn, setDraggedFromColumn] = useState<string | null>(
+    null,
+  );
+  const [dropBeforeTodo, setDropBeforeTodo] = useState<TodoObject | null>(null);
 
   useEffect(() => {
-    if (!todoData) return
+    if (!todoData) return;
 
-    const now = DateTime.now()
-    const sevenDaysFromNow = now.plus({ days: 7 })
+    const now = DateTime.now();
+    const sevenDaysFromNow = now.plus({ days: 7 });
 
-    const backlog: TodoObject[] = []
-    const thisWeek: TodoObject[] = []
-    const inProgress: TodoObject[] = []
-    const done: TodoObject[] = []
+    const backlog: TodoObject[] = [];
+    const thisWeek: TodoObject[] = [];
+    const inProgress: TodoObject[] = [];
+    const done: TodoObject[] = [];
 
     // Flatten all todos from all groups
-    const allTodos: TodoObject[] = []
+    const allTodos: TodoObject[] = [];
     todoData.forEach((group) => {
       if (group.todoObjects) {
-        allTodos.push(...group.todoObjects)
+        allTodos.push(...group.todoObjects);
       }
-    })
+    });
 
     allTodos.forEach((todo) => {
       if (todo.complete) {
-        done.push(todo)
-      } else if (todo.string.includes('wip:1')) {
-        inProgress.push(todo)
+        done.push(todo);
+      } else if (todo.string.includes("wip:1")) {
+        inProgress.push(todo);
       } else if (todo.due) {
-        const dueDate = DateTime.fromISO(todo.due)
+        const dueDate = DateTime.fromISO(todo.due);
         if (dueDate <= sevenDaysFromNow) {
-          thisWeek.push(todo)
+          thisWeek.push(todo);
         } else {
-          backlog.push(todo)
+          backlog.push(todo);
         }
       } else {
-        backlog.push(todo)
+        backlog.push(todo);
       }
-    })
+    });
 
     // Sort each column by priority
     const sortByPriority = (a: TodoObject, b: TodoObject) => {
-      if (!a.priority && !b.priority) return 0
-      if (!a.priority) return 1
-      if (!b.priority) return -1
-      return a.priority.localeCompare(b.priority)
-    }
+      if (!a.priority && !b.priority) return 0;
+      if (!a.priority) return 1;
+      if (!b.priority) return -1;
+      return a.priority.localeCompare(b.priority);
+    };
 
     setColumns([
-      { id: 'backlog', title: 'Backlog', todos: backlog.sort(sortByPriority) },
-      { id: 'thisWeek', title: 'This Week', todos: thisWeek.sort(sortByPriority) },
-      { id: 'inProgress', title: 'In Progress', todos: inProgress.sort(sortByPriority) },
-      { id: 'done', title: 'Done', todos: done.sort(sortByPriority) }
-    ])
-  }, [todoData])
+      { id: "backlog", title: "Backlog", todos: backlog.sort(sortByPriority) },
+      {
+        id: "thisWeek",
+        title: "This Week",
+        todos: thisWeek.sort(sortByPriority),
+      },
+      {
+        id: "inProgress",
+        title: "In Progress",
+        todos: inProgress.sort(sortByPriority),
+      },
+      { id: "done", title: "Done", todos: done.sort(sortByPriority) },
+    ]);
+  }, [todoData]);
 
   const handleTodoClick = (todo: TodoObject) => {
-    setTodoObject(todo)
-    setDialogOpen(true)
-  }
+    setTodoObject(todo);
+    setDialogOpen(true);
+  };
 
   const handleAddNewTodo = (columnId: string) => {
-    const now = new Date()
-    let todoString = ''
+    const now = new Date();
+    let todoString = "";
 
-    if (columnId === 'thisWeek') {
-      const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000)
-      const dueDate = threeDaysFromNow.toISOString().split('T')[0]
-      todoString = `due:${dueDate}`
-    } else if (columnId === 'inProgress') {
-      todoString = 'wip:1'
+    if (columnId === "thisWeek") {
+      const threeDaysFromNow = new Date(
+        now.getTime() + 3 * 24 * 60 * 60 * 1000,
+      );
+      const dueDate = threeDaysFromNow.toISOString().split("T")[0];
+      todoString = `due:${dueDate}`;
+    } else if (columnId === "inProgress") {
+      todoString = "wip:1";
     }
 
     const newTodo: TodoObject = {
@@ -119,192 +131,235 @@ const KanbanView: React.FC<KanbanViewProps> = ({
       tString: null,
       rec: null,
       hidden: false,
-      pm: null
-    }
+      pm: null,
+    };
 
-    setTodoObject(newTodo)
-    setDialogOpen(true)
-  }
+    setTodoObject(newTodo);
+    setDialogOpen(true);
+  };
 
   const handleDragStart = (todo: TodoObject, columnId: string) => {
-    setDraggedTodo(todo)
-    setDraggedFromColumn(columnId)
-  }
+    setDraggedTodo(todo);
+    setDraggedFromColumn(columnId);
+  };
 
   const handleDragOver = (e: React.DragEvent, todo: TodoObject | null) => {
-    e.preventDefault()
-    setDropBeforeTodo(todo)
-  }
+    e.preventDefault();
+    setDropBeforeTodo(todo);
+  };
 
-  const handleDrop = (e: React.DragEvent, targetColumnId: string, targetTodo: TodoObject | null) => {
-    e.preventDefault()
+  const handleDrop = (
+    e: React.DragEvent,
+    targetColumnId: string,
+    targetTodo: TodoObject | null,
+  ) => {
+    e.preventDefault();
 
-    if (!draggedTodo || !draggedFromColumn) return
+    if (!draggedTodo || !draggedFromColumn) return;
 
     if (draggedFromColumn === targetColumnId && targetTodo) {
       // Reorder within same column
-      handleReorder(draggedTodo, targetTodo)
+      handleReorder(draggedTodo, targetTodo);
     } else if (draggedFromColumn !== targetColumnId) {
       // Move between columns
-      handleMove(draggedTodo, targetColumnId)
+      handleMove(draggedTodo, targetColumnId);
     }
 
-    setDraggedTodo(null)
-    setDraggedFromColumn(null)
-    setDropBeforeTodo(null)
-  }
+    setDraggedTodo(null);
+    setDraggedFromColumn(null);
+    setDropBeforeTodo(null);
+  };
 
   const handleMove = (todo: TodoObject, targetColumnId: string) => {
-    const now = DateTime.now()
-    let updatedString = todo.string
+    const now = DateTime.now();
+    let updatedString = todo.string;
 
     // Remove wip:1 tag
-    updatedString = updatedString.replace(/\s*wip:1\s*/g, ' ').trim()
+    updatedString = updatedString.replace(/\s*wip:1\s*/g, " ").trim();
 
     // Update due date based on target column
-    const currentDueMatch = updatedString.match(/due:(\d{4}-\d{2}-\d{2})/)
-    const currentDueDate = currentDueMatch ? currentDueMatch[1] : null
+    const currentDueMatch = updatedString.match(/due:(\d{4}-\d{2}-\d{2})/);
+    const currentDueDate = currentDueMatch ? currentDueMatch[1] : null;
 
-    if (targetColumnId === 'thisWeek') {
-      const threeDaysFromNow = now.plus({ days: 3 })
-      const newDueDate = threeDaysFromNow.toISODate()
+    if (targetColumnId === "thisWeek") {
+      const threeDaysFromNow = now.plus({ days: 3 });
+      const newDueDate = threeDaysFromNow.toISODate();
       if (currentDueDate) {
-        updatedString = updatedString.replace(/due:\d{4}-\d{2}-\d{2}/, `due:${newDueDate}`)
+        updatedString = updatedString.replace(
+          /due:\d{4}-\d{2}-\d{2}/,
+          `due:${newDueDate}`,
+        );
       } else {
-        updatedString = `${updatedString} due:${newDueDate}`.trim()
+        updatedString = `${updatedString} due:${newDueDate}`.trim();
       }
-    } else if (targetColumnId === 'inProgress') {
-      updatedString = `${updatedString} wip:1`.trim()
-    } else if (targetColumnId === 'backlog') {
-      updatedString = updatedString.replace(/\s*due:\d{4}-\d{2}-\d{2}\s*/g, ' ').trim()
-    } else if (targetColumnId === 'done') {
+    } else if (targetColumnId === "inProgress") {
+      updatedString = `${updatedString} wip:1`.trim();
+    } else if (targetColumnId === "backlog") {
+      updatedString = updatedString
+        .replace(/\s*due:\d{4}-\d{2}-\d{2}\s*/g, " ")
+        .trim();
+    } else if (targetColumnId === "done") {
       // Mark as complete
       if (!todo.complete) {
-        ipcRenderer.send('writeTodoToFile', todo.lineNumber, todo.string, true)
-        return
+        ipcRenderer.send("writeTodoToFile", todo.lineNumber, todo.string, true);
+        return;
       }
     }
 
     // Write the updated string - priority is already in the string, so it's preserved
     if (updatedString !== todo.string) {
-      ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString)
+      ipcRenderer.send("writeTodoToFile", todo.lineNumber, updatedString);
     }
-  }
+  };
 
   const handleReorder = (draggedTodo: TodoObject, targetTodo: TodoObject) => {
-    const draggedPriority = draggedTodo.priority || 'Z'
-    const targetPriority = targetTodo.priority || 'Z'
+    const draggedPriority = draggedTodo.priority || "Z";
+    const targetPriority = targetTodo.priority || "Z";
 
-    const draggedCode = draggedPriority.charCodeAt(0)
-    const targetCode = targetPriority.charCodeAt(0)
+    const draggedCode = draggedPriority.charCodeAt(0);
+    const targetCode = targetPriority.charCodeAt(0);
 
-    let newPriority: string | null = null
+    let newPriority: string | null = null;
 
     if (draggedCode >= targetCode) {
       // Dragging up - increase priority (lower letter)
-      const newCode = Math.max(65, targetCode - 1) // 65 is 'A'
-      newPriority = String.fromCharCode(newCode)
+      const newCode = Math.max(65, targetCode - 1); // 65 is 'A'
+      newPriority = String.fromCharCode(newCode);
     }
 
     if (newPriority && newPriority !== draggedTodo.priority) {
       // Update the todo string with new priority
-      let updatedString = draggedTodo.string
+      let updatedString = draggedTodo.string;
       // Remove old priority if exists
-      updatedString = updatedString.replace(/^\([A-Z]\)\s*/, '')
+      updatedString = updatedString.replace(/^\([A-Z]\)\s*/, "");
       // Add new priority
-      updatedString = `(${newPriority}) ${updatedString}`
-      ipcRenderer.send('writeTodoToFile', draggedTodo.lineNumber, updatedString)
+      updatedString = `(${newPriority}) ${updatedString}`;
+      ipcRenderer.send(
+        "writeTodoToFile",
+        draggedTodo.lineNumber,
+        updatedString,
+      );
     }
-  }
+  };
 
   const handleContextMenu = (event: React.MouseEvent, todo: TodoObject) => {
-    event.preventDefault()
-    event.stopPropagation()
+    event.preventDefault();
+    event.stopPropagation();
 
     setContextMenu({
       event: event,
       items: [
         {
-          id: 'edit',
-          label: 'Edit',
+          id: "edit",
+          label: "Edit",
           function: () => {
-            setTodoObject(todo)
-            setDialogOpen(true)
-            setContextMenu(null)
-          }
+            setTodoObject(todo);
+            setDialogOpen(true);
+            setContextMenu(null);
+          },
         },
         {
-          id: 'complete',
-          label: todo.complete ? 'Mark Incomplete' : 'Mark Complete',
+          id: "complete",
+          label: todo.complete ? "Mark Incomplete" : "Mark Complete",
           function: () => {
-            ipcRenderer.send('writeTodoToFile', todo.lineNumber, todo.string, !todo.complete, false)
-            setContextMenu(null)
-          }
+            ipcRenderer.send(
+              "writeTodoToFile",
+              todo.lineNumber,
+              todo.string,
+              !todo.complete,
+              false,
+            );
+            setContextMenu(null);
+          },
         },
         {
-          id: 'priority-a',
-          label: 'Priority A',
+          id: "priority-a",
+          label: "Priority A",
           function: () => {
-            let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, '')
-            updatedString = `(A) ${updatedString}`
-            ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString, todo.complete, false)
-            setContextMenu(null)
-          }
+            let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, "");
+            updatedString = `(A) ${updatedString}`;
+            ipcRenderer.send(
+              "writeTodoToFile",
+              todo.lineNumber,
+              updatedString,
+              todo.complete,
+              false,
+            );
+            setContextMenu(null);
+          },
         },
         {
-          id: 'priority-b',
-          label: 'Priority B',
+          id: "priority-b",
+          label: "Priority B",
           function: () => {
-            let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, '')
-            updatedString = `(B) ${updatedString}`
-            ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString, todo.complete, false)
-            setContextMenu(null)
-          }
+            let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, "");
+            updatedString = `(B) ${updatedString}`;
+            ipcRenderer.send(
+              "writeTodoToFile",
+              todo.lineNumber,
+              updatedString,
+              todo.complete,
+              false,
+            );
+            setContextMenu(null);
+          },
         },
         {
-          id: 'priority-c',
-          label: 'Priority C',
+          id: "priority-c",
+          label: "Priority C",
           function: () => {
-            let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, '')
-            updatedString = `(C) ${updatedString}`
-            ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString, todo.complete, false)
-            setContextMenu(null)
-          }
+            let updatedString = todo.string.replace(/^\([A-Z]\)\s*/, "");
+            updatedString = `(C) ${updatedString}`;
+            ipcRenderer.send(
+              "writeTodoToFile",
+              todo.lineNumber,
+              updatedString,
+              todo.complete,
+              false,
+            );
+            setContextMenu(null);
+          },
         },
         {
-          id: 'remove-priority',
-          label: 'Remove Priority',
+          id: "remove-priority",
+          label: "Remove Priority",
           function: () => {
-            const updatedString = todo.string.replace(/^\([A-Z]\)\s*/, '')
-            ipcRenderer.send('writeTodoToFile', todo.lineNumber, updatedString, todo.complete, false)
-            setContextMenu(null)
-          }
+            const updatedString = todo.string.replace(/^\([A-Z]\)\s*/, "");
+            ipcRenderer.send(
+              "writeTodoToFile",
+              todo.lineNumber,
+              updatedString,
+              todo.complete,
+              false,
+            );
+            setContextMenu(null);
+          },
         },
         {
-          id: 'delete',
-          label: 'Delete',
+          id: "delete",
+          label: "Delete",
           promptItem: {
-            id: 'delete',
-            headline: 'Delete todo?',
+            id: "delete",
+            headline: "Delete todo?",
             text: `Delete: <code>${todo.body || todo.string}</code>`,
-            button1: 'Delete',
+            button1: "Delete",
             onButton1: () => {
-              ipcRenderer.send('removeLineFromFile', todo.lineNumber)
-              setPromptItem(null)
-            }
-          }
-        }
-      ]
-    })
-  }
+              ipcRenderer.send("removeLineFromFile", todo.lineNumber);
+              setPromptItem(null);
+            },
+          },
+        },
+      ],
+    });
+  };
 
   const getPriorityColor = (priority: string | null): string => {
-    if (!priority) return 'default'
-    const priorityLetter = priority.toUpperCase()
-    if (priorityLetter <= 'C') return 'error'
-    if (priorityLetter <= 'F') return 'warning'
-    return 'default'
-  }
+    if (!priority) return "default";
+    const priorityLetter = priority.toUpperCase();
+    if (priorityLetter <= "C") return "error";
+    if (priorityLetter <= "F") return "warning";
+    return "default";
+  };
 
   return (
     <div className="kanban-view">
@@ -330,7 +385,7 @@ const KanbanView: React.FC<KanbanViewProps> = ({
             {column.todos.map((todo) => (
               <div
                 key={todo.lineNumber}
-                className={`kanban-card ${dropBeforeTodo?.lineNumber === todo.lineNumber ? 'drag-over' : ''}`}
+                className={`kanban-card ${dropBeforeTodo?.lineNumber === todo.lineNumber ? "drag-over" : ""}`}
                 draggable
                 onDragStart={() => handleDragStart(todo, column.id)}
                 onDragOver={(e) => handleDragOver(e, todo)}
@@ -339,21 +394,31 @@ const KanbanView: React.FC<KanbanViewProps> = ({
                 onContextMenu={(e) => handleContextMenu(e, todo)}
               >
                 {todo.priority && (
-                  <span className={`priority priority-${getPriorityColor(todo.priority)}`}>
+                  <span
+                    className={`priority priority-${getPriorityColor(todo.priority)}`}
+                  >
                     ({todo.priority})
                   </span>
                 )}
                 <div className="todo-body">{todo.body}</div>
-                {todo.due && <div className="todo-due">Due: {todo.dueString}</div>}
+                {todo.due && (
+                  <div className="todo-due">Due: {todo.dueString}</div>
+                )}
                 {todo.projects && todo.projects.length > 0 && (
-                  <div className="todo-projects">{todo.projects.map((p) => (
-                      <span key={p} className="project-tag">+{p}</span>
+                  <div className="todo-projects">
+                    {todo.projects.map((p) => (
+                      <span key={p} className="project-tag">
+                        +{p}
+                      </span>
                     ))}
                   </div>
                 )}
                 {todo.contexts && todo.contexts.length > 0 && (
-                  <div className="todo-contexts">{todo.contexts.map((c) => (
-                      <span key={c} className="context-tag">@{c}</span>
+                  <div className="todo-contexts">
+                    {todo.contexts.map((c) => (
+                      <span key={c} className="context-tag">
+                        @{c}
+                      </span>
                     ))}
                   </div>
                 )}
@@ -363,7 +428,7 @@ const KanbanView: React.FC<KanbanViewProps> = ({
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default KanbanView
+export default KanbanView;
