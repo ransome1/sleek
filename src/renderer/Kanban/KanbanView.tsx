@@ -307,18 +307,17 @@ const KanbanView: React.FC<KanbanViewProps> = ({
   }
 
   return (
-    <div className="kanban-view" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', padding: '16px', height: '100%', overflow: 'auto', background: '#f5f5f5' }}>
+    <div className="kanban-view">
       {columns.map((column) => (
         <div
           key={column.id}
           className="kanban-column"
-          style={{ display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: '8px', minHeight: '200px', border: '1px solid #ddd' }}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => handleDrop(e, column.id, null)}
         >
-          <div className="kanban-column-header" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', borderBottom: '1px solid #ddd' }}>
-            <h3 style={{ margin: 0, flex: 1, fontSize: '16px', fontWeight: 600 }}>{column.title}</h3>
-            <span className="todo-count" style={{ fontSize: '14px', background: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>{column.todos.length}</span>
+          <div className="kanban-column-header">
+            <h3>{column.title}</h3>
+            <span className="todo-count">{column.todos.length}</span>
             <IconButton
               size="small"
               onClick={() => handleAddNewTodo(column.id)}
@@ -327,7 +326,7 @@ const KanbanView: React.FC<KanbanViewProps> = ({
               <AddIcon fontSize="small" />
             </IconButton>
           </div>
-          <div className="kanban-column-content" style={{ flex: 1, overflowY: 'auto', padding: '8px', minHeight: '200px' }}>
+          <div className="kanban-column-content">
             {column.todos.map((todo) => (
               <div
                 key={todo.lineNumber}
