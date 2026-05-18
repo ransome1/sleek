@@ -37,6 +37,7 @@ interface RowProps {
   settings: SettingStore;
   onNotification: React.Dispatch<SnackbarAction>;
   justDragged: boolean;
+  activeId?: number | null;
 }
 
 const Row: React.FC<RowProps> = memo(
@@ -50,6 +51,7 @@ const Row: React.FC<RowProps> = memo(
     settings,
     onNotification,
     justDragged,
+    activeId,
   }) => {
     const { t } = useTranslation();
     const { handleContextMenu: handleAttributeContextMenu } =
@@ -82,8 +84,8 @@ const Row: React.FC<RowProps> = memo(
 
     const style: React.CSSProperties = {
       transform: CSS.Transform.toString(transform),
-      transition,
-      opacity: isDragging ? 0.5 : 1,
+      transition: activeId != null ? transition : undefined,
+      opacity: isDragging ? 0 : 1,
     };
 
     const handleConfirmDelete = (): void => {
