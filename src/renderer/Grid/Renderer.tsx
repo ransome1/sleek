@@ -52,6 +52,11 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       { pattern: /(?:^|\s)@(\S+)/, type: "contexts", key: "@" },
       { pattern: /(?:^|\s)\+(\S+)/, type: "projects", key: "+" },
       { pattern: /(?:^|\s)h:1\b/, type: "hidden", key: "h:1" },
+      {
+        pattern: /(?:^|\s)inprogress:1/,
+        type: "inprogress",
+        key: "inprogress:1",
+      },
       { pattern: /(?:^|\s)pm:(\d+)/, type: "pm", key: "pm:" },
       { pattern: /(?:^|\s)rec:([^ ]+)/, type: "rec", key: "rec:" },
       {
@@ -217,6 +222,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       ),
 
       hidden: () => null as React.ReactNode,
+      inprogress: () => null as React.ReactNode,
 
       url: (value) => (
         <a
