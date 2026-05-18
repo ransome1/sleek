@@ -36,6 +36,10 @@
   }
 }
 
+.row-content {
+  display: contents;
+}
+
 .compact {
   .row {
     padding: 0.3em;
@@ -70,6 +74,18 @@
 
 .multiLineView {
   .row {
+    align-items: flex-start;
+    padding: 0.3em 0.5em;
+
+    .row-content {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
+      gap: 0.25em;
+      align-items: center;
+    }
+
     .row-text {
       flex: 1;
       min-width: 0;

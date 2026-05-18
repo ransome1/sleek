@@ -174,67 +174,69 @@ const Row: React.FC<RowProps> = memo(
             onChange={handleCheckboxChange}
           />
 
-          {(settings.sorting[0].value != "priority" || settings.fileSorting) &&
-            todoObject.priority && (
-              <span
-                data-todotxt-attribute="priority"
-                data-todotxt-value={todoObject.priority}
-                className={
-                  IsSelected("priority", filters, [todoObject.priority])
-                    ? "selected filter"
-                    : "filter"
-                }
-                data-testid={`datagrid-button-priority`}
-              >
-                <button
-                  onClick={() =>
-                    HandleFilterSelect(
-                      "priority",
-                      [todoObject.priority!],
-                      filters,
-                      false,
-                      null,
-                    )
+          <div className="row-content">
+            {(settings.sorting[0].value != "priority" || settings.fileSorting) &&
+              todoObject.priority && (
+                <span
+                  data-todotxt-attribute="priority"
+                  data-todotxt-value={todoObject.priority}
+                  className={
+                    IsSelected("priority", filters, [todoObject.priority])
+                      ? "selected filter"
+                      : "filter"
                   }
+                  data-testid={`datagrid-button-priority`}
                 >
-                  {todoObject.priority}
-                </button>
-              </span>
+                  <button
+                    onClick={() =>
+                      HandleFilterSelect(
+                        "priority",
+                        [todoObject.priority!],
+                        filters,
+                        false,
+                        null,
+                      )
+                    }
+                  >
+                    {todoObject.priority}
+                  </button>
+                </span>
+              )}
+
+            {todoObject.completed && (
+              <Tooltip
+                title={`${t("shared.attributeMapping.completed")} ${todoObject.completed}`}
+                arrow
+              >
+                <EventAvailableIcon
+                  data-todotxt-attribute="completed"
+                  data-testid={`datagrid-button-completed`}
+                />
+              </Tooltip>
             )}
 
-          {todoObject.completed && (
-            <Tooltip
-              title={`${t("shared.attributeMapping.completed")} ${todoObject.completed}`}
-              arrow
-            >
-              <EventAvailableIcon
-                data-todotxt-attribute="completed"
-                data-testid={`datagrid-button-completed`}
-              />
-            </Tooltip>
-          )}
+            {todoObject.created && (
+              <Tooltip
+                title={`${t("shared.attributeMapping.created")} ${todoObject.created}`}
+                arrow
+              >
+                <EventNoteIcon
+                  data-todotxt-attribute="created"
+                  data-testid={`datagrid-button-created`}
+                />
+              </Tooltip>
+            )}
 
-          {todoObject.created && (
-            <Tooltip
-              title={`${t("shared.attributeMapping.created")} ${todoObject.created}`}
-              arrow
-            >
-              <EventNoteIcon
-                data-todotxt-attribute="created"
-                data-testid={`datagrid-button-created`}
-              />
-            </Tooltip>
-          )}
+            {todoObject.hidden && (
+              <VisibilityOffIcon data-todotxt-attribute="hidden " />
+            )}
 
-          {todoObject.hidden && (
-            <VisibilityOffIcon data-todotxt-attribute="hidden " />
-          )}
-
-          <RendererComponent
-            todoObject={todoObject}
-            filters={filters ? filters : ({} as Filters)}
-            settings={settings}
-          />
+            <RendererComponent
+              todoObject={todoObject}
+              filters={filters ? filters : ({} as Filters)}
+              settings={settings}
+            />
+          </div>
         </li>
       </>
     );

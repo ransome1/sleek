@@ -310,12 +310,19 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         );
       }
 
+      const multiLineComponents: Components = {
+        ...linkOptions,
+        p: ({ children }): JSX.Element | null => {
+          return <>{children}</>;
+        },
+      };
+
       return (
         <>
           <span className="row-text">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              components={linkOptions}
+              components={multiLineComponents}
               urlTransform={transformURL}
             >
               {cleanBody}
