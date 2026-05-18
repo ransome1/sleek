@@ -60,7 +60,7 @@ function handleWriteTodoToFile(
   attributeValue: string,
 ) {
   try {
-    if (attributeType && attributeValue) {
+    if (attributeType) {
       const todoObject = createTodoObject(
         index,
         string,

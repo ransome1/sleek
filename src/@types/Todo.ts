@@ -50,6 +50,7 @@ export type AttributeKey =
   | "rec"
   | "pm"
   | "hidden"
+  | "inprogress"
   | "created"
   | "completed";
 

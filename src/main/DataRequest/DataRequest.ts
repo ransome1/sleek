@@ -9,7 +9,7 @@ import {
 } from "../Filters/Filters";
 import { updateAttributes, attributes } from "../Attributes";
 import { createTodoObjects } from "./CreateTodoObjects";
-import { sortTodoObjects } from "./Sort";
+import { sortTodoObjects, sortInProgressFirst } from "./Sort";
 import { groupTodoObjects } from "./Group";
 import {
   Filters,
@@ -102,6 +102,8 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
       }
     }
   }
+
+  sortInProgressFirst(todoData);
 
   const requestedData: RequestedData = {
     todoData,
