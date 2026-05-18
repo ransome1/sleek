@@ -1,4 +1,4 @@
-import { TodoObject } from "@sleek-types";
+import { TodoData, TodoObject } from "@sleek-types";
 import { Sorting } from "../../@types/Settings";
 import { RecurrenceInterval, intervalDayWeight } from "./RecurrenceInterval";
 
@@ -106,4 +106,14 @@ const sortTodoObjects = (
   return 0;
 };
 
-export { sortTodoObjects, parseRecurrenceSortKey };
+const sortInProgressFirst = (todoData: TodoData): void => {
+  for (const group of todoData) {
+    group.todoObjects.sort((a, b) => {
+      if (a.inprogress && !b.inprogress) return -1;
+      if (!a.inprogress && b.inprogress) return 1;
+      return 0;
+    });
+  }
+};
+
+export { sortTodoObjects, parseRecurrenceSortKey, sortInProgressFirst };

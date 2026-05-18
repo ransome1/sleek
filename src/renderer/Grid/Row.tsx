@@ -61,6 +61,7 @@ const Row: React.FC<RowProps> = memo(
       t,
       ipcRenderer,
     });
+    const skipNextOnChange = React.useRef(false);
 
     const handleConfirmDelete = (): void => {
       if (todoObject)
@@ -74,6 +75,10 @@ const Row: React.FC<RowProps> = memo(
     const handleCheckboxChange = (
       event: React.ChangeEvent<HTMLInputElement>,
     ): void => {
+      if (skipNextOnChange.current) {
+        skipNextOnChange.current = false;
+        return;
+      }
       ipcRenderer.send(
         "toggleTodoComplete",
         todoObject.lineNumber,
@@ -200,10 +205,23 @@ const Row: React.FC<RowProps> = memo(
             checked={todoObject.complete}
             indeterminate={todoObject.inprogress}
             onChange={handleCheckboxChange}
+            slotProps={{
+              input: {
+                onClick: (event: React.MouseEvent<HTMLInputElement>) => {
+                  if (event.ctrlKey) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }
+                },
+              },
+            }}
             onMouseDown={(event) => {
               if (event.button === 1 || event.ctrlKey) {
                 event.preventDefault();
+                skipNextOnChange.current = true;
                 handleInprogressToggle();
+              } else {
+                skipNextOnChange.current = false;
               }
             }}
           />
