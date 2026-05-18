@@ -28,9 +28,13 @@ describe("changeCompleteState", () => {
       const r = changeCompleteState("2026-01-01 My simple todo", true);
       expect(r).toMatch(/^x \d{4}-\d{2}-\d{2} 2026-01-01/);
     });
-    it("adds creation date if nonexistent", () => {
+    it("does not add creation date if nonexistent", () => {
       const r = changeCompleteState("My simple todo", true);
-      expect(r).toMatch(/^x \d{4}-\d{2}-\d{2} \d{4}-\d{2}-\d{2}/);
+      expect(r).toMatch(/^x \d{4}-\d{2}-\d{2} My simple todo$/);
+    });
+    it("keeps existing creation date", () => {
+      const r = changeCompleteState("2026-01-01 My simple todo", true);
+      expect(r).toMatch(/^x \d{4}-\d{2}-\d{2} 2026-01-01 My simple todo$/);
     });
     it("moves priority to pri attribute", () => {
       const r = changeCompleteState("(B) My simple todo", true);

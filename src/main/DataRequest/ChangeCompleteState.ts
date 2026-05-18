@@ -19,7 +19,6 @@ function changeCompleteState(string: string, state: boolean): string {
       createRecurringTodo(content, recurrence.value);
     }
 
-    JsTodoTxtObject.setCreated(JsTodoTxtObject.created() ?? new Date());
     JsTodoTxtObject.setCompleted(new Date());
 
     const currentPriority = JsTodoTxtObject.priority();
