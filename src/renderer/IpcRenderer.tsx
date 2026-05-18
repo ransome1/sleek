@@ -85,13 +85,15 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
           }
         }
 
-        // This is a reorder-only update: create shallow clone with updated lineNumbers
+        // This is a reorder-only update: match by string and update lineNumbers
         const newTodoData = prevTodoData.map((group, i) => ({
           ...group,
-          todoObjects: group.todoObjects.map((obj, j) => ({
-            ...obj,
-            lineNumber: incoming[i].todoObjects[j].lineNumber,
-          })),
+          todoObjects: group.todoObjects.map((obj) => {
+            const match = incoming[i].todoObjects.find(
+              (o) => o.string === obj.string,
+            );
+            return match ? { ...obj, lineNumber: match.lineNumber } : obj;
+          }),
         }));
 
         return newTodoData;

@@ -32,6 +32,7 @@ interface RowProps {
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: SettingStore;
   justDragged: boolean;
+  activeId?: number | null;
 }
 
 const Row: React.FC<RowProps> = memo(
@@ -44,6 +45,7 @@ const Row: React.FC<RowProps> = memo(
     setPromptItem,
     settings,
     justDragged,
+    activeId,
   }) => {
     const { t } = useTranslation();
 
@@ -63,8 +65,8 @@ const Row: React.FC<RowProps> = memo(
 
     const style: React.CSSProperties = {
       transform: CSS.Transform.toString(transform),
-      transition,
-      opacity: isDragging ? 0.5 : 1,
+      transition: activeId != null ? transition : undefined,
+      opacity: isDragging ? 0 : 1,
     };
 
     const handleConfirmDelete = (): void => {

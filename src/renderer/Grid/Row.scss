@@ -85,6 +85,16 @@
   }
 }
 
+.group-spacer {
+  height: 4px;
+  transition: height 0.2s ease, background-color 0.2s ease;
+
+  &.active {
+    height: 12px;
+    background-color: rgba(Variables.$blue, 0.05);
+  }
+}
+
 .dark {
   .row {
     border-color: Variables.$dark-grey;
