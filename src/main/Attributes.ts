@@ -29,6 +29,7 @@ let attributes: Attributes = {
   rec: {},
   pm: {},
   hidden: {},
+  inprogress: {},
   created: {},
   completed: {},
 };
