@@ -509,7 +509,7 @@ const GridComponent: React.FC<GridComponentProps> = memo(
   },
 );
 
-const DragOverlayWrapper: React.FC<{
+interface DragOverlayWrapperProps {
   activeTodoObject: TodoObject | null;
   todoData: TodoData | null;
   filters: Filters | null;
@@ -518,7 +518,9 @@ const DragOverlayWrapper: React.FC<{
   setContextMenu: React.Dispatch<React.SetStateAction<ContextMenu | null>>;
   setPromptItem: React.Dispatch<React.SetStateAction<PromptItem | null>>;
   settings: SettingStore;
-}> = memo(({ activeTodoObject, todoData, filters, setTodoObject, setDialogOpen, setContextMenu, setPromptItem, settings }) => {
+}
+
+const DragOverlayWrapper: React.FC<DragOverlayWrapperProps> = memo(({ activeTodoObject, todoData, filters, setTodoObject, setDialogOpen, setContextMenu, setPromptItem, settings }) => {
   const { active } = useDndContext();
   const activeId = active?.id as number | undefined;
 

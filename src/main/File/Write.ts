@@ -1,7 +1,6 @@
 import fs from "fs";
 import { Item } from "jstodotxt";
-import { linesInFile } from "../DataRequest/CreateTodoObjects";
-import { createTodoObject } from "../DataRequest/CreateTodoObjects";
+import { linesInFile, createTodoObject } from "../DataRequest/CreateTodoObjects";
 import { getActiveFile } from "./Active";
 import { SettingsStore } from "../Stores";
 import { replaceSpeakingDatesWithAbsoluteDates } from "../Date";
@@ -124,6 +123,26 @@ const writeSingleTodoToFile = (
   writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
 };
 
+const replaceAttributeTag = (
+  str: string,
+  pattern: RegExp,
+  symbol: string,
+  value: string,
+): string => {
+  const existing = str.match(pattern) || [];
+  if (existing.some((tag) => tag.trim() === `${symbol}${value}`)) return str;
+  let result = str.replace(pattern, "");
+  const dateAttrMatch = result.match(/\s+(due:|t:|rec:|pm:)/);
+  if (dateAttrMatch && dateAttrMatch.index !== undefined) {
+    return (
+      result.slice(0, dateAttrMatch.index) +
+      ` ${symbol}${value}` +
+      result.slice(dateAttrMatch.index)
+    );
+  }
+  return `${result} ${symbol}${value}`;
+};
+
 const reorderTodoLines = (fromLineNumber: number, toLineNumber: number) => {
   const activeFile = getActiveFile();
   if (!activeFile) {
@@ -161,31 +180,9 @@ const moveTodoLine = (
   let updatedString = linesInFile[fromLineNumber];
 
   if (attributeType === "projects") {
-    const projectPattern = /(?:^|\s)\+\S+/g;
-    const existingProjects = updatedString.match(projectPattern) || [];
-    const hasTarget = existingProjects.some(p => p.trim() === `+${attributeValue}`);
-    if (!hasTarget) {
-      updatedString = updatedString.replace(projectPattern, "");
-      const dateAttrMatch = updatedString.match(/\s+(due:|t:|rec:|pm:)/);
-      if (dateAttrMatch && dateAttrMatch.index !== undefined) {
-        updatedString = updatedString.slice(0, dateAttrMatch.index) + ` +${attributeValue}` + updatedString.slice(dateAttrMatch.index);
-      } else {
-        updatedString = `${updatedString} +${attributeValue}`;
-      }
-    }
+    updatedString = replaceAttributeTag(updatedString, /(?:^|\s)\+\S+/g, "+", attributeValue);
   } else if (attributeType === "contexts") {
-    const contextPattern = /(?:^|\s)@\S+/g;
-    const existingContexts = updatedString.match(contextPattern) || [];
-    const hasTarget = existingContexts.some(c => c.trim() === `@${attributeValue}`);
-    if (!hasTarget) {
-      updatedString = updatedString.replace(contextPattern, "");
-      const dateAttrMatch = updatedString.match(/\s+(due:|t:|rec:|pm:)/);
-      if (dateAttrMatch && dateAttrMatch.index !== undefined) {
-        updatedString = updatedString.slice(0, dateAttrMatch.index) + ` @${attributeValue}` + updatedString.slice(dateAttrMatch.index);
-      } else {
-        updatedString = `${updatedString} @${attributeValue}`;
-      }
-    }
+    updatedString = replaceAttributeTag(updatedString, /(?:^|\s)@\S+/g, "@", attributeValue);
   } else {
     const todoObject = createTodoObject(
       fromLineNumber,
@@ -198,13 +195,11 @@ const moveTodoLine = (
 
   linesInFile[fromLineNumber] = updatedString;
 
-  if (fromLineNumber === toLineNumber) {
-    writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
-    return;
+  if (fromLineNumber !== toLineNumber) {
+    const [movedLine] = linesInFile.splice(fromLineNumber, 1);
+    linesInFile.splice(toLineNumber, 0, movedLine);
   }
 
-  const [movedLine] = linesInFile.splice(fromLineNumber, 1);
-  linesInFile.splice(toLineNumber, 0, movedLine);
   writeToFile(linesInFile.join("\n"), activeFile.todoFilePath);
 };
 
