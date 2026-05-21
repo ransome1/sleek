@@ -14,6 +14,16 @@ import {
 
 const { ipcRenderer } = window.api;
 
+const buildTodoHashes = (data: TodoData): Set<string> => {
+  const hashes = new Set<string>();
+  for (const group of data) {
+    for (const obj of group.todoObjects) {
+      hashes.add(`${obj.lineNumber}:${obj.string}`);
+    }
+  }
+  return hashes;
+};
+
 interface IpcComponentProps {
   setHeaders: React.Dispatch<React.SetStateAction<HeadersObject | null>>;
   setAttributes: React.Dispatch<React.SetStateAction<Attributes | null>>;
@@ -62,23 +72,8 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
             return incoming;
           }
 
-          // Create a map of (lineNumber + string) hashes from prevTodoData
-          const prevHashes = new Set<string>();
-          for (let i = 0; i < prevTodoData.length; i++) {
-            for (let j = 0; j < prevTodoData[i].todoObjects.length; j++) {
-              const obj = prevTodoData[i].todoObjects[j];
-              prevHashes.add(`${obj.lineNumber}:${obj.string}`);
-            }
-          }
-
-          // Create a map of (lineNumber + string) hashes from incoming
-          const incomingHashes = new Set<string>();
-          for (let i = 0; i < incoming.length; i++) {
-            for (let j = 0; j < incoming[i].todoObjects.length; j++) {
-              const obj = incoming[i].todoObjects[j];
-              incomingHashes.add(`${obj.lineNumber}:${obj.string}`);
-            }
-          }
+          const prevHashes = buildTodoHashes(prevTodoData);
+          const incomingHashes = buildTodoHashes(incoming);
 
           // If hashes differ, it's not a reorder-only update
           if (prevHashes.size !== incomingHashes.size) {
@@ -92,7 +87,7 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
           }
 
           // This is a reorder-only update: match by string and update lineNumbers
-          const newTodoData = prevTodoData.map((group, i) => ({
+          return prevTodoData.map((group, i) => ({
             ...group,
             todoObjects: group.todoObjects.map((obj) => {
               const match = incoming[i].todoObjects.find(
@@ -101,8 +96,6 @@ const IpcComponent: React.FC<IpcComponentProps> = ({
               return match ? { ...obj, lineNumber: match.lineNumber } : obj;
             }),
           }));
-
-          return newTodoData;
         });
       }
     },
