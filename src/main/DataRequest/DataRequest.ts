@@ -9,7 +9,7 @@ import {
 } from "../Filters/Filters";
 import { updateAttributes, attributes } from "../Attributes";
 import { createTodoObjects } from "./CreateTodoObjects";
-import { sortTodoObjects, sortInProgressFirst } from "./Sort";
+import { sortTodoObjects, sortInProgressFirst, sortCompletedLast } from "./Sort";
 import { groupTodoObjects } from "./Group";
 import {
   Filters,
@@ -47,6 +47,7 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
         rec: {},
         pm: {},
         hidden: {},
+        inprogress: {},
         created: {},
         completed: {},
       },
@@ -59,6 +60,7 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
         rec: [],
         pm: [],
         hidden: [],
+        inprogress: [],
         created: [],
         completed: [],
       },
@@ -122,16 +124,7 @@ function dataRequest(passedSearchString: string = ""): RequestedData | null {
     todoObjects.sort((a, b) => sortTodoObjects(a, b, sorting));
     todoData = groupTodoObjects(todoObjects, sorting[0].value);
 
-    const sortCompletedLast = SettingsStore.get("sortCompletedLast");
-    if (sortCompletedLast) {
-      for (const group of todoData) {
-        group.todoObjects.sort((a, b) => {
-          if (a.complete && !b.complete) return 1;
-          if (!a.complete && b.complete) return -1;
-          return 0;
-        });
-      }
-    }
+    if (SettingsStore.get("sortCompletedLast")) sortCompletedLast(todoData);
   }
 
   sortInProgressFirst(todoData);

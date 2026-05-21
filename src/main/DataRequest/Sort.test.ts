@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest";
-import { sortTodoObjects, sortInProgressFirst } from "./Sort";
+import { sortTodoObjects, sortInProgressFirst, sortCompletedLast } from "./Sort";
 import { createTodoObject } from "./CreateTodoObjects";
 import { TodoData } from "@sleek-types";
 
@@ -184,5 +184,80 @@ describe("sortInProgressFirst", () => {
     expect(todoData[0].todoObjects[1].body).toBe("Todo 1");
     expect(todoData[0].todoObjects[2].body).toBe("Todo 2");
     expect(todoData[0].todoObjects[3].body).toBe("Todo 4");
+  });
+});
+
+describe("sortCompletedLast", () => {
+  it("sorts completed items to the bottom of each group", () => {
+    const todoData: TodoData = [
+      {
+        title: "A",
+        visible: true,
+        todoObjects: [
+          createTodoObject(1, "x Todo A"),
+          createTodoObject(1, "Todo B"),
+          createTodoObject(1, "x Todo C"),
+        ],
+      },
+    ];
+
+    sortCompletedLast(todoData);
+
+    expect(todoData[0].todoObjects[0].complete).toBe(false);
+    expect(todoData[0].todoObjects[1].complete).toBe(true);
+    expect(todoData[0].todoObjects[2].complete).toBe(true);
+  });
+
+  it("sorts completed items last across multiple groups", () => {
+    const todoData: TodoData = [
+      {
+        title: "Group A",
+        visible: true,
+        todoObjects: [
+          createTodoObject(1, "x Todo 1"),
+          createTodoObject(1, "Todo 2"),
+        ],
+      },
+      {
+        title: "Group B",
+        visible: true,
+        todoObjects: [
+          createTodoObject(1, "Todo 3"),
+          createTodoObject(1, "x Todo 4"),
+          createTodoObject(1, "Todo 5"),
+        ],
+      },
+    ];
+
+    sortCompletedLast(todoData);
+
+    expect(todoData[0].todoObjects[0].complete).toBe(false);
+    expect(todoData[0].todoObjects[1].complete).toBe(true);
+
+    expect(todoData[1].todoObjects[0].complete).toBe(false);
+    expect(todoData[1].todoObjects[1].complete).toBe(false);
+    expect(todoData[1].todoObjects[2].complete).toBe(true);
+  });
+
+  it("preserves relative order of non-completed items", () => {
+    const todoData: TodoData = [
+      {
+        title: null,
+        visible: true,
+        todoObjects: [
+          createTodoObject(1, "Todo 1"),
+          createTodoObject(1, "x Todo 2"),
+          createTodoObject(1, "Todo 3"),
+          createTodoObject(1, "Todo 4"),
+        ],
+      },
+    ];
+
+    sortCompletedLast(todoData);
+
+    expect(todoData[0].todoObjects[0].body).toBe("Todo 1");
+    expect(todoData[0].todoObjects[1].body).toBe("Todo 3");
+    expect(todoData[0].todoObjects[2].body).toBe("Todo 4");
+    expect(todoData[0].todoObjects[3].body).toBe("x Todo 2");
   });
 });

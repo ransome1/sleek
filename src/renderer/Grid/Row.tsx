@@ -96,9 +96,7 @@ const Row: React.FC<RowProps> = memo(
       );
     };
 
-    const handleInprogressToggle = (
-      event: React.MouseEvent,
-    ): void => {
+    const handleInprogressToggle = (): void => {
       if (todoObject.complete) return;
       const attributeValue = todoObject.inprogress ? "" : "1";
       ipcRenderer.send(
@@ -221,7 +219,7 @@ const Row: React.FC<RowProps> = memo(
               if (event.button === 1 || event.ctrlKey) {
                 event.preventDefault();
                 skipNextOnChange.current = true;
-                handleInprogressToggle(event);
+                handleInprogressToggle();
               } else {
                 skipNextOnChange.current = false;
               }
