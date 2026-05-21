@@ -139,8 +139,8 @@ const Row: React.FC<RowProps> = memo(
       if (clickedElement.tagName.toLowerCase() === "img") match = true;
 
       // Check if element is inside a .filter container
-      if (clickedElement.closest(".filter")) {
-        const filterElement = clickedElement.closest(".filter");
+      const filterElement = clickedElement.closest(".filter");
+      if (filterElement) {
         const attribute = filterElement.getAttribute("data-todotxt-attribute");
         if (attribute === "due" || attribute === "t") {
           match = true;
