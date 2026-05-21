@@ -1,10 +1,9 @@
-@use "../Variables.scss";
 #Sorting {
   padding: 0.75em 1em;
   .MuiListItem-root {
     padding: 0.25em 0;
     gap: 0.5em;
-    border-bottom: 1px dashed Variables.$mid-grey;
+    border-bottom: 1px dashed var(--color-outlineVariant);
     .MuiListItemText-root {
       padding: 0 1em;
     }
@@ -32,7 +31,7 @@
 .dark {
   #Sorting {
     .MuiListItem-root {
-      border-bottom: 1px dashed Variables.$dark-grey;
+      border-bottom: 1px dashed var(--color-outline);
     }
   }
 }

@@ -1,4 +1,4 @@
-import React, { memo, ReactElement, ReactNode, useState } from "react";
+import React, { memo, ReactElement, useState } from "react";
 import List from "@mui/material/List";
 import Row from "./Row";
 import Group from "./Group";
@@ -110,47 +110,48 @@ const GridComponent: React.FC<GridComponentProps> = memo(
     return (
       <List id="grid" onScroll={handleScroll} onKeyUp={handleKeyUp}>
         {todoData &&
-          todoData.map((group) => {
+          todoData.map((group, groupIndex) => {
             if (!group.visible) {
               return null;
             }
-            return (
-              <React.Fragment key={group.title?.toString()}>
+            return (() => {
+              const result = [] as ReactElement[];
+
+              // Add Group
+              result.push(
                 <Group
+                  key={`group-${groupIndex}-${group.title?.toString()}`}
                   attributeKey={settings.sorting[0].value}
                   value={group.title}
                   filters={filters}
-                />
-                {((): ReactNode => {
-                  const rows = [] as ReactElement[];
-                  for (let i = 0; i < group.todoObjects.length; i++) {
-                    const todoObject = group.todoObjects[i];
+                />,
+              );
 
-                    if (renderedRows.length >= maxRows) {
-                      break;
-                    } else if (renderedRows.includes(todoObject.lineNumber)) {
-                      continue;
-                    }
+              // Add rows
+              for (let i = 0; i < group.todoObjects.length; i++) {
+                const todoObject = group.todoObjects[i];
+                if (renderedRows.length >= maxRows) {
+                  break;
+                } else if (renderedRows.includes(todoObject.lineNumber)) {
+                  continue;
+                }
+                renderedRows.push(todoObject.lineNumber);
+                result.push(
+                  <Row
+                    key={`row-${todoObject.lineNumber}`}
+                    todoObject={todoObject}
+                    filters={filters}
+                    setTodoObject={setTodoObject}
+                    setDialogOpen={setDialogOpen}
+                    setContextMenu={setContextMenu}
+                    setPromptItem={setPromptItem}
+                    settings={settings}
+                  />,
+                );
+              }
 
-                    renderedRows.push(todoObject.lineNumber);
-
-                    rows.push(
-                      <Row
-                        key={todoObject.lineNumber}
-                        todoObject={todoObject}
-                        filters={filters}
-                        setTodoObject={setTodoObject}
-                        setDialogOpen={setDialogOpen}
-                        setContextMenu={setContextMenu}
-                        setPromptItem={setPromptItem}
-                        settings={settings}
-                      />,
-                    );
-                  }
-                  return rows;
-                })()}
-              </React.Fragment>
-            );
+              return result;
+            })();
           })}
       </List>
     );

@@ -1,5 +1,3 @@
-@use "../Variables.scss";
-
 .MuiDrawer-root {
   height: 100vh;
   transition: margin-left 0.3s ease;
@@ -24,7 +22,7 @@
             position: absolute;
             right: 0em;
             bottom: 0em;
-            color: Variables.$dark-grey;
+            color: var(--color-outline);
           }
         }
       }
@@ -67,7 +65,7 @@
       .MuiTabs-scroller {
         button {
           .reset {
-            color: Variables.$light-grey;
+            color: var(--color-outline);
           }
         }
       }

@@ -9,7 +9,7 @@ import NavigationComponent from "./Navigation";
 import GridComponent from "./Grid/Grid";
 import SplashScreen from "./SplashScreen";
 import FileTabs from "./Header/FileTabs";
-import { dark, light } from "./Themes";
+import { dark, light, BORDER_RADIUS } from "./Themes";
 import DrawerComponent from "./Drawer/Drawer";
 import SearchComponent from "./Header/Search/Search";
 import DialogComponent from "./Dialog/Dialog";
@@ -20,6 +20,7 @@ import { I18nextProvider } from "react-i18next";
 import { i18n } from "./Settings/LanguageSelector";
 import Settings from "./Settings/Settings";
 import Prompt from "./Prompt";
+import { getCssVariables } from "./Colors";
 import "./App.scss";
 import "./Buttons.scss";
 import "./Form.scss";
@@ -66,6 +67,17 @@ const App = (): JSX.Element => {
     }),
   );
   const searchFieldRef = useRef<HTMLInputElement>(null);
+
+  // Inject CSS variables for current theme and radius
+  useEffect(() => {
+    const themeMode = settings?.shouldUseDarkColors ? "dark" : "light";
+    const vars = getCssVariables(themeMode);
+    Object.entries(vars).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(key, value);
+    });
+    // Inject border radius as CSS variable
+    document.documentElement.style.setProperty("--radius", BORDER_RADIUS);
+  }, [settings?.shouldUseDarkColors]);
 
   useEffect(() => {
     setSnackBarOpen(Boolean(snackBarContent));

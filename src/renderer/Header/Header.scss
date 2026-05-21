@@ -1,5 +1,3 @@
-@use "../Variables.scss";
-
 #ToolBar {
   width: 2.5em;
   aspect-ratio: 1;
@@ -11,43 +9,32 @@
   justify-content: center;
   align-items: center;
   padding: 0 1em;
-  background: #fff;
+  background: white;
   svg {
     display: flex;
     cursor: pointer;
     font-size: 1.85em;
-    color: Variables.$dark-grey;
+    color: var(--color-outline);
     &.active {
-      color: Variables.$blue;
+      color: var(--semantic-primary);
     }
   }
   &svg:hover {
-    color: Variables.$blue;
+    color: var(--semantic-primary);
   }
 }
 
-// .compact {
-//   #ToolBar {
-//     width: 2.5em;
-//     aspect-ratio: 1;
-//     padding: 0 1em;
-//     svg {
-//       font-size: 1.85em;
-//     }
-//   }
-// }
-
 .dark {
   #ToolBar {
-    background: #212224;
+    background: var(--color-outline)-background;
     svg {
-      color: Variables.$mid-grey;
+      color: var(--color-outlineVariant);
       &.active {
-        color: Variables.$blue;
+        color: var(--semantic-primary);
       }
     }
     & svg:hover {
-      color: Variables.$blue;
+      color: var(--semantic-primary);
     }
   }
 }
