@@ -136,7 +136,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
     }, [settings.language]);
 
     useEffect(() => {
-      const { shouldUseDarkColors, zoom, compact, disableAnimations } =
+      const { shouldUseDarkColors, zoom, compact, disableAnimations, multiLineView } =
         settings;
       const adjustedFontSize = Math.round(14 * (zoom / 100));
 
@@ -152,7 +152,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
 
       document.body.classList.toggle("disableAnimations", disableAnimations);
       document.body.classList.toggle("compact", compact);
-      document.body.classList.toggle("multiLineView", settings.multiLineView);
+      document.body.classList.toggle("multiLineView", multiLineView);
       document.body.classList.toggle("dark", shouldUseDarkColors);
       document.body.classList.toggle("light", !shouldUseDarkColors);
 

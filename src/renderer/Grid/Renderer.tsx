@@ -149,126 +149,63 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
     };
 
     if (settings.multiLineView) {
-      const badgePatterns: RegExp[] = [];
-      if (todoObject.tString) badgePatterns.push(new RegExp(`t:${todoObject.tString.replace(/\s/g, "\\s")}`, "g"));
-      if (todoObject.dueString) badgePatterns.push(new RegExp(`due:${todoObject.dueString.replace(/\s/g, "\\s")}`, "g"));
-      badgePatterns.push(/@\S+/g, /(?:^|\s)\+\S+/g, /\bh:1\b/g, /\bpm:\d+/g, /\brec:[^ ]+/g);
-
       let cleanBody = todoObject.body;
-      for (const pattern of badgePatterns) {
-        cleanBody = cleanBody.replace(pattern, "");
+      for (const { pattern } of expressions) {
+        cleanBody = cleanBody.replace(new RegExp(pattern.source, "g"), "");
       }
       cleanBody = cleanBody.replace(/\s+/g, " ").trim();
 
       const badgeElements: React.ReactNode[] = [];
-      let badgeIndex = 0;
 
-      if (todoObject.due) {
-        badgeIndex++;
+      const dateBadges: Array<{ type: "due" | "t"; value: string | null }> = [
+        { type: "due", value: todoObject.due },
+        { type: "t", value: todoObject.t },
+      ];
+      dateBadges.forEach(({ type, value }) => {
+        if (!value) return;
         badgeElements.push(
           <span
-            key={`due-${badgeIndex}`}
-            className={
-              IsSelected("due", filters, [todoObject.due])
-                ? "selected filter"
-                : "filter"
-            }
-            data-todotxt-attribute="due"
+            key={type}
+            className={IsSelected(type, filters, [value]) ? "selected filter" : "filter"}
+            data-todotxt-attribute={type}
           >
             <DatePickerInline
-              type="due"
+              type={type}
               todoObject={todoObject}
-              date={todoObject.due}
+              date={value}
               filters={filters}
               settings={settings}
             />
           </span>
         );
-      }
+      });
 
-      if (todoObject.t) {
-        badgeIndex++;
-        badgeElements.push(
-          <span
-            key={`t-${badgeIndex}`}
-            className={
-              IsSelected("t", filters, [todoObject.t])
-                ? "selected filter"
-                : "filter"
-            }
-            data-todotxt-attribute="t"
-          >
-            <DatePickerInline
-              type="t"
-              todoObject={todoObject}
-              date={todoObject.t}
-              filters={filters}
-              settings={settings}
-            />
-          </span>
-        );
-      }
-
-      if (todoObject.projects) {
-        todoObject.projects.forEach((project) => {
-          badgeIndex++;
+      const listBadges: Array<{ type: "projects" | "contexts"; values: string[] | null }> = [
+        { type: "projects", values: todoObject.projects },
+        { type: "contexts", values: todoObject.contexts },
+      ];
+      listBadges.forEach(({ type, values }) => {
+        values?.forEach((value) => {
           badgeElements.push(
             <span
-              key={`projects-${project}-${badgeIndex}`}
-              className={
-                IsSelected("projects", filters, [project])
-                  ? "selected filter"
-                  : "filter"
-              }
-              data-todotxt-attribute="projects"
+              key={`${type}-${value}`}
+              className={IsSelected(type, filters, [value]) ? "selected filter" : "filter"}
+              data-todotxt-attribute={type}
             >
               <button
-                onClick={() =>
-                  HandleFilterSelect("projects", [project], filters, false, null)
-                }
-                data-testid="datagrid-button-projects"
+                onClick={() => HandleFilterSelect(type, [value], filters, false, null)}
+                data-testid={`datagrid-button-${type}`}
               >
-                {project}
+                {value}
               </button>
             </span>
           );
         });
-      }
-
-      if (todoObject.contexts) {
-        todoObject.contexts.forEach((context) => {
-          badgeIndex++;
-          badgeElements.push(
-            <span
-              key={`contexts-${context}-${badgeIndex}`}
-              className={
-                IsSelected("contexts", filters, [context])
-                  ? "selected filter"
-                  : "filter"
-              }
-              data-todotxt-attribute="contexts"
-            >
-              <button
-                onClick={() =>
-                  HandleFilterSelect("contexts", [context], filters, false, null)
-                }
-                data-testid="datagrid-button-contexts"
-              >
-                {context}
-              </button>
-            </span>
-          );
-        });
-      }
+      });
 
       if (todoObject.rec) {
-        badgeIndex++;
         badgeElements.push(
-          <span
-            key={`rec-${badgeIndex}`}
-            className="filter"
-            data-todotxt-attribute="rec"
-          >
+          <span key="rec" className="filter" data-todotxt-attribute="rec">
             <button
               onClick={() =>
                 HandleFilterSelect("rec", [todoObject.rec!], filters, false, null)
@@ -283,13 +220,8 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       }
 
       if (todoObject.pm) {
-        badgeIndex++;
         badgeElements.push(
-          <span
-            key={`pm-${badgeIndex}`}
-            className="filter"
-            data-todotxt-attribute="pm"
-          >
+          <span key="pm" className="filter" data-todotxt-attribute="pm">
             <button
               className="pomodoro"
               onClick={() =>
@@ -312,9 +244,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
 
       const multiLineComponents: Components = {
         ...linkOptions,
-        p: ({ children }): JSX.Element | null => {
-          return <>{children}</>;
-        },
+        p: ({ children }): JSX.Element | null => <>{children}</>,
       };
 
       return (
