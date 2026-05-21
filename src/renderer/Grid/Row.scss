@@ -33,6 +33,24 @@
     border: none;
     cursor: auto;
   }
+  .drag-handle {
+    cursor: grab;
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    color: var(--color-surfaceVariant);
+    padding: 0 0.15em;
+    &:active {
+      cursor: grabbing;
+    }
+    svg {
+      font-size: 1.1em;
+    }
+  }
+  &.dragging {
+    opacity: 0.5;
+    border-left-style: dashed;
+  }
 }
 
 .compact {
@@ -67,8 +85,21 @@
   }
 }
 
+.group-spacer {
+  height: 4px;
+  transition: height 0.2s ease, background-color 0.2s ease;
+
+  &.active {
+    height: 12px;
+    background-color: rgba(#1976d2, 0.05);
+  }
+}
+
 .dark {
   .row {
     border-color: var(--color-outlineVariant);
+    .drag-handle {
+      color: var(--color-outlineVariant);
+    }
   }
 }
