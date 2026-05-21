@@ -120,6 +120,7 @@ const Row: React.FC<RowProps> = memo(
     const preventDialog = (clickedElement: HTMLElement): boolean => {
       let match = false;
 
+      // Check direct element
       if (clickedElement.classList.contains("MuiChip-label")) match = true;
       if (clickedElement.classList.contains("drag-handle")) match = true;
       if (clickedElement.closest(".drag-handle")) match = true;
@@ -132,16 +133,24 @@ const Row: React.FC<RowProps> = memo(
         "datagrid-picker-date-due"
       )
         match = true;
-      // if (clickedElement.closest('.filter')) {
-      //   const foundElement = clickedElement.closest('.filter');
-      //   if(foundElement.getAttribute('data-todotxt-attribute') === 'due' || foundElement.getAttribute('data-todotxt-attribute') === 't') {
-      //     match = true
-      //   }
-      // }
       if (clickedElement.tagName.toLowerCase() === "a") match = true;
       if (clickedElement.tagName.toLowerCase() === "input") match = true;
       if (clickedElement.tagName.toLowerCase() === "button") match = true;
       if (clickedElement.tagName.toLowerCase() === "img") match = true;
+
+      // Check if element is inside a .filter container
+      if (clickedElement.closest(".filter")) {
+        const filterElement = clickedElement.closest(".filter");
+        const attribute = filterElement.getAttribute("data-todotxt-attribute");
+        if (attribute === "due" || attribute === "t") {
+          match = true;
+        }
+      }
+
+      // Check if element is inside a DatePicker Popper
+      if (clickedElement.closest(".MuiPopper-root")) match = true;
+      if (clickedElement.closest(".MuiPickersLayout-root")) match = true;
+
       return match;
     };
 
@@ -155,7 +164,9 @@ const Row: React.FC<RowProps> = memo(
           (event as React.KeyboardEvent).key === "Enter") ||
         event.type === "click"
       ) {
-        if (!preventDialog(clickedElement) && todoObject && !justDragged) {
+        if (preventDialog(clickedElement)) {
+          event.stopPropagation();
+        } else if (todoObject && !justDragged) {
           event.preventDefault();
           setTodoObject(todoObject);
           setDialogOpen(true);

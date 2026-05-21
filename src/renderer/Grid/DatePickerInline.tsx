@@ -60,6 +60,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
 
   const toggleOpen = (event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault();
+    event.stopPropagation();
     setOpen((prev) => !prev);
   };
 
@@ -69,7 +70,7 @@ const DatePickerInlineComponent: React.FC<DatePickerInlineComponentProps> = ({
       ? friendlyDate(date, type, settings, t).pop()
       : date;
 
-return (
+  return (
     <LocalizationProvider
       dateAdapter={AdapterLuxon}
       adapterLocale={settings.language}
@@ -81,15 +82,16 @@ return (
         <button tabIndex={-1}>
           <Badge variant="dot" invisible={mustNotify}>
             <Chip
-              onClick={() =>
+              onClick={(event) => {
+                event.stopPropagation();
                 HandleFilterSelect(
                   type,
                   date ? [date] : [],
                   filters,
                   false,
                   null,
-                )
-              }
+                );
+              }}
               label={chipText}
               data-testid={`datagrid-button-${type}`}
               tabIndex={0}
@@ -111,27 +113,29 @@ return (
         onClose={() => setOpen(false)}
         value={date ? DateTime.fromISO(date) : null}
         onChange={handleChange}
-        slots={{ field: () => <span style={{ display: 'none' }} /> }}
-        slotProps={{ popper: {
-          anchorEl: anchorEl,
-          placement: 'bottom-start',
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 8],
+        slots={{ field: () => <span style={{ display: "none" }} /> }}
+        slotProps={{
+          popper: {
+            anchorEl: anchorEl,
+            placement: "bottom-start",
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 8],
+                },
               },
-            },
-            {
-              name: 'flip',
-              enabled: true,
-            },
-            {
-              name: 'preventOverflow',
-              enabled: true,
-            },
-          ],
-        } }}
+              {
+                name: "flip",
+                enabled: true,
+              },
+              {
+                name: "preventOverflow",
+                enabled: true,
+              },
+            ],
+          },
+        }}
       />
     </LocalizationProvider>
   );

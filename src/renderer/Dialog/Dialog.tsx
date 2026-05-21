@@ -179,6 +179,7 @@ const DialogComponent: React.FC<DialogComponentProps> = memo(
         open={dialogOpen}
         onClose={handleClose}
         onKeyDown={handleKeyDown}
+        autoFocus={true}
       >
         <DialogContent>
           <AutoSuggest

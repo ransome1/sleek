@@ -1,10 +1,9 @@
 @use "sass:color";
-@use "../Variables.scss";
 
 .row {
   cursor: pointer;
-  border-left: solid 0.2em Variables.$light-grey;
-  border-bottom: dotted 1px Variables.$light-grey;
+  border-left: solid 0.2em var(--color-surfaceVariant);
+  border-bottom: dotted 1px var(--color-surfaceVariant);
   display: flex;
   flex-wrap: wrap;
   gap: 0.25em;
@@ -38,7 +37,8 @@
     cursor: grab;
     display: inline-flex;
     align-items: center;
-    color: Variables.$light-grey;
+    align-self: stretch;
+    color: var(--color-surfaceVariant);
     padding: 0 0.15em;
     &:active {
       cursor: grabbing;
@@ -91,15 +91,15 @@
 
   &.active {
     height: 12px;
-    background-color: rgba(Variables.$blue, 0.05);
+    background-color: rgba(#1976d2, 0.05);
   }
 }
 
 .dark {
   .row {
-    border-color: Variables.$dark-grey;
+    border-color: var(--color-outlineVariant);
     .drag-handle {
-      color: Variables.$dark-grey;
+      color: var(--color-outlineVariant);
     }
   }
 }
