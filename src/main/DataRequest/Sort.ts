@@ -116,4 +116,19 @@ const sortInProgressFirst = (todoData: TodoData): void => {
   }
 };
 
-export { sortTodoObjects, parseRecurrenceSortKey, sortInProgressFirst };
+const sortCompletedLast = (todoData: TodoData): void => {
+  for (const group of todoData) {
+    group.todoObjects.sort((a, b) => {
+      if (a.complete && !b.complete) return 1;
+      if (!a.complete && b.complete) return -1;
+      return 0;
+    });
+  }
+};
+
+export {
+  sortTodoObjects,
+  parseRecurrenceSortKey,
+  sortInProgressFirst,
+  sortCompletedLast,
+};
