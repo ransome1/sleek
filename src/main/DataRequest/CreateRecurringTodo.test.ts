@@ -239,11 +239,11 @@ describe("createRecurringTodo", () => {
       // due:2021-06-08, t:2021-06-01 → gap = 7 days
       // completion date = 2021-06-01, rec:1w → new due = 2021-06-08
       // thresholdBase = newDueDate - 7 days = 2021-06-01
-      // newThresholdDate = thresholdBase + 1w = 2021-06-08
+      // newThresholdDate = thresholdBase = 2021-06-01 (gap preserved)
       createRecurringTodo("Task due:2021-06-08 t:2021-06-01 rec:1w", "1w");
       const todo = capturedTodo();
       expect(ext(todo, "due")).toBe("2021-06-08");
-      expect(ext(todo, "t")).toBe("2021-06-08");
+      expect(ext(todo, "t")).toBe("2021-06-01");
     });
 
     it("updates threshold date using completion date when no due date (threshold only)", () => {
@@ -252,6 +252,18 @@ describe("createRecurringTodo", () => {
       const todo = capturedTodo();
       expect(ext(todo, "due")).toBeUndefined();
       expect(ext(todo, "t")).toBe("2021-06-08");
+    });
+
+    it("non-strict recurrence with 3-week interval preserves due/threshold gap (issue #886)", () => {
+      // due:2021-06-22, t:2021-06-15 → gap = 7 days
+      // completion date = 2021-06-01, rec:3w → new due = 2021-06-22
+      // thresholdBase = 2021-06-22 − 7d = 2021-06-15
+      // Bug: without fix thresholdBase + 3w = 2021-07-06 (interval applied twice)
+      // Fix: newThresholdDate = thresholdBase = 2021-06-15 (gap preserved)
+      createRecurringTodo("Task due:2021-06-22 t:2021-06-15 rec:3w", "3w");
+      const todo = capturedTodo();
+      expect(ext(todo, "due")).toBe("2021-06-22");
+      expect(ext(todo, "t")).toBe("2021-06-15");
     });
 
     it("strict recurrence updates threshold date relative to previous threshold", () => {

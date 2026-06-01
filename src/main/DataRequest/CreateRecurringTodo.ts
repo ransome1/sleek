@@ -112,11 +112,12 @@ const createRecurringTodo = (string: string, recurrence: string): void => {
             .toJSDate()
         : creationDate;
 
-  const newThresholdDate: Date = addRecurrenceToDate(
-    thresholdBase,
-    recurrenceInterval,
-    recurrenceValue,
-  );
+  // For non-strict recurrence with a gap, thresholdBase already equals
+  // newDueDate − daysBetween — applying the interval again would double it.
+  const newThresholdDate: Date =
+    !strictRecurrence && daysBetween > 0
+      ? thresholdBase
+      : addRecurrenceToDate(thresholdBase, recurrenceInterval, recurrenceValue);
 
   const recurrenceOnlyForThresholdDate = oldThresholdDate && !oldDueDate;
 
