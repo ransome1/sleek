@@ -83,6 +83,7 @@ vi.mock("electron", () => {
       };
     }),
     app: {
+      getLocale: vi.fn().mockReturnValue("en"),
       getPath: vi.fn().mockReturnValue(""),
     },
   };
@@ -132,6 +133,12 @@ describe("CreateTitle", () => {
 
   it("Empty string if due date is in the past", () => {
     expect(CreateTitle(lastWeek, today)).toBe("");
+  });
+
+  it("uses Chinese titles when language is zh", () => {
+    expect(CreateTitle(today, today, "zh")).toBe("今天截止");
+    expect(CreateTitle(tomorrow, today, "zh")).toBe("明天截止");
+    expect(CreateTitle(inFourDays, today, "zh")).toBe("4 天后截止");
   });
 });
 

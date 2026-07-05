@@ -88,19 +88,19 @@ const friendlyLanguageName: Record<string, string> = {
   de: "Deutsch",
   en: "English",
   it: "Italiano",
-  es: "Español",
-  fr: "Français",
-  zh: "简体中文",
-  pt: "Português (Portugal)",
-  "pt-br": "Português (Brasil)",
-  jp: "日本語",
-  tr: "Türkçe",
+  es: "Espa\u00f1ol",
+  fr: "Fran\u00e7ais",
+  zh: "\u7b80\u4f53\u4e2d\u6587",
+  pt: "Portugu\u00eas (Portugal)",
+  "pt-br": "Portugu\u00eas (Brasil)",
+  jp: "\u65e5\u672c\u8a9e",
+  tr: "T\u00fcrk\u00e7e",
   hu: "Magyar",
-  cs: "Čeština",
+  cs: "\u010ce\u0161tina",
   pl: "Polski",
-  ru: "Русский",
-  ko: "한국어",
-  hi: "हिन्दी",
+  ru: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+  ko: "\ud55c\uad6d\uc5b4",
+  hi: "\u0939\u093f\u0928\u094d\u0926\u0940",
 };
 
 interface LanguageSelectorComponentProps {
@@ -119,7 +119,7 @@ const LanguageSelectorComponent: React.FC<LanguageSelectorComponentProps> = ({
       <Select
         labelId="language"
         id="language"
-        label="Language"
+        label={i18n.t("settings.language")}
         data-testid={"setting-select-language"}
         value={settings.language || navigator.language}
         name="language"

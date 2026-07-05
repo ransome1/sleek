@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { zhCN } from "@mui/x-date-pickers/locales";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTime, Settings as LuxonSettings, WeekdayNumbers } from "luxon";
 import "./DatePicker.scss";
@@ -28,11 +29,16 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   };
 
   const { t } = useTranslation();
+  const localeText =
+    settings.language === "zh"
+      ? zhCN.components.MuiLocalizationProvider.defaultProps.localeText
+      : undefined;
 
   return (
     <LocalizationProvider
       dateAdapter={AdapterLuxon}
       adapterLocale={settings.language}
+      localeText={localeText}
     >
       <DatePicker
         className="datePicker"

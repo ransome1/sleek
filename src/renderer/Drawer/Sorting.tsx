@@ -120,7 +120,7 @@ const DrawerSortingComponent: React.FC<DrawerSortingComponentProps> = ({
                 onClick={() => toggleInvert(index)}
                 data-testid={`drawer-sorting-draggable-list-item-${item.value}-invert`}
                 aria-label={
-                  item.invert ? "Descending order" : "Ascending order"
+                  item.invert ? t("sorting.descending") : t("sorting.ascending")
                 }
               >
                 {!item.invert ? <SortIcon className="invert" /> : <SortIcon />}

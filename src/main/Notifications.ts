@@ -4,6 +4,7 @@ import { Notification } from "electron";
 import { SettingsStore, NotificationsStore, FiltersStore } from "./Stores";
 import { checkForSearchMatches } from "./Filters/Search";
 import { SearchFilter, Badge } from "@sleek-types";
+import { TranslateMain } from "./I18n";
 
 // ─── Store accessors ────────────────────────────────────────────────────────
 
@@ -25,13 +26,23 @@ export function MustNotify(dueDate: DateTime, thresholdDay: DateTime): boolean {
   return dueDate < thresholdDay;
 }
 
-export function CreateTitle(dueDate: DateTime, today: DateTime): string {
+export function CreateTitle(
+  dueDate: DateTime,
+  today: DateTime,
+  language?: string,
+): string {
   const tomorrow: DateTime = today.plus({ days: 1 });
   const daysUntilDue: number = dueDate.diff(today, "days").toObject().days ?? 0;
 
-  if (dueDate.hasSame(today, "day")) return "Due today";
-  if (dueDate.hasSame(tomorrow, "day")) return "Due tomorrow";
-  return daysUntilDue > 1 ? `Due in ${daysUntilDue} days` : "";
+  if (dueDate.hasSame(today, "day"))
+    return TranslateMain("notification.dueToday", language);
+  if (dueDate.hasSame(tomorrow, "day"))
+    return TranslateMain("notification.dueTomorrow", language);
+  return daysUntilDue > 1
+    ? TranslateMain("notification.dueInDays", language, {
+        count: daysUntilDue,
+      })
+    : "";
 }
 
 export function SuppressNotification(
@@ -77,7 +88,7 @@ export function HandleNotification(
   if (SuppressNotification(dueDate, body, hash, today, thresholdDay)) return;
 
   const notification = new Notification({
-    title: CreateTitle(dueDate, today),
+    title: CreateTitle(dueDate, today, SettingsStore.get("language")),
     body,
     silent: false,
   });

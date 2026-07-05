@@ -6,6 +6,7 @@ import { checkArchiveReadiness } from "./File/Archive";
 import { SettingsStore, FiltersStore } from "./Stores";
 import { File } from "../@types";
 import appPackage from "../../package.json";
+import { TranslateMain } from "./I18n";
 
 export const GetFileMenuEntries = (files: File[]) => {
   return files.map((file: File, index: number) => ({
@@ -20,19 +21,23 @@ export const GetFileMenuEntries = (files: File[]) => {
 const GetMenuTemplate = (
   files: File[],
 ): Electron.MenuItemConstructorOptions[] => {
+  const language = SettingsStore.get("language");
+  const t = (key: Parameters<typeof TranslateMain>[0]) =>
+    TranslateMain(key, language);
+
   return [
     {
       label: "sleek",
       type: "submenu",
       submenu: [
         {
-          label: "About",
+          label: t("menu.about"),
           click: async () => {
             const options = {
-              title: "About sleek",
+              title: t("menu.aboutSleek"),
               message: `sleek v${app.getVersion()}`,
               detail: appPackage.description,
-              buttons: ["Close", "Reveal configuration folder"],
+              buttons: [t("close"), t("menu.revealConfigurationFolder")],
             };
             const { response } = await dialog.showMessageBox(options);
             if (response === 1) {
@@ -42,7 +47,7 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Settings",
+          label: t("settings"),
           accelerator: "CmdOrCtrl+,",
           click: () => {
             mainWindow!.webContents.send("isSettingsOpen", true);
@@ -52,6 +57,7 @@ const GetMenuTemplate = (
           ? ([
               { type: "separator" },
               {
+                label: t("menu.hide"),
                 accelerator: "Cmd+H",
                 role: "hide",
               },
@@ -59,6 +65,7 @@ const GetMenuTemplate = (
           : []),
         { type: "separator" },
         {
+          label: t("menu.quitSleek"),
           role: "quit",
           accelerator: "CmdOrCtrl+Q",
         },
@@ -66,18 +73,18 @@ const GetMenuTemplate = (
     },
     {
       id: "fileMenu",
-      label: "File",
+      label: t("menu.file"),
       submenu: [
         { type: "separator" },
         {
-          label: "Open file",
+          label: t("openFile"),
           accelerator: "CmdOrCtrl+O",
           click: async () => {
             await openFile(false);
           },
         },
         {
-          label: "Create file",
+          label: t("createFile"),
           click: async () => {
             await createFile(false);
           },
@@ -87,15 +94,24 @@ const GetMenuTemplate = (
       ],
     },
     {
-      role: "editMenu",
+      label: t("menu.edit"),
+      submenu: [
+        { label: t("menu.undo"), role: "undo" },
+        { label: t("menu.redo"), role: "redo" },
+        { type: "separator" },
+        { label: t("menu.cut"), role: "cut" },
+        { label: t("copy"), role: "copy" },
+        { label: t("menu.paste"), role: "paste" },
+        { label: t("menu.selectAll"), role: "selectAll" },
+      ],
     },
     {
-      label: "View",
+      label: t("menu.view"),
       submenu: [
         ...(files?.length > 0
           ? [
               {
-                label: "Toggle drawer",
+                label: t("menu.toggleDrawer"),
                 accelerator: "CmdOrCtrl+B",
                 click: () => {
                   const isDrawerOpen = SettingsStore.get("isDrawerOpen");
@@ -103,7 +119,7 @@ const GetMenuTemplate = (
                 },
               },
               {
-                label: "Toggle file tabs",
+                label: t("menu.toggleFileTabs"),
                 click: () => {
                   const showFileTabs = SettingsStore.get("showFileTabs");
                   SettingsStore.set("showFileTabs", !showFileTabs);
@@ -112,7 +128,7 @@ const GetMenuTemplate = (
             ]
           : []),
         {
-          label: "Toggle navigation",
+          label: t("menu.toggleNavigation"),
           accelerator: "Ctrl+Alt+H",
           click: () => {
             const isNavigationOpen = SettingsStore.get("isNavigationOpen");
@@ -120,7 +136,7 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Toggle theme",
+          label: t("menu.toggleTheme"),
           accelerator: "Ctrl+Alt+D",
           click: () => {
             const shouldUseDarkColors = SettingsStore.get(
@@ -133,7 +149,7 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Toggle compact mode",
+          label: t("menu.toggleCompactMode"),
           click: () => {
             const compact = SettingsStore.get("compact");
             SettingsStore.set("compact", !compact);
@@ -144,17 +160,17 @@ const GetMenuTemplate = (
     ...(files?.length > 0
       ? [
           {
-            label: "Todos",
+            label: t("menu.todos"),
             submenu: [
               {
-                label: "Add new todo",
+                label: t("menu.addNewTodo"),
                 accelerator: "CmdOrCtrl+N",
                 click: () => {
                   mainWindow?.webContents.send("isDialogOpen");
                 },
               },
               {
-                label: "Find",
+                label: t("menu.find"),
                 accelerator: "CmdOrCtrl+F",
                 click: () => {
                   const isSearchOpen = SettingsStore.get("isSearchOpen");
@@ -162,7 +178,7 @@ const GetMenuTemplate = (
                 },
               },
               {
-                label: "Toggle completed",
+                label: t("menu.toggleCompleted"),
                 accelerator: "Ctrl+H",
                 click: async () => {
                   const showCompleted = SettingsStore.get("showCompleted");
@@ -170,14 +186,14 @@ const GetMenuTemplate = (
                 },
               },
               {
-                label: "Reset filters",
+                label: t("splashscreen.noTodosVisible.reset"),
                 accelerator: "CmdOrCtrl+0",
                 click: async () => {
                   FiltersStore.set("attributes", {});
                 },
               },
               {
-                label: "Archive completed todos",
+                label: t("prompt.archive.headline"),
                 accelerator: "Ctrl+Alt+A",
                 click: () => {
                   checkArchiveReadiness();
@@ -191,12 +207,12 @@ const GetMenuTemplate = (
       role: "window",
       submenu: [
         {
-          label: "Close window",
+          label: t("menu.closeWindow"),
           accelerator: "CmdOrCtrl+W",
           role: "close",
         },
         {
-          label: "Open window",
+          label: t("menu.openWindow"),
           click: () => {
             HandleCreateWindow();
           },
@@ -204,7 +220,7 @@ const GetMenuTemplate = (
       ],
     },
     {
-      label: "Help",
+      label: t("menu.help"),
       submenu: [
         {
           label: "sleek wiki",
@@ -213,7 +229,7 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Changelog",
+          label: t("menu.changelog"),
           click: () => {
             shell?.openExternal(
               "https://github.com/ransome1/sleek/blob/main/CHANGELOG.md",
@@ -221,13 +237,13 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Report bugs",
+          label: t("menu.reportBugs"),
           click: () => {
             shell?.openExternal("https://github.com/ransome1/sleek/issues");
           },
         },
         {
-          label: "Discuss new or existing features",
+          label: t("menu.discussFeatures"),
           click: () => {
             shell?.openExternal(
               "https://github.com/ransome1/sleek/discussions",
@@ -235,7 +251,7 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Contributing",
+          label: t("menu.contributing"),
           click: () => {
             shell?.openExternal(
               "https://github.com/ransome1/sleek/blob/master/CONTRIBUTING.md",
@@ -243,7 +259,7 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Keyboard shortcuts",
+          label: t("menu.keyboardShortcuts"),
           click: () => {
             shell?.openExternal(
               "https://github.com/ransome1/sleek/wiki/Keyboard-shortcuts#v2x",
@@ -251,7 +267,7 @@ const GetMenuTemplate = (
           },
         },
         {
-          label: "Privacy policy",
+          label: t("menu.privacyPolicy"),
           click: () => {
             shell?.openExternal(
               "https://github.com/ransome1/sleek/blob/master/PRIVACY.md",
@@ -261,7 +277,7 @@ const GetMenuTemplate = (
         ...(!process.mas
           ? [
               {
-                label: "Sponsoring",
+                label: t("menu.sponsoring"),
                 click: () => {
                   shell?.openExternal("https://github.com/sponsors/ransome1");
                 },
@@ -270,10 +286,11 @@ const GetMenuTemplate = (
           : []),
         {
           role: "toggleDevTools",
-          label: "Developer tools",
+          label: t("menu.developerTools"),
         },
         {
           role: "reload",
+          label: t("menu.reload"),
         },
       ],
     },

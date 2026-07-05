@@ -8,6 +8,7 @@ import { HandleError } from "./Shared";
 import { registerTodoFile, activateFile, removeFile } from "./File/File";
 import { openFile, createFile } from "./File/Dialog";
 import { createTodoObject } from "./DataRequest/CreateTodoObjects";
+import { TranslateMain } from "./I18n";
 
 function handleDataRequest(event: IpcMainEvent, searchString: string) {
   try {
@@ -204,7 +205,12 @@ function handleArchiveTodos(event: IpcMainEvent): void {
 function handleSaveToClipboard(event: IpcMainEvent, string: string): void {
   try {
     clipboard.writeText(string);
-    event.reply("responseFromMainProcess", "Copied to clipboard: " + string);
+    event.reply(
+      "responseFromMainProcess",
+      TranslateMain("clipboard.copied", SettingsStore.get("language"), {
+        value: string,
+      }),
+    );
   } catch (error) {
     if (error instanceof Error) HandleError(error);
   }
