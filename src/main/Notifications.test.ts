@@ -88,6 +88,25 @@ vi.mock("electron", () => {
   };
 });
 
+vi.mock("./i18n", () => {
+  return {
+    default: {
+      t: vi.fn(function (k: string, ops: { count: number }) {
+        switch (k) {
+          case "notification.dueToday":
+            return `Due today`;
+          case "notification.dueTomorrow":
+            return `Due tomorrow`;
+          case "notification.dueInDays":
+            return `Due in ${ops.count} days`;
+          default:
+            return k;
+        }
+      }),
+    },
+  };
+});
+
 describe("MustNotify", () => {
   beforeEach(() => {
     vi.clearAllMocks();

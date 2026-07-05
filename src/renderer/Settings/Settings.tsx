@@ -31,6 +31,7 @@ export interface VisibleSettings {
     min?: number;
     max?: number;
     unit?: string;
+    unitKey?: string;
     step?: number;
     values?: (string | number)[];
     rerender?: boolean;
@@ -83,7 +84,7 @@ const visibleSettings: VisibleSettings = {
     style: "slider",
     min: 0,
     max: 10,
-    unit: " days",
+    unitKey: "settings.days",
     step: 1,
     help: "https://github.com/ransome1/sleek/wiki/Notifications-and-badges#notification-threshold",
   },
@@ -283,7 +284,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = memo(
                     step={settingValue.step}
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value: number): string =>
-                      `${value}${settingValue.unit}`
+                      `${value}${settingValue.unitKey ? t(settingValue.unitKey) : (settingValue.unit ?? "")}`
                     }
                     min={settingValue.min}
                     max={settingValue.max}

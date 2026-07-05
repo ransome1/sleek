@@ -4,6 +4,7 @@ import { Notification } from "electron";
 import { SettingsStore, NotificationsStore, FiltersStore } from "./Stores";
 import { checkForSearchMatches } from "./Filters/Search";
 import { SearchFilter, Badge } from "@sleek-types";
+import i18n from "./i18n";
 
 // ─── Store accessors ────────────────────────────────────────────────────────
 
@@ -29,9 +30,14 @@ export function CreateTitle(dueDate: DateTime, today: DateTime): string {
   const tomorrow: DateTime = today.plus({ days: 1 });
   const daysUntilDue: number = dueDate.diff(today, "days").toObject().days ?? 0;
 
-  if (dueDate.hasSame(today, "day")) return "Due today";
-  if (dueDate.hasSame(tomorrow, "day")) return "Due tomorrow";
-  return daysUntilDue > 1 ? `Due in ${daysUntilDue} days` : "";
+  if (dueDate.hasSame(today, "day")) return i18n.t("notification.dueToday");
+  if (dueDate.hasSame(tomorrow, "day"))
+    return i18n.t("notification.dueTomorrow");
+  return daysUntilDue > 1
+    ? i18n.t("notification.dueInDays", {
+        count: daysUntilDue,
+      })
+    : "";
 }
 
 export function SuppressNotification(

@@ -7,22 +7,25 @@ import {
 import path from "path";
 import { registerTodoFile, linkDoneFile } from "./File";
 import { writeToFile } from "./Write";
+import i18n from "../i18n";
 
-const dialogFilters = [
-  {
-    name: "Text files",
-    extensions: ["txt"],
-  },
-  {
-    name: "All files",
-    extensions: ["*"],
-  },
-];
+const dialogFilters = () => {
+  return [
+    {
+      name: i18n.t("fileDialog.textFiles"),
+      extensions: ["txt"],
+    },
+    {
+      name: i18n.t("fileDialog.allFiles"),
+      extensions: ["*"],
+    },
+  ];
+};
 
 async function openFile(setDoneFile: boolean): Promise<void> {
   const result: OpenDialogReturnValue = await dialog.showOpenDialog({
     properties: ["openFile"],
-    filters: dialogFilters,
+    filters: dialogFilters(),
     securityScopedBookmarks: true,
   });
   if (!result.canceled && result.filePaths.length > 0) {
@@ -41,7 +44,7 @@ async function createFile(setDoneFile: boolean): Promise<void> {
   const defaultFileName = setDoneFile ? "done.txt" : "todo.txt";
   const result: SaveDialogReturnValue = await dialog.showSaveDialog({
     defaultPath: path.join(app.getPath("documents"), defaultFileName),
-    filters: dialogFilters,
+    filters: dialogFilters(),
     securityScopedBookmarks: true,
   });
 

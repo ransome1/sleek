@@ -60,7 +60,7 @@ const LanguageSelectorComponent: React.FC<LanguageSelectorComponentProps> = ({
       <Select
         labelId="language"
         id="language"
-        label="Language"
+        label={i18n.t("settings.language")}
         data-testid={"setting-select-language"}
         value={settings.language || navigator.language}
         name="language"

@@ -3,6 +3,7 @@ import { HandleCreateWindow, mainWindow } from "./index";
 import { GetFileMenuEntries } from "./Menu";
 import { SettingsStore } from "./Stores";
 import { File } from "../@types";
+import i18n from "./i18n";
 import TrayIconDark from "../../resources/trayDarkTemplate.png?asset";
 import TrayIconLight from "../../resources/trayLightTemplate.png?asset";
 import TrayIconDarkWin from "../../resources/trayDark.ico?asset";
@@ -56,11 +57,11 @@ export function UpdateTrayMenu(): void {
   if (tray === null) return;
   const files: File[] = SettingsStore.get("files");
   const menu: Electron.Menu = Menu.buildFromTemplate([
-    { label: "Show sleek", click: HandleCreateWindow },
+    { label: i18n.t("menu.showSleek"), click: HandleCreateWindow },
     { type: "separator" },
     ...GetFileMenuEntries(files),
     { type: "separator" },
-    { label: "Quit sleek", click: app.quit },
+    { label: i18n.t("menu.quitSleek"), click: app.quit },
   ]);
   tray.setContextMenu(menu);
 }
