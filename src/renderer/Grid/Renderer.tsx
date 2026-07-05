@@ -114,38 +114,7 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
       return uri;
     };
 
-    const options: Components = {
-      p: ({ children }): JSX.Element | null => {
-        const mappedChildren = React.Children.map(children, (child) => {
-          if (typeof child !== "string") return child;
-          let modifiedChild: React.ReactNode = child;
-          let index = 0;
-          expressions.forEach(({ pattern, type }) => {
-            modifiedChild = reactStringReplace(
-              modifiedChild as string,
-              pattern,
-              (match) => {
-                index++;
-                return (
-                  <span
-                    key={`${type}-${match}-${index}`}
-                    className={
-                      IsSelected(type, filters, [match])
-                        ? "selected filter"
-                        : "filter"
-                    }
-                    data-todotxt-attribute={type}
-                  >
-                    {replacements[type](match, type)}
-                  </span>
-                );
-              },
-            );
-          });
-          return modifiedChild;
-        });
-        return mappedChildren ? <>{mappedChildren}</> : null;
-      },
+    const linkOptions: Components = {
       a: ({ children, href, ...props }): JSX.Element | null => {
         if (!children) return null;
         const childrenStr =
@@ -176,6 +145,158 @@ const RendererComponent: React.FC<RendererComponentProps> = memo(
         ) : (
           link
         );
+      },
+    };
+
+    if (settings.multiLineView) {
+      let cleanBody = todoObject.body;
+      for (const { pattern } of expressions) {
+        cleanBody = cleanBody.replace(new RegExp(pattern.source, "g"), "");
+      }
+      cleanBody = cleanBody.replace(/\s+/g, " ").trim();
+
+      const badgeElements: React.ReactNode[] = [];
+
+      const dateBadges: Array<{ type: "due" | "t"; value: string | null }> = [
+        { type: "due", value: todoObject.due },
+        { type: "t", value: todoObject.t },
+      ];
+      dateBadges.forEach(({ type, value }) => {
+        if (!value) return;
+        badgeElements.push(
+          <span
+            key={type}
+            className={IsSelected(type, filters, [value]) ? "selected filter" : "filter"}
+            data-todotxt-attribute={type}
+          >
+            <DatePickerInline
+              type={type}
+              todoObject={todoObject}
+              date={value}
+              filters={filters}
+              settings={settings}
+            />
+          </span>
+        );
+      });
+
+      const listBadges: Array<{ type: "projects" | "contexts"; values: string[] | null }> = [
+        { type: "projects", values: todoObject.projects },
+        { type: "contexts", values: todoObject.contexts },
+      ];
+      listBadges.forEach(({ type, values }) => {
+        values?.forEach((value) => {
+          badgeElements.push(
+            <span
+              key={`${type}-${value}`}
+              className={IsSelected(type, filters, [value]) ? "selected filter" : "filter"}
+              data-todotxt-attribute={type}
+            >
+              <button
+                onClick={() => HandleFilterSelect(type, [value], filters, false, null)}
+                data-testid={`datagrid-button-${type}`}
+              >
+                {value}
+              </button>
+            </span>
+          );
+        });
+      });
+
+      if (todoObject.rec) {
+        badgeElements.push(
+          <span key="rec" className="filter" data-todotxt-attribute="rec">
+            <button
+              onClick={() =>
+                HandleFilterSelect("rec", [todoObject.rec!], filters, false, null)
+              }
+              data-testid="datagrid-button-rec"
+            >
+              <Chip label="rec:" />
+              <div>{todoObject.rec}</div>
+            </button>
+          </span>
+        );
+      }
+
+      if (todoObject.pm) {
+        badgeElements.push(
+          <span key="pm" className="filter" data-todotxt-attribute="pm">
+            <button
+              className="pomodoro"
+              onClick={() =>
+                HandleFilterSelect(
+                  "pm",
+                  [String(todoObject.pm)],
+                  filters,
+                  false,
+                  null,
+                )
+              }
+              data-testid="datagrid-button-pm"
+            >
+              <img src={PomodoroIcon} alt="Pomodoro" />
+              {todoObject.pm}
+            </button>
+          </span>
+        );
+      }
+
+      const multiLineComponents: Components = {
+        ...linkOptions,
+        p: ({ children }): JSX.Element | null => <>{children}</>,
+      };
+
+      return (
+        <>
+          <span className="row-text">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={multiLineComponents}
+              urlTransform={transformURL}
+            >
+              {cleanBody}
+            </ReactMarkdown>
+          </span>
+          {badgeElements.length > 0 && (
+            <span className="row-badges">{badgeElements}</span>
+          )}
+        </>
+      );
+    }
+
+    const options: Components = {
+      ...linkOptions,
+      p: ({ children }): JSX.Element | null => {
+        const mappedChildren = React.Children.map(children, (child) => {
+          if (typeof child !== "string") return child;
+          let modifiedChild: React.ReactNode = child;
+          let index = 0;
+          expressions.forEach(({ pattern, type }) => {
+            modifiedChild = reactStringReplace(
+              modifiedChild as string,
+              pattern,
+              (match) => {
+                index++;
+                return (
+                  <span
+                    key={`${type}-${match}-${index}`}
+                    className={
+                      IsSelected(type, filters, [match])
+                        ? "selected filter"
+                        : "filter"
+                    }
+                    data-todotxt-attribute={type}
+                  >
+                    {replacements[type](match, type)}
+                  </span>
+                );
+              },
+            );
+          });
+          return modifiedChild;
+        });
+        return mappedChildren ? <>{mappedChildren}</> : null;
       },
     };
 

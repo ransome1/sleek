@@ -20,6 +20,7 @@ export interface SettingStore {
   menuBarVisibility: boolean;
   disableAnimations: boolean;
   compact: boolean;
+  multiLineView: boolean;
   zoom: number;
   matomo: boolean;
 

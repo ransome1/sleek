@@ -35,6 +35,10 @@
   }
 }
 
+.row-content {
+  display: contents;
+}
+
 .compact {
   .row {
     padding: 0.3em;
@@ -63,6 +67,34 @@
       button {
         padding: 0.2em 0.4em;
       }
+    }
+  }
+}
+
+.multiLineView {
+  .row {
+    align-items: flex-start;
+    padding: 0.3em 0.5em;
+
+    .row-content {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
+      gap: 0.25em;
+      align-items: center;
+    }
+
+    .row-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .row-badges {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25em;
+      align-items: center;
     }
   }
 }
