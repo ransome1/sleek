@@ -45,7 +45,7 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:mas": "npm run build && electron-builder build -m mas --universal --publish never",
     "build:masdev": "npm run build && electron-builder build -m mas-dev --publish never",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "install-electron && electron-builder install-app-deps",
     "peggy": "npx peggy --format es --dts --output ./src/main/Filters/FilterLang.ts ./src/main/Filters/FilterLang.pegjs && npm run peggy:ts-nocheck",
     "peggy:ts-nocheck": "node -e \"const fs=require('fs');const p='src/main/Filters/FilterLang.ts';const c=fs.readFileSync(p,'utf8');if(!c.startsWith('// @ts-nocheck')) fs.writeFileSync(p,'// @ts-nocheck\\n'+c,'utf8')\""
   },
@@ -82,7 +82,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.0.18",
-    "electron": "^41.1.1",
+    "electron": "^43.0.0",
     "electron-builder": "^26.0.12",
     "electron-vite": "^6.0.0-beta.0",
     "eslint": "^9.39.4",
