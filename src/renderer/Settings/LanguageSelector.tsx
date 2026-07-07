@@ -3,75 +3,16 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import i18n, { InitOptions } from "i18next";
+import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import de from "../../locales/de.json";
-import en from "../../locales/en.json";
-import it from "../../locales/it.json";
-import es from "../../locales/es.json";
-import fr from "../../locales/fr.json";
-import zh from "../../locales/zh.json";
-import pt from "../../locales/pt.json";
-import pt_br from "../../locales/pt-br.json";
-import jp from "../../locales/jp.json";
-import tr from "../../locales/tr.json";
-import hu from "../../locales/hu.json";
-import cs from "../../locales/cs.json";
-import pl from "../../locales/pl.json";
-import ru from "../../locales/ru.json";
-import ko from "../../locales/ko.json";
-import hi from "../../locales/hi.json";
 import { SettingStore } from "../../@types";
+import { i18nextOptions } from "../../i18n.config";
 
 const { store } = window.api;
 
-const options: InitOptions = {
-  resources: {
-    de: { translation: de },
-    en: { translation: en },
-    it: { translation: it },
-    es: { translation: es },
-    fr: { translation: fr },
-    zh: { translation: zh },
-    pt: { translation: pt },
-    "pt-br": { translation: pt_br },
-    jp: { translation: jp },
-    tr: { translation: tr },
-    hu: { translation: hu },
-    cs: { translation: cs },
-    pl: { translation: pl },
-    ru: { translation: ru },
-    ko: { translation: ko },
-    hi: { translation: hi },
-  },
-  fallbackLng: "en",
-  supportedLngs: [
-    "de",
-    "en",
-    "it",
-    "es",
-    "fr",
-    "zh",
-    "pt",
-    "pt-br",
-    "jp",
-    "tr",
-    "hu",
-    "cs",
-    "pl",
-    "ru",
-    "ko",
-    "hi",
-  ],
-  interpolation: {
-    escapeValue: false,
-  },
-  saveMissing: true,
-};
-
 i18n
   .use(initReactI18next)
-  .init(options)
+  .init(i18nextOptions)
   .then(() => {
     if (!store.getConfig("language")) {
       store.setConfig("language", navigator.language.toLowerCase().slice(0, 2));

@@ -13,6 +13,7 @@ import { HandleTheme } from "./Theme.js";
 import "./IpcMain.js";
 import { FSWatcher } from "chokidar";
 import { File } from "@sleek-types";
+import { setupI18n } from "./i18n.js";
 
 const startTime = performance.now();
 const environment: string | undefined = process.env.NODE_ENV;
@@ -244,6 +245,7 @@ if (!gotTheLock) {
   app
     .whenReady()
     .then(() => {
+      setupI18n();
       const tray = SettingsStore.get("tray");
       const startMinimized = SettingsStore.get("startMinimized");
       if (tray) CreateTray();
