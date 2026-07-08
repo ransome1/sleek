@@ -1,7 +1,7 @@
 {
   "name": "sleek",
   "productName": "sleek",
-  "version": "2.0.26",
+  "version": "2.0.26-rc.1",
   "description": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "synopsis": "todo.txt manager for Linux, Windows and MacOS, free and open-source (FOSS)",
   "keywords": [
@@ -96,5 +96,11 @@
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.55.0",
     "vitest": "^4.0.14"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.5.6": true,
+    "esbuild@0.25.12": true,
+    "electron-winstaller@5.4.0": true,
+    "fsevents@2.3.3": true
   }
 }

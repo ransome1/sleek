@@ -40,7 +40,7 @@ const baseTheme: Theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         paper: {
-          backgroundColor: colors.light.surfaceVariant,
+          backgroundColor: colors.theme.light.surfaceVariant,
         },
       },
     },
@@ -91,8 +91,8 @@ const dark: Theme = createTheme({
   palette: {
     mode: "dark",
     background: {
-      default: colors.dark.background,
-      paper: colors.dark.surface,
+      default: colors.theme.dark.background,
+      paper: colors.theme.dark.surface,
     },
   },
   components: {
@@ -107,7 +107,7 @@ const dark: Theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         paper: {
-          backgroundColor: colors.dark.background,
+          backgroundColor: colors.theme.dark.background,
         },
       },
     },
@@ -115,7 +115,7 @@ const dark: Theme = createTheme({
       styleOverrides: {
         root: {
           ".modal": {
-            background: colors.dark.surface,
+            background: colors.theme.dark.surface,
           },
         },
       },
@@ -130,7 +130,7 @@ const dark: Theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          background: colors.dark.surfaceVariant,
+          background: colors.theme.dark.surfaceVariant,
           "&:focus-visible": focusStyle,
         },
         notchedOutline: {
@@ -201,7 +201,7 @@ const light: Theme = createTheme({
       styleOverrides: {
         paper: {
           border: "none",
-          backgroundColor: colors.light.surfaceVariant,
+          backgroundColor: colors.theme.light.surfaceVariant,
         },
       },
     },
@@ -209,7 +209,7 @@ const light: Theme = createTheme({
       styleOverrides: {
         root: {
           ".modal": {
-            background: colors.light.background,
+            background: colors.theme.light.background,
           },
         },
       },
@@ -217,7 +217,7 @@ const light: Theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          background: colors.light.surface,
+          background: colors.theme.light.surface,
           "&:focus-visible": focusStyle,
         },
         notchedOutline: {

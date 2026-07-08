@@ -1,7 +1,7 @@
 import { app, BrowserWindow, nativeImage } from "electron";
 import { fileURLToPath } from "url";
 import fs from "fs";
-import { SettingsStore, setMainWindow } from "./Stores.js";
+import { SettingsStore, ColorsStore } from "./Stores.js";
 import { CreateMenu } from "./Menu.js";
 import { createFileWatcher, watcher } from "./File/Watcher";
 import { registerTodoFile } from "./File/File";
@@ -39,7 +39,7 @@ const HandleCreateWindow = () => {
 const handleClosed = async () => {
   if (watcher) await watcher.close();
   mainWindow = null;
-  setMainWindow(null);
+  //setMainWindow(null);
   eventListeners.handleClosed = undefined;
   eventListeners.handleResize = undefined;
   eventListeners.handleMove = undefined;
@@ -139,7 +139,7 @@ const createMainWindow = () => {
       sandbox: false,
     },
   });
-  setMainWindow(mainWindow);
+  //setMainWindow(mainWindow);
 
   mainWindow.once("ready-to-show", () => {
     if (!mainWindow) return;
@@ -149,6 +149,7 @@ const createMainWindow = () => {
     console.log(`Startup time: ${(endTime - startTime).toFixed(2)} ms`);
 
     const files: File[] = (SettingsStore.get("files") as File[]) || [];
+    ColorsStore.get("colors");
     createFileWatcher(files);
     CreateMenu(files);
   });

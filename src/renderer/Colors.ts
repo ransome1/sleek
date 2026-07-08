@@ -1,4 +1,4 @@
-import colorsJson from "./colors.json";
+const { store } = window.api;
 
 export type ColorTheme = "light" | "dark";
 
@@ -8,16 +8,12 @@ export interface PriorityColor {
 }
 
 export interface AttributeColor {
-  // Old structure (for projects, contexts, generic)
-  text?: string;
-  background?: string;
-  darkText?: string;
-  darkBackground?: string;
-  selectedLight?: string;
-  selectedDark?: string;
-  // New structure (for pomodoro)
-  selectedText?: string;
-  selectedBackground?: string;
+  background: string;
+  text: string;
+  selected?: {
+    text: string;
+    background: string;
+  };
 }
 
 export interface SemanticColors {
@@ -50,11 +46,6 @@ export interface Opacity {
   disabled: number;
   hover: number;
   focus: number;
-}
-
-export interface ChipDarkColors {
-  background: string;
-  backgroundFocus: string;
 }
 
 export interface PomodoroThemeColors {
@@ -94,26 +85,42 @@ export interface ColorPalette {
     light: NavigationThemeColors;
     dark: NavigationThemeColors;
   };
-  attributes: {
-    projects: AttributeColor;
-    contexts: AttributeColor;
-    pomodoro: AttributeColor;
-    generic: AttributeColor;
+  theme: {
+    light: ThemeColors;
+    dark: ThemeColors;
   };
-  light: ThemeColors;
-  dark: ThemeColors;
-  chipDark: ChipDarkColors;
+
+  attributes: {
+    projects: { light: AttributeColor; dark: AttributeColor };
+    contexts: { light: AttributeColor; dark: AttributeColor };
+    pomodoro: { light: AttributeColor; dark: AttributeColor };
+    generic: { light: AttributeColor; dark: AttributeColor };
+  };
   gradients: Gradients;
   opacity: Opacity;
+  chip: {
+    light: {
+      background: string;
+      text: string;
+    };
+    dark: {
+      background: string;
+      text: string;
+    };
+  };
 }
 
-const colors: ColorPalette = colorsJson as ColorPalette;
+const storeColors = store.getColors("colors");
+if (!storeColors) {
+  console.log("Colors from store are undefined");
+}
+const colors: ColorPalette = store.getColors("colors") as ColorPalette;
 
 /**
  * Get all colors for a specific theme (light or dark)
  */
 export function getThemeColors(theme: ColorTheme): ThemeColors {
-  return colors[theme];
+  return colors.theme[theme];
 }
 
 /**
@@ -138,31 +145,15 @@ export function getAttributeColors(
   const attr = colors.attributes[attribute as keyof typeof colors.attributes];
   if (!attr) return null;
 
-  // Handle old structure (projects, contexts, generic)
-  if (attr.text && attr.background) {
-    return {
-      text: theme === "light" ? attr.text : attr.darkText || attr.text,
-      background:
-        theme === "light"
-          ? attr.background
-          : attr.darkBackground || attr.background,
-      selectedText: theme === "light" ? attr.selectedLight : attr.selectedDark,
-      selectedBackground:
-        theme === "light" ? attr.selectedLight : attr.selectedDark,
-    };
-  }
+  const themeAttr = attr[theme];
+  if (!themeAttr) return null;
 
-  // Handle new structure (pomodoro)
-  if (attr.selectedText && attr.selectedBackground) {
-    return {
-      text: attr.text || "",
-      background: attr.background || "",
-      selectedText: attr.selectedText,
-      selectedBackground: attr.selectedBackground,
-    };
-  }
-
-  return null;
+  return {
+    text: themeAttr.text,
+    background: themeAttr.background,
+    selectedText: themeAttr.selected?.text,
+    selectedBackground: themeAttr.selected?.background,
+  };
 }
 
 /**
@@ -170,7 +161,7 @@ export function getAttributeColors(
  * Returns a Record that can be applied to document.documentElement.style
  */
 export function getCssVariables(theme: ColorTheme): Record<string, string> {
-  const themeColors = colors[theme];
+  const themeColors = colors.theme[theme];
   const pomodoroColors = colors.pomodoro[theme];
   const navigationColors = colors.navigation[theme];
   const vars: Record<string, string> = {};
@@ -206,38 +197,21 @@ export function getCssVariables(theme: ColorTheme): Record<string, string> {
   vars["--navigation-hover-bg"] = navigationColors.hoverBackground;
 
   // Add attribute colors and their selected states
-  Object.entries(colors.attributes).forEach(([attrName, attrColors]) => {
+  Object.entries(colors.attributes).forEach(([attrName, attrThemes]) => {
     const prefix = `--attribute-${attrName}`;
+    const themeAttr = attrThemes[theme];
 
-    // Handle old structure (projects, contexts, generic)
-    if (attrColors.text && attrColors.background) {
-      vars[`${prefix}-text`] =
-        theme === "light"
-          ? attrColors.text
-          : attrColors.darkText || attrColors.text;
-      vars[`${prefix}-bg`] =
-        theme === "light"
-          ? attrColors.background
-          : attrColors.darkBackground || attrColors.background;
-      if (theme === "light" && attrColors.selectedLight) {
-        vars[`${prefix}-selected`] = attrColors.selectedLight;
-      } else if (theme === "dark" && attrColors.selectedDark) {
-        vars[`${prefix}-selected`] = attrColors.selectedDark;
-      }
-    }
-    // Handle new structure (pomodoro)
-    else if (attrColors.selectedText && attrColors.selectedBackground) {
-      vars[`${prefix}-text`] = attrColors.text || "";
-      vars[`${prefix}-bg`] = attrColors.background || "";
-      vars[`${prefix}-selected-text`] = attrColors.selectedText;
-      vars[`${prefix}-selected-bg`] = attrColors.selectedBackground;
+    vars[`${prefix}-text`] = themeAttr.text;
+    vars[`${prefix}-bg`] = themeAttr.background;
+    if (themeAttr.selected) {
+      vars[`${prefix}-selected-text`] = themeAttr.selected.text;
+      vars[`${prefix}-selected-bg`] = themeAttr.selected.background;
     }
   });
 
-  // Add chip dark colors
-  Object.entries(colors.chipDark).forEach(([key, value]) => {
-    vars[`--chipDark-${key}`] = value;
-  });
+  // Add chip colors
+  vars["--chip-bg"] = colors.chip[theme].background;
+  vars["--chip-text"] = colors.chip[theme].text;
 
   // Add gradients
   Object.entries(colors.gradients).forEach(([name, gradient]) => {

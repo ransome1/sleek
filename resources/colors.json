@@ -1,0 +1,195 @@
+{
+  "semantic": {
+    "primary": "#1976d2",
+    "error": "#f44336",
+    "warning": "#ff9800",
+    "success": "#4caf50",
+    "notification": "#ff3860",
+    "focus": "#1976d2"
+  },
+  "priority": {
+    "A": {
+      "base": "#ff0000",
+      "selected": "#B70025"
+    },
+    "B": {
+      "base": "#fd7d67",
+      "selected": "#D22307"
+    },
+    "C": {
+      "base": "#ffdd57",
+      "selected": "#d4a83a"
+    }
+  },
+  "pomodoro": {
+    "light": {
+      "base": {
+        "text": "rgb(221, 44, 0)",
+        "background": "white"
+      },
+      "selected": {
+        "text": "white",
+        "background": "rgb(221, 44, 0)"
+      },
+      "badgeText": "white",
+      "badgeBackground": "rgb(221, 44, 0)"
+    },
+    "dark": {
+      "base": {
+        "text": "rgb(221, 44, 0)",
+        "background": "white"
+      },
+      "selected": {
+        "text": "white",
+        "background": "rgb(221, 44, 0)"
+      },
+      "badgeText": "white",
+      "badgeBackground": "rgb(221, 44, 0)"
+    }
+  },
+  "navigation": {
+    "light": {
+      "iconColor": "#5a5a5a",
+      "hoverBackground": "#ebebeb"
+    },
+    "dark": {
+      "iconColor": "#b0b0b0",
+      "hoverBackground": "#4a4a4a"
+    }
+  },
+  "attributes": {
+    "projects": {
+      "light": {
+        "text": "#6f266f",
+        "background": "#f1d6f1",
+        "selected": {
+          "text": "white",
+          "background": "rgb(73, 25, 73)"
+        }
+      },
+      "dark": {
+        "text": "#f1d6f1",
+        "background": "#6f266f",
+        "selected": {
+          "text": "white",
+          "background": "rgb(73, 25, 73)"
+        }
+      }
+    },
+    "contexts": {
+      "light": {
+        "text": "#1e6251",
+        "background": "#c5ede3",
+        "selected": {
+          "text": "white",
+          "background": "rgb(18, 59, 49)"
+        }
+      },
+      "dark": {
+        "text": "#c5ede3",
+        "background": "#1e6251",
+        "selected": {
+          "text": "white",
+          "background": "rgb(18, 59, 49)"
+        }
+      }
+    },
+    "pomodoro": {
+      "light": {
+        "text": "#DD2C00",
+        "background": "#FFFFFF",
+        "selected": {
+          "text": "#FFFFFF",
+          "background": "#DD2C00"
+        }
+      },
+      "dark": {
+        "text": "#DD2C00",
+        "background": "#FFFFFF",
+        "selected": {
+          "text": "#FFFFFF",
+          "background": "#DD2C00"
+        }
+      }
+    },
+    "due": {
+      "light": {
+        "text": "#ffffff",
+        "background": "#333333"
+      },
+      "dark": {
+        "text": "#ffffff",
+        "background": "#333333"
+      }
+    },
+    "t": {
+      "light": {
+        "text": "#ffffff",
+        "background": "#333333"
+      },
+      "dark": {
+        "text": "#ffffff",
+        "background": "#333333"
+      }
+    },
+    "generic": {
+      "light": {
+        "text": "#5a5a5a",
+        "background": "#ccc",
+        "selected": {
+          "text": "white",
+          "background": "#5a5a5a"
+        }
+      },
+      "dark": {
+        "text": "#5a5a5a",
+        "background": "#ccc",
+        "selected": {
+          "text": "white",
+          "background": "#343434"
+        }
+      }
+    }
+  },
+  "theme": {
+    "light": {
+      "background": "#ffffff",
+      "surface": "#f0f0f0",
+      "surfaceVariant": "#ebebeb",
+      "outline": "#5a5a5a",
+      "outlineVariant": "#ccc",
+      "onSurface": "#212224",
+      "onBackground": "#000000"
+    },
+    "dark": {
+      "background": "#212224",
+      "surface": "#3b3b3b",
+      "surfaceVariant": "#2d2d2d",
+      "outline": "#f0f0f0",
+      "outlineVariant": "#5a5a5a",
+      "onSurface": "#ebebeb",
+      "onBackground": "#ffffff"
+    }
+  },
+  "gradients": {
+    "logo": {
+      "start": "#1b5551",
+      "end": "#813e93"
+    }
+  },
+  "opacity": {
+    "disabled": 0.5,
+    "hover": 0.7,
+    "focus": 1.0
+  },
+  "chip": {
+    "light": {
+      "background": "#5a5a5a",
+      "text": "#ffffff"
+    },
+    "dark": {
+      "background": "#333333",
+      "text": "#ffffff"
+    }
+  }
+}

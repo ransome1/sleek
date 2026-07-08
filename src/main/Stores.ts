@@ -1,7 +1,7 @@
 import Store from "electron-store";
 import path from "path";
 import crypto from "crypto";
-import { BrowserWindow, nativeTheme } from "electron";
+import { nativeTheme } from "electron";
 import { dataRequest, searchString } from "./DataRequest/DataRequest";
 import { userDataDirectory, HandleError } from "./Shared";
 import { createFileWatcher } from "./File/Watcher";
@@ -12,13 +12,9 @@ import {
   UpdateTrayMenu,
 } from "./Tray";
 import { HandleTheme } from "./Theme";
+import { mainWindow } from "./index";
 import { SettingStore } from "@sleek-types";
-
-let mainWindow: BrowserWindow | null = null;
-
-export function setMainWindow(window: BrowserWindow | null): void {
-  mainWindow = window;
-}
+import colorsData from "../../resources/colors.json";
 
 const distributionChannel = function (): string {
   if (process.env.APPIMAGE) {
@@ -205,6 +201,34 @@ function getFiltersStore(): Store {
 export const FiltersStore = {
   get: (key: string) => getFiltersStore().get(key),
   set: (key: string, value: unknown) => getFiltersStore().set(key, value),
+};
+
+let _colorsStore: Store | null = null;
+
+function getColorsStore(): Store {
+  if (!_colorsStore) {
+    _colorsStore = new Store({
+      cwd: userDataDirectory,
+      name: "colors",
+      migrations: {
+  "2.0.26-rc.1": (colors) => {
+    console.log("Creating colors store → 2.0.26");
+    colors.set("colors", colorsData);
+  },
+  "2.0.26": (colors) => {
+    console.log("Updating colors store with new selected color structures → 2.0.26");
+    colors.set("colors", colorsData);
+  },
+
+      },
+    });
+  }
+  return _colorsStore;
+}
+
+export const ColorsStore = {
+  get: (key: string) => getColorsStore().get(key),
+  set: (key: string, value: unknown) => getColorsStore().set(key, value),
 };
 
 let _notificationsStore: Store | null = null;

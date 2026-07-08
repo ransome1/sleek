@@ -1,8 +1,8 @@
 @use "sass:color";
 
 button:not(.MuiIconButton-root):not(.MuiTab-root):not(
-    .MuiAccordionSummary-root
-  ),
+  .MuiAccordionSummary-root
+),
 button:hover:not(.MuiIconButton-root) {
   &:focus-visible {
     outline: 0.1em solid var(--color-outline);
@@ -27,15 +27,25 @@ button:hover:not(.MuiIconButton-root) {
     }
   }
 
+  .MuiChip-root {
+    background: var(--chip-bg);
+    color: var(--chip-text);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin: 0 4px;
+    &:hover {
+      background: var(--chip-bg);
+      color: var(--chip-text);
+    }
+  }
+
   button {
     color: var(--color1);
     background: var(--color2);
     &:focus-visible {
       outline-color: var(--color1);
-    }
-    .MuiChip-root {
-      color: white;
-      background: var(--color1);
     }
   }
   .MuiBadge-badge {
@@ -61,6 +71,7 @@ button:hover:not(.MuiIconButton-root) {
 
 *[data-todotxt-attribute="priority"] {
   --color1: white;
+
   button {
     &.Mui-disabled {
       color: white;
@@ -140,6 +151,8 @@ button:hover:not(.MuiIconButton-root) {
   .MuiBadge-dot {
     background: var(--pomodoro-badge-bg);
   }
+
+
   .selected {
     button {
       color: var(--pomodoro-selected-text);
@@ -151,11 +164,21 @@ button:hover:not(.MuiIconButton-root) {
 *[data-todotxt-attribute="projects"] {
   --color1: var(--attribute-projects-text);
   --color2: var(--attribute-projects-bg);
+  .selected {
+    button {
+      background: var(--attribute-projects-selected-bg);
+    }
+  }
 }
 
 *[data-todotxt-attribute="contexts"] {
   --color1: var(--attribute-contexts-text);
   --color2: var(--attribute-contexts-bg);
+  .selected {
+    button {
+      background: var(--attribute-contexts-selected-bg);
+    }
+  }
 }
 
 .dark {
@@ -171,34 +194,29 @@ button:hover:not(.MuiIconButton-root) {
     ) {
     --color1: var(--color-onSurface);
     --color2: var(--color-outlineVariant);
+  }
+
+  *[data-todotxt-attribute]:not(
+      [data-todotxt-attribute="priority"],
+      [data-todotxt-attribute="projects"],
+      [data-todotxt-attribute="contexts"],
+      [data-todotxt-attribute^="pm"]
+    ).selected {
     button {
-      .MuiChip-root {
-        background: var(--chipDark-background);
-      }
-    }
-    &.selected {
-      button,
-      div {
-        background: var(--chipDark-backgroundFocus);
-      }
+      color: var(--attribute-generic-selected-text, white);
+      background: var(--attribute-generic-selected-bg, #343434);
     }
   }
-
-  // Contexts and projects use theme-aware CSS variables
-  // No inversion needed - getCssVariables() handles theme switching
-
-  *[data-todotxt-attribute="contexts"] {
-    &.selected {
-      button {
-        background: var(--attribute-contexts-selected);
-      }
+  *[data-todotxt-attribute="projects"].selected {
+    button {
+      color: var(--attribute-projects-selected-text);
+      background: var(--attribute-projects-selected-bg);
     }
   }
-  *[data-todotxt-attribute="projects"] {
-    &.selected {
-      button {
-        background: var(--attribute-projects-selected);
-      }
+  *[data-todotxt-attribute="contexts"].selected {
+    button {
+      color: var(--attribute-contexts-selected-text);
+      background: var(--attribute-contexts-selected-bg);
     }
   }
 }

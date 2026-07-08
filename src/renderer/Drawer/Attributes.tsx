@@ -198,7 +198,7 @@ const DrawerAttributesComponent: React.FC<DrawerAttributesComponentProps> =
                   className={categoryKey === "pm" ? "pomodoro" : undefined}
                 >
                   {categoryKey === "pm" && (
-                    <img src={PomodoroIcon} alt={t("pomodoro.alt")} />
+                    <img src={PomodoroIcon} alt="Pomodoro" />
                   )}
                   {bucketName}
                 </button>

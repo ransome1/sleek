@@ -1,3 +1,4 @@
+
 button {
   font-size: 1em;
   border: none;
@@ -51,7 +52,7 @@ button {
       margin: 0;
     }
     div:first-child {
-      margin-right: 0.25em;
+      margin: 0 0.25em 0 0;
     }
     div {
       display: flex;
@@ -171,15 +172,6 @@ div[data-todotxt-attribute="priority"] {
 }
 
 .compact {
-  // .row {
-  // 	[data-todotxt-attribute='due'],
-  // 	[data-todotxt-attribute='t'],
-  // 	[data-todotxt-attribute='rec'] {
-  // 	  div {
-  // 	  	padding: 0.1em 0;
-  // 	  }
-  // 	}
-  // }
   div[data-todotxt-attribute="priority"] {
     button {
       font-size: 1.25em;
@@ -195,9 +187,9 @@ div[data-todotxt-attribute="priority"] {
       color: #ccc;
       background: #5a5a5a;
     }
-    .overlay {
-      background: rgba(0, 0, 0, 0.35) !important;
-    }
+.overlay {
+  background: rgba(0, 0, 0, 0.35) !important;
+}
   }
   .MuiDialog-root {
     .MuiDialog-paper {

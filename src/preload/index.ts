@@ -18,6 +18,9 @@ contextBridge.exposeInMainWorld("api", {
     getFilters(key): StoreReply {
       return ipcRenderer.sendSync("storeGetFilters", key);
     },
+    getColors(key): StoreReply {
+      return ipcRenderer.sendSync("storeGetColors", key);
+    },
     notifiedTodoObjects(value) {
       return ipcRenderer.send("storeSetNotifiedTodoObjects", value);
     },

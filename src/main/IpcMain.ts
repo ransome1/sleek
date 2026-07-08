@@ -3,7 +3,12 @@ import { dataRequest } from "./DataRequest/DataRequest";
 import { changeCompleteState } from "./DataRequest/ChangeCompleteState";
 import { writeSingleTodoToFile, removeLineFromFile } from "./File/Write";
 import { archiveTodos, checkArchiveReadiness } from "./File/Archive";
-import { SettingsStore, FiltersStore, NotificationsStore } from "./Stores";
+import {
+  SettingsStore,
+  FiltersStore,
+  ColorsStore,
+  NotificationsStore,
+} from "./Stores";
 import { HandleError } from "./Shared";
 import { registerTodoFile, activateFile, removeFile } from "./File/File";
 import { openFile, createFile } from "./File/Dialog";
@@ -128,6 +133,14 @@ function handleStoreSetNotifiedTodoObjects(
   }
 }
 
+function handleStoreGetColors(event: IpcMainEvent, value: string) {
+  try {
+    event.returnValue = ColorsStore.get(value);
+  } catch (error) {
+    if (error instanceof Error) HandleError(error);
+  }
+}
+
 function handleSetFile(_: IpcMainEvent, index: number): void {
   try {
     activateFile(index);
@@ -229,6 +242,7 @@ function removeEventListeners(): void {
   ipcMain.off("storeSetConfig", handleStoreSetConfig);
   ipcMain.off("storeSetFilters", handleStoreSetFilters);
   ipcMain.off("storeGetFilters", handleStoreGetFilters);
+  ipcMain.off("storeGetColors", handleStoreGetColors);
   ipcMain.off("storeSetNotifiedTodoObjects", handleStoreSetNotifiedTodoObjects);
   ipcMain.off("setFile", handleSetFile);
   ipcMain.off("removeFile", handleRemoveFile);
@@ -253,6 +267,7 @@ ipcMain.on("storeGetConfig", handleStoreGetConfig);
 ipcMain.on("storeSetConfig", handleStoreSetConfig);
 ipcMain.on("storeSetFilters", handleStoreSetFilters);
 ipcMain.on("storeGetFilters", handleStoreGetFilters);
+ipcMain.on("storeGetColors", handleStoreGetColors);
 ipcMain.on("storeSetNotifiedTodoObjects", handleStoreSetNotifiedTodoObjects);
 ipcMain.on("setFile", handleSetFile);
 ipcMain.on("removeFile", handleRemoveFile);
