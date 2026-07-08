@@ -39,7 +39,16 @@ If you have ideas for new features or improvements, we encourage you to open a f
 
 ### Pull Requests
 
-We welcome pull requests for bug fixes, enhancements, or new features. To contribute code, please follow these steps:
+We welcome pull requests for bug fixes, enhancements, or new features.
+
+**If you're intending to add a new feature not previously discussed in an issue
+or discussion, please create a [feature request](#feature-requests) first.
+This allows us to gather input from the community, plan its implementation and
+make sure it aligns with sleek's purpose and saves you time in implementing it.
+After all, we want sleek to stay sleek and maintainable. New Feature Pull
+Requests without prior discussion will receive low priority for review.**
+
+To contribute code, please follow these steps:
 
 1. Fork the repository and create a new branch based on the `main` branch.
 2. Make your changes in the new branch, adhering to the [coding guidelines](#coding-guidelines).
