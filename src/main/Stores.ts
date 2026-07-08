@@ -211,15 +211,16 @@ function getColorsStore(): Store {
       cwd: userDataDirectory,
       name: "colors",
       migrations: {
-  "2.0.26-rc.1": (colors) => {
-    console.log("Creating colors store → 2.0.26");
-    colors.set("colors", colorsData);
-  },
-  "2.0.26": (colors) => {
-    console.log("Updating colors store with new selected color structures → 2.0.26");
-    colors.set("colors", colorsData);
-  },
-
+        "2.0.26-rc.1": (colors) => {
+          console.log("Creating colors store → 2.0.26");
+          colors.set("colors", colorsData);
+        },
+        "2.0.26": (colors) => {
+          console.log(
+            "Updating colors store with new selected color structures → 2.0.26",
+          );
+          colors.set("colors", colorsData);
+        },
       },
     });
   }
