@@ -31,20 +31,20 @@ const NavigationComponent: React.FC<NavigationComponentProps> = memo(
       }
     };
 
-    useEffect(() => {
-      const handleKeyDown = (event: KeyboardEvent): void => {
-        if (event.ctrlKey && event.key === "т") {
-          handleOpen();
-        }
-      };
+useEffect(() => {
+  const handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.ctrlKey && event.key === "т") {
+      handleOpen();
+    }
+  };
 
-      ipcRenderer.on("isDialogOpen", handleOpen);
-      document.addEventListener("keydown", handleKeyDown);
-      return (): void => {
-        ipcRenderer.off("isDialogOpen", handleOpen);
-        document.removeEventListener("keydown", handleKeyDown);
-      };
-    }, []);
+  ipcRenderer.on("isDialogOpen", handleOpen);
+  document.addEventListener("keydown", handleKeyDown);
+  return (): void => {
+    ipcRenderer.off("isDialogOpen", handleOpen);
+    document.removeEventListener("keydown", handleKeyDown);
+  };
+}, [setDialogOpen, settings]);
 
     return (
       <>
